@@ -1,5 +1,7 @@
 {{ config(alias='report_metrics_summary_account_year') }}
 
+-- TODO: 20221208 TAM fields need to refactored as they are not called TAM anymore
+
 WITH date_details AS (
 
     SELECT *
@@ -56,9 +58,7 @@ WITH date_details AS (
 
     SELECT *
     --FROM prod.restricted_safe_common_mart_sales.mart_arr
-    FROM {{ref('mart_arr')}}
-
-     
+    FROM {{ref('mart_arr')}}   
 
   ), raw_account AS (
   
@@ -66,9 +66,7 @@ WITH date_details AS (
     FROM {{ source('salesforce', 'account') }}
     --FROM raw.salesforce_stitch.account 
 
-      
   -- missing fields in mart crm account so adding dim_crm_account cte here on top of the mart below
- 
   ), dim_crm_account AS (
 
     SELECT *
@@ -81,6 +79,7 @@ WITH date_details AS (
   -- PUBSEC_TYPE__C,
   -- POTENTIAL_ARR_LAM__C
   -- BILLINGSTATE
+  -- customer_score__c
   ), mart_crm_account AS (
 
     SELECT acc.*,
@@ -88,7 +87,8 @@ WITH date_details AS (
         raw.public_sector_account__c  AS public_sector_account_flag,
         raw.pubsec_type__c            AS pubsec_type,
         raw.lam_tier__c               AS potential_lam_arr,
-        raw.billingstatecode          AS account_billing_state
+        raw.billingstatecode          AS account_billing_state,
+        raw.customer_score__c          AS customer_score
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_account acc
     FROM {{ref('mart_crm_account')}} acc
     LEFT JOIN raw_account raw
@@ -683,7 +683,7 @@ WITH date_details AS (
     coalesce(mart_crm_account.crm_account_zoom_info_number_of_developers, 0)    AS zi_developers,
     coalesce(mart_crm_account.zoom_info_company_revenue, 0)                     AS zi_revenue,
 
-    --
+    -- LAM Dev count calculated at the UPA level
     upa_account.parent_crm_account_lam_dev_count                       AS upa_lam_dev_count,
     mart_crm_account.public_sector_account_flag,
     mart_crm_account.pubsec_type,
@@ -692,6 +692,12 @@ WITH date_details AS (
     
     COALESCE(mart_crm_account.carr_account_family, 0)                       AS account_family_arr,
     LEAST(50000,GREATEST(coalesce(mart_crm_account.number_of_licenses_this_account,0),COALESCE(mart_crm_account.potential_users, mart_crm_account.decision_maker_count_linkedin, mart_crm_account.crm_account_zoom_info_number_of_developers, 0)))           AS calculated_developer_count,
+
+    -- Account score used to balance patches in maps
+    mart_crm_account.customer_score,
+
+
+    -- TODO: 20221208 They are not called TAMs anymore, this part needs to be refactored
     a.technical_account_manager_date,
     a.technical_account_manager                                             AS technical_account_manager_name,
     CASE
@@ -1269,26 +1275,21 @@ FROM selected_hierarchy_virtual_upa final
             THEN new_upa.virtual_upa_area
         ELSE acc.upa_user_area
     END                                     AS upa_user_area,
-    CASE 
-        WHEN new_upa.upa_id IS NOT NULL 
-            THEN new_upa.virtual_upa_country 
-        ELSE acc.upa_ad_country
-    END                                     AS upa_user_country,
-    CASE 
-        WHEN new_upa.upa_id IS NOT NULL 
-            THEN new_upa.virtual_upa_zip_code 
-        ELSE acc.upa_ad_zip_code
-    END                                     AS upa_user_zip_code,
     
     
     acc.lam_dev_count_bin_rank,
     acc.lam_dev_count_bin_name,
+
     -- Public Sector
     CASE
         WHEN MAX(acc.is_public_sector_flag) = 1
             THEN 'Public'
         ELSE 'Private'
     END                             AS sector_type,
+    
+    -- Customer score used in maps for account visualization
+    MAX(acc.customer_score) AS customer_score,
+    
     MAX(acc.is_public_sector_flag)      AS is_public_sector_flag,
     
     
@@ -1401,7 +1402,7 @@ FROM selected_hierarchy_virtual_upa final
     LEFT JOIN final_virtual_upa new_upa
         ON new_upa.account_id = acc.account_id
         AND new_upa.report_fiscal_year = acc.report_fiscal_year
-  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
 
 )
 , final AS (

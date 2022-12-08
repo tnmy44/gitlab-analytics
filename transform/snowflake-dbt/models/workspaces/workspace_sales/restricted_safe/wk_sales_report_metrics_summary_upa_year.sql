@@ -296,8 +296,10 @@ FROM selected_hierarchy_virtual_upa final
         ELSE 'Private'
     END                             AS sector_type,
     MAX(acc.is_public_sector_flag)      AS is_public_sector_flag,
-    
-    
+
+    -- Customer score used in maps for account visualization
+    MAX(acc.customer_score) AS customer_score,
+        
     SUM(CASE WHEN acc.account_forbes_rank IS NOT NULL THEN 1 ELSE 0 END)   AS count_forbes_accounts,
     MIN(account_forbes_rank)      AS forbes_rank,
     MAX(acc.potential_users)          AS potential_users,
