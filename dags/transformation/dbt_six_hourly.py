@@ -1,15 +1,14 @@
 """
-## Info about DAG
-This DAG is responsible for running a six-hourly refresh on models tagged with the "six_hourly" label from Monday to Saturday.
+Info about DAG:
+This DAG is responsible for running a six-hourly refresh on models tagged
+with the "six_hourly" label from Monday to Saturday.
 """
 
-import os
+
 from datetime import datetime, timedelta
 
-from croniter import croniter
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.python_operator import ShortCircuitOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
@@ -19,34 +18,28 @@ from airflow_utils import (
     slack_failed_task,
 )
 from kube_secrets import (
-    GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_CONFIG,
+    GIT_DATA_TESTS_PRIVATE_KEY,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
     SALT,
     SALT_EMAIL,
     SALT_IP,
     SALT_NAME,
     SALT_PASSWORD,
     SNOWFLAKE_ACCOUNT,
+    SNOWFLAKE_LOAD_PASSWORD,
+    SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_LOAD_USER,
+    SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_TRANSFORM_ROLE,
     SNOWFLAKE_TRANSFORM_SCHEMA,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_USER,
-    SNOWFLAKE_LOAD_PASSWORD,
-    SNOWFLAKE_LOAD_ROLE,
-    SNOWFLAKE_LOAD_USER,
-    SNOWFLAKE_LOAD_WAREHOUSE,
-    MCD_DEFAULT_API_ID,
-    MCD_DEFAULT_API_TOKEN,
 )
 
-# Load the env vars into a dict and set Secrets
-env = os.environ.copy()
-GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
-
-# This value is set based on the commit hash setter task in dbt_snapshot
-# pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_hash }}" """
 
 
 # Default arguments for the DAG
@@ -93,7 +86,6 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 */6 * * 1-6",
 )
-dag.doc_md = __doc__
 
 # run sfdc_opportunity models on large warehouse
 dbt_six_hourly_models_command = f"""
@@ -113,8 +105,4 @@ dbt_six_hourly_models_task = KubernetesPodOperator(
     dag=dag,
 )
 
-
-(
-    # dbt_evaluate_run_date_task
-    dbt_six_hourly_models_task
-)
+dbt_six_hourly_models_task
