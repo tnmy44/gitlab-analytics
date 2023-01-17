@@ -69,7 +69,7 @@ recursive_hierarchy AS (
     TO_ARRAY(root.team_name)   AS upstream_organization_names
   FROM team_superior_change AS root
   WHERE team_superior_team_id IS NULL
-
+  
   UNION ALL
 
   SELECT
@@ -170,8 +170,7 @@ final AS (
     IFF(DATE(valid_to) = {{ var('tomorrow') }}, TRUE, FALSE)            AS is_current
   FROM team_hierarchy
   LEFT JOIN team_data
-    ON team_hierarchy.team_superior_team_id = team_data.team_superior_team_id
-      AND team_hierarchy.team_id = team_data.team_id
+    ON team_hierarchy.team_id = team_data.team_id
       AND (
         CASE
           WHEN team_data.valid_from >= team_hierarchy.hierarchy_valid_from AND team_data.valid_from < team_hierarchy.hierarchy_valid_to THEN TRUE
