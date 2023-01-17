@@ -269,7 +269,7 @@ we can delete this connection and use the mart table directly.
           THEN 'Partner Sourced'
         WHEN (sfdc_opportunity_xf.deal_path = 'Channel' OR sfdc_opportunity_xf.deal_path = 'Partner') 
             AND (sfdc_opportunity_xf.sales_qualified_source != 'Channel Generated' 
-                OR sfdc_opportunity_xf.sales_qualified_source = 'Partner Generated') 
+                AND sfdc_opportunity_xf.sales_qualified_source != 'Partner Generated') 
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
 

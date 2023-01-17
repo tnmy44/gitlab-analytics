@@ -51,11 +51,11 @@ WITH sfdc_accounts_xf AS (
               OR opp_snapshot.sales_qualified_source = 'Partner Generated')
           THEN 'Channel Generated'
         WHEN (opp_snapshot.sales_qualified_source != 'Channel Generated' 
-              OR opp_snapshot.sales_qualified_source = 'Partner Generated')            
+              AND opp_snapshot.sales_qualified_source != 'Partner Generated')            
           AND NOT(LOWER(resale.account_name) LIKE ANY ('%ibm%','%google%','%gcp%','%amazon%'))
           THEN 'Channel Co-Sell'
         WHEN (opp_snapshot.sales_qualified_source != 'Channel Generated' 
-              OR opp_snapshot.sales_qualified_source = 'Partner Generated')            
+              AND opp_snapshot.sales_qualified_source != 'Partner Generated')            
           AND LOWER(resale.account_name ) LIKE ANY ('%ibm%','%google%','%gcp%','%amazon%')
           THEN 'Alliance Co-Sell'
         ELSE 'Direct'

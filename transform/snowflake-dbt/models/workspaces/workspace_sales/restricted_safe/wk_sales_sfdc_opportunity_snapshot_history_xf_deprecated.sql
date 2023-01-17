@@ -294,7 +294,7 @@ WITH date_details AS (
         WHEN (sfdc_opportunity_snapshot_history.deal_path = 'Channel' 
               OR sfdc_opportunity_snapshot_history.deal_path = 'Partner') 
             AND (sfdc_opportunity_snapshot_history.sales_qualified_source != 'Channel Generated'
-                OR sfdc_opportunity_snapshot_history.sales_qualified_source = 'Partner Generated') 
+                AND sfdc_opportunity_snapshot_history.sales_qualified_source != 'Partner Generated') 
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
 

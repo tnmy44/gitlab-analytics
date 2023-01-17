@@ -248,7 +248,7 @@ WITH date_details AS (
 
         -- deal path direct year
         SUM(CASE
-            WHEN (o.deal_path != 'Channel' OR o.deal_path != 'Partner')
+            WHEN (o.deal_path != 'Channel' AND o.deal_path != 'Partner')
             THEN o.net_arr
             ELSE 0 END) AS last_12m_booked_direct_net_arr,   --ttm_direct_net_arr
 
@@ -306,14 +306,14 @@ WITH date_details AS (
 
           -- deal path direct year
         SUM(CASE
-            WHEN (o.deal_path != 'Channel' OR o.deal_path != 'Partner')
+            WHEN (o.deal_path != 'Channel' AND o.deal_path != 'Partner')
                 AND o.is_won = 1
             THEN o.calculated_deal_count
             ELSE 0 END) AS last_12m_booked_direct_deal_count,  -- ttm_direct_deal_count
 
         -- deal path channel year
         SUM(CASE
-            WHEN (o.deal_path = 'Channel' OR o.deal_path != 'Partner')
+            WHEN (o.deal_path = 'Channel' OR o.deal_path = 'Partner')
                 AND o.is_won = 1
             THEN o.calculated_deal_count
             ELSE 0 END) AS last_12m_booked_channel_deal_count  -- ttm_channel_deal_count
@@ -379,25 +379,25 @@ WITH date_details AS (
 
         -- deal path direct year
         SUM(CASE
-            WHEN (o.deal_path != 'Channel' OR o.deal_path != 'Partner')
+            WHEN (o.deal_path != 'Channel' AND o.deal_path != 'Partner')
             THEN o.booked_net_arr
             ELSE 0 END) AS fy_booked_direct_net_arr,
 
         -- deal path channel year
         SUM(CASE
-            WHEN (o.deal_path = 'Channel' OR o.deal_path != 'Partner')
+            WHEN (o.deal_path = 'Channel' OR o.deal_path = 'Partner')
             THEN o.booked_net_arr
             ELSE 0 END) AS fy_booked_channel_net_arr,
 
          -- deal path direct year
         SUM(CASE
-            WHEN (o.deal_path != 'Channel' OR o.deal_path != 'Partner')
+            WHEN (o.deal_path != 'Channel' AND o.deal_path != 'Partner')
             THEN o.calculated_deal_count
             ELSE 0 END) AS fy_booked_direct_deal_count,
 
         -- deal path channel year
         SUM(CASE
-            WHEN (o.deal_path = 'Channel' OR o.deal_path != 'Partner')
+            WHEN (o.deal_path = 'Channel' OR o.deal_path = 'Partner')
             THEN o.calculated_deal_count
             ELSE 0 END) AS fy_booked_channel_deal_count
 
