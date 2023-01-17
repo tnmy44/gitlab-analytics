@@ -15,7 +15,11 @@ team_data AS (
     source.team_name,
     source.team_manager_name,
     source.team_manager_name_id,
-    source.team_inactivated_date,
+    IFF(
+      source.is_deleted AND source.team_inactivated_date IS NULL,
+      source.uploaded_at,
+      source.team_inactivated_date)      AS team_inactivated_date,
+    source.is_deleted,
     DATE_TRUNC('day', source.valid_from) AS valid_from,
     COALESCE(DATE_TRUNC('day', source.valid_to),
       {{ var('tomorrow') }}
@@ -69,7 +73,7 @@ recursive_hierarchy AS (
     TO_ARRAY(root.team_name)   AS upstream_organization_names
   FROM team_superior_change AS root
   WHERE team_superior_team_id IS NULL
-  
+
   UNION ALL
 
   SELECT
@@ -138,8 +142,8 @@ team_hierarchy AS (
 final AS (
 
   SELECT
-    team_hierarchy.team_id,
-    team_hierarchy.team_superior_team_id,
+    team_data.team_id,
+    team_data.team_superior_team_id,
     team_hierarchy.hierarchy_level_1,
     team_hierarchy.hierarchy_level_2,
     team_hierarchy.hierarchy_level_3,
@@ -165,11 +169,12 @@ final AS (
     team_data.team_manager_name,
     team_data.team_manager_name_id,
     team_data.team_inactivated_date,
+    IFF(team_data.team_inactivated_date IS NULL, TRUE, FALSE)           AS is_team_active,
     GREATEST(team_hierarchy.hierarchy_valid_from, team_data.valid_from) AS valid_from,
     LEAST(team_hierarchy.hierarchy_valid_to, team_data.valid_to)        AS valid_to,
-    IFF(DATE(valid_to) = {{ var('tomorrow') }}, TRUE, FALSE)            AS is_current
-  FROM team_hierarchy
-  LEFT JOIN team_data
+    IFF(DATE(valid_to) = {{ var('tomorrow') }}, TRUE, FALSE)  AS is_current
+  FROM team_data
+  LEFT JOIN team_hierarchy
     ON team_hierarchy.team_id = team_data.team_id
       AND (
         CASE
