@@ -28,6 +28,45 @@ include:
 # ======
 # Snowflake Database Clones
 # ======
+.snowflake_dbt_jobs: &snowflake_dbt_jobs
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.22
+  stage: ⚙️ dbt Run
+  before_script:
+    - cd transform/snowflake-dbt/
+    - echo $BRANCH_NAME
+    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_PREP_DATABASE="PREP"; else export SNOWFLAKE_PREP_DATABASE="${CI_COMMIT_REF_NAME^^}_PREP"; fi
+    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_PROD_DATABASE="PROD"; else export SNOWFLAKE_PROD_DATABASE="${CI_COMMIT_REF_NAME^^}_PROD"; fi
+    - echo $SNOWFLAKE_PREP_DATABASE
+    - echo $SNOWFLAKE_PROD_DATABASE
+    - export SNOWFLAKE_LOAD_DATABASE="RAW" # dbt pulls from RAW
+    - echo $SNOWFLAKE_LOAD_DATABASE
+    - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_XS_WAREHOUSE
+    - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
+    - export SNOWFLAKE_SNAPSHOT_DATABASE="SNOWFLAKE"
+    - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
+    - echo $CI_PROFILE_TARGET
+    - mkdir -p ~/.ssh
+    - touch ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh
+    - echo "$GIT_DATA_TESTS_SSH_PRIVATE_KEY" | base64 --decode > ~/.ssh/id_rsa # decodes key from base64
+    - chmod 0400 ~/.ssh/id_rsa # Makes key read only
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config # Adds gitlab.com as known host
+  after_script:
+    - cd $CI_PROJECT_DIR/transform/snowflake-dbt/
+    - mkdir -p $CI_PROJECT_DIR/public/dbt/
+    - cp -r target $CI_PROJECT_DIR/public/dbt/
+  tags:
+    - analytics
+  only:
+    - merge_requests
+  when: manual
+  artifacts:
+    name: "dbt Compiled Files"
+    paths:
+      - public
+    expire_in: 1 week
+    when: always
 
 # Template for cloning databases in Snowflake for use in MRs
 .snowflake_clone_template: &snowflake_clone_template
@@ -71,6 +110,25 @@ include:
     - manage_snowflake.py manage_clones --database prod --empty
     - manage_snowflake.py manage_clones --database prep --empty
   when: always
+
+.deps_and_seed: &deps_and_seed
+  - python3 macro_name_check.py
+  - dbt deps $CI_PROFILE_TARGET
+  - dbt seed --full-refresh $CI_PROFILE_TARGET #seed data from csv
+  - dbt --warn-error run-operation tag_validation --profiles-dir profile --target ci
+
+
+🐭specify_model:
+  <<: *snowflake_dbt_jobs
+  script:
+    - *deps_and_seed
+    - echo $DBT_MODELS
+    - echo $CI_MERGE_REQUEST_DIFF_BASE_SHA
+    - echo $CI_COMMIT_BEFORE_SHA
+    - dbt run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --models $DBT_MODELS || FAILED=true
+    - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
+
 
 📈❗️clone_prod_real:
   <<: *snowflake_start_clone
