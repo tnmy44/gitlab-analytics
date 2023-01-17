@@ -2240,6 +2240,18 @@ roles:
                 read:
                     - static.sensitive.*
 
+    - static_sensitive_readonly:
+        privileges:
+            databases:
+                read:
+                    - static
+            schemas:
+                read:
+                    - static.sensitive
+            tables:
+                read:
+                    - static.sensitive.*
+
     - static_admin:
         member_of:
             - static
@@ -2983,6 +2995,7 @@ roles:
             - loader
             - reporter
             - transformer
+            - static_sensitive_readonly
         warehouses:
             - loading
             - dev_l
@@ -4779,6 +4792,7 @@ users:
             - data_science_loader
             - sales_analytics
             - reporter
+            - static_sensitive_readonly
 
     - alpcohen:
         can_login: yes
