@@ -182,9 +182,6 @@ final AS (
 
 )
 
-SELECT *
-FROM final
-
 
 {{ dbt_audit(
     cte_ref="final",
