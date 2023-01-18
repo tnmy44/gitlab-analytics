@@ -82,7 +82,6 @@ SELECT
   ptpt_past_score_group,
 
   -- Namespace notification dates
-  user_limit_namespace_id,
   user_limit_notification_at,
   user_limit_enforcement_at,
   is_impacted_by_user_limit,

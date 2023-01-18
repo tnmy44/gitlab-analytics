@@ -988,7 +988,6 @@
       'ptpt_past_score_group',
       'is_member_of_public_ultimate_parent_namespace',
       'is_member_of_private_ultimate_parent_namespace',
-      'user_limit_namespace_id',
       'user_limit_notification_at',
       'user_limit_enforcement_at',
       'is_impacted_by_user_limit',
