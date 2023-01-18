@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import json
 import argparse
+import os
+import subprocess
 from os import environ as env
 from typing import Dict, List
 
@@ -13,13 +15,19 @@ from gitlabdata.orchestration_utils import data_science_engine_factory
 
 from simple_dependency_resolver.simple_dependency_resolver import DependencyResolver
 
+def get_git_branch(path=None):
+    if path is None:
+        path = os.path.curdir
+    command = 'git rev-parse --abbrev-ref HEAD'.split()
+    branch = subprocess.Popen(command, stdout=subprocess.PIPE, cwd=path).stdout.read()
+    return branch.strip().decode('utf-8')
+
 
 class DbtModelClone:
     """"""
 
     def __init__(self, config_vars: Dict):
-        self.environment = config_vars["ENVIRONMENT"]
-
+        self.environment = config_vars["ENVIRONMENT"].upper()
         if self.environment == "CI":
 
             self.engine = create_engine(
@@ -32,13 +40,17 @@ class DbtModelClone:
                     )
             )
 
+            # Snowflake database name should be in CAPS
+            # see https://gitlab.com/meltano/analytics/issues/491
+            self.branch_name = config_vars["GIT_BRANCH"].upper()
+
         elif self.environment == "LOCAL":
 
             self.engine = data_science_engine_factory()
+            # Snowflake database name should be in CAPS
+            # see https://gitlab.com/meltano/analytics/issues/491
+            self.branch_name = get_git_branch().upper()
 
-        # Snowflake database name should be in CAPS
-        # see https://gitlab.com/meltano/analytics/issues/491
-        self.branch_name = config_vars["GIT_BRANCH"].upper()
         self.prep_database = f"{self.branch_name}_PREP"
         self.prod_database = f"{self.branch_name}_PROD"
         self.raw_database = f"{self.branch_name}_RAW"
@@ -158,6 +170,12 @@ class DbtModelClone:
             schema_name = i.get("schema").upper()
             table_name = i.get("name").upper()
             config = i.get("config")
+
+            if "PROD" in database_name:
+                database_name = "PROD"
+
+            if "PREP" in database_name:
+                database_name = "PREP"
 
             if config:
                 alias = config.get("alias")

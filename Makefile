@@ -4,6 +4,7 @@ SHELL:=/bin/zsh
 TEST_FOLDERS_PATH := $(shell eval find . -name "test" -type d)
 PATH := $(PATH):$(PWD):$(TEST_FOLDERS_PATH)
 GIT_BRANCH = $$(git symbolic-ref --short HEAD)
+EVALUATED_BRANCH = $(git symbolic-ref --short HEAD)
 DOCKER_UP = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose up"
 DOCKER_DOWN = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose down"
 DOCKER_RUN = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose run"
@@ -12,6 +13,7 @@ DBT_DEPS = "cd transform/snowflake-dbt/ && poetry run dbt clean && poetry run db
 .EXPORT_ALL_VARIABLES:
 DATA_TEST_BRANCH=main
 DATA_SIREN_BRANCH=master
+ENVIRONMENT=LOCAL
 SNOWFLAKE_SNAPSHOT_DATABASE=SNOWFLAKE
 SNOWFLAKE_LOAD_DATABASE=RAW
 SNOWFLAKE_PREP_DATABASE=PREP
@@ -123,6 +125,7 @@ prepare-dbt-fix:
 	"$(DBT_DEPS)"
 
 run-dbt-no-deps:
+	export GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 	cd transform/snowflake-dbt/ && poetry shell;
 
 dbt-deps:
