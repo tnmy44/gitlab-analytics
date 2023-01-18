@@ -144,7 +144,7 @@ WITH map_merged_crm_account AS (
       decile                                                                                                   AS decile,
       score_group                                                                                              AS score_group,
       MIN(score_date)                                                                                          AS valid_from,
-      COALESCE(LEAD(valid_from) OVER (PARTITION BY crm_account_id ORDER BY valid_from), CURRENT_DATE())        AS valid_to,
+      COALESCE(LEAD(valid_from) OVER (PARTITION BY crm_account_id ORDER BY valid_from), {{ var('tomorrow') }}) AS valid_to,
       CASE 
         WHEN ROW_NUMBER() OVER (PARTITION BY crm_account_id ORDER BY valid_from DESC) = 1 
           THEN TRUE
@@ -163,7 +163,7 @@ WITH map_merged_crm_account AS (
       decile                                                                                                   AS decile,
       score_group                                                                                              AS score_group,
       MIN(score_date)                                                                                          AS valid_from,
-      COALESCE(LEAD(valid_from) OVER (PARTITION BY crm_account_id ORDER BY valid_from), CURRENT_DATE())        AS valid_to,
+      COALESCE(LEAD(valid_from) OVER (PARTITION BY crm_account_id ORDER BY valid_from), {{ var('tomorrow') }}) AS valid_to,
       CASE 
         WHEN ROW_NUMBER() OVER (PARTITION BY crm_account_id ORDER BY valid_from DESC) = 1 
           THEN TRUE
