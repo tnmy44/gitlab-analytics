@@ -161,7 +161,7 @@ class SnowflakeManager:
             "raw": self.raw_database,
         }
         
-        logging.info(dir())
+        logging.info(databases)
 
     def delete_clones(self):
         """
