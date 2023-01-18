@@ -9,6 +9,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import ProgrammingError
 from loguru import logger
 from gitlabdata.orchestration_utils import query_executor
+from gitlabdata.orchestration_utils import data_science_engine_factory
 
 from simple_dependency_resolver.simple_dependency_resolver import DependencyResolver
 
@@ -17,19 +18,27 @@ class DbtModelClone:
     """"""
 
     def __init__(self, config_vars: Dict):
-        self.engine = create_engine(
-            URL(
-                user=config_vars["SNOWFLAKE_USER"],
-                password=config_vars["SNOWFLAKE_PASSWORD"],
-                account=config_vars["SNOWFLAKE_ACCOUNT"],
-                role=config_vars["SNOWFLAKE_SYSADMIN_ROLE"],
-                warehouse=config_vars["SNOWFLAKE_LOAD_WAREHOUSE"],
+        self.environment = config_vars["ENVIRONMENT"]
+
+        if self.environment == "CI":
+
+            self.engine = create_engine(
+                    URL(
+                            user=config_vars["SNOWFLAKE_USER"],
+                            password=config_vars["SNOWFLAKE_PASSWORD"],
+                            account=config_vars["SNOWFLAKE_ACCOUNT"],
+                            role=config_vars["SNOWFLAKE_SYSADMIN_ROLE"],
+                            warehouse=config_vars["SNOWFLAKE_LOAD_WAREHOUSE"],
+                    )
             )
-        )
+
+        elif self.environment == "LOCAL":
+
+            self.engine = data_science_engine_factory()
 
         # Snowflake database name should be in CAPS
         # see https://gitlab.com/meltano/analytics/issues/491
-        self.branch_name = config_vars["BRANCH_NAME"].upper()
+        self.branch_name = config_vars["GIT_BRANCH"].upper()
         self.prep_database = f"{self.branch_name}_PREP"
         self.prod_database = f"{self.branch_name}_PROD"
         self.raw_database = f"{self.branch_name}_RAW"

@@ -14,6 +14,8 @@
     - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     - export SNOWFLAKE_SNAPSHOT_DATABASE="SNOWFLAKE"
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - export ENVIRONMENT="CI"
+    - echo $ENVIRONMENT
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
     - mkdir -p ~/.ssh
