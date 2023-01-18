@@ -154,14 +154,25 @@ class SnowflakeManager:
                 self.clone_stages(create_db, database, schema)
     
     def grant_clones(self):
+        """
+        Grant privildges on a clone.
+        """
+        db_list = [
+            self.prep_database,
+            self.prod_database,
+            self.raw_database,
+        ]
 
-        databases = {
-            "prep": self.prep_database,
-            "prod": self.prod_database,
-            "raw": self.raw_database,
-        }
-        
-        logging.info(databases)
+        for db in db_list:
+            query = 'show grants on database prod; select 1;'
+            try:
+                logging.info("Executing Query: {}".format(query))
+                connection = self.engine.connect()
+                [result] = connection.execute(query).fetchone()
+                logging.info("Query Result: {}".format(result))
+            finally:
+                connection.close()
+                self.engine.dispose()
 
     def delete_clones(self):
         """
