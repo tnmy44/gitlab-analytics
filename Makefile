@@ -4,7 +4,6 @@ SHELL:=/bin/zsh
 TEST_FOLDERS_PATH := $(shell eval find . -name "test" -type d)
 PATH := $(PATH):$(PWD):$(TEST_FOLDERS_PATH)
 GIT_BRANCH = $$(git symbolic-ref --short HEAD)
-EVALUATED_BRANCH = $(git symbolic-ref --short HEAD)
 DOCKER_UP = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose up"
 DOCKER_DOWN = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose down"
 DOCKER_RUN = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose run"
