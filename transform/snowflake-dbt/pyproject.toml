@@ -8,9 +8,12 @@ authors = []
 python = "^3.8.0"
 dbt-snowflake = "1.1.0"
 gitlabdata = "0.3.13"
+loguru = "0.6.0"
 pandas = "1.4.2"
 requests = "2.27.1"
+SQLAlchemy = "1.4.37"
 sqlfluff = "1.4.5"
 sqlfluff-templater-dbt = "1.4.5"
+simple-dependency-resolver = "0.1.1"
 urllib3 = "1.26.9"
 
