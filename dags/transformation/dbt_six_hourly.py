@@ -4,7 +4,6 @@ This DAG is responsible for running a six-hourly refresh on models tagged
 with the "six_hourly" label from Monday to Saturday.
 """
 
-import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
@@ -12,7 +11,6 @@ from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOpera
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
-    dbt_install_deps_cmd,
     dbt_install_deps_nosha_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
@@ -40,12 +38,7 @@ from kube_secrets import (
     SNOWFLAKE_USER,
 )
 
-env = os.environ.copy()
-
-GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
-
-
 
 
 # Default arguments for the DAG
@@ -93,7 +86,6 @@ dag = DAG(
     schedule_interval="0 */6 * * 1-6",
 )
 
-dag.doc_md = __doc__
 
 # run sfdc_opportunity models on large warehouse
 dbt_six_hourly_models_command = f"""
