@@ -168,10 +168,11 @@ class SnowflakeManager:
             'create or replace temporary table raw.public.temp_grants_table as select * from table (result_scan(last_query_id()))',
         ]
 
+        connection = self.engine.connect()
+        
         try:
             for query in queries:
                 logging.info("Executing Query: {}".format(query))
-                connection = self.engine.connect()
                 connection.execute(query)
                 # logging.info("Query Result: {}".format(result))
         finally:
