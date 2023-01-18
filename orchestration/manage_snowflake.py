@@ -173,7 +173,7 @@ class SnowflakeManager:
                 logging.info("Executing Query: {}".format(query))
                 connection = self.engine.connect()
                 [result] = connection.execute(query).fetchone()
-                logging.info("Query Result: {}".format(result))
+                # logging.info("Query Result: {}".format(result))
         finally:
             connection.close()
             self.engine.dispose()
