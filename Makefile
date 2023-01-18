@@ -12,7 +12,6 @@ DBT_DEPS = "cd transform/snowflake-dbt/ && poetry run dbt clean && poetry run db
 .EXPORT_ALL_VARIABLES:
 DATA_TEST_BRANCH=main
 DATA_SIREN_BRANCH=master
-ENVIRONMENT=LOCAL
 SNOWFLAKE_SNAPSHOT_DATABASE=SNOWFLAKE
 SNOWFLAKE_LOAD_DATABASE=RAW
 SNOWFLAKE_PREP_DATABASE=PREP
@@ -124,7 +123,16 @@ prepare-dbt-fix:
 	"$(DBT_DEPS)"
 
 run-dbt-no-deps:
-	export GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	cd transform/snowflake-dbt/ && poetry shell;
+
+clone-dbt-select-local-branch:
+	echo $(DBT_MODELS)
+	cd transform/snowflake-dbt/ && poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id config"
+	cd transform/snowflake-dbt/ && export ENVIRONMENT="LOCAL_BRANCH" && poetry run ../../orchestration/clone_dbt_models_select.py $INPUT;
+
+clone-dbt-select-local-user:
+	export ENVIRONMENT="LOCAL_USER"
+	INPUT=$(dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id config")
 	cd transform/snowflake-dbt/ && poetry shell;
 
 dbt-deps:

@@ -15,6 +15,7 @@ from gitlabdata.orchestration_utils import data_science_engine_factory
 
 from simple_dependency_resolver.simple_dependency_resolver import DependencyResolver
 
+
 def get_git_branch(path=None):
     if path is None:
         path = os.path.curdir
@@ -44,12 +45,18 @@ class DbtModelClone:
             # see https://gitlab.com/meltano/analytics/issues/491
             self.branch_name = config_vars["GIT_BRANCH"].upper()
 
-        elif self.environment == "LOCAL":
+        elif self.environment == "LOCAL_BRANCH":
 
             self.engine = data_science_engine_factory()
             # Snowflake database name should be in CAPS
             # see https://gitlab.com/meltano/analytics/issues/491
             self.branch_name = get_git_branch().upper()
+
+        elif self.environment == "LOCAL_USER":
+
+            self.engine = data_science_engine_factory()
+
+            self.branch_name = self.engine.url.database.replace('/', '').upper()
 
         self.prep_database = f"{self.branch_name}_PREP"
         self.prod_database = f"{self.branch_name}_PROD"
