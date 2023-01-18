@@ -169,7 +169,7 @@ class SnowflakeManager:
         ]
 
         try:
-            for query in queries
+            for query in queries:
                 logging.info("Executing Query: {}".format(query))
                 connection = self.engine.connect()
                 [result] = connection.execute(query).fetchone()
