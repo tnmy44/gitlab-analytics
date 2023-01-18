@@ -165,7 +165,7 @@ class SnowflakeManager:
 
         queries = [
             'show grants on database prod;',
-            'create or replace temporary table temp_grants_table as select * from table (result_scan(last_query_id()))',
+            'create or replace temporary table raw.public.temp_grants_table as select * from table (result_scan(last_query_id()))',
         ]
 
         try:
