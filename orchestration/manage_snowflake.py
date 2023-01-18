@@ -163,16 +163,20 @@ class SnowflakeManager:
             self.raw_database,
         ]
 
-        for db in db_list:
-            query = 'show grants on database prod; select 1;'
-            try:
+        queries = [
+            'show grants on database prod;',
+            'create or replace temporary table temp_grants_table as select * from table (result_scan(last_query_id()))',
+        ]
+
+        try:
+            for query in queries
                 logging.info("Executing Query: {}".format(query))
                 connection = self.engine.connect()
                 [result] = connection.execute(query).fetchone()
                 logging.info("Query Result: {}".format(result))
-            finally:
-                connection.close()
-                self.engine.dispose()
+        finally:
+            connection.close()
+            self.engine.dispose()
 
     def delete_clones(self):
         """
