@@ -24,13 +24,13 @@ class DbtModelClone:
         if self.environment == "CI":
 
             self.engine = create_engine(
-                    URL(
-                            user=config_vars["SNOWFLAKE_USER"],
-                            password=config_vars["SNOWFLAKE_PASSWORD"],
-                            account=config_vars["SNOWFLAKE_ACCOUNT"],
-                            role=config_vars["SNOWFLAKE_SYSADMIN_ROLE"],
-                            warehouse=config_vars["SNOWFLAKE_LOAD_WAREHOUSE"],
-                    )
+                URL(
+                    user=config_vars["SNOWFLAKE_USER"],
+                    password=config_vars["SNOWFLAKE_PASSWORD"],
+                    account=config_vars["SNOWFLAKE_ACCOUNT"],
+                    role=config_vars["SNOWFLAKE_SYSADMIN_ROLE"],
+                    warehouse=config_vars["SNOWFLAKE_LOAD_WAREHOUSE"],
+                )
             )
 
             # Snowflake database name should be in CAPS
@@ -48,7 +48,7 @@ class DbtModelClone:
 
             self.engine = data_science_engine_factory()
 
-            self.branch_name = self.engine.url.database.replace('/', '').upper()
+            self.branch_name = self.engine.url.database.replace("/", "").upper()
 
         self.prep_database = f"{self.branch_name}_PREP"
         self.prod_database = f"{self.branch_name}_PROD"
