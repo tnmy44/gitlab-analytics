@@ -288,6 +288,7 @@ WITH first_contact  AS (
       new_logo_count,
       user_segment_stamped,
       user_segment_stamped_grouped,
+      user_business_unit_stamped,
       user_geo_stamped,
       user_region_stamped,
       user_area_stamped,

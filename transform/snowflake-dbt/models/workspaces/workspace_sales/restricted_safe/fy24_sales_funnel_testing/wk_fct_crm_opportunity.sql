@@ -232,7 +232,7 @@
       sfdc_opportunity.days_in_stage,
       sfdc_opportunity.calculated_age_in_days,
       sfdc_opportunity.days_since_last_activity,
-      prep_crm_user_hierarchy_stamped.crm_opp_owner_hierarchy_key
+      prep_crm_user_hierarchy_stamped.dim_crm_user_hierarchy_sk
 
     FROM sfdc_opportunity
     LEFT JOIN crm_account_dimensions
