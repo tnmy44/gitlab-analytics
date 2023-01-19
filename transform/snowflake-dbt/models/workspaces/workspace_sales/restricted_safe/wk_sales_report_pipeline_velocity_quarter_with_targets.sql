@@ -26,7 +26,8 @@ WITH report_pipeline_velocity_quarter AS (
 -- keys used for aggregated historical analysis
 
     SELECT *
-    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }} 
+   -- FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
+   FROM {{ ref('wk_sales_report_agg_keys_fy22_fy23') }} 
 
 ), sfdc_opportunity_xf AS (
   
