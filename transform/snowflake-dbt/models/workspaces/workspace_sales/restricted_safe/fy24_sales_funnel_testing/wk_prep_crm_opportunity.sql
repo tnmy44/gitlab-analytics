@@ -171,7 +171,11 @@ WITH first_contact  AS (
 
    SELECT 
      sfdc_opportunity_source.*,
-     NULL AS user_business_unit_stamped
+     CASE
+       WHEN close_date >= '2023-02-01'
+         THEN 'COMM'
+       ELSE NULL
+     END AS user_business_unit_stamped
    FROM {{ ref('sfdc_opportunity_source')}}
 
    UNION ALL 
@@ -1288,30 +1292,43 @@ WITH first_contact  AS (
       ELSE 'SMB'
     END AS account_owner_team_stamped_cro_level,
     CASE
-      WHEN close_date.fiscal_year BETWEEN '2021' AND '2023'
+      WHEN sfdc_opportunity.close_date < '2023-02-01'
         THEN CONCAT(
                     sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_geo_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_region_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_area_stamped
                     )
-      WHEN close_date.fiscal_year >= 2024 AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'comm'
+      WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'comm'
         THEN CONCAT(
                     sfdc_opportunity.crm_opp_owner_business_unit_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_geo_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_region_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_area_stamped,
-                    sfdc_opportunity.crm_opp_owner_user_role_type_stamped
+                    '-',
+                    COALESCE(sfdc_opportunity.crm_opp_owner_user_role_type_stamped, 'placeholder') -- Added due to data quality issues in testing prior to FY switch
                     )
-      WHEN close_date.fiscal_year >= 2024 AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'entg'
+      WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'entg'
         THEN CONCAT(
                     sfdc_opportunity.crm_opp_owner_business_unit_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_geo_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_region_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_area_stamped,
+                    '-',
                     sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
-                    sfdc_opportunity.crm_opp_owner_user_role_type_stamped
+                    '-',
+                    COALESCE(sfdc_opportunity.crm_opp_owner_user_role_type_stamped, 'placeholder') -- Added due to data quality issues in testing prior to FY switch
                     )
     END AS dim_crm_opp_owner_hierarchy_sk
 
@@ -1349,7 +1366,6 @@ WITH first_contact  AS (
     LEFT JOIN net_iacv_to_net_arr_ratio
       ON live_opportunity_owner_fields.opportunity_owner_user_segment = net_iacv_to_net_arr_ratio.user_segment_stamped
         AND sfdc_opportunity.order_type = net_iacv_to_net_arr_ratio.order_type
-    
 
 )
 

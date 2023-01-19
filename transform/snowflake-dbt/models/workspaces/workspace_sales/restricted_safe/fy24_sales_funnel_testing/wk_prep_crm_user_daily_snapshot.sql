@@ -82,24 +82,37 @@
       CASE
         WHEN sfdc_users.snapshot_fiscal_year BETWEEN '2021' AND '2023'
           THEN CONCAT(sfdc_users.user_segment, 
+                      '-',
                       sfdc_users.user_geo, 
+                      '-',
                       sfdc_users.user_region, 
+                      '-',
                       sfdc_users.user_area
                       )
         WHEN sfdc_users.snapshot_fiscal_year >= 2024 AND LOWER(sfdc_users.user_business_unit) = 'comm'
           THEN CONCAT(sfdc_users.user_business_unit, 
+                      '-',
                       sfdc_users.user_geo, 
+                      '-',
                       sfdc_users.user_region, 
+                      '-',
                       sfdc_users.user_segment, 
+                      '-',
                       sfdc_users.user_area,
+                      '-',
                       sfdc_users.user_role_type
                       )
         WHEN sfdc_users.snapshot_fiscal_year >= 2024 AND LOWER(sfdc_users.user_business_unit) = 'entg'
           THEN CONCAT(sfdc_users.user_business_unit, 
+                      '-',
                       sfdc_users.user_geo, 
+                      '-',
                       sfdc_users.user_region, 
+                      '-',
                       sfdc_users.user_area, 
+                      '-',
                       sfdc_users.user_segment, 
+                      '-',
                       sfdc_users.user_role_type
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk

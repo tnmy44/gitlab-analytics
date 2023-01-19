@@ -20,21 +20,13 @@
 ), sheetload_sales_funnel_targets_matrix_source AS (
 
     SELECT 
-      sheetload_sales_funnel_targets_matrix_source.*,
-      CONCAT(sheetload_sales_funnel_targets_matrix_source.user_segment, 
-             '-',
-             sheetload_sales_funnel_targets_matrix_source.user_geo, 
-             '-', 
-             sheetload_sales_funnel_targets_matrix_source.user_region, 
-             '-', 
-             sheetload_sales_funnel_targets_matrix_source.user_area)        AS user_segment_geo_region_area
+      sheetload_sales_funnel_targets_matrix_source.*
     FROM {{ ref('sheetload_sales_funnel_targets_matrix_source') }}
 
 ), sheetload_sales_funnel_partner_alliance_targets_matrix_source AS (
 
     SELECT 
-      sheetload_sales_funnel_partner_alliance_targets_matrix_source.*,
-      sheetload_sales_funnel_partner_alliance_targets_matrix_source.area    AS user_segment_geo_region_area
+      sheetload_sales_funnel_partner_alliance_targets_matrix_source.*
     FROM {{ ref('sheetload_sales_funnel_partner_alliance_targets_matrix_source') }}
   
 ), user_hierarchy_source AS (
@@ -45,11 +37,14 @@
       wk_prep_crm_user_daily_snapshot.crm_user_geo AS user_geo,
       wk_prep_crm_user_daily_snapshot.crm_user_region AS user_region,
       wk_prep_crm_user_daily_snapshot.crm_user_area AS user_area,
-      wk_prep_crm_user_daily_snapshot.crm_user_sales_segment_geo_region_area AS user_segment_geo_region_area,
       wk_prep_crm_user_daily_snapshot.crm_user_business_unit AS user_business_unit,
       wk_prep_crm_user_daily_snapshot.user_role_type AS user_role_type,
       wk_prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk
     FROM wk_prep_crm_user_daily_snapshot
+    WHERE wk_prep_crm_user_daily_snapshot.crm_user_sales_segment IS NOT NULL
+      AND wk_prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
+      AND wk_prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
+      AND wk_prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
 
 ), user_hierarchy_sheetload AS (
 /*
@@ -61,30 +56,46 @@
       sheetload_sales_funnel_targets_matrix_source.user_geo,
       sheetload_sales_funnel_targets_matrix_source.user_region,
       sheetload_sales_funnel_targets_matrix_source.user_area,
-      sheetload_sales_funnel_targets_matrix_source.user_segment_geo_region_area,
-      'none' AS user_business_unit,
+      CASE
+        WHEN fiscal_months.fiscal_year >= 2024
+          THEN 'COMM'
+        ELSE 'none'
+      END AS user_business_unit,
       'none' AS user_role_type,
       CASE
         WHEN fiscal_months.fiscal_year BETWEEN '2021' AND '2023'
           THEN CONCAT(sheetload_sales_funnel_targets_matrix_source.user_segment, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_geo, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_region, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_area
                       )
         WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(user_business_unit) = 'comm'
           THEN CONCAT(user_business_unit, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_geo, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_region, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_segment, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_area,
+                      '-',
                       user_role_type
                       )
         WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(user_business_unit) = 'entg'
           THEN CONCAT(user_business_unit, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_geo, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_region, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_area, 
+                      '-',
                       sheetload_sales_funnel_targets_matrix_source.user_segment, 
+                      '-',
                       user_role_type
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk
@@ -107,30 +118,42 @@
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo,
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region,
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area,
-      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment_geo_region_area,
       'none' AS user_business_unit,
       'none' AS user_role_type,
       CASE
         WHEN fiscal_months.fiscal_year BETWEEN '2021' AND '2023'
-          THEN CONCAT(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment, 
+          THEN CONCAT(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment,
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo, 
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region, 
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area
                       )
         WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(user_business_unit) = 'comm'
-          THEN CONCAT(user_business_unit, 
+          THEN CONCAT(user_business_unit,
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo, 
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region, 
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment, 
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area,
+                      '-',
                       user_role_type
                       )
         WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(user_business_unit) = 'entg'
-          THEN CONCAT(user_business_unit, 
+          THEN CONCAT(user_business_unit,
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo, 
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region, 
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area, 
+                      '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment, 
+                      '-',
                       user_role_type
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk
@@ -150,7 +173,6 @@
       wk_prep_crm_opportunity.user_geo_stamped                      AS user_geo,
       wk_prep_crm_opportunity.user_region_stamped                   AS user_region,
       wk_prep_crm_opportunity.user_area_stamped                     AS user_area,
-      wk_prep_crm_opportunity.user_segment_geo_region_area_stamped  AS user_segment_geo_region_area,
       wk_prep_crm_opportunity.user_business_unit_stamped            AS user_business_unit,
       wk_prep_crm_opportunity.crm_opp_owner_user_role_type_stamped  AS user_role_type,
       wk_prep_crm_opportunity.dim_crm_opp_owner_hierarchy_sk        AS dim_crm_user_hierarchy_sk
@@ -185,18 +207,17 @@
     SELECT DISTINCT 
       {{ dbt_utils.surrogate_key(['dim_crm_user_hierarchy_sk']) }}                    AS dim_crm_user_hierarchy_stamped_id,
       dim_crm_user_hierarchy_sk,
-      {{ dbt_utils.surrogate_key(['user_business_unit']) }}                           AS dim_crm_opp_owner_business_unit_stamped_id,
+
       user_business_unit                                                              AS crm_opp_owner_business_unit_stamped,
-      {{ dbt_utils.surrogate_key(['user_segment']) }}                                 AS dim_crm_opp_owner_sales_segment_stamped_id,
+
       user_segment                                                                    AS crm_opp_owner_sales_segment_stamped,
-      {{ dbt_utils.surrogate_key(['user_geo']) }}                                     AS dim_crm_opp_owner_geo_stamped_id,
+
       user_geo                                                                        AS crm_opp_owner_geo_stamped,
-      {{ dbt_utils.surrogate_key(['user_region']) }}                                  AS dim_crm_opp_owner_region_stamped_id,
+
       user_region                                                                     AS crm_opp_owner_region_stamped,
-      {{ dbt_utils.surrogate_key(['user_area']) }}                                    AS dim_crm_opp_owner_area_stamped_id,
+
       user_area                                                                       AS crm_opp_owner_area_stamped,
-      user_segment_geo_region_area                                                    AS crm_opp_owner_sales_segment_geo_region_area_stamped,
-      {{ dbt_utils.surrogate_key(['user_role_type']) }}                               AS dim_crm_opp_owner_role_type_stamped_id,
+
       user_role_type                                                                  AS crm_opp_owner_role_type_stamped,
       CASE
           WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'

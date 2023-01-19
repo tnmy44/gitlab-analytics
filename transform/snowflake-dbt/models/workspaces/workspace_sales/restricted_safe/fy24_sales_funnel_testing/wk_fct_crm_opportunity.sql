@@ -12,26 +12,11 @@
     ('alliance_type', 'prep_alliance_type_scd'),
     ('channel_type', 'prep_channel_type'),
     ('sfdc_opportunity', 'wk_prep_crm_opportunity'),
-    ('prep_crm_user_hierarchy_stamped', 'wk_prep_crm_user_hierarchy_stamped'),
-    ('prep_crm_user_hierarchy_live', 'prep_crm_user_hierarchy_live')
-
+    ('prep_crm_user_hierarchy_stamped', 'wk_prep_crm_user_hierarchy_stamped')
 
 ]) }}
     
-, prep_crm_user_hierarchy_live_prep AS (
-    
-    SELECT 
-      *,
-      'ENTG' AS crm_user_business_unit,
-      CASE 
-        WHEN LOWER(crm_user_business_unit) = 'comm'
-          THEN CONCAT(crm_user_business_unit, crm_user_geo, crm_user_region, crm_user_sales_segment, crm_user_area)
-        WHEN LOWER(crm_user_business_unit) = 'entg'
-          THEN CONCAT(crm_user_business_unit, crm_user_geo, crm_user_region, crm_user_area, crm_user_sales_segment)
-      END AS crm_opp_owner_hierarchy_key
-    FROM {{ ref('prep_crm_user_hierarchy_live') }}
-
-), final_opportunities AS (
+, final_opportunities AS (
 
     SELECT
 
@@ -251,8 +236,6 @@
       ON sfdc_opportunity.sales_segment = sales_segment.sales_segment_name
     LEFT JOIN prep_crm_user_hierarchy_stamped
       ON sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk = prep_crm_user_hierarchy_stamped.dim_crm_user_hierarchy_sk
-    LEFT JOIN prep_crm_user_hierarchy_live_prep
-      ON sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk = prep_crm_user_hierarchy_live_prep.crm_opp_owner_hierarchy_key
     LEFT JOIN dr_partner_engagement
       ON sfdc_opportunity.dr_partner_engagement = dr_partner_engagement.dr_partner_engagement_name
     LEFT JOIN alliance_type
