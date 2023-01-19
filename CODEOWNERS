@@ -19,16 +19,16 @@ LICENSE.md         @rparker2
 README.md          @rparker2 @rparker2 @iweeks @dvanrooijen2 @mlaanen
 
 [Data Engineering]
-/dags/              @paul_armstrong @vedprakash2021
-/extract/           @jjstark @paul_armstrong @vedprakash2021
-/load/              @jjstark @paul_armstrong @vedprakash2021
-/orchestration/     @jjstark @paul_armstrong @vedprakash2021
+/dags/              @paul_armstrong @vedprakash2021 @rbacovic
+/extract/           @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/load/              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/orchestration/     @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /permissions/       @dvanrooijen2 @paul_armstrong @jjstark
-/pump/              @jjstark @paul_armstrong @vedprakash2021
+/pump/              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
-Makefile            @jjstark @paul_armstrong @vedprakash2021
-docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021
-.gitlab-ci.yml      @jjstark @paul_armstrong @vedprakash2021
+Makefile            @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+.gitlab-ci.yml      @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
 
 
@@ -37,15 +37,15 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021
 # ======
 
 [dbt]
-/transform/                                         @jjstark @paul_armstrong @vedprakash2021
-/transform/general/                                 @jjstark @paul_armstrong @vedprakash2021
-/transform/snowflake-dbt/                           @jjstark @paul_armstrong @vedprakash2021 @iweeks @pempey
-/transform/snowflake-dbt/snowflake-dbt-ci.yml       @jjstark @paul_armstrong @vedprakash2021
-/transform/snowflake-dbt/generate_dbt_schema.py     @jjstark @paul_armstrong @vedprakash2021
-/transform/snowflake-dbt/periscope_check.py         @jjstark @paul_armstrong @vedprakash2021
+/transform/                                         @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/transform/general/                                 @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/transform/snowflake-dbt/                           @jjstark @paul_armstrong @vedprakash2021 @iweeks @pempey @rbacovic
+/transform/snowflake-dbt/snowflake-dbt-ci.yml       @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/transform/snowflake-dbt/generate_dbt_schema.py     @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/transform/snowflake-dbt/periscope_check.py         @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
-/transform/snowflake-dbt/analysis/                  @jjstark @paul_armstrong @vedprakash2021
-/transform/snowflake-dbt/docs/                      @jjstark @paul_armstrong @vedprakash2021
+/transform/snowflake-dbt/analysis/                  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/transform/snowflake-dbt/docs/                      @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /transform/snowflake-dbt/macros/                    @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
 
 /transform/snowflake-dbt/models/legacy/bamboohr/    @pempey @iweeks
@@ -95,7 +95,7 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_latest.sql        @tpoole1 @chrissharp @snalamaru @mdrussell @iweeks
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_historical.sql    @tpoole1 @chrissharp @snalamaru @mdrussell @iweeks
 
-/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @vedprakash2021 @rbacovic @jjstark @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks
+/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @vedprakash2021 @rbacovic @jjstark @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks @rbacovic
 /transform/snowflake-dbt/models/legacy/gitlab_dotcom/       @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks
 
 /transform/snowflake-dbt/models/sources/greenhouse/         @jjstark @rigerta @paul_armstrong @pempey @iweeks
