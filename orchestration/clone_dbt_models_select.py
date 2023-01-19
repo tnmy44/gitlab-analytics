@@ -21,7 +21,6 @@ class DbtModelClone:
 
     def __init__(self, config_vars: Dict):
         self.environment = config_vars["ENVIRONMENT"].upper()
-        logger.info()
         if self.environment == "CI":
 
             self.engine = create_engine(
