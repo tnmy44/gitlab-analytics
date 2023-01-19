@@ -18,7 +18,7 @@
 
 ]) }}
     
-, prep_crm_user_hierarchy_live AS (
+, prep_crm_user_hierarchy_live_prep AS (
     
     SELECT 
       *,
@@ -251,8 +251,8 @@
       ON sfdc_opportunity.sales_segment = sales_segment.sales_segment_name
     LEFT JOIN prep_crm_user_hierarchy_stamped
       ON sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk = prep_crm_user_hierarchy_stamped.dim_crm_user_hierarchy_sk
-    LEFT JOIN prep_crm_user_hierarchy_live
-      ON sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk = prep_crm_user_hierarchy_live.dim_crm_opp_owner_hierarchy_sk
+    LEFT JOIN prep_crm_user_hierarchy_live_prep
+      ON sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk = prep_crm_user_hierarchy_live_prep.crm_opp_owner_hierarchy_key
     LEFT JOIN dr_partner_engagement
       ON sfdc_opportunity.dr_partner_engagement = dr_partner_engagement.dr_partner_engagement_name
     LEFT JOIN alliance_type
