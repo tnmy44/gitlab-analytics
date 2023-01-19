@@ -15,8 +15,8 @@ WITH source AS (
         -- logistical information
         is_closed::VARCHAR AS is_closed,
         is_won::VARCHAR AS is_won,
-        close_date::TIMESTAMP_TZ(9) AS close_date,
-        created_date::TIMESTAMP_TZ(9) AS created_date,
+        close_date::VARCHAR AS close_date,
+        created_date::VARCHAR AS created_date,
         days_in_stage::VARCHAR AS days_in_stage,
         deployment_preference::VARCHAR AS deployment_preference,
         generated_source::VARCHAR AS generated_source,
@@ -35,9 +35,9 @@ WITH source AS (
 
         account_owner_team_stamped::VARCHAR AS account_owner_team_stamped,
 
-        sales_accepted_date::TIMESTAMP_TZ(9) AS sales_accepted_date,
+        sales_accepted_date::VARCHAR AS sales_accepted_date,
         sales_path::VARCHAR AS sales_path,
-        sales_qualified_date::TIMESTAMP_TZ(9) AS sales_qualified_date,
+        sales_qualified_date::VARCHAR AS sales_qualified_date,
         iqm_submitted_by_role::VARCHAR AS iqm_submitted_by_role,
 
         sales_type::VARCHAR AS sales_type,
@@ -231,7 +231,8 @@ WITH source AS (
         days_since_last_activity::VARCHAR AS days_since_last_activity,
         is_deleted::VARCHAR AS is_deleted,
         last_activity_date::VARCHAR AS last_activity_date,
-        record_type_id::VARCHAR AS record_type_id
+        record_type_id::VARCHAR AS record_type_id,
+        user_business_unit_stamped::VARCHAR AS user_business_unit_stamped
 
       FROM source
 

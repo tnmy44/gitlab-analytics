@@ -177,7 +177,7 @@ WITH first_contact  AS (
    UNION ALL 
 
    SELECT *
-   FROM {{ ref('fy24_mock_opportunities') }}
+   FROM {{ ref('fy24_mock_opportunities_source') }}
 
 ), sfdc_opportunity AS (
 
@@ -189,6 +189,7 @@ WITH first_contact  AS (
       opportunity_term                                                   AS opportunity_term_base,
       IFF(sales_qualified_source = 'BDR Generated', 'SDR Generated', sales_qualified_source)    AS sales_qualified_source,
       user_segment_stamped                                               AS crm_opp_owner_sales_segment_stamped,
+      user_business_unit_stamped                                         AS crm_opp_owner_business_unit_stamped,
       user_geo_stamped                                                   AS crm_opp_owner_geo_stamped,
       user_region_stamped                                                AS crm_opp_owner_region_stamped,
       user_area_stamped                                                  AS crm_opp_owner_area_stamped,
@@ -197,19 +198,196 @@ WITH first_contact  AS (
       sales_accepted_date::DATE                                          AS sales_accepted_date,
       close_date::DATE                                                   AS close_date,
       net_arr                                                            AS raw_net_arr,
-        CASE
-          WHEN sfdc_opportunity_source.stage_name
-            IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
+      CASE
+        WHEN sfdc_opportunity_prep.stage_name
+          IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
           THEN 1
           ELSE 0
-        END                                                                                         AS is_stage_1_plus,
-        CASE
-          WHEN sfdc_opportunity_source.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
-              THEN 0
-          ELSE 1
-        END                                                                                         AS is_open,
-        {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR", "DEAL_SIZE"])}}
-    FROM {{ ref('sfdc_opportunity_source') }}
+      END                                                                                         AS is_stage_1_plus,
+      CASE
+        WHEN sfdc_opportunity_prep.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
+          THEN 0
+         ELSE 1
+      END                                                                                         AS is_open,
+      opportunity_name,
+      is_closed,
+      days_in_stage,
+      deployment_preference,
+      generated_source,
+      lead_source,
+      merged_opportunity_id,
+      duplicate_opportunity_id,
+      account_owner,
+      opportunity_owner,
+      opportunity_owner_manager,
+      opportunity_owner_department,
+      opportunity_sales_development_representative,
+      opportunity_business_development_representative,
+      opportunity_business_development_representative_lookup,
+      opportunity_development_representative,
+      account_owner_team_stamped,
+      sales_path,
+      sales_qualified_date,
+      iqm_submitted_by_role,
+      sales_type,
+      net_new_source_categories,
+      source_buckets,
+      stage_name,
+      deal_path,
+      acv,
+      amount,
+      closed_deals,
+      competitors,
+      critical_deal_flag,
+      forecast_category_name,
+      forecasted_iacv,
+      iacv_created_date,
+      incremental_acv,
+      pre_covid_iacv,
+      invoice_number,
+      is_refund,
+      is_downgrade,
+      is_swing_deal,
+      is_edu_oss,
+      is_ps_opp,
+      net_incremental_acv,
+      primary_campaign_source_id,
+      probability,
+      professional_services_value,
+      pushed_count,
+      reason_for_loss,
+      reason_for_loss_details,
+      refund_iacv,
+      downgrade_iacv,
+      renewal_acv,
+      renewal_amount,
+      sales_qualified_source_grouped,
+      sqs_bucket_engagement,
+      sdr_pipeline_contribution,
+      solutions_to_be_replaced,
+      technical_evaluation_date,
+      total_contract_value,
+      recurring_amount,
+      true_up_amount,
+      proserv_amount,
+      other_non_recurring_amount,
+      upside_iacv,
+      upside_swing_deal_iacv,
+      is_web_portal_purchase,
+      partner_initiated_opportunity,
+      user_segment,
+      subscription_start_date,
+      subscription_end_date,
+      true_up_value,
+      order_type_live,
+      order_type_grouped,
+      growth_type,
+      arr_basis,
+      arr,
+      days_in_sao,
+      new_logo_count,
+      user_segment_stamped,
+      user_segment_stamped_grouped,
+      user_geo_stamped,
+      user_region_stamped,
+      user_area_stamped,
+      user_segment_region_stamped_grouped,
+      user_segment_geo_region_area_stamped,
+      crm_opp_owner_user_role_type_stamped,
+      crm_opp_owner_stamped_name,
+      crm_account_owner_stamped_name,
+      sao_crm_opp_owner_stamped_name,
+      sao_crm_account_owner_stamped_name,
+      sao_crm_opp_owner_sales_segment_stamped,
+      sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
+      sao_crm_opp_owner_sales_segment_stamped_grouped,
+      sao_crm_opp_owner_geo_stamped,
+      sao_crm_opp_owner_region_stamped,
+      sao_crm_opp_owner_area_stamped,
+      sao_crm_opp_owner_segment_region_stamped_grouped,
+      opportunity_category,
+      opportunity_health,
+      risk_type,
+      risk_reasons,
+      tam_notes,
+      primary_solution_architect,
+      product_details,
+      product_category,
+      products_purchased,
+      opportunity_deal_size,
+      payment_schedule,
+      comp_y2_iacv,
+      comp_new_logo_override,
+      is_pipeline_created_eligible,
+      sales_segment,
+      parent_segment,
+      days_in_0_pending_acceptance,
+      days_in_1_discovery,
+      days_in_2_scoping,
+      days_in_3_technical_evaluation,
+      days_in_4_proposal,
+      days_in_5_negotiating,
+      stage_0_pending_acceptance_date,
+      stage_1_discovery_date,
+      stage_2_scoping_date,
+      stage_3_technical_evaluation_date,
+      stage_4_proposal_date,
+      stage_5_negotiating_date,
+      stage_6_awaiting_signature_date,
+      stage_6_closed_won_date,
+      stage_6_closed_lost_date,
+      division_sales_segment_stamped,
+      dr_partner_deal_type,
+      dr_partner_engagement,
+      dr_deal_id,
+      dr_primary_registration,
+      channel_type,
+      partner_account,
+      dr_status,
+      distributor,
+      influence_partner,
+      fulfillment_partner,
+      platform_partner,
+      partner_track,
+      resale_partner_track,
+      is_public_sector_opp,
+      is_registration_from_portal,
+      calculated_discount,
+      partner_discount,
+      partner_discount_calc,
+      comp_channel_neutral,
+      cp_champion,
+      cp_close_plan,
+      cp_competition,
+      cp_decision_criteria,
+      cp_decision_process,
+      cp_economic_buyer,
+      cp_help,
+      cp_identify_pain,
+      cp_metrics,
+      cp_partner,
+      cp_paper_process,
+      cp_review_notes,
+      cp_risks,
+      cp_use_cases,
+      cp_value_driver,
+      cp_why_do_anything_at_all,
+      cp_why_gitlab,
+      cp_why_now,
+      cp_score,
+      sa_tech_evaluation_close_status,
+      sa_tech_evaluation_end_date,
+      sa_tech_evaluation_start_date,
+      fpa_master_bookings_flag,
+      downgrade_reason,
+      ssp_id,
+      ga_client_id,
+      _last_dbt_run,
+      days_since_last_activity,
+      is_deleted,
+      last_activity_date,
+      record_type_id
+    FROM sfdc_opportunity_prep
     WHERE account_id IS NOT NULL
       AND is_deleted = FALSE
 
@@ -1109,12 +1287,31 @@ WITH first_contact  AS (
       ELSE 'SMB'
     END AS account_owner_team_stamped_cro_level,
     CASE
-      WHEN sfdc_opportunity.close_date BETWEEN '2022-02-01' AND '2023-01-31'
-        THEN CONCAT(sfdc_opportunity.crm_opp_owner_sales_segment_stamped, sfdc_opportunity.crm_opp_owner_geo_stamped, sfdc_opportunity.crm_opp_owner_region_stamped, sfdc_opportunity.crm_opp_owner_area_stamped, close_date.fiscal_year)
+      WHEN close_date.fiscal_year BETWEEN '2021' AND '2023'
+        THEN CONCAT(
+                    sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
+                    sfdc_opportunity.crm_opp_owner_geo_stamped,
+                    sfdc_opportunity.crm_opp_owner_region_stamped,
+                    sfdc_opportunity.crm_opp_owner_area_stamped
+                    )
       WHEN close_date.fiscal_year >= 2024 AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'comm'
-        THEN CONCAT(sfdc_opportunity.crm_opp_owner_business_unit_stamped, sfdc_opportunity.crm_opp_owner_geo_stamped, sfdc_opportunity.crm_opp_owner_region_stamped, sfdc_opportunity.crm_opp_owner_sales_segment_stamped, sfdc_opportunity.crm_opp_owner_area_stamped, close_date.fiscal_year)
+        THEN CONCAT(
+                    sfdc_opportunity.crm_opp_owner_business_unit_stamped,
+                    sfdc_opportunity.crm_opp_owner_geo_stamped,
+                    sfdc_opportunity.crm_opp_owner_region_stamped,
+                    sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
+                    sfdc_opportunity.crm_opp_owner_area_stamped,
+                    sfdc_opportunity.crm_opp_owner_user_role_type_stamped
+                    )
       WHEN close_date.fiscal_year >= 2024 AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'entg'
-        THEN CONCAT(sfdc_opportunity.crm_opp_owner_business_unit_stamped, sfdc_opportunity.crm_opp_owner_geo_stamped, sfdc_opportunity.crm_opp_owner_region_stamped, sfdc_opportunity.crm_opp_owner_area_stamped, sfdc_opportunity.crm_opp_owner_sales_segment_stamped, close_date.fiscal_year)
+        THEN CONCAT(
+                    sfdc_opportunity.crm_opp_owner_business_unit_stamped,
+                    sfdc_opportunity.crm_opp_owner_geo_stamped,
+                    sfdc_opportunity.crm_opp_owner_region_stamped,
+                    sfdc_opportunity.crm_opp_owner_area_stamped,
+                    sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
+                    sfdc_opportunity.crm_opp_owner_user_role_type_stamped
+                    )
     END AS dim_crm_opp_owner_hierarchy_sk
 
     FROM sfdc_opportunity

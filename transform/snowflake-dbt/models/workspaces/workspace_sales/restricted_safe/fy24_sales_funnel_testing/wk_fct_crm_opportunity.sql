@@ -11,47 +11,14 @@
     ('dr_partner_engagement', 'prep_dr_partner_engagement'),
     ('alliance_type', 'prep_alliance_type_scd'),
     ('channel_type', 'prep_channel_type'),
-    ('prep_crm_opportunity', 'prep_crm_opportunity')
+    ('sfdc_opportunity', 'wk_prep_crm_opportunity'),
+    ('prep_crm_user_hierarchy_stamped', 'wk_prep_crm_user_hierarchy_stamped'),
+    ('prep_crm_user_hierarchy_live', 'prep_crm_user_hierarchy_live')
+
 
 ]) }}
-
-), sfdc_opportunity AS (
-
-    SELECT 
-      *,
-      'ENTG' AS crm_opp_owner_business_unit_stamped,
-      CASE
-        WHEN close_date BETWEEN '2021-02-01' AND '2022-01-31'
-          THEN CONCAT(crm_opp_owner_sales_segment_stamped, crm_opp_owner_geo_stamped, crm_opp_owner_region_stamped, crm_opp_owner_area_stamped, fiscal_year)
-        WHEN close_date BETWEEN '2022-02-01' AND '2023-01-31'
-          THEN CONCAT(crm_opp_owner_sales_segment_stamped, crm_opp_owner_geo_stamped, crm_opp_owner_region_stamped, crm_opp_owner_area_stamped, fiscal_year)
-        WHEN close_date >= '2023-02-01' AND LOWER(crm_opp_owner_business_unit_stamped) = 'comm'
-          THEN CONCAT(crm_opp_owner_business_unit_stamped, crm_opp_owner_geo_stamped, crm_opp_owner_region_stamped, crm_opp_owner_sales_segment_stamped, crm_opp_owner_area_stamped, fiscal_year)
-        WHEN close_date >= '2023-02-01' AND LOWER(crm_opp_owner_business_unit_stamped) = 'entg'
-          THEN CONCAT(crm_opp_owner_business_unit_stamped, crm_opp_owner_geo_stamped, crm_opp_owner_region_stamped, crm_opp_owner_area_stamped, crm_opp_owner_sales_segment_stamped, fiscal_year)
-      END AS crm_opp_owner_hierarchy_key
-    FROM prep_crm_opportunity
-    LEFT JOIN prod.common.dim_date
-      ON prep_crm_opportunity.close_date = dim_date.date_actual
     
-), prep_crm_user_hierarchy_stamped AS (
-    
-    SELECT 
-      *,
-      'ENTG' AS crm_opp_owner_business_unit_stamped,
-      CASE 
-        WHEN fiscal_year = 2022
-          THEN CONCAT(crm_opp_owner_sales_segment_stamped, crm_opp_owner_geo_stamped, crm_opp_owner_region_stamped, crm_opp_owner_area_stamped, fiscal_year)
-        WHEN fiscal_year = 2023
-          THEN CONCAT(crm_opp_owner_sales_segment_stamped, crm_opp_owner_geo_stamped, crm_opp_owner_region_stamped, crm_opp_owner_area_stamped, fiscal_year)
-        WHEN fiscal_year > 2023 AND LOWER(crm_opp_owner_business_unit_stamped) = 'comm'
-          THEN CONCAT(crm_opp_owner_business_unit_stamped, crm_opp_owner_geo_stamped, crm_opp_owner_region_stamped, crm_opp_owner_sales_segment_stamped, crm_opp_owner_area_stamped, fiscal_year)
-        WHEN fiscal_year > 2023 AND LOWER(crm_opp_owner_business_unit_stamped) = 'entg'
-          THEN CONCAT(crm_opp_owner_business_unit_stamped, crm_opp_owner_geo_stamped, crm_opp_owner_region_stamped, crm_opp_owner_area_stamped, crm_opp_owner_sales_segment_stamped, fiscal_year)
-      END AS crm_opp_owner_hierarchy_key
-    FROM {{ ref('prep_crm_user_hierarchy_stamped') }}
-    
-), prep_crm_user_hierarchy_live AS (
+, prep_crm_user_hierarchy_live AS (
     
     SELECT 
       *,
@@ -283,9 +250,9 @@
     LEFT JOIN sales_segment
       ON sfdc_opportunity.sales_segment = sales_segment.sales_segment_name
     LEFT JOIN prep_crm_user_hierarchy_stamped
-      ON sfdc_opportunity.crm_opp_owner_hierarchy_key = prep_crm_user_hierarchy_stamped.crm_opp_owner_hierarchy_key
+      ON sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk = prep_crm_user_hierarchy_stamped.dim_crm_user_hierarchy_sk
     LEFT JOIN prep_crm_user_hierarchy_live
-      ON sfdc_opportunity.crm_opp_owner_hierarchy_key = prep_crm_user_hierarchy_live.crm_opp_owner_hierarchy_key
+      ON sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk = prep_crm_user_hierarchy_live.dim_crm_opp_owner_hierarchy_sk
     LEFT JOIN dr_partner_engagement
       ON sfdc_opportunity.dr_partner_engagement = dr_partner_engagement.dr_partner_engagement_name
     LEFT JOIN alliance_type

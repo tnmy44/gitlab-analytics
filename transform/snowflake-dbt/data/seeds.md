@@ -81,3 +81,9 @@ https://docs.gitlab.com/ee/api/access_requests.html
 Sample data with mock opportunities for FY24 using the FY24 sales hierarchy. This is to be used solely in the workspace models to test the joins for FY24 modeling.
 
 {% enddocs %}
+
+{% docs fy24_mock_crm_users %}
+
+Sample data with mock users for FY24 sales hierarchy planning. This is to be used solely in the workspace models to test the joins for FY24 modeling.
+
+{% enddocs %}

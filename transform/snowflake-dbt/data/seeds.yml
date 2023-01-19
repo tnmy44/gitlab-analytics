@@ -23,3 +23,5 @@ seeds:
     description: '{{ doc("gitlab_dotcom_access_levels") }}'
   - name: fy24_mock_opportunities
     description: '{{ doc("fy24_mock_opportunities") }}'
+  - name: fy24_mock_crm_users
+    description: '{{ doc("fy24_mock_crm_users") }}'
