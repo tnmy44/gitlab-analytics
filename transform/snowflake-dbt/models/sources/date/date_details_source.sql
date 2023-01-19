@@ -113,7 +113,7 @@ WITH date_spine AS (
         ELSE 0 
       END                                                                                     AS is_first_day_of_fiscal_quarter_week,
 
-      last_day_of_month - date_day                                                            AS days_until_last_day_of_month 
+      DATEDIFF('day', date_day, last_day_of_month)                                            AS days_until_last_day_of_month 
 
     FROM date_spine
 
