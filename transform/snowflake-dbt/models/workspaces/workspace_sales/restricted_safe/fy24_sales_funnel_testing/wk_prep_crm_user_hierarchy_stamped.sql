@@ -207,18 +207,18 @@
     SELECT DISTINCT 
       {{ dbt_utils.surrogate_key(['dim_crm_user_hierarchy_sk']) }}                    AS dim_crm_user_hierarchy_stamped_id,
       dim_crm_user_hierarchy_sk,
-
       user_business_unit                                                              AS crm_opp_owner_business_unit_stamped,
-
+      {{ dbt_utils.surrogate_key(['user_business_unit']) }}                           AS dim_crm_opp_owner_business_unit_stamped_id,
       user_segment                                                                    AS crm_opp_owner_sales_segment_stamped,
-
+      {{ dbt_utils.surrogate_key(['user_segment']) }}                                 AS dim_crm_opp_owner_sales_segment_stamped_id,
       user_geo                                                                        AS crm_opp_owner_geo_stamped,
-
+      {{ dbt_utils.surrogate_key(['user_geo']) }}                                     AS dim_crm_opp_owner_geo_stamped_id,
       user_region                                                                     AS crm_opp_owner_region_stamped,
-
+      {{ dbt_utils.surrogate_key(['user_region']) }}                                  AS dim_crm_opp_owner_region_stamped_id,
       user_area                                                                       AS crm_opp_owner_area_stamped,
-
+      {{ dbt_utils.surrogate_key(['user_area']) }}                                    AS dim_crm_opp_owner_area_stamped_id,
       user_role_type                                                                  AS crm_opp_owner_role_type_stamped,
+      {{ dbt_utils.surrogate_key(['user_role_type']) }}                               AS dim_crm_opp_owner_user_role_type_stamped_id,
       CASE
           WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
           ELSE user_segment
