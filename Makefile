@@ -126,14 +126,12 @@ run-dbt-no-deps:
 	cd transform/snowflake-dbt/ && poetry shell;
 
 clone-dbt-select-local-branch:
-	echo $(DBT_MODELS)
-	cd transform/snowflake-dbt/ && poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id config"
-	cd transform/snowflake-dbt/ && export ENVIRONMENT="LOCAL_BRANCH" && poetry run ../../orchestration/clone_dbt_models_select.py $INPUT;
+	cd transform/snowflake-dbt/ && export INPUT=$$(poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id config") && \
+	export ENVIRONMENT="LOCAL_BRANCH" && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT;
 
 clone-dbt-select-local-user:
-	export ENVIRONMENT="LOCAL_USER"
-	INPUT=$(dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id config")
-	cd transform/snowflake-dbt/ && poetry shell;
+	cd transform/snowflake-dbt/ && export INPUT=$$(poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id config") && \
+	export ENVIRONMENT="LOCAL_USER" && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT;
 
 dbt-deps:
 	"$(DBT_DEPS)"
