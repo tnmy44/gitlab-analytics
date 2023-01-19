@@ -16,19 +16,12 @@ from gitlabdata.orchestration_utils import data_science_engine_factory
 from simple_dependency_resolver.simple_dependency_resolver import DependencyResolver
 
 
-def get_git_branch(path=None):
-    if path is None:
-        path = os.path.curdir
-    command = 'git rev-parse --abbrev-ref HEAD'.split()
-    branch = subprocess.Popen(command, stdout=subprocess.PIPE, cwd=path).stdout.read()
-    return branch.strip().decode('utf-8')
-
-
 class DbtModelClone:
     """"""
 
     def __init__(self, config_vars: Dict):
         self.environment = config_vars["ENVIRONMENT"].upper()
+        logger.info()
         if self.environment == "CI":
 
             self.engine = create_engine(
@@ -50,7 +43,7 @@ class DbtModelClone:
             self.engine = data_science_engine_factory()
             # Snowflake database name should be in CAPS
             # see https://gitlab.com/meltano/analytics/issues/491
-            self.branch_name = get_git_branch().upper()
+            self.branch_name = config_vars["GIT_BRANCH"].upper()
 
         elif self.environment == "LOCAL_USER":
 
