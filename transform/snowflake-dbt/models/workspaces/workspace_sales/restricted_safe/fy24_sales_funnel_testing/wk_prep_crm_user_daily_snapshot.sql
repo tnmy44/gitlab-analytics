@@ -37,7 +37,7 @@
       snapshot_user_prep.*
     FROM snapshot_user_prep
     INNER JOIN snapshot_dates
-      ON snapshot_dates.date_actual >= snapshot_user_prep.dbt_valid_from
+      ON snapshot_dates.date_actual >= snapshot_user_prep.dbt_valid_from::DATE
         AND snapshot_dates.date_actual < COALESCE(snapshot_user_prep.dbt_valid_to, '9999-12-31'::TIMESTAMP)
 
 ), final AS (

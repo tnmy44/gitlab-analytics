@@ -5,7 +5,7 @@
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('wk_prep_crm_user_daily_snapshot', 'wk_prep_crm_user_daily_snapshot'),
-    ('wk_prep_crm_opportunty', 'wk_prep_crm_opportunity')
+    ('wk_prep_crm_opportunity', 'wk_prep_crm_opportunity')
 
 ]) }}
 
@@ -17,7 +17,7 @@
       first_day_of_month
     FROM dim_date
 
-, sheetload_sales_funnel_targets_matrix_source AS (
+), sheetload_sales_funnel_targets_matrix_source AS (
 
     SELECT 
       sheetload_sales_funnel_targets_matrix_source.*,
@@ -36,24 +36,20 @@
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.*,
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.area    AS user_segment_geo_region_area
     FROM {{ ref('sheetload_sales_funnel_partner_alliance_targets_matrix_source') }}
-    WHERE month NOT LIKE 'FY22%' 
-
--- Since these targets where set at the segment-area grain and not the segment-geo-region-area that we want to use
-                                 -- Also, the FY22 hierarchy is already correctly modelled, the one that need this introduction is the FY23 hierarchy
   
 ), user_hierarchy_source AS (
 
     SELECT 
       DISTINCT 
-      snapshot_user_prep.user_segment,
-      snapshot_user_prep.user_geo,
-      snapshot_user_prep.user_region,
-      snapshot_user_prep.user_area,
-      snapshot_user_prep.user_segment_geo_region_area,
-      snapshot_user_prep.user_business_unit,
-      snapshot_user_prep.user_role_type,
-      snapshot_user_prep.dim_crm_user_hierarchy_sk
-    FROM snapshot_user_prep
+      wk_prep_crm_user_daily_snapshot.crm_user_sales_segment AS user_segment,
+      wk_prep_crm_user_daily_snapshot.crm_user_geo AS user_geo,
+      wk_prep_crm_user_daily_snapshot.crm_user_region AS user_region,
+      wk_prep_crm_user_daily_snapshot.crm_user_area AS user_area,
+      wk_prep_crm_user_daily_snapshot.crm_user_sales_segment_geo_region_area AS user_segment_geo_region_area,
+      wk_prep_crm_user_daily_snapshot.crm_user_business_unit AS user_business_unit,
+      wk_prep_crm_user_daily_snapshot.crm_user_role_type AS user_role_type,
+      wk_prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk
+    FROM wk_prep_crm_user_daily_snapshot
 
 ), user_hierarchy_sheetload AS (
 /*
@@ -74,7 +70,7 @@
                       sheetload_sales_funnel_targets_matrix_source.user_geo, 
                       sheetload_sales_funnel_targets_matrix_source.user_region, 
                       sheetload_sales_funnel_targets_matrix_source.user_area
-                      sheetload_sales_funnel_targets_matrix_source
+                      )
         WHEN fiscal_months.snapshot_fiscal_year >= 2024 AND LOWER(sheetload_sales_funnel_targets_matrix_source.user_business_unit) = 'comm'
           THEN CONCAT(sheetload_sales_funnel_targets_matrix_source.user_business_unit, 
                       sheetload_sales_funnel_targets_matrix_source.user_geo, 
@@ -206,7 +202,7 @@
       CASE
           WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
           ELSE user_segment
-        END                                                                           AS crm_opp_owner_sales_segment_stamped_grouped,
+      END                                                                             AS crm_opp_owner_sales_segment_stamped_grouped,
       {{ sales_segment_region_grouped('user_segment', 'user_geo', 'user_region') }}   AS crm_opp_owner_sales_segment_region_stamped_grouped,
       fiscal_year,
       is_last_user_hierarchy_in_fiscal_year,
