@@ -56,52 +56,53 @@ WITH sfdc_account_xf AS (
             ELSE 'Other'
         END AS role_type,
 
-        CASE
-            WHEN sales_qualified_source_name = 'Channel Generated'
-            THEN 'Channel Generated'
-            WHEN sales_qualified_source_name != 'Channel Generated'
-            AND NOT(LOWER(resale.account_name) LIKE ANY ('%ibm%','%google%','%gcp%','%amazon%'))
-            THEN 'Channel Co-Sell'
-            WHEN sales_qualified_source_name != 'Channel Generated'
-            AND LOWER(resale.account_name) LIKE ANY ('%ibm%','%google%','%gcp%','%amazon%')
-            THEN 'Alliance Co-Sell'
-            ELSE 'Direct'
-        END                                               AS partner_category,   -- definition pending
-
-        CASE
-            WHEN LOWER(resale.account_name)LIKE '%ibm%'
-            THEN 'IBM'
-            WHEN LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%')
-            THEN 'GCP'
-            WHEN LOWER(resale.account_name) LIKE '%amazon%'
-            THEN 'AWS'
-            WHEN LOWER(resale.account_name) IS NOT NULL
-            THEN 'Channel'
-            ELSE 'Direct'
-        END                                               AS alliance_partner,  -- definition pending
-
--- updated definition
+-- FY23 definition
         -- CASE
-        --   WHEN sales_qualified_source = 'Partner Generated'
-        --       THEN 'Partner Sourced'
-        --   WHEN sales_qualified_source != 'Partner Generated'
-        --       AND NOT LOWER(resale_partner_name) LIKE ANY ('%google%','%gcp%','%amazon%')
-        --       THEN 'Channel Co-Sell'
-        --   WHEN sales_qualified_source != 'Partner Generated'
-        --       AND LOWER(resale_partner_name) LIKE ANY ('%google%','%gcp%','%amazon%')
-        --       THEN 'Alliance Co-Sell'
-        --   ELSE 'Direct'
+        --     WHEN sales_qualified_source_name = 'Channel Generated'
+        --     THEN 'Channel Generated'
+        --     WHEN sales_qualified_source_name != 'Channel Generated'
+        --     AND NOT(LOWER(resale.account_name) LIKE ANY ('%ibm%','%google%','%gcp%','%amazon%'))
+        --     THEN 'Channel Co-Sell'
+        --     WHEN sales_qualified_source_name != 'Channel Generated'
+        --     AND LOWER(resale.account_name) LIKE ANY ('%ibm%','%google%','%gcp%','%amazon%')
+        --     THEN 'Alliance Co-Sell'
+        --     ELSE 'Direct'
         -- END                                               AS partner_category,
 
         -- CASE
-        --   WHEN LOWER(resale_partner_name) LIKE ANY ('%google%','%gcp%')
+        --     WHEN LOWER(resale.account_name)LIKE '%ibm%'
+        --     THEN 'IBM'
+        --     WHEN LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%')
         --     THEN 'GCP'
-        --   WHEN LOWER(resale_partner_name) LIKE ANY ('%amazon%')
+        --     WHEN LOWER(resale.account_name) LIKE '%amazon%'
         --     THEN 'AWS'
-        --   WHEN LOWER(resale_partner_name) IS NOT NULL
+        --     WHEN LOWER(resale.account_name) IS NOT NULL
         --     THEN 'Channel'
-        --   ELSE 'Direct'
+        --     ELSE 'Direct'
         -- END                                               AS alliance_partner,
+
+
+        CASE
+          WHEN (sales_qualified_source_name = 'Channel Generated' OR sales_qualified_source_name = 'Partner Generated')
+              THEN 'Partner Sourced'
+          WHEN (sales_qualified_source_name != 'Channel Generated' AND sales_qualified_source_name != 'Partner Generated')
+              AND NOT LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
+              THEN 'Channel Co-Sell'
+          WHEN (sales_qualified_source_name != 'Channel Generated' AND sales_qualified_source_name != 'Partner Generated')
+              AND LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
+              THEN 'Alliance Co-Sell'
+          ELSE 'Direct'
+        END                                               AS partner_category,
+
+        CASE
+          WHEN LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%')
+            THEN 'GCP'
+          WHEN LOWER(resale.account_name) LIKE ANY ('%amazon%')
+            THEN 'AWS'
+          WHEN LOWER(resale.account_name) IS NOT NULL
+            THEN 'Channel'
+          ELSE 'Direct'
+        END                                               AS alliance_partner,
 
 
         report_opportunity_user_segment,
