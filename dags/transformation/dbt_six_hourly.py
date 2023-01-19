@@ -83,7 +83,7 @@ dag = DAG(
     "dbt_six_hourly",
     description="This DAG is responsible for refreshing models at minute 0 past every 6th hour.",
     default_args=default_args,
-    schedule_interval="0 */6 * * 1-6",
+    schedule_interval="55 */6 * * 1-6",
 )
 
 
