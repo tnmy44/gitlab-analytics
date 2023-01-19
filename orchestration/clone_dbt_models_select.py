@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import json
 import argparse
-import os
-import subprocess
 from os import environ as env
 from typing import Dict, List
 
