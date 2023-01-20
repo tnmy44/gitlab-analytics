@@ -115,11 +115,6 @@ include:
     - manage_snowflake.py manage_clones --force --database prod --empty
     - manage_snowflake.py manage_clones --force --database raw --include_stages
 
-grant_clone:
-  <<: *snowflake_start_clone
-  script:
-  - manage_snowflake.py grant_clones
-
 clone_stop:
   <<: *snowflake_clone_template
   stage: 🛑 Snowflake Stop

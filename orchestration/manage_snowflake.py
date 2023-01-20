@@ -47,10 +47,10 @@ class SnowflakeManager:
 
         # Queries for database cloning and permissions
         check_db_exists_query = """use database "{0}";"""
-        create_query = """create or replace database "{0}" {1};"""
+        create_query = """create or replace database "{0}" {1} COPY GRANTS;"""
         grant_query = """grant ownership on database "{0}" to TRANSFORMER;"""
 
-        clone_schema_query = """create schema "{0}"."{1}" clone "{2}"."{1}"; """
+        clone_schema_query = """create schema "{0}"."{1}" clone "{2}"."{1}" COPY GRANTS; """
 
         usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
         usage_grant_query_with_params = (
@@ -152,32 +152,6 @@ class SnowflakeManager:
 
             if include_stages:
                 self.clone_stages(create_db, database, schema)
-    
-    def grant_clones(self):
-        """
-        Grant privildges on a clone.
-        """
-        db_list = [
-            self.prep_database,
-            self.prod_database,
-            self.raw_database,
-        ]
-
-        queries = [
-            'show grants on database prod;',
-            'create or replace temporary table raw.public.temp_grants_table as select * from table (result_scan(last_query_id()))',
-        ]
-
-        
-        try:
-            connection = self.engine.connect()
-            for query in queries:
-                logging.info("Executing Query: {}".format(query))
-                connection.execute(query)
-                # logging.info("Query Result: {}".format(result))
-        finally:
-            connection.close()
-            self.engine.dispose()
 
     def delete_clones(self):
         """
