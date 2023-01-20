@@ -30,7 +30,7 @@
 
     SELECT *
     -- FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
-    FROM {{ ref('wk_sales_report_agg_keys_fy22_fy23') }}
+    FROM {{ ref('wk_sales_report_agg_keys_ssot') }}
 
   
   ), final AS (

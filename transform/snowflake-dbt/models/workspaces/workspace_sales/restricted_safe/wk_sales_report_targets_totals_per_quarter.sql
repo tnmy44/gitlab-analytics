@@ -11,7 +11,7 @@ WITH date_details AS (
 
     SELECT *
     -- FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
-    FROM {{ ref('wk_sales_report_agg_keys_fy22_fy23') }} 
+    FROM {{ ref('wk_sales_report_agg_keys_ssot') }} 
 
 ), sfdc_opportunity_snapshot_history_xf AS (
   

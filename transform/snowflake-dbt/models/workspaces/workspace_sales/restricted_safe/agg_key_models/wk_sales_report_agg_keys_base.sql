@@ -1,4 +1,4 @@
-{{ config(alias='report_agg_keys_fy24_model') }}
+{{ config(alias='report_agg_keys_base') }}
 -- supports FY22, FY23 and FY24 granularity 
 
 -- grains include:

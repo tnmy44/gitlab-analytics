@@ -28,7 +28,7 @@ WITH edm_opty AS (
 -- keys used for aggregated historical analysis
 
     SELECT *
-    FROM {{ ref('wk_sales_report_agg_keys_fy24') }}
+    FROM {{ ref('wk_sales_report_agg_keys_base') }}
 
 ), today AS (
 

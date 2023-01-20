@@ -1,5 +1,5 @@
-{{ config(alias='report_agg_keys_fy22_fy23_model') }}
--- based on report_agg_keys_fy24_model
+{{ config(alias='report_agg_keys_ssot') }}
+-- based on report_agg_keys_base model
 -- can replace the existing wk_sales_report_agg_demo_sqs_ot_keys
 
 -- grains include:
@@ -9,7 +9,7 @@
 WITH report_agg_keys_fy24_model AS (
 
     SELECT *
-    FROM {{ref('wk_sales_report_agg_keys_fy24')}}
+    FROM {{ref('wk_sales_report_agg_keys_base')}}
     -- FROM PROD.RESTRICTED_SAFE_WORKSPACE_SALES.REPORT_AGG_KEYS_FY24_MODEL
 
 )
