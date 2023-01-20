@@ -39,7 +39,6 @@
       wk_prep_crm_user_daily_snapshot.crm_user_region                     AS user_region,
       wk_prep_crm_user_daily_snapshot.crm_user_area                       AS user_area,
       wk_prep_crm_user_daily_snapshot.crm_user_business_unit              AS user_business_unit,
-      wk_prep_crm_user_daily_snapshot.user_role_type                      AS user_role_type,
       wk_prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk
     FROM wk_prep_crm_user_daily_snapshot
     INNER JOIN dim_date 
@@ -65,7 +64,6 @@
           THEN 'COMM'
         ELSE 'none'
       END AS user_business_unit,
-      'none' AS user_role_type,
       CASE
         WHEN fiscal_months.fiscal_year BETWEEN '2021' AND '2023'
           THEN CONCAT(sheetload_sales_funnel_targets_matrix_source.user_segment, 
@@ -85,9 +83,7 @@
                       '-',
                       sheetload_sales_funnel_targets_matrix_source.user_segment, 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_area,
-                      '-',
-                      user_role_type
+                      sheetload_sales_funnel_targets_matrix_source.user_area
                       )
         WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(user_business_unit) = 'entg'
           THEN CONCAT(user_business_unit, 
@@ -98,9 +94,7 @@
                       '-',
                       sheetload_sales_funnel_targets_matrix_source.user_area, 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_segment, 
-                      '-',
-                      user_role_type
+                      sheetload_sales_funnel_targets_matrix_source.user_segment
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk
     FROM sheetload_sales_funnel_targets_matrix_source
@@ -124,7 +118,6 @@
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region,
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area,
       'none' AS user_business_unit,
-      'none' AS user_role_type,
       CASE
         WHEN fiscal_months.fiscal_year BETWEEN '2021' AND '2023'
           THEN CONCAT(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment,
@@ -144,9 +137,7 @@
                       '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment, 
                       '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area,
-                      '-',
-                      user_role_type
+                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area
                       )
         WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(user_business_unit) = 'entg'
           THEN CONCAT(user_business_unit,
@@ -157,9 +148,7 @@
                       '-',
                       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area, 
                       '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment, 
-                      '-',
-                      user_role_type
+                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk
     FROM sheetload_sales_funnel_partner_alliance_targets_matrix_source
@@ -180,7 +169,6 @@
       wk_prep_crm_opportunity.user_region_stamped                   AS user_region,
       wk_prep_crm_opportunity.user_area_stamped                     AS user_area,
       wk_prep_crm_opportunity.user_business_unit_stamped            AS user_business_unit,
-      wk_prep_crm_opportunity.crm_opp_owner_user_role_type_stamped  AS user_role_type,
       wk_prep_crm_opportunity.dim_crm_opp_owner_hierarchy_sk        AS dim_crm_user_hierarchy_sk
     FROM wk_prep_crm_opportunity
     INNER JOIN dim_date 
@@ -218,7 +206,6 @@
       user_region,
       user_area,
       NULL        AS user_business_unit,
-      NULL        AS user_role_type,
       dim_crm_user_hierarchy_sk
     FROM unioned 
     WHERE fiscal_year < 2024
@@ -231,7 +218,6 @@
       user_region,
       user_area,
       user_business_unit,
-      user_role_type,
       dim_crm_user_hierarchy_sk
     FROM unioned 
     WHERE fiscal_year >= 2024
@@ -262,8 +248,6 @@
       {{ dbt_utils.surrogate_key(['user_region']) }}                                  AS dim_crm_opp_owner_region_stamped_id,
       user_area                                                                       AS crm_opp_owner_area_stamped,
       {{ dbt_utils.surrogate_key(['user_area']) }}                                    AS dim_crm_opp_owner_area_stamped_id,
-      user_role_type                                                                  AS crm_opp_owner_role_type_stamped,
-      {{ dbt_utils.surrogate_key(['user_role_type']) }}                               AS dim_crm_opp_owner_user_role_type_stamped_id,
       CASE
           WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
           ELSE user_segment

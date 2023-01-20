@@ -1312,9 +1312,7 @@ WITH first_contact  AS (
                     '-',
                     sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
                     '-',
-                    sfdc_opportunity.crm_opp_owner_area_stamped,
-                    '-',
-                    COALESCE(sfdc_opportunity.crm_opp_owner_user_role_type_stamped, 'placeholder') -- Added due to data quality issues in testing prior to FY switch
+                    sfdc_opportunity.crm_opp_owner_area_stamped
                     )
       WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'entg'
         THEN CONCAT(
@@ -1326,9 +1324,7 @@ WITH first_contact  AS (
                     '-',
                     sfdc_opportunity.crm_opp_owner_area_stamped,
                     '-',
-                    sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
-                    '-',
-                    COALESCE(sfdc_opportunity.crm_opp_owner_user_role_type_stamped, 'placeholder') -- Added due to data quality issues in testing prior to FY switch
+                    sfdc_opportunity.crm_opp_owner_sales_segment_stamped
                     )
     END AS dim_crm_opp_owner_hierarchy_sk
 

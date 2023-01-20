@@ -5,14 +5,14 @@
     ('order_type', 'prep_order_type'),
     ('sales_qualified_source', 'prep_sales_qualified_source'),
     ('deal_path', 'prep_deal_path'),
-    ('sales_rep', 'prep_crm_user'),
+    ('sales_rep', 'wk_prep_crm_user'),
     ('sales_segment', 'prep_sales_segment'),
     ('sfdc_campaigns', 'prep_campaign'),
     ('dr_partner_engagement', 'prep_dr_partner_engagement'),
     ('alliance_type', 'prep_alliance_type_scd'),
     ('channel_type', 'prep_channel_type'),
     ('sfdc_opportunity', 'wk_prep_crm_opportunity'),
-    ('prep_crm_user_hierarchy_stamped', 'wk_prep_crm_user_hierarchy_stamped')
+    ('prep_crm_user_hierarchy', 'wk_prep_crm_user_hierarchy')
 
 ]) }}
     
@@ -91,23 +91,29 @@
       crm_account_dimensions.dim_account_industry_id,
       crm_account_dimensions.dim_account_location_country_id,
       crm_account_dimensions.dim_account_location_region_id,
-      COALESCE(prep_crm_user_hierarchy_stamped.dim_crm_user_hierarchy_stamped_id, MD5(-1))                                  AS dim_crm_opp_owner_user_hierarchy_id,
-      prep_crm_user_hierarchy_stamped.crm_opp_owner_sales_segment_stamped,
+      COALESCE(prep_crm_user_hierarchy.dim_crm_user_hierarchy_stamped_id, MD5(-1))                                          AS dim_crm_opp_owner_user_hierarchy_id,
+      prep_crm_user_hierarchy.crm_opp_owner_sales_segment_stamped,
       sfdc_opportunity.crm_opp_owner_sales_segment_stamped                                                                  AS opp_crm_opp_owner_sales_segment_stamped,
-      prep_crm_user_hierarchy_stamped.crm_opp_owner_geo_stamped,
+      prep_crm_user_hierarchy.crm_opp_owner_geo_stamped,
       sfdc_opportunity.crm_opp_owner_geo_stamped                                                                            AS opp_crm_opp_owner_geo_stamped,
-      prep_crm_user_hierarchy_stamped.crm_opp_owner_region_stamped,
+      prep_crm_user_hierarchy.crm_opp_owner_region_stamped,
       sfdc_opportunity.crm_opp_owner_region_stamped                                                                         AS opp_crm_opp_owner_region_stamped,
-      prep_crm_user_hierarchy_stamped.crm_opp_owner_area_stamped,
+      prep_crm_user_hierarchy.crm_opp_owner_area_stamped,
       sfdc_opportunity.crm_opp_owner_area_stamped                                                                           AS opp_crm_opp_owner_area_stamped,
-      COALESCE(prep_crm_user_hierarchy_stamped.dim_crm_opp_owner_sales_segment_stamped_id, MD5(-1))                         AS dim_crm_opp_owner_sales_segment_stamped_id,
-      COALESCE(prep_crm_user_hierarchy_stamped.dim_crm_opp_owner_geo_stamped_id, MD5(-1))                                   AS dim_crm_opp_owner_geo_stamped_id,
-      COALESCE(prep_crm_user_hierarchy_stamped.dim_crm_opp_owner_region_stamped_id, MD5(-1))                                AS dim_crm_opp_owner_region_stamped_id,
-      COALESCE(prep_crm_user_hierarchy_stamped.dim_crm_opp_owner_area_stamped_id, MD5(-1))                                  AS dim_crm_opp_owner_area_stamped_id,
+      sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk,
+      COALESCE(prep_crm_user_hierarchy.dim_crm_opp_owner_business_unit_stamped_id, MD5(-1))                                 AS dim_crm_opp_owner_business_unit_stamped_id,
+      COALESCE(prep_crm_user_hierarchy.dim_crm_opp_owner_sales_segment_stamped_id, MD5(-1))                                 AS dim_crm_opp_owner_sales_segment_stamped_id,
+      COALESCE(prep_crm_user_hierarchy.dim_crm_opp_owner_geo_stamped_id, MD5(-1))                                           AS dim_crm_opp_owner_geo_stamped_id,
+      COALESCE(prep_crm_user_hierarchy.dim_crm_opp_owner_region_stamped_id, MD5(-1))                                        AS dim_crm_opp_owner_region_stamped_id,
+      COALESCE(prep_crm_user_hierarchy.dim_crm_opp_owner_area_stamped_id, MD5(-1))                                          AS dim_crm_opp_owner_area_stamped_id,
+      COALESCE(sales_rep.dim_crm_user_hierarchy_sk, MD5(-1))                                                                AS dim_crm_user_hierarchy_live_sk,
+      COALESC(sales_rep.dim_crm_user_business_unit_stamped_id, MD5(-1))                                                     AS dim_crm_user_business_unit_stamped_id,
       COALESCE(sales_rep.dim_crm_user_sales_segment_id, MD5(-1))                                                            AS dim_crm_user_sales_segment_id,
       COALESCE(sales_rep.dim_crm_user_geo_id, MD5(-1))                                                                      AS dim_crm_user_geo_id,
       COALESCE(sales_rep.dim_crm_user_region_id, MD5(-1))                                                                   AS dim_crm_user_region_id,
       COALESCE(sales_rep.dim_crm_user_area_id, MD5(-1))                                                                     AS dim_crm_user_area_id,
+      COALESCE(sales_rep_account.dim_crm_user_hierarchy_sk, MD5(-1))                                                        AS dim_crm_user_hierarchy_account_user_sk,
+      COALESC(sales_rep_account.dim_crm_user_business_unit_stamped_id, MD5(-1))                                             AS dim_crm_account_user_business_stamped_unit_id,
       COALESCE(sales_rep_account.dim_crm_user_sales_segment_id, MD5(-1))                                                    AS dim_crm_account_user_sales_segment_id,
       COALESCE(sales_rep_account.dim_crm_user_geo_id, MD5(-1))                                                              AS dim_crm_account_user_geo_id,
       COALESCE(sales_rep_account.dim_crm_user_region_id, MD5(-1))                                                           AS dim_crm_account_user_region_id,
@@ -216,8 +222,7 @@
       sfdc_opportunity.total_contract_value,
       sfdc_opportunity.days_in_stage,
       sfdc_opportunity.calculated_age_in_days,
-      sfdc_opportunity.days_since_last_activity,
-      prep_crm_user_hierarchy_stamped.dim_crm_user_hierarchy_sk
+      sfdc_opportunity.days_since_last_activity
 
     FROM sfdc_opportunity
     LEFT JOIN crm_account_dimensions
@@ -234,8 +239,8 @@
       ON sfdc_opportunity.deal_path = deal_path.deal_path_name
     LEFT JOIN sales_segment
       ON sfdc_opportunity.sales_segment = sales_segment.sales_segment_name
-    LEFT JOIN prep_crm_user_hierarchy_stamped
-      ON sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk = prep_crm_user_hierarchy_stamped.dim_crm_user_hierarchy_sk
+    LEFT JOIN prep_crm_user_hierarchy
+      ON sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk = prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk
     LEFT JOIN dr_partner_engagement
       ON sfdc_opportunity.dr_partner_engagement = dr_partner_engagement.dr_partner_engagement_name
     LEFT JOIN alliance_type
