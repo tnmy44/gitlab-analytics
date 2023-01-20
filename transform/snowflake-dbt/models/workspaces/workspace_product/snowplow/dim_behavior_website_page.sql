@@ -15,6 +15,7 @@
       app_id,
       page_url_host_path,
       page_url_path,
+      page_url_query,
       clean_url_path,
       page_url_host,
       page_url_scheme,
@@ -28,7 +29,7 @@
       AND behavior_at > (SELECT max(max_event_timestamp) FROM {{ this }})
 
     {% endif %}
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=9) }}
 
 ), referrer_url AS (
 
@@ -37,6 +38,7 @@
       app_id,
       referrer_url_host_path                                                        AS page_url_host_path,
       referrer_url_path                                                             AS page_url_path,
+      referrer_url_query                                                            AS page_url_query,
       {{ clean_url('referrer_url_path') }}                                          AS clean_url_path,
       referrer_url_host                                                             AS page_url_host,
       referrer_url_scheme                                                           AS page_url_scheme,
@@ -51,7 +53,7 @@
       AND behavior_at > (SELECT MAX(max_event_timestamp) FROM {{ this }})
 
     {% endif %}
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=9) }}
 
 ), page AS (
 
@@ -76,6 +78,7 @@
 
       -- Attributes
       page_url_path,
+      page_url_query,
       clean_url_path,
       page_url_scheme,
       SPLIT_PART(clean_url_path, '/' ,1)                                        AS page_group,
@@ -241,7 +244,7 @@
       MIN(min_event_timestamp)                                                  AS min_event_timestamp,
       MAX(max_event_timestamp)                                                  AS max_event_timestamp
     FROM page
-    {{ dbt_utils.group_by(n=15) }}
+    {{ dbt_utils.group_by(n=16) }}
 
 )
 
@@ -250,5 +253,5 @@
     created_by="@chrissharp",
     updated_by="@chrissharp",
     created_date="2022-07-22",
-    updated_date="2022-12-15"
+    updated_date="2023-01-20"
 ) }}
