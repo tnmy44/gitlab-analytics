@@ -17,7 +17,8 @@
   ('map_gitlab_dotcom_xmau_metrics', 'map_gitlab_dotcom_xmau_metrics'),
   ('services', 'gitlab_dotcom_integrations_source'),
   ('project', 'prep_project'),
-  ('ptpt_scores_by_user', 'prep_ptpt_scores_by_user')
+  ('ptpt_scores_by_user', 'prep_ptpt_scores_by_user'),
+  ('namespace_details', 'gitlab_dotcom_namespace_details_source')
 ]) }}
 
 -------------------------- Start of PQL logic: --------------------------
@@ -303,6 +304,22 @@
     FROM marketing_contact_order
     WHERE subscription_start_date is not null
     GROUP BY dim_marketing_contact_id
+
+), namespace_notifications AS (
+
+    SELECT
+      COALESCE(notification_email, email) AS email_address,
+      namespace_details.namespace_id      AS user_limit_namespace_id,
+      dashboard_notification_at           AS user_limit_notification_at,
+      dashboard_enforcement_at            AS user_limit_enforcement_at
+    FROM namespace_details
+    INNER JOIN dim_namespace
+      ON namespace_details.namespace_id = dim_namespace.dim_namespace_id
+    INNER JOIN gitlab_dotcom_users_source AS user
+      ON user.user_id = dim_namespace.creator_id
+      AND state = 'active'
+    WHERE dashboard_notification_at IS NOT NULL OR dashboard_enforcement_at IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY email_address ORDER BY COALESCE(dashboard_notification_at, dashboard_enforcement_at) ASC) = 1
 
 ), paid_subscription_aggregate AS (
 
@@ -848,6 +865,15 @@
       ptpt_scores_by_user.past_score_group        AS ptpt_past_score_group,
       ptpt_scores_by_user.past_score_date         AS ptpt_past_score_date,
 
+      -- Namespace notification dates
+      namespace_notifications.user_limit_namespace_id,
+      namespace_notifications.user_limit_notification_at,
+      namespace_notifications.user_limit_enforcement_at,
+      IFF(namespace_notifications.user_limit_notification_at IS NOT NULL OR namespace_notifications.user_limit_enforcement_at IS NOT NULL,
+        TRUE, FALSE)                              AS is_impacted_by_user_limit,
+      IFF(is_impacted_by_user_limit = TRUE OR (is_impacted_by_user_limit = FALSE AND marketing_contact.is_impacted_by_user_limit_marketo = TRUE), TRUE, FALSE)
+                                                  AS is_impacted_by_user_limit_change,
+
       usage_metrics.usage_umau_28_days_user,
       usage_metrics.usage_action_monthly_active_users_project_repo_28_days_user,
       usage_metrics.usage_merge_requests_28_days_user,
@@ -898,6 +924,8 @@
       ON ptpt_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN trials_final
       ON trials_final.email = marketing_contact.email_address
+    LEFT JOIN namespace_notifications
+      ON namespace_notifications.email_address = marketing_contact.email_address
 )
 
 {{ hash_diff(
@@ -975,6 +1003,10 @@
       'ptpt_past_score_group',
       'is_member_of_public_ultimate_parent_namespace',
       'is_member_of_private_ultimate_parent_namespace',
+      'user_limit_notification_at',
+      'user_limit_enforcement_at',
+      'is_impacted_by_user_limit',
+      'is_impacted_by_user_limit_change',
       'marketo_lead_id',
       'is_current_saas_trial'
       ]
@@ -985,5 +1017,5 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2023-01-02"
+    updated_date="2023-01-20"
 ) }}

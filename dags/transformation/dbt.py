@@ -113,9 +113,12 @@ def dbt_evaluate_run_date(timestamp: datetime, exclude_schedule: str) -> bool:
     return True
 
 
+# NB - Only the date is needed from this schedule, this is configured to exclude the first Sunday of the month
+exclusion_schedule = "* * * * SUN#1"
+
 dbt_evaluate_run_date_task = ShortCircuitOperator(
     task_id="evaluate_dbt_run_date",
-    python_callable=lambda: dbt_evaluate_run_date(datetime.now(), "45 8 * * SUN#1"),
+    python_callable=lambda: dbt_evaluate_run_date(datetime.now(), exclusion_schedule),
     dag=dag,
 )
 
@@ -124,7 +127,7 @@ dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --exclude tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
+    dbt --no-use-colors run --profiles-dir profile --target prod --exclude tag:product tag:six_hourly legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
