@@ -90,8 +90,10 @@
       CASE 
         WHEN page_url_path LIKE '%/activity'
           THEN 'Project information - Activity'
+        WHEN page_url_path LIKE '%/-/activity' 
+          THEN 'Namespace information - Activity'
         WHEN page_url_path LIKE '%/-/labels'
-          THEN 'Project information - Labels'
+          THEN 'Namespace or Project information - Labels'
         WHEN page_url_path LIKE '%/-/project_members'
           THEN 'Project information - Members'
         WHEN page_url_path LIKE '%/-/tree/main'
@@ -224,6 +226,10 @@
           THEN 'Settings - Usage Quotas'
         WHEN page_url_path LIKE '%/-/billings'
           THEN 'Settings - Billings'
+        WHEN page_url_path LIKE '%/-/group_members' 
+          THEN 'Namespace information - Members'
+        WHEN page_url_path LIKE '%/sign_in' 
+          THEN 'Sign in'
         ELSE 'Other'
       END                                                                       AS url_path_category,
       CASE 
