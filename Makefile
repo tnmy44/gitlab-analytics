@@ -155,6 +155,10 @@ prepare-python:
 	which poetry || python3 -m pip install poetry
 	poetry install
 
+update-dbt-poetry:
+	cd transform/snowflake-dbt/ && poetry install
+	exit
+
 black:
 	@echo "Running lint (black)..."
 	@poetry run black --check .
