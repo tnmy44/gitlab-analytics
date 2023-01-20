@@ -25,7 +25,6 @@ most_recent_yml_record AS (
 
   SELECT *
   FROM pi_targets
-  WHERE pi_monthly_estimated_targets IS NOT NULL
   QUALIFY ROW_NUMBER() OVER (PARTITION BY pi_metric_name ORDER BY snapshot_date DESC) = 1
 
 ),
@@ -42,6 +41,7 @@ flattened_monthly_targets AS (
     PARSE_JSON(d.path)[0]::TIMESTAMP AS target_end_month
   FROM most_recent_yml_record,
     LATERAL FLATTEN(INPUT => PARSE_JSON(pi_monthly_estimated_targets), OUTER => TRUE) AS d
+  WHERE pi_monthly_estimated_targets IS NOT NULL
 
 ),
 
@@ -58,7 +58,7 @@ monthly_targets_with_intervals AS (
     *,
     COALESCE(
       LAG(target_end_month) OVER (PARTITION BY pi_metric_name ORDER BY target_end_month),
-      '2017-01-01' --year of GitLab initial release date
+      '2020-02-01' --first PIs started to appear in March 2020
     ) AS target_start_month
   FROM flattened_monthly_targets
 
