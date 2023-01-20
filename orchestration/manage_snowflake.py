@@ -50,7 +50,7 @@ class SnowflakeManager:
         create_query = """create or replace database "{0}" {1};"""
         grant_query = """grant ownership on database "{0}" to TRANSFORMER;"""
 
-        clone_schema_query = """create schema "{0}"."{1}" clone "{2}"."{1}" COPY GRANTS; """
+        clone_schema_query = """create schema "{0}"."{1}" clone "{2}"."{1}"; """
 
         usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
         usage_grant_query_with_params = (
@@ -116,7 +116,7 @@ class SnowflakeManager:
         }
 
         create_db = databases[database]
-        clone_db = f"clone {database}" if not empty else ""
+        clone_db = f"clone {database} COPY GRANTS" if not empty else ""
         queries = self.generate_db_queries(create_db, clone_db, schema, database)
 
         # if force is false, check if the database exists
