@@ -33,14 +33,17 @@
 
     SELECT 
       DISTINCT 
-      wk_prep_crm_user_daily_snapshot.crm_user_sales_segment AS user_segment,
-      wk_prep_crm_user_daily_snapshot.crm_user_geo AS user_geo,
-      wk_prep_crm_user_daily_snapshot.crm_user_region AS user_region,
-      wk_prep_crm_user_daily_snapshot.crm_user_area AS user_area,
-      wk_prep_crm_user_daily_snapshot.crm_user_business_unit AS user_business_unit,
-      wk_prep_crm_user_daily_snapshot.user_role_type AS user_role_type,
+      dim_date.fiscal_year,
+      wk_prep_crm_user_daily_snapshot.crm_user_sales_segment              AS user_segment,
+      wk_prep_crm_user_daily_snapshot.crm_user_geo                        AS user_geo,
+      wk_prep_crm_user_daily_snapshot.crm_user_region                     AS user_region,
+      wk_prep_crm_user_daily_snapshot.crm_user_area                       AS user_area,
+      wk_prep_crm_user_daily_snapshot.crm_user_business_unit              AS user_business_unit,
+      wk_prep_crm_user_daily_snapshot.user_role_type                      AS user_role_type,
       wk_prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk
     FROM wk_prep_crm_user_daily_snapshot
+    INNER JOIN dim_date 
+      ON wk_prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
     WHERE wk_prep_crm_user_daily_snapshot.crm_user_sales_segment IS NOT NULL
       AND wk_prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
       AND wk_prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
@@ -52,6 +55,7 @@
 */
 
     SELECT DISTINCT 
+      fiscal_months.fiscal_year,
       sheetload_sales_funnel_targets_matrix_source.user_segment,
       sheetload_sales_funnel_targets_matrix_source.user_geo,
       sheetload_sales_funnel_targets_matrix_source.user_region,
@@ -114,6 +118,7 @@
 */
 
     SELECT DISTINCT 
+      fiscal_months.fiscal_year,
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment,
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo,
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region,
@@ -169,6 +174,7 @@
 */
 
     SELECT DISTINCT
+      dim_date.fiscal_year,
       wk_prep_crm_opportunity.user_segment_stamped                  AS user_segment,
       wk_prep_crm_opportunity.user_geo_stamped                      AS user_geo,
       wk_prep_crm_opportunity.user_region_stamped                   AS user_region,
@@ -177,6 +183,8 @@
       wk_prep_crm_opportunity.crm_opp_owner_user_role_type_stamped  AS user_role_type,
       wk_prep_crm_opportunity.dim_crm_opp_owner_hierarchy_sk        AS dim_crm_user_hierarchy_sk
     FROM wk_prep_crm_opportunity
+    INNER JOIN dim_date 
+      ON wk_prep_crm_opportunity.close_date = dim_date.date_actual
   
 ), unioned AS (
 /*
@@ -202,6 +210,43 @@
     SELECT *
     FROM user_hierarchy_stamped_opportunity
 
+), pre_fy24_hierarchy AS (
+
+    SELECT DISTINCT
+      user_segment,
+      user_geo,
+      user_region,
+      user_area,
+      NULL        AS user_business_unit,
+      NULL        AS user_role_type,
+      dim_crm_user_hierarchy_sk
+    FROM unioned 
+    WHERE fiscal_year < 2024
+
+), fy24_and_beyond_hierarchy AS (
+
+    SELECT DISTINCT
+      user_segment,
+      user_geo,
+      user_region,
+      user_area,
+      user_business_unit,
+      user_role_type,
+      dim_crm_user_hierarchy_sk
+    FROM unioned 
+    WHERE fiscal_year >= 2024
+
+), final_unioned AS (
+
+
+    SELECT *
+    FROM pre_fy24_hierarchy
+
+    UNION ALL 
+
+    SELECT *
+    FROM fy24_and_beyond_hierarchy
+
 ), final AS (
 
     SELECT DISTINCT 
@@ -224,7 +269,7 @@
           ELSE user_segment
       END                                                                             AS crm_opp_owner_sales_segment_stamped_grouped,
       {{ sales_segment_region_grouped('user_segment', 'user_geo', 'user_region') }}   AS crm_opp_owner_sales_segment_region_stamped_grouped
-    FROM unioned
+    FROM final_unioned
 
 )
 
