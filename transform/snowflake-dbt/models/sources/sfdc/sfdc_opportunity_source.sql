@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi"]
+    tags=["mnpi", "six_hourly"]
 ) }}
 
 /*

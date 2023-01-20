@@ -111,7 +111,9 @@ WITH date_spine AS (
                 OR date_actual = first_day_of_fiscal_quarter) 
           THEN 1 
         ELSE 0 
-      END                                                                                     AS is_first_day_of_fiscal_quarter_week
+      END                                                                                     AS is_first_day_of_fiscal_quarter_week,
+
+      DATEDIFF('day', date_day, last_day_of_month)                                            AS days_until_last_day_of_month 
 
     FROM date_spine
 
@@ -178,6 +180,7 @@ SELECT
   calculated.week_of_fiscal_quarter_normalised,
   calculated.day_of_fiscal_year_normalised,
   calculated.is_first_day_of_fiscal_quarter_week,
+  calculated.days_until_last_day_of_month,
   current_date_information.current_fiscal_year,
   current_date_information.current_first_day_of_fiscal_year,
   current_date_information.current_fiscal_quarter_name_fy,
