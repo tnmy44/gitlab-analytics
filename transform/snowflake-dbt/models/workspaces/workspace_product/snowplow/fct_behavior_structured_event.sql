@@ -16,6 +16,7 @@ WITH structured_event_renamed AS (
       event_id,
       tracker_version,
       dim_behavior_event_sk,
+      event_value,
       contexts,
       dvce_created_tstamp,
       behavior_at,
@@ -85,6 +86,7 @@ WITH structured_event_renamed AS (
       structured_event_renamed.page_url_scheme,
       structured_event_renamed.page_url_host,
       structured_event_renamed.page_url_fragment,
+      structured_event_renamed.event_value,
 
       -- Degenerate Dimensions (Gitlab Standard Context Attributes)
       structured_event_renamed.gsc_google_analytics_client_id,
@@ -103,5 +105,5 @@ WITH structured_event_renamed AS (
     created_by="@michellecooper",
     updated_by="@chrissharp",
     created_date="2022-09-01",
-    updated_date="2022-12-01"
+    updated_date="2023-01-20"
 ) }}

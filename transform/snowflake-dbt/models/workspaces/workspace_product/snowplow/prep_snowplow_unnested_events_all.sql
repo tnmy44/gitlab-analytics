@@ -21,6 +21,7 @@ SELECT
   se_category                         AS event_category,
   se_label                            AS event_label,
   se_property                         AS event_property,
+  se_value                            AS event_value,
   platform                            AS platform,
   gsc_pseudonymized_user_id           AS gsc_pseudonymized_user_id,
   page_urlhost                        AS page_url_host,
