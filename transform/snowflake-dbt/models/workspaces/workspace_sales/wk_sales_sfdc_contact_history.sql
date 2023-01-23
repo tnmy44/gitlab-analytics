@@ -1,3 +1,5 @@
+{{ config(alias='sfdc_contact_history') }}
+
 WITH base AS (
 
     SELECT *
