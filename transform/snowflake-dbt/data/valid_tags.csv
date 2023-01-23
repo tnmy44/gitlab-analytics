@@ -58,3 +58,4 @@ zuora_central_sandbox, Relates to Central Sandbox data
 zuora_revenue, Relates to Zuora Revenue data
 zuora_query_api, Relates to Zuora Query API data
 true_up, Relates to True Ups
+six_hourly, Relates to the six_hourly dbt DAG
