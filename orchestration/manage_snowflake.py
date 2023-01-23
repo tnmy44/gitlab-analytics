@@ -116,7 +116,7 @@ class SnowflakeManager:
         }
 
         create_db = databases[database]
-        clone_db = f"clone {database} COPY GRANTS" if not empty else ""
+        clone_db = f"clone {database}" if not empty else ""
         queries = self.generate_db_queries(create_db, clone_db, schema, database)
 
         # if force is false, check if the database exists
