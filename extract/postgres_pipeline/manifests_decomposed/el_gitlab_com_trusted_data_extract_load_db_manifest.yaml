@@ -822,14 +822,6 @@ tables:
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2
         UNION ALL
-        SELECT 'gitlab_db_project_daily_statistics' AS table_name
-        , date as created_date
-        , 'null' as updated_date
-        , count(*) as number_of_records
-        FROM project_daily_statistics
-        WHERE DATE(date) > current_date - interval '8' day
-        GROUP BY 1,2
-        UNION ALL
         SELECT 'gitlab_db_audit_events' AS table_name
         , DATE(created_at) as created_date
         , 'null' as updated_date
