@@ -78,7 +78,7 @@
       {{ dbt_utils.surrogate_key(['sfdc_users.user_area']) }}                                                                         AS dim_crm_user_area_id,
       sfdc_users.user_area                                                                                                            AS crm_user_area,
       sfdc_users.user_business_unit                                                                                                   AS crm_user_business_unit,
-      {{ dbt_utils.surrogate_key(['sfdc_users.user_business_unit']) }}                                                                AS dim_crm_user_busines_unit_id,
+      {{ dbt_utils.surrogate_key(['sfdc_users.user_business_unit']) }}                                                                AS dim_crm_user_business_unit_id,
       COALESCE(
                sfdc_users.user_segment_geo_region_area,
                CONCAT(sfdc_users.user_segment,'-' , sfdc_users.user_geo, '-', sfdc_users.user_region, '-', sfdc_users.user_area)

@@ -80,7 +80,9 @@
       sheetload_mapping_sdr_sfdc_bamboohr_source.sdr_region,
       sfdc_users.created_date,
       CASE
-        WHEN sfdc_users.snapshot_fiscal_year BETWEEN '2021' AND '2023'
+        WHEN sfdc_users.snapshot_fiscal_year < 2022
+          THEN sfdc_users.user_area
+        WHEN sfdc_users.snapshot_fiscal_year = 2023
           THEN CONCAT(sfdc_users.user_segment, 
                       '-',
                       sfdc_users.user_geo, 

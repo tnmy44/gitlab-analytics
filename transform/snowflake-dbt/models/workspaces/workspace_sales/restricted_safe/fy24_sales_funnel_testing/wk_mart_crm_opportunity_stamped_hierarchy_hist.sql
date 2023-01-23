@@ -12,7 +12,7 @@
     ('dim_crm_user_hierarchy', 'wk_dim_crm_user_hierarchy')
 ]) }}
 
-), final AS (
+, final AS (
 
     SELECT
 
