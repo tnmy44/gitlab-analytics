@@ -85,7 +85,6 @@ SELECT
   user_limit_notification_at,
   user_limit_enforcement_at,
   is_impacted_by_user_limit,
-  is_impacted_by_user_limit_change,
 
   marketo_lead_id,
   is_current_saas_trial,
@@ -101,4 +100,5 @@ WHERE rlike(email_address, '^[A-Z0-9.+_%-]+@[A-Z0-9.-]+\\.[A-Z]+$','i')
     )
     OR is_ptpt_contact_change = TRUE
     OR is_impacted_by_user_limit_change = TRUE
+    OR is_current_saas_trial = TRUE
   )
