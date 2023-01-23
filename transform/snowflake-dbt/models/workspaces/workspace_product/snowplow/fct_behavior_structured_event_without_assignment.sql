@@ -36,7 +36,8 @@
       fct_behavior_structured_event.session_id,
       fct_behavior_structured_event.user_snowplow_domain_id,
       fct_behavior_structured_event.contexts,
-
+      fct_behavior_structured_event.event_value,
+      
       -- Degenerate Dimensions (Gitlab Standard Context Attributes)
       fct_behavior_structured_event.gsc_google_analytics_client_id,
       fct_behavior_structured_event.gsc_pseudonymized_user_id,
