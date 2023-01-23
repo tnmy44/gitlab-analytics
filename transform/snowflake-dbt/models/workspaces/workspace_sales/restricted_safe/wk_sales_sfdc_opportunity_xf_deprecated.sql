@@ -694,7 +694,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
       -- account driven fields 
       sfdc_accounts_xf.account_name,
-      sfdc_accounts_xf.ultimate_parent_account_id,
+      -- sfdc_accounts_xf.ultimate_parent_account_id,
       sfdc_accounts_xf.is_jihu_account,
       
       sfdc_accounts_xf.account_owner_user_segment,
@@ -803,7 +803,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
       CASE 
-        WHEN sfdc_accounts_xf.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+        WHEN sfdc_accounts_xf.ultimate_parent_account_id IN ('001610000111bA3AAI','0016100001F4xlaAAB','0016100001CXGCsAAP','00161000015O9YnAAK','0016100001b9JscAAE') 
           AND sfdc_opportunity_xf.close_date < '2020-08-01' 
             THEN 1
         -- NF 2021 - Pubsec extreme deals

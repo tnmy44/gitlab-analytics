@@ -25,7 +25,6 @@ SELECT
     mart.crm_account_name                                    AS account_name,
     mart.master_record_id,
     mart.dim_crm_user_id                                     AS owner_id,
-    -- parent_id,
     mart.dim_crm_person_primary_contact_id                   AS primary_contact_id,
     mart.record_type_id,
     mart.partner_vat_tax_id,
@@ -175,6 +174,7 @@ SELECT
     mart.is_zi_circle_ci_present                                    AS zi_circle_ci_presence_flag,
     mart.is_zi_bit_bucket_present                                   AS zi_bit_bucket_presence_flag,
 
+    mart.crm_account_owner_user_segment                             AS account_owner_user_segment,
     mart.crm_account_owner_geo                                      AS account_owner_user_geo,
     mart.crm_account_owner_region                                   AS account_owner_user_region,
     mart.crm_account_owner_area                                     AS account_owner_user_area,
