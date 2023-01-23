@@ -19,16 +19,16 @@ LICENSE.md         @rparker2
 README.md          @rparker2 @rparker2 @iweeks @dvanrooijen2 @mlaanen
 
 [Data Engineering]
-/dags/              @paul_armstrong @vedprakash2021
-/extract/           @jjstark @paul_armstrong @vedprakash2021
-/load/              @jjstark @paul_armstrong @vedprakash2021
-/orchestration/     @jjstark @paul_armstrong @vedprakash2021
+/dags/              @paul_armstrong @vedprakash2021 @rbacovic
+/extract/           @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/load/              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/orchestration/     @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /permissions/       @dvanrooijen2 @paul_armstrong @jjstark
-/pump/              @jjstark @paul_armstrong @vedprakash2021
+/pump/              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
-Makefile            @jjstark @paul_armstrong @vedprakash2021
-docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021
-.gitlab-ci.yml      @jjstark @paul_armstrong @vedprakash2021
+Makefile            @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+.gitlab-ci.yml      @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
 
 
@@ -115,6 +115,8 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021
 
 /transform/snowflake-dbt/models/sources/qualtrics           @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks
 /transform/snowflake-dbt/models/legacy/qualtrics            @michellecooper @jeanpeguero @iweeks
+
+/transform/snowflake-dbt/models/sources/saas_usage_ping     @vedprakash @rbacovic @jjstark
 
 /transform/snowflake-dbt/models/sources/sfdc/               @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks
 /transform/snowflake-dbt/models/legacy/sfdc/                @michellecooper @jeanpeguero @iweeks
