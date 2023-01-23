@@ -2121,6 +2121,7 @@ tables:
       , first_name
       , last_name
       , user_type
+      , otp_required_for_login
       FROM users
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
