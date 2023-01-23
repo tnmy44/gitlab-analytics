@@ -149,7 +149,12 @@ models:
       clari:
         +materialized: table
         +schema: clari
-         
+
+      static:
+        +materialized: view
+        +schema: static
+        +database: "{{ env_var('SNOWFLAKE_STATIC_DATABASE') }}" #STATIC
+
       container_registry:
         +schema: container_registry
 
@@ -226,7 +231,7 @@ models:
         +schema: google_analytics_360
 
       google_search_console:
-        +schema: google_search_console 
+        +schema: google_search_console
 
       greenhouse:
         +schema: greenhouse

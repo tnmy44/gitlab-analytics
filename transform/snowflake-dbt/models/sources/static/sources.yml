@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: static
+    database: '{{ env_var("SNOWFLAKE_STATIC_DATABASE") }}'
+    schema: sensitive
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+
+    tables:
+    - name: qualtrics_post_purchase_survey_answers_from_issue_15225
+      freshness: null

@@ -72,7 +72,7 @@ WITH responses AS (
         TO_TIMESTAMP_NTZ(survey_start_date) as survey_start_date,
         user_language,
         user_plan
-    from static.sensitive.qualtrics_post_purchase_survey_answers_from_issue_15225
+    from {{ ref('qualtrics_post_purchase_survey_answers_from_issue_15225') }} 
 )
 
 SELECT *
