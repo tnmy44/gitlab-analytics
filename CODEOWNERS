@@ -37,15 +37,15 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 # ======
 
 [dbt]
-/transform/                                         @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/transform/general/                                 @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/transform/snowflake-dbt/                           @jjstark @paul_armstrong @vedprakash2021 @iweeks @pempey @rbacovic
-/transform/snowflake-dbt/snowflake-dbt-ci.yml       @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/transform/snowflake-dbt/generate_dbt_schema.py     @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/transform/snowflake-dbt/periscope_check.py         @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/transform/                                         @jjstark @paul_armstrong @vedprakash2021
+/transform/general/                                 @jjstark @paul_armstrong @vedprakash2021
+/transform/snowflake-dbt/                           @jjstark @paul_armstrong @vedprakash2021 @iweeks @pempey
+/transform/snowflake-dbt/snowflake-dbt-ci.yml       @jjstark @paul_armstrong @vedprakash2021
+/transform/snowflake-dbt/generate_dbt_schema.py     @jjstark @paul_armstrong @vedprakash2021
+/transform/snowflake-dbt/periscope_check.py         @jjstark @paul_armstrong @vedprakash2021
 
-/transform/snowflake-dbt/analysis/                  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/transform/snowflake-dbt/docs/                      @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/transform/snowflake-dbt/analysis/                  @jjstark @paul_armstrong @vedprakash2021
+/transform/snowflake-dbt/docs/                      @jjstark @paul_armstrong @vedprakash2021
 /transform/snowflake-dbt/macros/                    @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
 
 /transform/snowflake-dbt/models/legacy/bamboohr/    @pempey @iweeks
@@ -95,7 +95,7 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_latest.sql        @tpoole1 @chrissharp @snalamaru @mdrussell @iweeks
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_historical.sql    @tpoole1 @chrissharp @snalamaru @mdrussell @iweeks
 
-/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @vedprakash2021 @rbacovic @jjstark @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks @rbacovic
+/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @vedprakash2021 @rbacovic @jjstark @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks
 /transform/snowflake-dbt/models/legacy/gitlab_dotcom/       @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks
 
 /transform/snowflake-dbt/models/sources/greenhouse/         @jjstark @rigerta @paul_armstrong @pempey @iweeks
@@ -115,6 +115,8 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
 /transform/snowflake-dbt/models/sources/qualtrics           @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks
 /transform/snowflake-dbt/models/legacy/qualtrics            @michellecooper @jeanpeguero @iweeks
+
+/transform/snowflake-dbt/models/sources/saas_usage_ping     @vedprakash @rbacovic @jjstark
 
 /transform/snowflake-dbt/models/sources/sfdc/               @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks
 /transform/snowflake-dbt/models/legacy/sfdc/                @michellecooper @jeanpeguero @iweeks
