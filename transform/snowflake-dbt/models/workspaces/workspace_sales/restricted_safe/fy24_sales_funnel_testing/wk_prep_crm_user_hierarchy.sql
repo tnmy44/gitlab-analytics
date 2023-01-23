@@ -6,7 +6,8 @@
     ('dim_date', 'dim_date'),
     ('wk_prep_crm_user_daily_snapshot', 'wk_prep_crm_user_daily_snapshot'),
     ('wk_prep_crm_opportunity', 'wk_prep_crm_opportunity'),
-    ('wk_prep_sales_funnel_target', 'wk_prep_sales_funnel_target')
+    ('wk_prep_sales_funnel_target', 'wk_prep_sales_funnel_target'),
+    ('wk_prep_sales_funnel_partner_alliance_target', 'wk_prep_sales_funnel_partner_alliance_target')
 
 ]) }}
 
@@ -75,52 +76,16 @@
 */
 
     SELECT DISTINCT 
-      fiscal_months.fiscal_year,
-      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment,
-      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo,
-      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region,
-      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area,
-      'none' AS user_business_unit,
-      CASE
-        WHEN fiscal_months.fiscal_year <= 2022
-          THEN sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area
-        WHEN fiscal_months.fiscal_year = 2023
-          THEN CONCAT(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment,
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo, 
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region, 
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area
-                      )
-        WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(user_business_unit) = 'comm'
-          THEN CONCAT(user_business_unit,
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo, 
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region, 
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment, 
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area
-                      )
-        WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(user_business_unit) = 'entg'
-          THEN CONCAT(user_business_unit,
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo, 
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region, 
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area, 
-                      '-',
-                      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment
-                      )
-        END                                                                                                                           AS dim_crm_user_hierarchy_sk
-    FROM sheetload_sales_funnel_partner_alliance_targets_matrix_source
-    INNER JOIN fiscal_months
-      ON sheetload_sales_funnel_partner_alliance_targets_matrix_source.month = fiscal_months.fiscal_month_name_fy
-    WHERE sheetload_sales_funnel_partner_alliance_targets_matrix_source.area != 'N/A'
-      AND sheetload_sales_funnel_partner_alliance_targets_matrix_source.area IS NOT NULL
+      wk_prep_sales_funnel_partner_alliance_target.fiscal_year,
+      wk_prep_sales_funnel_partner_alliance_target.user_segment,
+      wk_prep_sales_funnel_partner_alliance_target.user_geo,
+      wk_prep_sales_funnel_partner_alliance_target.user_region,
+      wk_prep_sales_funnel_partner_alliance_target.user_area,
+      wk_prep_sales_funnel_partner_alliance_target.user_business_unit,
+      wk_prep_sales_funnel_partner_alliance_target.dim_crm_user_hierarchy_sk
+    FROM wk_prep_sales_funnel_partner_alliance_target
+    WHERE wk_prep_sales_funnel_partner_alliance_target.area != 'N/A'
+      AND wk_prep_sales_funnel_partner_alliance_target.area IS NOT NULL
 
 ), user_hierarchy_stamped_opportunity AS (
 /*
