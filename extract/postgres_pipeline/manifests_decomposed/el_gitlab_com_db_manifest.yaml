@@ -423,20 +423,6 @@ tables:
       FROM dast_profiles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  dependency_proxy_image_ttl_group_policies:
-    export_schema: "gitlab_com"
-    export_table: dependency_proxy_image_ttl_group_policies
-    export_table_primary_key: group_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT created_at
-      , updated_at
-      , group_id
-      , ttl
-      , enabled
-      FROM dependency_proxy_image_ttl_group_policies
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp 
   deployment_approvals:
     dbt_source_model: true
     export_schema: 'gitlab_com'
