@@ -1248,23 +1248,6 @@ tables:
       FROM operations_feature_flags
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  packages_package_files:
-    export_schema: 'gitlab_com'
-    export_table: 'packages_package_files'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , package_id
-      , created_at
-      , updated_at
-      , size
-      , file_store
-      , file_name
-      , file
-      FROM packages_package_files
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   packages_packages:
     export_schema: 'gitlab_com'
     export_table: 'packages_packages'
