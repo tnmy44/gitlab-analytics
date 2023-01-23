@@ -150,11 +150,6 @@ models:
         +materialized: table
         +schema: clari
 
-      static:
-        +materialized: view
-        +schema: static
-        +database: "{{ env_var('SNOWFLAKE_STATIC_DATABASE') }}" #STATIC
-
       container_registry:
         +schema: container_registry
 
