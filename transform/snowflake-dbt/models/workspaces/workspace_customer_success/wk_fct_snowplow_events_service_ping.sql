@@ -18,10 +18,10 @@ WITH redis_clicks AS (
   WHERE behavior_at >= '2022-11-01' -- no events added to SP context before Nov 2022
 ),
 
-namespaces AS (
+namespaces_hist AS (
   SELECT
     *
-  FROM {{ ref('dim_namespace') }}
+  FROM {{ ref('gitlab_dotcom_namespace_lineage_scd') }}
 ),
 
 contexts AS (
@@ -38,11 +38,12 @@ final AS (
     redis_clicks.dim_namespace_id,
     redis_clicks.dim_project_id,
     redis_clicks.gsc_plan,
-    namespaces.ultimate_parent_namespace_id,
+    namespaces_hist.ultimate_parent_id AS ultimate_parent_namespace_id,
     contexts.redis_event_name
   FROM redis_clicks
   INNER JOIN contexts ON contexts.behavior_structured_event_pk = redis_clicks.behavior_structured_event_pk
-  LEFT JOIN namespaces ON namespaces.dim_namespace_id = redis_clicks.dim_namespace_id
+  LEFT JOIN namespaces_hist ON namespaces_hist.namespace_id = redis_clicks.dim_namespace_id
+    AND redis_clicks.behavior_at BETWEEN namespaces_hist.lineage_valid_from AND namespaces_hist.lineage_valid_to
   {% if is_incremental() %}
   
       AND redis_clicks.behavior_at >= (SELECT MAX(behavior_at) FROM {{this}})
@@ -55,5 +56,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-12-21",
-    updated_date="2023-01-11"
+    updated_date="2023-01-23"
 ) }}
