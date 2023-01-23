@@ -254,7 +254,7 @@ WITH date_details AS (
 
         -- deal path channel year
         SUM(CASE
-            WHEN (o.deal_path = 'Channel' OR o.deal_path != 'Partner')
+            WHEN (o.deal_path = 'Channel' OR o.deal_path = 'Partner')
             THEN o.net_arr
             ELSE 0 END) AS last_12m_booked_channel_net_arr,   --ttm_channel_net_arr
 
