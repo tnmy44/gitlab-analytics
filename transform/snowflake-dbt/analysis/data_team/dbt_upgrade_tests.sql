@@ -18,7 +18,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
 
@@ -38,7 +39,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
         
@@ -58,7 +60,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
 
@@ -80,7 +83,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["days_since_last_activity","dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -100,7 +104,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
 
@@ -121,7 +126,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -141,7 +147,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -161,7 +168,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
 
@@ -182,7 +190,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -202,7 +211,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -222,7 +232,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -242,7 +253,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -262,7 +274,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -282,7 +295,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -302,7 +316,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -322,7 +337,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
 
@@ -342,7 +358,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -362,7 +379,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -382,7 +400,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -402,7 +421,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
   
@@ -422,7 +442,8 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
 
@@ -443,6 +464,7 @@
 ) -%}
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
-    b_relation=new_etl_relation
+    b_relation=new_etl_relation,
+    exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
