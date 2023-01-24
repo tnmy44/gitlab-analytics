@@ -232,8 +232,8 @@ class SnowflakeManager:
         table_query = f"""
                      select COUNT(*) as table_count 
                      from {database}.information_schema.tables 
-                     where table_schema = "{schema.upper()}"
-                     and table_name = "{table_name.upper()}"
+                     where table_schema = '{schema.upper()}'
+                     and table_name = '{table_name.upper()}'
                      """
 
         table_result = query_executor(self.engine, table_query)
