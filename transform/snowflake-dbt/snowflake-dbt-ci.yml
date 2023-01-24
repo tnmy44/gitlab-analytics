@@ -203,6 +203,10 @@ specify_dbt_parameters:
     - INPUT=$(dbt --quiet ls --models $CHANGED_FILES --output json --output-keys "database schema name depends_on unique_id config" --profiles-dir profile --target prod)
     - /builds/gitlab-data/analytics/orchestration/clone_dbt_models_select.py $INPUT
 
+check_seeds_exist:
+  <<: *snowflake_dbt_jobs
+  script:
+   - python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema legacy --table acquisition_impact
 
 🔆⚡️clone_model_dbt_select:
   <<: *snowflake_dbt_jobs
