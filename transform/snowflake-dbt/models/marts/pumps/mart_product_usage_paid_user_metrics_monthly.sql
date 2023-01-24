@@ -430,7 +430,7 @@
       monthly_saas_metrics.analytics_28_days_user,
       monthly_saas_metrics.issues_edit_28_days_user,
       COALESCE(user_packages.distinct_users_whole_month, 0) AS user_packages_28_days_user,
-      COALESCE(p_terraform_state_api_unique_users.distinct_users, 0) AS terraform_state_api_28_days_user,
+      monthly_saas_metrics.terraform_state_api_28_days_user,
       monthly_saas_metrics.incident_management_28_days_user,
       -- Wave 3.2
       monthly_saas_metrics.auto_devops_enabled,
