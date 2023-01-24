@@ -88,10 +88,10 @@
       REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)             AS url_namespace_id,
       REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)               AS url_project_id,
       CASE 
-        WHEN page_url_path LIKE '%/activity'
-          THEN 'Project information - Activity'
         WHEN page_url_path LIKE '%/-/activity' 
           THEN 'Namespace information - Activity'
+        WHEN page_url_path LIKE '%/activity'
+          THEN 'Project information - Activity'
         WHEN page_url_path LIKE '%/-/labels'
           THEN 'Namespace or Project information - Labels'
         WHEN page_url_path LIKE '%/-/project_members'
