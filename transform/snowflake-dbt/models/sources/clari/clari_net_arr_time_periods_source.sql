@@ -16,7 +16,7 @@ intermediate AS (
     source.uploaded_at
   FROM
     source,
-    LATERAL FLATTEN(input => jsontext:data:timePeriods) AS d
+    LATERAL FLATTEN(input => jsontext['data']['timePeriods']) AS d
 
   {% if is_incremental() %}
     WHERE source.uploaded_at > (SELECT MAX(t.uploaded_at) FROM {{ this }} AS t)
@@ -25,13 +25,13 @@ intermediate AS (
 
 parsed AS (
   SELECT
-    REPLACE(value:timePeriodId, '_', '-')::varchar AS fiscal_quarter,
-    value:startDate::date                          AS fiscal_quarter_start_date,
-    value:endDate::date                            AS fiscal_quarter_end_date,
-    value:label::varchar                           AS quarter,
-    value:year::number                             AS year,
-    value:crmId::varchar                           AS crm_id,
-    value:type::varchar                            AS time_period_type,
+    REPLACE(value['timePeriodId'], '_', '-')::VARCHAR AS fiscal_quarter,
+    value['startDate']::DATE                          AS fiscal_quarter_start_date,
+    value['endDate']::DATE                            AS fiscal_quarter_end_date,
+    value['label']::VARCHAR                           AS quarter,
+    value['year']::NUMBER                             AS year,
+    value['crmId']::VARCHAR                           AS crm_id,
+    value['type']::VARCHAR                            AS time_period_type,
     uploaded_at
   FROM
     intermediate
