@@ -158,18 +158,16 @@ SELECT
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.stage_name IN (
-                    'create', 'devops::create'
-                ) AND usage_ping_metrics.time_frame = 'all'
+                usage_ping_metrics.stage_name = 'create'
+                AND usage_ping_metrics.time_frame = 'all'
                 THEN flattened_metrics.metrics_path
         END
     ) AS stage_create_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.stage_name IN (
-                    'create', 'devops::create'
-                ) AND usage_ping_metrics.time_frame = '28d'
+                usage_ping_metrics.stage_name = 'create'
+                AND usage_ping_metrics.time_frame = '28d'
                 THEN flattened_metrics.metrics_path
         END
     ) AS stage_create_28days_features,
@@ -211,18 +209,16 @@ SELECT
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.stage_name IN (
-                    'release', 'releases'
-                ) AND usage_ping_metrics.time_frame = 'all'
+                usage_ping_metrics.stage_name = 'release'
+                AND usage_ping_metrics.time_frame = 'all'
                 THEN flattened_metrics.metrics_path
         END
     ) AS stage_release_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.stage_name IN (
-                    'release', 'releases'
-                ) AND usage_ping_metrics.time_frame = '28d'
+                usage_ping_metrics.stage_name = 'release'
+                AND usage_ping_metrics.time_frame = '28d'
                 THEN flattened_metrics.metrics_path
         END
     ) AS stage_release_28days_features,
@@ -264,18 +260,16 @@ SELECT
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.stage_name IN (
-                    'manage', 'managed'
-                ) AND usage_ping_metrics.time_frame = 'all'
+                usage_ping_metrics.stage_name = 'manage'
+                AND usage_ping_metrics.time_frame = 'all'
                 THEN flattened_metrics.metrics_path
         END
     ) AS stage_manage_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.stage_name IN (
-                    'manage', 'managed'
-                ) AND usage_ping_metrics.time_frame = '28d'
+                usage_ping_metrics.stage_name = 'manage' 
+                AND usage_ping_metrics.time_frame = '28d'
                 THEN flattened_metrics.metrics_path
         END
     ) AS stage_manage_28days_features,
@@ -283,18 +277,16 @@ SELECT
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.stage_name IN (
-                    'secure', 'devops::secure'
-                ) AND usage_ping_metrics.time_frame = 'all'
+                usage_ping_metrics.stage_name = 'secure'
+                AND usage_ping_metrics.time_frame = 'all'
                 THEN flattened_metrics.metrics_path
         END
     ) AS stage_secure_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.stage_name IN (
-                    'secure', 'devops::secure'
-                ) AND usage_ping_metrics.time_frame = '28d'
+                usage_ping_metrics.stage_name = 'secure'
+                AND usage_ping_metrics.time_frame = '28d'
                 THEN flattened_metrics.metrics_path
         END
     ) AS stage_secure_28days_features,
@@ -569,9 +561,8 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.stage_name IN (
-                        'create', 'devops::create'
-                    ) AND usage_ping_metrics.time_frame = 'all'
+                    usage_ping_metrics.stage_name = 'create'
+                    AND usage_ping_metrics.time_frame = 'all'
                     THEN flattened_metrics.metrics_value
             END
         ),
@@ -603,9 +594,8 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.stage_name IN (
-                        'release', 'releases'
-                    ) AND usage_ping_metrics.time_frame = 'all'
+                    usage_ping_metrics.stage_name = 'release'
+                    AND usage_ping_metrics.time_frame = 'all'
                     THEN flattened_metrics.metrics_value
             END
         ),
@@ -637,9 +627,8 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.stage_name IN (
-                        'manage', 'managed'
-                    ) AND usage_ping_metrics.time_frame = 'all'
+                    usage_ping_metrics.stage_name = 'manage'
+                    AND usage_ping_metrics.time_frame = 'all'
                     THEN flattened_metrics.metrics_value
             END
         ),
@@ -649,9 +638,8 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.stage_name IN (
-                        'secure', 'devops::secure'
-                    ) AND usage_ping_metrics.time_frame = 'all'
+                    usage_ping_metrics.stage_name = 'secure'
+                    AND usage_ping_metrics.time_frame = 'all'
                     THEN flattened_metrics.metrics_value
             END
         ),
