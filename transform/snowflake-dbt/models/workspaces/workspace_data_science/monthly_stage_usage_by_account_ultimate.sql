@@ -343,6 +343,57 @@ SELECT
         END
     ) AS stage_enablement_28days_features,
 
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.stage_name = 'govern'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS stage_govern_alltime_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.stage_name = 'govern'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS stage_govern_28days_features,
+
+        COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.stage_name = 'fulfillment'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS stage_fulfillment_alltime_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.stage_name = 'fulfillment'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS stage_fulfillment_28days_features,
+
+        COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.stage_name = 'analytics'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS stage_analytics_alltime_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.stage_name = 'analytics'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS stage_analytics_28days_features,
+
     -- NUMBER OF FEATURES USED BY PRODUCT STAGE
     COUNT(
         DISTINCT CASE
@@ -652,6 +703,40 @@ SELECT
         0
     ) AS stage_enablement_alltime_feature_sum,
 
+    COALESCE(
+        SUM(
+            CASE
+                WHEN
+                    usage_ping_metrics.stage_name = 'govern'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
+            END
+        ),
+        0
+    ) AS stage_govern_alltime_feature_sum,
+    COALESCE(
+        SUM(
+            CASE
+                WHEN
+                    usage_ping_metrics.stage_name = 'fulfillment'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
+            END
+        ),
+        0
+    ) AS stage_fulfillment_alltime_feature_sum,
+    COALESCE(
+        SUM(
+            CASE
+                WHEN
+                    usage_ping_metrics.stage_name = 'analytics'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
+            END
+        ),
+        0
+    ) AS stage_analytics_alltime_feature_sum,
+
     /* If want to calculate 28 day metrics, could use the lag function. Or
        compute by nesting this SELECT statement in a WITH and computing after
        the fact, STAGE_PLAN_ALLTIME_FEATURE_SUM -
@@ -712,6 +797,18 @@ SELECT
         DIV0(stage_enablement_alltime_feature_sum,
              all_stages_alltime_feature_sum), 4
     ) AS stage_enablement_alltime_share_pct,
+    ROUND(
+        DIV0(stage_govern_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
+    ) AS stage_govern_alltime_share_pct,
+    ROUND(
+        DIV0(stage_fulfillment_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
+    ) AS stage_fulfillment_alltime_share_pct,
+    ROUND(
+        DIV0(stage_analytics_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
+    ) AS stage_analytics_alltime_share_pct,
 
     -- MOST USED STAGE ALL TIME
     CASE GREATEST(
@@ -725,7 +822,10 @@ SELECT
         stage_manage_alltime_share_pct,
         stage_secure_alltime_share_pct,
         stage_growth_alltime_share_pct,
-        stage_enablement_alltime_share_pct
+        stage_enablement_alltime_share_pct,
+        stage_govern_alltime_share_pct,
+        stage_fulfillment_alltime_share_pct,
+        stage_analytics_alltime_share_pct
     )
         WHEN stage_plan_alltime_share_pct THEN 'plan'
         WHEN stage_create_alltime_share_pct THEN 'create'
@@ -738,6 +838,9 @@ SELECT
         WHEN stage_secure_alltime_share_pct THEN 'secure'
         WHEN stage_growth_alltime_share_pct THEN 'growth'
         WHEN stage_enablement_alltime_share_pct THEN 'enablement'
+        WHEN stage_govern_alltime_share_pct THEN 'govern'
+        WHEN stage_fulfillment_alltime_share_pct THEN 'fulfillment'
+        WHEN stage_analytics_alltime_share_pct THEN 'analytics'
         ELSE 'none'
     END AS stage_most_used_alltime,
 
@@ -845,7 +948,34 @@ SELECT
                     CASE WHEN stage_enablement_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
-    END AS stage_enablement_months_used
+    END AS stage_enablement_months_used,
+    CASE WHEN stage_govern_28days_features = 0 THEN 0
+        ELSE
+            ROW_NUMBER() OVER (
+                PARTITION BY
+                    flattened_metrics.dim_crm_account_id,
+                    CASE WHEN stage_govern_28days_features > 0 THEN 1 END
+                ORDER BY flattened_metrics.snapshot_month
+            )
+    END AS stage_govern_months_used,
+    CASE WHEN stage_fulfillment_28days_features = 0 THEN 0
+        ELSE
+            ROW_NUMBER() OVER (
+                PARTITION BY
+                    flattened_metrics.dim_crm_account_id,
+                    CASE WHEN stage_fulfillment_28days_features > 0 THEN 1 END
+                ORDER BY flattened_metrics.snapshot_month
+            )
+    END AS stage_fulfillment_months_used,
+    CASE WHEN stage_analytics_28days_features = 0 THEN 0
+        ELSE
+            ROW_NUMBER() OVER (
+                PARTITION BY
+                    flattened_metrics.dim_crm_account_id,
+                    CASE WHEN stage_analytics_28days_features > 0 THEN 1 END
+                ORDER BY flattened_metrics.snapshot_month
+            )
+    END AS stage_analytics_months_used
 
 FROM flattened_metrics
 LEFT JOIN
