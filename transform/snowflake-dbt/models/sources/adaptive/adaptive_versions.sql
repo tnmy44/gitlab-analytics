@@ -1,3 +1,8 @@
+
+with source as (
+  select * from
+  {{ source('tap_adaptive', 'versions'}}
+),
 SELECT
   PARSE_JSON(_data):"@id"::varchar AS parent_id,
   version.value['@id']::varchar AS id,
@@ -18,7 +23,7 @@ SELECT
   version.value['@lockLeading'] AS lock_leading,
   __LOADED_AT
 FROM
-  "RAW"."TAP_ADAPTIVE"."VERSIONS",
+  source
   LATERAL FLATTEN(input => PARSE_JSON(_data):version) version
 ORDER BY
   __LOADED_AT

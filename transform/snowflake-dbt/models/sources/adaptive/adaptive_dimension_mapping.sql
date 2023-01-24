@@ -1,10 +1,14 @@
-WITH
+
+with source as (
+  select * from
+  {{ source('tap_adaptive', 'dimension_mapping'}}
+),
   parsed AS (
     SELECT
       PARSE_JSON(_data) v,
       __LOADED_AT
     FROM
-      "RAW"."TAP_ADAPTIVE"."DIMENSION_MAPPING"
+      source
   )
 SELECT
   v:version['@id']::varchar AS parent_id,

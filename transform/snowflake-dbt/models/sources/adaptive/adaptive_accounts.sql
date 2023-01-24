@@ -1,3 +1,7 @@
+with source as (
+  select * from
+  {{ source('tap_adaptive', 'accounts'}}
+),
 SELECT
   PARSE_JSON(_data)['@id']::varchar AS parent_id,
   PARSE_JSON(_data)['@name']::varchar AS parent_name,
@@ -38,7 +42,7 @@ SELECT
   account.value['@hasFormula']::varchar AS hasFormula,
   __LOADED_AT
 FROM
-  RAW.TAP_ADAPTIVE.accounts,
+  source,
   LATERAL FLATTEN(input => PARSE_JSON(_data)['account']) account
 ORDER BY
   __LOADED_AT

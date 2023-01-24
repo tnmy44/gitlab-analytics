@@ -1,3 +1,8 @@
+
+with source as (
+  select * from
+  {{ source('tap_adaptive', 'dimensions'}}
+),
 SELECT
   PARSE_JSON(_data) ['@id']::varchar AS parent_id,
   PARSE_JSON(_data) ['@name']::varchar AS parent_name,
@@ -9,5 +14,5 @@ SELECT
   dimension_values.value['@attribute']::variant AS attributes,
   __LOADED_AT
 FROM
-  RAW.TAP_ADAPTIVE.dimensions,
+  source,
   LATERAL FLATTEN(input => PARSE_JSON(_data)['dimensionValue']) dimension_values
