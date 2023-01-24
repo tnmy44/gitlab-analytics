@@ -312,40 +312,6 @@ SELECT
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.stage_name = 'protect'
-                AND usage_ping_metrics.time_frame = 'all'
-                THEN flattened_metrics.metrics_path
-        END
-    ) AS stage_protect_alltime_features,
-    COUNT(
-        DISTINCT CASE
-            WHEN
-                usage_ping_metrics.stage_name = 'protect'
-                AND usage_ping_metrics.time_frame = '28d'
-                THEN flattened_metrics.metrics_path
-        END
-    ) AS stage_protect_28days_features,
-
-    COUNT(
-        DISTINCT CASE
-            WHEN
-                usage_ping_metrics.stage_name = 'ecosystem'
-                AND usage_ping_metrics.time_frame = 'all'
-                THEN flattened_metrics.metrics_path
-        END
-    ) AS stage_ecosystem_alltime_features,
-    COUNT(
-        DISTINCT CASE
-            WHEN
-                usage_ping_metrics.stage_name = 'ecosystem'
-                AND usage_ping_metrics.time_frame = '28d'
-                THEN flattened_metrics.metrics_path
-        END
-    ) AS stage_ecosystem_28days_features,
-
-    COUNT(
-        DISTINCT CASE
-            WHEN
                 usage_ping_metrics.stage_name = 'growth'
                 AND usage_ping_metrics.time_frame = 'all'
                 THEN flattened_metrics.metrics_path
@@ -667,28 +633,6 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.stage_name = 'protect'
-                    AND usage_ping_metrics.time_frame = 'all'
-                    THEN flattened_metrics.metrics_value
-            END
-        ),
-        0
-    ) AS stage_protect_alltime_feature_sum,
-    COALESCE(
-        SUM(
-            CASE
-                WHEN
-                    usage_ping_metrics.stage_name = 'ecosystem'
-                    AND usage_ping_metrics.time_frame = 'all'
-                    THEN flattened_metrics.metrics_value
-            END
-        ),
-        0
-    ) AS stage_ecosystem_alltime_feature_sum,
-    COALESCE(
-        SUM(
-            CASE
-                WHEN
                     usage_ping_metrics.stage_name = 'growth'
                     AND usage_ping_metrics.time_frame = 'all'
                     THEN flattened_metrics.metrics_value
@@ -761,14 +705,6 @@ SELECT
              all_stages_alltime_feature_sum), 4
     ) AS stage_secure_alltime_share_pct,
     ROUND(
-        DIV0(stage_protect_alltime_feature_sum,
-             all_stages_alltime_feature_sum), 4
-    ) AS stage_protect_alltime_share_pct,
-    ROUND(
-        DIV0(stage_ecosystem_alltime_feature_sum,
-             all_stages_alltime_feature_sum), 4
-    ) AS stage_ecosystem_alltime_share_pct,
-    ROUND(
         DIV0(stage_growth_alltime_feature_sum,
              all_stages_alltime_feature_sum), 4
     ) AS stage_growth_alltime_share_pct,
@@ -788,8 +724,6 @@ SELECT
         stage_monitor_alltime_share_pct,
         stage_manage_alltime_share_pct,
         stage_secure_alltime_share_pct,
-        stage_protect_alltime_share_pct,
-        stage_ecosystem_alltime_share_pct,
         stage_growth_alltime_share_pct,
         stage_enablement_alltime_share_pct
     )
@@ -802,8 +736,6 @@ SELECT
         WHEN stage_monitor_alltime_share_pct THEN 'monitor'
         WHEN stage_manage_alltime_share_pct THEN 'manage'
         WHEN stage_secure_alltime_share_pct THEN 'secure'
-        WHEN stage_protect_alltime_share_pct THEN 'protect'
-        WHEN stage_ecosystem_alltime_share_pct THEN 'ecosystem'
         WHEN stage_growth_alltime_share_pct THEN 'growth'
         WHEN stage_enablement_alltime_share_pct THEN 'enablement'
         ELSE 'none'
@@ -896,24 +828,6 @@ SELECT
                 ORDER BY flattened_metrics.snapshot_month
             )
     END AS stage_secure_months_used,
-    CASE WHEN stage_protect_28days_features = 0 THEN 0
-        ELSE
-            ROW_NUMBER() OVER (
-                PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
-                    CASE WHEN stage_protect_28days_features > 0 THEN 1 END
-                ORDER BY flattened_metrics.snapshot_month
-            )
-    END AS stage_protect_months_used,
-    CASE WHEN stage_ecosystem_28days_features = 0 THEN 0
-        ELSE
-            ROW_NUMBER() OVER (
-                PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
-                    CASE WHEN stage_ecosystem_28days_features > 0 THEN 1 END
-                ORDER BY flattened_metrics.snapshot_month
-            )
-    END AS stage_ecosystem_months_used,
     CASE WHEN stage_growth_28days_features = 0 THEN 0
         ELSE
             ROW_NUMBER() OVER (
