@@ -141,7 +141,7 @@ class BizibleSnowFlakeExtractor:
         logging.info(f"Running {table_name} query")
 
         if full_refresh:
-            start_date = datetime.datetime(2020, 1, 1)
+            start_date = datetime(2020, 1, 1)
 
         if date_column == "":
             self.upload_complete_file(table_name)

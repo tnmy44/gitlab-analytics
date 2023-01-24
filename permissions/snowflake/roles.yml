@@ -1021,6 +1021,7 @@ roles:
             - covid19
             - snowflake_db
             - zoominfo
+            - static_sensitive_readonly
         owns:
             schemas:
                 - prod.common
@@ -2995,7 +2996,6 @@ roles:
             - loader
             - reporter
             - transformer
-            - static_sensitive_readonly
         warehouses:
             - loading
             - dev_l
@@ -3251,6 +3251,8 @@ roles:
                 read:
                     - jpeguero_prep
                     - jpeguero_prod
+                    - raw
+                    - prep
                 write:
                     - jpeguero_prep
                     - jpeguero_prod
@@ -3258,6 +3260,8 @@ roles:
                 read:
                     - jpeguero_prep.*
                     - jpeguero_prod.*
+                    - raw.snowflake_imports
+                    - prep.snowflake_imports
                 write:
                     - jpeguero_prep.*
                     - jpeguero_prod.*
@@ -3265,6 +3269,8 @@ roles:
                 read:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
+                    - raw.snowflake_imports.usage_ping_payloads
+                    - prep.snowflake_imports.snowflake_imports_usage_ping_payloads_source
                 write:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
@@ -4792,7 +4798,6 @@ users:
             - data_science_loader
             - sales_analytics
             - reporter
-            - static_sensitive_readonly
 
     - alpcohen:
         can_login: yes
