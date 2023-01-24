@@ -16,7 +16,7 @@ SELECT
   v:version['@name']::varchar                                                                 AS parent_name,
   v:version['@readOnly']::varchar                                                             AS parent_readonly,
   v:dimensions.dimension['@id']::varchar                                                      AS dimension_id,
-  v:dimensions.dimension['@mappingDimensionIds']::varchar                                     AS dimension_mappingdimensionids,
+  v:dimensions.dimension['@mappingDimensionIds']::varchar                                     AS dimension_mapping_dimension_ids,
   v:dimensions.dimension['@name']::varchar                                                    AS dimension_name,
   v:dimensions.dimension.mappingCriteria.mappingCriterion['@id']::varchar                     AS dimension_mapping_criteria_id,
   v:dimensions.dimension.mappingCriteria.mappingCriterion.dimension['@id']::varchar           AS dimension_mapping_criteria_dimension_id,
