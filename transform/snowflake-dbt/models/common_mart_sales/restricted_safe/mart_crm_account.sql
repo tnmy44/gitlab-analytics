@@ -28,6 +28,8 @@
       dim_crm_account.account_owner,
       dim_crm_account.proposed_crm_account_owner,
       dim_crm_account.technical_account_manager,
+      dim_crm_account.owner_role,
+      dim_crm_account.user_role_type,
 
       --crm account owner attributes
       crm_account_owner.crm_user_geo AS crm_account_owner_geo,
@@ -235,7 +237,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@lvinueza",
     created_date="2022-08-10",
-    updated_date="2022-11-02"
+    updated_date="2023-01-13"
 ) }}
