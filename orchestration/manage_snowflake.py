@@ -237,7 +237,6 @@ class SnowflakeManager:
                      """
 
         table_result = query_executor(self.engine, table_query)
-        logging.info(table_result[0]["table_count"])
         if table_result[0]["table_count"] == 0:
             return False
         else:

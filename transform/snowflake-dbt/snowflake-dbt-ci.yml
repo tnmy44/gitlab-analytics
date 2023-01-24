@@ -206,7 +206,13 @@ specify_dbt_parameters:
 check_seeds_exist:
   <<: *snowflake_dbt_jobs
   script:
-   - python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema legacy --table_name acquisition_impact
+   - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema legacy --table_name acquisition_impact)" = "True" ]
+   - then
+   -  dbt seed --full-refresh $CI_PROFILE_TARGET
+   - else
+   -  echo "False"
+   - fi
+
 
 🔆⚡️clone_model_dbt_select:
   <<: *snowflake_dbt_jobs
