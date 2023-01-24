@@ -228,6 +228,19 @@ class SnowflakeManager:
 
         return self
 
+    def check_if_table_exists(self, database: str, schema: str, table_name: str):
+        table_query = f"""
+                     select COUNT(*) as table_count 
+                     from {database}.information_schema.tables 
+                     where table_schema = {schema}
+                     and table_name = {table_name}
+                     """
+
+        table_result = query_executor(self.engine, table_query)
+        logging.info(table_result)
+
+
+
     def clone_stages(self, create_db: str, database: str, schema: str = ""):
         """
          Clones the stages available in a DB or schema (if specified).
