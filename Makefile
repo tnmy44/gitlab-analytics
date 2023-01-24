@@ -200,4 +200,4 @@ python_code_quality: black mypy pylint complexity flake8 vulture pytest
 
 clean-python:
 	@echo "Running clean-python..."
-	@poetry env remove python
+	@poetry env remove python3
