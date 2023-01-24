@@ -1021,6 +1021,7 @@ roles:
             - covid19
             - snowflake_db
             - zoominfo
+            - static_sensitive_readonly
         owns:
             schemas:
                 - prod.common
@@ -2240,6 +2241,18 @@ roles:
                 read:
                     - static.sensitive.*
 
+    - static_sensitive_readonly:
+        privileges:
+            databases:
+                read:
+                    - static
+            schemas:
+                read:
+                    - static.sensitive
+            tables:
+                read:
+                    - static.sensitive.*
+
     - static_admin:
         member_of:
             - static
@@ -2992,6 +3005,13 @@ roles:
             - transforming_xs
             - transforming_xl
 
+    - gweaver:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - hkacmarski:
         member_of:
             - analyst_sales
@@ -3231,6 +3251,8 @@ roles:
                 read:
                     - jpeguero_prep
                     - jpeguero_prod
+                    - raw
+                    - prep
                 write:
                     - jpeguero_prep
                     - jpeguero_prod
@@ -3238,6 +3260,8 @@ roles:
                 read:
                     - jpeguero_prep.*
                     - jpeguero_prod.*
+                    - raw.snowflake_imports
+                    - prep.snowflake_imports
                 write:
                     - jpeguero_prep.*
                     - jpeguero_prod.*
@@ -3245,6 +3269,8 @@ roles:
                 read:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
+                    - raw.snowflake_imports.usage_ping_payloads
+                    - prep.snowflake_imports.snowflake_imports_usage_ping_payloads_source
                 write:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
@@ -4895,6 +4921,11 @@ users:
         can_login: yes
         member_of:
             - grafana
+
+    - gweaver:
+        can_login: yes
+        member_of:
+            - gweaver
 
     - hkacmarski:
         can_login: yes

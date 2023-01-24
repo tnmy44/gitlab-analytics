@@ -15,6 +15,7 @@ DATA_SIREN_BRANCH=master
 SNOWFLAKE_SNAPSHOT_DATABASE=SNOWFLAKE
 SNOWFLAKE_LOAD_DATABASE=RAW
 SNOWFLAKE_PREP_DATABASE=PREP
+SNOWFLAKE_STATIC_DATABASE=STATIC
 SNOWFLAKE_PREP_SCHEMA=preparation
 SNOWFLAKE_PROD_DATABASE=PROD
 SNOWFLAKE_TRANSFORM_WAREHOUSE=ANALYST_XS
@@ -160,7 +161,7 @@ mypy:
 
 pylint:
 	@echo "Running pylint..."
-	@poetry run pylint extract/ --ignore=dags --disable=line-too-long,E0401,E0611,W1203,W1202,C0103,R0902,W0212
+	@poetry run pylint extract/ --ignore=analytics/dags --disable=line-too-long,E0401,E0611,W1203,W1202,C0103,R0801,R0902,W0212
 
 complexity:
 	@echo "Running complexity (Xenon)..."

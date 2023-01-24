@@ -1,6 +1,7 @@
 {{
   config(
-    materialized='table',
+    materialized='incremental',
+    unique_key='event_id',
     tags=["mnpi_exception"]
   )
 }}
@@ -19,10 +20,10 @@ WITH redis_clicks AS (
   )
 ),
 
-namespaces AS (
+namespaces_hist AS (
   SELECT
     *
-  FROM {{ ref('dim_namespace') }}
+  FROM {{ ref('gitlab_dotcom_namespace_lineage_scd') }}
 ),
 
 joined AS (
@@ -34,15 +35,21 @@ joined AS (
     redis_clicks.gsc_namespace_id,
     redis_clicks.gsc_project_id,
     redis_clicks.gsc_plan,
-    namespaces.ultimate_parent_namespace_id
+    namespaces_hist.ultimate_parent_id AS ultimate_parent_namespace_id
   FROM redis_clicks
-  LEFT JOIN namespaces ON namespaces.dim_namespace_id = redis_clicks.gsc_namespace_id
+  LEFT JOIN namespaces_hist ON namespaces_hist.namespace_id = redis_clicks.gsc_namespace_id
+    AND redis_clicks.derived_tstamp BETWEEN namespaces_hist.lineage_valid_from AND namespaces_hist.lineage_valid_to
+  {% if is_incremental() %}
+  
+      WHERE redis_clicks.derived_tstamp >= (SELECT MAX(derived_tstamp) FROM {{this}})
+  
+  {% endif %}
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mdrussell",
-    updated_by="@iweeks",
+    updated_by="@mdrussell",
     created_date="2022-06-06",
-    updated_date="2022-06-27"
+    updated_date="2022-01-23"
 ) }}

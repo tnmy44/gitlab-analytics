@@ -16,19 +16,19 @@ intermediate AS (
     source.uploaded_at
   FROM
     source,
-    LATERAL FLATTEN(input => jsontext:data:fields) AS d
+    LATERAL FLATTEN(input => jsontext['data']['fields']) AS d
 
   {% if is_incremental() %}
-    WHERE source.uploaded_at > (SELECT MAX(source.uploaded_at) FROM {{ this }})
+    WHERE source.uploaded_at > (SELECT MAX(t.uploaded_at) FROM {{ this }} AS t)
   {% endif %}
 ),
 
 parsed AS (
   SELECT
-    uploaded_at,
-    value:fieldId::varchar AS field_id,
-    value:fieldName::varchar AS field_name,
-    value:fieldType::varchar AS field_type
+    value['fieldId']::VARCHAR   AS field_id,
+    value['fieldName']::VARCHAR AS field_name,
+    value['fieldType']::VARCHAR AS field_type,
+    uploaded_at
   FROM
     intermediate
 
@@ -43,7 +43,6 @@ parsed AS (
   ORDER BY field_id
 )
 
-SELECT
-  *
+SELECT *
 FROM
   parsed
