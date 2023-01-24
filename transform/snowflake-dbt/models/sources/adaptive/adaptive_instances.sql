@@ -1,18 +1,18 @@
-
-with source as (
-  select * from
-  {{ source('tap_adaptive', 'instances'}}
+WITH source AS (
+  SELECT * FROM
+    {{ source('adaptive', 'instances') }}
 ),
+
 SELECT
-parse_json(_data)['@code']::varchar AS code,
-parse_json(_data)['@name']::varchar AS name,
-parse_json(_data)['@sessionTimeout']::varchar AS session_timeout,
-parse_json(_data)['@systemCurrency']::varchar AS system_currency,
-parse_json(_data)['@products']::varchar AS products,
-parse_json(_data)['@options']::varchar AS options,
-parse_json(_data)['@datasources']::varchar AS data_sources,
-parse_json(_data)['@tenantCode']::varchar AS tenant_code,
-parse_json(_data)['@tenantEnv']::varchar as tenant_env,
-__LOADED_AT
+  PARSE_JSON(_data) ['@code']::varchar           AS code,
+  PARSE_JSON(_data) ['@name']::varchar           AS name,
+  PARSE_JSON(_data) ['@sessionTimeout']::varchar AS session_timeout,
+  PARSE_JSON(_data) ['@systemCurrency']::varchar AS system_currency,
+  PARSE_JSON(_data) ['@products']::varchar       AS products,
+  PARSE_JSON(_data) ['@options']::varchar        AS options,
+  PARSE_JSON(_data) ['@datasources']::varchar    AS data_sources,
+  PARSE_JSON(_data) ['@tenantCode']::varchar     AS tenant_code,
+  PARSE_JSON(_data) ['@tenantEnv']::varchar      AS tenant_env,
+  __loaded_at
 FROM
   source

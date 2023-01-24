@@ -1,7 +1,7 @@
 
 with source as (
   select * from
-  {{ source('tap_adaptive', 'versions'}}
+  {{ source('adaptive', 'versions')}}
 ),
 SELECT
   PARSE_JSON(_data):"@id"::varchar AS parent_id,
