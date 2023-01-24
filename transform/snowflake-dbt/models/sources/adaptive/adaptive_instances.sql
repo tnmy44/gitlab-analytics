@@ -10,4 +10,4 @@ parse_json(_data)['@tenantCode']::varchar AS tenant_code,
 parse_json(_data)['@tenantEnv']::varchar as tenant_env,
 __LOADED_AT
 FROM
-  RAW.TAP_ADAPTIVE.instances;
+  RAW.TAP_ADAPTIVE.instances

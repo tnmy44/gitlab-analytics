@@ -8,4 +8,4 @@ SELECT
   attribute_values.value['@name']::varchar AS name
 FROM
   RAW.TAP_ADAPTIVE.attributes,
-  LATERAL FLATTEN(input => PARSE_JSON(_data)['attributeValue']) attribute_values;
+  LATERAL FLATTEN(input => PARSE_JSON(_data)['attributeValue']) attribute_values

@@ -7,8 +7,8 @@ WITH
       "RAW"."TAP_ADAPTIVE"."DIMENSION_FAMILIES"
   )
 select
-v['@accounts']::varchar,
-v['@dimensions']::varchar,
-v['@name']::varchar,
-v['@id']::varchar
-from parsed;
+v['@accounts']::varchar AS accounts,
+v['@dimensions']::varchar AS dimensions,
+v['@name']::varchar AS name,
+v['@id']::varchar as id
+from parsed

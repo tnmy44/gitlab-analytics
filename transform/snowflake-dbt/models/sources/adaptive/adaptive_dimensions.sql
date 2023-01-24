@@ -10,4 +10,4 @@ SELECT
   __LOADED_AT
 FROM
   RAW.TAP_ADAPTIVE.dimensions,
-  LATERAL FLATTEN(input => PARSE_JSON(_data)['dimensionValue']) dimension_values;
+  LATERAL FLATTEN(input => PARSE_JSON(_data)['dimensionValue']) dimension_values

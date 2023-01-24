@@ -9,4 +9,4 @@ parse_json(_data)['@timeZone']::varchar AS time_zone,
 parse_json(_data)['subscriptions']::variant AS subscriptions,
 __LOADED_AT
 FROM
-  RAW.TAP_ADAPTIVE.users;
+  RAW.TAP_ADAPTIVE.users
