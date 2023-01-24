@@ -208,7 +208,8 @@ check_seeds_exist:
   script:
    - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema legacy --table_name acquisition_impact)" = "True" ]
    - then
-   -  dbt seed --full-refresh $CI_PROFILE_TARGET
+   -   dbt deps $CI_PROFILE_TARGET
+   -   dbt seed --full-refresh $CI_PROFILE_TARGET
    - else
    -  echo "False"
    - fi
