@@ -213,12 +213,12 @@ we can delete this connection and use the mart table directly.
       sfdc_opportunity_xf.account_owner_team_stamped,
 
       -- NF: why do we need these fields now?
-      sfdc_opportunity_xf.division_sales_segment_stamped,
-      sfdc_opportunity_xf.tsp_max_hierarchy_sales_segment,
-      sfdc_opportunity_xf.division_sales_segment,
-      sfdc_opportunity_xf.ultimate_parent_sales_segment,
-      sfdc_opportunity_xf.sales_segment,
-      sfdc_opportunity_xf.parent_segment,
+      -- sfdc_opportunity_xf.division_sales_segment_stamped,
+      -- sfdc_opportunity_xf.tsp_max_hierarchy_sales_segment,
+      -- sfdc_opportunity_xf.division_sales_segment,
+      -- sfdc_opportunity_xf.ultimate_parent_sales_segment,
+      -- sfdc_opportunity_xf.sales_segment,
+      -- sfdc_opportunity_xf.parent_segment,
 
       -----------------------------------------------------------
       -----------------------------------------------------------
