@@ -75,7 +75,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
       fy22_user_hierarchy.crm_opp_owner_area_stamped
     FROM target_matrix
     LEFT JOIN fy22_user_hierarchy
-      ON {{ sales_funnel_text_slugify("target_matrix.area") }} = {{ sales_funnel_text_slugify("fy22_user_hierarchy.crm_opp_owner_area_stamped") }}
+      ON UPPER(target_matrix.area) = fy22_user_hierarchy.crm_opp_owner_area_stamped
     WHERE target_matrix.fiscal_year = 2022 
 
     UNION ALL
@@ -101,7 +101,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
       fy23_and_beyond_user_hierarchy.crm_opp_owner_area_stamped
     FROM target_matrix
     LEFT JOIN fy23_and_beyond_user_hierarchy
-      ON {{ sales_funnel_text_slugify("target_matrix.area") }} = {{ sales_funnel_text_slugify("fy23_and_beyond_user_hierarchy.crm_opp_owner_sales_segment_geo_region_area_stamped") }}
+      ON UPPER(target_matrix.area) = fy23_and_beyond_user_hierarchy.crm_opp_owner_sales_segment_geo_region_area_stamped
         AND target_matrix.fiscal_year = fy23_and_beyond_user_hierarchy.fiscal_year
     WHERE target_matrix.fiscal_year > 2022 
 
@@ -119,22 +119,22 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
      unioned_targets.kpi_name,
      unioned_targets.first_day_of_month,
      unioned_targets.fiscal_year,
-     unioned_targets.opportunity_source                                                                                             AS sales_qualified_source,
+     unioned_targets.opportunity_source                                                                                               AS sales_qualified_source,
      unioned_targets.dim_sales_qualified_source_id,
      unioned_targets.order_type,
      unioned_targets.dim_order_type_id,
-     unioned_targets.crm_opp_owner_sales_segment_geo_region_area_stamped                                                             AS crm_user_sales_segment_geo_region_area,
-     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id, unioned_targets.dim_crm_user_hierarchy_stamped_id)           AS dim_crm_user_hierarchy_live_id,
-     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_sales_segment_id, unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id)   AS dim_crm_user_sales_segment_id,
-     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_geo_id, unioned_targets.dim_crm_opp_owner_geo_stamped_id)                       AS dim_crm_user_geo_id,
-     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_region_id, unioned_targets.dim_crm_opp_owner_region_stamped_id)                 AS dim_crm_user_region_id,
-     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_area_id, unioned_targets.dim_crm_opp_owner_area_stamped_id)                     AS dim_crm_user_area_id,
+     unioned_targets.crm_opp_owner_sales_segment_geo_region_area_stamped                                                              AS crm_user_sales_segment_geo_region_area,
+     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id, unioned_targets.dim_crm_user_hierarchy_stamped_id)             AS dim_crm_user_hierarchy_live_id,
+     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_sales_segment_id, unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id)     AS dim_crm_user_sales_segment_id,
+     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_geo_id, unioned_targets.dim_crm_opp_owner_geo_stamped_id)                         AS dim_crm_user_geo_id,
+     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_region_id, unioned_targets.dim_crm_opp_owner_region_stamped_id)                   AS dim_crm_user_region_id,
+     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_area_id, unioned_targets.dim_crm_opp_owner_area_stamped_id)                       AS dim_crm_user_area_id,
      unioned_targets.dim_crm_user_hierarchy_stamped_id,
      unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id,
      unioned_targets.dim_crm_opp_owner_geo_stamped_id,
      unioned_targets.dim_crm_opp_owner_region_stamped_id,
      unioned_targets.dim_crm_opp_owner_area_stamped_id,
-     SUM(unioned_targets.allocated_target)                                                                                          AS allocated_target
+     SUM(unioned_targets.allocated_target)                                                                                            AS allocated_target
 
     FROM unioned_targets
     LEFT JOIN sfdc_user_hierarchy_live
