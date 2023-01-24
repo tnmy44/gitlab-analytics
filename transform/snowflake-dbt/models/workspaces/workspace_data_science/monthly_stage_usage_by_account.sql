@@ -496,6 +496,23 @@ SELECT
         END
     ) AS section_seg_28days_features,
 
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.section_name = 'analytics'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS section_analytics_alltime_features,
+    COUNT(
+        DISTINCT CASE
+            WHEN
+                usage_ping_metrics.section_name = 'analytics'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
+        END
+    ) AS section_analytics_28days_features,
+
     -- NUMBER OF FEATURES USED BY PRODUCT TIER
     COUNT(
         DISTINCT CASE
