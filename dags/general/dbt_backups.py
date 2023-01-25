@@ -29,6 +29,7 @@ from kube_secrets import (
     SNOWFLAKE_TRANSFORM_SCHEMA,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_USER,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -87,6 +88,7 @@ def generate_task(task: str, backup_list: list, is_included: bool = False) -> No
             SNOWFLAKE_TRANSFORM_ROLE,
             SNOWFLAKE_TRANSFORM_WAREHOUSE,
             SNOWFLAKE_TRANSFORM_SCHEMA,
+            SNOWFLAKE_STATIC_DATABASE,
         ],
         env_vars=pod_env_vars,
         arguments=[dbt_backups_cmd],
