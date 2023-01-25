@@ -211,8 +211,13 @@ check_seeds_exist:
    -   dbt deps $CI_PROFILE_TARGET
    -   dbt seed --full-refresh $CI_PROFILE_TARGET
    - else
-   -  echo "False"
+   -  echo "Already seeded"
    - fi
+
+test_seeds:
+  <<: *snowflake_dbt_jobs
+  script:
+    - python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema legacy --table_name acquisition_impact
 
 
 🔆⚡️clone_model_dbt_select:
