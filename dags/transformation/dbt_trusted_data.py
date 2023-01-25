@@ -33,6 +33,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -98,6 +99,7 @@ dbt_trusted_data = KubernetesPodOperator(
         SNOWFLAKE_TRANSFORM_SCHEMA,
         MCD_DEFAULT_API_ID,
         MCD_DEFAULT_API_TOKEN,
+        SNOWFLAKE_STATIC_DATABASE,
     ],
     env_vars=pod_env_vars,
     arguments=[dbt_trusted_data_command],

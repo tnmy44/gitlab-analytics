@@ -36,6 +36,7 @@ from kube_secrets import (
     SNOWFLAKE_TRANSFORM_SCHEMA,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_USER,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
