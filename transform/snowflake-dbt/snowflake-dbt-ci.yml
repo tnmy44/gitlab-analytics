@@ -217,7 +217,7 @@ check_seeds_exist:
 test_seeds:
   <<: *snowflake_dbt_jobs
   script:
-    - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema legacy --table_name acquisition_impact)" = "True" ]; then dbt deps $CI_PROFILE_TARGET dbt seed --full-refresh $CI_PROFILE_TARGET; fi
+    - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema legacy --table_name abc)" = "True" ]; then dbt deps $CI_PROFILE_TARGET dbt seed --full-refresh $CI_PROFILE_TARGET; fi
 
 🔆⚡️clone_model_dbt_select:
   <<: *snowflake_dbt_jobs
