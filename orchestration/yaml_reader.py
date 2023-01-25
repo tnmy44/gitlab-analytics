@@ -1,4 +1,6 @@
 import yaml
+from fire import Fire
+
 
 class YamlReader:
 
