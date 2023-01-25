@@ -10,11 +10,11 @@
 
 {{ simple_cte([
     ('sm_free_users','fct_ping_instance_free_user_metrics'),
-    ('saas_free_users','prep_saas_usage_ping_free_user_metrics')
-   --('smau', 'fct_ping_instance_metric_wave_monthly')
+    ('saas_free_users','prep_saas_usage_ping_free_user_metrics'),
+    ('smau', 'fct_ping_instance_metric_wave_monthly')
 ]) }}
 
-/*, smau_metrics AS (
+ , smau_metrics AS (
 
     SELECT distinct
       dim_instance_id as uuid,
@@ -25,14 +25,14 @@
       user_packages_28_days_user,
       terraform_state_api_28_days_user,
       incident_management_28_days_user
-    FROM smau*/
+    FROM smau
 
- sm_free_user_metrics AS (
+ ), sm_free_user_metrics AS (
 
     SELECT
-      sm_free_users.ping_created_at_month::DATE                                                 AS reporting_month,
+      sm_free_users.ping_created_date_month::DATE                                               AS reporting_month,
       NULL                                                                                      AS dim_namespace_id,
-      sm_free_users.dim_instance_id                                                             AS uuid,
+      sm_free_users.uuid,                                                            
       sm_free_users.host_name                                                                   AS hostname,
       'Self-Managed'                                                                            AS delivery_type,
       sm_free_users.cleaned_version,
@@ -206,18 +206,18 @@
       sm_free_users.paid_license_search_28_days_user,
       sm_free_users.last_activity_28_days_user,
       -- Data Quality Flag
-      IFF(ROW_NUMBER() OVER (PARTITION BY sm_free_users.uuid, sm_free_users.hostname
+      IFF(ROW_NUMBER() OVER (PARTITION BY sm_free_users.uuid, sm_free_users.host_name
                              ORDER BY sm_free_users.ping_created_at DESC
                             ) = 1,
           TRUE, FALSE)                                                                          AS is_latest_data
     FROM sm_free_users
-   -- LEFT JOIN smau_metrics
-   --   ON sm_free_users.dim_instance_id = smau_metrics.dim_instance_id
-   --   AND sm_free_users.host_name = smau_metrics.hostname
-  --    AND sm_free_users.ping_created_date_month = smau_metrics.snapshot_month
+    LEFT JOIN smau_metrics
+     ON sm_free_users.uuid = smau_metrics.uuid
+     AND sm_free_users.host_name = smau_metrics.hostname
+     AND sm_free_users.ping_created_date_month = smau_metrics.snapshot_month
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
-        sm_free_users.dim_instance_id,
+        sm_free_users.uuid,
         sm_free_users.host_name,
         sm_free_users.ping_created_date_month
       ORDER BY sm_free_users.ping_created_at DESC
