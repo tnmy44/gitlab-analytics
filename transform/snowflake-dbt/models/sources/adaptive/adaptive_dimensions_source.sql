@@ -1,6 +1,18 @@
+-- no merge key, behaves as append
+{{ config(
+    materialized="incremental",
+    incremental_strategy='merge'
+    )
+}}
 WITH source AS (
   SELECT * FROM
     {{ source('adaptive', 'dimensions') }}
+),
+intermediate AS (
+  select * from source
+  {% if is_incremental() %}
+    WHERE source.uploaded_at > (SELECT MAX(t.uploaded_at) FROM {{ this }} AS t)
+  {% endif %}
 )
 
 SELECT
@@ -14,5 +26,5 @@ SELECT
   dimension_values.value['attributes']::VARIANT   AS attributes,
   __loaded_at
 FROM
-  source,
+  intermediate,
   LATERAL FLATTEN(input => PARSE_JSON(_data) ['dimensionValue']) dimension_values
