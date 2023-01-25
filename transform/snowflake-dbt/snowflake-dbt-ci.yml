@@ -212,18 +212,7 @@ specify_dbt_parameters:
     - CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/^/$ANCESTOR_TYPE/g" | sed "s/.sql/$DEPENDENT_TYPE/g" )
     - echo $CHANGED_FILES
     - INPUT=$(dbt --quiet ls --models $CHANGED_FILES --output json --output-keys "database schema name depends_on unique_id config" --profiles-dir profile --target prod)
-    - /builds/gitlab-data/analytics/orchestration/clone_dbt_models_select.py $INPUT
-
-check_seeds_exist:
-  <<: *snowflake_dbt_jobs
-  script:
-   - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema legacy --table_name acquisition_impact)" = "True" ]; \
-   - then
-   -    dbt deps $CI_PROFILE_TARGET
-   -    dbt seed --full-refresh $CI_PROFILE_TARGET;\
-   - else
-   -  echo "Already seeded";\
-   - fi
+    - ../../orchestration/clone_dbt_models_select.py $INPUT
 
 test_seeds:
   <<: *snowflake_dbt_jobs
@@ -233,7 +222,7 @@ test_seeds:
     - TABLE_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_name --seed_file_path "./data/seeds.yml")
     - echo $TABLE_NAME
     - python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME
-    - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)" = "True" ]; then dbt deps $CI_PROFILE_TARGET dbt seed --full-refresh $CI_PROFILE_TARGET; fi
+    - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)" = "False" ]; then dbt deps $CI_PROFILE_TARGET dbt seed --full-refresh $CI_PROFILE_TARGET; fi
 
 🔆⚡️clone_model_dbt_select:
   <<: *snowflake_dbt_jobs
