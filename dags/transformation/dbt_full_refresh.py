@@ -112,6 +112,7 @@ dbt_full_refresh = KubernetesPodOperator(
         SNOWFLAKE_STATIC_DATABASE,
         MCD_DEFAULT_API_ID,
         MCD_DEFAULT_API_TOKEN,
+        SNOWFLAKE_STATIC_DATABASE,
     ],
     env_vars=pod_env_vars,
     arguments=[dbt_full_refresh_cmd],
