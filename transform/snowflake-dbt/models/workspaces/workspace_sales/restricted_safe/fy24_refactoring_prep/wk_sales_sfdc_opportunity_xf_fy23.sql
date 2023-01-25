@@ -1,4 +1,4 @@
-{{ config(alias='sfdc_opportunity_xf') }}
+{{ config(alias='sfdc_opportunity_xf_fy23') }}
 
 WITH edm_opty AS (
 
@@ -28,7 +28,8 @@ WITH edm_opty AS (
 -- keys used for aggregated historical analysis
 
     SELECT *
-    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
+    FROM {{ ref('wk_sales_report_agg_keys_fy23') }}
+    -- FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
     --FROM restricted_safe_workspace_sales.report_agg_demo_sqs_ot_keys
 
 ), today AS (
@@ -344,14 +345,32 @@ WITH edm_opty AS (
     edm_opty.is_excluded_from_pipeline_created                                AS is_excluded_flag,
     -----------------------------------------------
 
-    edm_opty.report_opportunity_user_segment,
+    -- edm_opty.report_opportunity_user_segment,
+    CASE 
+          WHEN (edm_opty.report_opportunity_user_segment = 'mid-market' OR edm_opty.report_opportunity_user_segment = 'smb')
+                  AND edm_opty.report_opportunity_user_region = 'meta'
+            THEN 'large'
+          WHEN (edm_opty.report_opportunity_user_segment = 'mid-market' OR edm_opty.report_opportunity_user_segment = 'smb')
+                  AND edm_opty.report_opportunity_user_region = 'latam'
+            THEN 'large'
+          WHEN (edm_opty.report_opportunity_user_segment = 'mid-market' OR edm_opty.report_opportunity_user_segment = 'smb')
+                  AND edm_opty.report_opportunity_user_geo = 'apac'
+            THEN 'large'
+        ELSE edm_opty.report_opportunity_user_segment 
+      END                                              AS report_opportunity_user_segment,
+
     edm_opty.report_opportunity_user_geo,
     edm_opty.report_opportunity_user_region,
     edm_opty.report_opportunity_user_area,
     
     -- NF 2022-02-17 these next two fields leverage the logic of comparing current fy opportunity demographics stamped vs account demo for previous years
     edm_opty.report_user_segment_geo_region_area,
-    edm_opty.report_user_segment_geo_region_area_sqs_ot,
+    -- edm_opty.report_user_segment_geo_region_area_sqs_ot,
+
+
+
+    LOWER(CONCAT(report_opportunity_user_segment,'-',edm_opty.report_opportunity_user_geo,'-',edm_opty.report_opportunity_user_region,'-',edm_opty.report_opportunity_user_area, '-', sales_qualified_source, '-', order_type)) AS report_user_segment_geo_region_area_sqs_ot,
+
 
     ---- measures
     edm_opty.open_1plus_deal_count,
@@ -369,26 +388,26 @@ WITH edm_opty AS (
 
     -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with
     -- different aggregation levels
-    LOWER(edm_opty.key_sqs)                             AS key_sqs,
-    LOWER(edm_opty.key_ot)                              AS key_ot,
-    LOWER(edm_opty.key_segment)                         AS key_segment,
-    LOWER(edm_opty.key_segment_sqs)                     AS key_segment_sqs,
-    LOWER(edm_opty.key_segment_ot)                      AS key_segment_ot,
-    LOWER(edm_opty.key_segment_geo)                     AS key_segment_geo,
-    LOWER(edm_opty.key_segment_geo_sqs)                 AS key_segment_geo_sqs,
-    LOWER(edm_opty.key_segment_geo_ot)                  AS key_segment_geo_ot,
-    LOWER(edm_opty.key_segment_geo_region)              AS key_segment_geo_region,
-    LOWER(edm_opty.key_segment_geo_region_sqs)          AS key_segment_geo_region_sqs,
-    LOWER(edm_opty.key_segment_geo_region_ot)           AS key_segment_geo_region_ot,
-    LOWER(edm_opty.key_segment_geo_region_area)         AS key_segment_geo_region_area,
-    LOWER(edm_opty.key_segment_geo_region_area_sqs)     AS key_segment_geo_region_area_sqs,
-    LOWER(edm_opty.key_segment_geo_region_area_ot)      AS key_segment_geo_region_area_ot,
-    LOWER(edm_opty.key_segment_geo_area)                AS key_segment_geo_area,
-    edm_opty.sales_team_cro_level,
-    edm_opty.sales_team_rd_asm_level,
-    edm_opty.sales_team_vp_level,
-    edm_opty.sales_team_avp_rd_level,
-    edm_opty.sales_team_asm_level,
+    -- LOWER(edm_opty.key_sqs)                             AS key_sqs,
+    -- LOWER(edm_opty.key_ot)                              AS key_ot,
+    -- LOWER(edm_opty.key_segment)                         AS key_segment,
+    -- LOWER(edm_opty.key_segment_sqs)                     AS key_segment_sqs,
+    -- LOWER(edm_opty.key_segment_ot)                      AS key_segment_ot,
+    -- LOWER(edm_opty.key_segment_geo)                     AS key_segment_geo,
+    -- LOWER(edm_opty.key_segment_geo_sqs)                 AS key_segment_geo_sqs,
+    -- LOWER(edm_opty.key_segment_geo_ot)                  AS key_segment_geo_ot,
+    -- LOWER(edm_opty.key_segment_geo_region)              AS key_segment_geo_region,
+    -- LOWER(edm_opty.key_segment_geo_region_sqs)          AS key_segment_geo_region_sqs,
+    -- LOWER(edm_opty.key_segment_geo_region_ot)           AS key_segment_geo_region_ot,
+    -- LOWER(edm_opty.key_segment_geo_region_area)         AS key_segment_geo_region_area,
+    -- LOWER(edm_opty.key_segment_geo_region_area_sqs)     AS key_segment_geo_region_area_sqs,
+    -- LOWER(edm_opty.key_segment_geo_region_area_ot)      AS key_segment_geo_region_area_ot,
+    -- LOWER(edm_opty.key_segment_geo_area)                AS key_segment_geo_area,
+    -- edm_opty.sales_team_cro_level,
+    -- edm_opty.sales_team_rd_asm_level,
+    -- edm_opty.sales_team_vp_level,
+    -- edm_opty.sales_team_avp_rd_level,
+    -- edm_opty.sales_team_asm_level,
 
     edm_opty.deal_size,
     edm_opty.calculated_deal_size,
@@ -489,6 +508,28 @@ WITH edm_opty AS (
 
     SELECT
       oppty_final.*,
+
+      agg_demo_keys.key_segment,
+      agg_demo_keys.key_sqs,
+      agg_demo_keys.key_ot,
+      agg_demo_keys.key_segment_sqs,
+      agg_demo_keys.key_segment_ot,
+      agg_demo_keys.key_segment_geo,
+      agg_demo_keys.key_segment_geo_sqs,
+      agg_demo_keys.key_segment_geo_ot,
+      agg_demo_keys.key_segment_geo_region,
+      agg_demo_keys.key_segment_geo_region_sqs,
+      agg_demo_keys.key_segment_geo_region_ot,
+      agg_demo_keys.key_segment_geo_region_area,
+      agg_demo_keys.key_segment_geo_region_area_sqs,
+      agg_demo_keys.key_segment_geo_region_area_ot,
+      agg_demo_keys.key_segment_geo_area,
+      agg_demo_keys.sales_team_cro_level,
+      agg_demo_keys.sales_team_rd_asm_level,
+      agg_demo_keys.sales_team_vp_level,
+      agg_demo_keys.sales_team_avp_rd_level,
+      agg_demo_keys.sales_team_asm_level,
+
 
       -- Created pipeline eligibility definition
       -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389

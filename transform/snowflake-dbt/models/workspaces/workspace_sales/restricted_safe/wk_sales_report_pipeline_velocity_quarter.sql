@@ -11,8 +11,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 -- keys used for aggregated historical analysis
 
     SELECT *
-    -- FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
-    FROM {{ ref('wk_sales_report_agg_keys_ssot') }} 
+    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }} 
 
 ), report_pipeline_velocity_quarter AS (
 

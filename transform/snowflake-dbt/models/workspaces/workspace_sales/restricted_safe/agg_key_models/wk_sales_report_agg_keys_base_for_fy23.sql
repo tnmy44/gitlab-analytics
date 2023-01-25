@@ -1,9 +1,14 @@
-{{ config(alias='report_agg_keys_base') }}
--- supports FY22, FY23 and FY24 granularity 
+{{ config (alias='report_agg_keys_base_for_fy23') }}
+-- base for wk_sales_report_agg_keys_fy23
+-- copy of wk_sales_report_agg_keys_base but segment is modified so that segment aggregation is comparable with FY24 models
 
 -- grains include:
 -- segment, geo, region, area, sqs, ot, deal_category, deal_group
 -- business_unit, role_type, partner_category, alliance_partner 
+
+
+-- to be deprecated after validation between FY24 and 23 models
+
 
 
 WITH sfdc_account_xf AS (
@@ -104,7 +109,22 @@ WITH sfdc_account_xf AS (
         END                                               AS alliance_partner,
 
 
-        report_opportunity_user_segment,
+        -- for FY23 - 24 transition 
+        CASE 
+          WHEN (report_opportunity_user_segment = 'mid-market' OR report_opportunity_user_segment = 'smb')
+                  AND report_opportunity_user_region = 'meta'
+            THEN 'large'
+          WHEN (report_opportunity_user_segment = 'mid-market' OR report_opportunity_user_segment = 'smb')
+                  AND report_opportunity_user_region = 'latam'
+            THEN 'large'
+          WHEN (report_opportunity_user_segment = 'mid-market' OR report_opportunity_user_segment = 'smb')
+                  AND report_opportunity_user_geo = 'apac'
+            THEN 'large'
+        ELSE report_opportunity_user_segment 
+        END                                              AS report_opportunity_user_segment,
+
+
+        -- report_opportunity_user_segment,
         report_opportunity_user_geo,
         report_opportunity_user_region,
         report_opportunity_user_area,
@@ -116,6 +136,7 @@ WITH sfdc_account_xf AS (
         opp.account_owner_user_geo,
         opp.account_owner_user_region,
         opp.account_owner_user_area
+
 
     FROM mart_crm_opportunity AS opp
     LEFT JOIN sfdc_users_xf AS account_owner

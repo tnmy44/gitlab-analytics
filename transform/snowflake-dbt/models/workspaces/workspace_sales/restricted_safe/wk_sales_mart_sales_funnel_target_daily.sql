@@ -29,8 +29,7 @@
   -- keys used for aggregated historical analysis
 
     SELECT *
-    -- FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
-    FROM {{ ref('wk_sales_report_agg_keys_ssot') }}
+    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
 
   
   ), final AS (
