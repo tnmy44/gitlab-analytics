@@ -53,6 +53,7 @@
 .dbt_validate_tags: &dbt_validate_tags
   - dbt --warn-error run-operation tag_validation --profiles-dir profile --target ci
 
+# First checks if dbt has already been seeded using the first table defined in ./data/seeds.yml before seeding.
 .auto_dbt_seed: &auto_dbt_seed
     - SCHEMA_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_schema --dbt_project_path "./dbt_project.yml")
     - TABLE_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_name --seed_file_path "./data/seeds.yml")
@@ -228,7 +229,10 @@ test_seeds:
   <<: *snowflake_dbt_jobs
   script:
     - SCHEMA_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_schema --dbt_project_path "./dbt_project.yml")
+    - echo $SCHEMA_NAME
     - TABLE_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_name --seed_file_path "./data/seeds.yml")
+    - echo $TABLE_NAME
+    - python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME
     - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)" = "True" ]; then dbt deps $CI_PROFILE_TARGET dbt seed --full-refresh $CI_PROFILE_TARGET; fi
 
 🔆⚡️clone_model_dbt_select:
