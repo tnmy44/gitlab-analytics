@@ -217,8 +217,10 @@ check_seeds_exist:
 read_yaml_test:
   <<: *snowflake_dbt_jobs
   script:
-    - SCHEMA_NAME = $(python3 ../../orchestration/yaml_reader.py read_seed_schema)
-    - TABLE_NAME = $(python3 ../../orchestration/yaml_reader.py read_seed_name)
+    - pwd
+    - ls
+    - SCHEMA_NAME = $(python3 ../../orchestration/yaml_reader.py read_seed_schema --dbt_project_path "/transform/snowflake-dbt/dbt_project.yml")
+    - TABLE_NAME = $(python3 ../../orchestration/yaml_reader.py read_seed_name -- seed_file_path "/transform/snowflake-dbt/data/seeds.yml")
     - echo $SCHEMA_NAME
     - echo $TABLE_NAME
     - echo $$SCHEMA_NAME
