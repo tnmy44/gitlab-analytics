@@ -37,7 +37,7 @@
       'Self-Managed'                                                                            AS delivery_type,
       sm_free_users.cleaned_version,
       sm_free_users.dim_crm_account_id,
-      sm_free_users.ping_created_at::DATE                                                       AS ping_date,
+      sm_free_users.ping_created_date                                                           AS ping_date,
       sm_free_users.umau_28_days_user,
       sm_free_users.action_monthly_active_users_project_repo_28_days_user,
       sm_free_users.merge_requests_28_days_user,
