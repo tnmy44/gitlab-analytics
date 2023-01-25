@@ -10,7 +10,7 @@ models:
         - name: visitor_id
           tests:
             - not_null
-        - name: visitor_start_time
+        - name: visit_start_time
           tests:
             - not_null
     - name: ga360_session_hit_custom_dimension_xf
