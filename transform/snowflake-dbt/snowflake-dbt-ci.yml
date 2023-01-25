@@ -214,6 +214,16 @@ check_seeds_exist:
    -  echo "Already seeded";\
    - fi
 
+read_yaml_test:
+  <<: *snowflake_dbt_jobs
+  script:
+    - SCHEMA_NAME = $(python3 ../../orchestration/yaml_reader.py read_seed_schema)
+    - TABLE_NAME = $(python3 ../../orchestration/yaml_reader.py read_seed_name)
+    - echo $SCHEMA_NAME
+    - echo $TABLE_NAME
+    - echo $$SCHEMA_NAME
+    - echo $$TABLE_NAME
+
 test_seeds:
   <<: *snowflake_dbt_jobs
   script:
