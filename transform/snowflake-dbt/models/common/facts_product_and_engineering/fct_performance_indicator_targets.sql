@@ -18,14 +18,13 @@ first_day_of_month AS (
 
 /*
 Grab metrics that currently have targets in the yml files
-We do not want to include metrics whose targets have been removed or metrics 
+We do not want to include metrics whose targets have been removed or metrics
 that have been removed from the files altogether
 */
 
 metrics_with_targets AS (
 
-  SELECT DISTINCT
-    pi_metric_name
+  SELECT DISTINCT pi_metric_name
   FROM pi_targets
   WHERE valid_to_date = (SELECT MAX(valid_to_date) FROM pi_targets) --record still valid
     AND pi_monthly_estimated_targets IS NOT NULL
@@ -56,8 +55,8 @@ flattened_monthly_targets AS (
     pi_metric_name,
     d.value,
     PARSE_JSON(d.path)[0]::TIMESTAMP AS target_end_month
-  FROM most_recent_yml_record,
-    LATERAL FLATTEN(INPUT => PARSE_JSON(pi_monthly_estimated_targets), OUTER => TRUE) AS d
+  FROM most_recent_yml_record
+  INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(pi_monthly_estimated_targets), OUTER => TRUE) AS d
 
 ),
 
@@ -111,5 +110,5 @@ results AS (
     created_by="@dihle",
     updated_by="@cbraza",
     created_date="2022-04-20",
-    updated_date="2022-12-23"
+    updated_date="2023-01-25"
 ) }}
