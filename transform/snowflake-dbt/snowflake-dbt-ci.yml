@@ -48,7 +48,6 @@
   - echo $SNOWFLAKE_SNAPSHOT_DATABASE
 
 .deps_and_seed: &deps_and_seed
-  - python3 macro_name_check.py
   - dbt deps $CI_PROFILE_TARGET
   - dbt seed --full-refresh $CI_PROFILE_TARGET #seed data from csv
   - dbt --warn-error run-operation tag_validation --profiles-dir profile --target ci
@@ -333,6 +332,29 @@ test_seeds:
         config.schema:restricted_safe_workspace_sales 
       --output json > safe_models.json
     - python3 safe_model_check.py
+
+# ======
+# Macro name Check
+# ======
+
+.dbt_macro_check: &dbt_macro_check
+  stage: 🛠 dbt Misc
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.22
+  before_script:
+    - cd transform/snowflake-dbt/
+  tags:
+    - analytics
+  only:
+    changes:
+      - "transform/snowflake-dbt/macros/**/*.sql"
+    refs:
+      - merge_request
+  allow_failure: false
+
+🔍macro_name_check:
+  <<: *dbt_macro_check
+  script:
+    - python3 macro_name_check.py
 
 # ======
 # Periscope Model Check
