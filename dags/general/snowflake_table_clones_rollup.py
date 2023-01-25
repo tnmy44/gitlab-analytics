@@ -20,6 +20,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_USER,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 
 # Load the env vars into a dict and set env vars
@@ -46,6 +47,7 @@ secrets = [
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_USER,
+    SNOWFLAKE_STATIC_DATABASE,
 ]
 
 # Default arguments for the DAG
