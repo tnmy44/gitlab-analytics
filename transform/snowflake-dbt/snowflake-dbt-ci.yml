@@ -47,10 +47,18 @@
   - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
   - echo $SNOWFLAKE_SNAPSHOT_DATABASE
 
-.deps_and_seed: &deps_and_seed
+.dbt_deps: &dbt_deps
   - dbt deps $CI_PROFILE_TARGET
-  - dbt seed --full-refresh $CI_PROFILE_TARGET #seed data from csv
   - dbt --warn-error run-operation tag_validation --profiles-dir profile --target ci
+
+.auto_dbt_seed: &auto_dbt_seed
+    - SCHEMA_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_schema --dbt_project_path "./dbt_project.yml")
+    - TABLE_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_name --seed_file_path "./data/seeds.yml")
+    - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)" = "True" ]; then dbt deps $CI_PROFILE_TARGET dbt seed --full-refresh $CI_PROFILE_TARGET; fi
+
+.deps_and_seed: &deps_and_seed
+  - *dbt_deps
+  - *auto_dbt_seed
 
 .l_warehouse: &l_warehouse
   - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_L_WAREHOUSE
@@ -275,6 +283,14 @@ test_seeds:
     - *deps_and_seed
     - echo $DBT_MODELS
     - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS
+
+manual_seed:
+  <<: *snowflake_dbt_jobs
+  stage: 🛠 dbt Misc
+  script:
+    - dbt deps $CI_PROFILE_TARGET
+    - dbt seed --full-refresh $CI_PROFILE_TARGET #seed data from csv
+    - dbt --warn-error run-operation tag_validation --profiles-dir profile --target ci
 
 # ======
 # SAFE Models Check
