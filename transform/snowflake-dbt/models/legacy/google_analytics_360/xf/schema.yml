@@ -7,7 +7,7 @@ models:
         - name: visit_id
           tests:
             - not_null
-        - name: visit_id
+        - name: visitor_id
           tests:
             - not_null
         - name: visitor_start_time
