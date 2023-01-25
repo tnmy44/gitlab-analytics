@@ -10,11 +10,11 @@
 
 {{ simple_cte([
     ('sm_free_users','fct_ping_instance_free_user_metrics'),
-    ('saas_free_users','prep_saas_usage_ping_free_user_metrics'),
-    ('smau', 'fct_ping_instance_metric_wave_monthly')
+    ('saas_free_users','prep_saas_usage_ping_free_user_metrics')
+   --('smau', 'fct_ping_instance_metric_wave_monthly')
 ]) }}
 
-, smau_metrics AS (
+/*, smau_metrics AS (
 
     SELECT distinct
       dim_instance_id as uuid,
@@ -25,9 +25,9 @@
       user_packages_28_days_user,
       terraform_state_api_28_days_user,
       incident_management_28_days_user
-    FROM smau
+    FROM smau*/
 
-), sm_free_user_metrics AS (
+ sm_free_user_metrics AS (
 
     SELECT
       sm_free_users.ping_created_at_month::DATE                                                 AS reporting_month,
@@ -211,10 +211,10 @@
                             ) = 1,
           TRUE, FALSE)                                                                          AS is_latest_data
     FROM sm_free_users
-    LEFT JOIN smau_metrics
-      ON sm_free_users.dim_instance_id = smau_metrics.dim_instance_id
-      AND sm_free_users.host_name = smau_metrics.hostname
-      AND sm_free_users.ping_created_date_month = smau_metrics.snapshot_month
+   -- LEFT JOIN smau_metrics
+   --   ON sm_free_users.dim_instance_id = smau_metrics.dim_instance_id
+   --   AND sm_free_users.host_name = smau_metrics.hostname
+  --    AND sm_free_users.ping_created_date_month = smau_metrics.snapshot_month
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
         sm_free_users.dim_instance_id,
