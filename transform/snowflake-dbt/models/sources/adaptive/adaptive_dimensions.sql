@@ -1,17 +1,17 @@
 WITH source AS (
   SELECT * FROM
     {{ source('adaptive', 'dimensions') }}
-),
+)
 
 SELECT
-  PARSE_JSON(_data) ['@id']::varchar              AS parent_id,
-  PARSE_JSON(_data) ['@name']::varchar            AS parent_name,
-  PARSE_JSON(_data) ['@seqNo']::varchar           AS parent_seq_num,
-  dimension_values.value['@id']::varchar          AS id,
-  dimension_values.value['@name']::varchar        AS name,
-  dimension_values.value['@description']::varchar AS description,
-  dimension_values.value['@shortName']::varchar   AS short_name,
-  dimension_values.value['@attribute']::variant   AS attributes,
+  PARSE_JSON(_data) ['@id']::VARCHAR              AS parent_id,
+  PARSE_JSON(_data) ['@name']::VARCHAR            AS parent_name,
+  PARSE_JSON(_data) ['@seqNo']::VARCHAR           AS parent_seq_num,
+  dimension_values.value['@id']::VARCHAR          AS id,
+  dimension_values.value['@name']::VARCHAR        AS name,
+  dimension_values.value['@description']::VARCHAR AS description,
+  dimension_values.value['@shortName']::VARCHAR   AS short_name,
+  dimension_values.value['attributes']::VARIANT   AS attributes,
   __loaded_at
 FROM
   source,

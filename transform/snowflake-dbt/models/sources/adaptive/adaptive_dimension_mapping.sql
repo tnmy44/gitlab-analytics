@@ -12,17 +12,17 @@ parsed AS (
 )
 
 SELECT
-  v:version['@id']::varchar                                                                   AS parent_id,
-  v:version['@name']::varchar                                                                 AS parent_name,
-  v:version['@readOnly']::varchar                                                             AS parent_readonly,
-  v:dimensions.dimension['@id']::varchar                                                      AS dimension_id,
-  v:dimensions.dimension['@mappingDimensionIds']::varchar                                     AS dimension_mapping_dimension_ids,
-  v:dimensions.dimension['@name']::varchar                                                    AS dimension_name,
-  v:dimensions.dimension.mappingCriteria.mappingCriterion['@id']::varchar                     AS dimension_mapping_criteria_id,
-  v:dimensions.dimension.mappingCriteria.mappingCriterion.dimension['@id']::varchar           AS dimension_mapping_criteria_dimension_id,
-  v:dimensions.dimension.mappingCriteria.mappingCriterion.dimension['@type']::varchar         AS dimension_mapping_criteria_dimension_type,
-  v:dimensions.dimension.mappingCriteria.mappingCriterion.dimension['@valueId']::varchar      AS dimension_mapping_criteria_dimension_value_id,
-  v:dimensions.dimension.mappingCriteria.mappingCriterion.mapTo['@dimensionValueId']::varchar AS map_to_dimension_value_id,
+  v:version['@id']::VARCHAR                                                                   AS version_id,
+  v:version['@name']::VARCHAR                                                                 AS version_name,
+  v:version['@readOnly']::VARCHAR                                                             AS version_readonly,
+  v:dimensions.dimension['@id']::VARCHAR                                                      AS dimension_id,
+  v:dimensions.dimension['@mappingDimensionIds']::VARCHAR                                     AS mapping_dimension_ids,
+  v:dimensions.dimension['@name']::VARCHAR                                                    AS dimension_name,
+  v:dimensions.dimension.mappingCriteria.mappingCriterion['@id']::VARCHAR                     AS mapping_criteria_id,
+  v:dimensions.dimension.mappingCriteria.mappingCriterion.dimension['@id']::VARCHAR           AS mapping_criteria_dimension_id,
+  v:dimensions.dimension.mappingCriteria.mappingCriterion.dimension['@type']::VARCHAR         AS mapping_criteria_dimension_type,
+  v:dimensions.dimension.mappingCriteria.mappingCriterion.dimension['@valueId']::VARCHAR      AS mapping_criteria_dimension_value_id,
+  v:dimensions.dimension.mappingCriteria.mappingCriterion.mapTo['@dimensionValueId']::VARCHAR AS mapping_criteria_map_to_dimension_value_id,
   __loaded_at
 FROM
   parsed

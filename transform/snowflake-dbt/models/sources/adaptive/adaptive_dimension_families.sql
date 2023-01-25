@@ -15,5 +15,6 @@ SELECT
   v['@accounts']::varchar   AS accounts,
   v['@dimensions']::varchar AS dimensions,
   v['@name']::varchar       AS name,
-  v['@id']::varchar         AS id
+  v['@id']::varchar         AS id,
+  __loaded_at
 FROM parsed
