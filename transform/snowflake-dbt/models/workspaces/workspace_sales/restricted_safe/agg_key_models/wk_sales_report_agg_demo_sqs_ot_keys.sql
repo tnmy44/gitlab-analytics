@@ -1,5 +1,6 @@
 {{ config(alias='report_agg_demo_sqs_ot_keys') }}
 -- supports FY22, FY23 grains
+-- based on wk_sales_report_agg_keys_base
 
 
 WITH report_agg_keys_base AS (
