@@ -25,7 +25,8 @@ class SnowflakeManager:
                 account=config_vars["SNOWFLAKE_ACCOUNT"],
                 role=config_vars["SNOWFLAKE_SYSADMIN_ROLE"],
                 warehouse=config_vars["SNOWFLAKE_LOAD_WAREHOUSE"],
-            )
+            ),
+            echo=False
         )
 
         # Snowflake database name should be in CAPS
