@@ -218,10 +218,10 @@ read_yaml_test:
   <<: *snowflake_dbt_jobs
   script:
     - SCHEMA_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_schema --dbt_project_path "./dbt_project.yml")
-    - TABLE_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_name -- seed_file_path "./data/seeds.yml")
     - echo $SCHEMA_NAME
-    - echo $TABLE_NAME
     - echo $$SCHEMA_NAME
+    - TABLE_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_name -- seed_file_path "./data/seeds.yml")
+    - echo $TABLE_NAME
     - echo $$TABLE_NAME
 
 test_seeds:
