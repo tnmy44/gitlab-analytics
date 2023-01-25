@@ -26,7 +26,6 @@ class SnowflakeManager:
                 role=config_vars["SNOWFLAKE_SYSADMIN_ROLE"],
                 warehouse=config_vars["SNOWFLAKE_LOAD_WAREHOUSE"],
             ),
-            echo=False
         )
 
         # Snowflake database name should be in CAPS
@@ -230,6 +229,7 @@ class SnowflakeManager:
         return self
 
     def check_if_table_exists(self, database: str, schema: str, table_name: str):
+        logging.getLogger('sqlalchemy').setLevel(logging.ERROR)
         table_query = f"""
                      select COUNT(*) as table_count 
                      from {database}.information_schema.tables 
