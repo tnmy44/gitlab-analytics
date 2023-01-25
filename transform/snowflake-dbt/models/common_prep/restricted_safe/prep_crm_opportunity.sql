@@ -18,7 +18,7 @@
     SELECT
       opportunity_id,                                                             -- opportunity_id
       contact_id                                                                  AS sfdc_contact_id,
-      md5(cast(coalesce(cast(contact_id as varchar), '') as varchar))             AS dim_crm_person_id,
+      {{ dbt_utils.surrogate_key(['contact_id']) }}                               AS dim_crm_person_id,
       ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY created_date ASC)   AS row_num
     FROM {{ ref('sfdc_opportunity_contact_role_source')}}
 
