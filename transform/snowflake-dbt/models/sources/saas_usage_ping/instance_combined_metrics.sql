@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "table"
+    })
+}}
+
 WITH source AS (
 
   SELECT
@@ -102,5 +107,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-11-09",
-    updated_date="2022-12-20"
+    updated_date="2023-01-18"
 ) }}
