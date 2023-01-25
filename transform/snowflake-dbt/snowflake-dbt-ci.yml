@@ -202,7 +202,7 @@ specify_dbt_parameters:
   variables:
     LOGURU_COLORIZE: "true"
   script:
-    - *deps_and_seed
+    - *dbt_deps
     - export SNOWFLAKE_PREP_DATABASE="PREP"
     - export SNOWFLAKE_PROD_DATABASE="PROD"
     - CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/^/$ANCESTOR_TYPE/g" | sed "s/.sql/$DEPENDENT_TYPE/g" )
@@ -233,7 +233,7 @@ test_seeds:
   variables:
     LOGURU_COLORIZE: "true"
   script:
-    - *deps_and_seed
+    - *dbt_deps
     - export SNOWFLAKE_PREP_DATABASE="PREP"
     - export SNOWFLAKE_PROD_DATABASE="PROD"
     - echo $DBT_MODELS
