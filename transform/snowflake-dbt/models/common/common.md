@@ -753,7 +753,7 @@ Industry dimension, based off of salesforce account data, using the `generate_si
 
 {% docs dim_installation %}
 
-Installation dimension, based off of version usage data and version host table. The primary key is built as a surrogate key based off of the `dim_host_id` and the `dim_instance_id`
+Installation dimension, based off of version ping data and version host table. The primary key comes from `prep_ping_instance` and is built as a surrogate key based off of the `dim_host_id` and the `dim_instance_id`
 
 {% enddocs %}
 
