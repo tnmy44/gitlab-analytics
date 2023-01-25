@@ -44,6 +44,7 @@ sales_territory, Related to sales territory mappings
 subscription_snapshot,For Subscription Snapshots
 service_ping,Relates to service_ping (SQL and Redis metrics) data
 sfdc,Relates to Salesforce dotcom
+six_hourly,For running DAGs at an increased frequency
 sources,Related to sources
 social,Related to social media data
 tdf,Trusted Data Framework

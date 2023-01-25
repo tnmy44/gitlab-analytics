@@ -1,3 +1,7 @@
+{{ config(
+    tags=["six_hourly"]
+) }}
+
 {{ simple_cte([
     ('sfdc_user_roles_source','sfdc_user_roles_source'),
     ('net_iacv_to_net_arr_ratio', 'net_iacv_to_net_arr_ratio'),

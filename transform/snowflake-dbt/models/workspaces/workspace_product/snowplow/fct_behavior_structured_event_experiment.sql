@@ -6,7 +6,7 @@
 {{ 
     simple_cte([
     ('fct_behavior_structured_event', 'fct_behavior_structured_event'),
-    ('snowplow_gitlab_events_experiment_contexts', 'snowplow_gitlab_events_experiment_contexts')
+    ('snowplow_gitlab_events_experiment_contexts', 'prep_snowplow_gitlab_events_experiment_contexts_all')
 
     ])
 }}
