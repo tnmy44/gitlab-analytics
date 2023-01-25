@@ -30,7 +30,7 @@ README.md          @rparker2 @rparker2 @iweeks @dvanrooijen2 @mlaanen
 /dags/data_science/ @paul_armstrong @rigerta
 
 [Sales Analytics]
-/dags/sales_analytics/ @rigerta
+/dags/sales_analytics/ @rigerta @paul_armstrong
 
 Makefile            @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
