@@ -1,8 +1,8 @@
 {% macro default_usage_ping_information() %} 
 
     -- usage ping meta data 
-    dim_usage_ping_id                                                                                       AS dim_ping_instance_id, 
-    ping_created_at                                                                                         AS ,
+    dim_usage_ping_id, 
+    ping_created_at,
     ping_created_at_28_days_earlier,
     ping_created_at_year,
     ping_created_at_month,
