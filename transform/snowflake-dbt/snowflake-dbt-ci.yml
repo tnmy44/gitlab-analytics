@@ -57,7 +57,9 @@
 .auto_dbt_seed: &auto_dbt_seed
     - SCHEMA_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_schema --dbt_project_path "./dbt_project.yml")
     - TABLE_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_name --seed_file_path "./data/seeds.yml")
-    - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)" = "False" ]; then dbt seed --full-refresh $CI_PROFILE_TARGET; fi
+    - RESULT=$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)
+    - CLEAN_RESULT=$(echo $RESULT | egrep -o '.{4,5}$') #extract only the result from the python output.
+    - if [ $CLEAN_RESULT = "False" ]; then dbt seed --full-refresh $CI_PROFILE_TARGET; fi
 
 .deps_and_seed: &deps_and_seed
   - *dbt_deps
