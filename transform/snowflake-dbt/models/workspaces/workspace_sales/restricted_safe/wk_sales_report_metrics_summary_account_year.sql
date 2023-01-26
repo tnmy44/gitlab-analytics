@@ -634,7 +634,7 @@ WITH date_details AS (
     a.ultimate_parent_account_name    AS upa_name,
     a.is_key_account,
     a.abm_tier,
-    a.parent_id,
+    a.ultimate_parent_account_id,
     u.name                              AS account_owner_name,
     a.owner_id                          AS account_owner_id,
     trim(u.employee_number)             AS account_owner_employee_number,
@@ -642,7 +642,7 @@ WITH date_details AS (
     upa_owner.user_id                   AS upa_owner_id,
     upa_owner.title_category            AS upa_owner_title_category,
     trim(upa_owner.employee_number)     AS upa_owner_employee_number,
-    dim_account.forbes_2000_rank        AS account_forbes_rank,
+    -- dim_account.forbes_2000_rank        AS account_forbes_rank,
     a.billing_country                   AS account_country,
     a.billing_postal_code               AS account_zip_code,
     mart_crm_account.account_billing_state AS account_state,
@@ -654,7 +654,7 @@ WITH date_details AS (
     upa_account.parent_crm_account_demographics_region              AS upa_ad_region,
     upa_account.parent_crm_account_demographics_area                AS upa_ad_area,
     
-    coalesce(upa_account.parent_crm_account_billing_country, REPLACE(REPLACE(REPLACE(upa.tsp_address_country,'The Netherlands','Netherlands'),'Russian Federation','Russia'), 'Russia','Russian Federation'))              AS upa_ad_country,
+    coalesce(upa_account.parent_crm_account_billing_country, REPLACE(REPLACE('Russian Federation','Russia'), 'Russia','Russian Federation'))              AS upa_ad_country,  
     upa_account.parent_crm_account_demographics_upa_state           AS upa_ad_state,
     upa_account.parent_crm_account_demographics_upa_city            AS upa_ad_city,
     upa_account.parent_crm_account_demographics_upa_postal_code     AS upa_ad_zip_code,
@@ -1039,7 +1039,7 @@ SELECT
     level + 1 AS level
 FROM consolidated_accounts child
 INNER JOIN upa_virtual_cte upa
-    ON child.parent_id = upa.account_id
+    ON child.ultimate_parent_account_id = upa.account_id
     AND child.report_fiscal_year = upa.report_fiscal_year
 
 ), max_virtual_upa_depth AS (
@@ -1292,8 +1292,8 @@ FROM selected_hierarchy_virtual_upa final
     MAX(acc.is_public_sector_flag)      AS is_public_sector_flag,
     
     
-    SUM(CASE WHEN acc.account_forbes_rank IS NOT NULL THEN 1 ELSE 0 END)   AS count_forbes_accounts,
-    MIN(account_forbes_rank)      AS forbes_rank,
+    -- SUM(CASE WHEN acc.account_forbes_rank IS NOT NULL THEN 1 ELSE 0 END)   AS count_forbes_accounts,
+    -- MIN(account_forbes_rank)      AS forbes_rank,
     MAX(acc.potential_users)          AS potential_users,
     MAX(acc.licenses)                 AS licenses,
     MAX(acc.linkedin_developer)       AS linkedin_developer,

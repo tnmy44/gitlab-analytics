@@ -21,6 +21,7 @@ SELECT
   se_category                         AS event_category,
   se_label                            AS event_label,
   se_property                         AS event_property,
+  se_value                            AS event_value,
   platform                            AS platform,
   gsc_pseudonymized_user_id           AS gsc_pseudonymized_user_id,
   page_urlhost                        AS page_url_host,
@@ -51,6 +52,7 @@ SELECT
   page_urlpath                        AS page_url_path,
   {{ clean_url('page_urlpath') }}     AS clean_url_path,
   page_urlfragment                    AS page_url_fragment,
+  page_urlquery                       AS page_url_query,
   {{ dbt_utils.surrogate_key(['page_url_host_path', 'app_id', 'page_url_scheme']) }}  AS dim_behavior_website_page_sk,
   gsc_environment                     AS gsc_environment,
   gsc_extra                           AS gsc_extra,
@@ -70,6 +72,7 @@ SELECT
   refr_urlhost                        AS referrer_url_host,
   refr_urlpath                        AS referrer_url_path,
   refr_urlscheme                      AS referrer_url_scheme,
+  refr_urlquery                       AS referrer_url_query,
   REGEXP_REPLACE(page_referrer, '^https?:\/\/')     AS referrer_url_host_path,
   {{ dbt_utils.surrogate_key(['referrer_url_host_path', 'app_id', 'referrer_url_scheme']) }}  AS dim_behavior_referrer_page_sk
 FROM unioned_view

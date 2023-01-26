@@ -22,6 +22,7 @@
       dim_behavior_event_sk,
       platform,
       gsc_pseudonymized_user_id,
+      user_snowplow_domain_id,
       clean_url_path,
       page_url_host,
       app_id,
@@ -70,8 +71,9 @@
       --Time Attributes
       behavior_at,
 
-      -- Google Key
+      -- User Keys
       gsc_pseudonymized_user_id,
+      user_snowplow_domain_id,
 
       -- Attributes
       link_click_target_url,
@@ -90,5 +92,5 @@
     created_by="@chrissharp",
     updated_by="@chrissharp",
     created_date="2022-09-27",
-    updated_date="2022-12-01"
+    updated_date="2023-01-20"
 ) }}
