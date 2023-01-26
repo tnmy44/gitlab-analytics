@@ -60,7 +60,7 @@ renamed AS (
     -- note // hidden for privacy
     otp_grace_period_started_at::TIMESTAMP AS otp_grace_period_started_at,
     external::BOOLEAN AS is_external_user,
-    NULL AS organization, -- noqa:L029
+    NULL AS organization,
     auditor::BOOLEAN AS auditor,
     require_two_factor_authentication_from_group::BOOLEAN AS does_require_two_factor_authentication_from_group, -- noqa:L016
     two_factor_grace_period::NUMBER AS two_factor_grace_period,
