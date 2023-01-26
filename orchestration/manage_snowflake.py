@@ -15,6 +15,7 @@ from gitlabdata.orchestration_utils import query_executor
 # Set logging defaults
 logging.basicConfig(stream=sys.stdout, level=20)
 
+
 class SnowflakeManager:
     def __init__(self, config_vars: Dict):
         self.engine = create_engine(
@@ -240,8 +241,6 @@ class SnowflakeManager:
             return False
         else:
             return True
-
-
 
     def clone_stages(self, create_db: str, database: str, schema: str = ""):
         """
