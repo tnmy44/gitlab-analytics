@@ -216,16 +216,6 @@ specify_dbt_parameters:
     - INPUT=$(dbt --quiet ls --models $CHANGED_FILES --output json --output-keys "database schema name depends_on unique_id config" --profiles-dir profile --target prod)
     - ../../orchestration/clone_dbt_models_select.py $INPUT
 
-test_seeds:
-  <<: *snowflake_dbt_jobs
-  script:
-    - SCHEMA_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_schema --dbt_project_path "./dbt_project.yml")
-    - echo $SCHEMA_NAME
-    - TABLE_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_name --seed_file_path "./data/seeds.yml")
-    - echo $TABLE_NAME
-    - RESULT=$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)
-    - CLEAN_RESULT=$(echo $RESULT | egrep -o '.{4,5}$') #extract only the result from the python output.
-    - if [ $CLEAN_RESULT = "False" ]; then dbt seed --full-refresh $CI_PROFILE_TARGET; fi
 
 🔆⚡️clone_model_dbt_select:
   <<: *snowflake_dbt_jobs

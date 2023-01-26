@@ -229,6 +229,14 @@ class SnowflakeManager:
         return self
 
     def check_if_table_exists(self, database: str, schema: str, table_name: str):
+        """
+        Simple utility function written to check if a table exists in the database
+
+        :param database:
+        :param schema:
+        :param table_name:
+        :return:
+        """
         table_query = f"""
                      select COUNT(*) as table_count 
                      from {database}.information_schema.tables 
