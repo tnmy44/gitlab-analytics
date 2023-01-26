@@ -16,8 +16,6 @@ WITH structured_event_renamed AS (
       event_id,
       tracker_version,
       dim_behavior_event_sk,
-      event_action, 
-      event_category,
       event_value,
       contexts,
       dvce_created_tstamp,
@@ -88,8 +86,6 @@ WITH structured_event_renamed AS (
       structured_event_renamed.page_url_scheme,
       structured_event_renamed.page_url_host,
       structured_event_renamed.page_url_fragment,
-      structured_event_renamed.event_action, 
-      structured_event_renamed.event_category,
       structured_event_renamed.event_value,
 
       -- Degenerate Dimensions (Gitlab Standard Context Attributes)
