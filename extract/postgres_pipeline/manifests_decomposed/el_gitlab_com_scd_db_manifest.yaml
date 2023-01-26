@@ -121,20 +121,6 @@ tables:
       , cluster_id
       , group_id
       FROM cluster_groups
-  columns:
-    advanced_metadata: true
-    export_schema: 'gitlab_com'
-    export_table: 'columns'
-    export_table_primary_key: CONCAT(table_name, '_', column_name, table_schema)
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT CONCAT(table_name, '_', column_name, table_schema) AS column_id
-      , column_name
-      , data_type
-      , ordinal_position
-      , table_name
-      , table_schema
-      FROM information_schema.columns
     import_schema: information_schema
   clusters_integration_prometheus:
     advanced_metadata: true
