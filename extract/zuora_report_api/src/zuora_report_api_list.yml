@@ -1,0 +1,31 @@
+report_list:
+  billing_waterfall: 
+      category: "Revenue"
+      rep_name: "Billing Waterfall"
+      layout_name: "Gitlab : RCID by Transaction"
+      rep_desc: "Revenue waterfall for billed contractual revenue (rollout at line level of Contract Liability balances)"
+      status: "A"
+  rc_rollforward:
+      category: "Revenue"
+      rep_name: "RC Rollforward Report"
+      layout_name: "by nll ptd"
+      rep_desc: "Displays Contract Liability/Contract Asset beginning and ending balances, and activity for the period selected. Used by revenue users for reconciliation and disclosures"
+      status: "A"
+#  revenue_waterfall:
+#      category: "Revenue"
+#      rep_name: "Waterfall Report"
+#      layout_name: "GitLab - By RCID (Transaction Currency)"
+#      rep_desc: "Waterfall of prior period, current and future scheduled and forecasted revenue (and cost). Can be used for timing of revenue for unsatisfied/partially satisfied performance obligations"
+#      status: "A"
+#  unreleased_pob:
+#      category: "Revenue"
+#      rep_name: "Billing Waterfall"
+#      layout_name: "Gitlab : RCID by Transaction"
+#      rep_desc: "Revenue waterfall for billed contractual revenue (rollout at line level of Contract Liability balances)"
+#      status: "A"
+#  unbill_rollforward:
+#      category: "Revenue"
+#      rep_name: "Unbill RollForward Report"
+#      layout_name: "Gitlab Unbill by RCID"
+#      rep_desc: "Subset of RC Rollforward report showing beginning and ending balances and activity for contractual revenue not yet billed"
+#      status: "A" 
