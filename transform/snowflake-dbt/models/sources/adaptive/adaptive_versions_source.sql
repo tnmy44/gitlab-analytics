@@ -4,7 +4,7 @@ WITH source AS (
 )
 
 SELECT
-  PARSE_JSON(_data) :"@id"::VARCHAR             AS parent_id,
+  PARSE_JSON(source._data) :"@id"::VARCHAR      AS parent_id,
   version.value['@id']::VARCHAR                 AS id,
   version.value['@name']::VARCHAR               AS name,
   version.value['@shortName']::VARCHAR          AS short_name,
@@ -21,9 +21,9 @@ SELECT
   version.value['@startPlan']::VARCHAR          AS start_plan,
   version.value['@endPlan']::VARCHAR            AS end_plan,
   version.value['@lockLeading']                 AS lock_leading,
-  __loaded_at
+  source.__loaded_at
 FROM
   source,
-  LATERAL FLATTEN(input => PARSE_JSON(_data) ['version']) version
+  LATERAL FLATTEN(input => PARSE_JSON(source._data) ['version']) AS version
 ORDER BY
   __loaded_at
