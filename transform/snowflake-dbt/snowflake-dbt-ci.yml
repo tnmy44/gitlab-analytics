@@ -218,14 +218,10 @@ test_seeds:
   <<: *snowflake_dbt_jobs
   script:
     - SCHEMA_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_schema --dbt_project_path "./dbt_project.yml")
-    - echo $SCHEMA_NAME
     - TABLE_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_name --seed_file_path "./data/seeds.yml")
-    - echo $TABLE_NAME
-    - VALUE=$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)
-    - echo $VALUE
-    - CLEAN_VALUE=$(echo $VALUE | egrep -o '.{4,5}$')
-    - echo $CLEAN_VALUE
-    - if [ "$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)" = "False" ]; then dbt deps $CI_PROFILE_TARGET dbt seed --full-refresh $CI_PROFILE_TARGET; fi
+    - RESULT=$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)
+    - CLEAN_RESULT=$(echo $VALUE | egrep -o '.{4,5}$')
+    - if [ $CLEAN_RESULT = "False" ]; then dbt deps $CI_PROFILE_TARGET dbt seed --full-refresh $CI_PROFILE_TARGET; fi
 
 🔆⚡️clone_model_dbt_select:
   <<: *snowflake_dbt_jobs
