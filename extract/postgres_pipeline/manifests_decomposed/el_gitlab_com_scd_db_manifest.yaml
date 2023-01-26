@@ -513,17 +513,6 @@ tables:
       , created_at
       , scopes
       FROM oauth_access_tokens
-  packages_build_infos:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'packages_build_infos'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-    
-      SELECT  id
-      , package_id
-      , pipeline_id 
-      FROM packages_build_infos
   pages_domains:
     dbt_source_model: true 
     export_schema: 'gitlab_com' 
