@@ -16,7 +16,7 @@ WITH source AS (
 intermediate AS (
   SELECT * FROM source
   {% if is_incremental() %}
-    WHERE source.uploaded_at > (SELECT MAX(t.uploaded_at) FROM {{ this }} AS t)
+    WHERE source.__loaded_at > (SELECT MAX(t.__loaded_at) FROM {{ this }} AS t)
   {% endif %}
 )
 
