@@ -10,7 +10,7 @@ SELECT
   PARSE_JSON(source._data) ['@dimension-id']::VARCHAR AS parent_dimension_id,
   PARSE_JSON(source._data) ['@seqNo']::VARCHAR        AS parent_seq_num,
   attribute_values.value['@id']::VARCHAR              AS id,
-  attribute_values.value['@name']::VARCHAR            AS name,
+  attribute_values.value['@name']::VARCHAR            AS attribute_name,
   source.__loaded_at
 FROM
   source,

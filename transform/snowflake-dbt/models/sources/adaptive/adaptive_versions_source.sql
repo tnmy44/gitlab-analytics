@@ -4,26 +4,26 @@ WITH source AS (
 )
 
 SELECT
-  PARSE_JSON(source._data) :"@id"::VARCHAR      AS parent_id,
-  version.value['@id']::VARCHAR                 AS id,
-  version.value['@name']::VARCHAR               AS name,
-  version.value['@shortName']::VARCHAR          AS short_name,
-  version.value['@type']::VARCHAR               AS version_type,
-  version.value['@isVirtual']::VARCHAR          AS is_virtual,
-  version.value['@description']::VARCHAR        AS description,
-  version.value['@isDefaultVersion']::VARCHAR   AS is_default_version,
-  version.value['@isLocked']::VARCHAR           AS is_locked,
-  version.value['@hasAuditTrail']::VARCHAR      AS has_audit_trail,
-  version.value['@enabledForWorkflow']::VARCHAR AS enabled_for_workflow,
-  version.value['@isImportable']::VARCHAR       AS is_importable,
-  version.value['@isPredictive']::VARCHAR       AS is_predictive,
-  version.value['@leftScroll']::VARCHAR         AS left_scroll,
-  version.value['@startPlan']::VARCHAR          AS start_plan,
-  version.value['@endPlan']::VARCHAR            AS end_plan,
-  version.value['@lockLeading']                 AS lock_leading,
+  PARSE_JSON(source._data) :"@id"::VARCHAR       AS parent_id,
+  versions.value['@id']::VARCHAR                 AS id,
+  versions.value['@name']::VARCHAR               AS version_name,
+  versions.value['@shortName']::VARCHAR          AS short_name,
+  versions.value['@type']::VARCHAR               AS version_type,
+  versions.value['@isVirtual']::VARCHAR          AS is_virtual,
+  versions.value['@description']::VARCHAR        AS description,
+  versions.value['@isDefaultVersion']::VARCHAR   AS is_default_version,
+  versions.value['@isLocked']::VARCHAR           AS is_locked,
+  versions.value['@hasAuditTrail']::VARCHAR      AS has_audit_trail,
+  versions.value['@enabledForWorkflow']::VARCHAR AS enabled_for_workflow,
+  versions.value['@isImportable']::VARCHAR       AS is_importable,
+  versions.value['@isPredictive']::VARCHAR       AS is_predictive,
+  versions.value['@leftScroll']::VARCHAR         AS left_scroll,
+  versions.value['@startPlan']::VARCHAR          AS start_plan,
+  versions.value['@endPlan']::VARCHAR            AS end_plan,
+  versions.value['@lockLeading']                 AS lock_leading,
   source.__loaded_at
 FROM
   source,
-  LATERAL FLATTEN(input => PARSE_JSON(source._data) ['version']) AS version
+  LATERAL FLATTEN(input => PARSE_JSON(source._data) ['version']) AS versions
 ORDER BY
-  __loaded_at
+  source.__loaded_at

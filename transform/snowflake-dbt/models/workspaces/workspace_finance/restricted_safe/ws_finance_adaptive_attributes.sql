@@ -1,6 +1,7 @@
-{{ config(
-tags=["mnpi"]
-)
+{{
+  config(
+    tags=["mnpi"]
+  )
 }}
 
 SELECT
