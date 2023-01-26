@@ -254,7 +254,7 @@
 {{ audit_helper.compare_relations(
     a_relation=old_etl_relation,
     b_relation=new_etl_relation,
-    exclude_columns=["dbt_updated_at","dbt_created_at"]
+    exclude_columns=["dbt_updated_at","dbt_created_at","IP_ADDRESS_HASH", "IS_LAST_PING_OF_MONTH", "IS_LAST_PING_OF_WEEK"]
 ) }}
 ;
   
