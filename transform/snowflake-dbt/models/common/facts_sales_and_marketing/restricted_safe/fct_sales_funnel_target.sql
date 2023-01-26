@@ -75,7 +75,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
       fy22_user_hierarchy.crm_opp_owner_area_stamped
     FROM target_matrix
     LEFT JOIN fy22_user_hierarchy
-      ON UPPER(target_matrix.area) = fy22_user_hierarchy.crm_opp_owner_area_stamped
+      ON {{ sales_funnel_text_slugify("target_matrix.area") }} = {{ sales_funnel_text_slugify("fy22_user_hierarchy.crm_opp_owner_area_stamped") }}
     WHERE target_matrix.fiscal_year = 2022 
 
     UNION ALL
@@ -101,7 +101,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
       fy23_and_beyond_user_hierarchy.crm_opp_owner_area_stamped
     FROM target_matrix
     LEFT JOIN fy23_and_beyond_user_hierarchy
-      ON UPPER(target_matrix.area) = fy23_and_beyond_user_hierarchy.crm_opp_owner_sales_segment_geo_region_area_stamped
+      ON {{ sales_funnel_text_slugify("target_matrix.area") }} = {{ sales_funnel_text_slugify("fy23_and_beyond_user_hierarchy.crm_opp_owner_sales_segment_geo_region_area_stamped") }}
         AND target_matrix.fiscal_year = fy23_and_beyond_user_hierarchy.fiscal_year
     WHERE target_matrix.fiscal_year > 2022 
 
@@ -148,5 +148,5 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-12-18",
-    updated_date="2022-03-07"
+    updated_date="2023-01-23"
 ) }}
