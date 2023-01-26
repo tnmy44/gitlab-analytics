@@ -680,7 +680,8 @@
   
   FROM cohort_base
   LEFT JOIN rpt_crm_touchpoint_combined
-    ON rpt_crm_touchpoint_combined.email_hash = cohort_base.email_hash
+    ON rpt_crm_touchpoint_combined.email_hash = cohort_base.email_hash 
+        and rpt_crm_touchpoint_combined.dim_crm_person_id = cohort_base.dim_crm_person_id
   LEFT JOIN dim_date AS inquiry_date 
     ON cohort_base.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date AS mql_date
@@ -703,7 +704,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@degan",
     created_date="2022-10-05",
-    updated_date="2022-12-27",
+    updated_date="2023-01-26",
   ) }}
