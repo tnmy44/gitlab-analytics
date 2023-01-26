@@ -16,7 +16,7 @@
 
  , smau_metrics AS (
 
-    SELECT distinct
+    SELECT DISTINCT
       dim_instance_id as uuid,
       hostname,
       snapshot_month,
