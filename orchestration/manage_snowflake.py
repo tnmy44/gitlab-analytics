@@ -14,7 +14,6 @@ from gitlabdata.orchestration_utils import query_executor
 
 # Set logging defaults
 logging.basicConfig(stream=sys.stdout, level=20)
-logging.getLogger('sqlalchemy').setLevel(logging.ERROR)
 
 class SnowflakeManager:
     def __init__(self, config_vars: Dict):
