@@ -135,6 +135,7 @@ clone-dbt-select-local-user:
 
 dbt-deps:
 	"$(DBT_DEPS)"
+	exit
 
 run-dbt:
 	"$(DBT_DEPS)"
