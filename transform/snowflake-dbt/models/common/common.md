@@ -1150,18 +1150,19 @@ For this reason `metrics_path` is not unique.
 - pi_metric_name
 
 **Filters Applied to Model:**
-- `pi_monthly_estimated_targets IS NOT NULL` (field from .yml file)
+- Use currently valid records from files - `valid_to_date = MAX(valid_to_date)`
+- Include metrics with targets - `pi_monthly_estimated_targets IS NOT NULL` (field from .yml file)
 
 **Business Logic in this Model:**
 - `reporting_month` is derived from the date provided in the `pi_monthly_estimated_targets` field of the .yml file
   - Target end date: date specified in `pi_monthly_estimated_targets`
-  - Target start date: The day after the previous target end date _OR_, if a previous target is not specified, `2017-01-01` (date of earliest available product data)
+  - Target start date: The day after the previous target end date _OR_, if a previous target is not specified, `2020-03-01` (date of earliest PIs we are tracking)
 
 Example: `pi_monthly_estimated_targets`: `{"2022-02-28":1000,"2022-03-31":2000,"2022-05-31":3000}`
 
 | reporting_month | target_value |
 | --- | --- |
-| 2017-01-01 | 1000 |
+| 2020-03-01 | 1000 |
 | ... | 1000 |
 | 2022-02-01 | 1000 |
 | 2022-03-01 | 2000 |
