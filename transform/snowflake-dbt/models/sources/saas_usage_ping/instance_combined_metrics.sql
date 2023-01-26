@@ -49,7 +49,7 @@ final AS (
     run_results['license_user_count']::VARCHAR AS license_user_count,
     run_results['license_starts_at']::TIMESTAMP AS license_starts_at,
     run_results['license_expires_at']::TIMESTAMP AS license_expires_at,
-    NULL AS license_add_ons,
+    PARSE_JSON(NULL) AS license_add_ons,
     632::NUMBER AS host_id, -- this is the GitLab host_id
     run_results['mattermost_enabled']::BOOLEAN AS mattermost_enabled,
     run_results['hostname']::VARCHAR AS hostname,
