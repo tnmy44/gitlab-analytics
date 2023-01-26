@@ -14,7 +14,7 @@ from gitlabdata.orchestration_utils import query_executor
 
 # Set logging defaults
 logging.basicConfig(stream=sys.stdout, level=20)
-
+logging.getLogger('sqlalchemy').setLevel(logging.ERROR)
 
 class SnowflakeManager:
     def __init__(self, config_vars: Dict):
@@ -229,7 +229,6 @@ class SnowflakeManager:
         return self
 
     def check_if_table_exists(self, database: str, schema: str, table_name: str):
-        logging.getLogger('sqlalchemy').setLevel(logging.ERROR)
         table_query = f"""
                      select COUNT(*) as table_count 
                      from {database}.information_schema.tables 
