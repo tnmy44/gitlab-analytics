@@ -1,6 +1,5 @@
 WITH source AS (
-  SELECT * FROM
-    {{ source('adaptive', 'instances') }}
+  SELECT * FROM {{ source('adaptive', 'instances') }}
 )
 
 SELECT
@@ -13,6 +12,6 @@ SELECT
   PARSE_JSON(_data) ['@datasources']::VARCHAR    AS data_sources,
   PARSE_JSON(_data) ['@tenantCode']::VARCHAR     AS tenant_code,
   PARSE_JSON(_data) ['@tenantEnv']::VARCHAR      AS tenant_env,
-  __loaded_at
+  __loaded_at                                    AS uploaded_at
 FROM
   source

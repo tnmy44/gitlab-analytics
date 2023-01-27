@@ -1,6 +1,5 @@
 WITH source AS (
-  SELECT * FROM
-    {{ source('adaptive', 'versions') }}
+  SELECT * FROM {{ source('adaptive', 'versions') }}
 )
 
 SELECT
@@ -21,7 +20,7 @@ SELECT
   versions.value['@startPlan']::VARCHAR          AS start_plan,
   versions.value['@endPlan']::VARCHAR            AS end_plan,
   versions.value['@lockLeading']                 AS lock_leading,
-  source.__loaded_at
+  source.__loaded_at                             AS uploaded_at
 FROM
   source,
   LATERAL FLATTEN(input => PARSE_JSON(source._data) ['version']) AS versions

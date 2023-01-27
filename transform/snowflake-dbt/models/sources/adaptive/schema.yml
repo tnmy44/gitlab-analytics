@@ -9,7 +9,7 @@ models:
   - name: adaptive_attributes_source
     description: Adaptive attributes info
     columns:
-      - name: id
+      - name: parent_id
         tests:
           - not_null
   - name: adaptive_dimension_families_source
@@ -48,6 +48,6 @@ models:
   - name: adaptive_versions_source
     description: Adaptive version info 
     columns:
-      - name: id
+      - name: parent_id
         tests:
           - not_null

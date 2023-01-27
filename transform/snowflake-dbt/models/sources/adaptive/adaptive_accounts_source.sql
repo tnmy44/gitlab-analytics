@@ -1,6 +1,5 @@
 WITH source AS (
-  SELECT * FROM
-    {{ source('adaptive', 'accounts') }}
+  SELECT * FROM {{ source('adaptive', 'accounts') }}
 )
 
 SELECT
@@ -41,7 +40,7 @@ SELECT
   fin_account.value['@enableActuals']::VARCHAR           AS enable_actuals,
   fin_account.value['@isGroup']::VARCHAR                 AS is_group,
   fin_account.value['@hasFormula']::VARCHAR              AS has_formula,
-  source.__loaded_at
+  source.__loaded_at                                     AS uploaded_at
 FROM
   source,
   LATERAL FLATTEN(input => PARSE_JSON(source._data) ['account']) AS fin_account

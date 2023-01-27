@@ -9,7 +9,7 @@ models:
   - name: ws_finance_adaptive_attributes
     description: Adaptive attributes info
     columns:
-      - name: id
+      - name: parent_id
         tests:
           - not_null
   - name: ws_finance_adaptive_dimension_families
@@ -48,6 +48,6 @@ models:
   - name: ws_finance_adaptive_versions
     description: Adaptive version info 
     columns:
-      - name: id
+      - name: parent_id
         tests:
           - not_null

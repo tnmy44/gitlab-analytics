@@ -1,6 +1,5 @@
 WITH source AS (
-  SELECT * FROM
-    {{ source('adaptive', 'users') }}
+  SELECT * FROM {{ source('adaptive', 'users') }}
 )
 
 SELECT
@@ -12,6 +11,6 @@ SELECT
   PARSE_JSON(_data) ['@guid']::VARCHAR            AS user_guid,
   PARSE_JSON(_data) ['@timeZone']::VARCHAR        AS time_zone,
   PARSE_JSON(_data) ['subscriptions']::VARIANT    AS subscriptions,
-  __loaded_at
+  __loaded_at                                     AS uploaded_at
 FROM
   source

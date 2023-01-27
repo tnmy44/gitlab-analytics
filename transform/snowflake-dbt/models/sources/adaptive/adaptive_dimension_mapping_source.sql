@@ -1,12 +1,11 @@
 WITH source AS (
-  SELECT * FROM
-    {{ source('adaptive', 'dimension_mapping') }}
+  SELECT * FROM {{ source('adaptive', 'dimension_mapping') }}
 ),
 
 parsed AS (
   SELECT
     PARSE_JSON(_data) AS dimension_mapping_data,
-    __loaded_at
+    __loaded_at       AS uploaded_at
   FROM
     source
 )
@@ -23,7 +22,7 @@ SELECT
   dimension_mapping_data['dimensions'].dimension.mappingCriteria.mappingCriterion.dimension['@type']::VARCHAR         AS mapping_criteria_dimension_type,
   dimension_mapping_data['dimensions'].dimension.mappingCriteria.mappingCriterion.dimension['@valueId']::VARCHAR      AS mapping_criteria_dimension_value_id,
   dimension_mapping_data['dimensions'].dimension.mappingCriteria.mappingCriterion.mapTo['@dimensionValueId']::VARCHAR AS mapping_criteria_map_to_dimension_value_id,
-  __loaded_at
+  uploaded_at
 FROM
   parsed
-ORDER BY __loaded_at
+ORDER BY uploaded_at

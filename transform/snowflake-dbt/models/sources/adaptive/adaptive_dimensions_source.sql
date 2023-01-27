@@ -5,18 +5,20 @@
     )
 }}
 WITH source AS (
-  SELECT * FROM
-    {{ source('adaptive', 'dimensions') }}
+  SELECT
+    _data,
+    __loaded_at AS uploaded_at
+  FROM {{ source('adaptive', 'dimensions') }}
   -- when selecting all records, there's a timesout using XL WH
   -- Select 45 most recent records, this is for display purposes
-  ORDER BY __loaded_at DESC
+  ORDER BY uploaded_at DESC
   LIMIT 45
 ),
 
 intermediate AS (
   SELECT * FROM source
   {% if is_incremental() %}
-    WHERE source.__loaded_at > (SELECT MAX(t.__loaded_at) FROM {{ this }} AS t)
+    WHERE source.uploaded_at > (SELECT MAX(t.uploaded_at) FROM {{ this }} AS t)
   {% endif %}
 )
 
@@ -29,7 +31,7 @@ SELECT
   dimension_values.value['@description']::VARCHAR    AS description,
   dimension_values.value['@shortName']::VARCHAR      AS short_name,
   dimension_values.value['attributes']::VARIANT      AS attributes,
-  intermediate.__loaded_at
+  intermediate.__loaded_at                           AS uploaded_at
 FROM
   intermediate,
   LATERAL FLATTEN(input => PARSE_JSON(intermediate._data) ['dimensionValue']) AS dimension_values
