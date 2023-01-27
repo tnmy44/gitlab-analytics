@@ -105,5 +105,5 @@ WITH structured_event_renamed AS (
     created_by="@michellecooper",
     updated_by="@chrissharp",
     created_date="2022-09-01",
-    updated_date="2023-01-26"
+    updated_date="2023-01-20"
 ) }}
