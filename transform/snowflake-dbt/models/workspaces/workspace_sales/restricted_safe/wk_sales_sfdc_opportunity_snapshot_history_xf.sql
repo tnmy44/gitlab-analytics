@@ -312,12 +312,6 @@ WITH date_details AS (
       edm_snapshot_opty.created_fiscal_quarter_name,
       edm_snapshot_opty.created_fiscal_quarter_date,
 
-      edm_snapshot_opty.net_arr_created_date,
-      edm_snapshot_opty.net_arr_created_month                   AS net_arr_created_date_month,
-      edm_snapshot_opty.net_arr_created_fiscal_year,
-      edm_snapshot_opty.net_arr_created_fiscal_quarter_name,
-      edm_snapshot_opty.net_arr_created_fiscal_quarter_date,
-
       edm_snapshot_opty.pipeline_created_date,
       edm_snapshot_opty.pipeline_created_month                  AS pipeline_created_date_month,
       edm_snapshot_opty.pipeline_created_fiscal_year,
