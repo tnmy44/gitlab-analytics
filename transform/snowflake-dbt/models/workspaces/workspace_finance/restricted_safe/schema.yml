@@ -30,7 +30,7 @@ models:
   - name: ws_finance_adaptive_dimensions
     description: Adaptive dimension info 
     columns:
-      - name: id
+      - name: parent_id
         tests:
           - not_null
   - name: ws_finance_adaptive_instances
