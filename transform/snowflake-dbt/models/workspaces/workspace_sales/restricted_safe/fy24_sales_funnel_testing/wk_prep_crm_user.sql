@@ -110,6 +110,14 @@
                       '-',
                       sfdc_users.user_segment
                       )
+          ELSE CONCAT(sfdc_users.user_segment, 
+                      '-',
+                      sfdc_users.user_geo, 
+                      '-',
+                      sfdc_users.user_region, 
+                      '-',
+                      sfdc_users.user_area
+                      )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk
     FROM sfdc_users
     LEFT JOIN sfdc_user_roles_source
