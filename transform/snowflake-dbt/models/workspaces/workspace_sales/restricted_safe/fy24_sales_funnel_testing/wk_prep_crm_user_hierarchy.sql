@@ -131,6 +131,7 @@
 ), pre_fy23_hierarchy AS (
 
     SELECT DISTINCT
+      fiscal_year,
       NULL        AS user_segment,
       NULL        AS user_geo,
       NULL        AS user_region,
@@ -143,6 +144,7 @@
 ), fy23_hierarchy AS (
 
     SELECT DISTINCT
+      fiscal_year,
       user_segment,
       user_geo,
       user_region,
@@ -155,6 +157,7 @@
 ), fy24_and_beyond_hierarchy AS (
 
     SELECT DISTINCT
+      fiscal_year,
       user_segment,
       user_geo,
       user_region,
@@ -183,8 +186,9 @@
 ), final AS (
 
     SELECT DISTINCT 
-      {{ dbt_utils.surrogate_key(['dim_crm_user_hierarchy_sk']) }}                    AS dim_crm_user_hierarchy_stamped_id,
+      {{ dbt_utils.surrogate_key(['dim_crm_user_hierarchy_sk', fiscal_year]) }}                    AS dim_crm_user_hierarchy_stamped_id,
       dim_crm_user_hierarchy_sk,
+      fiscal_year,
       user_business_unit                                                              AS crm_opp_owner_business_unit_stamped,
       {{ dbt_utils.surrogate_key(['user_business_unit']) }}                           AS dim_crm_opp_owner_business_unit_stamped_id,
       user_segment                                                                    AS crm_opp_owner_sales_segment_stamped,

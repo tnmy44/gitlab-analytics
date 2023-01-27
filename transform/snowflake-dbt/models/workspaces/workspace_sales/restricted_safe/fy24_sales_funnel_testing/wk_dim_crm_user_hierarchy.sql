@@ -4,6 +4,7 @@ WITH source AS (
   SELECT 
     dim_crm_user_hierarchy_stamped_id,
     dim_crm_user_hierarchy_sk,
+    fiscal_year,
     crm_opp_owner_business_unit_stamped,
     dim_crm_opp_owner_business_unit_stamped_id,
     crm_opp_owner_sales_segment_stamped,

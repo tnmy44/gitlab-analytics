@@ -46,6 +46,7 @@
       ON {{ sales_funnel_text_slugify("wk_prep_sales_funnel_target.order_type") }} = {{ sales_funnel_text_slugify("order_type.order_type_name") }}
     LEFT JOIN wk_prep_crm_user_hierarchy
       ON wk_prep_sales_funnel_target.dim_crm_user_hierarchy_sk = wk_prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+        AND wk_prep_sales_funnel_target.fiscal_year = wk_prep_crm_user_hierarchy.fiscal_year
     {{ dbt_utils.group_by(n=22)}}
 
 )
