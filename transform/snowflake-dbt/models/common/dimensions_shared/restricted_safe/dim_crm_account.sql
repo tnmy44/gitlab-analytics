@@ -18,8 +18,11 @@ WITH final AS (
 
       --account people
       prep_crm_account.crm_account_owner,
+      prep_crm_account.proposed_crm_account_owner,
       prep_crm_account.account_owner,
       prep_crm_account.technical_account_manager,
+      prep_crm_account.owner_role,
+      prep_crm_account.user_role_type,
 
       ----ultimate parent crm account info
       prep_crm_account.parent_crm_account_name,
@@ -134,6 +137,8 @@ WITH final AS (
       prep_crm_account.forbes_2000_rank,
       prep_crm_account.parent_account_industry_hierarchy,
       prep_crm_account.sales_development_rep,
+      prep_crm_account.admin_manual_source_number_of_employees,
+      prep_crm_account.admin_manual_source_account_address,
 
       --measures (maintain for now to not break reporting)
       prep_crm_account.parent_crm_account_lam,
@@ -183,7 +188,13 @@ WITH final AS (
       prep_crm_account.last_modified_by_name,
       prep_crm_account.last_modified_date,
       prep_crm_account.last_activity_date,
-      prep_crm_account.is_deleted
+      prep_crm_account.is_deleted,
+      prep_crm_account.pte_score,
+      prep_crm_account.pte_decile,
+      prep_crm_account.pte_score_group,
+      prep_crm_account.ptc_score,
+      prep_crm_account.ptc_decile,
+      prep_crm_account.ptc_score_group
     FROM {{ ref('prep_crm_account') }}
 
 )
@@ -191,9 +202,9 @@ WITH final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@j_kim",
+    updated_by="@lisvinueza",
     created_date="2020-06-01",
-    updated_date="2022-10-12"
+    updated_date="2023-01-13"
 ) }}
 
 

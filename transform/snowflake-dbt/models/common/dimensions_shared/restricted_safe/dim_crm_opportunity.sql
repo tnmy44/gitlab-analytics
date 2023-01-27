@@ -1,3 +1,7 @@
+{{ config(
+    tags=["six_hourly"]
+) }}
+
 WITH prep_crm_opportunity AS (
 
     SELECT *
@@ -60,6 +64,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.partner_initiated_opportunity,
       prep_crm_opportunity.user_segment,
       prep_crm_opportunity.order_type,
+      prep_crm_opportunity.order_type_live,
       prep_crm_opportunity.opportunity_category,
       prep_crm_opportunity.opportunity_health,
       prep_crm_opportunity.risk_type,
@@ -96,6 +101,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.subscription_start_date,
       prep_crm_opportunity.subscription_end_date,
       prep_crm_opportunity.resale_partner_name,
+	  prep_crm_opportunity.record_type_name,
 
       --account people attributes
       prep_crm_opportunity.crm_account_owner_sales_segment,
@@ -212,5 +218,5 @@ WITH prep_crm_opportunity AS (
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-11-20",
-    updated_date="2022-08-05"
+    updated_date="2022-12-28"
 ) }}

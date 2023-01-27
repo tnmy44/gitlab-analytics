@@ -5,7 +5,8 @@
 
 {{ 
     simple_cte([
-    ('fct_behavior_structured_event', 'fct_behavior_structured_event')
+    ('fct_behavior_structured_event', 'fct_behavior_structured_event'),
+    ('dim_behavior_event', 'dim_behavior_event')
     ])
 }}
 
@@ -22,25 +23,17 @@
       fct_behavior_structured_event.dim_behavior_operating_system_sk,
       fct_behavior_structured_event.dim_namespace_id,
       fct_behavior_structured_event.dim_project_id,
+      fct_behavior_structured_event.dim_behavior_event_sk,
 
       -- Time Attributes
       fct_behavior_structured_event.dvce_created_tstamp,
       fct_behavior_structured_event.behavior_at,
 
       -- Degenerate Dimensions (Event Attributes)
-      fct_behavior_structured_event.event_action,
-      fct_behavior_structured_event.event_category,
-      fct_behavior_structured_event.event_label,
-      fct_behavior_structured_event.event_property,
-      fct_behavior_structured_event.event_value,
-      fct_behavior_structured_event.v_tracker,
+      fct_behavior_structured_event.tracker_version,
       fct_behavior_structured_event.session_index,
       fct_behavior_structured_event.app_id,
       fct_behavior_structured_event.session_id,
-      fct_behavior_structured_event.page_url,
-      fct_behavior_structured_event.page_url_scheme,
-      fct_behavior_structured_event.page_url_host,
-      fct_behavior_structured_event.page_url_fragment,
       fct_behavior_structured_event.user_snowplow_domain_id,
       fct_behavior_structured_event.contexts,
 
@@ -53,7 +46,9 @@
       fct_behavior_structured_event.gsc_source
       
     FROM fct_behavior_structured_event
-    WHERE event_action IN (
+    INNER JOIN dim_behavior_event
+      ON fct_behavior_structured_event.dim_behavior_event_sk = dim_behavior_event.dim_behavior_event_sk
+    WHERE dim_behavior_event.event_action IN (
     'g_analytics_valuestream',
     'action_active_users_project_repo',
     'push_package',
@@ -76,5 +71,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2022-10-03"
+    updated_date="2022-11-02"
 ) }}

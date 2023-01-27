@@ -1,3 +1,7 @@
+{{ config(
+    tags=["six_hourly"]
+) }}
+
 {{ simple_cte([
     ('dim_crm_account','dim_crm_account'),
     ('dim_crm_opportunity','dim_crm_opportunity'),
@@ -147,6 +151,7 @@
       dim_deal_path.deal_path_name,
       dim_order_type.order_type_name                                       AS order_type,
       dim_order_type.order_type_grouped,
+      dim_order_type_live.order_type_name                                  AS order_type_live,
       dim_dr_partner_engagement.dr_partner_engagement_name,
       dim_alliance_type.alliance_type_name,
       dim_alliance_type.alliance_type_short_name,
@@ -154,6 +159,7 @@
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_sales_qualified_source.sales_qualified_source_grouped,
       dim_sales_qualified_source.sqs_bucket_engagement,
+      dim_crm_opportunity.record_type_name,
 
        -- Account fields
       dim_crm_account.crm_account_name,
@@ -184,6 +190,8 @@
       dim_crm_account.crm_account_zi_technologies,
       dim_crm_account.is_jihu_account,
       dim_crm_account.fy22_new_logo_target_list,
+      dim_crm_account.admin_manual_source_number_of_employees,
+      dim_crm_account.admin_manual_source_account_address,
 
       -- Flags
       fct_crm_opportunity.is_won,
@@ -220,7 +228,7 @@
       fct_crm_opportunity.is_downgrade,
       dim_crm_opportunity.critical_deal_flag,
 
-      -- crm opp owner/account owner fields stamped at SAO date
+      -- crm opp owner/account owner fields stamped at SAO date (only used for reporting on opps with close date < 2022-02-01)
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
       dim_crm_opportunity.sao_crm_account_owner_stamped_name,
       dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
@@ -540,6 +548,8 @@
       ON fct_crm_opportunity.dim_deal_path_id = dim_deal_path.dim_deal_path_id
     LEFT JOIN dim_order_type
       ON fct_crm_opportunity.dim_order_type_id = dim_order_type.dim_order_type_id
+    LEFT JOIN dim_order_type AS dim_order_type_live
+      ON fct_crm_opportunity.dim_order_type_live_id = dim_order_type_live.dim_order_type_id
     LEFT JOIN dim_dr_partner_engagement
       ON fct_crm_opportunity.dim_dr_partner_engagement_id = dim_dr_partner_engagement.dim_dr_partner_engagement_id
     LEFT JOIN dim_alliance_type
@@ -618,7 +628,7 @@
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-12-07",
-    updated_date="2022-09-06"
+    updated_date="2022-12-28"
   ) }}
 
 

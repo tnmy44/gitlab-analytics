@@ -38,6 +38,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -82,8 +83,7 @@ dbt_full_refresh_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE={dbt_warehouse_for_full_refresh} &&
     dbt --no-use-colors run --profiles-dir profile --target prod --models {dbt_model_to_full_refresh} --full-refresh; ret=$?;
-    montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis;
+    montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(
@@ -109,8 +109,10 @@ dbt_full_refresh = KubernetesPodOperator(
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_STATIC_DATABASE,
         MCD_DEFAULT_API_ID,
         MCD_DEFAULT_API_TOKEN,
+        SNOWFLAKE_STATIC_DATABASE,
     ],
     env_vars=pod_env_vars,
     arguments=[dbt_full_refresh_cmd],

@@ -12,9 +12,28 @@ from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperato
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.27"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.11"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.22"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v1.0.13"
+
+SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
+
+
+def get_sales_analytics_notebooks(frequency: str) -> Dict:
+
+    notebooks = []
+    fileNames = []
+
+    path = f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/"
+
+    for file in os.listdir(path):
+        filename = os.fsdecode(file)
+        if filename.endswith(".ipynb"):
+            notebooks.append(filename)
+            fileNames.append(os.path.splitext(filename)[0])
+        else:
+            continue
+    return dict(zip(notebooks, fileNames))
 
 
 analytics_pipelines_dag = [
@@ -27,6 +46,7 @@ analytics_pipelines_dag = [
     "dbt_snowplow_full_refresh",
     "saas_usage_ping",
     "t_prep_dotcom_usage_events_backfill",
+    "dbt_six_hourly",
 ]
 
 
@@ -34,6 +54,14 @@ data_science_pipelines_dag = [
     "ds_propensity_to_expand",
     "ds_propensity_to_contract",
     "ds_propensity_to_purchase_trial",
+    "ds_namespace_segmentation",
+]
+
+sales_analytics_pipelines_dag = [
+    "sales_analytics_daily_notebooks",
+    "sales_analytics_weekly_notebooks",
+    "sales_analytics_monthly_notebooks",
+    "sales_analytics_quarterly_notebooks",
 ]
 
 
@@ -138,6 +166,8 @@ def slack_defaults(context, task_type):
             slack_channel = "#analytics-pipelines"
         elif dag_id in data_science_pipelines_dag:
             slack_channel = "#data-science-pipelines"
+        elif dag_id in sales_analytics_pipelines_dag:
+            slack_channel = "#sales-analytics-pipelines"
         else:
             slack_channel = dag_context.params.get(
                 "slack_channel_override", "#data-pipelines"
@@ -183,6 +213,8 @@ def slack_webhook_conn(slack_channel):
         slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
     elif slack_channel == "#data-science-pipelines":
         slack_webhook = Variable.get("AIRFLOW_VAR_DATA_SCIENCE_PIPELINES")
+    elif slack_channel == "#sales-analytics-pipelines":
+        slack_webhook = Variable.get("AIRFLOW_VAR_SALES_ANALYTICS_PIPELINES")
     else:
         slack_webhook = Variable.get("AIRFLOW_VAR_DATA_PIPELINES")
     airflow_http_con_id = Variable.get("AIRFLOW_VAR_SLACK_CONNECTION")

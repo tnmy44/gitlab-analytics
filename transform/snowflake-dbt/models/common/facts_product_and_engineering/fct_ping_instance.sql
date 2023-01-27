@@ -4,12 +4,9 @@
     unique_key = "ping_instance_id"
 ) }}
 
-{%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}
-
 {{ simple_cte([
     ('prep_license', 'prep_license'),
     ('prep_subscription', 'prep_subscription'),
-    ('prep_usage_ping_metrics_setting', 'prep_usage_ping_metrics_setting'),
     ('dim_date', 'dim_date'),
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
@@ -76,6 +73,7 @@
     LEFT JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
     AND IFF( add_country_info_to_usage_ping.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
+    AND dim_product_tier.product_tier_name != 'Dedicated - Ultimate'
     --AND main_edition = 'EE'
 
 ), joined_payload AS (
@@ -121,7 +119,7 @@
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@snalamaru",
+    updated_by="@tpoole",
     created_date="2022-03-08",
-    updated_date="2022-07-07"
+    updated_date="2023-01-20"
 ) }}

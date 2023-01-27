@@ -42,7 +42,7 @@ renamed AS (
     SPLIT_PART(COALESCE(notification_email, email), '@', 2) AS notification_email_domain,
     hide_no_password::BOOLEAN AS has_hide_no_password_enabled,
     password_automatically_set::BOOLEAN AS is_password_automatically_set,
-    IFF(LOWER(location) = 'nan', NULL, location) AS location, -- noqa:L029
+    NULL AS location,
     email::VARCHAR AS email,
     SPLIT_PART(email, '@', 2) AS email_domain,
     public_email::VARCHAR AS public_email,
@@ -60,7 +60,7 @@ renamed AS (
     -- note // hidden for privacy
     otp_grace_period_started_at::TIMESTAMP AS otp_grace_period_started_at,
     external::BOOLEAN AS is_external_user,
-    organization AS organization, -- noqa:L029
+    NULL AS organization,
     auditor::BOOLEAN AS auditor,
     require_two_factor_authentication_from_group::BOOLEAN AS does_require_two_factor_authentication_from_group, -- noqa:L016
     two_factor_grace_period::NUMBER AS two_factor_grace_period,
