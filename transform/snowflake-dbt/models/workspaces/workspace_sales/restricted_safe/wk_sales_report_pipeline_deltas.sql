@@ -198,8 +198,8 @@ WITH sfdc_opportunity_xf AS (
       oppty.sales_qualified_source,
       oppty.opportunity_category,
       oppty.sales_type,
-      users.user_id AS opportuniy_owner_id,
-      users.name AS opportunity_owner,
+      oppty.owner_id AS opportuniy_owner_id,
+      oppty.opportunity_owner,
       oppty.account_id,
       oppty.account_name,
       oppty.opportunity_name,
@@ -255,6 +255,7 @@ WITH sfdc_opportunity_xf AS (
       ON oppty.opportunity_id = deltas.opportunity_id
     LEFT JOIN sfdc_users_xf AS users
       ON deltas.owner_id = users.user_id
+      AND oppty.opportunity_owner = users.name
     
 )
 
