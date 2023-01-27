@@ -139,6 +139,8 @@ WITH sfdc_lead AS (
       is_ptpt_contact_marketo,
       is_impacted_by_user_limit_marketo,
       is_currently_in_trial_marketo,
+      trial_start_date_marketo,
+      trial_end_date_marketo,
       (ROW_NUMBER() OVER (PARTITION BY email ORDER BY updated_at DESC))                 AS record_number
 
     FROM marketo
@@ -268,6 +270,8 @@ WITH sfdc_lead AS (
       IFNULL(marketo_lead.is_ptpt_contact_marketo, FALSE)                                                                AS is_ptpt_contact_marketo,
       IFNULL(marketo_lead.is_impacted_by_user_limit_marketo, FALSE)                                                      AS is_impacted_by_user_limit_marketo,
       IFNULL(marketo_lead.is_currently_in_trial_marketo, FALSE)                                                          AS is_currently_in_trial_marketo,
+      marketo_lead.trial_start_date_marketo                                                                              AS trial_start_date_marketo,
+      marketo_lead.trial_end_date_marketo                                                                              AS trial_end_date_marketo,
       CASE
         WHEN sfdc.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
