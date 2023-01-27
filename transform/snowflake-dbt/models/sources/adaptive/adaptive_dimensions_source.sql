@@ -31,7 +31,7 @@ SELECT
   dimension_values.value['@description']::VARCHAR    AS description,
   dimension_values.value['@shortName']::VARCHAR      AS short_name,
   dimension_values.value['attributes']::VARIANT      AS attributes,
-  intermediate.__loaded_at                           AS uploaded_at
+  intermediate.uploaded_at
 FROM
   intermediate,
   LATERAL FLATTEN(input => PARSE_JSON(intermediate._data) ['dimensionValue']) AS dimension_values
