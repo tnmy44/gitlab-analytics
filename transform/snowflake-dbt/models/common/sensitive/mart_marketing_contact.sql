@@ -1008,6 +1008,7 @@
       'user_limit_enforcement_at',
       'is_impacted_by_user_limit',
       'is_impacted_by_user_limit_change',
+      'user_limit_namespace_id',
       'marketo_lead_id'
       ]
 ) }}
