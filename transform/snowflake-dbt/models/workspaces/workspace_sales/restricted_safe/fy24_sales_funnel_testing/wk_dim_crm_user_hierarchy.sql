@@ -16,7 +16,8 @@ WITH source AS (
     crm_opp_owner_area_stamped,
     dim_crm_opp_owner_area_stamped_id,
     crm_opp_owner_sales_segment_stamped_grouped,
-    crm_opp_owner_sales_segment_region_stamped_grouped
+    crm_opp_owner_sales_segment_region_stamped_grouped,
+    is_current_crm_user_hierarchy
   FROM {{ ref('wk_prep_crm_user_hierarchy') }}
 
 )

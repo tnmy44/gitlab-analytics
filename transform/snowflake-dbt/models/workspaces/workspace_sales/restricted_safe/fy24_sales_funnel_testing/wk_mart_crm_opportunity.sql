@@ -475,7 +475,8 @@
       fct_crm_opportunity.other_non_recurring_amount,
       fct_crm_opportunity.renewal_amount,
       fct_crm_opportunity.total_contract_value,
-      fct_crm_opportunity.days_in_stage
+      fct_crm_opportunity.days_in_stage,
+      fct_crm_opportunity.is_test_opp
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
@@ -496,18 +497,21 @@
       ON fct_crm_opportunity.dim_alliance_type_id = dim_alliance_type.dim_alliance_type_id
     LEFT JOIN dim_channel_type
       ON fct_crm_opportunity.dim_channel_type_id = dim_channel_type.dim_channel_type_id
+    LEFT JOIN dim_date close_date
+      ON fct_crm_opportunity.close_date_id = close_date.date_id
     LEFT JOIN dim_crm_user_hierarchy
       ON fct_crm_opportunity.dim_crm_opp_owner_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+        AND close_date.fiscal_year = dim_crm_user_hierarchy.fiscal_year
     LEFT JOIN dim_crm_user_hierarchy AS dim_crm_user_hierarchy_live
       ON fct_crm_opportunity.dim_crm_user_hierarchy_live_sk = dim_crm_user_hierarchy_live.dim_crm_user_hierarchy_sk
+        AND dim_crm_user_hierarchy_live.is_current_crm_user_hierarchy = 1
     LEFT JOIN dim_crm_user_hierarchy AS dim_crm_user_hierarchy_account_owner
       ON fct_crm_opportunity.dim_crm_user_hierarchy_account_user_sk = dim_crm_user_hierarchy_account_owner.dim_crm_user_hierarchy_sk
+        AND dim_crm_user_hierarchy_account_owner.is_current_crm_user_hierarchy = 1
     LEFT JOIN dim_date created_date
       ON fct_crm_opportunity.created_date_id = created_date.date_id
     LEFT JOIN dim_date sales_accepted_date
       ON fct_crm_opportunity.sales_accepted_date_id = sales_accepted_date.date_id
-    LEFT JOIN dim_date close_date
-      ON fct_crm_opportunity.close_date_id = close_date.date_id
     LEFT JOIN dim_date stage_0_pending_acceptance_date
       ON fct_crm_opportunity.stage_0_pending_acceptance_date_id = stage_0_pending_acceptance_date.date_id
     LEFT JOIN dim_date stage_1_discovery_date
@@ -550,7 +554,7 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2023-01-20",
-    updated_date="2023-01-20"
+    updated_date="2023-01-27"
   ) }}
 
 

@@ -183,28 +183,38 @@
     SELECT *
     FROM fy24_and_beyond_hierarchy
 
+), current_fiscal_year AS(
+
+    SELECT DISTINCT
+      fiscal_year
+    FROM dim_date
+    WHERE date_actual = '2023-02-02' -- Pretend like its 2024
+
 ), final AS (
 
     SELECT DISTINCT 
-      {{ dbt_utils.surrogate_key(['dim_crm_user_hierarchy_sk', fiscal_year]) }}                    AS dim_crm_user_hierarchy_stamped_id,
-      dim_crm_user_hierarchy_sk,
-      fiscal_year,
-      user_business_unit                                                              AS crm_opp_owner_business_unit_stamped,
-      {{ dbt_utils.surrogate_key(['user_business_unit']) }}                           AS dim_crm_opp_owner_business_unit_stamped_id,
-      user_segment                                                                    AS crm_opp_owner_sales_segment_stamped,
-      {{ dbt_utils.surrogate_key(['user_segment']) }}                                 AS dim_crm_opp_owner_sales_segment_stamped_id,
-      user_geo                                                                        AS crm_opp_owner_geo_stamped,
-      {{ dbt_utils.surrogate_key(['user_geo']) }}                                     AS dim_crm_opp_owner_geo_stamped_id,
-      user_region                                                                     AS crm_opp_owner_region_stamped,
-      {{ dbt_utils.surrogate_key(['user_region']) }}                                  AS dim_crm_opp_owner_region_stamped_id,
-      user_area                                                                       AS crm_opp_owner_area_stamped,
-      {{ dbt_utils.surrogate_key(['user_area']) }}                                    AS dim_crm_opp_owner_area_stamped_id,
+      {{ dbt_utils.surrogate_key(['final_unioned.dim_crm_user_hierarchy_sk', 'final_unioned.fiscal_year']) }}                    AS dim_crm_user_hierarchy_stamped_id,
+      final_unioned.dim_crm_user_hierarchy_sk,
+      final_unioned.fiscal_year,
+      final_unioned.user_business_unit                                                                                          AS crm_opp_owner_business_unit_stamped,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_business_unit']) }}                                                       AS dim_crm_opp_owner_business_unit_stamped_id,
+      final_unioned.user_segment                                                                                                AS crm_opp_owner_sales_segment_stamped,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_segment']) }}                                                             AS dim_crm_opp_owner_sales_segment_stamped_id,
+      final_unioned.user_geo                                                                                                    AS crm_opp_owner_geo_stamped,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_geo']) }}                                                                 AS dim_crm_opp_owner_geo_stamped_id,
+      final_unioned.user_region                                                                                                 AS crm_opp_owner_region_stamped,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_region']) }}                                                              AS dim_crm_opp_owner_region_stamped_id,
+      final_unioned.user_area                                                                                                   AS crm_opp_owner_area_stamped,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_area']) }}                                                                AS dim_crm_opp_owner_area_stamped_id,
       CASE
-          WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
-          ELSE user_segment
-      END                                                                             AS crm_opp_owner_sales_segment_stamped_grouped,
-      {{ sales_segment_region_grouped('user_segment', 'user_geo', 'user_region') }}   AS crm_opp_owner_sales_segment_region_stamped_grouped
+          WHEN final_unioned.user_segment IN ('Large', 'PubSec') THEN 'Large'
+          ELSE final_unioned.user_segment
+      END                                                                                                                       AS crm_opp_owner_sales_segment_stamped_grouped,
+      {{ sales_segment_region_grouped('final_unioned.user_segment', 'final_unioned.user_geo', 'final_unioned.user_region') }}   AS crm_opp_owner_sales_segment_region_stamped_grouped,
+      IFF(final_unioned.fiscal_year = current_fiscal_year.fiscal_year, 1, 0)                                                    AS is_current_crm_user_hierarchy
     FROM final_unioned
+    LEFT JOIN current_fiscal_year
+      ON final_unioned.fiscal_year = current_fiscal_year.fiscal_year
 
 )
 

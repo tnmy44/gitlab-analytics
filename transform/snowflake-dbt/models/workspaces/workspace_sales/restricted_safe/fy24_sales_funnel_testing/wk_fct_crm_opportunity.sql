@@ -222,7 +222,9 @@
       sfdc_opportunity.total_contract_value,
       sfdc_opportunity.days_in_stage,
       sfdc_opportunity.calculated_age_in_days,
-      sfdc_opportunity.days_since_last_activity
+      sfdc_opportunity.days_since_last_activity,
+      sfdc_opportunity.is_test_opp,
+      sfdc_opportunity.close_fiscal_year -- just for testing (will delete)
 
     FROM sfdc_opportunity
     LEFT JOIN crm_account_dimensions
@@ -241,7 +243,7 @@
       ON sfdc_opportunity.sales_segment = sales_segment.sales_segment_name
     LEFT JOIN prep_crm_user_hierarchy
       ON sfdc_opportunity.dim_crm_opp_owner_hierarchy_sk = prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk
-        AND sfdc_opportunity.close_date_fiscal_year = prep_crm_user_hierarchy.fiscal_year
+        AND sfdc_opportunity.close_fiscal_year = prep_crm_user_hierarchy.fiscal_year
     LEFT JOIN dr_partner_engagement
       ON sfdc_opportunity.dr_partner_engagement = dr_partner_engagement.dr_partner_engagement_name
     LEFT JOIN alliance_type

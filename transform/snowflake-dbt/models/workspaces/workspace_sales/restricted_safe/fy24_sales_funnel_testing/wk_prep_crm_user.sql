@@ -14,7 +14,7 @@
 
     SELECT 
       *,
-      NULL AS user_business_unit
+      'COMM' AS user_business_unit -- ONLY FOR TESTING SINCE MOST RECORDS DO NOT HAVE A BUSINESS UNIT YET
     FROM sfdc_users_source
 
     UNION ALL

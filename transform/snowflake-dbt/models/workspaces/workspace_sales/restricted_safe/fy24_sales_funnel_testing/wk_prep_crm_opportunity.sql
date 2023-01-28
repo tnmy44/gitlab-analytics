@@ -175,12 +175,14 @@ WITH first_contact  AS (
        WHEN close_date >= '2023-02-01'
          THEN 'COMM'
        ELSE NULL
-     END AS user_business_unit_stamped
+     END AS user_business_unit_stamped,
+     0 AS is_test_opp
    FROM {{ ref('sfdc_opportunity_source')}}
 
    UNION ALL 
 
-   SELECT *
+   SELECT *,
+   1 AS is_test_opp
    FROM {{ ref('fy24_mock_opportunities_source') }}
 
 ), sfdc_opportunity AS (
@@ -391,7 +393,8 @@ WITH first_contact  AS (
       days_since_last_activity,
       is_deleted,
       last_activity_date,
-      record_type_id
+      record_type_id,
+      is_test_opp
     FROM sfdc_opportunity_prep
     WHERE account_id IS NOT NULL
       AND is_deleted = FALSE
@@ -470,6 +473,7 @@ WITH first_contact  AS (
 
 
       close_date.first_day_of_fiscal_quarter                                                      AS close_fiscal_quarter_date,
+      close_date.fiscal_year                                                                      AS close_fiscal_year,
 
       {{ get_date_id('sfdc_opportunity.iacv_created_date') }}                                     AS arr_created_date_id,
       sfdc_opportunity.iacv_created_date                                                          AS arr_created_date,

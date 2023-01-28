@@ -31,8 +31,10 @@
       ON fct_sales_funnel_target.dim_order_type_id = dim_order_type.dim_order_type_id
     LEFT JOIN dim_crm_user_hierarchy
       ON fct_sales_funnel_target.dim_crm_user_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+        AND fct_sales_funnel_target.fiscal_year = dim_crm_user_hierarchy.fiscal_year
     LEFT JOIN dim_crm_user_hierarchy AS dim_crm_user_hierarchy_live
       ON fct_sales_funnel_target.dim_crm_user_hierarchy_live_id = dim_crm_user_hierarchy_live.dim_crm_user_hierarchy_sk
+        AND fct_sales_funnel_target.fiscal_year = dim_crm_user_hierarchy_live.fiscal_year
 
 ), monthly_targets_daily AS (
 
