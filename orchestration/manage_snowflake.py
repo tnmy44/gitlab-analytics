@@ -158,11 +158,10 @@ class SnowflakeManager:
         Grant privildges on a clone.
         """
         
-        match database:
-            case "prep":
-                clone = self.prep_database
-            case "prod":
-                clone = self.prod_database
+        if database == "prep":
+            clone = self.prep_database
+        elif database == "prod":
+            clone = self.prod_database
 
         get_grants_query = f"""
             with recursive roles_rec as (
