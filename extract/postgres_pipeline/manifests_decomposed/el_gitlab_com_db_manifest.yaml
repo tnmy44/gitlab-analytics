@@ -2026,7 +2026,6 @@ tables:
       , confirmation_sent_at
       , unconfirmed_email
       , hide_no_ssh_key
-      , website_url
       , admin_email_unsubscribed_at
       , notification_email
       , hide_no_password
