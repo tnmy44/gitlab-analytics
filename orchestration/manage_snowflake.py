@@ -153,6 +153,70 @@ class SnowflakeManager:
             if include_stages:
                 self.clone_stages(create_db, database, schema)
 
+    def grant_clones(self, role):
+        """
+        Grant privildges on a clone.
+        """
+        db_list = [
+            self.prep_database,
+            self.prod_database,
+            self.raw_database,
+        ]
+
+        get_grants_query = f"""
+            with recursive roles_rec as (
+
+            select grantee_name, name
+            from snowflake.account_usage.grants_to_roles
+            where granted_on = 'ROLE' and granted_to = 'ROLE'
+                and privilege = 'USAGE' and deleted_on is null
+                and grantee_name = {role}
+            
+            union all
+            
+            select g.grantee_name, g.name
+            from snowflake.account_usage.grants_to_roles g
+            join roles_rec r on g.grantee_name = r.name
+            where g.granted_on = 'ROLE' and g.granted_to = 'ROLE'
+                and g.privilege = 'USAGE' and g.deleted_on is null
+
+            ),  inherited_roles as (
+
+            select distinct name
+            from roles_rec
+
+            )
+
+            select 
+            privilege,
+            granted_on,
+            name,
+            table_catalog as _database,
+            table_schema as _schema,
+            grantee_name
+            from snowflake.account_usage.grants_to_roles
+            where table_catalog in ('PREP','PROD')
+            and (grantee_name = {role}
+            or grantee_name in (
+                select name
+                from inherited_roles
+            ))
+
+            ;
+        """
+
+        
+        try:
+            connection = self.engine.connect()
+            for query in queries:
+                logging.info("Executing Query: {}".format(query))
+                connection.execute(query)
+                # logging.info("Query Result: {}".format(result))
+        finally:
+            connection.close()
+            self.engine.dispose()
+
+
     def delete_clones(self):
         """
         Delete a clone.
