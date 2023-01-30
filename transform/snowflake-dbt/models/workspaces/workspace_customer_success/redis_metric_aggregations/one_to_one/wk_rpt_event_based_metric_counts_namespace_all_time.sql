@@ -18,7 +18,7 @@ WITH events AS (
     used to aggregate event-based all-time metrics.
   */
   WHERE key_path IS NOT NULL
-)
+),
 
 final AS (
   SELECT
