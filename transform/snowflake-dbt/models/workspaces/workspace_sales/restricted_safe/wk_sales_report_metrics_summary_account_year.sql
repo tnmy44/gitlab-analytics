@@ -212,7 +212,7 @@ WITH date_details AS (
             THEN o.net_arr
             ELSE 0 END) AS last_12m_booked_web_direct_sourced_net_arr,  --ttm_web_direct_sourced_net_arr
       SUM(CASE
-            WHEN o.sales_qualified_source = 'Channel Generated'
+            WHEN (o.sales_qualified_source = 'Channel Generated' OR o.sales_qualified_source = 'Partner Generated')
             THEN o.net_arr
             ELSE 0 END) AS last_12m_booked_channel_sourced_net_arr,  -- ttm_web_direct_sourced_net_arr
       SUM(CASE
@@ -248,13 +248,13 @@ WITH date_details AS (
 
         -- deal path direct year
         SUM(CASE
-            WHEN o.deal_path != 'Channel'
+            WHEN (o.deal_path != 'Channel' AND o.deal_path != 'Partner')
             THEN o.net_arr
             ELSE 0 END) AS last_12m_booked_direct_net_arr,   --ttm_direct_net_arr
 
         -- deal path channel year
         SUM(CASE
-            WHEN o.deal_path = 'Channel'
+            WHEN (o.deal_path = 'Channel' OR o.deal_path = 'Partner')
             THEN o.net_arr
             ELSE 0 END) AS last_12m_booked_channel_net_arr,   --ttm_channel_net_arr
 
@@ -306,14 +306,14 @@ WITH date_details AS (
 
           -- deal path direct year
         SUM(CASE
-            WHEN o.deal_path != 'Channel'
+            WHEN (o.deal_path != 'Channel' AND o.deal_path != 'Partner')
                 AND o.is_won = 1
             THEN o.calculated_deal_count
             ELSE 0 END) AS last_12m_booked_direct_deal_count,  -- ttm_direct_deal_count
 
         -- deal path channel year
         SUM(CASE
-            WHEN o.deal_path = 'Channel'
+            WHEN (o.deal_path = 'Channel' OR o.deal_path = 'Partner')
                 AND o.is_won = 1
             THEN o.calculated_deal_count
             ELSE 0 END) AS last_12m_booked_channel_deal_count  -- ttm_channel_deal_count
@@ -341,7 +341,7 @@ WITH date_details AS (
             THEN o.booked_net_arr
             ELSE 0 END) AS fy_booked_web_direct_sourced_net_arr,
       SUM(CASE
-            WHEN o.sales_qualified_source = 'Channel Generated'
+            WHEN (o.sales_qualified_source = 'Channel Generated' OR o.sales_qualified_source = 'Partner Generated')
             THEN o.booked_net_arr
             ELSE 0 END) AS fy_booked_channel_sourced_net_arr,
       SUM(CASE
@@ -379,25 +379,25 @@ WITH date_details AS (
 
         -- deal path direct year
         SUM(CASE
-            WHEN o.deal_path != 'Channel'
+            WHEN (o.deal_path != 'Channel' AND o.deal_path != 'Partner')
             THEN o.booked_net_arr
             ELSE 0 END) AS fy_booked_direct_net_arr,
 
         -- deal path channel year
         SUM(CASE
-            WHEN o.deal_path = 'Channel'
+            WHEN (o.deal_path = 'Channel' OR o.deal_path = 'Partner')
             THEN o.booked_net_arr
             ELSE 0 END) AS fy_booked_channel_net_arr,
 
          -- deal path direct year
         SUM(CASE
-            WHEN o.deal_path != 'Channel'
+            WHEN (o.deal_path != 'Channel' AND o.deal_path != 'Partner')
             THEN o.calculated_deal_count
             ELSE 0 END) AS fy_booked_direct_deal_count,
 
         -- deal path channel year
         SUM(CASE
-            WHEN o.deal_path = 'Channel'
+            WHEN (o.deal_path = 'Channel' OR o.deal_path = 'Partner')
             THEN o.calculated_deal_count
             ELSE 0 END) AS fy_booked_channel_deal_count
 
@@ -457,7 +457,7 @@ WITH date_details AS (
             THEN h.net_arr
             ELSE 0 END)              AS pg_last_12m_web_direct_sourced_net_arr,
       SUM(CASE
-            WHEN h.sales_qualified_source = 'Channel Generated'
+            WHEN (h.sales_qualified_source = 'Channel Generated' OR h.sales_qualified_source = 'Partner Generated')
             THEN h.net_arr
             ELSE 0 END)              AS pg_last_12m_channel_sourced_net_arr,
       SUM(CASE
@@ -474,7 +474,7 @@ WITH date_details AS (
             THEN h.calculated_deal_count
             ELSE 0 END)              AS pg_last_12m_web_direct_sourced_deal_count,
       SUM(CASE
-            WHEN h.sales_qualified_source = 'Channel Generated'
+            WHEN (h.sales_qualified_source = 'Channel Generated' OR h.sales_qualified_source = 'Partner Generated')
             THEN h.calculated_deal_count
             ELSE 0 END)              AS pg_last_12m_channel_sourced_deal_count,
       SUM(CASE
@@ -508,7 +508,7 @@ WITH date_details AS (
             THEN h.net_arr
             ELSE 0 END) AS pg_ytd_web_direct_sourced_net_arr,
       SUM(CASE
-            WHEN h.sales_qualified_source = 'Channel Generated'
+            WHEN (h.sales_qualified_source = 'Channel Generated' OR h.sales_qualified_source = 'Partner Generated')
             THEN h.net_arr
             ELSE 0 END) AS pg_ytd_channel_sourced_net_arr,
       SUM(CASE
@@ -634,7 +634,7 @@ WITH date_details AS (
     a.ultimate_parent_account_name    AS upa_name,
     a.is_key_account,
     a.abm_tier,
-    a.parent_id,
+    a.ultimate_parent_account_id,
     u.name                              AS account_owner_name,
     a.owner_id                          AS account_owner_id,
     trim(u.employee_number)             AS account_owner_employee_number,
@@ -642,7 +642,7 @@ WITH date_details AS (
     upa_owner.user_id                   AS upa_owner_id,
     upa_owner.title_category            AS upa_owner_title_category,
     trim(upa_owner.employee_number)     AS upa_owner_employee_number,
-    dim_account.forbes_2000_rank        AS account_forbes_rank,
+    -- dim_account.forbes_2000_rank        AS account_forbes_rank,
     a.billing_country                   AS account_country,
     a.billing_postal_code               AS account_zip_code,
     mart_crm_account.account_billing_state AS account_state,
@@ -654,7 +654,7 @@ WITH date_details AS (
     upa_account.parent_crm_account_demographics_region              AS upa_ad_region,
     upa_account.parent_crm_account_demographics_area                AS upa_ad_area,
     
-    coalesce(upa_account.parent_crm_account_billing_country, REPLACE(REPLACE(REPLACE(upa.tsp_address_country,'The Netherlands','Netherlands'),'Russian Federation','Russia'), 'Russia','Russian Federation'))              AS upa_ad_country,
+    coalesce(upa_account.parent_crm_account_billing_country, REPLACE(REPLACE('Russian Federation','Russia'), 'Russia','Russian Federation'))              AS upa_ad_country,  
     upa_account.parent_crm_account_demographics_upa_state           AS upa_ad_state,
     upa_account.parent_crm_account_demographics_upa_city            AS upa_ad_city,
     upa_account.parent_crm_account_demographics_upa_postal_code     AS upa_ad_zip_code,
@@ -1045,7 +1045,7 @@ SELECT
     level + 1 AS level
 FROM consolidated_accounts child
 INNER JOIN upa_virtual_cte upa
-    ON child.parent_id = upa.account_id
+    ON child.ultimate_parent_account_id = upa.account_id
     AND child.report_fiscal_year = upa.report_fiscal_year
 
 ), max_virtual_upa_depth AS (
@@ -1293,8 +1293,8 @@ FROM selected_hierarchy_virtual_upa final
     MAX(acc.is_public_sector_flag)      AS is_public_sector_flag,
     
     
-    SUM(CASE WHEN acc.account_forbes_rank IS NOT NULL THEN 1 ELSE 0 END)   AS count_forbes_accounts,
-    MIN(account_forbes_rank)      AS forbes_rank,
+    -- SUM(CASE WHEN acc.account_forbes_rank IS NOT NULL THEN 1 ELSE 0 END)   AS count_forbes_accounts,
+    -- MIN(account_forbes_rank)      AS forbes_rank,
     MAX(acc.potential_users)          AS potential_users,
     MAX(acc.licenses)                 AS licenses,
     MAX(acc.linkedin_developer)       AS linkedin_developer,

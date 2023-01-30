@@ -17,7 +17,7 @@ intermediate AS (
     source.uploaded_at
   FROM
     source,
-    LATERAL FLATTEN(input => jsontext:data:entries) AS d
+    LATERAL FLATTEN(input => jsontext['data']['entries']) AS d
   {% if is_incremental() %}
     WHERE source.uploaded_at > (SELECT MAX(t.uploaded_at) FROM {{ this }} AS t)
   {% endif %}
@@ -27,24 +27,24 @@ parsed AS (
   SELECT
 
     -- foreign keys
-    uploaded_at,
-    REPLACE(value:timePeriodId, '_', '-')::varchar AS fiscal_quarter,
+    REPLACE(value['timePeriodId'], '_', '-')::VARCHAR          AS fiscal_quarter,
     -- add fiscal_quarter to unique key: can be dup timeFrameId across quarters
-    CONCAT(value:timeFrameId::varchar, '_', fiscal_quarter) AS time_frame_id,
-    value:userId::varchar AS user_id,
-    value:fieldId::varchar AS field_id,
+    CONCAT(value['timeFrameId']::VARCHAR, '_', fiscal_quarter) AS time_frame_id,
+    value['userId']::VARCHAR                                   AS user_id,
+    value['fieldId']::VARCHAR                                  AS field_id,
 
     -- primary key, must be after aliased cols are derived else sql error
-    CONCAT_WS(' | ', time_frame_id, user_id, field_id) AS entries_id,
+    CONCAT_WS(' | ', time_frame_id, user_id, field_id)         AS entries_id,
 
     -- logical info
-    value:forecastValue::number(38, 1) AS forecast_value,
-    value:currency::variant AS currency,
-    value:isUpdated::boolean AS is_updated,
-    value:updatedBy::varchar AS updated_by,
+    value['forecastValue']::NUMBER(38, 1)                      AS forecast_value,
+    value['currency']::VARIANT                                 AS currency,
+    value['isUpdated']::BOOLEAN                                AS is_updated,
+    value['updatedBy']::VARCHAR                                AS updated_by,
+    TO_TIMESTAMP(value['updatedOn']::INT / 1000)               AS updated_on,
 
     -- metadata
-    TO_TIMESTAMP(value:updatedOn::int / 1000) AS updated_on
+    uploaded_at
   FROM
     intermediate
 
@@ -64,7 +64,6 @@ parsed AS (
 )
 
 
-SELECT
-  *
+SELECT *
 FROM
   parsed

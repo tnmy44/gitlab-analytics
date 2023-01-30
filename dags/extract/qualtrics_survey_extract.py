@@ -21,6 +21,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -66,6 +67,7 @@ qualtrics_operator = KubernetesPodOperator(
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_STATIC_DATABASE,
     ],
     env_vars={
         **pod_env_vars,

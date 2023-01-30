@@ -16,7 +16,7 @@ intermediate AS (
     source.uploaded_at
   FROM
     source,
-    LATERAL FLATTEN(input => jsontext:data:users) AS d
+    LATERAL FLATTEN(input => jsontext['data']['users']) AS d
 
   {% if is_incremental() %}
     WHERE source.uploaded_at > (SELECT MAX(t.uploaded_at) FROM {{ this }} AS t)
@@ -26,19 +26,19 @@ intermediate AS (
 parsed AS (
   SELECT
     -- primary key
-    uploaded_at,
+    value['userId']::VARCHAR              AS user_id,
 
     -- logical info
-    value:userId::varchar AS user_id,
-    value:crmId::varchar AS crm_user_id,
-    value:email::varchar AS email,
-    value:parentHierarchyId::varchar AS parent_role_id,
-    value:parentHierarchyName::varchar AS parent_role,
-    value:hierarchyId::varchar AS sales_team_role_id,
-    value:hierarchyName::varchar AS sales_team_role,
-    value:name::varchar AS user_full_name,
+    value['crmId']::VARCHAR               AS crm_user_id,
+    value['email']::VARCHAR               AS user_email,
+    value['parentHierarchyId']::VARCHAR   AS parent_role_id,
+    value['parentHierarchyName']::VARCHAR AS parent_role,
+    value['hierarchyId']::VARCHAR         AS sales_team_role_id,
+    value['hierarchyName']::VARCHAR       AS sales_team_role,
+    value['name']::VARCHAR                AS user_full_name,
+    value['scopeId']::VARIANT             AS scope_id,
 
-    value:scopeId::variant AS scope_id
+    uploaded_at
   FROM
     intermediate
 
@@ -52,7 +52,6 @@ parsed AS (
     ) = 1
 )
 
-SELECT
-  *
+SELECT *
 FROM
   parsed

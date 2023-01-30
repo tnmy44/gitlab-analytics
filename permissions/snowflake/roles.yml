@@ -109,11 +109,6 @@ databases:
     - juwong_prep:
         shared: no  
 
-    - kaguilar_prod:
-        shared: no
-    - kaguilar_prep:
-        shared: no
-
     - kdietz_prod:
         shared: no
     - kdietz_prep:
@@ -1021,6 +1016,7 @@ roles:
             - covid19
             - snowflake_db
             - zoominfo
+            - static_sensitive_readonly
         owns:
             schemas:
                 - prod.common
@@ -1617,8 +1613,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_alert_management_alerts
                     - raw.tap_postgres.gitlab_db_alert_management_alert_assignees
                     - raw.tap_postgres.gitlab_db_approvals
-                    - raw.tap_postgres.gitlab_db_approvals_errors
-                    - raw.tap_postgres.gitlab_db_approvals_validate
                     - raw.tap_postgres.gitlab_db_approval_merge_request_rules
                     - raw.tap_postgres.gitlab_db_audit_events
                     - raw.tap_postgres.gitlab_db_award_emoji
@@ -1631,16 +1625,10 @@ roles:
                     - raw.tap_postgres.gitlab_db_ci_build_trace_section_names
                     - raw.tap_postgres.gitlab_db_ci_group_variables
                     - raw.tap_postgres.gitlab_db_ci_job_artifacts
-                    - raw.tap_postgres.gitlab_db_ci_job_artifacts_errors
-                    - raw.tap_postgres.gitlab_db_ci_job_artifacts_validate
                     - raw.tap_postgres.gitlab_db_ci_pipelines
                     - raw.tap_postgres.gitlab_db_ci_pipeline_chat_data
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedules
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_schedules_errors
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_schedules_validate
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables_errors
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables_validate
                     - raw.tap_postgres.gitlab_db_ci_platform_metrics
                     - raw.tap_postgres.gitlab_db_ci_runners
                     - raw.tap_postgres.gitlab_db_ci_runner_projects
@@ -1652,30 +1640,19 @@ roles:
                     - raw.tap_postgres.gitlab_db_clusters_applications_crossplane
                     - raw.tap_postgres.gitlab_db_clusters_applications_helm
                     - raw.tap_postgres.gitlab_db_clusters_applications_jupyter
-                    - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces_validate
                     - raw.tap_postgres.gitlab_db_cluster_groups
                     - raw.tap_postgres.gitlab_db_cluster_projects
-                    - raw.tap_postgres.gitlab_db_columns
                     - raw.tap_postgres.gitlab_db_deployments
-                    - raw.tap_postgres.gitlab_db_deployments_errors
-                    - raw.tap_postgres.gitlab_db_deployments_validate
                     - raw.tap_postgres.gitlab_db_deployment_merge_requests
                     - raw.tap_postgres.gitlab_db_design_management_designs
                     - raw.tap_postgres.gitlab_db_design_management_designs_versions
                     - raw.tap_postgres.gitlab_db_design_management_versions
                     - raw.tap_postgres.gitlab_db_elasticsearch_indexed_namespaces
                     - raw.tap_postgres.gitlab_db_emails
-                    - raw.tap_postgres.gitlab_db_emails_errors
                     - raw.tap_postgres.gitlab_db_emails_validate
                     - raw.tap_postgres.gitlab_db_environments
-                    - raw.tap_postgres.gitlab_db_environments_errors
-                    - raw.tap_postgres.gitlab_db_environments_validate
                     - raw.tap_postgres.gitlab_db_epics
-                    - raw.tap_postgres.gitlab_db_epics_errors
-                    - raw.tap_postgres.gitlab_db_epics_validate
                     - raw.tap_postgres.gitlab_db_epic_issues
-                    - raw.tap_postgres.gitlab_db_epic_metrics_errors
-                    - raw.tap_postgres.gitlab_db_epic_metrics_validate
                     - raw.tap_postgres.gitlab_db_events
                     - raw.tap_postgres.gitlab_db_experiments
                     - raw.tap_postgres.gitlab_db_gitlab_subscriptions
@@ -1705,22 +1682,16 @@ roles:
                     - raw.tap_postgres.gitlab_db_notification_settings
                     - raw.tap_postgres.gitlab_db_oauth_access_tokens
                     - raw.tap_postgres.gitlab_db_onboarding_progresses
-                    - raw.tap_postgres.gitlab_db_packages_build_infos
-                    - raw.tap_postgres.gitlab_db_packages_dependencies
-                    - raw.tap_postgres.gitlab_db_packages_dependency_links
                     - raw.tap_postgres.gitlab_db_packages_packages
-                    - raw.tap_postgres.gitlab_db_packages_package_files
                     - raw.tap_postgres.gitlab_db_pages_domains
                     - raw.tap_postgres.gitlab_db_plans
                     - raw.tap_postgres.gitlab_db_programming_languages
                     - raw.tap_postgres.gitlab_db_projects
                     - raw.tap_postgres.gitlab_db_project_auto_devops
-                    - raw.tap_postgres.gitlab_db_project_daily_statistics
                     - raw.tap_postgres.gitlab_db_project_features
                     - raw.tap_postgres.gitlab_db_project_group_links
                     - raw.tap_postgres.gitlab_db_project_import_data
                     - raw.tap_postgres.gitlab_db_project_mirror_data
-                    - raw.tap_postgres.gitlab_db_project_repository_states
                     - raw.tap_postgres.gitlab_db_project_statistics
                     - raw.tap_postgres.gitlab_db_prometheus_alerts
                     - raw.tap_postgres.gitlab_db_protected_branches
@@ -1740,19 +1711,11 @@ roles:
                     - raw.tap_postgres.gitlab_db_system_note_metadata
                     - raw.tap_postgres.gitlab_db_terraform_states
                     - raw.tap_postgres.gitlab_db_todos
-                    - raw.tap_postgres.gitlab_db_todos_errors
-                    - raw.tap_postgres.gitlab_db_todos_validate
                     - raw.tap_postgres.gitlab_db_users
-                    - raw.tap_postgres.gitlab_db_users_errors
-                    - raw.tap_postgres.gitlab_db_users_validate
                     - raw.tap_postgres.gitlab_db_user_custom_attributes
                     - raw.tap_postgres.gitlab_db_user_preferences
-                    - raw.tap_postgres.gitlab_db_user_preferences_validate
                     - raw.tap_postgres.gitlab_db_vulnerability_occurrences
                     - raw.tap_postgres.gitlab_db_web_hooks
-                    - raw.tap_postgres.gitlab_db_web_hooks_errors
-                    - raw.tap_postgres.gitlab_db_web_hooks_validate
-                    - raw.tap_postgres.gitlab_db_web_hook_logs
 
     - gitlab_dotcom_prep:
         warehouses:
@@ -2995,7 +2958,6 @@ roles:
             - loader
             - reporter
             - transformer
-            - static_sensitive_readonly
         warehouses:
             - loading
             - dev_l
@@ -3251,6 +3213,8 @@ roles:
                 read:
                     - jpeguero_prep
                     - jpeguero_prod
+                    - raw
+                    - prep
                 write:
                     - jpeguero_prep
                     - jpeguero_prod
@@ -3258,6 +3222,8 @@ roles:
                 read:
                     - jpeguero_prep.*
                     - jpeguero_prod.*
+                    - raw.snowflake_imports
+                    - prep.snowflake_imports
                 write:
                     - jpeguero_prep.*
                     - jpeguero_prod.*
@@ -3265,6 +3231,8 @@ roles:
                 read:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
+                    - raw.snowflake_imports.usage_ping_payloads
+                    - prep.snowflake_imports.snowflake_imports_usage_ping_payloads_source
                 write:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
@@ -3373,50 +3341,6 @@ roles:
                 write:
                     - juwong_prep.*.*
                     - juwong_prod.*.*
-
-    - kaguilar:
-        member_of:
-            - analyst_engineering
-            - customers_db
-            - data_team_analyst
-            - analyst_finance
-            - restricted_safe
-            - xactly
-            - bi_tool_eval_read
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - kaguilar_prep
-                - kaguilar_prod
-            schemas:
-                - kaguilar_prep.*
-                - kaguilar_prod.*
-            tables:
-                - kaguilar_prep.*.*
-                - kaguilar_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - kaguilar_prep
-                    - kaguilar_prod
-                write:
-                    - kaguilar_prep
-                    - kaguilar_prod
-            schemas:
-                read:
-                    - kaguilar_prep.*
-                    - kaguilar_prod.*
-                write:
-                    - kaguilar_prep.*
-                    - kaguilar_prod.*
-            tables:
-                read:
-                    - kaguilar_prep.*.*
-                    - kaguilar_prod.*.*
-                write:
-                    - kaguilar_prep.*.*
-                    - kaguilar_prod.*.*
 
     - kdietz:
         member_of:
@@ -4792,7 +4716,6 @@ users:
             - data_science_loader
             - sales_analytics
             - reporter
-            - static_sensitive_readonly
 
     - alpcohen:
         can_login: yes
@@ -4991,9 +4914,7 @@ users:
             - juwong
 
     - kaguilar:
-        can_login: yes
-        member_of:
-            - kaguilar
+        can_login: no
 
     - kdietz:
         can_login: yes

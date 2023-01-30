@@ -61,7 +61,7 @@ SELECT
     level + 1 AS level
 FROM report_metrics_summary_account_year child
 INNER JOIN upa_virtual_cte upa
-    ON child.parent_id = upa.account_id
+    ON child.ultimate_parent_account_id = upa.account_id
     AND child.report_fiscal_year = upa.report_fiscal_year
 
 ), max_virtual_upa_depth AS (
@@ -296,12 +296,10 @@ FROM selected_hierarchy_virtual_upa final
         ELSE 'Private'
     END                             AS sector_type,
     MAX(acc.is_public_sector_flag)      AS is_public_sector_flag,
-
-    -- Customer score used in maps for account visualization
-    MAX(acc.customer_score) AS customer_score,
-        
-    SUM(CASE WHEN acc.account_forbes_rank IS NOT NULL THEN 1 ELSE 0 END)   AS count_forbes_accounts,
-    MIN(account_forbes_rank)      AS forbes_rank,
+    
+    
+    -- SUM(CASE WHEN acc.account_forbes_rank IS NOT NULL THEN 1 ELSE 0 END)   AS count_forbes_accounts,
+    -- MIN(account_forbes_rank)      AS forbes_rank,
     MAX(acc.potential_users)          AS potential_users,
     MAX(acc.licenses)                 AS licenses,
     MAX(acc.linkedin_developer)       AS linkedin_developer,

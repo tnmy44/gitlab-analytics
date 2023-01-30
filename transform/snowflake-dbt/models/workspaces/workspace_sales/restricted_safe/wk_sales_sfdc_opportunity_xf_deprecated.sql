@@ -213,12 +213,12 @@ we can delete this connection and use the mart table directly.
       sfdc_opportunity_xf.account_owner_team_stamped,
 
       -- NF: why do we need these fields now?
-      sfdc_opportunity_xf.division_sales_segment_stamped,
-      sfdc_opportunity_xf.tsp_max_hierarchy_sales_segment,
-      sfdc_opportunity_xf.division_sales_segment,
-      sfdc_opportunity_xf.ultimate_parent_sales_segment,
-      sfdc_opportunity_xf.sales_segment,
-      sfdc_opportunity_xf.parent_segment,
+      -- sfdc_opportunity_xf.division_sales_segment_stamped,
+      -- sfdc_opportunity_xf.tsp_max_hierarchy_sales_segment,
+      -- sfdc_opportunity_xf.division_sales_segment,
+      -- sfdc_opportunity_xf.ultimate_parent_sales_segment,
+      -- sfdc_opportunity_xf.sales_segment,
+      -- sfdc_opportunity_xf.parent_segment,
 
       -----------------------------------------------------------
       -----------------------------------------------------------
@@ -242,7 +242,7 @@ we can delete this connection and use the mart table directly.
       sfdc_opportunity_xf.platform_partner,
 
       CASE
-        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
+        WHEN (sfdc_opportunity_xf.deal_path = 'Channel' OR sfdc_opportunity_xf.deal_path = 'Partner') 
           THEN REPLACE(COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track, resale_account.partner_track,'Open'),'select','Select')
         ELSE 'Direct' 
       END                                                                                           AS calculated_partner_track,
@@ -263,11 +263,13 @@ we can delete this connection and use the mart table directly.
           THEN 'Direct'
         WHEN sfdc_opportunity_xf.deal_path = 'Web Direct'
           THEN 'Web Direct' 
-        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
-            AND sfdc_opportunity_xf.sales_qualified_source = 'Channel Generated' 
+        WHEN (sfdc_opportunity_xf.deal_path = 'Channel' OR sfdc_opportunity_xf.deal_path = 'Partner') 
+            AND (sfdc_opportunity_xf.sales_qualified_source = 'Channel Generated' 
+                OR  sfdc_opportunity_xf.sales_qualified_source = 'Partner Generated') 
           THEN 'Partner Sourced'
-        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
-            AND sfdc_opportunity_xf.sales_qualified_source != 'Channel Generated' 
+        WHEN (sfdc_opportunity_xf.deal_path = 'Channel' OR sfdc_opportunity_xf.deal_path = 'Partner') 
+            AND (sfdc_opportunity_xf.sales_qualified_source != 'Channel Generated' 
+                AND sfdc_opportunity_xf.sales_qualified_source != 'Partner Generated') 
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
 
@@ -694,7 +696,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
       -- account driven fields 
       sfdc_accounts_xf.account_name,
-      sfdc_accounts_xf.ultimate_parent_account_id,
+      -- sfdc_accounts_xf.ultimate_parent_account_id,
       sfdc_accounts_xf.is_jihu_account,
       
       sfdc_accounts_xf.account_owner_user_segment,
@@ -803,7 +805,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
       CASE 
-        WHEN sfdc_accounts_xf.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+        WHEN sfdc_accounts_xf.ultimate_parent_account_id IN ('001610000111bA3AAI','0016100001F4xlaAAB','0016100001CXGCsAAP','00161000015O9YnAAK','0016100001b9JscAAE') 
           AND sfdc_opportunity_xf.close_date < '2020-08-01' 
             THEN 1
         -- NF 2021 - Pubsec extreme deals

@@ -15,6 +15,7 @@
       app_id,
       page_url_host_path,
       page_url_path,
+      page_url_query,
       clean_url_path,
       page_url_host,
       page_url_scheme,
@@ -28,7 +29,7 @@
       AND behavior_at > (SELECT max(max_event_timestamp) FROM {{ this }})
 
     {% endif %}
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=9) }}
 
 ), referrer_url AS (
 
@@ -37,6 +38,7 @@
       app_id,
       referrer_url_host_path                                                        AS page_url_host_path,
       referrer_url_path                                                             AS page_url_path,
+      referrer_url_query                                                            AS page_url_query,
       {{ clean_url('referrer_url_path') }}                                          AS clean_url_path,
       referrer_url_host                                                             AS page_url_host,
       referrer_url_scheme                                                           AS page_url_scheme,
@@ -51,7 +53,7 @@
       AND behavior_at > (SELECT MAX(max_event_timestamp) FROM {{ this }})
 
     {% endif %}
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=9) }}
 
 ), page AS (
 
@@ -76,6 +78,7 @@
 
       -- Attributes
       page_url_path,
+      page_url_query,
       clean_url_path,
       page_url_scheme,
       SPLIT_PART(clean_url_path, '/' ,1)                                        AS page_group,
@@ -85,10 +88,12 @@
       REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)             AS url_namespace_id,
       REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)               AS url_project_id,
       CASE 
+        WHEN page_url_path LIKE '%/-/activity' 
+          THEN 'Namespace information - Activity'
         WHEN page_url_path LIKE '%/activity'
           THEN 'Project information - Activity'
         WHEN page_url_path LIKE '%/-/labels'
-          THEN 'Project information - Labels'
+          THEN 'Namespace or Project information - Labels'
         WHEN page_url_path LIKE '%/-/project_members'
           THEN 'Project information - Members'
         WHEN page_url_path LIKE '%/-/tree/main'
@@ -221,6 +226,10 @@
           THEN 'Settings - Usage Quotas'
         WHEN page_url_path LIKE '%/-/billings'
           THEN 'Settings - Billings'
+        WHEN page_url_path LIKE '%/-/group_members' 
+          THEN 'Namespace information - Members'
+        WHEN page_url_path LIKE '%/sign_in' 
+          THEN 'Sign in'
         ELSE 'Other'
       END                                                                       AS url_path_category,
       CASE 
@@ -241,7 +250,7 @@
       MIN(min_event_timestamp)                                                  AS min_event_timestamp,
       MAX(max_event_timestamp)                                                  AS max_event_timestamp
     FROM page
-    {{ dbt_utils.group_by(n=15) }}
+    {{ dbt_utils.group_by(n=16) }}
 
 )
 
@@ -250,5 +259,5 @@
     created_by="@chrissharp",
     updated_by="@chrissharp",
     created_date="2022-07-22",
-    updated_date="2022-12-15"
+    updated_date="2023-01-20"
 ) }}
