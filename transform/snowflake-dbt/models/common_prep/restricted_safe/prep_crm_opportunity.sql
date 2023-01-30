@@ -1,3 +1,7 @@
+{{ config(
+    tags=["six_hourly"]
+) }}
+
 {{ sfdc_opportunity_fields('live') }}
 
 {{ dbt_audit(

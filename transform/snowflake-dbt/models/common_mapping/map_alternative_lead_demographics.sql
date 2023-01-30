@@ -280,5 +280,6 @@ SELECT
     WHEN first_country = 'moldova, republic of' THEN 'emea'
     WHEN first_country = 'russian federation' THEN 'emea'
     WHEN first_country = 'viet nam' THEN 'apac'
+    ELSE 'unknown'
   END AS geo_custom
 FROM crm_person

@@ -34,6 +34,7 @@ from kube_secrets import (
     SNOWFLAKE_USER,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 
 # Load the env vars into a dict and set env vars
@@ -59,6 +60,7 @@ dbt_secrets = [
     SNOWFLAKE_USER,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 ]
 
 

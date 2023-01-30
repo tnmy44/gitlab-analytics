@@ -1,3 +1,7 @@
+{{ config(
+    tags=["six_hourly"]
+) }}
+
 WITH prep_crm_opportunity AS (
 
     SELECT *

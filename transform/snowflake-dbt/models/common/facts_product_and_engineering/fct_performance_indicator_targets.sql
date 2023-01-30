@@ -7,7 +7,6 @@
     ('pi_targets', 'prep_performance_indicators_yaml'),
     ('dim_date', 'dim_date'),
     ])
-
 }},
 
 first_day_of_month AS (
@@ -18,15 +17,31 @@ first_day_of_month AS (
 ),
 
 /*
-Grab the most recent record of each pi_metric_name that does not have a NULL estimated target
+Grab metrics that currently have targets in the yml files
+We do not want to include metrics whose targets have been removed or metrics
+that have been removed from the files altogether
+*/
+
+metrics_with_targets AS (
+
+  SELECT DISTINCT pi_metric_name
+  FROM pi_targets
+  WHERE valid_to_date = (SELECT MAX(valid_to_date) FROM pi_targets) --record still valid
+    AND pi_monthly_estimated_targets IS NOT NULL
+
+),
+
+/*
+Grab the most recent record for each pi_metric_name
 */
 
 most_recent_yml_record AS (
 
-  SELECT *
+  SELECT pi_targets.*
   FROM pi_targets
-  WHERE pi_monthly_estimated_targets IS NOT NULL
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY pi_metric_name ORDER BY snapshot_date DESC) = 1
+  INNER JOIN metrics_with_targets
+    ON pi_targets.pi_metric_name = metrics_with_targets.pi_metric_name
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY pi_targets.pi_metric_name ORDER BY snapshot_date DESC) = 1
 
 ),
 
@@ -40,8 +55,8 @@ flattened_monthly_targets AS (
     pi_metric_name,
     d.value,
     PARSE_JSON(d.path)[0]::TIMESTAMP AS target_end_month
-  FROM most_recent_yml_record,
-    LATERAL FLATTEN(INPUT => PARSE_JSON(pi_monthly_estimated_targets), OUTER => TRUE) AS d
+  FROM most_recent_yml_record
+  INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(pi_monthly_estimated_targets), OUTER => TRUE) AS d
 
 ),
 
@@ -49,7 +64,7 @@ flattened_monthly_targets AS (
 Calculate the reporting intervals for the pi_metric_name. Each row will have a start and end date
 Determine start month by checking if the previous record has a target_end_date.
 - If yes, then target_start_month = target_end_date from previous record
-- If no, then target_start_month = 2017-01-01 (earliest available product data, an arbitrary date in the past)
+- If no, then target_start_month = 2020-02-01 (PIs in use first appeared in March 2020)
 */
 
 monthly_targets_with_intervals AS (
@@ -58,7 +73,7 @@ monthly_targets_with_intervals AS (
     *,
     COALESCE(
       LAG(target_end_month) OVER (PARTITION BY pi_metric_name ORDER BY target_end_month),
-      '2017-01-01' --year of GitLab initial release date
+      '2020-02-01' --first PIs started to appear in March 2020
     ) AS target_start_month
   FROM flattened_monthly_targets
 
@@ -95,5 +110,5 @@ results AS (
     created_by="@dihle",
     updated_by="@cbraza",
     created_date="2022-04-20",
-    updated_date="2022-12-23"
+    updated_date="2023-01-25"
 ) }}

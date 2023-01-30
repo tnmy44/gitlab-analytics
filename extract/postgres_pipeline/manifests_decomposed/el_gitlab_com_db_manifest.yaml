@@ -423,34 +423,6 @@ tables:
       FROM dast_profiles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  dependency_proxy_group_settings:
-    export_schema: "gitlab_com"
-    export_table: dependency_proxy_group_settings
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , group_id
-      , created_at
-      , updated_at
-      , enabled
-      FROM dependency_proxy_group_settings
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp 
-  dependency_proxy_image_ttl_group_policies:
-    export_schema: "gitlab_com"
-    export_table: dependency_proxy_image_ttl_group_policies
-    export_table_primary_key: group_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT created_at
-      , updated_at
-      , group_id
-      , ttl
-      , enabled
-      FROM dependency_proxy_image_ttl_group_policies
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp 
   deployment_approvals:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1276,23 +1248,6 @@ tables:
       FROM operations_feature_flags
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  packages_package_files:
-    export_schema: 'gitlab_com'
-    export_table: 'packages_package_files'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , package_id
-      , created_at
-      , updated_at
-      , size
-      , file_store
-      , file_name
-      , file
-      FROM packages_package_files
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   packages_packages:
     export_schema: 'gitlab_com'
     export_table: 'packages_packages'
@@ -1325,19 +1280,6 @@ tables:
       FROM project_auto_devops
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  project_daily_statistics:
-    export_schema: 'gitlab_com'
-    export_table: 'project_daily_statistics'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , fetch_count
-      , date
-      FROM project_daily_statistics
-      WHERE date >= '{EXECUTION_DATE}'::date - interval '{HOURS} hours'
-        AND date <= '{EXECUTION_DATE}'::date
   project_features:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2089,7 +2031,6 @@ tables:
       , notification_email
       , hide_no_password
       , password_automatically_set
-      , location
       , public_email
       , dashboard
       , project_view
@@ -2099,7 +2040,6 @@ tables:
       , note
       , otp_grace_period_started_at
       , external
-      , organization
       , auditor
       , require_two_factor_authentication_from_group
       , two_factor_grace_period
@@ -2121,6 +2061,7 @@ tables:
       , first_name
       , last_name
       , user_type
+      , otp_required_for_login
       FROM users
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2195,28 +2136,6 @@ tables:
       FROM web_hooks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-#   web_hook_logs:  # breaking extract 04-23-2020
-#     export_schema: 'gitlab_com'
-#     export_table: web_hook_logs
-#     export_table_primary_key: id
-#     import_db: GITLAB_DB
-#     import_query: >
-#       SELECT id
-#       , web_hook_id
-#       , trigger
-#       , url
-#       , request_headers
-#       , request_data
-#       , response_headers
-#       , response_body
-#       , response_status
-#       , execution_duration
-#       , internal_error_message
-#       , created_at
-#       , updated_at
-#       FROM web_hook_logs
-#       WHERE updated_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-#         AND '{EXECUTION_DATE}'::timestamp
   zoom_meetings:
     export_schema: "gitlab_com"
     export_table: zoom_meetings

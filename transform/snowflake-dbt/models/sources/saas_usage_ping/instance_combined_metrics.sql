@@ -1,3 +1,8 @@
+{{ config({
+    "materialized": "table"
+    })
+}}
+
 WITH source AS (
 
   SELECT
@@ -32,7 +37,7 @@ final AS (
     recorded_at::TIMESTAMP AS recorded_at,
     uploaded_at::TIMESTAMP AS created_at,
     uploaded_at::TIMESTAMP AS updated_at,
-    uuid::VARCHAR,
+    uuid::VARCHAR AS uuid,
     run_results['historical_max_users']::NUMBER AS historical_max_users,
     edition::VARCHAR AS edition,
     NULL::VARCHAR AS raw_usage_data_id,
@@ -102,5 +107,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-11-09",
-    updated_date="2022-12-20"
+    updated_date="2023-01-18"
 ) }}

@@ -38,6 +38,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -84,6 +85,7 @@ secrets_list = [
     SNOWFLAKE_TRANSFORM_SCHEMA,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 ]
 
 # Create the DAG
@@ -127,7 +129,7 @@ dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --exclude tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
+    dbt --no-use-colors run --profiles-dir profile --target prod --exclude tag:product tag:six_hourly legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """

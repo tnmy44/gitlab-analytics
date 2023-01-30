@@ -10,6 +10,16 @@ WITH map_merged_crm_account AS (
     SELECT *
     FROM {{ ref('prep_crm_person') }}
 
+), crm_user AS (
+
+    SELECT * 
+    FROM
+    {%- if model_type == 'live' %}
+        {{ ref('prep_crm_user') }}
+    {%- elif model_type == 'snapshot' %}
+        {{ ref('dim_crm_user_daily_snapshot') }}
+    {% endif %}
+
 {%- if model_type == 'live' %}
 
 {%- elif model_type == 'snapshot' %}
@@ -144,7 +154,7 @@ WITH map_merged_crm_account AS (
       decile                                                                                                   AS decile,
       score_group                                                                                              AS score_group,
       MIN(score_date)                                                                                          AS valid_from,
-      COALESCE(LEAD(valid_from) OVER (PARTITION BY crm_account_id ORDER BY valid_from), CURRENT_DATE())        AS valid_to,
+      COALESCE(LEAD(valid_from) OVER (PARTITION BY crm_account_id ORDER BY valid_from), {{ var('tomorrow') }}) AS valid_to,
       CASE 
         WHEN ROW_NUMBER() OVER (PARTITION BY crm_account_id ORDER BY valid_from DESC) = 1 
           THEN TRUE
@@ -163,7 +173,7 @@ WITH map_merged_crm_account AS (
       decile                                                                                                   AS decile,
       score_group                                                                                              AS score_group,
       MIN(score_date)                                                                                          AS valid_from,
-      COALESCE(LEAD(valid_from) OVER (PARTITION BY crm_account_id ORDER BY valid_from), CURRENT_DATE())        AS valid_to,
+      COALESCE(LEAD(valid_from) OVER (PARTITION BY crm_account_id ORDER BY valid_from), {{ var('tomorrow') }}) AS valid_to,
       CASE 
         WHEN ROW_NUMBER() OVER (PARTITION BY crm_account_id ORDER BY valid_from DESC) = 1 
           THEN TRUE
@@ -472,6 +482,8 @@ WITH map_merged_crm_account AS (
       sfdc_account.number_of_licenses_this_account,
       sfdc_account.decision_maker_count_linkedin,
       sfdc_account.number_of_employees,
+      crm_user.user_role_type                                             AS user_role_type,
+      crm_user.user_role_name                                             AS owner_role,
       {%- if model_type == 'live' %}
       sfdc_account.lam                                                    AS parent_crm_account_lam,
       sfdc_account.lam_dev_count                                          AS parent_crm_account_lam_dev_count,
@@ -526,6 +538,8 @@ WITH map_merged_crm_account AS (
       ON sfdc_account.created_by_id = created_by.user_id
     LEFT JOIN sfdc_users AS last_modified_by
       ON sfdc_account.last_modified_by_id = last_modified_by.user_id
+    LEFT JOIN crm_user
+      ON sfdc_account.owner_id = crm_user.dim_crm_user_id
     {%- elif model_type == 'snapshot' %}
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
@@ -557,6 +571,9 @@ WITH map_merged_crm_account AS (
       ON sfdc_account.account_id = ptc_scores.account_id
         AND sfdc_account.snapshot_date >= ptc_scores.valid_from::DATE
         AND  sfdc_account.snapshot_date < ptc_scores.valid_to::DATE
+    LEFT JOIN crm_user
+      ON sfdc_account.owner_id = crm_user.dim_crm_user_id
+        AND sfdc_account.snapshot_id = crm_user.snapshot_id
     
     {%- endif %}
 

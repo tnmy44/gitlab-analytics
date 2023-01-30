@@ -1,6 +1,8 @@
 {{ config(
         materialized = "incremental",
-        unique_key = "behavior_structured_event_pk"
+        unique_key = "behavior_structured_event_pk",
+        on_schema_change='sync_all_columns',
+        cluster_by=['behavior_at::DATE']
 ) }}
 
 {{ 
@@ -36,6 +38,7 @@
       fct_behavior_structured_event.session_id,
       fct_behavior_structured_event.user_snowplow_domain_id,
       fct_behavior_structured_event.contexts,
+      fct_behavior_structured_event.event_value,
 
       -- Degenerate Dimensions (Gitlab Standard Context Attributes)
       fct_behavior_structured_event.gsc_google_analytics_client_id,
@@ -62,7 +65,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@chrissharp",
     created_date="2022-09-01",
-    updated_date="2022-11-02"
+    updated_date="2023-01-23"
 ) }}
