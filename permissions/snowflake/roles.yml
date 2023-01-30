@@ -109,11 +109,6 @@ databases:
     - juwong_prep:
         shared: no  
 
-    - kaguilar_prod:
-        shared: no
-    - kaguilar_prep:
-        shared: no
-
     - kdietz_prod:
         shared: no
     - kdietz_prep:
@@ -3347,50 +3342,6 @@ roles:
                     - juwong_prep.*.*
                     - juwong_prod.*.*
 
-    - kaguilar:
-        member_of:
-            - analyst_engineering
-            - customers_db
-            - data_team_analyst
-            - analyst_finance
-            - restricted_safe
-            - xactly
-            - bi_tool_eval_read
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - kaguilar_prep
-                - kaguilar_prod
-            schemas:
-                - kaguilar_prep.*
-                - kaguilar_prod.*
-            tables:
-                - kaguilar_prep.*.*
-                - kaguilar_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - kaguilar_prep
-                    - kaguilar_prod
-                write:
-                    - kaguilar_prep
-                    - kaguilar_prod
-            schemas:
-                read:
-                    - kaguilar_prep.*
-                    - kaguilar_prod.*
-                write:
-                    - kaguilar_prep.*
-                    - kaguilar_prod.*
-            tables:
-                read:
-                    - kaguilar_prep.*.*
-                    - kaguilar_prod.*.*
-                write:
-                    - kaguilar_prep.*.*
-                    - kaguilar_prod.*.*
-
     - kdietz:
         member_of:
             - analyst_core
@@ -4963,9 +4914,7 @@ users:
             - juwong
 
     - kaguilar:
-        can_login: yes
-        member_of:
-            - kaguilar
+        can_login: no
 
     - kdietz:
         can_login: yes

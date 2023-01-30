@@ -159,7 +159,7 @@
       mart_crm_attribution_touchpoint.type,
       null AS mql_date_first,
       null AS true_inquiry_date,
-      null AS dim_crm_person_id,
+      mart_crm_attribution_touchpoint.dim_crm_person_id AS dim_crm_person_id,
       email_hash AS email_hash,
       null AS is_inquiry,
       null AS is_mql,
@@ -327,7 +327,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
-    created_date="2022-10-05",
-    updated_date="2022-12-22"
+    updated_by="@degan",
+    created_date="2021-10-05",
+    updated_date="2023-01-26"
 ) }}
