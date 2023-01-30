@@ -53,7 +53,7 @@ include:
       - $BRANCH_NAME == $SNOWFLAKE_PREP_DATABASE
       - $BRANCH_NAME == $SNOWFLAKE_PROD_DATABASE
       - $TEST_PIPELINE
-  when: manual  
+  when: manual
 
 .snowflake_start_clone: &snowflake_start_clone
   <<: *snowflake_clone_template
