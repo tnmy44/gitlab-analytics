@@ -168,6 +168,8 @@ models:
         description: Flags if zuora billing contact
       - name: is_marketo_lead
         description: Flags if marketo lead
+      - name: marketo_lead_id
+        description: Marketo id assigned to the marketing contact
       - name: is_marketo_email_hard_bounced
         description: Flags if marketing contact email has hard bounced
       - name: marketo_email_hard_bounced_date
