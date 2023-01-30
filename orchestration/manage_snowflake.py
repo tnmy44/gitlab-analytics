@@ -153,15 +153,16 @@ class SnowflakeManager:
             if include_stages:
                 self.clone_stages(create_db, database, schema)
 
-    def grant_clones(self, role):
+    def grant_clones(self, role, database):
         """
         Grant privildges on a clone.
         """
-        db_list = [
-            self.prep_database,
-            self.prod_database,
-            self.raw_database,
-        ]
+        
+        match database:
+            case "prep":
+                clone = self.prep_database
+            case "prod":
+                clone = self.prod_database
 
         get_grants_query = f"""
             with recursive roles_rec as (
@@ -170,7 +171,7 @@ class SnowflakeManager:
             from snowflake.account_usage.grants_to_roles
             where granted_on = 'ROLE' and granted_to = 'ROLE'
                 and privilege = 'USAGE' and deleted_on is null
-                and grantee_name = {role}
+                and grantee_name = UPPER('{role}')
             
             union all
             
@@ -188,15 +189,15 @@ class SnowflakeManager:
             )
 
             select 
-            privilege,
-            granted_on,
-            name,
-            table_catalog as _database,
-            table_schema as _schema,
-            grantee_name
+              'GRANT SELECT ON ' || '"{clone}}"' || '.' || "_SCHEMA" || '.' || "NAME" || ' TO ROLE {role};'
             from snowflake.account_usage.grants_to_roles
-            where table_catalog in ('PREP','PROD')
-            and (grantee_name = {role}
+            where table_catalog = UPPER('{database}')
+            and privilege = 'SELECT'
+            and name in (
+                select table_name
+                from "{clone}".information_schema.tables
+            )
+            and (grantee_name = UPPER('{role}')
             or grantee_name in (
                 select name
                 from inherited_roles
@@ -209,7 +210,7 @@ class SnowflakeManager:
         try:
             connection = self.engine.connect()
             logging.info("Executing Query: {}".format(get_grants_query))
-            connection.execute(get_grants_query)
+            # connection.execute(get_grants_query)
             # logging.info("Query Result: {}".format(result))
         finally:
             connection.close()
