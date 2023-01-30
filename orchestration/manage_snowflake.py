@@ -208,10 +208,9 @@ class SnowflakeManager:
         
         try:
             connection = self.engine.connect()
-            for query in queries:
-                logging.info("Executing Query: {}".format(query))
-                connection.execute(query)
-                # logging.info("Query Result: {}".format(result))
+            logging.info("Executing Query: {}".format(get_grants_query))
+            connection.execute(get_grants_query)
+            # logging.info("Query Result: {}".format(result))
         finally:
             connection.close()
             self.engine.dispose()
