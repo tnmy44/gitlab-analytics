@@ -123,6 +123,7 @@ clone_stop:
     action: stop
   variables:
     GIT_STRATEGY: none
+  dependencies: []
   script:
     - git clone $CI_REPOSITORY_URL
     - analytics/orchestration/manage_snowflake.py delete_clones
