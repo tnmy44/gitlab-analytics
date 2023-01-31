@@ -303,29 +303,29 @@ models:
       - name: wip_invalid_email_address_reason
         description: Reason why the email address is invalid. Work in progress - full list of invalid emails is not loaded
       - name: pql_namespace_id
-        description: Namespace id of the latest PQL OR trial namespace of the marketing contact.
+        description: Namespace id of the latest PQL namespace of the marketing contact.
       - name: pql_namespace_name
-        description: Namespace name of the latest PQL OR trial namespace of the marketing contact.
+        description: Namespace name of the latest PQL namespace of the marketing contact.
       - name: pql_namespace_name_masked
-        description: Masked version of PQL OR trial namespace_name. Field created to be used in mart_marketing_contact_no_pii.
+        description: Masked version of PQL namespace_name. Field created to be used in mart_marketing_contact_no_pii.
       - name: pql_product_interaction
-        description: Type of product interaction that the PQL OR trial had. As of now, it can either be SaaS Trial or Hand Raise PQL.
+        description: Type of product interaction that the PQL had. As of now, it can either be SaaS Trial or Hand Raise PQL.
       - name: pql_list_stages
-        description: List of product stages adopted by the PQL OR trial namespace. It only counts the events done before any conversion was done (if any), SMAU events and events done in the first year of the creation of the namespace. 
+        description: List of product stages adopted by the PQL namespace. It only counts the events done before any conversion was done (if any), SMAU events and events done in the first year of the creation of the namespace. 
       - name: pql_nbr_stages
-        description: Number of product stages adopted by the PQL OR trial namespace.
+        description: Number of product stages adopted by the PQL namespace.
       - name: pql_nbr_namespace_users
-        description: Current member count of the PQL OR trial namespace. This is calculated using the data in the Gitlab.com members table based on the number of accepted invites. If this number is zero, this is replaced to be 1 as all namespaces have at least one member, the creator.
+        description: Current member count of the PQL namespace. This is calculated using the data in the Gitlab.com members table based on the number of accepted invites. If this number is zero, this is replaced to be 1 as all namespaces have at least one member, the creator.
       - name: pql_trial_start_date
-        description: Trial start date of the PQL OR trial namespace. 
+        description: Trial start date of the PQL namespace. 
       - name: pql_event_created_at
-        description: Date that the PQL OR trial lead was created.
+        description: Date that the PQL lead was created.
       - name: pql_nbr_integrations_installed
-        description: Number of integrations services installed in the latest PQL OR trial namespace of the marketing contact.
+        description: Number of integrations services installed in the latest PQL namespace of the marketing contact.
       - name: pql_integrations_installed
-        description: List of all the integrations services installed in the latest PQL OR trial namespace of the marketing contact.
+        description: List of all the integrations services installed in the latest PQL namespace of the marketing contact.
       - name: pql_namespace_creator_job_description
-        description: Namespace creator job description of the latest PQL OR trial namespace of the marketing contact.
+        description: Namespace creator job description of the latest PQL namespace of the marketing contact.
       - name: has_namespace_setup_for_company_use
         description: If True, the marketing contact is a member of a namespace that has been checked for company use
       - name: has_namespace_with_public_project

@@ -778,7 +778,7 @@
       IFF(latest_pql.email IS NOT NULL, TRUE, FALSE) AS is_pql,
       marketing_contact.is_pql_marketo,
       IFF(is_pql = TRUE OR (is_pql = FALSE AND marketing_contact.is_pql_marketo = TRUE), TRUE, FALSE)
-                                            AS is_pql_change
+                                            AS is_pql_change,
       latest_pql.pql_namespace_id,
       latest_pql.pql_namespace_name,
       latest_pql.pql_namespace_name_masked, 
