@@ -16,7 +16,7 @@ WITH flattened_metrics AS (
 ), usage_ping_metrics AS (
   
 		SELECT *
-		FROM {{ ref('dim_usage_ping_metric') }}
+		FROM {{ ref('dim_ping_metric') }}
 
 )
 
@@ -29,7 +29,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'plan'
+				usage_ping_metrics.stage_name = 'plan'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -37,7 +37,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'plan'
+				usage_ping_metrics.stage_name = 'plan'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -46,7 +46,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage IN (
+				usage_ping_metrics.stage_name IN (
 					'create', 'devops::create'
 				) AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
@@ -55,7 +55,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage IN (
+				usage_ping_metrics.stage_name IN (
 					'create', 'devops::create'
 				) AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
@@ -65,7 +65,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'verify'
+				usage_ping_metrics.stage_name = 'verify'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -73,7 +73,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'verify'
+				usage_ping_metrics.stage_name = 'verify'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -82,7 +82,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'package'
+				usage_ping_metrics.stage_name = 'package'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -90,7 +90,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'package'
+				usage_ping_metrics.stage_name = 'package'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -99,7 +99,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage IN (
+				usage_ping_metrics.stage_name IN (
 					'release', 'releases'
 				) AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
@@ -108,7 +108,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage IN (
+				usage_ping_metrics.stage_name IN (
 					'release', 'releases'
 				) AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
@@ -118,7 +118,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'configure'
+				usage_ping_metrics.stage_name = 'configure'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -126,7 +126,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'configure'
+				usage_ping_metrics.stage_name = 'configure'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -135,7 +135,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'monitor'
+				usage_ping_metrics.stage_name = 'monitor'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -143,7 +143,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'monitor'
+				usage_ping_metrics.stage_name = 'monitor'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -152,7 +152,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage IN (
+				usage_ping_metrics.stage_name IN (
 					'manage', 'managed'
 				) AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
@@ -161,7 +161,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage IN (
+				usage_ping_metrics.stage_name IN (
 					'manage', 'managed'
 				) AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
@@ -171,7 +171,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage IN (
+				usage_ping_metrics.stage_name IN (
 					'secure', 'devops::secure'
 				) AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
@@ -180,7 +180,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage IN (
+				usage_ping_metrics.stage_name IN (
 					'secure', 'devops::secure'
 				) AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
@@ -190,7 +190,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'protect'
+				usage_ping_metrics.stage_name = 'protect'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -198,7 +198,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'protect'
+				usage_ping_metrics.stage_name = 'protect'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -207,7 +207,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'ecosystem'
+				usage_ping_metrics.stage_name = 'ecosystem'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -215,7 +215,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'ecosystem'
+				usage_ping_metrics.stage_name = 'ecosystem'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -224,7 +224,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'growth'
+				usage_ping_metrics.stage_name = 'growth'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -232,7 +232,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'growth'
+				usage_ping_metrics.stage_name = 'growth'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -241,7 +241,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'enablement'
+				usage_ping_metrics.stage_name = 'enablement'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -249,7 +249,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_stage = 'enablement'
+				usage_ping_metrics.stage_name = 'enablement'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -259,7 +259,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'dev'
+				usage_ping_metrics.section_name = 'dev'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -267,7 +267,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'dev'
+				usage_ping_metrics.section_name = 'dev'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -276,7 +276,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'enablement'
+				usage_ping_metrics.section_name = 'enablement'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -284,7 +284,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'enablement'
+				usage_ping_metrics.section_name = 'enablement'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -293,7 +293,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'fulfillment'
+				usage_ping_metrics.section_name = 'fulfillment'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -301,7 +301,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'fulfillment'
+				usage_ping_metrics.section_name = 'fulfillment'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -310,7 +310,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'growth'
+				usage_ping_metrics.section_name = 'growth'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -318,7 +318,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'growth'
+				usage_ping_metrics.section_name = 'growth'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -327,7 +327,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'ops'
+				usage_ping_metrics.section_name = 'ops'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -335,7 +335,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'ops'
+				usage_ping_metrics.section_name = 'ops'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -344,7 +344,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'sec'
+				usage_ping_metrics.section_name = 'sec'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -352,7 +352,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'sec'
+				usage_ping_metrics.section_name = 'sec'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -361,7 +361,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'seg'
+				usage_ping_metrics.section_name = 'seg'
 				AND usage_ping_metrics.time_frame = 'all'
 				THEN flattened_metrics.metrics_path
 		END
@@ -369,7 +369,7 @@ SELECT
 	COUNT(
 		DISTINCT CASE
 			WHEN
-				usage_ping_metrics.product_section = 'seg'
+				usage_ping_metrics.section_name = 'seg'
 				AND usage_ping_metrics.time_frame = '28d'
 				THEN flattened_metrics.metrics_path
 		END
@@ -446,7 +446,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage = 'plan'
+					usage_ping_metrics.stage_name = 'plan'
 					AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
 			END
@@ -457,7 +457,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage IN (
+					usage_ping_metrics.stage_name IN (
 						'create', 'devops::create'
 					) AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
@@ -469,7 +469,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage = 'verify'
+					usage_ping_metrics.stage_name = 'verify'
 					AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
 			END
@@ -480,7 +480,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage = 'package'
+					usage_ping_metrics.stage_name = 'package'
 					AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
 			END
@@ -491,7 +491,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage IN (
+					usage_ping_metrics.stage_name IN (
 						'release', 'releases'
 					) AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
@@ -503,7 +503,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage = 'configure'
+					usage_ping_metrics.stage_name = 'configure'
 					AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
 			END
@@ -514,7 +514,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage = 'monitor'
+					usage_ping_metrics.stage_name = 'monitor'
 					AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
 			END
@@ -525,7 +525,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage IN (
+					usage_ping_metrics.stage_name IN (
 						'manage', 'managed'
 					) AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
@@ -537,7 +537,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage IN (
+					usage_ping_metrics.stage_name IN (
 						'secure', 'devops::secure'
 					) AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
@@ -549,7 +549,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage = 'protect'
+					usage_ping_metrics.stage_name = 'protect'
 					AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
 			END
@@ -560,7 +560,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage = 'ecosystem'
+					usage_ping_metrics.stage_name = 'ecosystem'
 					AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
 			END
@@ -571,7 +571,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage = 'growth'
+					usage_ping_metrics.stage_name = 'growth'
 					AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
 			END
@@ -582,7 +582,7 @@ SELECT
 		SUM(
 			CASE
 				WHEN
-					usage_ping_metrics.product_stage = 'enablement'
+					usage_ping_metrics.stage_name = 'enablement'
 					AND usage_ping_metrics.time_frame = 'all'
 					THEN flattened_metrics.metrics_value
 			END
