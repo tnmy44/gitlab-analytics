@@ -49,6 +49,7 @@
       AND wk_prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
       AND wk_prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
       AND wk_prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
+      AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, 1=1) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
 
 ), user_hierarchy_sheetload AS (
 /*
@@ -128,20 +129,7 @@
     SELECT *
     FROM user_hierarchy_stamped_opportunity
 
-), pre_fy23_hierarchy AS (
-
-    SELECT DISTINCT
-      fiscal_year,
-      NULL        AS user_segment,
-      NULL        AS user_geo,
-      NULL        AS user_region,
-      user_area,
-      NULL        AS user_business_unit,
-      dim_crm_user_hierarchy_sk
-    FROM unioned 
-    WHERE fiscal_year < 2023
-
-), fy23_hierarchy AS (
+), pre_fy24_hierarchy AS (
 
     SELECT DISTINCT
       fiscal_year,
@@ -152,7 +140,7 @@
       NULL        AS user_business_unit,
       dim_crm_user_hierarchy_sk
     FROM unioned 
-    WHERE fiscal_year = 2023
+    WHERE fiscal_year < 2024
 
 ), fy24_and_beyond_hierarchy AS (
 
@@ -171,12 +159,7 @@
 
 
     SELECT *
-    FROM pre_fy23_hierarchy
-
-    UNION ALL
-
-    SELECT *
-    FROM fy23_hierarchy
+    FROM pre_fy24_hierarchy
 
     UNION ALL 
 

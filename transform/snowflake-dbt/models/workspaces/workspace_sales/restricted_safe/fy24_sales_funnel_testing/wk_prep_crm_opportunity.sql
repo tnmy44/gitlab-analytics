@@ -1296,9 +1296,7 @@ WITH first_contact  AS (
       ELSE 'SMB'
     END AS account_owner_team_stamped_cro_level,
     CASE
-      WHEN sfdc_opportunity.close_date < '2022-02-01'
-        THEN sfdc_opportunity.crm_opp_owner_area_stamped
-      WHEN sfdc_opportunity.close_date BETWEEN '2022-02-01' AND '2023-01-31'
+      WHEN sfdc_opportunity.close_date < '2023-02-01'
         THEN CONCAT(
                     sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
                     '-',
