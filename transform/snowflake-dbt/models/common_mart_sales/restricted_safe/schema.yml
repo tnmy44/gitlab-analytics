@@ -180,7 +180,7 @@ models:
             - unique
 
   - name: mart_crm_opportunity
-    description: Model with single pane of glass sales and marketing metrics.
+    description: Model with single pane of glass sales and marketing metrics. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
     columns:
       - name: dim_crm_opportunity_id
         tests:
