@@ -731,6 +731,8 @@ models:
           - not_null
           - unique
 
+  - name: dim_order_action_rate_plan
+
   - name: dim_order_type
     description: '{{ doc("dim_order_type") }}'
     columns:
