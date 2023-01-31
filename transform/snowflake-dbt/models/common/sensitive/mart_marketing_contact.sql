@@ -243,59 +243,6 @@
 )
 -------------------------- End of PQL logic --------------------------
 
--------------------------- Start trial logic --------------------------
-
-, trials AS (
-
-    SELECT
-      customers_db_trials.gitlab_user_id                                   AS user_id,
-      customers_db_trials.gitlab_namespace_id                              AS namespace_id,
-      'SaaS Trial'                                                         AS pql_product_interaction,
-      marketing_contact.email_address,
-      customers_db_trials.order_created_at                                 AS pql_event_created_at,
-      customers_db_trials.trial_start_date,
-      dim_namespace.namespace_name                                         AS namespace_name_masked,
-      gitlab_dotcom_namespaces_source.namespace_name,
-      stages_adopted.min_subscription_start_date                           AS pql_min_subscription_start_date,
-      stages_adopted.list_of_stages                                        AS pql_list_stages,
-      stages_adopted.active_stage_count                                    AS pql_nbr_stages,
-      IFNULL(namespaces_with_user_count.current_member_count, 0) + 1       AS pql_nbr_namespace_users,
-      marketing_contact.job_title                                          AS pql_namespace_creator_job_description,
-      marketing_contact.is_currently_in_trial_marketo
-
-    FROM customers_db_trials
-    INNER JOIN marketing_contact
-      ON marketing_contact.gitlab_dotcom_user_id = customers_db_trials.gitlab_user_id
-      AND marketing_contact.trial_start_date_marketo = customers_db_trials.trial_start_date
-    LEFT JOIN gitlab_dotcom_namespaces_source
-      ON gitlab_dotcom_namespaces_source.namespace_id = customers_db_trials.gitlab_namespace_id 
-    LEFT JOIN stages_adopted 
-      ON  stages_adopted.dim_namespace_id = customers_db_trials.gitlab_namespace_id
-    LEFT JOIN namespaces_with_user_count
-      ON namespaces_with_user_count.dim_namespace_id = customers_db_trials.gitlab_namespace_id
-    LEFT JOIN dim_namespace
-      ON dim_namespace.dim_namespace_id = customers_db_trials.gitlab_namespace_id
-    WHERE marketing_contact.is_currently_in_trial_marketo = TRUE 
-      -- AND customers_db_trials.trial_end_date >= CURRENT_DATE::DATE
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY marketing_contact.email_address ORDER BY customers_db_trials.trial_start_date DESC) = 1 -- pick latest trial by user
-
-), trials_final AS ( -- Add services fields to trials
-
-    SELECT
-      trials.*,
-      COUNT(services.service_type)                                                               AS pql_nbr_integrations_installed,
-      ARRAY_AGG(DISTINCT services.service_type) WITHIN GROUP (ORDER BY services.service_type)    AS pql_integrations_installed
-    FROM trials
-    LEFT JOIN project
-      ON project.dim_namespace_id = trials.namespace_id  
-    LEFT JOIN services
-      ON services.project_id = project.dim_project_id
-    {{ dbt_utils.group_by(14) }}
-
-)
-
--------------------------- End of trial logic --------------------------
-
 , subscription_aggregate AS (
 
     SELECT
@@ -831,21 +778,20 @@
       IFF(latest_pql.email IS NOT NULL, TRUE, FALSE) AS is_pql,
       marketing_contact.is_pql_marketo,
       IFF(is_pql = TRUE OR (is_pql = FALSE AND marketing_contact.is_pql_marketo = TRUE), TRUE, FALSE)
-                                            AS is_pql_change,
-      COALESCE(latest_pql.pql_namespace_id, trials_final.namespace_id)                                                        AS pql_namespace_id,
-      COALESCE(latest_pql.pql_namespace_name, trials_final.namespace_name)                                                    AS pql_namespace_name,
-      COALESCE(latest_pql.pql_namespace_name_masked, trials_final.namespace_name_masked)                                      AS pql_namespace_name_masked,
-      COALESCE(latest_pql.pql_product_interaction, trials_final.pql_product_interaction)                                      AS pql_product_interaction,
-      COALESCE(latest_pql.pql_list_stages, trials_final.pql_list_stages)                                                      AS pql_list_stages,
-      COALESCE(latest_pql.pql_nbr_stages, trials_final.pql_nbr_stages)                                                        AS pql_nbr_stages,
-      COALESCE(latest_pql.pql_nbr_namespace_users, trials_final.pql_nbr_namespace_users)                                      AS pql_nbr_namespace_users,
-      COALESCE(latest_pql.pql_trial_start_date, trials_final.trial_start_date)                                                AS pql_trial_start_date,
-      COALESCE(latest_pql.pql_min_subscription_start_date, trials_final.pql_min_subscription_start_date)                      AS pql_min_subscription_start_date,
-      COALESCE(latest_pql.pql_event_created_at, trials_final.pql_event_created_at)                                            AS pql_event_created_at,
-      COALESCE(services_by_email.pql_nbr_integrations_installed, trials_final.pql_nbr_integrations_installed)                 AS pql_nbr_integrations_installed,
-      COALESCE(services_by_email.pql_integrations_installed, trials_final.pql_integrations_installed)                         AS pql_integrations_installed,
-      COALESCE(users_role_by_email.pql_namespace_creator_job_description, trials_final.pql_namespace_creator_job_description) AS pql_namespace_creator_job_description,
-      trials_final.is_currently_in_trial_marketo,
+                                            AS is_pql_change
+      latest_pql.pql_namespace_id,
+      latest_pql.pql_namespace_name,
+      latest_pql.pql_namespace_name_masked, 
+      latest_pql.pql_product_interaction,
+      latest_pql.pql_list_stages,
+      latest_pql.pql_nbr_stages,
+      latest_pql.pql_nbr_namespace_users,
+      latest_pql.pql_trial_start_date,
+      latest_pql.pql_min_subscription_start_date,
+      latest_pql.pql_event_created_at,
+      services_by_email.pql_nbr_integrations_installed,
+      services_by_email.pql_integrations_installed,
+      users_role_by_email.pql_namespace_creator_job_description,
       marketing_contact.days_since_self_managed_owner_signup,
       marketing_contact.days_since_self_managed_owner_signup_bucket,
       marketing_contact.zuora_contact_id,
@@ -923,8 +869,6 @@
       ON users_role_by_email.email = marketing_contact.email_address
     LEFT JOIN ptpt_scores_by_user
       ON ptpt_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
-    LEFT JOIN trials_final
-      ON trials_final.email_address = marketing_contact.email_address
     LEFT JOIN namespace_notifications
       ON namespace_notifications.email_address = marketing_contact.email_address
 )
