@@ -9,9 +9,10 @@ from api import ZuoraRevProAPI
 parser = argparse.ArgumentParser(
     description="This enable to run the Extraction process for one table at a time."
 )
-bucket_name=os.getenv('zuora_bucket')
-api_dns_name=os.getenv('zuora_dns')
-api_auth_code=os.getenv('authorization_code')
+bucket_name = os.getenv("zuora_bucket")
+api_dns_name = os.getenv("zuora_dns")
+api_auth_code = os.getenv("authorization_code")
+zuora_report_home = os.getenv("zuora_report_home")
 
 parser.add_argument(
     "-extract_date",
@@ -48,26 +49,28 @@ if __name__ == "__main__":
         "zuora_fetch_report_list_url": (
             "https://" + api_dns_name + "/api/integration/v1/reports/list?createddate="
         ),
-        "zuora_download_report_url":(
+        "zuora_download_report_url": (
             "https://" + api_dns_name + "/api/integration/v1/reports/download/"
-        ), 
-        "bucket_name": bucket_name
+        ),
+        "bucket_name": bucket_name,
+        "zuora_report_home": zuora_report_home,
     }
 
     extract_date = results.extract_date
-    
+
     # Initialise the API class
     zuora_revpro = ZuoraRevProAPI(config_dict)
 
     report_date = zuora_revpro.get_extract_date(extract_date)
-    
-    zuora_report_list_df= zuora_revpro.get_report_list(report_date)
+
+    zuora_report_list_df = zuora_revpro.get_report_list(report_date)
 
     print(zuora_report_list_df)
-    #Read yml file 
-    zuora_report_list_to_download=zuora_revpro.get_requested_report()
+    # Read yml file
+    zuora_report_list_to_download = zuora_revpro.get_requested_report()
 
-    zuora_revpro.zuora_download_report(zuora_report_list_df,zuora_report_list_to_download)
-    
+    zuora_revpro.zuora_download_report(
+        zuora_report_list_df, zuora_report_list_to_download, report_date
+    )
 
-    
+    zuora_revpro.split_upload_report_gcs(report_date)
