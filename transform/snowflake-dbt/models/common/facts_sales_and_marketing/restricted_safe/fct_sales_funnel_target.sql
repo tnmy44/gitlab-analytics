@@ -119,22 +119,22 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
      unioned_targets.kpi_name,
      unioned_targets.first_day_of_month,
      unioned_targets.fiscal_year,
-     unioned_targets.opportunity_source                                                                                             AS sales_qualified_source,
+     unioned_targets.opportunity_source                                                                                               AS sales_qualified_source,
      unioned_targets.dim_sales_qualified_source_id,
      unioned_targets.order_type,
      unioned_targets.dim_order_type_id,
-     unioned_targets.crm_opp_owner_sales_segment_geo_region_area_stamped                                                             AS crm_user_sales_segment_geo_region_area,
-     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id, unioned_targets.dim_crm_user_hierarchy_stamped_id)           AS dim_crm_user_hierarchy_live_id,
-     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_sales_segment_id, unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id)   AS dim_crm_user_sales_segment_id,
-     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_geo_id, unioned_targets.dim_crm_opp_owner_geo_stamped_id)                       AS dim_crm_user_geo_id,
-     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_region_id, unioned_targets.dim_crm_opp_owner_region_stamped_id)                 AS dim_crm_user_region_id,
-     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_area_id, unioned_targets.dim_crm_opp_owner_area_stamped_id)                     AS dim_crm_user_area_id,
+     unioned_targets.crm_opp_owner_sales_segment_geo_region_area_stamped                                                              AS crm_user_sales_segment_geo_region_area,
+     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id, unioned_targets.dim_crm_user_hierarchy_stamped_id)             AS dim_crm_user_hierarchy_live_id,
+     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_sales_segment_id, unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id)     AS dim_crm_user_sales_segment_id,
+     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_geo_id, unioned_targets.dim_crm_opp_owner_geo_stamped_id)                         AS dim_crm_user_geo_id,
+     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_region_id, unioned_targets.dim_crm_opp_owner_region_stamped_id)                   AS dim_crm_user_region_id,
+     COALESCE(sfdc_user_hierarchy_live.dim_crm_user_area_id, unioned_targets.dim_crm_opp_owner_area_stamped_id)                       AS dim_crm_user_area_id,
      unioned_targets.dim_crm_user_hierarchy_stamped_id,
      unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id,
      unioned_targets.dim_crm_opp_owner_geo_stamped_id,
      unioned_targets.dim_crm_opp_owner_region_stamped_id,
      unioned_targets.dim_crm_opp_owner_area_stamped_id,
-     SUM(unioned_targets.allocated_target)                                                                                          AS allocated_target
+     SUM(unioned_targets.allocated_target)                                                                                            AS allocated_target
 
     FROM unioned_targets
     LEFT JOIN sfdc_user_hierarchy_live
@@ -148,5 +148,5 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-12-18",
-    updated_date="2022-03-07"
+    updated_date="2023-01-23"
 ) }}

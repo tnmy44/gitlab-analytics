@@ -106,6 +106,7 @@
       mart_arr_snapshot_model.subscription_sales_type,
       CASE
         WHEN mart_arr_snapshot_model.product_tier_name = 'Self-Managed - Ultimate' THEN 'Ultimate'
+        WHEN mart_arr_snapshot_model.product_tier_name = 'Dedicated - Ultimate'    THEN 'Ultimate'
         WHEN mart_arr_snapshot_model.product_tier_name = 'Self-Managed - Premium'  THEN 'Premium'
         WHEN mart_arr_snapshot_model.product_tier_name = 'Self-Managed - Starter'  THEN 'Bronze/Starter'
         WHEN mart_arr_snapshot_model.product_tier_name = 'SaaS - Ultimate'         THEN 'Ultimate'
@@ -259,7 +260,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@chrissharp",
     created_date="2021-08-16",
-    updated_date="2022-10-15"
+    updated_date="2023-01-23"
 ) }}

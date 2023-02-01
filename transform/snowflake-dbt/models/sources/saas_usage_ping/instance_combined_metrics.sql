@@ -37,7 +37,7 @@ final AS (
     recorded_at::TIMESTAMP AS recorded_at,
     uploaded_at::TIMESTAMP AS created_at,
     uploaded_at::TIMESTAMP AS updated_at,
-    uuid::VARCHAR,
+    uuid::VARCHAR AS uuid,
     run_results['historical_max_users']::NUMBER AS historical_max_users,
     edition::VARCHAR AS edition,
     NULL::VARCHAR AS raw_usage_data_id,

@@ -77,12 +77,13 @@ secrets_list = [
     SNOWFLAKE_TRANSFORM_SCHEMA,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 ]
 
 # Create the DAG
 dag = DAG(
     "dbt_six_hourly",
-    description="This DAG is responsible for refreshing models at minute 0 past every 6th hour.",
+    description="This DAG is responsible for refreshing models at minute 55 past every 6th hour.",
     default_args=default_args,
     schedule_interval="55 */6 * * 1-6",
 )

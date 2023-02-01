@@ -41,7 +41,6 @@ WITH source AS (
       confirmation_sent_at::TIMESTAMP                                  AS confirmation_sent_at,
       -- unconfirmed_email // hidden for privacy
       hide_no_ssh_key::BOOLEAN                                         AS has_hide_no_ssh_key_enabled,
-      -- website_url // hidden for privacy
       admin_email_unsubscribed_at::TIMESTAMP                           AS admin_email_unsubscribed_at,
       notification_email::VARCHAR                                      AS notification_email,
       hide_no_password::BOOLEAN                                        AS has_hide_no_password_enabled,
