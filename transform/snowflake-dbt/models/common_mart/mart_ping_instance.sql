@@ -95,7 +95,7 @@
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
     INNER JOIN dim_date
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=20)}}
+    {{ dbt_utils.group_by(n=21)}}
 
 
   ), joined AS (
@@ -128,8 +128,8 @@
         COALESCE(sha256.parent_crm_account_owner_team, md5.parent_crm_account_owner_team)                                               AS parent_crm_account_owner_team,
         COALESCE(sha256.parent_crm_account_sales_territory, md5.parent_crm_account_sales_territory)                                     AS parent_crm_account_sales_territory,
         COALESCE(sha256.technical_account_manager, md5.technical_account_manager)                                                       AS technical_account_manager,
-        COALESCE(is_paid_subscription, FALSE)                                                                                           AS is_paid_subscription,
-        COALESCE(is_program_subscription, FALSE)                                                                                        AS is_program_subscription,
+        COALESCE(sha256.is_paid_subscription, md5.is_paid_subscription, FALSE)                                                          AS is_paid_subscription,
+        COALESCE(sha256.is_program_subscription, md5.is_program_subscription, FALSE)                                                    AS is_program_subscription,
         dim_ping_instance.ping_delivery_type                                                                                            AS ping_delivery_type,
         dim_ping_instance.ping_edition                                                                                                  AS ping_edition,
         dim_ping_instance.product_tier                                                                                                  AS ping_product_tier,
