@@ -58,6 +58,7 @@
       dim_product_tier.dim_product_tier_id                AS dim_product_tier_id,
       ping_created_at                                     AS ping_created_at,
       hostname                                            AS hostname,
+      license_sha256                                      AS license_sha256,
       license_md5                                         AS license_md5,
       dim_location_country_id                             AS dim_location_country_id,
       license_trial_ends_on                               AS license_trial_ends_on,
@@ -83,15 +84,19 @@
       prep_usage_ping_cte.dim_ping_instance_id                                                            AS dim_ping_instance_id,
       prep_usage_ping_cte.ping_created_at                                                                 AS ping_created_at,
       prep_usage_ping_cte.dim_product_tier_id                                                             AS dim_product_tier_id,
-      COALESCE(prep_usage_ping_cte.license_subscription_id, prep_subscription.dim_subscription_id)        AS dim_subscription_id,
-      prep_subscription.dim_crm_account_id                                                                AS dim_crm_account_id,
-      dim_crm_account.dim_parent_crm_account_id                                                           AS dim_parent_crm_account_id,
+      COALESCE(prep_usage_ping_cte.license_subscription_id, prep_subscription_sha256.dim_subscription_id,
+          prep_subscription_md5.dim_subscription_id)                                                   AS dim_subscription_id,
+      COALESCE(prep_subscription_sha256.dim_crm_account_id, prep_subscription_md5.dim_crm_account_id)
+                                                                                                          AS dim_crm_account_id,
+      COALESCE(dim_crm_account_sha256.dim_parent_crm_account_id, dim_crm_account_md5.dim_parent_crm_account_id)
+                                                                                                          AS dim_parent_crm_account_id,
       prep_usage_ping_cte.dim_location_country_id                                                         AS dim_location_country_id,
       dim_date.date_id                                                                                    AS dim_ping_date_id,
       prep_usage_ping_cte.dim_instance_id                                                                 AS dim_instance_id,
       prep_usage_ping_cte.dim_host_id                                                                     AS dim_host_id,
       prep_usage_ping_cte.dim_installation_id                                                             AS dim_installation_id,
-      prep_license.dim_license_id                                                                         AS dim_license_id,
+      COALESCE(sha256.dim_license_id, md5.dim_license_id)                                                 AS dim_license_id,
+      prep_usage_ping_cte.license_sha256                                                                  AS license_sha256,
       prep_usage_ping_cte.license_md5                                                                     AS license_md5,
       prep_usage_ping_cte.license_billable_users                                                          AS license_billable_users,
       prep_usage_ping_cte.Instance_user_count                                                             AS instance_user_count,
@@ -105,12 +110,18 @@
       prep_usage_ping_cte.main_edition                                                                    AS main_edition_product_tier,
       'VERSION_DB'                                                                                        AS data_source
     FROM prep_usage_ping_cte
-    LEFT JOIN prep_license
-      ON prep_usage_ping_cte.license_md5 = prep_license.license_md5
-    LEFT JOIN prep_subscription
-      ON prep_license.dim_subscription_id = prep_subscription.dim_subscription_id
-    LEFT JOIN dim_crm_account
-      ON prep_subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+    LEFT JOIN prep_license md5
+      ON prep_usage_ping_cte.license_md5 = md5.license_md5
+    LEFT JOIN prep_license sha256
+      ON prep_usage_ping_cte.license_sha256 = sha256.license_sha256
+    LEFT JOIN prep_subscription AS prep_subscription_md5
+      ON md5.dim_subscription_id = prep_subscription_md5.dim_subscription_id
+    LEFT JOIN prep_subscription AS prep_subscription_sha256
+      ON sha256.dim_subscription_id = prep_subscription_sha256.dim_subscription_id
+    LEFT JOIN dim_crm_account AS dim_crm_account_md5
+      ON prep_subscription_md5.dim_crm_account_id = dim_crm_account_md5.dim_crm_account_id
+    LEFT JOIN dim_crm_account AS dim_crm_account_sha256
+      ON prep_subscription_sha256.dim_crm_account_id = dim_crm_account_sha256.dim_crm_account_id
     LEFT JOIN dim_date
       ON TO_DATE(prep_usage_ping_cte.ping_created_at) = dim_date.date_day
 
@@ -119,7 +130,7 @@
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@tpoole",
+    updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2023-01-20"
+    updated_date="2023-02-01"
 ) }}
