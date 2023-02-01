@@ -94,7 +94,7 @@ dbt_six_hourly_models_command = f"""
     {dbt_install_deps_nosha_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
     dbt --no-use-colors build --profiles-dir profile --target prod --selector six_hourly_salesforce_opportunity; ret=$?; exit $ret
-    
+
 """
 
 dbt_six_hourly_models_task = KubernetesPodOperator(
