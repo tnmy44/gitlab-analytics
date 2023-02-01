@@ -26,6 +26,7 @@ WITH sfdc_account_xf AS (
 ), field_for_keys AS (
     
     SELECT
+        -- will be replaced with the actual field
         CASE report_opportunity_user_segment
             WHEN 'large' THEN 'ent-g'
             WHEN 'pubsec' THEN 'ent-g'
