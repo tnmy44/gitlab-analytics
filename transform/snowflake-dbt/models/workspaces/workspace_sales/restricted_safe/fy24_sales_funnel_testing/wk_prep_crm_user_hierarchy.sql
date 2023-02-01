@@ -85,7 +85,7 @@
       wk_prep_sales_funnel_partner_alliance_target.user_business_unit,
       wk_prep_sales_funnel_partner_alliance_target.dim_crm_user_hierarchy_sk
     FROM wk_prep_sales_funnel_partner_alliance_target
-    WHERE wk_prep_sales_funnel_partner_alliance_target.area != 'N/A'
+    WHERE wk_prep_sales_funnel_partner_alliance_target.user_area != 'N/A'
       AND wk_prep_sales_funnel_partner_alliance_target.area IS NOT NULL
 
 ), user_hierarchy_stamped_opportunity AS (
