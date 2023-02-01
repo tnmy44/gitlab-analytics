@@ -44,6 +44,7 @@
     SELECT DISTINCT
       dim_date.first_day_of_month                                                 AS reporting_month,
       dim_license_id                                                              AS license_id,
+      dim_license.license_sha256                                                  AS license_sha256,
       dim_license.license_md5                                                     AS license_md5,
       dim_license.company                                                         AS license_company_name,
       subscription_source.subscription_name_slugify                               AS original_subscription_name_slugify,
@@ -130,29 +131,30 @@
         dim_ping_metric.is_gmau                                                                                                         AS is_gmau,
         dim_ping_metric.is_paid_gmau                                                                                                    AS is_paid_gmau,
         dim_ping_metric.is_umau                                                                                                         AS is_umau,
+        dim_ping_instance.license_sha256                                                                                                AS license_sha256,
         dim_ping_instance.license_md5                                                                                                   AS license_md5,
         dim_ping_instance.is_trial                                                                                                      AS is_trial,
         fct_ping_instance_metric.umau_value                                                                                             AS umau_value,
-        license_subscriptions_w_latest_subscription.license_id                                                                          AS license_id,
-        license_subscriptions_w_latest_subscription.license_company_name                                                                AS license_company_name,
-        license_subscriptions_w_latest_subscription.latest_subscription_id                                                              AS latest_subscription_id,
-        license_subscriptions_w_latest_subscription.original_subscription_name_slugify                                                  AS original_subscription_name_slugify,
-        license_subscriptions_w_latest_subscription.product_category_array                                                              AS product_category_array,
-        license_subscriptions_w_latest_subscription.product_rate_plan_name_array                                                        AS product_rate_plan_name_array,
-        license_subscriptions_w_latest_subscription.subscription_start_month                                                            AS subscription_start_month,
-        license_subscriptions_w_latest_subscription.subscription_end_month                                                              AS subscription_end_month,
-        license_subscriptions_w_latest_subscription.dim_billing_account_id                                                              AS dim_billing_account_id,
-        license_subscriptions_w_latest_subscription.crm_account_name                                                                    AS crm_account_name,
-        license_subscriptions_w_latest_subscription.dim_parent_crm_account_id                                                           AS dim_parent_crm_account_id,
-        license_subscriptions_w_latest_subscription.parent_crm_account_name                                                             AS parent_crm_account_name,
-        license_subscriptions_w_latest_subscription.parent_crm_account_billing_country                                                  AS parent_crm_account_billing_country,
-        license_subscriptions_w_latest_subscription.parent_crm_account_sales_segment                                                    AS parent_crm_account_sales_segment,
-        license_subscriptions_w_latest_subscription.parent_crm_account_industry                                                         AS parent_crm_account_industry,
-        license_subscriptions_w_latest_subscription.parent_crm_account_owner_team                                                       AS parent_crm_account_owner_team,
-        license_subscriptions_w_latest_subscription.parent_crm_account_sales_territory                                                  AS parent_crm_account_sales_territory,
-        license_subscriptions_w_latest_subscription.technical_account_manager                                                           AS technical_account_manager,
-        COALESCE(is_paid_subscription, FALSE)                                                                                           AS is_paid_subscription,
-        COALESCE(is_program_subscription, FALSE)                                                                                        AS is_program_subscription,
+        COALESCE(license_sha256.license_id, license_md5.license_id)license_id                                                           AS license_id,
+        COALESCE(license_sha256.license_company_name, license_md5.license_company_name)                                                 AS license_company_name,
+        COALESCE(license_sha256.latest_subscription_id, license_md5.latest_subscription_id)                                             AS latest_subscription_id,
+        COALESCE(license_sha256.original_subscription_name_slugify, license_md5.original_subscription_name_slugify)                     AS original_subscription_name_slugify,
+        COALESCE(license_sha256.product_category_array, license_md5.product_category_array)                                             AS product_category_array,
+        COALESCE(license_sha256.product_rate_plan_name_array, license_md5.product_rate_plan_name_array)                                 AS product_rate_plan_name_array,
+        COALESCE(license_sha256.subscription_start_month, license_md5.subscription_start_month)                                         AS subscription_start_month,
+        COALESCE(license_sha256.subscription_end_month, license_md5.subscription_end_month)                                             AS subscription_end_month,
+        COALESCE(license_sha256.dim_billing_account_id, license_md5.dim_billing_account_id)                                             AS dim_billing_account_id,
+        COALESCE(license_sha256.crm_account_name, license_md5.crm_account_name)                                                         AS crm_account_name,
+        COALESCE(license_sha256.dim_parent_crm_account_id, license_md5.dim_parent_crm_account_id)                                       AS dim_parent_crm_account_id,
+        COALESCE(license_sha256.parent_crm_account_name, license_md5.parent_crm_account_name)                                           AS parent_crm_account_name,
+        COALESCE(license_sha256.parent_crm_account_billing_country, license_md5.parent_crm_account_billing_country)                     AS parent_crm_account_billing_country,
+        COALESCE(license_sha256.parent_crm_account_sales_segment, license_md5.parent_crm_account_sales_segment)                         AS parent_crm_account_sales_segment,
+        COALESCE(license_sha256.parent_crm_account_industry, license_md5.parent_crm_account_industry)                                   AS parent_crm_account_industry,
+        COALESCE(license_sha256.parent_crm_account_owner_team, license_md5.parent_crm_account_owner_team)                               AS parent_crm_account_owner_team,
+        COALESCE(license_sha256.parent_crm_account_sales_territory, license_md5.parent_crm_account_sales_territory)                     AS parent_crm_account_sales_territory,
+        COALESCE(license_sha256.technical_account_manager, license_md5.technical_account_manager)                                       AS technical_account_manager,
+        COALESCE(license_sha256.is_paid_subscription, license_md5.is_paid_subscription, FALSE)                                          AS is_paid_subscription,
+        COALESCE(license_sha256.is_program_subscription, license_md5.is_program_subscription, FALSE)                                    AS is_program_subscription,
         dim_ping_instance.ping_delivery_type                                                                                            AS ping_delivery_type,
         dim_ping_instance.ping_edition                                                                                                  AS ping_edition,
         dim_ping_instance.product_tier                                                                                                  AS ping_product_tier,
@@ -185,9 +187,12 @@
         ON dim_ping_instance.dim_host_id = dim_hosts.host_id
           AND dim_ping_instance.ip_address_hash = dim_hosts.source_ip_hash
           AND dim_ping_instance.dim_instance_id = dim_hosts.instance_id
-      LEFT JOIN license_subscriptions_w_latest_subscription
-        ON dim_ping_instance.license_md5 = license_subscriptions_w_latest_subscription.license_md5
-          AND dim_date.first_day_of_month = license_subscriptions_w_latest_subscription.reporting_month
+      LEFT JOIN license_subscriptions_w_latest_subscription AS license_md5
+        ON dim_ping_instance.license_md5 = license_md5.license_md5
+          AND dim_date.first_day_of_month = license_md5.reporting_month
+      LEFT JOIN license_subscriptions_w_latest_subscription AS license_sha256
+        ON dim_ping_instance.license_sha256 = license_sha256.license_sha256
+          AND dim_date.first_day_of_month = license_sha256.reporting_month
       LEFT JOIN dim_location
         ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
       WHERE ping_delivery_type = 'Self-Managed'
@@ -277,7 +282,7 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2022-03-11",
-    updated_date="2022-07-29"
+    updated_date="2022-02-01"
 ) }}
