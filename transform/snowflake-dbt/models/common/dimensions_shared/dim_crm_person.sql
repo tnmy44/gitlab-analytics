@@ -98,7 +98,12 @@ WITH crm_person AS (
       account_demographics_upa_state,  
       account_demographics_upa_city,
       account_demographics_upa_street,
-      account_demographics_upa_postal_code
+      account_demographics_upa_postal_code,
+      LOWER(COALESCE(zoominfo_company_country, 
+                     zoominfo_contact_country,
+                     cognism_company_office_country,
+                     cognism_country)
+       ) AS person_first_country
 
     FROM crm_person
 )

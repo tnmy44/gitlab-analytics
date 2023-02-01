@@ -12,11 +12,7 @@ crm_person AS (
       account_demographics_employee_count,
       zoominfo_company_employee_count,
       cognism_employee_count) AS employee_count,
-    LOWER(COALESCE(
-      zoominfo_company_country,
-      zoominfo_contact_country,
-      cognism_company_office_country,
-      cognism_country)) AS first_country
+    person_first_country
   FROM dim_crm_person
 )
 
