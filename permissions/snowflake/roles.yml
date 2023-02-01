@@ -1096,7 +1096,7 @@ roles:
 
     - sales_systems_snowflake_api_role:
         warehouses:
-            - dev_m
+            - reporting
         privileges:
             databases:
                 read:
