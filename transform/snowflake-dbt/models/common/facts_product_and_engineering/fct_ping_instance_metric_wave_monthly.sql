@@ -69,6 +69,7 @@
       instance_type_ordering.instance_type,
       ping_instance_wave_sm.hostname,
       ping_instance_wave_sm.dim_license_id,
+      ping_instance_wave_sm.license_sha256,
       ping_instance_wave_sm.license_md5,
       ping_instance_wave_sm.cleaned_version,
       ping_instance_wave_sm.dim_location_country_id,
@@ -298,7 +299,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@snalamaru",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-07-21",
-    updated_date="2022-08-26"
+    updated_date="2023-02-01"
 ) }}
