@@ -344,32 +344,14 @@ WITH edm_opty AS (
     edm_opty.is_excluded_from_pipeline_created                                AS is_excluded_flag,
     -----------------------------------------------
 
-    -- 2023-01-25 JK: Temporarily calculating user segment differently until the FY24 structure is fully implemented
-    -- edm_opty.report_opportunity_user_segment,
-    CASE 
-      WHEN (edm_opty.report_opportunity_user_segment = 'mid-market' OR edm_opty.report_opportunity_user_segment = 'smb')
-              AND edm_opty.report_opportunity_user_region = 'meta'
-        THEN 'large'
-      WHEN (edm_opty.report_opportunity_user_segment = 'mid-market' OR edm_opty.report_opportunity_user_segment = 'smb')
-              AND edm_opty.report_opportunity_user_region = 'latam'
-        THEN 'large'
-      WHEN (edm_opty.report_opportunity_user_segment = 'mid-market' OR edm_opty.report_opportunity_user_segment = 'smb')
-              AND edm_opty.report_opportunity_user_geo = 'apac'
-        THEN 'large'
-    ELSE edm_opty.report_opportunity_user_segment 
-  END                                              AS report_opportunity_user_segment,
-
-
+    edm_opty.report_opportunity_user_segment,
     edm_opty.report_opportunity_user_geo,
     edm_opty.report_opportunity_user_region,
     edm_opty.report_opportunity_user_area,
     
     -- NF 2022-02-17 these next two fields leverage the logic of comparing current fy opportunity demographics stamped vs account demo for previous years
     edm_opty.report_user_segment_geo_region_area,
-    
-     -- 2023-01-25 JK: Temp creation of report_user_segment_geo_region_area_sqs_ot
-    -- edm_opty.report_user_segment_geo_region_area_sqs_ot,
-    LOWER(CONCAT(report_opportunity_user_segment,'-',edm_opty.report_opportunity_user_geo,'-',edm_opty.report_opportunity_user_region,'-',edm_opty.report_opportunity_user_area, '-', sales_qualified_source, '-', edm_opty.order_type)) AS report_user_segment_geo_region_area_sqs_ot,
+    edm_opty.report_user_segment_geo_region_area_sqs_ot,
 
     ---- measures
     edm_opty.open_1plus_deal_count,
