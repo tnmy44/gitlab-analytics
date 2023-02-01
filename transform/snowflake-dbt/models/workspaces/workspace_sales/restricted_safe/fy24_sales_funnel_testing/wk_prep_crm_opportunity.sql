@@ -1330,7 +1330,7 @@ WITH first_contact  AS (
                     '-',
                     sfdc_opportunity.crm_opp_owner_sales_segment_stamped
                     )
-    END AS dim_crm_opp_owner_hierarchy_sk
+    END AS dim_crm_opp_owner_stamped_hierarchy_sk
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage

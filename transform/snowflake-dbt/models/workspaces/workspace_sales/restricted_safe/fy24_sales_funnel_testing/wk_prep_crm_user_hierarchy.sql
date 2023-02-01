@@ -95,12 +95,12 @@
 
     SELECT DISTINCT
       dim_date.fiscal_year,
-      wk_prep_crm_opportunity.user_segment_stamped                  AS user_segment,
-      wk_prep_crm_opportunity.user_geo_stamped                      AS user_geo,
-      wk_prep_crm_opportunity.user_region_stamped                   AS user_region,
-      wk_prep_crm_opportunity.user_area_stamped                     AS user_area,
-      wk_prep_crm_opportunity.user_business_unit_stamped            AS user_business_unit,
-      wk_prep_crm_opportunity.dim_crm_opp_owner_hierarchy_sk        AS dim_crm_user_hierarchy_sk
+      wk_prep_crm_opportunity.user_segment_stamped                      AS user_segment,
+      wk_prep_crm_opportunity.user_geo_stamped                          AS user_geo,
+      wk_prep_crm_opportunity.user_region_stamped                       AS user_region,
+      wk_prep_crm_opportunity.user_area_stamped                         AS user_area,
+      wk_prep_crm_opportunity.user_business_unit_stamped                AS user_business_unit,
+      wk_prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk    AS dim_crm_user_hierarchy_sk
     FROM wk_prep_crm_opportunity
     INNER JOIN dim_date 
       ON wk_prep_crm_opportunity.close_date = dim_date.date_actual
@@ -176,24 +176,24 @@
 ), final AS (
 
     SELECT DISTINCT 
-      {{ dbt_utils.surrogate_key(['final_unioned.dim_crm_user_hierarchy_sk', 'final_unioned.fiscal_year']) }}                    AS dim_crm_user_hierarchy_stamped_id,
+      {{ dbt_utils.surrogate_key(['final_unioned.dim_crm_user_hierarchy_sk', 'final_unioned.fiscal_year']) }}                   AS dim_crm_user_hierarchy_id,
       final_unioned.dim_crm_user_hierarchy_sk,
       final_unioned.fiscal_year,
-      final_unioned.user_business_unit                                                                                          AS crm_opp_owner_business_unit_stamped,
-      {{ dbt_utils.surrogate_key(['final_unioned.user_business_unit']) }}                                                       AS dim_crm_opp_owner_business_unit_stamped_id,
-      final_unioned.user_segment                                                                                                AS crm_opp_owner_sales_segment_stamped,
-      {{ dbt_utils.surrogate_key(['final_unioned.user_segment']) }}                                                             AS dim_crm_opp_owner_sales_segment_stamped_id,
-      final_unioned.user_geo                                                                                                    AS crm_opp_owner_geo_stamped,
-      {{ dbt_utils.surrogate_key(['final_unioned.user_geo']) }}                                                                 AS dim_crm_opp_owner_geo_stamped_id,
-      final_unioned.user_region                                                                                                 AS crm_opp_owner_region_stamped,
-      {{ dbt_utils.surrogate_key(['final_unioned.user_region']) }}                                                              AS dim_crm_opp_owner_region_stamped_id,
-      final_unioned.user_area                                                                                                   AS crm_opp_owner_area_stamped,
-      {{ dbt_utils.surrogate_key(['final_unioned.user_area']) }}                                                                AS dim_crm_opp_owner_area_stamped_id,
+      final_unioned.user_business_unit                                                                                          AS crm_user_business_unit,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_business_unit']) }}                                                       AS dim_crm_user_business_unit_id,
+      final_unioned.user_segment                                                                                                AS crm_user_sales_segment,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_segment']) }}                                                             AS dim_crm_user_sales_segment_id,
+      final_unioned.user_geo                                                                                                    AS crm_user_geo,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_geo']) }}                                                                 AS dim_crm_user_geo_id,
+      final_unioned.user_region                                                                                                 AS crm_user_region,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_region']) }}                                                              AS dim_crm_user_region_id,
+      final_unioned.user_area                                                                                                   AS crm_user_area,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_area']) }}                                                                AS dim_crm_user_area_id,
       CASE
           WHEN final_unioned.user_segment IN ('Large', 'PubSec') THEN 'Large'
           ELSE final_unioned.user_segment
-      END                                                                                                                       AS crm_opp_owner_sales_segment_stamped_grouped,
-      {{ sales_segment_region_grouped('final_unioned.user_segment', 'final_unioned.user_geo', 'final_unioned.user_region') }}   AS crm_opp_owner_sales_segment_region_stamped_grouped,
+      END                                                                                                                       AS crm_user_sales_segment_grouped,
+      {{ sales_segment_region_grouped('final_unioned.user_segment', 'final_unioned.user_geo', 'final_unioned.user_region') }}   AS crm_user_sales_segment_region_grouped,
       IFF(final_unioned.fiscal_year = current_fiscal_year.fiscal_year, 1, 0)                                                    AS is_current_crm_user_hierarchy
     FROM final_unioned
     LEFT JOIN current_fiscal_year
@@ -206,5 +206,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2023-01-17",
-    updated_date="2023-01-17"
+    updated_date="2023-02-01"
 ) }}

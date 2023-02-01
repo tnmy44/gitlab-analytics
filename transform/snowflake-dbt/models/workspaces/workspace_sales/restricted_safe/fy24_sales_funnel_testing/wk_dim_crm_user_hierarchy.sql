@@ -2,21 +2,21 @@ WITH source AS (
 
 
   SELECT 
-    dim_crm_user_hierarchy_stamped_id,
+    dim_crm_user_hierarchy_id,
     dim_crm_user_hierarchy_sk,
     fiscal_year,
-    crm_opp_owner_business_unit_stamped,
-    dim_crm_opp_owner_business_unit_stamped_id,
-    crm_opp_owner_sales_segment_stamped,
-    dim_crm_opp_owner_sales_segment_stamped_id,
-    crm_opp_owner_geo_stamped,
-    dim_crm_opp_owner_geo_stamped_id,
-    crm_opp_owner_region_stamped,
-    dim_crm_opp_owner_region_stamped_id,
-    crm_opp_owner_area_stamped,
-    dim_crm_opp_owner_area_stamped_id,
-    crm_opp_owner_sales_segment_stamped_grouped,
-    crm_opp_owner_sales_segment_region_stamped_grouped,
+    crm_user_business_unit,
+    dim_crm_user_business_unit_id,
+    crm_user_sales_segment,
+    dim_crm_user_sales_segment_id,
+    crm_user_geo,
+    dim_crm_user_geo_id,
+    crm_user_region,
+    dim_crm_user_region_id,
+    crm_user_area,
+    dim_crm_user_area_id,
+    crm_user_sales_segment_grouped,
+    crm_user_sales_segment_region_grouped,
     is_current_crm_user_hierarchy
   FROM {{ ref('wk_prep_crm_user_hierarchy') }}
 
