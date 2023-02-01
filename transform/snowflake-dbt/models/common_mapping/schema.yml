@@ -209,3 +209,11 @@ models:
           combination_of_columns:
             - dim_namespace_id
             - date_month
+
+  - name: map_project_internal
+    description: '{{ doc("map_project_internal") }}'
+    columns:
+      - name: project_id
+        tests:
+          - not_null
+          - unique
