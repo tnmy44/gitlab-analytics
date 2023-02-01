@@ -1143,3 +1143,14 @@ The current Order Type of an opportunity, potentially after it has been stamped 
 
 {% enddocs %}
 
+{% docs country_name_ping_model %}
+
+The name of the country associated with the IP address of the ping (ex. Australia, France, etc)
+
+{% enddocs %}
+
+{% docs iso_2_country_code_ping_model %}
+
+The two-letter ISO country code associated with the IP address of the ping (ex. AU, FR, etc)
+
+{% enddocs %}

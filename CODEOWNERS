@@ -26,11 +26,15 @@ README.md          @iweeks @dvanrooijen2 @mlaanen
 /permissions/       @dvanrooijen2 @paul_armstrong @jjstark
 /pump/              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
+[Data Science]
+/dags/data_science/ @paul_armstrong @rigerta
+
+[Sales Analytics]
+/dags/sales_analytics/ @rigerta @paul_armstrong
+
 Makefile            @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 .gitlab-ci.yml      @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-
-
 
 # ======
 # dbt Overwrites
