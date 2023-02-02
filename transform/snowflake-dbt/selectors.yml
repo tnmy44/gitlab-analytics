@@ -173,7 +173,17 @@ selectors:
       union:
         - intersection:
             - method: selector
-              value: non_product_models
+              value: product_models
             - method: source
               value: gitlab_snowplow
               children: true
+            - union:
+              - method: fqn
+                value: snowplow_web_events
+                parents: true
+              - method: fqn
+                value: snowplow_id_map
+                parents: true
+              - method: fqn
+                value: snowplow_page_views
+                parents: true
