@@ -106,7 +106,6 @@ models:
   snowplow:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: "snowplow_{{ var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) }}_{{ var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) }}"
-    +tags: ["product"]
     +incremental_strategy: "delete+insert"
     page_views:
       default:
@@ -294,7 +293,6 @@ models:
         +schema: snowflake_imports
 
       snowplow:
-        +tags: ["product"]
         +schema: snowplow
 
       thanos:
@@ -514,7 +512,6 @@ models:
         +materialized: view
 
       snowplow:
-        +tags: ["product"]
         month_partition:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: "snowplow_{{ var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) }}_{{ var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) }}"
