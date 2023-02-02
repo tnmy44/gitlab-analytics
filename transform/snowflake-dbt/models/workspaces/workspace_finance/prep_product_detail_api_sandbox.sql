@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi"]
+    tags=["mnpi_exception"]
 ) }}
 
 WITH zuora_api_sandbox_product AS (
