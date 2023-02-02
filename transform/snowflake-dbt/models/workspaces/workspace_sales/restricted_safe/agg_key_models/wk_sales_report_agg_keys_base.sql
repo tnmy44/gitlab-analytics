@@ -5,6 +5,14 @@
 -- segment, geo, region, area, sqs, ot, deal_category, deal_group
 -- business_unit, role_type, partner_category, alliance_partner 
 
+/* 
+FY24 X-Ray Reporting Hierarchy
+[Business Unit] 
+- [Sub Business Unit]
+-- [Division]
+--- [ASM]
+*/
+
 
 WITH sfdc_account_xf AS (
 
@@ -26,36 +34,170 @@ WITH sfdc_account_xf AS (
 ), field_for_keys AS (
     
     SELECT
+
+        -- Business Unit (X-Ray 1st hierarchy)
         -- will be replaced with the actual field
         CASE report_opportunity_user_segment
-            WHEN 'large' THEN 'ent-g'
-            WHEN 'pubsec' THEN 'ent-g'
-            WHEN 'mid-market' THEN 'comm'
-            WHEN 'smb' THEN 'comm'
-            WHEN 'jihu' THEN 'jihu'
-            ELSE 'other'
+          WHEN 'large' THEN 'Ent-G'
+          WHEN 'pubsec' THEN 'Ent-H'
+          WHEN 'mid-market' THEN 'Comm'
+          WHEN 'smb' THEN 'Comm'
+          WHEN 'jihu' THEN 'JiHu'
+          ELSE 'Other'
         END AS business_unit,
 
         CASE
-            WHEN  order_type = '1. New - First Order'
-                THEN 'First Order'
-            WHEN lower(account_owner.role_name) like ('pooled%')
-                    AND key_segment IN ('smb','mid-market')
-                    AND order_type != '1. New - First Order'
-                THEN 'Pooled'
-            WHEN lower(account_owner.role_name) like ('terr%')
-                    AND key_segment IN ('smb','mid-market')
-                    AND order_type != '1. New - First Order'
-                THEN 'Territory'
-            WHEN lower(account_owner.role_name) like ('named%')
-                    AND key_segment IN ('smb','mid-market')
-                    AND order_type != '1. New - First Order'
-                THEN 'Named'
-            WHEN order_type IN ('2. New - Connected','4. Contraction','6. Churn - Final','5. Churn - Partial','3. Growth')
-                    AND key_segment IN ('smb','mid-market')
-                THEN 'Expansion'
-            ELSE 'Other'
+          WHEN  LOWER(order_type) = '1. new - first order'
+            THEN 'First Order'
+          WHEN LOWER(account_owner.role_name) like ('pooled%')
+                AND report_opportunity_user_segment IN ('smb','mid-market')
+                AND LOWER(order_type) != '1. new - first order'
+            THEN 'Pooled'
+          WHEN LOWER(account_owner.role_name) like ('terr%')
+                AND report_opportunity_user_segment IN ('smb','mid-market')
+                AND LOWER(order_type) != '1. new - first order'
+            THEN 'Territory'
+          WHEN LOWER(account_owner.role_name) like ('named%')
+                AND report_opportunity_user_segment IN ('smb','mid-market')
+                AND LOWER(order_type) != '1. new - first order'
+            THEN 'Named'
+          WHEN LOWER(order_type) IN ('2. new - connected', '4. contraction', '6. churn - final', '5. churn - partial', '3. growth')
+                AND report_opportunity_user_segment IN ('smb','mid-market')
+            THEN 'Expansion'
+          ELSE 'Other'
         END AS role_type,
+
+        -- Sub-Business Unit (X-Ray 2nd hierarchy)
+        CASE
+          WHEN LOWER(business_unit) = 'ent-g'
+            THEN report_opportunity_user_geo
+
+          WHEN
+            LOWER(business_unit) = 'comm'
+            AND 
+              (
+              report_opportunity_user_segment = 'smb' 
+              AND report_opportunity_user_geo = 'amer'
+              AND report_opportunity_user_area = 'lowtouch'
+              ) 
+            THEN 'AMER Low-Touch'
+          WHEN
+            LOWER(business_unit) = 'comm'
+            AND
+              (
+              report_opportunity_user_segment = 'mid-market'
+              AND (report_opportunity_user_geo = 'amer' OR report_opportunity_user_geo = 'emea')
+              AND LOWER(role_type) = 'first order'
+              )
+            THEN 'MM First Orders'
+          WHEN
+            LOWER(business_unit) = 'comm'
+            AND report_opportunity_user_geo = 'emea'
+            AND 
+              (
+              report_opportunity_user_segment != 'mid-market'
+              AND LOWER(role_type) != 'first order'
+              )
+            THEN  'EMEA'
+          WHEN
+            LOWER(business_unit) = 'comm'
+            AND report_opportunity_user_geo = 'amer'
+            AND
+              (
+              report_opportunity_user_segment != 'mid-market'
+              AND LOWER(role_type) != 'first order'
+              )
+            AND
+              (
+              report_opportunity_user_segment != 'smb'
+              AND report_opportunity_user_area != 'lowtouch'
+              )
+            THEN 'AMER'
+          ELSE 'Other'
+        END AS sub_business_unit,
+
+        -- Division (X-Ray 3rd hierarchy)
+        CASE 
+          WHEN LOWER(business_unit) = 'ent-g'
+            THEN report_opportunity_user_region
+          WHEN 
+            LOWER(business_unit) = 'comm'
+            AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+            AND report_opportunity_user_segment = 'mid-market'
+            THEN 'Mid-Market'
+          WHEN
+            LOWER(business_unit) = 'comm'
+            AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+            AND report_opportunity_user_segment = 'smb'
+            THEN 'SMB'
+          WHEN
+            LOWER(business_unit) = 'comm'
+            AND LOWER(sub_business_unit) = 'mm first orders'
+            THEN 'MM First Orders'
+          WHEN
+            LOWER(business_unit) = 'comm'
+            AND LOWER(sub_business_unit) = 'amer low-touch'
+            THEN 'AMER Low-Touch'
+          ELSE 'Other'
+        END AS division,
+
+        -- ASM (X-Ray 4th hierarchy): definition pending
+        CASE
+          WHEN 
+            LOWER(business_unit) = 'ent-g'
+            AND LOWER(sub_business_unit) = 'amer'
+            THEN report_opportunity_user_area
+
+          WHEN
+            LOWER(business_unit) = 'ent-g'
+            AND LOWER(sub_business_unit) = 'emea'
+            AND LOWER(division) = 'dach'
+            THEN 'pending'
+
+          WHEN
+            LOWER(business_unit) = 'ent-g'
+            AND LOWER(sub_business_unit) = 'emea'
+            AND (LOWER(division) = 'neur' OR LOWER(division) = 'seur')
+            THEN report_opportunity_user_area
+
+          WHEN
+            LOWER(business_unit) = 'ent-g'
+            AND LOWER(sub_business_unit) = 'emea'
+            AND LOWER(division) = 'meta'
+            THEN report_opportunity_user_segment
+
+          WHEN 
+            LOWER(business_unit) = 'ent-g'
+            AND (LOWER(sub_business_unit) = 'apac' OR LOWER(sub_business_unit) = 'pubsec')
+            THEN report_opportunity_user_area
+
+          WHEN
+            LOWER(business_unit) = 'comm'
+            AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+            THEN report_opportunity_user_area
+
+          WHEN 
+            LOWER(business_unit) = 'comm'
+            AND LOWER(sub_business_unit) = 'mm first orders'
+            THEN report_opportunity_user_geo
+
+          WHEN
+            LOWER(business_unit) = 'comm'
+            AND LOWER(sub_business_unit) = 'amer low-touch'
+            AND LOWER(role_type) = 'first order'
+            THEN 'LowTouch FO'
+
+          WHEN
+            LOWER(business_unit) = 'comm'
+            AND LOWER(sub_business_unit) = 'amer low-touch'
+            AND LOWER(role_type) != 'first order'
+            THEN 'LowTouch Pool'
+
+          ELSE 'Other'
+
+        END AS asm,
+
+
 
         -- FY23 definition
         -- CASE
@@ -129,6 +271,9 @@ WITH sfdc_account_xf AS (
 
   SELECT         
         LOWER(business_unit)                         AS business_unit,
+        LOWER(sub_business_unit)                     AS sub_business_unit,
+        LOWER(division)                              AS division,
+        LOWER(asm)                                   AS asm,
         LOWER(report_opportunity_user_segment)       AS report_opportunity_user_segment,
         LOWER(report_opportunity_user_geo)           AS report_opportunity_user_geo,
         LOWER(report_opportunity_user_region)        AS report_opportunity_user_region,
@@ -155,6 +300,9 @@ WITH sfdc_account_xf AS (
   
   SELECT
         LOWER(business_unit)                         AS business_unit,
+        LOWER(sub_business_unit)                     AS sub_business_unit,
+        LOWER(division)                              AS division,
+        LOWER(asm)                                   AS asm,
         LOWER(account_owner_user_segment)            AS report_opportunity_user_segment,
         LOWER(account_owner_user_geo)                AS report_opportunity_user_geo,
         LOWER(account_owner_user_region)             AS report_opportunity_user_region,
