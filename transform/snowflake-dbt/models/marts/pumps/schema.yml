@@ -1560,3 +1560,6 @@ models:
       - name: id
         tests:
           - not_null
+
+  - name: mart_product_usage_paid_user_metrics_monthly_report_view
+    description: '{{ doc("mart_product_usage_paid_user_metrics_monthly_report_view") }}'
