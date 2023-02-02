@@ -1,6 +1,7 @@
 {{ config(
         materialized = "incremental",
-        unique_key = "dim_behavior_operating_system_sk"
+        unique_key = "dim_behavior_operating_system_sk",
+        tags=['product']
     )
 }}
 

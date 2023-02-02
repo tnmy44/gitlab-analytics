@@ -1,6 +1,7 @@
 {{ config(
         materialized = "incremental",
-        unique_key = "fct_behavior_website_page_view_sk"
+        unique_key = "fct_behavior_website_page_view_sk",
+        tags=['product']
 ) }}
 
 {{ 
