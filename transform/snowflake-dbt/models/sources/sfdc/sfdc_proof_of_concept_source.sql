@@ -35,6 +35,7 @@ WITH source AS (
       status__c                                 AS pov_status,
       success_criteria__c                       AS success_criteria,
       unsuccessful_reason__c                    AS unsuccessful_reason,
+      sa_asm_leader_approved__c                 AS is_sa_asm_leader_approved,
 
     -- metadata
       createdbyid                               AS created_by_id,
