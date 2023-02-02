@@ -51,7 +51,7 @@ Detailed information on this model can be found on this [issue] (https://gitlab.
 
 {% enddocs %}
 
-{% mart_product_usage_paid_user_metrics_monthly_report_view %}
+{% docs mart_product_usage_paid_user_metrics_monthly_report_view %}
 
 This table contains information to be queried via the Snowflake API from the Sales Systems team.
 Detailed information on this use-case can be found on this [issue] (https://gitlab.com/gitlab-data/analytics/-/issues/15456).
