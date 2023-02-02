@@ -495,6 +495,11 @@
       last_activity_date.first_day_of_fiscal_quarter                  AS last_activity_fiscal_quarter_date,
       last_activity_date.fiscal_quarter_name_fy                       AS last_activity_fiscal_quarter_name,
       last_activity_date.fiscal_year                                  AS last_activity_fiscal_year,
+      sales_last_activity_date.date_actual                            AS sales_last_activity_date,
+      sales_last_activity_date.first_day_of_month                     AS sales_last_activity_month,
+      sales_last_activity_date.first_day_of_fiscal_quarter            AS sales_last_activity_fiscal_quarter_date,
+      sales_last_activity_date.fiscal_quarter_name_fy                 AS sales_last_activity_fiscal_quarter_name,
+      sales_last_activity_date.fiscal_year                            AS sales_last_activity_fiscal_year,
       technical_evaluation_date.date_actual                           AS technical_evaluation_date,
       technical_evaluation_date.first_day_of_month                    AS technical_evaluation_month,
       technical_evaluation_date.first_day_of_fiscal_quarter           AS technical_evaluation_fiscal_quarter_date,
@@ -636,6 +641,8 @@
       ON fct_crm_opportunity.sales_qualified_date_id = sales_qualified_date.date_id
     LEFT JOIN dim_date last_activity_date
       ON fct_crm_opportunity.last_activity_date_id = last_activity_date.date_id
+    LEFT JOIN dim_date sales_last_activity_date
+      ON fct_crm_opportunity.sales_last_activity_date_id = sales_last_activity_date.date_id
     LEFT JOIN dim_date technical_evaluation_date
       ON fct_crm_opportunity.technical_evaluation_date_id = technical_evaluation_date.date_id
     LEFT JOIN dim_date arr_created_date
@@ -652,5 +659,5 @@
     created_by="@jeanpeguero",
     updated_by="@michellecooper",
     created_date="2022-02-28",
-    updated_date="2022-12-28"
+    updated_date="2022-02-02"
   ) }}

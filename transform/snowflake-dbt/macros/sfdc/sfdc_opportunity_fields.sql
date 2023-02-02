@@ -333,6 +333,7 @@ WITH first_contact  AS (
       {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}                              AS stage_6_closed_lost_date_id,
       {{ get_date_id('sfdc_opportunity.technical_evaluation_date') }}                             AS technical_evaluation_date_id,
       {{ get_date_id('sfdc_opportunity.last_activity_date') }}                                    AS last_activity_date_id,
+      {{ get_date_id('sfdc_opportunity.sales_last_activity_date') }}                              AS sales_last_activity_date_id,
       {{ get_date_id('sfdc_opportunity.subscription_start_date') }}                               AS subscription_start_date_id,
       {{ get_date_id('sfdc_opportunity.subscription_end_date') }}                                 AS subscription_end_date_id,
       {{ get_date_id('sfdc_opportunity.sales_qualified_date') }}                                  AS sales_qualified_date_id,

@@ -292,6 +292,7 @@ SELECT
                          CURRENT_DATE)                  AS days_since_last_activity,
         isdeleted                                       AS is_deleted,
         lastactivitydate                                AS last_activity_date,
+        sales_last_activity_date__c                     AS sales_last_activity_date,
         recordtypeid                                    AS record_type_id,
 
         -- snapshot metadata
