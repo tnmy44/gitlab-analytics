@@ -209,7 +209,7 @@ class SnowflakeManager:
         try:
             connection = self.engine.connect()
             logging.info("Executing Query: {}".format(get_grants_query))
-            grants = connection.execute(get_grants_query).all()
+            grants = connection.execute(get_grants_query).fetchall()
             logging.info("Query Result: {}".format(grants))
         finally:
             connection.close()
