@@ -3939,10 +3939,10 @@ models:
       - name: instance_type
         description: Type of the instance
       - name: dim_license_id
+      - name: license_sha256
+        description: '{{ doc("license_sha256") }}'
       - name: license_md5
-        description: JOIN key to dim_licenses and dim_license
-      - name: license_md5
-        description: JOIN key to dim_licenses and dim_license
+        description: '{{ doc("license_md5") }}'
       - name: cleaned_version
       - name: license_utilization
         description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
@@ -4653,10 +4653,6 @@ models:
         description: '{{ doc("dim_installation_id") }}'
       - name: dim_license_id
         description:  '{{ doc("dim_license_id") }}'
-      - name: license_md5
-        description: '{{ doc("license_md5") }}'
-      - name: license_sha256
-        description: '{{ doc("license_sha256") }}'
       - name: dim_subscription_license_id
         description: '{{ doc("dim_subscription_license_id") }}'
       - name: metrics_path
