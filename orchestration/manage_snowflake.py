@@ -210,7 +210,8 @@ class SnowflakeManager:
             connection = self.engine.connect()
             logging.info("Executing Query: {}".format(get_grants_query))
             grants = connection.execute(get_grants_query).fetchall()
-            logging.info("Query Result: {}".format(grants))
+            for grant, in grants:
+                logging.info("Query Result: {}".format(grant))
         finally:
             connection.close()
             self.engine.dispose()
