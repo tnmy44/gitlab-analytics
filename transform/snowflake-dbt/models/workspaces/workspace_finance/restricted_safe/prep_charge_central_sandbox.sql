@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi"]
+    tags=["mnpi_exception"]
 ) }}
 
 WITH map_merged_crm_account AS (
