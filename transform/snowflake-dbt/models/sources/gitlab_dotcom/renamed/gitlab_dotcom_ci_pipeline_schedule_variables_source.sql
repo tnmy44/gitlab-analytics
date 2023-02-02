@@ -7,7 +7,6 @@ WITH source AS (
 
     SELECT
       id::NUMBER                   AS ci_pipeline_schedule_variable_id,
-      key                           AS key,
       pipeline_schedule_id::NUMBER AS ci_pipeline_schedule_id,
       created_at::TIMESTAMP         AS created_at,
       updated_at::TIMESTAMP         AS updated_at,
