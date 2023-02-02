@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 /* grain: one record per subscription per month */
 WITH dim_date AS (
 
