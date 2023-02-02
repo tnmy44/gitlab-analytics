@@ -273,7 +273,7 @@ specify_dbt_parameters:
     - echo $DBT_MODELS
     - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS
 
-manual_seed:
+🌱manual_seed:
   <<: *snowflake_dbt_jobs
   stage: 🛠 dbt Misc
   script:
