@@ -26,14 +26,14 @@
 , sm_subscriptions AS (
 
     SELECT
-      dim_subscription_id,
-      dim_subscription_id_original,
-      dim_billing_account_id,
-      first_day_of_month                                            AS snapshot_month
+      subscriptions.dim_subscription_id,
+      subscriptions.dim_subscription_id_original,
+      subscriptions.dim_billing_account_id,
+      dates.first_day_of_month                                            AS snapshot_month
     FROM subscriptions
     INNER JOIN dates
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE    -- first month Usage Ping was collected
-    WHERE product_delivery_type = 'Self-Managed'
+    WHERE subscriptions.product_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=4)}}
 
 

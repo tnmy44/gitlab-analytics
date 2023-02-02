@@ -47,7 +47,7 @@
 
     SELECT DISTINCT
       dim_date.first_day_of_month                                                 AS reporting_month,
-      dim_license_id                                                              AS license_id,
+      dim_license.dim_license_id                                                  AS license_id,
       dim_license.license_sha256                                                  AS license_sha256,
       dim_license.license_md5                                                     AS license_md5,
       dim_license.company                                                         AS license_company_name,
@@ -67,14 +67,15 @@
       dim_crm_accounts.parent_crm_account_owner_team                              AS parent_crm_account_owner_team,
       dim_crm_accounts.parent_crm_account_sales_territory                         AS parent_crm_account_sales_territory,
       dim_crm_accounts.technical_account_manager                                  AS technical_account_manager,
-      IFF(MAX(mrr) > 0, TRUE, FALSE)                                              AS is_paid_subscription,
-      MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))  AS is_program_subscription,
+      IFF(MAX(fct_charge.mrr) > 0, TRUE, FALSE)                                   AS is_paid_subscription,
+      MAX(IFF(dim_product_detail.product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE)) 
+                                                                                  AS is_program_subscription,
       ARRAY_AGG(DISTINCT dim_product_detail.product_tier_name)
         WITHIN GROUP (ORDER BY dim_product_detail.product_tier_name ASC)          AS product_category_array,
-      ARRAY_AGG(DISTINCT product_rate_plan_name)
-        WITHIN GROUP (ORDER BY product_rate_plan_name ASC)                        AS product_rate_plan_name_array,
-      SUM(quantity)                                                               AS quantity,
-      SUM(mrr * 12)                                                               AS arr
+      ARRAY_AGG(DISTINCT dim_product_detail.product_rate_plan_name)
+        WITHIN GROUP (ORDER BY dim_product_detail.product_rate_plan_name ASC)     AS product_rate_plan_name_array,
+      SUM(fct_charge.quantity)                                                    AS quantity,
+      SUM(fct_charge.mrr * 12)                                                    AS arr
     FROM dim_license
     INNER JOIN subscription_source
       ON dim_license.dim_subscription_id = subscription_source.subscription_id
@@ -84,17 +85,17 @@
       ON subscription_source.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     INNER JOIN fct_charge
       ON all_subscriptions.subscription_id = fct_charge.dim_subscription_id
-        AND charge_type = 'Recurring'
+        AND fct_charge.charge_type = 'Recurring'
     INNER JOIN dim_product_detail
       ON dim_product_detail.dim_product_detail_id = fct_charge.dim_product_detail_id
       AND dim_product_detail.product_delivery_type = 'Self-Managed'
-      AND product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
+      AND dim_product_detail.product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
     LEFT JOIN dim_billing_account
       ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
     LEFT JOIN dim_crm_accounts
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
     INNER JOIN dim_date
-      ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
+      ON fct_charge.effective_start_month <= dim_date.date_day AND fct_charge.effective_end_month > dim_date.date_day
     {{ dbt_utils.group_by(n=21)}}
 
 
@@ -165,8 +166,8 @@
         AND dim_date.first_day_of_month = sha256.reporting_month
       LEFT JOIN dim_location
         ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
-      WHERE ping_delivery_type = 'Self-Managed'
-        OR (ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
+      WHERE dim_ping_instance.ping_delivery_type = 'Self-Managed'
+        OR (dim_ping_instance.ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
 
 ), sorted AS (
 
@@ -239,7 +240,7 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@cbraza",
+    updated_by="@jpeguero",
     created_date="2022-03-11",
     updated_date="2023-02-01"
 ) }}
