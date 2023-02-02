@@ -1,4 +1,10 @@
-{{ config(materialized='view') }}
+{{
+  config(
+    tags=["product", "mnpi_exception"],
+    schema="common_mart_product",
+    materialized="view"
+  )
+}}
 
 WITH prep AS (
   SELECT
