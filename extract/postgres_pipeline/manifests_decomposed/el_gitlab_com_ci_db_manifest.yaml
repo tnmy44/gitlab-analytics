@@ -67,9 +67,6 @@ tables:
       , updated_at
       , file_store
       , name
-      , file
-      , checksum
-      , key_data
       FROM ci_secure_files
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
