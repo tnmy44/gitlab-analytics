@@ -259,10 +259,6 @@ models:
           +schema: sensitive
           secure: true
 
-      pmg:
-        +materialized: table
-        +schema: pmg
-
       pto:
         +materialized: table
         +schema: gitlab_pto
