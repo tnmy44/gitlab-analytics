@@ -81,7 +81,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , key
       , group_id
       , created_at
       , updated_at
