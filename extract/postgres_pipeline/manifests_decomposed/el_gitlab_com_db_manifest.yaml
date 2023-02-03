@@ -1183,22 +1183,8 @@ tables:
       SELECT id
       , user_id
       , source_id
-      , source_type
-      , level
       , created_at
       , updated_at
-      , new_note
-      , new_issue
-      , reopen_issue
-      , close_issue
-      , reassign_issue
-      , new_merge_request
-      , reopen_merge_request
-      , close_merge_request
-      , reassign_merge_request
-      , merge_merge_request
-      , failed_pipeline
-      , success_pipeline
       FROM notification_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
