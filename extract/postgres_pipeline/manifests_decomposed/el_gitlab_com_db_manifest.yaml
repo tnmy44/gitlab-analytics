@@ -367,9 +367,7 @@ tables:
       , migration_skipped_at
       , migration_retries_count
       , migration_skipped_reason
-      , migration_state
       , migration_aborted_in_state
-      , migration_plan
       , last_cleanup_deleted_tags_count
       FROM container_repositories
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
