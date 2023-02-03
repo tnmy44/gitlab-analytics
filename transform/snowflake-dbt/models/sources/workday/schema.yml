@@ -44,6 +44,7 @@ models:
             - employee_id
             - effective_date
             - compensation_type
+            - compensation_change_reason
             - initiated_at
     columns:
       - name: employee_id
