@@ -31,6 +31,8 @@ service_base.gcp_service_description,
 service_base.gcp_sku_description,
 service_base.gitlab_service,
 lower(coalesce(allocation.type, sandbox.classification, 'unknown')) as finance_pl,
+-- cost before discounts
+sum(service_base.cost_before_credits) as cost_before_credits,
 service_base.net_cost * coalesce(allocation.allocation, 1) as net_cost
 FROM
 service_base

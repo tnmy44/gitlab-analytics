@@ -26,6 +26,8 @@ infra_labels as (
         export.service_description AS service,
         export.sku_description AS sku_description,
         infra_labels.resource_label_value as infra_label,
+        -- cost before discounts
+        sum(export.cost_before_credits) as cost_before_credits,
         -- net costs
         sum(export.total_cost) AS net_cost
         FROM
@@ -43,6 +45,7 @@ SELECT
         billing_base.service as gcp_service_description,
         billing_base.sku_description as gcp_sku_description,
         billing_base.infra_label as infra_label,
+        sum(billing_base.cost_before_credits) as cost_before_credits,
         sum(billing_base.net_cost) as net_cost
 FROM billing_base 
 group by 1, 2, 3, 4, 5

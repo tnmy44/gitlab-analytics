@@ -255,6 +255,8 @@ resource_labels as (
             WHEN rule_1_ids.source_primary_key = export.source_primary_key THEN rule_1_ids.service
         END
         AS rule_1,
+        -- cost before discounts
+        sum(export.cost_before_credits) as cost_before_credits,
         -- net costs
         sum(export.total_cost) AS net_cost
         FROM
@@ -327,6 +329,7 @@ SELECT
                                                             coalesce(billing_base_rules.rule_8, ''),
                                                             coalesce(billing_base_rules.rule_9, ''),
                                                             coalesce(billing_base_rules.rule_10, ''))) as gitlab_service,
+        sum(billing_base_rules.cost_before_credits) * ifnull(service_coeff.coeff, 1) as cost_before_credits,
         sum(billing_base_rules.net_cost) * ifnull(service_coeff.coeff, 1) as net_cost
 FROM billing_base_rules LEFT JOIN service_coeff
         on billing_base_rules.rule_1 = service_coeff.gitlab_service

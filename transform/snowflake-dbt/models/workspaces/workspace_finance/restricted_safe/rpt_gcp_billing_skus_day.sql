@@ -290,6 +290,7 @@ SELECT
     ELSE 'Other'
   END AS finance_sku_subtype,
   sum(export.usage_amount) AS usage_amount,
+  sum(export.cost_before_credits) as cost_before_credits,
   sum(export.total_cost) AS net_cost
 FROM export
 {{ dbt_utils.group_by(n=7) }}

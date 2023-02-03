@@ -38,6 +38,9 @@ service_base.gcp_service_description,
 service_base.gcp_sku_description,
 service_base.infra_label,
 lower(coalesce(sandbox.classification, project_pl.type, infra_allocation.type, 'unknown')) as finance_pl,
+-- cost before discounts
+service_base.cost_before_credits * coalesce(infra_allocation.allocation, project_pl.allocation, 1) as cost_before_credits,
+-- net costs
 service_base.net_cost * coalesce(infra_allocation.allocation, project_pl.allocation, 1) as net_cost
 FROM
 service_base
