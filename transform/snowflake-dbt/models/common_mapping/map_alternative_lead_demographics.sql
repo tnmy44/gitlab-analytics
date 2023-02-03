@@ -271,7 +271,7 @@ SELECT
     WHEN person_first_country = 'united states' THEN 'amer'
     WHEN person_first_country = 'turks and caicos' THEN 'amer'
     WHEN person_first_country = 'korea, republic of' THEN 'apac'
-    WHEN person_first_country LIKE 'lao democratic people' AND first_country LIKE 's republic' THEN 'apac'
+    WHEN person_first_country LIKE 'lao democratic people' AND person_first_country LIKE 's republic' THEN 'apac'
     WHEN person_first_country = 'macedonia, the former yugoslav republic of' THEN 'emea'
     WHEN person_first_country = 'moldova, republic of' THEN 'emea'
     WHEN person_first_country = 'russian federation' THEN 'emea'
