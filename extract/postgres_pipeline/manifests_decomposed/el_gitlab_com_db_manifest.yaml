@@ -782,7 +782,6 @@ tables:
       SELECT id
       , project_id
       , label_id
-      , priority
       , created_at
       , updated_at
       FROM label_priorities
