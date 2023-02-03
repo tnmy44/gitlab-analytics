@@ -1544,3 +1544,23 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_behavior_browser %}
+
+**Description:** Dimension for the analysis of browsers in Snowplow.
+
+**Data Grain:** dim_behavior_browser_sk
+- brower_name
+- browser_major_version
+- browser_minor_version
+- browser_languge
+
+**Filters Applied to Model:**
+- 
+
+**Business Logic in this Model:**
+- 
+
+**Other Comments:**
+- [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
+
+{% enddocs %}

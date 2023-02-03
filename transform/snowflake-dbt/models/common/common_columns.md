@@ -1149,3 +1149,39 @@ The name of the country associated with the IP address of the ping (ex. Australi
 The two-letter ISO country code associated with the IP address of the ping (ex. AU, FR, etc)
 
 {% enddocs %}
+
+{% docs dim_behavior_browser_sk %}
+
+Surrogate key consisting of browser_name, browser_major_version, browser_minor_version, and browser_language, easily JOINed to dim_behavior_browser. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `br_family`, `br_name`, `br_version`, and `br_lang`.
+
+{% enddocs %}
+
+{% docs browser_name %}
+
+The name of the browser family (ex. 'Chrome', 'Firefox', 'Safari', etc). This appears as `br_family` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs browser_major_version %}
+
+The name and major version of the browser (ex. 'Chrome 10', 'Firefox 10', etc). This appears as `br_name` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs browser_minor_version %}
+
+The version of the browser (ex. '109.0.0.0', '15.3', etc). This appears as `br_version` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs browser_engine %}
+
+The browser rendering engine (ex. 'WEBKIT', 'GECKO', etc). This appears as `br_renderengine` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs browser_language %}
+
+Language the browser is set to (ex. 'en-GB', 'fr-FR', etc). This appears as `br_lang` in the raw Snowplow data
+
+{% enddocs %}

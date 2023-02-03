@@ -5048,12 +5048,33 @@ models:
         tags: ["tdf", "common"]
 
   - name: dim_behavior_browser
-    description: Dimension for the analysis of browsers in Snowplow.
+    description: '{{ doc("dim_behavior_browser") }}'
     columns: 
       - name: dim_behavior_browser_sk
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: browser_name
+        description: '{{ doc("browser_name") }}'
+      - name: browser_major_version
+        description: '{{ doc("browser_major_version") }}'
+      - name: browser_minor_version
+        description: '{{ doc("browser_minor_version") }}'
+      - name: browser_engine
+        description: '{{ doc("browser_engine") }}'
+      - name: browser_language
+        description: '{{ doc("browser_language") }}'
+      - name: max_timestamp
+        description: 
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: dim_behavior_operating_system
     description: Dimension for the analysis of operating systems in Snowplow.
