@@ -121,7 +121,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , key
       , pipeline_schedule_id
       , created_at
       , updated_at
