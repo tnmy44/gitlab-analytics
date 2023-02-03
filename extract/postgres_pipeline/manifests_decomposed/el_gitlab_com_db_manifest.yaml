@@ -236,7 +236,6 @@ tables:
       , group_id
       , created_at
       , updated_at
-      , name
       FROM boards_epic_boards
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
