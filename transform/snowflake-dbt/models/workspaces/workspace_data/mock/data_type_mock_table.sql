@@ -10,3 +10,17 @@ SELECT
   TRUE::BOOLEAN AS the_boolean
 
   --  {{ source('mock_source','mock_source_table') }}
+
+  -- {{ samples() }}
+
+
+  -- {{ sample_ref_relation('date_details_source') }}
+
+  -- {{ sample_ref_relation('dim_date') }}
+
+  -- {{ sample_ref_relation('prep_date') }}
+
+
+-- {{ create_sample_table('dim_date') }} 
+
+-- {{ sample_tables() }}
