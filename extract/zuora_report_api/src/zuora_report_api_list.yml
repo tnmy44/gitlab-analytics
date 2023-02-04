@@ -4,7 +4,7 @@ report_list:
       rep_name: "Billing Waterfall"
       layout_name: "Gitlab : RCID by Transaction"
       rep_desc: "Revenue waterfall for billed contractual revenue (rollout at line level of Contract Liability balances)"
-      output_file_name: "Revenue_billing_waterfall"
+      output_file_name: "revenue_billing_waterfall"
       status: "A"
   rc_rollforward:
       category: "Revenue"
