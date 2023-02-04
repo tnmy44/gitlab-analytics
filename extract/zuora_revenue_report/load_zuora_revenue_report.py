@@ -37,7 +37,7 @@ def get_files_for_report(bucket,output_file_name):
 
     list_of_files_per_report=[]
     for file in source_bucket:
-        if output_file_name in file:
+        if output_file_name in file.name:
             list_of_files_per_report.append(file)
 
     return list_of_files_per_report
@@ -57,7 +57,7 @@ def get_table_to_load(file_name,output_file_name) -> str:
 
 def load_report_header_snow(schema,file_name,table_to_load,engine):
 
-    copy_header_query=f"COPY INTO {schema}.{table_to_load} from (SELECT REGEXP_REPLACE(t.$1,'( ){1,}','_') AS metadata_column_name, REGEXP_REPLACE(CONCAT(t.$2,COALESCE(t.$3,'')),'(=){1,}','') AS metadata_column_value ,                        GET(SPLIT(METADATA$FILENAME,'/'),4)  AS file_name FROM @raw.zuora_revenue.ZUORA_REVENUE_STAGING/{file_name} t ) file_format = (type = csv,field_DELIMITER=',') ;"
+    copy_header_query=f"COPY INTO {schema}.{table_to_load} from (SELECT REGEXP_REPLACE(t.$1,'( ){1,}','_') AS metadata_column_name, REGEXP_REPLACE(CONCAT(t.$2,COALESCE(t.$3,'')),'(=){1,}','') AS metadata_column_value ,GET(SPLIT(METADATA$FILENAME,'/'),4)  AS file_name FROM @raw.zuora_revenue.ZUORA_REVENUE_STAGING/{file_name} t ) file_format = (type = csv,field_DELIMITER=',') ;"
     print(copy_header_query)
 
 def load_report_body_snow(chema,file_name,table_to_load,engine):
