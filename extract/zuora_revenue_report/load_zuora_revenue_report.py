@@ -25,14 +25,14 @@ def get_gcs_storage_client():
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
-    print(type(storage_client))
     return storage_client
 
 
 
 def get_files_for_report(bucket,output_file_name):
-    source_bucket = get_gcs_storage_client().get_bucket(bucket,prefix="RAW_DB/staging/zuora_revenue_report")
-    print(source_bucket)
+    source_bucket = get_gcs_storage_client().list_blobs(bucket,prefix="RAW_DB/staging/zuora_revenue_report",delimiter=None)
+    file_name = [file.name for file in source_bucket]
+    print(file_name)
     
 
     
