@@ -45,11 +45,11 @@ default_args = {
 }
 
 airflow_home = env["AIRFLOW_HOME"]
-task_name = "zuora-revenue"
+task_name = "zuora-revenue-report"
 
-# Get all the table name for which tasks for loading needs to be created
+# Get all the report name for which tasks for loading needs to be created
 with open(
-    f"{airflow_home}/analytics/extract/zuora_revenue/zuora_revenue_table_name.yml", "r"
+    f"{airflow_home}/analytics/extract/zuora_revenue_report/src/zuora_report_api_list.yml", "r"
 ) as file:
     try:
         stream = safe_load(file)
@@ -57,27 +57,27 @@ with open(
         print(exc)
 
         
-    report_list_key = list(stream["report_list"].keys())
+report_list = list(stream["report_list"].keys())
     
 
 
-# Create the DAG  with one load happening at once
+# Create the DAG  with one report at once
 dag = DAG(
-    "zuora_revenue_load_snow",
+    "el_zuora_revenue_report",
     default_args=default_args,
-    schedule_interval="0 13 * * *",
+    schedule_interval="0 5 * * *",
     concurrency=1,
 )
 
 start = DummyOperator(task_id="Start", dag=dag)
 
-for table_name in table_name_list:
+for report in report_list:
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_and_setup_extraction_cmd} &&
-        python3 zuora_revenue/load_zuora_revenue.py zuora_load --bucket zuora_revpro_gitlab --schema zuora_revenue --table_name {table_name}
+        python3 zuora_revenue_report/load_zuora_revenue_report.py zuora_report_load --bucket zuora_revpro_gitlab --schema zuora_revenue_report --table_name {stream["report_list"][report]["output_file_name"].lower()}
         """
-    task_identifier = f"{task_name}-{table_name.replace('_','-').lower()}-load"
+    task_identifier = f"el-{task_name}-{report.replace('_','-').lower()}-load"
     # Task 2
     zuora_revenue_load_run = KubernetesPodOperator(
         **gitlab_defaults,
