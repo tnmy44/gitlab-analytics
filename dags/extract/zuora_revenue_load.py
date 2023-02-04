@@ -49,14 +49,14 @@ task_name = "zuora-revenue"
 
 # Get all the table name for which tasks for loading needs to be created
 with open(
-    f"{airflow_home}/analytics/extract/zuora_report_api/src/zuora_report_api_list.yml", "r"
+    f"{airflow_home}/analytics/extract/zuora_revenue/zuora_revenue_table_name.yml", "r"
 ) as file:
     try:
         stream = safe_load(file)
     except YAMLError as exc:
         print(exc)
 
-    file_name_list = [
+    table_name_list = [
         "{table_name}".format(table_name=str(tab))
         for sheet in stream["table_info"]
         for tab in sheet["table_name"]
