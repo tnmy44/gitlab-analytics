@@ -75,7 +75,7 @@ for report in report_list:
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_and_setup_extraction_cmd} &&
-        python3 zuora_revenue_report/load_zuora_revenue_report.py zuora_report_load --bucket zuora_revpro_gitlab --schema zuora_revenue_report --table_name {stream["report_list"][report]["output_file_name"].lower()}
+        python3 zuora_revenue_report/load_zuora_revenue_report.py zuora_report_load --bucket zuora_revpro_gitlab --schema zuora_revenue_report --output_file_name {stream["report_list"][report]["output_file_name"].lower()}
         """
     task_identifier = f"el-{task_name}-{report.replace('_','-').lower()}-load"
     # Task 2
