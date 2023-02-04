@@ -78,7 +78,7 @@ def zuora_revenue_report_load(
     list_of_files=get_files_for_report(bucket,output_file_name)
     print(f"List of files to download for : {list_of_files}")
     for file_name in list_of_files:
-        table_to_load,type_of_load=get_table_to_load(file_name,output_file_name)
+        table_to_load,type_of_load=get_table_to_load(file_name.lower(),output_file_name)
         if type_of_load=='header':
             load_report_header_snow(schema,file_name,table_to_load,engine)
         else:
