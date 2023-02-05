@@ -89,7 +89,8 @@ def data_frame_enricher(raw_df,file_name) -> pd.DataFrame:
 
 def load_report_body_snow(schema, file_name, table_to_load,bucket, engine):
     """load body of report with proper data cleansing and adding metadata like uplodaed_at and file_name to the report."""
-    raw_file_blob=get_gcs_storage_client().blob(bucket,file_name)
+    raw_file_bucket=get_gcs_storage_client().bucket(bucket)
+    raw_file_blob=raw_file_bucket.blob(file_name)
     raw_data = raw_file_blob.download_as_bytes()
     raw_df=pd.read_csv(io.BytesIO(raw_data))
     enriched_df=data_frame_enricher(raw_df,get_file_name_without_path(file_name))
