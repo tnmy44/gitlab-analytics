@@ -49,16 +49,16 @@ task_name = "zuora-revenue-report"
 
 # Get all the report name for which tasks for loading needs to be created
 with open(
-    f"{airflow_home}/analytics/extract/zuora_revenue_report/src/zuora_report_api_list.yml", "r"
+    f"{airflow_home}/analytics/extract/zuora_revenue_report/src/zuora_report_api_list.yml",
+    "r",
 ) as file:
     try:
         stream = safe_load(file)
     except YAMLError as exc:
         print(exc)
 
-        
+
 report_list = list(stream["report_list"].keys())
-    
 
 
 # Create the DAG  with one report at once
