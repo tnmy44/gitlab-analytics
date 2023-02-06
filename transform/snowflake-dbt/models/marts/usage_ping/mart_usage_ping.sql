@@ -40,6 +40,7 @@
       dim_date.fiscal_quarter_name_fy,
       dim_location.country_name,
       dim_location.iso_2_country_code,
+      dim_license.license_sha256,
       dim_license.license_md5
     FROM fct_usage_ping_payload
     LEFT JOIN dim_subscription
@@ -91,6 +92,7 @@
       parent_crm_account_sales_territory,
 
       -- product info
+      license_sha256,
       license_md5,
       --is_trial                AS ping_is_trial_license,
       product_tier            AS ping_product_tier, -- might rename it in the payload model
