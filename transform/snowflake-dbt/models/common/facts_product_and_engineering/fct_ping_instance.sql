@@ -51,47 +51,47 @@
 ), prep_usage_ping_cte AS (
 
     SELECT
-      dim_ping_instance_id                                AS dim_ping_instance_id,
-      dim_host_id                                         AS dim_host_id,
-      dim_instance_id                                     AS dim_instance_id,
-      dim_installation_id                                 AS dim_installation_id,
-      dim_product_tier.dim_product_tier_id                AS dim_product_tier_id,
-      ping_created_at                                     AS ping_created_at,
-      hostname                                            AS hostname,
-      license_md5                                         AS license_md5,
-      dim_location_country_id                             AS dim_location_country_id,
-      license_trial_ends_on                               AS license_trial_ends_on,
-      license_subscription_id                             AS license_subscription_id,
-      license_billable_users                              AS license_billable_users,
-      Instance_user_count                                 AS instance_user_count,
-      historical_max_users                                AS historical_max_users,
-      license_user_count                                  AS license_user_count,
-      umau_value                                          AS umau_value,
-      product_tier                                        AS product_tier,
-      main_edition                                        AS main_edition
+      add_country_info_to_usage_ping.dim_ping_instance_id                                AS dim_ping_instance_id,
+      add_country_info_to_usage_ping.dim_host_id                                         AS dim_host_id,
+      add_country_info_to_usage_ping.dim_instance_id                                     AS dim_instance_id,
+      add_country_info_to_usage_ping.dim_installation_id                                 AS dim_installation_id,
+      dim_product_tier.dim_product_tier_id                                               AS dim_product_tier_id,
+      add_country_info_to_usage_ping.ping_created_at                                     AS ping_created_at,
+      add_country_info_to_usage_ping.hostname                                            AS hostname,
+      add_country_info_to_usage_ping.license_sha256                                      AS license_sha256,
+      add_country_info_to_usage_ping.license_md5                                         AS license_md5,
+      add_country_info_to_usage_ping.dim_location_country_id                             AS dim_location_country_id,
+      add_country_info_to_usage_ping.license_trial_ends_on                               AS license_trial_ends_on,
+      add_country_info_to_usage_ping.license_subscription_id                             AS license_subscription_id,
+      add_country_info_to_usage_ping.license_billable_users                              AS license_billable_users,
+      add_country_info_to_usage_ping.Instance_user_count                                 AS instance_user_count,
+      add_country_info_to_usage_ping.historical_max_users                                AS historical_max_users,
+      add_country_info_to_usage_ping.license_user_count                                  AS license_user_count,
+      add_country_info_to_usage_ping.umau_value                                          AS umau_value,
+      add_country_info_to_usage_ping.product_tier                                        AS product_tier,
+      add_country_info_to_usage_ping.main_edition                                        AS main_edition
     FROM add_country_info_to_usage_ping
     LEFT JOIN dim_product_tier
-    ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
-    AND IFF( add_country_info_to_usage_ping.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
-    AND dim_product_tier.product_tier_name != 'Dedicated - Ultimate'
-    --AND main_edition = 'EE'
-
-), joined_payload AS (
+      ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
+      AND IFF( add_country_info_to_usage_ping.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
+      AND dim_product_tier.product_tier_name != 'Dedicated - Ultimate'
+  
+), prep_usage_ping_and_license AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['prep_usage_ping_cte.dim_ping_instance_id']) }}                         AS ping_instance_id,
       prep_usage_ping_cte.dim_ping_instance_id                                                            AS dim_ping_instance_id,
       prep_usage_ping_cte.ping_created_at                                                                 AS ping_created_at,
       prep_usage_ping_cte.dim_product_tier_id                                                             AS dim_product_tier_id,
-      COALESCE(prep_usage_ping_cte.license_subscription_id, prep_subscription.dim_subscription_id)        AS dim_subscription_id,
-      prep_subscription.dim_crm_account_id                                                                AS dim_crm_account_id,
-      dim_crm_account.dim_parent_crm_account_id                                                           AS dim_parent_crm_account_id,
+      COALESCE(sha256.dim_subscription_id, md5.dim_subscription_id)                                       AS dim_subscription_id,
+      prep_usage_ping_cte.license_subscription_id                                                         AS license_subscription_id,
       prep_usage_ping_cte.dim_location_country_id                                                         AS dim_location_country_id,
       dim_date.date_id                                                                                    AS dim_ping_date_id,
       prep_usage_ping_cte.dim_instance_id                                                                 AS dim_instance_id,
       prep_usage_ping_cte.dim_host_id                                                                     AS dim_host_id,
       prep_usage_ping_cte.dim_installation_id                                                             AS dim_installation_id,
-      prep_license.dim_license_id                                                                         AS dim_license_id,
+      COALESCE(sha256.dim_license_id, md5.dim_license_id)                                                 AS dim_license_id,
+      prep_usage_ping_cte.license_sha256                                                                  AS license_sha256,
       prep_usage_ping_cte.license_md5                                                                     AS license_md5,
       prep_usage_ping_cte.license_billable_users                                                          AS license_billable_users,
       prep_usage_ping_cte.Instance_user_count                                                             AS instance_user_count,
@@ -100,26 +100,58 @@
       prep_usage_ping_cte.hostname                                                                        AS hostname,
       prep_usage_ping_cte.umau_value                                                                      AS umau_value,
       prep_usage_ping_cte.license_subscription_id                                                         AS dim_subscription_license_id,
-      IFF(prep_usage_ping_cte.ping_created_at < license_trial_ends_on, TRUE, FALSE)                       AS is_trial,
+      IFF(prep_usage_ping_cte.ping_created_at < prep_usage_ping_cte.license_trial_ends_on, TRUE, FALSE)   AS is_trial,
       prep_usage_ping_cte.product_tier                                                                    AS product_tier,
-      prep_usage_ping_cte.main_edition                                                                    AS main_edition_product_tier,
-      'VERSION_DB'                                                                                        AS data_source
+      prep_usage_ping_cte.main_edition                                                                    AS main_edition_product_tier
     FROM prep_usage_ping_cte
-    LEFT JOIN prep_license
-      ON prep_usage_ping_cte.license_md5 = prep_license.license_md5
-    LEFT JOIN prep_subscription
-      ON prep_license.dim_subscription_id = prep_subscription.dim_subscription_id
-    LEFT JOIN dim_crm_account
-      ON prep_subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+    LEFT JOIN prep_license AS md5
+      ON prep_usage_ping_cte.license_md5 = md5.license_md5
+    LEFT JOIN prep_license AS sha256
+      ON prep_usage_ping_cte.license_sha256 = sha256.license_sha256
     LEFT JOIN dim_date
       ON TO_DATE(prep_usage_ping_cte.ping_created_at) = dim_date.date_day
+
+), joined_payload AS (
+
+    SELECT
+      prep_usage_ping_and_license.ping_instance_id                                                           AS ping_instance_id,
+      prep_usage_ping_and_license.dim_ping_instance_id                                                       AS dim_ping_instance_id,
+      prep_usage_ping_and_license.ping_created_at                                                            AS ping_created_at,
+      prep_usage_ping_and_license.dim_product_tier_id                                                        AS dim_product_tier_id,
+      COALESCE(prep_usage_ping_and_license.license_subscription_id, prep_subscription.dim_subscription_id)   AS dim_subscription_id,
+      prep_subscription.dim_crm_account_id                                                                   AS dim_crm_account_id,
+      dim_crm_account.dim_parent_crm_account_id                                                              AS dim_parent_crm_account_id,
+      prep_usage_ping_and_license.dim_location_country_id                                                    AS dim_location_country_id,
+      prep_usage_ping_and_license.dim_ping_date_id                                                           AS dim_ping_date_id,
+      prep_usage_ping_and_license.dim_instance_id                                                            AS dim_instance_id,
+      prep_usage_ping_and_license.dim_host_id                                                                AS dim_host_id,
+      prep_usage_ping_and_license.dim_installation_id                                                        AS dim_installation_id,
+      prep_usage_ping_and_license.dim_license_id                                                             AS dim_license_id,
+      prep_usage_ping_and_license.license_sha256                                                             AS license_sha256,
+      prep_usage_ping_and_license.license_md5                                                                AS license_md5,
+      prep_usage_ping_and_license.license_billable_users                                                     AS license_billable_users,
+      prep_usage_ping_and_license.instance_user_count                                                        AS instance_user_count,
+      prep_usage_ping_and_license.historical_max_user_count                                                  AS historical_max_user_count,
+      prep_usage_ping_and_license.license_user_count                                                         AS license_user_count,
+      prep_usage_ping_and_license.hostname                                                                   AS hostname,
+      prep_usage_ping_and_license.umau_value                                                                 AS umau_value,
+      prep_usage_ping_and_license.dim_subscription_license_id                                                AS dim_subscription_license_id,
+      prep_usage_ping_and_license.is_trial                                                                   AS is_trial,
+      prep_usage_ping_and_license.product_tier                                                               AS product_tier,
+      prep_usage_ping_and_license.main_edition_product_tier                                                  AS main_edition_product_tier,
+      'VERSION_DB'                                                                                           AS data_source
+    FROM prep_usage_ping_and_license
+    LEFT JOIN prep_subscription
+      ON prep_usage_ping_and_license.dim_subscription_id = prep_subscription.dim_subscription_id
+    LEFT JOIN dim_crm_account
+      ON prep_subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
 )
 
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@tpoole",
+    updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2023-01-20"
+    updated_date="2023-02-01"
 ) }}

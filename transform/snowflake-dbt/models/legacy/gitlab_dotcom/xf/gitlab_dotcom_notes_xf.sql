@@ -7,6 +7,8 @@
 
 {% set fields_to_mask = ['note'] %}
 
+-- depends_on: {{ ref('internal_gitlab_namespaces') }}
+
 WITH base AS (
 
     SELECT *

@@ -14,7 +14,7 @@
 
     SELECT 
       *,
-      NULL AS user_business_unit
+      'COMM' AS user_business_unit -- ONLY FOR TESTING SINCE MOST RECORDS DO NOT HAVE A BUSINESS UNIT YET
     FROM sfdc_users_source
 
     UNION ALL
@@ -109,6 +109,14 @@
                       sfdc_users.user_area, 
                       '-',
                       sfdc_users.user_segment
+                      )
+          ELSE CONCAT(sfdc_users.user_segment, 
+                      '-',
+                      sfdc_users.user_geo, 
+                      '-',
+                      sfdc_users.user_region, 
+                      '-',
+                      sfdc_users.user_area
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk
     FROM sfdc_users

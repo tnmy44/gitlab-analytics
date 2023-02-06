@@ -107,7 +107,7 @@ Descriptive fields for both attribution and non-attribution Bizible touchpoints.
 {% enddocs %}
 
 {% docs dim_crm_opportunity %}
-Model for all dimensional opportunity columns from salesforce opportunity object
+Model for all dimensional opportunity columns from salesforce opportunity object. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
 
 {% enddocs %}
 
@@ -313,7 +313,7 @@ Fact table for non-attribution Bizible touchpoints with shared dimension keys re
 
 {% docs fct_crm_opportunity %}
 
-A fact table for salesforce opportunities with keys to connect opportunities to shared dimensions through the attributes of the crm account.
+A fact table for salesforce opportunities with keys to connect opportunities to shared dimensions through the attributes of the crm account. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
 
 {% enddocs %}
 
