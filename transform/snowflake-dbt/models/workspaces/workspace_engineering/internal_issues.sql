@@ -29,8 +29,6 @@ WITH internal_projects AS (
     SELECT 
     labels.*
     FROM {{ ref('gitlab_dotcom_labels_source') }} AS labels
-    INNER JOIN internal_projects
-      ON labels.project_id = internal_projects.project_id
 
 ), derived_close_date AS (
 
