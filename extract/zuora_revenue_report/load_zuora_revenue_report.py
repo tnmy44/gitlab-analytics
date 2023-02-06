@@ -99,6 +99,8 @@ def load_report_body_snow(schema, file_name, table_to_load,bucket, engine):
     )
     logging.info(f"Successfully loaded {enriched_df.shape[0]} rows into {table_to_load}")
 
+    
+
 
 
 def zuora_revenue_report_load(
