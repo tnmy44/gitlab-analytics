@@ -15,7 +15,7 @@ from gitlabdata.orchestration_utils import (
 )
 from sqlalchemy.engine.base import Engine
 
-from utils import (
+from .utils import (
     chunk_and_upload,
     get_engines,
     id_query_generator,
