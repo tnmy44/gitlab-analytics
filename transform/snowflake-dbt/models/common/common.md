@@ -107,7 +107,7 @@ Descriptive fields for both attribution and non-attribution Bizible touchpoints.
 {% enddocs %}
 
 {% docs dim_crm_opportunity %}
-Model for all dimensional opportunity columns from salesforce opportunity object
+Model for all dimensional opportunity columns from salesforce opportunity object. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
 
 {% enddocs %}
 
@@ -313,7 +313,7 @@ Fact table for non-attribution Bizible touchpoints with shared dimension keys re
 
 {% docs fct_crm_opportunity %}
 
-A fact table for salesforce opportunities with keys to connect opportunities to shared dimensions through the attributes of the crm account.
+A fact table for salesforce opportunities with keys to connect opportunities to shared dimensions through the attributes of the crm account. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
 
 {% enddocs %}
 
@@ -753,7 +753,7 @@ Industry dimension, based off of salesforce account data, using the `generate_si
 
 {% docs dim_installation %}
 
-Installation dimension, based off of version usage data and version host table. The primary key is built as a surrogate key based off of the `dim_host_id` and the `dim_instance_id`
+Installation dimension, based off of version ping data and version host table. The primary key comes from `prep_ping_instance` and is built as a surrogate key based off of the `dim_host_id` and the `dim_instance_id`
 
 {% enddocs %}
 
@@ -1150,18 +1150,19 @@ For this reason `metrics_path` is not unique.
 - pi_metric_name
 
 **Filters Applied to Model:**
-- `pi_monthly_estimated_targets IS NOT NULL` (field from .yml file)
+- Use currently valid records from files - `valid_to_date = MAX(valid_to_date)`
+- Include metrics with targets - `pi_monthly_estimated_targets IS NOT NULL` (field from .yml file)
 
 **Business Logic in this Model:**
 - `reporting_month` is derived from the date provided in the `pi_monthly_estimated_targets` field of the .yml file
   - Target end date: date specified in `pi_monthly_estimated_targets`
-  - Target start date: The day after the previous target end date _OR_, if a previous target is not specified, `2017-01-01` (date of earliest available product data)
+  - Target start date: The day after the previous target end date _OR_, if a previous target is not specified, `2020-03-01` (date of earliest PIs we are tracking)
 
 Example: `pi_monthly_estimated_targets`: `{"2022-02-28":1000,"2022-03-31":2000,"2022-05-31":3000}`
 
 | reporting_month | target_value |
 | --- | --- |
-| 2017-01-01 | 1000 |
+| 2020-03-01 | 1000 |
 | ... | 1000 |
 | 2022-02-01 | 1000 |
 | 2022-03-01 | 2000 |
@@ -1557,3 +1558,24 @@ Dimension model of all [Salesforce Tasks](https://help.salesforce.com/s/articleV
 Fact model of all [Salesforce Tasks](https://help.salesforce.com/s/articleView?id=sf.tasks.htm&type=5) that record activities related to leads, contacts, opportunities, and accounts.
 
 {% enddocs %}
+
+{% docs fct_ping_instance_free_user_metrics %}
+
+Table containing **free** Self-Managed users in preparation for free user service ping metrics fact table.
+
+The grain of this table is one row per uuid-hostname combination per month.
+
+
+{% enddocs %}
+
+{% docs fct_ping_instance_free_user_metrics_monthly %}
+
+This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used to create a mart table (`mart_product_usage_free_user_metrics_monthly`) for Customer Product Insights.
+
+The grain of this table is namespace || uuid-hostname per month.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+
+{% enddocs %}
+

@@ -4,12 +4,9 @@
     unique_key = "ping_instance_id"
 ) }}
 
-{%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}
-
 {{ simple_cte([
     ('prep_license', 'prep_license'),
     ('prep_subscription', 'prep_subscription'),
-    ('prep_usage_ping_metrics_setting', 'prep_usage_ping_metrics_setting'),
     ('dim_date', 'dim_date'),
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
@@ -122,7 +119,7 @@
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@snalamaru",
+    updated_by="@tpoole",
     created_date="2022-03-08",
-    updated_date="2022-12-15"
+    updated_date="2023-01-20"
 ) }}

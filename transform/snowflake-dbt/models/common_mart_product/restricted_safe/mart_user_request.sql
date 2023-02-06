@@ -38,7 +38,7 @@
       ON dim_product_detail.dim_product_detail_id = fct_quote_item.dim_product_detail_id
     WHERE dim_quote.is_primary_quote = TRUE
       AND dim_product_detail.product_tier_name IN ('Plus', 'GitHost', 'Standard', 'Self-Managed - Starter', 'Self-Managed - Premium',
-        'SaaS - Premium', 'SaaS - Bronze', 'Basic', 'Self-Managed - Ultimate', 'SaaS - Ultimate')
+        'SaaS - Premium', 'SaaS - Bronze', 'Basic', 'Self-Managed - Ultimate', 'SaaS - Ultimate', 'Dedicated - Ultimate')
       AND fct_crm_opportunity.close_date >= '2019-02-01'
     {{ dbt_utils.group_by(5) }}
 
@@ -147,7 +147,7 @@
     WHERE subscription_status IN ('Active', 'Cancelled')
       AND dim_date.date_actual = DATE_TRUNC('month', CURRENT_DATE)
       AND dim_product_detail.product_tier_name IN ('Plus', 'GitHost', 'Standard', 'Self-Managed - Starter', 'Self-Managed - Premium',
-        'SaaS - Premium', 'SaaS - Bronze', 'Basic', 'Self-Managed - Ultimate', 'SaaS - Ultimate')
+        'SaaS - Premium', 'SaaS - Bronze', 'Basic', 'Self-Managed - Ultimate', 'SaaS - Ultimate', 'Dedicated - Ultimate')
     GROUP BY 1
 
 ), epic_weight AS (
@@ -676,7 +676,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2021-10-22",
-    updated_date="2022-01-05",
+    updated_date="2023-01-24",
   ) }}

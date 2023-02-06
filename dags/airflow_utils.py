@@ -12,7 +12,7 @@ from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperato
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:zuora_revenue_report_gcs_upgrade"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.22"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.23"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v1.0.13"
 
@@ -46,6 +46,7 @@ analytics_pipelines_dag = [
     "dbt_snowplow_full_refresh",
     "saas_usage_ping",
     "t_prep_dotcom_usage_events_backfill",
+    "dbt_six_hourly",
 ]
 
 

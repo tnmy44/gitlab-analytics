@@ -38,6 +38,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -108,8 +109,10 @@ dbt_full_refresh = KubernetesPodOperator(
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_STATIC_DATABASE,
         MCD_DEFAULT_API_ID,
         MCD_DEFAULT_API_TOKEN,
+        SNOWFLAKE_STATIC_DATABASE,
     ],
     env_vars=pod_env_vars,
     arguments=[dbt_full_refresh_cmd],

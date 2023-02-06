@@ -13,7 +13,6 @@
     ('dim_product_detail', 'dim_product_detail'),
     ('fct_charge', 'fct_charge'),
     ('dim_license', 'dim_license'),
-    ('dim_hosts', 'dim_hosts'),
     ('dim_location', 'dim_location_country'),
     ('fct_ping_instance', 'fct_ping_instance'),
     ('dim_ping_metric', 'dim_ping_metric')
@@ -31,8 +30,8 @@
 
 ), fct_ping_instance_metric AS  (
 
-  SELECT
-    * FROM fct_ping_instance
+    SELECT *
+    FROM fct_ping_instance
     {% if is_incremental() %}
                 WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
     {% endif %}
@@ -101,6 +100,7 @@
   ), joined AS (
 
       SELECT
+        fct_ping_instance_metric.ping_instance_id                                                                                       AS ping_instance_id,
         fct_ping_instance_metric.dim_ping_date_id                                                                                       AS dim_ping_date_id,
         fct_ping_instance_metric.dim_license_id                                                                                         AS dim_license_id,
         fct_ping_instance_metric.dim_installation_id                                                                                    AS dim_installation_id,
@@ -155,10 +155,6 @@
         ON fct_ping_instance_metric.dim_ping_date_id = dim_date.date_id
       LEFT JOIN dim_ping_instance
         ON fct_ping_instance_metric.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
-      LEFT JOIN dim_hosts
-        ON dim_ping_instance.dim_host_id = dim_hosts.host_id
-          AND dim_ping_instance.ip_address_hash = dim_hosts.source_ip_hash
-          AND dim_ping_instance.dim_instance_id = dim_hosts.instance_id
       LEFT JOIN license_subscriptions
         ON dim_ping_instance.license_md5 = license_subscriptions.license_md5
           AND dim_date.first_day_of_month = license_subscriptions.reporting_month
@@ -172,7 +168,7 @@
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['dim_ping_instance_id']) }} AS ping_instance_id,
+      ping_instance_id,
       dim_ping_date_id,
       dim_ping_instance_id,
 
@@ -186,7 +182,9 @@
       major_minor_version_id,
       dim_host_id,
       host_name,
-      -- metadata usage ping
+      dim_location_country_id,
+
+      --Service Ping metadata
       ping_delivery_type,
       ping_edition,
       ping_product_tier,
@@ -200,11 +198,13 @@
       is_trial,
       umau_value,
 
-      --metadata instance
+      --installation metadata
       instance_user_count,
       collected_data_categories,
+      country_name,
+      iso_2_country_code,
 
-      --metadata subscription
+      --subscription metadata
       original_subscription_name_slugify,
       subscription_start_month,
       subscription_end_month,
@@ -227,7 +227,6 @@
       ping_created_date_month,
       is_last_ping_of_month
 
-
     FROM joined
 
 )
@@ -235,7 +234,7 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@tpoole1",
+    updated_by="@cbraza",
     created_date="2022-03-11",
-    updated_date="2022-10-13"
+    updated_date="2023-01-27"
 ) }}
