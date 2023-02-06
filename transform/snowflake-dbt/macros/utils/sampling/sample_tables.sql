@@ -13,8 +13,8 @@
 
 {% endset %}
 
-{% do return(sql) %}
-{#% do run_query(sql) %#}
+{#% do return(sql) %#}
+{% do run_query(sql) %}
 {% do log("Tables Samples", info=True) %}
 
 {%- endmacro -%}
