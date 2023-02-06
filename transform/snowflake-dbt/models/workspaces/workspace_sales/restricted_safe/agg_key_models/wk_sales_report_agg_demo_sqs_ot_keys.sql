@@ -6,7 +6,6 @@
     ('wk_sales_report_agg_keys_base', 'wk_sales_report_agg_keys_base'),
 ]) }}
 
-
 , fy23_segment_adjustment AS (
 
     SELECT
@@ -74,42 +73,6 @@
     FROM
       fy23_segment_adjustment
 
--- test
--- UNION ALL
-  
---   SELECT
---         LOWER(account_owner_user_segment)            AS adjusted_report_opportunity_user_segment,
---         LOWER(account_owner_user_geo)                AS report_opportunity_user_geo,
---         LOWER(account_owner_user_region)             AS report_opportunity_user_region,
---         LOWER(account_owner_user_area)               AS report_opportunity_user_area,
-        
---         LOWER(sales_qualified_source)                AS sales_qualified_source,
---         LOWER(order_type_stamped)                    AS order_type_stamped,
-  
---         LOWER(deal_category)                         AS deal_category,
---         LOWER(deal_group)                            AS deal_group,
-
---         LOWER(CONCAT(account_owner_user_segment,'-',account_owner_user_geo,'-',account_owner_user_region,'-',account_owner_user_area)) AS report_user_segment_geo_region_area,
---         LOWER(
---         CONCAT(
---         adjusted_report_opportunity_user_segment,
---         '-',
---         report_opportunity_user_geo,
---         '-',
---         report_opportunity_user_region,
---         '-',
---         report_opportunity_user_area,
---         '-',
---         sales_qualified_source,
---         '-', 
---         order_type_stamped
---         )
---       )  AS report_user_adjusted_segment_geo_region_area_sqs_ot
-
-
---   FROM fy23_segment_adjustment
-
-----
 
 ), valid_keys AS (
     SELECT DISTINCT 
@@ -205,7 +168,7 @@ FROM valid_keys
 
 
 
-
+-- 2023-02-06 JK: creating elibile keys with adjusted segment requires sourcing from mart_crm_opportunity instead of wk_sales_report_agg_keys_base
 -- report_agg_keys_base AS (
 
 --     SELECT *

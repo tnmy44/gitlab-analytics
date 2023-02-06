@@ -150,150 +150,149 @@ WITH RECURSIVE base AS (
     LEFT JOIN cro_sfdc_hierarchy AS cro
         ON cro.user_id = base.user_id
 
+
+), user_based_reporting_keys AS (
+    SELECT
+      consolidation.*,
+
+      -- Business Unit (X-Ray 1st hierarchy)
+      -- will be replaced with the actual field
+      CASE user_segment
+        WHEN 'large' THEN 'Ent-G'
+        WHEN 'pubsec' THEN 'Ent-H'
+        WHEN 'mid-market' THEN 'Comm'
+        WHEN 'smb' THEN 'Comm'
+        WHEN 'jihu' THEN 'JiHu'
+        ELSE 'Other'
+      END AS business_unit,
+
+      -- Sub-Business Unit (X-Ray 2nd hierarchy)
+      /*
+      JK 2023-02-06: sub-BU is used in lower hierarchy fields calculation (division & asm).
+      Therefore when making changes to the field, make sure to understand implications on the whole key hierarchy
+      */
+      CASE
+        WHEN LOWER(business_unit) = 'ent-g'
+          THEN user_geo
+
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND
+            (
+            user_segment = 'smb' 
+            AND user_geo = 'amer'
+            AND user_area = 'lowtouch'
+            ) 
+          THEN 'AMER Low-Touch'
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND
+            (
+            user_segment = 'mid-market'
+            AND (user_geo = 'amer' OR user_geo = 'emea')
+            AND LOWER(role_type) = 'first order'
+            )
+          THEN 'MM First Orders'  --mid-market FO(?)
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND user_geo = 'emea'
+          AND 
+            (
+            user_segment != 'mid-market'
+            AND LOWER(role_type) != 'first order'
+            )
+          THEN  'EMEA'
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND user_geo = 'amer'
+          AND
+            (
+            user_segment != 'mid-market'
+            AND LOWER(role_type) != 'first order'
+            )
+          AND
+            (
+            user_segment != 'smb'
+            AND user_area != 'lowtouch'
+            )
+          THEN 'AMER'
+        ELSE 'Other'
+      END AS sub_business_unit,
+
+      -- Division (X-Ray 3rd hierarchy)
+      CASE 
+        WHEN LOWER(business_unit) = 'ent-g'
+          THEN user_region
+
+        WHEN 
+          LOWER(business_unit) = 'comm'
+          AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+          AND user_segment = 'mid-market'
+          THEN 'Mid-Market'
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+          AND user_segment = 'smb'
+          THEN 'SMB'
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND LOWER(sub_business_unit) = 'mm first orders'
+          THEN 'MM First Orders'
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND LOWER(sub_business_unit) = 'amer low-touch'
+          THEN 'AMER Low-Touch'
+        ELSE 'Other'
+      END AS division,
+
+      -- ASM (X-Ray 4th hierarchy): definition pending
+      CASE
+        WHEN 
+          LOWER(business_unit) = 'ent-g'
+          AND LOWER(sub_business_unit) = 'amer'
+          THEN user_area
+
+        WHEN 
+          LOWER(business_unit) = 'ent-g'
+          AND LOWER(sub_business_unit) = 'emea'
+          AND (LOWER(division) = 'dach' OR LOWER(division) = 'neur' OR LOWER(division) = 'seur')
+          THEN user_area
+        WHEN
+          LOWER(business_unit) = 'ent-g'
+          AND LOWER(sub_business_unit) = 'emea'
+          AND LOWER(division) = 'meta'
+          THEN user_segment --- pending/ waiting for Meri?
+        WHEN 
+          LOWER(business_unit) = 'ent-g'
+          AND (LOWER(sub_business_unit) = 'apac' OR LOWER(sub_business_unit) = 'pubsec')
+          THEN user_area
+
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+          THEN user_area
+        WHEN 
+          LOWER(business_unit) = 'comm'
+          AND LOWER(sub_business_unit) = 'mm first orders'
+          THEN user_geo
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND LOWER(sub_business_unit) = 'amer low-touch'
+          AND LOWER(role_type) = 'first order'
+          THEN 'LowTouch FO'
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND LOWER(sub_business_unit) = 'amer low-touch'
+          AND LOWER(role_type) != 'first order'
+          THEN 'LowTouch Pool'
+        ELSE 'Other'
+      END AS asm
+
+    FROM consolidation
+
 )
--- ), user_based_reporting_keys AS (
---     SELECT
---       consolidation.*,
-
---       -- Business Unit (X-Ray 1st hierarchy)
---       -- will be replaced with the actual field
---       CASE user_segment
---         WHEN NULL THEN NULL
---         WHEN 'large' THEN 'Ent-G'
---         WHEN 'pubsec' THEN 'Ent-H'
---         WHEN 'mid-market' THEN 'Comm'
---         WHEN 'smb' THEN 'Comm'
---         WHEN 'jihu' THEN 'JiHu'
---         ELSE 'Other'
---       END AS business_unit,
-
---       -- Sub-Business Unit (X-Ray 2nd hierarchy)
---       /*
---       JK 2023-02-06: sub-BU is used in lower hierarchy fields calculation (division & asm).
---       Therefore when making changes to the field, make sure to understand implications on the whole key hierarchy
---       */
---       CASE
---         WHEN LOWER(business_unit) = 'ent-g'
---           THEN user_geo
-
---         WHEN
---           LOWER(business_unit) = 'comm'
---           AND
---             (
---             user_segment = 'smb' 
---             AND user_geo = 'amer'
---             AND user_area = 'lowtouch'
---             ) 
---           THEN 'AMER Low-Touch'
---         WHEN
---           LOWER(business_unit) = 'comm'
---           AND
---             (
---             user_segment = 'mid-market'
---             AND (user_geo = 'amer' OR user_geo = 'emea')
---             AND LOWER(role_type) = 'first order'
---             )
---           THEN 'MM First Orders'  --mid-market FO(?)
---         WHEN
---           LOWER(business_unit) = 'comm'
---           AND user_geo = 'emea'
---           AND 
---             (
---             user_segment != 'mid-market'
---             AND LOWER(role_type) != 'first order'
---             )
---           THEN  'EMEA'
---         WHEN
---           LOWER(business_unit) = 'comm'
---           AND user_geo = 'amer'
---           AND
---             (
---             user_segment != 'mid-market'
---             AND LOWER(role_type) != 'first order'
---             )
---           AND
---             (
---             user_segment != 'smb'
---             AND user_area != 'lowtouch'
---             )
---           THEN 'AMER'
---         ELSE 'Other'
---       END AS sub_business_unit,
-
---       -- Division (X-Ray 3rd hierarchy)
---       CASE 
---         WHEN LOWER(business_unit) = 'ent-g'
---           THEN user_region
-
---         WHEN 
---           LOWER(business_unit) = 'comm'
---           AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
---           AND user_segment = 'mid-market'
---           THEN 'Mid-Market'
---         WHEN
---           LOWER(business_unit) = 'comm'
---           AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
---           AND user_segment = 'smb'
---           THEN 'SMB'
---         WHEN
---           LOWER(business_unit) = 'comm'
---           AND LOWER(sub_business_unit) = 'mm first orders'
---           THEN 'MM First Orders'
---         WHEN
---           LOWER(business_unit) = 'comm'
---           AND LOWER(sub_business_unit) = 'amer low-touch'
---           THEN 'AMER Low-Touch'
---         ELSE 'Other'
---       END AS division,
-
---       -- ASM (X-Ray 4th hierarchy): definition pending
---       CASE
---         WHEN 
---           LOWER(business_unit) = 'ent-g'
---           AND LOWER(sub_business_unit) = 'amer'
---           THEN user_area
-
---         WHEN 
---           LOWER(business_unit) = 'ent-g'
---           AND LOWER(sub_business_unit) = 'emea'
---           AND (LOWER(division) = 'dach' OR LOWER(division) = 'neur' OR LOWER(division) = 'seur')
---           THEN user_area
---         WHEN
---           LOWER(business_unit) = 'ent-g'
---           AND LOWER(sub_business_unit) = 'emea'
---           AND LOWER(division) = 'meta'
---           THEN user_segment --- pending/ waiting for Meri?
---         WHEN 
---           LOWER(business_unit) = 'ent-g'
---           AND (LOWER(sub_business_unit) = 'apac' OR LOWER(sub_business_unit) = 'pubsec')
---           THEN user_area
-
---         WHEN
---           LOWER(business_unit) = 'comm'
---           AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
---           THEN user_area
---         WHEN 
---           LOWER(business_unit) = 'comm'
---           AND LOWER(sub_business_unit) = 'mm first orders'
---           THEN user_geo
---         WHEN
---           LOWER(business_unit) = 'comm'
---           AND LOWER(sub_business_unit) = 'amer low-touch'
---           AND LOWER(role_type) = 'first order'
---           THEN 'LowTouch FO'
---         WHEN
---           LOWER(business_unit) = 'comm'
---           AND LOWER(sub_business_unit) = 'amer low-touch'
---           AND LOWER(role_type) != 'first order'
---           THEN 'LowTouch Pool'
---         ELSE 'Other'
---       END AS asm
-
---     FROM consolidation
-
--- )
 
 
 SELECT *
--- FROM user_based_reporting_keys
-FROM consolidation
+FROM user_based_reporting_keys
+-- FROM consolidation

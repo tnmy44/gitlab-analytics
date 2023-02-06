@@ -374,7 +374,7 @@ WITH edm_opty AS (
     edm_opty.churned_contraction_net_arr,
 
 
-    -- 
+    -- JK 2023-02-06 adding adjusted segment
     -- If MM / SMB and Region = META then Segment = Large
     -- If MM/SMB and Region = LATAM then Segment = Large
     -- If MM/SMB and Geo = APAC then Segment = Large
@@ -413,6 +413,18 @@ WITH edm_opty AS (
     ) AS report_user_adjusted_segment_geo_region_area_sqs_ot,
 
 
+    
+
+
+
+
+
+
+
+
+
+
+
     edm_opty.deal_size,
     edm_opty.calculated_deal_size,
     edm_opty.calculated_age_in_days,
@@ -422,10 +434,8 @@ WITH edm_opty AS (
     edm_opty.is_booked_net_arr                      AS is_booked_net_arr_flag,
     edm_opty.is_eligible_churn_contraction          AS is_eligible_churn_contraction_flag,
     edm_opty.created_and_won_same_quarter_net_arr,
-    --edm_opty.churn_contraction_net_arr_bucket       AS churn_contracton_net_arr_bucket,  --typo in wk sales keeping it until the full migration
     edm_opty.churn_contraction_net_arr_bucket,
-    edm_opty.reason_for_loss_calc,
-    
+    edm_opty.reason_for_loss_calc,    
     CASE edm_opty.is_sao 
       WHEN TRUE THEN 1 
       ELSE 0 
