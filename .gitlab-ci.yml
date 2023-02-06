@@ -15,8 +15,8 @@ stages:
   - ⚙️ dbt Run    # transform/snowflake-dbt/snowflake-dbt-ci.yml
   - 🛠 dbt Misc  # transform/snowflake-dbt/snowflake-dbt-ci.yml
   - 📚 dbt Docs
-  - 🐍 Python
   - 🛑🐍 Python Critical
+  - 🐍 Python
   - 🛑 Snowflake Stop
   - triage
   - triage run
