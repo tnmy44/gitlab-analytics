@@ -3939,8 +3939,10 @@ models:
       - name: instance_type
         description: Type of the instance
       - name: dim_license_id
+      - name: license_sha256
+        description: '{{ doc("license_sha256") }}'
       - name: license_md5
-        description: JOIN key to dim_licenses and dim_license
+        description: '{{ doc("license_md5") }}'
       - name: cleaned_version
       - name: license_utilization
         description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
@@ -4406,6 +4408,8 @@ models:
         description:  '{{ doc("dim_license_id") }}'
       - name: license_md5
         description: '{{ doc("license_md5") }}'
+      - name: license_sha256
+        description: '{{ doc("license_sha256") }}'
       - name: license_billable_users
         description: '{{ doc("license_billable_users") }}'
       - name: instance_user_count
@@ -5630,6 +5634,88 @@ models:
           - not_null
         tags: ["tdf", "common"]
 
+  - name: dim_behavior_browser
+    description: Dimension for the analysis of browsers in Snowplow.
+    columns: 
+      - name: dim_behavior_browser_sk
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_behavior_operating_system
+    description: Dimension for the analysis of operating systems in Snowplow.
+    columns: 
+      - name: dim_behavior_operating_system_sk
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_behavior_website_page
+    description: Dimension for the analysis of webpages used according to the page_urlpath in Snowplow.
+    columns:
+      - name: dim_behavior_website_page_sk
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_behavior_website_page_view
+    description: Page views are a subset of Snowplow events and are fired by the Javascript tracker.
+    columns:
+      - name: fct_behavior_website_page_view_sk
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_behavior_event
+    description: Dimensional model containing distinct events types from Snowplow.
+    columns:
+      - name: dim_behavior_event_sk
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_behavior_structured_event
+    description: Atomic fact table for structured events.
+
+  - name: fct_behavior_structured_event_experiment
+    description: Derived fact table for structured events related to experiments.
+    columns:
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_behavior_structured_event_without_assignment
+    description: Derived fact table for structured events without assignment events.
+    columns:
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_behavior_structured_event_without_assignment_190
+    description: Derived fact table for structured events without assignment events filtered to the last 190 days.
+    columns:
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_behavior_structured_event_without_assignment_400
+    description: Derived fact table for structured events without assignment events fitlered to the last 400 days.
+    columns:
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_behavior_unstructured_event
+    description: Atomic fact table for unstructured events.
+    columns:
+      - name: fct_behavior_unstructured_sk
+        tests:
+          - not_null
+          - unique
 
   - name: fct_ping_instance_free_user_metrics
     description: '{{ doc("fct_ping_instance_free_user_metrics") }}'

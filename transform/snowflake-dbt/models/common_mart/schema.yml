@@ -430,6 +430,8 @@ models:
       description: '{{ doc("major_minor_version_id") }}'
     - name: host_name
       description: '{{ doc("host_name") }}'
+    - name: dim_location_country_id
+      description: '{{ doc("dim_location_country_id_ping_model") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
     - name: ping_edition
@@ -458,6 +460,10 @@ models:
       description: '{{ doc("instance_user_count") }}'
     - name: collected_data_categories
       description: '{{ doc("collected_data_categories") }}'
+    - name: country_name
+      description: '{{ doc("country_name_ping_model") }}'
+    - name: iso_2_country_code
+      description: '{{ doc("iso_2_country_code_ping_model") }}'
     - name: original_subscription_name_slugify
       description: '{{ doc("original_subscription_name_slugify") }}'
     - name: subscription_start_month

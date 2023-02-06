@@ -174,13 +174,20 @@ tables:
     export_table_primary_key: order_id
     import_db: CUSTOMERS_DB
     import_query: |-
-      SELECT order_id
-      , user_count
-      , reconcile_done_at
+      SELECT completed_email_sent_at
       , created_at
-      , updated_at
       , error_message
+      , id
+      , order_id
+      , qsr_opportunity_id
+      , quoted_invoice_amount
+      , quoted_invoice_at
+      , reconcile_done_at
       , reconcile_on
+      , skip_reason
+      , upcoming_email_sent_at
+      , updated_at
+      , user_count
       FROM reconciliations
   schema_migrations:
     advanced_metadata: true
