@@ -100,6 +100,7 @@ SELECT
                                                         AS sales_qualified_source,
         CASE
           WHEN sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
+          WHEN sales_qualified_source = 'Partner Generated' THEN 'Channel Generated'
           WHEN sales_qualified_source LIKE ANY ('Web%', 'Missing%', 'Other') OR sales_qualified_source IS NULL THEN 'Web Direct Generated'
           ELSE sales_qualified_source
         END                                             AS sales_qualified_source_grouped,
