@@ -24,11 +24,17 @@ WITH edm_opty AS (
     FROM {{ ref('wk_sales_date_details') }}
     --FROM prod.workspace_sales.date_details
 
-), agg_demo_keys AS (
+), agg_demo_keys_fy23 AS (
 -- keys used for aggregated historical analysis
 
     SELECT *
     FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
+    --FROM restricted_safe_workspace_sales.report_agg_demo_sqs_ot_keys
+
+), agg_demo_keys_fy24 AS (
+
+    SELECT *
+    FROM {{ ref('wk_sales_report_agg_keys_ssot') }}
     --FROM restricted_safe_workspace_sales.report_agg_demo_sqs_ot_keys
 
 ), today AS (
@@ -367,28 +373,45 @@ WITH edm_opty AS (
     edm_opty.booked_churned_contraction_net_arr,
     edm_opty.churned_contraction_net_arr,
 
-    -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with
-    -- different aggregation levels
-    LOWER(edm_opty.key_sqs)                             AS key_sqs,
-    LOWER(edm_opty.key_ot)                              AS key_ot,
-    LOWER(edm_opty.key_segment)                         AS key_segment,
-    LOWER(edm_opty.key_segment_sqs)                     AS key_segment_sqs,
-    LOWER(edm_opty.key_segment_ot)                      AS key_segment_ot,
-    LOWER(edm_opty.key_segment_geo)                     AS key_segment_geo,
-    LOWER(edm_opty.key_segment_geo_sqs)                 AS key_segment_geo_sqs,
-    LOWER(edm_opty.key_segment_geo_ot)                  AS key_segment_geo_ot,
-    LOWER(edm_opty.key_segment_geo_region)              AS key_segment_geo_region,
-    LOWER(edm_opty.key_segment_geo_region_sqs)          AS key_segment_geo_region_sqs,
-    LOWER(edm_opty.key_segment_geo_region_ot)           AS key_segment_geo_region_ot,
-    LOWER(edm_opty.key_segment_geo_region_area)         AS key_segment_geo_region_area,
-    LOWER(edm_opty.key_segment_geo_region_area_sqs)     AS key_segment_geo_region_area_sqs,
-    LOWER(edm_opty.key_segment_geo_region_area_ot)      AS key_segment_geo_region_area_ot,
-    LOWER(edm_opty.key_segment_geo_area)                AS key_segment_geo_area,
-    edm_opty.sales_team_cro_level,
-    edm_opty.sales_team_rd_asm_level,
-    edm_opty.sales_team_vp_level,
-    edm_opty.sales_team_avp_rd_level,
-    edm_opty.sales_team_asm_level,
+
+    -- 
+    -- If MM / SMB and Region = META then Segment = Large
+    -- If MM/SMB and Region = LATAM then Segment = Large
+    -- If MM/SMB and Geo = APAC then Segment = Large
+    -- Use that Adjusted Segment Field in our FY23 models
+    CASE
+      WHEN (edm_opty.report_opportunity_user_segment = 'mid-market'
+            OR edm_opty.report_opportunity_user_segment = 'smb')
+        AND edm_opty.report_opportunity_user_region = 'meta'
+        THEN 'large'
+      WHEN (edm_opty.report_opportunity_user_segment = 'mid-market'
+            OR edm_opty.report_opportunity_user_segment = 'smb')
+        AND edm_opty.report_opportunity_user_region = 'latam'
+        THEN 'large'
+      WHEN (edm_opty.report_opportunity_user_segment = 'mid-market'
+            OR edm_opty.report_opportunity_user_segment = 'smb')
+        AND edm_opty.report_opportunity_user_geo = 'apac'
+        THEN 'large'
+      ELSE edm_opty.report_opportunity_user_segment
+    END AS adjusted_report_opportunity_user_segment,
+
+    -- creating report_user_segment_geo_region_area_sqs_ot with adjusted segment
+    LOWER(
+      CONCAT(
+        adjusted_report_opportunity_user_segment,
+        '-',
+        edm_opty.report_opportunity_user_geo,
+        '-',
+        edm_opty.report_opportunity_user_region,
+        '-',
+        edm_opty.report_opportunity_user_area,
+        '-',
+        edm_opty.sales_qualified_source_name,
+        '-',
+        edm_opty.order_type
+      )
+    ) AS report_user_adjusted_segment_geo_region_area_sqs_ot,
+
 
     edm_opty.deal_size,
     edm_opty.calculated_deal_size,
@@ -490,6 +513,37 @@ WITH edm_opty AS (
     SELECT
       oppty_final.*,
 
+      -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with
+      -- different aggregation levels
+      LOWER(agg_demo_keys_fy23.key_sqs)                             AS key_sqs,
+      LOWER(agg_demo_keys_fy23.key_ot)                              AS key_ot,
+      LOWER(agg_demo_keys_fy23.key_segment)                         AS key_segment,
+      LOWER(agg_demo_keys_fy23.key_segment_sqs)                     AS key_segment_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_ot)                      AS key_segment_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo)                     AS key_segment_geo,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_sqs)                 AS key_segment_geo_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_ot)                  AS key_segment_geo_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region)              AS key_segment_geo_region,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_sqs)          AS key_segment_geo_region_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_ot)           AS key_segment_geo_region_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_area)         AS key_segment_geo_region_area,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_area_sqs)     AS key_segment_geo_region_area_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_area_ot)      AS key_segment_geo_region_area_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_area)                AS key_segment_geo_area,
+      agg_demo_keys_fy23.sales_team_cro_level,
+      agg_demo_keys_fy23.sales_team_rd_asm_level,
+      agg_demo_keys_fy23.sales_team_vp_level,
+      agg_demo_keys_fy23.sales_team_avp_rd_level,
+      agg_demo_keys_fy23.sales_team_asm_level,
+
+
+      -- test FY24 keys
+      -- LOWER(agg_demo_keys_fy24.key_bu)                             AS key_bu_fy24,
+      -- LOWER(agg_demo_keys_fy24.key_segment)                        AS key_segment_fy24,
+      -- LOWER(agg_demo_keys_fy24.key_sqs)                            AS key_sqs_fy24,
+      -- LOWER(agg_demo_keys_fy24.key_ot)                             AS key_ot_fy24,
+
+
       -- Created pipeline eligibility definition
       -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389
       CASE
@@ -511,8 +565,11 @@ WITH edm_opty AS (
 
     FROM oppty_final
     -- Add keys for aggregated analysis
-    LEFT JOIN agg_demo_keys
-      ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
+    LEFT JOIN agg_demo_keys_fy23
+      ON oppty_final.report_user_adjusted_segment_geo_region_area_sqs_ot = agg_demo_keys_fy23.report_user_adjusted_segment_geo_region_area_sqs_ot
+    -- LEFT JOIN agg_demo_keys_fy24
+    --   ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys_fy24.report_user_segment_geo_region_area_sqs_ot
+
 
 )
 SELECT *

@@ -51,6 +51,8 @@ WITH date_details AS (
       report_opportunity_user_area,
       report_user_segment_geo_region_area,
       report_user_segment_geo_region_area_sqs_ot,
+      adjusted_report_opportunity_user_segment,
+      report_user_adjusted_segment_geo_region_area_sqs_ot,
 
       -- NF 2022-02-17 new aggregated keys 
       key_sqs,
@@ -417,7 +419,10 @@ WITH date_details AS (
       sfdc_opportunity_xf.report_opportunity_user_area,
       sfdc_opportunity_xf.report_user_segment_geo_region_area,
       sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
-      
+
+      sfdc_opportunity_xf.adjusted_report_opportunity_user_segment,
+      sfdc_opportunity_xf.report_user_adjusted_segment_geo_region_area_sqs_ot,
+
       sfdc_opportunity_xf.key_sqs,
       sfdc_opportunity_xf.key_ot,
       sfdc_opportunity_xf.key_segment,

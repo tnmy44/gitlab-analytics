@@ -5,14 +5,6 @@
 -- segment, geo, region, area, sqs, ot, deal_category, deal_group
 -- business_unit, role_type, partner_category, alliance_partner 
 
-/* 
-FY24 X-Ray Reporting Hierarchy
-[Business Unit] 
-- [Sub Business Unit]
--- [Division]
---- [ASM]
-*/
-
 
 WITH sfdc_account_xf AS (
 
@@ -34,231 +26,223 @@ WITH sfdc_account_xf AS (
 ), field_for_keys AS (
     
     SELECT
+      account_owner.role_type,
 
-        -- Business Unit (X-Ray 1st hierarchy)
-        -- will be replaced with the actual field
-        CASE report_opportunity_user_segment
-          WHEN 'large' THEN 'Ent-G'
-          WHEN 'pubsec' THEN 'Ent-H'
-          WHEN 'mid-market' THEN 'Comm'
-          WHEN 'smb' THEN 'Comm'
-          WHEN 'jihu' THEN 'JiHu'
-          ELSE 'Other'
-        END AS business_unit,
+      -- CASE
+      --   WHEN  LOWER(order_type) = '1. new - first order'
+      --     THEN 'First Order'
+      --   WHEN LOWER(account_owner.role_name) like ('pooled%')
+      --         AND report_opportunity_user_segment IN ('smb','mid-market')
+      --         AND LOWER(order_type) != '1. new - first order'
+      --     THEN 'Pooled'
+      --   WHEN LOWER(account_owner.role_name) like ('terr%')
+      --         AND report_opportunity_user_segment IN ('smb','mid-market')
+      --         AND LOWER(order_type) != '1. new - first order'
+      --     THEN 'Territory'
+      --   WHEN LOWER(account_owner.role_name) like ('named%')
+      --         AND report_opportunity_user_segment IN ('smb','mid-market')
+      --         AND LOWER(order_type) != '1. new - first order'
+      --     THEN 'Named'
+      --   WHEN LOWER(order_type) IN ('2. new - connected', '4. contraction', '6. churn - final', '5. churn - partial', '3. growth')
+      --         AND report_opportunity_user_segment IN ('smb','mid-market')
+      --     THEN 'Expansion'
+      --   ELSE 'Other'
+      -- END AS role_type,
 
-        CASE
-          WHEN  LOWER(order_type) = '1. new - first order'
-            THEN 'First Order'
-          WHEN LOWER(account_owner.role_name) like ('pooled%')
-                AND report_opportunity_user_segment IN ('smb','mid-market')
-                AND LOWER(order_type) != '1. new - first order'
-            THEN 'Pooled'
-          WHEN LOWER(account_owner.role_name) like ('terr%')
-                AND report_opportunity_user_segment IN ('smb','mid-market')
-                AND LOWER(order_type) != '1. new - first order'
-            THEN 'Territory'
-          WHEN LOWER(account_owner.role_name) like ('named%')
-                AND report_opportunity_user_segment IN ('smb','mid-market')
-                AND LOWER(order_type) != '1. new - first order'
-            THEN 'Named'
-          WHEN LOWER(order_type) IN ('2. new - connected', '4. contraction', '6. churn - final', '5. churn - partial', '3. growth')
-                AND report_opportunity_user_segment IN ('smb','mid-market')
-            THEN 'Expansion'
-          ELSE 'Other'
-        END AS role_type,
+      -- Sub-Business Unit (X-Ray 2nd hierarchy)
+      -- JK: when modifying sub business unit, make sure all related fields (division/ asm) are updated/ up to date.
+--       CASE
+--         WHEN LOWER(business_unit) = 'ent-g'
+--           THEN report_opportunity_user_geo
 
-        -- Sub-Business Unit (X-Ray 2nd hierarchy)
-        CASE
-          WHEN LOWER(business_unit) = 'ent-g'
-            THEN report_opportunity_user_geo
+--         WHEN
+--           LOWER(business_unit) = 'comm'
+--           AND 
+--             (
+--             report_opportunity_user_segment = 'smb' 
+--             AND report_opportunity_user_geo = 'amer'
+--             AND report_opportunity_user_area = 'lowtouch'
+--             ) 
+--           THEN 'AMER Low-Touch'
+--         WHEN
+--           LOWER(business_unit) = 'comm'
+--           AND
+--             (
+--             report_opportunity_user_segment = 'mid-market'
+--             AND (report_opportunity_user_geo = 'amer' OR report_opportunity_user_geo = 'emea')
+--             AND LOWER(role_type) = 'first order'
+--             )
+--           THEN 'MM First Orders'  --mid-market FO
+--         WHEN
+--           LOWER(business_unit) = 'comm'
+--           AND report_opportunity_user_geo = 'emea'
+--           AND 
+--             (
+--             report_opportunity_user_segment != 'mid-market'
+--             AND LOWER(role_type) != 'first order'
+--             )
+--           THEN  'EMEA'
+--         WHEN
+--           LOWER(business_unit) = 'comm'
+--           AND report_opportunity_user_geo = 'amer'
+--           AND
+--             (
+--             report_opportunity_user_segment != 'mid-market'
+--             AND LOWER(role_type) != 'first order'
+--             )
+--           AND
+--             (
+--             report_opportunity_user_segment != 'smb'
+--             AND report_opportunity_user_area != 'lowtouch'
+--             )
+--           THEN 'AMER'
+--         ELSE 'Other'
+--       END AS sub_business_unit,
 
-          WHEN
-            LOWER(business_unit) = 'comm'
-            AND 
-              (
-              report_opportunity_user_segment = 'smb' 
-              AND report_opportunity_user_geo = 'amer'
-              AND report_opportunity_user_area = 'lowtouch'
-              ) 
-            THEN 'AMER Low-Touch'
-          WHEN
-            LOWER(business_unit) = 'comm'
-            AND
-              (
-              report_opportunity_user_segment = 'mid-market'
-              AND (report_opportunity_user_geo = 'amer' OR report_opportunity_user_geo = 'emea')
-              AND LOWER(role_type) = 'first order'
-              )
-            THEN 'MM First Orders'
-          WHEN
-            LOWER(business_unit) = 'comm'
-            AND report_opportunity_user_geo = 'emea'
-            AND 
-              (
-              report_opportunity_user_segment != 'mid-market'
-              AND LOWER(role_type) != 'first order'
-              )
-            THEN  'EMEA'
-          WHEN
-            LOWER(business_unit) = 'comm'
-            AND report_opportunity_user_geo = 'amer'
-            AND
-              (
-              report_opportunity_user_segment != 'mid-market'
-              AND LOWER(role_type) != 'first order'
-              )
-            AND
-              (
-              report_opportunity_user_segment != 'smb'
-              AND report_opportunity_user_area != 'lowtouch'
-              )
-            THEN 'AMER'
-          ELSE 'Other'
-        END AS sub_business_unit,
+--       -- Division (X-Ray 3rd hierarchy)
+--       CASE 
+--         WHEN LOWER(business_unit) = 'ent-g'
+--           THEN report_opportunity_user_region
+--         WHEN 
+--           LOWER(business_unit) = 'comm'
+--           AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+--           AND report_opportunity_user_segment = 'mid-market'
+--           THEN 'Mid-Market'
+--         WHEN
+--           LOWER(business_unit) = 'comm'
+--           AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+--           AND report_opportunity_user_segment = 'smb'
+--           THEN 'SMB'
+--         WHEN
+--           LOWER(business_unit) = 'comm'
+--           AND LOWER(sub_business_unit) = 'mm first orders'
+--           THEN 'MM First Orders'
+--         WHEN
+--           LOWER(business_unit) = 'comm'
+--           AND LOWER(sub_business_unit) = 'amer low-touch'
+--           THEN 'AMER Low-Touch'
+--         ELSE 'Other'
+--       END AS division,
 
-        -- Division (X-Ray 3rd hierarchy)
-        CASE 
-          WHEN LOWER(business_unit) = 'ent-g'
-            THEN report_opportunity_user_region
-          WHEN 
-            LOWER(business_unit) = 'comm'
-            AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
-            AND report_opportunity_user_segment = 'mid-market'
-            THEN 'Mid-Market'
-          WHEN
-            LOWER(business_unit) = 'comm'
-            AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
-            AND report_opportunity_user_segment = 'smb'
-            THEN 'SMB'
-          WHEN
-            LOWER(business_unit) = 'comm'
-            AND LOWER(sub_business_unit) = 'mm first orders'
-            THEN 'MM First Orders'
-          WHEN
-            LOWER(business_unit) = 'comm'
-            AND LOWER(sub_business_unit) = 'amer low-touch'
-            THEN 'AMER Low-Touch'
-          ELSE 'Other'
-        END AS division,
+--       -- ASM (X-Ray 4th hierarchy): definition pending
+--       CASE
+--         WHEN 
+--           LOWER(business_unit) = 'ent-g'
+--           AND LOWER(sub_business_unit) = 'amer'
+--           THEN report_opportunity_user_area
+--         WHEN
+--           LOWER(business_unit) = 'ent-g'
+--           AND LOWER(sub_business_unit) = 'emea'
+--           AND LOWER(division) = 'dach'
+--           THEN  --'pending' 
+--             report_opportunity_user_area
 
-        -- ASM (X-Ray 4th hierarchy): definition pending
-        CASE
-          WHEN 
-            LOWER(business_unit) = 'ent-g'
-            AND LOWER(sub_business_unit) = 'amer'
-            THEN report_opportunity_user_area
+--         WHEN
+--           LOWER(business_unit) = 'ent-g'
+--           AND LOWER(sub_business_unit) = 'emea'
+--           AND (LOWER(division) = 'neur' OR LOWER(division) = 'seur')
+--           THEN report_opportunity_user_area
+-- ------------------------- combine all enterprise emea into one case
 
-          WHEN
-            LOWER(business_unit) = 'ent-g'
-            AND LOWER(sub_business_unit) = 'emea'
-            AND LOWER(division) = 'dach'
-            THEN 'pending'
 
-          WHEN
-            LOWER(business_unit) = 'ent-g'
-            AND LOWER(sub_business_unit) = 'emea'
-            AND (LOWER(division) = 'neur' OR LOWER(division) = 'seur')
-            THEN report_opportunity_user_area
-
-          WHEN
-            LOWER(business_unit) = 'ent-g'
-            AND LOWER(sub_business_unit) = 'emea'
-            AND LOWER(division) = 'meta'
-            THEN report_opportunity_user_segment
-
-          WHEN 
-            LOWER(business_unit) = 'ent-g'
-            AND (LOWER(sub_business_unit) = 'apac' OR LOWER(sub_business_unit) = 'pubsec')
-            THEN report_opportunity_user_area
-
-          WHEN
-            LOWER(business_unit) = 'comm'
-            AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
-            THEN report_opportunity_user_area
-
-          WHEN 
-            LOWER(business_unit) = 'comm'
-            AND LOWER(sub_business_unit) = 'mm first orders'
-            THEN report_opportunity_user_geo
-
-          WHEN
-            LOWER(business_unit) = 'comm'
-            AND LOWER(sub_business_unit) = 'amer low-touch'
-            AND LOWER(role_type) = 'first order'
-            THEN 'LowTouch FO'
-
-          WHEN
-            LOWER(business_unit) = 'comm'
-            AND LOWER(sub_business_unit) = 'amer low-touch'
-            AND LOWER(role_type) != 'first order'
-            THEN 'LowTouch Pool'
-
-          ELSE 'Other'
-
-        END AS asm,
+--         WHEN
+--           LOWER(business_unit) = 'ent-g'
+--           AND LOWER(sub_business_unit) = 'emea'
+--           AND LOWER(division) = 'meta'
+--           THEN report_opportunity_user_segment --- pending/ waiting for Meri?
 
 
 
-        -- FY23 definition
-        -- CASE
-        --     WHEN sales_qualified_source_name = 'Channel Generated'
-        --     THEN 'Channel Generated'
-        --     WHEN sales_qualified_source_name != 'Channel Generated'
-        --     AND NOT(LOWER(resale.account_name) LIKE ANY ('%ibm%','%google%','%gcp%','%amazon%'))
-        --     THEN 'Channel Co-Sell'
-        --     WHEN sales_qualified_source_name != 'Channel Generated'
-        --     AND LOWER(resale.account_name) LIKE ANY ('%ibm%','%google%','%gcp%','%amazon%')
-        --     THEN 'Alliance Co-Sell'
-        --     ELSE 'Direct'
-        -- END                                               AS partner_category,
 
-        -- CASE
-        --     WHEN LOWER(resale.account_name)LIKE '%ibm%'
-        --     THEN 'IBM'
-        --     WHEN LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%')
-        --     THEN 'GCP'
-        --     WHEN LOWER(resale.account_name) LIKE '%amazon%'
-        --     THEN 'AWS'
-        --     WHEN LOWER(resale.account_name) IS NOT NULL
-        --     THEN 'Channel'
-        --     ELSE 'Direct'
-        -- END                                               AS alliance_partner,
+--         WHEN 
+--           LOWER(business_unit) = 'ent-g'
+--           AND (LOWER(sub_business_unit) = 'apac' OR LOWER(sub_business_unit) = 'pubsec')
+--           THEN report_opportunity_user_area
 
-        CASE
-          WHEN (sales_qualified_source_name = 'Channel Generated' OR sales_qualified_source_name = 'Partner Generated')
-              THEN 'Partner Sourced'
-          WHEN (sales_qualified_source_name != 'Channel Generated' AND sales_qualified_source_name != 'Partner Generated')
-              AND NOT LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
-              THEN 'Channel Co-Sell'
-          WHEN (sales_qualified_source_name != 'Channel Generated' AND sales_qualified_source_name != 'Partner Generated')
-              AND LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
-              THEN 'Alliance Co-Sell'
-          ELSE 'Direct'
-        END                                               AS partner_category,
+-- ---------------------------------------------------
 
-        CASE
-          WHEN LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%')
-            THEN 'GCP'
-          WHEN LOWER(resale.account_name) LIKE ANY ('%amazon%')
-            THEN 'AWS'
-          WHEN LOWER(resale.account_name) IS NOT NULL
-            THEN 'Channel'
-          ELSE 'Direct'
-        END                                               AS alliance_partner,
+--         WHEN
+--           LOWER(business_unit) = 'comm'
+--           AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+--           THEN report_opportunity_user_area
+--         WHEN 
+--           LOWER(business_unit) = 'comm'
+--           AND LOWER(sub_business_unit) = 'mm first orders'
+--           THEN report_opportunity_user_geo
+--         WHEN
+--           LOWER(business_unit) = 'comm'
+--           AND LOWER(sub_business_unit) = 'amer low-touch'
+--           AND LOWER(role_type) = 'first order'
+--           THEN 'LowTouch FO'
+--         WHEN
+--           LOWER(business_unit) = 'comm'
+--           AND LOWER(sub_business_unit) = 'amer low-touch'
+--           AND LOWER(role_type) != 'first order'
+--           THEN 'LowTouch Pool'
+--         ELSE 'Other'
+--       END AS asm,
 
 
-        report_opportunity_user_segment,
-        report_opportunity_user_geo,
-        report_opportunity_user_region,
-        report_opportunity_user_area,
-        order_type AS order_type_stamped,
-        sales_qualified_source_name AS sales_qualified_source,
-        deal_category,
-        deal_group,
-        opp.account_owner_user_segment,
-        opp.account_owner_user_geo,
-        opp.account_owner_user_region,
-        opp.account_owner_user_area
+      -- FY23 definition
+      -- CASE
+      --     WHEN sales_qualified_source_name = 'Channel Generated'
+      --     THEN 'Channel Generated'
+      --     WHEN sales_qualified_source_name != 'Channel Generated'
+      --     AND NOT(LOWER(resale.account_name) LIKE ANY ('%ibm%','%google%','%gcp%','%amazon%'))
+      --     THEN 'Channel Co-Sell'
+      --     WHEN sales_qualified_source_name != 'Channel Generated'
+      --     AND LOWER(resale.account_name) LIKE ANY ('%ibm%','%google%','%gcp%','%amazon%')
+      --     THEN 'Alliance Co-Sell'
+      --     ELSE 'Direct'
+      -- END                                               AS partner_category,
+
+      -- CASE
+      --     WHEN LOWER(resale.account_name)LIKE '%ibm%'
+      --     THEN 'IBM'
+      --     WHEN LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%')
+      --     THEN 'GCP'
+      --     WHEN LOWER(resale.account_name) LIKE '%amazon%'
+      --     THEN 'AWS'
+      --     WHEN LOWER(resale.account_name) IS NOT NULL
+      --     THEN 'Channel'
+      --     ELSE 'Direct'
+      -- END                                               AS alliance_partner,
+
+      CASE
+        WHEN (sales_qualified_source_name = 'Channel Generated' OR sales_qualified_source_name = 'Partner Generated')
+            THEN 'Partner Sourced'
+        WHEN (sales_qualified_source_name != 'Channel Generated' AND sales_qualified_source_name != 'Partner Generated')
+            AND NOT LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
+            THEN 'Channel Co-Sell'
+        WHEN (sales_qualified_source_name != 'Channel Generated' AND sales_qualified_source_name != 'Partner Generated')
+            AND LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
+            THEN 'Alliance Co-Sell'
+        ELSE 'Direct'
+      END                                               AS partner_category,
+
+      CASE
+        WHEN LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%')
+          THEN 'GCP'
+        WHEN LOWER(resale.account_name) LIKE ANY ('%amazon%')
+          THEN 'AWS'
+        WHEN LOWER(resale.account_name) IS NOT NULL
+          THEN 'Channel'
+        ELSE 'Direct'
+      END                                               AS alliance_partner,
+
+
+      report_opportunity_user_segment,
+      report_opportunity_user_geo,
+      report_opportunity_user_region,
+      report_opportunity_user_area,
+      order_type AS order_type_stamped,
+      sales_qualified_source_name AS sales_qualified_source,
+      deal_category,
+      deal_group,
+      opp.account_owner_user_segment,
+      opp.account_owner_user_geo,
+      opp.account_owner_user_region,
+      opp.account_owner_user_area
 
     FROM mart_crm_opportunity AS opp
     LEFT JOIN sfdc_users_xf AS account_owner
@@ -269,29 +253,28 @@ WITH sfdc_account_xf AS (
 
 ), eligible AS (
 
-  SELECT         
-        LOWER(business_unit)                         AS business_unit,
-        LOWER(sub_business_unit)                     AS sub_business_unit,
-        LOWER(division)                              AS division,
-        LOWER(asm)                                   AS asm,
-        LOWER(report_opportunity_user_segment)       AS report_opportunity_user_segment,
-        LOWER(report_opportunity_user_geo)           AS report_opportunity_user_geo,
-        LOWER(report_opportunity_user_region)        AS report_opportunity_user_region,
-        LOWER(report_opportunity_user_area)          AS report_opportunity_user_area,
+  SELECT
+        LOWER(business_unit)                            AS business_unit,
+        LOWER(sub_business_unit)                        AS sub_business_unit,
+        LOWER(division)                                 AS division,
+        LOWER(asm)                                      AS asm,
+        LOWER(report_opportunity_user_segment)          AS report_opportunity_user_segment,
+        LOWER(report_opportunity_user_geo)              AS report_opportunity_user_geo,
+        LOWER(report_opportunity_user_region)           AS report_opportunity_user_region,
+        LOWER(report_opportunity_user_area)             AS report_opportunity_user_area,
         
-        LOWER(sales_qualified_source)                AS sales_qualified_source,
-        LOWER(order_type_stamped)                    AS order_type_stamped,
+        LOWER(sales_qualified_source)                   AS sales_qualified_source,
+        LOWER(order_type_stamped)                       AS order_type_stamped,
   
-        LOWER(deal_category)                         AS deal_category,
-        LOWER(deal_group)                            AS deal_group,
+        LOWER(deal_category)                            AS deal_category,
+        LOWER(deal_group)                               AS deal_group,
 
-        LOWER(role_type)                             AS role_type,
-        LOWER(partner_category)                      AS partner_category,
-        LOWER(alliance_partner)                      AS alliance_partner,
+        LOWER(role_type)                                AS role_type,
+        LOWER(partner_category)                         AS partner_category,
+        LOWER(alliance_partner)                         AS alliance_partner,
 
-        LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area))                                                          AS report_user_segment_geo_region_area,
-        LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area,'-',sales_qualified_source,'-', order_type_stamped))       AS report_user_segment_geo_region_area_sqs_ot,
-
+        LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area))                                                       AS report_user_segment_geo_region_area,
+        LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area,'-',sales_qualified_source,'-', order_type_stamped))    AS report_user_segment_geo_region_area_sqs_ot,
         LOWER(CONCAT(business_unit,'-',report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area,'-',sales_qualified_source,'-',order_type_stamped,'-',role_type,'-',partner_category,'-',alliance_partner)) AS report_bu_user_segment_geo_region_area_sqs_ot_rt_pc_ap
 
   FROM field_for_keys
@@ -321,7 +304,6 @@ WITH sfdc_account_xf AS (
 
         LOWER(CONCAT(account_owner_user_segment,'-',account_owner_user_geo,'-',account_owner_user_region,'-',account_owner_user_area))                                                          AS report_user_segment_geo_region_area,
         LOWER(CONCAT(account_owner_user_segment,'-',account_owner_user_geo,'-',account_owner_user_region,'-',account_owner_user_area, '-', sales_qualified_source, '-', order_type_stamped))    AS report_user_segment_geo_region_area_sqs_ot,
-
         LOWER(CONCAT(business_unit,'-',account_owner_user_segment,'-',account_owner_user_geo,'-',account_owner_user_region,'-',account_owner_user_area,'-',sales_qualified_source,'-',order_type_stamped,'-',role_type,'-',partner_category,'-',alliance_partner)) AS report_bu_user_segment_geo_region_area_sqs_ot_rt_pc_ap
 
 
