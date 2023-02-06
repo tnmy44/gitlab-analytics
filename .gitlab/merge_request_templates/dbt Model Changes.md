@@ -11,7 +11,9 @@ Closes #
 
 Describe the solution. Include links to any related MRs and/or issues.
 
-## Handbook First: Enterprise Dimensional Model Documentation
+## Submitter Checklist
+
+#### Handbook First: Enterprise Dimensional Model Documentation
 
 **These requirements are for dimensional models in the COMMON schemas ONLY**
 
@@ -24,8 +26,6 @@ Describe the solution. Include links to any related MRs and/or issues.
 - [ ] Have the dimension and fact tables changed or added in this MR been added to the dbt dictionary section in the [Lead to Cash Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/#dbt-data-dictionaries), [Product Release to Adoption Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/#dbt-data-dictionaries-1), or the [Team Member Data Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/#dbt-data-dictionaries-2)? If not, please add a link to the dbt columns page for the data models and link the related MR to this MR..
 
 </details>
-
-## Submitter Checklist
 
 #### Testing - any exceptions must be noted
 
