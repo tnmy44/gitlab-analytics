@@ -210,7 +210,7 @@ class SnowflakeManager:
             connection = self.engine.connect()
             logging.info("Executing Query: {}".format(get_grants_query))
             grants = connection.execute(get_grants_query).fetchall()
-            logging.into("Found {} grants".format(len(grants)))
+            logging.info("Found {} grants".format(len(grants)))
             for grant, in grants:
                 logging.info("Running: {}".format(grant))
                 # [result] = connection.execute(grant).fetchone()
