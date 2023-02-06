@@ -1,6 +1,7 @@
 {{ config(
     materialized = "incremental",
-    unique_key = "dim_behavior_browser_sk"
+    unique_key = "dim_behavior_browser_sk",
+    tags=['product']
     )
 }}
 WITH browser_information AS (

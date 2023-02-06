@@ -1,6 +1,7 @@
 {{ config(
         materialized = "incremental",
-        unique_key = "dim_behavior_website_page_sk"
+        unique_key = "dim_behavior_website_page_sk",
+        tags=['product']
 ) }}
 
 {{ simple_cte([
