@@ -38,6 +38,12 @@ service_base.gcp_service_description,
 service_base.gcp_sku_description,
 service_base.infra_label,
 lower(coalesce(sandbox.classification, project_pl.type, infra_allocation.type, 'unknown')) as finance_pl,
+service_base.usage_unit as usage_unit,
+service_base.pricing_unit as pricing_unit,
+-- usage amount
+service_base.usage_amount * coalesce(infra_allocation.allocation, project_pl.allocation, 1)  as usage_amount,
+-- usage amount in p unit
+service_base.usage_amount_in_pricing_units * coalesce(infra_allocation.allocation, project_pl.allocation, 1)  as usage_amount_in_pricing_units,
 -- cost before discounts
 service_base.cost_before_credits * coalesce(infra_allocation.allocation, project_pl.allocation, 1) as cost_before_credits,
 -- net costs

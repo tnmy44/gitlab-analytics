@@ -255,6 +255,12 @@ resource_labels as (
             WHEN rule_1_ids.source_primary_key = export.source_primary_key THEN rule_1_ids.service
         END
         AS rule_1,
+        export.usage_unit as usage_unit,
+        export.pricing_unit as pricing_unit,
+        -- usage amount
+        sum(export.usage_amount) as usage_amount,
+        -- usage amount
+        sum(export.usage_amount_in_pricing_units) as usage_amount_in_pricing_units,
         -- cost before discounts
         sum(export.cost_before_credits) as cost_before_credits,
         -- net costs
@@ -313,7 +319,7 @@ resource_labels as (
         ON
         export.source_primary_key = rule_1_ids.source_primary_key
         -- -- -- -- -- -- 
-       {{ dbt_utils.group_by(n=14) }})
+       {{ dbt_utils.group_by(n=16) }})
 SELECT
         billing_base_rules.day as day,
         billing_base_rules.project_id as gcp_project_id,
@@ -329,6 +335,12 @@ SELECT
                                                             coalesce(billing_base_rules.rule_8, ''),
                                                             coalesce(billing_base_rules.rule_9, ''),
                                                             coalesce(billing_base_rules.rule_10, ''))) as gitlab_service,
+        billing_base_rules.usage_unit as usage_unit,
+        billing_base_rules.pricing_unit as pricing_unit,
+        -- usage amount
+        sum(billing_base_rules.usage_amount) * ifnull(service_coeff.coeff, 1) as usage_amount,
+        -- usage amount
+        sum(billing_base_rules.usage_amount_in_pricing_units)* ifnull(service_coeff.coeff, 1) as usage_amount_in_pricing_units,
         sum(billing_base_rules.cost_before_credits) * ifnull(service_coeff.coeff, 1) as cost_before_credits,
         sum(billing_base_rules.net_cost) * ifnull(service_coeff.coeff, 1) as net_cost
 FROM billing_base_rules LEFT JOIN service_coeff
@@ -342,4 +354,4 @@ FROM billing_base_rules LEFT JOIN service_coeff
         or billing_base_rules.rule_8 = service_coeff.gitlab_service
         or billing_base_rules.rule_9 = service_coeff.gitlab_service
         or billing_base_rules.rule_10 = service_coeff.gitlab_service
-group by 1, 2, 3, 4, 5, service_coeff.coeff
+group by 1, 2, 3, 4, 5, 6, 7, service_coeff.coeff
