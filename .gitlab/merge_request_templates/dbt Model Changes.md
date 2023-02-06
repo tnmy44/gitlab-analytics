@@ -11,13 +11,18 @@ Closes #
 
 Describe the solution. Include links to any related MRs and/or issues.
 
-## Stakeholder Checklist
-<details>
-<summary><i>Click to toggle Stakeholder Checklist</i></summary>
-If you are the person who will be using this data and/or the dashboard it depends on, please fill out this section.
+## Handbook First: Enterprise Dimensional Model Documentation
 
-- [ ] Does the dbt model change provide the requested data? 
-- [ ] Does the dbt model change provide accurate data?
+**These requirements are for dimensional models in the COMMON schemas ONLY**
+
+<details>
+<summary><i>EDM Documentation Checklist</i></summary>
+
+- [ ] Have the new or changed models in the MR been added or updated on an ERD in the [Lead to Cash ERD Library](https://about.gitlab.com/handbook/business-technology/data-team/platform/edw/#lead-to-cash-erds), [Product Release to Adoption ERD Library](https://about.gitlab.com/handbook/business-technology/data-team/platform/edw/#product-release-to-adoption-erds), or the [Team Member ERD Library](https://about.gitlab.com/handbook/business-technology/data-team/platform/edw/#team-member-erds)? If not, please add or update the models on an ERD and link the related MR to this MR.
+- [ ] Have the new or changed column definitions been added or updated in the schema.yml file? If not, please add or update the column definitions in the schema.yml file.
+- [ ] Have the dbt data lineages for critical source tables been added to the [Lead to Cash Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/#dbt-data-lineage-diagrams), [Product Release to Adoption Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/#dbt-data-lineage-diagrams-1), or the [Team Member Data Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/#dbt-data-lineage-diagrams-2)? If not, please add the dbt data lineages for the critical source tables and link the related MR to this MR.
+- [ ] Have the dimension and fact tables changed or added in this MR been added to the dbt dictionary section in the [Lead to Cash Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/#dbt-data-dictionaries), [Product Release to Adoption Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/#dbt-data-dictionaries-1), or the [Team Member Data Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/#dbt-data-dictionaries-2)? If not, please add a link to the dbt columns page for the data models and link the related MR to this MR..
+
 </details>
 
 ## Submitter Checklist
