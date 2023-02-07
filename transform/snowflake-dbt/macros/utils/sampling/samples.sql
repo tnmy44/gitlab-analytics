@@ -1,17 +1,22 @@
 {%- macro samples() -%}
 
+{#
+Example
+samples:
+  - name: fct_ping_instance_metric
+    clause: "date_actual >= DATEADD('day', -30, CURRENT_DATE())"
+  - name: date_details_source
+    clause: sample_table(3)
+  - name: date_details
+    clause: "date_actual >= DATEADD('day', -30, CURRENT_DATE())"
+
+#}
+
 {% set samples_yml -%}
 
 samples:
-  - name: dim_date
-    method: table
-    where: "date_actual >= DATEADD('day', -30, CURRENT_DATE())"
-  - name: date_details_source
-    method: random
-    percent: 3
-  - name: date_details
-    method: table
-    where: "date_actual >= DATEADD('day', -30, CURRENT_DATE())"
+  - name: prep_ping_instance
+    clause: '{{ sample_table(3) }}' 
 
 {%- endset %}
 

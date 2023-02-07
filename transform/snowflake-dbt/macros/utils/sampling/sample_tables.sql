@@ -15,6 +15,6 @@
 
 {#% do return(sql) %#}
 {% do run_query(sql) %}
-{% do log("Tables Samples", info=True) %}
+{% do log("Tables Sampled", info=True) %}
 
 {%- endmacro -%}

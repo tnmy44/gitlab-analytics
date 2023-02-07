@@ -20,7 +20,8 @@ SELECT
 
   -- {{ sample_ref_relation('prep_date') }}
 
+  -- {{ ref('prep_ping_instance') }}
 
--- {{ create_sample_table('dim_date') }} 
 
--- {{ sample_tables() }}
+-- {{ create_sample_table('prep_ping_instance') }} 
+
