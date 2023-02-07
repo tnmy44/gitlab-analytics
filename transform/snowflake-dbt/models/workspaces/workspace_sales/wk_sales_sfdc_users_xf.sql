@@ -251,7 +251,6 @@ WITH RECURSIVE base AS (
           LOWER(business_unit) = 'entg'
           AND LOWER(sub_business_unit) = 'amer'
           THEN user_area
-
         WHEN 
           LOWER(business_unit) = 'entg'
           AND LOWER(sub_business_unit) = 'emea'
@@ -264,8 +263,18 @@ WITH RECURSIVE base AS (
           THEN user_segment --- pending/ waiting for Meri?
         WHEN 
           LOWER(business_unit) = 'entg'
-          AND (LOWER(sub_business_unit) = 'apac' OR LOWER(sub_business_unit) = 'pubsec')
+          AND LOWER(sub_business_unit) = 'apac'
           THEN user_area
+        WHEN
+          LOWER(business_unit) = 'entg'
+          AND LOWER(sub_business_unit) = 'pubsec'
+          AND LOWER(division) != 'sled'
+          THEN user_area
+        WHEN
+          LOWER(business_unit) = 'entg'
+          AND LOWER(sub_business_unit) = 'pubsec'
+          AND LOWER(division) = 'sled'
+          THEN user_region
 
         WHEN
           LOWER(business_unit) = 'comm'
