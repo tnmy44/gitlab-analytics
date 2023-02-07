@@ -35,12 +35,12 @@ WITH sfdc_account_xf AS (
       -- JK 2023-02-07: these will be added to mart_crm_opportunity
       -- https://gitlab.com/gitlab-com/sales-team/field-operations/analytics/-/issues/418
       CASE
-        WHEN (sales_qualified_source_name = 'Channel Generated' OR sales_qualified_source_name = 'Partner Generated')
+        WHEN sales_qualified_source_name = 'Partner Generated'
             THEN 'Partner Sourced'
-        WHEN (sales_qualified_source_name != 'Channel Generated' AND sales_qualified_source_name != 'Partner Generated')
+        WHEN sales_qualified_source_name != 'Partner Generated'
             AND NOT LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
             THEN 'Channel Co-Sell'
-        WHEN (sales_qualified_source_name != 'Channel Generated' AND sales_qualified_source_name != 'Partner Generated')
+        WHEN sales_qualified_source_name != 'Partner Generated'
             AND LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
             THEN 'Alliance Co-Sell'
         ELSE 'Direct'
@@ -223,29 +223,7 @@ WITH sfdc_account_xf AS (
 
   SELECT DISTINCT 
 
-        -- Segment
-        -- Sales Qualified Source
-        -- Order Type
-
-        -- Segment - Geo
-        -- Segment - Geo - Region
-
-        -- Segment - Geo - Order Type Group 
-        -- Segment - Geo - Sales Qualified Source
-
-        -- Segment - Geo - Region - Order Type Group 
-        -- Segment - Geo - Region - Sales Qualified Source
-        -- Segment - Geo - Region - Area
-
-        -- Segment - Geo - Region - Area - Order Type Group 
-        -- Segment - Geo - Region - Area - Sales Qualified Source
-
-        -- 
-
-
-
         eligible.*,
-
 
         report_opportunity_user_segment   AS key_segment,
         sales_qualified_source            AS key_sqs,
@@ -254,12 +232,11 @@ WITH sfdc_account_xf AS (
         alliance_partner AS key_ap,
 
         report_opportunity_user_segment || '_' || sales_qualified_source             AS key_segment_sqs,
-        report_opportunity_user_segment || '_' || deal_group                         AS key_segment_ot,    
+        report_opportunity_user_segment || '_' || deal_group                         AS key_segment_ot,
 
         report_opportunity_user_segment || '_' || report_opportunity_user_geo                                               AS key_segment_geo,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' ||  sales_qualified_source             AS key_segment_geo_sqs,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' ||  deal_group                         AS key_segment_geo_ot,      
-
 
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region                                     AS key_segment_geo_region,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' ||  sales_qualified_source   AS key_segment_geo_region_sqs,
