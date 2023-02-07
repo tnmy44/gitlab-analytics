@@ -1,7 +1,7 @@
 import argparse
-import subprocess
 import logging
 import os
+import sys
 from datetime import datetime
 from api import ZuoraRevProAPI
 
@@ -19,7 +19,7 @@ parser.add_argument(
     action="store",
     dest="extract_date",
     required=False,
-    help="Pass parameter download todays report data format `DD-MMM-YYYY` example `16-JAN-2023`",
+    help="Pass parameter download today date in format report data format `DD-MMM-YYYY` example `16-JAN-2023` incase need to download today report",
 )
 
 results = parser.parse_args()
@@ -64,8 +64,11 @@ if __name__ == "__main__":
     report_date = zuora_revpro.get_extract_date(extract_date)
 
     zuora_report_list_df = zuora_revpro.get_report_list(report_date)
-
-    print(zuora_report_list_df)
+    if zuora_report_list_df.empty:
+        print("No Report to download")
+        sys.exit(0)
+    else:
+        logging.info(f"List of report to be checked for {zuora_report_list_df}")
     # Read yml file
     zuora_report_list_to_download = zuora_revpro.get_requested_report()
 

@@ -11,7 +11,8 @@ report_list:
       rep_name: "RC Rollforward Report"
       layout_name: "by nll ptd"
       rep_desc: "Displays Contract Liability/Contract Asset beginning and ending balances, and activity for the period selected. Used by revenue users for reconciliation and disclosures"
-      output_file_name: "Revenue_rc_rollforward_report"
+      output_file_name: "revenue_rc_rollforward_report"
+
       status: "A"
 #  revenue_waterfall:
 #      category: "Revenue"

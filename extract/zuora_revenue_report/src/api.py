@@ -8,8 +8,6 @@ import subprocess
 import pandas as pd
 from typing import Dict, Any
 from datetime import datetime, timedelta
-from os import environ as env
-from pathlib import Path
 import os
 
 
@@ -70,11 +68,11 @@ class ZuoraRevProAPI:
 
         return extract_date
 
-    def get_report_list_df(self, report_list):
+    def get_report_list_df(self, report_list: Dict) -> pd.DataFrame:
         """Return the data frame of list of reports for the particular day"""
         return pd.DataFrame(report_list)
 
-    def get_report_list(self, extract_date: str) -> dict:
+    def get_report_list(self, extract_date: str) -> pd.DataFrame:
         """Hit the URL to fetch all the report executed in the particular date.
         It finally return the data frame of report list"""
 
@@ -93,15 +91,14 @@ class ZuoraRevProAPI:
 
     def get_requested_report(
         self, zuora_report_api_list: str = "zuora_report_api_list.yml"
-    ):
+    ) -> Dict:
         """Open the yml file to get the list of reports which needs to be downloaded."""
 
         with open(zuora_report_api_list) as file:
             report_list_to_download = yaml.load(file, Loader=yaml.FullLoader)
-
         return report_list_to_download
 
-    def get_report_list_key(self, zuora_requested_report_list):
+    def get_report_list_key(self, zuora_requested_report_list) -> list:
 
         """Extract list of report name to iterate from the manifest file for which extraction needs to be done"""
         report_list_key = list(zuora_requested_report_list["report_list"].keys())
@@ -182,7 +179,7 @@ class ZuoraRevProAPI:
             sys.exit(1)
 
     def zuora_download_report(
-        self, zuora_report_list_df, zuora_report_list_to_download, report_date
+        self, zuora_report_list_df: pd.DataFrame, zuora_report_list_to_download: list, report_date: str
     ) -> None:
         """This function is responsible to get the list of reports to download and check if the report exist in the api call for that date.
         If present then download the report to the output directory."""
@@ -210,52 +207,52 @@ class ZuoraRevProAPI:
             list_of_file = [i for s in file_name.values for i in s]
             for file in list_of_file:
                 self.logger.info(f"downloading file : {file}")
-                output_file = (
-                    report_list_dict.get("output_file_name")
-                    + "_"
-                    + report_date_formatted
-                )
+                output_file = report_list_dict.get("output_file_name")
                 self.zuora_download_file(file, output_file, report_date_formatted)
 
-    def get_all_downloaded_file_list(self, File_directory):
+    def get_all_downloaded_file_list(self, file_directory):
 
         res = []
         # Iterate directory
-        for file in os.listdir(File_directory):
+        for file in os.listdir(file_directory):
             # check only text files
-            if file.endswith(".csv") and file.startswith("Revenue"):
+            if file.endswith(".csv") and file.startswith("revenue"):
                 res.append(file)
         return res
 
-    def get_file_list_to_upload(self, File_directory):
+    def get_file_list_to_upload(self, file_directory):
         res = []
         # Iterate directory
-        for file in os.listdir(File_directory):
+        for file in os.listdir(file_directory):
             # check only text files
             if file.startswith("header") or file.startswith("body"):
                 res.append(file)
         return res
 
-    def split_file(self, File_directory, file):
+    def split_file(self, file_directory, file):
         """Split file into 2 parts i.e. one with header information and other the content of the file. Also remove the file after split up"""
         file_name = file
-        with open(f"{File_directory}{file_name}", "r") as filedata:
+        with open(f"{file_directory}{file_name}", "r") as filedata:
             linesList = filedata.readlines()
 
-        with open(f"{File_directory}header_{file_name}", "w") as file_header:
+        with open(f"{file_directory}header_{file_name}", "w") as file_header:
             for line in linesList[:10]:
                 file_header.write(line)
 
-        with open(f"{File_directory}body_{file_name}", "w") as file_body:
+        with open(f"{file_directory}body_{file_name}", "w") as file_body:
             for body_line in linesList[11:]:
                 file_body.write(body_line)
 
-        os.remove(f"{File_directory}{file}")
+        os.remove(f"{file_directory}{file}")
 
-    def upload_delete(self, File_directory, file_name, report_date):
-        """Upload the file to GCS"""
+    def upload_delete(
+        self, file_directory: str, file_name: str, report_date: str
+    ) -> None:
+        """Upload the file to GCS. Pass 3 parameters source file directory to pick up file, File Name to upload and report date on which the report was executed.
+        Also delete the file from local
+        """
 
-        command_upload_to_gcs = f"gsutil cp {File_directory}/{file_name} gs://{self.bucket_name}/RAW_DB/zuora_revenue_report/staging/{report_date}/"
+        command_upload_to_gcs = f"gsutil cp {file_directory}/{file_name} gs://{self.bucket_name}/RAW_DB/zuora_revenue_report/staging/{report_date}/"
 
         try:
             self.logger.info(command_upload_to_gcs)
@@ -264,19 +261,19 @@ class ZuoraRevProAPI:
             self.logger.error("Error while uploading the file to GCS", exec_info=True)
             sys.exit(1)
 
-        # os.remove(f"{File_directory}{file}")
+        os.remove(f"{file_directory}{file_name}")
 
     def split_upload_report_gcs(self, report_date):
-        File_directory = (
+        file_directory = (
             self.zuora_report_output_directory + report_date.replace("-", "_") + "/"
         )
         # list to store files
-        list_of_files = self.get_all_downloaded_file_list(File_directory)
+        list_of_files = self.get_all_downloaded_file_list(file_directory)
         for file in list_of_files:
-            self.split_file(File_directory, file)
+            self.split_file(file_directory, file)
 
-        list_of_file_to_upload = self.get_file_list_to_upload(File_directory)
+        list_of_file_to_upload = self.get_file_list_to_upload(file_directory)
         for file_name in list_of_file_to_upload:
-            self.upload_delete(File_directory, file_name, report_date.replace("-", "_"))
+            self.upload_delete(file_directory, file_name, report_date.replace("-", "_"))
 
         return None

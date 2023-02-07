@@ -47,9 +47,11 @@ def get_files_for_report(bucket, output_file_name):
 
     return list_of_files_per_report
 
+
 def get_file_name_without_path(file_name):
     """separate file name from the bucket path"""
     return file_name.split("/")[-1]
+
 
 def get_table_to_load(file_name, output_file_name) -> str:
     """This function provide information to which table to load the data and type of load i.e. it is for header or for body of the report"""
@@ -65,7 +67,7 @@ def get_table_to_load(file_name, output_file_name) -> str:
     return table_to_load, type_of_load
 
 
-def load_report_header_snow(schema, file_name, table_to_load,engine):
+def load_report_header_snow(schema, file_name, table_to_load, engine):
 
     copy_header_query = f"COPY INTO {schema}.{table_to_load} from (SELECT REGEXP_REPLACE(t.$1,'( ){1,}','_') AS metadata_column_name, \
      REGEXP_REPLACE(CONCAT(t.$2,COALESCE(t.$3,'')),'(=){1,}','') AS metadata_column_value ,GET(SPLIT(METADATA$FILENAME,'/'),4)  AS file_name \
@@ -73,9 +75,10 @@ def load_report_header_snow(schema, file_name, table_to_load,engine):
     results = query_executor(engine, copy_header_query)
     logging.info(results)
 
-def data_frame_enricher(raw_df,file_name) -> pd.DataFrame:
 
-    """Add _uploaded_at and _file_name to the data frame before persisting also doing some data cleansing. """
+def data_frame_enricher(raw_df, file_name) -> pd.DataFrame:
+
+    """Add _uploaded_at and _file_name to the data frame before persisting also doing some data cleansing."""
     raw_df["_uploaded_at"] = time()
     raw_df.loc[:, "_file_name"] = file_name
     raw_df.columns = [
@@ -86,21 +89,44 @@ def data_frame_enricher(raw_df,file_name) -> pd.DataFrame:
     return raw_df
 
 
-
-def load_report_body_snow(file_name, table_to_load,bucket, engine):
+def load_report_body_snow(file_name, table_to_load, bucket, engine):
     """load body of report with proper data cleansing and adding metadata like uplodaed_at and file_name to the report."""
-    raw_file_bucket=get_gcs_storage_client().bucket(bucket)
-    raw_file_blob=raw_file_bucket.blob(file_name)
+    raw_file_bucket = get_gcs_storage_client().bucket(bucket)
+    raw_file_blob = raw_file_bucket.blob(file_name)
     raw_data = raw_file_blob.download_as_bytes()
-    raw_df=pd.read_csv(io.BytesIO(raw_data))
-    enriched_df=data_frame_enricher(raw_df,get_file_name_without_path(file_name))
+    raw_df = pd.read_csv(io.BytesIO(raw_data))
+    enriched_df = data_frame_enricher(raw_df, get_file_name_without_path(file_name))
     enriched_df.to_sql(
-        name=table_to_load, con=engine, index=False, if_exists='append', chunksize=15000
+        name=table_to_load, con=engine, index=False, if_exists="append", chunksize=15000
     )
-    logging.info(f"Successfully loaded {enriched_df.shape[0]} rows into {table_to_load}")
+    logging.info(
+        f"Successfully loaded {enriched_df.shape[0]} rows into {table_to_load}"
+    )
 
-    
 
+def move_file_to_processed(bucket, file_name):
+    source_bucket = get_gcs_storage_client.get_bucket(bucket)
+    destination_bucket = get_gcs_storage_client.get_bucket(bucket)
+    report_ran_date = file_name.split("/")[-2]
+    file_name_without_path = file_name.split("/")[-1]
+    destination_file_name = f"RAW_DB/processed/zuora_revenue_report/{report_ran_date}/{file_name_without_path}"
+    file_name_without_bucket_prefix = "/".join(file_name.split("/")[3:])
+    source_blob = source_bucket.blob(file_name_without_bucket_prefix)
+    try:
+        source_bucket.copy_blob(source_blob, destination_bucket, destination_file_name)
+    except:
+        logging.error(
+            f"Source file {file_name} not found, Please ensure the direcotry is empty for next \
+                            run else the file will be over written"
+        )
+        sys.exit(1)
+    try:
+        source_blob.delete()
+    except:
+        logging.error(
+            f"{file_name} is not found , throwing this as error to ensure that we are not overwriting the files."
+        )
+        sys.exit(1)
 
 
 def zuora_revenue_report_load(
@@ -120,9 +146,11 @@ def zuora_revenue_report_load(
             file_name.lower(), output_file_name
         )
         if type_of_load == "header":
-            load_report_header_snow( schema,file_name, table_to_load, engine)
+            load_report_header_snow(schema, file_name, table_to_load, engine)
+            move_file_to_processed(bucket, file_name)
         else:
-            load_report_body_snow( file_name, table_to_load,bucket, engine)
+            load_report_body_snow(file_name, table_to_load, bucket, engine)
+            move_file_to_processed(bucket, file_name)
 
 
 if __name__ == "__main__":
