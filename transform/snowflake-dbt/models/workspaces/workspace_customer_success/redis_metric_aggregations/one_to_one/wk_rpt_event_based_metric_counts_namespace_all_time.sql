@@ -18,6 +18,7 @@ WITH events AS (
     used to aggregate event-based all-time metrics.
   */
   WHERE key_path IS NOT NULL
+    AND time_frame = 'all'
 ),
 
 final AS (
@@ -34,5 +35,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2023-01-30",
-    updated_date="2023-01-30"
+    updated_date="2023-02-07"
 ) }}
