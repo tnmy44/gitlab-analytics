@@ -70,7 +70,7 @@ WITH date_details AS (
     SELECT 
       -----------------------------------------------------------------------------------
       -- report keys
-      opp_snapshot.report_user_segment_geo_region_area_sqs_ot,
+      opp_snapshot.report_user_adjusted_segment_geo_region_area_sqs_ot,
       -----------------------------------------------------------------------------------
       
       -----------------------------------------------------------------------------------
@@ -130,7 +130,7 @@ WITH date_details AS (
     SELECT 
       -----------------------------------------------------------------------------------
       -- report keys
-      opties.report_user_segment_geo_region_area_sqs_ot,
+      opties.report_user_adjusted_segment_geo_region_area_sqs_ot,
       -----------------------------------------------------------------------------------
       
       -----------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ WITH date_details AS (
       -----------------------------------------------------------------------------------
       -- report keys
       -- FY23 needs to be updated to the new logic
-      pipeline_snapshot.report_user_segment_geo_region_area_sqs_ot,
+      pipeline_snapshot.report_user_adjusted_segment_geo_region_area_sqs_ot,
       -----------------------------------------------------------------------------------
 
       SUM(pipeline_snapshot.deal_count)                           AS deal_count,
@@ -246,7 +246,7 @@ WITH date_details AS (
  
       -----------------------------------------------------------------------------------
       -- report keys
-      pipeline_snapshot.report_user_segment_geo_region_area_sqs_ot,
+      pipeline_snapshot.report_user_adjusted_segment_geo_region_area_sqs_ot,
       -----------------------------------------------------------------------------------
      
       SUM(pipeline_snapshot.open_1plus_deal_count)         AS rq_plus_1_open_1plus_deal_count,
@@ -279,7 +279,7 @@ WITH date_details AS (
 
       -----------------------------------------------------------------------------------
       -- report keys
-      pipeline_snapshot.report_user_segment_geo_region_area_sqs_ot,
+      pipeline_snapshot.report_user_adjusted_segment_geo_region_area_sqs_ot,
       -----------------------------------------------------------------------------------
      
       SUM(pipeline_snapshot.open_1plus_deal_count)           AS rq_plus_2_open_1plus_deal_count,
@@ -309,7 +309,7 @@ WITH date_details AS (
 
       -----------------------------------------------------------------------------------
       -- report keys
-      opp_history.report_user_segment_geo_region_area_sqs_ot,
+      opp_history.report_user_adjusted_segment_geo_region_area_sqs_ot,
       -----------------------------------------------------------------------------------
 
       SUM(opp_history.created_in_snapshot_quarter_deal_count)     AS pipe_gen_count,
@@ -330,7 +330,7 @@ WITH date_details AS (
 
       -----------------------------------------------------------------------------------
       -- report keys
-      opties.report_user_segment_geo_region_area_sqs_ot,
+      opties.report_user_adjusted_segment_geo_region_area_sqs_ot,
       -----------------------------------------------------------------------------------
 
       SUM(opties.created_in_snapshot_quarter_deal_count)     AS pipe_gen_count,
@@ -353,7 +353,7 @@ WITH date_details AS (
 
       -----------------------------------------------------------------------------------
       -- report keys
-      opp_history.report_user_segment_geo_region_area_sqs_ot,
+      opp_history.report_user_adjusted_segment_geo_region_area_sqs_ot,
       -----------------------------------------------------------------------------------
 
       SUM(opp_history.calculated_deal_count)     AS sao_deal_count,
@@ -374,7 +374,7 @@ WITH date_details AS (
 
       -----------------------------------------------------------------------------------
       -- report keys
-      opties.report_user_segment_geo_region_area_sqs_ot,
+      opties.report_user_adjusted_segment_geo_region_area_sqs_ot,
       -----------------------------------------------------------------------------------
 
       SUM(opties.calculated_deal_count)     AS sao_deal_count,
@@ -392,27 +392,27 @@ WITH date_details AS (
 ), key_fields AS (
   
  SELECT
-     report_user_segment_geo_region_area_sqs_ot,
+     report_user_adjusted_segment_geo_region_area_sqs_ot,
      close_fiscal_quarter_date
   FROM reported_quarter
   UNION
    SELECT
-     report_user_segment_geo_region_area_sqs_ot,
+     report_user_adjusted_segment_geo_region_area_sqs_ot,
      close_fiscal_quarter_date
   FROM report_quarter_plus_1
   UNION
    SELECT
-     report_user_segment_geo_region_area_sqs_ot,
+     report_user_adjusted_segment_geo_region_area_sqs_ot,
      close_fiscal_quarter_date
   FROM report_quarter_plus_2
   UNION
    SELECT
-     report_user_segment_geo_region_area_sqs_ot,
+     report_user_adjusted_segment_geo_region_area_sqs_ot,
      close_fiscal_quarter_date
   FROM pipeline_gen
   UNION
    SELECT
-     report_user_segment_geo_region_area_sqs_ot,
+     report_user_adjusted_segment_geo_region_area_sqs_ot,
      close_fiscal_quarter_date
   FROM sao_gen
 
@@ -441,7 +441,7 @@ WITH date_details AS (
     SELECT 
       -----------------------------
       -- keys
-      base_fields.report_user_segment_geo_region_area_sqs_ot,
+      base_fields.report_user_adjusted_segment_geo_region_area_sqs_ot,
 
       base_fields.close_fiscal_quarter_date,
       base_fields.close_fiscal_quarter_name,
@@ -565,42 +565,42 @@ WITH date_details AS (
     FROM base_fields
     -- base keys dictionary
     LEFT JOIN agg_demo_keys
-      ON base_fields.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
+      ON base_fields.report_user_adjusted_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_adjusted_segment_geo_region_area_sqs_ot
     -- historical quarter
     LEFT JOIN reported_quarter
       ON base_fields.close_day_of_fiscal_quarter_normalised = reported_quarter.close_day_of_fiscal_quarter_normalised
       AND base_fields.close_fiscal_quarter_date = reported_quarter.close_fiscal_quarter_date   
-      AND base_fields.report_user_segment_geo_region_area_sqs_ot = reported_quarter.report_user_segment_geo_region_area_sqs_ot
+      AND base_fields.report_user_adjusted_segment_geo_region_area_sqs_ot = reported_quarter.report_user_adjusted_segment_geo_region_area_sqs_ot
     -- next quarter in relation to the considered reported quarter
     LEFT JOIN  report_quarter_plus_1
       ON base_fields.close_day_of_fiscal_quarter_normalised = report_quarter_plus_1.close_day_of_fiscal_quarter_normalised
         AND base_fields.close_fiscal_quarter_date = report_quarter_plus_1.close_fiscal_quarter_date   
-        AND base_fields.report_user_segment_geo_region_area_sqs_ot = report_quarter_plus_1.report_user_segment_geo_region_area_sqs_ot    
+        AND base_fields.report_user_adjusted_segment_geo_region_area_sqs_ot = report_quarter_plus_1.report_user_adjusted_segment_geo_region_area_sqs_ot    
     -- 2 quarters ahead in relation to the considered reported quarter
     LEFT JOIN  report_quarter_plus_2
       ON base_fields.close_day_of_fiscal_quarter_normalised = report_quarter_plus_2.close_day_of_fiscal_quarter_normalised
         AND base_fields.close_fiscal_quarter_date = report_quarter_plus_2.close_fiscal_quarter_date   
-        AND base_fields.report_user_segment_geo_region_area_sqs_ot = report_quarter_plus_2.report_user_segment_geo_region_area_sqs_ot
+        AND base_fields.report_user_adjusted_segment_geo_region_area_sqs_ot = report_quarter_plus_2.report_user_adjusted_segment_geo_region_area_sqs_ot
     -- Pipe generation piece
     LEFT JOIN pipeline_gen 
       ON base_fields.close_day_of_fiscal_quarter_normalised = pipeline_gen.close_day_of_fiscal_quarter_normalised
         AND base_fields.close_fiscal_quarter_date = pipeline_gen.close_fiscal_quarter_date   
-        AND base_fields.report_user_segment_geo_region_area_sqs_ot = pipeline_gen.report_user_segment_geo_region_area_sqs_ot
+        AND base_fields.report_user_adjusted_segment_geo_region_area_sqs_ot = pipeline_gen.report_user_adjusted_segment_geo_region_area_sqs_ot
     -- Sales Accepted Opportunity Generation
     LEFT JOIN sao_gen
        ON base_fields.close_day_of_fiscal_quarter_normalised = sao_gen.close_day_of_fiscal_quarter_normalised
         AND base_fields.close_fiscal_quarter_date = sao_gen.close_fiscal_quarter_date   
-        AND base_fields.report_user_segment_geo_region_area_sqs_ot = sao_gen.report_user_segment_geo_region_area_sqs_ot
+        AND base_fields.report_user_adjusted_segment_geo_region_area_sqs_ot = sao_gen.report_user_adjusted_segment_geo_region_area_sqs_ot
     -- One Year Ago  pipeline generation
     LEFT JOIN pipeline_gen  minus_1_year_pipe_gen
       ON minus_1_year_pipe_gen.close_day_of_fiscal_quarter_normalised = base_fields.close_day_of_fiscal_quarter_normalised
         AND minus_1_year_pipe_gen.close_fiscal_quarter_date = DATEADD(month, -12, base_fields.close_fiscal_quarter_date)
-        AND minus_1_year_pipe_gen.report_user_segment_geo_region_area_sqs_ot = base_fields.report_user_segment_geo_region_area_sqs_ot
+        AND minus_1_year_pipe_gen.report_user_adjusted_segment_geo_region_area_sqs_ot = base_fields.report_user_adjusted_segment_geo_region_area_sqs_ot
     -- One Year Ago Sales Accepted Opportunity Generation
     LEFT JOIN sao_gen minus_1_year_sao_gen
       ON minus_1_year_sao_gen.close_day_of_fiscal_quarter_normalised = base_fields.close_day_of_fiscal_quarter_normalised
         AND minus_1_year_sao_gen.close_fiscal_quarter_date = DATEADD(month, -12, base_fields.close_fiscal_quarter_date)
-        AND minus_1_year_sao_gen.report_user_segment_geo_region_area_sqs_ot = base_fields.report_user_segment_geo_region_area_sqs_ot
+        AND minus_1_year_sao_gen.report_user_adjusted_segment_geo_region_area_sqs_ot = base_fields.report_user_adjusted_segment_geo_region_area_sqs_ot
 
 )
 

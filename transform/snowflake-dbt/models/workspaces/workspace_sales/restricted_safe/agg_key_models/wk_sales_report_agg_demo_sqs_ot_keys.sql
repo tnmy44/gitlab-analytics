@@ -61,7 +61,7 @@
           '-',report_opportunity_user_region,
           '-',report_opportunity_user_area
         )
-      ) AS report_user_segment_geo_region_area,
+      ) AS report_user_adjusted_segment_geo_region_area,
       LOWER(
         CONCAT(
           adjusted_report_opportunity_user_segment,
