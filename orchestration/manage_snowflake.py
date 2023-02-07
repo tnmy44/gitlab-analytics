@@ -192,8 +192,8 @@ class SnowflakeManager:
             from snowflake.account_usage.grants_to_roles
             where table_catalog = UPPER('{database}')
             and privilege = 'SELECT'
-            and name in (
-                select table_name
+            and table_schema ||'.'|| name in (
+                select table_schema ||'.'|| table_name
                 from "{clone}".information_schema.tables
             )
             and (grantee_name = UPPER('{role}')

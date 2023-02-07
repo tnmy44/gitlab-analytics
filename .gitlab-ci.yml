@@ -127,7 +127,7 @@ clone_stop:
     - git clone $CI_REPOSITORY_URL
     - analytics/orchestration/manage_snowflake.py delete_clones
 
-grant_clones:
+🔑grant_clones:
   <<: *snowflake_start_clone
   script:
     - manage_snowflake.py grant_clones --database prod --role analytics_engineer_core
