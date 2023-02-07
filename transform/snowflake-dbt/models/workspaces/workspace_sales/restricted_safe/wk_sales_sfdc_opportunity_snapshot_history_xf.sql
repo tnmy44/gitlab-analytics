@@ -200,7 +200,6 @@ WITH date_details AS (
 
       edm_snapshot_opty.dbt_updated_at                            AS _last_dbt_run,
       edm_snapshot_opty.is_deleted,
-      edm_snapshot_opty.last_activity_date,
 
       -- Channel Org. fields
       -- this fields should be changed to this historical version

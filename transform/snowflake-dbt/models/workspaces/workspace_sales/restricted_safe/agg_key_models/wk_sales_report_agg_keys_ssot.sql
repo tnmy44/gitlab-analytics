@@ -6,7 +6,6 @@
 
 -- grains include (pending):
 -- business_unit, segment, geo, region, area, sqs, ot, deal_category, deal_group,
--- role_type
 
 
 WITH report_agg_keys_base AS (
