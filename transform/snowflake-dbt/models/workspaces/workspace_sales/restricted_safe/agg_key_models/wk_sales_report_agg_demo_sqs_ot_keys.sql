@@ -28,8 +28,8 @@
       opp.report_opportunity_user_geo,
       opp.report_opportunity_user_region,
       opp.report_opportunity_user_area,
-      opp.order_type AS order_type_stamped,
-      opp.sales_qualified_source_name AS sales_qualified_source,
+      opp.order_type                                   AS order_type_stamped,
+      opp.sales_qualified_source_name                  AS sales_qualified_source,
       opp.deal_category,
       opp.deal_group,
       opp.account_owner_user_segment,
@@ -54,22 +54,24 @@
       LOWER(deal_category)                            AS deal_category,
       LOWER(deal_group)                               AS deal_group,
 
-      LOWER(CONCAT(adjusted_report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area)) AS report_user_segment_geo_region_area,
       LOWER(
         CONCAT(
-        adjusted_report_opportunity_user_segment,
-        '-',
-        report_opportunity_user_geo,
-        '-',
-        report_opportunity_user_region,
-        '-',
-        report_opportunity_user_area,
-        '-',
-        sales_qualified_source,
-        '-', 
-        order_type_stamped
+          adjusted_report_opportunity_user_segment,
+          '-',report_opportunity_user_geo,
+          '-',report_opportunity_user_region,
+          '-',report_opportunity_user_area
         )
-      )  AS report_user_adjusted_segment_geo_region_area_sqs_ot
+      ) AS report_user_segment_geo_region_area,
+      LOWER(
+        CONCAT(
+          adjusted_report_opportunity_user_segment,
+          '-',report_opportunity_user_geo,
+          '-',report_opportunity_user_region,
+          '-',report_opportunity_user_area,
+          '-',sales_qualified_source,
+          '-', order_type_stamped
+        )
+      ) AS report_user_adjusted_segment_geo_region_area_sqs_ot
     FROM
       fy23_segment_adjustment
 
@@ -107,7 +109,6 @@
         adjusted_report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' ||  sales_qualified_source             AS key_segment_geo_sqs,
         adjusted_report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' ||  deal_group                         AS key_segment_geo_ot,      
 
-
         adjusted_report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region                                     AS key_segment_geo_region,
         adjusted_report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' ||  sales_qualified_source   AS key_segment_geo_region_sqs,
         adjusted_report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' ||  deal_group               AS key_segment_geo_region_ot,   
@@ -116,9 +117,7 @@
         adjusted_report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  sales_qualified_source     AS key_segment_geo_region_area_sqs,
         adjusted_report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  deal_group                 AS key_segment_geo_region_area_ot,
 
-
         adjusted_report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_area                                       AS key_segment_geo_area,
-
 
         COALESCE(adjusted_report_opportunity_user_segment ,'other')                                    AS sales_team_cro_level,
      

@@ -279,6 +279,18 @@ WITH edm_opty AS (
     edm_opty.stage_3_technical_evaluation_fiscal_quarter_name            AS stage_3_fiscal_quarter_name,
     edm_opty.stage_3_technical_evaluation_fiscal_quarter_date            AS stage_3_fiscal_quarter_date,
 
+    edm_opty.last_activity_date,
+    edm_opty.last_activity_fiscal_year,
+    edm_opty.last_activity_fiscal_quarter_name,
+    edm_opty.last_activity_fiscal_quarter_date,
+    edm_opty.last_activity_month                                         AS last_activity_date_month,
+
+    edm_opty.sales_last_activity_date,
+    edm_opty.sales_last_activity_fiscal_year,
+    edm_opty.sales_last_activity_fiscal_quarter_name,
+    edm_opty.sales_last_activity_fiscal_quarter_date,
+    edm_opty.sales_last_activity_month                                   AS sales_last_activity_date_month,
+
     -----------------------------------------------------------------------------------------------------
     -----------------------------------------------------------------------------------------------------
     -- Opportunity User fields
@@ -564,6 +576,8 @@ WITH edm_opty AS (
     SELECT
       oppty_final.*,
 
+
+      -- JK 2023-02-06: FY23 keys for temp dashboard solution until tools are ready for FY24 keys 
       -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with
       -- different aggregation levels
       LOWER(agg_demo_keys_fy23.key_sqs)                             AS key_sqs,
@@ -588,16 +602,16 @@ WITH edm_opty AS (
       agg_demo_keys_fy23.sales_team_asm_level,
 
 
-      -- test FY24 keys
-      LOWER(agg_demo_keys_base.key_bu)                             AS key_bu_fy24,
-      LOWER(agg_demo_keys_base.key_segment)                        AS key_segment_fy24,
-      LOWER(agg_demo_keys_base.key_sqs)                            AS key_sqs_fy24,
-      LOWER(agg_demo_keys_base.key_ot)                             AS key_ot_fy24,
+      -- JK 2023-02-06: FY24 keys
+      LOWER(agg_demo_keys_base.business_unit) AS business_unit,
+      LOWER(agg_demo_keys_base.sub_business_unit) AS sub_business_unit,
+      LOWER(agg_demo_keys_base.division) AS division,
+      LOWER(agg_demo_keys_base.asm) AS asm,
 
-      LOWER(agg_demo_keys_base.sub_business_unit)                  AS sub_bu_fy24,
-      LOWER(agg_demo_keys_base.division)                           AS division_fy24,
-      LOWER(agg_demo_keys_base.asm)                                AS asm_fy24,
-
+      LOWER(agg_demo_keys_base.key_bu) AS key_bu_fy24,
+      LOWER(agg_demo_keys_base.key_bu_subbu) AS key_bu_subbu_fy24,
+      LOWER(agg_demo_keys_base.key_bu_subbu_division) AS key_bu_subbu_division_fy24,
+      LOWER(agg_demo_keys_base.key_bu_subbu_division_asm) AS key_bu_subbu_division_asm_fy24,
 
       -- Created pipeline eligibility definition
       -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389

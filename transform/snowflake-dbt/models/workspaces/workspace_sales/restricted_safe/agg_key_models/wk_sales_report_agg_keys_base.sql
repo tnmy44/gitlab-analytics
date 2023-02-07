@@ -32,28 +32,8 @@ WITH sfdc_account_xf AS (
       account_owner.division,
       account_owner.asm,
 
-      -- CASE
-      --   WHEN  LOWER(order_type) = '1. new - first order'
-      --     THEN 'First Order'
-      --   WHEN LOWER(account_owner.role_name) like ('pooled%')
-      --         AND report_opportunity_user_segment IN ('smb','mid-market')
-      --         AND LOWER(order_type) != '1. new - first order'
-      --     THEN 'Pooled'
-      --   WHEN LOWER(account_owner.role_name) like ('terr%')
-      --         AND report_opportunity_user_segment IN ('smb','mid-market')
-      --         AND LOWER(order_type) != '1. new - first order'
-      --     THEN 'Territory'
-      --   WHEN LOWER(account_owner.role_name) like ('named%')
-      --         AND report_opportunity_user_segment IN ('smb','mid-market')
-      --         AND LOWER(order_type) != '1. new - first order'
-      --     THEN 'Named'
-      --   WHEN LOWER(order_type) IN ('2. new - connected', '4. contraction', '6. churn - final', '5. churn - partial', '3. growth')
-      --         AND report_opportunity_user_segment IN ('smb','mid-market')
-      --     THEN 'Expansion'
-      --   ELSE 'Other'
-      -- END AS role_type,
-
-
+      -- JK 2023-02-07: these will be added to mart_crm_opportunity
+      -- https://gitlab.com/gitlab-com/sales-team/field-operations/analytics/-/issues/418
       CASE
         WHEN (sales_qualified_source_name = 'Channel Generated' OR sales_qualified_source_name = 'Partner Generated')
             THEN 'Partner Sourced'
@@ -65,7 +45,6 @@ WITH sfdc_account_xf AS (
             THEN 'Alliance Co-Sell'
         ELSE 'Direct'
       END                                               AS partner_category,
-
       CASE
         WHEN LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%')
           THEN 'GCP'
@@ -75,7 +54,6 @@ WITH sfdc_account_xf AS (
           THEN 'Channel'
         ELSE 'Direct'
       END                                               AS alliance_partner,
-
 
       report_opportunity_user_segment,
       report_opportunity_user_geo,
@@ -121,7 +99,6 @@ WITH sfdc_account_xf AS (
 
         LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area))                                                       AS report_user_segment_geo_region_area,
         LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area,'-',sales_qualified_source,'-', order_type_stamped))    AS report_user_segment_geo_region_area_sqs_ot,
-        LOWER(CONCAT(business_unit,'-',report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area,'-',sales_qualified_source,'-',order_type_stamped,'-',role_type,'-',partner_category,'-',alliance_partner)) AS report_bu_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
 
         LOWER(
           CONCAT(
@@ -132,8 +109,23 @@ WITH sfdc_account_xf AS (
             '-',report_opportunity_user_area,
             '-',sales_qualified_source,
             '-',order_type_stamped
-            )
-          ) AS report_bu_user_segment_geo_region_area_sqs_ot,
+          )
+        ) AS report_bu_user_segment_geo_region_area_sqs_ot,
+
+        LOWER(
+          CONCAT(
+            business_unit,
+            '-',report_opportunity_user_segment,
+            '-',report_opportunity_user_geo,
+            '-',report_opportunity_user_region,
+            '-',report_opportunity_user_area,
+            '-',sales_qualified_source,
+            '-',order_type_stamped,
+            '-',role_type,
+            '-',partner_category,
+            '-',alliance_partner
+          )
+        ) AS report_bu_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
 
         LOWER(
           CONCAT(
@@ -177,10 +169,8 @@ WITH sfdc_account_xf AS (
         LOWER(partner_category)                      AS partner_category,
         LOWER(alliance_partner)                      AS alliance_partner,
 
-
         LOWER(CONCAT(account_owner_user_segment,'-',account_owner_user_geo,'-',account_owner_user_region,'-',account_owner_user_area))                                                          AS report_user_segment_geo_region_area,
         LOWER(CONCAT(account_owner_user_segment,'-',account_owner_user_geo,'-',account_owner_user_region,'-',account_owner_user_area, '-', sales_qualified_source, '-', order_type_stamped))    AS report_user_segment_geo_region_area_sqs_ot,
-        LOWER(CONCAT(business_unit,'-',account_owner_user_segment,'-',account_owner_user_geo,'-',account_owner_user_region,'-',account_owner_user_area,'-',sales_qualified_source,'-',order_type_stamped,'-',role_type,'-',partner_category,'-',alliance_partner)) AS report_bu_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
 
         LOWER(
           CONCAT(
@@ -193,6 +183,21 @@ WITH sfdc_account_xf AS (
             '-',order_type_stamped
             )
           ) AS report_bu_user_segment_geo_region_area_sqs_ot,
+
+        LOWER(
+          CONCAT(
+            business_unit,
+            '-',account_owner_user_segment,
+            '-',account_owner_user_geo,
+            '-',account_owner_user_region,
+            '-',account_owner_user_area,
+            '-',sales_qualified_source,
+            '-',order_type_stamped,
+            '-',role_type,
+            '-',partner_category,
+            '-',alliance_partner
+          )
+        ) AS report_bu_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
 
         LOWER(
           CONCAT(
@@ -213,7 +218,6 @@ WITH sfdc_account_xf AS (
           ) AS report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap
 
   FROM field_for_keys
-
 
 ), valid_keys AS (
 
@@ -236,9 +240,13 @@ WITH sfdc_account_xf AS (
         -- Segment - Geo - Region - Area - Order Type Group 
         -- Segment - Geo - Region - Area - Sales Qualified Source
 
+        -- 
+
+
+
         eligible.*,
 
-        business_unit AS key_bu,
+
         report_opportunity_user_segment   AS key_segment,
         sales_qualified_source            AS key_sqs,
         deal_group                        AS key_ot,
@@ -265,37 +273,14 @@ WITH sfdc_account_xf AS (
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_area                                       AS key_segment_geo_area,
 
 
-
         -- FY24 structure keys (pending)
-        business_unit || '_' || report_opportunity_user_geo AS key_bu_geo,
-        partner_category || '_' || business_unit AS key_pc_bu,
-        alliance_partner || '_' || business_unit AS key_ap_bu,
-
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region AS key_bu_geo_region,
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_segment AS key_bu_geo_segment,
-        business_unit || '_' || report_opportunity_user_geo || '_' || role_type AS key_bu_geo_rt,
-        partner_category || '_' || business_unit || '_' || report_opportunity_user_geo AS key_pc_bu_geo,
-        alliance_partner || '_' || business_unit || '_' || report_opportunity_user_geo AS key_ap_bu_geo,
-
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area AS key_bu_geo_region_area,
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || role_type AS key_bu_geo_region_rt,
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_segment || '_' || report_opportunity_user_region AS key_bu_geo_segment_region,
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_segment || '_' || role_type AS key_bu_geo_segment_rt,
-
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || report_opportunity_user_segment AS key_bu_geo_region_area_segment,
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || role_type AS key_bu_geo_region_area_rt,
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_segment || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area AS key_bu_geo_segment_region_area,
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_segment || '_' || report_opportunity_user_region || '_' || role_type AS key_bu_geo_segment_region_rt,
-
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || report_opportunity_user_segment || '_' || role_type AS key_bu_geo_region_area_segment_rt,
-        business_unit || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_segment || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || role_type AS key_bu_geo_segment_region_area_rt,
-
-
+        business_unit AS key_bu,
         business_unit || '_' || sub_business_unit AS key_bu_subbu,
         business_unit || '_' || sub_business_unit || '_' || division AS key_bu_subbu_division,
         business_unit || '_' || sub_business_unit || '_' || division || '_' || asm AS key_bu_subbu_division_asm,
 
 
+        -- FY22 keys
         COALESCE(report_opportunity_user_segment ,'other')                                    AS sales_team_cro_level,
      
         -- NF: This code replicates the reporting structured of FY22, to keep current tools working

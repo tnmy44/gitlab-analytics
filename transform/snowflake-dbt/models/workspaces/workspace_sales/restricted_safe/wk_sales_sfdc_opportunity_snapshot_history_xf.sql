@@ -54,7 +54,8 @@ WITH date_details AS (
       adjusted_report_opportunity_user_segment,
       report_user_adjusted_segment_geo_region_area_sqs_ot,
 
-      -- NF 2022-02-17 new aggregated keys 
+      
+      -- FY23 keys 
       key_sqs,
       key_ot,
 
@@ -75,7 +76,17 @@ WITH date_details AS (
       key_segment_geo_region_area_ot,
 
       key_segment_geo_area,
-      
+
+      -- FY24 keys
+      business_unit,
+      sub_business_unit,
+      division,
+      asm,
+      key_bu_fy24,
+      key_bu_subbu_fy24,
+      key_bu_subbu_division_fy24,
+      key_bu_subbu_division_asm_fy24,
+
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
       -- I am adding this logic
@@ -331,6 +342,18 @@ WITH date_details AS (
       edm_snapshot_opty.sales_accepted_fiscal_quarter_name,
       edm_snapshot_opty.sales_accepted_fiscal_quarter_date,
 
+      edm_snapshot_opty.last_activity_date,
+      edm_snapshot_opty.last_activity_fiscal_year,
+      edm_snapshot_opty.last_activity_fiscal_quarter_name,
+      edm_snapshot_opty.last_activity_fiscal_quarter_date,
+      edm_snapshot_opty.last_activity_month                      AS last_activity_date_month,
+
+      edm_snapshot_opty.sales_last_activity_date,
+      edm_snapshot_opty.sales_last_activity_fiscal_year,
+      edm_snapshot_opty.sales_last_activity_fiscal_quarter_name,
+      edm_snapshot_opty.sales_last_activity_fiscal_quarter_date,
+      edm_snapshot_opty.sales_last_activity_month                AS sales_last_activity_date_month,
+
       edm_snapshot_opty.lead_source,
       edm_snapshot_opty.net_new_source_categories,           
       edm_snapshot_opty.record_type_id,
@@ -444,7 +467,17 @@ WITH date_details AS (
       sfdc_opportunity_xf.deal_group,
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.is_edu_oss,
-      
+
+      -- FY24 keys
+      sfdc_opportunity_xf.business_unit,
+      sfdc_opportunity_xf.sub_business_unit,
+      sfdc_opportunity_xf.division,
+      sfdc_opportunity_xf.asm,
+      sfdc_opportunity_xf.key_bu_fy24,
+      sfdc_opportunity_xf.key_bu_subbu_fy24,
+      sfdc_opportunity_xf.key_bu_subbu_division_fy24,
+      sfdc_opportunity_xf.key_bu_subbu_division_asm_fy24,
+
       -- fields calculated with both live and snapshot fields
       CASE 
         WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
