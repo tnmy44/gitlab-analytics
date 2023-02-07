@@ -157,11 +157,11 @@ WITH RECURSIVE base AS (
 
       -- Business Unit (X-Ray 1st hierarchy)
       -- will be replaced with the actual field
-      CASE user_segment
-        WHEN 'large' THEN 'Ent-G'
-        WHEN 'pubsec' THEN 'Ent-H'
-        WHEN 'mid-market' THEN 'Comm'
-        WHEN 'smb' THEN 'Comm'
+      CASE LOWER(user_segment)
+        WHEN 'large' THEN 'ENTG'
+        WHEN 'pubsec' THEN 'ENTG'
+        WHEN 'mid-market' THEN 'COMM'
+        WHEN 'smb' THEN 'COMM'
         WHEN 'jihu' THEN 'JiHu'
         ELSE 'Other'
       END AS business_unit,
@@ -172,48 +172,48 @@ WITH RECURSIVE base AS (
       Therefore when making changes to the field, make sure to understand implications on the whole key hierarchy
       */
       CASE
-        WHEN LOWER(business_unit) = 'ent-g'
+        WHEN LOWER(business_unit) = 'entg'
           THEN user_geo
 
         WHEN
           LOWER(business_unit) = 'comm'
           AND
             (
-            user_segment = 'smb' 
-            AND user_geo = 'amer'
-            AND user_area = 'lowtouch'
+            LOWER(user_segment) = 'smb'
+            AND LOWER(user_geo) = 'amer'
+            AND LOWER(user_area) = 'lowtouch'
             ) 
           THEN 'AMER Low-Touch'
         WHEN
           LOWER(business_unit) = 'comm'
           AND
             (
-            user_segment = 'mid-market'
-            AND (user_geo = 'amer' OR user_geo = 'emea')
+            LOWER(user_segment) = 'mid-market'
+            AND (LOWER(user_geo) = 'amer' OR LOWER(user_geo) = 'emea')
             AND LOWER(role_type) = 'first order'
             )
           THEN 'MM First Orders'  --mid-market FO(?)
         WHEN
           LOWER(business_unit) = 'comm'
-          AND user_geo = 'emea'
+          AND LOWER(user_geo) = 'emea'
           AND 
             (
-            user_segment != 'mid-market'
+            LOWER(user_segment) != 'mid-market'
             AND LOWER(role_type) != 'first order'
             )
           THEN  'EMEA'
         WHEN
           LOWER(business_unit) = 'comm'
-          AND user_geo = 'amer'
+          AND LOWER(user_geo) = 'amer'
           AND
             (
-            user_segment != 'mid-market'
+            LOWER(user_segment) != 'mid-market'
             AND LOWER(role_type) != 'first order'
             )
           AND
             (
-            user_segment != 'smb'
-            AND user_area != 'lowtouch'
+            LOWER(user_segment) != 'smb'
+            AND LOWER(user_area) != 'lowtouch'
             )
           THEN 'AMER'
         ELSE 'Other'
@@ -221,18 +221,18 @@ WITH RECURSIVE base AS (
 
       -- Division (X-Ray 3rd hierarchy)
       CASE 
-        WHEN LOWER(business_unit) = 'ent-g'
+        WHEN LOWER(business_unit) = 'entg'
           THEN user_region
 
         WHEN 
           LOWER(business_unit) = 'comm'
           AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
-          AND user_segment = 'mid-market'
+          AND LOWER(user_segment) = 'mid-market'
           THEN 'Mid-Market'
         WHEN
           LOWER(business_unit) = 'comm'
           AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
-          AND user_segment = 'smb'
+          AND LOWER(user_segment) = 'smb'
           THEN 'SMB'
         WHEN
           LOWER(business_unit) = 'comm'
@@ -248,22 +248,22 @@ WITH RECURSIVE base AS (
       -- ASM (X-Ray 4th hierarchy): definition pending
       CASE
         WHEN 
-          LOWER(business_unit) = 'ent-g'
+          LOWER(business_unit) = 'entg'
           AND LOWER(sub_business_unit) = 'amer'
           THEN user_area
 
         WHEN 
-          LOWER(business_unit) = 'ent-g'
+          LOWER(business_unit) = 'entg'
           AND LOWER(sub_business_unit) = 'emea'
           AND (LOWER(division) = 'dach' OR LOWER(division) = 'neur' OR LOWER(division) = 'seur')
           THEN user_area
         WHEN
-          LOWER(business_unit) = 'ent-g'
+          LOWER(business_unit) = 'entg'
           AND LOWER(sub_business_unit) = 'emea'
           AND LOWER(division) = 'meta'
           THEN user_segment --- pending/ waiting for Meri?
         WHEN 
-          LOWER(business_unit) = 'ent-g'
+          LOWER(business_unit) = 'entg'
           AND (LOWER(sub_business_unit) = 'apac' OR LOWER(sub_business_unit) = 'pubsec')
           THEN user_area
 

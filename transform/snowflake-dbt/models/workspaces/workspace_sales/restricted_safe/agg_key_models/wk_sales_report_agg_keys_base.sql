@@ -126,6 +126,18 @@ WITH sfdc_account_xf AS (
         LOWER(
           CONCAT(
             business_unit,
+            '-',report_opportunity_user_segment,
+            '-',report_opportunity_user_geo,
+            '-',report_opportunity_user_region,
+            '-',report_opportunity_user_area,
+            '-',sales_qualified_source,
+            '-',order_type_stamped
+            )
+          ) AS report_bu_user_segment_geo_region_area_sqs_ot,
+
+        LOWER(
+          CONCAT(
+            business_unit,
             '-',sub_business_unit,
             '-',division,
             '-',asm,
@@ -169,6 +181,18 @@ WITH sfdc_account_xf AS (
         LOWER(CONCAT(account_owner_user_segment,'-',account_owner_user_geo,'-',account_owner_user_region,'-',account_owner_user_area))                                                          AS report_user_segment_geo_region_area,
         LOWER(CONCAT(account_owner_user_segment,'-',account_owner_user_geo,'-',account_owner_user_region,'-',account_owner_user_area, '-', sales_qualified_source, '-', order_type_stamped))    AS report_user_segment_geo_region_area_sqs_ot,
         LOWER(CONCAT(business_unit,'-',account_owner_user_segment,'-',account_owner_user_geo,'-',account_owner_user_region,'-',account_owner_user_area,'-',sales_qualified_source,'-',order_type_stamped,'-',role_type,'-',partner_category,'-',alliance_partner)) AS report_bu_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
+
+        LOWER(
+          CONCAT(
+            business_unit,
+            '-',account_owner_user_segment,
+            '-',account_owner_user_geo,
+            '-',account_owner_user_region,
+            '-',account_owner_user_area,
+            '-',sales_qualified_source,
+            '-',order_type_stamped
+            )
+          ) AS report_bu_user_segment_geo_region_area_sqs_ot,
 
         LOWER(
           CONCAT(

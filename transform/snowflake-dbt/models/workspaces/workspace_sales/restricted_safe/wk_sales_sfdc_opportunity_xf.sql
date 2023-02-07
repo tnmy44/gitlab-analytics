@@ -31,10 +31,10 @@ WITH edm_opty AS (
     FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
     --FROM restricted_safe_workspace_sales.report_agg_demo_sqs_ot_keys
 
-), agg_demo_keys_fy24 AS (
+), agg_demo_keys_base AS (
 
     SELECT *
-    FROM {{ ref('wk_sales_report_agg_keys_ssot') }}
+    FROM {{ ref('wk_sales_report_agg_keys_base') }}
     --FROM restricted_safe_workspace_sales.report_agg_demo_sqs_ot_keys
 
 ), today AS (
@@ -411,18 +411,59 @@ WITH edm_opty AS (
         edm_opty.order_type
       )
     ) AS report_user_adjusted_segment_geo_region_area_sqs_ot,
-
-
     
+    CASE
+      WHEN (edm_opty.sales_qualified_source_name = 'Partner Generated')
+          THEN 'Partner Sourced'
+      WHEN (edm_opty.sales_qualified_source_name != 'Partner Generated')
+          AND NOT LOWER(resale_account.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
+          THEN 'Channel Co-Sell'
+      WHEN (edm_opty.sales_qualified_source_name != 'Partner Generated')
+          AND LOWER(resale_account.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
+          THEN 'Alliance Co-Sell'
+      ELSE 'Direct'
+    END AS partner_category,
+
+    CASE
+      WHEN LOWER(resale_account.account_name) LIKE ANY ('%google%','%gcp%')
+        THEN 'GCP'
+      WHEN LOWER(resale_account.account_name) LIKE ANY ('%amazon%')
+        THEN 'AWS'
+      WHEN LOWER(resale_account.account_name) IS NOT NULL
+        THEN 'Channel'
+      ELSE 'Direct'
+    END                                               AS alliance_partner,
 
 
-
-
-
-
-
-
-
+    LOWER(
+      CONCAT(
+        opportunity_owner.business_unit,
+        '-',
+        opportunity_owner.sub_business_unit,
+        '-',
+        opportunity_owner.division,
+        '-',
+        opportunity_owner.asm,
+        '-',
+        edm_opty.report_opportunity_user_segment,
+        '-',
+        edm_opty.report_opportunity_user_geo,
+        '-',
+        edm_opty.report_opportunity_user_region,
+        '-',
+        edm_opty.report_opportunity_user_area,
+        '-',
+        edm_opty.sales_qualified_source_name,
+        '-',
+        edm_opty.order_type,
+        '-',
+        opportunity_owner.role_type,
+        '-',
+        partner_category,
+        '-',
+        alliance_partner
+      )
+    ) AS report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
 
 
     edm_opty.deal_size,
@@ -548,10 +589,17 @@ WITH edm_opty AS (
 
 
       -- test FY24 keys
-      -- LOWER(agg_demo_keys_fy24.key_bu)                             AS key_bu_fy24,
-      -- LOWER(agg_demo_keys_fy24.key_segment)                        AS key_segment_fy24,
-      -- LOWER(agg_demo_keys_fy24.key_sqs)                            AS key_sqs_fy24,
-      -- LOWER(agg_demo_keys_fy24.key_ot)                             AS key_ot_fy24,
+      LOWER(agg_demo_keys_base.key_bu)                             AS key_bu_fy24,
+      LOWER(agg_demo_keys_base.key_segment)                        AS key_segment_fy24,
+      LOWER(agg_demo_keys_base.key_sqs)                            AS key_sqs_fy24,
+      LOWER(agg_demo_keys_base.key_ot)                             AS key_ot_fy24,
+
+      LOWER(agg_demo_keys_base.sub_business_unit)                  AS sub_bu_fy24,
+      LOWER(agg_demo_keys_base.division)                           AS division_fy24,
+      LOWER(agg_demo_keys_base.asm)                                AS asm_fy24,
+
+
+
 
 
       -- Created pipeline eligibility definition
@@ -577,8 +625,8 @@ WITH edm_opty AS (
     -- Add keys for aggregated analysis
     LEFT JOIN agg_demo_keys_fy23
       ON oppty_final.report_user_adjusted_segment_geo_region_area_sqs_ot = agg_demo_keys_fy23.report_user_adjusted_segment_geo_region_area_sqs_ot
-    -- LEFT JOIN agg_demo_keys_fy24
-    --   ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys_fy24.report_user_segment_geo_region_area_sqs_ot
+    LEFT JOIN agg_demo_keys_base
+      ON oppty_final.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap = agg_demo_keys_base.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap
 
 
 )
