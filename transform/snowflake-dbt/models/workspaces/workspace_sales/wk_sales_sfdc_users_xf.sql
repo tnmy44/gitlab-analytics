@@ -44,7 +44,7 @@ WITH RECURSIVE base AS (
       users.manager_name,
       users.manager_id,
       level + 1,
-      path || managers.role_name || '::'
+      path || COALESCE(managers.role_name,'') || '::'
     FROM base users
     INNER JOIN managers
       ON users.manager_id = managers.user_id

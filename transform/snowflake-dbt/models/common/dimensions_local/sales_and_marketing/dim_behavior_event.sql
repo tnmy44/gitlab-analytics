@@ -1,6 +1,7 @@
 {{ config(
         materialized = "incremental",
-        unique_key = "dim_behavior_event_sk"
+        unique_key = "dim_behavior_event_sk",
+        tags=['product']
 ) }}
 
 {{ simple_cte([

@@ -7,10 +7,9 @@ WITH source AS (
 
     SELECT
 
-      id::NUMBER                           AS label_priority_id,
-      project_id::NUMBER                   AS project_id,
-      label_id::NUMBER                     AS label_id,
-      priority::NUMBER                     AS priority,
+      id::NUMBER                            AS label_priority_id,
+      project_id::NUMBER                    AS project_id,
+      label_id::NUMBER                      AS label_id,
       created_at::TIMESTAMP                 AS created_at,
       updated_at::TIMESTAMP                 AS updated_at
 
