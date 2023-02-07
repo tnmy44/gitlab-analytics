@@ -599,9 +599,6 @@ WITH edm_opty AS (
       LOWER(agg_demo_keys_base.asm)                                AS asm_fy24,
 
 
-
-
-
       -- Created pipeline eligibility definition
       -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389
       CASE
