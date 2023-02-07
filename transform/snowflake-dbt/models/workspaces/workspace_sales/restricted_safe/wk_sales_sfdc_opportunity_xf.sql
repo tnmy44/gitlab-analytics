@@ -425,12 +425,12 @@ WITH edm_opty AS (
     ) AS report_user_adjusted_segment_geo_region_area_sqs_ot,
     
     CASE
-      WHEN (edm_opty.sales_qualified_source_name = 'Partner Generated')
+      WHEN (edm_opty.sales_qualified_source_name = 'Channel Generated' OR edm_opty.sales_qualified_source_name = 'Partner Generated')
           THEN 'Partner Sourced'
-      WHEN (edm_opty.sales_qualified_source_name != 'Partner Generated')
+      WHEN (edm_opty.sales_qualified_source_name != 'Channel Generated' AND edm_opty.sales_qualified_source_name != 'Partner Generated')
           AND NOT LOWER(resale_account.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
           THEN 'Channel Co-Sell'
-      WHEN (edm_opty.sales_qualified_source_name != 'Partner Generated')
+      WHEN (edm_opty.sales_qualified_source_name != 'Channel Generated' AND edm_opty.sales_qualified_source_name != 'Partner Generated')
           AND LOWER(resale_account.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
           THEN 'Alliance Co-Sell'
       ELSE 'Direct'

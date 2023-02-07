@@ -35,12 +35,12 @@ WITH sfdc_account_xf AS (
       -- JK 2023-02-07: these will be added to mart_crm_opportunity
       -- https://gitlab.com/gitlab-com/sales-team/field-operations/analytics/-/issues/418
       CASE
-        WHEN sales_qualified_source_name = 'Partner Generated'
+        WHEN (sales_qualified_source_name = 'Channel Generated' OR sales_qualified_source_name = 'Partner Generated')
             THEN 'Partner Sourced'
-        WHEN sales_qualified_source_name != 'Partner Generated'
+        WHEN (sales_qualified_source_name != 'Channel Generated' AND sales_qualified_source_name != 'Partner Generated')
             AND NOT LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
             THEN 'Channel Co-Sell'
-        WHEN sales_qualified_source_name != 'Partner Generated'
+        WHEN (sales_qualified_source_name != 'Channel Generated' AND sales_qualified_source_name != 'Partner Generated')
             AND LOWER(resale.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
             THEN 'Alliance Co-Sell'
         ELSE 'Direct'
