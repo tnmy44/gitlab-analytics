@@ -297,4 +297,4 @@ SELECT
   sum(export.cost_before_credits) as cost_before_credits,
   sum(export.total_cost) AS net_cost
 FROM export
-{{ dbt_utils.group_by(n=9) }}
+{{ dbt_utils.group_by(n=8) }}
