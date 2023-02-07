@@ -298,6 +298,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.business_development_rep,
       sfdc_account.dedicated_service_engineer,
       sfdc_account.account_tier,
+      sfdc_account.account_tier_notes,
       sfdc_account.license_utilization,
       sfdc_account.support_level,
       sfdc_account.named_account,

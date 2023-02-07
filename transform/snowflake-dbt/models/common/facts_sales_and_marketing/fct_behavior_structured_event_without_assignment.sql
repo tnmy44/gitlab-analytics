@@ -2,6 +2,7 @@
         materialized = "incremental",
         unique_key = "behavior_structured_event_pk",
         on_schema_change='sync_all_columns',
+        tags=['product'],
         cluster_by=['behavior_at::DATE']
 ) }}
 
