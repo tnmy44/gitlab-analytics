@@ -110,8 +110,8 @@ def load_report_body_snow(
 
 
 def move_file_to_processed(bucket: str, file_name: str) -> None:
-    source_bucket = get_gcs_storage_client.bucket(bucket)
-    destination_bucket = get_gcs_storage_client.bucket(bucket)
+    source_bucket = get_gcs_storage_client().bucket(bucket)
+    destination_bucket = get_gcs_storage_client().bucket(bucket)
     report_ran_date = file_name.split("/")[-2]
     file_name_without_path = file_name.split("/")[-1]
     destination_file_name = f"RAW_DB/processed/zuora_revenue_report/{report_ran_date}/{file_name_without_path}"
