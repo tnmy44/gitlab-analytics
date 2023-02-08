@@ -478,7 +478,7 @@ WITH date_details AS (
       agg_demo_keys.key_segment_geo_region_area_sqs,
       agg_demo_keys.key_segment_geo_region_area_ot,
 
-      agg_demo_keys.report_user_segment_geo_region_area,
+      agg_demo_keys.report_user_adjusted_segment_geo_region_area,
 
       -- used to track the latest updated day in the model
       -- this might be different to the latest available information in the source models

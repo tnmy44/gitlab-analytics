@@ -320,7 +320,7 @@ WITH date_details AS (
       agg_demo_keys.key_segment_geo_region_area_sqs,
       agg_demo_keys.key_segment_geo_region_area_ot,
 
-      agg_demo_keys.report_user_segment_geo_region_area,
+      agg_demo_keys.report_user_adjusted_segment_geo_region_area,
 
       ---------------------------------------------------
       -- current fiscal year
