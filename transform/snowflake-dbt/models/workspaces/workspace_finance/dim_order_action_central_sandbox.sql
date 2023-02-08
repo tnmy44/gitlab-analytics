@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi"]
 ) }}
 
 

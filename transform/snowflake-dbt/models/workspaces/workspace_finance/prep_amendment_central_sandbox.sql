@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi"]
 ) }}
 
 WITH zuora_central_sandbox_amendment AS (
