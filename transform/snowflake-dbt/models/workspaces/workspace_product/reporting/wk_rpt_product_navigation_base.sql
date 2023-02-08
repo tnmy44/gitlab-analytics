@@ -20,8 +20,8 @@ WITH filtered_snowplow_events AS (
     gsc_namespace_id,
     session_id
   FROM {{ ref('snowplow_structured_events_400') }}
-  WHERE derived_tstamp >= '2022-01-01'
-    AND (
+  WHERE 
+  (
       (
         event_label IN (
           'main_navigation',
@@ -45,26 +45,19 @@ WITH filtered_snowplow_events AS (
         AND event_action = 'click_dropdown'
       ) OR
       (
-        event_action IN (
-          'click_menu_item',
-          'click_menu'
-        )
-        AND event_category LIKE 'projects%'
-      ) OR
-      (
-        event_label IN (
-          'packages_registry',
-          'container_registry',
-          'infrastructure_registry',
-          'kubernetes',
-          'terraform'
-        )
-        AND event_action = 'click_menu_item'
-      ) OR
+      (event_action = 'click_menu' OR event_action = 'click_menu_item')
+      AND 
+      (event_category LIKE 'dashboard%' OR event_category LIKE 'root%')
+      ) 
+      OR
       (
         event_action = 'render' AND event_label = 'user_side_navigation'
       )
     )
+    OR
+    event_label LIKE 'groups_dropdown_%'
+    OR 
+    event_label LIKE 'project_dropdown_%'
   {% if is_incremental() %}
 
     AND  derived_tstamp > (SELECT MAX(derived_tstamp) FROM {{ this }})
@@ -75,7 +68,7 @@ WITH filtered_snowplow_events AS (
 {{ dbt_audit(
     cte_ref="filtered_snowplow_events",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@mpetersen",
     created_date="2022-10-11",
-    updated_date="2022-10-11"
+    updated_date="2023-02-09"
 ) }}
