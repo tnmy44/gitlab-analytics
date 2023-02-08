@@ -98,10 +98,9 @@ def extract_logs(
                     time.sleep(60)
                     response = requests.get(page_token, auth=("api", api_key))
 
-                page_token = data.get("paging").get("next")
-
                 try:
                     data = response.json()
+                    page_token = data.get("paging").get("next")
                     items = data.get("items")
                     if items is None or len(items) == 0:
                         info("Another empty response, ending")
