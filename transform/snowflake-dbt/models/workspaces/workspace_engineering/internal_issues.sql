@@ -6,75 +6,90 @@ WITH internal_projects AS (
   SELECT *
   FROM {{ ref('map_project_internal') }}
 
-), issues AS (
+),
 
-    SELECT 
-      issues.*,
-      internal_projects.parent_namespace_id AS namespace_id,
-      internal_projects.ultimate_parent_namespace_id
-    FROM {{ref('gitlab_dotcom_issues_source')}} AS issues
-    INNER JOIN internal_projects
-      ON issues.project_id = internal_projects.project_id
-    
+issues AS (
 
-), label_links AS (
+  SELECT
+    issues.*,
+    internal_projects.parent_namespace_id AS namespace_id,
+    internal_projects.ultimate_parent_namespace_id
+  FROM {{ ref('gitlab_dotcom_issues_source') }} AS issues
+  INNER JOIN internal_projects
+    ON issues.project_id = internal_projects.project_id
 
-    SELECT *
-    FROM {{ref('gitlab_dotcom_label_links')}}
-    WHERE is_currently_valid = True
-      AND target_type = 'Issue'
 
-), all_labels AS (
+),
 
-    SELECT 
-    labels.*
-    FROM {{ ref('gitlab_dotcom_labels_source') }} AS labels
+label_links AS (
 
-), derived_close_date AS (
+  SELECT *
+  FROM {{ ref('gitlab_dotcom_label_links') }}
+  WHERE is_currently_valid = TRUE
+    AND target_type = 'Issue'
 
-    SELECT
-      noteable_id AS issue_id,
-      created_at  AS derived_closed_at
-    FROM {{ref('gitlab_dotcom_notes_source')}}
-    WHERE noteable_type = 'Issue'
-      AND system = TRUE
-      AND (CONTAINS(note, 'closed')
+),
+
+all_labels AS (
+
+  SELECT labels.*
+  FROM {{ ref('gitlab_dotcom_labels_source') }} AS labels
+
+),
+
+derived_close_date AS (
+
+  SELECT
+    noteable_id AS issue_id,
+    created_at  AS derived_closed_at
+  FROM {{ ref('gitlab_dotcom_notes_source') }}
+  WHERE noteable_type = 'Issue'
+    AND system = TRUE
+    AND (CONTAINS(note, 'closed')
       OR CONTAINS(note, 'moved to'))
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY noteable_id ORDER BY created_at DESC) = 1
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY noteable_id ORDER BY created_at DESC) = 1
 
-), agg_labels AS (
+),
 
-    SELECT
-      issues.issue_id,
-      ARRAY_AGG(LOWER(all_labels.label_title)) WITHIN GROUP (ORDER BY all_labels.label_title ASC) AS labels
-    FROM issues
-    LEFT JOIN label_links
-      ON issues.issue_id = label_links.target_id
-    LEFT JOIN all_labels
-      ON label_links.label_id = all_labels.label_id
-    GROUP BY issues.issue_id
+agg_labels AS (
+
+  SELECT
+    issues.issue_id,
+    ARRAY_AGG(LOWER(all_labels.label_title)) WITHIN GROUP (ORDER BY all_labels.label_title ASC) AS labels
+  FROM issues
+  LEFT JOIN label_links
+    ON issues.issue_id = label_links.target_id
+  LEFT JOIN all_labels
+    ON label_links.label_id = all_labels.label_id
+  GROUP BY 1
 
 ),
 
 issue_metrics AS (
 
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_issue_metrics_source') }}
+  SELECT *
+  FROM {{ ref('gitlab_dotcom_issue_metrics_source') }}
 
-), events_weight AS (
+),
 
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_resource_weight_events_source') }}
+events_weight AS (
 
-), first_events_weight AS (
+  SELECT *
+  FROM {{ ref('gitlab_dotcom_resource_weight_events_source') }}
 
-    SELECT
-      issue_id,
-      MIN(created_at) first_weight_set_at
-    FROM events_weight
-    GROUP BY 1
+),
 
-), joined AS (
+first_events_weight AS (
+
+  SELECT
+    issue_id,
+    MIN(created_at) AS first_weight_set_at
+  FROM events_weight
+  GROUP BY 1
+
+),
+
+joined AS (
 
   SELECT
     issues.issue_id,
@@ -84,29 +99,25 @@ issue_metrics AS (
     issues.issue_title,
     issues.issue_description,
     issues.namespace_id,
-    issues.ultimate_parent_namespace_id AS ultimate_parent_id,
+    issues.ultimate_parent_namespace_id                                                AS ultimate_parent_id,
     issues.milestone_id,
     issues.sprint_id,
     issues.updated_by_id,
     issues.last_edited_by_id,
     issues.moved_to_id,
-    issues.created_at                            AS issue_created_at,
-    issues.updated_at                            AS issue_updated_at,
+    issues.created_at                                                                  AS issue_created_at,
+    issues.updated_at                                                                  AS issue_updated_at,
     issues.issue_last_edited_at,
     --issue_closed_at,
-    IFF(issues.issue_closed_at IS NULL 
-        AND state = 'closed',
-        derived_close_date.derived_closed_at,
-        issues.issue_closed_at)                         AS issue_closed_at,
+    IFF(issues.issue_closed_at IS NULL
+      AND issues.state = 'closed',
+      derived_close_date.derived_closed_at,
+      issues.issue_closed_at)                                                          AS issue_closed_at,
     --issues.visibility_level,
-    issues.is_confidential                              AS issue_is_confidential,
+    issues.is_confidential                                                             AS issue_is_confidential,
 
-    CASE
-    WHEN issues.namespace_id = 9970
-      AND ARRAY_CONTAINS('community contribution'::VARIANT, agg_labels.labels)
-      THEN TRUE
-    ELSE FALSE
-    END                                          AS is_community_contributor_related,
+    COALESCE(issues.namespace_id = 9970
+      AND ARRAY_CONTAINS('community contribution'::VARIANT, agg_labels.labels), FALSE) AS is_community_contributor_related,
 
     CASE
       WHEN ARRAY_CONTAINS('severity::1'::VARIANT, agg_labels.labels) OR ARRAY_CONTAINS('S1'::VARIANT, agg_labels.labels)
@@ -118,7 +129,7 @@ issue_metrics AS (
       WHEN ARRAY_CONTAINS('severity::4'::VARIANT, agg_labels.labels) OR ARRAY_CONTAINS('S4'::VARIANT, agg_labels.labels)
         THEN 'severity 4'
       ELSE 'undefined'
-    END                                          AS severity_tag,
+    END                                                                                AS severity_tag,
 
     CASE
       WHEN ARRAY_CONTAINS('priority::1'::VARIANT, agg_labels.labels) OR ARRAY_CONTAINS('P1'::VARIANT, agg_labels.labels)
@@ -130,19 +141,15 @@ issue_metrics AS (
       WHEN ARRAY_CONTAINS('priority::4'::VARIANT, agg_labels.labels) OR ARRAY_CONTAINS('P4'::VARIANT, agg_labels.labels)
         THEN 'priority 4'
       ELSE 'undefined'
-    END                                          AS priority_tag,
+    END                                                                                AS priority_tag,
 
-    CASE
-      WHEN issues.namespace_id = 9970
-        AND ARRAY_CONTAINS('security'::VARIANT, agg_labels.labels)
-        THEN TRUE
-      ELSE FALSE
-    END                                          AS is_security_issue,
+    COALESCE(issues.namespace_id = 9970
+      AND ARRAY_CONTAINS('security'::VARIANT, agg_labels.labels), FALSE)               AS is_security_issue,
 
-    IFF(issues.namespace_id IN ({{is_project_included_in_engineering_metrics()}}),
-      TRUE, FALSE)                               AS is_included_in_engineering_metrics,
-    IFF(issues.namespace_id IN ({{is_project_part_of_product()}}),
-      TRUE, FALSE)                               AS is_part_of_product,
+    IFF(issues.namespace_id IN ({{ is_project_included_in_engineering_metrics() }}),
+      TRUE, FALSE)                                                                     AS is_included_in_engineering_metrics,
+    IFF(issues.namespace_id IN ({{ is_project_part_of_product() }}),
+      TRUE, FALSE)                                                                     AS is_part_of_product,
     issues.state,
     issues.weight,
     issues.due_date,
@@ -157,7 +164,7 @@ issue_metrics AS (
     issues.issue_type,
 
     agg_labels.labels,
-    ARRAY_TO_STRING(agg_labels.labels,'|')       AS masked_label_title,
+    ARRAY_TO_STRING(agg_labels.labels, '|')                                            AS masked_label_title,
 
     issue_metrics.first_mentioned_in_commit_at,
     issue_metrics.first_associated_with_milestone_at,

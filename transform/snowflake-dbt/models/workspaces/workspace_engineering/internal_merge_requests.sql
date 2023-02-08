@@ -22,6 +22,14 @@ merge_requests AS (
 
 ),
 
+merge_request_metrics AS (
+
+  SELECT *
+  FROM {{ ref('gitlab_dotcom_merge_request_metrics') }}
+  QUALIFY MAX(merge_request_metric_id) OVER (PARTITION BY merge_request_id) = merge_request_metric_id
+
+),
+
 label_links AS (
 
   SELECT *
@@ -33,8 +41,7 @@ label_links AS (
 
 all_labels AS (
 
-  SELECT 
-    labels.*
+  SELECT labels.*
   FROM {{ ref('gitlab_dotcom_labels_source') }} AS labels
 
 ),
@@ -50,24 +57,6 @@ agg_labels AS (
   LEFT JOIN all_labels
     ON label_links.label_id = all_labels.label_id
   GROUP BY merge_requests.merge_request_id
-
-),
-
-latest_merge_request_metric AS (
-
-  SELECT 
-    MAX(merge_request_metric_id) AS target_id
-  FROM {{ ref('gitlab_dotcom_merge_request_metrics') }}
-  GROUP BY merge_request_id
-
-),
-
-merge_request_metrics AS (
-
-  SELECT *
-  FROM {{ ref('gitlab_dotcom_merge_request_metrics') }}
-  INNER JOIN latest_merge_request_metric
-    ON merge_request_metric_id = target_id
 
 ),
 
