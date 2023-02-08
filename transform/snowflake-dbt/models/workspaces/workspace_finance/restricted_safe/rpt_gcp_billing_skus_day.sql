@@ -12,11 +12,10 @@ WITH export AS (
 )
 
 SELECT
+  date(export.usage_end_time) AS day,
   export.project_id AS gcp_project_id,
   export.service_description AS gcp_service_description,
   export.sku_description AS gcp_sku_description,
-  export.usage_unit AS gcp_usage_unit,
-  date(export.usage_end_time) AS day,
   CASE
     -- STORAGE
     WHEN
@@ -289,7 +288,13 @@ SELECT
     WHEN lower(gcp_sku_description) LIKE '%marketplace%' THEN 'Marketplace (support)'
     ELSE 'Other'
   END AS finance_sku_subtype,
-  sum(export.usage_amount) AS usage_amount,
+  export.usage_unit as usage_unit,
+  export.pricing_unit as pricing_unit,
+  -- usage amount
+  sum(export.usage_amount) as usage_amount,
+  -- usage amount in p unit
+  sum(export.usage_amount_in_pricing_units) as usage_amount_in_pricing_units,
+  sum(export.cost_before_credits) as cost_before_credits,
   sum(export.total_cost) AS net_cost
 FROM export
-{{ dbt_utils.group_by(n=7) }}
+{{ dbt_utils.group_by(n=8) }}
