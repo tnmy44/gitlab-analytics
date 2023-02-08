@@ -29,3 +29,9 @@ seeds:
     description: '{{ doc("fy24_mock_opportunities") }}'
   - name: fy24_mock_crm_users
     description: '{{ doc("fy24_mock_crm_users") }}'
+  - name: gcp_billing_infra_pl_mapping
+    description: CSV containing the static allocation % on Free/Paid/Internal P&L mappings for GCP billing - Infra labels version https://docs.google.com/spreadsheets/d/1NqiddQILw-bay__M6GgBobbjFpp15QSjfGiYwucMR4s/edit#gid=1536190575
+  - name: gcp_billing_project_pl_mapping
+    description: CSV containing the static allocation % on Free/Paid/Internal P&L mappings for GCP billing - Projects version https://docs.google.com/spreadsheets/d/1NqiddQILw-bay__M6GgBobbjFpp15QSjfGiYwucMR4s/edit#gid=1536190575
+  - name: internal_gitlab_namespaces
+    description: '{{ doc("internal_gitlab_namespaces") }}'

@@ -24,11 +24,17 @@ WITH edm_opty AS (
     FROM {{ ref('wk_sales_date_details') }}
     --FROM prod.workspace_sales.date_details
 
-), agg_demo_keys AS (
+), agg_demo_keys_fy23 AS (
 -- keys used for aggregated historical analysis
 
     SELECT *
     FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
+    --FROM restricted_safe_workspace_sales.report_agg_demo_sqs_ot_keys
+
+), agg_demo_keys_base AS (
+
+    SELECT *
+    FROM {{ ref('wk_sales_report_agg_keys_base') }}
     --FROM restricted_safe_workspace_sales.report_agg_demo_sqs_ot_keys
 
 ), today AS (
@@ -273,6 +279,18 @@ WITH edm_opty AS (
     edm_opty.stage_3_technical_evaluation_fiscal_quarter_name            AS stage_3_fiscal_quarter_name,
     edm_opty.stage_3_technical_evaluation_fiscal_quarter_date            AS stage_3_fiscal_quarter_date,
 
+    edm_opty.last_activity_date,
+    edm_opty.last_activity_fiscal_year,
+    edm_opty.last_activity_fiscal_quarter_name,
+    edm_opty.last_activity_fiscal_quarter_date,
+    edm_opty.last_activity_month                                         AS last_activity_date_month,
+
+    edm_opty.sales_last_activity_date,
+    edm_opty.sales_last_activity_fiscal_year,
+    edm_opty.sales_last_activity_fiscal_quarter_name,
+    edm_opty.sales_last_activity_fiscal_quarter_date,
+    edm_opty.sales_last_activity_month                                   AS sales_last_activity_date_month,
+
     -----------------------------------------------------------------------------------------------------
     -----------------------------------------------------------------------------------------------------
     -- Opportunity User fields
@@ -367,28 +385,98 @@ WITH edm_opty AS (
     edm_opty.booked_churned_contraction_net_arr,
     edm_opty.churned_contraction_net_arr,
 
-    -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with
-    -- different aggregation levels
-    LOWER(edm_opty.key_sqs)                             AS key_sqs,
-    LOWER(edm_opty.key_ot)                              AS key_ot,
-    LOWER(edm_opty.key_segment)                         AS key_segment,
-    LOWER(edm_opty.key_segment_sqs)                     AS key_segment_sqs,
-    LOWER(edm_opty.key_segment_ot)                      AS key_segment_ot,
-    LOWER(edm_opty.key_segment_geo)                     AS key_segment_geo,
-    LOWER(edm_opty.key_segment_geo_sqs)                 AS key_segment_geo_sqs,
-    LOWER(edm_opty.key_segment_geo_ot)                  AS key_segment_geo_ot,
-    LOWER(edm_opty.key_segment_geo_region)              AS key_segment_geo_region,
-    LOWER(edm_opty.key_segment_geo_region_sqs)          AS key_segment_geo_region_sqs,
-    LOWER(edm_opty.key_segment_geo_region_ot)           AS key_segment_geo_region_ot,
-    LOWER(edm_opty.key_segment_geo_region_area)         AS key_segment_geo_region_area,
-    LOWER(edm_opty.key_segment_geo_region_area_sqs)     AS key_segment_geo_region_area_sqs,
-    LOWER(edm_opty.key_segment_geo_region_area_ot)      AS key_segment_geo_region_area_ot,
-    LOWER(edm_opty.key_segment_geo_area)                AS key_segment_geo_area,
-    edm_opty.sales_team_cro_level,
-    edm_opty.sales_team_rd_asm_level,
-    edm_opty.sales_team_vp_level,
-    edm_opty.sales_team_avp_rd_level,
-    edm_opty.sales_team_asm_level,
+
+    -- JK 2023-02-06 adding adjusted segment
+    -- If MM / SMB and Region = META then Segment = Large
+    -- If MM/SMB and Region = LATAM then Segment = Large
+    -- If MM/SMB and Geo = APAC then Segment = Large
+    -- Use that Adjusted Segment Field in our FY23 models
+    CASE
+      WHEN (edm_opty.report_opportunity_user_segment = 'mid-market'
+            OR edm_opty.report_opportunity_user_segment = 'smb')
+        AND edm_opty.report_opportunity_user_region = 'meta'
+        THEN 'large'
+      WHEN (edm_opty.report_opportunity_user_segment = 'mid-market'
+            OR edm_opty.report_opportunity_user_segment = 'smb')
+        AND edm_opty.report_opportunity_user_region = 'latam'
+        THEN 'large'
+      WHEN (edm_opty.report_opportunity_user_segment = 'mid-market'
+            OR edm_opty.report_opportunity_user_segment = 'smb')
+        AND edm_opty.report_opportunity_user_geo = 'apac'
+        THEN 'large'
+      ELSE edm_opty.report_opportunity_user_segment
+    END AS adjusted_report_opportunity_user_segment,
+
+    -- creating report_user_segment_geo_region_area_sqs_ot with adjusted segment
+    LOWER(
+      CONCAT(
+        adjusted_report_opportunity_user_segment,
+        '-',
+        edm_opty.report_opportunity_user_geo,
+        '-',
+        edm_opty.report_opportunity_user_region,
+        '-',
+        edm_opty.report_opportunity_user_area,
+        '-',
+        edm_opty.sales_qualified_source_name,
+        '-',
+        edm_opty.order_type
+      )
+    ) AS report_user_adjusted_segment_geo_region_area_sqs_ot,
+    
+    CASE
+      WHEN (edm_opty.sales_qualified_source_name = 'Channel Generated' OR edm_opty.sales_qualified_source_name = 'Partner Generated')
+          THEN 'Partner Sourced'
+      WHEN (edm_opty.sales_qualified_source_name != 'Channel Generated' AND edm_opty.sales_qualified_source_name != 'Partner Generated')
+          AND NOT LOWER(resale_account.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
+          THEN 'Channel Co-Sell'
+      WHEN (edm_opty.sales_qualified_source_name != 'Channel Generated' AND edm_opty.sales_qualified_source_name != 'Partner Generated')
+          AND LOWER(resale_account.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
+          THEN 'Alliance Co-Sell'
+      ELSE 'Direct'
+    END AS partner_category,
+
+    CASE
+      WHEN LOWER(resale_account.account_name) LIKE ANY ('%google%','%gcp%')
+        THEN 'GCP'
+      WHEN LOWER(resale_account.account_name) LIKE ANY ('%amazon%')
+        THEN 'AWS'
+      WHEN LOWER(resale_account.account_name) IS NOT NULL
+        THEN 'Channel'
+      ELSE 'Direct'
+    END                                               AS alliance_partner,
+
+
+    LOWER(
+      CONCAT(
+        opportunity_owner.business_unit,
+        '-',
+        opportunity_owner.sub_business_unit,
+        '-',
+        opportunity_owner.division,
+        '-',
+        opportunity_owner.asm,
+        '-',
+        edm_opty.report_opportunity_user_segment,
+        '-',
+        edm_opty.report_opportunity_user_geo,
+        '-',
+        edm_opty.report_opportunity_user_region,
+        '-',
+        edm_opty.report_opportunity_user_area,
+        '-',
+        edm_opty.sales_qualified_source_name,
+        '-',
+        edm_opty.order_type,
+        '-',
+        opportunity_owner.role_type,
+        '-',
+        partner_category,
+        '-',
+        alliance_partner
+      )
+    ) AS report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
+
 
     edm_opty.deal_size,
     edm_opty.calculated_deal_size,
@@ -399,10 +487,8 @@ WITH edm_opty AS (
     edm_opty.is_booked_net_arr                      AS is_booked_net_arr_flag,
     edm_opty.is_eligible_churn_contraction          AS is_eligible_churn_contraction_flag,
     edm_opty.created_and_won_same_quarter_net_arr,
-    --edm_opty.churn_contraction_net_arr_bucket       AS churn_contracton_net_arr_bucket,  --typo in wk sales keeping it until the full migration
     edm_opty.churn_contraction_net_arr_bucket,
-    edm_opty.reason_for_loss_calc,
-    
+    edm_opty.reason_for_loss_calc,    
     CASE edm_opty.is_sao 
       WHEN TRUE THEN 1 
       ELSE 0 
@@ -490,6 +576,43 @@ WITH edm_opty AS (
     SELECT
       oppty_final.*,
 
+
+      -- JK 2023-02-06: FY23 keys for temp dashboard solution until tools are ready for FY24 keys 
+      -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with
+      -- different aggregation levels
+      LOWER(agg_demo_keys_fy23.key_sqs)                             AS key_sqs,
+      LOWER(agg_demo_keys_fy23.key_ot)                              AS key_ot,
+      LOWER(agg_demo_keys_fy23.key_segment)                         AS key_segment,
+      LOWER(agg_demo_keys_fy23.key_segment_sqs)                     AS key_segment_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_ot)                      AS key_segment_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo)                     AS key_segment_geo,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_sqs)                 AS key_segment_geo_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_ot)                  AS key_segment_geo_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region)              AS key_segment_geo_region,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_sqs)          AS key_segment_geo_region_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_ot)           AS key_segment_geo_region_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_area)         AS key_segment_geo_region_area,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_area_sqs)     AS key_segment_geo_region_area_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_area_ot)      AS key_segment_geo_region_area_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_area)                AS key_segment_geo_area,
+      agg_demo_keys_fy23.sales_team_cro_level,
+      agg_demo_keys_fy23.sales_team_rd_asm_level,
+      agg_demo_keys_fy23.sales_team_vp_level,
+      agg_demo_keys_fy23.sales_team_avp_rd_level,
+      agg_demo_keys_fy23.sales_team_asm_level,
+
+
+      -- JK 2023-02-06: FY24 keys
+      LOWER(agg_demo_keys_base.business_unit) AS business_unit,
+      LOWER(agg_demo_keys_base.sub_business_unit) AS sub_business_unit,
+      LOWER(agg_demo_keys_base.division) AS division,
+      LOWER(agg_demo_keys_base.asm) AS asm,
+
+      LOWER(agg_demo_keys_base.key_bu) AS key_bu_fy24,
+      LOWER(agg_demo_keys_base.key_bu_subbu) AS key_bu_subbu_fy24,
+      LOWER(agg_demo_keys_base.key_bu_subbu_division) AS key_bu_subbu_division_fy24,
+      LOWER(agg_demo_keys_base.key_bu_subbu_division_asm) AS key_bu_subbu_division_asm_fy24,
+
       -- Created pipeline eligibility definition
       -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389
       CASE
@@ -511,8 +634,11 @@ WITH edm_opty AS (
 
     FROM oppty_final
     -- Add keys for aggregated analysis
-    LEFT JOIN agg_demo_keys
-      ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
+    LEFT JOIN agg_demo_keys_fy23
+      ON oppty_final.report_user_adjusted_segment_geo_region_area_sqs_ot = agg_demo_keys_fy23.report_user_adjusted_segment_geo_region_area_sqs_ot
+    LEFT JOIN agg_demo_keys_base
+      ON oppty_final.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap = agg_demo_keys_base.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap
+
 
 )
 SELECT *

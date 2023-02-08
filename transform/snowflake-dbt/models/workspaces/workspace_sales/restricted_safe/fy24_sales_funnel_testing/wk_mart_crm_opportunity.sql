@@ -181,38 +181,38 @@
       -- crm opp owner/account owner stamped fields stamped at close date
       dim_crm_opportunity.crm_opp_owner_stamped_name,
       dim_crm_opportunity.crm_account_owner_stamped_name,
-      dim_crm_user_hierarchy.crm_opp_owner_business_unit_stamped,
-      dim_crm_user_hierarchy.crm_opp_owner_sales_segment_stamped,
-      dim_crm_user_hierarchy.crm_opp_owner_sales_segment_stamped_grouped,
-      dim_crm_user_hierarchy.crm_opp_owner_geo_stamped,
-      dim_crm_user_hierarchy.crm_opp_owner_region_stamped,
-      dim_crm_user_hierarchy.crm_opp_owner_area_stamped,
-      {{ sales_segment_region_grouped('dim_crm_user_hierarchy.crm_opp_owner_sales_segment_stamped',
-        'dim_crm_user_hierarchy.crm_opp_owner_geo_stamped', 'dim_crm_user_hierarchy.crm_opp_owner_region_stamped') }}
-                                                                           AS crm_opp_owner_sales_segment_region_stamped_grouped,
+      dim_crm_user_hierarchy.crm_user_business_unit                                         AS crm_opp_owner_business_unit_stamped,
+      dim_crm_user_hierarchy.crm_user_sales_segment                                         AS crm_opp_owner_sales_segment_stamped,
+      dim_crm_user_hierarchy.crm_user_sales_segment_grouped                                 AS crm_opp_owner_sales_segment_stamped_grouped,
+      dim_crm_user_hierarchy.crm_user_geo                                                   AS crm_opp_owner_geo_stamped,
+      dim_crm_user_hierarchy.crm_user_region                                                AS crm_opp_owner_region_stamped,
+      dim_crm_user_hierarchy.crm_user_area                                                  AS crm_opp_owner_area_stamped,
+      {{ sales_segment_region_grouped('dim_crm_user_hierarchy.crm_user_sales_segment',
+        'dim_crm_user_hierarchy.crm_user_geo', 'dim_crm_user_hierarchy.crm_user_region') }}
+                                                                                            AS crm_opp_owner_sales_segment_region_stamped_grouped,
       dim_crm_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped,
       dim_crm_opportunity.crm_opp_owner_user_role_type_stamped,
 
       -- crm owner/sales rep live fields
-      dim_crm_user_hierarchy_live.crm_opp_owner_sales_segment_stamped                   AS crm_user_sales_segment,
-      dim_crm_user_hierarchy_live.crm_opp_owner_sales_segment_stamped_grouped           AS crm_user_sales_segment_grouped,
-      dim_crm_user_hierarchy_live.crm_opp_owner_geo_stamped                             AS crm_user_geo,
-      dim_crm_user_hierarchy_live.crm_opp_owner_region_stamped                          AS crm_user_region,
-      dim_crm_user_hierarchy_live.crm_opp_owner_area_stamped                            AS crm_user_area,
-      {{ sales_segment_region_grouped('dim_crm_user_hierarchy_live.crm_opp_owner_sales_segment_stamped',
-        'dim_crm_user_hierarchy_live.crm_opp_owner_geo_stamped', 'dim_crm_user_hierarchy_live.crm_opp_owner_region_stamped') }}
+      dim_crm_user_hierarchy_live.crm_user_sales_segment,
+      dim_crm_user_hierarchy_live.crm_user_sales_segment_grouped,
+      dim_crm_user_hierarchy_live.crm_user_geo,
+      dim_crm_user_hierarchy_live.crm_user_region,
+      dim_crm_user_hierarchy_live.crm_user_area,
+      {{ sales_segment_region_grouped('dim_crm_user_hierarchy_live.crm_user_sales_segment',
+        'dim_crm_user_hierarchy_live.crm_user_geo', 'dim_crm_user_hierarchy_live.crm_user_region') }}
                                                                            AS crm_user_sales_segment_region_grouped,
 
       
        -- crm account owner/sales rep live fields
-      dim_crm_user_hierarchy_account_owner.crm_opp_owner_sales_segment_stamped            AS crm_account_user_sales_segment,
-      dim_crm_user_hierarchy_account_owner.crm_opp_owner_sales_segment_stamped_grouped    AS crm_account_user_sales_segment_grouped,
-      dim_crm_user_hierarchy_account_owner.crm_opp_owner_geo_stamped                      AS crm_account_user_geo,
-      dim_crm_user_hierarchy_account_owner.crm_opp_owner_region_stamped                   AS crm_account_user_region,
-      dim_crm_user_hierarchy_account_owner.crm_opp_owner_area_stamped                     AS crm_account_user_area,
-      {{ sales_segment_region_grouped('dim_crm_user_hierarchy_account_owner.crm_opp_owner_sales_segment_stamped',
-        'dim_crm_user_hierarchy_account_owner.crm_opp_owner_geo_stamped', 'dim_crm_user_hierarchy_account_owner.crm_opp_owner_region_stamped') }}
-                                                                                         AS crm_account_user_sales_segment_region_grouped,
+      dim_crm_user_hierarchy_account_owner.crm_user_sales_segment                                                       AS crm_account_user_sales_segment,
+      dim_crm_user_hierarchy_account_owner.crm_user_sales_segment_grouped                                               AS crm_account_user_sales_segment_grouped,
+      dim_crm_user_hierarchy_account_owner.crm_user_geo                                                                 AS crm_account_user_geo,
+      dim_crm_user_hierarchy_account_owner.crm_user_region                                                              AS crm_account_user_region,
+      dim_crm_user_hierarchy_account_owner.crm_user_area                                                                AS crm_account_user_area,
+      {{ sales_segment_region_grouped('dim_crm_user_hierarchy_account_owner.crm_user_sales_segment',
+        'dim_crm_user_hierarchy_account_owner.crm_user_geo', 'dim_crm_user_hierarchy_account_owner.crm_user_region') }}
+                                                                                                                        AS crm_account_user_sales_segment_region_grouped,
       -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
       dim_crm_opportunity.opportunity_owner_user_segment,
       dim_crm_opportunity.opportunity_owner_user_geo,
@@ -475,7 +475,8 @@
       fct_crm_opportunity.other_non_recurring_amount,
       fct_crm_opportunity.renewal_amount,
       fct_crm_opportunity.total_contract_value,
-      fct_crm_opportunity.days_in_stage
+      fct_crm_opportunity.days_in_stage,
+      fct_crm_opportunity.is_test_opp
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
@@ -496,18 +497,21 @@
       ON fct_crm_opportunity.dim_alliance_type_id = dim_alliance_type.dim_alliance_type_id
     LEFT JOIN dim_channel_type
       ON fct_crm_opportunity.dim_channel_type_id = dim_channel_type.dim_channel_type_id
+    LEFT JOIN dim_date close_date
+      ON fct_crm_opportunity.close_date_id = close_date.date_id
     LEFT JOIN dim_crm_user_hierarchy
-      ON fct_crm_opportunity.dim_crm_opp_owner_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+      ON fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+        AND close_date.fiscal_year = dim_crm_user_hierarchy.fiscal_year
     LEFT JOIN dim_crm_user_hierarchy AS dim_crm_user_hierarchy_live
       ON fct_crm_opportunity.dim_crm_user_hierarchy_live_sk = dim_crm_user_hierarchy_live.dim_crm_user_hierarchy_sk
+        AND dim_crm_user_hierarchy_live.is_current_crm_user_hierarchy = 1
     LEFT JOIN dim_crm_user_hierarchy AS dim_crm_user_hierarchy_account_owner
       ON fct_crm_opportunity.dim_crm_user_hierarchy_account_user_sk = dim_crm_user_hierarchy_account_owner.dim_crm_user_hierarchy_sk
+        AND dim_crm_user_hierarchy_account_owner.is_current_crm_user_hierarchy = 1
     LEFT JOIN dim_date created_date
       ON fct_crm_opportunity.created_date_id = created_date.date_id
     LEFT JOIN dim_date sales_accepted_date
       ON fct_crm_opportunity.sales_accepted_date_id = sales_accepted_date.date_id
-    LEFT JOIN dim_date close_date
-      ON fct_crm_opportunity.close_date_id = close_date.date_id
     LEFT JOIN dim_date stage_0_pending_acceptance_date
       ON fct_crm_opportunity.stage_0_pending_acceptance_date_id = stage_0_pending_acceptance_date.date_id
     LEFT JOIN dim_date stage_1_discovery_date
@@ -550,7 +554,7 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2023-01-20",
-    updated_date="2023-01-20"
+    updated_date="2023-02-01"
   ) }}
 
 

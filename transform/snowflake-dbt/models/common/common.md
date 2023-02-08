@@ -107,7 +107,7 @@ Descriptive fields for both attribution and non-attribution Bizible touchpoints.
 {% enddocs %}
 
 {% docs dim_crm_opportunity %}
-Model for all dimensional opportunity columns from salesforce opportunity object
+Model for all dimensional opportunity columns from salesforce opportunity object. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
 
 {% enddocs %}
 
@@ -313,7 +313,7 @@ Fact table for non-attribution Bizible touchpoints with shared dimension keys re
 
 {% docs fct_crm_opportunity %}
 
-A fact table for salesforce opportunities with keys to connect opportunities to shared dimensions through the attributes of the crm account.
+A fact table for salesforce opportunities with keys to connect opportunities to shared dimensions through the attributes of the crm account. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
 
 {% enddocs %}
 
@@ -1558,3 +1558,24 @@ Dimension model of all [Salesforce Tasks](https://help.salesforce.com/s/articleV
 Fact model of all [Salesforce Tasks](https://help.salesforce.com/s/articleView?id=sf.tasks.htm&type=5) that record activities related to leads, contacts, opportunities, and accounts.
 
 {% enddocs %}
+
+{% docs fct_ping_instance_free_user_metrics %}
+
+Table containing **free** Self-Managed users in preparation for free user service ping metrics fact table.
+
+The grain of this table is one row per uuid-hostname combination per month.
+
+
+{% enddocs %}
+
+{% docs fct_ping_instance_free_user_metrics_monthly %}
+
+This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used to create a mart table (`mart_product_usage_free_user_metrics_monthly`) for Customer Product Insights.
+
+The grain of this table is namespace || uuid-hostname per month.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+
+{% enddocs %}
+

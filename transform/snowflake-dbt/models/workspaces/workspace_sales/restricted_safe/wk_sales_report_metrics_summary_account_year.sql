@@ -1114,7 +1114,6 @@ FROM selected_hierarchy_virtual_upa final
     
 
 -- identify accounts that belong to the same owner of a virtual upa within the hierarchy
--- after creating the virtual UPA hierarchy, some accounts might 
 ), final_virtual_upa AS (
     
 SELECT 
@@ -1410,12 +1409,30 @@ FROM selected_hierarchy_virtual_upa final
   SELECT
       
     acc.*, 
-    upa.arr             AS upa_arr,
-    
+
     -- 2022-06-28 JK: account_family_arr - temp solution adding a column with upa_arr for all accounts within the same upa family
     -- this will be updated with ARR bucket based solution later (e.g. 0-50k, 50k-100k, etc.)
     -- upa.arr AS account_family_arr,
+    upa.arr             AS account_family_arr,
 
+    CASE 
+      WHEN upa.arr > 0 AND upa.arr < 5000
+        THEN '1. 0-5k ARR'
+      WHEN upa.arr >= 5000 AND upa.arr < 10000
+        THEN '2. 0-10k ARR'
+      WHEN upa.arr >= 10000 AND upa.arr < 50000
+        THEN '3. 10k-50k ARR'
+      WHEN upa.arr >= 50000 AND upa.arr < 100000
+        THEN '4. 50K-100k ARR'
+      WHEN upa.arr >= 100000 AND upa.arr < 500000
+        THEN '5. 100k-500k ARR'
+      WHEN upa.arr >= 500000 AND upa.arr < 1000000
+        THEN '6. 500k-1M ARR'     
+      WHEN upa.arr >= 500000 AND upa.arr < 1000000
+        THEN '7. >=1M ARR' 
+      ELSE 'n/a'
+    END    AS account_family_arr_bin_name,
+    
     COALESCE(upa.potential_users,0)                 AS upa_potential_users,
     COALESCE(upa.licenses,0)                        AS upa_licenses,
     COALESCE(upa.linkedin_developer,0)              AS upa_linkedin_developer,
