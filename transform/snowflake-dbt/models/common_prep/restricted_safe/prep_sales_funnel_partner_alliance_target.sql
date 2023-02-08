@@ -24,13 +24,9 @@
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo,
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region,
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area,
+    sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_business_unit,
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.alliance_partner,
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.sqs_bucket_engagement,
-    CASE
-      WHEN fiscal_months.fiscal_year >= 2024
-        THEN 'COMM'
-      ELSE 'none'
-    END AS user_business_unit,
     CASE
       WHEN fiscal_months.fiscal_year < 2023
         THEN sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area
@@ -78,6 +74,6 @@
     cte_ref="final",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2023-01-23",
-    updated_date="2023-01-23"
+    created_date="2023-02-07",
+    updated_date="2023-02-07"
 ) }}

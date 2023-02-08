@@ -179,6 +179,7 @@ final AS (
     fct_crm_opportunity.user_geo_stamped AS crm_opp_owner_geo_stamped,
     fct_crm_opportunity.user_region_stamped AS crm_opp_owner_region_stamped,
     fct_crm_opportunity.user_area_stamped AS crm_opp_owner_area_stamped,
+    fct_crm_opportunity.user_business_unit_stamped AS crm_opp_owner_business_unit_stamped,
     {{ sales_segment_region_grouped('fct_crm_opportunity.user_segment_stamped',
         'fct_crm_opportunity.user_geo_stamped', 'fct_crm_opportunity.user_region_stamped') }}
     AS crm_opp_owner_sales_segment_region_stamped_grouped,
@@ -191,6 +192,7 @@ final AS (
     opp_owner_live.crm_user_geo,
     opp_owner_live.crm_user_region,
     opp_owner_live.crm_user_area,
+    opp_owner_live.crm_user_business_unit,
     {{ sales_segment_region_grouped('opp_owner_live.crm_user_sales_segment',
         'opp_owner_live.crm_user_geo', 'opp_owner_live.crm_user_region') }}
     AS crm_user_sales_segment_region_grouped,
@@ -546,5 +548,5 @@ final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-05-05",
-    updated_date="2023-02-02"
+    updated_date="2023-02-07"
   ) }}

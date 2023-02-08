@@ -136,15 +136,6 @@ models:
           - not_null
           - unique
 
-  - name: prep_crm_user_hierarchy_live
-    description: '{{ doc("prep_crm_user_hierarchy_live") }}'
-    columns:
-      - name: dim_crm_user_hierarchy_live_id
-        description: Unique identifier of a sales hierarchy tier
-        tests:
-          - not_null
-          - unique
-
   - name: prep_crm_user
     description: '{{ doc("prep_crm_user") }}'
     columns:
@@ -154,10 +145,10 @@ models:
           - not_null
           - unique
 
-  - name: prep_crm_user_hierarchy_stamped
-    description: '{{ doc("prep_crm_user_hierarchy_stamped") }}'
+  - name: prep_crm_user_hierarchy
+    description: '{{ doc("prep_crm_user_hierarchy") }}'
     columns:
-      - name: dim_crm_user_hierarchy_stamped_id
+      - name: dim_crm_user_hierarchy_id
         description: Unique identifier of a sales hierarchy tier
         tests:
           - not_null

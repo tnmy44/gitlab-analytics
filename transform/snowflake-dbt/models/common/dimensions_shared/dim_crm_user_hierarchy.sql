@@ -1,3 +1,8 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
+
 WITH source AS (
 
 
@@ -18,14 +23,14 @@ WITH source AS (
     crm_user_sales_segment_grouped,
     crm_user_sales_segment_region_grouped,
     is_current_crm_user_hierarchy
-  FROM {{ ref('wk_prep_crm_user_hierarchy') }}
+  FROM {{ ref('prep_crm_user_hierarchy') }}
 
 )
 
 {{ dbt_audit(
     cte_ref="source",
-    created_by="@michellecooper",
+    created_by="@mcooperDD",
     updated_by="@michellecooper",
-    created_date="2023-01-20",
-    updated_date="2023-01-20"
+    created_date="2021-01-05",
+    updated_date="2023-02-07"
 ) }}

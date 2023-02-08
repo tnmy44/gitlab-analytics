@@ -325,3 +325,15 @@ models:
       - name: dbt_valid_from
         tests:
           - not_null
+  - name: prep_sales_funnel_target
+    description: Prep model for SSOT sales funnel targets
+    columns:
+      - name: dim_crm_user_hierarchy_sk
+        tests:
+          - not_null
+  - name: prep_sales_funnel_partner_alliance_target
+    description: Prep model for sales funnel partner targets
+    columns:
+      - name: dim_crm_user_hierarchy_sk
+        tests:
+          - not_null

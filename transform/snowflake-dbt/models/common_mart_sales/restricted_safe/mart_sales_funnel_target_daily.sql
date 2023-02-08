@@ -1,24 +1,24 @@
 {{ simple_cte([
-    ('dim_crm_user_hierarchy_live','dim_crm_user_hierarchy_live'),
+    ('dim_crm_user_hierarchy','dim_crm_user_hierarchy'),
     ('dim_sales_qualified_source','dim_sales_qualified_source'),
     ('dim_order_type','dim_order_type'),
     ('fct_sales_funnel_target','fct_sales_funnel_target'),
-    ('dim_date','dim_date'),
-    ('dim_crm_user_hierarchy_stamped', 'dim_crm_user_hierarchy_stamped')
+    ('dim_date','dim_date')
 ]) }}
 
 , monthly_targets AS (
 
     SELECT
       fct_sales_funnel_target.sales_funnel_target_id,
-      fct_sales_funnel_target.first_day_of_month AS target_month,
+      fct_sales_funnel_target.first_day_of_month      AS target_month,
       fct_sales_funnel_target.kpi_name,
-      COALESCE(dim_crm_user_hierarchy_stamped.crm_opp_owner_sales_segment_stamped,dim_crm_user_hierarchy_live.crm_user_sales_segment)                                      AS crm_user_sales_segment,
-      COALESCE(dim_crm_user_hierarchy_stamped.crm_opp_owner_sales_segment_stamped_grouped,dim_crm_user_hierarchy_live.crm_user_sales_segment_grouped)                      AS crm_user_sales_segment_grouped,
-      COALESCE(dim_crm_user_hierarchy_stamped.crm_opp_owner_geo_stamped,dim_crm_user_hierarchy_live.crm_user_geo)                                                          AS crm_user_geo,
-      COALESCE(dim_crm_user_hierarchy_stamped.crm_opp_owner_region_stamped,dim_crm_user_hierarchy_live.crm_user_region)                                                    AS crm_user_region,
-      COALESCE(dim_crm_user_hierarchy_stamped.crm_opp_owner_area_stamped,dim_crm_user_hierarchy_live.crm_user_area)                                                        AS crm_user_area,
-      COALESCE(dim_crm_user_hierarchy_stamped.crm_opp_owner_sales_segment_region_stamped_grouped,dim_crm_user_hierarchy_live.crm_user_sales_segment_region_grouped)        AS crm_user_sales_segment_region_grouped,
+      dim_crm_user_hierarchy.crm_user_sales_segment,
+      dim_crm_user_hierarchy.crm_user_sales_segment_grouped,
+      dim_crm_user_hierarchy.crm_user_business_unit,
+      dim_crm_user_hierarchy.crm_user_geo,
+      dim_crm_user_hierarchy.crm_user_region,
+      dim_crm_user_hierarchy.crm_user_area,
+      dim_crm_user_hierarchy.crm_user_sales_segment_region_grouped,
       dim_order_type.order_type_name,
       dim_order_type.order_type_grouped,
       dim_sales_qualified_source.sales_qualified_source_name,
@@ -29,11 +29,9 @@
       ON fct_sales_funnel_target.dim_sales_qualified_source_id = dim_sales_qualified_source.dim_sales_qualified_source_id
     LEFT JOIN dim_order_type
       ON fct_sales_funnel_target.dim_order_type_id = dim_order_type.dim_order_type_id
-    LEFT JOIN dim_crm_user_hierarchy_stamped
-     ON fct_sales_funnel_target.crm_user_sales_segment_geo_region_area = dim_crm_user_hierarchy_stamped.crm_opp_owner_sales_segment_geo_region_area_stamped
-        AND fct_sales_funnel_target.fiscal_year = dim_crm_user_hierarchy_stamped.fiscal_year
-    LEFT JOIN dim_crm_user_hierarchy_live
-      ON fct_sales_funnel_target.crm_user_sales_segment_geo_region_area = dim_crm_user_hierarchy_live.crm_user_sales_segment_geo_region_area
+    LEFT JOIN dim_crm_user_hierarchy
+      ON fct_sales_funnel_target.dim_crm_user_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
+        AND fct_sales_funnel_target.fiscal_year = dim_crm_user_hierarchy.fiscal_year
 
 ), monthly_targets_daily AS (
 
@@ -91,5 +89,5 @@
     created_by="@jpeguero",
     updated_by="@michellecooper",
     created_date="2021-02-18",
-    updated_date="2022-03-07",
+    updated_date="2023-02-07",
   ) }}

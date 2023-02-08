@@ -482,7 +482,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.number_of_licenses_this_account,
       sfdc_account.decision_maker_count_linkedin,
       sfdc_account.number_of_employees,
-      crm_user.user_role_type                                             AS user_role_type,
+      crm_user.crm_user_role_type                                         AS user_role_type,
       crm_user.user_role_name                                             AS owner_role,
       {%- if model_type == 'live' %}
       sfdc_account.lam                                                    AS parent_crm_account_lam,

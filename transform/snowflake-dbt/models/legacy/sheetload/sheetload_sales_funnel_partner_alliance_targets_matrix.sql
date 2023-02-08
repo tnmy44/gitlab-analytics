@@ -16,6 +16,7 @@ WITH source AS (
       user_geo,
       user_region,
       user_area,
+      user_business_unit,
       allocated_target
     FROM source
 
@@ -24,7 +25,7 @@ WITH source AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-04-05",
-    updated_date="2021-09-10"
+    updated_date="2023-02-07"
 ) }}
