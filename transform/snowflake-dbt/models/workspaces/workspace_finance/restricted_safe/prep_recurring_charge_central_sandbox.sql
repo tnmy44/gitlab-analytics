@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi"]
 ) }}
 
 /* grain: one record per subscription per month */
