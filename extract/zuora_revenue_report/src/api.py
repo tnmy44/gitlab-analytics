@@ -179,7 +179,10 @@ class ZuoraRevProAPI:
             sys.exit(1)
 
     def zuora_download_report(
-        self, zuora_report_list_df: pd.DataFrame, zuora_report_list_to_download: list, report_date: str
+        self,
+        zuora_report_list_df: pd.DataFrame,
+        zuora_report_list_to_download: list,
+        report_date: str,
     ) -> None:
         """This function is responsible to get the list of reports to download and check if the report exist in the api call for that date.
         If present then download the report to the output directory."""

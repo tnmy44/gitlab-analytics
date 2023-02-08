@@ -32,7 +32,7 @@ def get_gcs_storage_client():
     return storage_client
 
 
-def get_files_for_report(bucket, output_file_name):
+def get_files_for_report(bucket: str, output_file_name: str) -> list:
     """
     This function provide all the file under zuora_revenue_report.
     """
@@ -48,12 +48,12 @@ def get_files_for_report(bucket, output_file_name):
     return list_of_files_per_report
 
 
-def get_file_name_without_path(file_name):
+def get_file_name_without_path(file_name: str) -> str:
     """separate file name from the bucket path"""
     return file_name.split("/")[-1]
 
 
-def get_table_to_load(file_name, output_file_name) -> str:
+def get_table_to_load(file_name: str, output_file_name: str) -> list:
     """This function provide information to which table to load the data and type of load i.e. it is for header or for body of the report"""
 
     if get_file_name_without_path(file_name).startswith("header"):
@@ -67,7 +67,9 @@ def get_table_to_load(file_name, output_file_name) -> str:
     return table_to_load, type_of_load
 
 
-def load_report_header_snow(schema, file_name, table_to_load, engine):
+def load_report_header_snow(
+    schema: str, file_name: str, table_to_load: str, engine: Dict
+) -> None:
 
     copy_header_query = f"COPY INTO {schema}.{table_to_load} from (SELECT REGEXP_REPLACE(t.$1,'( ){1,}','_') AS metadata_column_name, \
      REGEXP_REPLACE(CONCAT(t.$2,COALESCE(t.$3,'')),'(=){1,}','') AS metadata_column_value ,GET(SPLIT(METADATA$FILENAME,'/'),4)  AS file_name \
@@ -76,7 +78,7 @@ def load_report_header_snow(schema, file_name, table_to_load, engine):
     logging.info(results)
 
 
-def data_frame_enricher(raw_df, file_name) -> pd.DataFrame:
+def data_frame_enricher(raw_df: pd.DataFrame, file_name: str) -> pd.DataFrame:
 
     """Add _uploaded_at and _file_name to the data frame before persisting also doing some data cleansing."""
     raw_df["_uploaded_at"] = time()
@@ -89,13 +91,16 @@ def data_frame_enricher(raw_df, file_name) -> pd.DataFrame:
     return raw_df
 
 
-def load_report_body_snow(file_name, table_to_load, bucket, engine):
+def load_report_body_snow(
+    file_name: str, table_to_load: str, bucket: str, engine: Dict
+) -> None:
     """load body of report with proper data cleansing and adding metadata like uplodaed_at and file_name to the report."""
     raw_file_bucket = get_gcs_storage_client().bucket(bucket)
     raw_file_blob = raw_file_bucket.blob(file_name)
     raw_data = raw_file_blob.download_as_bytes()
     raw_df = pd.read_csv(io.BytesIO(raw_data))
     enriched_df = data_frame_enricher(raw_df, get_file_name_without_path(file_name))
+
     enriched_df.to_sql(
         name=table_to_load, con=engine, index=False, if_exists="append", chunksize=15000
     )
@@ -104,9 +109,9 @@ def load_report_body_snow(file_name, table_to_load, bucket, engine):
     )
 
 
-def move_file_to_processed(bucket, file_name):
-    source_bucket = get_gcs_storage_client.get_bucket(bucket)
-    destination_bucket = get_gcs_storage_client.get_bucket(bucket)
+def move_file_to_processed(bucket: str, file_name: str) -> None:
+    source_bucket = get_gcs_storage_client.bucket(bucket)
+    destination_bucket = get_gcs_storage_client.bucket(bucket)
     report_ran_date = file_name.split("/")[-2]
     file_name_without_path = file_name.split("/")[-1]
     destination_file_name = f"RAW_DB/processed/zuora_revenue_report/{report_ran_date}/{file_name_without_path}"
