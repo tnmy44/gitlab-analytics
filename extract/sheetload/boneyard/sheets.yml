@@ -77,3 +77,8 @@ sheets:
     tabs:
       - namespace_segmentation_202202
       - namespace_segmentation_202208
+  - name: downtier_20230117
+    owner: '@kmagda1'
+    tabs:
+      - downtier_20230117
+
