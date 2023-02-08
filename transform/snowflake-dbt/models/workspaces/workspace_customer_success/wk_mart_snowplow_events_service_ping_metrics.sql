@@ -45,7 +45,7 @@ joined AS (
       2. The Service Ping context has a non-null `key_path`. In this case, the `key_path` field
          contains the metric we should count
   */
-  WHERE metric_bridge.redis_event IS NOT NULL
+  WHERE metrics_with_events.redis_event IS NOT NULL
     OR service_ping_events.key_path IS NOT NULL
 )
 
@@ -54,5 +54,5 @@ joined AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-12-21",
-    updated_date="2023-02-04"
+    updated_date="2023-02-08"
 ) }}
