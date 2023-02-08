@@ -1,6 +1,6 @@
 {{
   config(
-    materialized='view',
+    materialized='incremental',
     tags=["mnpi_exception"]
   )
 }}
@@ -9,6 +9,12 @@ WITH service_ping_events AS (
   SELECT
     *
   FROM {{ ref('wk_fct_snowplow_events_service_ping') }}
+
+   {% if is_incremental() %}
+  
+    WHERE behavior_at >= (SELECT MAX(behavior_at) FROM {{this}})
+  
+  {% endif %}
 ),
 
 metric_bridge AS (
