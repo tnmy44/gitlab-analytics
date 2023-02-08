@@ -27,13 +27,18 @@ joined AS (
     service_ping_events.gsc_plan,
     service_ping_events.ultimate_parent_namespace_id,
     service_ping_events.key_path,
-    metric_bridge.metrics_path,
-    metric_bridge.aggregate_operator,
-    metric_bridge.aggregate_attribute,
-    metric_bridge.metrics_status,
-    metric_bridge.time_frame
+    COALESCE(metrics_with_events.metrics_path, metrics_without_events.metrics_path) AS metrics_path,
+    COALESCE(metrics_with_events.aggregate_operator, metrics_without_events.aggregate_operator) AS aggregate_operator,
+    COALESCE(metrics_with_events.aggregate_attribute, metrics_without_events.aggregate_attribute) AS aggregate_attribute,
+    COALESCE(metrics_with_events.metrics_status, metrics_without_events.metrics_status) AS metrics_status,
+    COALESCE(metrics_with_events.time_frame, metrics_without_events.time_frame) AS time_frame
   FROM service_ping_events
-  LEFT JOIN metric_bridge ON service_ping_events.redis_event_name = metric_bridge.redis_event
+  /*
+    Some events need to be joined back to the metrics dictionary on the redis event name because the key path is null,
+    and some need to be joined back on the key path because there are no associated redis event names. 
+  */
+  LEFT JOIN metric_bridge AS metrics_with_events ON service_ping_events.redis_event_name = metrics_with_events.redis_event
+  LEFT JOIN metric_bridge AS metrics_without_events ON service_ping_events.key_path = metrics_with_events.metrics_path
   /* 
     Only pull in events that match match one of two conditions:
       1. The redis event sent in the Service Ping context matches an event in the metric yml file
