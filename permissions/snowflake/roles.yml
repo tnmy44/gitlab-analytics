@@ -3313,6 +3313,7 @@ roles:
             - data_team_analyst
             - restricted_safe
             - bi_tool_eval_read
+            - zoominfo_inbound
         warehouses:
             - dev_xs
             - dev_xl
@@ -3471,6 +3472,7 @@ roles:
             - data_team_analyst
             - restricted_safe
             - xactly
+            - zoominfo_inbound
         warehouses:
             - dev_xs
 
