@@ -1496,6 +1496,18 @@ roles:
                     - prep.driveload.*
                     - raw.driveload.*
 
+    - facebook_ads:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.facebook_ads
+            tables:
+                read:
+                    - raw.facebook_ads.*
+
     - gainsight_pump:
         warehouses:
             - gainsight_xs
@@ -2753,6 +2765,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - data_science_readonly
+            - facebook_ads
         warehouses:
             - dev_xs
         owns:
@@ -2807,6 +2820,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - data_science_readonly
+            - facebook_ads
         warehouses:
             - dev_xs
 
@@ -3047,6 +3061,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - data_science_readonly
+            - facebook_ads
         warehouses:
             - dev_xs
 
@@ -4255,6 +4270,7 @@ roles:
             - bi_tool_eval_read
             - data_team_analyst
             - data_science_readonly
+            - facebook_ads
         warehouses:
             - dev_xs
         owns:
