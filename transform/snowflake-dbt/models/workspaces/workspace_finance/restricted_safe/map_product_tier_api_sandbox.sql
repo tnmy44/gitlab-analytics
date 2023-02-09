@@ -1,53 +1,59 @@
-WITH zuora_central_sandbox_product AS (
+{{ config(
+    tags=["mnpi"]
+) }}
+
+WITH zuora_api_sandbox_product AS (
 
     SELECT *
-    FROM {{ ref('zuora_central_sandbox_product_source') }}
+    FROM {{ ref('zuora_api_sandbox_product_source') }}
 
-), zuora_central_sandbox_product_rate_plan AS (
+), zuora_api_sandbox_product_rate_plan AS (
 
     SELECT *
-    FROM {{ ref('zuora_central_sandbox_product_rate_plan_source') }}
+    FROM {{ ref('zuora_api_sandbox_product_rate_plan_source') }}
     WHERE is_deleted = FALSE
 
 ), final AS (
 
     SELECT
-      zuora_central_sandbox_product_rate_plan.product_rate_plan_id                  AS product_rate_plan_id,
-      zuora_central_sandbox_product_rate_plan.product_rate_plan_name                AS product_rate_plan_name,
+      zuora_api_sandbox_product_rate_plan.product_rate_plan_id                  AS product_rate_plan_id,
+      zuora_api_sandbox_product_rate_plan.product_rate_plan_name                AS product_rate_plan_name,
       CASE
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%saas - ultimate%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%saas - ultimate%'
           THEN 'SaaS - Ultimate'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%saas - premium%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%saas - premium%'
           THEN 'SaaS - Premium'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%self-managed - ultimate%'
           THEN 'Self-Managed - Ultimate'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%dedicated - ultimate%'
+          THEN 'Dedicated - Ultimate'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
           THEN 'Self-Managed - Premium'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'gold%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'gold%'
           THEN 'SaaS - Gold'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'silver%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'silver%'
           THEN 'SaaS - Silver'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%bronze%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%bronze%'
           THEN 'SaaS - Bronze'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%starter%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%starter%'
           THEN 'Self-Managed - Starter'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'gitlab enterprise edition%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'gitlab enterprise edition%'
           THEN 'Self-Managed - Starter'
-        WHEN zuora_central_sandbox_product_rate_plan.product_rate_plan_name = 'Pivotal Cloud Foundry Tile for GitLab EE'
+        WHEN zuora_api_sandbox_product_rate_plan.product_rate_plan_name = 'Pivotal Cloud Foundry Tile for GitLab EE'
           THEN 'Self-Managed - Starter'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'plus%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'plus%'
           THEN 'Plus'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'standard%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'standard%'
           THEN 'Standard'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'basic%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'basic%'
           THEN 'Basic'
-        WHEN zuora_central_sandbox_product_rate_plan.product_rate_plan_name = 'Trueup'
+        WHEN zuora_api_sandbox_product_rate_plan.product_rate_plan_name = 'Trueup'
           THEN 'Trueup'
-        WHEN LTRIM(LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name)) LIKE 'githost%'
+        WHEN LTRIM(LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name)) LIKE 'githost%'
           THEN 'GitHost'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE ANY ('%quick start with ha%', '%proserv training per-seat add-on%')
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE ANY ('%quick start with ha%', '%proserv training per-seat add-on%')
           THEN 'Support'
-        WHEN TRIM(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) IN (
+        WHEN TRIM(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) IN (
                                                                         'GitLab Service Package'
                                                                       , 'Implementation Services Quick Start'
                                                                       , 'Implementation Support'
@@ -79,13 +85,13 @@ WITH zuora_central_sandbox_product AS (
                                                                       , 'Custom PS Education Services'
                                                                      )
           THEN 'Support'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'gitlab geo%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'gitlab geo%'
           THEN 'Other'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'ci runner%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'ci runner%'
           THEN 'Other'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'discount%'
+        WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE 'discount%'
           THEN 'Other'
-        WHEN TRIM(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) IN (
+        WHEN TRIM(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) IN (
                                                                         '#movingtogitlab'
                                                                       , 'File Locking'
                                                                       , 'Payment Gateway Test'
@@ -119,6 +125,7 @@ WITH zuora_central_sandbox_product AS (
                                           'SaaS - Gold'
                                         , 'Self-Managed - Ultimate'
                                         , 'SaaS - Ultimate'
+                                        , 'Dedicated - Ultimate'
                                         )
           THEN 3
         WHEN product_tier_historical IN (
@@ -141,16 +148,16 @@ WITH zuora_central_sandbox_product AS (
           THEN 'SaaS - Premium'
         ELSE product_tier_historical
       END                                                                       AS product_tier
-    FROM zuora_central_sandbox_product
-    INNER JOIN zuora_central_sandbox_product_rate_plan
-      ON zuora_central_sandbox_product.product_id = zuora_central_sandbox_product_rate_plan.product_id
+    FROM zuora_api_sandbox_product
+    INNER JOIN zuora_api_sandbox_product_rate_plan
+      ON zuora_api_sandbox_product.product_id = zuora_api_sandbox_product_rate_plan.product_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@michellecooper",
-    updated_by="@michellecooper",
-    created_date="2022-03-31",
-    updated_date="2022-03-31"
+    created_by="@ken_aguilar",
+    updated_by="@chrissharp",
+    created_date="2021-08-26",
+    updated_date="2023-01-24"
 ) }}

@@ -1,7 +1,11 @@
-WITH zuora_central_sandbox_amendment AS (
+{{ config(
+    tags=["mnpi"]
+) }}
+
+WITH zuora_api_sandbox_amendment AS (
 
   SELECT *
-  FROM {{ ref('zuora_central_sandbox_amendment_source') }}
+  FROM {{ ref('zuora_api_sandbox_amendment_source') }}
   WHERE is_deleted = FALSE
 
 ), base AS (
@@ -35,7 +39,7 @@ WITH zuora_central_sandbox_amendment AS (
       service_activation_date,
       customer_acceptance_date,
       contract_effective_date
-    FROM zuora_central_sandbox_amendment
+    FROM zuora_api_sandbox_amendment
 
     UNION ALL
 
@@ -73,8 +77,8 @@ WITH zuora_central_sandbox_amendment AS (
 
 {{ dbt_audit(
     cte_ref="base",
-    created_by="@michellecooper",
-    updated_by="@michellecooper",
-    created_date="2022-03-31",
-    updated_date="2022-03-31"
+    created_by="@ken_aguilar",
+    updated_by="@ken_aguilar",
+    created_date="2021-08-31",
+    updated_date="2021-08-31"
 ) }}
