@@ -5066,7 +5066,7 @@ models:
       - name: browser_language
         description: '{{ doc("browser_language") }}'
       - name: max_timestamp
-        description: 
+        description:  '{{ doc("max_timestamp") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -5101,7 +5101,7 @@ models:
           - unique
 
   - name: dim_behavior_event
-    description: Dimensional model containing distinct events types from Snowplow.
+    description: '{{ doc("dim_behavior_event") }}'
     columns:
       - name: dim_behavior_event_sk
         tests:
@@ -5125,7 +5125,7 @@ models:
       - name: event_property
         description: '{{ doc("event_property") }}'         
       - name: max_timestamp
-        description: 
+        description: '{{ doc("max_timestamp") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
