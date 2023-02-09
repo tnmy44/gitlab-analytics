@@ -4542,6 +4542,15 @@ roles:
                 write:
                     - testing_db.*.*
 
+    - tliu:
+        member_of:
+            - data_team_analyst
+            - analyst_core  
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - tpoole:
         member_of:
          - analyst_finance
@@ -5183,6 +5192,11 @@ users:
         can_login: yes
         member_of:
             - target_snowflake
+
+    - tliu:
+        can_login: yes
+        member_of:
+            - tliu
 
     - tpoole:
         can_login: yes
