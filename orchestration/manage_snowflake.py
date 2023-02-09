@@ -166,17 +166,17 @@ class SnowflakeManager:
         get_grants_query = f"""
             WITH recursive roles_rec AS (
 
-            SELECT 
+            SELECT
               grantee_name,
               name
             FROM snowflake.account_usage.grants_to_roles
             WHERE granted_on = 'ROLE' and granted_to = 'ROLE'
                 AND privilege = 'USAGE' and deleted_on IS NULL
                 AND grantee_name = UPPER('{role}')
-            
+
             UNION ALL
-            
-            SELECT 
+
+            SELECT
               g.grantee_name,
               g.name
             FROM snowflake.account_usage.grants_to_roles g
@@ -191,13 +191,13 @@ class SnowflakeManager:
 
             )
 
-            SELECT 
+            SELECT
               'GRANT SELECT ON ' || '"{clone}"' || '.' || "TABLE_SCHEMA" || '.' || "NAME" || ' TO ROLE {role};'
             FROM snowflake.account_usage.grants_to_roles
             WHERE table_catalog = UPPER('{database}')
             AND privilege = 'SELECT'
             AND table_schema ||'.'|| name in (
-                SELECT 
+                SELECT
                   table_schema ||'.'|| table_name
                 FROM "{clone}".information_schema.tables
               )
@@ -308,10 +308,10 @@ class SnowflakeManager:
         :param schema:
         """
         stages_query = f"""
-             SELECT 
+             SELECT
                  stage_schema,
                  stage_name,
-                 stage_url, 
+                 stage_url,
                  stage_type
              FROM {database}.information_schema.stages
              {f"WHERE stage_schema = '{schema.upper()}'" if schema != "" else ""}
@@ -329,7 +329,7 @@ class SnowflakeManager:
             if stage["stage_type"] == "External Named":
 
                 clone_stage_query = f"""
-                    CREATE OR REPLACE STAGE {output_stage_name} LIKE   
+                    CREATE OR REPLACE STAGE {output_stage_name} LIKE
                     {from_stage_name}
                     """
 
@@ -339,7 +339,7 @@ class SnowflakeManager:
 
             else:
                 clone_stage_query = f"""
-                    CREATE OR REPLACE STAGE {output_stage_name}  
+                    CREATE OR REPLACE STAGE {output_stage_name}
                     """
 
                 grants_query = f"""
