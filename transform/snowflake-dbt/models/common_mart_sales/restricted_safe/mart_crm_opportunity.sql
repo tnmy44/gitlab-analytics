@@ -107,11 +107,13 @@
        -- Account fields
       dim_crm_account.crm_account_name,
       dim_crm_account.parent_crm_account_name,
+      dim_crm_account.parent_crm_account_demographics_business_unit AS account_demographics_business_unit,
       dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
       dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
       dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
       dim_crm_account.parent_crm_account_demographics_area AS account_demographics_area,
       dim_crm_account.parent_crm_account_demographics_territory AS account_demographics_territory,
+      dim_crm_account.parent_crm_account_demographics_role_type AS account_demographics_role_type,
       dim_crm_account.parent_crm_account_gtm_strategy,
       dim_crm_account.parent_crm_account_focus_account,
       dim_crm_account.parent_crm_account_sales_segment,
@@ -185,12 +187,12 @@
       -- crm opp owner/account owner stamped fields stamped at close date
       dim_crm_opportunity.crm_opp_owner_stamped_name,
       dim_crm_opportunity.crm_account_owner_stamped_name,
+      dim_crm_user_hierarchy.crm_user_business_unit                                         AS crm_opp_owner_business_unit_stamped,
       dim_crm_user_hierarchy.crm_user_sales_segment                                         AS crm_opp_owner_sales_segment_stamped,
       dim_crm_user_hierarchy.crm_user_sales_segment_grouped                                 AS crm_opp_owner_sales_segment_stamped_grouped,
       dim_crm_user_hierarchy.crm_user_geo                                                   AS crm_opp_owner_geo_stamped,
       dim_crm_user_hierarchy.crm_user_region                                                AS crm_opp_owner_region_stamped,
       dim_crm_user_hierarchy.crm_user_area                                                  AS crm_opp_owner_area_stamped,
-      dim_crm_user_hierarchy.crm_user_business_unit                                         AS crm_opp_owner_business_unit_stamped,
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy.crm_user_sales_segment',
         'dim_crm_user_hierarchy.crm_user_geo', 'dim_crm_user_hierarchy.crm_user_region') }}
                                                                                             AS crm_opp_owner_sales_segment_region_stamped_grouped,
@@ -198,24 +200,24 @@
       dim_crm_opportunity.crm_opp_owner_user_role_type_stamped,
 
       -- crm owner/sales rep live fields
+      dim_crm_user_hierarchy_live.crm_user_business_unit,
       dim_crm_user_hierarchy_live.crm_user_sales_segment,
       dim_crm_user_hierarchy_live.crm_user_sales_segment_grouped,
       dim_crm_user_hierarchy_live.crm_user_geo,
       dim_crm_user_hierarchy_live.crm_user_region,
       dim_crm_user_hierarchy_live.crm_user_area,
-      dim_crm_user_hierarchy_live.crm_user_business_unit,
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy_live.crm_user_sales_segment',
         'dim_crm_user_hierarchy_live.crm_user_geo', 'dim_crm_user_hierarchy_live.crm_user_region') }}
                                                                            AS crm_user_sales_segment_region_grouped,
 
       
        -- crm account owner/sales rep live fields
+      dim_crm_user_hierarchy_account_owner.crm_user_business_unit                                                       AS crm_account_business_unit,
       dim_crm_user_hierarchy_account_owner.crm_user_sales_segment                                                       AS crm_account_user_sales_segment,
       dim_crm_user_hierarchy_account_owner.crm_user_sales_segment_grouped                                               AS crm_account_user_sales_segment_grouped,
       dim_crm_user_hierarchy_account_owner.crm_user_geo                                                                 AS crm_account_user_geo,
       dim_crm_user_hierarchy_account_owner.crm_user_region                                                              AS crm_account_user_region,
       dim_crm_user_hierarchy_account_owner.crm_user_area                                                                AS crm_account_user_area,
-      dim_crm_user_hierarchy_account_owner.crm_user_business_unit                                                       AS crm_account_business_unit,
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy_account_owner.crm_user_sales_segment',
         'dim_crm_user_hierarchy_account_owner.crm_user_geo', 'dim_crm_user_hierarchy_account_owner.crm_user_region') }}
                                                                                                                         AS crm_account_user_sales_segment_region_grouped,

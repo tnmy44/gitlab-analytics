@@ -56,7 +56,7 @@
       prep_user_hierarchy.dim_crm_user_geo_id                                                             AS dim_crm_opp_owner_geo_stamped_id,
       prep_user_hierarchy.dim_crm_user_region_id                                                          AS dim_crm_opp_owner_region_stamped_id,
       prep_user_hierarchy.dim_crm_user_area_id                                                            AS dim_crm_opp_owner_area_stamped_id,
-      SUM(prep_sales_funnel_partner_alliance_target.allocated_target)                                  AS allocated_target
+      SUM(prep_sales_funnel_partner_alliance_target.allocated_target)                                     AS allocated_target
     FROM prep_sales_funnel_partner_alliance_target
     LEFT JOIN date
       ON {{ sales_funnel_text_slugify("prep_sales_funnel_partner_alliance_target.month") }} = {{ sales_funnel_text_slugify("date.fiscal_month_name_fy") }}
@@ -70,6 +70,7 @@
       ON {{ sales_funnel_text_slugify("prep_sales_funnel_partner_alliance_target.channel_type") }} = {{ sales_funnel_text_slugify("channel_type.channel_type_name") }}
     LEFT JOIN prep_user_hierarchy
       ON prep_sales_funnel_partner_alliance_target.dim_crm_user_hierarchy_sk = prep_user_hierarchy.dim_crm_user_hierarchy_sk
+        AND prep_sales_funnel_partner_alliance_target.fiscal_year = prep_user_hierarchy.fiscal_year
     {{ dbt_utils.group_by(n=23) }}
 
 

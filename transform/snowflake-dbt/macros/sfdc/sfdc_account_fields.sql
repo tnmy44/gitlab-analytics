@@ -125,6 +125,8 @@ WITH map_merged_crm_account AS (
       account_demographics_geo,
       account_demographics_region,
       account_demographics_area,
+      account_demographics_business_unit,
+      account_demographics_role_type,
       account_demographics_territory,
       account_demographics_employee_count,
       account_demographics_max_family_employee,
@@ -258,6 +260,8 @@ WITH map_merged_crm_account AS (
       sfdc_account.account_demographics_region                            AS parent_crm_account_demographics_region,
       sfdc_account.account_demographics_area                              AS parent_crm_account_demographics_area,
       sfdc_account.account_demographics_territory                         AS parent_crm_account_demographics_territory,
+      sfdc_account.account_demographics_business_unit                     AS parent_crm_account_demographics_business_unit,
+      sfdc_account.account_demographics_role_type                         AS parent_crm_account_demographics_role_type,
       sfdc_account.account_demographics_max_family_employee               AS parent_crm_account_demographics_max_family_employee,
       sfdc_account.account_demographics_upa_country                       AS parent_crm_account_demographics_upa_country,
       sfdc_account.account_demographics_upa_state                         AS parent_crm_account_demographics_upa_state,
@@ -347,8 +351,8 @@ WITH map_merged_crm_account AS (
       sfdc_account.forbes_2000_rank,
       sfdc_account.parent_account_industry_hierarchy,
       sfdc_account.sales_development_rep,
-	  sfdc_account.admin_manual_source_number_of_employees,
-      sfdc_account.admin_manual_source_account_address,      
+      sfdc_account.admin_manual_source_number_of_employees,
+      sfdc_account.admin_manual_source_account_address,
 
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,

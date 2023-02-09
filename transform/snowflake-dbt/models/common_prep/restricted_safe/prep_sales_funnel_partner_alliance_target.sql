@@ -28,9 +28,7 @@
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.alliance_partner,
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.sqs_bucket_engagement,
     CASE
-      WHEN fiscal_months.fiscal_year < 2023
-        THEN sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area
-      WHEN fiscal_months.fiscal_year = 2023
+      WHEN fiscal_months.fiscal_year < 2024
         THEN CONCAT(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment,
                     '-',
                     sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo, 

@@ -63,11 +63,13 @@
       dim_crm_account.parent_crm_account_zoom_info_parent_company_name,
       dim_crm_account.parent_crm_account_zoom_info_ultimate_parent_company_zi_id,
       dim_crm_account.parent_crm_account_zoom_info_ultimate_parent_company_name,
-      dim_crm_account.parent_crm_account_demographics_sales_segment,
+      dim_crm_account.parent_crm_account_demographics_business_unit,
       dim_crm_account.parent_crm_account_demographics_geo,
       dim_crm_account.parent_crm_account_demographics_region,
+      dim_crm_account.parent_crm_account_demographics_sales_segment,
       dim_crm_account.parent_crm_account_demographics_area,
       dim_crm_account.parent_crm_account_demographics_territory,
+      dim_crm_account.parent_crm_account_demographics_role_type,
       dim_crm_account.parent_crm_account_demographics_max_family_employee,
       dim_crm_account.parent_crm_account_demographics_upa_country,
       dim_crm_account.parent_crm_account_demographics_upa_state,
@@ -149,7 +151,7 @@
       dim_crm_account.forbes_2000_rank,
       dim_crm_account.parent_account_industry_hierarchy,
       dim_crm_account.sales_development_rep,
-	  dim_crm_account.admin_manual_source_number_of_employees,
+      dim_crm_account.admin_manual_source_number_of_employees,
       dim_crm_account.admin_manual_source_account_address,
 
       --degenerative dimensions
@@ -237,7 +239,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@lvinueza",
+    updated_by="@michellecooper",
     created_date="2022-08-10",
-    updated_date="2023-01-13"
+    updated_date="2023-02-07"
 ) }}

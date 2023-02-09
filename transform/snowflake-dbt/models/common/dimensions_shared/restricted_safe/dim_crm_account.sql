@@ -51,11 +51,13 @@ WITH final AS (
       prep_crm_account.parent_crm_account_zoom_info_parent_company_name,
       prep_crm_account.parent_crm_account_zoom_info_ultimate_parent_company_zi_id,
       prep_crm_account.parent_crm_account_zoom_info_ultimate_parent_company_name,
-      prep_crm_account.parent_crm_account_demographics_sales_segment,
+      prep_crm_account.parent_crm_account_demographics_business_unit,
       prep_crm_account.parent_crm_account_demographics_geo,
       prep_crm_account.parent_crm_account_demographics_region,
+      prep_crm_account.parent_crm_account_demographics_sales_segment,
       prep_crm_account.parent_crm_account_demographics_area,
       prep_crm_account.parent_crm_account_demographics_territory,
+      prep_crm_account.parent_crm_account_demographics_role_type,
       prep_crm_account.parent_crm_account_demographics_max_family_employee,
       prep_crm_account.parent_crm_account_demographics_upa_country,
       prep_crm_account.parent_crm_account_demographics_upa_state,
@@ -202,9 +204,9 @@ WITH final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@lisvinueza",
+    updated_by="@michellecooper",
     created_date="2020-06-01",
-    updated_date="2023-01-13"
+    updated_date="2023-02-07"
 ) }}
 
 

@@ -26,9 +26,7 @@
       sheetload_sales_funnel_targets_matrix_source.user_area,
       sheetload_sales_funnel_targets_matrix_source.user_business_unit,
       CASE
-        WHEN fiscal_months.fiscal_year < 2023
-          THEN sheetload_sales_funnel_targets_matrix_source.area
-        WHEN fiscal_months.fiscal_year = 2023
+        WHEN fiscal_months.fiscal_year < 2024
           THEN CONCAT(sheetload_sales_funnel_targets_matrix_source.user_segment, 
                       '-',
                       sheetload_sales_funnel_targets_matrix_source.user_geo, 
