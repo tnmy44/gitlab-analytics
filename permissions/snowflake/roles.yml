@@ -1508,7 +1508,6 @@ roles:
                 read:
                     - raw.facebook_ads.*
 
-
     - gainsight_pump:
         warehouses:
             - gainsight_xs
