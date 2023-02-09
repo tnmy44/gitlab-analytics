@@ -130,8 +130,8 @@ clone_stop:
 🔑grant_clones:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py grant_clones --database prod --role analytics_engineer_core
-    - manage_snowflake.py grant_clones --database prep --role analytics_engineer_core
+    - manage_snowflake.py grant_clones --database prod --role $GRANT_TO_ROLE
+    - manage_snowflake.py grant_clones --database prep --role $GRANT_TO_ROLE
 
 # ======
 # Python Code Checks

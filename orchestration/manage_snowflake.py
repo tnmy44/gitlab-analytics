@@ -164,42 +164,48 @@ class SnowflakeManager:
             clone = self.prod_database
 
         get_grants_query = f"""
-            with recursive roles_rec as (
+            WITH recursive roles_rec AS (
 
-            select grantee_name, name
-            from snowflake.account_usage.grants_to_roles
-            where granted_on = 'ROLE' and granted_to = 'ROLE'
-                and privilege = 'USAGE' and deleted_on is null
-                and grantee_name = UPPER('{role}')
+            SELECT 
+              grantee_name,
+              name
+            FROM snowflake.account_usage.grants_to_roles
+            WHERE granted_on = 'ROLE' and granted_to = 'ROLE'
+                AND privilege = 'USAGE' and deleted_on IS NULL
+                AND grantee_name = UPPER('{role}')
             
-            union all
+            UNION ALL
             
-            select g.grantee_name, g.name
-            from snowflake.account_usage.grants_to_roles g
-            join roles_rec r on g.grantee_name = r.name
-            where g.granted_on = 'ROLE' and g.granted_to = 'ROLE'
-                and g.privilege = 'USAGE' and g.deleted_on is null
+            SELECT 
+              g.grantee_name,
+              g.name
+            FROM snowflake.account_usage.grants_to_roles g
+            JOIN roles_rec r ON g.grantee_name = r.name
+            WHERE g.granted_on = 'ROLE' AND g.granted_to = 'ROLE'
+                AND g.privilege = 'USAGE' AND g.deleted_on IS NULL
 
-            ),  inherited_roles as (
+            ),  inherited_roles AS (
 
-            select distinct name
-            from roles_rec
+            SELECT distinct name
+            FROM roles_rec
 
             )
 
-            select 
+            SELECT 
               'GRANT SELECT ON ' || '"{clone}"' || '.' || "TABLE_SCHEMA" || '.' || "NAME" || ' TO ROLE {role};'
-            from snowflake.account_usage.grants_to_roles
-            where table_catalog = UPPER('{database}')
-            and privilege = 'SELECT'
-            and table_schema ||'.'|| name in (
-                select table_schema ||'.'|| table_name
-                from "{clone}".information_schema.tables
-            )
-            and (grantee_name = UPPER('{role}')
-            or grantee_name in (
-                select name
-                from inherited_roles
+            FROM snowflake.account_usage.grants_to_roles
+            WHERE table_catalog = UPPER('{database}')
+            AND privilege = 'SELECT'
+            AND table_schema ||'.'|| name in (
+                SELECT 
+                  table_schema ||'.'|| table_name
+                FROM "{clone}".information_schema.tables
+              )
+            AND (grantee_name = UPPER('{role}')
+            OR grantee_name in (
+                SELECT
+                  name
+                FROM inherited_roles
             ))
 
             ;
