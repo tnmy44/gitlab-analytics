@@ -1575,3 +1575,16 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 - [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
 
 {% enddocs %}
+
+{% docs fct_behavior_structured_event %}
+
+**Description:** Fact table containing quantitative data for Snowplow Strutured events. Structured events are custom events implemented with five parameters: event_category, event_action, event_label, event_property and event_value. Snowplow documentation on [types of events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/).
+
+**Data Grain:** behavior_structured_event_pk
+
+**Filters Applied to Model:**
+- This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
+
+
+{% enddocs %}
+
