@@ -1298,7 +1298,7 @@ Timestamp for when the event actually happened.
 
 {% docs tracker_version %}
 
-Information about the event tracker version. This field can be used to distinguish front-end events V/S back-end events. When `tracker_version LIKE '%rb%'` THEN back-end event i.e. event was tracked using Ruby. When `tracker_version LIKE '%js%'` THEN front-end event i.e. event was tracked using Javascript.
+Information about the event tracker version. 
 
 {% enddocs %}
 
@@ -1332,3 +1332,59 @@ Unique User ID set by Snowplow when the user visits GitLab.com for the first tim
 JSON object for custom contexts implemented during tracking implementation. [More information on Snowplow contexts](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/#contexts). [More information on GitLab standard context](https://docs.gitlab.com/ee/development/snowplow/schemas.html#gitlab_standard) 
 
 {% enddocs %}
+
+{% docs page_url_host_path %}
+
+The page URL path of the event **with** the host (gitlab.com) information. Example: `gitlab.com/namespace9495566/project21362945/-/merge_requests/1575`. 
+
+{% enddocs %}
+
+{% docs page_url_path %}
+
+The page URL path of the event **without** the host (gitlab.com) information. Example: `/namespace9495566/project21362945/-/merge_requests/1575`
+
+{% enddocs %}
+
+{% docs page_url_scheme %}
+
+Scheme i.e. protocol. Example: 'https'.
+
+{% enddocs %}
+
+{% docs page_url_host %}
+
+Host/Domain information 
+
+{% enddocs %}
+
+{% docs gsc_pseudonymized_user_id %}
+
+User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user susccessfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time.
+
+{% enddocs %}
+
+{% docs gsc_google_analytics_client_id %}
+
+Google Analytics ID, present when set from our marketing sites.
+
+{% enddocs %}
+
+{% docs gsc_extra %}
+
+Any additional data associated with the event, in the form of key-value pairs.
+
+{% enddocs %}
+
+{% docs gsc_plan %}
+
+Name of the plan for the namespace, such as free, premium, or ultimate. Automatically picked from the namespace.
+
+{% enddocs %}
+
+{% docs gsc_source %}
+
+Name of the source application/ event tracker, such as gitlab-rails or gitlab-javascript. This field can be used to distinguish front-end events V/S back-end events. When `gsc_source = 'gitlab-rails'` THEN back-end event i.e. event was tracked using Ruby. When `gsc_source = 'gitlab-javascrip'` THEN front-end event i.e. event was tracked using Javascript.
+
+{% enddocs %}
+
+
