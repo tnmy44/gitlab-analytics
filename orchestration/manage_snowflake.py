@@ -157,7 +157,7 @@ class SnowflakeManager:
         """
         Grant privildges on a clone.
         """
-        
+
         if database == "prep":
             clone = self.prep_database
         elif database == "prod":
@@ -211,20 +211,18 @@ class SnowflakeManager:
             ;
         """
 
-        
         try:
             connection = self.engine.connect()
             logging.info("Executing Query: {}".format(get_grants_query))
             grants = connection.execute(get_grants_query).fetchall()
             logging.info("Found {} grants".format(len(grants)))
-            for grant, in grants:
+            for (grant,) in grants:
                 logging.info("Running: {}".format(grant))
                 [result] = connection.execute(grant).fetchone()
                 logging.info("Command Result: {}".format(result))
         finally:
             connection.close()
             self.engine.dispose()
-
 
     def delete_clones(self):
         """
