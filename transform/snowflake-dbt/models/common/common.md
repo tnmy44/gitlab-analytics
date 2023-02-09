@@ -1567,7 +1567,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs dim_behavior_event %}
 
-**Description:** Dimension table for events in Snowplow. 
+**Description:** Dimensional model containing distinct events types from Snowplow. 
 
 **Data Grain:** dim_behavior_event_sk
 
