@@ -192,7 +192,13 @@ class SnowflakeManager:
             )
 
             SELECT
-              'GRANT SELECT ON ' || '"{clone}"' || '.' || "TABLE_SCHEMA" || '.' || "NAME" || ' TO ROLE {role};'
+              'GRANT SELECT ON ' ||
+              '"{clone}"' ||
+              '.' ||
+              "TABLE_SCHEMA" ||
+              '.' ||
+              "NAME" ||
+              ' TO ROLE {role};'
             FROM snowflake.account_usage.grants_to_roles
             WHERE table_catalog = UPPER('{database}')
             AND privilege = 'SELECT'
