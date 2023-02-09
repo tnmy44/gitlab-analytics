@@ -155,7 +155,7 @@ class SnowflakeManager:
 
     def grant_clones(self, role, database):
         """
-        Grant privildges on a clone.
+        Grant privileges on a clone.
         """
 
         if database == "prep":
