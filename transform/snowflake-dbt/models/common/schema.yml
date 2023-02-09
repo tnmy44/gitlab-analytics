@@ -5138,7 +5138,62 @@ models:
 
 
   - name: fct_behavior_structured_event
-    description: Atomic fact table for structured events.
+    description: '{{ doc("fct_behavior_structured_event") }}'
+    columns: 
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique
+        description: '{{ doc("behavior_structured_event_pk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: 
+      - name: dim_behavior_referrer_page_sk
+        description: 
+      - name: dim_behavior_operating_system_sk
+        description: 
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("dvce_created_tstamp") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: tracker_version
+        description: '{{ doc("tracker_version") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+
 
   - name: fct_behavior_structured_event_experiment
     description: Derived fact table for structured events related to experiments.
