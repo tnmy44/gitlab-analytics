@@ -1496,6 +1496,19 @@ roles:
                     - prep.driveload.*
                     - raw.driveload.*
 
+    - facebook_ads:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.facebook_ads
+            tables:
+                read:
+                    - raw.facebook_ads.*
+
+
     - gainsight_pump:
         warehouses:
             - gainsight_xs
