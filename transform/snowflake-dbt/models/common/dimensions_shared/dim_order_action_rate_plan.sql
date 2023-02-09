@@ -13,7 +13,7 @@
       zuora_rate_plan.subscription_id                    AS dim_subscription_id,
       zuora_order_action.amendment_id                    AS dim_amendment_id,
       zuora_order.order_number, 
-      zuora_rate_plan.rate_plan_id, 
+      zuora_rate_plan.rate_plan_id,
       zuora_rate_plan.rate_plan_name, 
       zuora_rate_plan.product_rate_plan_id,
       zuora_rate_plan.amendement_type,
@@ -32,7 +32,7 @@
       zuora_order_action.renewal_term_period_type,
       zuora_order_action.renew_setting                   AS renewal_setting,
       zuora_order_action.term_start_date,
-      zuora_rate_plan.created_date
+      zuora_rate_plan.created_date                       AS rate_plan_created_date
     FROM zuora_order
     INNER JOIN zuora_order_action 
       ON zuora_order_action.order_id = zuora_order.order_id
