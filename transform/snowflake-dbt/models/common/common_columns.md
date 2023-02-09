@@ -1221,7 +1221,7 @@ Gitlab.com environment (production, stagging etc) of the event.
 The event category i.e. The page or backend section of the application. Example: `projects:merge_requests:creations:new`, `InvitesController`, `projects:issues:designs` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
 
 Note: 
-- It is only populated for strutured events (`event=struct`) and can not be NULL
+- It is only populated for strutured events (`event=struct`) and **can not be NULL**
 - The value of this field is not standardized and depends on implementing engineer
 
 {% enddocs %}
@@ -1231,7 +1231,7 @@ Note:
 The action the user takes, or aspect that’s being instrumented. Example: `invite_email_sent`, `join_clicked` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
 
 Note:
-- It is only populated for strutured events (`event=struct`) and can not be NULL
+- It is only populated for strutured events (`event=struct`) and **can not be NULL**
 - The value of this field is not standardized and depends on implementing engineer
 
 {% enddocs %}
@@ -1241,8 +1241,8 @@ Note:
 An optional string which identifies the specific object being actioned. Example: `invite_email`, `content_editor` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
 
 Note: 
-- The value of this field is not standardized and depends on implementing engineer
 - It is only populated for strutured events (`event=struct`)
+- The value of this field is not standardized and depends on implementing engineer
 
 {% enddocs %}
 
@@ -1251,8 +1251,8 @@ Note:
 An optional string describing the object or the action performed on it. Example: There are four different possible merge request actions: “create”, “merge”, “comment”, and “close”. Each of these would be a possible property value. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
 
 Note: 
-- The value of this field is not standardized and depends on implementing engineer
 - It is only populated for strutured events (`event=struct`)
+- The value of this field is not standardized and depends on implementing engineer
 
 {% enddocs %}
 
@@ -1261,8 +1261,8 @@ Note:
 An optional numeric data to quantify or further describe the user action. Example: `1` could mean success and `0` could mean failure of an event . See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema).
 
 Note: 
-- The value of this field is not standardized and depends on implementing engineer
 - It is only populated for strutured events (`event=struct`)
+- The value of this field is not standardized and depends on implementing engineer
 
 {% enddocs %}
 
