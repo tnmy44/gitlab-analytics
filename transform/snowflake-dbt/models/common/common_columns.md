@@ -1221,8 +1221,8 @@ Gitlab.com environment (production, stagging etc) of the event.
 The event category i.e. The page or backend section of the application. Example: `projects:merge_requests:creations:new`, `InvitesController`, `projects:issues:designs` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
 
 Note: 
+- It is only populated for strutured events (`event=struct`) and can not be NULL
 - The value of this field is not standardized and depends on implementing engineer
-- It is only populated for strutured events (`event=struct`)
 
 {% enddocs %}
 
@@ -1230,9 +1230,9 @@ Note:
 
 The action the user takes, or aspect that’s being instrumented. Example: `invite_email_sent`, `join_clicked` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
 
-Note: 
+Note:
+- It is only populated for strutured events (`event=struct`) and can not be NULL
 - The value of this field is not standardized and depends on implementing engineer
-- It is only populated for strutured events (`event=struct`)
 
 {% enddocs %}
 
@@ -1266,5 +1266,10 @@ Note:
 
 {% enddocs %}
 
+{% docs max_timestamp %}
+
+This is defined as the max(behavior_at) for that combination of columns. The logic behind using max_timestamp is to avoid daily incremental refresh for all dimensions. 
+
+{% enddocs %}
 
 
