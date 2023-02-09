@@ -37,15 +37,6 @@
     LEFT JOIN order_type
       ON {{ sales_funnel_text_slugify("sheetload_sales_funnel_targets_matrix_source.order_type") }} = {{ sales_funnel_text_slugify("order_type.order_type_name") }}
 
-), user_hierarchy AS (
-/* 
-For FY23 and beyond, targets in the sheetload file were set at the user_segment_geo_region_area grain, so we join to the stamped hierarchy on the user_segment_geo_region_area.
-*/
-
-    SELECT *
-    FROM sfdc_user_hierarchy_stamped
-    WHERE is_last_user_hierarchy_in_fiscal_year = 1
-
 ), unioned_targets AS (
 
     SELECT
@@ -57,20 +48,20 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
       target_matrix.order_type, 
       target_matrix.fiscal_year,
       target_matrix.allocated_target,
-      user_hierarchy.crm_opp_owner_sales_segment_geo_region_area_stamped,
-      user_hierarchy.dim_crm_user_hierarchy_stamped_id,
-      user_hierarchy.dim_crm_opp_owner_sales_segment_stamped_id,
-      user_hierarchy.crm_opp_owner_sales_segment_stamped,
-      user_hierarchy.dim_crm_opp_owner_geo_stamped_id,
-      user_hierarchy.crm_opp_owner_geo_stamped,
-      user_hierarchy.dim_crm_opp_owner_region_stamped_id,
-      user_hierarchy.crm_opp_owner_region_stamped,
-      user_hierarchy.dim_crm_opp_owner_area_stamped_id,
-      user_hierarchy.crm_opp_owner_area_stamped
+      sfdc_user_hierarchy_stamped.crm_opp_owner_sales_segment_geo_region_area_stamped,
+      sfdc_user_hierarchy_stamped.dim_crm_user_hierarchy_stamped_id,
+      sfdc_user_hierarchy_stamped.dim_crm_opp_owner_sales_segment_stamped_id,
+      sfdc_user_hierarchy_stamped.crm_opp_owner_sales_segment_stamped,
+      sfdc_user_hierarchy_stamped.dim_crm_opp_owner_geo_stamped_id,
+      sfdc_user_hierarchy_stamped.crm_opp_owner_geo_stamped,
+      sfdc_user_hierarchy_stamped.dim_crm_opp_owner_region_stamped_id,
+      sfdc_user_hierarchy_stamped.crm_opp_owner_region_stamped,
+      sfdc_user_hierarchy_stamped.dim_crm_opp_owner_area_stamped_id,
+      sfdc_user_hierarchy_stamped.crm_opp_owner_area_stamped
     FROM target_matrix
-    LEFT JOIN user_hierarchy
-      ON target_matrix.crm_opp_owner_segment_geo_region_area = user_hierarchy.crm_opp_owner_sales_segment_geo_region_area_stamped
-        AND target_matrix.fiscal_year = user_hierarchy.fiscal_year
+    LEFT JOIN sfdc_user_hierarchy_stamped
+      ON target_matrix.crm_opp_owner_segment_geo_region_area = sfdc_user_hierarchy_stamped.crm_opp_owner_sales_segment_geo_region_area_stamped
+        AND target_matrix.fiscal_year = sfdc_user_hierarchy_stamped.fiscal_year
 
 ), final_targets AS (
 

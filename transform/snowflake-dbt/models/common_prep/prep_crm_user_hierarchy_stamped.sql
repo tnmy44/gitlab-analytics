@@ -102,15 +102,10 @@
       sheetload_sales_funnel_targets_matrix_source.user_geo,
       sheetload_sales_funnel_targets_matrix_source.user_region,
       sheetload_sales_funnel_targets_matrix_source.user_area,
-      sheetload_sales_funnel_targets_matrix_source.user_segment_geo_region_area,
-      COALESCE(final_scd.is_last_user_hierarchy_in_fiscal_year, 1)      AS is_last_user_hierarchy_in_fiscal_year,
-      COALESCE(final_scd.is_last_user_area_in_fiscal_year, 0)           AS is_last_user_area_in_fiscal_year
+      sheetload_sales_funnel_targets_matrix_source.user_segment_geo_region_area
     FROM sheetload_sales_funnel_targets_matrix_source
     INNER JOIN fiscal_months
       ON sheetload_sales_funnel_targets_matrix_source.month = fiscal_months.fiscal_month_name_fy
-    LEFT JOIN final_scd
-      ON LOWER(sheetload_sales_funnel_targets_matrix_source.user_segment_geo_region_area) = LOWER(final_scd.user_segment_geo_region_area)
-        AND fiscal_months.fiscal_year = final_scd.fiscal_year
     WHERE sheetload_sales_funnel_targets_matrix_source.area != 'N/A'
       AND sheetload_sales_funnel_targets_matrix_source.area IS NOT NULL
 
@@ -125,15 +120,10 @@
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo,
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region,
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area,
-      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment_geo_region_area,
-      COALESCE(final_scd.is_last_user_hierarchy_in_fiscal_year, 1)      AS is_last_user_hierarchy_in_fiscal_year,
-      COALESCE(final_scd.is_last_user_area_in_fiscal_year, 0)           AS is_last_user_area_in_fiscal_year
+      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment_geo_region_area
     FROM sheetload_sales_funnel_partner_alliance_targets_matrix_source
     INNER JOIN fiscal_months
       ON sheetload_sales_funnel_partner_alliance_targets_matrix_source.month = fiscal_months.fiscal_month_name_fy
-    LEFT JOIN final_scd
-      ON LOWER(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment_geo_region_area) = LOWER(final_scd.user_segment_geo_region_area)
-        AND fiscal_months.fiscal_year = final_scd.fiscal_year
     WHERE sheetload_sales_funnel_partner_alliance_targets_matrix_source.area != 'N/A'
       AND sheetload_sales_funnel_partner_alliance_targets_matrix_source.area IS NOT NULL
 
@@ -148,15 +138,10 @@
       sfdc_opportunity_source.user_geo_stamped                      AS user_geo,
       sfdc_opportunity_source.user_region_stamped                   AS user_region,
       sfdc_opportunity_source.user_area_stamped                     AS user_area,
-      sfdc_opportunity_source.user_segment_geo_region_area_stamped  AS user_segment_geo_region_area,
-      COALESCE(final_scd.is_last_user_hierarchy_in_fiscal_year, 1)  AS is_last_user_hierarchy_in_fiscal_year,
-      COALESCE(final_scd.is_last_user_area_in_fiscal_year, 0)       AS is_last_user_area_in_fiscal_year
+      sfdc_opportunity_source.user_segment_geo_region_area_stamped  AS user_segment_geo_region_area
     FROM sfdc_opportunity_source
     INNER JOIN dim_date
       ON sfdc_opportunity_source.close_date = dim_date.date_actual
-    LEFT JOIN final_scd
-      ON LOWER(sfdc_opportunity_source.user_segment_geo_region_area_stamped) = LOWER(final_scd.user_segment_geo_region_area)
-        AND dim_date.fiscal_year = final_scd.fiscal_year
   
 ), unioned AS (
 /*
@@ -169,9 +154,7 @@
       final_scd.user_region,
       final_scd.user_area,
       final_scd.user_segment_geo_region_area,
-      final_scd.fiscal_year,
-      final_scd.is_last_user_hierarchy_in_fiscal_year,
-      final_scd.is_last_user_area_in_fiscal_year
+      final_scd.fiscal_year
     FROM final_scd
 
     UNION ALL
@@ -182,9 +165,7 @@
       user_hierarchy_stamped_opportunity.user_region, 
       user_hierarchy_stamped_opportunity.user_area, 
       user_hierarchy_stamped_opportunity.user_segment_geo_region_area, 
-      user_hierarchy_stamped_opportunity.fiscal_year, 
-      user_hierarchy_stamped_opportunity.is_last_user_hierarchy_in_fiscal_year,
-      user_hierarchy_stamped_opportunity.is_last_user_area_in_fiscal_year
+      user_hierarchy_stamped_opportunity.fiscal_year
     FROM user_hierarchy_stamped_opportunity
     
     UNION ALL
@@ -195,9 +176,7 @@
       user_hierarchy_sheetload_partner_alliance.user_region,
       user_hierarchy_sheetload_partner_alliance.user_area,
       user_hierarchy_sheetload_partner_alliance.user_segment_geo_region_area,
-      user_hierarchy_sheetload_partner_alliance.fiscal_year,
-      user_hierarchy_sheetload_partner_alliance.is_last_user_hierarchy_in_fiscal_year,
-      user_hierarchy_sheetload_partner_alliance.is_last_user_area_in_fiscal_year
+      user_hierarchy_sheetload_partner_alliance.fiscal_year
     FROM user_hierarchy_sheetload_partner_alliance
     
     UNION ALL
@@ -208,9 +187,7 @@
       user_hierarchy_sheetload.user_region,
       user_hierarchy_sheetload.user_area,
       user_hierarchy_sheetload.user_segment_geo_region_area,
-      user_hierarchy_sheetload.fiscal_year,
-      user_hierarchy_sheetload.is_last_user_hierarchy_in_fiscal_year,
-      user_hierarchy_sheetload.is_last_user_area_in_fiscal_year
+      user_hierarchy_sheetload.fiscal_year
     FROM user_hierarchy_sheetload
 
 ), final AS (
@@ -231,9 +208,7 @@
           ELSE user_segment
         END                                                                           AS crm_opp_owner_sales_segment_stamped_grouped,
       {{ sales_segment_region_grouped('user_segment', 'user_geo', 'user_region') }}   AS crm_opp_owner_sales_segment_region_stamped_grouped,
-      fiscal_year,
-      is_last_user_hierarchy_in_fiscal_year,
-      is_last_user_area_in_fiscal_year
+      fiscal_year
     FROM unioned
 
 )
