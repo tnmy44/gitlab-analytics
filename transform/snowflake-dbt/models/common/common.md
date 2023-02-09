@@ -1564,3 +1564,14 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 - [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
 
 {% enddocs %}
+
+{% docs dim_behavior_event %}
+
+**Description:** Dimension table for events in Snowplow. 
+
+**Data Grain:** dim_behavior_event_sk
+
+**Other Comments:**
+- [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
+
+{% enddocs %}
