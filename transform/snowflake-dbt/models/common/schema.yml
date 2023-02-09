@@ -5107,6 +5107,35 @@ models:
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_behavior_event_sk") }}'  
+      - name: event
+        description: '{{ doc("event") }}' 
+      - name: event_name
+        description: '{{ doc("event_name") }}'         
+      - name: platform
+        description: '{{ doc("platform") }}'         
+      - name: environment
+        description: '{{ doc("environment") }}'         
+      - name: event_category
+        description: '{{ doc("event_category") }}'         
+      - name: event_action
+        description: '{{ doc("event_action") }}'         
+      - name: event_label
+        description: '{{ doc("event_label") }}'         
+      - name: event_property
+        description: '{{ doc("event_property") }}'         
+      - name: max_timestamp
+        description: 
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+      
+
 
   - name: fct_behavior_structured_event
     description: Atomic fact table for structured events.
