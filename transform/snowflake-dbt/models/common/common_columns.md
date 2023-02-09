@@ -1185,3 +1185,86 @@ The browser rendering engine (ex. 'WEBKIT', 'GECKO', etc). This appears as `br_r
 Language the browser is set to (ex. 'en-GB', 'fr-FR', etc). This appears as `br_lang` in the raw Snowplow data
 
 {% enddocs %}
+
+{% docs dim_behavior_event_sk %}
+
+Surrogate key consisting of event, event_name, platform, gsc_environment, event_category, event_action, event_label, event_property, easily JOINed to dim_behavior_event. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event`, `event_name`, `platform`, `gsc_environment`, `se_category`, `se_action`, `se_label` and `se_property`.
+
+{% enddocs %}
+
+{% docs event %}
+
+The type of event i.e if an event is a strutured event OR an unstructured event OR a page view OR a page ping. Snowplow [documentation](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/) on types of events.
+
+{% enddocs %}
+
+{% docs event_name %}
+
+Event type of an unstructured event (i.e. change form, click link, submit form etc). Note: WHEN `event=struct` THEN this value will always be `event` and WHEN `event=page_ping` THEN it will be `page_ping` and WHEN `event=page_view` it will be `page_view` 
+
+{% enddocs %}
+
+{% docs platform %}
+
+The platform is used to distinguish server side events and web events. When `platform = srv` then the event was a server side event, tracked using Ruby. When `platform = web` then the event was a web event, tracked using Javascript tracker.
+
+{% enddocs %}
+
+{% docs environment %}
+
+Gitlab.com environment (production, stagging etc) of the event. 
+
+{% enddocs %}
+
+{% docs event_category %}
+
+The event category i.e. The page or backend section of the application. Example: `projects:merge_requests:creations:new`, `InvitesController`, `projects:issues:designs` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
+
+Note: 
+- The value of this field is not standardized and depends on implementing engineer
+- It is only populated for strutured events (`event=struct`)
+
+{% enddocs %}
+
+{% docs event_action %}
+
+The action the user takes, or aspect that’s being instrumented. Example: `invite_email_sent`, `join_clicked` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
+
+Note: 
+- The value of this field is not standardized and depends on implementing engineer
+- It is only populated for strutured events (`event=struct`)
+
+{% enddocs %}
+
+{% docs event_label %}
+
+An optional string which identifies the specific object being actioned. Example: `invite_email`, `content_editor` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
+
+Note: 
+- The value of this field is not standardized and depends on implementing engineer
+- It is only populated for strutured events (`event=struct`)
+
+{% enddocs %}
+
+{% docs event_property %}
+
+An optional string describing the object or the action performed on it. Example: There are four different possible merge request actions: “create”, “merge”, “comment”, and “close”. Each of these would be a possible property value. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
+
+Note: 
+- The value of this field is not standardized and depends on implementing engineer
+- It is only populated for strutured events (`event=struct`)
+
+{% enddocs %}
+
+{% docs event_value %}
+
+An optional numeric data to quantify or further describe the user action. Example: `1` could mean success and `0` could mean failure of an event . See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema).
+
+Note: 
+- The value of this field is not standardized and depends on implementing engineer
+- It is only populated for strutured events (`event=struct`)
+
+{% enddocs %}
+
+
+
