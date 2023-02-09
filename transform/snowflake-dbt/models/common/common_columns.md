@@ -1272,4 +1272,63 @@ This is defined as the max(behavior_at) for that combination of columns. The log
 
 {% enddocs %}
 
+{% docs behavior_structured_event_pk %}
 
+This is the Primary key. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event_id` 
+
+{% enddocs %}
+
+{% docs dim_namespace_id %}
+
+The unique identifier of the namespace in which the event was generated, easily joined to `dim_namespace`. This field will be NULL if the event is not tied to a namespace (ex. users_created)
+
+{% enddocs %}
+
+{% docs dvce_created_tstamp %}
+
+Timestamp for the event recorded on the client device.
+
+{% enddocs %}
+
+{% docs behavior_at %}
+
+Timestamp for when the event actually happened. 
+
+{% enddocs %}
+
+{% docs tracker_version %}
+
+Information about the event tracker version. This field can be used to distinguish front-end events V/S back-end events. When `tracker_version LIKE '%rb%'` THEN back-end event i.e. event was tracked using Ruby. When `tracker_version LIKE '%js%'` THEN front-end event i.e. event was tracked using Javascript.
+
+{% enddocs %}
+
+{% docs session_index %}
+
+It is the number of the current user session. For example, an event occurring during a user's first session would have session_index set to 1.
+
+{% enddocs %}
+
+
+{% docs app_id %}
+
+The environment of the event - Production, Staging OR Development. To only include Production events set filter to `app_id IN ('gitlab','gitlab_customers')`
+
+{% enddocs %}
+
+{% docs session_id %}
+
+Unique idenfitier for each user session. Note: session_id is NULL for back-end events (`tracker_version LIKE '%rb%'`)
+
+{% enddocs %}
+
+{% docs user_snowplow_domain_id %}
+
+Unique User ID set by Snowplow when the user visits GitLab.com for the first time (using 1st party cookie).
+
+{% enddocs %}
+
+{% docs contexts %}
+
+JSON object for custom contexts implemented during tracking implementation. [More information on Snowplow contexts](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/#contexts). [More information on GitLab standard context](https://docs.gitlab.com/ee/development/snowplow/schemas.html#gitlab_standard) 
+
+{% enddocs %}
