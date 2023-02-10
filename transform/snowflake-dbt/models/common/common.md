@@ -1597,3 +1597,14 @@ This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 - Include events where os_name _OR_ os_timezone is available (`os_name IS NOT NULL OR os_timezone IS NOT NULL`)
 
 {% enddocs %}
+
+{% docs dim_behavior_website_page %}
+
+**Description:** Dimensional model containing distinct page types from Snowplow events.
+
+**Data Grain:** dim_behavior_website_page_sk
+
+This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`.
+
+
+{% enddocs %}
