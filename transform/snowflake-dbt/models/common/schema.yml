@@ -5214,7 +5214,8 @@ models:
         description: '{{ doc("gsc_plan") }}'
       - name: gsc_source
         description: '{{ doc("gsc_source") }}'
-
+      - name: event_value
+        description: '{{ doc("event_value") }}'
 
   - name: fct_behavior_structured_event_experiment
     description: Derived fact table for structured events related to experiments.
