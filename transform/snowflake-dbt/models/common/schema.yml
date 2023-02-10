@@ -5095,7 +5095,7 @@ models:
       - name: device_type
         description: '{{ doc("device_type") }}'
       - name: is_device_mobile
-        description: '{{ doc("is_device_model") }}'
+        description: '{{ doc("is_device_mobile") }}'
       - name: max_timestamp
         description:  '{{ doc("max_timestamp_behavior_model") }}'
       - name: created_by
