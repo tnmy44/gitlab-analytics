@@ -2079,6 +2079,23 @@ roles:
                     - prep.sfdc.*
                     - raw.salesforce_stitch.*
 
+    - salesforce_sandbox:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.sfdc
+                    - raw.salesforce_sandbox_stitch
+            tables:
+                read:
+                    - prep.sfdc.*
+                    - raw.salesforce_sandbox_stitch.*
+
     - share:
         privileges:
             databases:
