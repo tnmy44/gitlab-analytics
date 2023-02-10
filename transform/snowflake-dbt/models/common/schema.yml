@@ -5108,12 +5108,57 @@ models:
         description: '{{ doc("model_updated_date") }}'
 
   - name: dim_behavior_website_page
-    description: Dimension for the analysis of webpages used according to the page_urlpath in Snowplow.
+    description: '{{ doc("dim_behavior_website_page") }}'
     columns:
       - name: dim_behavior_website_page_sk
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}' 
+      - name: app_id
+        description: '{{ doc("app_id") }}'         
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}' 
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}' 
+      - name: page_url_query
+        description: '{{ doc("page_url_query") }}' 
+      - name: clean_url_path
+        description: '{{ doc("clean_url_path") }}' 
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}' 
+      - name: page_group
+        description: '{{ doc("page_group") }}' 
+      - name: page_type
+        description: '{{ doc("page_type") }}' 
+      - name: page_sub_type
+        description: '{{ doc("page_sub_type") }}' 
+      - name: referrer_medium
+        description: 
+      - name: url_namespace_id
+        description: '{{ doc("behavior_url_namespace_id") }}' 
+      - name: url_project_id
+        description: '{{ doc("behavior_url_project_id") }}' 
+      - name: url_path_category
+        description: '{{ doc("url_path_category") }}' 
+      - name: is_url_interacting_with_security
+        description: '{{ doc("is_url_interacting_with_security") }}' 
+      - name: min_event_timestamp
+        description: '{{ doc("min_timestamp_behavior_model") }}' 
+      - name: max_event_timestamp
+        description: '{{ doc("max_timestamp_behavior_model") }}' 
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+
+
 
   - name: fct_behavior_website_page_view
     description: Page views are a subset of Snowplow events and are fired by the Javascript tracker.
