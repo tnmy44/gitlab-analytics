@@ -1557,7 +1557,11 @@ It is the number of the page views per user per session.
 
 {% enddocs %}
 
+{% docs event_id_behavior_model %}
 
+Unique idenfitier for each event. 
+
+{% enddocs %}
 
 
 
