@@ -29,7 +29,8 @@ WITH promotions AS (
              THEN {{ bamboohr_division_grouping(division='division') }}
            ELSE {{ bamboohr_department_grouping(department='department') }} END AS division_department, 
       SUM(headcount_end)                                                        AS headcount_end,
-      SUM(headcount_end_excluding_sdr)                                          AS headcount_end_excluding_sdr
+      SUM(headcount_end_excluding_sdr)                                          AS headcount_end_excluding_sdr,
+      SUM(rolling_12_month_headcount)                                           AS rolling_12_month_headcount
     FROM {{ ref('bamboohr_rpt_headcount_aggregation') }}  
     WHERE breakout_type IN ('department_breakout', 'kpi_breakout', 'division_breakout')
         AND eeoc_field_name = 'no_eeoc'
@@ -41,7 +42,8 @@ WITH promotions AS (
     SELECT 
       bamboohr_base.*, 
       promotions.*, 
-      headcount_end
+      headcount_end,
+      rolling_12_month_headcount
     FROM bamboohr_base
     LEFT JOIN promotions
       ON promotions.promotion_month BETWEEN rolling_start_month AND rolling_end_month
@@ -60,7 +62,8 @@ WITH promotions AS (
       'division_grouping_breakout' AS field_name,
       'Marketing - Excluding SDR' AS field_value,
       promotions.*, 
-      headcount_end_excluding_sdr
+      headcount_end_excluding_sdr,
+      rolling_12_month_headcount 
     FROM bamboohr_base
     INNER JOIN promotions
       ON promotions.promotion_month BETWEEN rolling_start_month AND rolling_end_month
@@ -78,7 +81,8 @@ WITH promotions AS (
     SELECT
       bamboohr_base.*,
       promotions.*,
-      headcount_end
+      headcount_end,
+      rolling_12_month_headcount
     FROM bamboohr_base
     LEFT JOIN promotions
       ON promotions.promotion_month BETWEEN rolling_start_month AND rolling_end_month
@@ -96,7 +100,8 @@ WITH promotions AS (
       'company_breakout' AS field_name,
       'Company - Excluding SDR'  AS field_value,
       promotions.*,
-      headcount_end_excluding_sdr
+      headcount_end_excluding_sdr,
+      rolling_12_month_headcount
     FROM bamboohr_base
     LEFT JOIN promotions
       ON promotions.promotion_month BETWEEN rolling_start_month AND rolling_end_month
@@ -110,18 +115,19 @@ WITH promotions AS (
 ), final AS (
 
     SELECT
-      rolling_end_month                             AS month_date,
+      rolling_end_month                                         AS month_date,
       field_name, 
       field_value,
-      headcount_end,
-      COUNT(employee_id)                            AS total_promotions,
-      total_promotions/NULLIFZERO(headcount_end)    AS promotion_rate,
+      headcount_end, 
+      rolling_12_month_headcount,
+      COUNT(employee_id)                                        AS total_promotions,
+        total_promotions/NULLIFZERO(rolling_12_month_headcount) AS promotion_rate,
       IFF(total_promotions <= 3, NULL, 
-            AVG(percent_change_in_comp))            AS average_percent_change_in_comp,
+            AVG(percent_change_in_comp))                        AS average_percent_change_in_comp,
       IFF(total_promotions <= 3, NULL, 
-            MEDIAN(percent_change_in_comp))         AS median_percent_change_change_in_comp
+            MEDIAN(percent_change_in_comp))                     AS median_percent_change_change_in_comp
     FROM joined
-    GROUP BY 1,2,3,4
+    GROUP BY 1,2,3,4,5
 
 )
 
