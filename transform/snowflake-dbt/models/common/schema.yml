@@ -5223,7 +5223,6 @@ models:
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
 
-
   - name: dim_behavior_event
     description: '{{ doc("dim_behavior_event") }}'
     columns:
@@ -5359,13 +5358,13 @@ models:
           - unique
 
   - name: fct_behavior_unstructured_event
-    description: Atomic fact table for unstructured events.
+    description: '{{ doc("fct_behavior_unstructured_event") }}'
     columns:
       - name: fct_behavior_unstructured_sk
         tests:
           - not_null
           - unique
-        description: 
+        description: '{{ doc("fct_behavior_unstructured_sk") }}'
       - name: app_id
         description: '{{ doc("app_id") }}'
       - name: event_id
@@ -5389,19 +5388,19 @@ models:
       - name: user_snowplow_domain_id
         description: '{{ doc("user_snowplow_domain_id") }}'
       - name: link_click_target_url
-        description: 
+        description: '{{ doc("link_click_target_url") }}'
       - name: submit_form_id
-        description: 
+        description: '{{ doc("submit_form_id") }}'
       - name: change_form_id
-        description: 
+        description: '{{ doc("change_form_id") }}'
       - name: change_form_type
-        description: 
+        description: '{{ doc("change_form_type") }}'
       - name: change_form_element_id
-        description: 
+        description: '{{ doc("change_form_element_id") }}'
       - name: focus_form_element_id
-        description: 
+        description: '{{ doc("focus_form_element_id") }}'
       - name: focus_form_node_name
-        description: 
+        description: '{{ doc("focus_form_node_name") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by

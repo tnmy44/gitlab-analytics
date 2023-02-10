@@ -1280,13 +1280,13 @@ This is the Primary key. This ID is generated from [prep_snowplow_unnested_event
 
 {% docs dim_namespace_id_behavior_model %}
 
-The unique identifier of the namespace in which the event was generated, easily joined to `dim_namespace`. This field will be NULL if the event is not tied to a namespace (ex. viewing the To Dos page). This is passed in the GitLab standard context and appears as `gsc_namespace_id` in the raw Snowplow data.
+The unique identifier of the namespace in which the event was generated, easily joined to `dim_namespace`. This field will be NULL if the event is not tied to a namespace (ex. viewing the To Dos page) and/or if the event occurred before `2021-09-02` (when collection of this data started). This is passed in the GitLab standard context and appears as `gsc_namespace_id` in the raw Snowplow data.
 
 {% enddocs %}
 
 {% docs dim_project_id_behavior_model %}
 
-The unique identifier of the project in which the event was generated, easily joined to `dim_project`. This field will be NULL if the event is not tied to a project (ex. viewing an epic). This is passed in the GitLab standard context and appears as `gsc_project_id` in the raw Snowplow data.
+The unique identifier of the project in which the event was generated, easily joined to `dim_project`. This field will be NULL if the event is not tied to a project (ex. viewing an epic) and/or if the event occurred before `2021-09-02` (when collection of this data started).. This is passed in the GitLab standard context and appears as `gsc_project_id` in the raw Snowplow data.
 
 {% enddocs %}
 
@@ -1364,7 +1364,13 @@ Host/Domain information
 
 {% docs gsc_pseudonymized_user_id %}
 
-User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user susccessfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL if a user is not logged in or is visiting a page outside of the product (ex. about.gitlab.com, docs.gitlab.com)
+User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user susccessfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL in the following situations:
+
+- The event occurred before `2021-09-29` (when the collection of this data started)
+- A user is not logged in
+- The event occurs on a page outside of the SaaS product (ex. about.gitlab.com, docs.gitlab.com)
+- It is an unstructured event
+- The event is not associated with a user (some backend events)
 
 {% enddocs %}
 
@@ -1464,7 +1470,6 @@ This field is defined as the second part of clean_url_path field i.e if `clean_u
 
 {% enddocs %}
 
-
 {% docs page_sub_type %}
 
 This field is defined as the third part of clean_url_path field i.e if `clean_url_path` = `groups/abc/group_members` THEN `page_sub_type` = `group_members`
@@ -1505,13 +1510,11 @@ The timestamp of the first event for that combination of columns/primary key. Th
 
 Primary key consisting of event_id and page_view_end_at. This ID in generated using event_id and page_view_end_at from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all).
 
-
 {% enddocs %}
 
 {% docs dim_behavior_referrer_page_sk %}
 
 Surrogate key consisting of referer_url, app_id and referer_url_scheme, easily JOINed to dim_behavior_website_page ON `dim_behavior_website_page_sk`. This ID in generated using `referer_url`, `app_id`, `referer_url_scheme` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all).
-
 
 {% enddocs %}
 
@@ -1563,5 +1566,51 @@ Unique idenfitier for each event.
 
 {% enddocs %}
 
+{% docs fct_behavior_unstructured_sk %}
 
+Primary key consisting of event_id and behavior_at
+
+{% enddocs %}
+
+{% docs link_click_target_url %}
+
+The target URL on a `link_click` event. This appears as `lc_targeturl` in the raw Snowplow data. This field will only be populated for `link_click` events
+
+{% enddocs %}
+
+{% docs submit_form_id %}
+
+The form ID on a `submit_form` event. This appears as `sf_formid` in the raw Snowplow data. This field will only be populated for `submit_form` events
+
+{% enddocs %}
+
+{% docs change_form_id %}
+
+The form ID on a `change_form` event. This appears as `cf_formid` in the raw Snowplow data. This field will only be populated for `change_form` events
+
+{% enddocs %}
+
+{% docs change_form_type %}
+
+The form type on a `change_form` event. This appears as `cf_type` in the raw Snowplow data. This field will only be populated for `change_form` events
+
+{% enddocs %}
+
+{% docs change_form_element_id %}
+
+The form element ID on a `change_form` event. This appears as `cf_elementid` in the raw Snowplow data. This field will only be populated for `change_form` events
+
+{% enddocs %}
+
+{% docs focus_form_element_id %}
+
+The form element ID on a `focus_form` event. This appears as `ff_elementid` in the raw Snowplow data. This field will only be populated for `focus_form` events
+
+{% enddocs %}
+
+{% docs focus_form_node_name %}
+
+The form node name on a `focus_form` event. This appears as `ff_nodename` in the raw Snowplow data. This field will only be populated for `focus_form` events
+
+{% enddocs %}
 

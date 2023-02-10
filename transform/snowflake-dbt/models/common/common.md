@@ -1583,6 +1583,9 @@ This ID in generated using `event_id` from [prep_snowplow_unnested_events_all](h
 **Filters Applied to Model:**
 - This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
 
+**Tips for use:**
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on `event_action`, `event_category`, etc.
+
 {% enddocs %}
 
 {% docs dim_behavior_operating_system %}
@@ -1606,6 +1609,8 @@ This ID in generated using `event_id` from [prep_snowplow_unnested_events_all](h
 
 This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`.
 
+**Filters Applied to Model:**
+- Include pages from page view, structured, and unstructured events (`event IN ('struct', 'page_view', 'unstruct')`)
 
 {% enddocs %}
 
@@ -1619,6 +1624,10 @@ This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow
 
 **Filters Applied to Model:**
 - This model only includes Pageview events (when `event=page_view` from `dim_behavior_event` )
+
+**Tips for use:**
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 
 {% enddocs %}
 
