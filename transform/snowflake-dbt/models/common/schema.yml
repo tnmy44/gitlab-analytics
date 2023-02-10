@@ -5136,7 +5136,6 @@ models:
       - name: page_sub_type
         description: '{{ doc("page_sub_type") }}' 
       - name: referrer_medium
-        description: 
       - name: url_namespace_id
         description: '{{ doc("behavior_url_namespace_id") }}' 
       - name: url_project_id
@@ -5205,7 +5204,6 @@ models:
       - name: event_name
         description: '{{ doc("event_name_behavior_model") }}' 
       - name: sf_formid
-        description: 
       - name: engaged_seconds
         description: '{{ doc("engaged_seconds") }}' 
       - name: page_load_time_in_ms
