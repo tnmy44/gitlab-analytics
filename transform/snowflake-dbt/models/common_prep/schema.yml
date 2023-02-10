@@ -2083,3 +2083,6 @@ models:
     columns:
       - name: member_count
         description: Do not use this count, it is incorrect. Use [gitlab_dotcom_memberships](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.gitlab_dotcom_memberships) for member counts.
+
+  - name: prep_order_action_rate_plan
+    description: Prep table for Zuora order action. This it at the order action grain i.e. one order can have multiple order actions.
