@@ -1316,7 +1316,7 @@ It is the number of the current user session. For example, an event occurring du
 
 {% docs app_id %}
 
-The environment of the event - Production, Staging OR Development. To only include Production events set filter to `app_id IN ('gitlab','gitlab_customers')`
+The environment of the event - Production, Staging OR Development. To only include GitLab.com Production events, set filter to `app_id IN ('gitlab','gitlab_customers')`
 
 {% enddocs %}
 
