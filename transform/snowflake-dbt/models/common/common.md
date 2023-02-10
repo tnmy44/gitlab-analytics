@@ -1578,7 +1578,7 @@ This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 
 **Data Grain:** behavior_structured_event_pk
 
-This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event_id` 
+This ID in generated using `event_id` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) 
 
 **Filters Applied to Model:**
 - This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
@@ -1606,5 +1606,18 @@ This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 
 This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`.
 
+
+{% enddocs %}
+
+{% docs fct_behavior_website_page_view %}
+
+**Description:** Fact table containing quantitative data for Page views. Page views are a subset of Snowplow events and are fired by the Javascript tracker.
+
+**Data Grain:** fct_behavior_website_page_view_sk
+
+This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+
+**Filters Applied to Model:**
+- This model only includes Pageview events (when `event=page_view` from `dim_behavior_event` )
 
 {% enddocs %}
