@@ -1192,27 +1192,27 @@ Surrogate key consisting of event, event_name, platform, gsc_environment, event_
 
 {% enddocs %}
 
-{% docs event %}
+{% docs event_behavior_model %}
 
 The type of event i.e if an event is a strutured event OR an unstructured event OR a page view OR a page ping. Snowplow [documentation](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/) on types of events.
 
 {% enddocs %}
 
-{% docs event_name %}
+{% docs event_name_behavior_model %}
 
 Event type of an unstructured event (i.e. change form, click link, submit form etc). Note: WHEN `event=struct` THEN this value will always be `event` and WHEN `event=page_ping` THEN it will be `page_ping` and WHEN `event=page_view` it will be `page_view` 
 
 {% enddocs %}
 
-{% docs platform %}
+{% docs platform_behavior_model %}
 
 The platform is used to distinguish server side events and web events. When `platform = srv` then the event was a server side event, tracked using Ruby. When `platform = web` then the event was a web event, tracked using Javascript tracker.
 
 {% enddocs %}
 
-{% docs environment %}
+{% docs environment_behavior_model %}
 
-Gitlab.com environment (production, stagging etc) of the event. 
+Gitlab.com environment (production, staging etc) of the event. 
 
 {% enddocs %}
 
@@ -1266,9 +1266,9 @@ Note:
 
 {% enddocs %}
 
-{% docs max_timestamp %}
+{% docs max_timestamp_behavior_model %}
 
-This is defined as the max(behavior_at) for that combination of columns. The logic behind using max_timestamp is to avoid daily incremental refresh for all dimensions. 
+The timestamp of the last event for that combination of columns/primary key. This is (defined as `MAX(behavior_at)`). The logic behind using max_timestamp is to avoid daily incremental refresh for all dimensions. 
 
 {% enddocs %}
 
@@ -1278,9 +1278,15 @@ This is the Primary key. This ID in generated in [prep_snowplow_unnested_events_
 
 {% enddocs %}
 
-{% docs dim_namespace_id %}
+{% docs dim_namespace_id_behavior_model %}
 
-The unique identifier of the namespace in which the event was generated, easily joined to `dim_namespace`. This field will be NULL if the event is not tied to a namespace (ex. users_created)
+The unique identifier of the namespace in which the event was generated, easily joined to `dim_namespace`. This field will be NULL if the event is not tied to a namespace (ex. viewing the To Dos page). This is passed in the GitLab standard context and appears as `gsc_namespace_id` in the raw Snowplow data.
+
+{% enddocs %}
+
+{% docs dim_project_id_behavior_model %}
+
+The unique identifier of the project in which the event was generated, easily joined to `dim_project`. This field will be NULL if the event is not tied to a project (ex. viewing an epic). This is passed in the GitLab standard context and appears as `gsc_project_id` in the raw Snowplow data.
 
 {% enddocs %}
 
@@ -1292,7 +1298,7 @@ Timestamp for the event recorded on the client device.
 
 {% docs behavior_at %}
 
-Timestamp for when the event actually happened. 
+Timestamp for when the event actually happened. This appears as `derived_tstamp` in the raw Snowplow data.
 
 {% enddocs %}
 
@@ -1307,7 +1313,6 @@ Information about the event tracker version.
 It is the number of the current user session. For example, an event occurring during a user's first session would have session_index set to 1.
 
 {% enddocs %}
-
 
 {% docs app_id %}
 
@@ -1387,4 +1392,44 @@ Name of the source application/ event tracker, such as gitlab-rails or gitlab-ja
 
 {% enddocs %}
 
+{% docs dim_behavior_operating_system_sk %}
 
+Surrogate key consisting of os_name and os_timezone, easily JOINed to dim_behavior_operating_system. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `os_name` and `os_timezone`.
+
+{% enddocs %}
+
+{% docs os %}
+
+The operating system family (ex. 'Linux', 'iOS', 'Windows'). This appears as `os_family` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs os_name %}
+
+The name of the operating system (ex. 'Linux', 'Mac OS X', 'Windows 10').
+
+{% enddocs %}
+
+{% docs os_manufacturer %}
+
+The manufacturer of the operating system (ex. 'Apple Inc.', 'Microsoft Corporation')
+
+{% enddocs %}
+
+{% docs os_timezone %}
+
+The timezone of the operating system (ex. 'Europe/London', 'Australia/Sydney')
+
+{% enddocs %}
+
+{% docs device_type %}
+
+The type of device (ex. 'Mobile', 'Computer'). This appears as `dvce_type` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs is_device_mobile %}
+
+Boolean flag set to True if the event is triggered on a mobile device. This appears as `dvce_ismobile` in the raw Snowplow data
+
+{% enddocs %}

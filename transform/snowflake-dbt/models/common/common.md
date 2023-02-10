@@ -1549,19 +1549,13 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 **Description:** Dimension for the analysis of browsers in Snowplow.
 
 **Data Grain:** dim_behavior_browser_sk
-- brower_name
+- browser_name
 - browser_major_version
 - browser_minor_version
-- browser_languge
+- browser_language
 
 **Filters Applied to Model:**
-- 
-
-**Business Logic in this Model:**
-- 
-
-**Other Comments:**
-- [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
+- Include events where at least one of browser_name, browser_major_version, browser_minor_version, _OR_ browser_language is available (`browser_name IS NOT NULL OR browser_major_version IS NOT NULL OR browser_minor_version IS NOT NULL OR browser_language IS NOT NULL`)
 
 {% enddocs %}
 
@@ -1585,6 +1579,17 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 **Filters Applied to Model:**
 - This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
 
-
 {% enddocs %}
 
+{% docs dim_behavior_operating_system %}
+
+**Description:** Dimension for the analysis of operating systems in Snowplow.
+
+**Data Grain:** dim_behavior_operating_system_sk
+- os_name
+- os_timezone
+
+**Filters Applied to Model:**
+- Include events where os_name _OR_ os_timezone is available (`os_name IS NOT NULL OR os_timezone IS NOT NULL`)
+
+{% enddocs %}

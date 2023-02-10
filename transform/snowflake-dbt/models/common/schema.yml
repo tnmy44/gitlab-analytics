@@ -5066,7 +5066,7 @@ models:
       - name: browser_language
         description: '{{ doc("browser_language") }}'
       - name: max_timestamp
-        description:  '{{ doc("max_timestamp") }}'
+        description:  '{{ doc("max_timestamp_behavior_model") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -5083,6 +5083,29 @@ models:
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: os
+        description: '{{ doc("os") }}'
+      - name: os_name
+        description: '{{ doc("os_name") }}'
+      - name: os_manufacturer
+        description: '{{ doc("os_manufacturer") }}'
+      - name: os_timezone
+        description: '{{ doc("os_timezone") }}'
+      - name: device_type
+        description: '{{ doc("device_type") }}'
+      - name: is_device_mobile
+        description: '{{ doc("is_device_model") }}'
+      - name: max_timestamp
+        description:  '{{ doc("max_timestamp_behavior_model") }}'
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: dim_behavior_website_page
     description: Dimension for the analysis of webpages used according to the page_urlpath in Snowplow.
@@ -5109,13 +5132,13 @@ models:
           - unique
         description: '{{ doc("dim_behavior_event_sk") }}'  
       - name: event
-        description: '{{ doc("event") }}' 
+        description: '{{ doc("event_behavior_model") }}' 
       - name: event_name
-        description: '{{ doc("event_name") }}'         
+        description: '{{ doc("event_name_behavior_model") }}'         
       - name: platform
-        description: '{{ doc("platform") }}'         
+        description: '{{ doc("platform_behavior_model") }}'         
       - name: environment
-        description: '{{ doc("environment") }}'         
+        description: '{{ doc("environment_behavior_model") }}'         
       - name: event_category
         description: '{{ doc("event_category") }}'         
       - name: event_action
@@ -5125,7 +5148,7 @@ models:
       - name: event_property
         description: '{{ doc("event_property") }}'         
       - name: max_timestamp
-        description: '{{ doc("max_timestamp") }}'
+        description: '{{ doc("max_timestamp_behavior_model") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -5134,8 +5157,6 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
-      
-
 
   - name: fct_behavior_structured_event
     description: '{{ doc("fct_behavior_structured_event") }}'
@@ -5152,11 +5173,11 @@ models:
       - name: dim_behavior_referrer_page_sk
         description: 
       - name: dim_behavior_operating_system_sk
-        description: 
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
       - name: dim_namespace_id
-        description: '{{ doc("dim_namespace_id") }}'
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
       - name: dim_project_id
-        description: '{{ doc("dim_project_id") }}'
+        description: '{{ doc("dim_project_id_behavior_model") }}'
       - name: dim_behavior_event_sk
         description: '{{ doc("dim_behavior_event_sk") }}'
       - name: dvce_created_tstamp
