@@ -2079,6 +2079,23 @@ roles:
                     - prep.sfdc.*
                     - raw.salesforce_stitch.*
 
+    - salesforce_sandbox:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.sfdc
+                    - raw.salesforce_sandbox_stitch
+            tables:
+                read:
+                    - prep.sfdc.*
+                    - raw.salesforce_sandbox_stitch.*
+
     - share:
         privileges:
             databases:
@@ -3017,6 +3034,7 @@ roles:
             - data_team_analyst
             - data_manager
             - restricted_safe
+            - salesforce_sandbox
             - xactly
             - bi_tool_eval_db
         warehouses:
@@ -3519,6 +3537,7 @@ roles:
             - data_team_analyst
             - prometheus
             - restricted_safe
+            - salesforce_sandbox
             - workday 
         warehouses:
             - dev_xs
@@ -3583,6 +3602,7 @@ roles:
             - data_team_analyst
             - data_science_readonly
             - restricted_safe
+            - salesforce_sandbox
             - workday
             - zendesk
         warehouses:
@@ -3993,6 +4013,7 @@ roles:
             - data_team_analyst
             - data_manager
             - restricted_safe
+            - salesforce_sandbox
             - xactly
             - bi_tool_eval_db
         warehouses:
