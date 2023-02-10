@@ -1621,3 +1621,26 @@ This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow
 - This model only includes Pageview events (when `event=page_view` from `dim_behavior_event` )
 
 {% enddocs %}
+
+{% docs fct_behavior_unstructured_event %}
+
+**Description:** Fact table containing quantitative data for Snowplow unstrutured events. These events include [Snowplow-authored "out of the box" events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/#snowplow-authored-events) like `link_click`, `focus_form`, `change_form`, and `submit_form`. Unstructured event data is based on a JSON schema.
+
+**Data Grain:** fct_behavior_unstructured_sk (generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all))
+- event_id
+- behavior_at
+
+**Filters Applied to Model:**
+- Include unstructured events (`event = 'unstruct'`) 
+
+**Business Logic in this Model:**
+- A selection of key value pairs from Snowplow-authored events are parsed out into their own columns:
+  - `link_click`: target URL
+  - `submit_form`: form ID
+  - `change_form`: form ID, form type, form element ID
+  - `focus_form`: form element ID, form node name
+
+**Other Comments:**
+- Any self-describing event (ex. not a structured event, page view, etc) is considered to be "unstructured", but GitLab's current instrumentation focuses on the [Snowplow-authored "out of the box" events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/#snowplow-authored-events).
+
+{% enddocs %}

@@ -5158,8 +5158,6 @@ models:
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
 
-
-
   - name: fct_behavior_website_page_view
     description: '{{ doc("fct_behavior_website_page_view") }}'
     columns:
@@ -5272,9 +5270,9 @@ models:
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
       - name: dim_behavior_website_page_sk
-        description: 
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
       - name: dim_behavior_referrer_page_sk
-        description: 
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
       - name: dim_behavior_operating_system_sk
         description: '{{ doc("dim_behavior_operating_system_sk") }}'
       - name: dim_namespace_id
@@ -5319,6 +5317,14 @@ models:
         description: '{{ doc("gsc_source") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: fct_behavior_structured_event_experiment
     description: Derived fact table for structured events related to experiments.
@@ -5359,6 +5365,51 @@ models:
         tests:
           - not_null
           - unique
+        description: 
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: event_id
+        description: '{{ doc("event_id_behavior_model") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}' 
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: link_click_target_url
+        description: 
+      - name: submit_form_id
+        description: 
+      - name: change_form_id
+        description: 
+      - name: change_form_type
+        description: 
+      - name: change_form_element_id
+        description: 
+      - name: focus_form_element_id
+        description: 
+      - name: focus_form_node_name
+        description: 
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: fct_ping_instance_free_user_metrics
     description: '{{ doc("fct_ping_instance_free_user_metrics") }}'
