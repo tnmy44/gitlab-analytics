@@ -1328,7 +1328,7 @@ Unique idenfitier for each user session. Note: session_id is NULL for back-end e
 
 {% docs user_snowplow_domain_id %}
 
-Unique User ID set by Snowplow when the user visits GitLab.com for the first time (using 1st party cookie).
+Unique User ID set by Snowplow when the user visits GitLab.com for the first time (using 1st party cookie). This value will remain the same until a user clears their cookies. Note: if a user visits GitLab.com on a different browser, they will have a different unique ID.
 
 {% enddocs %}
 
@@ -1364,7 +1364,7 @@ Host/Domain information
 
 {% docs gsc_pseudonymized_user_id %}
 
-User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user susccessfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time.
+User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user susccessfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL if a user is not logged in or is visiting a page outside of the product (ex. about.gitlab.com, docs.gitlab.com)
 
 {% enddocs %}
 
