@@ -1433,3 +1433,71 @@ The type of device (ex. 'Mobile', 'Computer'). This appears as `dvce_type` in th
 Boolean flag set to True if the event is triggered on a mobile device. This appears as `dvce_ismobile` in the raw Snowplow data
 
 {% enddocs %}
+
+{% docs dim_behavior_website_page_sk %}
+
+Surrogate key consisting of page_url_host_path, app_id and page_url_scheme, easily JOINed to dim_behavior_website_page. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`
+
+{% enddocs %}
+
+{% docs page_url_query %}
+
+This field is populated with the Querystring passed in the URL. Example: Branch name (`branch_name=masked_branch_name`) or Commit ID (`commit_id=ad604ea134d73261e5ab5c2c92df35d84f04b3c7`)
+
+{% enddocs %}
+
+{% docs clean_url_path %}
+
+This field includes [REGEX logic](https://dbt.gitlabdata.com/#!/macro/macro.gitlab_snowflake.clean_url) to standardize the page_url_path field. Example: If `page_url_path` = `/groups/abc/-/group_members` THEN `clean_url_path` = `groups/abc/group_members`. 
+
+{% enddocs %}
+
+{% docs page_group %}
+
+This field is defined as the first part of clean_url_path field i.e if `clean_url_path` = `groups/abc/group_members` THEN `page_group` = `groups`
+
+{% enddocs %}
+
+{% docs page_type %}
+
+This field is defined as the second part of clean_url_path field i.e if `clean_url_path` = `groups/abc/group_members` THEN `page_type` = `abc`
+
+{% enddocs %}
+
+
+{% docs page_sub_type %}
+
+This field is defined as the third part of clean_url_path field i.e if `clean_url_path` = `groups/abc/group_members` THEN `page_sub_type` = `group_members`
+
+{% enddocs %}
+
+{% docs behavior_url_namespace_id %}
+
+The unique identifier of the namespace passed in the URL. This field is only populated if namespace_id is passed in the page URL.
+
+{% enddocs %}
+
+{% docs behavior_url_project_id %}
+
+The unique identifier of the project passed in the URL. This field is only populated if project_id is passed in the page URL.
+
+{% enddocs %}
+
+{% docs url_path_category %}
+
+This field groups different clean_url_path values into distinct categorises. Please refer to Code section on this page for logic behind this categorization.
+
+{% enddocs %}
+
+{% docs is_url_interacting_with_security %}
+
+If the page URL is part of any page within the Group/Project Security feature on GitLab.com (Example: Vulnerability Report) THEN `is_url_interacting_with_security = 1` ELSE `is_url_interacting_with_security = 0`
+
+{% enddocs %}
+
+{% docs min_timestamp_behavior_model %}
+
+The timestamp of the first event for that combination of columns/primary key. This field is defined as MIN (behavior_at). 
+
+{% enddocs %}
+
