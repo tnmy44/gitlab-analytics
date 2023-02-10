@@ -1274,7 +1274,7 @@ The timestamp of the last event for that combination of columns/primary key. Thi
 
 {% docs behavior_structured_event_pk %}
 
-This is the Primary key. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event_id` 
+This is the Primary key. This ID is generated from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event_id`.
 
 {% enddocs %}
 
@@ -1500,4 +1500,64 @@ If the page URL is part of any page within the Group/Project Security feature on
 The timestamp of the first event for that combination of columns/primary key. This field is defined as MIN (behavior_at). 
 
 {% enddocs %}
+
+{% docs fct_behavior_website_page_view_sk %}
+
+Primary key consisting of event_id and page_view_end_at. This ID in generated using event_id and page_view_end_at from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all).
+
+
+{% enddocs %}
+
+{% docs dim_behavior_referrer_page_sk %}
+
+Surrogate key consisting of referer_url, app_id and referer_url_scheme, easily JOINed to dim_behavior_website_page ON `dim_behavior_website_page_sk`. This ID in generated using `referer_url`, `app_id`, `referer_url_scheme` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all).
+
+
+{% enddocs %}
+
+{% docs page_view_start_at %}
+
+Timestamp of when a web page was first rendered for that `dim_behavior_referrer_page_sk`. 
+
+{% enddocs %}
+
+{% docs page_view_end_at %}
+
+Timestamp of when a web page was last rendered for that `dim_behavior_referrer_page_sk`. 
+
+{% enddocs %}
+
+{% docs referer_url_path %}
+
+URL path of the referrer page. 
+
+{% enddocs %}
+
+{% docs engaged_seconds %}
+
+Total time (in seconds) user was on the page. This is calculated as difference between page_view_start_at and page_view_end_at. 
+
+{% enddocs %}
+
+{% docs page_load_time_in_ms %}
+
+Total time (in milliseconds) for the page to render. 
+
+{% enddocs %}
+
+{% docs page_view_index %}
+
+It is the number of page views per user. 
+
+{% enddocs %}
+
+{% docs page_view_in_session_index %}
+
+It is the number of the page views per user per session. 
+
+{% enddocs %}
+
+
+
+
 
