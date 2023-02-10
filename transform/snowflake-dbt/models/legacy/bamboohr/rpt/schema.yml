@@ -19,6 +19,8 @@ models:
       description: Identifies the associated division/department for the field_name
     - name: headcount_end
       description: The headcount at the end of the month
+    - name: rolling_12_month_headcount
+      description: Provides the average of the current month and previous 11 month average headcounts (the average headcount for each month is the headcount_start + headcount_end divided by 2).    
     - name: total_promotions
       description: The total promotions over for the rolling 12 months period.
     - name: promotion_rate 
