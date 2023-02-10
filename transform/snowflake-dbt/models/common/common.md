@@ -1565,6 +1565,8 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 **Data Grain:** dim_behavior_event_sk
 
+This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event`, `event_name`, `platform`, `gsc_environment`, `se_category`, `se_action`, `se_label` and `se_property`.
+
 **Other Comments:**
 - [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
 
@@ -1575,6 +1577,8 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 **Description:** Fact table containing quantitative data for Snowplow Strutured events. Structured events are custom events implemented with five parameters: event_category, event_action, event_label, event_property and event_value. Snowplow documentation on [types of events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/).
 
 **Data Grain:** behavior_structured_event_pk
+
+This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event_id` 
 
 **Filters Applied to Model:**
 - This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
