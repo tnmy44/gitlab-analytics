@@ -5,6 +5,75 @@ report_list:
       layout_name: "Gitlab : RCID by Transaction"
       rep_desc: "Revenue waterfall for billed contractual revenue (rollout at line level of Contract Liability balances)"
       output_file_name: "revenue_billing_waterfall"
+      load_column_name:  "$1 AS Book_Name
+                         ,$2 AS _Org_Name
+                         ,$3 AS _Entity
+                         ,$4 AS _Rate_Plan_Charge_Id
+                         ,$5 As _Sales_Order_Line_ID
+                         ,$6 AS _Invoice_Num
+                         ,$7 AS _Invoice_Date
+                         ,$8 AS _Billing_Quantity
+                         ,$9 AS _Rate_Plan_Name
+                         ,$10 AS _Rate_Plan_Charge_Name
+                         ,$11 AS _RC_ID
+                         ,$12 AS _Rc_Pob_Name
+                         ,$13 AS _Pob_Tmpl_Name
+                         ,$14 AS _Event_Name
+                         ,$15 AS _Subscription_Name
+                         ,$16 AS _Rc_Bill_Customer_Name
+                         ,$17 AS _Sales_Order_Num
+                         ,$18 AS _Sales_Order_Line_Num
+                         ,$19 AS _Rc_Bill_Item_Number
+                         ,$20 AS _Invoice_Amount_T
+                         ,$21 AS _Transaction_Currency
+                         ,$22 AS _Revenue_Start_Date
+                         ,$23 AS _Revenue_End_Date
+                         ,$24 AS _Subscription_Start_Date
+                         ,$25 AS _Subscription_End_Date
+                         ,$26 AS _Prior_Amount
+                         ,$27 AS MONTH_0
+                         ,$28 AS MONTH_1
+                         ,$29 AS MONTH_2
+                         ,$30 AS MONTH_3
+                         ,$31 AS MONTH_4
+                         ,$32 AS MONTH_5
+                         ,$33 AS MONTH_6
+                         ,$34 AS MONTH_7
+                         ,$35 AS MONTH_8
+                         ,$36 AS MONTH_9
+                         ,$37 AS MONTH_10
+                         ,$38 AS MONTH_11
+                         ,$39 AS MONTH_12
+                         ,$40 AS MONTH_13
+                         ,$41 AS MONTH_14
+                         ,$42 AS MONTH_15 
+                         ,$43 AS MONTH_16
+                         ,$44 AS MONTH_17
+                         ,$45 AS MONTH_18
+                         ,$46 AS MONTH_19
+                         ,$47 AS MONTH_20
+                         ,$48 AS MONTH_21
+                         ,$49 AS MONTH_22
+                         ,$50 AS MONTH_23
+                         ,$51 AS MONTH_24
+                         ,$52 AS MONTH_25
+                         ,$53 AS MONTH_26
+                         ,$54 AS MONTH_27
+                         ,$55 AS MONTH_28
+                         ,$56 AS MONTH_29
+                         ,$57 AS MONTH_30
+                         ,$58 AS MONTH_31
+                         ,$59 AS MONTH_32
+                         ,$60 AS MONTH_33
+                         ,$61 AS MONTH_34
+                         ,$62 AS MONTH_35
+                         ,$63 AS MONTH_36
+                         ,$64 AS MONTH_37
+                         ,$65 AS MONTH_38
+                         ,$66 AS MONTH_39
+                         ,$67 AS =>_2027
+                         ,$68 AS 2028
+                         ,$69 AS _Grand_Total_"
       status: "A"
   rc_rollforward:
       category: "Revenue"
@@ -12,8 +81,8 @@ report_list:
       layout_name: "by nll ptd"
       rep_desc: "Displays Contract Liability/Contract Asset beginning and ending balances, and activity for the period selected. Used by revenue users for reconciliation and disclosures"
       output_file_name: "revenue_rc_rollforward_report"
-
       status: "A"
+      load_column_name: ""
 #  revenue_waterfall:
 #      category: "Revenue"
 #      rep_name: "Waterfall Report"

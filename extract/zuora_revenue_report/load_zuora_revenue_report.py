@@ -34,7 +34,8 @@ def get_gcs_storage_client():
 
 def get_files_for_report(bucket: str, output_file_name: str) -> list:
     """
-    This function provide all the file under zuora_revenue_report.
+    This function provide all the file under zuora_revenue_report for defined output_file_name. 
+    This function returns all the files i.e. header and body of the particular type of report.
     """
     source_bucket = get_gcs_storage_client().list_blobs(
         bucket, prefix="RAW_DB/staging/zuora_revenue_report", delimiter=None
@@ -42,7 +43,8 @@ def get_files_for_report(bucket: str, output_file_name: str) -> list:
     file_list = [file.name for file in source_bucket]
     list_of_files_per_report = []
     for file in file_list:
-        if output_file_name in file.lower():
+        # check for the output_file name present in the file_list in the GCS bucket. 
+        if output_file_name in file:
             list_of_files_per_report.append(file)
 
     return list_of_files_per_report
@@ -63,7 +65,7 @@ def get_table_to_load(file_name: str, output_file_name: str) -> list:
         table_to_load = output_file_name + "_body"
         type_of_load = "body"
 
-    print(f"This is the table we load file {file_name}:{table_to_load}")
+    logging.info(f"Table Name to which we load file {file_name}:{table_to_load}")
     return table_to_load, type_of_load
 
 
@@ -92,10 +94,10 @@ def data_frame_enricher(raw_df: pd.DataFrame, file_name: str) -> pd.DataFrame:
 
 
 def load_report_body_snow(
-    file_name: str, table_to_load: str, bucket: str, engine: Dict
+    schema: str,file_name: str, table_to_load: str, body_load_query: str, engine: Dict
 ) -> None:
     """load body of report with proper data cleansing and adding metadata like uplodaed_at and file_name to the report."""
-    raw_file_bucket = get_gcs_storage_client().bucket(bucket)
+    """raw_file_bucket = get_gcs_storage_client().bucket(bucket)
     raw_file_blob = raw_file_bucket.blob(file_name)
     raw_data = raw_file_blob.download_as_bytes()
     raw_df = pd.read_csv(io.BytesIO(raw_data))
@@ -103,10 +105,16 @@ def load_report_body_snow(
 
     enriched_df.to_sql(
         name=table_to_load, con=engine, index=False, if_exists="append", chunksize=15000
-    )
-    logging.info(
+    )"""
+    
+    load_query=body_load_query+",METADATA$FILENAME as file_name"
+    copy_body_query = f"COPY INTO {schema}.{table_to_load} from (SELECT {load_query} \
+     FROM @ZUORA_REVENUE_STAGING/{file_name} t ) file_format = (type = csv,field_DELIMITER=',') ;"
+    results = query_executor(engine, copy_body_query)
+    logging.info(results)
+    """logging.info(
         f"Successfully loaded {enriched_df.shape[0]} rows into {table_to_load}"
-    )
+    )"""
 
 
 def move_file_to_processed(bucket: str, file_name: str) -> None:
@@ -138,23 +146,26 @@ def zuora_revenue_report_load(
     bucket: str,
     schema: str,
     output_file_name: str,
+    body_load_query: str,
     conn_dict: Dict[str, str] = None,
 ) -> None:
 
-    # Set some vars
+    # Set variable for snowflake engine
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
-    # get the filename for the report type from bucket
+    # Get the list of file for the particular output_file_name it will contain body and header if only one report is present for a particular type.
     list_of_files = get_files_for_report(bucket, output_file_name)
     print(f"List of files to download for : {list_of_files}")
+    #Iterate over each file to load into snowflake and move to processed folder.
+    
     for file_name in list_of_files:
         table_to_load, type_of_load = get_table_to_load(
-            file_name.lower(), output_file_name
+            file_name, output_file_name
         )
         if type_of_load == "header":
             load_report_header_snow(schema, file_name, table_to_load, engine)
             move_file_to_processed(bucket, file_name)
         else:
-            load_report_body_snow(file_name, table_to_load, bucket, engine)
+            load_report_body_snow(schema, file_name, table_to_load, body_load_query, engine)
             move_file_to_processed(bucket, file_name)
 
 
