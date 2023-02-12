@@ -151,7 +151,7 @@ def zuora_revenue_report_load(
 ) -> None:
 
     # Set variable for snowflake engine
-    engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
+    engine = snowflake_engine_factory(config_dict or env, "LOADER", schema)
     # Get the list of file for the particular output_file_name it will contain body and header if only one report is present for a particular type.
     list_of_files = get_files_for_report(bucket, output_file_name)
     print(f"List of files to download for : {list_of_files}")
