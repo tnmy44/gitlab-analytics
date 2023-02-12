@@ -1,6 +1,6 @@
 WITH source AS (
-    -- test change
-    SELECT * 
+
+    SELECT *
     FROM {{ source('sheetload','abuse_mitigation') }}
 
 ), final AS (
