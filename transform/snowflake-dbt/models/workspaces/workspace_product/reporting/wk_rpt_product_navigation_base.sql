@@ -15,9 +15,15 @@ WITH filtered_snowplow_events AS (
     WHEN 
     event_label LIKE 'group_dropdown_frequent_items_list_item_%'
     THEN 'group_dropdown_frequent_items_list_item'
+    WHEN 
+    event_label LIKE 'groups_dropdown_frequent_items_list_item_%'
+    THEN 'groups_dropdown_frequent_items_list_item'    
     WHEN
     event_label LIKE 'project_dropdown_frequent_items_list_item_%'
     THEN 'project_dropdown_frequent_items_list_item'
+    WHEN
+    event_label LIKE 'projects_dropdown_frequent_items_list_item_%'
+    THEN 'projects_dropdown_frequent_items_list_item'
     ELSE event_label 
     END AS event_label,
     event_property,
