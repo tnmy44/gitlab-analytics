@@ -38,7 +38,7 @@ def get_files_for_report(bucket: str, output_file_name: str) -> list:
     This function returns all the files i.e. header and body of the particular type of report.
     """
     source_bucket = get_gcs_storage_client().list_blobs(
-        bucket, prefix="RAW_DB/staging/zuora_revenue_report", delimiter=None
+        bucket, prefix="RAW_DB/zuora_revenue_report/staging", delimiter=None
     )
     file_list = [file.name for file in source_bucket]
     list_of_files_per_report = []
@@ -154,6 +154,7 @@ def zuora_revenue_report_load(
     engine = snowflake_engine_factory(config_dict or env, "LOADER", schema)
     # Get the list of file for the particular output_file_name it will contain body and header if only one report is present for a particular type.
     list_of_files = get_files_for_report(bucket, output_file_name)
+    print(body_load_query)
     print(f"List of files to download for : {list_of_files}")
     #Iterate over each file to load into snowflake and move to processed folder.
     
