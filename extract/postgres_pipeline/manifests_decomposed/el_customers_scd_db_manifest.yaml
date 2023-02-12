@@ -5,6 +5,53 @@ connection_info:
   port: PG_PORT
   user: CUSTOMERS_DB_USER
 tables:
+  billing_accounts:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'billing_accounts'
+    export_table_primary_key: id
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT id
+      , zuora_account_name
+      , zuora_account_id
+      , salesforce_account_id
+      , created_at
+      , updated_at
+      FROM billing_accounts
+  billing_account_memberships:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'billing_account_memberships'
+    export_table_primary_key: id
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT id
+      , customer_id
+      , billing_account_id
+      , created_at
+      , updated_at
+      FROM billing_account_memberships
+  cloud_activations:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'cloud_activations'
+    export_table_primary_key: id
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , customer_id
+      , activation_code
+      , subscription_name
+      , super_sonics_aware
+      , seat_utilization_reminder_sent_at
+      , billing_account_id
+      FROM cloud_activations
   customers:
     advanced_metadata: true
     export_db: EXPORT_DB
@@ -138,6 +185,7 @@ tables:
       , license_file_md5
       , creator_id
       , license_file_sha256
+      , billing_account_id
       FROM licenses
   orders:
     advanced_metadata: true
@@ -165,6 +213,7 @@ tables:
       , zuora_account_id
       , increased_billing_rate_notified_at
       , source
+      , billing_account_id
       FROM orders
   reconciliations:
     advanced_metadata: true
@@ -174,13 +223,20 @@ tables:
     export_table_primary_key: order_id
     import_db: CUSTOMERS_DB
     import_query: |-
-      SELECT order_id
-      , user_count
-      , reconcile_done_at
+      SELECT completed_email_sent_at
       , created_at
-      , updated_at
       , error_message
+      , id
+      , order_id
+      , qsr_opportunity_id
+      , quoted_invoice_amount
+      , quoted_invoice_at
+      , reconcile_done_at
       , reconcile_on
+      , skip_reason
+      , upcoming_email_sent_at
+      , updated_at
+      , user_count
       FROM reconciliations
   schema_migrations:
     advanced_metadata: true

@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH zuora_central_sandbox_product AS (
 
     SELECT *

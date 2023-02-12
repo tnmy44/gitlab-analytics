@@ -19,7 +19,7 @@ LICENSE.md         @iweeks @dvanrooijen2 @mlaanen
 README.md          @iweeks @dvanrooijen2 @mlaanen
 
 [Data Engineering]
-/dags/              @paul_armstrong @vedprakash2021 @rbacovic
+/dags/              @paul_armstrong @vedprakash2021 @rbacovic @jjstark
 /extract/           @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /load/              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /orchestration/     @jjstark @paul_armstrong @vedprakash2021 @rbacovic

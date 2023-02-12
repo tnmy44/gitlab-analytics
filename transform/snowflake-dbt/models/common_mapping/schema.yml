@@ -209,3 +209,19 @@ models:
           combination_of_columns:
             - dim_namespace_id
             - date_month
+
+  - name: map_project_internal
+    description: '{{ doc("map_project_internal") }}'
+    columns:
+      - name: project_id
+        description: '{{ doc("dim_project_id") }}' 
+        tests:
+          - not_null
+          - unique
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}' 
+      - name: parent_namespace_id
+        description: The namespace id that the project is directly related to.
+      - name: project_namespace_id
+        description: The namespace_id for that represents the project
+

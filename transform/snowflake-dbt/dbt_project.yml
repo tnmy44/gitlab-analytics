@@ -331,11 +331,11 @@ models:
 
       zuora_query_api:
         +schema: zuora_query_api
-        +tags: ["zuora_query_api"]
+        +tags: ["zuora_query_api", "mnpi" ]
 
       zuora_central_sandbox:
         +schema: zuora_central_sandbox
-        +tags: [ "zuora_central_sandbox" ]
+        +tags: [ "zuora_central_sandbox", "mnpi" ]
 
       zuora_revenue:
         +schema: zuora_revenue
