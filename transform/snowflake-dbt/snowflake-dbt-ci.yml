@@ -232,7 +232,7 @@ specify_dbt_parameters:
     - echo $DBT_MODELS
     - INPUT=$(dbt --quiet ls --models $DBT_MODELS --output json --output-keys "database schema name depends_on unique_id config" --profiles-dir profile --target prod)
     - echo $INPUT
-    - ../../orchestration/clone_dbt_models_select.py $INPUT
+    - ../../orchestration/clone_dbt_models_select.py "$INPUT"
 
 # dbt tests
 .dbt_misc_jobs: &dbt_misc_jobs
