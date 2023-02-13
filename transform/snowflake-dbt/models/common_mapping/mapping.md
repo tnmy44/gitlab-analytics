@@ -110,3 +110,9 @@ This table contains the most recent subscription version associated with each na
 Although in the prep data, namespaces can be associated with multiple `dim_subscription_id`s and/or multiple `dim_subscription_id_original`s in a single month, we use a `QUALIFY` statement in this table to limit down to **one** subscription per namespace per month (the most recently created subscription).
 
 {% enddocs %}
+
+{% docs map_alternative_lead_demographics %}
+
+This tables creates an [alterntive mapping](https://about.gitlab.com/handbook/marketing/strategy-performance/marketing-metrics/#alternative-method-for-account-demographics-fields-on-leads) for GEO and Segment values for leads based on data from data enrichmeent services.
+
+{% enddocs %}
