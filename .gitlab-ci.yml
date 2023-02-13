@@ -173,7 +173,7 @@ clone_stop:
 ✏️python_mypy:
   <<: *python_check
   script:
-    - mypy extract/ --implicit-reexport --ignore-missing-imports
+    - mypy extract/ --ignore-missing-imports --explicit-package-bases --implicit-optional
 
 🗒️python_pylint:
   <<: *python_check
