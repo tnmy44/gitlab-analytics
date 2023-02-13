@@ -6,7 +6,7 @@ from datetime import datetime
 import pytest
 import requests
 
-from extract.clari.src.main import (
+from extract.clari.src.clari import (
     _calc_fiscal_quarter,
     _get_previous_fiscal_quarter,
     get_fiscal_quarter,

@@ -53,7 +53,7 @@ dag = DAG(
 )
 
 clari_extract_command = (
-    f"{clone_and_setup_extraction_cmd} && " f"python clari/src/main.py"
+    f"{clone_and_setup_extraction_cmd} && " f"python clari/src/clari.py"
 )
 
 clari_task_previous_quarter = KubernetesPodOperator(
