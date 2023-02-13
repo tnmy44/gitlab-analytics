@@ -16,6 +16,12 @@ WITH redis_clicks AS (
     gsc_plan
   FROM {{ ref('fct_behavior_structured_event') }}
   WHERE behavior_at >= '2022-11-01' -- no events added to SP context before Nov 2022
+
+  {% if is_incremental() %}
+  
+    AND behavior_at >= (SELECT MAX(behavior_at) FROM {{this}})
+  
+  {% endif %}
 ),
 
 namespaces_hist AS (
@@ -44,11 +50,6 @@ final AS (
   INNER JOIN contexts ON contexts.behavior_structured_event_pk = redis_clicks.behavior_structured_event_pk
   LEFT JOIN namespaces_hist ON namespaces_hist.namespace_id = redis_clicks.dim_namespace_id
     AND redis_clicks.behavior_at BETWEEN namespaces_hist.lineage_valid_from AND namespaces_hist.lineage_valid_to
-  {% if is_incremental() %}
-  
-      AND redis_clicks.behavior_at >= (SELECT MAX(behavior_at) FROM {{this}})
-  
-  {% endif %}
 )
 
 {{ dbt_audit(
@@ -56,5 +57,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-12-21",
-    updated_date="2023-01-23"
+    updated_date="2023-02-01"
 ) }}
