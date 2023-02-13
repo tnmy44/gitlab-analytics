@@ -82,7 +82,7 @@ report_list:
       rep_desc: "Displays Contract Liability/Contract Asset beginning and ending balances, and activity for the period selected. Used by revenue users for reconciliation and disclosures"
       output_file_name: "revenue_rc_rollforward_report"
       status: "A"
-      load_column_name: "!!str $1 AS Book_Name"
+      load_column_name: "XX1 AS Book_Name"
 #  revenue_waterfall:
 #      category: "Revenue"
 #      rep_name: "Waterfall Report"

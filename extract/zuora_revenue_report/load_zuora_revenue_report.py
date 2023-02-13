@@ -107,7 +107,7 @@ def load_report_body_snow(
         name=table_to_load, con=engine, index=False, if_exists="append", chunksize=15000
     )"""
     
-    load_query=body_load_query+",METADATA$FILENAME as file_name"
+    load_query=body_load_query.replace("XX","$")+",METADATA$FILENAME as file_name"
     copy_body_query = f"COPY INTO {schema}.{table_to_load} from (SELECT {load_query} \
      FROM @ZUORA_REVENUE_STAGING/{file_name} t ) file_format = (type = csv,field_DELIMITER=',') ;"
     results = query_executor(engine, copy_body_query)
