@@ -2795,6 +2795,7 @@ roles:
             - bi_tool_eval_read
             - data_science_readonly
             - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
         owns:
@@ -2850,6 +2851,7 @@ roles:
             - bi_tool_eval_read
             - data_science_readonly
             - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
 
@@ -3092,6 +3094,7 @@ roles:
             - bi_tool_eval_read
             - data_science_readonly
             - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
 
@@ -4306,6 +4309,7 @@ roles:
             - data_team_analyst
             - data_science_readonly
             - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
         owns:
