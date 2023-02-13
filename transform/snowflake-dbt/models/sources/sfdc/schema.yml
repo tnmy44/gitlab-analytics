@@ -415,3 +415,18 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: sfdc_task_source
+    description: Source model for SFDC Tasks
+    columns:
+      - name: task_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: full_comments
+        meta:
+          sensitive: true
+      - name: task_subject
+        meta:
+          sensitive: true

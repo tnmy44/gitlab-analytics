@@ -1,6 +1,7 @@
 {{ simple_cte([
     ('dim_crm_task', 'dim_crm_task'),
-    ('fct_crm_task', 'fct_crm_task')
+    ('fct_crm_task', 'fct_crm_task'),
+    ('dim_crm_task_pii', 'dim_crm_task_pii')
 ]) }}
 
 , final AS (
@@ -29,8 +30,8 @@
     fct_crm_task.task_date,
     fct_crm_task.task_completed_date_id,
     fct_crm_task.task_completed_date,
-    dim_crm_task.full_comments_hash,
-    dim_crm_task.task_subject_hash,
+    dim_crm_task_pii.full_comments,
+    dim_crm_task_pii.task_subject,
     dim_crm_task.task_status,
     dim_crm_task.task_subtype,
     dim_crm_task.task_type,
@@ -118,6 +119,8 @@
     FROM fct_crm_task 
     LEFT JOIN dim_crm_task 
       ON fct_crm_task.dim_crm_task_sk = dim_crm_task.dim_crm_task_sk
+    LEFT JOIN dim_crm_task_pii
+      ON fct_crm_task.dim_crm_task_sk = dim_crm_task_pii.dim_crm_task_sk
 
 
 )
@@ -126,6 +129,6 @@
     cte_ref="final",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2022-12-05",
+    created_date="2023-02-13",
     updated_date="2023-02-13"
 ) }}
