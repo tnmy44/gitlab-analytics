@@ -209,3 +209,17 @@ models:
           combination_of_columns:
             - dim_namespace_id
             - date_month
+
+  - name: map_alternative_lead_demographics
+    description: '{{ doc("map_alternative_lead_demographics") }}'
+    columns:
+      - name: dim_crm_person_id
+        description: dim_crm_person_id from dim_crm_person
+      - name: employee_count_segment_custom
+        description: A case statement assigning segment based on the employee count from the first in the order of; Account Demographics Employee Count, Zoominfo Company Employee Count, Cognism Employee Count. Pubsec is always taken from Lean Data Matched Account Sales Segement
+      - name: employee_bucket_segment_custom
+        description: A case statement assigning segment based on the `employee_bucket` dim_crm_person. Pubsec is always taken from Lean Data Matched Account Sales Segement
+      - name: geo_custom
+        description: A case statement assigning geo according the [FY23 Territories Mapping File - SSoT](https://docs.google.com/spreadsheets/d/1gElhORjqraKDMQnWzApPelyP_vVa24tAOA85vb5f3Uc/edit#gid=1236326957) using `first_country` from dim_crm_person
+
+     
