@@ -97,3 +97,12 @@ models:
 
   - name: suggested_merge_request_reviewers
     description: Table for exploring the suggested reviewers for a merge request
+
+  - name: wk_gitlab_dotcom_namespace_details
+    description: Workspace table for exposing gitlab_dotcom_namespace_details table to Sisense.
+
+  - name: wk_gitlab_dotcom_namespace_details_snapshots
+    description: Workspace table for exposing gitlab_dotcom_namespace_details_snapshots table to Sisense.
+
+  - name: wk_gitlab_dotcom_web_hooks
+    description: Workspace table for exposing gitlab_dotcom_web_hooks table to Sisense.
