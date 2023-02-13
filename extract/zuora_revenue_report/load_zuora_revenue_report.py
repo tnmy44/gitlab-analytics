@@ -166,7 +166,7 @@ def zuora_revenue_report_load(
     list_of_files = get_files_for_report(bucket, output_file_name)
     print(f"List of files to download for : {list_of_files}")
     #Iterate over each file to load into snowflake and move to processed folder.
-    
+    print(body_load_query)
     for file_name in list_of_files:
         table_to_load, type_of_load = get_table_to_load(
             file_name, output_file_name
