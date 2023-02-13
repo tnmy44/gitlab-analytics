@@ -124,7 +124,7 @@ def move_file_to_processed(bucket: str, file_name: str) -> None:
     file_name_without_path = file_name.split("/")[-1]
     destination_file_name = f"RAW_DB/processed/zuora_revenue_report/{report_ran_date}/{file_name_without_path}"
     file_name_without_bucket_prefix = "/".join(file_name.split("/")[3:])
-    source_blob = source_bucket.blob(file_name_without_bucket_prefix)
+    source_blob = source_bucket.blob(file_name)
     try:
         source_bucket.copy_blob(source_blob, destination_bucket, destination_file_name)
     except:
