@@ -1860,6 +1860,18 @@ roles:
                     - prep.license_db.*
                     - raw.license_db.*
 
+    - linkedin_ads:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.linkedin_ads
+            tables:
+                read:
+                    - raw.linkedin_ads.*
+
     - maxmind:
         privileges:
             databases:
@@ -2783,6 +2795,7 @@ roles:
             - bi_tool_eval_read
             - data_science_readonly
             - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
         owns:
@@ -2838,6 +2851,7 @@ roles:
             - bi_tool_eval_read
             - data_science_readonly
             - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
 
@@ -3080,6 +3094,7 @@ roles:
             - bi_tool_eval_read
             - data_science_readonly
             - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
 
@@ -4294,6 +4309,7 @@ roles:
             - data_team_analyst
             - data_science_readonly
             - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
         owns:
