@@ -115,6 +115,7 @@ def load_report_body_snow(
     """
     if report_type=='dynamic':
         load_query=body_load_query.replace("XX","$")
+        print(load_query)
         file_name_without_path=get_file_name_without_path(file_name)
         copy_body_query = f"COPY INTO {schema}.{table_to_load} from (SELECT {load_query} ,{file_name_without_path} as file_name \
         FROM @ZUORA_REVENUE_STAGING/{file_name} (FILE_FORMAT => {schema}.revenue_report_format ));"
