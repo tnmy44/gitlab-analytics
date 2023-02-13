@@ -180,7 +180,7 @@ clone_stop:
     - black --check .
 
 ✏️python_mypy:
-  <<: *python_check
+  <<: *python_critical_check
   script:
     - mypy extract/ --ignore-missing-imports --explicit-package-bases --implicit-optional
 
