@@ -14,7 +14,7 @@ crm_person AS (
       cognism_employee_count) AS employee_count,
     person_first_country
   FROM dim_crm_person
-)
+), final AS (
 
 SELECT
   dim_crm_person_id,
@@ -279,8 +279,10 @@ SELECT
     ELSE 'unknown'
   END AS geo_custom
 FROM crm_person
+)
 
 {{ dbt_audit(
+    cte_ref="final",
     created_by="@rkohnke",
     updated_by="@degan",
     created_date="2022-10-18",
