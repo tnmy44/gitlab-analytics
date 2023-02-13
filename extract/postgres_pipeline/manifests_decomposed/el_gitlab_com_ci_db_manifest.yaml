@@ -67,9 +67,6 @@ tables:
       , updated_at
       , file_store
       , name
-      , file
-      , checksum
-      , key_data
       FROM ci_secure_files
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -81,7 +78,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , key
       , group_id
       , created_at
       , updated_at
@@ -122,7 +118,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , key
       , pipeline_schedule_id
       , created_at
       , updated_at

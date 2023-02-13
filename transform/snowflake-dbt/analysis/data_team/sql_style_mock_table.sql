@@ -1,8 +1,9 @@
 WITH my_data AS (
 
-  SELECT *
-  FROM prod.my_data
-  WHERE filter = 'my_filter'
+  SELECT my_data.*
+  FROM prod.my_data_with_a_long_table_name AS my_data
+  INNER JOIN prod.other_thing
+  WHERE my_data.filter = 'my_filter'
 
 ),
 
@@ -38,7 +39,7 @@ final AS (
     my_data.detailed_field_3,
     DATE_TRUNC('month', some_cte.date_field_at)                  AS date_field_month,
     some_cte.data_by_row['id']::NUMBER                           AS id_field,
-    IFF(my_data.detailed_field_3 > my_data.field_2, TRUE, FALSE) AS is_boolian,
+    IFF(my_data.detailed_field_3 > my_data.field_2, TRUE, FALSE) AS is_boolean,
     CASE
       WHEN my_data.cancellation_date IS NULL
         AND my_data.expiration_date IS NOT NULL
@@ -47,6 +48,7 @@ final AS (
         THEN my_data.start_date + 7 -- There is a reason for this number
       ELSE my_data.cancellation_date
     END                                                          AS adjusted_cancellation_date,
+    COUNT(*)                                                     AS number_of_records,
     SUM(some_cte.field_4)                                        AS field_4_sum,
     MAX(some_cte.field_5)                                        AS field_5_max
   FROM my_data
