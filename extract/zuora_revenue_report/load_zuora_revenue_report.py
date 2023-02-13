@@ -114,11 +114,9 @@ def load_report_body_snow(
     If the report is static then pass it through the data frame and persist it into snowflake.
     """
     if report_type=='dynamic':
-        print(f"load_query:{body_load_query}")
         load_query=body_load_query.replace("XX","$")
-        print(load_query)
         file_name_without_path=get_file_name_without_path(file_name)
-        copy_body_query = f"COPY INTO {schema}.{table_to_load} from (SELECT {load_query} ,{file_name_without_path} as file_name \
+        copy_body_query = f"COPY INTO {schema}.{table_to_load} from (SELECT {load_query} ,'{file_name_without_path}' as file_name \
         FROM @ZUORA_REVENUE_STAGING/{file_name} (FILE_FORMAT => {schema}.revenue_report_format ));"
         results = query_executor(engine, copy_body_query)
         logging.info(results)
@@ -164,7 +162,6 @@ def zuora_revenue_report_load(
     engine = snowflake_engine_factory(config_dict or env, "LOADER", schema)
     # Get the list of file for the particular output_file_name it will contain body and header if only one report is present for a particular type.
     list_of_files = get_files_for_report(bucket, output_file_name)
-    print(body_load_query)
     print(f"List of files to download for : {list_of_files}")
     #Iterate over each file to load into snowflake and move to processed folder.
     for file_name in list_of_files:
