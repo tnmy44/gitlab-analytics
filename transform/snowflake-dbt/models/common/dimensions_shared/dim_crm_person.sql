@@ -113,5 +113,5 @@ WITH crm_person AS (
     created_by="@jjstark",
     updated_by="@degan",
     created_date="2020-09-10",
-    updated_date="2022-12-12"
+    updated_date="2023-02-13"
 ) }}
