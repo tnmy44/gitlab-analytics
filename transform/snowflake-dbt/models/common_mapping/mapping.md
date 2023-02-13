@@ -110,3 +110,10 @@ This table contains the most recent subscription version associated with each na
 Although in the prep data, namespaces can be associated with multiple `dim_subscription_id`s and/or multiple `dim_subscription_id_original`s in a single month, we use a `QUALIFY` statement in this table to limit down to **one** subscription per namespace per month (the most recently created subscription).
 
 {% enddocs %}
+
+
+{% docs map_project_internal %}
+
+This View contains the list of projects that are under ultimate parent namespace ids that are internal to gitlab. This mapping should be used to filter entities such as Issues and Merge requests when only internal GitLab data is needed.
+
+{% enddocs %}

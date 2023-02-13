@@ -1496,6 +1496,18 @@ roles:
                     - prep.driveload.*
                     - raw.driveload.*
 
+    - facebook_ads:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.facebook_ads
+            tables:
+                read:
+                    - raw.facebook_ads.*
+
     - gainsight_pump:
         warehouses:
             - gainsight_xs
@@ -1848,6 +1860,18 @@ roles:
                     - prep.license_db.*
                     - raw.license_db.*
 
+    - linkedin_ads:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.linkedin_ads
+            tables:
+                read:
+                    - raw.linkedin_ads.*
+
     - maxmind:
         privileges:
             databases:
@@ -2066,6 +2090,23 @@ roles:
                 read:
                     - prep.sfdc.*
                     - raw.salesforce_stitch.*
+
+    - salesforce_sandbox:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.sfdc
+                    - raw.salesforce_sandbox_stitch
+            tables:
+                read:
+                    - prep.sfdc.*
+                    - raw.salesforce_sandbox_stitch.*
 
     - share:
         privileges:
@@ -2753,6 +2794,8 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - data_science_readonly
+            - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
         owns:
@@ -2807,6 +2850,8 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - data_science_readonly
+            - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
 
@@ -3003,6 +3048,7 @@ roles:
             - data_team_analyst
             - data_manager
             - restricted_safe
+            - salesforce_sandbox
             - xactly
             - bi_tool_eval_db
         warehouses:
@@ -3047,6 +3093,8 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - data_science_readonly
+            - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
 
@@ -3298,6 +3346,7 @@ roles:
             - data_team_analyst
             - restricted_safe
             - bi_tool_eval_read
+            - zoominfo_inbound
         warehouses:
             - dev_xs
             - dev_xl
@@ -3456,6 +3505,7 @@ roles:
             - data_team_analyst
             - restricted_safe
             - xactly
+            - zoominfo_inbound
         warehouses:
             - dev_xs
 
@@ -3502,6 +3552,7 @@ roles:
             - data_team_analyst
             - prometheus
             - restricted_safe
+            - salesforce_sandbox
             - workday 
         warehouses:
             - dev_xs
@@ -3566,6 +3617,7 @@ roles:
             - data_team_analyst
             - data_science_readonly
             - restricted_safe
+            - salesforce_sandbox
             - workday
             - zendesk
         warehouses:
@@ -3976,6 +4028,7 @@ roles:
             - data_team_analyst
             - data_manager
             - restricted_safe
+            - salesforce_sandbox
             - xactly
             - bi_tool_eval_db
         warehouses:
@@ -4255,6 +4308,8 @@ roles:
             - bi_tool_eval_read
             - data_team_analyst
             - data_science_readonly
+            - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
         owns:
@@ -4523,6 +4578,15 @@ roles:
                     - testing_db.*.*
                 write:
                     - testing_db.*.*
+
+    - tliu:
+        member_of:
+            - data_team_analyst
+            - analyst_core  
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
 
     - tpoole:
         member_of:
@@ -5165,6 +5229,11 @@ users:
         can_login: yes
         member_of:
             - target_snowflake
+
+    - tliu:
+        can_login: yes
+        member_of:
+            - tliu
 
     - tpoole:
         can_login: yes

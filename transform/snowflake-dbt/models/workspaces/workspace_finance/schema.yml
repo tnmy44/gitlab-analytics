@@ -1179,8 +1179,14 @@ models:
         description: implements sku sub-buckets
       - name: usage_unit
         description: usage unit (seconds, bytes-seconds, etc...)
+      - name: pricing_unit
+        description: usage unit in pricing unit (seconds, bytes-seconds, etc...)
       - name: usage_amount
         description: usage amount in usage_unit
+      - name: usage_in_pricing_units
+        description: usage amount in pricing unit (seconds, bytes-seconds, etc...)
+      - name: cost_before_credits
+        description: cost before credits
       - name: net_cost
         description: gcp net cost for gitlab
   - name: rpt_gcp_billing_service_mapping_day
@@ -1196,6 +1202,16 @@ models:
         description: gcp service sub-category
       - name: gitlab_service
         description: gitlab service mapping
+      - name: usage_unit
+        description: usage amount in usage_unit
+      - name: pricing_unit
+        description: pricing unit
+      - name: usage_amount
+        description: usage amount in usage_unit
+      - name: usage_amount_in_pricing_units
+        description: usage amount in pricing unit
+      - name: cost_before_credits
+        description: cost before credits
       - name: net_cost
         description: net cost paid by GitLab
   - name: rpt_gcp_billing_pl_mapping_day
@@ -1213,6 +1229,16 @@ models:
         description: gitlab service mapping
       - name: finance_pl
         description: Finance P&L mapping
+      - name: usage_unit
+        description: usage unit
+      - name: pricing_unit
+        description: Finance P&L mapping
+      - name: usage_amount
+        description: Finance P&L mapping
+      - name: usage_amount_in_pricing_units
+        description: Finance P&L mapping
+      - name: cost_before_credits
+        description: Finance P&L mapping
       - name: net_cost
         description: net cost paid by GitLab
   - name: rpt_gcp_billing_infra_mapping_day
@@ -1227,6 +1253,18 @@ models:
       - name: gcp_sku_description
         description: gcp service sub-category
       - name: infra_label
+        description: gitlab service mapping
+      - name: finance_pl
+        description: finance pl classification  
+      - name: usage_unit
+        description: usage unit (bytes, bytes-seconds, etc)
+      - name: pricing_unit
+        description: pricing unit 
+      - name: usage_amount
+        description: gitlab service mapping
+      - name: usage_amount_in_pricing_units
+        description: gitlab service mapping
+      - name: cost_before_credits
         description: gitlab service mapping
       - name: net_cost
         description: net cost paid by GitLab
@@ -1245,6 +1283,16 @@ models:
         description: gitlab service mapping
       - name: finance_pl
         description: Finance P&L mapping
+      - name: usage_unit
+        description: usage unit
+      - name: pricing_unit
+        description: pricing unit
+      - name: usage_amount
+        description: usage amount in usage unit
+      - name: usage_amount_in_pricing_units
+        description: usage amount in pricing unit
+      - name: cost_before_credits
+        description: cost before applying credits
       - name: net_cost
         description: net cost paid by GitLab
 

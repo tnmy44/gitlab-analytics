@@ -97,6 +97,8 @@
       sfdc_opportunity.sales_qualified_date_id,
       sfdc_opportunity.last_activity_date,
       sfdc_opportunity.last_activity_date_id,
+      sfdc_opportunity.sales_last_activity_date,
+      sfdc_opportunity.sales_last_activity_date_id,
       sfdc_opportunity.technical_evaluation_date,
       sfdc_opportunity.technical_evaluation_date_id,
 
@@ -257,11 +259,11 @@
     LEFT JOIN user_hierarchy_stamped_sales_segment
       ON sfdc_opportunity.crm_opp_owner_sales_segment_stamped = user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped
     LEFT JOIN user_hierarchy_stamped_geo
-      ON UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped) = user_hierarchy_stamped_geo.crm_opp_owner_geo_stamped
+      ON sfdc_opportunity.crm_opp_owner_geo_stamped = user_hierarchy_stamped_geo.crm_opp_owner_geo_stamped
     LEFT JOIN user_hierarchy_stamped_region
-      ON UPPER(sfdc_opportunity.crm_opp_owner_region_stamped) = user_hierarchy_stamped_region.crm_opp_owner_region_stamped
+      ON sfdc_opportunity.crm_opp_owner_region_stamped = user_hierarchy_stamped_region.crm_opp_owner_region_stamped
     LEFT JOIN user_hierarchy_stamped_area
-      ON UPPER(sfdc_opportunity.crm_opp_owner_area_stamped) = user_hierarchy_stamped_area.crm_opp_owner_area_stamped
+      ON sfdc_opportunity.crm_opp_owner_area_stamped = user_hierarchy_stamped_area.crm_opp_owner_area_stamped
     LEFT JOIN dr_partner_engagement
       ON sfdc_opportunity.dr_partner_engagement = dr_partner_engagement.dr_partner_engagement_name
     LEFT JOIN alliance_type
@@ -282,5 +284,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2023-01-30"
+    updated_date="2023-02-09"
 ) }}

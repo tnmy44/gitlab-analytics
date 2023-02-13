@@ -136,7 +136,7 @@ clone_stop:
 
 .python_critical_check: &python_critical_check
   stage: 🛑🐍 Python Critical
-  image: registry.gitlab.com/gitlab-data/data-image/ci-python-image:v1.0.16
+  image: registry.gitlab.com/gitlab-data/data-image/ci-python-image:v1.0.26
   before_script:
     - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
   tags:
@@ -150,7 +150,7 @@ clone_stop:
 
 .python_check: &python_check
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/data-image/ci-python-image:v1.0.16
+  image:  registry.gitlab.com/gitlab-data/data-image/ci-python-image:v1.0.26
   before_script:
     - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
   tags:
@@ -180,9 +180,9 @@ clone_stop:
     - black --check .
 
 ✏️python_mypy:
-  <<: *python_critical_check
+  <<: *python_check
   script:
-    - mypy extract/ --ignore-missing-imports
+    - mypy extract/ --ignore-missing-imports --explicit-package-bases --implicit-optional
 
 🌽python_flake8:
   <<: *python_check
