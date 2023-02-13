@@ -1860,6 +1860,18 @@ roles:
                     - prep.license_db.*
                     - raw.license_db.*
 
+    - linkedin_ads:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.linkedin_ads
+            tables:
+                read:
+                    - raw.linkedin_ads.*
+
     - maxmind:
         privileges:
             databases:
