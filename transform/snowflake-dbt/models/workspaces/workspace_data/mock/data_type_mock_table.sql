@@ -13,15 +13,11 @@ SELECT
 
   -- {{ samples() }}
 
-
-  -- {{ sample_ref_relation('date_details_source') }}
-
-  -- {{ sample_ref_relation('dim_date') }}
-
-  -- {{ sample_ref_relation('prep_date') }}
+  -- {{ ref('dim_date') }}
 
   -- {{ ref('prep_ping_instance') }}
 
+  -- {{ create_sample_tables() }}
 
--- {{ create_sample_table('prep_ping_instance') }} 
+
 

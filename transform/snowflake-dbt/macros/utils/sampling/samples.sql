@@ -3,12 +3,10 @@
 {#
 Example
 samples:
-  - name: fct_ping_instance_metric
-    clause: "date_actual >= DATEADD('day', -30, CURRENT_DATE())"
   - name: date_details_source
-    clause: sample_table(3)
+    clause: '{{ sample_table(3) }}'
   - name: date_details
-    clause: "date_actual >= DATEADD('day', -30, CURRENT_DATE())"
+    clause: "WHERE date_actual >= DATEADD('day', -30, CURRENT_DATE())"
 
 #}
 
@@ -16,7 +14,9 @@ samples:
 
 samples:
   - name: prep_ping_instance
-    clause: '{{ sample_table(3) }}' 
+    clause: '{{ sample_table(3) }}'
+  - name: dim_date
+    clause: '{{ sample_table(3) }}'
 
 {%- endset %}
 
