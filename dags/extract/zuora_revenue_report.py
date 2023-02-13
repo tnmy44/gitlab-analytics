@@ -73,7 +73,7 @@ start = DummyOperator(task_id="Start", dag=dag)
 
 for report in report_list:
     file_name_to_load=stream["report_list"][report]["output_file_name"].lower()
-    body_load_query_string=str(stream["report_list"][report]["load_column_name"])+",METADATA$FILENAME as file_name"
+    body_load_query_string=stream["report_list"][report]["load_column_name"]
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_and_setup_extraction_cmd} &&
