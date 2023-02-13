@@ -114,6 +114,7 @@ def load_report_body_snow(
     If the report is static then pass it through the data frame and persist it into snowflake.
     """
     if report_type=='dynamic':
+        print(f"load_query:{body_load_query}")
         load_query=body_load_query.replace("XX","$")
         print(load_query)
         file_name_without_path=get_file_name_without_path(file_name)
