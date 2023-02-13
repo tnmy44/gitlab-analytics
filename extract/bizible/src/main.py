@@ -7,7 +7,6 @@ from typing import Dict
 import yaml
 from dateutil import parser as date_parser
 
-# test change
 
 def manifest_reader(file_path: str) -> Dict[str, Dict]:
     """
