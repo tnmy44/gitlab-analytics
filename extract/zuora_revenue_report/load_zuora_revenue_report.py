@@ -82,9 +82,9 @@ def load_report_header_snow(
 
 def data_frame_enricher(raw_df: pd.DataFrame, file_name: str) -> pd.DataFrame:
 
-    """Add _uploaded_at and _file_name to the data frame before persisting also doing some data cleansing."""
-    raw_df["_uploaded_at"] = time()
-    raw_df.loc[:, "_file_name"] = file_name
+    """Add file_name to the data frame before persisting also doing some data cleansing."""
+    #raw_df["uploaded_at"] = time()
+    raw_df.loc[:, "file_name"] = file_name
     raw_df.columns = [
         translate_column_names(str(column_name)) for column_name in raw_df.columns
     ]
@@ -92,12 +92,9 @@ def data_frame_enricher(raw_df: pd.DataFrame, file_name: str) -> pd.DataFrame:
     raw_df.replace("", np.nan, inplace=True)
     return raw_df
 
-
-def load_report_body_snow(
-    schema: str,file_name: str, table_to_load: str, body_load_query: str, engine: Dict
-) -> None:
-    """load body of report with proper data cleansing and adding metadata like uplodaed_at and file_name to the report."""
-    """raw_file_bucket = get_gcs_storage_client().bucket(bucket)
+def load_static_table(bucket: str,file_name: str, table_to_load: str,engine: Dict):
+    """load report which are static in nature body of report with proper data cleansing and adding metadata file_name to the report."""
+    raw_file_bucket = get_gcs_storage_client().bucket(bucket)
     raw_file_blob = raw_file_bucket.blob(file_name)
     raw_data = raw_file_blob.download_as_bytes()
     raw_df = pd.read_csv(io.BytesIO(raw_data))
@@ -105,16 +102,23 @@ def load_report_body_snow(
 
     enriched_df.to_sql(
         name=table_to_load, con=engine, index=False, if_exists="append", chunksize=15000
-    )"""
-    
-    load_query=body_load_query.replace("XX","$")+",METADATA$FILENAME as file_name"
-    copy_body_query = f"COPY INTO {schema}.{table_to_load} from (SELECT {load_query} \
-     FROM @ZUORA_REVENUE_STAGING/{file_name} (FILE_FORMAT => {schema}.revenue_report_format ));"
-    results = query_executor(engine, copy_body_query)
-    logging.info(results)
-    """logging.info(
+    )
+    logging.info(
         f"Successfully loaded {enriched_df.shape[0]} rows into {table_to_load}"
-    )"""
+    )
+    
+def load_report_body_snow(
+    bucket: str, schema: str,file_name: str, table_to_load: str, body_load_query: str,report_type: str, engine: Dict
+) -> None:
+    if report_type=='dynamic':
+        load_query=body_load_query.replace("XX","$")+f",{file_name} as file_name"
+        copy_body_query = f"COPY INTO {schema}.{table_to_load} from (SELECT {load_query} \
+        FROM @ZUORA_REVENUE_STAGING/{file_name} (FILE_FORMAT => {schema}.revenue_report_format ));"
+        results = query_executor(engine, copy_body_query)
+        logging.info(results)
+    else:
+        load_static_table(bucket,file_name,table_to_load,engine)
+    
 
 
 def move_file_to_processed(bucket: str, file_name: str) -> None:
@@ -146,6 +150,7 @@ def zuora_revenue_report_load(
     schema: str,
     output_file_name: str,
     body_load_query: str,
+    report_type: str,
     conn_dict: Dict[str, str] = None,
 ) -> None:
 
@@ -153,7 +158,6 @@ def zuora_revenue_report_load(
     engine = snowflake_engine_factory(config_dict or env, "LOADER", schema)
     # Get the list of file for the particular output_file_name it will contain body and header if only one report is present for a particular type.
     list_of_files = get_files_for_report(bucket, output_file_name)
-    print(body_load_query)
     print(f"List of files to download for : {list_of_files}")
     #Iterate over each file to load into snowflake and move to processed folder.
     
@@ -165,7 +169,7 @@ def zuora_revenue_report_load(
             load_report_header_snow(schema, file_name, table_to_load, engine)
             move_file_to_processed(bucket, file_name)
         else:
-            load_report_body_snow(schema, file_name, table_to_load, body_load_query, engine)
+            load_report_body_snow(bucket,schema, file_name, table_to_load, body_load_query,report_type, engine)
             move_file_to_processed(bucket, file_name)
 
 

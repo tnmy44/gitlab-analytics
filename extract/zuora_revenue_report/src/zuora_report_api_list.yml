@@ -71,10 +71,11 @@ report_list:
                          ,XX64 AS MONTH_37
                          ,XX65 AS MONTH_38
                          ,XX66 AS MONTH_39
-                         ,XX67 AS YEAR_2027
-                         ,XX68 AS YEAR_2028
+                         ,XX67 AS YEAR_4
+                         ,XX68 AS YEAR_5
                          ,XX69 AS _Grand_Total_"
       status: "A"
+      report_type: "dynamic"
   rc_rollforward:
       category: "Revenue"
       rep_name: "RC Rollforward Report"
@@ -82,7 +83,8 @@ report_list:
       rep_desc: "Displays Contract Liability/Contract Asset beginning and ending balances, and activity for the period selected. Used by revenue users for reconciliation and disclosures"
       output_file_name: "revenue_rc_rollforward_report"
       status: "A"
-      load_column_name: "XX1 AS Book_Name"
+      load_column_name: ""
+      report_type: "static"
 #  revenue_waterfall:
 #      category: "Revenue"
 #      rep_name: "Waterfall Report"
