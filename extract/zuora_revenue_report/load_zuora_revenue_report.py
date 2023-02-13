@@ -110,9 +110,13 @@ def load_static_table(bucket: str,file_name: str, table_to_load: str,engine: Dic
 def load_report_body_snow(
     bucket: str, schema: str,file_name: str, table_to_load: str, body_load_query: str,report_type: str, engine: Dict
 ) -> None:
+    """ Check if the report is of type dynamic. If dynamic report then get the query to build the dynamic query from YAML file and persist into snowflake. 
+    If the report is static then pass it through the data frame and persist it into snowflake.
+    """
     if report_type=='dynamic':
-        load_query=body_load_query.replace("XX","$")+f",{file_name} as file_name"
-        copy_body_query = f"COPY INTO {schema}.{table_to_load} from (SELECT {load_query} \
+        load_query=body_load_query.replace("XX","$")
+        file_name_without_path=get_file_name_without_path(file_name)
+        copy_body_query = f"COPY INTO {schema}.{table_to_load} from (SELECT {load_query} ,{file_name_without_path} as file_name \
         FROM @ZUORA_REVENUE_STAGING/{file_name} (FILE_FORMAT => {schema}.revenue_report_format ));"
         results = query_executor(engine, copy_body_query)
         logging.info(results)
