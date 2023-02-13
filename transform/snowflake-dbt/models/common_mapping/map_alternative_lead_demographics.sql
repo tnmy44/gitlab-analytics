@@ -279,3 +279,10 @@ SELECT
     ELSE 'unknown'
   END AS geo_custom
 FROM crm_person
+
+{{ dbt_audit(
+    created_by="@rkohnke",
+    updated_by="@degan",
+    created_date="2022-10-18",
+    updated_date="2023-02-13"
+) }}
