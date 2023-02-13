@@ -1520,13 +1520,13 @@ Surrogate key consisting of referer_url, app_id and referer_url_scheme, easily J
 
 {% docs page_view_start_at %}
 
-Timestamp of when a web page was first rendered for that `dim_behavior_referrer_page_sk`. 
+Timestamp of when a web page was first rendered for that `fct_behavior_website_page_view_sk`. 
 
 {% enddocs %}
 
 {% docs page_view_end_at %}
 
-Timestamp of when a web page was last rendered for that `dim_behavior_referrer_page_sk`. 
+Timestamp of when a web page was last rendered for that `fct_behavior_website_page_view_sk`. 
 
 {% enddocs %}
 
