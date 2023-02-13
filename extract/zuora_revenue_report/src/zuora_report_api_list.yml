@@ -71,7 +71,7 @@ report_list:
                          ,XX64 AS MONTH_37
                          ,XX65 AS MONTH_38
                          ,XX66 AS MONTH_39
-                         ,XX67 AS =>_2027
+                         ,XX67 AS 2027
                          ,XX68 AS 2028
                          ,XX69 AS _Grand_Total_"
       status: "A"
