@@ -61,7 +61,8 @@ WITH filtered_snowplow_events AS (
       (
       (event_action = 'click_menu' OR event_action = 'click_menu_item')
       AND 
-      (event_category LIKE 'dashboard%' OR event_category LIKE 'root%')
+      (
+      event_category LIKE 'dashboard%' OR event_category LIKE 'root%' OR event_category LIKE 'projects%')
       ) 
       OR
       (
@@ -72,6 +73,10 @@ WITH filtered_snowplow_events AS (
     event_label LIKE 'groups_dropdown_%'
     OR 
     event_label LIKE 'project_dropdown_%'
+    OR
+    event_label LIKE 'group_dropdown_%'
+    OR 
+    event_label LIKE 'projects_dropdown_%'
   {% if is_incremental() %}
 
     AND  derived_tstamp > (SELECT MAX(derived_tstamp) FROM {{ this }})
