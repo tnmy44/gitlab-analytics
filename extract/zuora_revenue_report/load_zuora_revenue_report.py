@@ -109,7 +109,7 @@ def load_report_body_snow(
     
     load_query=body_load_query.replace("XX","$")+",METADATA$FILENAME as file_name"
     copy_body_query = f"COPY INTO {schema}.{table_to_load} from (SELECT {load_query} \
-     FROM @ZUORA_REVENUE_STAGING/{file_name} t ) (FILE_FORMAT => {schema}.ZUORA_REVENUE_REPORT.revenue_report_format ) ;"
+     FROM @ZUORA_REVENUE_STAGING/{file_name} (FILE_FORMAT => {schema}.revenue_report_format ));"
     results = query_executor(engine, copy_body_query)
     logging.info(results)
     """logging.info(
