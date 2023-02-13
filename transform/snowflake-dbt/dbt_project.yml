@@ -636,9 +636,6 @@ models:
         +schema: pumps_sensitive
         +materialized: table
 
-      usage_ping:
-        +tags: ["product"]
-
 
     # ------------------
     # Legacy Structure
