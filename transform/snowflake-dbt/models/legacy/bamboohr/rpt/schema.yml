@@ -44,11 +44,14 @@ models:
     - name: eeoc_value
     - name: headcount_start
       description: Provides headcount at start of month.
+    - name: headcount_start_excluding_sdr
+      description: Headcount at start of month not including the Sales Development department (used for promotion calculation)
     - name: headcount_end
       description: Provides headcount on the last day of the month.
     - name: headcount_end_excluding_sdr
       description: Headcount not including the Sales Development department (used for promotion calculation)
     - name: headcount_average
+    - name: headcount_average_excluding_sdr
     - name: hire_count
       description: Provides the total number of employees hired for a given month as associated to the diversity_field and aggregation_type.
     - name: separation_count
@@ -56,6 +59,8 @@ models:
     - name: involuntary_separation_count
     - name: rolling_12_month_headcount
       description: Provides the average of the current month and previous 11 month average headcounts (the average headcount for each month is the headcount_start + headcount_end divided by 2).  
+    - name: rolling_12_month_headcount_excluding_sdr
+      description: Provides the average of the current month and previous 11 month average headcounts excluding the Sales Development department (the average headcount for each month is the headcount_start + headcount_end divided by 2).  
     - name: rolling_12_month_separations
       description: Provides the total number of employees separated for the current month and previous 11 months.
     - name: rolling_12_month_voluntary_separations
