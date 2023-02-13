@@ -30,7 +30,8 @@ WITH promotions AS (
            ELSE {{ bamboohr_department_grouping(department='department') }} END AS division_department, 
       SUM(headcount_end)                                                        AS headcount_end,
       SUM(headcount_end_excluding_sdr)                                          AS headcount_end_excluding_sdr,
-      SUM(rolling_12_month_headcount)                                           AS rolling_12_month_headcount
+      SUM(rolling_12_month_headcount)                                           AS rolling_12_month_headcount,
+      SUM(rolling_12_month_headcount_excluding_sdr)                             AS rolling_12_month_headcount_excluding_sdr
     FROM {{ ref('bamboohr_rpt_headcount_aggregation') }}  
     WHERE breakout_type IN ('department_breakout', 'kpi_breakout', 'division_breakout')
         AND eeoc_field_name = 'no_eeoc'
@@ -63,7 +64,7 @@ WITH promotions AS (
       'Marketing - Excluding SDR' AS field_value,
       promotions.*, 
       headcount_end_excluding_sdr,
-      rolling_12_month_headcount 
+      rolling_12_month_headcount_excluding_sdr 
     FROM bamboohr_base
     INNER JOIN promotions
       ON promotions.promotion_month BETWEEN rolling_start_month AND rolling_end_month
@@ -101,7 +102,7 @@ WITH promotions AS (
       'Company - Excluding SDR'  AS field_value,
       promotions.*,
       headcount_end_excluding_sdr,
-      rolling_12_month_headcount
+      rolling_12_month_headcount_excluding_sdr
     FROM bamboohr_base
     LEFT JOIN promotions
       ON promotions.promotion_month BETWEEN rolling_start_month AND rolling_end_month
