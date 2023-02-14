@@ -6135,8 +6135,8 @@ models:
         description: '{{ doc("event_count") }}'
       - name: user_count
         description: '{{ doc("user_count") }}'
-      - name: unique_date_count
-        description: '{{ doc("unique_date_count") }}'
+      - name: event_date_count
+        description: '{{ doc("event_date_count") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by

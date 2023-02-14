@@ -58,12 +58,12 @@ fact_with_dims AS (
     data_source,
     event_count,
     user_count,
-    unique_date_count
+    event_date_count
   FROM fact
   LEFT JOIN dim_namespace
     ON fact.dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id
   LEFT JOIN dim_date
-    ON fact.event_calendar_month = dim_date.first_day_of_month
+    ON fact.event_calendar_month = dim_date.date_actual --join on first day of calendar month
         
 )
 

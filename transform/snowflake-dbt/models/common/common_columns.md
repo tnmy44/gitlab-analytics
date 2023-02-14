@@ -322,7 +322,7 @@ The count of events generated
 
 {% enddocs %}
 
-{% docs unique_date_count %}
+{% docs event_date_count %}
 
  The count of distinct days in which an event was generated
 
