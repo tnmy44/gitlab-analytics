@@ -218,11 +218,11 @@ class SnowflakeManager:
         """
 
         grant_usage_on_db = f"""
-            GRANT USAGE ON DATABASE {clone} TO ROLE {role};
+            GRANT USAGE ON DATABASE "{clone}" TO ROLE {role};
         """
 
         grant_usage_on_schema = f"""
-            GRANT USAGE ON ALL SCHEMAS IN DATABASE {clone} TO ROLE {role};
+            GRANT USAGE ON ALL SCHEMAS IN DATABASE "{clone}" TO ROLE {role};
         """
 
         try:
