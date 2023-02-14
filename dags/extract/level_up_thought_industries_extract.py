@@ -43,7 +43,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "level_up_thought_industries_extract_test3",
+    "level_up_thought_industries_extract_test4",
     default_args=default_args,
     schedule_interval="0 1 * * *",
     #TODO: change date later
