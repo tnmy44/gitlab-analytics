@@ -31,7 +31,7 @@ def upload_payload_to_snowflake(
     Upload payload to Snowflake using snowflake_stage_load_copy_remove()
     """
     loader_engine = snowflake_engine_factory(config_dict, "LOADER")
-    with open(json_dump_filename, "w", encoding="utf8") as upload_file:
+    with open(json_dump_filename, "w+", encoding="utf8") as upload_file:
         json.dump(payload, upload_file)
 
     snowflake_stage_load_copy_remove(
