@@ -63,7 +63,7 @@ fact_with_dims AS (
   LEFT JOIN dim_namespace
     ON fact.dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id
   LEFT JOIN dim_date
-    ON fact.dim_event_date_id = dim_date.date_id
+    ON fact.event_calendar_month = dim_date.first_day_of_month
         
 )
 
