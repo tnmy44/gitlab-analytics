@@ -153,6 +153,83 @@ class SnowflakeManager:
             if include_stages:
                 self.clone_stages(create_db, database, schema)
 
+    def grant_clones(self, role, database):
+        """
+        Grant privileges on a clone.
+        """
+
+        if database == "prep":
+            clone = self.prep_database
+        elif database == "prod":
+            clone = self.prod_database
+
+        get_grants_query = f"""
+            WITH recursive roles_rec AS (
+
+            SELECT
+              grantee_name,
+              name
+            FROM snowflake.account_usage.grants_to_roles
+            WHERE granted_on = 'ROLE' and granted_to = 'ROLE'
+                AND privilege = 'USAGE' and deleted_on IS NULL
+                AND grantee_name = UPPER('{role}')
+
+            UNION ALL
+
+            SELECT
+              g.grantee_name,
+              g.name
+            FROM snowflake.account_usage.grants_to_roles g
+            JOIN roles_rec r ON g.grantee_name = r.name
+            WHERE g.granted_on = 'ROLE' AND g.granted_to = 'ROLE'
+                AND g.privilege = 'USAGE' AND g.deleted_on IS NULL
+
+            ),  inherited_roles AS (
+
+            SELECT distinct name
+            FROM roles_rec
+
+            )
+
+            SELECT
+              'GRANT SELECT ON ' ||
+              '"{clone}"' ||
+              '.' ||
+              "TABLE_SCHEMA" ||
+              '.' ||
+              "NAME" ||
+              ' TO ROLE {role};'
+            FROM snowflake.account_usage.grants_to_roles
+            WHERE table_catalog = UPPER('{database}')
+            AND privilege = 'SELECT'
+            AND table_schema ||'.'|| name in (
+                SELECT
+                  table_schema ||'.'|| table_name
+                FROM "{clone}".information_schema.tables
+              )
+            AND (grantee_name = UPPER('{role}')
+            OR grantee_name in (
+                SELECT
+                  name
+                FROM inherited_roles
+            ))
+
+            ;
+        """
+
+        try:
+            connection = self.engine.connect()
+            logging.info("Executing Query: {}".format(get_grants_query))
+            grants = connection.execute(get_grants_query).fetchall()
+            logging.info("Found {} grants".format(len(grants)))
+            for (grant,) in grants:
+                logging.info("Running: {}".format(grant))
+                [result] = connection.execute(grant).fetchone()
+                logging.info("Command Result: {}".format(result))
+        finally:
+            connection.close()
+            self.engine.dispose()
+
     def delete_clones(self):
         """
         Delete a clone.
@@ -259,10 +336,10 @@ class SnowflakeManager:
         :param schema:
         """
         stages_query = f"""
-             SELECT 
+             SELECT
                  stage_schema,
                  stage_name,
-                 stage_url, 
+                 stage_url,
                  stage_type
              FROM {database}.information_schema.stages
              {f"WHERE stage_schema = '{schema.upper()}'" if schema != "" else ""}
@@ -280,7 +357,7 @@ class SnowflakeManager:
             if stage["stage_type"] == "External Named":
 
                 clone_stage_query = f"""
-                    CREATE OR REPLACE STAGE {output_stage_name} LIKE   
+                    CREATE OR REPLACE STAGE {output_stage_name} LIKE
                     {from_stage_name}
                     """
 
@@ -290,7 +367,7 @@ class SnowflakeManager:
 
             else:
                 clone_stage_query = f"""
-                    CREATE OR REPLACE STAGE {output_stage_name}  
+                    CREATE OR REPLACE STAGE {output_stage_name}
                     """
 
                 grants_query = f"""
