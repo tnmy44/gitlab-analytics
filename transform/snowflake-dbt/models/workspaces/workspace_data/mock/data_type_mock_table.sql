@@ -10,14 +10,3 @@ SELECT
   TRUE::BOOLEAN AS the_boolean
 
   --  {{ source('mock_source','mock_source_table') }}
-
-  -- {{ samples() }}
-
-  -- {{ ref('dim_date') }}
-
-  -- {{ ref('prep_ping_instance') }}
-
-  -- {{ create_sample_tables() }}
-
-
-

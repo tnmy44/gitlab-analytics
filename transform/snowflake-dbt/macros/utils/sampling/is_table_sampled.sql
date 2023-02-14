@@ -5,10 +5,9 @@
   {% set model_sample = samples_dict.samples | selectattr("name", "equalto",model_name) | list %} 
 
   {% set is_sampled = model_sample|length >0 %}
-
-  {% set sample_override = var('local_data') == 'sample' %}
+  {% set is_override = var('local_data') != 'sample' %}
   {% set is_development = target.name not in production_targets() %}
   
-  {% do return(is_development and is_sampled and sample_override) %}    
+  {% do return(is_development and is_sampled and not is_override) %}    
 
 {%- endmacro -%}

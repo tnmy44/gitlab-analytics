@@ -3,18 +3,21 @@
   {% set samples_dict = samples() %}
   {% set sample_models = samples_dict.samples | map(attribute='name')| list %}
 
-{% set sql %}
+  {% if sample_models | length < 1 %}
+    {% do exceptions.raise_compiler_error('There are no table samples configured in the samples macro')%}
+  {% endif %}
 
-  {% for model in sample_models %}
+  {% set sql %}
 
-    {{ generate_sample_table_sql(model) }}
-    
-  {% endfor %}
+    {% for model in sample_models %}
 
-{% endset %}
+      {{ generate_sample_table_sql(model) }}
+      
+    {% endfor %}
 
-{% do return(sql) %}
-{#% do run_query(sql) %#}
-{% do log("Tables Sampled: " ~ sample_models, info=True) %}
+  {% endset %}
+
+  {% do run_query(sql) %}
+  {% do log("Tables Sampled: " ~ sample_models, info=True) %}
 
 {%- endmacro -%}
