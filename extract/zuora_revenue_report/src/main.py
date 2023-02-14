@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     zuora_report_list_df = zuora_revpro.get_report_list(report_date)
     if zuora_report_list_df.empty:
-        print("No Report to download")
+        logging.info("No Report to download")
         sys.exit(0)
     else:
         logging.info(f"List of report to be checked for {zuora_report_list_df}")

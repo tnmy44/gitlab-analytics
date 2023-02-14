@@ -2,6 +2,7 @@
 import os
 from datetime import datetime, timedelta
 from yaml import safe_load, YAMLError
+import logging
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -48,18 +49,24 @@ default_args = {
 airflow_home = env["AIRFLOW_HOME"]
 task_name = "zuora-revenue-report"
 
-# Get all the report name for which tasks for loading needs to be created
-with open(
-    f"{airflow_home}/analytics/extract/zuora_revenue_report/src/zuora_report_api_list.yml",
-    "r",
-    encoding="utf-8",
-) as file:
-    try:
-        stream = safe_load(file)
-    except YAMLError as exc:
-        print(exc)
+full_path = f"{airflow_home}/analytics/extract/zuora_revenue_report/src/zuora_report_api_list.yml"
 
 
+def get_yaml_file(path: str) -> dict:
+    """
+    Get all the report name for which tasks for loading
+    needs to be created
+    """
+
+    with open(file=path, mode="r", encoding="utf-8") as file:
+        try:
+            loaded_file = safe_load(stream=file)
+            return loaded_file
+        except YAMLError as exc:
+            logging.error(f"Issue with the yaml file: {exc}")
+
+
+stream = get_yaml_file(path=full_path)
 report_list = list(stream["report_list"].keys())
 
 
@@ -80,7 +87,9 @@ for report in report_list:
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_and_setup_extraction_cmd} &&
-        python3 zuora_revenue_report/load_zuora_revenue_report.py zuora_report_load --bucket zuora_revpro_gitlab --schema zuora_revenue_report --output_file_name {file_name_to_load} --body_load_query "{body_load_query_string}" --report_type {report_type}
+        python3 zuora_revenue_report/load_zuora_revenue_report.py zuora_report_load --bucket zuora_revpro_gitlab\
+                --schema zuora_revenue_report --output_file_name {file_name_to_load}\
+                --body_load_query "{body_load_query_string}" --report_type {report_type}
         """
     task_identifier = f"el-{task_name}-{report.replace('_','-').lower()}-load"
     # Task 2
