@@ -84,13 +84,7 @@ WITH filtered_snowplow_events AS (
       )
     )
     OR
-    event_label LIKE 'groups_dropdown_%'
-    OR 
-    event_label LIKE 'project_dropdown_%'
-    OR
-    event_label LIKE 'group_dropdown_%'
-    OR 
-    event_label LIKE 'projects_dropdown_%'
+    event_label LIKE ANY ('groups_dropdown_%','project_dropdown_%','group_dropdown_%','projects_dropdown_%')
   {% if is_incremental() %}
 
     AND  derived_tstamp > (SELECT MAX(derived_tstamp) FROM {{ this }})
