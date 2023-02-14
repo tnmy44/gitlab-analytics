@@ -76,10 +76,8 @@ WITH filtered_snowplow_events AS (
       (
         event_action IN ('click_menu', 'click_menu_item')
         AND 
-        (
-        event_category LIKE 'dashboard%' OR event_category LIKE 'root%' OR event_category LIKE 'projects%')
-        )
-      ) 
+        (event_category LIKE 'dashboard%' OR event_category LIKE 'root%' OR event_category LIKE 'projects%')
+        ) 
       OR
       (
         event_action = 'render' AND event_label = 'user_side_navigation'
