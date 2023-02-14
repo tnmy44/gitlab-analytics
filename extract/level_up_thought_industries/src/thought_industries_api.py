@@ -16,8 +16,8 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict
 
 from thought_industries_api_helpers import (
-    make_request, iso8601_to_epoch_ts_ms, upload_payload_to_snowflake,
-    is_invalid_ms_timestamp
+    make_request, iso8601_to_epoch_ts_ms, epoch_ts_ms_to_datetime_str,
+    upload_payload_to_snowflake, is_invalid_ms_timestamp
 )
 
 config_dict = os.environ.copy()
@@ -27,7 +27,8 @@ class ThoughtIndustries(ABC):
     """ Base abstract class that contains the main endpoint logic """
     BASE_URL = 'https://levelup.gitlab.com/'
     HEADERS = {
-        'Authorization': f'Bearer {config_dict["LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY"]}'
+        'Authorization':
+            f'Bearer {config_dict["LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY"]}'
     }
 
     @abstractmethod
@@ -92,15 +93,23 @@ class ThoughtIndustries(ABC):
 
         return final_events
 
-    def upload_events_to_snowflake(self, events: Dict[Any, Any]):
+    def upload_events_to_snowflake(
+        self, events: Dict[Any, Any], epoch_start_ms: int, epoch_end_ms: int
+    ):
         """ Upload event payload to Snowflake """
+
+        upload_dict = {
+            "data": events,
+            "api_start_datetime": epoch_ts_ms_to_datetime_str(epoch_start_ms),
+            "api_end_datetime": epoch_ts_ms_to_datetime_str(epoch_end_ms),
+        }
 
         schema_name = 'level_up'
         stage_name = 'level_up_load_stage'
         table_name = self.name
         json_dump_filename = f"level_up_{self.name}.json"
         upload_payload_to_snowflake(
-            events, schema_name, stage_name, table_name, json_dump_filename
+            upload_dict, schema_name, stage_name, table_name, json_dump_filename
         )
 
     def fetch_and_upload_data(self, epoch_start_ms: int,
@@ -112,7 +121,7 @@ class ThoughtIndustries(ABC):
                 'Aborting now...'
             )
         events = self.fetch_from_endpoint(epoch_start_ms, epoch_end_ms)
-        self.upload_events_to_snowflake(events)
+        self.upload_events_to_snowflake(events, epoch_start_ms, epoch_end_ms)
         return events
 
 
@@ -164,5 +173,7 @@ if __name__ == '__main__':
     EPOCH_START_MS = 1675904400000
     EPOCH_END_MS = 1676246400000
     cls_to_run = CourseCompletions()
-    result_events = cls_to_run.fetch_and_upload_data(EPOCH_START_MS, EPOCH_END_MS)
+    result_events = cls_to_run.fetch_and_upload_data(
+        EPOCH_START_MS, EPOCH_END_MS
+    )
     print(f'\nresult_events: {result_events[:10]}')

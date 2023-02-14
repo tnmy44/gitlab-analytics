@@ -18,8 +18,8 @@ def cls_factory(class_name_to_run: str) -> Type:
 def main(class_name_to_run: str):
     """ dynamically instantiates class and call its fetch_and_upload_data() """
     # fail if env variables are missing
-    epoch_start_ms = os.environ['epoch_start_ms']
-    epoch_end_ms = os.environ['epoch_end_ms']
+    epoch_start_ms = int(os.environ['epoch_start_ms'])
+    epoch_end_ms = int(os.environ['epoch_end_ms'])
     class_to_run = cls_factory(class_name_to_run)
     class_to_run.fetch_and_upload_data(epoch_start_ms, epoch_end_ms)
 

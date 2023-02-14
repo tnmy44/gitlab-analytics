@@ -67,6 +67,15 @@ def iso8601_to_epoch_ts_ms(iso8601_timestamp: str) -> int:
     return epoch_ts_ms
 
 
+def epoch_ts_ms_to_datetime_str(epoch_ts_ms: int) -> str:
+    """
+    convert from epoch ts in milliseconds, i.e 1675904400000
+    to datetime str, i.e '2023-02-09 01:00:00'
+    """
+    date_time = datetime.datetime.utcfromtimestamp(epoch_ts_ms / 1000)
+    return date_time.strftime('%Y-%m-%d %H:%M:%S')
+
+
 def make_request(
     request_type: str,
     url: str,
@@ -114,11 +123,11 @@ def make_request(
         raise
 
 
-def is_invalid_ms_timestamp(epoch_start, epoch_end):
+def is_invalid_ms_timestamp(epoch_start_ms, epoch_end_ms):
     """
     Checks if timestamp in milliseconds > 9/9/2001
     More info here: https://stackoverflow.com/a/23982005
     """
-    if len(str(epoch_start)) < 13 or (len(str(epoch_end)) < 13):
+    if len(str(epoch_start_ms)) < 13 or (len(str(epoch_end_ms)) < 13):
         return True
     return False
