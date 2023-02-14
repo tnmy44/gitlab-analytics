@@ -654,7 +654,7 @@ WITH date_details AS (
     upa_account.parent_crm_account_demographics_region              AS upa_ad_region,
     upa_account.parent_crm_account_demographics_area                AS upa_ad_area,
     
-    coalesce(upa_account.parent_crm_account_billing_country, REPLACE(REPLACE('Russian Federation','Russia'), 'Russia','Russian Federation'))              AS upa_ad_country,  
+    upa_account.parent_crm_account_billing_country                  AS upa_ad_country,  
     upa_account.parent_crm_account_demographics_upa_state           AS upa_ad_state,
     upa_account.parent_crm_account_demographics_upa_city            AS upa_ad_city,
     upa_account.parent_crm_account_demographics_upa_postal_code     AS upa_ad_zip_code,
