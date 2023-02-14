@@ -43,10 +43,11 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "level_up_thought_industries_extract_test1",
+    "level_up_thought_industries_extract_test3",
     default_args=default_args,
     schedule_interval="0 1 * * *",
-    start_date=datetime(2023, 2, 10),
+    #TODO: change date later
+    start_date=datetime(2023, 2, 12),
     catchup=True,
     max_active_runs=2,
 )
@@ -78,11 +79,10 @@ for endpoint_class in endpoint_classes:
         ],
         env_vars={
             **pod_env_vars,
-            # epoch timestamp needs to be in milliseconds
-            "epoch_start_ms":
-                "{{ execution_date.int_timestamp }}" * 1000,
-            "epoch_end_ms":
-                "{{ next_execution_date.int_timestamp }}" * 1000,
+            "epoch_start_str":
+                "{{ execution_date.int_timestamp }}",
+            "epoch_end_str":
+                "{{ next_execution_date.int_timestamp }}",
         },
         affinity=get_affinity(False),
         tolerations=get_toleration(False),

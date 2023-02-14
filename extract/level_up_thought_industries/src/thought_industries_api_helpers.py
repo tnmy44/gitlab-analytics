@@ -128,6 +128,6 @@ def is_invalid_ms_timestamp(epoch_start_ms, epoch_end_ms):
     Checks if timestamp in milliseconds > 9/9/2001
     More info here: https://stackoverflow.com/a/23982005
     """
-    if len(str(epoch_start_ms)) < 13 or (len(str(epoch_end_ms)) < 13):
+    if len(str(epoch_start_ms)) != 13 or (len(str(epoch_end_ms)) != 13):
         return True
     return False
