@@ -341,6 +341,9 @@ models:
         description: A boolean Salesforce field on the [lead](https://gitlab.my.salesforce.com/00N4M00000Ib1VK) and [contact](https://gitlab.my.salesforce.com/00N4M00000Ib1VP) denoting if the contact is going through an [Outreach](https://about.gitlab.com/handbook/marketing/marketing-operations/outreach/) sequence.
       - name: region
         description: A picklist field on the [lead](https://gitlab.my.salesforce.com/00N61000009n0Sl) and [contact](https://gitlab.my.salesforce.com/00N6100000ELkLu?) object in Salesforce. Currently one of `AMER, APAC, EMEA, LATAM.`
+      - name: person_first_country
+        description: >
+          Selects the first country contact enhanmenet services using abilve data. Following the order:  Zoominfo Company Country, Zoominfo Contact Country, Cognism Company Office Country, Cognism Country
 
   - name: dim_crm_user
     description: '{{ doc("dim_crm_user") }}'
@@ -5048,12 +5051,33 @@ models:
         tags: ["tdf", "common"]
 
   - name: dim_behavior_browser
-    description: Dimension for the analysis of browsers in Snowplow.
+    description: '{{ doc("dim_behavior_browser") }}'
     columns: 
       - name: dim_behavior_browser_sk
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: browser_name
+        description: '{{ doc("browser_name") }}'
+      - name: browser_major_version
+        description: '{{ doc("browser_major_version") }}'
+      - name: browser_minor_version
+        description: '{{ doc("browser_minor_version") }}'
+      - name: browser_engine
+        description: '{{ doc("browser_engine") }}'
+      - name: browser_language
+        description: '{{ doc("browser_language") }}'
+      - name: max_timestamp
+        description:  '{{ doc("max_timestamp_behavior_model") }}'
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: dim_behavior_operating_system
     description: Dimension for the analysis of operating systems in Snowplow.
@@ -5062,33 +5086,245 @@ models:
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: os
+        description: '{{ doc("os") }}'
+      - name: os_name
+        description: '{{ doc("os_name") }}'
+      - name: os_manufacturer
+        description: '{{ doc("os_manufacturer") }}'
+      - name: os_timezone
+        description: '{{ doc("os_timezone") }}'
+      - name: device_type
+        description: '{{ doc("device_type") }}'
+      - name: is_device_mobile
+        description: '{{ doc("is_device_mobile") }}'
+      - name: max_timestamp
+        description:  '{{ doc("max_timestamp_behavior_model") }}'
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: dim_behavior_website_page
-    description: Dimension for the analysis of webpages used according to the page_urlpath in Snowplow.
+    description: '{{ doc("dim_behavior_website_page") }}'
     columns:
       - name: dim_behavior_website_page_sk
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}' 
+      - name: app_id
+        description: '{{ doc("app_id") }}'         
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}' 
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}' 
+      - name: page_url_query
+        description: '{{ doc("page_url_query") }}' 
+      - name: clean_url_path
+        description: '{{ doc("clean_url_path") }}' 
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}' 
+      - name: page_group
+        description: '{{ doc("page_group") }}' 
+      - name: page_type
+        description: '{{ doc("page_type") }}' 
+      - name: page_sub_type
+        description: '{{ doc("page_sub_type") }}' 
+      - name: referrer_medium
+      - name: url_namespace_id
+        description: '{{ doc("behavior_url_namespace_id") }}' 
+      - name: url_project_id
+        description: '{{ doc("behavior_url_project_id") }}' 
+      - name: url_path_category
+        description: '{{ doc("url_path_category") }}' 
+      - name: is_url_interacting_with_security
+        description: '{{ doc("is_url_interacting_with_security") }}' 
+      - name: min_event_timestamp
+        description: '{{ doc("min_timestamp_behavior_model") }}' 
+      - name: max_event_timestamp
+        description: '{{ doc("max_timestamp_behavior_model") }}' 
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: fct_behavior_website_page_view
-    description: Page views are a subset of Snowplow events and are fired by the Javascript tracker.
+    description: '{{ doc("fct_behavior_website_page_view") }}'
     columns:
       - name: fct_behavior_website_page_view_sk
         tests:
           - not_null
           - unique
+        description: '{{ doc("fct_behavior_website_page_view_sk") }}'  
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}' 
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}' 
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}' 
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}' 
+      - name: page_view_start_at
+        description: '{{ doc("page_view_start_at") }}' 
+      - name: page_view_end_at
+        description: '{{ doc("page_view_end_at") }}' 
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}' 
+      - name: session_id
+        description: '{{ doc("session_id") }}' 
+      - name: event_id
+        description: '{{ doc("event_id_behavior_model") }}'  
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}' 
+      - name: environment
+        description: '{{ doc("environment_behavior_model") }}' 
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}' 
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: referer_url_path
+        description: '{{ doc("referer_url_path") }}' 
+      - name: event_name
+        description: '{{ doc("event_name_behavior_model") }}' 
+      - name: sf_formid
+      - name: engaged_seconds
+        description: '{{ doc("engaged_seconds") }}' 
+      - name: page_load_time_in_ms
+        description: '{{ doc("page_load_time_in_ms") }}' 
+      - name: page_view_index
+        description: '{{ doc("page_view_index") }}' 
+      - name: page_view_in_session_index
+        description: '{{ doc("page_view_in_session_index") }}' 
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: dim_behavior_event
-    description: Dimensional model containing distinct events types from Snowplow.
+    description: '{{ doc("dim_behavior_event") }}'
     columns:
       - name: dim_behavior_event_sk
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_behavior_event_sk") }}'  
+      - name: event
+        description: '{{ doc("event_behavior_model") }}' 
+      - name: event_name
+        description: '{{ doc("event_name_behavior_model") }}'         
+      - name: platform
+        description: '{{ doc("platform_behavior_model") }}'         
+      - name: environment
+        description: '{{ doc("environment_behavior_model") }}'         
+      - name: event_category
+        description: '{{ doc("event_category") }}'         
+      - name: event_action
+        description: '{{ doc("event_action") }}'         
+      - name: event_label
+        description: '{{ doc("event_label") }}'         
+      - name: event_property
+        description: '{{ doc("event_property") }}'         
+      - name: max_timestamp
+        description: '{{ doc("max_timestamp_behavior_model") }}'
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: fct_behavior_structured_event
-    description: Atomic fact table for structured events.
+    description: '{{ doc("fct_behavior_structured_event") }}'
+    columns: 
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique
+        description: '{{ doc("behavior_structured_event_pk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("dvce_created_tstamp") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: tracker_version
+        description: '{{ doc("tracker_version") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: fct_behavior_structured_event_experiment
     description: Derived fact table for structured events related to experiments.
@@ -5123,12 +5359,57 @@ models:
           - unique
 
   - name: fct_behavior_unstructured_event
-    description: Atomic fact table for unstructured events.
+    description: '{{ doc("fct_behavior_unstructured_event") }}'
     columns:
       - name: fct_behavior_unstructured_sk
         tests:
           - not_null
           - unique
+        description: '{{ doc("fct_behavior_unstructured_sk") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: event_id
+        description: '{{ doc("event_id_behavior_model") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}' 
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: link_click_target_url
+        description: '{{ doc("link_click_target_url") }}'
+      - name: submit_form_id
+        description: '{{ doc("submit_form_id") }}'
+      - name: change_form_id
+        description: '{{ doc("change_form_id") }}'
+      - name: change_form_type
+        description: '{{ doc("change_form_type") }}'
+      - name: change_form_element_id
+        description: '{{ doc("change_form_element_id") }}'
+      - name: focus_form_element_id
+        description: '{{ doc("focus_form_element_id") }}'
+      - name: focus_form_node_name
+        description: '{{ doc("focus_form_node_name") }}'
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
 
   - name: fct_ping_instance_free_user_metrics
     description: '{{ doc("fct_ping_instance_free_user_metrics") }}'
