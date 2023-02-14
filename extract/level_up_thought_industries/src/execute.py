@@ -1,6 +1,7 @@
 """
 Run each class (which requests from its respective endpoint) from the command line
 """
+import os
 import logging
 from typing import Type
 
@@ -14,10 +15,13 @@ def cls_factory(class_name_to_run: str) -> Type:
     return cls_obj()
 
 
-def main(class_name_to_run: str, epoch_start: int, epoch_end: int):
+def main(class_name_to_run: str):
     """ dynamically instantiates class and call its fetch_and_upload_data() """
+    # fail if env variables are missing
+    epoch_start_ms = os.environ['epoch_start_ms']
+    epoch_end_ms = os.environ['epoch_end_ms']
     class_to_run = cls_factory(class_name_to_run)
-    class_to_run.fetch_and_upload_data(epoch_start, epoch_end)
+    class_to_run.fetch_and_upload_data(epoch_start_ms, epoch_end_ms)
 
 
 if __name__ == '__main__':

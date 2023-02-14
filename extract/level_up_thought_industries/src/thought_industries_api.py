@@ -27,7 +27,7 @@ class ThoughtIndustries(ABC):
     """ Base abstract class that contains the main endpoint logic """
     BASE_URL = 'https://levelup.gitlab.com/'
     HEADERS = {
-        'Authorization': f'Bearer {config_dict["THOUGHT_INDUSTRIES_API_KEY"]}'
+        'Authorization': f'Bearer {config_dict["LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY"]}'
     }
 
     @abstractmethod
@@ -44,7 +44,7 @@ class ThoughtIndustries(ABC):
         self.endpoint_url = self.get_endpoint_url()
 
     def fetch_from_endpoint(
-        self, original_epoch_start: int, original_epoch_end: int
+        self, original_epoch_start_ms: int, original_epoch_end_ms: int
     ) -> Dict[Any, Any]:
         """
         Based on the start & end epoch dates, continue calling the API
@@ -62,13 +62,13 @@ class ThoughtIndustries(ABC):
         """
         final_events = []
         events = ['_']  # some placeholder val
-        current_epoch_end = original_epoch_end  # init current epoch end
+        current_epoch_end_ms = original_epoch_end_ms  # init current epoch end
 
         # while the response returns events records
         while len(events) > 0:
             params = {
-                'startDate': original_epoch_start,
-                'endDate': current_epoch_end
+                'startDate': original_epoch_start_ms,
+                'endDate': current_epoch_end_ms
             }
             full_url = f'{self.BASE_URL}{self.endpoint_url}'
             print(f'\nMaking request to {full_url} with params:\n{params}')
@@ -84,7 +84,7 @@ class ThoughtIndustries(ABC):
 
                 # get the earliest event from latest response
                 # it should be the last one, since api returns from latest to earliest
-                current_epoch_end = iso8601_to_epoch_ts_ms(
+                current_epoch_end_ms = iso8601_to_epoch_ts_ms(
                     events[-1]['timestamp']
                 )
             else:
@@ -103,15 +103,15 @@ class ThoughtIndustries(ABC):
             events, schema_name, stage_name, table_name, json_dump_filename
         )
 
-    def fetch_and_upload_data(self, epoch_start: int,
-                              epoch_end: int) -> Dict[Any, Any]:
+    def fetch_and_upload_data(self, epoch_start_ms: int,
+                              epoch_end_ms: int) -> Dict[Any, Any]:
         """ main function, fetch data from API, and upload to snowflake """
-        if is_invalid_ms_timestamp(epoch_start, epoch_end):
+        if is_invalid_ms_timestamp(epoch_start_ms, epoch_end_ms):
             raise ValueError(
                 'Invalid epoch timestamp(s). Make sure epoch timestamp is in MILLISECONDS. '
                 'Aborting now...'
             )
-        events = self.fetch_from_endpoint(epoch_start, epoch_end)
+        events = self.fetch_from_endpoint(epoch_start_ms, epoch_end_ms)
         self.upload_events_to_snowflake(events)
         return events
 
@@ -161,8 +161,8 @@ class CourseViews(ThoughtIndustries):
 
 
 if __name__ == '__main__':
-    EPOCH_START = 1675904400000
-    EPOCH_END = 1676246400000
+    EPOCH_START_MS = 1675904400000
+    EPOCH_END_MS = 1676246400000
     cls_to_run = CourseCompletions()
-    result_events = cls_to_run.fetch_and_upload_data(EPOCH_START, EPOCH_END)
+    result_events = cls_to_run.fetch_and_upload_data(EPOCH_START_MS, EPOCH_END_MS)
     print(f'\nresult_events: {result_events[:10]}')
