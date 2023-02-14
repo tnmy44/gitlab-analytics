@@ -45,7 +45,7 @@ fact_with_dims AS (
     --Date information
     event_calendar_month,
     dim_date.quarter_name                  AS event_calendar_quarter,
-    dim_date.year_actual                   AS event_calendar_year
+    dim_date.year_actual                   AS event_calendar_year,
 
     --Event information
     event_name,
