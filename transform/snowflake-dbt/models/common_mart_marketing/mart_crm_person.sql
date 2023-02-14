@@ -182,7 +182,8 @@
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
         ELSE FALSE
-      END                                                        AS is_lead_source_trial
+      END                                                        AS is_lead_source_trial,
+      dim_crm_person.person_first_country
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
       ON fct_crm_person.dim_crm_person_id = dim_crm_person.dim_crm_person_id
@@ -268,5 +269,5 @@
     created_by="@iweeks",
     updated_by="@degan",
     created_date="2020-12-07",
-    updated_date="2022-12-12",
+    updated_date="2023-02-13",
   ) }}  
