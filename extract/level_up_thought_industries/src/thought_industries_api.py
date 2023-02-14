@@ -13,15 +13,18 @@ The parent class contains the bulk of the logic as the endpoints are very simili
 import os
 
 from abc import ABC, abstractmethod
-from logging import info, basicConfig, getLogger, error
 from typing import Any, Dict
 
-from level_up_helpers import make_request, iso8601_to_epoch_ts_ms, upload_payload_to_snowflake, is_invalid_ms_timestamp
+from thought_industries_api_helpers import (
+    make_request, iso8601_to_epoch_ts_ms, upload_payload_to_snowflake,
+    is_invalid_ms_timestamp
+)
 
 config_dict = os.environ.copy()
 
 
 class ThoughtIndustries(ABC):
+    """ Base abstract class that contains the main endpoint logic """
     BASE_URL = 'https://levelup.gitlab.com/'
     HEADERS = {
         'Authorization': f'Bearer {config_dict["THOUGHT_INDUSTRIES_API_KEY"]}'
@@ -30,12 +33,10 @@ class ThoughtIndustries(ABC):
     @abstractmethod
     def get_endpoint_url(self):
         """ Each child class must implement """
-        pass
 
     @abstractmethod
     def get_name(self):
         """ Each child class must implement """
-        pass
 
     def __init__(self):
         """ Instantiate instance vars """
@@ -49,7 +50,9 @@ class ThoughtIndustries(ABC):
         Based on the start & end epoch dates, continue calling the API
         until no more data is returned.
 
-        Note that the API returns data from latest -> earliest, and only returns 100 records per request.
+        Note that:
+        - the API returns data from latest -> earliest
+        - only returns 100 records per request.
 
         The sliding window of start/end times looks like this:
         Start ————————— end  # first request
@@ -100,11 +103,13 @@ class ThoughtIndustries(ABC):
             events, schema_name, stage_name, table_name, json_dump_filename
         )
 
-    def fetch_and_upload_data(self, epoch_start: int, epoch_end: int) -> Dict[Any, Any]:
+    def fetch_and_upload_data(self, epoch_start: int,
+                              epoch_end: int) -> Dict[Any, Any]:
         """ main function, fetch data from API, and upload to snowflake """
         if is_invalid_ms_timestamp(epoch_start, epoch_end):
             raise ValueError(
-                'Invalid epoch timestamp(s) passed in. Make sure epoch timestamp is in MILLISECONDS. Aborting now...'
+                'Invalid epoch timestamp(s). Make sure epoch timestamp is in MILLISECONDS. '
+                'Aborting now...'
             )
         events = self.fetch_from_endpoint(epoch_start, epoch_end)
         self.upload_events_to_snowflake(events)
@@ -112,6 +117,7 @@ class ThoughtIndustries(ABC):
 
 
 class CourseCompletions(ThoughtIndustries):
+    """ Class for CourseCompletions endpoint """
     def get_name(self) -> str:
         """ implement abstract class """
         return 'course_completions'
@@ -122,7 +128,8 @@ class CourseCompletions(ThoughtIndustries):
 
 
 class Logins(ThoughtIndustries):
-    def get_name_url(self) -> str:
+    """ Class for Logins endpoint """
+    def get_name(self) -> str:
         """ implement abstract class """
         return "logins"
 
@@ -132,7 +139,8 @@ class Logins(ThoughtIndustries):
 
 
 class Visits(ThoughtIndustries):
-    def get_name_url(self) -> str:
+    """ Class for Visits endpoint """
+    def get_name(self) -> str:
         """ implement abstract class """
         return "visits"
 
@@ -142,7 +150,8 @@ class Visits(ThoughtIndustries):
 
 
 class CourseViews(ThoughtIndustries):
-    def get_name_url(self) -> str:
+    """ Class for CourseViews endpoint """
+    def get_name(self) -> str:
         """ implement abstract class """
         return "course_views"
 
@@ -152,8 +161,8 @@ class CourseViews(ThoughtIndustries):
 
 
 if __name__ == '__main__':
-    epoch_start = 1675904400000
-    epoch_end = 1676246400000
-    level_up_obj = CourseCompletions()
-    events = level_up_obj.fetch_and_upload_data(epoch_start, epoch_end)
-    print(f'\nevents: {events[:10]}')
+    EPOCH_START = 1675904400000
+    EPOCH_END = 1676246400000
+    cls_to_run = CourseCompletions()
+    result_events = cls_to_run.fetch_and_upload_data(EPOCH_START, EPOCH_END)
+    print(f'\nresult_events: {result_events[:10]}')
