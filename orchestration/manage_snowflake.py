@@ -242,7 +242,8 @@ class SnowflakeManager:
                 logging.info("Command Result: {}".format(result))
 
             else:
-                logging.info("No matching object permissions found. Have you built the database obejcts yet?")
+                raise
+                logging.info(f"No matching object permissions found. Have you built the database objects for {database} yet?")
         
             for (grant,) in grants:
                 logging.info("Running: {}".format(grant))
