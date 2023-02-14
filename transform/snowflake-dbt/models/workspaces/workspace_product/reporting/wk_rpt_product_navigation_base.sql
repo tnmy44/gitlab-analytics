@@ -35,7 +35,7 @@ WITH filtered_snowplow_events AS (
     session_id
   FROM {{ ref('snowplow_structured_events_all') }}
   WHERE 
-  derived_tstamp >= '2020-01-01'
+  derived_tstamp >= '2021-10-01'
   AND
   (
       (
@@ -71,12 +71,14 @@ WITH filtered_snowplow_events AS (
           'projects_dropdown'
         )
         AND event_action = 'click_dropdown'
-      ) OR
+      ) 
+      OR
       (
-      (event_action = 'click_menu' OR event_action = 'click_menu_item')
-      AND 
-      (
-      event_category LIKE 'dashboard%' OR event_category LIKE 'root%' OR event_category LIKE 'projects%')
+        event_action IN ('click_menu', 'click_menu_item')
+        AND 
+        (
+        event_category LIKE 'dashboard%' OR event_category LIKE 'root%' OR event_category LIKE 'projects%')
+        )
       ) 
       OR
       (
