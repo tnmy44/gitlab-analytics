@@ -458,17 +458,6 @@ Sales funnel targets set by the Finance team to measure performance of important
 
 {% enddocs %}
 
-{% docs fct_usage_ping_subscription_mapped_smau %}
-
-This model contains **Self-Managed** instances data from every month _that a Usage Ping payload was received_. For a given subscription-uuid-hostname combination, values of each SMAU metric from the last Usage Ping value in that month are reported.
-
-The grain of this table is `hostname` per `uuid` per `dim_subscription_id` per `snapshot_month`. Since there are Self-Managed subscriptions that do not send Usage Ping payloads, it is possible for `uuid` and `hostname` to be null.
-
-This data model is used for the Customer Health Dashboards.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
 
 {% docs fct_usage_ci_minutes %}
 
@@ -477,15 +466,6 @@ This table replicates the Gitlab UI logic that generates the CI minutes Usage Qu
 Namespaces from the `namespace_snapshots_monthly_all` CTE that are not present in the `namespace_statistics_monthly_all` CTE are joined into the logic with NULL `shared_runners_seconds` since these namespaces have not used CI Minutes on GitLab-provided shared runners. Since these CI Minutes are neither trackable nor monetizable, they can be functionally thought of as 0 `shared_runners_minutes_used_overall`. The SQL code has been implemented with this logic as justification.
 
 It also adds two additional columns which aren't calculated in the UI, which are `limit_based_plan` and `status_based_plan` which are independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
-{% docs fct_product_usage_free_user_metrics_monthly %}
-This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used to create a mart table (`mart_product_usage_free_user_metrics_monthly`) for Customer Product Insights.
-
-The grain of this table is namespace || uuid-hostname per month.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
@@ -640,21 +620,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 **Other Comments:**
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
-
-{% enddocs %}
-
-{% docs fct_usage_ping_payload %}
-Factual table with metadata on usage ping payloads received.
-
-The grain of the table is a dim_usage_ping_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-Main foreign key that can help to build easily joins:
-
-- dim_license_id
-- dim_subscription_id
-- dim_date_id
 
 {% enddocs %}
 

@@ -20,7 +20,7 @@ from gitlabdata.orchestration_utils import (
 
 config_dict = env.copy()
 
-api_key = env.get("MAILGUN_API_KEY")
+api_key = env.get("MAILGUN_API_KEY", "")
 domains = ["mg.gitlab.com"]
 
 
@@ -93,14 +93,14 @@ def extract_logs(
 
                 items = data.get("items")
 
-                page_token = data.get("paging").get("next")
-
                 if items is None or len(items) == 0:
                     info("Empty response received, retrying")
                     time.sleep(60)
                     response = requests.get(page_token, auth=("api", api_key))
+
                 try:
                     data = response.json()
+                    page_token = data.get("paging").get("next")
                     items = data.get("items")
                     if items is None or len(items) == 0:
                         info("Another empty response, ending")
