@@ -56,9 +56,9 @@ fct_event_namespace_monthly AS (
       fact_with_month.dim_billing_account_id,
       
       --Degenerate Dimensions (No stand-alone, promoted dimension table)
-      plan_by_month.plan_id_at_event_date          AS plan_id_at_event_month,
-      plan_by_month.plan_name_at_event_date        AS plan_name_at_event_month,
-      plan_by_month.plan_was_paid_at_event_date    AS plan_was_paid_at_event_month,
+      plan_by_month.plan_id_at_event_date         AS plan_id_at_event_month,
+      plan_by_month.plan_name_at_event_date       AS plan_name_at_event_month,
+      plan_by_month.plan_was_paid_at_event_date   AS plan_was_paid_at_event_month,
       fact_with_month.event_calendar_month,
       fact_with_month.event_name,
       fact_with_month.section_name,
@@ -70,9 +70,9 @@ fct_event_namespace_monthly AS (
       fact_with_month.data_source,
       
       --Facts
-      COUNT(*)                                     AS event_count,
-      COUNT(DISTINCT(fact_with_month.dim_user_id)) AS user_count,
-      COUNT(DISTINCT(fact_with_month.event_date))  AS unique_date_count
+      COUNT(*)                                    AS event_count,
+      COUNT(DISTINCT fact_with_month.dim_user_id) AS user_count,
+      COUNT(DISTINCT fact_with_month.event_date)  AS event_date_count
 
     FROM fact_with_month
     LEFT JOIN plan_by_month
