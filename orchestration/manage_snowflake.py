@@ -217,15 +217,40 @@ class SnowflakeManager:
             ;
         """
 
+        grant_usage_on_db = f"""
+            GRANT USAGE ON DATABASE "{clone}" TO ROLE {role};
+        """
+
+        grant_usage_on_schema = f"""
+            GRANT USAGE ON ALL SCHEMAS IN DATABASE "{clone}" TO ROLE {role};
+        """
+
         try:
             connection = self.engine.connect()
             logging.info("Executing Query: {}".format(get_grants_query))
             grants = connection.execute(get_grants_query).fetchall()
             logging.info("Found {} grants".format(len(grants)))
+
+            if len(grants) > 0:
+
+                logging.info(f"Granting database usage via {grant_usage_on_db}")
+                [result] = connection.execute(grant_usage_on_db).fetchone()
+                logging.info("Command Result: {}".format(result))
+
+                logging.info(f"Granting schema usage via {grant_usage_on_schema}")
+                [result] = connection.execute(grant_usage_on_schema).fetchone()
+                logging.info("Command Result: {}".format(result))
+
+            else:
+                logging.info(
+                    f"🚨🚨 No matching object permissions found. Have you built the database objects for {database} yet?🚨🚨"
+                )
+
             for (grant,) in grants:
                 logging.info("Running: {}".format(grant))
                 [result] = connection.execute(grant).fetchone()
                 logging.info("Command Result: {}".format(result))
+
         finally:
             connection.close()
             self.engine.dispose()
