@@ -76,4 +76,4 @@ if __name__ == "__main__":
         zuora_report_list_df, zuora_report_list_to_download, report_date
     )
 
-    zuora_revpro.split_upload_report_gcs(report_date)
+    zuora_revpro.split_upload_report_gcs(report_date, zuora_report_list_to_download)

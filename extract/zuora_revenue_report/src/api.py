@@ -1,4 +1,4 @@
-# type: ignore
+""" Main class for zuora revenue api report"""
 import logging
 import sys
 import requests
@@ -12,6 +12,8 @@ import os
 
 
 class ZuoraRevProAPI:
+    """Zuora class to include all functionality"""
+
     def __init__(self, config_dict: Dict[str, str]):
         self.headers = config_dict["headers"]
         self.authenticate_url_zuora_revpro = config_dict[
@@ -34,13 +36,13 @@ class ZuoraRevProAPI:
             config_dict["zuora_report_home"] + "report_output/"
         )
 
-    def get_auth_token(self) -> str:
+    def get_auth_token(self) -> Any:
         """
         This function receives url and header information and generate authentication token in response.
         If we don't receive the response status code  200 then exit the program.
         """
         response = requests.post(
-            self.authenticate_url_zuora_revpro, headers=self.headers
+            self.authenticate_url_zuora_revpro, headers=self.headers, timeout=20
         )
         if response.status_code == 200:
             self.logger.info("Authentication token generated successfully")
@@ -107,7 +109,9 @@ class ZuoraRevProAPI:
         )
         return report_list_key
 
-    def get_report_list_dict(self, zuora_report_list_to_download, report):
+    def get_report_list_dict(
+        self, zuora_report_list_to_download: dict, report: str
+    ) -> Dict:
 
         """Read manifest file for all required values"""
         report_list_dict = {}
@@ -126,10 +130,13 @@ class ZuoraRevProAPI:
         report_list_dict["output_file_name"] = zuora_report_list_to_download[
             "report_list"
         ][report]["output_file_name"]
+        report_list_dict["static_rows_column_header"] = zuora_report_list_to_download[
+            "report_list"
+        ][report]["static_rows_column_header"]
 
         return report_list_dict
 
-    def get_csv_filename(self, file_name):
+    def get_csv_filename(self, file_name: str) -> str:
 
         """If the filename has exstention other than csv rename it csv"""
         split_file_name = file_name.split(".", 1)
@@ -137,19 +144,23 @@ class ZuoraRevProAPI:
             file_name = split_file_name[0] + ".csv"
         return file_name
 
-    def get_filename_without_csv(self, file_name):
+    def get_filename_without_csv(self, file_name: str) -> str:
         """Remove the suffix of the file."""
         split_file_name = file_name.split(".", 1)
         return split_file_name[0]
 
-    def get_file_size_from_url(self, download_report_url, csv_file_name) -> None:
+    def get_file_size_from_url(
+        self, download_report_url: str, csv_file_name: str
+    ) -> None:
         """Get the file size not a must have condition but for logging purpose."""
         report_file = requests.get(download_report_url, headers=self.request_headers)
         self.logger.info(
             f"size of file {csv_file_name} is :{report_file.headers.get('content-length')}"
         )
 
-    def zuora_download_file(self, file_name, output_file_name, report_date_formatted):
+    def zuora_download_file(
+        self, file_name: str, output_file_name: str, report_date_formatted: str
+    ) -> None:
 
         """This function get the file size and download the file."""
         csv_file_name = self.get_csv_filename(file_name)
@@ -157,7 +168,9 @@ class ZuoraRevProAPI:
         download_report_url = f"{self.zuora_fetch_data_url}{csv_file_name}"
         self.get_file_size_from_url(download_report_url, csv_file_name)
 
-        report_file = requests.get(download_report_url, headers=self.request_headers)
+        report_file = requests.get(
+            download_report_url, headers={"token": self.get_auth_token()}
+        )
         full_file_name_path = (
             self.zuora_report_output_directory
             + "/"
@@ -213,17 +226,18 @@ class ZuoraRevProAPI:
                 output_file = report_list_dict.get("output_file_name")
                 self.zuora_download_file(file, output_file, report_date_formatted)
 
-    def get_all_downloaded_file_list(self, file_directory):
-
+    def get_all_downloaded_file_list(self, file_directory: str) -> list:
+        """Get list of all the file ending with .csv from the directory"""
         res = []
         # Iterate directory
         for file in os.listdir(file_directory):
             # check only text files
-            if file.endswith(".csv") and file.startswith("revenue"):
+            if file.endswith(".csv"):
                 res.append(file)
         return res
 
-    def get_file_list_to_upload(self, file_directory):
+    def get_file_list_to_upload(self, file_directory: str) -> list:
+        """Get list of all the file post split up i.e. all header and body of the report to get uploaded to GCS bucket"""
         res = []
         # Iterate directory
         for file in os.listdir(file_directory):
@@ -232,18 +246,22 @@ class ZuoraRevProAPI:
                 res.append(file)
         return res
 
-    def split_file(self, file_directory, file):
+    def split_file(
+        self, file_directory: str, file: str, report_static_column_list: str
+    ):
         """Split file into 2 parts i.e. one with header information and other the content of the file. Also remove the file after split up"""
         file_name = file
+        header_rows = report_static_column_list
+        body_rows = report_static_column_list + 1
         with open(f"{file_directory}{file_name}", "r") as filedata:
             linesList = filedata.readlines()
 
         with open(f"{file_directory}header_{file_name}", "w") as file_header:
-            for line in linesList[:10]:
+            for line in linesList[:header_rows]:
                 file_header.write(line)
 
         with open(f"{file_directory}body_{file_name}", "w") as file_body:
-            for body_line in linesList[11:]:
+            for body_line in linesList[body_rows:]:
                 file_body.write(body_line)
 
         os.remove(f"{file_directory}{file}")
@@ -266,14 +284,28 @@ class ZuoraRevProAPI:
 
         os.remove(f"{file_directory}{file_name}")
 
-    def split_upload_report_gcs(self, report_date):
+    def split_upload_report_gcs(
+        self, report_date: str, zuora_report_list_to_download: Dict
+    ) -> None:
+        """This function is responsible for split the downloaded output file based on the static_rows_column_header in yaml file and upload it to GCS bucket."""
+
         file_directory = (
             self.zuora_report_output_directory + report_date.replace("-", "_") + "/"
         )
+        requested_report_list = self.get_report_list_key(zuora_report_list_to_download)
         # list to store files
         list_of_files = self.get_all_downloaded_file_list(file_directory)
-        for file in list_of_files:
-            self.split_file(file_directory, file)
+        for report in requested_report_list:
+            report_list_dict = self.get_report_list_dict(
+                zuora_report_list_to_download, report
+            )
+            report_file_name = report_list_dict.get("output_file_name")
+            report_static_column_list = report_list_dict.get(
+                "static_rows_column_header"
+            )
+            for file in list_of_files:
+                if file.startswith(report_file_name):
+                    self.split_file(file_directory, file, report_static_column_list)
 
         list_of_file_to_upload = self.get_file_list_to_upload(file_directory)
         for file_name in list_of_file_to_upload:

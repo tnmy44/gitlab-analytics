@@ -1,3 +1,4 @@
+""" Airflow DAG for loading Zuora Revenue Report API"""
 import os
 from datetime import datetime, timedelta
 from yaml import safe_load, YAMLError
@@ -51,6 +52,7 @@ task_name = "zuora-revenue-report"
 with open(
     f"{airflow_home}/analytics/extract/zuora_revenue_report/src/zuora_report_api_list.yml",
     "r",
+    encoding="utf-8",
 ) as file:
     try:
         stream = safe_load(file)
@@ -72,9 +74,9 @@ dag = DAG(
 start = DummyOperator(task_id="Start", dag=dag)
 
 for report in report_list:
-    file_name_to_load=stream["report_list"][report]["output_file_name"].lower()
-    body_load_query_string=stream["report_list"][report]["load_column_name"]
-    report_type=stream["report_list"][report]["report_type"]
+    file_name_to_load = stream["report_list"][report]["output_file_name"].lower()
+    body_load_query_string = stream["report_list"][report]["load_column_name"]
+    report_type = stream["report_list"][report]["report_type"]
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_and_setup_extraction_cmd} &&

@@ -77,6 +77,7 @@ report_list:
                          ,XX69 AS _Grand_Total_"
       status: "A"
       report_type: "dynamic"
+      static_rows_column_header: 10
   rc_rollforward:
       category: "Revenue"
       rep_name: "RC Rollforward Report"
@@ -86,21 +87,35 @@ report_list:
       status: "A"
       load_column_name: ""
       report_type: "static"
-#  revenue_waterfall:
-#      category: "Revenue"
-#      rep_name: "Waterfall Report"
-#      layout_name: "GitLab - By RCID (Transaction Currency)"
-#      rep_desc: "Waterfall of prior period, current and future scheduled and forecasted revenue (and cost). Can be used for timing of revenue for unsatisfied/partially satisfied performance obligations"
-#      status: "A"
-#  unreleased_pob:
-#      category: "Revenue"
-#      rep_name: "Billing Waterfall"
-#      layout_name: "Gitlab : RCID by Transaction"
-#      rep_desc: "Revenue waterfall for billed contractual revenue (rollout at line level of Contract Liability balances)"
-#      status: "A"
-#  unbill_rollforward:
-#      category: "Revenue"
-#      rep_name: "Unbill RollForward Report"
-#      layout_name: "Gitlab Unbill by RCID"
-#      rep_desc: "Subset of RC Rollforward report showing beginning and ending balances and activity for contractual revenue not yet billed"
-#      status: "A" 
+      static_rows_column_header: 10
+  revenue_waterfall:
+      category: "Revenue"
+      rep_name: "Waterfall Report"
+      layout_name: "GitLab - By RCID (Transaction Currency)"
+      rep_desc: "Waterfall of prior period, current and future scheduled and forecasted revenue (and cost). Can be used for timing of revenue for unsatisfied/partially satisfied performance obligations"
+      output_file_name: "revenue_waterfall_report"
+      status: "A"
+      load_column_name: ""
+      report_type: "dynamic"
+      static_rows_column_header:  15
+  unreleased_pob:
+      category: "Transactions"
+      rep_name: "Unreleased POB(s) Report"
+      layout_name: "Gitlab Unreleased POB v1"
+      rep_desc: "Listing of all POB(s) where revenue has not been fully released"
+      output_file_name: "transactions_unreleased_pod"
+      status: "A"
+      load_column_name: ""
+      report_type: "static"
+      static_rows_column_header: 8
+  unbill_rollforward:
+      category: "Revenue"
+      rep_name: "Unbill RollForward Report"
+      layout_name: "Gitlab Unbill by RCID"
+      rep_desc: "Subset of RC Rollforward report showing beginning and ending balances and activity for contractual revenue not yet billed"
+      output_file_name: "revenue_unbill_rollforward"
+      status: "A" 
+      load_column_name: ""
+      report_type: "static"
+      static_rows_column_header: 10
+      
