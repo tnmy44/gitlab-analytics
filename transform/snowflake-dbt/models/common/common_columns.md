@@ -40,9 +40,21 @@ The unique identifier of the ultimate parent namespace in which the event was ge
 
 {% enddocs %}
 
-{% docs dim_project_id %}
+{% docs dim_project_id_event_model %}
 
 The unique identifier of the project in which the event was generated, easily joined to `dim_project`. This will be NULL if the event is not tied to a project (ex. epic_creation, etc)
+
+{% enddocs %}
+
+{% docs dim_ultimate_parent_namespace_id %}
+
+The unique identifier (and natural key) of the namespace's ultimate parent, easily joined to `dim_namespace`. The recommended JOIN is `dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id`, which will be a one-to-one relationship. JOINing on `dim_ultimate_parent_namespace_id = dim_namespace.ultimate_parent_namespace_id` will return `dim_namespace` records for both the ultimate parent _and_ all sub-groups underneath it.
+
+{% enddocs %}
+
+{% docs dim_project_id %}
+
+The unique identifier (and natural key) of the project, easily joined to `dim_project`
 
 {% enddocs %}
 

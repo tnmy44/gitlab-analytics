@@ -1721,7 +1721,7 @@ models:
       - name: dim_ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
       - name: dim_project_id
-        description: '{{ doc("dim_project_id") }}'
+        description: '{{ doc("dim_project_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
       - name: dim_active_product_tier_id
@@ -1804,7 +1804,7 @@ models:
       - name: dim_ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
       - name: dim_project_id
-        description: '{{ doc("dim_project_id") }}'
+        description: '{{ doc("dim_project_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
       - name: event_created_at
