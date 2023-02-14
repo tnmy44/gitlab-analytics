@@ -1,3 +1,4 @@
+""" Main code for extraction"""
 import argparse
 import logging
 import os

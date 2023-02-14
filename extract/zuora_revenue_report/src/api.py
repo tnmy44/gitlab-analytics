@@ -1,14 +1,14 @@
 """ Main class for zuora revenue api report"""
 import logging
 import sys
-import requests
 import json
-import yaml
 import subprocess
-import pandas as pd
 from typing import Dict, Any
 from datetime import datetime, timedelta
 import os
+import requests
+import yaml
+import pandas as pd
 
 
 class ZuoraRevProAPI:
@@ -65,8 +65,6 @@ class ZuoraRevProAPI:
         if extract_date is None:
             yesterday = datetime.now() - timedelta(1)
             extract_date = datetime.strftime(yesterday, "%d-%b-%Y")
-        else:
-            extract_date = extract_date
 
         return extract_date
 
@@ -79,7 +77,9 @@ class ZuoraRevProAPI:
         It finally return the data frame of report list"""
 
         get_report_list_url = f"{self.zuora_fetch_report_list_url}{extract_date}"
-        report_list = requests.get(get_report_list_url, headers=self.request_headers)
+        report_list = requests.get(
+            get_report_list_url, headers=self.request_headers, timeout=20
+        )
 
         if report_list.status_code == 200:
             zuora_report_list = json.loads(report_list.text)
@@ -96,7 +96,7 @@ class ZuoraRevProAPI:
     ) -> Dict:
         """Open the yml file to get the list of reports which needs to be downloaded."""
 
-        with open(zuora_report_api_list) as file:
+        with open(zuora_report_api_list, encoding="utf-8") as file:
             report_list_to_download = yaml.load(file, Loader=yaml.FullLoader)
         return report_list_to_download
 
@@ -153,7 +153,9 @@ class ZuoraRevProAPI:
         self, download_report_url: str, csv_file_name: str
     ) -> None:
         """Get the file size not a must have condition but for logging purpose."""
-        report_file = requests.get(download_report_url, headers=self.request_headers)
+        report_file = requests.get(
+            download_report_url, headers=self.request_headers, timeout=20
+        )
         self.logger.info(
             f"size of file {csv_file_name} is :{report_file.headers.get('content-length')}"
         )
@@ -169,7 +171,7 @@ class ZuoraRevProAPI:
         self.get_file_size_from_url(download_report_url, csv_file_name)
 
         report_file = requests.get(
-            download_report_url, headers={"token": self.get_auth_token()}
+            download_report_url, headers={"token": self.get_auth_token()}, timeout=20
         )
         full_file_name_path = (
             self.zuora_report_output_directory
@@ -183,7 +185,7 @@ class ZuoraRevProAPI:
         )
         os.makedirs(os.path.dirname(full_file_name_path), exist_ok=True)
         if report_file.status_code == 200:
-            with open(f"{full_file_name_path}", "w+") as file:
+            with open(f"{full_file_name_path}", "w+", encoding="utf-8") as file:
                 file.write(report_file.text)
         else:
             self.logger.error(
@@ -253,14 +255,18 @@ class ZuoraRevProAPI:
         file_name = file
         header_rows = report_static_column_list
         body_rows = report_static_column_list + 1
-        with open(f"{file_directory}{file_name}", "r") as filedata:
+        with open(f"{file_directory}{file_name}", "r", encoding="utf-8") as filedata:
             linesList = filedata.readlines()
 
-        with open(f"{file_directory}header_{file_name}", "w") as file_header:
+        with open(
+            f"{file_directory}header_{file_name}", "w", encoding="utf-8"
+        ) as file_header:
             for line in linesList[:header_rows]:
                 file_header.write(line)
 
-        with open(f"{file_directory}body_{file_name}", "w") as file_body:
+        with open(
+            f"{file_directory}body_{file_name}", "w", encoding="utf-8"
+        ) as file_body:
             for body_line in linesList[body_rows:]:
                 file_body.write(body_line)
 
@@ -310,5 +316,3 @@ class ZuoraRevProAPI:
         list_of_file_to_upload = self.get_file_list_to_upload(file_directory)
         for file_name in list_of_file_to_upload:
             self.upload_delete(file_directory, file_name, report_date.replace("-", "_"))
-
-        return None
