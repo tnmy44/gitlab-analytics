@@ -29,8 +29,8 @@
     fct_crm_task.task_date,
     fct_crm_task.task_completed_date_id,
     fct_crm_task.task_completed_date,
-    dim_crm_task.full_comments_hash,
-    dim_crm_task.task_subject_hash,
+    dim_crm_task.full_comments,
+    dim_crm_task.task_subject,
     dim_crm_task.task_status,
     dim_crm_task.task_subtype,
     dim_crm_task.task_type,
@@ -127,5 +127,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-12-05",
-    updated_date="2023-02-13"
+    updated_date="2022-12-05"
 ) }}

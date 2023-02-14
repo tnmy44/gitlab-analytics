@@ -366,21 +366,3 @@ models:
         description: Date time indicating when the marketing contact user_limit_namespace_id entered the user limit notification state. More information about this field can be seen [HERE](https://gitlab.com/gitlab-org/gitlab/-/issues/375748)
       - name: user_limit_enforcement_at
         description: Date time indicating when the marketing contact user_limit_namespace_id entered the user limit enforcement state. More information about this field can be seen [HERE](https://gitlab.com/gitlab-org/gitlab/-/issues/375748)
-
-  - name: dim_crm_task_pii
-    description: '{{ doc("dim_crm_task") }}'
-    columns:
-      - name: dim_crm_task_sk
-        description: A primary key for the SFDC task 
-        tests:
-          - not_null
-          - unique
-
-  - name: mart_crm_task_pii
-    description: '{{ doc("mart_crm_task") }}'
-    columns:
-      - name: dim_crm_task_pk
-        description: A primary key for the SFDC task 
-        tests:
-          - not_null
-          - unique

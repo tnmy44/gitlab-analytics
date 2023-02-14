@@ -16,8 +16,8 @@ WITH prep_crm_task AS (
     prep_crm_task.task_id,
 
     -- Task infomation
-    prep_crm_task.full_comments_hash,
-    prep_crm_task.task_subject_hash,
+    prep_crm_task.full_comments,
+    prep_crm_task.task_subject,
     prep_crm_task.task_status,
     prep_crm_task.task_subtype,
     prep_crm_task.task_type,
@@ -94,5 +94,5 @@ WITH prep_crm_task AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-12-05",
-    updated_date="2023-02-13"
+    updated_date="2022-12-05"
 ) }}

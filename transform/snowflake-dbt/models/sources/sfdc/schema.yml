@@ -426,7 +426,7 @@ models:
           - unique
       - name: full_comments
         meta:
-          sensitive: true
+           masking_policy: analyst_core
       - name: task_subject
         meta:
-          sensitive: true
+           masking_policy: analyst_core

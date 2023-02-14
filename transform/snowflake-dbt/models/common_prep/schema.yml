@@ -1549,6 +1549,12 @@ models:
         tests:
           - unique
           - not_null
+      - name: full_comments
+        meta:
+           masking_policy: analyst_core
+      - name: task_subject
+        meta:
+           masking_policy: analyst_core
 
   - name: prep_performance_indicators_yaml
     description: '{{ doc("prep_performance_indicators_yaml") }}'

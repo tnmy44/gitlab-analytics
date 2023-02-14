@@ -1,7 +1,6 @@
 WITH source AS (
 
-    SELECT
-    {{ hash_sensitive_columns('sfdc_task_source') }}
+    SELECT *
     FROM {{ ref('sfdc_task_source') }}
 
 ), renamed AS(
@@ -29,8 +28,8 @@ WITH source AS (
 
       -- Task infomation
       source.comments,
-      source.full_comments_hash,
-      source.task_subject_hash,
+      source.full_comments,
+      source.task_subject,
       source.task_date,
       source.task_created_date,
       source.task_created_by_id,
