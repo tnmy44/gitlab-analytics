@@ -40,7 +40,7 @@ The unique identifier of the ultimate parent namespace in which the event was ge
 
 {% enddocs %}
 
-{% docs  %}
+{% docs dim_project_id %}
 
 The unique identifier of the project in which the event was generated, easily joined to `dim_project`. This will be NULL if the event is not tied to a project (ex. epic_creation, etc)
 
