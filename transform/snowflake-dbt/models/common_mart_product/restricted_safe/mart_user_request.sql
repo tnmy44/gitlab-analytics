@@ -181,6 +181,8 @@
 
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
+
+      IFF(LOWER(label_links_joined.label_title) LIKE 'theme::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS theme_label,
       CASE
         WHEN group_label IS NOT NULL THEN 3
         WHEN devops_label IS NOT NULL THEN 2
@@ -200,6 +202,9 @@
 
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
+
+      IFF(LOWER(label_links_joined.label_title) LIKE 'theme::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS theme_label,
+
       CASE
         WHEN group_label IS NOT NULL THEN 3
         WHEN devops_label IS NOT NULL THEN 2
@@ -368,6 +373,7 @@
         WHEN 'feature' THEN 'feature request'
       END                                                                         AS issue_epic_type,
       IFNULL(issue_status.workflow_label, 'Not Started')                          AS issue_status,
+      theme_label.theme_label                                                     AS theme,
       -1                                                                          AS epic_status,
       dim_epic.epic_url                                                           AS parent_epic_path,
       dim_epic.epic_title                                                         AS parent_epic_title,
@@ -391,6 +397,9 @@
       ON devops_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN issue_type_label AS type_label
       ON type_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
+    LEFT JOIN issue_labels AS theme_label
+      ON theme_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      AND theme_label.theme_label IS NOT NULL
 
     UNION
 
@@ -444,6 +453,7 @@
         WHEN 'feature' THEN 'feature request'
       END                                                                         AS issue_epic_type,
       'Not Applicable'                                                            AS issue_status,
+      theme_label.theme_label                                                     AS theme,
       IFNULL(epic_weight.epic_status, 0)                                          AS epic_status,
       parent_epic.epic_url                                                        AS parent_epic_path,
       parent_epic.epic_title                                                      AS parent_epic_title,
@@ -471,6 +481,9 @@
       ON devops_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN epic_type_label AS type_label
       ON type_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
+    LEFT JOIN epic_labels AS theme_label
+      ON theme_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
+      AND theme_label.theme_label IS NOT NULL
 
 ), user_request_with_account_opp_attributes AS (
 
@@ -676,7 +689,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jpeguero",
-    updated_by="@chrissharp",
+    updated_by="@jpeguero",
     created_date="2021-10-22",
-    updated_date="2023-01-24",
+    updated_date="2023-02-15",
   ) }}
