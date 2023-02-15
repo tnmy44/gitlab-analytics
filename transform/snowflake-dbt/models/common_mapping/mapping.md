@@ -82,12 +82,6 @@ Table for mapping GitLab.com CI Runner to a specific project.
 More info about [CI Runners here](https://docs.gitlab.com/ee/ci/runners/)
 {% enddocs %}
 
-{% docs map_usage_ping_active_subscription %}
-
-Mapping table used to link a usage ping (dim_usage_ping_id) to an active zuora subscription at the ping creation date (dim_subscription_id).
-
-This table is needed to identify how many active subscriptions send us on a month M sent us at least 1 usage ping. 
-{% enddocs %}
 
 {% docs map_subscription_opportunity %}
 
@@ -111,6 +105,12 @@ Although in the prep data, namespaces can be associated with multiple `dim_subsc
 
 {% enddocs %}
 
+
+{% docs map_alternative_lead_demographics %}
+
+This tables creates an [alterntive mapping](https://about.gitlab.com/handbook/marketing/strategy-performance/marketing-metrics/#alternative-method-for-account-demographics-fields-on-leads) for GEO and Segment values for leads based on data from data enrichment services.
+
+{% enddocs %}
 
 {% docs map_project_internal %}
 

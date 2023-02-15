@@ -20,7 +20,7 @@ from gitlabdata.orchestration_utils import (
 
 config_dict = env.copy()
 
-api_key = env.get("MAILGUN_API_KEY")
+api_key = env.get("MAILGUN_API_KEY", "")
 domains = ["mg.gitlab.com"]
 
 
