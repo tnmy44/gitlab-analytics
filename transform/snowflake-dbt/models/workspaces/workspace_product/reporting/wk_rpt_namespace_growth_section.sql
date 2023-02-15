@@ -40,7 +40,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     INNER JOIN prep_gitlab_dotcom_plan plan
       ON dim_namespace.gitlab_plan_id = plan.dim_plan_id
     LEFT JOIN customers_db_leads AS pql -- legacy schema
-      ON pql.namespace_id = dim_namespace.ultimate_parent_namespace_id
+      ON pql.namespace_id = dim_namespace.dim_namespace_id
       AND pql.product_interaction = 'Hand Raise PQL' 
     LEFT JOIN dim_user 
       ON dim_user.dim_user_id = dim_namespace.creator_id
