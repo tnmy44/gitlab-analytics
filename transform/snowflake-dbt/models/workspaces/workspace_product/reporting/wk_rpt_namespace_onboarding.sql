@@ -57,7 +57,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       trials.start_date::DATE                                      AS trial_start_date, 
       DATEDIFF('days', namespace_created_date, trial_start_date)   AS days_since_namespace_creation_at_trial
     FROM namespaces
-    INNER JOIN customers_db_trial_histories -- legacy schema
+    INNER JOIN customers_db_trial_histories AS trials -- legacy schema
       ON namespaces.ultimate_parent_namespace_id = trials.gl_namespace_id
 
 ), charges AS ( --First paid subscription for ultimate namespace
