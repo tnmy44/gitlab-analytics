@@ -53,7 +53,8 @@ class ZuoraRevProAPI:
                 f"HTTP {response.status_code} - {response.reason}, Message {response.text}"
             )
 
-    def get_extract_date(self, extract_date: str = None) -> str:
+    @staticmethod
+    def get_extract_date(extract_date: str = None) -> str:
         """
         This function provide the date for which we need to look for report.Reports can be downloaded only for
         48 hours from the time it runs.
@@ -67,7 +68,8 @@ class ZuoraRevProAPI:
 
         return extract_date
 
-    def get_report_list_df(self, report_list: Dict) -> pd.DataFrame:
+    @staticmethod
+    def get_report_list_df(report_list: Dict) -> pd.DataFrame:
         """Return the data frame of list of reports for the particular day"""
         return pd.DataFrame(report_list)
 
@@ -90,8 +92,9 @@ class ZuoraRevProAPI:
 
         return self.get_report_list_df(zuora_report_list.get("Result"))
 
+    @staticmethod
     def get_requested_report(
-        self, zuora_report_api_list: str = "zuora_report_api_list.yml"
+        zuora_report_api_list: str = "zuora_report_api_list.yml",
     ) -> Dict:
         """Open the yml file to get the list of reports which needs to be downloaded."""
 
@@ -108,7 +111,8 @@ class ZuoraRevProAPI:
         )
         return report_list_key
 
-    def get_report_list_dict(self, zuora_report_list_to_download, report: str) -> Dict:
+    @staticmethod
+    def get_report_list_dict(zuora_report_list_to_download, report: str) -> Dict:
 
         """Read manifest file for all required values"""
         report_list_dict = {}
@@ -133,7 +137,8 @@ class ZuoraRevProAPI:
 
         return report_list_dict
 
-    def get_csv_filename(self, file_name: str) -> str:
+    @staticmethod
+    def get_csv_filename(file_name: str) -> str:
 
         """If the filename has exstention other than csv rename it csv"""
         split_file_name = file_name.split(".", 1)
@@ -225,7 +230,8 @@ class ZuoraRevProAPI:
                 output_file = report_list_dict.get("output_file_name")
                 self.zuora_download_file(file, output_file, report_date_formatted)
 
-    def get_all_downloaded_file_list(self, file_directory: str) -> list:
+    @staticmethod
+    def get_all_downloaded_file_list(file_directory: str) -> list:
         """Get list of all the file ending with .csv from the directory"""
         res = []
         # Iterate directory
@@ -235,7 +241,8 @@ class ZuoraRevProAPI:
                 res.append(file)
         return res
 
-    def get_file_list_to_upload(self, file_directory: str) -> list:
+    @staticmethod
+    def get_file_list_to_upload(file_directory: str) -> list:
         """Get list of all the file post split up i.e. all header and body of the report to get uploaded to GCS bucket"""
         res = []
         # Iterate directory
@@ -245,9 +252,8 @@ class ZuoraRevProAPI:
                 res.append(file)
         return res
 
-    def split_file(
-        self, file_directory: str, file: str, report_static_column_list
-    ) -> None:
+    @staticmethod
+    def split_file(file_directory: str, file: str, report_static_column_list) -> None:
         """Split file into 2 parts i.e. one with header information and other the content of the file. Also remove the file after split up"""
         file_name = file
         header_rows = int(report_static_column_list)
