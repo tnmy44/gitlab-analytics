@@ -139,9 +139,7 @@ def move_file_to_processed(bucket: str, file_name: str) -> None:
     try:
         source_bucket.copy_blob(source_blob, destination_bucket, destination_file_name)
     except FileNotFoundError as exc:
-        logging.error(
-            f"Source file {file_name} not found.{exc} "
-        )
+        logging.error(f"Source file {file_name} not found.{exc} ")
         sys.exit(1)
     try:
         source_blob.delete()

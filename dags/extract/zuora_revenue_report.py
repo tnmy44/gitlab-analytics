@@ -1,4 +1,4 @@
-""" Airflow DAG for loading Zuora Revenue Report API"""
+""" Airflow DAG for loading Zuora Revenue Report from API"""
 import os
 from datetime import datetime, timedelta
 import logging

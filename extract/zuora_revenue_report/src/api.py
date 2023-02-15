@@ -3,7 +3,7 @@ import logging
 import sys
 import json
 import subprocess
-from typing import Dict, Any
+from typing import Dict
 from datetime import datetime, timedelta
 import os
 import requests
@@ -36,7 +36,7 @@ class ZuoraRevProAPI:
             config_dict["zuora_report_home"] + "report_output/"
         )
 
-    def get_auth_token(self) -> Any:
+    def get_auth_token(self) -> str:
         """
         This function receives url and header information and generate authentication token in response.
         If we don't receive the response status code  200 then exit the program.
@@ -49,10 +49,9 @@ class ZuoraRevProAPI:
             authToken = response.headers["Revpro-Token"]
             return authToken
         else:
-            self.logger.error(
+            raise ConnectionError(
                 f"HTTP {response.status_code} - {response.reason}, Message {response.text}"
             )
-            sys.exit(1)
 
     def get_extract_date(self, extract_date: str = None) -> str:
         """
@@ -282,7 +281,7 @@ class ZuoraRevProAPI:
         try:
             self.logger.info(command_upload_to_gcs)
             subprocess.run(command_upload_to_gcs, shell=True, check=True)
-        except Exception:
+        except FileNotFoundError:
             self.logger.error("Error while uploading the file to GCS", exc_info=True)
             sys.exit(1)
 

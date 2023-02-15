@@ -4,7 +4,7 @@ from typing import Dict, Any
 from sqlalchemy.engine.base import Engine
 
 import load_functions
-from utils import check_if_schema_changed
+from postgres_utils import check_if_schema_changed
 
 
 class PostgresPipelineTable:
