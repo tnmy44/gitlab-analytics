@@ -43,13 +43,15 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "level_up_thought_industries_extract_test4",
+    "level_up_thought_industries_extract_test7",
     default_args=default_args,
+    # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
     #TODO: change date later
-    start_date=datetime(2023, 2, 12),
+    start_date=datetime(2023, 2, 10),
     catchup=True,
-    max_active_runs=2,
+    max_active_runs=1, # due to rate limiting
+    max_active_tasks=2, # due to rate limiting
 )
 
 dummy_start = DummyOperator(task_id="dummy_start", dag=dag)
@@ -79,10 +81,11 @@ for endpoint_class in endpoint_classes:
         ],
         env_vars={
             **pod_env_vars,
+            # remove time from execution_date, and convert to epoch timestamp
             "epoch_start_str":
-                "{{ execution_date.int_timestamp }}",
+                "{{ execution_date.replace(hour=0, minute=0, second=0, microsecond=0).int_timestamp }}",
             "epoch_end_str":
-                "{{ next_execution_date.int_timestamp }}",
+                "{{ next_execution_date.replace(hour=0, minute=0, second=0, microsecond=0).int_timestamp }}",
         },
         affinity=get_affinity(False),
         tolerations=get_toleration(False),

@@ -74,13 +74,13 @@ class ThoughtIndustries(ABC):
             full_url = f'{self.BASE_URL}{self.endpoint_url}'
             print(f'\nMaking request to {full_url} with params:\n{params}')
             response = make_request(
-                "GET", full_url, headers=self.HEADERS, params=params
+                "GET", full_url, headers=self.HEADERS, params=params, max_retry_count=7
             )
 
             events = response.json()['events']
             if events:
                 events_to_print = [events[0]] + [events[-1]]
-                print(f'\nevents_to_print: {events_to_print}')
+                print(f'\nfirst & last event from latest response: {events_to_print}')
                 final_events = final_events + events
 
                 # get the earliest event from latest response

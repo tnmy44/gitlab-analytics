@@ -103,9 +103,10 @@ def make_request(
 
         response.raise_for_status()
         return response
-    except requests.exceptions.RequestException:
+    except requests.exceptions.HTTPError:
         if response.status_code == 429:
             retry_after = int(response.headers["Retry-After"])
+            print(f'\nToo many requests... Sleeping for {retry_after} seconds')
             time.sleep(retry_after)
             current_retry_count += 1
             # Make the request again
