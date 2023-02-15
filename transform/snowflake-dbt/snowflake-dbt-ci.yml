@@ -217,7 +217,7 @@ specify_dbt_parameters:
     - CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/^/$ANCESTOR_TYPE/g" | sed "s/.sql/$DEPENDENT_TYPE/g" )
     - echo $CHANGED_FILES
     - INPUT=$(dbt --quiet ls --models $CHANGED_FILES --output json --output-keys "database schema name depends_on unique_id config" --profiles-dir profile --target prod)
-    - ../../orchestration/clone_dbt_models_select.py "$INPUT"
+    - ../../orchestration/clone_dbt_models_select.py $INPUT
 
 
 🔆⚡️clone_model_dbt_select:
@@ -231,7 +231,7 @@ specify_dbt_parameters:
     - export GIT_BRANCH=$BRANCH_NAME
     - echo $DBT_MODELS
     - INPUT=$(dbt --quiet ls --models $DBT_MODELS --output json --output-keys "database schema name depends_on unique_id config" --profiles-dir profile --target prod)
-    - ../../orchestration/clone_dbt_models_select.py "$INPUT"
+    - ../../orchestration/clone_dbt_models_select.py $INPUT
 
 # dbt tests
 .dbt_misc_jobs: &dbt_misc_jobs
