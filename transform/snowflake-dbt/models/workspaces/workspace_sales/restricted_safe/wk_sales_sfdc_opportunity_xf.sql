@@ -644,7 +644,7 @@ WITH edm_opty AS (
     FROM oppty_final
     -- Add keys for aggregated analysis
     LEFT JOIN agg_demo_keys_fy23
-      ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys_fy23.report_user_adjusted_segment_geo_region_area_sqs_ot
+      ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys_fy23.report_user_segment_geo_region_area_sqs_ot
     LEFT JOIN agg_demo_keys_base
       ON oppty_final.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap = agg_demo_keys_base.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap
 

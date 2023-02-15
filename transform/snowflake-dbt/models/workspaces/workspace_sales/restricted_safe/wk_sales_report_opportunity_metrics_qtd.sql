@@ -44,8 +44,7 @@ WITH sfdc_opportunity_xf AS (
       -------------------------------------------------------------------------------- 
       -- KEYS
 
-      -- oppty.report_user_segment_geo_region_area_sqs_ot,
-      oppty.report_user_adjusted_segment_geo_region_area_sqs_ot,
+      oppty.report_user_segment_geo_region_area_sqs_ot,
       today.current_fiscal_quarter_name,
       today.current_fiscal_quarter_day_normalised,
   
@@ -429,8 +428,7 @@ WITH sfdc_opportunity_xf AS (
 ), pipe_gen_yoy AS (
   
     SELECT 
-      -- opp_snapshot.report_user_segment_geo_region_area_sqs_ot,
-      opp_snapshot.report_user_adjusted_segment_geo_region_area_sqs_ot,
+      opp_snapshot.report_user_segment_geo_region_area_sqs_ot,
       SUM(opp_snapshot.net_arr)                            AS minus_1_year_pipe_gen_net_arr
     FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
       CROSS JOIN today
@@ -482,9 +480,9 @@ WITH sfdc_opportunity_xf AS (
     FROM aggregation agg
     -- Add keys for aggregated analysis
     LEFT JOIN pipe_gen_yoy
-        ON agg.report_user_adjusted_segment_geo_region_area_sqs_ot = pipe_gen_yoy.report_user_adjusted_segment_geo_region_area_sqs_ot
+        ON agg.report_user_segment_geo_region_area_sqs_ot = pipe_gen_yoy.report_user_segment_geo_region_area_sqs_ot
     LEFT JOIN agg_demo_keys
-        ON agg.report_user_adjusted_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_adjusted_segment_geo_region_area_sqs_ot
+        ON agg.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
   )
 
 SELECT *

@@ -32,7 +32,7 @@ WITH date_details AS (
     SELECT 
         ---------------------------
         -- Keys
-        report_user_adjusted_segment_geo_region_area_sqs_ot,
+        report_user_segment_geo_region_area_sqs_ot,
         -----------------------------
 
         close_fiscal_quarter_date,
@@ -110,7 +110,7 @@ WITH date_details AS (
     SELECT
         ---------------------------
         -- Keys
-        report_user_segment_geo_region_area_sqs_ot AS report_user_adjusted_segment_geo_region_area_sqs_ot,
+        report_user_segment_geo_region_area_sqs_ot,
         -----------------------------
 
         close_fiscal_quarter_name,
@@ -159,7 +159,7 @@ WITH date_details AS (
     target_day_of_fiscal_quarter_normalised   AS close_day_of_fiscal_quarter_normalised,
     
     --------------------------
-    report_user_segment_geo_region_area_sqs_ot AS report_user_adjusted_segment_geo_region_area_sqs_ot,
+    report_user_segment_geo_region_area_sqs_ot,
        
     --------------------------
 
@@ -184,12 +184,12 @@ WITH date_details AS (
 ), key_fields AS (
     
   SELECT         
-      report_user_adjusted_segment_geo_region_area_sqs_ot,
+      report_user_segment_geo_region_area_sqs_ot,
       close_fiscal_quarter_date
   FROM consolidated_targets
   UNION
   SELECT         
-      report_user_adjusted_segment_geo_region_area_sqs_ot,
+      report_user_segment_geo_region_area_sqs_ot,
       close_fiscal_quarter_date
   FROM consolidated_metrics
   
@@ -219,7 +219,7 @@ WITH date_details AS (
 
         --------------------------
         -- keys
-        base.report_user_adjusted_segment_geo_region_area_sqs_ot,
+        base.report_user_segment_geo_region_area_sqs_ot,
         --------------------------
   
         base.close_fiscal_quarter_date,
@@ -265,8 +265,6 @@ WITH date_details AS (
         agg_demo_keys.key_segment_geo_region_area_ot,
 
         agg_demo_keys.key_segment_geo_area,
-
-        agg_demo_keys.report_user_segment_geo_region_area,
         ----------------------------------------
 
         -- report quarter plus 1 / 2 date fields
@@ -383,36 +381,36 @@ WITH date_details AS (
     FROM base_fields base 
     -- base keys dictionary
     LEFT JOIN agg_demo_keys
-      ON base.report_user_adjusted_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_adjusted_segment_geo_region_area_sqs_ot
+      ON base.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
     LEFT JOIN consolidated_metrics metrics
       ON metrics.close_fiscal_quarter_date = base.close_fiscal_quarter_date
       AND metrics.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
-      AND metrics.report_user_adjusted_segment_geo_region_area_sqs_ot = base.report_user_adjusted_segment_geo_region_area_sqs_ot
+      AND metrics.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
     -- current quarter
     LEFT JOIN consolidated_targets_per_day targets 
       ON targets.close_fiscal_quarter_date = base.close_fiscal_quarter_date
         AND targets.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
-        AND targets.report_user_adjusted_segment_geo_region_area_sqs_ot = base.report_user_adjusted_segment_geo_region_area_sqs_ot
+        AND targets.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
     -- quarter plus 1 targets
     LEFT JOIN consolidated_targets_per_day rq_plus_one
       ON rq_plus_one.close_fiscal_quarter_date = base.rq_plus_1_close_fiscal_quarter_date
         AND rq_plus_one.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
-        AND rq_plus_one.report_user_adjusted_segment_geo_region_area_sqs_ot = base.report_user_adjusted_segment_geo_region_area_sqs_ot
+        AND rq_plus_one.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
     -- quarter plus 2 targets
     LEFT JOIN consolidated_targets_per_day rq_plus_two
       ON rq_plus_two.close_fiscal_quarter_date = base.rq_plus_2_close_fiscal_quarter_date
         AND rq_plus_two.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
-        AND rq_plus_two.report_user_adjusted_segment_geo_region_area_sqs_ot = base.report_user_adjusted_segment_geo_region_area_sqs_ot
+        AND rq_plus_two.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
     -- qtd allocated targets
     LEFT JOIN funnel_allocated_targets_qtd qtd_target
       ON qtd_target.close_fiscal_quarter_date = base.close_fiscal_quarter_date
         AND qtd_target.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
-        AND qtd_target.report_user_adjusted_segment_geo_region_area_sqs_ot = base.report_user_adjusted_segment_geo_region_area_sqs_ot
+        AND qtd_target.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
     -- one year ago totals
     LEFT JOIN consolidated_targets_per_day year_minus_one
       ON year_minus_one.close_fiscal_quarter_date = dateadd(month,-12,base.close_fiscal_quarter_date)
         AND year_minus_one.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
-        AND year_minus_one.report_user_adjusted_segment_geo_region_area_sqs_ot = base.report_user_adjusted_segment_geo_region_area_sqs_ot
+        AND year_minus_one.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
 
 
 

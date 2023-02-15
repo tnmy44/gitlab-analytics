@@ -71,7 +71,7 @@
           '-',sales_qualified_source,
           '-', order_type_stamped
         )
-      ) AS report_user_adjusted_segment_geo_region_area_sqs_ot
+      ) AS report_user_segment_geo_region_area_sqs_ot
     FROM
       fy23_segment_adjustment
 

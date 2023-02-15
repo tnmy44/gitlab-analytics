@@ -642,7 +642,6 @@ WITH date_details AS (
     upa_owner.user_id                   AS upa_owner_id,
     upa_owner.title_category            AS upa_owner_title_category,
     trim(upa_owner.employee_number)     AS upa_owner_employee_number,
-    -- dim_account.forbes_2000_rank        AS account_forbes_rank,
     a.billing_country                   AS account_country,
     a.billing_postal_code               AS account_zip_code,
     mart_crm_account.account_billing_state AS account_state,
@@ -1409,12 +1408,7 @@ FROM selected_hierarchy_virtual_upa final
   SELECT
       
     acc.*, 
-
-    -- 2022-06-28 JK: account_family_arr - temp solution adding a column with upa_arr for all accounts within the same upa family
-    -- this will be updated with ARR bucket based solution later (e.g. 0-50k, 50k-100k, etc.)
-    -- upa.arr AS account_family_arr,
-    upa.arr             AS account_family_arr,
-
+    
     CASE 
       WHEN upa.arr > 0 AND upa.arr < 5000
         THEN '1. 0-5k ARR'

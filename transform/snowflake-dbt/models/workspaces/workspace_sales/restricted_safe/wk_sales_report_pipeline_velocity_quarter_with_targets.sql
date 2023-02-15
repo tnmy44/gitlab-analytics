@@ -55,7 +55,7 @@ WITH report_pipeline_velocity_quarter AS (
      base.close_fiscal_quarter_date,
      -------------------------
      -- keys
-     base.report_user_segment_geo_region_area_sqs_ot AS report_user_adjusted_segment_geo_region_area_sqs_ot,
+     base.report_user_segment_geo_region_area_sqs_ot AS report_user_segment_geo_region_area_sqs_ot,
      -------------------------
 
      base.target_net_arr,
@@ -74,7 +74,7 @@ WITH report_pipeline_velocity_quarter AS (
 
       -------------------------
       -- keys
-      pv.report_user_adjusted_segment_geo_region_area_sqs_ot,
+      pv.report_user_segment_geo_region_area_sqs_ot,
       -------------------------
 
       SUM(pv.open_1plus_net_arr)                AS open_1plus_net_arr,
@@ -97,7 +97,7 @@ WITH report_pipeline_velocity_quarter AS (
 
       -------------------------
       -- keys
-      o.report_user_adjusted_segment_geo_region_area_sqs_ot,
+      o.report_user_segment_geo_region_area_sqs_ot,
       -------------------------     
 
       SUM(o.open_1plus_net_arr)              AS open_1plus_net_arr,
@@ -117,14 +117,14 @@ WITH report_pipeline_velocity_quarter AS (
     pipeline_summary.close_fiscal_quarter_name,
     pipeline_summary.close_fiscal_quarter_date,
     pipeline_summary.close_day_of_fiscal_quarter_normalised,
-    pipeline_summary.report_user_adjusted_segment_geo_region_area_sqs_ot
+    pipeline_summary.report_user_segment_geo_region_area_sqs_ot
   FROM pipeline_summary
   UNION
   SELECT 
     consolidated_targets_totals.close_fiscal_quarter_name,
     consolidated_targets_totals.close_fiscal_quarter_date,
     close_day.close_day_of_fiscal_quarter_normalised,
-    consolidated_targets_totals.report_user_adjusted_segment_geo_region_area_sqs_ot
+    consolidated_targets_totals.report_user_segment_geo_region_area_sqs_ot
   FROM consolidated_targets_totals
   CROSS JOIN (SELECT DISTINCT close_day_of_fiscal_quarter_normalised
             FROM pipeline_summary) close_day
@@ -140,7 +140,7 @@ WITH report_pipeline_velocity_quarter AS (
 
     -------------------------
     -- keys
-    base.report_user_adjusted_segment_geo_region_area_sqs_ot,
+    base.report_user_segment_geo_region_area_sqs_ot,
     -------------------------
 
     target.total_churned_contraction_net_arr,
@@ -159,11 +159,11 @@ WITH report_pipeline_velocity_quarter AS (
   FROM base_keys base
   LEFT JOIN  consolidated_targets_totals target  
     ON target.close_fiscal_quarter_name = base.close_fiscal_quarter_name
-    AND target.report_user_adjusted_segment_geo_region_area_sqs_ot = base.report_user_adjusted_segment_geo_region_area_sqs_ot
+    AND target.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
   LEFT JOIN  pipeline_summary ps  
     ON base.close_fiscal_quarter_name = ps.close_fiscal_quarter_name
     AND base.close_day_of_fiscal_quarter_normalised = ps.close_day_of_fiscal_quarter_normalised
-    AND base.report_user_adjusted_segment_geo_region_area_sqs_ot = ps.report_user_adjusted_segment_geo_region_area_sqs_ot
+    AND base.report_user_segment_geo_region_area_sqs_ot = ps.report_user_segment_geo_region_area_sqs_ot
   -- only consider quarters we have data in the snapshot history
   WHERE base.close_fiscal_quarter_date >= '2019-08-01'::DATE
   AND base.close_day_of_fiscal_quarter_normalised <= 90
@@ -214,7 +214,7 @@ WITH report_pipeline_velocity_quarter AS (
 
   FROM pipeline_velocity_with_targets_per_day agg
   LEFT JOIN agg_demo_keys
-    ON agg.report_user_adjusted_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_adjusted_segment_geo_region_area_sqs_ot
+    ON agg.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
 
 
 )

@@ -28,7 +28,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
       -------------------------
       -- keys
-      report_user_adjusted_segment_geo_region_area_sqs_ot,
+      report_user_segment_geo_region_area_sqs_ot,
       -------------------------
   
       -------------------
@@ -105,7 +105,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
   FROM report_pipeline_velocity_quarter agg
   LEFT JOIN agg_demo_keys
-    ON agg.report_user_adjusted_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_adjusted_segment_geo_region_area_sqs_ot
+    ON agg.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
 
 )
 
