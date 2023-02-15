@@ -174,7 +174,7 @@ WITH report_pipeline_velocity_quarter AS (
     agg.*,
 
     -- agg_demo_keys.report_opportunity_user_segment,
-    agg_demo_keys.adjusted_report_opportunity_user_segment,
+    agg_demo_keys.report_opportunity_user_segment,
     agg_demo_keys.report_opportunity_user_geo,
     agg_demo_keys.report_opportunity_user_region,    
     agg_demo_keys.report_opportunity_user_area,  
@@ -210,7 +210,7 @@ WITH report_pipeline_velocity_quarter AS (
     agg_demo_keys.key_segment_geo_area,
 
     -- agg_demo_keys.report_user_segment_geo_region_area
-    agg_demo_keys.report_user_adjusted_segment_geo_region_area
+    agg_demo_keys.report_user_segment_geo_region_area
 
   FROM pipeline_velocity_with_targets_per_day agg
   LEFT JOIN agg_demo_keys

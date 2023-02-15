@@ -231,7 +231,7 @@ WITH date_details AS (
         ----------------------------------------
 
        -- agg_demo_keys.report_opportunity_user_segment,
-        agg_demo_keys.adjusted_report_opportunity_user_segment,
+        agg_demo_keys.report_opportunity_user_segment,
         agg_demo_keys.report_opportunity_user_geo,
         agg_demo_keys.report_opportunity_user_region,    
         agg_demo_keys.report_opportunity_user_area,  

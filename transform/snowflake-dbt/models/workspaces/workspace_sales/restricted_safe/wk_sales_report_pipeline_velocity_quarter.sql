@@ -100,8 +100,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       agg_demo_keys.key_segment_geo_region_area_sqs,
       agg_demo_keys.key_segment_geo_region_area_ot,
 
-      -- agg_demo_keys.report_user_segment_geo_region_area
-      agg_demo_keys.report_user_adjusted_segment_geo_region_area
+      agg_demo_keys.report_user_segment_geo_region_area
 
   FROM report_pipeline_velocity_quarter agg
   LEFT JOIN agg_demo_keys
