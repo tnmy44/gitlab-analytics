@@ -6,9 +6,6 @@ WITH source AS (
 
 )
 
-SELECT 
-  *,
-  full_comments_hash     AS full_comments,
-  task_subject_hash      AS task_subject
+SELECT *
 FROM source
 
