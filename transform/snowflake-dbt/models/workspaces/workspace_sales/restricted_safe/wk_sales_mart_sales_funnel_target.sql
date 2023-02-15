@@ -86,15 +86,15 @@
 
       agg_demo_keys.key_segment_geo_region_area,
       agg_demo_keys.key_segment_geo_region_area_sqs,
-      agg_demo_keys.key_segment_geo_region_area_ot,
+      agg_demo_keys.key_segment_geo_region_area_ot
 
-      agg_demo_keys.report_user_adjusted_segment_geo_region_area
+
 
     FROM mart_sales_funnel_target funnel_target
     INNER JOIN  date_details target_month
       ON target_month.date_actual = funnel_target.target_month
     LEFT JOIN agg_demo_keys
-      ON funnel_target.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_adjusted_segment_geo_region_area_sqs_ot
+      ON funnel_target.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
     WHERE LOWER(funnel_target.deal_group) LIKE ANY ('%growth%','%new%')
   
   ), fy24_target_placeholder AS (

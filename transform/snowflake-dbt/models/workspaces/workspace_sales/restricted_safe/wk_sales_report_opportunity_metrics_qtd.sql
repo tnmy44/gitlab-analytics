@@ -469,7 +469,7 @@ WITH sfdc_opportunity_xf AS (
         COALESCE(agg_demo_keys.key_segment_geo_region_area_ot,'other')  AS key_segment_geo_region_area_ot,
 
         -- COALESCE(agg_demo_keys.report_opportunity_user_segment ,'other')  AS sales_team_cro_level,
-        COALESCE(agg_demo_keys.adjusted_report_opportunity_user_segment ,'other')  AS sales_team_cro_level,
+        COALESCE(agg_demo_keys.report_opportunity_user_segment ,'other')  AS sales_team_cro_level,
 
         -- NF: This code replicates the reporting structured of FY22, to keep current tools working
         COALESCE(agg_demo_keys.sales_team_rd_asm_level,'other')           AS sales_team_rd_asm_level,
