@@ -14,7 +14,7 @@ import pandas as pd
 class ZuoraRevProAPI:
     """Zuora class to include all functionality"""
 
-    def __init__(self, config_dict: Dict[str, str]):
+    def __init__(self, config_dict: Dict):
         self.headers = config_dict["headers"]
         self.authenticate_url_zuora_revpro = config_dict[
             "authenticate_url_zuora_revpro"
@@ -109,9 +109,7 @@ class ZuoraRevProAPI:
         )
         return report_list_key
 
-    def get_report_list_dict(
-        self, zuora_report_list_to_download: dict, report: str
-    ) -> Dict:
+    def get_report_list_dict(self, zuora_report_list_to_download, report: str) -> Dict:
 
         """Read manifest file for all required values"""
         report_list_dict = {}
@@ -161,7 +159,7 @@ class ZuoraRevProAPI:
         )
 
     def zuora_download_file(
-        self, file_name: str, output_file_name: str, report_date_formatted: str
+        self, file_name: str, output_file_name, report_date_formatted: str
     ) -> None:
 
         """This function get the file size and download the file."""
@@ -249,12 +247,12 @@ class ZuoraRevProAPI:
         return res
 
     def split_file(
-        self, file_directory: str, file: str, report_static_column_list: str
-    ):
+        self, file_directory: str, file: str, report_static_column_list
+    ) -> None:
         """Split file into 2 parts i.e. one with header information and other the content of the file. Also remove the file after split up"""
         file_name = file
-        header_rows = report_static_column_list
-        body_rows = report_static_column_list + 1
+        header_rows = int(report_static_column_list)
+        body_rows = int(report_static_column_list) + 1
         with open(f"{file_directory}{file_name}", "r", encoding="utf-8") as filedata:
             linesList = filedata.readlines()
 
@@ -285,7 +283,7 @@ class ZuoraRevProAPI:
             self.logger.info(command_upload_to_gcs)
             subprocess.run(command_upload_to_gcs, shell=True, check=True)
         except Exception:
-            self.logger.error("Error while uploading the file to GCS", exec_info=True)
+            self.logger.error("Error while uploading the file to GCS", exc_info=True)
             sys.exit(1)
 
         os.remove(f"{file_directory}{file_name}")

@@ -51,7 +51,7 @@ def get_file_name_without_path(file_name: str) -> str:
     return file_name.split("/")[-1]
 
 
-def get_table_to_load(file_name: str, output_file_name: str) -> list:
+def get_table_to_load(file_name: str, output_file_name: str) -> tuple:
     """This function provide information to which table to load the data and type of load i.e. it is for header or for body of the report"""
 
     if get_file_name_without_path(file_name).startswith("header"):
@@ -138,15 +138,14 @@ def move_file_to_processed(bucket: str, file_name: str) -> None:
     source_blob = source_bucket.blob(file_name)
     try:
         source_bucket.copy_blob(source_blob, destination_bucket, destination_file_name)
-    except Exception:
+    except FileNotFoundError as exc:
         logging.error(
-            f"Source file {file_name} not found, Please ensure the directory is empty for next \
-                            run else the file will be over written"
+            f"Source file {file_name} not found.{exc} "
         )
         sys.exit(1)
     try:
         source_blob.delete()
-    except Exception:
+    except FileNotFoundError:
         logging.error(
             f"{file_name} is not found , throwing this as error to ensure that we are not overwriting the files."
         )

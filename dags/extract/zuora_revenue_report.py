@@ -1,8 +1,8 @@
 """ Airflow DAG for loading Zuora Revenue Report API"""
 import os
 from datetime import datetime, timedelta
-from yaml import safe_load, YAMLError
 import logging
+from yaml import safe_load, YAMLError
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -52,7 +52,7 @@ task_name = "zuora-revenue-report"
 full_path = f"{airflow_home}/analytics/extract/zuora_revenue_report/src/zuora_report_api_list.yml"
 
 
-def get_yaml_file(path: str) -> dict:
+def get_yaml_file(path: str) -> dict | None:
     """
     Get all the report name for which tasks for loading
     needs to be created
@@ -64,6 +64,7 @@ def get_yaml_file(path: str) -> dict:
             return loaded_file
         except YAMLError as exc:
             logging.error(f"Issue with the yaml file: {exc}")
+            return None
 
 
 stream = get_yaml_file(path=full_path)

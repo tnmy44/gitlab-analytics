@@ -45,13 +45,15 @@ if __name__ == "__main__":
             "Authorization": api_auth_code,
         },
         "authenticate_url_zuora_revpro": (
-            "https://" + api_dns_name + "/api/integration/v1/authenticate"
+            "https://" + str(api_dns_name) + "/api/integration/v1/authenticate"
         ),
         "zuora_fetch_report_list_url": (
-            "https://" + api_dns_name + "/api/integration/v1/reports/list?createddate="
+            "https://"
+            + str(api_dns_name)
+            + "/api/integration/v1/reports/list?createddate="
         ),
         "zuora_download_report_url": (
-            "https://" + api_dns_name + "/api/integration/v1/reports/download/"
+            "https://" + str(api_dns_name) + "/api/integration/v1/reports/download/"
         ),
         "bucket_name": bucket_name,
         "zuora_report_home": zuora_report_home,
