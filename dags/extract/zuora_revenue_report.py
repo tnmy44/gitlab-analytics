@@ -52,7 +52,7 @@ task_name = "zuora-revenue-report"
 full_path = f"{airflow_home}/analytics/extract/zuora_revenue_report/src/zuora_report_api_list.yml"
 
 
-def get_yaml_file(path: str) -> dict | None:
+def get_yaml_file(path: str) -> dict:
     """
     Get all the report name for which tasks for loading
     needs to be created
