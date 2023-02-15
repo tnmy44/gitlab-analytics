@@ -64,7 +64,6 @@ class ThoughtIndustries(ABC):
         final_events = []
         events = ['_']  # some placeholder val
         current_epoch_end_ms = original_epoch_end_ms  # init current epoch end
-
         # while the response returns events records
         while len(events) > 0:
             params = {
@@ -74,20 +73,30 @@ class ThoughtIndustries(ABC):
             full_url = f'{self.BASE_URL}{self.endpoint_url}'
             print(f'\nMaking request to {full_url} with params:\n{params}')
             response = make_request(
-                "GET", full_url, headers=self.HEADERS, params=params, max_retry_count=7
+                "GET",
+                full_url,
+                headers=self.HEADERS,
+                params=params,
+                max_retry_count=7
             )
 
             events = response.json()['events']
             if events:
                 events_to_print = [events[0]] + [events[-1]]
-                print(f'\nfirst & last event from latest response: {events_to_print}')
+                print(
+                    f'\nfirst & last event from latest response: {events_to_print}'
+                )
                 final_events = final_events + events
 
-                # get the earliest event from latest response
-                # it should be the last one, since api returns from latest to earliest
+                prev_epoch_end_ms = current_epoch_end_ms
+                # get the earliest timestamp- will be last event in the resp
                 current_epoch_end_ms = iso8601_to_epoch_ts_ms(
                     events[-1]['timestamp']
-                )
+                ) - 1  # subtract by 1 from ts so that record isn't included again
+                if current_epoch_end_ms >= prev_epoch_end_ms:
+                    raise ValueError(
+                        'endDate parameter has not changed since last call.'
+                    )
             else:
                 print('\nThe last response had 0 events, stopping requests\n')
 

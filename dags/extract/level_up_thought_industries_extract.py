@@ -50,8 +50,8 @@ dag = DAG(
     #TODO: change date later
     start_date=datetime(2023, 2, 10),
     catchup=True,
-    max_active_runs=1, # due to rate limiting
-    max_active_tasks=2, # due to rate limiting
+    max_active_runs=1, # due to API rate limiting
+    concurrency=2, # num of max_tasks, limit due to API rate limiting
 )
 
 dummy_start = DummyOperator(task_id="dummy_start", dag=dag)
