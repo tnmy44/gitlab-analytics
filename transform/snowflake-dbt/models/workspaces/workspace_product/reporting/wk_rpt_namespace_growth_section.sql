@@ -37,7 +37,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       IFF(TIMESTAMPDIFF(minute, members.invite_accepted_at, namespace_created_at) BETWEEN 0 AND 2, TRUE, FALSE)
                                                                   AS is_namespace_created_within_2min_of_creator_invite_acceptance --filterable field specific to growth conversion analysis
     FROM dim_namespace
-    JOIN prep_gitlab_dotcom_plan plan
+    INNER JOIN prep_gitlab_dotcom_plan plan
       ON dim_namespace.gitlab_plan_id = plan.dim_plan_id
     LEFT JOIN customers_db_leads AS pql -- legacy schema
       ON pql.namespace_id = dim_namespace.ultimate_parent_namespace_id
@@ -57,7 +57,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       trials.start_date::DATE                                      AS trial_start_date, 
       DATEDIFF('days', namespace_created_date, trial_start_date)   AS days_since_namespace_creation_at_trial
     FROM namespaces
-    JOIN customers_db_trial_histories -- legacy schema
+    INNER JOIN customers_db_trial_histories -- legacy schema
       ON namespaces.ultimate_parent_namespace_id = trials.gl_namespace_id
 
 ), charges AS ( --First paid subscription for ultimate namespace
@@ -70,7 +70,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       SPLIT_PART(charges.product_category, ' - ', 2)               AS first_paid_plan_name, --product_category: SaaS - Premium, SaaS - Ultimate, etc
       charges.is_purchased_through_subscription_portal             AS first_paid_plan_purchased_through_subscription_portal
     FROM namespaces
-    JOIN customers_db_charges_xf AS charges -- legacy schema
+    INNER JOIN customers_db_charges_xf AS charges -- legacy schema
       ON namespaces.ultimate_parent_namespace_id = charges.current_gitlab_namespace_id::INT
     WHERE charges.product_category != 'Storage' --exclude storage payments
       AND charges.product_category NOT LIKE 'Self-Managed%' --exclude SM plans
@@ -87,7 +87,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     ARRAY_TO_STRING(ARRAY_AGG(DISTINCT events.event_name) WITHIN GROUP(ORDER BY events.event_name ASC), ' , ')
                                                                      AS activation_event_array
   FROM namespaces
-  JOIN mart_event_namespace_daily AS events
+  INNER JOIN mart_event_namespace_daily AS events
     ON events.dim_ultimate_parent_namespace_id = namespaces.ultimate_parent_namespace_id
   WHERE lower(events.event_name) IN ('merge_request_note_creation', 'todos', 'other_ci_build_creation', 'successful_ci_pipeline_creation', 'issue_note_creation', 'merge_request_creation', 'epic_notes') -- activation events  
     AND events.days_since_namespace_creation_at_event_date BETWEEN 0 AND 13
@@ -104,9 +104,9 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     SUM(count_billable_members) OVER (PARTITION BY namespaces.ultimate_parent_namespace_id ORDER BY days_since_namespace_creation_at_2nd_user_add)
                                                                        AS total_users_added   -- always 2 - field is not in final output    
   FROM namespaces
-  JOIN gitlab_dotcom_memberships AS mships -- legacy shema
+  INNER JOIN gitlab_dotcom_memberships AS mships -- legacy shema
     ON namespaces.ultimate_parent_namespace_id = mships.ultimate_parent_id
-  JOIN dim_user -- including all users with a membership to the ultimate parent regardless of creator status
+  INNER JOIN dim_user -- including all users with a membership to the ultimate parent regardless of creator status
     ON dim_user.dim_user_id = mships.user_id
     AND dim_user.is_blocked_user = FALSE
     AND mships.is_billable = TRUE -- Optional based on use case - excluding guests, bots, other use cases that would not be counted towards a subscription if one were to exist
@@ -123,7 +123,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
    SELECT DISTINCT
     namespaces.ultimate_parent_namespace_id
   FROM namespaces
-  JOIN mart_event_namespace_daily AS events
+  INNER JOIN mart_event_namespace_daily AS events
     ON events.dim_ultimate_parent_namespace_id = namespaces.ultimate_parent_namespace_id
   WHERE days_since_namespace_creation_at_event_date BETWEEN 59 AND 89
        
@@ -134,9 +134,9 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     MAX(IFF(dim_user.dim_user_id = namespaces.creator_id, 1, 0))        AS creator_is_valuable_signup_numeric,
     IFF(creator_is_valuable_signup_numeric = 1, TRUE, FALSE)            AS creator_is_valuable_signup
   FROM namespaces
-  JOIN gitlab_dotcom_memberships AS mships
+  INNER JOIN gitlab_dotcom_memberships AS mships
     ON namespaces.ultimate_parent_namespace_id = mships.ultimate_parent_id
-  JOIN dim_user -- including all users with a membership to the ultimate parent regardless of creator status
+  INNER JOIN dim_user -- including all users with a membership to the ultimate parent regardless of creator status
     ON dim_user.dim_user_id = mships.user_id
     AND dim_user.is_blocked_user = FALSE
     AND mships.is_billable = TRUE -- Optional based on use case - excluding guests, bots, other use cases that would not be counted towards a subscription if one were to exist
@@ -159,7 +159,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
                                                                          AS stage_order_adopted,-- Sequential order that this stage was adopted initially at the ultimate namespace level
       CONCAT(stage_order_adopted, ' ', stage_name)                       AS stage_name_order -- This will allow me to create an ordered array 
     FROM namespaces
-    JOIN mart_event_valid AS events -- Using this model to remove events triggered in Learn Gitlab projects (Growth use case)
+    INNER JOIN mart_event_valid AS events -- Using this model to remove events triggered in Learn Gitlab projects (Growth use case)
       ON namespaces.ultimate_parent_namespace_id = events.dim_ultimate_parent_namespace_id
     WHERE is_smau = TRUE
       AND events.project_is_learn_gitlab != TRUE -- Filters out events caused by default Learn GitLab project creation.
@@ -203,7 +203,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     role                                                                  AS namespace_creator_role,
     jobs_to_be_done                                                       AS namespace_creator_jtbd
   FROM namespaces
-  JOIN dim_user -- including all users with a membership to the ultimate parent regardless of creator status
+  INNER JOIN dim_user -- including all users with a membership to the ultimate parent regardless of creator status
     ON namespaces.creator_id = dim_user.dim_user_id
 
 ), billable_members AS ( --billable members calculated to match user limit calculations
@@ -212,7 +212,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     namespaces.ultimate_parent_namespace_id, -- ultimate parent namespace
     COUNT(DISTINCT mships.user_id)                                         AS billable_member_count
   FROM namespaces
-  JOIN gitlab_dotcom_memberships AS mships  
+  INNER JOIN gitlab_dotcom_memberships AS mships  
     ON mships.ultimate_parent_id = namespaces.ultimate_parent_namespace_id 
   WHERE mships.is_billable = TRUE                                                           
   GROUP BY 1
@@ -223,7 +223,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     namespaces.ultimate_parent_namespace_id,
     storage_gib 
   FROM namespaces
-  JOIN fct_usage_storage AS storage 
+  INNER JOIN fct_usage_storage AS storage 
     ON storage.ultimate_parent_namespace_id = namespaces.ultimate_parent_namespace_id
   WHERE snapshot_month = DATE_TRUNC('month', GETDATE())::DATE --current month storage snapshot
 
