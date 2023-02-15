@@ -40,6 +40,7 @@ WITH date_details AS (
 
       -- this fields use the opportunity owner version for current FY and account fields for previous years
       report_opportunity_user_segment,
+      raw_report_opportunity_user_segment,
       report_opportunity_user_geo,
       report_opportunity_user_region,
       report_opportunity_user_area,
@@ -413,11 +414,6 @@ WITH date_details AS (
       sfdc_opportunity_xf.order_type_stamped,     
       sfdc_opportunity_xf.is_duplicate_flag                               AS current_is_duplicate_flag,
       
-      sfdc_opportunity_xf.opportunity_owner_user_segment,
-      sfdc_opportunity_xf.opportunity_owner_user_region,
-      sfdc_opportunity_xf.opportunity_owner_user_area,
-      sfdc_opportunity_xf.opportunity_owner_user_geo,
-      
       sfdc_opportunity_xf.sales_team_rd_asm_level,
       sfdc_opportunity_xf.sales_team_cro_level,
       sfdc_opportunity_xf.sales_team_vp_level,
@@ -429,10 +425,10 @@ WITH date_details AS (
       sfdc_opportunity_xf.report_opportunity_user_region,
       sfdc_opportunity_xf.report_opportunity_user_area,
       sfdc_opportunity_xf.report_user_segment_geo_region_area,
-      sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
 
-      sfdc_opportunity_xf.adjusted_report_opportunity_user_segment,
-      sfdc_opportunity_xf.report_user_adjusted_segment_geo_region_area_sqs_ot,
+      -- unadjusted version of the field
+      sfdc_opportunity_xf.raw_report_opportunity_user_segment,
+      sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
 
       sfdc_opportunity_xf.key_sqs,
       sfdc_opportunity_xf.key_ot,
@@ -457,10 +453,11 @@ WITH date_details AS (
       sfdc_opportunity_xf.is_edu_oss,
 
       -- FY24 keys
-      sfdc_opportunity_xf.business_unit,
-      sfdc_opportunity_xf.sub_business_unit,
-      sfdc_opportunity_xf.division,
-      sfdc_opportunity_xf.asm,
+      sfdc_opportunity_xf.report_opportunity_user_business_unit,
+      sfdc_opportunity_xf.report_opportunity_user_sub_business_unit,
+      sfdc_opportunity_xf.report_opportunity_user_division,
+      sfdc_opportunity_xf.report_opportunity_user_asm,
+      
 
       sfdc_opportunity_xf.key_bu,
       sfdc_opportunity_xf.key_bu_subbu,

@@ -399,6 +399,7 @@ WITH edm_opty AS (
     -- FY23 Key fields
     -- NF: 20230213 Adjusting the segment field to try to provide closer to reality figures
     edm_opty.adjusted_report_opportunity_user_segment AS report_opportunity_user_segment,
+    edm_opty.report_opportunity_user_segment          AS raw_report_opportunity_user_segment,
     edm_opty.report_opportunity_user_geo,
     edm_opty.report_opportunity_user_region,
     edm_opty.report_opportunity_user_area,
