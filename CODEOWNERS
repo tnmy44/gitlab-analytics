@@ -143,15 +143,17 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 transform/snowflake-dbt/models/marts/pumps/                 @jjstark @paul_armstrong @dparker @Karuna16
 transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armstrong @dparker @Karuna16
 
-/transform/snowflake-dbt/models/workspaces/workspace_sales          @nfiguera @mvilain
+/transform/snowflake-dbt/models/workspaces/workspace_sales/          @nfiguera @mvilain
 
-/transform/snowflake-dbt/models/workspaces/workspace_finance        @statimatla @fkurniadi @james.shen @cmestel @cmachado1 @iweeks @michellecooper @jeanpeguero @vagrawalg
+/transform/snowflake-dbt/models/workspaces/workspace_finance/        @james.shen @cmestel @iweeks @michellecooper @jeanpeguero @vagrawalg
 
-/transform/snowflake-dbt/models/workspaces/workspace_engineering    @pempey @iweeks @snalamaru @meks @lmai1
+/transform/snowflake-dbt/models/workspaces/workspace_engineering/    @pempey @iweeks @meks @lmai1 @clem.lr 
 
-/transform/snowflake-dbt/models/workspaces/workspace_people         @pempey @iweeks @aperez349
+/transform/snowflake-dbt/models/workspaces/workspace_people/         @pempey @iweeks @aperez349
 
-/transform/snowflake-dbt/models/workspaces/workspace_customer_success @mdrussell @snalamaru @chrissharp
+/transform/snowflake-dbt/models/workspaces/workspace_customer_success/  @mdrussell @snalamaru @chrissharp
+
+/transform/snowflake-dbt/models/workspaces/workspace_product/           @cbraza @matthewpetersen @eneuberger @nraisinghani @mdrussell @snalamaru @jeanpeguero
 
 # ======
 # dbt data file Overwrites
