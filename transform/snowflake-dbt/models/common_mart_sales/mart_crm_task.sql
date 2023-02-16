@@ -108,6 +108,7 @@
     fct_crm_task.lead_or_contact_count,
 
     -- Flags
+    dim_crm_task.is_reminder_task,
     dim_crm_task.is_demand_gen_task,
     dim_crm_task.is_demo_task,
     dim_crm_task.is_workshop_task,

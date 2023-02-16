@@ -85,6 +85,7 @@ WITH prep_crm_task AS (
     prep_crm_task.chorus_call_id,
 
     -- Flags
+    prep_crm_task.is_reminder_task,
     prep_crm_task.is_demand_gen_task,
     prep_crm_task.is_demo_task,
     prep_crm_task.is_workshop_task,

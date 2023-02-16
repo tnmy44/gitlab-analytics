@@ -115,6 +115,11 @@ WITH source AS (
 
       -- flags
       IFF(
+        source.task_subject LIKE '%Reminder%',
+          1,
+        0
+        )                                                                                               AS is_reminder_task,
+      IFF(
         source.task_type ='Demand Gen' 
           OR LOWER(source.task_subject) LIKE '%demand gen%'
             OR LOWER(source.full_comments) LIKE '%demand gen%',
