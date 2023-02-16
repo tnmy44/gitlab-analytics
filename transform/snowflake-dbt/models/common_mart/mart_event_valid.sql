@@ -12,12 +12,15 @@
     ])
 }},
 
+--limit mart to rolling 24 months for performance reasons
+
 fact AS (
 
   SELECT
     {{ dbt_utils.star(from=ref('fct_event_valid'), except=["CREATED_BY",
         "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
   FROM fct_event_valid
+  WHERE DATE_TRUNC('month', event_date) >= DATEADD('month', -24, DATE_TRUNC('month',CURRENT_DATE))
   
 ), 
 
