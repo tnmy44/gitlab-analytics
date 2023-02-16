@@ -19,6 +19,87 @@ from gitlabdata.orchestration_utils import (
 
 config_dict = os.environ.copy()
 
+from sqlalchemy.engine.base import Engine
+from sqlalchemy import create_engine
+
+
+# TODO remove this function, need to currently use it to test
+def snowflake_stage_load_copy_remove(
+    file: str,
+    stage: str,
+    table_path: str,
+    engine: Engine,
+    type: str = "json",
+    on_error: str = "skip_file",
+    file_format_options: str = "",
+) -> None:
+    """
+    Upload file to stage, copy to table, remove file from stage on Snowflake
+    """
+
+    import logging
+    import os
+    import sys
+    from pathlib import Path
+    from time import time
+
+    from snowflake.sqlalchemy import URL as snowflake_URL
+
+    put_query = f"put 'file://{file}' @{stage} auto_compress=true;"
+
+    if type == "json":
+        copy_query = f"""copy into {table_path} (jsontext)
+                         from @{stage}
+                         file_format=(type='{type}'),
+                         on_error='{on_error}';"""
+
+        remove_query = f"remove @{stage} pattern='.*.{type}.gz'"
+    else:
+        file_name = os.path.basename(file)
+        file_pattern = f".*{file_name}.gz"
+        copy_query = f"""copy into {table_path}
+                         from @{stage}
+                         file_format=(type='{type}' {file_format_options}),
+                         on_error='{on_error}'
+                         pattern='{file_pattern}';
+                        """
+
+        remove_query = f"remove @{stage} pattern='{file_pattern}'"
+
+    logging.basicConfig(stream=sys.stdout, level=20)
+
+    try:
+        connection = engine.connect()
+
+        logging.info(f"Clearing {type} files from stage.")
+        remove = connection.execute(remove_query)
+        logging.info(f"Query successfully run")
+
+        logging.info("Writing to Snowflake.")
+        results = connection.execute(put_query)
+        logging.info(f"Query successfully run")
+    except Exception as e:
+        raise (str(e))
+    finally:
+        connection.close()
+        engine.dispose()
+
+    try:
+        connection = engine.connect()
+
+        logging.info(f"Copying to Table {table_path}.")
+        copy_results = connection.execute(copy_query)
+        logging.info(f"Query successfully run")
+
+        logging.info(f"Removing {file} from stage.")
+        remove = connection.execute(remove_query)
+        logging.info(f"Query successfully run")
+    except Exception as e:
+        raise (str(e))
+    finally:
+        connection.close()
+        engine.dispose()
+
 
 def upload_payload_to_snowflake(
     payload: Dict[Any, Any],

@@ -107,10 +107,12 @@ class ThoughtIndustries(ABC):
     ):
         """ Upload event payload to Snowflake """
 
+        api_start_datetime = epoch_ts_ms_to_datetime_str(epoch_start_ms)
+        api_end_datetime = epoch_ts_ms_to_datetime_str(epoch_end_ms)
         upload_dict = {
             "data": events,
-            "api_start_datetime": epoch_ts_ms_to_datetime_str(epoch_start_ms),
-            "api_end_datetime": epoch_ts_ms_to_datetime_str(epoch_end_ms),
+            "api_start_datetime": api_start_datetime,
+            "api_end_datetime": api_end_datetime,
         }
 
         schema_name = 'level_up'
@@ -120,6 +122,7 @@ class ThoughtIndustries(ABC):
         upload_payload_to_snowflake(
             upload_dict, schema_name, stage_name, table_name, json_dump_filename
         )
+        print(f'Completed writing to Snowflake for api_start_datetime {api_start_datetime} & api_end_datetime {api_end_datetime}')
 
     def fetch_and_upload_data(self, epoch_start_ms: int,
                               epoch_end_ms: int) -> Dict[Any, Any]:
