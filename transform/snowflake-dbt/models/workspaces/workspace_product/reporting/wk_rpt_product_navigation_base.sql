@@ -85,7 +85,15 @@ WITH filtered_snowplow_events AS (
     )
     OR
     event_label LIKE ANY ('groups_dropdown_%','project_dropdown_%','group_dropdown_%','projects_dropdown_%')
-  {% if is_incremental() %}
+    OR 
+    (
+    e.event_label IN ('packages_registry','container_registry','infrastructure_registry','kubernetes','terraform')
+    AND
+    e.event_action = 'click_menu_item'
+    AND
+    e.event_category LIKE 'groups%'
+    )  
+    {% if is_incremental() %}
 
     AND  derived_tstamp > (SELECT MAX(derived_tstamp) FROM {{ this }})
 
