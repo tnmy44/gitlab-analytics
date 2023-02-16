@@ -87,11 +87,11 @@ WITH filtered_snowplow_events AS (
     event_label LIKE ANY ('groups_dropdown_%','project_dropdown_%','group_dropdown_%','projects_dropdown_%')
     OR 
     (
-    e.event_label IN ('packages_registry','container_registry','infrastructure_registry','kubernetes','terraform')
+    event_label IN ('packages_registry','container_registry','infrastructure_registry','kubernetes','terraform')
     AND
-    e.event_action = 'click_menu_item'
+    event_action = 'click_menu_item'
     AND
-    e.event_category LIKE 'groups%'
+    event_category LIKE 'groups%'
     )  
     {% if is_incremental() %}
 
