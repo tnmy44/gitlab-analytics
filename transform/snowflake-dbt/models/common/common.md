@@ -1546,7 +1546,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs dim_behavior_browser %}
 
-**Description:** Dimension for the analysis of browsers in Snowplow.
+**Description:** Dimension containing browser attributes for the analysis of Snowplow events.
 
 **Data Grain:** dim_behavior_browser_sk
 - browser_name
@@ -1556,6 +1556,9 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 **Filters Applied to Model:**
 - Include events where at least one of browser_name, browser_major_version, browser_minor_version, _OR_ browser_language is available (`browser_name IS NOT NULL OR browser_major_version IS NOT NULL OR browser_minor_version IS NOT NULL OR browser_language IS NOT NULL`)
+
+**Tips for use:**
+- Join this model to facts (ex. `fct_behavior_website_page_view`, `fct_behavior_structured_event`) using `dim_behavior_browser_sk` to get browser-level attributes about page views or events
 
 {% enddocs %}
 
@@ -1574,7 +1577,7 @@ This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 
 {% docs fct_behavior_structured_event %}
 
-**Description:** Fact table containing quantitative data for Snowplow Strutured events. Structured events are custom events implemented with five parameters: event_category, event_action, event_label, event_property and event_value. Snowplow documentation on [types of events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/).
+**Description:** Fact table containing quantitative data for Snowplow Structured events. Structured events are custom events implemented with five parameters: event_category, event_action, event_label, event_property and event_value. Snowplow documentation on [types of events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/).
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -1590,7 +1593,7 @@ This ID in generated using `event_id` from [prep_snowplow_unnested_events_all](h
 
 {% docs dim_behavior_operating_system %}
 
-**Description:** Dimension for the analysis of operating systems in Snowplow.
+**Description:** Dimension containing operating system and device attributes for the analysis of Snowplow events.
 
 **Data Grain:** dim_behavior_operating_system_sk
 - os_name
@@ -1598,6 +1601,9 @@ This ID in generated using `event_id` from [prep_snowplow_unnested_events_all](h
 
 **Filters Applied to Model:**
 - Include events where os_name _OR_ os_timezone is available (`os_name IS NOT NULL OR os_timezone IS NOT NULL`)
+
+**Tips for use:**
+- Join this model to facts (ex. `fct_behavior_website_page_view`, `fct_behavior_structured_event`) using `dim_behavior_operating_system_sk` to get OS and device-level attributes about page views or events
 
 {% enddocs %}
 
@@ -1633,7 +1639,7 @@ This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow
 
 {% docs fct_behavior_unstructured_event %}
 
-**Description:** Fact table containing quantitative data for Snowplow unstrutured events. These events include [Snowplow-authored "out of the box" events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/#snowplow-authored-events) like `link_click`, `focus_form`, `change_form`, and `submit_form`. Unstructured event data is based on a JSON schema.
+**Description:** Fact table containing quantitative data for Snowplow unstructured events. These events include [Snowplow-authored "out of the box" events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/#snowplow-authored-events) like `link_click`, `focus_form`, `change_form`, and `submit_form`. Unstructured event data is based on a JSON schema.
 
 **Data Grain:** fct_behavior_unstructured_sk (generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all))
 - event_id
