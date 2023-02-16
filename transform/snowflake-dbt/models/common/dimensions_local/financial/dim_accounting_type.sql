@@ -3,6 +3,8 @@ WITH accounting_type_source AS (
     SELECT *
     FROM {{ ref('zuora_revenue_accounting_type_source') }}
 
+    -- Debug
+
 ), final AS (
 
     SELECT
