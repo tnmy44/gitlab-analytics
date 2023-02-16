@@ -48,7 +48,7 @@ fct_event_namespace_daily AS (
       COUNT(DISTINCT(dim_user_id)) AS user_count
     FROM fct_event_valid
     WHERE dim_ultimate_parent_namespace_id IS NOT NULL
-      AND DATE_TRUNC('month', event_date) >= DATEADD('month', -24, DATE_TRUNC('month',CURRENT_DATE))
+      AND event_date >= DATEADD('month', -24, DATE_TRUNC('month',CURRENT_DATE))
     {{ dbt_utils.group_by(n=20) }}
         
 )
