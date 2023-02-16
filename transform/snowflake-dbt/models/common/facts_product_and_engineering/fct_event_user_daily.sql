@@ -51,7 +51,7 @@ fct_event_user_daily AS (
     
   FROM fct_event_valid
   WHERE is_null_user = FALSE
-    AND DATE_TRUNC('month', event_date) >= DATEADD('month', -24, DATE_TRUNC('month',CURRENT_DATE))
+    AND event_date >= DATEADD('month', -24, DATE_TRUNC('month',CURRENT_DATE))
   {{ dbt_utils.group_by(n=23) }}
 
 )
