@@ -37,5 +37,5 @@ models:
         description: For the CRM Account, sum of all ARR lost when the customer left GitLab.
       - name: lost_arr
         description: Sum of crm_account_lost_opp_arr and crm_account_lost_customer_arr
-      - name: theme
-        description: Scoped theme::* label in the issue or epic user request
+      - name: theme_labels
+        description: Non-scoped theme:* labels in the issue or epic user request. Since there can be multiple for a single issue/epic, this field is an array.
