@@ -2,6 +2,7 @@
 ThoughtIndustries is the name of the vendor that provides
 GitLab with Learning Management System internally known as Level Up.
 
+
 The code will refer to ThoughtIndustries when referring to the API,
 and Level Up when referring to the schemas/tables to save.
 
