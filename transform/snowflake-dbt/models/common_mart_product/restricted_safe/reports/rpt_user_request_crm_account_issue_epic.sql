@@ -31,7 +31,7 @@ WITH mart_user_request AS (
         product_stage,
         issue_epic_type,
         issue_status,
-        theme,
+        theme_labels,
         epic_status,
         parent_epic_path,
         parent_epic_title,
