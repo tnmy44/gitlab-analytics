@@ -10,7 +10,7 @@ The unique identifier of the ultimate parent namespace's latest product tier, ea
 
 {% enddocs %}
 
-{% docs dim_active_subscription_id %}
+{% docs dim_latest_subscription_id %}
 
 The unique identifier of the ultimate parent namespace's latest subscription, easily joined to `dim_subscription`
 
@@ -34,15 +34,27 @@ The identifier of the Zuora account associated with the subscription, easily joi
 
 {% enddocs %}
 
-{% docs dim_ultimate_parent_namespace_id %}
+{% docs dim_ultimate_parent_namespace_id_event_model %}
 
 The unique identifier of the ultimate parent namespace in which the event was generated, easily joined to `dim_namespace`. The recommended JOIN is `dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id`, which will be a one-to-one relationship. JOINing on `dim_ultimate_parent_namespace_id = dim_namespace.ultimate_parent_namespace_id` will return `dim_namespace` records for both the ultimate parent _and_ all sub-groups underneath it. This field will be NULL if the event is not tied to a namespace (ex. users_created)
 
 {% enddocs %}
 
-{% docs dim_project_id %}
+{% docs dim_project_id_event_model %}
 
 The unique identifier of the project in which the event was generated, easily joined to `dim_project`. This will be NULL if the event is not tied to a project (ex. epic_creation, etc)
+
+{% enddocs %}
+
+{% docs dim_ultimate_parent_namespace_id %}
+
+The unique identifier (and natural key) of the namespace's ultimate parent, easily joined to `dim_namespace`. The recommended JOIN is `dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id`, which will be a one-to-one relationship. JOINing on `dim_ultimate_parent_namespace_id = dim_namespace.ultimate_parent_namespace_id` will return `dim_namespace` records for both the ultimate parent _and_ all sub-groups underneath it.
+
+{% enddocs %}
+
+{% docs dim_project_id %}
+
+The unique identifier (and natural key) of the project, easily joined to `dim_project`
 
 {% enddocs %}
 
@@ -126,19 +138,19 @@ The name of the [product category](https://gitlab.com/gitlab-com/www-gitlab-com/
 
 {% docs plan_id_at_event_date %}
 
-The ID of the ultimate parent namespace's plan on the day the event was created (ex. 34, 100, 101, etc). If multiple plans are available on a single day, this reflects the last available plan for the namespace. Defaults to '34' (free) if a value is not available
+The ID of the ultimate parent namespace's plan on the day the event was created (ex. 34, 100, 101, etc). If multiple plans are available on a given day, this reflects the plan on the last event of the day for the namespace. Defaults to '34' (free) if a value is not available
 
 {% enddocs %}
 
 {% docs plan_name_at_event_date %}
 
-The name of the ultimate parent namespace's plan type on the day when the event was created (ex. free, premium, ultimate). If multiple plans are available on a single day, this reflects the last available plan for the namespace. Defaults to 'free' if a value is not available
+The name of the ultimate parent namespace's plan type on the day when the event was created (ex. free, premium, ultimate). If multiple plans are available on a given day, this reflects the plan on the last event of the day for the namespace. Defaults to 'free' if a value is not available
 
 {% enddocs %}
 
 {% docs plan_was_paid_at_event_date %}
 
-Boolean flag which is set to True if the ultimate parent namespace's plan was paid on the day when the event was created. If multiple plans are available on a single day, this reflects the last available plan for the namespace. Defaults to False if a value is not available
+Boolean flag which is set to True if the ultimate parent namespace's plan was paid on the day when the event was created. If multiple plans are available on a given day, this reflects the plan on the last event of the day for the namespace. Defaults to False if a value is not available
 
 {% enddocs %}
 
@@ -157,6 +169,24 @@ The name of the ultimate parent namespace's plan type at the timestamp when the 
 {% docs plan_was_paid_at_event_timestamp %}
 
 Boolean flag which is set to True if the ultimate parent namespace's plan was paid at the timestamp when the event was created. Defaults to False if a value is not available
+
+{% enddocs %}
+
+{% docs plan_id_at_event_month %}
+
+The ID of the ultimate parent namespace's plan on the month the event was created (ex. 34, 100, 101, etc). If multiple plans are available during the month, this reflects the plan on the last event of the month for the namespace. Defaults to '34' (free) if a value is not available
+
+{% enddocs %}
+
+{% docs plan_name_at_event_month %}
+
+The name of the ultimate parent namespace's plan on the month the event was created (ex. free, premium, ultimate, etc). If multiple plans are available during the month, this reflects the plan on the last event of the month for the namespace. Defaults to 'free' if a value is not available
+
+{% enddocs %}
+
+{% docs plan_was_paid_at_event_month %}
+
+Boolean flag which is set to True if the ultimate parent namespace's plan was paid on the month when the event was created. If multiple plans are available during the month, this reflects the plan on the last event of the month for the namespace. Defaults to False if a value is not available
 
 {% enddocs %}
 
@@ -289,6 +319,12 @@ The count of events generated
 {% docs ultimate_parent_namespace_count %}
 
  The count of distinct ultimate parent namespaces in which an event was generated
+
+{% enddocs %}
+
+{% docs event_date_count %}
+
+ The count of distinct days in which an event was generated
 
 {% enddocs %}
 

@@ -1659,3 +1659,32 @@ This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow
 - Any self-describing event (ex. not a structured event, page view, etc) is considered to be "unstructured", but GitLab's current instrumentation focuses on the [Snowplow-authored "out of the box" events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/#snowplow-authored-events).
 
 {% enddocs %}
+
+{% docs fct_event_namespace_monthly %}
+
+**Description:** GitLab.com usage event data for valid events, grouped by month, event name, and ultimate parent namespace
+
+**Data Grain:**
+- event_calendar_month
+- event_name
+- dim_ultimate_parent_namespace_id
+
+**Filters Applied to Model:**
+- Exclude events not associated with a namespace (ex: 'users_created')
+- `Inherited` - Include valid events for standard analysis and reporting:
+  - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
+    - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
+  - Exclude events from blocked users (based on the current user state)
+- `Inherited` - Rolling 24 months of data
+
+**Business Logic in this Model:**
+- `Inherited` - A namespace's plan information (ex: `plan_name_at_event_month`) is determined by the plan for the last event on a given month
+- `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
+- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
+
+**Other Comments:**
+- The current month is _included_ in this model. Be mindful of potentially including incomplete data
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
+
+{% enddocs %}
