@@ -103,6 +103,7 @@ models:
       - name: age_cohort
         description: As based on current data.  
       - name: gender
+      - name: gender_identity
       - name: nationality
       - name: region
       - name: region_modified
