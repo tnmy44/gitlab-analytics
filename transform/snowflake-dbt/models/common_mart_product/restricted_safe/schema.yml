@@ -39,3 +39,7 @@ models:
         description: Sum of crm_account_lost_opp_arr and crm_account_lost_customer_arr
       - name: theme_labels
         description: Non-scoped theme:* labels in the issue or epic user request. Since there can be multiple for a single issue/epic, this field is an array.
+      - name: primary_solution_architect_id
+        description: The primary solution architech user id associated with the SFDC opportunity, whenever there is an opportunity linked to the user request.
+      - name: primary_solution_architect_user_name
+        description: The primary solution architech user name associated with the SFDC opportunity, whenever there is an opportunity linked to the user request.

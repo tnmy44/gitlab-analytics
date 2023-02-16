@@ -15,7 +15,8 @@
     ('fct_quote_item', 'fct_quote_item'),
     ('dim_quote', 'dim_quote'),
     ('dim_crm_opportunity', 'dim_crm_opportunity'),
-    ('dim_order_type', 'dim_order_type')
+    ('dim_order_type', 'dim_order_type'),
+    ('dim_crm_user', 'dim_crm_user')
 ])}}
 
 , opportunity_seats AS (
@@ -534,10 +535,12 @@
 
       -- CRM Opportunity attributes
       dim_crm_opportunity.stage_name                                              AS crm_opp_stage_name,
-      fct_crm_opportunity.is_closed                                         AS crm_opp_is_closed,
+      fct_crm_opportunity.is_closed                                               AS crm_opp_is_closed,
       fct_crm_opportunity.close_date                                              AS crm_opp_close_date,
       dim_order_type.order_type_name                                              AS crm_opp_order_type,
       dim_order_type.order_type_grouped                                           AS crm_opp_order_type_grouped,
+      primary_solution_architect.dim_crm_user_id                                  AS primary_solution_architect_id,
+      primary_solution_architect.user_name                                        AS primary_solution_architect_user_name,
       IFF(DATE_TRUNC('month', dim_crm_opportunity.subscription_end_date) >= DATE_TRUNC('month',CURRENT_DATE),
         DATE_TRUNC('month', dim_crm_opportunity.subscription_end_date),
         NULL
@@ -578,6 +581,9 @@
       ON dim_crm_opportunity.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
     LEFT JOIN opportunity_seats
       ON opportunity_seats.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
+    LEFT JOIN dim_crm_user AS primary_solution_architect
+      ON primary_solution_architect.dim_crm_user_id = dim_crm_opportunity.primary_solution_architect
+
 
 ), customer_value_scores AS (
 
