@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 from airflow_utils import (
     DATA_IMAGE,
@@ -90,6 +91,7 @@ for endpoint_class in endpoint_classes:
         tolerations=get_toleration(False),
         arguments=[extract_command],
         dag=dag,
+        trigger_rule=TriggerRule.ALL_DONE, # run task regardless of upstream
     )
     prev_task >> extract_task
     prev_task = extract_task
