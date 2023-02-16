@@ -27,7 +27,8 @@ WITH source AS (
         WHEN age IS NULL            THEN 'Unreported'
         WHEN age = -1               THEN 'Unreported'
           ELSE NULL END                                                                 AS age_cohort,
-      COALESCE(gender_dropdown, gender,'Did Not Identify')                              AS gender,
+      COALESCE(gender,'Did Not Identify')                                               AS gender,    
+      COALESCE(gender_dropdown, gender,'Did Not Identify')                              AS gender_identity,
       COALESCE(ethnicity, 'Did Not Identify')                                           AS ethnicity, 
       country,
       nationality,
@@ -39,8 +40,8 @@ WITH source AS (
           THEN 'LATAM'
         ELSE region END                                                                AS region_modified,
         IFF(country IN ('United States','United States of America'), 
-            COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_' || country, 
-            COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_'|| 'Non-US')   AS gender_region,
+            COALESCE(gender,'Did Not Identify')  || '_' || country, 
+            COALESCE(gender,'Did Not Identify')  || '_'|| 'Non-US')   AS gender_region,
         greenhouse_candidate_id,
         uploaded_at                                                                    AS last_updated_date,
       CASE
