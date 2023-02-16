@@ -5080,7 +5080,7 @@ models:
         description: '{{ doc("model_updated_date") }}'
 
   - name: dim_behavior_operating_system
-    description: Dimension for the analysis of operating systems in Snowplow.
+    description: '{{ doc("dim_behavior_operating_system") }}'
     columns: 
       - name: dim_behavior_operating_system_sk
         tests:
