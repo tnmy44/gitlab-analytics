@@ -40,7 +40,7 @@ fct_event_valid AS (
       ON fct_event.event_name = xmau_metrics.common_events_to_include
     LEFT JOIN dim_user
       ON fct_event.dim_user_sk = dim_user.dim_user_sk
-    WHERE DATE_TRUNC(MONTH,fct_event.event_created_at::DATE) >= DATEADD(MONTH, -36, DATE_TRUNC(MONTH,CURRENT_DATE)) 
+    WHERE event_created_at >= DATEADD(MONTH, -36, DATE_TRUNC(MONTH,CURRENT_DATE)) 
       AND (fct_event.days_since_user_creation_at_event_date >= 0
            OR fct_event.days_since_user_creation_at_event_date IS NULL)
       AND (dim_user.is_blocked_user = FALSE 
