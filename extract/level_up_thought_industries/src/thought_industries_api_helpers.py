@@ -7,7 +7,7 @@ import time
 import json
 
 from typing import Any, Dict, Optional
-from logging import error
+from logging import info, error
 
 import requests
 import dateutil.parser
@@ -187,7 +187,7 @@ def make_request(
     except requests.exceptions.RequestException:
         if response.status_code == 429:
             retry_after = int(response.headers["Retry-After"])
-            print(f'\nToo many requests... Sleeping for {retry_after} seconds')
+            info(f'\nToo many requests... Sleeping for {retry_after} seconds')
             time.sleep(retry_after)
             current_retry_count += 1
             # Make the request again

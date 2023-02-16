@@ -29,3 +29,4 @@ if __name__ == '__main__':
     logging.getLogger("snowflake.connector.cursor").disabled = True
     logging.getLogger("snowflake.connector.connection").disabled = True
     fire.Fire(main)
+    logging.info("Complete.")

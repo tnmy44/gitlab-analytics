@@ -12,6 +12,7 @@ The parent class contains the bulk of the logic as the endpoints are very simili
 """
 import os
 
+from logging import info, basicConfig, getLogger, error
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
@@ -71,7 +72,7 @@ class ThoughtIndustries(ABC):
                 'endDate': current_epoch_end_ms
             }
             full_url = f'{self.BASE_URL}{self.endpoint_url}'
-            print(f'\nMaking request to {full_url} with params:\n{params}')
+            info(f'\nMaking request to {full_url} with params:\n{params}')
             response = make_request(
                 "GET",
                 full_url,
@@ -83,7 +84,7 @@ class ThoughtIndustries(ABC):
             events = response.json()['events']
             if events:
                 events_to_print = [events[0]] + [events[-1]]
-                print(
+                info(
                     f'\nfirst & last event from latest response: {events_to_print}'
                 )
                 final_events = final_events + events
@@ -98,7 +99,7 @@ class ThoughtIndustries(ABC):
                         'endDate parameter has not changed since last call.'
                     )
             else:
-                print('\nThe last response had 0 events, stopping requests\n')
+                info('\nThe last response had 0 events, stopping requests\n')
 
         return final_events
 
@@ -122,7 +123,7 @@ class ThoughtIndustries(ABC):
         upload_payload_to_snowflake(
             upload_dict, schema_name, stage_name, table_name, json_dump_filename
         )
-        print(f'Completed writing to Snowflake for api_start_datetime {api_start_datetime} & api_end_datetime {api_end_datetime}')
+        info(f'Completed writing to Snowflake for api_start_datetime {api_start_datetime} & api_end_datetime {api_end_datetime}')
 
     def fetch_and_upload_data(self, epoch_start_ms: int,
                               epoch_end_ms: int) -> Dict[Any, Any]:
@@ -188,4 +189,4 @@ if __name__ == '__main__':
     result_events = cls_to_run.fetch_and_upload_data(
         EPOCH_START_MS, EPOCH_END_MS
     )
-    print(f'\nresult_events: {result_events[:10]}')
+    info(f'\nresult_events: {result_events[:10]}')
