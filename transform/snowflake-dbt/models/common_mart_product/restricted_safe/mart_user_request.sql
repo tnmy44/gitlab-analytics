@@ -182,7 +182,9 @@
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
 
-      IFF(LOWER(label_links_joined.label_title) LIKE 'theme::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS theme_label,
+      IFF(LOWER(label_links_joined.label_title) LIKE 'theme:%'
+        AND NOT CONTAINS(label_links_joined.label_title, '::'), -- This second condition makes sure we are not matching the scoped label theme::*, only the non scoped theme:*
+          SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)                                                             AS theme_label,
       CASE
         WHEN group_label IS NOT NULL THEN 3
         WHEN devops_label IS NOT NULL THEN 2
@@ -203,7 +205,9 @@
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
 
-      IFF(LOWER(label_links_joined.label_title) LIKE 'theme::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS theme_label,
+      IFF(LOWER(label_links_joined.label_title) LIKE 'theme:%'
+        AND NOT CONTAINS(label_links_joined.label_title, '::'), -- This second condition makes sure we are not matching the scoped label theme::*, only the non scoped theme:*
+          SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)                                                             AS theme_label,
 
       CASE
         WHEN group_label IS NOT NULL THEN 3
@@ -212,6 +216,22 @@
         ELSE 0
       END product_group_level
     FROM label_links_joined
+
+), issue_theme_labels AS (
+
+    SELECT
+      dim_issue_id,
+      ARRAY_AGG(theme_label) WITHIN GROUP (ORDER BY theme_label) AS theme_labels
+    FROM issue_labels
+    GROUP BY 1
+
+), epic_theme_labels AS (
+
+    SELECT
+      dim_epic_id,
+      ARRAY_AGG(theme_label) WITHIN GROUP (ORDER BY theme_label) AS theme_labels
+    FROM epic_labels
+    GROUP BY 1
 
 ), issue_group_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the group::* label
 
@@ -373,7 +393,7 @@
         WHEN 'feature' THEN 'feature request'
       END                                                                         AS issue_epic_type,
       IFNULL(issue_status.workflow_label, 'Not Started')                          AS issue_status,
-      theme_label.theme_label                                                     AS theme,
+      issue_theme_labels.theme_labels                                             AS theme_labels,
       -1                                                                          AS epic_status,
       dim_epic.epic_url                                                           AS parent_epic_path,
       dim_epic.epic_title                                                         AS parent_epic_title,
@@ -397,9 +417,8 @@
       ON devops_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN issue_type_label AS type_label
       ON type_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
-    LEFT JOIN issue_labels AS theme_label
-      ON theme_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
-      AND theme_label.theme_label IS NOT NULL
+    LEFT JOIN issue_theme_labels
+      ON issue_theme_labels.dim_issue_id = bdg_issue_user_request.dim_issue_id
 
     UNION
 
@@ -453,7 +472,7 @@
         WHEN 'feature' THEN 'feature request'
       END                                                                         AS issue_epic_type,
       'Not Applicable'                                                            AS issue_status,
-      theme_label.theme_label                                                     AS theme,
+      epic_theme_labels.theme_labels                                              AS theme_labels,
       IFNULL(epic_weight.epic_status, 0)                                          AS epic_status,
       parent_epic.epic_url                                                        AS parent_epic_path,
       parent_epic.epic_title                                                      AS parent_epic_title,
@@ -481,9 +500,8 @@
       ON devops_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN epic_type_label AS type_label
       ON type_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
-    LEFT JOIN epic_labels AS theme_label
-      ON theme_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
-      AND theme_label.theme_label IS NOT NULL
+    LEFT JOIN epic_theme_labels
+      ON epic_theme_labels.dim_epic_id = bdg_epic_user_request.dim_epic_id
 
 ), user_request_with_account_opp_attributes AS (
 
