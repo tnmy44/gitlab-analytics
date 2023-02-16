@@ -64,6 +64,7 @@ fact_with_dims AS (
     ON fact.dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id
   LEFT JOIN dim_date
     ON fact.event_calendar_month = dim_date.date_actual --join on first day of calendar month
+  WHERE fact.event_calendar_month < DATE_TRUNC('month', CURRENT_DATE) --exclude current month/incomplete data
         
 )
 

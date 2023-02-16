@@ -79,7 +79,6 @@ fct_event_namespace_monthly AS (
       ON fact_with_month.dim_ultimate_parent_namespace_id = plan_by_month.dim_ultimate_parent_namespace_id
       AND fact_with_month.event_calendar_month = plan_by_month.event_calendar_month
     WHERE fact_with_month.dim_ultimate_parent_namespace_id IS NOT NULL
-      AND fact_with_month.event_calendar_month < DATE_TRUNC('month', CURRENT_DATE)
     {{ dbt_utils.group_by(n=18) }}
         
 )
