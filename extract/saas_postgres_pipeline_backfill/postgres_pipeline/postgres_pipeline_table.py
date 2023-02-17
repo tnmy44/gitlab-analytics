@@ -1,10 +1,12 @@
 import logging
+
+from datetime import datetime
 from typing import Dict, Any
 
 from sqlalchemy.engine.base import Engine
 
 import load_functions
-from utils import check_if_schema_changed
+from utils import schema_addition_check
 
 
 class PostgresPipelineTable:
@@ -49,37 +51,7 @@ class PostgresPipelineTable:
     def is_incremental(self) -> bool:
         return "{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query
 
-    def do_incremental(
-        self, source_engine: Engine, target_engine: Engine, schema_changed: bool
-    ) -> bool:
-        if schema_changed:
-            return False
-        if not self.needs_incremental_backfill(source_engine, target_engine):
-            return False
-        target_table = self.get_target_table_name()
-        return load_functions.load_incremental(
-            source_engine,
-            target_engine,
-            self.source_table_name,
-            self.table_dict,
-            target_table,
-        )
 
-    def do_trusted_data_pgp(
-        self, source_engine: Engine, target_engine: Engine, schema_changed: bool
-    ) -> bool:
-        """
-        The function is used for trusted data extract and load.
-        It is responsible for setting up the target table and then call trusted_data_pgp load function.
-        """
-        target_table = self.target_table_name_td_sf
-        return load_functions.trusted_data_pgp(
-            source_engine,
-            target_engine,
-            self.source_table_name,
-            self.table_dict,
-            target_table,
-        )
 
     def needs_incremental_backfill(
         self, source_engine: Engine, target_engine: Engine
@@ -95,7 +67,7 @@ class PostgresPipelineTable:
         if not self.is_incremental() or not schema_changed:
             logging.info("table does not need incremental backfill")
             return False
-        target_table = self.get_temp_target_table_name()
+        target_table = self.get_target_table_name()
         return load_functions.sync_incremental_ids(
             source_engine,
             target_engine,
@@ -129,18 +101,44 @@ class PostgresPipelineTable:
         schema_changed: bool,
     ) -> bool:
         load_types = {
-            "incremental": self.do_incremental,
             "scd": self.do_scd,
             "backfill": self.do_incremental_backfill,
             "test": self.check_new_table,
-            "trusted_data": self.do_trusted_data_pgp,
         }
         return load_types[load_type](source_engine, target_engine, schema_changed)
+
+    def query_backfill_metadata():
+        #TODO
+        latest_backfill_status = 'in progress'
+        latest_backfill_updated_at = datetime.now()
+        return latest_backfill_status, latest_backfill_updated_at
+
+    def no_gcs_schema_change():
+        pass
+
+    def check_if_backfill_needed():
+        #TODO
+        latest_backfill_status, latest_backfill_updated_at = query_backfill_metadata()
+
+        if latest_backfill_status == 'in progress':
+
+            # last backfill file was less than 24 hr ago
+            if latest_backfill_updated_at < '24hr':
+
+                # no schema change since backfill started
+                if no_gcs_schema_change():
+                    return 'Start from last file'
+            return False
+
+        # backfill not already in progres
+        else:
+            return self.check_if_schema_changed()
+
 
     def check_if_schema_changed(
         self, source_engine: Engine, target_engine: Engine
     ) -> bool:
-        schema_changed = check_if_schema_changed(
+        schema_changed = schema_addition_check(
             self.query,
             source_engine,
             self.source_table_name,
@@ -155,5 +153,8 @@ class PostgresPipelineTable:
     def get_target_table_name(self):
         return self.target_table_name
 
+    # REMOVE
+    '''
     def get_temp_target_table_name(self):
         return self.get_target_table_name() + "_TEMP"
+    '''

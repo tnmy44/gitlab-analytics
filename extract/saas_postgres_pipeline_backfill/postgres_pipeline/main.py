@@ -1,22 +1,16 @@
-import datetime
+
 import logging
-import os
-import sys
-from typing import Dict, Any
+from typing import Dict
 
 from fire import Fire
 from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
     query_executor,
     append_to_xcom_file,
 )
 from sqlalchemy.engine.base import Engine
 from postgres_pipeline_table import PostgresPipelineTable
 from utils import (
-    check_if_schema_changed,
-    chunk_and_upload,
     get_engines,
-    id_query_generator,
     manifest_reader,
 )
 
@@ -63,7 +57,9 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
     manifest_dict = manifest_reader(file_path)
     # When load_only_table specified reduce manifest to keep only relevant table config
     filter_manifest(manifest_dict, load_only_table)
+    print(manifest_dict)
 
+    # REVERT
     postgres_engine, snowflake_engine = get_engines(manifest_dict["connection_info"])
     logging.info(snowflake_engine)
 
@@ -72,10 +68,15 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         table_dict = manifest_dict["tables"][table]
         current_table = PostgresPipelineTable(table_dict)
 
+        '''
+        is_backfill = current_table.check_if_backfill_needed()
         # Check if the schema has changed or the table is new
         schema_changed = current_table.check_if_schema_changed(
             postgres_engine, snowflake_engine
         )
+        '''
+
+        schema_changed = True #REVERT
 
         # Call the correct function based on the load_type
         loaded = current_table.do_load(
@@ -83,6 +84,8 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         )
         logging.info(f"Finished upload for table: {table}")
 
+        # REVERT
+        '''
         # Drop the original table and rename the temp table
         if schema_changed and loaded:
             swap_temp_table(
@@ -102,10 +105,18 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         append_to_xcom_file(
             {current_table.get_target_table_name(): count, "load_ran": loaded}
         )
+        '''
 
 
 if __name__ == "__main__":
+    file_path = "analytics/extract/postgres_pipeline/manifests_decomposed/el_gitlab_com_db_manifest.yaml"
+    load_type = 'backfill'
+    load_only_table = 'alert_management_http_integrations'
+    main(file_path, load_type, load_only_table)
+    # REVERT
+    '''
     logging.basicConfig(level=logging.INFO)
     logging.getLogger("snowflake.connector.cursor").disabled = True
     logging.getLogger("snowflake.connector.connection").disabled = True
     Fire({"tap": main})
+    '''

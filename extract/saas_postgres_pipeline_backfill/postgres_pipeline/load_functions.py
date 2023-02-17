@@ -185,9 +185,11 @@ def sync_incremental_ids(
     primary_key = table_dict["export_table_primary_key"]
     # If temp isn't in the name, we don't need to full sync.
     # If a temp table exists, we know the sync didn't complete successfully
+    '''
     if "_TEMP" != table_name[-5:]:
         logging.info(f"Table {table} doesn't need a full sync.")
         return False
+    '''
 
     load_ids(
         additional_filtering,

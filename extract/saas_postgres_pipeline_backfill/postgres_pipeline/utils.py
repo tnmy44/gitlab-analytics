@@ -4,6 +4,7 @@ import os
 import sys
 import yaml
 import tempfile
+from datetime import datetime
 from time import time
 from typing import Dict, List, Generator, Any, Tuple
 
@@ -54,18 +55,15 @@ def upload_to_gcs(
     """
 
     keyfile = yaml.load(os.environ["GCP_SERVICE_CREDS"], Loader=yaml.FullLoader)
-    bucket_name = "postgres_pipeline"
+    bucket_name = "saas-pipeline-backfills"
     bucket = get_gcs_bucket(keyfile, bucket_name)
 
     # Write out the TSV and upload it
     enriched_df = dataframe_enricher(advanced_metadata, upload_df)
-    enriched_df.to_csv(
+    enriched_df.to_parquet(
         upload_file_name,
         compression="gzip",
-        escapechar="\\",
         index=False,
-        quoting=csv.QUOTE_NONE,
-        sep="\t",
     )
     blob = bucket.blob(upload_file_name)
     blob.upload_from_filename(upload_file_name)
@@ -259,7 +257,9 @@ def chunk_and_upload(
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
 
-            upload_file_name = f"{target_table}_CHUNK.tsv.gz"
+            # i.e '2023-02-17T11:02:44.672'
+            now = datetime.now().isoformat(timespec='milliseconds')
+            upload_file_name = f"{target_table}/{target_table}_chunk_{now}.parquet.gzip"
             if row_count > 0:
                 upload_to_gcs(
                     advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
@@ -268,6 +268,7 @@ def chunk_and_upload(
                     f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}"
                 )
 
+    '''
     if rows_uploaded > 0:
         trigger_snowflake_upload(
             target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
@@ -275,6 +276,7 @@ def chunk_and_upload(
         logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
 
     target_engine.dispose()
+    '''
     source_engine.dispose()
 
 
@@ -308,7 +310,7 @@ def range_generator(
         start += step
 
 
-def check_if_schema_changed(
+def schema_addition_check(
     raw_query: str,
     source_engine: Engine,
     source_table: str,
@@ -342,7 +344,9 @@ def check_if_schema_changed(
         .columns
     )
 
-    return set(source_columns) != set(target_columns)
+    source_columns, target_columns = set(source_columns), set(target_columns)
+    # does target include all the new_source cols?
+    return all(elem in target_columns for elem in source_columns)
 
 
 def id_query_generator(
@@ -364,6 +368,7 @@ def id_query_generator(
     it will return a list of queries that load chunks of IDs until it has the same max id.
     """
 
+    '''
     # Get the max ID from the target DB
     logging.info(f"Getting max primary key from target_table: {target_table}")
     max_target_id_query = f"SELECT MAX({primary_key}) as id FROM {target_table}"
@@ -377,6 +382,7 @@ def id_query_generator(
     else:
         max_target_id = 0
     logging.info(f"Target Max ID: {max_target_id}")
+    '''
 
     # Get the max ID from the source DB
     logging.info(f"Getting max ID from source_table: {source_table}")
@@ -416,7 +422,7 @@ def id_query_generator(
     # Generate the range pairs based on the max source id and the
     # greatest of either the min_source_id or the max_target_id
     for id_pair in range_generator(
-        max(max_target_id, min_source_id), max_source_id, step=id_range
+        min_source_id, max_source_id, step=id_range
     ):
         id_range_query = (
             "".join(raw_query.lower().split("where")[0])
