@@ -84,11 +84,6 @@ databases:
     - jcaine_prep:
         shared: no
 
-    - jkim_prod:
-        shared: no
-    - jkim_prep:
-        shared: no
-
     - jng_prod:
         shared: no
     - jng_prep:
@@ -3133,52 +3128,6 @@ roles:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
 
-    - jkim:
-        member_of:
-            - analyst_sales
-            - restricted_safe
-            - data_team_analyst
-            - bi_tool_eval_read
-            - xactly
-            - sales_analytics
-            - data_science_readonly
-            - marketo
-            - static_sensitive
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - jkim_prep
-                - jkim_prod
-            schemas:
-                - jkim_prep.*
-                - jkim_prod.*
-            tables:
-                - jkim_prep.*.*
-                - jkim_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - jkim_prep
-                    - jkim_prod
-                write:
-                    - jkim_prep
-                    - jkim_prod
-            schemas:
-                read:
-                    - jkim_prep.*
-                    - jkim_prod.*
-                write:
-                    - jkim_prep.*
-                    - jkim_prod.*
-            tables:
-                read:
-                    - jkim_prep.*.*
-                    - jkim_prod.*.*
-                write:
-                    - jkim_prep.*.*
-                    - jkim_prod.*.*
-
     - jng:
         member_of:
          - restricted_safe
@@ -4818,11 +4767,6 @@ users:
         can_login: yes
         member_of:
             - jcaine
-
-    - jkim:
-        can_login: yes
-        member_of:
-            - jkim
 
     - jng:
         can_login: yes
