@@ -230,11 +230,11 @@ WITH date_details AS (
   LEFT JOIN agg_demo_keys
     ON base.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
   LEFT JOIN funnel_targets_per_quarter target
-     ON target.target_fiscal_quarter_date = base.close_fiscal_quarter_date
+    ON target.target_fiscal_quarter_date = base.close_fiscal_quarter_date
       AND target.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
   -- quarterly total
   LEFT JOIN totals_per_quarter total
-     ON total.close_fiscal_quarter_date = base.close_fiscal_quarter_date
+    ON total.close_fiscal_quarter_date = base.close_fiscal_quarter_date
       AND total.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
   
 )
