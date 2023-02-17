@@ -577,4 +577,44 @@ models:
             - reporting_month
             - dim_subscription_id_original
             - dim_namespace_id
-            
+    
+  - name: mart_structured_event_behavior
+    description: TBA
+    columns:
+      - name: behavior_structured_event_pk
+        tests:
+          - unique
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: behavior_date
+        description: '{{ doc("behavior_at") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
+      - name: event_action
+        description: '{{ doc("event_action") }}'
+      - name: event_category
+        description: '{{ doc("event_category") }}'
+      - name: event_property
+        description: '{{ doc("event_property") }}'
+      - name: event_label
+        description: '{{ doc("event_label") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: is_device_mobile
+        description: '{{ doc("is_device_mobile") }}'
+      - name: device_type
+        description: '{{ doc("device_type") }}'
