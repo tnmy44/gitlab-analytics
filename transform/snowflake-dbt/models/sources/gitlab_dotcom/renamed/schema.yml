@@ -1934,3 +1934,11 @@ models:
       - name: suggested_reviewers_top_n
       - name: suggested_reviewers_version
       - name: suggested_reviewers_list
+
+  - name: gitlab_dotcom_web_hooks_source
+    description: Base model for Gitlab.com WebHooks table. More information about Gitlab webhooks [HERE](https://docs.gitlab.com/ee/user/project/integrations/webhooks.html).
+    columns:
+      - name: web_hook_id
+        tests:
+          - not_null
+          - unique
