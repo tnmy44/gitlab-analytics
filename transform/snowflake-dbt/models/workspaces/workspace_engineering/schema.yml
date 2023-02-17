@@ -150,3 +150,8 @@ models:
 
     - name: leading_organization_entry_dates
       description: The entry and exit dates of organizations that are admitted into our Leading Organization program
+
+    - name: rpt_product_namespace_classification
+      description: WIP Ref for namespace classification
+      columns:
+      - name: namespace_type

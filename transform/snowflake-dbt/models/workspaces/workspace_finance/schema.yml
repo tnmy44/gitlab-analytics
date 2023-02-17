@@ -1295,7 +1295,3 @@ models:
         description: cost before applying credits
       - name: net_cost
         description: net cost paid by GitLab
-  - name: rpt_product_namespace_classification
-    description: WIP Ref for namespace classification
-    columns:
-      - name: namespace_type
