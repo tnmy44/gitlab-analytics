@@ -29,7 +29,7 @@ fct_event AS (
     {{ dbt_utils.star(from=ref('fct_event'), except=["CREATED_BY","UPDATED_BY",
       "MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
   FROM {{ ref('fct_event') }} 
-  WHERE event_created_at >= DATEADD(MONTH, -6, DATE_TRUNC(MONTH,CURRENT_DATE)) 
+  WHERE event_created_at >= DATEADD(MONTH, -36, DATE_TRUNC(MONTH,CURRENT_DATE)) 
       AND (days_since_user_creation_at_event_date >= 0
            OR days_since_user_creation_at_event_date IS NULL)
 
