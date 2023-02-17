@@ -3484,20 +3484,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - kchen:
-        member_of:
-            - adaptive
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
-            - xactly
-            - zoominfo_inbound
-        warehouses:
-            - dev_xs
-
     - kkarthikeyan:
         member_of:
             - analyst_finance
@@ -4888,11 +4874,6 @@ users:
         can_login: yes
         member_of:
             - kmckern
-
-    - kchen:
-        can_login: yes
-        member_of:
-            - kchen
 
     - kkarthikeyan:
         can_login: yes
