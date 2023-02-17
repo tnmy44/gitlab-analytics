@@ -221,11 +221,6 @@ databases:
     - srehm_prep:
         shared: no
 
-    - tpoole_prod:
-        shared: no
-    - tpoole_prep:
-        shared: no
-
     - tnguyen_prod:
         shared: no
     - tnguyen_prep:
@@ -4587,50 +4582,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - tpoole:
-        member_of:
-         - analyst_finance
-         - analyst_growth
-         - analyst_marketing
-         - customers_db
-         - data_team_analyst
-         - gainsight
-         - restricted_safe
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - tpoole_prep
-                - tpoole_prod
-            schemas:
-                - tpoole_prep.*
-                - tpoole_prod.*
-            tables:
-                - tpoole_prep.*.*
-                - tpoole_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - tpoole_prep
-                    - tpoole_prod
-                write:
-                    - tpoole_prep
-                    - tpoole_prod
-            schemas:
-                read:
-                    - tpoole_prep.*
-                    - tpoole_prod.*
-                write:
-                    - tpoole_prep.*
-                    - tpoole_prod.*
-            tables:
-                read:
-                    - tpoole_prep.*.*
-                    - tpoole_prod.*.*
-                write:
-                    - tpoole_prep.*.*
-                    - tpoole_prod.*.*
-
     - tnguyen:
         member_of:
          - data_team_analyst
@@ -5220,11 +5171,6 @@ users:
         can_login: yes
         member_of:
             - tliu
-
-    - tpoole:
-        can_login: yes
-        member_of:
-            - tpoole
 
     - tnguyen:
         can_login: yes
