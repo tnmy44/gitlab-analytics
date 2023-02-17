@@ -22,13 +22,19 @@ WITH internal_merge_requests AS (
     FROM {{ ref('stages_groups_yaml_source') }}
     WHERE snapshot_date = (SELECT max(snapshot_date) FROM {{ ref('stages_groups_yaml_source') }})
 
+), bot_users AS (
+
+    SELECT dim_user_id
+    FROM {{ ref('dim_user') }}
+    WHERE email_domain LIKE '%noreply.gitlab.com'
+
 ), engineering_merge_requests AS (
 
   SELECT
     internal_merge_requests.merge_request_id                                                                                    AS merge_request_id,
     internal_merge_requests.merge_request_iid                                                                                   AS merge_request_iid,
     internal_merge_requests.author_id                                                                                           AS author_id,
-    IFF(internal_merge_requests.author_id = 1786152,
+    IFF(bots.dim_user_id IS NOT NULL or internal_merge_requests.author_id = 1786152 or ARRAY_CONTAINS('automation:bot-authored'::variant, internal_merge_requests.labels),
         TRUE, FALSE)                                                                                                            AS is_created_by_bot,
     internal_merge_requests.assignee_id                                                                                         AS assignee_id,
     internal_merge_requests.project_id                                                                                          AS project_id,
@@ -84,6 +90,8 @@ WITH internal_merge_requests AS (
   FROM internal_merge_requests
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_merge_requests.target_project_id
+  LEFT JOIN bot_users AS bots
+    ON bots.dim_user_id = internal_merge_requests.author_id
   LEFT JOIN namespaces AS ns
     ON ns.dim_namespace_id = projects.dim_namespace_id
   LEFT JOIN namespaces ns_1 
