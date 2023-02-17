@@ -10,12 +10,6 @@ Array containing the event_names included in the xMAU metric
 
 {% enddocs %}
 
-{% docs plan_id_at_event_month %}
-
-The ID of the ultimate parent namespace's plan on the month the event was created (ex. 34, 100, 101, etc). If multiple plans are available during the month, this reflects the last available plan for the namespace. Defaults to '34' (free) if a value is not available
-
-{% enddocs %}
-
 {% docs first_major_minor_version_id_with_counter %}
 
 The first (minimum/earliest) major_minor_version_id that sent a ping containing the metric

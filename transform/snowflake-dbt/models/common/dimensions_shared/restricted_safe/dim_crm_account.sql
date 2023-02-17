@@ -92,6 +92,7 @@ WITH final AS (
       prep_crm_account.business_development_rep,
       prep_crm_account.dedicated_service_engineer,
       prep_crm_account.account_tier,
+      prep_crm_account.account_tier_notes,
       prep_crm_account.license_utilization,
       prep_crm_account.support_level,
       prep_crm_account.named_account,

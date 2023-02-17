@@ -453,17 +453,6 @@ Sales funnel targets set by the Finance team to measure performance of important
 
 {% enddocs %}
 
-{% docs fct_usage_ping_subscription_mapped_smau %}
-
-This model contains **Self-Managed** instances data from every month _that a Usage Ping payload was received_. For a given subscription-uuid-hostname combination, values of each SMAU metric from the last Usage Ping value in that month are reported.
-
-The grain of this table is `hostname` per `uuid` per `dim_subscription_id` per `snapshot_month`. Since there are Self-Managed subscriptions that do not send Usage Ping payloads, it is possible for `uuid` and `hostname` to be null.
-
-This data model is used for the Customer Health Dashboards.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
 
 {% docs fct_usage_ci_minutes %}
 
@@ -472,15 +461,6 @@ This table replicates the Gitlab UI logic that generates the CI minutes Usage Qu
 Namespaces from the `namespace_snapshots_monthly_all` CTE that are not present in the `namespace_statistics_monthly_all` CTE are joined into the logic with NULL `shared_runners_seconds` since these namespaces have not used CI Minutes on GitLab-provided shared runners. Since these CI Minutes are neither trackable nor monetizable, they can be functionally thought of as 0 `shared_runners_minutes_used_overall`. The SQL code has been implemented with this logic as justification.
 
 It also adds two additional columns which aren't calculated in the UI, which are `limit_based_plan` and `status_based_plan` which are independent of whether there aren't projects with `shared_runners_enabled` inside the namespaces and only take into account how many minutes have been used from the monthly quota based in the plan of the namespace.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
-{% docs fct_product_usage_free_user_metrics_monthly %}
-This table unions the sets of all Self-Managed and SaaS **free users**. The data from this table will be used to create a mart table (`mart_product_usage_free_user_metrics_monthly`) for Customer Product Insights.
-
-The grain of this table is namespace || uuid-hostname per month.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
@@ -635,21 +615,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 **Other Comments:**
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
-
-{% enddocs %}
-
-{% docs fct_usage_ping_payload %}
-Factual table with metadata on usage ping payloads received.
-
-The grain of the table is a dim_usage_ping_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-Main foreign key that can help to build easily joins:
-
-- dim_license_id
-- dim_subscription_id
-- dim_date_id
 
 {% enddocs %}
 
@@ -1574,3 +1539,147 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_behavior_browser %}
+
+**Description:** Dimension containing browser attributes for the analysis of Snowplow events.
+
+**Data Grain:** dim_behavior_browser_sk
+- browser_name
+- browser_major_version
+- browser_minor_version
+- browser_language
+
+**Filters Applied to Model:**
+- Include events where at least one of browser_name, browser_major_version, browser_minor_version, _OR_ browser_language is available (`browser_name IS NOT NULL OR browser_major_version IS NOT NULL OR browser_minor_version IS NOT NULL OR browser_language IS NOT NULL`)
+
+**Tips for use:**
+- Join this model to facts (ex. `fct_behavior_website_page_view`, `fct_behavior_structured_event`) using `dim_behavior_browser_sk` to get browser-level attributes about page views or events
+
+{% enddocs %}
+
+{% docs dim_behavior_event %}
+
+**Description:** Dimensional model containing distinct events types from Snowplow. 
+
+**Data Grain:** dim_behavior_event_sk
+
+This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event`, `event_name`, `platform`, `gsc_environment`, `se_category`, `se_action`, `se_label` and `se_property`.
+
+**Other Comments:**
+- [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
+
+{% enddocs %}
+
+{% docs fct_behavior_structured_event %}
+
+**Description:** Fact table containing quantitative data for Snowplow Structured events. Structured events are custom events implemented with five parameters: event_category, event_action, event_label, event_property and event_value. Snowplow documentation on [types of events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/).
+
+**Data Grain:** behavior_structured_event_pk
+
+This ID in generated using `event_id` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) 
+
+**Filters Applied to Model:**
+- This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
+
+**Tips for use:**
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on `event_action`, `event_category`, etc.
+
+{% enddocs %}
+
+{% docs dim_behavior_operating_system %}
+
+**Description:** Dimension containing operating system and device attributes for the analysis of Snowplow events.
+
+**Data Grain:** dim_behavior_operating_system_sk
+- os_name
+- os_timezone
+
+**Filters Applied to Model:**
+- Include events where os_name _OR_ os_timezone is available (`os_name IS NOT NULL OR os_timezone IS NOT NULL`)
+
+**Tips for use:**
+- Join this model to facts (ex. `fct_behavior_website_page_view`, `fct_behavior_structured_event`) using `dim_behavior_operating_system_sk` to get OS and device-level attributes about page views or events
+
+{% enddocs %}
+
+{% docs dim_behavior_website_page %}
+
+**Description:** Dimensional model containing distinct page types from Snowplow events.
+
+**Data Grain:** dim_behavior_website_page_sk
+
+This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`.
+
+**Filters Applied to Model:**
+- Include pages from page view, structured, and unstructured events (`event IN ('struct', 'page_view', 'unstruct')`)
+
+{% enddocs %}
+
+{% docs fct_behavior_website_page_view %}
+
+**Description:** Fact table containing quantitative data for Page views. Page views are a subset of Snowplow events and are fired by the Javascript tracker.
+
+**Data Grain:** fct_behavior_website_page_view_sk
+
+This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+
+**Filters Applied to Model:**
+- This model only includes Pageview events (when `event=page_view` from `dim_behavior_event` )
+
+**Tips for use:**
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
+
+{% enddocs %}
+
+{% docs fct_behavior_unstructured_event %}
+
+**Description:** Fact table containing quantitative data for Snowplow unstructured events. These events include [Snowplow-authored "out of the box" events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/#snowplow-authored-events) like `link_click`, `focus_form`, `change_form`, and `submit_form`. Unstructured event data is based on a JSON schema.
+
+**Data Grain:** fct_behavior_unstructured_sk (generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all))
+- event_id
+- behavior_at
+
+**Filters Applied to Model:**
+- Include unstructured events (`event = 'unstruct'`) 
+
+**Business Logic in this Model:**
+- A selection of key value pairs from Snowplow-authored events are parsed out into their own columns:
+  - `link_click`: target URL
+  - `submit_form`: form ID
+  - `change_form`: form ID, form type, form element ID
+  - `focus_form`: form element ID, form node name
+
+**Other Comments:**
+- Any self-describing event (ex. not a structured event, page view, etc) is considered to be "unstructured", but GitLab's current instrumentation focuses on the [Snowplow-authored "out of the box" events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/#snowplow-authored-events).
+
+{% enddocs %}
+
+{% docs fct_event_namespace_monthly %}
+
+**Description:** GitLab.com usage event data for valid events, grouped by month, event name, and ultimate parent namespace
+
+**Data Grain:**
+- event_calendar_month
+- event_name
+- dim_ultimate_parent_namespace_id
+
+**Filters Applied to Model:**
+- Exclude events not associated with a namespace (ex: 'users_created')
+- `Inherited` - Include valid events for standard analysis and reporting:
+  - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
+    - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
+  - Exclude events from blocked users (based on the current user state)
+- `Inherited` - Rolling 24 months of data
+
+**Business Logic in this Model:**
+- `Inherited` - A namespace's plan information (ex: `plan_name_at_event_month`) is determined by the plan for the last event on a given month
+- `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
+- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
+
+**Other Comments:**
+- The current month is _included_ in this model. Be mindful of potentially including incomplete data
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
+
+{% enddocs %}

@@ -51,6 +51,7 @@ renamed AS (
     sub_industry__c AS sub_industry,
     parent_lam_industry_acct_heirarchy__c AS parent_account_industry_hierarchy,
     account_tier__c AS account_tier,
+    account_tier_notes__c AS account_tier_notes,
     customer_since__c::DATE AS customer_since_date,
     carr_this_account__c AS carr_this_account,
     carr_acct_family__c AS carr_account_family,

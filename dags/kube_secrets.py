@@ -66,10 +66,6 @@ GAINSIGHT_BUCKET_NAME = Secret(
 )
 
 # Postgres
-PG_USERNAME = Secret("env", "PG_USERNAME", "airflow", "PG_USERNAME")
-PG_ADDRESS = Secret("env", "PG_ADDRESS", "airflow", "PG_ADDRESS")
-PG_PASSWORD = Secret("env", "PG_PASSWORD", "airflow", "PG_PASSWORD")
-PG_DATABASE = Secret("env", "PG_DATABASE", "airflow", "PG_DATABASE")
 PG_PORT = Secret("env", "PG_PORT", "airflow", "PG_PORT")
 
 # Customers DB
@@ -327,4 +323,3 @@ GSHEETS_SERVICE_ACCOUNT_CREDENTIALS = Secret(
     "airflow",
     "GSHEETS_SERVICE_ACCOUNT_CREDENTIALS",
 )
-

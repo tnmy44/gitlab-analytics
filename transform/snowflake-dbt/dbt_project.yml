@@ -335,11 +335,11 @@ models:
 
       zuora_query_api:
         +schema: zuora_query_api
-        +tags: ["zuora_query_api"]
+        +tags: ["zuora_query_api", "mnpi" ]
 
       zuora_central_sandbox:
         +schema: zuora_central_sandbox
-        +tags: [ "zuora_central_sandbox" ]
+        +tags: [ "zuora_central_sandbox", "mnpi" ]
 
       zuora_revenue:
         +schema: zuora_revenue
@@ -635,9 +635,6 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps_sensitive
         +materialized: table
-
-      usage_ping:
-        +tags: ["product"]
 
 
     # ------------------

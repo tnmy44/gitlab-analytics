@@ -104,6 +104,7 @@
       dim_crm_account.business_development_rep,
       dim_crm_account.dedicated_service_engineer,
       dim_crm_account.account_tier,
+      dim_crm_account.account_tier_notes,
       dim_crm_account.license_utilization,
       dim_crm_account.support_level,
       dim_crm_account.named_account,
