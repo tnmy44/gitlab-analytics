@@ -1307,39 +1307,45 @@ WITH first_contact  AS (
       ELSE 'SMB'
     END AS account_owner_team_stamped_cro_level,
     CASE
-      WHEN sfdc_opportunity.close_date < '2023-02-01'
+      WHEN close_date.fiscal_year < 2024
         THEN CONCAT(
-                    sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_geo_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_region_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_area_stamped
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    close_date.fiscal_year
                     )
-      WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'comm'
+      WHEN close_date.fiscal_year >= 2024 AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'comm'
         THEN CONCAT(
-                    sfdc_opportunity.crm_opp_owner_business_unit_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_geo_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_region_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_sales_segment_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_area_stamped
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    close_date.fiscal_year
                     )
-      WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'entg'
+      WHEN close_date.fiscal_year >= 2024 AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'entg'
         THEN CONCAT(
-                    sfdc_opportunity.crm_opp_owner_business_unit_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_geo_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_region_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_area_stamped,
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
                     '-',
-                    sfdc_opportunity.crm_opp_owner_sales_segment_stamped
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    close_date.fiscal_year
                     )
     END AS dim_crm_opp_owner_stamped_hierarchy_sk
 

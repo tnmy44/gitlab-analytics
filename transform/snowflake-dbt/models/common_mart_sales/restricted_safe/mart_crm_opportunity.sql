@@ -513,13 +513,10 @@
       ON fct_crm_opportunity.close_date_id = close_date.date_id
         LEFT JOIN dim_crm_user_hierarchy
       ON fct_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk = dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk
-        AND close_date.fiscal_year = dim_crm_user_hierarchy.fiscal_year
     LEFT JOIN dim_crm_user_hierarchy AS dim_crm_user_hierarchy_live
       ON fct_crm_opportunity.dim_crm_user_hierarchy_live_sk = dim_crm_user_hierarchy_live.dim_crm_user_hierarchy_sk
-        AND dim_crm_user_hierarchy_live.is_current_crm_user_hierarchy = 1
     LEFT JOIN dim_crm_user_hierarchy AS dim_crm_user_hierarchy_account_owner
       ON fct_crm_opportunity.dim_crm_user_hierarchy_account_user_sk = dim_crm_user_hierarchy_account_owner.dim_crm_user_hierarchy_sk
-        AND dim_crm_user_hierarchy_account_owner.is_current_crm_user_hierarchy = 1
     LEFT JOIN dim_date created_date
       ON fct_crm_opportunity.created_date_id = created_date.date_id
     LEFT JOIN dim_date sales_accepted_date

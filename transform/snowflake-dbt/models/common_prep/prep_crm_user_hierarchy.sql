@@ -136,11 +136,11 @@
 
     SELECT DISTINCT
       fiscal_year,
-      user_segment,
-      user_geo,
-      user_region,
-      user_area,
-      NULL        AS user_business_unit,
+      UPPER(user_segment) AS user_segment,
+      UPPER(user_geo)     AS user_geo,
+      UPPER(user_region)  AS user_region,
+      UPPER(user_area)    AS user_area,
+      NULL                AS user_business_unit,
       dim_crm_user_hierarchy_sk
     FROM unioned 
     WHERE fiscal_year < 2024
@@ -149,11 +149,11 @@
 
     SELECT DISTINCT
       fiscal_year,
-      user_segment,
-      user_geo,
-      user_region,
-      user_area,
-      user_business_unit,
+      UPPER(user_segment)       AS user_segment,
+      UPPER(user_geo)           AS user_geo,
+      UPPER(user_region)        AS user_region,
+      UPPER(user_area)          AS user_area,
+      UPPER(user_business_unit) AS user_business_unit,
       dim_crm_user_hierarchy_sk
     FROM unioned 
     WHERE fiscal_year >= 2024
@@ -179,7 +179,7 @@
 ), final AS (
 
     SELECT DISTINCT 
-      {{ dbt_utils.surrogate_key(['final_unioned.dim_crm_user_hierarchy_sk', 'final_unioned.fiscal_year']) }}                   AS dim_crm_user_hierarchy_id,
+      {{ dbt_utils.surrogate_key(['final_unioned.dim_crm_user_hierarchy_sk']) }}                                                AS dim_crm_user_hierarchy_id,
       final_unioned.dim_crm_user_hierarchy_sk,
       final_unioned.fiscal_year,
       final_unioned.user_business_unit                                                                                          AS crm_user_business_unit,

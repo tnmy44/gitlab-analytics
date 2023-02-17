@@ -27,35 +27,44 @@
       sheetload_sales_funnel_targets_matrix_source.user_business_unit,
       CASE
         WHEN fiscal_months.fiscal_year < 2024
-          THEN CONCAT(sheetload_sales_funnel_targets_matrix_source.user_segment, 
+          THEN CONCAT(
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_segment), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_geo, 
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_geo), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_region, 
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_region), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_area
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_area),
+                      '-',
+                      fiscal_months.fiscal_year
                       )
         WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(sheetload_sales_funnel_targets_matrix_source.user_business_unit) = 'comm'
-          THEN CONCAT(sheetload_sales_funnel_targets_matrix_source.user_business_unit, 
+          THEN CONCAT(
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_business_unit), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_geo, 
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_geo), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_region, 
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_segment), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_segment, 
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_region), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_area
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_area),
+                      '-',
+                      fiscal_months.fiscal_year
                       )
         WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(sheetload_sales_funnel_targets_matrix_source.user_business_unit) = 'entg'
-          THEN CONCAT(sheetload_sales_funnel_targets_matrix_source.user_business_unit, 
+          THEN CONCAT(
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_business_unit), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_geo, 
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_geo), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_region, 
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_region), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_area, 
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_area), 
                       '-',
-                      sheetload_sales_funnel_targets_matrix_source.user_segment
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_segment),
+                      '-',
+                      fiscal_months.fiscal_year
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,
         fiscal_months.fiscal_year,

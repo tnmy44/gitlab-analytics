@@ -238,7 +238,6 @@
       ON sfdc_opportunity.sales_segment = sales_segment.sales_segment_name
         LEFT JOIN prep_crm_user_hierarchy
       ON sfdc_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk = prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk
-        AND sfdc_opportunity.close_fiscal_year = prep_crm_user_hierarchy.fiscal_year
     LEFT JOIN dr_partner_engagement
       ON sfdc_opportunity.dr_partner_engagement = dr_partner_engagement.dr_partner_engagement_name
     LEFT JOIN alliance_type
