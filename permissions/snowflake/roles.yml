@@ -134,11 +134,6 @@ databases:
     - mdrussell_prep:
         shared: no
 
-    - mlaanen_prod:
-        shared: no
-    - mlaanen_prep:
-        shared: no
-
     - mpetersen_prod:
         shared: no
     - mpetersen_prep:
@@ -3703,47 +3698,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - mlaanen:
-        member_of:
-            - analyst_core
-            - data_manager
-            - restricted_safe
-            - bi_tool_eval_db
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - mlaanen_prep
-                - mlaanen_prod
-            schemas:
-                - mlaanen_prep.*
-                - mlaanen_prod.*
-            tables:
-                - mlaanen_prep.*.*
-                - mlaanen_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - mlaanen_prep
-                    - mlaanen_prod
-                write:
-                    - mlaanen_prep
-                    - mlaanen_prod
-            schemas:
-                read:
-                    - mlaanen_prep.*
-                    - mlaanen_prod.*
-                write:
-                    - mlaanen_prep.*
-                    - mlaanen_prod.*
-            tables:
-                read:
-                    - mlaanen_prep.*.*
-                    - mlaanen_prod.*.*
-                write:
-                    - mlaanen_prep.*.*
-                    - mlaanen_prod.*.*
-
     - mnohr:
         member_of:
             - reporter
@@ -4984,11 +4938,6 @@ users:
         can_login: yes
         member_of:
             - mfleisher
-
-    - mlaanen:
-        can_login: yes
-        member_of:
-            - mlaanen
 
     - mnohr:
         can_login: yes
