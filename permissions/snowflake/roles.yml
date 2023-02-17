@@ -4753,19 +4753,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - zzhang:
-        member_of:
-            - adaptive
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
-            - xactly
-        warehouses:
-            - dev_xs
-
 # ==========================================
 # Users
 # ==========================================
@@ -5275,11 +5262,6 @@ users:
         can_login: yes
         member_of:
             - workato
-
-    - zzhang:
-        can_login: yes
-        member_of:
-            - zzhang
 
 # ==========================================
 # Warehouses
