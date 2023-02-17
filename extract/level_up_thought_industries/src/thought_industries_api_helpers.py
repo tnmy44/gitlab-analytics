@@ -90,7 +90,7 @@ def make_request(
 
     additional_backoff = 20
     if current_retry_count >= max_retry_count:
-        raise Exception(f"Too many retries when calling the {url}")
+        raise requests.exceptions.HTTPError(f"Manually raising 429 Client Error: Too many retries when calling the {url}.")
     try:
         if request_type == "GET":
             response = requests.get(
@@ -107,7 +107,10 @@ def make_request(
         return response
     except requests.exceptions.RequestException:
         if response.status_code == 429:
-            retry_after = int(response.headers["Retry-After"])
+            # if no retry-after exists, wait default time
+            retry_after = int(
+                response.headers.get("Retry-After", additional_backoff)
+            )
             info(f'\nToo many requests... Sleeping for {retry_after} seconds')
             # add some buffer to sleep
             time.sleep(retry_after + (additional_backoff * current_retry_count))

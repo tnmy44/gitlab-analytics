@@ -83,6 +83,8 @@ class ThoughtIndustries(ABC):
             )
 
             events = response.json()['events']
+
+            # response has events
             if events:
                 events_to_print = [events[0]] + [events[-1]]
                 info(
@@ -91,14 +93,18 @@ class ThoughtIndustries(ABC):
                 final_events = final_events + events
 
                 prev_epoch_end_ms = current_epoch_end_ms
-                # get the earliest timestamp- will be last event in the resp
+
+                # current_epoch_end will be prev earliest timestamp
                 current_epoch_end_ms = iso8601_to_epoch_ts_ms(
                     events[-1]['timestamp']
-                ) - 1  # subtract by 1 from ts so that record isn't included again
+                ) - 1  # subtract by 1 sec from ts so that record isn't included again
+                # the endDate should be getting smaller each call
                 if current_epoch_end_ms >= prev_epoch_end_ms:
+                    # raise error if endDate stayed the same or increased
                     raise ValueError(
                         'endDate parameter has not changed since last call.'
                     )
+            # no more events in response, should stop making requests
             else:
                 info('\nThe last response had 0 events, stopping requests\n')
 
