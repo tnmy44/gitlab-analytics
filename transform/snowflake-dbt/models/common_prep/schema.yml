@@ -1755,9 +1755,6 @@ models:
       - name: member_count
         description: Do not use this count, it is incorrect. Use [gitlab_dotcom_memberships](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.gitlab_dotcom_memberships) for member counts.
 
-  - name: prep_order_action_rate_plan
-    description: Prep table for Zuora order action. This it at the order action grain i.e. one order can have multiple order actions.
-
   - name: prep_snowplow_unnested_events_all
     description: This is the primary events view which is the union of the Fishtown and GitLab tables across the last 25 months of snowplow_YYYY_MM schemas. All of the unstructured events are unpacked - [link click tracking](https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#39-link-click-tracking), [form tracking](https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#3101-enableformtracking), and [time tracking](https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#timing).
 
