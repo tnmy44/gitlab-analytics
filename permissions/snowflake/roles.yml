@@ -84,11 +84,6 @@ databases:
     - jcaine_prep:
         shared: no
 
-    - jkim_prod:
-        shared: no
-    - jkim_prep:
-        shared: no
-
     - jng_prod:
         shared: no
     - jng_prep:
@@ -132,11 +127,6 @@ databases:
     - mdrussell_prod:
         shared: no
     - mdrussell_prep:
-        shared: no
-
-    - mlaanen_prod:
-        shared: no
-    - mlaanen_prep:
         shared: no
 
     - mpetersen_prod:
@@ -219,11 +209,6 @@ databases:
     - srehm_prod:
         shared: no
     - srehm_prep:
-        shared: no
-
-    - tpoole_prod:
-        shared: no
-    - tpoole_prep:
         shared: no
 
     - tnguyen_prod:
@@ -489,7 +474,6 @@ roles:
             - netsuite
             - mailgun
             - marketo
-            - pmg
             - snowflake_db
             - zendesk
             - zendesk_community_relations
@@ -737,7 +721,6 @@ roles:
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
                 - raw.gitter
-                - raw.pmg
                 - raw.prometheus
                 - raw.pto
                 - raw.rspec
@@ -752,7 +735,6 @@ roles:
                 - raw.engineering_extracts.*
                 - raw.gitlab_data_yaml.*
                 - raw.gitter.*
-                - raw.pmg.*
                 - raw.prometheus.*
                 - raw.pto.*
                 - raw.rspec.*
@@ -1994,20 +1976,6 @@ roles:
                     - prep.sensitive.qualtrics_post_purchase_survey_responses_source
                     - raw.qualtrics.*
 
-    - pmg:
-        warehouses:
-            - dev_xs
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.pmg
-            tables:
-                read:
-                    - prep.pmg.*
-
     - prometheus:
         warehouses:
             - dev_xs
@@ -3143,52 +3111,6 @@ roles:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
 
-    - jkim:
-        member_of:
-            - analyst_sales
-            - restricted_safe
-            - data_team_analyst
-            - bi_tool_eval_read
-            - xactly
-            - sales_analytics
-            - data_science_readonly
-            - marketo
-            - static_sensitive
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - jkim_prep
-                - jkim_prod
-            schemas:
-                - jkim_prep.*
-                - jkim_prod.*
-            tables:
-                - jkim_prep.*.*
-                - jkim_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - jkim_prep
-                    - jkim_prod
-                write:
-                    - jkim_prep
-                    - jkim_prod
-            schemas:
-                read:
-                    - jkim_prep.*
-                    - jkim_prod.*
-                write:
-                    - jkim_prep.*
-                    - jkim_prod.*
-            tables:
-                read:
-                    - jkim_prep.*.*
-                    - jkim_prod.*.*
-                write:
-                    - jkim_prep.*.*
-                    - jkim_prod.*.*
-
     - jng:
         member_of:
          - restricted_safe
@@ -3494,20 +3416,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - kchen:
-        member_of:
-            - adaptive
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
-            - xactly
-            - zoominfo_inbound
-        warehouses:
-            - dev_xs
-
     - kkarthikeyan:
         member_of:
             - analyst_finance
@@ -3707,47 +3615,6 @@ roles:
             - restricted_safe
         warehouses:
             - dev_xs
-
-    - mlaanen:
-        member_of:
-            - analyst_core
-            - data_manager
-            - restricted_safe
-            - bi_tool_eval_db
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - mlaanen_prep
-                - mlaanen_prod
-            schemas:
-                - mlaanen_prep.*
-                - mlaanen_prod.*
-            tables:
-                - mlaanen_prep.*.*
-                - mlaanen_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - mlaanen_prep
-                    - mlaanen_prod
-                write:
-                    - mlaanen_prep
-                    - mlaanen_prod
-            schemas:
-                read:
-                    - mlaanen_prep.*
-                    - mlaanen_prod.*
-                write:
-                    - mlaanen_prep.*
-                    - mlaanen_prod.*
-            tables:
-                read:
-                    - mlaanen_prep.*.*
-                    - mlaanen_prod.*.*
-                write:
-                    - mlaanen_prep.*.*
-                    - mlaanen_prod.*.*
 
     - mnohr:
         member_of:
@@ -4587,50 +4454,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - tpoole:
-        member_of:
-         - analyst_finance
-         - analyst_growth
-         - analyst_marketing
-         - customers_db
-         - data_team_analyst
-         - gainsight
-         - restricted_safe
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - tpoole_prep
-                - tpoole_prod
-            schemas:
-                - tpoole_prep.*
-                - tpoole_prod.*
-            tables:
-                - tpoole_prep.*.*
-                - tpoole_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - tpoole_prep
-                    - tpoole_prod
-                write:
-                    - tpoole_prep
-                    - tpoole_prod
-            schemas:
-                read:
-                    - tpoole_prep.*
-                    - tpoole_prod.*
-                write:
-                    - tpoole_prep.*
-                    - tpoole_prod.*
-            tables:
-                read:
-                    - tpoole_prep.*.*
-                    - tpoole_prod.*.*
-                write:
-                    - tpoole_prep.*.*
-                    - tpoole_prod.*.*
-
     - tnguyen:
         member_of:
          - data_team_analyst
@@ -4750,19 +4573,6 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - restricted_safe
-        warehouses:
-            - dev_xs
-
-    - zzhang:
-        member_of:
-            - adaptive
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
-            - xactly
         warehouses:
             - dev_xs
 
@@ -4941,11 +4751,6 @@ users:
         member_of:
             - jcaine
 
-    - jkim:
-        can_login: yes
-        member_of:
-            - jkim
-
     - jng:
         can_login: yes
         member_of:
@@ -4997,11 +4802,6 @@ users:
         member_of:
             - kmckern
 
-    - kchen:
-        can_login: yes
-        member_of:
-            - kchen
-
     - kkarthikeyan:
         can_login: yes
         member_of:
@@ -5046,11 +4846,6 @@ users:
         can_login: yes
         member_of:
             - mfleisher
-
-    - mlaanen:
-        can_login: yes
-        member_of:
-            - mlaanen
 
     - mnohr:
         can_login: yes
@@ -5234,11 +5029,6 @@ users:
         member_of:
             - tliu
 
-    - tpoole:
-        can_login: yes
-        member_of:
-            - tpoole
-
     - tnguyen:
         can_login: yes
         member_of:
@@ -5275,11 +5065,6 @@ users:
         can_login: yes
         member_of:
             - workato
-
-    - zzhang:
-        can_login: yes
-        member_of:
-            - zzhang
 
 # ==========================================
 # Warehouses
