@@ -2240,6 +2240,18 @@ roles:
                 read:
                     - static.sensitive.*
 
+    - static_pmg_readonly:
+        privileges:
+            databases:
+                read:
+                    - static
+            schemas:
+                read:
+                    - static.pmg_backup
+            tables:
+                read:
+                    - static.pmg_backup.*
+
     - static_admin:
         member_of:
             - static
