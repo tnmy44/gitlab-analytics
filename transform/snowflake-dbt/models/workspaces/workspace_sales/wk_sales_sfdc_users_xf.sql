@@ -14,7 +14,7 @@ WITH base AS (
       manager_id,
       
       CASE 
-        WHEN LOWER(crm_user_geo) IN ('amer','apac','jihu','emea')
+        WHEN LOWER(crm_user_geo) IN ('amer','apac','jihu','emea','pubsec')
           THEN IFNULL(crm_user_geo, 'Other')   
         ELSE 'Other'
       END                                              AS user_geo,
@@ -79,12 +79,15 @@ WITH base AS (
 
       -- Business Unit (X-Ray 1st hierarchy)
       -- will be replaced with the actual field
-      CASE LOWER(user_segment)
-        WHEN 'large' THEN 'ENTG'
-        WHEN 'pubsec' THEN 'ENTG'
-        WHEN 'mid-market' THEN 'COMM'
-        WHEN 'smb' THEN 'COMM'
-        WHEN 'jihu' THEN 'JiHu'
+      CASE 
+        WHEN LOWER(user_segment) IN ('large','pubsec') 
+            THEN 'ENTG'
+        WHEN LOWER(user_region) IN ('latam','meta')
+            OR LOWER(user_geo) IN ('apac')
+            THEN 'ENTG'         
+        WHEN LOWER(user_segment) IN ('mid-market','smb')
+            THEN 'COMM'
+        WHEN LOWER(user_segment) = 'jihu' THEN 'JiHu'
         ELSE 'Other'
       END AS business_unit,
 
