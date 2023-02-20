@@ -2792,6 +2792,7 @@ roles:
             - data_science_readonly
             - facebook_ads
             - linkedin_ads
+            - static_pmg_readonly
         warehouses:
             - dev_xs
         owns:
