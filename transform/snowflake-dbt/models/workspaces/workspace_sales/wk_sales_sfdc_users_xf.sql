@@ -12,9 +12,28 @@ WITH base AS (
       END                       AS user_email,
       manager_name,
       manager_id,
-      IFNULL(crm_user_geo, 'Other')                    AS user_geo,
+      
+      CASE 
+        WHEN LOWER(crm_user_geo) IN ('amer','apac','jihu','emea')
+          THEN IFNULL(crm_user_geo, 'Other')   
+        ELSE 'Other'
+      END                                              AS user_geo,
       IFNULL(crm_user_region, 'Other')                 AS user_region,
-      IFNULL(crm_user_sales_segment, 'Other')          AS user_segment,
+
+
+      CASE 
+        WHEN LOWER(crm_user_sales_segment) = 'lrg' 
+          THEN 'Large'
+        WHEN LOWER(crm_user_sales_segment) = 'mm' 
+          THEN 'Mid-Market' 
+        WHEN LOWER(crm_user_sales_segment) = 'jihu' 
+          THEN 'Jihu'         
+        WHEN LOWER(crm_user_sales_segment) = 'all' 
+          THEN 'Other'        
+        ELSE
+          IFNULL(crm_user_sales_segment, 'Other') 
+      END                                              AS user_segment,
+
       IFNULL(crm_user_area, 'Other')                   AS user_area,
       IFNULL(user_role_name, 'Other')                  AS role_name,
       IFNULL(user_role_type, 'Other')                  AS role_type,
@@ -93,31 +112,16 @@ WITH base AS (
             (
             LOWER(user_segment) = 'mid-market'
             AND (LOWER(user_geo) = 'amer' OR LOWER(user_geo) = 'emea')
-            AND LOWER(role_type) = 'first order'
+            AND LOWER(role_type) = 'fo'
             )
           THEN 'MM First Orders'  --mid-market FO(?)
         WHEN
           LOWER(business_unit) = 'comm'
           AND LOWER(user_geo) = 'emea'
-          AND 
-            (
-            LOWER(user_segment) != 'mid-market'
-            AND LOWER(role_type) != 'first order'
-            )
           THEN  'EMEA'
         WHEN
           LOWER(business_unit) = 'comm'
           AND LOWER(user_geo) = 'amer'
-          AND
-            (
-            LOWER(user_segment) != 'mid-market'
-            AND LOWER(role_type) != 'first order'
-            )
-          AND
-            (
-            LOWER(user_segment) != 'smb'
-            AND LOWER(user_area) != 'lowtouch'
-            )
           THEN 'AMER'
         ELSE 'Other'
       END AS sub_business_unit,
