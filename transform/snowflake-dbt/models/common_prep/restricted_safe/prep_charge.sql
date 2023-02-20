@@ -162,6 +162,8 @@
       zuora_rate_plan_charge.account_id                                 AS dim_billing_account_id,
       map_merged_crm_account.dim_crm_account_id                         AS dim_crm_account_id,
       ultimate_parent_account.account_id                                AS dim_parent_crm_account_id,
+      order_action.order_id                                             AS dim_order_id,
+      order_action.order_action_id_array                                AS dim_order_action_id_array,
       {{ get_date_id('zuora_rate_plan_charge.effective_start_date') }}  AS effective_start_date_id,
       {{ get_date_id('zuora_rate_plan_charge.effective_end_date') }}    AS effective_end_date_id,
 
@@ -244,12 +246,7 @@
         WHEN is_paid_in_full = FALSE THEN months_of_future_billings * zuora_rate_plan_charge.mrr
         ELSE 0
       END                                                               AS estimated_total_future_billings,
-      0                                                                 AS is_manual_charge,
-
-      -- orders fields
-      order_action.order_id,
-      order_action.order_action_id_array
-
+      0                                                                 AS is_manual_charge
 
     FROM zuora_rate_plan
     INNER JOIN zuora_rate_plan_charge
@@ -303,6 +300,8 @@
       manual_charges_prep.dim_billing_account_id                                            AS dim_billing_account_id,
       zuora_account.crm_id                                                                  AS dim_crm_account_id,
       sfdc_account.ultimate_parent_account_id                                               AS dim_parent_crm_account_id,
+      NULL                                                                                  AS dim_order_id,
+      NULL                                                                                  AS dim_order_action_id_array,
       {{ get_date_id('manual_charges_prep.effective_start_date') }}                         AS effective_start_date_id,
       {{ get_date_id('manual_charges_prep.effective_end_date') }}                           AS effective_end_date_id,
       active_zuora_subscription.subscription_status                                         AS subscription_status,
@@ -350,11 +349,7 @@
         WHEN is_paid_in_full = FALSE THEN months_of_future_billings * manual_charges_prep.mrr
         ELSE 0
       END                                                                                   AS estimated_total_future_billings,
-      1                                                                                     AS is_manual_charge,
-
-      -- orders fields
-      NULL                                                                                  AS order_id,
-      NULL                                                                                  AS order_action_id_array
+      1                                                                                     AS is_manual_charge
 
     FROM manual_charges_prep
     INNER JOIN active_zuora_subscription
