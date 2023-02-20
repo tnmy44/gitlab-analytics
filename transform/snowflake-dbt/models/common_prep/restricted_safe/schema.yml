@@ -105,7 +105,6 @@ models:
         description: ID of the Zuora account associated with a given Subscription ID
         tests:
           - not_null
-        description: Zuora account id
       - name: dim_crm_account_id
         description: Account ID from SFDC identifing the customer
       - name: dim_date_id
