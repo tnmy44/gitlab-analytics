@@ -5,7 +5,7 @@
 
 WITH crm_user_hierarchy_stamped AS (
 
-    SELECT
+    SELECT DISTINCT
       dim_crm_user_hierarchy_stamped_id,
       fiscal_year,
       dim_crm_opp_owner_sales_segment_stamped_id,
@@ -27,5 +27,5 @@ WITH crm_user_hierarchy_stamped AS (
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2021-01-05",
-    updated_date="2022-03-07"
+    updated_date="2023-02-09"
 ) }}

@@ -1,5 +1,19 @@
 {% macro get_internal_parent_namespaces() %}
 
-{{ return((6543, 9970, 4347861, 1400979, 2299361, 1353442, 349181, 3455548, 3068744, 5362395, 4436569, 3630110, 3315282, 5811832, 5496509, 4206656, 5495265, 5496484, 2524164, 4909902))  }}
+    {%- call statement('get_namespace_ids', fetch_result=True) %}
 
-{% endmacro %}
+        SELECT DISTINCT namespace_id
+        FROM {{ ref('internal_gitlab_namespaces') }}
+        WHERE namespace_id IS NOT NULL
+
+    {%- endcall -%}
+
+    {%- set value_list = load_result('get_namespace_ids') -%}
+
+    {%- if value_list and value_list['data'] -%}
+      {%- set values =  value_list['data'] | map(attribute=0) | join(', ')  %}
+    {%- endif -%}
+
+    {{ return( '(' ~ values ~ ')' ) }}
+
+ {% endmacro %}

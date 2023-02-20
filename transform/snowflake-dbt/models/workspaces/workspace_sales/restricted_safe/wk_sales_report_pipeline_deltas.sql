@@ -255,6 +255,7 @@ WITH sfdc_opportunity_xf AS (
       ON oppty.opportunity_id = deltas.opportunity_id
     LEFT JOIN sfdc_users_xf AS users
       ON deltas.owner_id = users.user_id
+      AND oppty.opportunity_owner = users.name
     
 )
 
