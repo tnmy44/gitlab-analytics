@@ -1694,7 +1694,8 @@ This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow
 **Description:** Derived fact table containing quantitative data for Snowplow structured events related to experiments.
 
 **Data Grain:** behavior_structured_event_pk
-This ID in generated using event_id from prep_snowplow_unnested_events_all
+
+This ID in generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
 
 **Filters Applied to Model:**
 
