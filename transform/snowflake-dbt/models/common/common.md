@@ -1688,3 +1688,21 @@ This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
 
 {% enddocs %}
+
+{% docs fct_behavior_structured_event_experiment %}
+
+**Description:** Derived fact table containing quantitative data for Snowplow structured events related to experiments.
+
+**Data Grain:** behavior_structured_event_pk
+This ID in generated using event_id from prep_snowplow_unnested_events_all
+
+**Filters Applied to Model:**
+
+This model only includes structured events implemented for experiments. 
+
+**Tips for use:**
+
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+
+{% enddocs %}
