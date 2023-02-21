@@ -348,8 +348,14 @@ WITH map_merged_crm_account AS (
       sfdc_account.forbes_2000_rank,
       sfdc_account.parent_account_industry_hierarchy,
       sfdc_account.sales_development_rep,
-	  sfdc_account.admin_manual_source_number_of_employees,
-      sfdc_account.admin_manual_source_account_address,      
+      sfdc_account.admin_manual_source_number_of_employees,
+      sfdc_account.admin_manual_source_account_address,
+      sfdc_account.eoa_sentiment,
+      sfdc_account.gs_health_user_engagement,
+      sfdc_account.gs_health_cd,
+      sfdc_account.gs_health_devsecops,
+      sfdc_account.gs_health_ci,
+      sfdc_account.gs_health_scm,
 
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,
@@ -460,6 +466,10 @@ WITH map_merged_crm_account AS (
       sfdc_account.customer_since_date,
       {{ get_date_id('sfdc_account.next_renewal_date') }}                 AS next_renewal_date_id,
       sfdc_account.next_renewal_date,
+      {{ get_date_id('sfdc_account.gs_first_value_date') }}               AS gs_first_value_date_id,
+      sfdc_account.gs_first_value_date,
+      {{ get_date_id('sfdc_account.gs_last_csm_activity_date') }}         AS gs_last_csm_activity_date_id,
+      sfdc_account.gs_last_csm_activity_date,
 
       --measures
       sfdc_account.count_active_subscription_charges,
