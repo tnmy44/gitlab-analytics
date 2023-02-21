@@ -21,6 +21,8 @@ WITH final AS (
       prep_crm_account.proposed_crm_account_owner,
       prep_crm_account.account_owner,
       prep_crm_account.technical_account_manager,
+      prep_crm_account.owner_role,
+      prep_crm_account.user_role_type,
 
       ----ultimate parent crm account info
       prep_crm_account.parent_crm_account_name,
@@ -88,6 +90,7 @@ WITH final AS (
       prep_crm_account.business_development_rep,
       prep_crm_account.dedicated_service_engineer,
       prep_crm_account.account_tier,
+      prep_crm_account.account_tier_notes,
       prep_crm_account.license_utilization,
       prep_crm_account.support_level,
       prep_crm_account.named_account,
@@ -200,9 +203,9 @@ WITH final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@rkohnke",
+    updated_by="@lisvinueza",
     created_date="2020-06-01",
-    updated_date="2022-11-10"
+    updated_date="2023-01-13"
 ) }}
 
 

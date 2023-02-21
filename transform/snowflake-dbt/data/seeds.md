@@ -75,3 +75,9 @@ https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/access.rb#L12
 https://docs.gitlab.com/ee/api/access_requests.html
 
 {% enddocs %}
+
+{% docs internal_gitlab_namespaces %}
+
+A manual list of top level namespace paths and ids that should be considered internal to GitLab.  There is, at this time, no system of record for this information.
+
+{% enddocs %}

@@ -1,5 +1,5 @@
 .snowflake_dbt_jobs: &snowflake_dbt_jobs
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.14
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.23
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -14,6 +14,8 @@
     - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     - export SNOWFLAKE_SNAPSHOT_DATABASE="SNOWFLAKE"
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - export ENVIRONMENT="CI"
+    - echo $ENVIRONMENT
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
     - mkdir -p ~/.ssh
@@ -47,11 +49,24 @@
   - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
   - echo $SNOWFLAKE_SNAPSHOT_DATABASE
 
-.deps_and_seed: &deps_and_seed
-  - python3 macro_name_check.py
+.dbt_deps: &dbt_deps
   - dbt deps $CI_PROFILE_TARGET
-  - dbt seed --full-refresh $CI_PROFILE_TARGET #seed data from csv
+
+.dbt_validate_tags: &dbt_validate_tags
   - dbt --warn-error run-operation tag_validation --profiles-dir profile --target ci
+
+# First checks if dbt has already been seeded using the first table defined in ./data/seeds.yml before seeding.
+.auto_dbt_seed: &auto_dbt_seed
+    - SCHEMA_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_schema --dbt_project_path "./dbt_project.yml")
+    - TABLE_NAME=$(python3 ../../orchestration/yaml_reader.py read_seed_name --seed_file_path "./data/seeds.yml")
+    - RESULT=$(python3 ../../orchestration/manage_snowflake.py check_if_table_exists --database $SNOWFLAKE_PROD_DATABASE --schema $SCHEMA_NAME --table_name $TABLE_NAME)
+    - CLEAN_RESULT=$(echo $RESULT | egrep -o '.{4,5}$') #extract only the result from the python output.
+    - if [ $CLEAN_RESULT = "False" ]; then dbt seed --full-refresh $CI_PROFILE_TARGET; fi
+
+.deps_and_seed: &deps_and_seed
+  - *dbt_deps
+  - *auto_dbt_seed
+  - *dbt_validate_tags
 
 .l_warehouse: &l_warehouse
   - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_L_WAREHOUSE
@@ -65,7 +80,7 @@
   - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_XS_WAREHOUSE
   - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
 
-➕🐭specify_model:
+🐭specify_model:
   <<: *snowflake_dbt_jobs
   script:
     - *deps_and_seed
@@ -74,7 +89,7 @@
     - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
-➕🦖specify_l_model:
+🦖specify_l_model:
   <<: *snowflake_dbt_jobs
   script:
     - *l_warehouse
@@ -85,7 +100,7 @@
     - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
-➕specify_dbt_parameters:
+specify_dbt_parameters:
   <<: *snowflake_dbt_jobs
   script:
     - *deps_and_seed
@@ -94,7 +109,7 @@
     - dbt test $CI_PROFILE_TARGET $DBT_PARAMETERS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
-➕🐘specify_xl_model:
+🐘specify_xl_model:
   <<: *snowflake_dbt_jobs
   script:
     - *xl_warehouse
@@ -105,7 +120,7 @@
     - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
-➕🐭🥩specify_raw_model:
+🐭🥩specify_raw_model:
   <<: *snowflake_dbt_jobs
   script:
     - *deps_and_seed
@@ -116,7 +131,7 @@
     - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
-➕🌱specify_csv_seed:
+🌱specify_csv_seed:
   <<: *snowflake_dbt_jobs
   script:
     - python3 macro_name_check.py
@@ -124,7 +139,7 @@
     - echo $DBT_MODELS
     - dbt seed --full-refresh $CI_PROFILE_TARGET --select $DBT_MODELS
 
-➕📸🥩specify_snapshot:
+📸🥩specify_snapshot:
   <<: *snowflake_dbt_jobs
   script:
     - echo $DBT_MODELS
@@ -133,7 +148,7 @@
     - *deps_and_seed
     - dbt snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
 
-➕📸🥩🦖specify_l_snapshot:
+📸🥩🦖specify_l_snapshot:
   <<: *snowflake_dbt_jobs
   script:
     - echo $DBT_MODELS
@@ -143,7 +158,7 @@
     - *deps_and_seed
     - dbt snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
 
-➕🏗️🛺run_changed_models_sql:
+🏗️🛺run_changed_models_sql:
   <<: *snowflake_dbt_jobs
   script:
     - *deps_and_seed
@@ -153,7 +168,7 @@
     - dbt test $CI_PROFILE_TARGET --models $CHANGED_FILES || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
-➕🏗️🛺🦖run_changed_models_sql_l:
+🏗️🛺🦖run_changed_models_sql_l:
   <<: *snowflake_dbt_jobs
   script:
     - *l_warehouse
@@ -164,7 +179,7 @@
     - dbt test $CI_PROFILE_TARGET --models $CHANGED_FILES || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
-➕🏗️🛺🐘run_changed_models_sql_xl:
+🏗️🛺🐘run_changed_models_sql_xl:
   <<: *snowflake_dbt_jobs
   script:
     - *xl_warehouse
@@ -175,35 +190,48 @@
     - dbt test $CI_PROFILE_TARGET --models $CHANGED_FILES || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
+🐘🏭⛏specify_selector_build_xl:
+  <<: *snowflake_dbt_jobs
+  script:
+    - *xl_warehouse
+    - *set_snapshot
+    - *clone_raw # Reads from raw clone
+    - dbt deps $CI_PROFILE_TARGET
+    - echo $DBT_SELECTOR
+    - dbt build $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --selector $DBT_SELECTOR || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
+
 # ======
 # DBT cloning
 # ======
 
-➕🏗️🔆run_changed_️clone_model_dbt_select:
+🏗️🔆run_changed_️clone_model_dbt_select:
   <<: *snowflake_dbt_jobs
   variables:
     LOGURU_COLORIZE: "true"
   script:
-    - *deps_and_seed
+    - *dbt_deps
     - export SNOWFLAKE_PREP_DATABASE="PREP"
     - export SNOWFLAKE_PROD_DATABASE="PROD"
+    - export GIT_BRANCH=$BRANCH_NAME
     - CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/^/$ANCESTOR_TYPE/g" | sed "s/.sql/$DEPENDENT_TYPE/g" )
     - echo $CHANGED_FILES
     - INPUT=$(dbt --quiet ls --models $CHANGED_FILES --output json --output-keys "database schema name depends_on unique_id config" --profiles-dir profile --target prod)
-    - /builds/gitlab-data/analytics/orchestration/clone_dbt_models_select.py $INPUT
+    - ../../orchestration/clone_dbt_models_select.py $INPUT
 
 
-➕🔆⚡️clone_model_dbt_select:
+🔆⚡️clone_model_dbt_select:
   <<: *snowflake_dbt_jobs
   variables:
     LOGURU_COLORIZE: "true"
   script:
-    - *deps_and_seed
+    - *dbt_deps
     - export SNOWFLAKE_PREP_DATABASE="PREP"
     - export SNOWFLAKE_PROD_DATABASE="PROD"
+    - export GIT_BRANCH=$BRANCH_NAME
     - echo $DBT_MODELS
     - INPUT=$(dbt --quiet ls --models $DBT_MODELS --output json --output-keys "database schema name depends_on unique_id config" --profiles-dir profile --target prod)
-    - /builds/gitlab-data/analytics/orchestration/clone_dbt_models_select.py $INPUT
+    - ../../orchestration/clone_dbt_models_select.py $INPUT
 
 # dbt tests
 .dbt_misc_jobs: &dbt_misc_jobs
@@ -249,13 +277,21 @@
     - echo $DBT_MODELS
     - dbt test $CI_PROFILE_TARGET --models $DBT_MODELS
 
+🌱manual_seed:
+  <<: *snowflake_dbt_jobs
+  stage: 🛠 dbt Misc
+  script:
+    - dbt deps $CI_PROFILE_TARGET
+    - dbt seed --full-refresh $CI_PROFILE_TARGET #seed data from csv
+    - dbt --warn-error run-operation tag_validation --profiles-dir profile --target ci
+
 # ======
 # SAFE Models Check
 # ======
 
 .safe_models_check: &safe_models_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.14
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.23
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -307,6 +343,29 @@
     - python3 safe_model_check.py
 
 # ======
+# Macro name Check
+# ======
+
+.dbt_macro_check: &dbt_macro_check
+  stage: 🛠 dbt Misc
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.22
+  before_script:
+    - cd transform/snowflake-dbt/
+  tags:
+    - analytics
+  only:
+    changes:
+      - "transform/snowflake-dbt/macros/**/*.sql"
+    refs:
+      - merge_request
+  allow_failure: false
+
+🔍macro_name_check:
+  <<: *dbt_macro_check
+  script:
+    - python3 macro_name_check.py
+
+# ======
 # Periscope Model Check
 # ======
 
@@ -317,7 +376,7 @@
     - analytics
   only:
     changes:
-      - "**/*.sql"
+      - "transform/snowflake-dbt/models/**/*.sql"
     refs:
       - merge_request
   allow_failure: true
@@ -337,7 +396,7 @@
 # ======
 .dbt_sql_lint: &dbt_sql_lint
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.14
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.23
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -365,6 +424,7 @@
   only:
     changes:
       - "transform/snowflake-dbt/models/**/*.sql"
+      - "transform/snowflake-dbt/analysis/**/*.sql"
     refs:
       - merge_request
   allow_failure: true

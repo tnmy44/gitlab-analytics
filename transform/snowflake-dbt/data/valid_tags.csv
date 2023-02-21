@@ -19,7 +19,6 @@ driveload,For data loaded via driveload
 edcast, Relates to the EdCast data source.
 edm_snapshot, Models which create snapshots on upper-layer portions of the EDM
 gainsight,Relates to Customer Product Usage data
-geo,Relates to geo data
 gitlab_dotcom,Relates to GitLab.com Database
 gitlab_ops,Relates to GitLab ops database
 license_db,Relates to License DB
@@ -45,6 +44,7 @@ sales_territory, Related to sales territory mappings
 subscription_snapshot,For Subscription Snapshots
 service_ping,Relates to service_ping (SQL and Redis metrics) data
 sfdc,Relates to Salesforce dotcom
+six_hourly,For running DAGs at an increased frequency
 sources,Related to sources
 social,Related to social media data
 tdf,Trusted Data Framework

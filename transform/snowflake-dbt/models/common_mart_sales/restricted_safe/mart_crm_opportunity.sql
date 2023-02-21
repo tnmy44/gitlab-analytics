@@ -1,3 +1,7 @@
+{{ config(
+    tags=["six_hourly"]
+) }}
+
 {{ simple_cte([
     ('dim_crm_account','dim_crm_account'),
     ('dim_crm_opportunity','dim_crm_opportunity'),
@@ -147,6 +151,7 @@
       dim_deal_path.deal_path_name,
       dim_order_type.order_type_name                                       AS order_type,
       dim_order_type.order_type_grouped,
+      dim_order_type_live.order_type_name                                  AS order_type_live,
       dim_dr_partner_engagement.dr_partner_engagement_name,
       dim_alliance_type.alliance_type_name,
       dim_alliance_type.alliance_type_short_name,
@@ -154,6 +159,7 @@
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_sales_qualified_source.sales_qualified_source_grouped,
       dim_sales_qualified_source.sqs_bucket_engagement,
+      dim_crm_opportunity.record_type_name,
 
        -- Account fields
       dim_crm_account.crm_account_name,
@@ -222,7 +228,7 @@
       fct_crm_opportunity.is_downgrade,
       dim_crm_opportunity.critical_deal_flag,
 
-      -- crm opp owner/account owner fields stamped at SAO date
+      -- crm opp owner/account owner fields stamped at SAO date (only used for reporting on opps with close date < 2022-02-01)
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
       dim_crm_opportunity.sao_crm_account_owner_stamped_name,
       dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
@@ -469,6 +475,11 @@
       last_activity_date.first_day_of_fiscal_quarter                  AS last_activity_fiscal_quarter_date,
       last_activity_date.fiscal_quarter_name_fy                       AS last_activity_fiscal_quarter_name,
       last_activity_date.fiscal_year                                  AS last_activity_fiscal_year,
+      sales_last_activity_date.date_actual                            AS sales_last_activity_date,
+      sales_last_activity_date.first_day_of_month                     AS sales_last_activity_month,
+      sales_last_activity_date.first_day_of_fiscal_quarter            AS sales_last_activity_fiscal_quarter_date,
+      sales_last_activity_date.fiscal_quarter_name_fy                 AS sales_last_activity_fiscal_quarter_name,
+      sales_last_activity_date.fiscal_year                            AS sales_last_activity_fiscal_year,
       technical_evaluation_date.date_actual                           AS technical_evaluation_date,
       technical_evaluation_date.first_day_of_month                    AS technical_evaluation_month,
       technical_evaluation_date.first_day_of_fiscal_quarter           AS technical_evaluation_fiscal_quarter_date,
@@ -542,6 +553,8 @@
       ON fct_crm_opportunity.dim_deal_path_id = dim_deal_path.dim_deal_path_id
     LEFT JOIN dim_order_type
       ON fct_crm_opportunity.dim_order_type_id = dim_order_type.dim_order_type_id
+    LEFT JOIN dim_order_type AS dim_order_type_live
+      ON fct_crm_opportunity.dim_order_type_live_id = dim_order_type_live.dim_order_type_id
     LEFT JOIN dim_dr_partner_engagement
       ON fct_crm_opportunity.dim_dr_partner_engagement_id = dim_dr_partner_engagement.dim_dr_partner_engagement_id
     LEFT JOIN dim_alliance_type
@@ -604,6 +617,8 @@
       ON fct_crm_opportunity.sales_qualified_date_id = sales_qualified_date.date_id
     LEFT JOIN dim_date last_activity_date
       ON fct_crm_opportunity.last_activity_date_id = last_activity_date.date_id
+    LEFT JOIN dim_date sales_last_activity_date
+      ON fct_crm_opportunity.sales_last_activity_date_id = sales_last_activity_date.date_id
     LEFT JOIN dim_date technical_evaluation_date
       ON fct_crm_opportunity.technical_evaluation_date_id = technical_evaluation_date.date_id
     LEFT JOIN dim_date AS arr_created_date
@@ -618,9 +633,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@michellecooper",
     created_date="2020-12-07",
-    updated_date="2022-11-10"
+    updated_date="2023-02-02"
   ) }}
 
 

@@ -9,9 +9,9 @@ ci_pipeline_creation,verify,TRUE,pipeline_execution,TRUE,ops,FALSE
 ci_pipeline_schedules,verify,FALSE,pipeline_execution,FALSE,ops,FALSE
 ci_stages,configure,FALSE,configure,FALSE,ops,FALSE
 ci_triggers,verify,FALSE,pipeline_execution,FALSE,ops,FALSE
-container_scanning_build_run,protect,TRUE,container_security,TRUE,sec,FALSE
+container_scanning_build_run,secure,FALSE,composition_analysis,TRUE,sec,FALSE
 dast_build_run,secure,TRUE,dynamic_analysis,TRUE,sec,FALSE
-dependency_scanning_build_run,secure,TRUE,composition_analysis,TRUE,sec,FALSE
+dependency_scanning_build_run,secure,TRUE,composition_analysis,FALSE,sec,FALSE
 deployment_creation,release,TRUE,release,FALSE,ops,FALSE
 environments,release,FALSE,release,FALSE,ops,FALSE
 epic_creation,plan,FALSE,product_planning,TRUE,dev,FALSE
@@ -43,3 +43,4 @@ successful_ci_pipeline_creation,verify,FALSE,pipeline_execution,FALSE,ops,FALSE
 terraform_reports,configure,FALSE,configure,FALSE,ops,FALSE
 todos,plan,FALSE,project_management,FALSE,dev,FALSE
 users_created,manage,FALSE,access,FALSE,dev,FALSE
+kubernetes_with_agent,configure,FALSE,configure,FALSE,ops,FALSE

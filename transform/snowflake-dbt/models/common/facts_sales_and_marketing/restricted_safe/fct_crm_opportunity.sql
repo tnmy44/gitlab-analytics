@@ -1,3 +1,7 @@
+{{ config(
+    tags=["six_hourly"]
+) }}
+
 {{ simple_cte([
     ('crm_account_dimensions', 'map_crm_account'),
     ('prep_crm_account', 'prep_crm_account'),
@@ -93,6 +97,8 @@
       sfdc_opportunity.sales_qualified_date_id,
       sfdc_opportunity.last_activity_date,
       sfdc_opportunity.last_activity_date_id,
+      sfdc_opportunity.sales_last_activity_date,
+      sfdc_opportunity.sales_last_activity_date_id,
       sfdc_opportunity.technical_evaluation_date,
       sfdc_opportunity.technical_evaluation_date_id,
 
@@ -100,6 +106,7 @@
       {{ get_keyed_nulls('sfdc_opportunity.dim_crm_user_id') }}                                                             AS dim_crm_user_id,
       {{ get_keyed_nulls('prep_crm_account.dim_crm_user_id') }}                                                             AS dim_crm_account_user_id,
       {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                 AS dim_order_type_id,
+      {{ get_keyed_nulls('order_type_live.dim_order_type_id') }}                                                            AS dim_order_type_live_id,
       {{ get_keyed_nulls('dr_partner_engagement.dim_dr_partner_engagement_id') }}                                           AS dim_dr_partner_engagement_id,
       {{ get_keyed_nulls('alliance_type.dim_alliance_type_id') }}                                                           AS dim_alliance_type_id,
       {{ get_keyed_nulls('alliance_type_current.dim_alliance_type_id') }}                                                   AS dim_alliance_type_current_id,
@@ -243,6 +250,8 @@
       ON sfdc_opportunity.sales_qualified_source = sales_qualified_source.sales_qualified_source_name
     LEFT JOIN order_type
       ON sfdc_opportunity.order_type = order_type.order_type_name
+    LEFT JOIN order_type AS order_type_live
+      ON sfdc_opportunity.order_type_live = order_type_live.order_type_name
     LEFT JOIN deal_path
       ON sfdc_opportunity.deal_path = deal_path.deal_path_name
     LEFT JOIN sales_segment
@@ -275,5 +284,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2022-09-06"
+    updated_date="2023-02-09"
 ) }}

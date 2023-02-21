@@ -121,20 +121,6 @@ tables:
       , cluster_id
       , group_id
       FROM cluster_groups
-  columns:
-    advanced_metadata: true
-    export_schema: 'gitlab_com'
-    export_table: 'columns'
-    export_table_primary_key: CONCAT(table_name, '_', column_name, table_schema)
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT CONCAT(table_name, '_', column_name, table_schema) AS column_id
-      , column_name
-      , data_type
-      , ordinal_position
-      , table_name
-      , table_schema
-      FROM information_schema.columns
     import_schema: information_schema
   clusters_integration_prometheus:
     advanced_metadata: true
@@ -317,17 +303,6 @@ tables:
       , last_error
       , user_id
       FROM group_import_states
-  ip_restrictions:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'ip_restrictions'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , group_id
-      , range
-      FROM ip_restrictions
   issuable_severities:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -472,19 +447,6 @@ tables:
       SELECT milestone_id
       , release_id
       FROM milestone_releases
-  namespace_package_settings:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'namespace_package_settings'
-    export_table_primary_key: namespace_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT namespace_id
-      , maven_duplicates_allowed
-      , maven_duplicate_exception_regex
-      , generic_duplicates_allowed
-      , generic_duplicate_exception_regex
-      FROM namespace_package_settings
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true
@@ -513,36 +475,23 @@ tables:
       , created_at
       , scopes
       FROM oauth_access_tokens
-  packages_build_infos:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'packages_build_infos'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-    
-      SELECT  id
-      , package_id
-      , pipeline_id 
-      FROM packages_build_infos
   pages_domains:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'pages_domains'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
+    dbt_source_model: true 
+    export_schema: 'gitlab_com' 
+    export_table: 'pages_domains' 
+    export_table_primary_key: id 
+    import_db: GITLAB_DB 
+    import_query: |- 
       SELECT id
       , project_id
-      , certificate
-      , domain
       , CAST(verified_at AS VARCHAR) AS verified_at
-      , verification_code
-      , CAST(enabled_until AS VARCHAR) AS enabled_until
-      , CAST(remove_at AS VARCHAR) AS remove_at
+      , CAST(enabled_until AS VARCHAR) AS enabled_until 
+      , CAST(remove_at AS VARCHAR) AS remove_at 
       , auto_ssl_enabled
-      , CAST(certificate_valid_not_before AS VARCHAR) AS certificate_valid_not_before
-      , CAST(certificate_valid_not_after AS VARCHAR) AS certificate_valid_not_after
-      , certificate_source
+      , wildcard
+      , usage
+      , scope
+      , auto_ssl_failed
       FROM pages_domains
   path_locks:
     advanced_metadata: true

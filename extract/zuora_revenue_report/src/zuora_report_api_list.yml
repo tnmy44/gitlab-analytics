@@ -1,0 +1,190 @@
+report_list:
+  billing_waterfall: 
+      category: "Revenue"
+      rep_name: "Billing Waterfall"
+      layout_name: "Gitlab : RCID by Transaction"
+      rep_desc: "Revenue waterfall for billed contractual revenue (rollout at line level of Contract Liability balances)"
+      output_file_name: "revenue_billing_waterfall"
+      load_column_name:  "
+                          XX1 AS Book_Name
+                         ,XX2 AS _Org_Name
+                         ,XX3 AS _Entity
+                         ,XX4 AS _Rate_Plan_Charge_Id
+                         ,XX5 As _Sales_Order_Line_ID
+                         ,XX6 AS _Invoice_Num
+                         ,XX7 AS _Invoice_Date
+                         ,XX8 AS _Billing_Quantity
+                         ,XX9 AS _Rate_Plan_Name
+                         ,XX10 AS _Rate_Plan_Charge_Name
+                         ,XX11 AS _RC_ID
+                         ,XX12 AS _Rc_Pob_Name
+                         ,XX13 AS _Pob_Tmpl_Name
+                         ,XX14 AS _Event_Name
+                         ,XX15 AS _Subscription_Name
+                         ,XX16 AS _Rc_Bill_Customer_Name
+                         ,XX17 AS _Sales_Order_Num
+                         ,XX18 AS _Sales_Order_Line_Num
+                         ,XX19 AS _Rc_Bill_Item_Number
+                         ,XX20 AS _Invoice_Amount_T
+                         ,XX21 AS _Transaction_Currency
+                         ,XX22 AS _Revenue_Start_Date
+                         ,XX23 AS _Revenue_End_Date
+                         ,XX24 AS _Subscription_Start_Date
+                         ,XX25 AS _Subscription_End_Date
+                         ,XX26 AS _Prior_Amount
+                         ,XX27 AS MONTH_0
+                         ,XX28 AS MONTH_1
+                         ,XX29 AS MONTH_2
+                         ,XX30 AS MONTH_3
+                         ,XX31 AS MONTH_4
+                         ,XX32 AS MONTH_5
+                         ,XX33 AS MONTH_6
+                         ,XX34 AS MONTH_7
+                         ,XX35 AS MONTH_8
+                         ,XX36 AS MONTH_9
+                         ,XX37 AS MONTH_10
+                         ,XX38 AS MONTH_11
+                         ,XX39 AS MONTH_12
+                         ,XX40 AS MONTH_13
+                         ,XX41 AS MONTH_14
+                         ,XX42 AS MONTH_15 
+                         ,XX43 AS MONTH_16
+                         ,XX44 AS MONTH_17
+                         ,XX45 AS MONTH_18
+                         ,XX46 AS MONTH_19
+                         ,XX47 AS MONTH_20
+                         ,XX48 AS MONTH_21
+                         ,XX49 AS MONTH_22
+                         ,XX50 AS MONTH_23
+                         ,XX51 AS MONTH_24
+                         ,XX52 AS MONTH_25
+                         ,XX53 AS MONTH_26
+                         ,XX54 AS MONTH_27
+                         ,XX55 AS MONTH_28
+                         ,XX56 AS MONTH_29
+                         ,XX57 AS MONTH_30
+                         ,XX58 AS MONTH_31
+                         ,XX59 AS MONTH_32
+                         ,XX60 AS MONTH_33
+                         ,XX61 AS MONTH_34
+                         ,XX62 AS MONTH_35
+                         ,XX63 AS MONTH_36
+                         ,XX64 AS MONTH_37
+                         ,XX65 AS MONTH_38
+                         ,XX66 AS MONTH_39
+                         ,XX67 AS YEAR_4
+                         ,XX68 AS YEAR_5
+                         ,XX69 AS _Grand_Total_"
+      status: "A"
+      report_type: "dynamic"
+      static_rows_column_header: 10
+  rc_rollforward:
+      category: "Revenue"
+      rep_name: "RC Rollforward Report"
+      layout_name: "by nll ptd"
+      rep_desc: "Displays Contract Liability/Contract Asset beginning and ending balances, and activity for the period selected. Used by revenue users for reconciliation and disclosures"
+      output_file_name: "revenue_rc_rollforward_report"
+      status: "A"
+      load_column_name: ""
+      report_type: "static"
+      static_rows_column_header: 10
+  revenue_waterfall:
+      category: "Revenue"
+      rep_name: "Waterfall Report"
+      layout_name: "GitLab - By RCID (Transaction Currency)"
+      rep_desc: "Waterfall of prior period, current and future scheduled and forecasted revenue (and cost). Can be used for timing of revenue for unsatisfied/partially satisfied performance obligations"
+      output_file_name: "revenue_waterfall_report"
+      status: "A"
+      load_column_name: " XX1 AS Book_Name
+                         ,XX2 AS _Entity
+                         ,XX3 AS _Org_Name
+                         ,XX4 AS _Rc_Line_Customer_Name
+                         ,XX5 AS _Subscription_Name
+                         ,XX6 AS _Subscription_ID
+                         ,XX7 AS _Sales_Order_Line_ID
+                         ,XX8 AS _RC_ID
+                         ,XX9 AS _Rate_Plan_Name
+                         ,XX10 AS _Rate_Plan_Charge_Name
+                         ,XX11 AS _SSP_Bundle_Stratifier
+                         ,XX12 AS _Rc_Pob_Name
+                         ,XX13 AS _Revenue_Segments
+                         ,XX14 AS _Subscription_Start_Date
+                         ,XX15 AS _Revenue_Start_Date
+                         ,XX16 AS _Revenue_End_Date
+                         ,XX17 AS _Product_Family
+                         ,XX18 AS _Product_Category
+                         ,XX19 AS _Line_Item_Num
+                         ,XX20 AS _Sold_to_Country
+                         ,XX21 AS _Subscription_End_Date
+                         ,XX22 AS _Customer_Number
+                         ,XX23 AS _Sales_Order_Date
+                         ,XX24 AS _Rc_Line_Atr16
+                         ,XX25 AS _Prior_Amount
+                         ,XX26 AS MONTH_0
+                         ,XX27 AS MONTH_1
+                         ,XX28 AS MONTH_2
+                         ,XX29 AS MONTH_3
+                         ,XX30 AS MONTH_4
+                         ,XX31 AS MONTH_5
+                         ,XX32 AS MONTH_6
+                         ,XX33 AS MONTH_7
+                         ,XX34 AS MONTH_8
+                         ,XX35 AS MONTH_9
+                         ,XX36 AS MONTH_10
+                         ,XX37 AS MONTH_11
+                         ,XX38 AS MONTH_12
+                         ,XX39 AS MONTH_13
+                         ,XX40 AS MONTH_14
+                         ,XX41 AS MONTH_15
+                         ,XX42 AS MONTH_16
+                         ,XX43 AS MONTH_17
+                         ,XX44 AS MONTH_18
+                         ,XX45 AS MONTH_19
+                         ,XX46 AS MONTH_20
+                         ,XX47 AS MONTH_21
+                         ,XX48 AS MONTH_22
+                         ,XX49 AS MONTH_23
+                         ,XX50 AS MONTH_24
+                         ,XX51 AS MONTH_25
+                         ,XX52 AS MONTH_26
+                         ,XX53 AS MONTH_27
+                         ,XX54 AS MONTH_28
+                         ,XX55 AS MONTH_29
+                         ,XX56 AS MONTH_30
+                         ,XX57 AS MONTH_31
+                         ,XX58 AS MONTH_32
+                         ,XX59 AS MONTH_33
+                         ,XX60 AS MONTH_34
+                         ,XX61 AS MONTH_35
+                         ,XX62 AS MONTH_36
+                         ,XX63 AS MONTH_37
+                         ,XX64 AS MONTH_38
+                         ,XX65 AS MONTH_39
+                         ,XX66 AS YEAR_2027
+                         ,XX67 AS YEAR_2028
+                         ,XX68 AS _Total_
+                         ,XX69 AS Grand_Total
+                         "
+      report_type: "dynamic"
+      static_rows_column_header:  15
+  unreleased_pob:
+      category: "Transactions"
+      rep_name: "Unreleased POB(s) Report"
+      layout_name: "Gitlab Unreleased POB v1"
+      rep_desc: "Listing of all POB(s) where revenue has not been fully released"
+      output_file_name: "transactions_unreleased_pod"
+      status: "A"
+      load_column_name: ""
+      report_type: "static"
+      static_rows_column_header: 8
+  unbill_rollforward:
+      category: "Revenue"
+      rep_name: "Unbill RollForward Report"
+      layout_name: "Gitlab Unbill by RCID"
+      rep_desc: "Subset of RC Rollforward report showing beginning and ending balances and activity for contractual revenue not yet billed"
+      output_file_name: "revenue_unbill_rollforward"
+      status: "A" 
+      load_column_name: ""
+      report_type: "static"
+      static_rows_column_header: 10
+      

@@ -15,6 +15,7 @@ stages:
   - ⚙️ dbt Run    # transform/snowflake-dbt/snowflake-dbt-ci.yml
   - 🛠 dbt Misc  # transform/snowflake-dbt/snowflake-dbt-ci.yml
   - 📚 dbt Docs
+  - 🛑🐍 Python Critical
   - 🐍 Python
   - 🛑 Snowflake Stop
   - triage
@@ -53,7 +54,7 @@ include:
       - $BRANCH_NAME == $SNOWFLAKE_PREP_DATABASE
       - $BRANCH_NAME == $SNOWFLAKE_PROD_DATABASE
       - $TEST_PIPELINE
-  when: manual  
+  when: manual
 
 .snowflake_start_clone: &snowflake_start_clone
   <<: *snowflake_clone_template
@@ -123,18 +124,38 @@ clone_stop:
     action: stop
   variables:
     GIT_STRATEGY: none
+  dependencies: []
   script:
     - git clone $CI_REPOSITORY_URL
     - analytics/orchestration/manage_snowflake.py delete_clones
 
+🔑grant_clones:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py grant_clones --database prod --role $GRANT_TO_ROLE
+    - manage_snowflake.py grant_clones --database prep --role $GRANT_TO_ROLE
 
 # ======
 # Python Code Checks
 # ======
 
+.python_critical_check: &python_critical_check
+  stage: 🛑🐍 Python Critical
+  image: registry.gitlab.com/gitlab-data/ci-python-image:v0.0.1
+  before_script:
+    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
+  tags:
+    - analytics
+  only:
+    changes:
+      - "**/*.py"
+    refs:
+      - merge_requests
+  allow_failure: false
+
 .python_check: &python_check
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/data-image/ci-python-image:v1.0.16
+  image: registry.gitlab.com/gitlab-data/ci-python-image:v0.0.1
   before_script:
     - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
   tags:
@@ -150,7 +171,7 @@ clone_stop:
   stage: 🐍 Python
   tags:
     - analytics
-  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.21
   only:
     changes:
       - "**/*.py"
@@ -159,9 +180,14 @@ clone_stop:
   allow_failure: true
 
 ⚫python_black:
-  <<: *python_check
+  <<: *python_critical_check
   script:
     - black --check .
+
+✏️python_mypy:
+  <<: *python_critical_check
+  script:
+    - mypy extract/ --ignore-missing-imports --explicit-package-bases --implicit-optional
 
 🌽python_flake8:
   <<: *python_check
@@ -169,16 +195,11 @@ clone_stop:
     - echo "Changed files are $CHANGED_FILES"
     - flake8 $CHANGED_FILES --ignore=E203,E501,W503,W605
 
-✏️python_mypy:
-  <<: *python_check
-  script:
-    - mypy extract/ --ignore-missing-imports
-
 🗒️python_pylint:
   <<: *python_check
   script:
     - echo "Changed files are $CHANGED_FILES"
-    - pylint $CHANGED_FILES --ignore=dags --disable=line-too-long,E0401,E0611,W1203,W1202,C0103,R0902,W0212
+    - pylint $CHANGED_FILES --ignore=analytics/dags --disable=line-too-long,E0401,E0611,W1203,W1202,C0103,R0801,R0902,W0212
 
 🤔python_complexity:
   <<: *python_check
@@ -252,7 +273,7 @@ clone_stop:
 
 .pages_job_template: &pages_job_template
   stage: 📚 dbt Docs
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.2
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.23
   variables:
     SNOWFLAKE_ROLE: $SNOWFLAKE_TRANSFORM_ROLE
     SNOWFLAKE_WAREHOUSE: $SNOWFLAKE_TRANSFORM_WAREHOUSE

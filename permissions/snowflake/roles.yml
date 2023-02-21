@@ -34,6 +34,11 @@ databases:
     - cbraza_prep:
         shared: no
 
+    - cleroux_prod:
+        shared: no
+    - cleroux_prep:
+        shared: no
+
     - csharp_prod:
         shared: no
     - csharp_prep:
@@ -42,6 +47,11 @@ databases:
     - david_prod:
         shared: no
     - david_prep:
+        shared: no
+
+    - ddeng_prod:
+        shared: no
+    - ddeng_prep:
         shared: no
 
     - degan_prod:
@@ -74,9 +84,9 @@ databases:
     - jcaine_prep:
         shared: no
 
-    - jkim_prod:
+    - jng_prod:
         shared: no
-    - jkim_prep:
+    - jng_prep:
         shared: no
 
     - jpeguero_prod:
@@ -93,11 +103,6 @@ databases:
         shared: no
     - juwong_prep:
         shared: no  
-
-    - kaguilar_prod:
-        shared: no
-    - kaguilar_prep:
-        shared: no
 
     - kdietz_prod:
         shared: no
@@ -122,11 +127,6 @@ databases:
     - mdrussell_prod:
         shared: no
     - mdrussell_prep:
-        shared: no
-
-    - mlaanen_prod:
-        shared: no
-    - mlaanen_prep:
         shared: no
 
     - mpetersen_prod:
@@ -194,11 +194,6 @@ databases:
     - rkohnke_prep:
         shared: no
 
-    - rparker_prod:
-        shared: no
-    - rparker_prep:
-        shared: no
-
     - schaturvedi_prod:
         shared: no
     - schaturvedi_prep:
@@ -214,11 +209,6 @@ databases:
     - srehm_prod:
         shared: no
     - srehm_prep:
-        shared: no
-
-    - tpoole_prod:
-        shared: no
-    - tpoole_prep:
         shared: no
 
     - tnguyen_prod:
@@ -243,6 +233,10 @@ roles:
         member_of:
             - securityadmin
             - sysadmin
+    
+    - orgadmin:
+        warehouses:
+            - admin
 
     - securityadmin:
         warehouses:
@@ -262,6 +256,7 @@ roles:
             - accountadmin
             - securityadmin
             - useradmin
+            - orgadmin
         warehouses:
             - admin
         privileges:
@@ -479,7 +474,6 @@ roles:
             - netsuite
             - mailgun
             - marketo
-            - pmg
             - snowflake_db
             - zendesk
             - zendesk_community_relations
@@ -558,28 +552,6 @@ roles:
             - analyst_core
             - snowflake_db
             - data_team_analyst
-
-    - analytics_engineer_ga:
-        member_of:
-            - analytics_engineer_core
-            - analyst_people
-            - analyst_engineering
-            - bamboohr
-            - prometheus
-            - workday
-
-    - analytics_engineer_gtm:
-        member_of:
-            - analytics_engineer_core
-            - analyst_marketing
-            - analyst_sales
-            - analyst_finance
-
-    - analytics_engineer_rd:
-        member_of:
-            - analytics_engineer_core
-            - analyst_engineering
-            - analyst_growth
 
     - data_manager:
         warehouses:
@@ -749,7 +721,6 @@ roles:
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
                 - raw.gitter
-                - raw.pmg
                 - raw.prometheus
                 - raw.pto
                 - raw.rspec
@@ -764,7 +735,6 @@ roles:
                 - raw.engineering_extracts.*
                 - raw.gitlab_data_yaml.*
                 - raw.gitter.*
-                - raw.pmg.*
                 - raw.prometheus.*
                 - raw.pto.*
                 - raw.rspec.*
@@ -841,9 +811,13 @@ roles:
                       - prod.restricted_safe_common_mart_sales
                       - prod.common_mart_marketing
                       - prod.restricted_safe_workspace_sales
+                      - prod.restricted_safe_common
+                      - prod.pumps_sensitive
                       - prep.snowplow_*
                       - prep.gitlab_dotcom
                       - prep.zendesk
+                      - prep.preparation
+                      - prep.customers
                       - raw.data_science
                       - raw.salesforce_stitch
                       - raw.snapshots
@@ -857,12 +831,16 @@ roles:
                       - prep.snowplow_*.*
                       - prep.zendesk.*
                       - prep.gitlab_dotcom.*
+                      - prep.preparation.*
+                      - prep.customers.*
                       - prod.common.*
                       - prod.legacy.*
                       - prod.common_mart_product.*
                       - prod.restricted_safe_common_mart_sales.*
+                      - prod.restricted_safe_common.*
                       - prod.restricted_safe_workspace_sales.*
                       - prod.common_mart_marketing.*
+                      - prod.pumps_sensitive.*
                       - raw.salesforce_stitch.*
                       - raw.snapshots.*
                   write:
@@ -1020,6 +998,7 @@ roles:
             - covid19
             - snowflake_db
             - zoominfo
+            - static_sensitive_readonly
         owns:
             schemas:
                 - prod.common
@@ -1499,6 +1478,18 @@ roles:
                     - prep.driveload.*
                     - raw.driveload.*
 
+    - facebook_ads:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.facebook_ads
+            tables:
+                read:
+                    - raw.facebook_ads.*
+
     - gainsight_pump:
         warehouses:
             - gainsight_xs
@@ -1523,7 +1514,6 @@ roles:
                     - prod.common_mart_product
             tables:
                 read:
-                    - prod.common_prep.prep_usage_ping_no_license_key
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
                     - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
@@ -1616,8 +1606,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_alert_management_alerts
                     - raw.tap_postgres.gitlab_db_alert_management_alert_assignees
                     - raw.tap_postgres.gitlab_db_approvals
-                    - raw.tap_postgres.gitlab_db_approvals_errors
-                    - raw.tap_postgres.gitlab_db_approvals_validate
                     - raw.tap_postgres.gitlab_db_approval_merge_request_rules
                     - raw.tap_postgres.gitlab_db_audit_events
                     - raw.tap_postgres.gitlab_db_award_emoji
@@ -1630,16 +1618,10 @@ roles:
                     - raw.tap_postgres.gitlab_db_ci_build_trace_section_names
                     - raw.tap_postgres.gitlab_db_ci_group_variables
                     - raw.tap_postgres.gitlab_db_ci_job_artifacts
-                    - raw.tap_postgres.gitlab_db_ci_job_artifacts_errors
-                    - raw.tap_postgres.gitlab_db_ci_job_artifacts_validate
                     - raw.tap_postgres.gitlab_db_ci_pipelines
                     - raw.tap_postgres.gitlab_db_ci_pipeline_chat_data
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedules
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_schedules_errors
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_schedules_validate
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables_errors
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables_validate
                     - raw.tap_postgres.gitlab_db_ci_platform_metrics
                     - raw.tap_postgres.gitlab_db_ci_runners
                     - raw.tap_postgres.gitlab_db_ci_runner_projects
@@ -1651,30 +1633,19 @@ roles:
                     - raw.tap_postgres.gitlab_db_clusters_applications_crossplane
                     - raw.tap_postgres.gitlab_db_clusters_applications_helm
                     - raw.tap_postgres.gitlab_db_clusters_applications_jupyter
-                    - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces_validate
                     - raw.tap_postgres.gitlab_db_cluster_groups
                     - raw.tap_postgres.gitlab_db_cluster_projects
-                    - raw.tap_postgres.gitlab_db_columns
                     - raw.tap_postgres.gitlab_db_deployments
-                    - raw.tap_postgres.gitlab_db_deployments_errors
-                    - raw.tap_postgres.gitlab_db_deployments_validate
                     - raw.tap_postgres.gitlab_db_deployment_merge_requests
                     - raw.tap_postgres.gitlab_db_design_management_designs
                     - raw.tap_postgres.gitlab_db_design_management_designs_versions
                     - raw.tap_postgres.gitlab_db_design_management_versions
                     - raw.tap_postgres.gitlab_db_elasticsearch_indexed_namespaces
                     - raw.tap_postgres.gitlab_db_emails
-                    - raw.tap_postgres.gitlab_db_emails_errors
                     - raw.tap_postgres.gitlab_db_emails_validate
                     - raw.tap_postgres.gitlab_db_environments
-                    - raw.tap_postgres.gitlab_db_environments_errors
-                    - raw.tap_postgres.gitlab_db_environments_validate
                     - raw.tap_postgres.gitlab_db_epics
-                    - raw.tap_postgres.gitlab_db_epics_errors
-                    - raw.tap_postgres.gitlab_db_epics_validate
                     - raw.tap_postgres.gitlab_db_epic_issues
-                    - raw.tap_postgres.gitlab_db_epic_metrics_errors
-                    - raw.tap_postgres.gitlab_db_epic_metrics_validate
                     - raw.tap_postgres.gitlab_db_events
                     - raw.tap_postgres.gitlab_db_experiments
                     - raw.tap_postgres.gitlab_db_gitlab_subscriptions
@@ -1704,22 +1675,16 @@ roles:
                     - raw.tap_postgres.gitlab_db_notification_settings
                     - raw.tap_postgres.gitlab_db_oauth_access_tokens
                     - raw.tap_postgres.gitlab_db_onboarding_progresses
-                    - raw.tap_postgres.gitlab_db_packages_build_infos
-                    - raw.tap_postgres.gitlab_db_packages_dependencies
-                    - raw.tap_postgres.gitlab_db_packages_dependency_links
                     - raw.tap_postgres.gitlab_db_packages_packages
-                    - raw.tap_postgres.gitlab_db_packages_package_files
                     - raw.tap_postgres.gitlab_db_pages_domains
                     - raw.tap_postgres.gitlab_db_plans
                     - raw.tap_postgres.gitlab_db_programming_languages
                     - raw.tap_postgres.gitlab_db_projects
                     - raw.tap_postgres.gitlab_db_project_auto_devops
-                    - raw.tap_postgres.gitlab_db_project_daily_statistics
                     - raw.tap_postgres.gitlab_db_project_features
                     - raw.tap_postgres.gitlab_db_project_group_links
                     - raw.tap_postgres.gitlab_db_project_import_data
                     - raw.tap_postgres.gitlab_db_project_mirror_data
-                    - raw.tap_postgres.gitlab_db_project_repository_states
                     - raw.tap_postgres.gitlab_db_project_statistics
                     - raw.tap_postgres.gitlab_db_prometheus_alerts
                     - raw.tap_postgres.gitlab_db_protected_branches
@@ -1739,19 +1704,11 @@ roles:
                     - raw.tap_postgres.gitlab_db_system_note_metadata
                     - raw.tap_postgres.gitlab_db_terraform_states
                     - raw.tap_postgres.gitlab_db_todos
-                    - raw.tap_postgres.gitlab_db_todos_errors
-                    - raw.tap_postgres.gitlab_db_todos_validate
                     - raw.tap_postgres.gitlab_db_users
-                    - raw.tap_postgres.gitlab_db_users_errors
-                    - raw.tap_postgres.gitlab_db_users_validate
                     - raw.tap_postgres.gitlab_db_user_custom_attributes
                     - raw.tap_postgres.gitlab_db_user_preferences
-                    - raw.tap_postgres.gitlab_db_user_preferences_validate
                     - raw.tap_postgres.gitlab_db_vulnerability_occurrences
                     - raw.tap_postgres.gitlab_db_web_hooks
-                    - raw.tap_postgres.gitlab_db_web_hooks_errors
-                    - raw.tap_postgres.gitlab_db_web_hooks_validate
-                    - raw.tap_postgres.gitlab_db_web_hook_logs
 
     - gitlab_dotcom_prep:
         warehouses:
@@ -1884,6 +1841,18 @@ roles:
                     - prep.license_db.*
                     - raw.license_db.*
 
+    - linkedin_ads:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.linkedin_ads
+            tables:
+                read:
+                    - raw.linkedin_ads.*
+
     - maxmind:
         privileges:
             databases:
@@ -2007,20 +1976,6 @@ roles:
                     - prep.sensitive.qualtrics_post_purchase_survey_responses_source
                     - raw.qualtrics.*
 
-    - pmg:
-        warehouses:
-            - dev_xs
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.pmg
-            tables:
-                read:
-                    - prep.pmg.*
-
     - prometheus:
         warehouses:
             - dev_xs
@@ -2102,6 +2057,23 @@ roles:
                 read:
                     - prep.sfdc.*
                     - raw.salesforce_stitch.*
+
+    - salesforce_sandbox:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.sfdc
+                    - raw.salesforce_sandbox_stitch
+            tables:
+                read:
+                    - prep.sfdc.*
+                    - raw.salesforce_sandbox_stitch.*
 
     - share:
         privileges:
@@ -2239,6 +2211,30 @@ roles:
                 read:
                     - static.sensitive.*
 
+    - static_sensitive_readonly:
+        privileges:
+            databases:
+                read:
+                    - static
+            schemas:
+                read:
+                    - static.sensitive
+            tables:
+                read:
+                    - static.sensitive.*
+
+    - static_pmg_readonly:
+        privileges:
+            databases:
+                read:
+                    - static
+            schemas:
+                read:
+                    - static.pmg_backup
+            tables:
+                read:
+                    - static.pmg_backup.*
+
     - static_admin:
         member_of:
             - static
@@ -2285,6 +2281,20 @@ roles:
                     - raw.saas_usage_ping.*
                     - prep.saas_usage_ping.*
                     - raw.version_db.*
+
+    - workato:
+        warehouses:
+            - loading
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.pumps_sensitive
+            tables:
+                read:
+                    - prod.pumps_sensitive.pump_marketing_contact
 
     - workday:
         warehouses:
@@ -2517,7 +2527,6 @@ roles:
             - reporter
             - restricted_safe
             - xactly
-
         warehouses:
             - dev_xs
 
@@ -2526,6 +2535,7 @@ roles:
             - analyst_sales
             - restricted_safe
             - data_team_analyst
+            - static_sensitive
         warehouses:
             - dev_xs
 
@@ -2558,6 +2568,7 @@ roles:
         member_of:
             - analyst_core
             - data_team_analyst
+            - restricted_safe
         warehouses:
             - dev_xs
 
@@ -2585,6 +2596,38 @@ roles:
             - analyst_engineering
         warehouses:
             - dev_xs
+        owns:
+            databases:
+                - cleroux_prep
+                - cleroux_prod
+            schemas:
+                - cleroux_prep.*
+                - cleroux_prod.*
+            tables:
+                - cleroux_prep.*.*
+                - cleroux_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - cleroux_prep
+                    - cleroux_prod
+                write:
+                    - cleroux_prep
+                    - cleroux_prod
+            schemas:
+                read:
+                    - cleroux_prep.*
+                    - cleroux_prod.*
+                write:
+                    - cleroux_prep.*
+                    - cleroux_prod.*
+            tables:
+                read:
+                    - cleroux_prep.*.*
+                    - cleroux_prod.*.*
+                write:
+                    - cleroux_prep.*.*
+                    - cleroux_prod.*.*
 
     - cmeddaugh:
         member_of:
@@ -2681,6 +2724,7 @@ roles:
         member_of:
             - reporter
             - analyst_marketing
+            - restricted_safe
         warehouses:
             - dev_xs
 
@@ -2689,6 +2733,38 @@ roles:
             - analyst_engineering
         warehouses:
             - dev_xs
+        owns:
+            databases:
+                - ddeng_prep
+                - ddeng_prod
+            schemas:
+                - ddeng_prep.*
+                - ddeng_prod.*
+            tables:
+                - ddeng_prep.*.*
+                - ddeng_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - ddeng_prep
+                    - ddeng_prod
+                write:
+                    - ddeng_prep
+                    - ddeng_prod
+            schemas:
+                read:
+                    - ddeng_prep.*
+                    - ddeng_prod.*
+                write:
+                    - ddeng_prep.*
+                    - ddeng_prod.*
+            tables:
+                read:
+                    - ddeng_prep.*.*
+                    - ddeng_prod.*.*
+                write:
+                    - ddeng_prep.*.*
+                    - ddeng_prod.*.*
 
     - degan:
         member_of:
@@ -2696,6 +2772,10 @@ roles:
             - analyst_marketing
             - restricted_safe
             - bi_tool_eval_read
+            - data_science_readonly
+            - facebook_ads
+            - linkedin_ads
+            - static_pmg_readonly
         warehouses:
             - dev_xs
         owns:
@@ -2749,6 +2829,9 @@ roles:
             - analyst_marketing
             - restricted_safe
             - bi_tool_eval_read
+            - data_science_readonly
+            - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
 
@@ -2797,6 +2880,7 @@ roles:
             - analyst_core
             - data_manager
             - restricted_safe
+            - orgadmin
         warehouses:
             - dev_xs
         owns:
@@ -2909,6 +2993,22 @@ roles:
             - transforming_xs
             - transforming_xl
 
+    - gweaver:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - hkacmarski:
+        member_of:
+            - analyst_sales
+            - bi_tool_eval_read
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - hselim:
         member_of:
             - adaptive
@@ -2916,7 +3016,6 @@ roles:
             - restricted_safe
             - salesforce
             - xactly
-
         warehouses:
             - dev_xs
 
@@ -2929,6 +3028,7 @@ roles:
             - data_team_analyst
             - data_manager
             - restricted_safe
+            - salesforce_sandbox
             - xactly
             - bi_tool_eval_db
         warehouses:
@@ -2972,12 +3072,18 @@ roles:
             - analyst_marketing
             - restricted_safe
             - bi_tool_eval_read
+            - data_science_readonly
+            - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
 
-    - jameson: # De provisioned as part of Quarterly audit and security check.
-        member_of: []
-        warehouses: []
+    - jbudreski:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
 
     - jcaine:
         member_of:
@@ -3018,53 +3124,44 @@ roles:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
 
-    - jkim:
+    - jng:
         member_of:
-            - analyst_sales
-            - restricted_safe
-            - data_team_analyst
-            - bi_tool_eval_read
-            - xactly
-            - sales_analytics
-            - data_science_readonly
+         - restricted_safe
+         - analytics_engineer_core
         warehouses:
             - dev_xs
         owns:
             databases:
-                - jkim_prep
-                - jkim_prod
+                - jng_prep
+                - jng_prod
             schemas:
-                - jkim_prep.*
-                - jkim_prod.*
+                - jng_prep.*
+                - jng_prod.*
             tables:
-                - jkim_prep.*.*
-                - jkim_prod.*.*
+                - jng_prep.*.*
+                - jng_prod.*.*
         privileges:
             databases:
                 read:
-                    - jkim_prep
-                    - jkim_prod
+                    - jng_prep
+                    - jng_prod
                 write:
-                    - jkim_prep
-                    - jkim_prod
+                    - jng_prep
+                    - jng_prod
             schemas:
                 read:
-                    - jkim_prep.*
-                    - jkim_prod.*
+                    - jng_prep.*
+                    - jng_prod.*
                 write:
-                    - jkim_prep.*
-                    - jkim_prod.*
+                    - jng_prep.*
+                    - jng_prod.*
             tables:
                 read:
-                    - jkim_prep.*.*
-                    - jkim_prod.*.*
+                    - jng_prep.*.*
+                    - jng_prod.*.*
                 write:
-                    - jkim_prep.*.*
-                    - jkim_prod.*.*
-
-    - joshua:
-        member_of: []
-        warehouses: []
+                    - jng_prep.*.*
+                    - jng_prod.*.*
 
     - jpeguero:
         member_of:
@@ -3100,6 +3197,8 @@ roles:
                 read:
                     - jpeguero_prep
                     - jpeguero_prod
+                    - raw
+                    - prep
                 write:
                     - jpeguero_prep
                     - jpeguero_prod
@@ -3107,6 +3206,8 @@ roles:
                 read:
                     - jpeguero_prep.*
                     - jpeguero_prod.*
+                    - raw.snowflake_imports
+                    - prep.snowflake_imports
                 write:
                     - jpeguero_prep.*
                     - jpeguero_prod.*
@@ -3114,6 +3215,8 @@ roles:
                 read:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
+                    - raw.snowflake_imports.usage_ping_payloads
+                    - prep.snowflake_imports.snowflake_imports_usage_ping_payloads_source
                 write:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
@@ -3177,6 +3280,7 @@ roles:
             - data_team_analyst
             - restricted_safe
             - bi_tool_eval_read
+            - zoominfo_inbound
         warehouses:
             - dev_xs
             - dev_xl
@@ -3222,50 +3326,6 @@ roles:
                 write:
                     - juwong_prep.*.*
                     - juwong_prod.*.*
-
-    - kaguilar:
-        member_of:
-            - analyst_engineering
-            - customers_db
-            - data_team_analyst
-            - analyst_finance
-            - restricted_safe
-            - xactly
-            - bi_tool_eval_read
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - kaguilar_prep
-                - kaguilar_prod
-            schemas:
-                - kaguilar_prep.*
-                - kaguilar_prod.*
-            tables:
-                - kaguilar_prep.*.*
-                - kaguilar_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - kaguilar_prep
-                    - kaguilar_prod
-                write:
-                    - kaguilar_prep
-                    - kaguilar_prod
-            schemas:
-                read:
-                    - kaguilar_prep.*
-                    - kaguilar_prod.*
-                write:
-                    - kaguilar_prep.*
-                    - kaguilar_prod.*
-            tables:
-                read:
-                    - kaguilar_prep.*.*
-                    - kaguilar_prod.*.*
-                write:
-                    - kaguilar_prep.*.*
-                    - kaguilar_prod.*.*
 
     - kdietz:
         member_of:
@@ -3369,19 +3429,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - kchen:
-        member_of:
-            - adaptive
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
-            - xactly
-        warehouses:
-            - dev_xs
-
     - kkarthikeyan:
         member_of:
             - analyst_finance
@@ -3394,20 +3441,39 @@ roles:
         warehouses:
             - dev_xs
 
-    - laddula:
-        member_of: []
-        warehouses: []
+    - lmai:
+        member_of:
+            - analyst_engineering
+            - bi_tool_eval_read
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.sensitive
+            tables: # https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/6311
+                read:
+                    - prep.sensitive.bamboohr_id_employee_number_mapping
+        warehouses:
+            - dev_xs
+
 
     - lvinueza:
         member_of:
             - analyst_finance
             - analyst_people
-            - analytics_engineer_ga
+            - analytics_engineer_core
+            - analyst_people
+            - analyst_engineering
             - bamboohr
             - bamboohr_analytics
             - customers_db
             - data_team_analyst
+            - prometheus
             - restricted_safe
+            - salesforce_sandbox
+            - workday 
         warehouses:
             - dev_xs
         owns:
@@ -3465,11 +3531,13 @@ roles:
     - mcooper:
         member_of:
             - analyst_finance
+            - analyst_marketing
             - bamboohr
             - customers_db
             - data_team_analyst
             - data_science_readonly
             - restricted_safe
+            - salesforce_sandbox
             - workday
             - zendesk
         warehouses:
@@ -3509,8 +3577,10 @@ roles:
 
     - mdrussell:
         member_of:
+         - analytics_engineer_core
+         - analyst_engineering
+         - analyst_growth
          - data_team_analyst
-         - analytics_engineer_rd
          - restricted_safe
          - bi_tool_eval_read
          - zuora
@@ -3559,46 +3629,12 @@ roles:
         warehouses:
             - dev_xs
 
-    - mlaanen:
+    - mnohr:
         member_of:
-            - analyst_core
-            - data_manager
+            - reporter
             - restricted_safe
-            - bi_tool_eval_db
         warehouses:
             - dev_xs
-        owns:
-            databases:
-                - mlaanen_prep
-                - mlaanen_prod
-            schemas:
-                - mlaanen_prep.*
-                - mlaanen_prod.*
-            tables:
-                - mlaanen_prep.*.*
-                - mlaanen_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - mlaanen_prep
-                    - mlaanen_prod
-                write:
-                    - mlaanen_prep
-                    - mlaanen_prod
-            schemas:
-                read:
-                    - mlaanen_prep.*
-                    - mlaanen_prod.*
-                write:
-                    - mlaanen_prep.*
-                    - mlaanen_prod.*
-            tables:
-                read:
-                    - mlaanen_prep.*.*
-                    - mlaanen_prod.*.*
-                write:
-                    - mlaanen_prep.*.*
-                    - mlaanen_prod.*.*
 
     - mpetersen:
         member_of:
@@ -3721,10 +3757,6 @@ roles:
                     - mvilain_prep.*.*
                     - mvilain_prod.*.*
 
-    - mwalker:
-        member_of: []
-        warehouses: []
-
     - mwawrzyniak:
         member_of:
             - analyst_growth
@@ -3769,6 +3801,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - ncregan:
+        member_of:
+            - google_search_console
+        warehouses:
+            - dev_xs
+
     - nfiguera:
         member_of:
             - analyst_sales
@@ -3778,6 +3816,8 @@ roles:
             - xactly
             - sales_analytics
             - data_science_readonly
+            - marketo
+            - static_sensitive
         warehouses:
             - dev_xs
         owns:
@@ -3867,6 +3907,7 @@ roles:
             - data_team_analyst
             - data_manager
             - restricted_safe
+            - salesforce_sandbox
             - xactly
             - bi_tool_eval_db
         warehouses:
@@ -3998,8 +4039,13 @@ roles:
     - pempey:
         member_of:
             - engineer
-            - analytics_engineer_ga
+            - analytics_engineer_core
+            - analyst_people
+            - analyst_engineering
+            - bamboohr
             - bi_tool_eval_db
+            - prometheus
+            - workday
         warehouses:
             - dev_xs
             - dev_m
@@ -4140,6 +4186,9 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - data_team_analyst
+            - data_science_readonly
+            - facebook_ads
+            - linkedin_ads
         warehouses:
             - dev_xs
         owns:
@@ -4175,48 +4224,15 @@ roles:
                     - rkohnke_prep.*.*
                     - rkohnke_prod.*.*
 
-    - rparker:
-        member_of:
-            - analyst_core
-            - restricted_safe
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - rparker_prep
-                - rparker_prod
-            schemas:
-                - rparker_prep.*
-                - rparker_prod.*
-            tables:
-                - rparker_prep.*.*
-                - rparker_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - rparker_prep
-                    - rparker_prod
-                write:
-                    - rparker_prep
-                    - rparker_prod
-            schemas:
-                read:
-                    - rparker_prep.*
-                    - rparker_prod.*
-                write:
-                    - rparker_prep.*
-                    - rparker_prod.*
-            tables:
-                read:
-                    - rparker_prep.*.*
-                    - rparker_prod.*.*
-                write:
-                    - rparker_prep.*.*
-                    - rparker_prod.*.*
-
     - rrendon:
         member_of:
             - analyst_engineering
+        warehouses:
+            - dev_xs
+
+    - rwoo:
+        member_of:
+            - dbt_analytics
         warehouses:
             - dev_xs
 
@@ -4287,6 +4303,18 @@ roles:
             - reporter
             - restricted_safe
             - workday
+        warehouses:
+            - dev_xs
+
+    - smishra:
+        member_of:
+            - adaptive
+            - analyst_finance
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+            - xactly
         warehouses:
             - dev_xs
 
@@ -4430,49 +4458,14 @@ roles:
                 write:
                     - testing_db.*.*
 
-    - tpoole:
+    - tliu:
         member_of:
-         - analyst_finance
-         - analyst_growth
-         - analyst_marketing
-         - customers_db
-         - data_team_analyst
-         - gainsight
-         - restricted_safe
+            - data_team_analyst
+            - analyst_core  
+            - reporter
+            - restricted_safe
         warehouses:
             - dev_xs
-        owns:
-            databases:
-                - tpoole_prep
-                - tpoole_prod
-            schemas:
-                - tpoole_prep.*
-                - tpoole_prod.*
-            tables:
-                - tpoole_prep.*.*
-                - tpoole_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - tpoole_prep
-                    - tpoole_prod
-                write:
-                    - tpoole_prep
-                    - tpoole_prod
-            schemas:
-                read:
-                    - tpoole_prep.*
-                    - tpoole_prod.*
-                write:
-                    - tpoole_prep.*
-                    - tpoole_prod.*
-            tables:
-                read:
-                    - tpoole_prep.*.*
-                    - tpoole_prod.*.*
-                write:
-                    - tpoole_prep.*.*
-                    - tpoole_prod.*.*
 
     - tnguyen:
         member_of:
@@ -4596,19 +4589,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - zzhang:
-        member_of:
-            - adaptive
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
-            - xactly
-        warehouses:
-            - dev_xs
-
 # ==========================================
 # Users
 # ==========================================
@@ -4636,18 +4616,10 @@ users:
         member_of:
             - alu
 
-    - amartin:
-        can_login: no
-        member_of: []
-
     - aperez:
         can_login: yes
         member_of:
             - aperez
-
-    - ashaikh:
-        can_login: no
-        member_of: []
 
     - bi_tool_eval:
         can_login: yes
@@ -4709,10 +4681,6 @@ users:
         member_of:
             - degan
 
-    - dfelton:
-        can_login: no
-        member_of: []
-
     - dgupta:
         can_login: yes
         member_of:
@@ -4761,18 +4729,20 @@ users:
         member_of:
             - grafana
 
+    - gweaver:
+        can_login: yes
+        member_of:
+            - gweaver
+
+    - hkacmarski:
+        can_login: yes
+        member_of:
+            - hkacmarski
+
     - hselim:
         can_login: yes
         member_of:
             - hselim
-        
-    - ian:
-        can_login: no
-        member_of: []
-
-    - isharan:
-        can_login: no
-        member_of: []
 
     - iweeks:
         can_login: yes
@@ -4784,19 +4754,20 @@ users:
         member_of:
             - jahye
 
+    - jbudreski:
+        can_login: yes
+        member_of:
+            - jbudreski
+
     - jcaine:
         can_login: yes
         member_of:
             - jcaine
 
-    - jkim:
+    - jng:
         can_login: yes
         member_of:
-            - jkim
-
-    - joshua:
-        can_login: no
-        member_of: []
+            - jng
 
     - jpeguero:
         can_login: yes
@@ -4821,19 +4792,13 @@ users:
         member_of:
             - jstemmer
 
-    - judume:
-        can_login: no
-        member_of: []
-
     - juwong:
         can_login: yes
         member_of:
             - juwong
 
     - kaguilar:
-        can_login: yes
-        member_of:
-            - kaguilar
+        can_login: no
 
     - kdietz:
         can_login: yes
@@ -4850,23 +4815,15 @@ users:
         member_of:
             - kmckern
 
-    - kchen:
-        can_login: yes
-        member_of:
-            - kchen
-
     - kkarthikeyan:
         can_login: yes
         member_of:
             - kkarthikeyan
 
-    - laddula:
-        can_login: no
-        member_of: []
-
     - lmai:
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of:
+            - lmai
 
     - lvinueza:
         can_login: yes
@@ -4903,10 +4860,10 @@ users:
         member_of:
             - mfleisher
 
-    - mlaanen:
+    - mnohr:
         can_login: yes
         member_of:
-            - mlaanen
+            - mnohr
 
     - mpetersen:
         can_login: yes
@@ -4932,6 +4889,11 @@ users:
         can_login: yes
         member_of:
             - nbelokolodov
+
+    - ncregan:
+        can_login: yes
+        member_of:
+            - ncregan
 
     - nfiguera:
         can_login: yes
@@ -4980,10 +4942,6 @@ users:
             - periscope
             - reporter
 
-    - periscope_sensitive:
-        can_login: no
-        member_of: []
-
     - permission_bot:
         can_login: yes
         member_of:
@@ -5008,16 +4966,15 @@ users:
         member_of:
             - rkohnke
 
-    - rparker:
-        can_login: yes
-        member_of:
-            - rparker
-            - accountadmin
-
     - rrendon:
         can_login: yes
         member_of:
             - rrendon
+
+    - rwoo:
+        can_login: yes
+        member_of:
+            - rwoo
 
     - schaturvedi:
         can_login: yes
@@ -5044,6 +5001,11 @@ users:
         member_of:
             - smccormack
 
+    - smishra:
+        can_login: yes
+        member_of:
+            - smishra
+
     - snalamaru:
         can_login: yes
         member_of:
@@ -5053,10 +5015,6 @@ users:
         can_login: yes
         member_of:
             - srehm
-
-    - statimatla:
-        can_login: no
-        member_of: []
 
     - stitch:
         can_login: yes
@@ -5079,10 +5037,10 @@ users:
         member_of:
             - target_snowflake
 
-    - tpoole:
+    - tliu:
         can_login: yes
         member_of:
-            - tpoole
+            - tliu
 
     - tnguyen:
         can_login: yes
@@ -5116,10 +5074,10 @@ users:
         member_of:
             - webrahim
 
-    - zzhang:
+    - workato:
         can_login: yes
         member_of:
-            - zzhang
+            - workato
 
 # ==========================================
 # Warehouses

@@ -17,7 +17,8 @@
   ('map_gitlab_dotcom_xmau_metrics', 'map_gitlab_dotcom_xmau_metrics'),
   ('services', 'gitlab_dotcom_integrations_source'),
   ('project', 'prep_project'),
-  ('ptpt_scores_by_user', 'prep_ptpt_scores_by_user')
+  ('ptpt_scores_by_user', 'prep_ptpt_scores_by_user'),
+  ('namespace_details', 'gitlab_dotcom_namespace_details_source')
 ]) }}
 
 -------------------------- Start of PQL logic: --------------------------
@@ -251,6 +252,22 @@
     FROM marketing_contact_order
     WHERE subscription_start_date is not null
     GROUP BY dim_marketing_contact_id
+
+), namespace_notifications AS (
+
+    SELECT
+      COALESCE(notification_email, email) AS email_address,
+      namespace_details.namespace_id      AS user_limit_namespace_id,
+      dashboard_notification_at           AS user_limit_notification_at,
+      dashboard_enforcement_at            AS user_limit_enforcement_at
+    FROM namespace_details
+    INNER JOIN dim_namespace
+      ON namespace_details.namespace_id = dim_namespace.dim_namespace_id
+    INNER JOIN gitlab_dotcom_users_source AS user
+      ON user.user_id = dim_namespace.creator_id
+      AND state = 'active'
+    WHERE dashboard_notification_at IS NOT NULL OR dashboard_enforcement_at IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY email_address ORDER BY COALESCE(dashboard_notification_at, dashboard_enforcement_at) ASC) = 1
 
 ), paid_subscription_aggregate AS (
 
@@ -735,6 +752,7 @@
       marketing_contact.mobile_phone,
       marketing_contact.sfdc_parent_sales_segment,
       marketing_contact.sfdc_parent_crm_account_tsp_region,
+      marketing_contact.marketo_lead_id,
       marketing_contact.is_marketo_lead,
       marketing_contact.is_marketo_email_hard_bounced,
       marketing_contact.marketo_email_hard_bounced_date,
@@ -763,7 +781,7 @@
                                             AS is_pql_change,
       latest_pql.pql_namespace_id,
       latest_pql.pql_namespace_name,
-      latest_pql.pql_namespace_name_masked,
+      latest_pql.pql_namespace_name_masked, 
       latest_pql.pql_product_interaction,
       latest_pql.pql_list_stages,
       latest_pql.pql_nbr_stages,
@@ -793,6 +811,15 @@
       ptpt_scores_by_user.score_date              AS ptpt_score_date,
       ptpt_scores_by_user.past_score_group        AS ptpt_past_score_group,
       ptpt_scores_by_user.past_score_date         AS ptpt_past_score_date,
+
+      -- Namespace notification dates
+      namespace_notifications.user_limit_namespace_id,
+      namespace_notifications.user_limit_notification_at,
+      namespace_notifications.user_limit_enforcement_at,
+      IFF(namespace_notifications.user_limit_notification_at IS NOT NULL OR namespace_notifications.user_limit_enforcement_at IS NOT NULL,
+        TRUE, FALSE)                              AS is_impacted_by_user_limit,
+      IFF(is_impacted_by_user_limit = TRUE OR (is_impacted_by_user_limit = FALSE AND marketing_contact.is_impacted_by_user_limit_marketo = TRUE), TRUE, FALSE)
+                                                  AS is_impacted_by_user_limit_change,
 
       usage_metrics.usage_umau_28_days_user,
       usage_metrics.usage_action_monthly_active_users_project_repo_28_days_user,
@@ -842,6 +869,8 @@
       ON users_role_by_email.email = marketing_contact.email_address
     LEFT JOIN ptpt_scores_by_user
       ON ptpt_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
+    LEFT JOIN namespace_notifications
+      ON namespace_notifications.email_address = marketing_contact.email_address
 )
 
 {{ hash_diff(
@@ -853,8 +882,7 @@
       'is_individual_namespace_owner',
       'is_customer_db_owner',
       'is_zuora_billing_contact',
-      'days_since_saas_trial_ended',
-      'days_until_saas_trial_ends',
+      'days_since_saas_trial_ended_bucket',
       'individual_namespace_is_saas_trial',
       'individual_namespace_is_saas_free_tier',
       'individual_namespace_is_saas_bronze_tier',
@@ -878,21 +906,12 @@
       'is_self_managed_starter_tier',
       'is_self_managed_premium_tier',
       'is_self_managed_ultimate_tier',
-      'min_subscription_start_date',
-      'max_subscription_end_date',
-      'nbr_of_paid_subscriptions',
       'email_address',
       'first_name',
       'last_name',
       'gitlab_user_name',
       'company_name',
-      'job_title',
       'country',
-      'sfdc_parent_sales_segment',
-      'is_sfdc_lead_contact',
-      'sfdc_lead_contact',
-      'sfdc_created_date',
-      'is_sfdc_opted_out',
       'is_gitlab_dotcom_user',
       'gitlab_dotcom_user_id',
       'gitlab_dotcom_created_date',
@@ -910,37 +929,6 @@
       'pql_list_stages',
       'pql_nbr_stages',
       'pql_nbr_namespace_users',
-      'wip_is_valid_email_address',
-      'wip_invalid_email_address_reason',
-      'usage_umau_28_days_user',
-      'usage_action_monthly_active_users_project_repo_28_days_user',
-      'usage_merge_requests_28_days_user',
-      'usage_commit_comment_all_time_event',
-      'usage_source_code_pushes_all_time_event',
-      'usage_ci_pipelines_28_days_user',
-      'usage_ci_internal_pipelines_28_days_user',
-      'usage_ci_builds_28_days_user',
-      'usage_ci_builds_all_time_user',
-      'usage_ci_builds_all_time_event',
-      'usage_ci_runners_all_time_event',
-      'usage_auto_devops_enabled_all_time_event',
-      'usage_template_repositories_all_time_event',
-      'usage_ci_pipeline_config_repository_28_days_user',
-      'usage_user_unique_users_all_secure_scanners_28_days_user',
-      'usage_user_container_scanning_jobs_28_days_user',
-      'usage_user_sast_jobs_28_days_user',
-      'usage_user_dast_jobs_28_days_user',
-      'usage_user_dependency_scanning_jobs_28_days_user',
-      'usage_user_license_management_jobs_28_days_user',
-      'usage_user_secret_detection_jobs_28_days_user',
-      'usage_projects_with_packages_all_time_event',
-      'usage_projects_with_packages_28_days_event',
-      'usage_deployments_28_days_user',
-      'usage_releases_28_days_user',
-      'usage_epics_28_days_user',
-      'usage_issues_28_days_user',
-      'usage_instance_user_count_not_aligned',
-      'usage_historical_max_users_not_aligned',
       'has_namespace_setup_for_company_use',
       'pql_namespace_id',
       'pql_namespace_name',
@@ -959,7 +947,13 @@
       'ptpt_score_date',
       'ptpt_past_score_group',
       'is_member_of_public_ultimate_parent_namespace',
-      'is_member_of_private_ultimate_parent_namespace'
+      'is_member_of_private_ultimate_parent_namespace',
+      'user_limit_notification_at',
+      'user_limit_enforcement_at',
+      'is_impacted_by_user_limit',
+      'is_impacted_by_user_limit_change',
+      'user_limit_namespace_id',
+      'marketo_lead_id'
       ]
 ) }}
 
@@ -968,5 +962,5 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2022-10-24"
+    updated_date="2023-01-27"
 ) }}

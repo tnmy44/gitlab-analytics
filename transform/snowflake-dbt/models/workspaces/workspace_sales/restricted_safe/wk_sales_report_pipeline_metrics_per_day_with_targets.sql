@@ -24,8 +24,8 @@ WITH date_details AS (
 -- keys used for aggregated historical analysis
 
     SELECT *
-    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }} 
-
+    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
+    
 -- make sure the aggregation works at the level we want it
 ), consolidated_metrics AS (
 
@@ -230,7 +230,8 @@ WITH date_details AS (
 
         ----------------------------------------
 
-        agg_demo_keys.report_opportunity_user_segment,     
+       -- agg_demo_keys.report_opportunity_user_segment,
+        agg_demo_keys.report_opportunity_user_segment,
         agg_demo_keys.report_opportunity_user_geo,
         agg_demo_keys.report_opportunity_user_region,    
         agg_demo_keys.report_opportunity_user_area,  
@@ -264,8 +265,6 @@ WITH date_details AS (
         agg_demo_keys.key_segment_geo_region_area_ot,
 
         agg_demo_keys.key_segment_geo_area,
-
-        agg_demo_keys.report_user_segment_geo_region_area,
         ----------------------------------------
 
         -- report quarter plus 1 / 2 date fields

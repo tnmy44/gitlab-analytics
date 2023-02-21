@@ -26,14 +26,14 @@
 , sm_subscriptions AS (
 
     SELECT
-      dim_subscription_id,
-      dim_subscription_id_original,
-      dim_billing_account_id,
-      first_day_of_month                                            AS snapshot_month
+      subscriptions.dim_subscription_id,
+      subscriptions.dim_subscription_id_original,
+      subscriptions.dim_billing_account_id,
+      dates.first_day_of_month                                            AS snapshot_month
     FROM subscriptions
     INNER JOIN dates
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE    -- first month Usage Ping was collected
-    WHERE product_delivery_type = 'Self-Managed'
+    WHERE subscriptions.product_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=4)}}
 
 
@@ -69,6 +69,7 @@
       instance_type_ordering.instance_type,
       ping_instance_wave_sm.hostname,
       ping_instance_wave_sm.dim_license_id,
+      ping_instance_wave_sm.license_sha256,
       ping_instance_wave_sm.license_md5,
       ping_instance_wave_sm.cleaned_version,
       ping_instance_wave_sm.dim_location_country_id,
@@ -298,7 +299,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@snalamaru",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-07-21",
-    updated_date="2022-08-26"
+    updated_date="2023-02-01"
 ) }}

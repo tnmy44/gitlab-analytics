@@ -5,7 +5,7 @@
 
 {{ simple_cte([
     ('saas_usage_ping_instance', 'saas_usage_ping_instance'),
-    ('dim_usage_ping_metric', 'dim_usage_ping_metric')
+    ('dim_ping_metric', 'dim_ping_metric')
 ]) }}
 
 , flattened AS (
@@ -33,7 +33,7 @@
       flattened.ping_date                        AS ping_date,
       flattened.metric_path                      AS metric_path,
       flattened.metric_value                     AS metric_value,
-      dim_usage_ping_metric.metrics_status       AS metric_status,
+      dim_ping_metric.metrics_status             AS metric_status,
       flattened.recorded_at                      AS recorded_at,
       flattened.version                          AS version,
       flattened.edition                          AS edition,
@@ -42,8 +42,8 @@
       flattened.uuid                             AS uuid,
       flattened._uploaded_at                     AS _uploaded_at
     FROM flattened
-    LEFT JOIN dim_usage_ping_metric
-    ON flattened.metric_path = dim_usage_ping_metric.metrics_path
+    LEFT JOIN dim_ping_metric
+    ON flattened.metric_path = dim_ping_metric.metrics_path
 
 )
 SELECT *

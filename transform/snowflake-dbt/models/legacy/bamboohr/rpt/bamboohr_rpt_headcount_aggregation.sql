@@ -45,14 +45,17 @@ WITH source AS (
       IFF(base.breakout_type !='eeoc_breakout' 
             AND base.eeoc_field_name !='no_eeoc', FALSE, TRUE)                     AS show_value_criteria,
       headcount_start,
+      headcount_start_excluding_sdr,
       headcount_end,
       headcount_end_excluding_sdr,
       headcount_average,
+      headcount_average_excluding_sdr,
       hire_count,
       separation_count,
       voluntary_separation,
       involuntary_separation,
       AVG(COALESCE(headcount_average, 0)) {{partition_statement}}                   AS rolling_12_month_headcount,
+      AVG(COALESCE(headcount_average_excluding_sdr, 0)) {{partition_statement}}     AS rolling_12_month_headcount_excluding_sdr,
       SUM(COALESCE(separation_count,0)) {{partition_statement}}                     AS rolling_12_month_separations,
       SUM(COALESCE(voluntary_separation,0)) {{partition_statement}}                 AS rolling_12_month_voluntary_separations,
       SUM(COALESCE(involuntary_separation,0)) {{partition_statement}}               AS rolling_12_month_involuntary_separations,
@@ -88,19 +91,6 @@ WITH source AS (
         1 - (rolling_12_month_separations_management/
             NULLIF(rolling_12_month_headcount_management,0)))                            AS retention_management,
 
-
-      headcount_end_staff,
-      headcount_average_staff,
-      hired_staff,
-      separated_staff,
-      AVG(COALESCE(headcount_average_staff, 0)) {{partition_statement}}             AS rolling_12_month_headcount_staff,
-      SUM(COALESCE(separated_staff,0)) {{partition_statement}}                      AS rolling_12_month_separations_staff,
-      IFF(rolling_12_month_headcount_staff< rolling_12_month_separations_staff, 
-        NULL,
-        1 - (rolling_12_month_separations_management/
-            NULLIF(rolling_12_month_headcount_staff,0)))                            AS retention_staff,
-
-
       headcount_end_individual_contributor,
       headcount_average_contributor,
       hired_contributor,
@@ -118,8 +108,6 @@ WITH source AS (
       SUM(headcount_average_leader) {{ratio_to_report_partition_statement}}         AS total_headcount_leader,
       MIN(headcount_average_manager) {{ratio_to_report_partition_statement}}        AS min_headcount_manager,
       SUM(headcount_average_manager) {{ratio_to_report_partition_statement}}        AS total_headcount_manager,
-      MIN(headcount_average_staff) {{ratio_to_report_partition_statement}}          AS min_headcount_staff,
-      SUM(headcount_average_staff) {{ratio_to_report_partition_statement}}          AS total_headcount_staff,
       MIN(headcount_average_contributor) {{ratio_to_report_partition_statement}}    AS min_headcount_contributor,
 
 
@@ -130,9 +118,7 @@ WITH source AS (
       RATIO_TO_REPORT(headcount_end_leader) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_leaders,
       RATIO_TO_REPORT(headcount_end_manager) 
-        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_manager,     
-      RATIO_TO_REPORT(headcount_end_staff) 
-        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_staff,      
+        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_manager,          
       RATIO_TO_REPORT(headcount_end_individual_contributor) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_contributor,
       
@@ -175,23 +161,28 @@ WITH source AS (
             THEN 'Other_'|| SPLIT_PART(eeoc_value,'_',2)
            WHEN eeoc_field_name = 'ethnicity' AND headcount_end < 5
             THEN 'Other'       
-           ELSE eeoc_value END                                              AS eeoc_value,
+           ELSE eeoc_value END                                                 AS eeoc_value,
       IFF(headcount_start <4 AND show_value_criteria = FALSE,
-        NULL,headcount_start)                                               AS headcount_start,
+        NULL,headcount_start)                                                  AS headcount_start,
+      IFF(headcount_start_excluding_sdr <4 AND show_value_criteria = FALSE,
+        NULL,headcount_start_excluding_sdr)                                    AS headcount_start_excluding_sdr,  
       IFF(headcount_end <4 AND show_value_criteria = FALSE,
-        NULL, headcount_end)                                                AS headcount_end,
+        NULL, headcount_end)                                                   AS headcount_end,
       IFF(headcount_end_excluding_sdr <4 AND show_value_criteria = FALSE,
-        NULL, headcount_end_excluding_sdr)                                  AS headcount_end_excluding_sdr,      
+        NULL, headcount_end_excluding_sdr)                                     AS headcount_end_excluding_sdr,      
       IFF(headcount_average <4 AND eeoc_field_name != 'no_eeoc',  
-        NULL, headcount_average)                                            AS headcount_average,
+        NULL, headcount_average)                                               AS headcount_average,
+      IFF(headcount_average_excluding_sdr <4 AND eeoc_field_name != 'no_eeoc',  
+        NULL, headcount_average)                                               AS headcount_average_excluding_sdr,  
       IFF(hire_count <4 AND eeoc_field_name != 'no_eeoc', 
-        NULL, hire_count)                                                   AS hire_count,
+        NULL, hire_count)                                                      AS hire_count,
       IFF(separation_count <4 AND eeoc_field_name != 'no_eeoc', 
-        NULL, separation_count)                                             AS separation_count,
-      IFF(voluntary_separation <4, NULL, voluntary_separation)              AS voluntary_separation_count,
-      IFF(voluntary_separation < 4,  NULL, involuntary_separation)          AS involuntary_separation_count,  
+        NULL, separation_count)                                                AS separation_count,
+      IFF(voluntary_separation <4, NULL, voluntary_separation)                 AS voluntary_separation_count,
+      IFF(voluntary_separation < 4,  NULL, involuntary_separation)             AS involuntary_separation_count,  
 
       rolling_12_month_headcount,
+      rolling_12_month_headcount_excluding_sdr,
       rolling_12_month_separations,
       rolling_12_month_voluntary_separations,
       rolling_12_month_involuntary_separations,
@@ -238,15 +229,6 @@ WITH source AS (
       rolling_12_month_separations_management,
       retention_management,
 
-      IFF(headcount_end_staff < 3 AND eeoc_field_name != 'no_eeoc', 
-        NULL, headcount_end_staff)                                              AS headcount_end_staff,
-      IFF(headcount_average_staff < 3 AND eeoc_field_name != 'no_eeoc', 
-        NULL, headcount_average_staff)                                          AS headcount_average_staff,
-      IFF(hired_staff < 3 AND eeoc_field_name != 'no_eeoc', 
-        NULL, hired_staff)                                                      AS hired_staff,
-      IFF(separated_staff < 3 AND eeoc_field_name != 'no_eeoc',
-        NULL, separated_staff)                                                  AS separated_staff,
-
       IFF(headcount_end_individual_contributor < 4 AND eeoc_field_name != 'no_eeoc', 
         NULL, headcount_end_individual_contributor)                              AS headcount_end_contributor,
       IFF(headcount_average_contributor < 4 AND eeoc_field_name != 'no_eeoc', 
@@ -264,9 +246,6 @@ WITH source AS (
         NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_leaders,
       IFF(total_headcount_manager < 3 AND show_value_criteria = FALSE,  
         NULL, percent_of_headcount_manager)                                      AS percent_of_headcount_manager,    
-      IFF((total_headcount_staff < 5 and show_value_criteria = FALSE) 
-           OR (breakout_type = 'all_attributes_breakout' AND eeoc_field_name !='no_eeoc'), 
-        NULL, percent_of_headcount_staff)                                        AS percent_of_headcount_staff,  
       IFF(total_headcount_end_contributor < 5 AND show_value_criteria = FALSE, 
         NULL, percent_of_headcount_contributor)                                  AS percent_of_headcount_contributor,
 

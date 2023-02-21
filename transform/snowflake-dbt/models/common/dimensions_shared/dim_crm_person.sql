@@ -13,7 +13,9 @@ WITH crm_person AS (
       sfdc_record_type,
       email_hash,
       email_domain,
+      IFF(email_domain_type = 'Business email domain',TRUE,FALSE) AS is_valuable_signup,
       email_domain_type,
+      marketo_lead_id,
 
       --keys
       master_record_id,
@@ -96,7 +98,12 @@ WITH crm_person AS (
       account_demographics_upa_state,  
       account_demographics_upa_city,
       account_demographics_upa_street,
-      account_demographics_upa_postal_code
+      account_demographics_upa_postal_code,
+      LOWER(COALESCE(zoominfo_company_country, 
+                     zoominfo_contact_country,
+                     cognism_company_office_country,
+                     cognism_country)
+       ) AS person_first_country
 
     FROM crm_person
 )
@@ -104,7 +111,7 @@ WITH crm_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jjstark",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2020-09-10",
-    updated_date="2022-09-30"
+    updated_date="2023-02-13"
 ) }}

@@ -36,6 +36,7 @@ final AS (
     fct_crm_opportunity.deal_path AS deal_path_name,
     fct_crm_opportunity.order_type,
     fct_crm_opportunity.order_type_grouped,
+    fct_crm_opportunity.order_type_live,
     fct_crm_opportunity.dr_partner_engagement AS dr_partner_engagement_name,
     fct_crm_opportunity.alliance_type AS alliance_type_name,
     fct_crm_opportunity.alliance_type_short AS alliance_type_short_name,
@@ -406,6 +407,11 @@ final AS (
     last_activity_date.first_day_of_fiscal_quarter                  AS last_activity_fiscal_quarter_date,
     last_activity_date.fiscal_quarter_name_fy                       AS last_activity_fiscal_quarter_name,
     last_activity_date.fiscal_year                                  AS last_activity_fiscal_year,
+    sales_last_activity_date.date_actual                            AS sales_last_activity_date,
+    sales_last_activity_date.first_day_of_month                     AS sales_last_activity_month,
+    sales_last_activity_date.first_day_of_fiscal_quarter            AS sales_last_activity_fiscal_quarter_date,
+    sales_last_activity_date.fiscal_quarter_name_fy                 AS sales_last_activity_fiscal_quarter_name,
+    sales_last_activity_date.fiscal_year                            AS sales_last_activity_fiscal_year,
     technical_evaluation_date.date_actual                           AS technical_evaluation_date,
     technical_evaluation_date.first_day_of_month                    AS technical_evaluation_month,
     technical_evaluation_date.first_day_of_fiscal_quarter           AS technical_evaluation_fiscal_quarter_date,
@@ -519,6 +525,8 @@ final AS (
     ON fct_crm_opportunity.sales_qualified_date = sales_qualified_date.date_actual
   LEFT JOIN dim_date last_activity_date
     ON fct_crm_opportunity.last_activity_date = last_activity_date.date_actual
+  LEFT JOIN dim_date sales_last_activity_date
+    ON fct_crm_opportunity.sales_last_activity_date = sales_last_activity_date.date_actual
   LEFT JOIN dim_date technical_evaluation_date
     ON fct_crm_opportunity.technical_evaluation_date = technical_evaluation_date.date_actual
   LEFT JOIN dim_date arr_created_date 
@@ -536,7 +544,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2022-05-05",
-    updated_date="2022-10-20"
+    updated_date="2023-02-02"
   ) }}

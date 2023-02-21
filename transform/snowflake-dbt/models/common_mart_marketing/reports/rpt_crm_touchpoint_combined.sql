@@ -58,6 +58,17 @@
       is_dg_influenced,
       0 AS Total_cost,
       1 AS touchpoint_sum,
+      mart_crm_touchpoint.bizible_touchpoint_source,
+      mart_crm_touchpoint.bizible_ad_content,
+      mart_crm_touchpoint.bizible_ad_group_name,
+      mart_crm_touchpoint.bizible_form_url_raw,
+      mart_crm_touchpoint.bizible_landing_page_raw,
+      mart_crm_touchpoint.bizible_referrer_page,
+      mart_crm_touchpoint.bizible_referrer_page_raw,
+      mart_crm_touchpoint.campaign_name AS bizible_salesforce_campaign,
+      mart_crm_touchpoint.dim_campaign_id,
+      mart_crm_touchpoint.campaign_rep_role_name,
+      NULL AS pipe_name,
       SUM(mart_crm_touchpoint.bizible_count_lead_creation_touch) AS new_lead_created_sum,
       SUM(mart_crm_touchpoint.count_true_inquiry) AS count_true_inquiry,
       SUM(mart_crm_touchpoint.count_inquiry) AS inquiry_sum, 
@@ -102,7 +113,7 @@
       0 AS won_custom_net_arr,
       0 AS won_linear_net_arr
     FROM mart_crm_touchpoint
-    {{ dbt_utils.group_by(43) }}
+    {{ dbt_utils.group_by(56) }}
     
     UNION ALL
     
@@ -148,7 +159,7 @@
       mart_crm_attribution_touchpoint.type,
       null AS mql_date_first,
       null AS true_inquiry_date,
-      null AS dim_crm_person_id,
+      mart_crm_attribution_touchpoint.dim_crm_person_id AS dim_crm_person_id,
       email_hash AS email_hash,
       null AS is_inquiry,
       null AS is_mql,
@@ -159,6 +170,17 @@
       END AS is_dg_influenced,
       0 AS total_cost,
       0 AS touchpoint_sum,
+      mart_crm_attribution_touchpoint.bizible_touchpoint_source,
+      mart_crm_attribution_touchpoint.bizible_ad_content,
+      mart_crm_attribution_touchpoint.bizible_ad_group_name,
+      mart_crm_attribution_touchpoint.bizible_form_url_raw,
+      mart_crm_attribution_touchpoint.bizible_landing_page_raw,
+      mart_crm_attribution_touchpoint.bizible_referrer_page,
+      mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
+      mart_crm_attribution_touchpoint.campaign_name AS bizible_salesforce_campaign,
+      mart_crm_attribution_touchpoint.dim_campaign_id,
+      mart_crm_attribution_touchpoint.campaign_rep_role_name,
+      mart_crm_attribution_touchpoint.pipe_name,
       0 AS new_lead_created_sum,
       0 AS count_true_inquiry, 
       0 AS inquiry_sum,
@@ -299,13 +321,13 @@
         ELSE 0 
       END AS won_linear_net_arr
     FROM mart_crm_attribution_touchpoint
-    {{ dbt_utils.group_by(42) }}
+    {{ dbt_utils.group_by(56) }}
 )
 
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
-    created_date="2022-10-05",
-    updated_date="2022-10-05"
+    updated_by="@degan",
+    created_date="2021-10-05",
+    updated_date="2023-01-26"
 ) }}

@@ -31,6 +31,7 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
+    "retries": 1,
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
@@ -41,6 +42,7 @@ dag = DAG(
     "mailgun_extract",
     default_args=default_args,
     schedule_interval="0 */12 * * *",
+    concurrency=2,
 )
 
 events = [
@@ -75,8 +77,8 @@ for e in events:
         ],
         env_vars={
             **pod_env_vars,
-            "START_TIME": "{{ execution_date.isoformat() }}",
-            "END_TIME": "{{ yesterday_ds }}",
+            "START_TIME": "{{ execution_date }}",
+            "END_TIME": "{{ next_execution_date }}",
         },
         affinity=get_affinity(False),
         tolerations=get_toleration(False),

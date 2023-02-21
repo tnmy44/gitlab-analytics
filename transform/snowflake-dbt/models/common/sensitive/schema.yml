@@ -168,6 +168,8 @@ models:
         description: Flags if zuora billing contact
       - name: is_marketo_lead
         description: Flags if marketo lead
+      - name: marketo_lead_id
+        description: Marketo id assigned to the marketing contact
       - name: is_marketo_email_hard_bounced
         description: Flags if marketing contact email has hard bounced
       - name: marketo_email_hard_bounced_date
@@ -305,7 +307,7 @@ models:
       - name: pql_namespace_name
         description: Namespace name of the latest PQL namespace of the marketing contact.
       - name: pql_namespace_name_masked
-        description: Masked version of pql_namespace_name. Field created to be used in mart_marketing_contact_no_pii.
+        description: Masked version of PQL namespace_name. Field created to be used in mart_marketing_contact_no_pii.
       - name: pql_product_interaction
         description: Type of product interaction that the PQL had. As of now, it can either be SaaS Trial or Hand Raise PQL.
       - name: pql_list_stages
@@ -315,7 +317,7 @@ models:
       - name: pql_nbr_namespace_users
         description: Current member count of the PQL namespace. This is calculated using the data in the Gitlab.com members table based on the number of accepted invites. If this number is zero, this is replaced to be 1 as all namespaces have at least one member, the creator.
       - name: pql_trial_start_date
-        description: Trial start date of the PQL pql_namespace. 
+        description: Trial start date of the PQL namespace. 
       - name: pql_event_created_at
         description: Date that the PQL lead was created.
       - name: pql_nbr_integrations_installed
@@ -356,3 +358,11 @@ models:
         description: Past ptpt_score_date givene to the ptpt_namespace_id
       - name: is_ptpt_contact
         description: Flag if marketing contact has a ptpt score
+      - name: is_impacted_by_user_limit
+        description: Flag that indicates if marketing contact is affected by namespace user limit campaign
+      - name: user_limit_namespace_id
+        description: Namespace id corresponding to the user limit campaign
+      - name: user_limit_notification_at
+        description: Date time indicating when the marketing contact user_limit_namespace_id entered the user limit notification state. More information about this field can be seen [HERE](https://gitlab.com/gitlab-org/gitlab/-/issues/375748)
+      - name: user_limit_enforcement_at
+        description: Date time indicating when the marketing contact user_limit_namespace_id entered the user limit enforcement state. More information about this field can be seen [HERE](https://gitlab.com/gitlab-org/gitlab/-/issues/375748)
