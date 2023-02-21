@@ -47,7 +47,7 @@ def get_logs(
     """
     return requests.get(
         f"https://api.mailgun.net/v3/{domain}/events",
-        auth=("api", api_key),
+        auth=("api", str(api_key)),
         params={
             "begin": formatted_start_date,
             "end": formatted_end_date,
