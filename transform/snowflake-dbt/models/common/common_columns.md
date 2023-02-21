@@ -1650,3 +1650,55 @@ The form node name on a `focus_form` event. This appears as `ff_nodename` in the
 
 {% enddocs %}
 
+{% docs gs_first_value_date %}
+
+Date when the account reached 10% of license utiliztion. The goal is to reach this within 30 days.
+
+{% enddocs %}
+
+{% docs gs_last_csm_activity_date %}
+
+Last time the CSM had contact with the customer.
+
+{% enddocs %}
+
+{% docs eoa_sentiment %}
+
+Red - customer was unhappy with the announcement and there's potential risk of churn
+Yellow - customer exhibited some dissatisfaction with the announcement but likely won't churn
+Green - customer responded favourably to the announcement and is a strong candidate to uptier
+
+{% enddocs %}
+
+{% docs gs_health_user_engagement %}
+
+[Customer health score for engaging in meetings, cadence calls, or EBRs](https://about.gitlab.com/handbook/customer-success/customer-health-scoring/#customer-engagement).
+
+{% enddocs %}
+
+{% docs gs_health_cd %}
+
+Customer [health score for CD use case adoption](https://about.gitlab.com/handbook/customer-success/product-usage-data/maturity-scoring/#cd-adoption-scoring).
+
+{% enddocs %}
+
+{% docs gs_health_devsecops %}
+
+Customer [health score for DevSecOps use case adoption](https://about.gitlab.com/handbook/customer-success/product-usage-data/maturity-scoring/#devsecops-adoption-scoring).
+
+{% enddocs %}
+
+{% docs gs_health_ci %}
+
+Customer [health score for CI use case adoption](https://about.gitlab.com/handbook/customer-success/product-usage-data/maturity-scoring/#ci-adoption-scoring).
+
+{% enddocs %}
+
+{% docs gs_health_scm %}
+
+[Customer health score for source code management (SCM) use case adoption](https://about.gitlab.com/handbook/marketing/brand-and-product-marketing/product-and-solution-marketing/usecase-gtm/version-control-collaboration/#adoption-guide).
+
+{% enddocs %}
+
+
+
