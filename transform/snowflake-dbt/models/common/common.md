@@ -1730,3 +1730,45 @@ This model only includes structured events without assignment events (`event_act
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
 {% enddocs %}
+
+{% docs fct_behavior_structured_event_without_assignment_190 %}
+
+**Description:** Derived fact table containing quantitative data for Snowplow structured events **without assignment events** for the **last 190 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
+
+**Data Grain:** behavior_structured_event_pk
+
+This ID in generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+
+**Filters Applied to Model:**
+
+This model only includes structured events for the last 190 days without assignment events (`event_action = 'assignment'`)
+
+**Tips for use:**
+
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
+
+{% enddocs %}
+
+{% docs fct_behavior_structured_event_without_assignment_400 %}
+
+**Description:** Derived fact table containing quantitative data for Snowplow structured events **without assignment events** for the **last 400 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
+
+**Data Grain:** behavior_structured_event_pk
+
+This ID in generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+
+**Filters Applied to Model:**
+
+This model only includes structured events for the last 400 days without assignment events (`event_action = 'assignment'`)
+
+**Tips for use:**
+
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
+
+{% enddocs %}
