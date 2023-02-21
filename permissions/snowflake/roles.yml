@@ -2223,6 +2223,18 @@ roles:
                 read:
                     - static.sensitive.*
 
+    - static_pmg_readonly:
+        privileges:
+            databases:
+                read:
+                    - static
+            schemas:
+                read:
+                    - static.pmg_backup
+            tables:
+                read:
+                    - static.pmg_backup.*
+
     - static_admin:
         member_of:
             - static
@@ -2763,6 +2775,7 @@ roles:
             - data_science_readonly
             - facebook_ads
             - linkedin_ads
+            - static_pmg_readonly
         warehouses:
             - dev_xs
         owns:
