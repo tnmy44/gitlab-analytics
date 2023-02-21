@@ -111,14 +111,11 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
 
 
 if __name__ == "__main__":
-    file_path = "analytics/extract/postgres_pipeline/manifests_decomposed/el_gitlab_com_db_manifest.yaml"
-    load_type = 'backfill'
-    load_only_table = 'alert_management_http_integrations'
-    main(file_path, load_type, load_only_table)
-    # REVERT
-    '''
+    # file_path = "analytics/extract/postgres_pipeline/manifests_decomposed/el_gitlab_com_db_manifest.yaml"
+    # load_type = 'backfill'
+    # load_only_table = 'alert_management_http_integrations'
+    # main(file_path, load_type, load_only_table)
     logging.basicConfig(level=logging.INFO)
     logging.getLogger("snowflake.connector.cursor").disabled = True
     logging.getLogger("snowflake.connector.connection").disabled = True
     Fire({"tap": main})
-    '''
