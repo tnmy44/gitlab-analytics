@@ -45,7 +45,9 @@ final AS (
     redis_clicks.dim_project_id,
     redis_clicks.gsc_plan,
     namespaces_hist.ultimate_parent_id AS ultimate_parent_namespace_id,
-    contexts.redis_event_name
+    contexts.redis_event_name,
+    contexts.key_path,
+    contexts.data_source
   FROM redis_clicks
   INNER JOIN contexts ON contexts.behavior_structured_event_pk = redis_clicks.behavior_structured_event_pk
   LEFT JOIN namespaces_hist ON namespaces_hist.namespace_id = redis_clicks.dim_namespace_id
@@ -57,5 +59,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-12-21",
-    updated_date="2023-02-01"
+    updated_date="2023-02-17"
 ) }}
