@@ -247,12 +247,14 @@ def chunk_and_upload(
 
         for idx, chunk_df in enumerate(iter_csv):
 
+            '''
             if backfill:
                 schema_types = transform_source_types_to_snowflake_types(
                     chunk_df, source_table, source_engine
                 )
                 seed_table(advanced_metadata, schema_types, target_table, target_engine)
                 backfill = False
+            '''
 
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count

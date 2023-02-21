@@ -101,8 +101,8 @@ def use_cloudsql_proxy(dag_name, operation, instance_name):
         {clone_repo_cmd} &&
         cd analytics/orchestration &&
         python ci_helpers.py use_proxy --instance_name {instance_name} --command " \
-            python ../extract/postgres_pipeline/postgres_pipeline/main.py tap  \
-            ../extract/postgres_pipeline/manifests_decomposed/{dag_name}_db_manifest.yaml {operation}
+            python ../extract/saas_postgres_pipeline_backfill/postgres_pipeline/main.py tap  \
+            ../extract/saas_postgres_pipeline_backfill/manifests_decomposed/{dag_name}_db_manifest.yaml {operation}
         "
     """
 
@@ -122,7 +122,7 @@ def generate_cmd(dag_name, operation, cloudsql_instance_name):
     if cloudsql_instance_name is None:
         return f"""
             {clone_repo_cmd} &&
-            cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
+            cd analytics/extract/saas_postgres_pipeline_backfill/postgres_pipeline/ &&
             python main.py tap ../manifests_decomposed/{dag_name}_db_manifest.yaml {operation}
         """
 
