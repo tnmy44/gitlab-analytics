@@ -474,7 +474,6 @@ roles:
             - netsuite
             - mailgun
             - marketo
-            - pmg
             - snowflake_db
             - zendesk
             - zendesk_community_relations
@@ -722,7 +721,6 @@ roles:
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
                 - raw.gitter
-                - raw.pmg
                 - raw.prometheus
                 - raw.pto
                 - raw.rspec
@@ -737,7 +735,6 @@ roles:
                 - raw.engineering_extracts.*
                 - raw.gitlab_data_yaml.*
                 - raw.gitter.*
-                - raw.pmg.*
                 - raw.prometheus.*
                 - raw.pto.*
                 - raw.rspec.*
@@ -1978,20 +1975,6 @@ roles:
                     - prep.sensitive.qualtrics_nps_survey_responses
                     - prep.sensitive.qualtrics_post_purchase_survey_responses_source
                     - raw.qualtrics.*
-
-    - pmg:
-        warehouses:
-            - dev_xs
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.pmg
-            tables:
-                read:
-                    - prep.pmg.*
 
     - prometheus:
         warehouses:
