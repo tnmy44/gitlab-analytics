@@ -135,7 +135,7 @@
     FROM zuora_rate_plan
     INNER JOIN zuora_rate_plan_charge
       ON zuora_rate_plan.rate_plan_id = zuora_rate_plan_charge.rate_plan_id
-    LEFT JOIN zuora_order_action_rate_plan
+    INNER JOIN zuora_order_action_rate_plan
       ON zuora_rate_plan.rate_plan_id = zuora_order_action_rate_plan.rate_plan_id
     INNER JOIN zuora_order_action
       ON zuora_order_action_rate_plan.order_action_id = zuora_order_action.order_action_id
