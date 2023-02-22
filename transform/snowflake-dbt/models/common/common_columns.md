@@ -1652,19 +1652,19 @@ The form node name on a `focus_form` event. This appears as `ff_nodename` in the
 
 {% docs experiment_name %}
 
-The name of the experiment as per implementation. More details on [Experimentation implementation](https://docs.gitlab.com/ee/development/experiment_guide/)
+The name of the experiment as per implementation. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
 
 {% enddocs %}
 
 {% docs experiment_variant %}
 
-Experiment group (control/candidate) to which the event belongs to. 
+Experiment group (control/candidate) to which the event belongs to. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
 
 {% enddocs %}
 
 {% docs context_key %}
 
-The value passed in `key` section of the `experiment` context json. [More information on Snowplow contexts](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/#contexts). More details on [Experimentation implementation](https://docs.gitlab.com/ee/development/experiment_guide/)
+The value passed in `key` section of the `experiment` context json. [More information on Snowplow contexts](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/#contexts). More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
 
 {% enddocs %}
 
