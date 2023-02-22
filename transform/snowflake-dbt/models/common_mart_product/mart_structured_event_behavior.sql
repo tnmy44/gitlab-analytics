@@ -46,7 +46,11 @@ structured_behavior AS (
 
   WHERE behavior_at > (SELECT MAX({{ var('incremental_backfill_date', 'behavior_at') }}) FROM {{ this }})
     AND behavior_at <= (SELECT DATEADD(month, 1,  MAX({{ var('incremental_backfill_date', 'behavior_at') }}) )  FROM {{ this }})
-  
+
+  {% else %}
+  -- This will cover the first creation of the table and requires that the table be backfilled
+  WHERE behavior_at > DATE_TRUNC('month', CURRENT_DATE() )
+
   {% endif %}
 
 )
