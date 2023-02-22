@@ -1,4 +1,4 @@
-{{config(
+{{ config(
 
     materialized='incremental',
     unique_key='behavior_structured_event_pk',
@@ -7,7 +7,7 @@
     on_schema_change='sync_all_columns',
     cluster_by=['behavior_at::DATE']
   )
-
+  
 }}
 
 {{ simple_cte([
@@ -44,8 +44,8 @@ structured_behavior AS (
   FROM {{ ref('fct_behavior_structured_event') }}
   {% if is_incremental() %}
 
-  WHERE behavior_at > (SELECT MAX({{ var('incremental_backfill_date', 'behavior_at') }}) FROM {{ this }})
-    AND behavior_at <= (SELECT DATEADD(month, 1,  MAX({{ var('incremental_backfill_date', 'behavior_at') }}) )  FROM {{ this }})
+    WHERE behavior_at > (SELECT MAX({{ var('incremental_backfill_date', 'behavior_at') }}) FROM {{ this }})
+      AND behavior_at <= (SELECT DATEADD(MONTH, 1, MAX({{ var('incremental_backfill_date', 'behavior_at') }})) FROM {{ this }})
 
   {% else %}
   -- This will cover the first creation of the table and requires that the table be backfilled
@@ -97,4 +97,4 @@ LEFT JOIN project
 LEFT JOIN operating_system
   ON structured_behavior.dim_behavior_operating_system_sk = operating_system.dim_behavior_operating_system_sk
 LEFT JOIN dates
-  ON {{ get_date_id('structured_behavior.behavior_at') }} = dates.date_id
+  ON{{ get_date_id('structured_behavior.behavior_at') }} = dates.date_id
