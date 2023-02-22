@@ -48,16 +48,16 @@ dag = DAG(
     default_args=default_args,
     # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
-    #TODO: change date later
+    # TODO: change date later
     start_date=datetime(2023, 2, 1),
     catchup=True,
-    max_active_runs=1, # due to API rate limiting
+    max_active_runs=1,  # due to API rate limiting
 )
 
 dummy_start = DummyOperator(task_id="dummy_start", dag=dag)
 dummy_end = DummyOperator(task_id="dummy_end", dag=dag)
 
-endpoint_classes = ('CourseCompletions', 'Logins', 'Visits', 'CourseViews')
+endpoint_classes = ("CourseCompletions", "Logins", "Visits", "CourseViews")
 
 prev_task = dummy_start
 for endpoint_class in endpoint_classes:
@@ -82,16 +82,20 @@ for endpoint_class in endpoint_classes:
         env_vars={
             **pod_env_vars,
             # remove time from execution_date, and convert to epoch timestamp
-            "EPOCH_START_STR":
-                "{{ execution_date.replace(hour=0, minute=0, second=0, microsecond=0).int_timestamp }}",
-            "EPOCH_END_STR":
-                "{{ next_execution_date.replace(hour=0, minute=0, second=0, microsecond=0).int_timestamp }}",
+            "EPOCH_START_STR": (
+                "{{ execution_date.replace(hour=0, minute=0, second=0, microsecond=0)"
+                ".int_timestamp }}"
+            ),
+            "EPOCH_END_STR": (
+                "{{ next_execution_date.replace(hour=0, minute=0, second=0, microsecond=0)"
+                ".int_timestamp }}"
+            ),
         },
         affinity=get_affinity(False),
         tolerations=get_toleration(False),
         arguments=[extract_command],
         dag=dag,
-        trigger_rule=TriggerRule.ALL_DONE, # run task regardless of upstream
+        trigger_rule=TriggerRule.ALL_DONE,  # run task regardless of upstream
     )
     prev_task >> extract_task
     prev_task = extract_task

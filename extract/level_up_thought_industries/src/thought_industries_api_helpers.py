@@ -6,7 +6,7 @@ import datetime
 import time
 import json
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 from logging import info, error
 
 import requests
@@ -25,7 +25,7 @@ def upload_payload_to_snowflake(
     schema_name: str,
     stage_name: str,
     table_name: str,
-    json_dump_filename: str = 'to_upload.json'
+    json_dump_filename: str = "to_upload.json",
 ):
     """
     Upload payload to Snowflake using snowflake_stage_load_copy_remove()
@@ -73,7 +73,7 @@ def epoch_ts_ms_to_datetime_str(epoch_ts_ms: int) -> str:
     to datetime str, i.e '2023-02-09 01:00:00'
     """
     date_time = datetime.datetime.utcfromtimestamp(epoch_ts_ms / 1000)
-    return date_time.strftime('%Y-%m-%d %H:%M:%S')
+    return date_time.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def make_request(
@@ -90,7 +90,9 @@ def make_request(
 
     additional_backoff = 20
     if current_retry_count >= max_retry_count:
-        raise requests.exceptions.HTTPError(f"Manually raising 429 Client Error: Too many retries when calling the {url}.")
+        raise requests.exceptions.HTTPError(
+            f"Manually raising 429 Client Error: Too many retries when calling the {url}."
+        )
     try:
         if request_type == "GET":
             response = requests.get(
@@ -108,10 +110,8 @@ def make_request(
     except requests.exceptions.RequestException:
         if response.status_code == 429:
             # if no retry-after exists, wait default time
-            retry_after = int(
-                response.headers.get("Retry-After", additional_backoff)
-            )
-            info(f'\nToo many requests... Sleeping for {retry_after} seconds')
+            retry_after = int(response.headers.get("Retry-After", additional_backoff))
+            info(f"\nToo many requests... Sleeping for {retry_after} seconds")
             # add some buffer to sleep
             time.sleep(retry_after + (additional_backoff * current_retry_count))
             current_retry_count += 1
