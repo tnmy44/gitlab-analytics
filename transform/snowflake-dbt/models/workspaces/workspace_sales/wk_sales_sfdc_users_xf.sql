@@ -43,15 +43,15 @@ WITH base AS (
         WHEN (LOWER(user_segment) = 'mid-market'
                 OR LOWER(user_segment)  = 'smb')
             AND LOWER(user_region) = 'meta'
-            THEN 'large'
+            THEN 'Large'
         WHEN (LOWER(user_segment)  = 'mid-market'
                 OR LOWER(user_segment)  = 'smb')
             AND LOWER(user_region) = 'latam'
-            THEN 'large'
+            THEN 'Large'
         WHEN (LOWER(user_segment)  = 'mid-market'
                 OR LOWER(user_segment)  = 'smb')
             AND LOWER(user_geo) = 'apac'
-            THEN 'large'
+            THEN 'Large'
         ELSE user_segment
         END                                            AS adjusted_user_segment,
 
