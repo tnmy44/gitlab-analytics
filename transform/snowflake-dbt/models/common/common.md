@@ -1626,7 +1626,7 @@ This ID is generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 
 **Data Grain:** fct_behavior_website_page_view_sk
 
-This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
 
 **Filters Applied to Model:**
 - This model only includes Pageview events (when `event=page_view` from `dim_behavior_event` )
