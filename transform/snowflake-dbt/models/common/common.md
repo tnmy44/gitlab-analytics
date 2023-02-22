@@ -1713,7 +1713,7 @@ This model only includes structured events implemented for experiments. Experime
 
 {% docs fct_behavior_structured_event_without_assignment %}
 
-**Description:** Derived fact table containing quantitative data for Snowplow structured events **without assignment events**. Assignment events are events that signifies a user was enrolled into an Experiment.
+**Description:** Derived fact table containing quantitative data for Snowplow structured events **excluding assignment events**. Assignment events are events that signifies a user was enrolled into an Experiment.
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -1734,7 +1734,7 @@ This model only includes structured events without assignment events (`event_act
 
 {% docs fct_behavior_structured_event_without_assignment_190 %}
 
-**Description:** Derived fact table containing quantitative data for Snowplow structured events **without assignment events** for the **last 190 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
+**Description:** Derived fact table containing quantitative data for Snowplow structured events **excluding assignment events** for the **last 190 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -1742,7 +1742,8 @@ This ID in generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 **Filters Applied to Model:**
 
-This model only includes structured events for the last 190 days without assignment events (`event_action = 'assignment'`)
+- This model only includes structured events for the last 190 days
+- This model excludes assignment events (`event_action = 'assignment'`)
 
 **Tips for use:**
 
@@ -1755,7 +1756,7 @@ This model only includes structured events for the last 190 days without assignm
 
 {% docs fct_behavior_structured_event_without_assignment_400 %}
 
-**Description:** Derived fact table containing quantitative data for Snowplow structured events **without assignment events** for the **last 400 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
+**Description:** Derived fact table containing quantitative data for Snowplow structured events **excluding assignment events** for the **last 400 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
 
 **Data Grain:** behavior_structured_event_pk
 
@@ -1763,7 +1764,8 @@ This ID in generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 **Filters Applied to Model:**
 
-This model only includes structured events for the last 400 days without assignment events (`event_action = 'assignment'`)
+- This model only includes structured events for the last 400 days
+- This model excludes assignment events (`event_action = 'assignment'`)
 
 **Tips for use:**
 
