@@ -324,6 +324,3 @@ models:
       - name: dbt_valid_from
         tests:
           - not_null
-
-  - name: prep_order_action_rate_plan
-    description: Prep table for Zuora order action. This it at the order action grain i.e. one order can have multiple order actions.
