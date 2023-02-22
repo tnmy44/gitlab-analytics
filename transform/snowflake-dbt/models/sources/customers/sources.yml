@@ -57,7 +57,7 @@ sources:
           - name: id
             tests:
               - not_null       
-      - name: customers_db_orders
+      - name: customers_db_reconciliations
       - name: customers_db_trial_histories
       - name: customers_db_versions
         columns:

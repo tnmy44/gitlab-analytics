@@ -185,6 +185,8 @@ models:
         tests:
           - not_null
       - name: order_source
+  - name: customers_db_customers_db_reconciliations_source
+    description: '{{ doc("customers_db_customers_db_reconciliationss_source") }}'  
   - name: customers_db_trial_histories_source
     description: '{{ doc("customers_db_trial_histories_source") }}'  
     columns:
