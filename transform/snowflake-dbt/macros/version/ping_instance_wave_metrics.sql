@@ -173,6 +173,18 @@ MAX(CASE WHEN metrics_path = 'counts.external_status_checks' THEN {{ null_negati
 MAX(CASE WHEN metrics_path = 'redis_hll_counters.search.i_search_paid_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS paid_license_search_28_days_user,
 MAX(CASE WHEN metrics_path = 'redis_hll_counters.manage.unique_active_users_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS last_activity_28_days_user,
 
+-- 7 metrics
+MAX(CASE WHEN metrics_path = 'counts_monthly.snippets' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS snippets_28_days_event,
+MAX(CASE WHEN metrics_path = 'redis_hll_counters.ide_edit.g_edit_by_sfe_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS single_file_editor_28_days_user,
+MAX(CASE WHEN metrics_path = 'redis_hll_counters.code_review.i_code_review_create_mr_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS merge_requests_created_28_days_event,
+MAX(CASE WHEN metrics_path = 'redis_hll_counters.code_review.i_code_review_user_create_mr_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS merge_requests_created_28_days_user,
+MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.govern.merged_merge_requests_using_approval_rules_distinct' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS merge_requests_approval_rules_28_days_event,
+MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.manage.custom_compliance_frameworks' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS custom_compliance_frameworks_28_days_event,
+MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.govern.distinct_count_project_id_from_security_orchestration_policy_configurations' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS projects_security_policy_28_days_event,
+MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.govern.user_merge_requests_for_projects_with_assigned_security_policy_project' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS merge_requests_security_policy_28_days_user,
+MAX(CASE WHEN metrics_path = 'redis_hll_counters.ci_templates.p_ci_templates_implicit_auto_devops_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS pipelines_implicit_auto_devops_28_days_event,
+MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.verify.ci_pipeline_schedules' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS pipeline_schedules_28_days_user,
+
 ---SMAU metrics
 MAX(CASE WHEN metrics_path = 'redis_hll_counters.terraform.p_terraform_state_api_unique_users_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS terraform_state_api_28_days_user,
 MAX(CASE WHEN metrics_path = 'ranalytics_unique_visits.analytics_unique_visits_for_any_target_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS analytics_28_days_user,

@@ -307,6 +307,17 @@
       monthly_sm_metrics.external_status_checks_all_time_event,
       monthly_sm_metrics.paid_license_search_28_days_user,
       monthly_sm_metrics.last_activity_28_days_user,
+      -- Wave 7
+      monthly_sm_metrics.snippets_28_days_event,
+      monthly_sm_metrics.single_file_editor_28_days_user,
+      monthly_sm_metrics.merge_requests_created_28_days_event,
+      monthly_sm_metrics.merge_requests_created_28_days_user,
+      monthly_sm_metrics.merge_requests_approval_rules_28_days_event,
+      monthly_sm_metrics.custom_compliance_frameworks_28_days_event,
+      monthly_sm_metrics.projects_security_policy_28_days_event,
+      monthly_sm_metrics.merge_requests_security_policy_28_days_user,
+      monthly_sm_metrics.pipelines_implicit_auto_devops_28_days_event,
+      monthly_sm_metrics.pipeline_schedules_28_days_user,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -535,6 +546,17 @@
       monthly_saas_metrics.external_status_checks_all_time_event,
       monthly_saas_metrics.paid_license_search_28_days_user,
       monthly_saas_metrics.last_activity_28_days_user,
+      -- Wave 7
+      monthly_saas_metrics.snippets_28_days_event,
+      monthly_saas_metrics.single_file_editor_28_days_user,
+      monthly_saas_metrics.merge_requests_created_28_days_event,
+      monthly_saas_metrics.merge_requests_created_28_days_user,
+      monthly_saas_metrics.merge_requests_approval_rules_28_days_event,
+      monthly_saas_metrics.custom_compliance_frameworks_28_days_event,
+      monthly_saas_metrics.projects_security_policy_28_days_event,
+      monthly_saas_metrics.merge_requests_security_policy_28_days_user,
+      monthly_saas_metrics.pipelines_implicit_auto_devops_28_days_event,
+      monthly_saas_metrics.pipeline_schedules_28_days_user,
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
