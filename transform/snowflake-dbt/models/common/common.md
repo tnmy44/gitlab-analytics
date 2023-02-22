@@ -1721,7 +1721,7 @@ This ID in generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 **Filters Applied to Model:**
 
-This model only includes structured events without assignment events (`event_action = 'assignment'`)
+This model excludes assignment events (`event_action = 'assignment'`)
 
 **Tips for use:**
 
