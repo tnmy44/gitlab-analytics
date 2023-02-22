@@ -26,12 +26,12 @@ WITH base AS (
 
       --Information
       'Missing order_description'           AS order_description,
-      '9999-12-31 00:00:00.000 +0000'       AS order_created_date,
-      '9999-12-31 00:00:00.000 +0000'       AS order_date,
+      NULL                                  AS order_created_date,
+      NULL                                  AS order_date,
       'Missing order_number'                AS order_number,
       'Missing order_state'                 AS order_state,
       'Missing order_status'                AS order_status,
-      'Missing is_created_by_migration'     AS is_created_by_migration
+      NULL                                  AS is_created_by_migration
 
 )
 
