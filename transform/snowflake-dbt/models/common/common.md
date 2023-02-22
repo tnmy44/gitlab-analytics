@@ -1568,7 +1568,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 **Data Grain:** dim_behavior_event_sk
 
-This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event`, `event_name`, `platform`, `gsc_environment`, `se_category`, `se_action`, `se_label` and `se_property`.
+This ID is generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event`, `event_name`, `platform`, `gsc_environment`, `se_category`, `se_action`, `se_label` and `se_property`.
 
 **Other Comments:**
 - [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
@@ -1581,7 +1581,7 @@ This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 
 **Data Grain:** behavior_structured_event_pk
 
-This ID in generated using `event_id` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) 
+This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) 
 
 **Filters Applied to Model:**
 - This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
@@ -1613,7 +1613,7 @@ This ID in generated using `event_id` from [prep_snowplow_unnested_events_all](h
 
 **Data Grain:** dim_behavior_website_page_sk
 
-This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`.
+This ID is generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`.
 
 **Filters Applied to Model:**
 - Include pages from page view, structured, and unstructured events (`event IN ('struct', 'page_view', 'unstruct')`)
@@ -1695,7 +1695,7 @@ This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow
 
 **Data Grain:** behavior_structured_event_pk
 
-This ID in generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+This ID is generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
 
 **Filters Applied to Model:**
 
@@ -1717,7 +1717,7 @@ This model only includes structured events implemented for experiments. Experime
 
 **Data Grain:** behavior_structured_event_pk
 
-This ID in generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+This ID is generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
 
 **Filters Applied to Model:**
 
@@ -1738,7 +1738,7 @@ This model excludes assignment events (`event_action = 'assignment'`)
 
 **Data Grain:** behavior_structured_event_pk
 
-This ID in generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+This ID is generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
 
 **Filters Applied to Model:**
 
@@ -1760,7 +1760,7 @@ This ID in generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 **Data Grain:** behavior_structured_event_pk
 
-This ID in generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+This ID is generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
 
 **Filters Applied to Model:**
 
