@@ -1699,10 +1699,11 @@ This ID in generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 **Filters Applied to Model:**
 
-This model only includes structured events implemented for experiments. 
+This model only includes structured events implemented for experiments. Experiment events are defined as any event that includes the `gitlab_experiment` context
 
 **Tips for use:**
 
+- Unlike the previous legacy version, you do _not_ need to join this model back to the fact. It includes all columns on the fact, in addition to experiment-specific columns (ex. `experiment_name`, etc).
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS details 
