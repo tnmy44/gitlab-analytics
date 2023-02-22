@@ -625,11 +625,6 @@ WITH edm_opty AS (
     edm_opty.dim_parent_crm_account_id                 AS ultimate_parent_account_id,
     edm_opty.is_jihu_account,
 
-    account_owner.user_segment               AS account_owner_user_segment,
-    account_owner.user_geo                   AS account_owner_user_geo,
-    account_owner.user_region                AS account_owner_user_region,
-    account_owner.user_area                  AS account_owner_user_area,
-
     -- NF: 20230223 FY24 GTM fields, precalculated in the user object
     account_owner.business_unit         AS account_owner_user_business_unit,
     account_owner.sub_business_unit     AS account_owner_user_sub_business_unit,
@@ -738,12 +733,20 @@ WITH edm_opty AS (
     -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
     
     -- NF: 20230223 FY24 GTM fields, precalculated in the user object
+    account_owner.adjusted_user_segment      AS account_owner_user_segment,
+    account_owner.user_segment               AS account_owner_raw_user_segment,
+    account_owner.user_geo                   AS account_owner_user_geo,
+    account_owner.user_region                AS account_owner_user_region,
+    account_owner.user_area                  AS account_owner_user_area,
+
+    -- NF: 20230223 FY24 GTM fields, precalculated in the user object
     opportunity_owner.business_unit         AS opportunity_owner_user_business_unit,
     opportunity_owner.sub_business_unit     AS opportunity_owner_user_sub_business_unit,
     opportunity_owner.division              AS opportunity_owner_user_division,
     opportunity_owner.asm                   AS opportunity_owner_user_asm,
 
-    opportunity_owner.user_segment          AS opportunity_owner_user_segment,
+    opportunity_owner.adjusted_user_segment AS opportunity_owner_user_segment,
+    opportunity_owner.user_segment          AS opportunity_owner_raw_user_segment,
     opportunity_owner.user_geo              AS opportunity_owner_user_geo,
     opportunity_owner.user_region           AS opportunity_owner_user_region,
     opportunity_owner.user_area             AS opportunity_owner_user_area,
@@ -831,12 +834,21 @@ WITH edm_opty AS (
     edm_opty.report_user_segment_geo_region_area,
 */
 
-
+    -- NF: adjusted to FY24 GTM structure
    CASE 
+        WHEN edm_opty.close_date < today.current_fiscal_year_date
+          THEN account_owner.adjusted_user_segment
+        ELSE opportunity_owner.adjusted_user_segment
+    END                                                       AS report_opportunity_user_segment,
+
+    -- NF: unadjusted version of segment used to create the FY24 GTM key
+    CASE 
         WHEN edm_opty.close_date < today.current_fiscal_year_date
           THEN account_owner.user_segment
         ELSE opportunity_owner.user_segment
-    END                                                       AS report_opportunity_user_segment,
+    END                                                       AS report_opportunity_raw_user_segment,
+
+
     CASE 
         WHEN edm_opty.close_date < today.current_fiscal_year_date
           THEN account_owner.user_geo
@@ -877,31 +889,12 @@ WITH edm_opty AS (
         ELSE opportunity_owner.asm
     END                                                       AS report_opportunity_user_asm,
 
-    -- JK 2023-02-06 adding adjusted segment
-    -- If MM / SMB and Region = META then Segment = Large
-    -- If MM/SMB and Region = LATAM then Segment = Large
-    -- If MM/SMB and Geo = APAC then Segment = Large
-    -- Use that Adjusted Segment Field in our FY23 models
-    CASE
-      WHEN (report_opportunity_user_segment = 'mid-market'
-            OR report_opportunity_user_segment = 'smb')
-        AND report_opportunity_user_region = 'meta'
-        THEN 'large'
-      WHEN (report_opportunity_user_segment = 'mid-market'
-            OR report_opportunity_user_segment = 'smb')
-        AND report_opportunity_user_region = 'latam'
-        THEN 'large'
-      WHEN (report_opportunity_user_segment = 'mid-market'
-            OR report_opportunity_user_segment = 'smb')
-        AND report_opportunity_user_geo = 'apac'
-        THEN 'large'
-      ELSE report_opportunity_user_segment
-    END AS adjusted_report_opportunity_user_segment,
+
 
     -- creating report_user_segment_geo_region_area_sqs_ot with adjusted segment
     LOWER(
       CONCAT(
-        adjusted_report_opportunity_user_segment,
+        report_opportunity_user_segment,
         '-',
         report_opportunity_user_geo,
         '-',
@@ -918,7 +911,7 @@ WITH edm_opty AS (
     -- creating report_user_segment_geo_region_area with adjusted segment
     LOWER(
       CONCAT(
-        adjusted_report_opportunity_user_segment,
+        report_opportunity_user_segment,
         '-',
         report_opportunity_user_geo,
         '-',
@@ -965,7 +958,7 @@ WITH edm_opty AS (
         '-',
         report_opportunity_user_asm,
         '-',
-        report_opportunity_user_segment,
+        report_opportunity_raw_user_segment,
         '-',
         report_opportunity_user_geo,
         '-',
