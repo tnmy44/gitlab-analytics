@@ -56,7 +56,8 @@ sources:
         columns:
           - name: id
             tests:
-              - not_null
+              - not_null       
+      - name: customers_db_orders
       - name: customers_db_trial_histories
       - name: customers_db_versions
         columns:
