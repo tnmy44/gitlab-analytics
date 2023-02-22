@@ -618,3 +618,27 @@ models:
         description: '{{ doc("is_device_mobile") }}'
       - name: device_type
         description: '{{ doc("device_type") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: event_label
+        description: '{{ doc("event_label") }}'
+      - name: namespace_is_internal
+        description: '{{ doc("namespace_is_internal") }}'
+      - name: namespace_type
+        description: '{{ doc("namespace_type") }}'
+      - name: visibility_level
+        description: '{{ doc("visibility_level") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: namespace_is_ultimate_parent
+        description: '{{ doc("namespace_is_ultimate_parent") }}'

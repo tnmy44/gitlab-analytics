@@ -1650,3 +1650,28 @@ The form node name on a `focus_form` event. This appears as `ff_nodename` in the
 
 {% enddocs %}
 
+
+{% docs namespace_type %}
+
+This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
+
+{% enddocs %}
+
+{% docs visibility_level %}
+
+public, private, or internal.
+
+{% enddocs %}
+
+{% docs page_url_fragment %}
+
+Fragment aka anchor
+
+{% enddocs %}
+
+
+{% docs namespace_is_ultimate_parent %}
+
+A flag to indicate if the namespace record is also an ultimate parent namespace
+
+{% enddocs %}
