@@ -92,7 +92,7 @@ def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
     table_definition_to_create_table = query_executor(
         snowflake_engine, build_ddl_statement
     )
-    return table_definition_to_create_table
+    return table_definition_to_create_table[0]
 
 
 def create_temp_table(manifest_dict: Dict, table_name: str):
