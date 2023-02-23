@@ -628,8 +628,6 @@ models:
         description: '{{ doc("gsc_google_analytics_client_id") }}'
       - name: gsc_extra
         description: '{{ doc("gsc_extra") }}'
-      - name: event_label
-        description: '{{ doc("event_label") }}'
       - name: namespace_is_internal
         description: '{{ doc("namespace_is_internal") }}'
       - name: namespace_type
@@ -642,3 +640,5 @@ models:
         description: '{{ doc("session_id") }}'
       - name: namespace_is_ultimate_parent
         description: '{{ doc("namespace_is_ultimate_parent") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
