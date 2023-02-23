@@ -166,18 +166,13 @@ class DbtModelClone:
             database_name = i.get("database").upper()
             schema_name = i.get("schema").upper()
             table_name = i.get("name").upper()
-            config = i.get("config")
+            alias = i.get("alias").upper()
 
             if "PROD" in database_name:
                 database_name = "PROD"
 
             if "PREP" in database_name:
                 database_name = "PREP"
-
-            if config:
-                alias = config.get("alias")
-            else:
-                alias = None
 
             if alias:
                 table_name = alias.upper()
