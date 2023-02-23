@@ -6155,7 +6155,7 @@ models:
           - not_null
           - unique
       - name: arr_month
-        description: 
+        description: '{{ doc("arr_month") }}'
       - name: dim_parent_crm_account_id
         description: '{{ doc("dim_parent_crm_account_id") }}'
       - name: dim_crm_account_id
