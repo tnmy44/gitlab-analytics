@@ -7,11 +7,12 @@
     ('fct_mrr', 'fct_mrr')
 ]) }}
 
-, oldest_subscription_in_cohort_id AS (
+, oldest_subscription_in_cohort AS (
 
     SELECT 
       sub.dim_subscription_id,
-      sub_w_org_id.dim_subscription_id AS dim_oldest_subscription_in_cohort_id
+      sub_w_org_id.dim_subscription_id AS dim_oldest_subscription_in_cohort_id,
+      sub_w_org_id.dim_crm_account_id AS dim_oldest_crm_account_in_cohort_id
     FROM dim_subscription sub
     LEFT JOIN dim_subscription sub_w_org_id
       ON sub.oldest_subscription_in_cohort = sub_w_org_id.subscription_name_slugify
@@ -28,23 +29,21 @@
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)                             AS fiscal_year,
       dim_crm_account.dim_parent_crm_account_id,
       COALESCE(dim_crm_account.merged_to_account_id, dim_crm_account.dim_crm_account_id)            AS dim_crm_account_id,
-      dim_subscription.dim_oldest_subscription_in_cohort_id,
+      oldest_subscription_in_cohort.dim_oldest_subscription_in_cohort_id,
       dim_product_detail.product_tier_name,
       dim_product_detail.product_delivery_type,
       dim_product_detail.product_ranking,
       fct_mrr.mrr,
       fct_mrr.quantity
     FROM fct_mrr
-    INNER JOIN oldest_subscription_in_cohort_id dim_subscription
-      ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
-    INNER JOIN dim_product_detail
-      ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id
-    INNER JOIN dim_billing_account
-      ON dim_billing_account.dim_billing_account_id = fct_mrr.dim_billing_account_id
+    INNER JOIN oldest_subscription_in_cohort
+      ON oldest_subscription_in_cohort.dim_subscription_id = fct_mrr.dim_subscription_id
     INNER JOIN dim_date
       ON dim_date.date_id = fct_mrr.dim_date_id
+    INNER JOIN dim_product_detail
+      ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id    
     LEFT JOIN dim_crm_account
-      ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+      ON oldest_subscription_in_cohort.dim_oldest_crm_account_in_cohort_id = dim_crm_account.dim_crm_account_id
     WHERE fct_mrr.subscription_status IN ('Active', 'Cancelled')
       AND dim_crm_account.is_jihu_account != 'TRUE'
 
@@ -171,8 +170,8 @@
       {{ dbt_utils.surrogate_key(['type_of_arr_change.arr_month', 'type_of_arr_change.dim_oldest_subscription_in_cohort_id']) }}
                                                                     AS delta_arr_subscription_month_pk,
       type_of_arr_change.arr_month,
-      type_of_arr_change.dim_parent_crm_account_id,
-      type_of_arr_change.dim_crm_account_id,
+      --type_of_arr_change.dim_parent_crm_account_id,
+      --type_of_arr_change.dim_crm_account_id,
       type_of_arr_change.dim_oldest_subscription_in_cohort_id,
       type_of_arr_change.product_tier_name ,
       type_of_arr_change.previous_product_tier_name AS previous_month_product_tier_name ,
