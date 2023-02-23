@@ -278,7 +278,7 @@ for source_name, config in config_dict.items():
                         affinity=get_affinity(False),
                         tolerations=get_toleration(False),
                         arguments=[sync_cmd],
-                        do_xcom_push=True,
+                        # do_xcom_push=True, # TODO: do we need this still?
                     )
 
         globals()[

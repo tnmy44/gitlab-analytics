@@ -48,7 +48,7 @@ def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
 
 
 def upload_to_gcs(
-    advanced_metadata: bool, upload_df: pd.DataFrame, upload_file_name: str
+        advanced_metadata: bool, upload_df: pd.DataFrame, upload_file_dir: str, upload_file_name: str
 ) -> bool:
     """
     Write a dataframe to local storage and then upload it to a GCS bucket.
@@ -58,14 +58,15 @@ def upload_to_gcs(
     bucket_name = "saas-pipeline-backfills"
     bucket = get_gcs_bucket(keyfile, bucket_name)
 
-    # Write out the TSV and upload it
+    # Write out the parquet and upload it
     enriched_df = dataframe_enricher(advanced_metadata, upload_df)
     enriched_df.to_parquet(
         upload_file_name,
         compression="gzip",
         index=False,
     )
-    blob = bucket.blob(upload_file_name)
+    logging.info(f'GCS save location: {upload_file_dir + upload_file_name}')
+    blob = bucket.blob(upload_file_dir + upload_file_name)
     blob.upload_from_filename(upload_file_name)
 
     return True
@@ -259,12 +260,15 @@ def chunk_and_upload(
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
 
+            load_start_prefix = 'load_start_2023-02-17T11:02:44.672' # TODO this needs to turned into a variable later
+
             # i.e '2023-02-17T11:02:44.672'
             now = datetime.now().isoformat(timespec='milliseconds')
-            upload_file_name = f"{target_table}/{target_table}_chunk_{now}.parquet.gzip"
+            upload_file_dir = f"{target_table}/{load_start_prefix}/".lower()
+            upload_file_name = f"{target_table}_chunk_{now}.parquet.gzip".lower()
             if row_count > 0:
                 upload_to_gcs(
-                    advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
+                    advanced_metadata, chunk_df, upload_file_dir, upload_file_name
                 )
                 logging.info(
                     f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}"
@@ -293,7 +297,8 @@ def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFra
     cur.copy_expert(copy_sql, tmp_file)
     tmp_file.seek(0)
     logging.info("Reading csv")
-    df = pd.read_csv(tmp_file, chunksize=750_000, parse_dates=True, low_memory=False)
+    # TODO change back to chunksize=750_000
+    df = pd.read_csv(tmp_file, chunksize=400, parse_dates=True, low_memory=False)
     logging.info("CSV read")
     return df
 
