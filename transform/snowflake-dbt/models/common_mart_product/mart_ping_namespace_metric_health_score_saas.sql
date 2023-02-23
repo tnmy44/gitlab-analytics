@@ -59,7 +59,8 @@
         map_subscription_namespace_month.dim_subscription_id_original, 
         namespace_subscription_monthly_distinct.dim_subscription_id_original
       ) AS dim_subscription_id_original,
-      instance_types_ordering.instance_type
+      instance_types_ordering.instance_type,
+      instance_types_ordering.included_in_health_measures_str
     FROM prep_saas_usage_ping_namespace
     LEFT JOIN instance_types_ordering
       ON prep_saas_usage_ping_namespace.dim_namespace_id = instance_types_ordering.namespace_id
@@ -101,6 +102,7 @@
       dim_subscription_id_original,
       reporting_month,
       instance_type,
+      included_in_health_measures_str,
       MAX(ping_date)                                        AS ping_date,
       {{ dbt_utils.pivot('ping_name', gainsight_wave_metrics, then_value='counter_value') }}
     FROM joined
@@ -113,5 +115,5 @@
     created_by="@mdrusell",
     updated_by="@mdrussell",
     created_date="2022-10-12",
-    updated_date="2022-10-21"
+    updated_date="2023-02-23"
 ) }}

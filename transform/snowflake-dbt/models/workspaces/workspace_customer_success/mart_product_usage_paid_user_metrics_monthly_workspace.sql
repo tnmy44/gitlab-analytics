@@ -124,6 +124,7 @@
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_ping_instance_id                                       AS dim_usage_ping_id,
       monthly_sm_metrics.instance_type,
+      monthly_sm_metrics.included_in_health_measures_str,
       monthly_sm_metrics.cleaned_version,
       location_country.country_name,
       location_country.iso_2_country_code,
@@ -363,6 +364,7 @@
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
       monthly_saas_metrics.instance_type                                            AS instance_type,
+      monthly_saas_metrics.included_in_health_measures_str                          AS included_in_health_measures_str,
       NULL                                                                          AS cleaned_version,
       NULL                                                                          AS country_name,
       NULL                                                                          AS iso_2_country_code,
@@ -630,5 +632,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2023-02-21"
+    updated_date="2023-02-23"
 ) }}

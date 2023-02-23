@@ -66,6 +66,7 @@
       saas_usage_ping.ping_date                                                         AS ping_created_at,
       {{ get_date_id('saas_usage_ping.ping_date') }}                                    AS ping_created_date_id,
       saas_usage_ping.instance_type,
+      saas_usage_ping.included_in_health_measures_str,
       -- Wave 1
       gitlab_seats.seats                                                                AS subscription_seats,
       gitlab_seats.seats_in_use                                                         AS billable_user_count,

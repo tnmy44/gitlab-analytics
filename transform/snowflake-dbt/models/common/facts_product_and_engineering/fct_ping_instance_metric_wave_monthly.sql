@@ -67,6 +67,7 @@
       {{ get_date_id('ping_instance_wave_sm.ping_created_at') }}                                         AS ping_created_date_id,
       ping_instance_wave_sm.dim_instance_id,
       instance_type_ordering.instance_type,
+      instance_type_ordering.included_in_health_measures_str,
       ping_instance_wave_sm.hostname,
       ping_instance_wave_sm.dim_license_id,
       ping_instance_wave_sm.license_sha256,
