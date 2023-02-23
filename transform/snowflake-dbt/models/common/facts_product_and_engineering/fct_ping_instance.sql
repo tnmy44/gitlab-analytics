@@ -69,7 +69,8 @@
       add_country_info_to_usage_ping.license_user_count                                  AS license_user_count,
       add_country_info_to_usage_ping.umau_value                                          AS umau_value,
       add_country_info_to_usage_ping.product_tier                                        AS product_tier,
-      add_country_info_to_usage_ping.main_edition                                        AS main_edition
+      add_country_info_to_usage_ping.main_edition                                        AS main_edition,
+      add_country_info_to_usage_ping.ping_type                                           AS ping_type
     FROM add_country_info_to_usage_ping
     LEFT JOIN dim_product_tier
       ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
@@ -102,7 +103,9 @@
       prep_usage_ping_cte.license_subscription_id                                                         AS dim_subscription_license_id,
       IFF(prep_usage_ping_cte.ping_created_at < prep_usage_ping_cte.license_trial_ends_on, TRUE, FALSE)   AS is_trial,
       prep_usage_ping_cte.product_tier                                                                    AS product_tier,
-      prep_usage_ping_cte.main_edition                                                                    AS main_edition_product_tier
+      prep_usage_ping_cte.main_edition                                                                    AS main_edition_product_tier,
+      'VERSION_DB'                                                                                        AS data_source,
+      ping_type                                                                                           AS ping_type
     FROM prep_usage_ping_cte
     LEFT JOIN prep_license AS md5
       ON prep_usage_ping_cte.license_md5 = md5.license_md5
