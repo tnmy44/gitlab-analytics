@@ -1705,5 +1705,118 @@ Customer [health score for CI use case adoption](https://about.gitlab.com/handbo
 
 {% enddocs %}
 
+{% docs arr_month %}
+
+This is the calendar month that ARR is counted.
+
+{% enddocs %}
+
+{% docs dim_oldest_subscription_in_cohort_id %}
+
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the dimension key for the oldest subscription in a lineage. This key can be used to group a subscription lineage together for analysis.
+
+{% enddocs %}
+
+{% docs product_tier_name  %}
+
+A GitLab offering that provides a set of features at a particular price point such as Free, Premium, or Ultimate. This field also includes the delivery type such as SaaS or Self-Managed.
+
+{% enddocs %}
+
+{% docs previous_month_product_tier_name  %}
+
+This is the previous month's product tier. A GitLab offering that provides a set of features at a particular price point such as Free, Premium, or Ultimate. This field also includes the delivery type such as SaaS or Self-Managed.
+
+{% enddocs %}
+
+{% docs product_delivery_type %}
+
+This is the delivery type of GitLab to include either SaaS or Self-Managed.
+
+{% enddocs %}
+
+{% docs previous_month_product_delivery_type %}
+
+This is the previous month delivery type. Includes either SaaS or Self-Managed.
+
+{% enddocs %}
+
+{% docs product_ranking %}
+
+This is a field used for analysis and ranks the product tiers. Ultimate is 3, Premium is 2, and Bronze/Starter is 1.
+
+{% enddocs %}
+
+{% docs previous_month_product_ranking %}
+
+This is the previous month product ranking. Ultimate is 3, Premium is 2, and Bronze/Starter is 1.
+
+{% enddocs %}
+
+{% docs type_of_arr_change %}
+
+Types of Delta ARR:
+
+new - ARR for the customer’s first paying month/quarter
+expansion - ARR increased from previous month/quarter
+contraction - ARR decreased from previous month/quarter
+churn - ARR decreased all the way to zero for a customer who was paying in the previous month/quarter
+no impact - ARR remained the same from previous month/quarter
+
+{% enddocs %}
+
+{% docs beg_arr %}
+
+The ARR at the beginning of an arr_month.
+
+{% enddocs %}
+
+{% docs beg_quantity %}
+
+The number of licensed users at the beginning of an arr_month.
+
+{% enddocs %}
+
+{% docs seat_change_arr %}
+
+A change in ARR due to the quantity of seats purchased.
+
+{% enddocs %}
+
+{% docs seat_change_quantity %}
+
+A change in the quantity of seats purchased.
+
+{% enddocs %}
+
+{% docs price_change_arr %}
+
+The price changes represents discounts provided to the customer. 
+
+{% enddocs %}
+
+{% docs tier_change_arr %}
+
+Change in ARR due to an upward or downward change in the product purchased (i.e., from Premium up to Ultimate).
+
+{% enddocs %}
+
+{% docs end_arr %}
+
+The ARR at the end of the arr_month. 
+
+{% enddocs %}
+
+{% docs end_quantity %}
+
+The number of licensed users at the end of the arr_month.
+
+{% enddocs %}
+
+{% docs annual_price_per_seat_change %}
+
+Change in the price per seat paid in the arr_month.
+
+{% enddocs %}
 
 
