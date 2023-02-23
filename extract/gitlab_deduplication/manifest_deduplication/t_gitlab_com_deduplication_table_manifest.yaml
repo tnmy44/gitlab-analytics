@@ -3,18 +3,19 @@ generic_info:
   backup_retention_policy: 7 days
   table_prefix: gitlab_db_
   raw_schema: TAP_POSTGRES
-scd_tables:
+tables_to_de_duped:
     - bulk_import_entities
-    - clusters_integration_prometheus
-    - elasticsearch_indexed_namespaces
-    - gitlab_subscriptions
-    - group_group_links
-    - group_import_states
-    - issue_links
-    - label_links
-    - lfs_file_locks
-    - members
-    - merge_request_reviewers
-    - path_locks
-    - project_group_links
-    - repository_languages
+    #- clusters_integration_prometheus
+    #- elasticsearch_indexed_namespaces
+    #- gitlab_subscriptions
+    #- group_group_links
+    #- group_import_states
+    #- issue_links
+    #- label_links
+    #- lfs_file_locks
+    #- members
+    #- merge_request_reviewers
+    #- path_locks
+    #- project_group_links
+    #- repository_languages
+    - ci_builds
