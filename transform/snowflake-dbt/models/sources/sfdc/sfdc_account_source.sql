@@ -217,6 +217,16 @@ renamed AS (
     -- NF: Added on 20220427 to support EMEA reporting
     key_account__c                     AS is_key_account,
 
+    -- Gainsight Fields
+    gs_first_value_date__c AS gs_first_value_date,
+    gs_last_tam_activity_date__c AS gs_last_csm_activity_date,
+    eoa_sentiment__c AS eoa_sentiment,
+    gs_health_user_engagement__c AS gs_health_user_engagement,
+    gs_health_cd__c AS gs_health_cd,
+    gs_health_devsecops__c AS gs_health_devsecops,
+    gs_health_ci__c AS gs_health_ci,
+    gs_health_scm__c AS gs_health_scm,
+
     -- metadata
     createdbyid AS created_by_id,
     createddate AS created_date,
