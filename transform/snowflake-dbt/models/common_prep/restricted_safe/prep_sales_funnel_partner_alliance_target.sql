@@ -26,6 +26,7 @@
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area,
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_business_unit,
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.alliance_partner,
+    sheetload_sales_funnel_partner_alliance_targets_matrix_source.partner_category,
     sheetload_sales_funnel_partner_alliance_targets_matrix_source.sqs_bucket_engagement,
     CASE
       WHEN fiscal_months.fiscal_year < 2024
@@ -63,8 +64,6 @@
                     UPPER(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region), 
                     '-',
                     UPPER(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area), 
-                    '-',
-                    UPPER(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment),
                     '-',
                     fiscal_months.fiscal_year
                     )

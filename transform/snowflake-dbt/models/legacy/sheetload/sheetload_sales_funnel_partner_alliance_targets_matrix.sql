@@ -10,6 +10,7 @@ WITH source AS (
       month,
       sales_qualified_source,
       alliance_partner,
+      partner_category,
       order_type,
       area,
       user_segment,

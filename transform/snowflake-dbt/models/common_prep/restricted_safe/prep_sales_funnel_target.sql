@@ -62,8 +62,6 @@
                       '-',
                       UPPER(sheetload_sales_funnel_targets_matrix_source.user_area), 
                       '-',
-                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_segment),
-                      '-',
                       fiscal_months.fiscal_year
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,

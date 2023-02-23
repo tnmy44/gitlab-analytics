@@ -623,6 +623,8 @@ WITH first_contact  AS (
 
       fulfillment_partner.account_name AS resale_partner_name,
 
+      {{ partner_category('sfdc_opportunity.sales_qualified_source', 'fulfillment_partner.account_name') }} AS partner_category,
+
       --  quote information
       quote.dim_quote_id,
       quote.quote_start_date,
@@ -1342,9 +1344,6 @@ WITH first_contact  AS (
                     UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
                     '-',
                     UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
-                    '-',
-                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
-                    '-',
                     close_date.fiscal_year
                     )
     END AS dim_crm_opp_owner_stamped_hierarchy_sk

@@ -115,19 +115,6 @@
                       '-',
                       UPPER(sfdc_users.user_area), 
                       '-',
-                      UPPER(sfdc_users.user_segment),
-                      '-',
-                      current_fiscal_year.fiscal_year
-                      )
-          ELSE CONCAT(
-                      UPPER(sfdc_users.user_segment), 
-                      '-',
-                      UPPER(sfdc_users.user_geo), 
-                      '-',
-                      UPPER(sfdc_users.user_region), 
-                      '-',
-                      UPPER(sfdc_users.user_area),
-                      '-',
                       current_fiscal_year.fiscal_year
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,
@@ -168,8 +155,6 @@
                       UPPER(sfdc_users.user_region), 
                       '-',
                       UPPER(sfdc_users.user_area), 
-                      '-',
-                      UPPER(sfdc_users.user_segment),
                       '-',
                       sfdc_users.snapshot_fiscal_year
                       )
