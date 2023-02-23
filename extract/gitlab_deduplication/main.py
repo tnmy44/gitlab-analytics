@@ -126,6 +126,7 @@ def main(manifest_dict: Dict, table_name: str) -> None:
     """
     # Process the manifest
     logging.info(f"Proceeding with table {table_name} for deduplication")
+    print(manifest_dict)
     # Create backup table
     create_clone_table = create_backup_table(manifest_dict, table_name)
     # validate if backup created successfully then create the temp table.
