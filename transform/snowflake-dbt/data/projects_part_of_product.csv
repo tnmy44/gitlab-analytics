@@ -21,6 +21,7 @@ gitlab-org/cluster-integration/helm-install-image,9184510
 gitlab-org/cookbook-omnibus-gitlab,95156
 gitlab-org/customers-gitlab-com,2670515, @jeromezng
 gitlab-org/database-team/gitlab-com-database-testing,23345837
+gitlab-org/database-team/query-intercepter,43513722
 gitlab-org/discourse-omniauth-gitlab,150440
 gitlab-org/distribution/gitlab-configurator,13682597
 gitlab-org/distribution/gitlab-provisioner,6047528
@@ -272,6 +273,7 @@ gitlab-org/quality/preprod,15821588
 gitlab-org/quality/ci/secure-test-project-orchestrator,19722963
 gitlab-com/gl-infra/production,7444821
 gitlab-com/runbooks,1148549
+gitlab-com/chatops,5651817
 gitlab-cookbooks/cookbook-customers-gitlab-com,1755794
 gitlab-cookbooks/cookbook-wrapper-gitlab-runner,1755701
 gitlab-org/gl-openshift/gitlab-runner-operator,22848448

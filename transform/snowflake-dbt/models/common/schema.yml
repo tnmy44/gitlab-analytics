@@ -2853,6 +2853,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: ping_type
+        description: '{{ doc("ping_type") }}'
 
   - name: dim_ping_metric
     description: ' {{ doc("dim_ping_metric") }} '
@@ -3032,6 +3034,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: ping_type
+        description: '{{ doc("ping_type") }}'
 
   - name: fct_ping_instance_metric_rolling_6_months
     description: '{{ doc("fct_ping_instance_metric_rolling_6_months") }}'
@@ -3847,6 +3851,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: ping_type
+        description: '{{ doc("ping_type") }}'
 
 
   - name: fct_ping_instance_metric_28_day

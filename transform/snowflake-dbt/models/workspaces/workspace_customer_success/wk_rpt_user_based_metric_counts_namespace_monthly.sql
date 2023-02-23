@@ -14,6 +14,7 @@ WITH events AS (
   WHERE (aggregate_operator = 'OR'
     OR aggregate_operator IS NULL)
     AND time_frame = '28d'
+    AND key_path IS NULL
 ),
 
 dates AS (
@@ -39,5 +40,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-12-21",
-    updated_date="2023-02-04"
+    updated_date="2023-02-17"
 ) }}
