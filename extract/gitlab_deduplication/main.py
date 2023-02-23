@@ -3,6 +3,7 @@ import logging
 from os import environ as env
 from datetime import datetime
 from fire import Fire
+from yaml import safe_load, YAMLError
 from typing import Dict
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -114,7 +115,22 @@ def swap_and_drop_temp_table(manifest_dict: Dict, table_name: str):
         query_executor(snowflake_engine, drop_query)
 
 
-def main(manifest_dict: Dict, table_name: str) -> None:
+def get_yaml_file(path: str) -> dict:
+    """
+    Get all the report name for which tasks for loading
+    needs to be created
+    """
+
+    with open(file=path, mode="r", encoding="utf-8") as file:
+        try:
+            loaded_file = safe_load(stream=file)
+            return loaded_file
+        except YAMLError as exc:
+            logging.error(f"Issue with the yaml file: {exc}")
+            return None
+
+
+def main(file_name: str, table_name: str) -> None:
     """
     Read table name FROM manifest file and decide if the table exist in the database. Check if the advance metadata column `_task_instance`
     is present in the table.
@@ -126,6 +142,7 @@ def main(manifest_dict: Dict, table_name: str) -> None:
     """
     # Process the manifest
     logging.info(f"Proceeding with table {table_name} for deduplication")
+    manifest_dict = get_yaml_file(path=file_name)
     print(manifest_dict)
     # Create backup table
     create_clone_table = create_backup_table(manifest_dict, table_name)
