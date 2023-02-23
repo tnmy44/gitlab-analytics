@@ -165,7 +165,7 @@
 
     SELECT
       {{ dbt_utils.surrogate_key(['type_of_arr_change.arr_month', 'type_of_arr_change.subscription_lineage']) }}
-                                                                    AS delta_arr_subscription_month_pk,
+                                                                    AS delta_arr_subscription_product_month_pk,
       type_of_arr_change.arr_month,
       type_of_arr_change.dim_parent_crm_account_id,
       type_of_arr_change.subscription_lineage,

@@ -1689,7 +1689,7 @@ This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow
 
 {% enddocs %}
 
-{% docs fct_delta_arr_subscription_month %}
+{% docs fct_delta_arr_subscription_product_month %}
 
 Delta ARR is a measure of changes to ARR compared to the prior month. The [ARR Analysis Framework](https://internal-handbook.gitlab.io/handbook/sales/annual-recurring-revenue-arr/#arr-analysis-framework) handbook page provides more details on the analysis.
 
