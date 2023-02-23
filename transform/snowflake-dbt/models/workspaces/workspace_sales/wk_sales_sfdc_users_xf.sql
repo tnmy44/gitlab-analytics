@@ -34,6 +34,27 @@ WITH base AS (
           IFNULL(crm_user_sales_segment, 'Other') 
       END                                              AS user_segment,
 
+        -- JK 2023-02-06 adding adjusted segment
+        -- If MM / SMB and Region = META then Segment = Large
+        -- If MM/SMB and Region = LATAM then Segment = Large
+        -- If MM/SMB and Geo = APAC then Segment = Large
+        -- Use that Adjusted Segment Field in our FY23 models
+        CASE
+        WHEN (LOWER(user_segment) = 'mid-market'
+                OR LOWER(user_segment)  = 'smb')
+            AND LOWER(user_region) = 'meta'
+            THEN 'Large'
+        WHEN (LOWER(user_segment)  = 'mid-market'
+                OR LOWER(user_segment)  = 'smb')
+            AND LOWER(user_region) = 'latam'
+            THEN 'Large'
+        WHEN (LOWER(user_segment)  = 'mid-market'
+                OR LOWER(user_segment)  = 'smb')
+            AND LOWER(user_geo) = 'apac'
+            THEN 'Large'
+        ELSE user_segment
+        END                                            AS adjusted_user_segment,
+
       IFNULL(crm_user_area, 'Other')                   AS user_area,
       IFNULL(user_role_name, 'Other')                  AS role_name,
       IFNULL(user_role_type, 'Other')                  AS role_type,
@@ -55,6 +76,7 @@ WITH base AS (
       base.user_geo,
       base.user_region,
       base.user_segment,
+      base.adjusted_user_segment,
       base.user_area,
       base.role_name,
       base.role_type,
