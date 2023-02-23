@@ -880,7 +880,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , namespace_id bigint
+      , namespace_id
       , created_at
       , updated_at
       , base_access_level
