@@ -205,14 +205,14 @@ SELECT
         END AS was_stage_7_skipped_flag,
 
         -- calculate age in stage
-        DATEDIFF(day,coalesce(base.stage_1_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_0_date) AS days_in_stage_0,
-        DATEDIFF(day,coalesce(base.stage_2_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_1_date) AS days_in_stage_1,
-        DATEDIFF(day,coalesce(base.stage_3_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_2_date) AS days_in_stage_2,
-        DATEDIFF(day,coalesce(base.stage_4_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_3_date) AS days_in_stage_3,
-        DATEDIFF(day,coalesce(base.stage_5_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_4_date) AS days_in_stage_4,
-        DATEDIFF(day,coalesce(base.stage_6_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_5_date) AS days_in_stage_5,
-        DATEDIFF(day,coalesce(base.stage_7_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE), base.stage_6_date) AS days_in_stage_6,        
-        DATEDIFF(day,coalesce(base.stage_closed_date,CURRENT_DATE), base.stage_7_date)                                             AS days_in_stage_7, 
+        DATEDIFF(day, base.stage_0_date, coalesce(base.stage_1_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE)) AS days_in_stage_0,
+        DATEDIFF(day, base.stage_1_date, coalesce(base.stage_2_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE)) AS days_in_stage_1,
+        DATEDIFF(day, base.stage_2_date, coalesce(base.stage_3_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE)) AS days_in_stage_2,
+        DATEDIFF(day, base.stage_3_date, coalesce(base.stage_4_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE)) AS days_in_stage_3,
+        DATEDIFF(day, base.stage_4_date, coalesce(base.stage_5_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE)) AS days_in_stage_4,
+        DATEDIFF(day, base.stage_5_date, coalesce(base.stage_6_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE)) AS days_in_stage_5,
+        DATEDIFF(day, base.stage_6_date, coalesce(base.stage_7_date,base.stage_close_lost_unqualified_duplicate_date,CURRENT_DATE)) AS days_in_stage_6,        
+        DATEDIFF(day, base.stage_7_date, coalesce(base.stage_closed_date,CURRENT_DATE))                                             AS days_in_stage_7, 
 
         -- stage date helpers
         stage_0.fiscal_quarter_name_fy      AS stage_0_fiscal_quarter_name,
