@@ -1073,7 +1073,7 @@ tables:
       SELECT id
       , created_at
       , updated_at
-      , iid bigint
+      , iid
       , project_id
       , user_id
       , name
