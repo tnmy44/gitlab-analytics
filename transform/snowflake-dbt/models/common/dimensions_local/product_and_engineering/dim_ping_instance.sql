@@ -212,7 +212,8 @@ final AS (
         ELSE FALSE
       END                                                                                                         AS is_last_ping_of_week,
       raw_flattened.collected_data_categories,
-      fct_w_month_flag.raw_usage_data_payload
+      fct_w_month_flag.raw_usage_data_payload,
+      fct_w_month_flag.ping_type
     FROM fct_w_month_flag
     LEFT JOIN raw_flattened
       ON fct_w_month_flag.raw_usage_data_id = raw_flattened.raw_usage_data_id
