@@ -1653,25 +1653,25 @@ The form node name on a `focus_form` event. This appears as `ff_nodename` in the
 
 {% docs namespace_type %}
 
-This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
+The type of namespace: Group, User, or Project.
 
 {% enddocs %}
 
 {% docs visibility_level %}
 
-public, private, or internal.
+The visibility setting for the namespace or project: public, private, or internal. More information about namespace and project visibility [here](https://docs.gitlab.com/ee/user/public_access.html)
 
 {% enddocs %}
 
 {% docs page_url_fragment %}
 
-Fragment aka anchor
+Fragment aka anchor. Ex. For gitlab.com/projects/new#blank_project, the page_url_fragment is `blank_project`
 
 {% enddocs %}
 
 
 {% docs namespace_is_ultimate_parent %}
 
-A flag to indicate if the namespace record is also an ultimate parent namespace
+Boolean flag which is set to True if the namespace is the ultimate parent.
 
 {% enddocs %}
