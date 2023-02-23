@@ -21,7 +21,7 @@ def build_table_name(
     elif table_prefix is not None and table_suffix is None:
         return table_prefix + table_name
     else:
-        return table_prefix + table_name + table_suffix
+        return f"{table_prefix}{table_name}{table_suffix}"
 
 
 def create_table_name(manifest_dict: Dict, table_name: str) -> list:
