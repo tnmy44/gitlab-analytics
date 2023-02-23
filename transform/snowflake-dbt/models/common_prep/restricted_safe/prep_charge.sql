@@ -4,8 +4,8 @@
     ('zuora_rate_plan_charge', 'zuora_rate_plan_charge_source'),
     ('zuora_order_action_rate_plan','zuora_query_api_order_action_rate_plan_source'),
     ('zuora_order_action', 'zuora_order_action_source'),
-    ('revenue_contract_line', 'zuora_revenue_revenue_contract_line_source')
-
+    ('revenue_contract_line', 'zuora_revenue_revenue_contract_line_source'),
+    ('zuora_order', 'zuora_order_source')
 ])}}
 
 , sfdc_account AS (
@@ -126,12 +126,11 @@
       AND ABS(ROUND(adjustment,5)) > 0
     {{ dbt_utils.group_by(n=7) }}
 
-), order_action AS (
+), charge_to_order AS (
 
     SELECT 
-      zuora_rate_plan_charge.rate_plan_charge_id AS dim_charge_id,
-      zuora_order_action.order_id,
-      ARRAY_AGG(zuora_order_action.order_action_id) within GROUP (ORDER BY zuora_order_action.order_action_id ASC) AS order_action_id_array
+      zuora_rate_plan_charge.rate_plan_charge_id,
+      zuora_order_action.order_id
     FROM zuora_rate_plan
     INNER JOIN zuora_rate_plan_charge
       ON zuora_rate_plan.rate_plan_id = zuora_rate_plan_charge.rate_plan_id
@@ -162,8 +161,7 @@
       zuora_rate_plan_charge.account_id                                 AS dim_billing_account_id,
       map_merged_crm_account.dim_crm_account_id                         AS dim_crm_account_id,
       ultimate_parent_account.account_id                                AS dim_parent_crm_account_id,
-      {{ get_keyed_nulls('order_action.order_id') }}                    AS dim_order_id,
-      order_action.order_action_id_array                                AS dim_order_action_id_array,
+      charge_to_order.order_id                                          AS dim_order_id,
       {{ get_date_id('zuora_rate_plan_charge.effective_start_date') }}  AS effective_start_date_id,
       {{ get_date_id('zuora_rate_plan_charge.effective_end_date') }}    AS effective_end_date_id,
 
@@ -261,8 +259,8 @@
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
-    LEFT JOIN order_action
-      ON zuora_rate_plan_charge.rate_plan_charge_id = order_action.dim_charge_id
+    LEFT JOIN charge_to_order
+      ON zuora_rate_plan_charge.rate_plan_charge_id = charge_to_order.rate_plan_charge_id
 
  ), manual_charges_prep AS (
   
@@ -301,7 +299,6 @@
       zuora_account.crm_id                                                                  AS dim_crm_account_id,
       sfdc_account.ultimate_parent_account_id                                               AS dim_parent_crm_account_id,
       MD5(-1)                                                                               AS dim_order_id,
-      NULL                                                                                  AS dim_order_action_id_array,
       {{ get_date_id('manual_charges_prep.effective_start_date') }}                         AS effective_start_date_id,
       {{ get_date_id('manual_charges_prep.effective_end_date') }}                           AS effective_end_date_id,
       active_zuora_subscription.subscription_status                                         AS subscription_status,

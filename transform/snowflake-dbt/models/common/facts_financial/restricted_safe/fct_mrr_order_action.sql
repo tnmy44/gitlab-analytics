@@ -1,5 +1,5 @@
 {{ config({
-    "alias": "fct_mrr"
+    "alias": "fct_mrr_order_action"
 }) }}
 
 /* grain: one record per rate_plan_charge per month */
@@ -20,6 +20,7 @@
       prep_charge.dim_billing_account_id,
       prep_charge.dim_crm_account_id,
       prep_charge.dim_order_id,
+      prep_charge.dim_order_action_id_array,
       prep_charge.subscription_status,
       prep_charge.unit_of_measure,
       SUM(prep_charge.mrr)                                                                  AS mrr,
@@ -36,7 +37,7 @@
       /* This excludes Education customers (charge name EDU or OSS) with free subscriptions.
          Pull in seats from Paid EDU Plans with no ARR */
       AND (mrr != 0 OR LOWER(prep_charge.rate_plan_charge_name) = 'max enrollment')
-    {{ dbt_utils.group_by(n=10) }}
+    {{ dbt_utils.group_by(n=11) }}
 )
 
 {{ dbt_audit(
