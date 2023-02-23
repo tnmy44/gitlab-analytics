@@ -170,8 +170,8 @@
       {{ dbt_utils.surrogate_key(['type_of_arr_change.arr_month', 'type_of_arr_change.dim_oldest_subscription_in_cohort_id']) }}
                                                                     AS delta_arr_subscription_month_pk,
       type_of_arr_change.arr_month,
-      --type_of_arr_change.dim_parent_crm_account_id,
-      --type_of_arr_change.dim_crm_account_id,
+      type_of_arr_change.dim_parent_crm_account_id,
+      type_of_arr_change.dim_crm_account_id,
       type_of_arr_change.dim_oldest_subscription_in_cohort_id,
       type_of_arr_change.product_tier_name ,
       type_of_arr_change.previous_product_tier_name AS previous_month_product_tier_name ,
