@@ -115,7 +115,7 @@ def swap_and_drop_temp_table(manifest_dict: Dict, table_name: str):
         query_executor(snowflake_engine, drop_query)
 
 
-def get_yaml_file(path: str) -> dict:
+def get_yaml_file(path: str):
     """
     Get all the report name for which tasks for loading
     needs to be created
@@ -143,6 +143,8 @@ def main(file_name: str, table_name: str) -> None:
     # Process the manifest
     logging.info(f"Proceeding with table {table_name} for deduplication")
     manifest_dict = get_yaml_file(path=file_name)
+    # Update database name to the manifest for in case of MR branch.
+    manifest_dict.update({"raw_database": env.copy()["SNOWFLAKE_LOAD_DATABASE"]})
     print(manifest_dict)
     # Create backup table
     create_clone_table = create_backup_table(manifest_dict, table_name)
