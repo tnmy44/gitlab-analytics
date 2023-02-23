@@ -93,14 +93,14 @@ def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
         snowflake_engine, build_ddl_statement
     )
     logging.info(table_definition_to_create_table[0][0])
-    logging.info(type(table_definition_to_create_table[0]))
     return table_definition_to_create_table[0][0]
 
 
 def create_temp_table(manifest_dict: Dict, table_name: str):
     """This function create the table in the schema"""
     table_definition = create_temp_table_ddl(manifest_dict, table_name)
-    query_executor(snowflake_engine, table_definition)
+    create_temp_table = query_executor(snowflake_engine, table_definition)
+    logging.info(create_temp_table)
     return True
 
 
@@ -113,8 +113,11 @@ def swap_and_drop_temp_table(manifest_dict: Dict, table_name: str):
     swap_query = f"ALTER TABLE {raw_database}.{raw_schema}.{temp_table_name} SWAP WITH {raw_database}.{raw_schema}.{original_table_name};"
     # Drop the temp table in tap_postgres schema
     drop_query = f"DROP TABLE {raw_database}.{raw_schema}.{temp_table_name};"
-    if query_executor(snowflake_engine, swap_query):
-        query_executor(snowflake_engine, drop_query)
+    swap_table = query_executor(snowflake_engine, swap_query)
+    logging.info(swap_table)
+    if swap_table:
+        drop_temp_table = query_executor(snowflake_engine, drop_query)
+        logging.info(drop_temp_table)
 
 
 def get_yaml_file(path: str):
