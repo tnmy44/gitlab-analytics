@@ -24,7 +24,7 @@ def build_table_name(
         return f"{table_prefix}{table_name}{table_suffix}"
 
 
-def create_table_name(manifest_dict: Dict, table_name: str) -> list:
+def create_table_name(manifest_dict: Dict, table_name: str) -> tuple:
     """Prepare the backup table name and original table name as the table name passed in manifest i postgres table name not the snowflake table name"""
     table_suffix = "_" + datetime.now().strftime("%Y%m%d")
     table_prefix = manifest_dict["generic_info"]["table_prefix"]
@@ -127,9 +127,9 @@ def main(manifest_dict: Dict, table_name: str) -> None:
     # Process the manifest
     logging.info(f"Proceeding with table {table_name} for deduplication")
     # Create backup table
-    create_backup_table(manifest_dict, table_name)
+    create_clone_table=create_backup_table(manifest_dict, table_name)
     # validate if backup created successfully then create the temp table.
-    if create_backup_table:
+    if create_clone_table:
         table_definition = create_temp_table(manifest_dict, table_name)
     if table_definition:
         swap_and_drop_temp_table(manifest_dict, table_name)
