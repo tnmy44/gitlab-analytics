@@ -173,6 +173,16 @@
       external_status_checks_all_time_event,
       paid_license_search_28_days_user,
       last_activity_28_days_user,
+      snippets_28_days_event,
+      single_file_editor_28_days_user,
+      merge_requests_created_28_days_event,
+      merge_requests_created_28_days_user,
+      merge_requests_approval_rules_28_days_event,
+      custom_compliance_frameworks_28_days_event,
+      projects_security_policy_28_days_event,
+      merge_requests_security_policy_28_days_user,
+      pipelines_implicit_auto_devops_28_days_event,
+      pipeline_schedules_28_days_user,
       is_latest_data,
 
       -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
