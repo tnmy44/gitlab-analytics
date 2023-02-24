@@ -40,7 +40,7 @@ WITH date_details AS (
 
       -- this fields use the opportunity owner version for current FY and account fields for previous years
       report_opportunity_user_segment,
-      raw_report_opportunity_user_segment,
+      report_opportunity_raw_user_segment,
       report_opportunity_user_geo,
       report_opportunity_user_region,
       report_opportunity_user_area,
@@ -427,7 +427,7 @@ WITH date_details AS (
       sfdc_opportunity_xf.report_user_segment_geo_region_area,
 
       -- unadjusted version of the field
-      sfdc_opportunity_xf.raw_report_opportunity_user_segment,
+      sfdc_opportunity_xf.report_opportunity_raw_user_segment,
       sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
 
       sfdc_opportunity_xf.key_sqs,

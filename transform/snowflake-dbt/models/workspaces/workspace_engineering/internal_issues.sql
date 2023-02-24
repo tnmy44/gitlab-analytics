@@ -146,9 +146,9 @@ joined AS (
     COALESCE(issues.namespace_id = 9970
       AND ARRAY_CONTAINS('security'::VARIANT, agg_labels.labels), FALSE)               AS is_security_issue,
 
-    IFF(issues.namespace_id IN ({{ is_project_included_in_engineering_metrics() }}),
+    IFF(issues.project_id IN ({{ is_project_included_in_engineering_metrics() }}),
       TRUE, FALSE)                                                                     AS is_included_in_engineering_metrics,
-    IFF(issues.namespace_id IN ({{ is_project_part_of_product() }}),
+    IFF(issues.project_id IN ({{ is_project_part_of_product() }}),
       TRUE, FALSE)                                                                     AS is_part_of_product,
     issues.state,
     issues.weight,

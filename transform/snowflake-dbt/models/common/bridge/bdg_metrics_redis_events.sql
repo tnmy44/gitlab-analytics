@@ -12,8 +12,8 @@ final AS (
     metrics.data_by_row['options']['aggregate']['attribute']::VARCHAR AS aggregate_attribute,
     metrics.metrics_status,
     metrics.time_frame
-  FROM metrics,
-    LATERAL FLATTEN(INPUT => PARSE_JSON(data_by_row['options']['events'])) AS events
+  FROM metrics
+  LEFT JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(data_by_row['options']['events']), OUTER => TRUE) AS events
 )
 
 {{ dbt_audit(
@@ -21,5 +21,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-12-02",
-    updated_date="2023-02-04"
+    updated_date="2023-02-17"
 ) }}
