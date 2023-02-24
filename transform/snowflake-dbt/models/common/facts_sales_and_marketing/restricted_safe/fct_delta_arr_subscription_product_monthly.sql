@@ -63,10 +63,8 @@
       ON dim_date.date_id = fct_mrr.dim_date_id
     INNER JOIN dim_product_detail
       ON dim_product_detail.dim_product_detail_id = fct_mrr.dim_product_detail_id    
-    INNER JOIN dim_billing_account
-      ON dim_billing_account.dim_billing_account_id = fct_mrr.dim_billing_account_id
     LEFT JOIN dim_crm_account
-      ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+      ON oldest_subscription_in_cohort.dim_oldest_crm_account_in_cohort_id = dim_crm_account.dim_crm_account_id
     WHERE fct_mrr.subscription_status IN ('Active', 'Cancelled')
       AND dim_crm_account.is_jihu_account != 'TRUE'
 
@@ -130,123 +128,26 @@
 
 ), type_of_arr_change_cte AS (
 
-    SELECT
+    SELECT DISTINCT
+      {{ dbt_utils.surrogate_key(['arr_month', 'subscription_lineage']) }}
+                                                                    AS delta_arr_subscription_product_monthly_pk,
       prior_month.*,
-      {{ type_of_arr_change('arr','previous_arr','row_number') }}
-    FROM prior_month
-
-), reason_for_arr_change_beg AS (
-
-    SELECT
-      arr_month,
-      dim_parent_crm_account_id,
-      subscription_lineage,
+      {{ type_of_arr_change('arr','previous_arr','row_number') }},
       previous_arr      AS beg_arr,
-      previous_quantity AS beg_quantity
-    FROM type_of_arr_change_cte
-
-), reason_for_arr_change_seat_change AS (
-
-    SELECT
-      arr_month,
-      dim_parent_crm_account_id,
-      subscription_lineage,
+      previous_quantity AS beg_quantity,
       {{ reason_for_arr_change_seat_change('quantity', 'previous_quantity', 'arr', 'previous_arr') }},
-      {{ reason_for_quantity_change_seat_change('quantity', 'previous_quantity') }}
-    FROM type_of_arr_change_cte
-
-), reason_for_arr_change_price_change AS (
-
-    SELECT
-      arr_month,
-      dim_parent_crm_account_id,
-      subscription_lineage,
-      {{ reason_for_arr_change_price_change('product_tier_name ', 'previous_product_tier_name ', 'quantity', 'previous_quantity', 'arr', 'previous_arr', 'product_ranking',' previous_product_ranking') }}
-    FROM type_of_arr_change_cte
-
-), reason_for_arr_change_tier_change AS (
-
-    SELECT
-      arr_month,
-      dim_parent_crm_account_id,
-      subscription_lineage,
-      {{ reason_for_arr_change_tier_change('product_ranking', 'previous_product_ranking', 'quantity', 'previous_quantity', 'arr', 'previous_arr') }}
-    FROM type_of_arr_change_cte
-
-), reason_for_arr_change_end AS (
-
-    SELECT
-      arr_month,
-      dim_parent_crm_account_id,
-      subscription_lineage,
+      {{ reason_for_quantity_change_seat_change('quantity', 'previous_quantity') }},
+      {{ reason_for_arr_change_price_change('product_tier_name ', 'previous_product_tier_name ', 'quantity', 'previous_quantity', 'arr', 'previous_arr', 'product_ranking',' previous_product_ranking') }},
+      {{ reason_for_arr_change_tier_change('product_ranking', 'previous_product_ranking', 'quantity', 'previous_quantity', 'arr', 'previous_arr') }},
+      {{ annual_price_per_seat_change('quantity', 'previous_quantity', 'arr', 'previous_arr') }},
       arr                   AS end_arr,
       quantity              AS end_quantity
-    FROM type_of_arr_change_cte
-
-), annual_price_per_seat_change AS (
-
-    SELECT
-      arr_month,
-      dim_parent_crm_account_id,
-      subscription_lineage,
-      {{ annual_price_per_seat_change('quantity', 'previous_quantity', 'arr', 'previous_arr') }}
-    FROM type_of_arr_change_cte
-
-), combined AS (
-
-    SELECT
-      {{ dbt_utils.surrogate_key(['type_of_arr_change_cte.arr_month', 'type_of_arr_change_cte.subscription_lineage']) }}
-                                                                    AS delta_arr_subscription_product_monthly_pk,
-      type_of_arr_change_cte.dim_date_month_id,                                                             
-      type_of_arr_change_cte.arr_month,
-      type_of_arr_change_cte.dim_parent_crm_account_id,
-      type_of_arr_change_cte.subscription_lineage,
-      type_of_arr_change_cte.product_tier_name ,
-      type_of_arr_change_cte.previous_product_tier_name AS previous_month_product_tier_name ,
-      type_of_arr_change_cte.product_delivery_type,
-      type_of_arr_change_cte.previous_product_delivery_type AS previous_month_product_delivery_type,
-      type_of_arr_change_cte.product_ranking,
-      type_of_arr_change_cte.previous_product_ranking AS previous_month_product_ranking,
-      type_of_arr_change_cte.type_of_arr_change,
-      reason_for_arr_change_beg.beg_arr,
-      reason_for_arr_change_beg.beg_quantity,
-      reason_for_arr_change_seat_change.seat_change_arr,
-      reason_for_arr_change_seat_change.seat_change_quantity,
-      reason_for_arr_change_price_change.price_change_arr,
-      --reason_for_arr_change_tier_change.tier_change_arr,
-      reason_for_arr_change_end.end_arr,
-      reason_for_arr_change_end.end_quantity,
-      annual_price_per_seat_change.annual_price_per_seat_change
-    FROM type_of_arr_change_cte
-    LEFT JOIN reason_for_arr_change_beg
-      ON type_of_arr_change_cte.subscription_lineage = reason_for_arr_change_beg.subscription_lineage
-      AND type_of_arr_change_cte.arr_month = reason_for_arr_change_beg.arr_month
-      AND type_of_arr_change_cte.dim_parent_crm_account_id = reason_for_arr_change_beg.dim_parent_crm_account_id
-    LEFT JOIN reason_for_arr_change_seat_change
-      ON type_of_arr_change_cte.subscription_lineage = reason_for_arr_change_seat_change.subscription_lineage
-      AND type_of_arr_change_cte.arr_month = reason_for_arr_change_seat_change.arr_month
-      AND type_of_arr_change_cte.dim_parent_crm_account_id = reason_for_arr_change_seat_change.dim_parent_crm_account_id
-    LEFT JOIN reason_for_arr_change_price_change
-      ON type_of_arr_change_cte.subscription_lineage = reason_for_arr_change_price_change.subscription_lineage
-      AND type_of_arr_change_cte.arr_month = reason_for_arr_change_price_change.arr_month
-      AND type_of_arr_change_cte.dim_parent_crm_account_id = reason_for_arr_change_price_change.dim_parent_crm_account_id
-    --LEFT JOIN reason_for_arr_change_tier_change
-      --ON type_of_arr_change_cte.subscription_lineage = reason_for_arr_change_tier_change.subscription_lineage
-      --AND type_of_arr_change_cte.arr_month = reason_for_arr_change_tier_change.arr_month
-      --AND type_of_arr_change_cte.dim_parent_crm_account_id = reason_for_arr_change_tier_change.dim_parent_crm_account_id
-    LEFT JOIN reason_for_arr_change_end
-      ON type_of_arr_change_cte.subscription_lineage = reason_for_arr_change_end.subscription_lineage
-      AND type_of_arr_change_cte.arr_month = reason_for_arr_change_end.arr_month
-      AND type_of_arr_change_cte.dim_parent_crm_account_id = reason_for_arr_change_end.dim_parent_crm_account_id
-    LEFT JOIN annual_price_per_seat_change
-      ON type_of_arr_change_cte.subscription_lineage = annual_price_per_seat_change.subscription_lineage
-      AND type_of_arr_change_cte.arr_month = annual_price_per_seat_change.arr_month
-      AND type_of_arr_change_cte.dim_parent_crm_account_id = annual_price_per_seat_change.dim_parent_crm_account_id
+    FROM prior_month
 
 )
 
 {{ dbt_audit(
-    cte_ref="combined",
+    cte_ref="type_of_arr_change_cte",
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2023-02-22",
