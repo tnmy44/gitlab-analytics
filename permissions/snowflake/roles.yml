@@ -2554,7 +2554,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - reporting
+            - reporting        
 
     - bnguyen:
         member_of:
@@ -2562,6 +2562,14 @@ roles:
             - bamboohr_analytics
         warehouses:
             - dev_xs
+
+     - bvandre:
+        member_of:
+            - analyst_core
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - dev_xs   
 
     - caitlin:
         member_of:
@@ -4634,6 +4642,11 @@ users:
         can_login: yes
         member_of:
             - bnguyen
+            
+    - bvandre:
+        can_login: yes
+        member_of:
+            - bvandre
 
     - caitlin:
         can_login: yes
