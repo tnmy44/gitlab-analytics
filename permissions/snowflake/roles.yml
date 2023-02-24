@@ -2554,7 +2554,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - reporting        
+            - reporting
 
     - bnguyen:
         member_of:
@@ -2563,7 +2563,7 @@ roles:
         warehouses:
             - dev_xs
 
-     - bvandre:
+    - bvandre:
         member_of:
             - analyst_core
             - data_team_analyst
