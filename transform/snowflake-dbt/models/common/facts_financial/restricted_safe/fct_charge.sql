@@ -29,7 +29,6 @@ WITH prep_charge AS (
       prep_charge.dim_crm_account_id,
       prep_charge.dim_parent_crm_account_id,
       prep_charge.dim_order_id,
-      prep_charge.dim_order_action_id_array,
       prep_charge.effective_start_date_id,
       prep_charge.effective_end_date_id,
 
