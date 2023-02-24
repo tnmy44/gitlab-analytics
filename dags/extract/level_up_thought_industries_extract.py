@@ -44,12 +44,11 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "level_up_thought_industries_extract_test11",
+    "level_up_thought_industries_extract",
     default_args=default_args,
     # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
-    # TODO: change date later
-    start_date=datetime(2023, 2, 10),
+    start_date=datetime(2022, 7, 1), # program launched 2022-08-01
     catchup=True,
     max_active_runs=1,  # due to API rate limiting
 )
