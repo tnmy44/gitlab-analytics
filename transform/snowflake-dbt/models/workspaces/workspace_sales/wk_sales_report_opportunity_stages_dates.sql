@@ -121,21 +121,22 @@ SELECT
         opty.sales_team_rd_asm_level,
         -- adjusted dates for throughput analysis
         -- missing stage dates are completed using the next available stage date, up to a closed date
-        coalesce(base.min_stage_0_date,opty.created_date) as stage_0_date,
-        coalesce(base.min_stage_1_date,base.min_stage_2_date,base.min_stage_3_date,base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date)  AS stage_1_date,
-        coalesce(base.min_stage_2_date,base.min_stage_3_date,base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date)                     AS stage_2_date,
-        coalesce(base.min_stage_3_date,base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date)                                        AS stage_3_date,
-        coalesce(base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date)                                                           AS stage_4_date,
-        coalesce(base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date)                                                                              AS stage_5_date,
-        coalesce(base.min_stage_6_date,base.min_stage_7_date,min_stage_8_won_date)                                                                                                   AS stage_6_date,
-        coalesce(base.min_stage_7_date,base.min_stage_8_won_date)                                                                                                                    AS stage_7_date,
-        base.min_stage_8_lost_date                     AS stage_8_lost_date,
-        base.min_stage_8_won_date                      AS stage_8_won_date,
-        base.min_stage_9_date                          AS stage_9_date,
-        base.min_stage_10_date                         AS stage_10_date,
-        base.max_closed_stage_date                     AS stage_closed_date,
-        base.max_closed_lost_unqualified_duplicate_date AS stage_close_lost_unqualified_duplicate_date,
-        
+        -- do not populate date of stages that are not reach yet
+        IFF(stage_name_rank >= 0, coalesce(base.min_stage_0_date,opty.created_date),Null) as stage_0_date,
+        IFF(stage_name_rank >= 1, coalesce(base.min_stage_1_date,base.min_stage_2_date,base.min_stage_3_date,base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date),Null)  AS stage_1_date,
+        IFF(stage_name_rank >= 2, coalesce(base.min_stage_2_date,base.min_stage_3_date,base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date),Null)                     AS stage_2_date,
+        IFF(stage_name_rank >= 3, coalesce(base.min_stage_3_date,base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date),Null)                                        AS stage_3_date,
+        IFF(stage_name_rank >= 4, coalesce(base.min_stage_4_date,base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date),Null)                                                           AS stage_4_date,
+        IFF(stage_name_rank >= 5, coalesce(base.min_stage_5_date,base.min_stage_6_date,base.min_stage_7_date,base.min_stage_8_won_date) ,Null)                                              AS stage_5_date,
+        IFF(stage_name_rank >= 6, coalesce(base.min_stage_6_date,base.min_stage_7_date,min_stage_8_won_date) ,Null)                                                                                                  AS stage_6_date,
+        IFF(stage_name_rank >= 7, coalesce(base.min_stage_7_date,base.min_stage_8_won_date),Null)                                                                                                                    AS stage_7_date,
+        IFF(stage_name_rank = 8, base.min_stage_8_lost_date,Null)                      AS stage_8_lost_date,
+        IFF(stage_name_rank = 9, base.min_stage_8_won_date,Null)                       AS stage_8_won_date,
+        IFF(stage_name_rank = 11, base.min_stage_9_date,Null)                          AS stage_9_date,
+        IFF(stage_name_rank = 10, base.min_stage_10_date,Null)                         AS stage_10_date,
+        IFF(stage_name_rank IN (8,9),base.max_closed_stage_date,Null)                  AS stage_closed_date,
+        IFF(stage_name_rank IN (8,10,11),base.max_closed_lost_unqualified_duplicate_date,Null) AS stage_close_lost_unqualified_duplicate_date,
+
         -- unadjusted fields
         base.min_stage_0_date,
         base.min_stage_1_date,

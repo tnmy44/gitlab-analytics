@@ -514,6 +514,24 @@ WITH edm_opty AS (
     edm_opty.order_type                            AS order_type_stamped,
     edm_opty.order_type_live                       AS order_type_live,
 
+
+    -- stage rank
+    CASE edm_opty.stage_name
+        WHEN '0-Pending Acceptance'      THEN 0
+        WHEN '1-Discovery'               THEN 1
+        WHEN '2-Scoping'                 THEN 2
+        WHEN '3-Technical Evaluation'    THEN 3
+        WHEN '4-Proposal'                THEN 4
+        WHEN '5-Negotiating'             THEN 5
+        WHEN '6-Awaiting Signature'      THEN 6
+        WHEN '7-Closing'                 THEN 7
+        WHEN '8-Closed Lost'             THEN 8
+        WHEN 'Closed Won'                 THEN 9
+        WHEN '9-Unqualified'             THEN 11
+        WHEN '10-Duplicate'              THEN 10
+    ELSE NULL
+    END                                             AS stage_name_rank,
+
     ----------------------------------------------------------
     ----------------------------------------------------------
     -- Amount fields
@@ -662,6 +680,7 @@ WITH edm_opty AS (
     edm_opty.is_closed                                AS stage_is_closed,
     edm_opty.is_active                                AS stage_is_active,
     edm_opty.is_renewal,
+
 
     -- date fields helpers -- revisit
     edm_opty.close_fiscal_quarter_name,
