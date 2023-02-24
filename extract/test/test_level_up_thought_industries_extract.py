@@ -49,7 +49,7 @@ def test_instantiation():
 
 
 def test_iso8601_to_epoch_ts_ms():
-    """ Test that iso8601 date string is converted correctly """
+    """Test that iso8601 date string is converted correctly"""
     # Test that func returns correct value
     valid_iso8601 = "2023-02-10T16:44:45.084Z"
     res = iso8601_to_epoch_ts_ms(valid_iso8601)
@@ -64,14 +64,14 @@ def test_iso8601_to_epoch_ts_ms():
 
 
 def test_epoch_ts_ms_to_datetime_str():
-    """ Test that epoch ts is converted to datetime str """
+    """Test that epoch ts is converted to datetime str"""
     epoch_ts_ms = 1675904400000
     res = epoch_ts_ms_to_datetime_str(epoch_ts_ms)
     assert res == "2023-02-09 01:00:00"
 
 
 def test_is_invalid_ms_timestamp():
-    """ Test that valid/invalid timestamps are handled correctly """
+    """Test that valid/invalid timestamps are handled correctly"""
 
     valid_epoch_start_ms = 1104541200000  # 2005-01-01
     valid_epoch_end_ms = 4075049156000  # 2099-02-17
@@ -98,7 +98,7 @@ def test_is_invalid_ms_timestamp():
 
 
 def test_make_request():
-    """ Test requests """
+    """Test requests"""
     # Test that google request passes
     request_type = "GET"
     url = "https://www.google.com"
