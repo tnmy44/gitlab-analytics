@@ -1,7 +1,6 @@
-More information on this extraction is in the handbook:
-https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#clari
+More information on this extraction is in the [handbook](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/91a63ee99016d986904dc73bb6d29aa1bb67c8b8/sites/handbook/source/handbook/business-technology/data-team/platform/pipelines/index.html.md#level-up-thought-industries-extract)
 
-#TODO: update the above link once the 'Level Up' section is finalized.
+#TODO: update the above link once the 'Level Up' section is finalized in the 'master' branch.
 
 ### One-time Setup of Database Environment
 ```sql
