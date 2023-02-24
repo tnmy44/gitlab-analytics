@@ -21,7 +21,7 @@ WITH report_agg_keys_base AS (
         deal_group,
 
         report_user_segment_geo_region_area,
-        report_user_segment_geo_region_area_sqs_ot
+        report_user_segment_geo_region_area_sqs_ot,
 
         key_segment,
         key_sqs,
