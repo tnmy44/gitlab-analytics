@@ -270,6 +270,7 @@
       mart_crm_opportunity.sdr_or_bdr,
       mart_crm_opportunity.sdr_pipeline_contribution,
       mart_crm_opportunity.sales_path,
+      mart_crm_opportunity.parent_crm_account_lam_dev_count,
       mart_crm_opportunity.opportunity_deal_size,
       mart_crm_opportunity.primary_campaign_source_id AS opp_primary_campaign_source_id,
       mart_crm_opportunity.net_new_source_categories AS opp_net_new_source_categories,
@@ -465,6 +466,7 @@
     cohort_base.sales_qualified_source_name,
     cohort_base.deal_path_name,
     cohort_base.sales_type,
+    cohort_base.parent_crm_account_lam_dev_count,
     cohort_base.crm_opp_owner_geo_stamped,
     cohort_base.crm_opp_owner_sales_segment_stamped,
     cohort_base.crm_opp_owner_region_stamped,
@@ -704,7 +706,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-01-26",
+    updated_date="2023-02-10",
   ) }}

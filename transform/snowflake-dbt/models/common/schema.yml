@@ -4300,6 +4300,22 @@ models:
         description: for deleted accounts this is the SFDC account they were merged to
       - name: crm_account_created_date
         description: The date on which the CRM account was created in SFDC
+      - name: gs_health_user_engagement
+        description: ' {{ doc("gs_health_user_engagement") }} '
+      - name: gs_health_cd
+        description: ' {{ doc("gs_health_cd") }} '
+      - name: gs_health_devsecops
+        description: ' {{ doc("gs_health_devsecops") }} '
+      - name: gs_health_ci
+        description: ' {{ doc("gs_health_ci") }} '
+      - name: gs_health_scm
+        description: ' {{ doc("gs_health_scm") }} '
+      - name: eoa_sentiment
+        description: ' {{ doc("eoa_sentiment") }} '
+      - name: gs_first_value_date
+        description: ' {{ doc("gs_first_value_date") }} '
+      - name: gs_last_csm_activity_date
+        description: ' {{ doc("gs_last_csm_activity_date") }} '
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
@@ -4516,6 +4532,10 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common"]
+      - name: gs_first_value_date_id
+        description: ' {{ doc("gs_first_value_date") }} '
+      - name: gs_last_csm_activity_date_id
+        description: ' {{ doc("gs_last_csm_activity_date") }} '
 
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
