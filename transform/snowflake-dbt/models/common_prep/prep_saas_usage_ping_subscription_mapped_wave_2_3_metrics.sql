@@ -99,7 +99,7 @@
       MAX(ping_date)                                        AS ping_date,
       {{ dbt_utils.pivot('ping_name', gainsight_wave_metrics, then_value='counter_value') }}
     FROM joined
-    {{ dbt_utils.group_by(n=4)}}
+    {{ dbt_utils.group_by(n=5)}}
 
 )
 
