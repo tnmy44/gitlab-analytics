@@ -1782,6 +1782,8 @@ Delta ARR is a measure of changes to ARR compared to the prior month. The [ARR A
 
 The model uses the subscription_lineage grain to calculate the Delta ARR. This is a fundamental change from previous Delta ARR models at the subscription grain. When looking at the subscription grain, debook-book scenarios are not captured. Therefore, it is necessary to analyze the subscription_lineage grain for accurate product level Delta ARR changes. This model provides a method to analyze the 6 subscription linkage scenarios provided in this [Linking Subscriptions for Data Retention[https://docs.google.com/spreadsheets/d/1SYFy0Xqau1dbOm2YXmp0NvWDEkL_vIcWaFhKzwcocCM/edit#gid=0] file.
 
+The model ERD can be found [HERE](https://lucid.app/lucidchart/invitations/accept/inv_07d25d39-3076-408f-b768-67d1895ea064). 
+
 Model Validation:
 
 The model ties out 100% to mart_arr with the below 3 exceptions:
