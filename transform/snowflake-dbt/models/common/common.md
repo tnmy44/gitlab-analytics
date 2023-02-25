@@ -1794,4 +1794,8 @@ The model ties out 100% to mart_arr with the below 3 exceptions:
 
 1. At the time of model creation, there were 23 subscriptions that were part of lineages where subscriptions in the lineage roll up to different Salesforce ultimate parent accounts. All of the ARR for these subscriptions is in the model; however, the model rolls up the ARR for these subscriptions to the ultimate parent account of the oldest subscription in the lineage. This results in these 23 parent accounts not tieing out 100% to mart_arr.
 
+Model Caveat:
+
+1. It should be that a subscription only has 1 paid tier plan attached to it. However, there are a small minority of subscriptions that have more than 1 product. Therefore, it is necessary to put the product tiers into an array in the model for completeness. In virtually all cases, it is 2 product tiers on the subscription with many of them having old Bronze/Starter plans in addition to Premium plans.
+
 {% enddocs %}
