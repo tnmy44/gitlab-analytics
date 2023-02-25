@@ -67,6 +67,8 @@
       ON oldest_subscription_in_cohort.dim_oldest_crm_account_in_cohort_id = dim_crm_account.dim_crm_account_id
     WHERE fct_mrr.subscription_status IN ('Active', 'Cancelled')
       AND dim_crm_account.is_jihu_account != 'TRUE'
+      --Filter out storage charges. This fact model focuses on the tier plans.
+      AND LOWER(dim_product_detail.product_tier_name) != 'storage' 
 
 ), max_min_month AS (
 

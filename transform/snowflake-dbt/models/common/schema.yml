@@ -6436,3 +6436,5 @@ models:
         description: '{{ doc("end_quantity") }}'
       - name: annual_price_per_seat_change
         description: '{{ doc("annual_price_per_seat_change") }}'
+      - name: row_number
+        description: This is a helper field used in the macros in the model. It helps to calculate the type_of_arr_change fields.
