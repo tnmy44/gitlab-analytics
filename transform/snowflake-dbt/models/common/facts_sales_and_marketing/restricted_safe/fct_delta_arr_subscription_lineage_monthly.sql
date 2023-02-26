@@ -77,7 +77,9 @@
       --Filter out storage charges. This fact model focuses on the tier plans.
       AND LOWER(dim_product_detail.product_tier_name) != 'storage' 
 
-), max_min_month AS (
+)
+
+, max_min_month AS (
 
     SELECT
       dim_parent_crm_account_id,
@@ -89,7 +91,9 @@
     FROM mart_arr
     {{ dbt_utils.group_by(n=3) }}
 
-), base AS (
+)
+
+, base AS (
 
     SELECT
       dim_parent_crm_account_id,
@@ -107,7 +111,9 @@
       AND dim_date.date_actual <=  max_min_month.date_month_end
       AND day_of_month = 1
 
-), monthly_arr_subscription_level AS (
+)
+
+, monthly_arr_subscription_level AS (
 
     SELECT
       base.dim_date_month_id,
@@ -126,11 +132,13 @@
       AND base.subscription_lineage = mart_arr.subscription_lineage
     {{ dbt_utils.group_by(n=5) }}
 
-), prior_month AS (
+)
+
+, prior_month AS (
 
     SELECT
       monthly_arr_subscription_level.*,
-      LAG(product_tier_name ) OVER (PARTITION BY subscription_lineage ORDER BY arr_month) AS previous_product_tier_name ,
+      LAG(product_tier_name ) OVER (PARTITION BY subscription_lineage ORDER BY arr_month) AS previous_product_tier_name,
       LAG(product_delivery_type) OVER (PARTITION BY subscription_lineage ORDER BY arr_month) AS previous_product_delivery_type,
       COALESCE(LAG(product_ranking) OVER (PARTITION BY subscription_lineage ORDER BY arr_month),0) AS previous_product_ranking,
       COALESCE(LAG(quantity) OVER (PARTITION BY subscription_lineage ORDER BY arr_month),0) AS previous_quantity,
@@ -138,7 +146,9 @@
       ROW_NUMBER() OVER (PARTITION BY subscription_lineage ORDER BY arr_month) AS row_number
     FROM monthly_arr_subscription_level
 
-), type_of_arr_change_cte AS (
+)
+
+, type_of_arr_change_cte AS (
 
     SELECT DISTINCT
       {{ dbt_utils.surrogate_key(['arr_month', 'subscription_lineage']) }}
@@ -158,8 +168,49 @@
 
 )
 
+, final AS (
+
+    SELECT
+      --primary key
+      delta_arr_subscription_lineage_monthly_pk,
+
+      --foreign keys
+      dim_date_month_id,
+      dim_parent_crm_account_id,
+
+      --degenerate dimensions
+      subscription_lineage,
+      oldest_subscription_cohort_month,
+      product_tier_name,
+      previous_product_tier_name,
+      product_delivery_type,
+      previous_product_delivery_type,
+      product_ranking,
+      previous_product_ranking,
+      type_of_arr_change,
+
+      --date fields
+      arr_month,
+
+      --facts
+      arr,
+      quantity,
+      beg_arr,
+      seat_change_arr,
+      tier_change_arr,
+      price_change_arr,
+      end_arr,
+      annual_price_per_seat_change,
+      beg_quantity,
+      seat_change_quantity,
+      end_quantity
+    FROM type_of_arr_change_cte
+
+)
+
+
 {{ dbt_audit(
-    cte_ref="type_of_arr_change_cte",
+    cte_ref="final",
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2023-02-22",
