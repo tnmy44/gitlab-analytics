@@ -193,8 +193,6 @@
       arr_month,
 
       --facts
-      arr,
-      quantity,
       beg_arr,
       seat_change_arr,
       tier_change_arr,
