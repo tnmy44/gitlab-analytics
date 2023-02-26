@@ -1843,4 +1843,11 @@ Change in the price per seat paid in the arr_month.
 
 {% enddocs %}
 
+{% docs oldest_subscription_cohort_month %}
+
+This is the cohort month for the oldest subscription in a given subscription lineage.
+
+{% enddocs %}
+
+
 

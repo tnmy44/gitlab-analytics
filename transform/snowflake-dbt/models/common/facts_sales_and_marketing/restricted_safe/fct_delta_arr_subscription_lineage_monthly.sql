@@ -28,11 +28,17 @@
 
 , oldest_subscription_in_cohort AS (
 
+    /*
+    This CTE fetches the subscription id, crm account id, and subscription lineage for the oldest subscription in the lineage a given subscription is a part of. 
+    This information is used to group linked subscriptions together in the model and provide a connected view of delta arr changes in a subscription lineage.
+    */
+
     SELECT 
       sub.dim_subscription_id,
       sub_w_org_id.dim_subscription_id AS dim_oldest_subscription_in_cohort_id,
       sub_w_org_id.dim_crm_account_id AS dim_oldest_crm_account_in_cohort_id,
-      sub_w_org_id.subscription_lineage
+      sub_w_org_id.subscription_lineage,
+      sub_w_org_id.subscription_cohort_month AS oldest_subscription_cohort_month
     FROM dim_subscription sub
     LEFT JOIN dim_subscription sub_w_org_id
       ON sub.oldest_subscription_in_cohort = sub_w_org_id.subscription_name_slugify
@@ -51,6 +57,7 @@
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)                             AS fiscal_year,
       dim_crm_account.dim_parent_crm_account_id,
       oldest_subscription_in_cohort.subscription_lineage,
+      oldest_subscription_in_cohort.oldest_subscription_cohort_month,
       dim_product_detail.product_tier_name,
       dim_product_detail.product_delivery_type,
       dim_product_detail.product_ranking,
@@ -75,17 +82,19 @@
     SELECT
       dim_parent_crm_account_id,
       subscription_lineage,
+      oldest_subscription_cohort_month,
       MIN(arr_month)                      AS date_month_start,
       --add 1 month to generate churn month
       DATEADD('month',1,MAX(arr_month))   AS date_month_end
     FROM mart_arr
-    {{ dbt_utils.group_by(n=2) }}
+    {{ dbt_utils.group_by(n=3) }}
 
 ), base AS (
 
     SELECT
       dim_parent_crm_account_id,
       subscription_lineage,
+      oldest_subscription_cohort_month,
       dim_date.date_id AS dim_date_month_id,
       dim_date.date_actual AS arr_month,
       dim_date.fiscal_quarter_name_fy,
@@ -105,6 +114,7 @@
       base.arr_month,
       base.dim_parent_crm_account_id,
       base.subscription_lineage,
+      base.oldest_subscription_cohort_month,
       ARRAY_AGG(DISTINCT mart_arr.product_tier_name ) WITHIN GROUP (ORDER BY mart_arr.product_tier_name  ASC) AS product_tier_name,
       ARRAY_AGG(DISTINCT mart_arr.product_delivery_type) WITHIN GROUP (ORDER BY mart_arr.product_delivery_type ASC) AS product_delivery_type,
       MAX(mart_arr.product_ranking) AS product_ranking,
@@ -114,7 +124,7 @@
     LEFT JOIN mart_arr
       ON base.arr_month = mart_arr.arr_month
       AND base.subscription_lineage = mart_arr.subscription_lineage
-    {{ dbt_utils.group_by(n=4) }}
+    {{ dbt_utils.group_by(n=5) }}
 
 ), prior_month AS (
 
@@ -132,7 +142,7 @@
 
     SELECT DISTINCT
       {{ dbt_utils.surrogate_key(['arr_month', 'subscription_lineage']) }}
-                                                                    AS delta_arr_subscription_product_monthly_pk,
+                                                                    AS delta_arr_subscription_lineage_monthly_pk,
       prior_month.*,
       {{ type_of_arr_change('arr','previous_arr','row_number') }},
       previous_arr      AS beg_arr,

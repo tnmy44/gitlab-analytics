@@ -6388,10 +6388,10 @@ models:
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
 
-  - name: fct_delta_arr_subscription_product_monthly
-    description: '{{ doc("fct_delta_arr_subscription_product_monthly") }}'
+  - name: fct_delta_arr_subscription_lineage_monthly
+    description: '{{ doc("fct_delta_arr_subscription_lineage_monthly") }}'
     columns:
-      - name: delta_arr_subscription_product_monthly_pk
+      - name: delta_arr_subscription_lineage_monthly_pk
         description: The unique composite ID of the fct_delta_arr_subscription_month model consisting of arr_month and dim_oldest_subscription_in_cohort_id
         tests:
           - not_null
@@ -6438,3 +6438,5 @@ models:
         description: '{{ doc("annual_price_per_seat_change") }}'
       - name: row_number
         description: This is a helper field used in the macros in the model. It helps to calculate the type_of_arr_change fields.
+      - name: oldest_subscription_cohort_month
+        description: '{{ doc("oldest_subscription_cohort_month") }}'
