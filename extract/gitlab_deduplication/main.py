@@ -117,9 +117,11 @@ def swap_and_drop_temp_table(manifest_dict: Dict, table_name: str):
     swap_query = f"ALTER TABLE {raw_database}.{raw_schema}.{temp_table_name} SWAP WITH {raw_database}.{raw_schema}.{original_table_name};"
     # Drop the temp table in tap_postgres schema
     drop_query = f"DROP TABLE {raw_database}.{raw_schema}.{temp_table_name};"
+    logging.info(f"Swap query:{swap_query}")
     swap_table = query_executor(snowflake_engine, swap_query)
     logging.info(swap_table)
     if swap_table:
+        logging.info(f"Drop query:{drop_query}")
         drop_temp_table = query_executor(snowflake_engine, drop_query)
         logging.info(drop_temp_table)
 
@@ -154,7 +156,6 @@ def main(file_name: str, table_name: str) -> None:
     manifest_dict = get_yaml_file(path=file_name)
     # Update database name to the manifest for in case of MR branch.
     manifest_dict.update({"raw_database": env.copy()["SNOWFLAKE_LOAD_DATABASE"]})
-    print(manifest_dict)
     # Create backup table
     create_clone_table = create_backup_table(manifest_dict, table_name)
     # validate if backup created successfully then create the temp table.
