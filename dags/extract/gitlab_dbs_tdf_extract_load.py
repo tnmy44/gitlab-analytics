@@ -123,7 +123,6 @@ def extract_table_list_from_manifest(manifest_contents):
 
 
 for source_name, config in config_dict_td_pgp.items():
-
     # Sync DAG
     data_quality_dag_args = {
         "catchup": False,
@@ -143,7 +142,6 @@ for source_name, config in config_dict_td_pgp.items():
         concurrency=1,
     )
     with data_quality_dag:
-
         # PGP Extract
         file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
         manifest = extract_manifest(file_path)
