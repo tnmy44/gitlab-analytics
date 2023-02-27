@@ -24,6 +24,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_SALES_ANALYTICS_LOAD_ROLE,
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
+    GSHEETS_SERVICE_ACCOUNT_CREDENTIALS,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -81,6 +82,7 @@ for notebook, task_name in notebooks.items():
             SNOWFLAKE_LOAD_USER,
             SNOWFLAKE_LOAD_WAREHOUSE,
             GITLAB_ANALYTICS_PRIVATE_TOKEN,
+            GSHEETS_SERVICE_ACCOUNT_CREDENTIALS,
         ],
         env_vars=pod_env_vars,
         affinity=get_affinity(True),
