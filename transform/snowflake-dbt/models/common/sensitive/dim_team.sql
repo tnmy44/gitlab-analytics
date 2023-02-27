@@ -100,7 +100,8 @@ recursive_hierarchy AS (
           WHEN iter.valid_to > anchor.valid_from AND iter.valid_to <= anchor.valid_to THEN TRUE
           WHEN anchor.valid_from >= iter.valid_from AND anchor.valid_from < iter.valid_to THEN TRUE
           ELSE FALSE
-        END) = TRUE
+        END) = TRUE 
+   ORDER BY valid_to
 
 ),
 
@@ -129,13 +130,12 @@ team_hierarchy AS (
     COALESCE(recursive_hierarchy.upstream_organization_names[8]::VARCHAR, '--') AS hierarchy_level_9_name,
     recursive_hierarchy.upstream_organizations                                  AS hierarchy_levels_array,
     recursive_hierarchy.valid_to 												AS recursive_hierarchy_valid_to,
-    recursive_hierarchy.valid_from												AS recursive_hierarchy_valid_from,
     MAX(from_list.value::TIMESTAMP)                                             AS hierarchy_valid_from,
     MIN(to_list.value::TIMESTAMP)                                               AS hierarchy_valid_to
   FROM recursive_hierarchy
   INNER JOIN LATERAL FLATTEN(INPUT => recursive_hierarchy.valid_from_list) AS from_list
   INNER JOIN LATERAL FLATTEN(INPUT => recursive_hierarchy.valid_to_list) AS to_list
-  {{ dbt_utils.group_by(n=23) }}
+  {{ dbt_utils.group_by(n=22) }}
   HAVING hierarchy_valid_to > hierarchy_valid_from
 
 ),
