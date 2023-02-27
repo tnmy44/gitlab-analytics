@@ -14,7 +14,7 @@ from gitlabdata.orchestration_utils import (
 def build_table_name(
     table_name: str, table_prefix: str = None, table_suffix: str = None
 ) -> str:
-    """The function is responsible for adding prefix and suffix"""
+    """The function is responsible for adding prefix and suffix to create table name"""
     if table_prefix is None and table_suffix is None:
         return table_name
     elif table_prefix is None and table_suffix is not None:
@@ -60,7 +60,7 @@ def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
     bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
     backup_schema = manifest_dict["generic_info"]["backup_schema"]
     build_ddl_statement = f"""
-                             SELECT CONCAT('CREATE TRANSIENT TABLE {raw_database}.{raw_schema}.{original_table_name}_temp\n AS (' ,'SELECT  \n', 
+                             SELECT CONCAT('CREATE TABLE {raw_database}.{raw_schema}.{original_table_name}_temp\n AS (' ,'SELECT  \n', 
                                     LISTAGG(
                                             CASE 
                                             WHEN LOWER(column_name) = '_uploaded_at' THEN 'MIN( _uploaded_at) AS _uploaded_at'
