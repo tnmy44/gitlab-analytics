@@ -49,9 +49,13 @@ def create_backup_table(
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
     bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
     create_backup_table = f"CREATE TABLE {raw_database}.{backup_schema_name}.{bkp_table_name} CLONE {raw_database}.{raw_schema}.{original_table_name};"
-    logging.info(f"create_backup_table")
-    query_executor(snowflake_engine, create_backup_table)
-    return True
+    logging.info(f"Backup table DDL : {create_backup_table}")
+    backup_table=query_executor(snowflake_engine, create_backup_table)
+    logging.info(backup_table)
+    if backup_table:
+        return True
+    
+    return False
 
 
 def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
