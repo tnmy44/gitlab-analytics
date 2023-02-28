@@ -1,6 +1,6 @@
 """ Airflow DAG for removing duplicate data in gitlab.com tables"""
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 import logging
 from yaml import safe_load, YAMLError
 from airflow import DAG

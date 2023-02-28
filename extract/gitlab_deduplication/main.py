@@ -63,19 +63,19 @@ def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
     bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
     backup_schema = manifest_dict["generic_info"]["backup_schema"]
-    build_ddl_statement = f"""SELECT CONCAT('CREATE TABLE {raw_database}.{raw_schema}.{original_table_name}_temp\n AS (' ,'SELECT  \n', 
+    build_ddl_statement = f"""SELECT CONCAT('CREATE TABLE {raw_database}.{raw_schema}.{original_table_name}_temp\n AS (' ,'SELECT  \n',
                                     LISTAGG(
-                                            CASE 
+                                            CASE
                                             WHEN LOWER(column_name) = '_uploaded_at' THEN 'MIN( _uploaded_at) AS _uploaded_at'
                                             WHEN LOWER(column_name) = '_task_instance' THEN 'MAX(_task_instance)  AS _task_instance'
-                                            ELSE column_name 
-                                            END ,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC) 
+                                            ELSE column_name
+                                            END ,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC)
                                             , ' \n FROM {raw_database}.{backup_schema}.{bkp_table_name}' ,
-                             '\n GROUP BY  \n', 
-                                    (SELECT LISTAGG(column_name,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC) FROM {raw_database}.information_schema.columns 
-                                    WHERE LOWER(table_name) = ('{original_table_name}')   
+                             '\n GROUP BY  \n',
+                                    (SELECT LISTAGG(column_name,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC) FROM {raw_database}.information_schema.columns
+                                    WHERE LOWER(table_name) = ('{original_table_name}')
                                     AND LOWER(column_name) NOT IN ('_uploaded_at','_task_instance')),');')
-                                    from {raw_database}.information_schema.columns 
+                                    from {raw_database}.information_schema.columns
                                     where LOWER(table_name) = '{original_table_name}';"""
 
     # Create the temporary table definition
