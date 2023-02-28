@@ -1568,7 +1568,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 **Data Grain:** dim_behavior_event_sk
 
-This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event`, `event_name`, `platform`, `gsc_environment`, `se_category`, `se_action`, `se_label` and `se_property`.
+This ID is generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event`, `event_name`, `platform`, `gsc_environment`, `se_category`, `se_action`, `se_label` and `se_property`.
 
 **Other Comments:**
 - [Snowplow column definitions](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/)
@@ -1581,7 +1581,7 @@ This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 
 **Data Grain:** behavior_structured_event_pk
 
-This ID in generated using `event_id` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) 
+This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) 
 
 **Filters Applied to Model:**
 - This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
@@ -1613,7 +1613,7 @@ This ID in generated using `event_id` from [prep_snowplow_unnested_events_all](h
 
 **Data Grain:** dim_behavior_website_page_sk
 
-This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`.
+This ID is generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`.
 
 **Filters Applied to Model:**
 - Include pages from page view, structured, and unstructured events (`event IN ('struct', 'page_view', 'unstruct')`)
@@ -1626,7 +1626,7 @@ This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabda
 
 **Data Grain:** fct_behavior_website_page_view_sk
 
-This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
 
 **Filters Applied to Model:**
 - This model only includes Pageview events (when `event=page_view` from `dim_behavior_event` )
@@ -1686,5 +1686,92 @@ This ID in generated using `event_id` and `page_view_end_at` from [prep_snowplow
 **Other Comments:**
 - The current month is _included_ in this model. Be mindful of potentially including incomplete data
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
+
+{% enddocs %}
+
+{% docs fct_behavior_structured_event_experiment %}
+
+**Description:** Derived fact table containing quantitative data for Snowplow structured events related to experiments.
+
+**Data Grain:** behavior_structured_event_pk
+
+This ID is generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+
+**Filters Applied to Model:**
+
+This model only includes structured events implemented for experiments. Experiment events are defined as any event that includes the `gitlab_experiment` context
+
+**Tips for use:**
+
+- Unlike the previous legacy version, you do _not_ need to join this model back to the fact. It includes all columns on the fact, in addition to experiment-specific columns (ex. `experiment_name`, etc).
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS details 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser details
+
+{% enddocs %}
+
+{% docs fct_behavior_structured_event_without_assignment %}
+
+**Description:** Derived fact table containing quantitative data for Snowplow structured events **excluding assignment events**. Assignment events are events that signifies a user was enrolled into an Experiment.
+
+**Data Grain:** behavior_structured_event_pk
+
+This ID is generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+
+**Filters Applied to Model:**
+
+This model excludes assignment events (`event_action = 'assignment'`)
+
+**Tips for use:**
+
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
+
+{% enddocs %}
+
+{% docs fct_behavior_structured_event_without_assignment_190 %}
+
+**Description:** Derived fact table containing quantitative data for Snowplow structured events **excluding assignment events** for the **last 190 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
+
+**Data Grain:** behavior_structured_event_pk
+
+This ID is generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+
+**Filters Applied to Model:**
+
+- This model only includes structured events for the last 190 days
+- This model excludes assignment events (`event_action = 'assignment'`)
+
+**Tips for use:**
+
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
+
+{% enddocs %}
+
+{% docs fct_behavior_structured_event_without_assignment_400 %}
+
+**Description:** Derived fact table containing quantitative data for Snowplow structured events **excluding assignment events** for the **last 400 days**. Assignment events are events that signifies a user was enrolled into an Experiment.
+
+**Data Grain:** behavior_structured_event_pk
+
+This ID is generated using event_id from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all). 
+
+**Filters Applied to Model:**
+
+- This model only includes structured events for the last 400 days
+- This model excludes assignment events (`event_action = 'assignment'`)
+
+**Tips for use:**
+
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
 {% enddocs %}
