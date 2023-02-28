@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: sales_analytics
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: sales_analytics
+    loaded_at_field: _uploaded_at::TIMESTAMP
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    tables:
+      - name: xray_curves_qtd_fitted_source
