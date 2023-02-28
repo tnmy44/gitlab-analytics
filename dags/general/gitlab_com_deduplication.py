@@ -71,7 +71,7 @@ dag = DAG(
     "t_gitlab_com_deduplication",
     default_args=default_args,
     schedule_interval="0 11 * * 0",
-    concurrency=1,
+    concurrency=3,
 )
 
 start = DummyOperator(task_id="Start", dag=dag)
