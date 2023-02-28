@@ -57,7 +57,7 @@
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)                             AS fiscal_year,
       dim_crm_account.dim_parent_crm_account_id,
       oldest_subscription_in_cohort.subscription_lineage,
-      oldest_subscription_in_cohort.oldest_subscription_cohort_month,
+      oldest_subscription_in_cohort.dim_oldest_subscription_in_cohort_id,
       dim_product_detail.product_tier_name,
       dim_product_detail.product_delivery_type,
       dim_product_detail.product_ranking,
@@ -84,7 +84,7 @@
     SELECT
       dim_parent_crm_account_id,
       subscription_lineage,
-      oldest_subscription_cohort_month,
+      dim_oldest_subscription_in_cohort_id,
       MIN(arr_month)                      AS date_month_start,
       --add 1 month to generate churn month
       DATEADD('month',1,MAX(arr_month))   AS date_month_end
@@ -98,7 +98,7 @@
     SELECT
       dim_parent_crm_account_id,
       subscription_lineage,
-      oldest_subscription_cohort_month,
+      dim_oldest_subscription_in_cohort_id,
       dim_date.date_id AS dim_date_month_id,
       dim_date.date_actual AS arr_month,
       dim_date.fiscal_quarter_name_fy,
@@ -120,7 +120,7 @@
       base.arr_month,
       base.dim_parent_crm_account_id,
       base.subscription_lineage,
-      base.oldest_subscription_cohort_month,
+      base.dim_oldest_subscription_in_cohort_id,
       ARRAY_AGG(DISTINCT mart_arr.product_tier_name ) WITHIN GROUP (ORDER BY mart_arr.product_tier_name  ASC) AS product_tier_name,
       ARRAY_AGG(DISTINCT mart_arr.product_delivery_type) WITHIN GROUP (ORDER BY mart_arr.product_delivery_type ASC) AS product_delivery_type,
       MAX(mart_arr.product_ranking) AS product_ranking,
@@ -151,8 +151,8 @@
 , type_of_arr_change_cte AS (
 
     SELECT DISTINCT
-      {{ dbt_utils.surrogate_key(['arr_month', 'subscription_lineage']) }}
-                                                                    AS delta_arr_subscription_lineage_monthly_pk,
+      {{ dbt_utils.surrogate_key(['arr_month', 'dim_oldest_subscription_in_cohort_id']) }}
+                                                                    AS delta_arr_subscription_lineage_product_monthly_pk,
       prior_month.*,
       {{ type_of_arr_change('arr','previous_arr','row_number') }},
       previous_arr      AS beg_arr,
@@ -172,15 +172,14 @@
 
     SELECT
       --primary key
-      delta_arr_subscription_lineage_monthly_pk,
+      delta_arr_subscription_lineage_product_monthly_pk,
 
       --foreign keys
       dim_date_month_id,
       dim_parent_crm_account_id,
+      dim_oldest_subscription_in_cohort_id,
 
-      --degenerate dimensions
-      subscription_lineage,
-      oldest_subscription_cohort_month,
+      --degenerate dimensions 
       product_tier_name,
       previous_product_tier_name,
       product_delivery_type,
@@ -188,9 +187,6 @@
       product_ranking,
       previous_product_ranking,
       type_of_arr_change,
-
-      --date fields
-      arr_month,
 
       --facts
       beg_arr,

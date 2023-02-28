@@ -1729,12 +1729,6 @@ Customer [health score for CI use case adoption](https://about.gitlab.com/handbo
 
 {% enddocs %}
 
-{% docs arr_month %}
-
-This is the calendar month that ARR is counted.
-
-{% enddocs %}
-
 {% docs dim_oldest_subscription_in_cohort_id %}
 
 Zuora subscriptions can have lineages of linked subscriptions. This field provides the dimension key for the oldest subscription in a lineage. This key can be used to group a subscription lineage together for analysis.
@@ -1840,12 +1834,6 @@ The number of licensed users at the end of the arr_month.
 {% docs annual_price_per_seat_change %}
 
 Change in the price per seat paid in the arr_month.
-
-{% enddocs %}
-
-{% docs oldest_subscription_cohort_month %}
-
-This is the cohort month for the oldest subscription in a given subscription lineage.
 
 {% enddocs %}
 
