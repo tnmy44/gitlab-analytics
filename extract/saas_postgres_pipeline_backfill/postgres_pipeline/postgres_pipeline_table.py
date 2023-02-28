@@ -6,7 +6,7 @@ from typing import Dict, Any
 from sqlalchemy.engine.base import Engine
 
 import load_functions
-from utils import schema_addition_check
+from utils import check_is_new_table, schema_addition_check
 
 
 class PostgresPipelineTable:
@@ -116,8 +116,11 @@ class PostgresPipelineTable:
     def no_gcs_schema_change():
         pass
 
-    def check_if_backfill_needed():
-        #TODO
+    def check_if_backfill_needed(self, source_engine: Engine, metadata_engine: Engine):
+        is_new_table = check_is_new_table(metadata_engine, self.source_table_name)
+
+        #TODO later:
+        '''
         latest_backfill_status, latest_backfill_updated_at = query_backfill_metadata()
 
         if latest_backfill_status == 'in progress':
@@ -133,6 +136,7 @@ class PostgresPipelineTable:
         # backfill not already in progres
         else:
             return self.check_if_schema_changed()
+        '''
 
 
     def check_if_schema_changed(

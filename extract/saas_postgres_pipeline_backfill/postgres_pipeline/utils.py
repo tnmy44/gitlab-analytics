@@ -310,6 +310,26 @@ def range_generator(
         start += step
 
 
+def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
+    """
+    Check if backfill table exists in backfill metadata table.
+    If the table doesn't exist, then it's a 'new' table
+    """
+    query = f"""
+    SELECT
+      *
+    FROM
+      saas_db_metadata.backfill_metadata
+    WHERE
+      table_name = {source_table}
+    LIMIT 1;
+    """
+    result = query_executor(metadata_engine, query)
+    if result.fetch():
+        return False
+    return True
+
+
 def schema_addition_check(
     raw_query: str,
     source_engine: Engine,

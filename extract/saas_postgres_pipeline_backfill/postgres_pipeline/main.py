@@ -68,19 +68,21 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         table_dict = manifest_dict["tables"][table]
         current_table = PostgresPipelineTable(table_dict)
 
+        is_backfill_needed = current_table.check_if_backfill_needed(source_engine, metadata_engine)
+        print(f'\nis_backfill_needed: {is_backfill_needed}')
+
         '''
-        is_backfill = current_table.check_if_backfill_needed()
         # Check if the schema has changed or the table is new
         schema_changed = current_table.check_if_schema_changed(
             postgres_engine, snowflake_engine
         )
         '''
 
-        schema_changed = True #REVERT
+        # schema_changed = True #REVERT
 
         # Call the correct function based on the load_type
         loaded = current_table.do_load(
-            load_type, postgres_engine, snowflake_engine, schema_changed
+            load_type, postgres_engine, snowflake_engine, is_backfill_needed
         )
         logging.info(f"Finished upload for table: {table}")
 
