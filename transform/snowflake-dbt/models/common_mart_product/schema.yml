@@ -617,4 +617,3 @@ models:
             - reporting_month
             - dim_subscription_id_original
             - dim_namespace_id
-            

@@ -1655,6 +1655,49 @@ The form node name on a `focus_form` event. This appears as `ff_nodename` in the
 
 {% enddocs %}
 
+
+{% docs namespace_type %}
+
+The type of namespace: Group, User, or Project.
+
+{% enddocs %}
+
+{% docs visibility_level %}
+
+The visibility setting for the namespace or project: public, private, or internal. More information about namespace and project visibility [here](https://docs.gitlab.com/ee/user/public_access.html)
+
+{% enddocs %}
+
+{% docs page_url_fragment %}
+
+Fragment aka anchor. Ex. For gitlab.com/projects/new#blank_project, the page_url_fragment is `blank_project`
+
+{% enddocs %}
+
+{% docs experiment_name %}
+
+The name of the experiment as per implementation. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
+
+{% enddocs %}
+
+{% docs experiment_variant %}
+
+Experiment group (control/candidate) to which the event belongs to. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
+
+{% enddocs %}
+
+{% docs context_key %}
+
+The value passed in `key` section of the `experiment` context json. [More information on Snowplow contexts](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/#contexts). More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
+
+{% enddocs %}
+
+{% docs experiment_migration_keys %}
+
+This column may contain a list of migration keys.
+
+{% enddocs %}
+
 {% docs gs_first_value_date %}
 
 Date when the account reached 10% of license utiliztion. The goal is to reach this within 30 days.
@@ -1706,4 +1749,9 @@ Customer [health score for CI use case adoption](https://about.gitlab.com/handbo
 {% enddocs %}
 
 
+{% docs namespace_is_ultimate_parent %}
+
+Boolean flag which is set to True if the namespace is the ultimate parent.
+
+{% enddocs %}
 
