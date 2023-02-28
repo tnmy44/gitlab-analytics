@@ -24,5 +24,3 @@ tables_to_de_duped:
     - path_locks
     - project_group_links
     - repository_languages
-    - 
-    -
