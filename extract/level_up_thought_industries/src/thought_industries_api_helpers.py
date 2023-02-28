@@ -79,12 +79,9 @@ def epoch_ts_ms_to_datetime_str(epoch_ts_ms: int) -> str:
 def make_request(
     request_type: str,
     url: str,
-    headers: Optional[Dict[Any, Any]] = None,
-    params: Optional[Dict[Any, Any]] = None,
-    json_body: Optional[Dict[Any, Any]] = None,
-    timeout: int = 60,
     current_retry_count: int = 0,
     max_retry_count: int = 3,
+    **kwargs
 ) -> requests.models.Response:
     """Generic function that handles making GET and POST requests"""
 
@@ -95,13 +92,9 @@ def make_request(
         )
     try:
         if request_type == "GET":
-            response = requests.get(
-                url, headers=headers, params=params, timeout=timeout
-            )
+            response = requests.get(url, **kwargs)
         elif request_type == "POST":
-            response = requests.post(
-                url, headers=headers, json=json_body, timeout=timeout
-            )
+            response = requests.post(url, **kwargs)
         else:
             raise ValueError("Invalid request type")
 
@@ -110,21 +103,19 @@ def make_request(
     except requests.exceptions.RequestException:
         if response.status_code == 429:
             # if no retry-after exists, wait default time
-            retry_after = int(response.headers.get("Retry-After", additional_backoff))
+            retry_after = int(
+                response.headers.get("Retry-After", additional_backoff)
+            )
             info(f"\nToo many requests... Sleeping for {retry_after} seconds")
             # add some buffer to sleep
             time.sleep(retry_after + (additional_backoff * current_retry_count))
-            current_retry_count += 1
             # Make the request again
             return make_request(
                 request_type=request_type,
                 url=url,
-                headers=headers,
-                params=params,
-                json_body=json_body,
-                timeout=timeout,
-                current_retry_count=current_retry_count,
+                current_retry_count=current_retry_count + 1,
                 max_retry_count=max_retry_count,
+                **kwargs
             )
         error(f"request exception for url {url}, see below")
         raise
