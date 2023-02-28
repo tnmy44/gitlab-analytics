@@ -4508,6 +4508,8 @@ models:
           - unique
       - name: dim_product_detail_id
         description: The unique ID of a product rate plan charge
+      - name: dim_order_id
+        description: Unique identifier for each order which groups all order actions within an order
       - name: rate_plan_charge_number
         description: A unique number that identifies the charge
       - name: effective_start_date_id
@@ -4903,6 +4905,8 @@ models:
         description: Zuora account id
       - name:  dim_crm_account_id
         description: account id frm crm
+      - name: dim_order_id
+        description: Unique identifier for each order which groups all order actions within an order
       - name: mrr
         description: Monthly Recurring Revenue value for given month
       - name: arr
