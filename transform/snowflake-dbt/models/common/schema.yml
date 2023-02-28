@@ -53,6 +53,7 @@ models:
       - name: subscription_id_order
       - name: ultimate_parent_namespace_id
       - name: namespace_type
+        description: '{{ doc("namespace_type") }}'
       - name: is_namespace_active
       - name: namespace_was_trial
       - name: saas_trial_start_date
@@ -91,6 +92,7 @@ models:
       - name: subscription_id_order
       - name: ultimate_parent_namespace_id
       - name: namespace_type
+        description: '{{ doc("namespace_type") }}'
       - name: is_namespace_active
       - name: dim_product_tier_id_namespace
       - name: product_tier_name_namespace
@@ -1683,9 +1685,9 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: namespace_type
-        description: Group, Individual, or NULL. For example https://gitlab.com/gitlab-data is a Group namespace.
+        description: '{{ doc("namespace_type") }}'
       - name: visibility_level
-        description: public, private, or internal.
+        description: '{{ doc("visibility_level") }}'
       - name:  limit
         description: Monthly CI Minutes limit of the namespace, based on its [product tier](https://about.gitlab.com/pricing/). This value will be 'Not supported minutes' if shared runners are not enabled on the namespace and 'Unlimited minutes' for certain GitLab internal namespaces.
         tests:
@@ -2213,11 +2215,12 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: namespace_is_internal
       - name: namespace_is_ultimate_parent
+        description: '{{ doc("namespace_is_ultimate_parent") }}'
       - name: namespace_name
       - name: namespace_path
       - name: owner_id
       - name: namespace_type
-        description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
+        description: '{{ doc("namespace_type") }}'
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
@@ -2228,6 +2231,7 @@ models:
       - name: has_request_access_enabled
       - name: has_share_with_group_locked
       - name: visibility_level
+        description: '{{ doc("visibility_level") }}'
       - name: dap_sync_status
       - name: ldap_sync_error
       - name: ldap_sync_last_update_at
