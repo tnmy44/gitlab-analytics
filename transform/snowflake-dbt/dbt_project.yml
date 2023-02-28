@@ -600,6 +600,10 @@ models:
       workspace_engineering:
         +schema: workspace_engineering
         +materialized: table
+        restricted_safe:
+          +schema: restricted_safe_workspace_engineering
+          +tags: ["safe"]
+          secure: true
         zengrc:
           +materialized: view
 
