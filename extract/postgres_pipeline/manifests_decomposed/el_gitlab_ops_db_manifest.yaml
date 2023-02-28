@@ -238,8 +238,8 @@ tables:
       , notification_email
       , hide_no_password
       , password_automatically_set
-      , location
       , public_email
+      , NULL AS location
       , dashboard
       , project_view
       , consumed_timestep
