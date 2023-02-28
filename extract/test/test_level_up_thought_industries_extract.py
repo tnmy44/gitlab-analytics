@@ -5,6 +5,7 @@ import os
 import pytest
 import requests
 
+# can't import without key
 os.environ["LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY"] = "some_key"
 from extract.level_up_thought_industries.src.thought_industries_api import (
     CourseCompletions,
