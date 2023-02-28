@@ -1,6 +1,0 @@
-version: 2
-
-models:
-
-    - name: xray_curves_qtd_fitted_source
-      description: This is a test description.
