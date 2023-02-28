@@ -33,8 +33,7 @@ class ThoughtIndustries(ABC):
 
     BASE_URL = "https://levelup.gitlab.com/"
     HEADERS = {
-        "Authorization":
-            f'Bearer {config_dict["LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY"]}'
+        "Authorization": f'Bearer {config_dict["LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY"]}'
     }
 
     @abstractmethod
@@ -84,7 +83,7 @@ class ThoughtIndustries(ABC):
                 headers=self.HEADERS,
                 params=params,
                 timeout=60,
-                max_retry_count=7
+                max_retry_count=7,
             )
 
             events = response.json()["events"]
@@ -92,9 +91,7 @@ class ThoughtIndustries(ABC):
             # response has events
             if events:
                 events_to_print = [events[0]] + [events[-1]]
-                info(
-                    f"\nfirst & last event from latest response: {events_to_print}"
-                )
+                info(f"\nfirst & last event from latest response: {events_to_print}")
                 final_events = final_events + events
 
                 prev_epoch_end_ms = current_epoch_end_ms
@@ -140,8 +137,9 @@ class ThoughtIndustries(ABC):
             f"& api_end_datetime {api_end_datetime}"
         )
 
-    def fetch_and_upload_data(self, epoch_start_ms: int,
-                              epoch_end_ms: int) -> List[Dict]:
+    def fetch_and_upload_data(
+        self, epoch_start_ms: int, epoch_end_ms: int
+    ) -> List[Dict]:
         """main function, fetch data from API, and upload to snowflake"""
         if is_invalid_ms_timestamp(epoch_start_ms, epoch_end_ms):
             raise ValueError(
@@ -155,6 +153,7 @@ class ThoughtIndustries(ABC):
 
 class CourseCompletions(ThoughtIndustries):
     """Class for CourseCompletions endpoint"""
+
     def get_name(self) -> str:
         """implement abstract class"""
         return "course_completions"
@@ -166,6 +165,7 @@ class CourseCompletions(ThoughtIndustries):
 
 class Logins(ThoughtIndustries):
     """Class for Logins endpoint"""
+
     def get_name(self) -> str:
         """implement abstract class"""
         return "logins"
@@ -177,6 +177,7 @@ class Logins(ThoughtIndustries):
 
 class Visits(ThoughtIndustries):
     """Class for Visits endpoint"""
+
     def get_name(self) -> str:
         """implement abstract class"""
         return "visits"
@@ -188,6 +189,7 @@ class Visits(ThoughtIndustries):
 
 class CourseViews(ThoughtIndustries):
     """Class for CourseViews endpoint"""
+
     def get_name(self) -> str:
         """implement abstract class"""
         return "course_views"
@@ -201,7 +203,5 @@ if __name__ == "__main__":
     EPOCH_START_MS = 1675904400000
     EPOCH_END_MS = 1676246400000
     cls_to_run = CourseCompletions()
-    result_events = cls_to_run.fetch_and_upload_data(
-        EPOCH_START_MS, EPOCH_END_MS
-    )
+    result_events = cls_to_run.fetch_and_upload_data(EPOCH_START_MS, EPOCH_END_MS)
     info(f"\nresult_events: {result_events[:10]}")

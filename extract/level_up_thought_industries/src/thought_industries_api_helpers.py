@@ -81,7 +81,7 @@ def make_request(
     url: str,
     current_retry_count: int = 0,
     max_retry_count: int = 3,
-    **kwargs
+    **kwargs,
 ) -> requests.models.Response:
     """Generic function that handles making GET and POST requests"""
 
@@ -103,9 +103,7 @@ def make_request(
     except requests.exceptions.RequestException:
         if response.status_code == 429:
             # if no retry-after exists, wait default time
-            retry_after = int(
-                response.headers.get("Retry-After", additional_backoff)
-            )
+            retry_after = int(response.headers.get("Retry-After", additional_backoff))
             info(f"\nToo many requests... Sleeping for {retry_after} seconds")
             # add some buffer to sleep
             time.sleep(retry_after + (additional_backoff * current_retry_count))
@@ -115,7 +113,7 @@ def make_request(
                 url=url,
                 current_retry_count=current_retry_count + 1,
                 max_retry_count=max_retry_count,
-                **kwargs
+                **kwargs,
             )
         error(f"request exception for url {url}, see below")
         raise
