@@ -2,9 +2,9 @@
 import logging
 from os import environ as env
 from datetime import datetime
+from typing import Dict
 from fire import Fire
 from yaml import safe_load, YAMLError
-from typing import Dict
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     query_executor,
@@ -17,12 +17,11 @@ def build_table_name(
     """The function is responsible for adding prefix and suffix to create table name"""
     if table_prefix is None and table_suffix is None:
         return table_name
-    elif table_prefix is None and table_suffix is not None:
+    if table_prefix is None and table_suffix is not None:
         return table_name + table_suffix
-    elif table_prefix is not None and table_suffix is None:
+    if table_prefix is not None and table_suffix is None:
         return table_prefix + table_name
-    else:
-        return f"{table_prefix}{table_name}{table_suffix}"
+    return f"{table_prefix}{table_name}{table_suffix}"
 
 
 def create_table_name(manifest_dict: Dict, table_name: str) -> tuple:
@@ -48,9 +47,9 @@ def create_backup_table(
     backup_schema_name = manifest_dict["generic_info"]["backup_schema"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
     bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
-    create_backup_table = f"CREATE TABLE {raw_database}.{backup_schema_name}.{bkp_table_name} CLONE {raw_database}.{raw_schema}.{original_table_name};"
-    logging.info(f"Backup table DDL : {create_backup_table}")
-    backup_table = query_executor(snowflake_engine, create_backup_table)
+    query_create_backup_table = f"CREATE TABLE {raw_database}.{backup_schema_name}.{bkp_table_name} CLONE {raw_database}.{raw_schema}.{original_table_name};"
+    logging.info(f"Backup table DDL : {query_create_backup_table}")
+    backup_table = query_executor(snowflake_engine, query_create_backup_table)
     logging.info(backup_table)
     if backup_table:
         return True
@@ -59,38 +58,22 @@ def create_backup_table(
 
 
 def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
+    """This function is responsible to generate the temp table DDL for the passed table parameters"""
     raw_database = manifest_dict["raw_database"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
     bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
     backup_schema = manifest_dict["generic_info"]["backup_schema"]
-    build_ddl_statement = f"""
-                             SELECT CONCAT('CREATE TABLE {raw_database}.{raw_schema}.{original_table_name}_temp\n AS (' ,'SELECT  \n', 
-                                    LISTAGG(
-                                            CASE 
-                                            WHEN LOWER(column_name) = '_uploaded_at' THEN 'MIN( _uploaded_at) AS _uploaded_at'
-                                            WHEN LOWER(column_name) = '_task_instance' THEN 'MAX(_task_instance)  AS _task_instance'
-                                            ELSE column_name 
-                                            END ,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC) 
-                                            , ' \n FROM {raw_database}.{backup_schema}.{bkp_table_name}' ,
-                             '\n GROUP BY  \n', 
-                                    (SELECT LISTAGG(column_name,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC) FROM {raw_database}.information_schema.columns 
-                                    WHERE LOWER(table_name) = ('{original_table_name}')   
-                                    AND LOWER(column_name) NOT IN ('_uploaded_at','_task_instance')),
-                             ' \r\n UNION \n',
-                                'SELECT  \n', 
-                                    LISTAGG(
-                                            CASE 
+    build_ddl_statement = f"""SELECT CONCAT('CREATE TABLE {raw_database}.{raw_schema}.{original_table_name}_temp\n AS (' ,'SELECT  \n',
+                                    LISTAGG(CASE
                                             WHEN LOWER(column_name) = '_uploaded_at' THEN 'MAX( _uploaded_at) AS _uploaded_at'
                                             WHEN LOWER(column_name) = '_task_instance' THEN 'MAX(_task_instance)  AS _task_instance'
-                                            ELSE column_name 
-                                            END ,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC),
-                             '\n FROM {raw_database}.{backup_schema}.{bkp_table_name}' ,
-                             '\n GROUP BY  ', 
-                                   (SELECT LISTAGG(column_name,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC) FROM {raw_database}.information_schema.columns 
-                                    WHERE LOWER(table_name) = ('{original_table_name}')   
-                                    AND LOWER(column_name) NOT IN ('_uploaded_at','_task_instance')),');')
-                                    from {raw_database}.information_schema.columns 
-                                    where LOWER(table_name) = '{original_table_name}';"""
+                                            ELSE column_name
+                                            END ,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC)
+                                            , ' \n FROM {raw_database}.{backup_schema}.{bkp_table_name}' ,
+                             '\n GROUP BY  \n',
+                                    (SELECT LISTAGG(column_name,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC) FROM {raw_database}.information_schema.columns
+                                    WHERE LOWER(table_name) = ('{original_table_name}')
+                                    AND LOWER(column_name) NOT IN ('_uploaded_at','_task_instance'));"""
 
     # Create the temporary table definition
     table_definition_to_create_table = query_executor(
@@ -103,12 +86,13 @@ def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
 def create_temp_table(manifest_dict: Dict, table_name: str):
     """This function create the table in the schema"""
     table_definition = create_temp_table_ddl(manifest_dict, table_name)
-    create_temp_table = query_executor(snowflake_engine, table_definition)
-    logging.info(create_temp_table)
+    execute_create_temp_table = query_executor(snowflake_engine, table_definition)
+    logging.info(execute_create_temp_table)
     return True
 
 
 def swap_and_drop_temp_table(manifest_dict: Dict, table_name: str):
+    """The function swaps the table and drop the temp table created"""
     raw_database = manifest_dict["raw_database"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
     bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
