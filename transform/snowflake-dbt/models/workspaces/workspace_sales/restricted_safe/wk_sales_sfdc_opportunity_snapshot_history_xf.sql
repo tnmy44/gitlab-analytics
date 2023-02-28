@@ -26,33 +26,34 @@ WITH date_details AS (
       deal_group,
       opportunity_owner_manager,
       is_edu_oss,
-      -- account_owner_team_stamped, 
 
-      -- Opportunity Owner Stamped fields
-      opportunity_owner_user_segment,
-      opportunity_owner_user_region,
-      opportunity_owner_user_area,
-      opportunity_owner_user_geo,
-
+      -------------------
       -------------------
       --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
       sales_team_rd_asm_level,
-      -------------------
-
       sales_team_cro_level,
       sales_team_vp_level,
       sales_team_avp_rd_level,
       sales_team_asm_level,
+      -------------------
+      -------------------
 
       -- this fields use the opportunity owner version for current FY and account fields for previous years
       report_opportunity_user_segment,
+      report_opportunity_raw_user_segment,
       report_opportunity_user_geo,
       report_opportunity_user_region,
       report_opportunity_user_area,
       report_user_segment_geo_region_area,
       report_user_segment_geo_region_area_sqs_ot,
 
-      -- NF 2022-02-17 new aggregated keys 
+      -- FY24 new fields
+      report_opportunity_user_business_unit,
+      report_opportunity_user_sub_business_unit,
+      report_opportunity_user_division,
+      report_opportunity_user_asm,
+      
+      -- FY23 keys 
       key_sqs,
       key_ot,
 
@@ -73,7 +74,13 @@ WITH date_details AS (
       key_segment_geo_region_area_ot,
 
       key_segment_geo_area,
-      
+
+      -- FY24 keys
+      key_bu,
+      key_bu_subbu,
+      key_bu_subbu_division,
+      key_bu_subbu_division_asm,
+
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
       -- I am adding this logic
@@ -187,7 +194,6 @@ WITH date_details AS (
 
       edm_snapshot_opty.dbt_updated_at                            AS _last_dbt_run,
       edm_snapshot_opty.is_deleted,
-      edm_snapshot_opty.last_activity_date,
 
       -- Channel Org. fields
       -- this fields should be changed to this historical version
@@ -217,7 +223,7 @@ WITH date_details AS (
       edm_snapshot_opty.stage_3_technical_evaluation_date,
       edm_snapshot_opty.stage_4_proposal_date,
       edm_snapshot_opty.stage_5_negotiating_date,
-      edm_snapshot_opty.stage_6_awaiting_signature_date_date      AS stage_6_awaiting_signature_date,
+      edm_snapshot_opty.stage_6_awaiting_signature_date_date AS stage_6_awaiting_signature_date,
       edm_snapshot_opty.stage_6_closed_won_date,
       edm_snapshot_opty.stage_6_closed_lost_date,
       
@@ -329,6 +335,18 @@ WITH date_details AS (
       edm_snapshot_opty.sales_accepted_fiscal_quarter_name,
       edm_snapshot_opty.sales_accepted_fiscal_quarter_date,
 
+      edm_snapshot_opty.last_activity_date,
+      edm_snapshot_opty.last_activity_fiscal_year,
+      edm_snapshot_opty.last_activity_fiscal_quarter_name,
+      edm_snapshot_opty.last_activity_fiscal_quarter_date,
+      edm_snapshot_opty.last_activity_month                      AS last_activity_date_month,
+
+      edm_snapshot_opty.sales_last_activity_date,
+      edm_snapshot_opty.sales_last_activity_fiscal_year,
+      edm_snapshot_opty.sales_last_activity_fiscal_quarter_name,
+      edm_snapshot_opty.sales_last_activity_fiscal_quarter_date,
+      edm_snapshot_opty.sales_last_activity_month                AS sales_last_activity_date_month,
+
       edm_snapshot_opty.lead_source,
       edm_snapshot_opty.net_new_source_categories,           
       edm_snapshot_opty.record_type_id,
@@ -392,18 +410,9 @@ WITH date_details AS (
     SELECT DISTINCT
       opp_snapshot.*,
       
-      -- using current opportunity perspective instead of historical
-      -- NF 2021-01-26: this might change to order type live 2.1    
-      -- NF 2022-01-28: Update to OT 2.3 will be stamped directly  
-      
       -- fields from sfdc_opportunity_xf 
       sfdc_opportunity_xf.order_type_stamped,     
       sfdc_opportunity_xf.is_duplicate_flag                               AS current_is_duplicate_flag,
-      
-      sfdc_opportunity_xf.opportunity_owner_user_segment,
-      sfdc_opportunity_xf.opportunity_owner_user_region,
-      sfdc_opportunity_xf.opportunity_owner_user_area,
-      sfdc_opportunity_xf.opportunity_owner_user_geo,
       
       sfdc_opportunity_xf.sales_team_rd_asm_level,
       sfdc_opportunity_xf.sales_team_cro_level,
@@ -416,8 +425,11 @@ WITH date_details AS (
       sfdc_opportunity_xf.report_opportunity_user_region,
       sfdc_opportunity_xf.report_opportunity_user_area,
       sfdc_opportunity_xf.report_user_segment_geo_region_area,
+
+      -- unadjusted version of the field
+      sfdc_opportunity_xf.report_opportunity_raw_user_segment,
       sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
-      
+
       sfdc_opportunity_xf.key_sqs,
       sfdc_opportunity_xf.key_ot,
       sfdc_opportunity_xf.key_segment,
@@ -439,7 +451,19 @@ WITH date_details AS (
       sfdc_opportunity_xf.deal_group,
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.is_edu_oss,
+
+      -- FY24 keys
+      sfdc_opportunity_xf.report_opportunity_user_business_unit,
+      sfdc_opportunity_xf.report_opportunity_user_sub_business_unit,
+      sfdc_opportunity_xf.report_opportunity_user_division,
+      sfdc_opportunity_xf.report_opportunity_user_asm,
       
+
+      sfdc_opportunity_xf.key_bu,
+      sfdc_opportunity_xf.key_bu_subbu,
+      sfdc_opportunity_xf.key_bu_subbu_division,
+      sfdc_opportunity_xf.key_bu_subbu_division_asm,
+
       -- fields calculated with both live and snapshot fields
       CASE 
         WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
@@ -474,16 +498,8 @@ WITH date_details AS (
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
 
-      -- account driven fields
-      sfdc_accounts_xf.tsp_region,
-      sfdc_accounts_xf.tsp_sub_region,
-      sfdc_accounts_xf.ultimate_parent_sales_segment,
-      sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
-
       opportunity_owner.name                                     AS opportunity_owner,
-      
-      sfdc_accounts_xf.ultimate_parent_id, -- same is ultimate_parent_account_id?
-
+    
       upa.account_demographics_sales_segment                     AS upa_demographics_segment,
       upa.account_demographics_geo                               AS upa_demographics_geo,
       upa.account_demographics_region                            AS upa_demographics_region,
@@ -554,7 +570,7 @@ WITH date_details AS (
 
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
       CASE 
-        WHEN opp_snapshot.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+        WHEN opp_snapshot.ultimate_parent_account_id IN ('001610000111bA3AAI','0016100001F4xlaAAB','0016100001CXGCsAAP','00161000015O9YnAAK','0016100001b9JscAAE') 
           AND opp_snapshot.close_date < '2020-08-01' 
             THEN 1
         -- NF 2021 - Pubsec extreme deals

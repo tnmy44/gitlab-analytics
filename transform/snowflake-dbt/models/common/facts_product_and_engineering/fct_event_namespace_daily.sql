@@ -1,7 +1,7 @@
 {{ config(
     materialized='table',
     tags=["mnpi_exception", "product"]
-) }}
+) }} 
 
 {{ simple_cte([
     ('fct_event_valid', 'fct_event_valid')
@@ -42,6 +42,7 @@ fct_event_namespace_daily AS (
       COUNT(*) AS event_count,
       COUNT(DISTINCT(dim_user_id)) AS user_count
     FROM fct_event_valid
+    WHERE dim_ultimate_parent_namespace_id IS NOT NULL
     {{ dbt_utils.group_by(n=20) }}
         
 )
@@ -49,7 +50,7 @@ fct_event_namespace_daily AS (
 {{ dbt_audit(
     cte_ref="fct_event_namespace_daily",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@cbraza",
     created_date="2022-04-09",
-    updated_date="2022-06-20"
+    updated_date="2023-02-14"
 ) }}

@@ -26,10 +26,13 @@ joined AS (
     service_ping_events.dim_project_id,
     service_ping_events.gsc_plan,
     service_ping_events.ultimate_parent_namespace_id,
+    service_ping_events.redis_event_name,
+    service_ping_events.key_path,
     metric_bridge.metrics_path,
     metric_bridge.aggregate_operator,
     metric_bridge.aggregate_attribute,
-    metric_bridge.metrics_status
+    metric_bridge.metrics_status,
+    metric_bridge.time_frame
   FROM service_ping_events
   INNER JOIN metric_bridge ON service_ping_events.redis_event_name = metric_bridge.redis_event
 )
@@ -39,5 +42,5 @@ joined AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-12-21",
-    updated_date="2023-01-11"
+    updated_date="2023-02-17"
 ) }}

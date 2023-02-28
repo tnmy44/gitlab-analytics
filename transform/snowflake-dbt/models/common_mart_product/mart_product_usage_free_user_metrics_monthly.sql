@@ -1,9 +1,9 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception","product"]
 ) }}
 
 {{ simple_cte([
-    ('free_user_metrics', 'fct_product_usage_free_user_metrics_monthly'),
+    ('free_user_metrics', 'fct_ping_instance_free_user_metrics_monthly'),
     ('crm_accounts', 'dim_crm_account'),
     ('namespaces', 'dim_namespace')
 ]) }}
@@ -381,7 +381,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@mdrussell",
+    updated_by="@snalamaru",
     created_date="2021-06-14",
-    updated_date="2022-08-26"
+    updated_date="2023-01-24"
 ) }}

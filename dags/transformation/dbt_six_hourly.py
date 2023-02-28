@@ -36,6 +36,7 @@ from kube_secrets import (
     SNOWFLAKE_TRANSFORM_SCHEMA,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_USER,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
@@ -76,12 +77,13 @@ secrets_list = [
     SNOWFLAKE_TRANSFORM_SCHEMA,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 ]
 
 # Create the DAG
 dag = DAG(
     "dbt_six_hourly",
-    description="This DAG is responsible for refreshing models at minute 0 past every 6th hour.",
+    description="This DAG is responsible for refreshing models at minute 55 past every 6th hour.",
     default_args=default_args,
     schedule_interval="55 */6 * * 1-6",
 )
@@ -91,7 +93,8 @@ dag = DAG(
 dbt_six_hourly_models_command = f"""
     {dbt_install_deps_nosha_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt --no-use-colors build --profiles-dir profile --target prod --selector six_hourly_salesforce_opportunity; ret=$?;
+    dbt --no-use-colors build --profiles-dir profile --target prod --selector six_hourly_salesforce_opportunity; ret=$?; exit $ret
+
 """
 
 dbt_six_hourly_models_task = KubernetesPodOperator(

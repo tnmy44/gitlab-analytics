@@ -9,6 +9,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import ProgrammingError
 from loguru import logger
 from gitlabdata.orchestration_utils import query_executor
+from gitlabdata.orchestration_utils import data_science_engine_factory
 
 from simple_dependency_resolver.simple_dependency_resolver import DependencyResolver
 
@@ -17,19 +18,36 @@ class DbtModelClone:
     """"""
 
     def __init__(self, config_vars: Dict):
-        self.engine = create_engine(
-            URL(
-                user=config_vars["SNOWFLAKE_USER"],
-                password=config_vars["SNOWFLAKE_PASSWORD"],
-                account=config_vars["SNOWFLAKE_ACCOUNT"],
-                role=config_vars["SNOWFLAKE_SYSADMIN_ROLE"],
-                warehouse=config_vars["SNOWFLAKE_LOAD_WAREHOUSE"],
-            )
-        )
+        self.environment = config_vars["ENVIRONMENT"].upper()
+        if self.environment == "CI":
 
-        # Snowflake database name should be in CAPS
-        # see https://gitlab.com/meltano/analytics/issues/491
-        self.branch_name = config_vars["BRANCH_NAME"].upper()
+            self.engine = create_engine(
+                URL(
+                    user=config_vars["SNOWFLAKE_USER"],
+                    password=config_vars["SNOWFLAKE_PASSWORD"],
+                    account=config_vars["SNOWFLAKE_ACCOUNT"],
+                    role=config_vars["SNOWFLAKE_SYSADMIN_ROLE"],
+                    warehouse=config_vars["SNOWFLAKE_LOAD_WAREHOUSE"],
+                )
+            )
+
+            # Snowflake database name should be in CAPS
+            # see https://gitlab.com/meltano/analytics/issues/491
+            self.branch_name = config_vars["GIT_BRANCH"].upper()
+
+        elif self.environment == "LOCAL_BRANCH":
+
+            self.engine = data_science_engine_factory()
+            # Snowflake database name should be in CAPS
+            # see https://gitlab.com/meltano/analytics/issues/491
+            self.branch_name = config_vars["GIT_BRANCH"].upper()
+
+        elif self.environment == "LOCAL_USER":
+
+            self.engine = data_science_engine_factory()
+
+            self.branch_name = self.engine.url.database.replace("/", "").upper()
+
         self.prep_database = f"{self.branch_name}_PREP"
         self.prod_database = f"{self.branch_name}_PROD"
         self.raw_database = f"{self.branch_name}_RAW"
@@ -148,12 +166,13 @@ class DbtModelClone:
             database_name = i.get("database").upper()
             schema_name = i.get("schema").upper()
             table_name = i.get("name").upper()
-            config = i.get("config")
+            alias = i.get("alias").upper()
 
-            if config:
-                alias = config.get("alias")
-            else:
-                alias = None
+            if "PROD" in database_name:
+                database_name = "PROD"
+
+            if "PREP" in database_name:
+                database_name = "PREP"
 
             if alias:
                 table_name = alias.upper()

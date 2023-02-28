@@ -97,6 +97,8 @@
       sfdc_opportunity.sales_qualified_date_id,
       sfdc_opportunity.last_activity_date,
       sfdc_opportunity.last_activity_date_id,
+      sfdc_opportunity.sales_last_activity_date,
+      sfdc_opportunity.sales_last_activity_date_id,
       sfdc_opportunity.technical_evaluation_date,
       sfdc_opportunity.technical_evaluation_date_id,
 
@@ -282,5 +284,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2022-12-28"
+    updated_date="2023-02-09"
 ) }}

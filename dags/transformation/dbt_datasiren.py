@@ -32,6 +32,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -58,6 +59,7 @@ task_secrets = [
     SNOWFLAKE_LOAD_WAREHOUSE,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 ]
 
 # Default arguments for the DAG
@@ -75,8 +77,8 @@ dag = DAG("dbt_datasiren", default_args=default_args, schedule_interval=None)
 dbt_datasiren_command = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="DATASIREN" &&
-        dbt run --profiles-dir profile --target prod --models tag:datasiren --exclude datasiren_audit_results+;  ret=$?;
-        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
+        dbt run --profiles-dir profile --target prod --models tag:datasiren --exclude datasiren_audit_results+ | tee logs/logs.txt;  ret=$?;
+        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --logs logs/logs.txt --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 
@@ -94,8 +96,8 @@ datasiren_operator = KubernetesPodOperator(
 dbt_datasiren_audit_results_command = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="DATASIREN" &&
-        dbt run --profiles-dir profile --target prod --models datasiren_audit_results+; ret=$?;
-        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
+        dbt run --profiles-dir profile --target prod --models datasiren_audit_results+ | tee logs/logs.txt; ret=$?;
+        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --logs logs/logs.txt --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 

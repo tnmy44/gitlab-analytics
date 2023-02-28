@@ -126,8 +126,17 @@ prepare-dbt-fix:
 run-dbt-no-deps:
 	cd transform/snowflake-dbt/ && poetry shell;
 
+clone-dbt-select-local-branch:
+	cd transform/snowflake-dbt/ && export INPUT=$$(poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id alias") && \
+	export ENVIRONMENT="LOCAL_BRANCH" && export GIT_BRANCH=$(GIT_BRANCH) && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT;
+
+clone-dbt-select-local-user:
+	cd transform/snowflake-dbt/ && export INPUT=$$(poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id alias") && \
+	export ENVIRONMENT="LOCAL_USER" && export GIT_BRANCH=$(GIT_BRANCH) && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT;
+
 dbt-deps:
 	"$(DBT_DEPS)"
+	exit
 
 run-dbt:
 	"$(DBT_DEPS)"
@@ -146,6 +155,10 @@ clean-dbt:
 prepare-python:
 	which poetry || python3 -m pip install poetry
 	poetry install
+
+update-dbt-poetry:
+	cd transform/snowflake-dbt/ && poetry install
+	exit
 
 black:
 	@echo "Running lint (black)..."
@@ -189,4 +202,4 @@ python_code_quality: black mypy pylint complexity flake8 vulture pytest
 
 clean-python:
 	@echo "Running clean-python..."
-	@poetry env remove python
+	@poetry env remove python3

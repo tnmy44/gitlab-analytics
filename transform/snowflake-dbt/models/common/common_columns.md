@@ -10,7 +10,7 @@ The unique identifier of the ultimate parent namespace's latest product tier, ea
 
 {% enddocs %}
 
-{% docs dim_active_subscription_id %}
+{% docs dim_latest_subscription_id %}
 
 The unique identifier of the ultimate parent namespace's latest subscription, easily joined to `dim_subscription`
 
@@ -34,15 +34,27 @@ The identifier of the Zuora account associated with the subscription, easily joi
 
 {% enddocs %}
 
-{% docs dim_ultimate_parent_namespace_id %}
+{% docs dim_ultimate_parent_namespace_id_event_model %}
 
 The unique identifier of the ultimate parent namespace in which the event was generated, easily joined to `dim_namespace`. The recommended JOIN is `dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id`, which will be a one-to-one relationship. JOINing on `dim_ultimate_parent_namespace_id = dim_namespace.ultimate_parent_namespace_id` will return `dim_namespace` records for both the ultimate parent _and_ all sub-groups underneath it. This field will be NULL if the event is not tied to a namespace (ex. users_created)
 
 {% enddocs %}
 
-{% docs dim_project_id %}
+{% docs dim_project_id_event_model %}
 
 The unique identifier of the project in which the event was generated, easily joined to `dim_project`. This will be NULL if the event is not tied to a project (ex. epic_creation, etc)
+
+{% enddocs %}
+
+{% docs dim_ultimate_parent_namespace_id %}
+
+The unique identifier (and natural key) of the namespace's ultimate parent, easily joined to `dim_namespace`. The recommended JOIN is `dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id`, which will be a one-to-one relationship. JOINing on `dim_ultimate_parent_namespace_id = dim_namespace.ultimate_parent_namespace_id` will return `dim_namespace` records for both the ultimate parent _and_ all sub-groups underneath it.
+
+{% enddocs %}
+
+{% docs dim_project_id %}
+
+The unique identifier (and natural key) of the project, easily joined to `dim_project`
 
 {% enddocs %}
 
@@ -126,19 +138,19 @@ The name of the [product category](https://gitlab.com/gitlab-com/www-gitlab-com/
 
 {% docs plan_id_at_event_date %}
 
-The ID of the ultimate parent namespace's plan on the day the event was created (ex. 34, 100, 101, etc). If multiple plans are available on a single day, this reflects the last available plan for the namespace. Defaults to '34' (free) if a value is not available
+The ID of the ultimate parent namespace's plan on the day the event was created (ex. 34, 100, 101, etc). If multiple plans are available on a given day, this reflects the plan on the last event of the day for the namespace. Defaults to '34' (free) if a value is not available
 
 {% enddocs %}
 
 {% docs plan_name_at_event_date %}
 
-The name of the ultimate parent namespace's plan type on the day when the event was created (ex. free, premium, ultimate). If multiple plans are available on a single day, this reflects the last available plan for the namespace. Defaults to 'free' if a value is not available
+The name of the ultimate parent namespace's plan type on the day when the event was created (ex. free, premium, ultimate). If multiple plans are available on a given day, this reflects the plan on the last event of the day for the namespace. Defaults to 'free' if a value is not available
 
 {% enddocs %}
 
 {% docs plan_was_paid_at_event_date %}
 
-Boolean flag which is set to True if the ultimate parent namespace's plan was paid on the day when the event was created. If multiple plans are available on a single day, this reflects the last available plan for the namespace. Defaults to False if a value is not available
+Boolean flag which is set to True if the ultimate parent namespace's plan was paid on the day when the event was created. If multiple plans are available on a given day, this reflects the plan on the last event of the day for the namespace. Defaults to False if a value is not available
 
 {% enddocs %}
 
@@ -157,6 +169,24 @@ The name of the ultimate parent namespace's plan type at the timestamp when the 
 {% docs plan_was_paid_at_event_timestamp %}
 
 Boolean flag which is set to True if the ultimate parent namespace's plan was paid at the timestamp when the event was created. Defaults to False if a value is not available
+
+{% enddocs %}
+
+{% docs plan_id_at_event_month %}
+
+The ID of the ultimate parent namespace's plan on the month the event was created (ex. 34, 100, 101, etc). If multiple plans are available during the month, this reflects the plan on the last event of the month for the namespace. Defaults to '34' (free) if a value is not available
+
+{% enddocs %}
+
+{% docs plan_name_at_event_month %}
+
+The name of the ultimate parent namespace's plan on the month the event was created (ex. free, premium, ultimate, etc). If multiple plans are available during the month, this reflects the plan on the last event of the month for the namespace. Defaults to 'free' if a value is not available
+
+{% enddocs %}
+
+{% docs plan_was_paid_at_event_month %}
+
+Boolean flag which is set to True if the ultimate parent namespace's plan was paid on the month when the event was created. If multiple plans are available during the month, this reflects the plan on the last event of the month for the namespace. Defaults to False if a value is not available
 
 {% enddocs %}
 
@@ -289,6 +319,12 @@ The count of events generated
 {% docs ultimate_parent_namespace_count %}
 
  The count of distinct ultimate parent namespaces in which an event was generated
+
+{% enddocs %}
+
+{% docs event_date_count %}
+
+ The count of distinct days in which an event was generated
 
 {% enddocs %}
 
@@ -1078,6 +1114,11 @@ The unique surrogate key of a [task activity](https://help.salesforce.com/s/arti
 
 {% enddocs %}
 
+{% docs ping_type %}
+
+Indicates whether the ping payload was generated by a manual or automated process, and has three potential values: 'SaaS - Manual', 'SaaS - Automated', and 'Self-Managed'. This field will only have the 'SaaS - Manual' value for the GitLab SaaS production installation (dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7') before February 19, 2023.
+{% enddocs %}
+
 {% docs snapshot_id %}
 
 The ID of the date the snapshot was valid, easily joined to `dim_date` (YYYYMMDD). This column is often used as the spined date for [date spining](https://discourse.getdbt.com/t/finding-active-days-for-a-subscription-user-account-date-spining/265).
@@ -1137,4 +1178,556 @@ An attribute of an opportunity to designate what type or order it is. This is st
 The current Order Type of an opportunity, potentially after it has been stamped on its close date. Per the [documentation in Salesforce](https://gitlab.my.salesforce.com/00N4M00000Ib8Ok?setupid=OpportunityFields), This field is used to track movement of values post deal close and is for analysis purposes only.
 
 {% enddocs %}
+
+{% docs country_name_ping_model %}
+
+The name of the country associated with the IP address of the ping (ex. Australia, France, etc)
+
+{% enddocs %}
+
+{% docs iso_2_country_code_ping_model %}
+
+The two-letter ISO country code associated with the IP address of the ping (ex. AU, FR, etc)
+
+{% enddocs %}
+
+{% docs dim_behavior_browser_sk %}
+
+Surrogate key consisting of browser_name, browser_major_version, browser_minor_version, and browser_language, easily JOINed to dim_behavior_browser. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `br_family`, `br_name`, `br_version`, and `br_lang`.
+
+{% enddocs %}
+
+{% docs browser_name %}
+
+The name of the browser family (ex. 'Chrome', 'Firefox', 'Safari', etc). This appears as `br_family` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs browser_major_version %}
+
+The name and major version of the browser (ex. 'Chrome 10', 'Firefox 10', etc). This appears as `br_name` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs browser_minor_version %}
+
+The version of the browser (ex. '109.0.0.0', '15.3', etc). This appears as `br_version` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs browser_engine %}
+
+The browser rendering engine (ex. 'WEBKIT', 'GECKO', etc). This appears as `br_renderengine` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs browser_language %}
+
+Language the browser is set to (ex. 'en-GB', 'fr-FR', etc). This appears as `br_lang` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs dim_behavior_event_sk %}
+
+Surrogate key consisting of event, event_name, platform, gsc_environment, event_category, event_action, event_label, event_property, easily JOINed to dim_behavior_event. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event`, `event_name`, `platform`, `gsc_environment`, `se_category`, `se_action`, `se_label` and `se_property`.
+
+{% enddocs %}
+
+{% docs event_behavior_model %}
+
+The type of event i.e if an event is a strutured event OR an unstructured event OR a page view OR a page ping. Snowplow [documentation](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/) on types of events.
+
+{% enddocs %}
+
+{% docs event_name_behavior_model %}
+
+Event type of an unstructured event (i.e. change form, click link, submit form etc). Note: WHEN `event=struct` THEN this value will always be `event` and WHEN `event=page_ping` THEN it will be `page_ping` and WHEN `event=page_view` it will be `page_view` 
+
+{% enddocs %}
+
+{% docs platform_behavior_model %}
+
+The platform is used to distinguish server side events and web events. When `platform = srv` then the event was a server side event, tracked using Ruby. When `platform = web` then the event was a web event, tracked using Javascript tracker.
+
+{% enddocs %}
+
+{% docs environment_behavior_model %}
+
+Gitlab.com environment (production, staging etc) of the event. 
+
+{% enddocs %}
+
+{% docs event_category %}
+
+The event category i.e. The page or backend section of the application. Example: `projects:merge_requests:creations:new`, `InvitesController`, `projects:issues:designs` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
+
+Note: 
+- It is only populated for strutured events (`event=struct`) and **can not be NULL**
+- The value of this field is not standardized and depends on implementing engineer
+
+{% enddocs %}
+
+{% docs event_action %}
+
+The action the user takes, or aspect that’s being instrumented. Example: `invite_email_sent`, `join_clicked` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
+
+Note:
+- It is only populated for strutured events (`event=struct`) and **can not be NULL**
+- The value of this field is not standardized and depends on implementing engineer
+
+{% enddocs %}
+
+{% docs event_label %}
+
+An optional string which identifies the specific object being actioned. Example: `invite_email`, `content_editor` etc. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
+
+Note: 
+- It is only populated for strutured events (`event=struct`)
+- The value of this field is not standardized and depends on implementing engineer
+
+{% enddocs %}
+
+{% docs event_property %}
+
+An optional string describing the object or the action performed on it. Example: There are four different possible merge request actions: “create”, “merge”, “comment”, and “close”. Each of these would be a possible property value. See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema). 
+
+Note: 
+- It is only populated for strutured events (`event=struct`)
+- The value of this field is not standardized and depends on implementing engineer
+
+{% enddocs %}
+
+{% docs event_value %}
+
+An optional numeric data to quantify or further describe the user action. Example: `1` could mean success and `0` could mean failure of an event . See [GitLab Event schema for more details](https://docs.gitlab.com/ee/development/snowplow/index.html#event-schema).
+
+Note: 
+- It is only populated for strutured events (`event=struct`)
+- The value of this field is not standardized and depends on implementing engineer
+
+{% enddocs %}
+
+{% docs max_timestamp_behavior_model %}
+
+The timestamp of the last event for that combination of columns/primary key. This is (defined as `MAX(behavior_at)`). The logic behind using max_timestamp is to avoid daily incremental refresh for all dimensions. 
+
+{% enddocs %}
+
+{% docs behavior_structured_event_pk %}
+
+This is the Primary key. This ID is generated from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `event_id`.
+
+{% enddocs %}
+
+{% docs dim_namespace_id_behavior_model %}
+
+The unique identifier of the namespace in which the event was generated, easily joined to `dim_namespace`. This field will be NULL if the event is not tied to a namespace (ex. viewing the To Dos page) and/or if the event occurred before `2021-09-02` (when collection of this data started). This is passed in the GitLab standard context and appears as `gsc_namespace_id` in the raw Snowplow data.
+
+{% enddocs %}
+
+{% docs dim_project_id_behavior_model %}
+
+The unique identifier of the project in which the event was generated, easily joined to `dim_project`. This field will be NULL if the event is not tied to a project (ex. viewing an epic) and/or if the event occurred before `2021-09-02` (when collection of this data started).. This is passed in the GitLab standard context and appears as `gsc_project_id` in the raw Snowplow data.
+
+{% enddocs %}
+
+{% docs dvce_created_tstamp %}
+
+Timestamp for the event recorded on the client device.
+
+{% enddocs %}
+
+{% docs behavior_at %}
+
+Timestamp for when the event actually happened. This appears as `derived_tstamp` in the raw Snowplow data.
+
+{% enddocs %}
+
+{% docs tracker_version %}
+
+Information about the event tracker version. 
+
+{% enddocs %}
+
+{% docs session_index %}
+
+It is the number of the current user session. For example, an event occurring during a user's first session would have session_index set to 1.
+
+{% enddocs %}
+
+{% docs app_id %}
+
+The environment of the event - Production, Staging OR Development. To only include GitLab.com Production events, set filter to `app_id IN ('gitlab','gitlab_customers')`
+
+{% enddocs %}
+
+{% docs session_id %}
+
+Unique idenfitier for each user session. Note: session_id is NULL for back-end events (`tracker_version LIKE '%rb%'`)
+
+{% enddocs %}
+
+{% docs user_snowplow_domain_id %}
+
+Unique User ID set by Snowplow when the user visits GitLab.com for the first time (using 1st party cookie). This value will remain the same until a user clears their cookies. Note: if a user visits GitLab.com on a different browser, they will have a different unique ID.
+
+{% enddocs %}
+
+{% docs contexts %}
+
+JSON object for custom contexts implemented during tracking implementation. [More information on Snowplow contexts](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/#contexts). [More information on GitLab standard context](https://docs.gitlab.com/ee/development/snowplow/schemas.html#gitlab_standard) 
+
+{% enddocs %}
+
+{% docs page_url_host_path %}
+
+The page URL path of the event **with** the host (gitlab.com) information. Example: `gitlab.com/namespace9495566/project21362945/-/merge_requests/1575`. 
+
+{% enddocs %}
+
+{% docs page_url_path %}
+
+The page URL path of the event **without** the host (gitlab.com) information. Example: `/namespace9495566/project21362945/-/merge_requests/1575`
+
+{% enddocs %}
+
+{% docs page_url_scheme %}
+
+Scheme i.e. protocol. Example: 'https'.
+
+{% enddocs %}
+
+{% docs page_url_host %}
+
+Host/Domain information 
+
+{% enddocs %}
+
+{% docs gsc_pseudonymized_user_id %}
+
+User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user susccessfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL in the following situations:
+
+- The event occurred before `2021-09-29` (when the collection of this data started)
+- A user is not logged in
+- The event occurs on a page outside of the SaaS product (ex. about.gitlab.com, docs.gitlab.com)
+- It is an unstructured event
+- The event is not associated with a user (some backend events)
+
+{% enddocs %}
+
+{% docs gsc_google_analytics_client_id %}
+
+Google Analytics ID, present when set from our marketing sites.
+
+{% enddocs %}
+
+{% docs gsc_extra %}
+
+Any additional data associated with the event, in the form of key-value pairs.
+
+{% enddocs %}
+
+{% docs gsc_plan %}
+
+Name of the plan for the namespace, such as free, premium, or ultimate. Automatically picked from the namespace.
+
+{% enddocs %}
+
+{% docs gsc_source %}
+
+Name of the source application/ event tracker, such as gitlab-rails or gitlab-javascript. This field can be used to distinguish front-end events V/S back-end events. When `gsc_source = 'gitlab-rails'` THEN back-end event i.e. event was tracked using Ruby. When `gsc_source = 'gitlab-javascrip'` THEN front-end event i.e. event was tracked using Javascript.
+
+{% enddocs %}
+
+{% docs dim_behavior_operating_system_sk %}
+
+Surrogate key consisting of os_name and os_timezone, easily JOINed to dim_behavior_operating_system. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `os_name` and `os_timezone`.
+
+{% enddocs %}
+
+{% docs os %}
+
+The operating system family (ex. 'Linux', 'iOS', 'Windows'). This appears as `os_family` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs os_name %}
+
+The name of the operating system (ex. 'Linux', 'Mac OS X', 'Windows 10').
+
+{% enddocs %}
+
+{% docs os_manufacturer %}
+
+The manufacturer of the operating system (ex. 'Apple Inc.', 'Microsoft Corporation')
+
+{% enddocs %}
+
+{% docs os_timezone %}
+
+The timezone of the operating system (ex. 'Europe/London', 'Australia/Sydney')
+
+{% enddocs %}
+
+{% docs device_type %}
+
+The type of device (ex. 'Mobile', 'Computer'). This appears as `dvce_type` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs is_device_mobile %}
+
+Boolean flag set to True if the event is triggered on a mobile device. This appears as `dvce_ismobile` in the raw Snowplow data
+
+{% enddocs %}
+
+{% docs dim_behavior_website_page_sk %}
+
+Surrogate key consisting of page_url_host_path, app_id and page_url_scheme, easily JOINed to dim_behavior_website_page. This ID in generated in [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) using `page_url_host_path`, `app_id` and `page_url_scheme`
+
+{% enddocs %}
+
+{% docs page_url_query %}
+
+This field is populated with the Querystring passed in the URL. Example: Branch name (`branch_name=masked_branch_name`) or Commit ID (`commit_id=ad604ea134d73261e5ab5c2c92df35d84f04b3c7`)
+
+{% enddocs %}
+
+{% docs clean_url_path %}
+
+This field includes [REGEX logic](https://dbt.gitlabdata.com/#!/macro/macro.gitlab_snowflake.clean_url) to standardize the page_url_path field. Example: If `page_url_path` = `/groups/abc/-/group_members` THEN `clean_url_path` = `groups/abc/group_members`. 
+
+{% enddocs %}
+
+{% docs page_group %}
+
+This field is defined as the first part of clean_url_path field i.e if `clean_url_path` = `groups/abc/group_members` THEN `page_group` = `groups`
+
+{% enddocs %}
+
+{% docs page_type %}
+
+This field is defined as the second part of clean_url_path field i.e if `clean_url_path` = `groups/abc/group_members` THEN `page_type` = `abc`
+
+{% enddocs %}
+
+{% docs page_sub_type %}
+
+This field is defined as the third part of clean_url_path field i.e if `clean_url_path` = `groups/abc/group_members` THEN `page_sub_type` = `group_members`
+
+{% enddocs %}
+
+{% docs behavior_url_namespace_id %}
+
+The unique identifier of the namespace passed in the URL. This field is only populated if namespace_id is passed in the page URL.
+
+{% enddocs %}
+
+{% docs behavior_url_project_id %}
+
+The unique identifier of the project passed in the URL. This field is only populated if project_id is passed in the page URL.
+
+{% enddocs %}
+
+{% docs url_path_category %}
+
+This field groups different clean_url_path values into distinct categorises. Please refer to Code section on this page for logic behind this categorization.
+
+{% enddocs %}
+
+{% docs is_url_interacting_with_security %}
+
+If the page URL is part of any page within the Group/Project Security feature on GitLab.com (Example: Vulnerability Report) THEN `is_url_interacting_with_security = 1` ELSE `is_url_interacting_with_security = 0`
+
+{% enddocs %}
+
+{% docs min_timestamp_behavior_model %}
+
+The timestamp of the first event for that combination of columns/primary key. This field is defined as MIN (behavior_at). 
+
+{% enddocs %}
+
+{% docs fct_behavior_website_page_view_sk %}
+
+Primary key consisting of event_id and page_view_end_at. This ID in generated using event_id and page_view_end_at from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all).
+
+{% enddocs %}
+
+{% docs dim_behavior_referrer_page_sk %}
+
+Surrogate key consisting of referer_url, app_id and referer_url_scheme, easily JOINed to dim_behavior_website_page ON `dim_behavior_website_page_sk`. This ID in generated using `referer_url`, `app_id`, `referer_url_scheme` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all).
+
+{% enddocs %}
+
+{% docs page_view_start_at %}
+
+Timestamp of when a web page was first rendered for that `fct_behavior_website_page_view_sk`. 
+
+{% enddocs %}
+
+{% docs page_view_end_at %}
+
+Timestamp of when a web page was last rendered for that `fct_behavior_website_page_view_sk`. 
+
+{% enddocs %}
+
+{% docs referer_url_path %}
+
+URL path of the referrer page. 
+
+{% enddocs %}
+
+{% docs engaged_seconds %}
+
+Total time (in seconds) user was on the page. This is calculated as difference between page_view_start_at and page_view_end_at. 
+
+{% enddocs %}
+
+{% docs page_load_time_in_ms %}
+
+Total time (in milliseconds) for the page to render. 
+
+{% enddocs %}
+
+{% docs page_view_index %}
+
+It is the number of page views per user. 
+
+{% enddocs %}
+
+{% docs page_view_in_session_index %}
+
+It is the number of the page views per user per session. 
+
+{% enddocs %}
+
+{% docs event_id_behavior_model %}
+
+Unique idenfitier for each event. 
+
+{% enddocs %}
+
+{% docs fct_behavior_unstructured_sk %}
+
+Primary key consisting of event_id and behavior_at
+
+{% enddocs %}
+
+{% docs link_click_target_url %}
+
+The target URL on a `link_click` event. This appears as `lc_targeturl` in the raw Snowplow data. This field will only be populated for `link_click` events
+
+{% enddocs %}
+
+{% docs submit_form_id %}
+
+The form ID on a `submit_form` event. This appears as `sf_formid` in the raw Snowplow data. This field will only be populated for `submit_form` events
+
+{% enddocs %}
+
+{% docs change_form_id %}
+
+The form ID on a `change_form` event. This appears as `cf_formid` in the raw Snowplow data. This field will only be populated for `change_form` events
+
+{% enddocs %}
+
+{% docs change_form_type %}
+
+The form type on a `change_form` event. This appears as `cf_type` in the raw Snowplow data. This field will only be populated for `change_form` events
+
+{% enddocs %}
+
+{% docs change_form_element_id %}
+
+The form element ID on a `change_form` event. This appears as `cf_elementid` in the raw Snowplow data. This field will only be populated for `change_form` events
+
+{% enddocs %}
+
+{% docs focus_form_element_id %}
+
+The form element ID on a `focus_form` event. This appears as `ff_elementid` in the raw Snowplow data. This field will only be populated for `focus_form` events
+
+{% enddocs %}
+
+{% docs focus_form_node_name %}
+
+The form node name on a `focus_form` event. This appears as `ff_nodename` in the raw Snowplow data. This field will only be populated for `focus_form` events
+
+{% enddocs %}
+
+{% docs experiment_name %}
+
+The name of the experiment as per implementation. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
+
+{% enddocs %}
+
+{% docs experiment_variant %}
+
+Experiment group (control/candidate) to which the event belongs to. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
+
+{% enddocs %}
+
+{% docs context_key %}
+
+The value passed in `key` section of the `experiment` context json. [More information on Snowplow contexts](https://docs.snowplow.io/docs/understanding-your-pipeline/canonical-event/#contexts). More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
+
+{% enddocs %}
+
+{% docs experiment_migration_keys %}
+
+This column may contain a list of migration keys.
+
+{% enddocs %}
+
+{% docs gs_first_value_date %}
+
+Date when the account reached 10% of license utiliztion. The goal is to reach this within 30 days.
+
+{% enddocs %}
+
+{% docs gs_last_csm_activity_date %}
+
+Last time the CSM had contact with the customer.
+
+{% enddocs %}
+
+{% docs eoa_sentiment %}
+
+Red - customer was unhappy with the announcement and there's potential risk of churn
+Yellow - customer exhibited some dissatisfaction with the announcement but likely won't churn
+Green - customer responded favourably to the announcement and is a strong candidate to uptier
+
+{% enddocs %}
+
+{% docs gs_health_user_engagement %}
+
+[Customer health score for engaging in meetings, cadence calls, or EBRs](https://about.gitlab.com/handbook/customer-success/customer-health-scoring/#customer-engagement).
+
+{% enddocs %}
+
+{% docs gs_health_cd %}
+
+Customer [health score for CD use case adoption](https://about.gitlab.com/handbook/customer-success/product-usage-data/maturity-scoring/#cd-adoption-scoring).
+
+{% enddocs %}
+
+{% docs gs_health_devsecops %}
+
+Customer [health score for DevSecOps use case adoption](https://about.gitlab.com/handbook/customer-success/product-usage-data/maturity-scoring/#devsecops-adoption-scoring).
+
+{% enddocs %}
+
+{% docs gs_health_ci %}
+
+Customer [health score for CI use case adoption](https://about.gitlab.com/handbook/customer-success/product-usage-data/maturity-scoring/#ci-adoption-scoring).
+
+{% enddocs %}
+
+{% docs gs_health_scm %}
+
+[Customer health score for source code management (SCM) use case adoption](https://about.gitlab.com/handbook/marketing/brand-and-product-marketing/product-and-solution-marketing/usecase-gtm/version-control-collaboration/#adoption-guide).
+
+{% enddocs %}
+
+
 
