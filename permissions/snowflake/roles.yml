@@ -474,7 +474,6 @@ roles:
             - netsuite
             - mailgun
             - marketo
-            - pmg
             - snowflake_db
             - zendesk
             - zendesk_community_relations
@@ -722,7 +721,6 @@ roles:
                 - raw.gcp_billing
                 - raw.gitlab_data_yaml
                 - raw.gitter
-                - raw.pmg
                 - raw.prometheus
                 - raw.pto
                 - raw.rspec
@@ -737,7 +735,6 @@ roles:
                 - raw.engineering_extracts.*
                 - raw.gitlab_data_yaml.*
                 - raw.gitter.*
-                - raw.pmg.*
                 - raw.prometheus.*
                 - raw.pto.*
                 - raw.rspec.*
@@ -1979,20 +1976,6 @@ roles:
                     - prep.sensitive.qualtrics_post_purchase_survey_responses_source
                     - raw.qualtrics.*
 
-    - pmg:
-        warehouses:
-            - dev_xs
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.pmg
-            tables:
-                read:
-                    - prep.pmg.*
-
     - prometheus:
         warehouses:
             - dev_xs
@@ -2122,7 +2105,6 @@ roles:
                     - prep.sensitive.sheetload_ally_certificate_source
                     - prep.sensitive.sheetload_communication_certificate_source
                     - prep.sensitive.sheetload_compensation_certificate_source
-                    - prep.sensitive.sheetload_employee_location_factor
                     - prep.sensitive.sheetload_ic_collaboration_competency_source
                     - prep.sensitive.sheetload_ic_dib_comptency_source
                     - prep.sensitive.sheetload_ic_efficiency_competency_source
@@ -2239,6 +2221,18 @@ roles:
             tables:
                 read:
                     - static.sensitive.*
+
+    - static_pmg_readonly:
+        privileges:
+            databases:
+                read:
+                    - static
+            schemas:
+                read:
+                    - static.pmg_backup
+            tables:
+                read:
+                    - static.pmg_backup.*
 
     - static_admin:
         member_of:
@@ -2569,6 +2563,14 @@ roles:
         warehouses:
             - dev_xs
 
+    - bvandre:
+        member_of:
+            - analyst_core
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - dev_xs   
+
     - caitlin:
         member_of:
             - analyst_core
@@ -2780,6 +2782,7 @@ roles:
             - data_science_readonly
             - facebook_ads
             - linkedin_ads
+            - static_pmg_readonly
         warehouses:
             - dev_xs
         owns:
@@ -4639,6 +4642,11 @@ users:
         can_login: yes
         member_of:
             - bnguyen
+            
+    - bvandre:
+        can_login: yes
+        member_of:
+            - bvandre
 
     - caitlin:
         can_login: yes
@@ -5143,3 +5151,4 @@ warehouses:
 
     - usage_ping:
         size: small
+ 
