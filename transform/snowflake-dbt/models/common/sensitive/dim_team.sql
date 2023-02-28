@@ -21,7 +21,9 @@ team_data AS (
       source.team_inactivated_date)      AS team_inactivated_date,
     source.is_deleted,
     DATE_TRUNC('day', source.valid_from) AS valid_from,
-    COALESCE(DATE_TRUNC('day', source.valid_to), DATEADD(day, 1, CURRENT_DATE()))                               AS valid_to
+    COALESCE(DATE_TRUNC('day', source.valid_to),
+      {{ var('tomorrow') }}
+    )                                    AS valid_to
   FROM source
 
 ),
@@ -176,7 +178,7 @@ final AS (
     IFF(team_data.team_inactivated_date IS NULL, TRUE, FALSE)           AS is_team_active,
     GREATEST(team_hierarchy.hierarchy_valid_from, team_data.valid_from) AS valid_from,
     LEAST(team_hierarchy.hierarchy_valid_to, team_data.valid_to)        AS valid_to,
-    IFF(DATE(valid_to) = DATEADD(day, 1, CURRENT_DATE()), TRUE, FALSE)  AS is_current
+    IFF(DATE(valid_to) = {{ var('tomorrow') }}, TRUE, FALSE)            AS is_current
   FROM team_data
   LEFT JOIN team_hierarchy
     ON team_hierarchy.team_id = team_data.team_id
