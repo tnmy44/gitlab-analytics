@@ -15,7 +15,7 @@ import os
 
 from logging import info
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from thought_industries_api_helpers import (
     make_request,
@@ -91,7 +91,7 @@ class ThoughtIndustries(ABC):
 
                 prev_epoch_end_ms = current_epoch_end_ms
 
-                # current_epoch_end will be prev earliest timestamp
+                # current_epoch_end will be the previous earliest timestamp
                 current_epoch_end_ms = (
                     iso8601_to_epoch_ts_ms(events[-1]["timestamp"]) - 1
                 )  # subtract by 1 sec from ts so that record isn't included again

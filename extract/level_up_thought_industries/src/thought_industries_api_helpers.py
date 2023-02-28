@@ -6,7 +6,7 @@ import datetime
 import time
 import json
 
-from typing import Any, Dict, Optional, List
+from typing import Any, Dict, Optional
 from logging import info, error
 
 import requests
