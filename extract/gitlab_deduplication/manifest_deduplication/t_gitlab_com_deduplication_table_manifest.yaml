@@ -5,9 +5,15 @@ generic_info:
   raw_schema: TAP_POSTGRES
 tables_to_de_duped:
     - bulk_import_entities
+    - ci_build_trace_chunks
+    - ci_builds_runner_session
+    - ci_namespace_monthly_usages
+    - ci_pipeline_chat_data
+    - ci_project_monthly_usages
+    - ci_sources_pipelines
+    - ci_variables
     - clusters_integration_prometheus
     - elasticsearch_indexed_namespaces
-    - gitlab_subscriptions
     - group_group_links
     - group_import_states
     - issue_links
@@ -18,4 +24,5 @@ tables_to_de_duped:
     - path_locks
     - project_group_links
     - repository_languages
-    - ci_builds
+    - 
+    -
