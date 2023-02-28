@@ -2,7 +2,7 @@ version: 2
 
 exposures:
   
-  - name: structured_event_behavior
+  - name: behavior_structured_event
     type: analysis
     maturity: high
     url: https://lucid.app/lucidchart/5d5c918d-2e6d-47d6-a2e5-db3c4951c531/edit?invitationId=inv_a4c5f29c-930f-4103-a121-320dd8009b5a&page=-3ovyOx0~RdS#
