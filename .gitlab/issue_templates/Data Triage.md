@@ -26,7 +26,6 @@ All tasks below should be checked off at the end of Triage day.
             - [ ] the [CODEOWNERS file](https://gitlab.com/gitlab-data/analytics/blob/master/CODEOWNERS) for specific dbt model failures 
             - [ ] the [functional DRIs](https://about.gitlab.com/handbook/business-ops/data-team/organization/#team-organization)
             - [ ] OR to the  Manager, Data if you aren't sure. 
-        - [ ] Asking initial questions (data source, business logic clarification, etc) to groom the issue. 
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
 
 ### Friends and family days
@@ -36,6 +35,15 @@ All tasks below should be checked off at the end of Triage day.
 ## Analytics Engineer tasks
 
 The focus area for the Analytics Engineer are the `DBT` models including the applied tests. The source for the tasks below are the Airflow logs posted in **#analytics-pipelines** and the Sisense Trusted Data Operations [Dashboard](https://app.periscopedata.com/app/gitlab/756199/TD:-Trusted-Data-Operations-Dashboard). 
+
+* [ ] Review each slack message in the **#data-triage** channel, which will inform the triager of what issues have been opened in the data team project that day.  Because this channel can sometimes be difficult to keep track of, you **should** also look at [issues with the ~"Needs Triage" label](https://gitlab.com/gitlab-data/analytics/-/issues?label_name%5B%5D=Needs+Triage&scope=all&state=opened), as this label is added every hour to issues that may have been missed.
+    - [ ] For each issue opened by a non-Data Team member, label the issue by: 
+        - [ ] Adding the `Workflow::start (triage)` and `Triage` label
+        - [ ] Adding additional [labels](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling)
+        - [ ] Assigning the issue based on:
+            - [ ] the [CODEOWNERS file](https://gitlab.com/gitlab-data/analytics/blob/master/CODEOWNERS) for specific dbt model failures 
+            - [ ] the [functional DRIs](https://about.gitlab.com/handbook/business-ops/data-team/organization/#team-organization)
+            - [ ] OR to the  Manager, Data if you aren't sure. 
 
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) for each new failed DBT model.
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**. 
