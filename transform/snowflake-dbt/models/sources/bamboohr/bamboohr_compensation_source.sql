@@ -27,7 +27,7 @@ WITH source AS (
       uploaded_at 
     FROM intermediate
     -- Filter out specific team member that was brought in as a contractor without a compensation value.
-    WHERE employee_id != 43749 AND compensation_value IS NULL
+    WHERE (employee_id != 43749 OR compensation_value IS NOT NULL)
       
 )
 
