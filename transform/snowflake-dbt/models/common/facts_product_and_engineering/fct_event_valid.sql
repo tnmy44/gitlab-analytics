@@ -185,5 +185,5 @@ gitlab_dotcom_fact AS (
     created_by="@iweeks",
     updated_by="@cbraza",
     created_date="2022-04-09",
-    updated_date="2023-02-16"
+    updated_date="2023-03-01"
 ) }}
