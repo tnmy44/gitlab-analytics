@@ -13,7 +13,7 @@ if __name__ == "__main__":
     file_dict = dict(
         commit_stats="commitStats",
         # red_master_stats="redMasterStats",
-        development_team_members="developmentTeamMembers",
+        # development_team_members="developmentTeamMembers",
     )
 
     logging.basicConfig(stream=sys.stdout, level=20)
