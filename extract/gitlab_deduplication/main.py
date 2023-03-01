@@ -1,31 +1,38 @@
-""" This the transformation code for deduplication of data of postgres"""
+"""
+This the transformation code for deduplication of data of postgres
+"""
 import logging
-from os import environ as env
 from datetime import datetime
+from os import environ as env
 from typing import Dict
+
 from fire import Fire
-from yaml import safe_load, YAMLError
-from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
-    query_executor,
-)
+from gitlabdata.orchestration_utils import query_executor, snowflake_engine_factory
+from yaml import YAMLError, safe_load
 
 
-def build_table_name(
-    table_name: str, table_prefix: str = None, table_suffix: str = None
+def build_table_name(table_prefix: str = None, table_name: str = None,  table_suffix: str = None
 ) -> str:
     """The function is responsible for adding prefix and suffix to create table name"""
-    if table_prefix is None and table_suffix is None:
-        return table_name
-    if table_prefix is None and table_suffix is not None:
-        return table_name + table_suffix
-    if table_prefix is not None and table_suffix is None:
-        return table_prefix + table_name
-    return f"{table_prefix}{table_name}{table_suffix}"
+
+    res = ""
+    if table_prefix:
+        res += table_prefix
+
+    if table_name:
+        res += table_name
+
+    if table_suffix:
+        res += table_suffix
+
+    return res
 
 
 def create_table_name(manifest_dict: Dict, table_name: str) -> tuple:
-    """Prepare the backup table name and original table name as the table name passed in manifest i postgres table name not the snowflake table name"""
+    """
+    Prepare the backup table name and original table name
+    as the table name passed in manifest i postgres table name not the snowflake table name
+    """
     table_suffix = "_" + datetime.now().strftime("%Y%m%d")
     table_prefix = manifest_dict["generic_info"]["table_prefix"]
 
@@ -42,18 +49,23 @@ def create_backup_table(
     manifest_dict: dict,
     table_name: str,
 ) -> bool:
-    """This function create clone of the table in the backup schema , if the backup has been taken today it self it will abort here."""
+    """
+    This function create clone of the table in the backup schema,
+    if the backup has been taken today it self it will abort here.
+    """
+
     raw_database = manifest_dict["raw_database"]
     backup_schema_name = manifest_dict["generic_info"]["backup_schema"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
     bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
     query_create_backup_table = f"CREATE TABLE {raw_database}.{backup_schema_name}.{bkp_table_name} CLONE {raw_database}.{raw_schema}.{original_table_name};"
+
     logging.info(f"Backup table DDL : {query_create_backup_table}")
     backup_table = query_executor(snowflake_engine, query_create_backup_table)
     logging.info(backup_table)
+
     if backup_table:
         return True
-
     return False
 
 
@@ -61,7 +73,7 @@ def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
     """This function is responsible to generate the temp table DDL for the passed table parameters"""
     raw_database = manifest_dict["raw_database"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
-    bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
+    _ , original_table_name = create_table_name(manifest_dict, table_name)
     backup_schema = manifest_dict["generic_info"]["backup_schema"]
     build_ddl_statement = f"""SELECT CONCAT('CREATE TABLE {raw_database}.{raw_schema}.{original_table_name}_temp\n AS (' ,'SELECT  \n',
                                     LISTAGG(
@@ -86,27 +98,40 @@ def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
     return table_definition_to_create_table[0][0]
 
 
+def dummy_test(input:str) -> str: # TODO: ved, please delete this one
+    return f"123_{input}"
+
 def create_temp_table(manifest_dict: Dict, table_name: str):
-    """This function create the table in the schema"""
+    """
+    This function create the table in the schema
+    """
+
     table_definition = create_temp_table_ddl(manifest_dict, table_name)
     execute_create_temp_table = query_executor(snowflake_engine, table_definition)
     logging.info(execute_create_temp_table)
-    return True
 
 
 def swap_and_drop_temp_table(manifest_dict: Dict, table_name: str):
-    """The function swaps the table and drop the temp table created"""
+    """
+    The function swaps the table and drop the temp table created
+    """
     raw_database = manifest_dict["raw_database"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
+
     bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
+
     # Swap the table name with main table.
     temp_table_name = f"{original_table_name}_temp"
     swap_query = f"ALTER TABLE {raw_database}.{raw_schema}.{temp_table_name} SWAP WITH {raw_database}.{raw_schema}.{original_table_name};"
+
     # Drop the temp table in tap_postgres schema
     drop_query = f"DROP TABLE {raw_database}.{raw_schema}.{temp_table_name};"
+
     logging.info(f"Swap query:{swap_query}")
     swap_table = query_executor(snowflake_engine, swap_query)
+
     logging.info(swap_table)
+
     if swap_table:
         logging.info(f"Drop query:{drop_query}")
         drop_temp_table = query_executor(snowflake_engine, drop_query)
@@ -125,8 +150,7 @@ def get_yaml_file(path: str):
             return loaded_file
         except YAMLError as exc:
             logging.error(f"Issue with the yaml file: {exc}")
-            return None
-
+            raise
 
 def main(file_name: str, table_name: str) -> None:
     """
@@ -141,14 +165,16 @@ def main(file_name: str, table_name: str) -> None:
     # Process the manifest
     logging.info(f"Proceeding with table {table_name} for deduplication")
     manifest_dict = get_yaml_file(path=file_name)
+
     # Update database name to the manifest for in case of MR branch.
     manifest_dict.update({"raw_database": env.copy()["SNOWFLAKE_LOAD_DATABASE"]})
+
     # Create backup table
     create_clone_table = create_backup_table(manifest_dict, table_name)
+
     # validate if backup created successfully then create the temp table.
     if create_clone_table:
-        table_definition = create_temp_table(manifest_dict, table_name)
-    if table_definition:
+        create_temp_table(manifest_dict, table_name)
         swap_and_drop_temp_table(manifest_dict, table_name)
 
 
