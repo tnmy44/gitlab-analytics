@@ -27,7 +27,15 @@
         WHEN instance_type = 'Non-Production' THEN 2
         WHEN instance_type = 'Unknown' THEN 3
         ELSE 4
-      END AS ordering_field
+      END AS instance_type_ordering_field,
+      /*
+        Adding an ordering field to account for namespace that are associated with multiple production installations
+      */
+      CASE
+        WHEN included_in_health_measures_str = 'Included in Health Score' THEN 1
+        WHEN included_in_health_measures_str = 'Opt-Out' THEN 2
+        WHEN included_in_health_measures_str = NULL THEN 3
+      END AS health_score_ordering_field
     FROM instance_types
 )
 
@@ -85,7 +93,8 @@
         prep_saas_usage_ping_namespace.ping_name
         ORDER BY 
           prep_saas_usage_ping_namespace.ping_date DESC,
-          instance_types_ordering.ordering_field ASC --prioritizing Production instances
+          instance_types_ordering.ordering_field ASC, --prioritizing Production instances
+          instance_types_ordering.health_score_ordering_field ASC
     ) = 1
 
 ), pivoted AS (
@@ -108,5 +117,5 @@
     created_by="@mpeychet_",
     updated_by="@mdrussell",
     created_date="2021-03-22",
-    updated_date="2023-02-23"
+    updated_date="2023-03-01"
 ) }}
