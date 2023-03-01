@@ -81,7 +81,6 @@ dag = DAG(
 )
 
 for sheet in sheets:
-
     # Set the command for the container
     container_cmd = f"""
         {clone_and_setup_extraction_cmd} &&

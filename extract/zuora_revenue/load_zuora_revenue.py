@@ -126,7 +126,6 @@ def zuora_revenue_load(
     table_name: str,
     conn_dict: Dict[str, str] = None,
 ) -> None:
-
     """
     This function is responsible for checking if there has been extraction done today for this table.
     If Yes then it will load all the file present in the GCS folder under processed  for particular table and give number of rows loaded.

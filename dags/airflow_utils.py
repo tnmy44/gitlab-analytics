@@ -20,7 +20,6 @@ SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
 
 
 def get_sales_analytics_notebooks(frequency: str) -> Dict:
-
     notebooks = []
     fileNames = []
 
@@ -66,7 +65,6 @@ sales_analytics_pipelines_dag = [
 
 
 def split_date_parts(day: date, partition: str) -> Dict:
-
     if partition == "month":
         split_dict = {
             "year": day.strftime("%Y"),
