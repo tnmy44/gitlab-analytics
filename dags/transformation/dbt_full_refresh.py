@@ -82,8 +82,8 @@ logging.info(
 dbt_full_refresh_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE={dbt_warehouse_for_full_refresh} &&
-    dbt --debug --log-format json --no-use-colors run --profiles-dir profile --target prod --models {dbt_model_to_full_refresh} --full-refresh; ret=$?;
-    montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --logs logs/dbt.log --project-name gitlab-analysis;
+    dbt --no-use-colors run --profiles-dir profile --target prod --models {dbt_model_to_full_refresh} --full-refresh ; ret=$?;
+    montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(

@@ -1207,6 +1207,7 @@ models:
       - name: namespace_path
         description: '{{ doc("visibility_documentation") }}'
       - name: namespace_type
+        description: '{{ doc("namespace_type") }}'
         tests:
           - not_null
           - accepted_values:

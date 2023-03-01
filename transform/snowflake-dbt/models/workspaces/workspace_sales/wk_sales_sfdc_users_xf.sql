@@ -12,9 +12,49 @@ WITH base AS (
       END                       AS user_email,
       manager_name,
       manager_id,
-      IFNULL(crm_user_geo, 'Other')                    AS user_geo,
+      
+      CASE 
+        WHEN LOWER(crm_user_geo) IN ('amer','apac','jihu','emea','pubsec')
+          THEN IFNULL(crm_user_geo, 'Other')   
+        ELSE 'Other'
+      END                                              AS user_geo,
       IFNULL(crm_user_region, 'Other')                 AS user_region,
-      IFNULL(crm_user_sales_segment, 'Other')          AS user_segment,
+
+
+      CASE 
+        WHEN LOWER(crm_user_sales_segment) = 'lrg' 
+          THEN 'Large'
+        WHEN LOWER(crm_user_sales_segment) = 'mm' 
+          THEN 'Mid-Market' 
+        WHEN LOWER(crm_user_sales_segment) = 'jihu' 
+          THEN 'Jihu'         
+        WHEN LOWER(crm_user_sales_segment) = 'all' 
+          THEN 'Other'        
+        ELSE
+          IFNULL(crm_user_sales_segment, 'Other') 
+      END                                              AS user_segment,
+
+        -- JK 2023-02-06 adding adjusted segment
+        -- If MM / SMB and Region = META then Segment = Large
+        -- If MM/SMB and Region = LATAM then Segment = Large
+        -- If MM/SMB and Geo = APAC then Segment = Large
+        -- Use that Adjusted Segment Field in our FY23 models
+        CASE
+        WHEN (LOWER(user_segment) = 'mid-market'
+                OR LOWER(user_segment)  = 'smb')
+            AND LOWER(user_region) = 'meta'
+            THEN 'Large'
+        WHEN (LOWER(user_segment)  = 'mid-market'
+                OR LOWER(user_segment)  = 'smb')
+            AND LOWER(user_region) = 'latam'
+            THEN 'Large'
+        WHEN (LOWER(user_segment)  = 'mid-market'
+                OR LOWER(user_segment)  = 'smb')
+            AND LOWER(user_geo) = 'apac'
+            THEN 'Large'
+        ELSE user_segment
+        END                                            AS adjusted_user_segment,
+
       IFNULL(crm_user_area, 'Other')                   AS user_area,
       IFNULL(user_role_name, 'Other')                  AS role_name,
       IFNULL(user_role_type, 'Other')                  AS role_type,
@@ -36,6 +76,7 @@ WITH base AS (
       base.user_geo,
       base.user_region,
       base.user_segment,
+      base.adjusted_user_segment,
       base.user_area,
       base.role_name,
       base.role_type,
@@ -60,12 +101,15 @@ WITH base AS (
 
       -- Business Unit (X-Ray 1st hierarchy)
       -- will be replaced with the actual field
-      CASE LOWER(user_segment)
-        WHEN 'large' THEN 'ENTG'
-        WHEN 'pubsec' THEN 'ENTG'
-        WHEN 'mid-market' THEN 'COMM'
-        WHEN 'smb' THEN 'COMM'
-        WHEN 'jihu' THEN 'JiHu'
+      CASE 
+        WHEN LOWER(user_segment) IN ('large','pubsec') 
+            THEN 'ENTG'
+        WHEN LOWER(user_region) IN ('latam','meta')
+            OR LOWER(user_geo) IN ('apac')
+            THEN 'ENTG'         
+        WHEN LOWER(user_segment) IN ('mid-market','smb')
+            THEN 'COMM'
+        WHEN LOWER(user_segment) = 'jihu' THEN 'JiHu'
         ELSE 'Other'
       END AS business_unit,
 
@@ -93,31 +137,16 @@ WITH base AS (
             (
             LOWER(user_segment) = 'mid-market'
             AND (LOWER(user_geo) = 'amer' OR LOWER(user_geo) = 'emea')
-            AND LOWER(role_type) = 'first order'
+            AND LOWER(role_type) = 'fo'
             )
           THEN 'MM First Orders'  --mid-market FO(?)
         WHEN
           LOWER(business_unit) = 'comm'
           AND LOWER(user_geo) = 'emea'
-          AND 
-            (
-            LOWER(user_segment) != 'mid-market'
-            AND LOWER(role_type) != 'first order'
-            )
           THEN  'EMEA'
         WHEN
           LOWER(business_unit) = 'comm'
           AND LOWER(user_geo) = 'amer'
-          AND
-            (
-            LOWER(user_segment) != 'mid-market'
-            AND LOWER(role_type) != 'first order'
-            )
-          AND
-            (
-            LOWER(user_segment) != 'smb'
-            AND LOWER(user_area) != 'lowtouch'
-            )
           THEN 'AMER'
         ELSE 'Other'
       END AS sub_business_unit,
