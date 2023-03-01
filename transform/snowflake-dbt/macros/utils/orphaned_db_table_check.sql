@@ -1,17 +1,4 @@
-{#
-Check database tables for inclusion in the dbt code base
-
-Example Usage:
-dbt run-operation dbt_schema_check
-dbt run-operation dbt_schema_check --args "{databases: ['raw']}"
-
-Arguments:
-  databases: The list of databases to retreive the table namse from
-
-
-#}
-
-{% macro dbt_schema_check(databases=['prod','prep']) %}
+{% macro orphaned_db_table_check(databases=['prod','prep']) %}
 
 {% if (databases is not string and databases is not iterable) or databases is mapping or databases|length <=0  %}
   {% do exceptions.raise_compiler_error('databases must be a list') %}
@@ -55,7 +42,7 @@ Arguments:
     AND table_schema != 'CONTAINER_REGISTRY'
     AND table_schema != 'FULL_TABLE_CLONES'
     AND table_schema != 'QUALTRICS_MAILING_LIST'
-    -- NYI
+    -- Not yet implemented models
     AND table_schema != 'NETSUITE_FIVETRAN'
     ORDER BY 1,2,3
   {% endcall %}
@@ -74,6 +61,7 @@ Arguments:
     {% endif %}   
   {% endfor %}
 
-  {% do log(output) %}
+  {% do log("Number of Orphaned Tables: " ~ output | length, info=True ) %}
+  {% do log("Orphaned Tables:\n" ~ toyaml(output), info=True ) %}
 
 {% endmacro %} 
