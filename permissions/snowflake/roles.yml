@@ -2645,7 +2645,6 @@ roles:
     - csharp:
         member_of:
             - analytics_engineer_core
-            - engineer
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
@@ -4045,7 +4044,6 @@ roles:
 
     - pempey:
         member_of:
-            - engineer
             - analytics_engineer_core
             - analyst_people
             - analyst_engineering
@@ -4328,7 +4326,6 @@ roles:
     - snalamaru:
         member_of:
             - analytics_engineer_core
-            - engineer
             - restricted_safe
         warehouses:
             - dev_xs
