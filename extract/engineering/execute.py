@@ -25,9 +25,9 @@ if __name__ == "__main__":
 
     for key, value in file_dict.items():
         logging.info(f"Downloading {value} to JSON file.")
-        print('----------------------')
-        print('\n')
-        print(f'Key: {key}, Value: {value}')
+        print("----------------------")
+        print("\n")
+        print(f"Key: {key}, Value: {value}")
 
         command = f"curl {base_url}{value} > {key}.json"
         print(command)
