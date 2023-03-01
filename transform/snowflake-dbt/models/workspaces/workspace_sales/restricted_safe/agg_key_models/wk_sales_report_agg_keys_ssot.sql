@@ -6,15 +6,12 @@
 
 -- grains include (pending):
 -- business_unit, segment, geo, region, area, sqs, ot, deal_category, deal_group,
--- role_type
 
 
 WITH report_agg_keys_base AS (
 
     SELECT *
     FROM {{ref('wk_sales_report_agg_keys_base')}}
-    -- FROM PROD.RESTRICTED_SAFE_WORKSPACE_SALES.REPORT_AGG_KEYS_FY24_MODEL
-
 )
 
 SELECT DISTINCT
@@ -27,9 +24,10 @@ SELECT DISTINCT
     order_type_stamped,
     deal_category,
     deal_group,
-    role_type,
+--     role_type,
     report_user_segment_geo_region_area,
     report_user_segment_geo_region_area_sqs_ot,
+    report_bu_user_segment_geo_region_area_sqs_ot,
     key_bu,
     key_segment,
     key_sqs,
@@ -47,8 +45,8 @@ SELECT DISTINCT
     key_segment_geo_region_area_ot,
     key_segment_geo_area,
 
-    key_bu_geo_region_area_segment_rt,
-    key_bu_geo_segment_region_area_rt,
+--    key_bu_geo_region_area_segment_rt,
+--    key_bu_geo_segment_region_area_rt,
 
     sales_team_cro_level,
     sales_team_rd_asm_level,
