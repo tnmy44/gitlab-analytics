@@ -329,17 +329,6 @@ models:
       tests:
       - not_null
       - unique
-- name: sheetload_procurement_cost_savings_source
-  description: This is the source of the KPI - Deliver Quantified Savings of greater than three million over a rolling 12 month period
-  columns:
-    - name: calendar_month
-      tests:
-      - not_null
-      - unique
-    - name: savings
-    - name: rolling_12_month_savings_without_audit
-    - name: rolling_12_month_savings_with_audit
-    - name: target
 - name: sheetload_product_group_mappings_source
   description: This is the mapping between group, stage, and section.
   columns:
