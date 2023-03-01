@@ -1775,3 +1775,27 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
 {% enddocs %}
+
+{% docs fct_delta_arr_subscription_lineage_product_monthly %}
+
+Delta ARR is a measure of changes to ARR compared to the prior month. The [ARR Analysis Framework](https://internal-handbook.gitlab.io/handbook/sales/annual-recurring-revenue-arr/#arr-analysis-framework) handbook page provides more details on the analysis.
+
+The model uses the subscription_lineage grain to calculate the Delta ARR. This is a fundamental change from previous Delta ARR models at the subscription grain. When looking at the subscription grain, debook-book scenarios are not captured. Therefore, it is necessary to analyze the subscription_lineage grain for accurate product level Delta ARR changes. This model provides a method to analyze the 6 subscription linkage scenarios provided in this [Linking Subscriptions for Data Retention[https://docs.google.com/spreadsheets/d/1SYFy0Xqau1dbOm2YXmp0NvWDEkL_vIcWaFhKzwcocCM/edit#gid=0] file.
+
+The model ERD can be found [HERE](https://lucid.app/lucidchart/invitations/accept/inv_07d25d39-3076-408f-b768-67d1895ea064). 
+
+Model Validation:
+
+The model ties out 100% to mart_arr with the below 3 exceptions:
+
+1. The model removes subscriptions with data quality problems in the subscription_name_slugify field that is used for the subscription lineage. These were 5 subscriptions at the time of model creation and they do not have a material impact on the model insights.
+
+1. The model removes Storage product charges. The model is intended to focus on the paid plan tiers only.
+
+1. At the time of model creation, there were 23 subscriptions that were part of lineages where subscriptions in the lineage roll up to different Salesforce ultimate parent accounts. All of the ARR for these subscriptions is in the model; however, the model rolls up the ARR for these subscriptions to the ultimate parent account of the oldest subscription in the lineage. This results in these 23 parent accounts not tieing out 100% to mart_arr.
+
+Model Caveat:
+
+1. It should be that a subscription only has 1 paid tier plan attached to it. However, there are a small minority of subscriptions that have more than 1 product. Therefore, it is necessary to put the product tiers into an array in the model for completeness. In virtually all cases, it is 2 product tiers on the subscription with many of them having old Bronze/Starter plans in addition to Premium plans.
+
+{% enddocs %}
