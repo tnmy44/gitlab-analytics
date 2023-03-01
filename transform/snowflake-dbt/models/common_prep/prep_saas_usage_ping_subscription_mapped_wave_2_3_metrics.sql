@@ -93,7 +93,7 @@
         prep_saas_usage_ping_namespace.ping_name
         ORDER BY 
           prep_saas_usage_ping_namespace.ping_date DESC,
-          instance_types_ordering.ordering_field ASC, --prioritizing Production instances
+          instance_types_ordering.instance_type_ordering_field ASC, --prioritizing Production instances
           instance_types_ordering.health_score_ordering_field ASC
     ) = 1
 
