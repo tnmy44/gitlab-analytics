@@ -1,5 +1,5 @@
 with source as
-(select * FROM {{ source('level_up', 'course_views') }} ),
+(select * FROM {{ source('level_up', 'logins') }} ),
 
   intermediate AS (
     SELECT
@@ -13,8 +13,6 @@ with source as
 parsed as (
 select
       value['browserInfo']::variant as  browser_info,
-      value['device']::variant as  device,
-      value['os']::variant as  os,
       value['companyHost']::varchar as companyHost,
       value['companyId']::varchar as companyId,
       value['companySubdomain']::varchar as companySubdomain,
@@ -23,7 +21,7 @@ select
       value['ipGeoInfo']::variant as ipGeoInfo,
       value['timestamp']::varchar as timestamp,
       value['userAgent']::varchar as userAgent,
-      value['userDetail']['id']::varchar as id,
+      value['userDetail']['id']::varchar as user_id,
       value['userDetail']['ref1']::varchar as user_type,
       value['userDetail']['ref2']::varchar as user_job,
       value['userDetail']['ref3']::varchar as ref3,
@@ -33,18 +31,14 @@ select
 from intermediate
 
 -- remove dups in case 'raw' is reloaded
-/*
 QUALIFY
   ROW_NUMBER() OVER (
     PARTITION BY
       user_id,
-      timestamp,
-      lesson_id
+      timestamp
     ORDER BY
       uploaded_at DESC
   ) = 1
-)
-*/
 )
 select * from parsed
 

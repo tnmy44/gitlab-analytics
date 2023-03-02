@@ -43,7 +43,6 @@ value['topicTitle']::varchar as topic_title,
 from intermediate
 
 -- remove dups in case 'raw' is reloaded
-/*
 QUALIFY
   ROW_NUMBER() OVER (
     PARTITION BY
@@ -53,8 +52,6 @@ QUALIFY
     ORDER BY
       uploaded_at DESC
   ) = 1
-)
-*/
 )
 select * from parsed
 

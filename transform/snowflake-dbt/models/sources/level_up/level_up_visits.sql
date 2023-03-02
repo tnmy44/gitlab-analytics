@@ -1,5 +1,5 @@
 with source as
-(select * FROM {{ source('level_up', 'course_views') }} ),
+(select * FROM {{ source('level_up', 'visits') }} ),
 
   intermediate AS (
     SELECT
@@ -30,18 +30,14 @@ value['timestamp']::varchar as timestamp,
 from intermediate
 
 -- remove dups in case 'raw' is reloaded
-/*
 QUALIFY
   ROW_NUMBER() OVER (
     PARTITION BY
       user_id,
-      timestamp,
-      lesson_id
+      timestamp
     ORDER BY
       uploaded_at DESC
   ) = 1
-)
-*/
 )
 select * from parsed
 
