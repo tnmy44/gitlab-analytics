@@ -6475,3 +6475,50 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+
+  - name: fct_delta_arr_subscription_lineage_product_monthly
+    description: '{{ doc("fct_delta_arr_subscription_lineage_product_monthly") }}'
+    columns:
+      - name: delta_arr_subscription_lineage_product_monthly_pk
+        description: The unique composite ID of the fct_delta_arr_subscription_month model consisting of arr_month and dim_oldest_subscription_in_cohort_id.
+        tests:
+          - not_null
+          - unique
+      - name: dim_parent_crm_account_id
+        description: '{{ doc("dim_parent_crm_account_id") }}'
+      - name: dim_crm_account_id
+        description: '{{ doc("dim_crm_account_id") }}'
+      - name: dim_oldest_subscription_in_cohort_id
+        description: '{{ doc("dim_oldest_subscription_in_cohort_id") }}'
+      - name: product_tier_name 
+        description: '{{ doc("product_tier_name") }}'
+      - name: previous_month_product_tier_name 
+        description: '{{ doc("previous_month_product_tier_name") }}'
+      - name: product_delivery_type
+        description: '{{ doc("product_delivery_type") }}'
+      - name: previous_month_product_delivery_type
+        description: '{{ doc("previous_month_product_delivery_type") }}'
+      - name: product_ranking
+        description: '{{ doc("product_ranking") }}'
+      - name: previous_month_product_ranking
+        description: '{{ doc("previous_month_product_ranking") }}'
+      - name: type_of_arr_change
+        description: '{{ doc("type_of_arr_change") }}'
+      - name: beg_arr
+        description: '{{ doc("beg_arr") }}'
+      - name: beg_quantity
+        description: '{{ doc("beg_quantity") }}'
+      - name: seat_change_arr
+        description: '{{ doc("seat_change_arr") }}'
+      - name: seat_change_quantity
+        description: '{{ doc("seat_change_quantity") }}'
+      - name: price_change_arr
+        description: '{{ doc("price_change_arr") }}'
+      - name: tier_change_arr
+        description: '{{ doc("tier_change_arr") }}'
+      - name: end_arr
+        description: '{{ doc("end_arr") }}'
+      - name: end_quantity
+        description: '{{ doc("end_quantity") }}'
+      - name: annual_price_per_seat_change
+        description: '{{ doc("annual_price_per_seat_change") }}'

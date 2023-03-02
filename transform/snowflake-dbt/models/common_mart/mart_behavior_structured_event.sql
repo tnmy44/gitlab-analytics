@@ -48,8 +48,8 @@ structured_behavior AS (
       AND behavior_at <= (SELECT DATEADD(MONTH, 1, MAX({{ var('incremental_backfill_date', 'behavior_at') }})) FROM {{ this }})
 
   {% else %}
-  -- This will cover the first creation of the table and requires that the table be backfilled
-  WHERE behavior_at > DATE_TRUNC('month', CURRENT_DATE() )
+  -- This will cover the first creation of the table or a full refresh and requires that the table be backfilled
+  WHERE behavior_at > DATEADD('day', -30 ,CURRENT_DATE())
 
   {% endif %}
 
