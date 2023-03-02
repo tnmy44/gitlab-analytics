@@ -147,7 +147,10 @@ class ThoughtIndustries(ABC):
                 "Aborting now..."
             )
         events = self.fetch_from_endpoint(epoch_start_ms, epoch_end_ms)
-        self.upload_events_to_snowflake(events, epoch_start_ms, epoch_end_ms)
+        if events:
+            self.upload_events_to_snowflake(events, epoch_start_ms, epoch_end_ms)
+        else:
+            info('No events data returned, nothing to upload')
         return events
 
 
