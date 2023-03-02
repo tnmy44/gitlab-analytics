@@ -547,6 +547,7 @@ roles:
         warehouses:
             - dev_xs
             - dev_m
+            - dev_xl
         member_of:
             - analyst_core
             - snowflake_db
