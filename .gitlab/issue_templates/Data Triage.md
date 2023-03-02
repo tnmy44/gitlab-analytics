@@ -17,7 +17,7 @@ All tasks below should be checked off at the end of Triage day.
 * [ ] Review each slack message request in the **#data** channel 
     - [ ] Reply to slack threads by pointing GitLab team member to the appropriate handbook page or visualization.
     - [ ] Direct GitLab team member to the channel description, which has the link to the Data team project, if the request requires more than 5 minutes of investigative effort from a Data team member.
-    - [ ] Ping [Triage Group](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#enterprise-data-program-triage-instructions) who may know more about the topic. (Slack Aliases for the Triage Groups are still under construction)
+    - [ ] Ping [Triage Group](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#enterprise-data-program-triage-instructions) who may know more about the topic. You can also ping the Slack Alias for the relevant Triage Group.
 
 ### Friends and family days
 * [ ] As we currently have a no-merge Friday rule if there is an upcoming family and friends day during your triage week which affects this please ensure this message (or similar) is shared #data channel by Tuesday at the latest: 
