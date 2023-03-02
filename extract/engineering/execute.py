@@ -10,7 +10,6 @@ from gitlabdata.orchestration_utils import (
 
 
 if __name__ == "__main__":
-
     file_dict = dict(
         commit_stats="commitStats",
         red_master_stats="redMasterStats",

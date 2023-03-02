@@ -99,7 +99,6 @@ def iterative_query_upload(
 
 
 if __name__ == "__main__":
-
     logging.basicConfig(stream=sys.stdout, level=20)
 
     config_dict = env.copy()
