@@ -150,7 +150,7 @@ class ThoughtIndustries(ABC):
         if events:
             self.upload_events_to_snowflake(events, epoch_start_ms, epoch_end_ms)
         else:
-            info('No events data returned, nothing to upload')
+            info("No events data returned, nothing to upload")
         return events
 
 
