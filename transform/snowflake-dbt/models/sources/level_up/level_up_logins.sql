@@ -17,8 +17,6 @@ select
       value['companyId']::varchar as companyId,
       value['companySubdomain']::varchar as companySubdomain,
       value['event']::varchar as event,
-      value['ipAddress']::varchar as ipAddress,
-      value['ipGeoInfo']::variant as ipGeoInfo,
       value['timestamp']::varchar as timestamp,
       value['userAgent']::varchar as userAgent,
       value['userDetail']['id']::varchar as user_id,
