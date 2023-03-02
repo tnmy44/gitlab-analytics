@@ -58,7 +58,7 @@ The focus area for the Analytics Engineer are the `DBT` models including the app
     * [ ] [Opening an incident issue](https://gitlab.com/gitlab-data/analytics/-/issues/new?issuable_template=incident&issue[issue_type]=incident) when the failure requires [immediate action](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#incidents) in order to avoid or rememdy a data outage.
         * [ ] Link to all resulting incidents/issues and MRs in Slack
 
-*Occaisionally you we encounter connection errors, in which case [re-running the Airflow task](https://airflow.apache.org/docs/apache-airflow/1.10.15/dag-run.html#re-run-tasks) may be more appropriate than creating an issue. If the connection error persists then create an issue and escalate to the triage Data Engineer.*
+*Occasionally you we encounter connection errors, in which case [re-running the Airflow task](https://airflow.apache.org/docs/apache-airflow/1.10.15/dag-run.html#re-run-tasks) may be more appropriate than creating an issue. If the connection error persists then create an issue and escalate to the triage Data Engineer.*
 
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** and **#data-triage** so that it is clear for the next triager what time to check for issues from.
 
