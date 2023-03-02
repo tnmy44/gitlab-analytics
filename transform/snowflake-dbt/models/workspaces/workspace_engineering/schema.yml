@@ -227,4 +227,3 @@ models:
           description: The group path in the merge request URL
         - name: url
           description: Merge request URL
->>>>>>> transform/snowflake-dbt/models/workspaces/workspace_engineering/schema.yml
