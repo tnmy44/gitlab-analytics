@@ -1,5 +1,6 @@
 {{ config({
-    "alias": "dim_crm_account"
+    "alias": "dim_crm_account",
+    "tags": ["six_hourly"]
 }) }}
 
 WITH final AS (
