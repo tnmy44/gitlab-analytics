@@ -102,4 +102,6 @@ macros:
     description: '{{ doc("rolling_window_delete") }}'
   - name: only_force_full_refresh
     description: '{{ doc("only_force_full_refresh") }}'
+  - name: orphaned_db_table_check
+    description: '{{ doc("orphaned_db_table_check") }}'
 
