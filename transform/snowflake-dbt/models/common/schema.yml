@@ -772,6 +772,8 @@ models:
         tags: ["gainsight"]
       - name: crm_account_name
         description: Name of the CRM account associated with the instance
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
 
   - name: dim_instances
     description: '{{ doc("dim_instances") }}'
