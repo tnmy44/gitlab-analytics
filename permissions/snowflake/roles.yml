@@ -789,7 +789,7 @@ roles:
     - data_science:
           warehouses:
               - dev_xs
-              - dev_m
+              - dev_l
           privileges:
               databases:
                   read:
@@ -838,7 +838,7 @@ roles:
     - data_science_sensitive:
           warehouses:
               - dev_xs
-              - dev_m
+              - dev_l
           privileges:
               databases:
                   read:
