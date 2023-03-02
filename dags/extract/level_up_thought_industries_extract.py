@@ -44,7 +44,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "level_up_thought_industries_extract",
+    "el_level_up_thought_industries",
     default_args=default_args,
     # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
@@ -68,8 +68,8 @@ for endpoint_class in endpoint_classes:
     extract_task = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=f"extract-{endpoint_class}",
-        name=f"extract-{endpoint_class}",
+        task_id=f"el-{endpoint_class}",
+        name=f"el-{endpoint_class}",
         secrets=[
             SNOWFLAKE_ACCOUNT,
             SNOWFLAKE_LOAD_ROLE,
