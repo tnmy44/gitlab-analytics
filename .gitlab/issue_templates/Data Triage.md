@@ -60,7 +60,7 @@ The focus area for the Analytics Engineer are the `DBT` models including the app
 
 *Occaisionally you we encounter connection errors, in which case [re-running the Airflow task](https://airflow.apache.org/docs/apache-airflow/1.10.15/dag-run.html#re-run-tasks) may be more appropriate than creating an issue. If the connection error persists then create an issue and escalate to the triage Data Engineer.*
 
-* [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** so that it is clear for the next triager what time to check for issues from.
+* [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** and **#data-triage** so that it is clear for the next triager what time to check for issues from.
 
 ### Prepare for Next Milestone 
 * [ ] Groom Issues for Next Milestone: for issues that have missing or poor requirements, add comments in the issue asking questions to the Business DRI. 
