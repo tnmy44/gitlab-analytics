@@ -133,6 +133,7 @@ WITH sfdc_lead AS (
       is_email_bounced                                                                  AS is_marketo_email_bounced,
       email_bounced_date                                                                AS marketo_email_bounced_date,
       is_unsubscribed                                                                   AS is_marketo_unsubscribed,
+      COALESCE(marketo_lead.is_marketo_unsubscribed, FALSE)                             AS has_marketo_unsubscribed,
       is_opt_in                                                                         AS is_marketo_opted_in,
       compliance_segment_value                                                          AS marketo_compliance_segment_value,
       is_pql_marketo,
