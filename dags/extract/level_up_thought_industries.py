@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 from airflow_utils import (
     DATA_IMAGE,
@@ -43,7 +44,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "el_level_up_thought_industries_v3",  # TODO: rename to v2
+    "el_level_up_thought_industries_v3", # TODO: rename to v2
     default_args=default_args,
     # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
@@ -51,7 +52,7 @@ dag = DAG(
     # start_date=datetime(2022, 1, 12),  # CourseCompletion data starts: 2022-01-13
     catchup=True,
     max_active_runs=1,  # due to API rate limiting
-    concurrency=2,  # num of max_tasks, limit due to API rate limiting
+    concurrency=2, # num of max_tasks, limit due to API rate limiting
 )
 
 dummy_start = DummyOperator(task_id="dummy_start", dag=dag)
@@ -60,6 +61,8 @@ dummy_end = DummyOperator(task_id="dummy_end", dag=dag)
 endpoint_classes = ("CourseCompletions", "Logins", "Visits", "CourseViews")
 extract_tasks = []
 
+
+prev_task = dummy_start
 for endpoint_class in endpoint_classes:
     extract_command = (
         f"{clone_and_setup_extraction_cmd} && "
@@ -82,21 +85,20 @@ for endpoint_class in endpoint_classes:
         env_vars={
             **pod_env_vars,
             # remove time from execution_date, and convert to epoch timestamp
-            "EPOCH_START_STR":
-                (
-                    "{{ execution_date.replace(hour=0, minute=0, second=0, microsecond=0)"
-                    ".int_timestamp }}"
-                ),
-            "EPOCH_END_STR":
-                (
-                    "{{ next_execution_date.replace(hour=0, minute=0, second=0, microsecond=0)"
-                    ".int_timestamp }}"
-                ),
+            "EPOCH_START_STR": (
+                "{{ execution_date.replace(hour=0, minute=0, second=0, microsecond=0)"
+                ".int_timestamp }}"
+            ),
+            "EPOCH_END_STR": (
+                "{{ next_execution_date.replace(hour=0, minute=0, second=0, microsecond=0)"
+                ".int_timestamp }}"
+            ),
         },
         affinity=get_affinity(False),
         tolerations=get_toleration(False),
         arguments=[extract_command],
         dag=dag,
+        trigger_rule=TriggerRule.ALL_DONE,  # run task regardless of upstream
     )
     extract_tasks.append(extract_task)
 
