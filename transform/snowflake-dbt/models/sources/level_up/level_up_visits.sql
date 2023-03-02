@@ -1,42 +1,45 @@
-with source as
-(select * FROM {{ source('level_up', 'visits') }} ),
+WITH
+source AS (
+  SELECT * FROM
+    {{ source('level_up', 'visits') }}
+),
 
-  intermediate AS (
-    SELECT
-      d.value,
-      source.uploaded_at
-    FROM
-      source,
-      LATERAL FLATTEN(input => source.jsontext['data']) AS d
-  ),
+intermediate AS (
+  SELECT
+    d.value,
+    source.uploaded_at
+  FROM
+    source,
+    LATERAL FLATTEN(input => source.jsontext['data']) AS d
+),
 
-parsed as (
-select
-value['companyHost']::varchar as company_host,
-value['companyId']::varchar as company_id,
-value['companySubdomain']::varchar as company_subdomain,
-value['event']::varchar as event,
-value['timestamp']::varchar as timestamp,
-    value['userDetail']['clientId']::varchar as client_id,
-    value['userDetail']['departmentId']::varchar as department_id,
-    value['userDetail']['id']::varchar as user_id,
-    value['userDetail']['ref1']::varchar as user_type,
-    value['userDetail']['ref2']::varchar as user_job,
-    value['userDetail']['ref3']::varchar as ref3,
-    value['userDetail']['sfAccountId']::varchar as sf_account_id,
-    value['userDetail']['sfContactId']::varchar as sf_contact_id,
-  uploaded_at
-from intermediate
+parsed AS (
+  SELECT
+    value['companyHost']::VARCHAR                AS company_host,
+    value['companyId']::VARCHAR                  AS company_id,
+    value['companySubdomain']::VARCHAR           AS company_subdomain,
+    value['event']::VARCHAR                      AS event,
+    value['timestamp']::TIMESTAMP                AS event_timestamp,
+    value['userDetail']['clientId']::VARCHAR     AS client_id,
+    value['userDetail']['departmentId']::VARCHAR AS department_id,
+    value['userDetail']['id']::VARCHAR           AS user_id,
+    value['userDetail']['ref1']::VARCHAR         AS user_type,
+    value['userDetail']['ref2']::VARCHAR         AS user_job,
+    value['userDetail']['ref3']::VARCHAR         AS ref3,
+    value['userDetail']['sfAccountId']::VARCHAR  AS sf_account_id,
+    value['userDetail']['sfContactId']::VARCHAR  AS sf_contact_id,
+    uploaded_at
+  FROM intermediate
 
--- remove dups in case 'raw' is reloaded
-QUALIFY
-  ROW_NUMBER() OVER (
-    PARTITION BY
-      user_id,
-      timestamp
-    ORDER BY
-      uploaded_at DESC
-  ) = 1
+  -- remove dups in case 'raw' is reloaded
+  QUALIFY
+    ROW_NUMBER() OVER (
+      PARTITION BY
+        user_id,
+        event_timestamp
+      ORDER BY
+        uploaded_at DESC
+    ) = 1
 )
-select * from parsed
 
+SELECT * FROM parsed
