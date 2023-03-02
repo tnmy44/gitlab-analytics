@@ -28,6 +28,7 @@ WITH prep_charge AS (
       prep_charge.dim_billing_account_id,
       prep_charge.dim_crm_account_id,
       prep_charge.dim_parent_crm_account_id,
+      prep_charge.dim_order_id,
       prep_charge.effective_start_date_id,
       prep_charge.effective_end_date_id,
 
@@ -60,7 +61,7 @@ WITH prep_charge AS (
 {{ dbt_audit(
     cte_ref="fct_charge",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@chrissharp",
     created_date="2021-06-07",
-    updated_date="2021-06-07"
+    updated_date="2023-02-20"
 ) }}

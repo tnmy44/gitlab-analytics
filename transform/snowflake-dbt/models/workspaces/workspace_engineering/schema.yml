@@ -150,8 +150,81 @@ models:
 
     - name: leading_organization_entry_dates
       description: The entry and exit dates of organizations that are admitted into our Leading Organization program
-
     - name: rpt_product_namespace_classification
       description: WIP Ref for namespace classification
       columns:
       - name: namespace_type
+    - name: engineering_merge_requests
+      description: A model containing all MRs that affect our product. This model includes relevant and common flags that are used in engineering metrics.
+      columns: 
+        - name: merge_request_id
+          tests:
+            - not_null
+            - unique
+        - name: merge_request_iid
+          description: The ID appended to the merge request link
+        - name: author_id
+          description: The user_id that created the merge request
+        - name: is_created_by_bot
+          description: Boolean field that identifies whether the merge request was created by a bot
+        - name: assignee_id
+          description: The user_id that is assigned to the merge request
+        - name: project_id
+          description: The project_id related to the merge request
+        - name: target_project_id
+          description: The target_project_id related to the merge request
+        - name: merge_request_state
+          description: The merge_request_state related to the merge request
+        - name: created_at
+          description: When the merge request was created
+        - name: updated_at
+          description: When the merge request was updated
+        - name: merged_at
+          description: When the merge request was merged
+        - name: created_month
+          description: Which month the merge request was created
+        - name: merge_month
+          description: Which month the merge request was merged
+        - name: days_to_merge
+          description: Number of days it takes from when the merge request was created to merged
+        - name: merge_request_title
+          description: Title of merge request
+        - name: merge_request_description
+          description: Description of merge request
+        - name: milestone_id
+          description: The milestone_id related to the merge request
+        - name: milestone_title
+          description: The title of the related milestone_id
+        - name: milestone_description
+          description: The description of the related milestone_id
+        - name: namespace_id
+          description: The namespace_id related to the merge request
+        - name: labels
+          description: The labels on a merge request
+        - name: masked_label_title
+          description: String version of labels, separated by '|'
+        - name: is_community_contribution
+          description: Boolean field that identifies whether the merge request is a community contribution via labels
+        - name: is_security
+          description: Boolean field that identifies whether the merge request is related to security via labels
+        - name: priority_label
+          description: The value following a priority label ('priority::%'')
+        - name: severity_label
+          description: The value following a severity label ('severity::%'')
+        - name: group_label
+          description: The group that the merge request is related to. This is extracted from labels ('group::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: section_label
+          description: The section that the merge request is related to. This is extracted from labels ('section::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: stage_label
+          description: The stage that the merge request is related to. This is extracted from labels ('devops::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: type_label
+          description: The worktype type classification, defined as either a bug, maintenance, or feature.
+        - name: subtype_label
+          description: The worktype subtype classification that matches a type_label
+        - name: visibility_level
+          description: Indicate if the merge request lives in a private or public project
+        - name: full_group_path
+          description: The group path in the merge request URL
+        - name: url
+          description: Merge request URL
+>>>>>>> transform/snowflake-dbt/models/workspaces/workspace_engineering/schema.yml

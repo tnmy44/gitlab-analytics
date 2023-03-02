@@ -18,6 +18,21 @@ WITH base AS (
 
     FROM base
 
+    UNION ALL
+
+    SELECT
+      --Surrogate Keys
+      MD5('-1')                             AS dim_order_id,
+
+      --Information
+      'Missing order_description'           AS order_description,
+      '9999-12-31 00:00:00.000 +0000'       AS order_created_date,
+      '9999-12-31 00:00:00.000 +0000'       AS order_date,
+      'Missing order_number'                AS order_number,
+      'Missing order_state'                 AS order_state,
+      'Missing order_status'                AS order_status,
+      NULL                                  AS is_created_by_migration
+
 )
 
 {{ dbt_audit(

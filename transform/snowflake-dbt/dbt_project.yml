@@ -259,10 +259,6 @@ models:
           +schema: sensitive
           secure: true
 
-      pmg:
-        +materialized: table
-        +schema: pmg
-
       pto:
         +materialized: table
         +schema: gitlab_pto
@@ -344,6 +340,10 @@ models:
       zuora_revenue:
         +schema: zuora_revenue
         +tags: ["zuora_revenue"]
+
+      zuora_order:
+        +schema: zuora_order
+        +tags: ["zuora_order"]
 
     # ------------------
     # Common

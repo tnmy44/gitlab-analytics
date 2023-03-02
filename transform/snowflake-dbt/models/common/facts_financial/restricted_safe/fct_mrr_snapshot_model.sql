@@ -45,6 +45,7 @@ WITH snapshot_dates AS (
       dim_subscription_id                     AS dim_subscription_id,
       dim_billing_account_id                  AS dim_billing_account_id,
       dim_crm_account_id                      AS dim_crm_account_id,
+      dim_order_id                            AS dim_order_id,
       mrr                                     AS mrr,
       arr                                     AS arr,
       quantity                                AS quantity,
@@ -68,7 +69,28 @@ WITH snapshot_dates AS (
 
     SELECT
       snapshot_dates.date_id AS snapshot_id,
-      fct_mrr.*
+      fct_mrr.mrr_id,
+      fct_mrr.dim_date_id,
+      fct_mrr.dim_charge_id,
+      fct_mrr.dim_product_detail_id,
+      fct_mrr.dim_subscription_id,
+      fct_mrr.dim_billing_account_id,
+      fct_mrr.dim_crm_account_id,
+      fct_mrr.dim_order_id,
+      fct_mrr.mrr,
+      fct_mrr.arr,
+      fct_mrr.quantity,
+      fct_mrr.unit_of_measure,
+      fct_mrr.created_by,
+      fct_mrr.updated_by,
+      fct_mrr.model_created_date,
+      fct_mrr.model_updated_date,
+      fct_mrr.dbt_created_at,
+      fct_mrr.dbt_scd_id,
+      fct_mrr.dbt_updated_at,
+      fct_mrr.dbt_valid_from,
+      fct_mrr.dbt_valid_to,
+      fct_mrr.subscription_status
     FROM fct_mrr
     INNER JOIN snapshot_dates
       ON snapshot_dates.date_actual >= fct_mrr.dbt_valid_from
