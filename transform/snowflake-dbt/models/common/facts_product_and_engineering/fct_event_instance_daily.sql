@@ -8,6 +8,11 @@
     ])
 }},
 
+/*
+Aggregate events by date and event
+Limit to 24 months of history for performance reasons
+*/
+
 fct_event_instance_daily AS (
     
   SELECT
@@ -26,6 +31,7 @@ fct_event_instance_daily AS (
     COUNT(DISTINCT(dim_user_id)) AS user_count,
     COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count
   FROM fct_event_valid
+  WHERE event_date >= DATEADD('month', -24, DATE_TRUNC('month',CURRENT_DATE))
   {{ dbt_utils.group_by(n=4) }}
   
 )
@@ -33,7 +39,7 @@ fct_event_instance_daily AS (
 {{ dbt_audit(
     cte_ref="fct_event_instance_daily",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@cbraza",
     created_date="2022-04-09",
-    updated_date="2022-06-20"
+    updated_date="2023-02-16"
 ) }}
