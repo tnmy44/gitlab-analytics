@@ -1918,35 +1918,6 @@ models:
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
 
-  - name: fct_event_instance_daily
-    description: '{{ doc("fct_event_instance_daily") }}'
-    columns:
-      - name: event_instance_daily_pk
-        description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance_daily.
-        tests:
-          - not_null
-          - unique
-      - name: event_date
-        description: '{{ doc("event_date") }}'
-      - name: event_name
-        description: '{{ doc("event_name") }}'
-      - name: data_source
-        description: '{{ doc("data_source") }}'
-      - name: event_count
-        description: '{{ doc("event_count") }}'
-      - name: user_count
-        description: '{{ doc("user_count") }}'
-      - name: ultimate_parent_namespace_count
-        description: '{{ doc("ultimate_parent_namespace_count") }}'
-      - name: created_by
-        description: '{{ doc("created_by") }}'
-      - name: updated_by
-        description: '{{ doc("updated_by") }}'
-      - name: model_created_date
-        description: '{{ doc("model_created_date") }}'
-      - name: model_updated_date
-        description: '{{ doc("model_updated_date") }}'
-
   - name: fct_event_namespace_daily
     description: '{{ doc("fct_event_namespace_daily") }}'
     columns:
@@ -2436,27 +2407,6 @@ models:
           - not_null
       - name: ci_pipeline_internal_id
         description: Internal ID for the CI Pipeline. This is project specific
-
-  - name: dim_action
-    description: '{{ doc("dim_action") }}'
-    columns:
-      - name: dim_action_id
-        description: The unique identifier for each of the actions.
-        tests:
-          - not_null
-          - unique
-      - name: dim_project_id
-      - name: dim_namespace_id
-      - name: ultimate_parent_namespace_id
-      - name: dim_user_id
-      - name: created_date_id
-      - name: dim_plan_id
-        tests:
-          - not_null
-      - name: target_id
-      - name: target_type
-      - name: created_at
-      - name: event_action_type
 
   - name: dim_user
     description: '{{ doc("dim_user") }}'
