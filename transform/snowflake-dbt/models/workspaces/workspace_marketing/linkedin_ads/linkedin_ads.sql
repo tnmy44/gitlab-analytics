@@ -5,7 +5,7 @@ WITH find_current_campaigns AS (
       LAST_MODIFIED_TIME
     ) OVER (PARTITION BY id ORDER BY LAST_MODIFIED_TIME DESC) AS latest_update,
     latest_update = LAST_MODIFIED_TIME AS is_latest
-  FROM RAW.LINKEDIN_ADS.CAMPAIGN_HISTORY
+  FROM {{ ref('linkedin_ads_campaign_history_source') }}
 ),current_campaigns AS (
   SELECT
     *
@@ -18,7 +18,7 @@ WITH find_current_campaigns AS (
       LAST_MODIFIED_TIME
     ) OVER (PARTITION BY id ORDER BY LAST_MODIFIED_TIME DESC) AS latest_update,
     latest_update = LAST_MODIFIED_TIME AS is_latest
-  FROM RAW.LINKEDIN_ADS.CREATIVE_HISTORY
+   FROM {{ ref('linkedin_ads_creative_history_source') }}
 ),current_creatives AS (
   SELECT
     *
@@ -27,7 +27,7 @@ WITH find_current_campaigns AS (
 ), creative_stats as (
   SELECT
     *
-  FROM RAW.LINKEDIN_ADS.AD_ANALYTICS_BY_CREATIVE
+   FROM {{ ref('linkedin_ads_ad_analytics_by_creative_source') }}
 )
 
 SELECT
