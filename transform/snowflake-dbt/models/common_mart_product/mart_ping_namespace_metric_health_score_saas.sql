@@ -111,10 +111,11 @@
       dim_subscription_id_original,
       reporting_month,
       instance_type,
+      included_in_health_measures_str,
       MAX(ping_date)                                        AS ping_date,
       {{ dbt_utils.pivot('ping_name', gainsight_wave_metrics, then_value='counter_value') }}
     FROM joined
-    {{ dbt_utils.group_by(n=5)}}
+    {{ dbt_utils.group_by(n=6)}}
 
 )
 
@@ -123,5 +124,5 @@
     created_by="@mdrusell",
     updated_by="@mdrussell",
     created_date="2022-10-12",
-    updated_date="2022-10-21"
+    updated_date="2023-03-01"
 ) }}
