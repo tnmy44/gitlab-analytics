@@ -3,7 +3,7 @@ WITH find_current_campaigns AS (
     *,
     MAX(
       LAST_MODIFIED_TIME
-    ) OVER (PARTITION BY id ORDER BY LAST_MODIFIED_TIME DESC) AS latest_update,
+    ) OVER (PARTITION BY campaign_id ORDER BY LAST_MODIFIED_TIME DESC) AS latest_update,
     latest_update = LAST_MODIFIED_TIME AS is_latest
   FROM {{ ref('linkedin_ads_campaign_history_source') }}
 ),current_campaigns AS (
@@ -16,7 +16,7 @@ WITH find_current_campaigns AS (
     *,
     MAX(
       LAST_MODIFIED_TIME
-    ) OVER (PARTITION BY id ORDER BY LAST_MODIFIED_TIME DESC) AS latest_update,
+    ) OVER (PARTITION BY creative_id ORDER BY LAST_MODIFIED_TIME DESC) AS latest_update,
     latest_update = LAST_MODIFIED_TIME AS is_latest
    FROM {{ ref('linkedin_ads_creative_history_source') }}
 ),current_creatives AS (
@@ -36,7 +36,7 @@ SELECT
      current_campaigns.account_id,
     /* Campaign Info */
      
-    current_campaigns.id                  as campaign_id,
+    current_campaigns.campaign_id         as campaign_id,
     current_campaigns.name                as campaign_name,
     current_campaigns.status              as campaign_status,
     current_campaigns.RUN_SCHEDULE_END    as campaign_end_date,
@@ -59,5 +59,5 @@ SELECT
     creative_stats.cost_in_usd
 from
 current_campaigns
-    left join current_creatives on current_campaigns.id = current_creatives.CAMPAIGN_ID
-    left join creative_stats on current_creatives.id = creative_stats.CREATIVE_ID
+    left join current_creatives on current_campaigns.campaign_id = current_creatives.campaign_id
+    left join creative_stats on current_creatives.creative_id = creative_stats.creative_id

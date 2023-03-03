@@ -8,16 +8,16 @@ renamed AS (
 
   SELECT
 	id::NUMBER AS campaign_id,
-	last_modified_time::TIMESTAMP as last_modified_time,
-	type::VARCHAR as type,
-	created_time::TIMESTAMP as created_time,
-	name::VARCHAR as name,
-	status::VARCHAR as status,
-	format varchar(256),
-	run_schedule_start::TIMESTAMP as run_schedule_start,
-	run_schedule_end::TIMESTAMP as run_schedule_end,
-	campaign_group_id::NUMBER as campaign_group_id,
-	account_id::NUMBER as account_id,
+	last_modified_time::TIMESTAMP AS last_modified_time,
+	type::VARCHAR AS type,
+    objective_type::VARCHAR as objective_type,
+	created_time::TIMESTAMP AS created_time,
+	name::VARCHAR AS name,
+	status::VARCHAR AS status,
+	run_schedule_start::TIMESTAMP AS run_schedule_start,
+	run_schedule_end::TIMESTAMP AS run_schedule_end,
+	campaign_group_id::NUMBER AS campaign_group_id,
+	account_id::NUMBER AS account_id,
 	_fivetran_synced::TIMESTAMP AS _fivetran_synced
 
   FROM source

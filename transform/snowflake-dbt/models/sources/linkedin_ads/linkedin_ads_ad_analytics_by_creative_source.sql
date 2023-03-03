@@ -7,14 +7,14 @@ WITH source AS (
 renamed AS (
 
   SELECT
-    creative_id::NUMBER as creative_id,
-	day::TIMESTAMP as day,
-	clicks::NUMBER as clicks,
-	impressions::NUMBER as impressions,
-	one_click_leads::NUMBER as one_click_leads,
-	opens::NUMBER as opens,
-	cost_in_usd::NUMBER as cost_in_usd
-	_fivetran_synced timestamp_tz(9),
+    creative_id::NUMBER AS creative_id,
+	day::TIMESTAMP AS day,
+	clicks::NUMBER AS clicks,
+	impressions::NUMBER AS impressions,
+	one_click_leads::NUMBER AS one_click_leads,
+	opens::NUMBER AS opens,
+	cost_in_usd::NUMBER AS cost_in_usd,
+	_fivetran_synced::TIMESTAMP AS _fivetran_synced
 
   FROM source
 )
