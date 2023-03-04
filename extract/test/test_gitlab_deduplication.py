@@ -4,7 +4,11 @@ Test gitlab_deduplication
 
 import pytest
 
-from extract.gitlab_deduplication.main import build_table_name, dummy_test
+from extract.gitlab_deduplication.main import (
+    build_table_name,
+    create_swap_table_ddl,
+    create_drop_table_ddl,
+)
 
 
 @pytest.mark.parametrize(
@@ -29,16 +33,38 @@ def test_build_table_name(table_prefix, table_name, table_suffix, expected):
 
     assert actual == expected
 
-@pytest.mark.parametrize(
-    "actual, expected",
-    [
-        ('radovan','123_radovan'),
-        ('ved','123_ved'),
-        ('',''),
 
+@pytest.mark.parametrize(
+    "raw_database, raw_schema, temp_table_name, original_table_name,expected",
+    [
+        (
+            None,
+            None,
+            None,
+            None,
+            "ALTER TABLE None.None.None SWAP WITH None.None.None;",
+        ),
+        ("", "", "", "", "ALTER TABLE .. SWAP WITH ..;"),
+        (
+            "RAW",
+            "Test_schema",
+            "test_table_temp",
+            "test_table",
+            "ALTER TABLE RAW.Test_schema.test_table_temp SWAP WITH RAW.Test_schema.test_table;",
+        ),
     ],
 )
-def test_dummy_test(actual, expected):
-    actual = dummy_test('RADOVAN')
+def test_create_swap_table_ddl(
+    raw_database, raw_schema, temp_table_name, original_table_name, expected
+):
+    """
+    Test swap table ddl
+    """
+    actual = create_swap_table_ddl(
+        raw_database=raw_database,
+        raw_schema=raw_schema,
+        temp_table_name=temp_table_name,
+        original_table_name=original_table_name,
+    )
 
-    assert actual == 'radovan_RADOVAN'
+    assert actual == expected

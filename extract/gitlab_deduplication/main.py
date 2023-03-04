@@ -10,8 +10,11 @@ from fire import Fire
 from gitlabdata.orchestration_utils import query_executor, snowflake_engine_factory
 from yaml import YAMLError, safe_load
 
+file_name = "gitlab_deduplication/manifest_deduplication/t_gitlab_com_deduplication_table_manifest.yaml"
 
-def build_table_name(table_prefix: str = None, table_name: str = None,  table_suffix: str = None
+
+def build_table_name(
+    table_prefix: str = None, table_name: str = None, table_suffix: str = None
 ) -> str:
     """The function is responsible for adding prefix and suffix to create table name"""
 
@@ -28,13 +31,12 @@ def build_table_name(table_prefix: str = None, table_name: str = None,  table_su
     return res
 
 
-def create_table_name(manifest_dict: Dict, table_name: str) -> tuple:
+def create_table_name(table_prefix: str, table_name: str) -> tuple:
     """
     Prepare the backup table name and original table name
     as the table name passed in manifest i postgres table name not the snowflake table name
     """
     table_suffix = "_" + datetime.now().strftime("%Y%m%d")
-    table_prefix = manifest_dict["generic_info"]["table_prefix"]
 
     if table_prefix:
         bkp_table_name = build_table_name(table_name, table_prefix, table_suffix)
@@ -51,29 +53,28 @@ def create_backup_table(
 ) -> bool:
     """
     This function create clone of the table in the backup schema,
-    if the backup has been taken today it self it will abort here.
+    if the backup has been taken today itself it will abort here.
     """
 
     raw_database = manifest_dict["raw_database"]
     backup_schema_name = manifest_dict["generic_info"]["backup_schema"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
-    bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
-    query_create_backup_table = f"CREATE TABLE {raw_database}.{backup_schema_name}.{bkp_table_name} CLONE {raw_database}.{raw_schema}.{original_table_name};"
+    table_prefix = manifest_dict["generic_info"]["table_prefix"]
+    bkp_table_name, original_table_name = create_table_name(table_prefix, table_name)
+    query_create_backup_table = f"CREATE TABLE {raw_database}.{backup_schema_name}.{bkp_table_name} CLONE {raw_database}.{raw_schema}.{original_table_name}; "
 
     logging.info(f"Backup table DDL : {query_create_backup_table}")
     backup_table = query_executor(snowflake_engine, query_create_backup_table)
     logging.info(backup_table)
-
-    if backup_table:
-        return True
-    return False
+    return True
 
 
 def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
     """This function is responsible to generate the temp table DDL for the passed table parameters"""
     raw_database = manifest_dict["raw_database"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
-    _ , original_table_name = create_table_name(manifest_dict, table_name)
+    table_prefix = manifest_dict["generic_info"]["table_prefix"]
+    bkp_table_name, original_table_name = create_table_name(table_prefix, table_name)
     backup_schema = manifest_dict["generic_info"]["backup_schema"]
     build_ddl_statement = f"""SELECT CONCAT('CREATE TABLE {raw_database}.{raw_schema}.{original_table_name}_temp\n AS (' ,'SELECT  \n',
                                     LISTAGG(
@@ -98,17 +99,29 @@ def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
     return table_definition_to_create_table[0][0]
 
 
-def dummy_test(input:str) -> str: # TODO: ved, please delete this one
-    return f"123_{input}"
-
-def create_temp_table(manifest_dict: Dict, table_name: str):
+def create_temp_table(manifest_dict: Dict, table_name: str) -> None:
     """
-    This function create the table in the schema
+    This function create the temporary table in the original schema.
+    This temp table contains most recent unique rows.
     """
 
     table_definition = create_temp_table_ddl(manifest_dict, table_name)
     execute_create_temp_table = query_executor(snowflake_engine, table_definition)
     logging.info(execute_create_temp_table)
+
+
+def create_swap_table_ddl(
+    raw_database: str, raw_schema: str, temp_table_name: str, original_table_name: str
+) -> str:
+
+    return f"ALTER TABLE {raw_database}.{raw_schema}.{temp_table_name} SWAP WITH {raw_database}.{raw_schema}.{original_table_name}; "
+
+
+def create_drop_table_ddl(
+    raw_database: str, raw_schema: str, temp_table_name: str
+) -> str:
+
+    return f"DROP TABLE {raw_database}.{raw_schema}.{temp_table_name};"
 
 
 def swap_and_drop_temp_table(manifest_dict: Dict, table_name: str):
@@ -117,15 +130,17 @@ def swap_and_drop_temp_table(manifest_dict: Dict, table_name: str):
     """
     raw_database = manifest_dict["raw_database"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
-
-    bkp_table_name, original_table_name = create_table_name(manifest_dict, table_name)
+    table_prefix = manifest_dict["generic_info"]["table_prefix"]
+    _, original_table_name = create_table_name(table_prefix, table_name)
 
     # Swap the table name with main table.
     temp_table_name = f"{original_table_name}_temp"
-    swap_query = f"ALTER TABLE {raw_database}.{raw_schema}.{temp_table_name} SWAP WITH {raw_database}.{raw_schema}.{original_table_name};"
+    swap_query = create_swap_table_ddl(
+        raw_database, raw_schema, temp_table_name, original_table_name
+    )
 
     # Drop the temp table in tap_postgres schema
-    drop_query = f"DROP TABLE {raw_database}.{raw_schema}.{temp_table_name};"
+    drop_query = create_drop_table_ddl(raw_database, raw_schema, temp_table_name)
 
     logging.info(f"Swap query:{swap_query}")
     swap_table = query_executor(snowflake_engine, swap_query)
@@ -152,7 +167,8 @@ def get_yaml_file(path: str):
             logging.error(f"Issue with the yaml file: {exc}")
             raise
 
-def main(file_name: str, table_name: str) -> None:
+
+def main(table_name: str) -> None:
     """
     Read table name FROM manifest file and decide if the table exist in the database. Check if the advance metadata column `_task_instance`
     is present in the table.

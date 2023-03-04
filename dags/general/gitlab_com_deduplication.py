@@ -47,7 +47,7 @@ full_path = f"{airflow_home}/analytics/extract/gitlab_deduplication/manifest_ded
 task_name = "t_deduplication"
 
 
-def get_yaml_file(path: str) -> dict:
+def get_yaml_file(path: str):
     """
     Get all the report name for which tasks for loading
     needs to be created
@@ -59,12 +59,11 @@ def get_yaml_file(path: str) -> dict:
             return loaded_file
         except YAMLError as exc:
             logging.error(f"Issue with the yaml file: {exc}")
-            return None
+            raise
 
 
 manifest_dict = get_yaml_file(path=full_path)
 table_list = manifest_dict["tables_to_de_duped"]
-
 
 # Create the DAG  with one report at once
 dag = DAG(
@@ -81,9 +80,9 @@ for table in table_list:
     container_cmd_load = f"""
         {clone_and_setup_extraction_cmd} &&
         export SNOWFLAKE_LOAD_WAREHOUSE="LOADING_XL" &&
-        python3 gitlab_deduplication/main.py deduplication  --file_name "gitlab_deduplication/manifest_deduplication/t_gitlab_com_deduplication_table_manifest.yaml" --table_name {table}
+        python3 gitlab_deduplication/main.py deduplication  --table_name {table}
         """
-    task_identifier = f"{task_name}-{table.replace('_','-').lower()}-transform"
+    task_identifier = f"{task_name}-{table.replace('_', '-').lower()}-transform"
     # Task 2
     gitlab_deduplication_transform_run = KubernetesPodOperator(
         **gitlab_defaults,
