@@ -346,6 +346,7 @@ roles:
         warehouses:
             - dev_xs
             - dev_l
+            - dev_xl
         member_of:
             - analyst_core
             - boneyard
@@ -547,8 +548,8 @@ roles:
         warehouses:
             - dev_xs
             - dev_m
+            - dev_xl
         member_of:
-            - transformer # until issue#11249
             - analyst_core
             - snowflake_db
             - data_team_analyst
@@ -1584,8 +1585,6 @@ roles:
                     - prod.common_mart_product
             tables:
                 read:
-                    - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_latest
-                    - prod.common_mart_product.mart_product_usage_wave_1_3_metrics_monthly_diff
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_free_user_metrics_monthly
                     - prod.restricted_safe_common_mart_sales.mart_arr
@@ -2671,6 +2670,7 @@ roles:
     - cleroux:
         member_of:
             - analyst_engineering
+            - restricted_safe
         warehouses:
             - dev_xs
         owns:
@@ -2715,7 +2715,7 @@ roles:
 
     - csharp:
         member_of:
-            - engineer
+            - analytics_engineer_core
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
@@ -3614,6 +3614,7 @@ roles:
         member_of:
             - analyst_finance
             - analyst_marketing
+            - analytics_engineer_core
             - bamboohr
             - customers_db
             - data_team_analyst
@@ -4120,7 +4121,6 @@ roles:
 
     - pempey:
         member_of:
-            - engineer
             - analytics_engineer_core
             - analyst_people
             - analyst_engineering
@@ -4402,7 +4402,7 @@ roles:
 
     - snalamaru:
         member_of:
-            - engineer
+            - analytics_engineer_core
             - restricted_safe
         warehouses:
             - dev_xs

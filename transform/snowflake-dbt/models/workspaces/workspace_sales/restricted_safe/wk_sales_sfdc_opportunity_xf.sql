@@ -273,6 +273,9 @@ WITH edm_opty AS (
     edm_opty.dim_parent_crm_account_id                 AS ultimate_parent_account_id,
     edm_opty.is_jihu_account,
 
+    account_owner.name                                  AS account_owner_name,
+    account_owner.user_id                               AS account_owner_id,                                       
+
     edm_opty.account_demographics_segment,
     edm_opty.account_demographics_geo,
     edm_opty.account_demographics_region,

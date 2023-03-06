@@ -24,7 +24,6 @@ SELECT DISTINCT
     order_type_stamped,
     deal_category,
     deal_group,
---     role_type,
     report_user_segment_geo_region_area,
     report_user_segment_geo_region_area_sqs_ot,
     report_bu_user_segment_geo_region_area_sqs_ot,
@@ -44,10 +43,6 @@ SELECT DISTINCT
     key_segment_geo_region_area_sqs,
     key_segment_geo_region_area_ot,
     key_segment_geo_area,
-
---    key_bu_geo_region_area_segment_rt,
---    key_bu_geo_segment_region_area_rt,
-
     sales_team_cro_level,
     sales_team_rd_asm_level,
     sales_team_vp_level,
