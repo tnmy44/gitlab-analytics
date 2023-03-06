@@ -90,7 +90,7 @@ WITH internal_issues AS (
         ELSE 'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/issues/' || internal_issues.issue_iid 
         END                                                                                                                     AS url
   FROM internal_issues
-  LEFT JOIN common.dim_project AS projects
+  LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_issues.project_id
   LEFT JOIN bot_users AS bots
     ON bots.dim_user_id = internal_issues.author_id
