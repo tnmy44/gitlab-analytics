@@ -551,11 +551,12 @@ WITH edm_opty AS (
 
 
       -- JK 2023-02-06: FY24 keys
-      LOWER(agg_demo_keys_base.business_unit)               AS business_unit,
-      LOWER(agg_demo_keys_base.sub_business_unit)           AS sub_business_unit,
-      LOWER(agg_demo_keys_base.division)                    AS division,
-      LOWER(agg_demo_keys_base.asm)                         AS asm,
-
+      /*
+      LOWER(agg_demo_keys_base.report_opportunity_user_business_unit)               AS business_unit,
+      LOWER(agg_demo_keys_base.report_opportunity_user_sub_business_unit)           AS sub_business_unit,
+      LOWER(agg_demo_keys_base.report_opportunity_user_division)                    AS division,
+      LOWER(agg_demo_keys_base.report_opportunity_user_asm)                         AS asm,
+      */
       LOWER(agg_demo_keys_base.key_bu)                      AS key_bu,
       LOWER(agg_demo_keys_base.key_bu_subbu)                AS key_bu_subbu,
       LOWER(agg_demo_keys_base.key_bu_subbu_division)       AS key_bu_subbu_division,

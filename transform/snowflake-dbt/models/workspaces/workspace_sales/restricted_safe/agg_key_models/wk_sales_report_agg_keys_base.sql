@@ -67,10 +67,10 @@ WITH sfdc_account_xf AS (
     ), eligible AS (
 
     SELECT
-        LOWER(report_opportunity_user_business_unit)      AS business_unit,
-        LOWER(report_opportunity_user_sub_business_unit)  AS sub_business_unit,
-        LOWER(report_opportunity_user_division)           AS division,
-        LOWER(report_opportunity_user_asm)              AS asm,
+        LOWER(report_opportunity_user_business_unit)      AS report_opportunity_user_business_unit,
+        LOWER(report_opportunity_user_sub_business_unit)  AS report_opportunity_user_sub_business_unit,
+        LOWER(report_opportunity_user_division)           AS report_opportunity_user_division,
+        LOWER(report_opportunity_user_asm)              AS report_opportunity_user_asm,
         LOWER(report_opportunity_user_segment)          AS report_opportunity_user_segment,
         LOWER(report_opportunity_user_geo)              AS report_opportunity_user_geo,
         LOWER(report_opportunity_user_region)           AS report_opportunity_user_region,
@@ -139,10 +139,10 @@ WITH sfdc_account_xf AS (
     UNION ALL
 
     SELECT
-        LOWER(account_owner_user_business_unit)      AS business_unit,
-        LOWER(account_owner_user_sub_business_unit)  AS sub_business_unit,
-        LOWER(account_owner_user_division)           AS division,
-        LOWER(account_owner_user_asm)                AS asm,
+        LOWER(account_owner_user_business_unit)      AS report_opportunity_user_business_unit,
+        LOWER(account_owner_user_sub_business_unit)  AS report_opportunity_user_sub_business_unit,
+        LOWER(account_owner_user_division)           AS report_opportunity_user_division,
+        LOWER(account_owner_user_asm)                AS report_opportunity_user_asm,
         LOWER(account_owner_user_segment)            AS report_opportunity_user_segment,
         LOWER(account_owner_user_geo)                AS report_opportunity_user_geo,
         LOWER(account_owner_user_region)             AS report_opportunity_user_region,
@@ -234,16 +234,18 @@ WITH sfdc_account_xf AS (
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area                                       AS key_segment_geo_region_area,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  sales_qualified_source     AS key_segment_geo_region_area_sqs,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  deal_group                 AS key_segment_geo_region_area_ot,
-
-
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_area                                       AS key_segment_geo_area,
 
-
+        -- FY24 structure as hierarchy
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  deal_group   AS key_bu_segment_geo_region_area_ot,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  sales_qualified_source   AS key_bu_segment_geo_region_area_sqs,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  deal_group  || '_' ||  sales_qualified_source   AS key_bu_segment_geo_region_area_ot_sqs,
+        
         -- FY24 structure keys (pending)
-        business_unit AS key_bu,
-        business_unit || '_' || sub_business_unit AS key_bu_subbu,
-        business_unit || '_' || sub_business_unit || '_' || division AS key_bu_subbu_division,
-        business_unit || '_' || sub_business_unit || '_' || division || '_' || asm AS key_bu_subbu_division_asm,
+        report_opportunity_user_business_unit AS key_bu,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit                                                                                   AS key_bu_subbu,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division                                        AS key_bu_subbu_division,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division || '_' || report_opportunity_user_asm  AS key_bu_subbu_division_asm,
 
 
         -- FY22 keys

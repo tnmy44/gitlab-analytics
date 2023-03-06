@@ -15,11 +15,17 @@ WITH report_agg_keys_base AS (
 )
 
 SELECT DISTINCT
-    business_unit,
+    report_opportunity_user_business_unit,
     report_opportunity_user_segment,
     report_opportunity_user_geo,
     report_opportunity_user_region,
     report_opportunity_user_area,
+
+    -- Calculated reporting fields
+    report_opportunity_user_sub_business_unit,
+    report_opportunity_user_division,
+    report_opportunity_user_asm,
+
     sales_qualified_source,
     order_type_stamped,
     deal_category,
@@ -47,6 +53,9 @@ SELECT DISTINCT
     sales_team_rd_asm_level,
     sales_team_vp_level,
     sales_team_avp_rd_level,
-    sales_team_asm_level
+    sales_team_asm_level,
+
+    --fy24
+    key_bu_segment_geo_region_area_ot_sqs
 
 FROM report_agg_keys_base
