@@ -1295,4 +1295,4 @@ models:
         description: cost before applying credits
       - name: net_cost
         description: net cost paid by GitLab
-
+        
