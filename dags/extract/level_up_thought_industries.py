@@ -52,13 +52,19 @@ dag = DAG(
     # start_date=datetime(2022, 1, 12),  # CourseCompletion data starts: 2022-01-13
     catchup=True,
     max_active_runs=1,  # due to API rate limiting
-    concurrency=2,  # num of max_tasks, limit due to API rate limiting
+    concurrency=3,  # num of max_tasks, limit due to API rate limiting
 )
 
 dummy_start = DummyOperator(task_id="dummy_start", dag=dag)
 dummy_end = DummyOperator(task_id="dummy_end", dag=dag)
 
-endpoint_classes = ("CourseCompletions", "Logins", "Visits", "CourseViews")
+endpoint_classes = (
+    "CourseCompletions",
+    "Logins",
+    "Visits",
+    "CourseViews",
+    "CourseActions",
+)
 extract_tasks = []
 
 for endpoint_class in endpoint_classes:
@@ -96,7 +102,6 @@ for endpoint_class in endpoint_classes:
         tolerations=get_toleration(False),
         arguments=[extract_command],
         dag=dag,
-        trigger_rule=TriggerRule.ALL_DONE,  # run task regardless of upstream
     )
     extract_tasks.append(extract_task)
 

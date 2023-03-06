@@ -202,6 +202,18 @@ class CourseViews(ThoughtIndustries):
         return "incoming/v2/events/courseView"
 
 
+class CourseActions(ThoughtIndustries):
+    """Class for CourseActions endpoint"""
+
+    def get_name(self) -> str:
+        """implement abstract class"""
+        return "course_actions"
+
+    def get_endpoint_url(self) -> str:
+        """implement abstract class"""
+        return "incoming/v2/events/courseAction"
+
+
 if __name__ == "__main__":
     EPOCH_START_MS = 1675904400000
     EPOCH_END_MS = 1676246400000
