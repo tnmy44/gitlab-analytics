@@ -1,0 +1,452 @@
+[0m14:05:23  Running with dbt=1.2.3
+[0m14:05:23  Partial parse save file not found. Starting full parse.
+[0m14:06:15  
+        SET email_sha = '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+        
+Initiating login request with your identity provider. A browser window should have opened for you to complete the login. If you can't see it, check existing browser windows, or your OS settings. Press CTRL+C to abort and try again...
+[0m14:06:21  
+                DELETE FROM raw.tap_postgres.customers_db_licenses WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:06:26  
+                DELETE FROM raw.tap_postgres.gitlab_db_members WHERE SHA2(TRIM(LOWER("INVITE_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:06:29  
+                DELETE FROM raw.tap_postgres.gitlab_db_push_rules WHERE SHA2(TRIM(LOWER("AUTHOR_EMAIL_REGEX"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:06:31  
+                DELETE FROM raw.tap_postgres.gitlab_ops_db_members WHERE SHA2(TRIM(LOWER("INVITE_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:06:33  
+                DELETE FROM raw.tap_postgres.gitlab_db_emails WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    2 |
+[0m14:06:36  
+                DELETE FROM raw.tap_postgres.gitlab_db_users WHERE SHA2(TRIM(LOWER("COMMIT_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:06:39  
+                DELETE FROM raw.tap_postgres.gitlab_db_users WHERE SHA2(TRIM(LOWER("NOTIFICATION_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:06:42  
+                DELETE FROM raw.tap_postgres.gitlab_db_users WHERE SHA2(TRIM(LOWER("PUBLIC_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:06:45  
+                DELETE FROM raw.tap_postgres.gitlab_db_users WHERE SHA2(TRIM(LOWER("ADMIN_EMAIL_UNSUBSCRIBED_AT"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:06:48  
+                DELETE FROM raw.tap_postgres.gitlab_db_users WHERE SHA2(TRIM(LOWER("EMAIL_OPTED_IN_AT"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:06:52  
+                DELETE FROM raw.tap_postgres.gitlab_db_users WHERE SHA2(TRIM(LOWER("UNCONFIRMED_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:06:53  
+                DELETE FROM raw.tap_postgres.gitlab_db_users WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    4 |
+[0m14:07:01  
+                DELETE FROM raw.tap_postgres.version_db_usage_data WHERE SHA2(TRIM(LOWER("REPLY_BY_EMAIL_ENABLED"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:04  
+                DELETE FROM raw.tap_postgres.customers_db_customers WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:12  
+                DELETE FROM raw.tap_postgres.license_db_users WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:13  
+                DELETE FROM raw.tap_postgres.version_db_users WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:14  
+                DELETE FROM raw.tap_postgres.license_db_licenses WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:15  
+                DELETE FROM raw.tap_postgres.customers_db_leads WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:18  
+                DELETE FROM raw.tap_postgres.gitlab_ops_db_users WHERE SHA2(TRIM(LOWER("ADMIN_EMAIL_UNSUBSCRIBED_AT"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:19  
+                DELETE FROM raw.tap_postgres.gitlab_ops_db_users WHERE SHA2(TRIM(LOWER("COMMIT_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:20  
+                DELETE FROM raw.tap_postgres.gitlab_ops_db_users WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:21  
+                DELETE FROM raw.tap_postgres.gitlab_ops_db_users WHERE SHA2(TRIM(LOWER("EMAIL_OPTED_IN_AT"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:22  
+                DELETE FROM raw.tap_postgres.gitlab_ops_db_users WHERE SHA2(TRIM(LOWER("NOTIFICATION_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:22  
+                DELETE FROM raw.tap_postgres.gitlab_ops_db_users WHERE SHA2(TRIM(LOWER("PUBLIC_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:23  
+                DELETE FROM raw.tap_postgres.gitlab_ops_db_users WHERE SHA2(TRIM(LOWER("UNCONFIRMED_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+[0m14:07:26  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                AVATAR =  'GDPR Redacted', 
+                FIRST_NAME =  'GDPR Redacted', 
+                NAME =  'GDPR Redacted', 
+                NOTE =  'GDPR Redacted', 
+                WEBSITE_URL =  'GDPR Redacted', 
+                LAST_NAME =  'GDPR Redacted', 
+                OTP_GRACE_PERIOD_STARTED_AT =  'GDPR Redacted', 
+                LAST_SIGN_IN_IP =  'GDPR Redacted', 
+                CURRENT_SIGN_IN_IP =  'GDPR Redacted', 
+                LOCATION =  'GDPR Redacted', 
+                ORGANIZATION =  'GDPR Redacted', 
+                PREFERRED_LANGUAGE =  'GDPR Redacted', 
+                STATE =  'GDPR Redacted', 
+                USERNAME =  'GDPR Redacted'
+                
+                WHERE SHA2(TRIM(LOWER("ADMIN_EMAIL_UNSUBSCRIBED_AT"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:07:31  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                AVATAR =  'GDPR Redacted', 
+                FIRST_NAME =  'GDPR Redacted', 
+                NAME =  'GDPR Redacted', 
+                NOTE =  'GDPR Redacted', 
+                WEBSITE_URL =  'GDPR Redacted', 
+                LAST_NAME =  'GDPR Redacted', 
+                OTP_GRACE_PERIOD_STARTED_AT =  'GDPR Redacted', 
+                LAST_SIGN_IN_IP =  'GDPR Redacted', 
+                CURRENT_SIGN_IN_IP =  'GDPR Redacted', 
+                LOCATION =  'GDPR Redacted', 
+                ORGANIZATION =  'GDPR Redacted', 
+                PREFERRED_LANGUAGE =  'GDPR Redacted', 
+                STATE =  'GDPR Redacted', 
+                USERNAME =  'GDPR Redacted'
+                
+                WHERE SHA2(TRIM(LOWER("EMAIL_OPTED_IN_AT"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:07:37  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                AVATAR =  'GDPR Redacted', 
+                FIRST_NAME =  'GDPR Redacted', 
+                NAME =  'GDPR Redacted', 
+                NOTE =  'GDPR Redacted', 
+                WEBSITE_URL =  'GDPR Redacted', 
+                LAST_NAME =  'GDPR Redacted', 
+                OTP_GRACE_PERIOD_STARTED_AT =  'GDPR Redacted', 
+                LAST_SIGN_IN_IP =  'GDPR Redacted', 
+                CURRENT_SIGN_IN_IP =  'GDPR Redacted', 
+                LOCATION =  'GDPR Redacted', 
+                ORGANIZATION =  'GDPR Redacted', 
+                PREFERRED_LANGUAGE =  'GDPR Redacted', 
+                STATE =  'GDPR Redacted', 
+                USERNAME =  'GDPR Redacted'
+                
+                WHERE SHA2(TRIM(LOWER("PUBLIC_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:07:41  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                AVATAR =  'GDPR Redacted', 
+                FIRST_NAME =  'GDPR Redacted', 
+                NAME =  'GDPR Redacted', 
+                NOTE =  'GDPR Redacted', 
+                WEBSITE_URL =  'GDPR Redacted', 
+                LAST_NAME =  'GDPR Redacted', 
+                OTP_GRACE_PERIOD_STARTED_AT =  'GDPR Redacted', 
+                LAST_SIGN_IN_IP =  'GDPR Redacted', 
+                CURRENT_SIGN_IN_IP =  'GDPR Redacted', 
+                LOCATION =  'GDPR Redacted', 
+                ORGANIZATION =  'GDPR Redacted', 
+                PREFERRED_LANGUAGE =  'GDPR Redacted', 
+                STATE =  'GDPR Redacted', 
+                USERNAME =  'GDPR Redacted'
+                
+                WHERE SHA2(TRIM(LOWER("COMMIT_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:07:46  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                AVATAR =  'GDPR Redacted', 
+                FIRST_NAME =  'GDPR Redacted', 
+                NAME =  'GDPR Redacted', 
+                NOTE =  'GDPR Redacted', 
+                WEBSITE_URL =  'GDPR Redacted', 
+                LAST_NAME =  'GDPR Redacted', 
+                OTP_GRACE_PERIOD_STARTED_AT =  'GDPR Redacted', 
+                LAST_SIGN_IN_IP =  'GDPR Redacted', 
+                CURRENT_SIGN_IN_IP =  'GDPR Redacted', 
+                LOCATION =  'GDPR Redacted', 
+                ORGANIZATION =  'GDPR Redacted', 
+                PREFERRED_LANGUAGE =  'GDPR Redacted', 
+                STATE =  'GDPR Redacted', 
+                USERNAME =  'GDPR Redacted'
+                
+                WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    4 |                    0 |
+[0m14:07:56  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                AVATAR =  'GDPR Redacted', 
+                FIRST_NAME =  'GDPR Redacted', 
+                NAME =  'GDPR Redacted', 
+                NOTE =  'GDPR Redacted', 
+                WEBSITE_URL =  'GDPR Redacted', 
+                LAST_NAME =  'GDPR Redacted', 
+                OTP_GRACE_PERIOD_STARTED_AT =  'GDPR Redacted', 
+                LAST_SIGN_IN_IP =  'GDPR Redacted', 
+                CURRENT_SIGN_IN_IP =  'GDPR Redacted', 
+                LOCATION =  'GDPR Redacted', 
+                ORGANIZATION =  'GDPR Redacted', 
+                PREFERRED_LANGUAGE =  'GDPR Redacted', 
+                STATE =  'GDPR Redacted', 
+                USERNAME =  'GDPR Redacted'
+                
+                WHERE SHA2(TRIM(LOWER("NOTIFICATION_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:08:02  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                AVATAR =  'GDPR Redacted', 
+                FIRST_NAME =  'GDPR Redacted', 
+                NAME =  'GDPR Redacted', 
+                NOTE =  'GDPR Redacted', 
+                WEBSITE_URL =  'GDPR Redacted', 
+                LAST_NAME =  'GDPR Redacted', 
+                OTP_GRACE_PERIOD_STARTED_AT =  'GDPR Redacted', 
+                LAST_SIGN_IN_IP =  'GDPR Redacted', 
+                CURRENT_SIGN_IN_IP =  'GDPR Redacted', 
+                LOCATION =  'GDPR Redacted', 
+                ORGANIZATION =  'GDPR Redacted', 
+                PREFERRED_LANGUAGE =  'GDPR Redacted', 
+                STATE =  'GDPR Redacted', 
+                USERNAME =  'GDPR Redacted'
+                
+                WHERE SHA2(TRIM(LOWER("UNCONFIRMED_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:08:05  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                ADMIN_EMAIL_UNSUBSCRIBED_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL_OPTED_IN_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                PUBLIC_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                COMMIT_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                NOTIFICATION_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                UNCONFIRMED_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293'
+                
+                WHERE SHA2(TRIM(LOWER("ADMIN_EMAIL_UNSUBSCRIBED_AT"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:08:07  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                ADMIN_EMAIL_UNSUBSCRIBED_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL_OPTED_IN_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                PUBLIC_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                COMMIT_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                NOTIFICATION_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                UNCONFIRMED_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293'
+                
+                WHERE SHA2(TRIM(LOWER("EMAIL_OPTED_IN_AT"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:08:10  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                ADMIN_EMAIL_UNSUBSCRIBED_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL_OPTED_IN_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                PUBLIC_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                COMMIT_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                NOTIFICATION_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                UNCONFIRMED_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293'
+                
+                WHERE SHA2(TRIM(LOWER("PUBLIC_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:08:12  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                ADMIN_EMAIL_UNSUBSCRIBED_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL_OPTED_IN_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                PUBLIC_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                COMMIT_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                NOTIFICATION_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                UNCONFIRMED_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293'
+                
+                WHERE SHA2(TRIM(LOWER("COMMIT_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:08:15  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                ADMIN_EMAIL_UNSUBSCRIBED_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL_OPTED_IN_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                PUBLIC_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                COMMIT_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                NOTIFICATION_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                UNCONFIRMED_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293'
+                
+                WHERE SHA2(TRIM(LOWER("EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    4 |                    0 |
+[0m14:08:22  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                ADMIN_EMAIL_UNSUBSCRIBED_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL_OPTED_IN_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                PUBLIC_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                COMMIT_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                NOTIFICATION_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                UNCONFIRMED_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293'
+                
+                WHERE SHA2(TRIM(LOWER("NOTIFICATION_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:08:25  
+                UPDATE raw.snapshots.gitlab_dotcom_users_snapshots SET
+                ADMIN_EMAIL_UNSUBSCRIBED_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL_OPTED_IN_AT =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                PUBLIC_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                COMMIT_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                NOTIFICATION_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293', 
+                UNCONFIRMED_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293'
+                
+                WHERE SHA2(TRIM(LOWER("UNCONFIRMED_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:08:27  
+                UPDATE raw.snapshots.gitlab_dotcom_members_snapshots SET
+                INVITE_TOKEN =  'GDPR Redacted', 
+                SOURCE_TYPE =  'GDPR Redacted', 
+                TYPE =  'GDPR Redacted'
+                
+                WHERE SHA2(TRIM(LOWER("INVITE_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:08:32  
+                UPDATE raw.snapshots.gitlab_dotcom_members_snapshots SET
+                INVITE_EMAIL =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293'
+                
+                WHERE SHA2(TRIM(LOWER("INVITE_EMAIL"))) =  '2c24f2b7005198ca7127be663e915b8df88f3f0709d225d5896bff281bc3a293';
+
+            
+| number of rows up... | number of multi-j... |
+| -------------------- | -------------------- |
+|                    0 |                    0 |
+[0m14:08:35  Removal Complete!
