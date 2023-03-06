@@ -6,11 +6,13 @@ WITH find_current_campaigns AS (
     ) OVER (PARTITION BY campaign_id ORDER BY LAST_MODIFIED_TIME DESC) AS latest_update,
     latest_update = LAST_MODIFIED_TIME AS is_latest
   FROM {{ ref('linkedin_ads_campaign_history_source') }}
+
 ),current_campaigns AS (
   SELECT
     *
   FROM find_current_campaigns
   WHERE is_latest
+
 ), find_current_creatives AS (
   SELECT
     *,
@@ -19,11 +21,13 @@ WITH find_current_campaigns AS (
     ) OVER (PARTITION BY creative_id ORDER BY LAST_MODIFIED_TIME DESC) AS latest_update,
     latest_update = LAST_MODIFIED_TIME AS is_latest
    FROM {{ ref('linkedin_ads_creative_history_source') }}
+
 ),current_creatives AS (
   SELECT
     *
   FROM find_current_creatives
   WHERE is_latest
+
 ), creative_stats as (
   SELECT
     *
