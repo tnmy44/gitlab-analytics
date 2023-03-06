@@ -547,8 +547,8 @@ roles:
         warehouses:
             - dev_xs
             - dev_m
+            - dev_xl
         member_of:
-            - transformer # until issue#11249
             - analyst_core
             - snowflake_db
             - data_team_analyst
@@ -2645,7 +2645,7 @@ roles:
 
     - csharp:
         member_of:
-            - engineer
+            - analytics_engineer_core
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
@@ -4045,7 +4045,6 @@ roles:
 
     - pempey:
         member_of:
-            - engineer
             - analytics_engineer_core
             - analyst_people
             - analyst_engineering
@@ -4327,7 +4326,7 @@ roles:
 
     - snalamaru:
         member_of:
-            - engineer
+            - analytics_engineer_core
             - restricted_safe
         warehouses:
             - dev_xs
