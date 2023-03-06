@@ -30,7 +30,7 @@
     ON from_subsidiary.base_currency_id = base_currency.currency_id
   INNER JOIN transaction_currency
     ON to_subsidiary.base_currency_id = transaction_currency.currency_id
-  WHERE accounting_period.is_accouting_period_closed = TRUE
+  WHERE accounting_period.accounting_period_end_date < CURRENT_DATE()
 
 )
 
