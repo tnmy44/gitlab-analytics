@@ -1,13 +1,14 @@
-{{ config(materialized='view') }}
+{{
+    config(
+        materialized='view'
+    )
+}}
 
-
-WITH base AS (
+WITH source AS (
 
     SELECT *
-    --FROM raw.sales_analytics.xray_curves_qtd_fitted
-    FROM {{ ref('driveload_ssa_coverage_fitted_curves_source') }}
+    FROM {{ ref('ssa_coverage_fitted_curves_source') }}
 
 )
-
 SELECT *
-FROM base
+FROM source

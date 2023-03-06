@@ -125,7 +125,6 @@ def snowflake_stage_load_copy_remove(
 
 
 if __name__ == "__main__":
-
     logging.basicConfig(stream=sys.stdout, level=20)
 
     config_dict = env.copy()

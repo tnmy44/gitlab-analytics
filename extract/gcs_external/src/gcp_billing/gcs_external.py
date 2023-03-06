@@ -73,7 +73,6 @@ def run_export(export_name: str):
 
 
 if __name__ == "__main__":
-
     logging.basicConfig(level=20)
     fire.Fire(run_export)
     logging.info("Complete.")
