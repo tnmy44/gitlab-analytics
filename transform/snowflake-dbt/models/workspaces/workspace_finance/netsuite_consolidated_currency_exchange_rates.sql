@@ -12,12 +12,13 @@
 , final AS (
 
   SELECT DISTINCT
+
     accounting_period.accounting_period_name,
     accounting_period.accounting_period_end_date::DATE  AS accounting_period_end_date,
-    base_currency.currency_symbol                       AS base_currency,
-    transaction_currency.currency_symbol                AS transaction_currency,
-    consolidated_exchange_rates.current_rate            AS consolidated_exchange_rate,
-    1 / consolidated_exchange_rate                      AS reciprocal_exchange_rate
+    transaction_currency.currency_symbol                AS base_currency,
+    base_currency.currency_symbol                       AS transaction_currency,
+    1 / consolidated_exchange_rates.current_rate        AS consolidated_exchange_rate
+
   FROM consolidated_exchange_rates
   INNER JOIN accounting_period
     ON consolidated_exchange_rates.accounting_period_id = accounting_period.accounting_period_id
