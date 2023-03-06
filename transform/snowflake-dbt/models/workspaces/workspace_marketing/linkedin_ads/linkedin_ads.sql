@@ -40,28 +40,28 @@ SELECT
      current_campaigns.account_id,
     /* Campaign Info */
      
-    current_campaigns.campaign_id         as campaign_id,
-    current_campaigns.name                as campaign_name,
-    current_campaigns.status              as campaign_status,
-    current_campaigns.RUN_SCHEDULE_END    as campaign_end_date,
-    current_campaigns.RUN_SCHEDULE_START  as campaign_start_date,
-    current_campaigns.OBJECTIVE_TYPE      as ad_type,
+    current_campaigns.campaign_id         AS campaign_id,
+    current_campaigns.name                AS campaign_name,
+    current_campaigns.status              AS campaign_status,
+    current_campaigns.RUN_SCHEDULE_END    AS campaign_end_date,
+    current_campaigns.RUN_SCHEDULE_START  AS campaign_start_date,
+    current_campaigns.OBJECTIVE_TYPE      AS ad_type,
 
     /* Creative Info */
 
-    current_creatives.type                as creative_type,
-    current_creatives.status              as creative_status,
+    current_creatives.type                AS creative_type,
+    current_creatives.status              AS creative_status,
     current_creatives.click_uri,
     current_creatives.text_ad_text,
     current_creatives.text_ad_title,
     
     /* Creative Stats */
-    creative_stats.day as campaign_day,
+    creative_stats.day                    AS campaign_day,
     creative_stats.impressions,
     creative_stats.clicks,
-    creative_stats.ONE_CLICK_LEADS as linkedin_leads,
+    creative_stats.ONE_CLICK_LEADS        AS linkedin_leads,
     creative_stats.cost_in_usd
-from
+FROM
 current_campaigns
-    left join current_creatives on current_campaigns.campaign_id = current_creatives.campaign_id
-    left join creative_stats on current_creatives.creative_id = creative_stats.creative_id
+    LEFT JOIN current_creatives ON current_campaigns.campaign_id = current_creatives.campaign_id
+    LEFT JOIN creative_stats ON current_creatives.creative_id = creative_stats.creative_id
