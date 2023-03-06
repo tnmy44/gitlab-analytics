@@ -3539,6 +3539,7 @@ roles:
         member_of:
             - analyst_finance
             - analyst_marketing
+            - analytics_engineer_core
             - bamboohr
             - customers_db
             - data_team_analyst
