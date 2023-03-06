@@ -346,6 +346,7 @@ roles:
         warehouses:
             - dev_xs
             - dev_l
+            - dev_xl
         member_of:
             - analyst_core
             - boneyard
