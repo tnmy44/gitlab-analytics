@@ -553,6 +553,15 @@ roles:
             - analyst_core
             - snowflake_db
             - data_team_analyst
+            - data_science_readonly
+            - gainsight
+            - postgres_pipeline
+            - salesforce
+            - snapshots
+            - snowplow
+            - version_db
+            - zuora
+            - zuora_api_sandbox_stitch
 
     - data_manager:
         warehouses:
