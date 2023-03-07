@@ -61,7 +61,8 @@ clone_data_science_ptpf_repo_cmd = f"""
     git clone -b main --single-branch --filter=blob:none --no-checkout --depth 1 $REPO &&
     echo "checking out commit $GIT_COMMIT" &&
     cd propensity-to-purchase &&
-    git sparse-checkout add prod
+    git sparse-checkout init &&
+    git sparse-checkout add /prod &&
     git checkout $GIT_COMMIT &&
     echo pwd &&
     cd .."""
