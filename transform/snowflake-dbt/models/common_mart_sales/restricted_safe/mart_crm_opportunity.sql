@@ -137,6 +137,7 @@
       dim_crm_account.fy22_new_logo_target_list,
       dim_crm_account.admin_manual_source_number_of_employees,
       dim_crm_account.admin_manual_source_account_address,
+      dim_crm_account.parent_crm_account_lam_dev_count,
 
       -- Flags
       fct_crm_opportunity.is_won,
@@ -565,7 +566,7 @@
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-12-07",
-    updated_date="2023-02-07"
+    updated_date="2023-02-10"
   ) }}
 
 

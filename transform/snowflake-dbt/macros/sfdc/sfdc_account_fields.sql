@@ -354,6 +354,12 @@ WITH map_merged_crm_account AS (
       sfdc_account.sales_development_rep,
       sfdc_account.admin_manual_source_number_of_employees,
       sfdc_account.admin_manual_source_account_address,
+      sfdc_account.eoa_sentiment,
+      sfdc_account.gs_health_user_engagement,
+      sfdc_account.gs_health_cd,
+      sfdc_account.gs_health_devsecops,
+      sfdc_account.gs_health_ci,
+      sfdc_account.gs_health_scm,
 
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,
