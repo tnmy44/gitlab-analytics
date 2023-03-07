@@ -554,7 +554,6 @@ roles:
             - snowflake_db
             - data_team_analyst
             - data_science_readonly
-            - gainsight
             - postgres_pipeline
             - salesforce
             - snapshots
