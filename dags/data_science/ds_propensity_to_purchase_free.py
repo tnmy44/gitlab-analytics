@@ -45,9 +45,7 @@ default_args = {
 DATA_SCIENCE_PTPF_SSH_REPO = (
     "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-purchase.git"
 )
-DATA_SCIENCE_PTPF_HTTP_REPO = (
-    "https://gitlab_analytics:$GITLAB_ANALYTICS_PRIVATE_TOKEN@gitlab.com/gitlab-data/data-science-projects/propensity-to-purchase.git"
-)
+DATA_SCIENCE_PTPF_HTTP_REPO = "https://gitlab_analytics:$GITLAB_ANALYTICS_PRIVATE_TOKEN@gitlab.com/gitlab-data/data-science-projects/propensity-to-purchase.git"
 
 clone_data_science_ptpf_repo_cmd = f"""
     {data_test_ssh_key_cmd} &&
