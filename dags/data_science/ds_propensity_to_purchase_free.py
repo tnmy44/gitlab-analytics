@@ -46,7 +46,7 @@ DATA_SCIENCE_PTPF_SSH_REPO = (
     "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-purchase.git"
 )
 DATA_SCIENCE_PTPF_HTTP_REPO = (
-    "https://gitlab.com/gitlab-data/data-science-projects/propensity-to-purchase.git"
+    "https://gitlab_analytics:$GITLAB_ANALYTICS_PRIVATE_TOKEN@gitlab.com/gitlab-data/data-science-projects/propensity-to-purchase.git"
 )
 
 clone_data_science_ptpf_repo_cmd = f"""
