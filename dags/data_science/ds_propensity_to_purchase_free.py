@@ -62,7 +62,7 @@ clone_data_science_ptpf_repo_cmd = f"""
     echo "checking out commit $GIT_COMMIT" &&
     cd propensity-to-purchase &&
     git sparse-checkout init &&
-    git sparse-checkout add prod &&
+    git sparse-checkout set /prod &&
     git checkout $GIT_COMMIT &&
     pwd &&
     cd .."""
