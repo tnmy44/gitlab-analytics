@@ -6,18 +6,18 @@ WITH source AS (
 renamed AS (
 
   SELECT
-	account_id::NUMBER as account_id,
-	id::NUMBER as creative_id,
-	body::VARCHAR as body,
-	link_destination_display_url::VARCHAR as link_destination_display_url,
-	link_url::VARCHAR as link_url,
-	name::VARCHAR as name,
-	object_type::VARCHAR as object_type,
-	object_url::VARCHAR as object_url,
-	status::VARCHAR as status,
-	title::VARCHAR as title,
-	page_link::VARCHAR as page_link,
-    _fivetran_id::VARCHAR as _fivetran_id,
+	account_id::NUMBER AS account_id,
+	id::NUMBER AS creative_id,
+	body::VARCHAR AS body,
+	link_destination_display_url::VARCHAR AS link_destination_display_url,
+	link_url::VARCHAR AS link_url,
+	name::VARCHAR AS name,
+	object_type::VARCHAR AS object_type,
+	object_url::VARCHAR AS object_url,
+	status::VARCHAR AS status,
+	title::VARCHAR AS title,
+	page_link::VARCHAR AS page_link,
+    _fivetran_id::VARCHAR AS _fivetran_id,
     _fivetran_synced::TIMESTAMP AS _fivetran_synced
   FROM source
 )
