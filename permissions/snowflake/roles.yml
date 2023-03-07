@@ -2718,6 +2718,7 @@ roles:
             - analytics_engineer_core
             - restricted_safe
             - bi_tool_eval_read
+            - salesforce
         warehouses:
             - dev_xs
             - dev_m
