@@ -559,9 +559,7 @@ roles:
             - salesforce
             - snapshots
             - snowplow
-            - version_db
             - zuora
-            - zuora_api_sandbox_stitch
 
     - data_manager:
         warehouses:
@@ -2725,6 +2723,8 @@ roles:
     - csharp:
         member_of:
             - analytics_engineer_core
+            - analyst_engineering
+            - analyst_growth
             - restricted_safe
             - bi_tool_eval_read
             - salesforce
@@ -4417,7 +4417,10 @@ roles:
     - snalamaru:
         member_of:
             - analytics_engineer_core
+            - analyst_engineering
+            - analyst_growth
             - restricted_safe
+            - zuora_api_sandbox_stitch
         warehouses:
             - dev_xs
             - dev_m
