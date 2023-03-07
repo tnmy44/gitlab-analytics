@@ -48,7 +48,7 @@ models:
       - name: insights
         description: Top 5 explanatory insights for an account.
   - name: ptpt_scores
-    description: Propensity to purchase within the next 40 days. All trial namespaces with an active trial in the last 40 days are scored. 
+    description: Propensity to purchase within the next 40 days. All trial namespaces with an active trial in the last 40 days are scored.
     columns:
       - name: score
         description: 0-1 value representing the likelihood to purchase. For example. a value of 0.61 would mean a 61% likelihood to purchase in the next 40 days
@@ -62,3 +62,10 @@ models:
       This is done by lowering or upping the score with the lowest distance to the score mean relative to its standard deviation.
       If the score with the lowest variance is the PtC, then the score will go from 1 to 2.
       If the score with the lowest variance is the PtE, then the score will go from 5 to 4.
+  - name: ptpf_scores
+    description: to-be-filled
+    columns:
+      - name: score
+        description: to-be-filled
+      - name: decile
+        description: to-be-filled
