@@ -34,6 +34,7 @@ WITH source AS (
       jsontext['license_add_ons']::VARIANT                      AS license_add_ons,
       jsontext['license_expires_at']::TIMESTAMP                 AS license_expires_at,
       jsontext['license_md5']::VARCHAR                          AS license_md5,
+      jsontext['license_sha256']::VARCHAR                       AS license_sha256,
       jsontext['license_plan']::VARCHAR                         AS license_plan,
       jsontext['license_starts_at']::TIMESTAMP                  AS license_starts_at,
       jsontext['license_trial']::BOOLEAN                        AS is_license_trial,

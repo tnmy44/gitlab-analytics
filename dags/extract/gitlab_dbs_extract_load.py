@@ -292,7 +292,6 @@ for source_name, config in config_dict.items():
         )
 
         with extract_dag:
-
             # Actual PGP extract
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
@@ -343,7 +342,6 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)

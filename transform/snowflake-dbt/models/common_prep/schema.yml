@@ -257,12 +257,13 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: namespace_is_ultimate_parent
+        description: '{{ doc("namespace_is_ultimate_parent") }}'
       - name: namespace_is_internal
       - name: namespace_name
       - name: namespace_path
       - name: owner_id
       - name: namespace_type
-        description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
+        description: '{{ doc("namespace_type") }}'
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
@@ -273,6 +274,7 @@ models:
       - name: has_request_access_enabled
       - name: has_share_with_group_locked
       - name: visibility_level
+        description: '{{ doc("visibility_level") }}'
       - name: dap_sync_status
       - name: ldap_sync_error
       - name: ldap_sync_last_update_at
@@ -1467,6 +1469,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: ping_type
+        description: '{{ doc("ping_type") }}'
 
 
   - name: prep_ping_instance_flattened
@@ -1519,6 +1523,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: ping_type
+        description: '{{ doc("ping_type") }}'
 
   - name: prep_billing_account_user
     description: Zuora Billing users

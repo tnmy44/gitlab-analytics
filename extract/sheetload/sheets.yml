@@ -219,10 +219,6 @@ sheets:
     owner: '@iweeks'
     tabs:
       - planned_values
-  - name: procurement_cost_savings
-    owner: '@iweeks'
-    tabs:
-      - procurement_cost_savings
   - name: product_group_mappings
     owner: '@lmai1'
     tabs:

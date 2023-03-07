@@ -106,6 +106,12 @@ Although in the prep data, namespaces can be associated with multiple `dim_subsc
 {% enddocs %}
 
 
+{% docs map_alternative_lead_demographics %}
+
+This tables creates an [alterntive mapping](https://about.gitlab.com/handbook/marketing/strategy-performance/marketing-metrics/#alternative-method-for-account-demographics-fields-on-leads) for GEO and Segment values for leads based on data from data enrichment services.
+
+{% enddocs %}
+
 {% docs map_project_internal %}
 
 This View contains the list of projects that are under ultimate parent namespace ids that are internal to gitlab. This mapping should be used to filter entities such as Issues and Merge requests when only internal GitLab data is needed.

@@ -20,7 +20,7 @@ from gitlabdata.orchestration_utils import (
 
 config_dict = env.copy()
 
-api_key = env.get("MAILGUN_API_KEY")
+api_key = env.get("MAILGUN_API_KEY", "")
 domains = ["mg.gitlab.com"]
 
 
@@ -47,7 +47,7 @@ def get_logs(
     """
     return requests.get(
         f"https://api.mailgun.net/v3/{domain}/events",
-        auth=("api", api_key),
+        auth=("api", str(api_key)),
         params={
             "begin": formatted_start_date,
             "end": formatted_end_date,
@@ -74,7 +74,6 @@ def extract_logs(
     formatted_end_date = utils.format_datetime(end_date)
 
     for domain in domains:
-
         while True:
             if page_token:
                 try:

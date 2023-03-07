@@ -7,7 +7,6 @@ class DiscourseClient:
         self.base_url = base_url
 
     def get_json(self, endpoint, params):
-
         get_url = f"{self.base_url}/{endpoint}.json"
 
         headers = {"Api-Username": "system", "Api-Key": self.api_token}
