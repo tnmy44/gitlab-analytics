@@ -5025,10 +5025,10 @@ models:
         tags: ["tdf", "common"]
       - name: full_comments
         meta:
-           masking_policy: analyst_core
+           masking_policy: data_science_sensitive
       - name: task_subject
         meta:
-           masking_policy: analyst_core
+           masking_policy: data_science_sensitive
 
   - name: fct_crm_task
     description: '{{ doc("fct_crm_task") }}'
@@ -5041,10 +5041,10 @@ models:
         tags: ["tdf", "common"]
       - name: full_comments
         meta:
-           masking_policy: analyst_core
+           masking_policy: sensitive
       - name: task_subject
         meta:
-           masking_policy: analyst_core
+           masking_policy: sensitive
 
   - name: dim_behavior_browser
     description: '{{ doc("dim_behavior_browser") }}'

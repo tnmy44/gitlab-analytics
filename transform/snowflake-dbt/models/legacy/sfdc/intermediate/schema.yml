@@ -214,7 +214,7 @@ models:
           - not_null
       - name: full_comments
         meta:
-           masking_policy: analyst_core
+           masking_policy: data_science_sensitive
       - name: task_subject
         meta:
-           masking_policy: analyst_core
+           masking_policy: data_science_sensitive
