@@ -553,6 +553,11 @@ roles:
             - analyst_core
             - snowflake_db
             - data_team_analyst
+            - data_science_readonly
+            - postgres_pipeline
+            - snapshots
+            - snowplow
+            - zuora
 
     - data_manager:
         warehouses:
@@ -2716,6 +2721,8 @@ roles:
     - csharp:
         member_of:
             - analytics_engineer_core
+            - analyst_engineering
+            - analyst_growth
             - restricted_safe
             - bi_tool_eval_read
             - salesforce
@@ -4127,8 +4134,12 @@ roles:
     - pempey:
         member_of:
             - analytics_engineer_core
-            - analyst_people
             - analyst_engineering
+            - analyst_finance
+            - analyst_growth
+            - analyst_marketing
+            - analyst_people
+            - analyst_sales
             - bamboohr
             - bi_tool_eval_db
             - prometheus
@@ -4408,7 +4419,10 @@ roles:
     - snalamaru:
         member_of:
             - analytics_engineer_core
+            - analyst_engineering
+            - analyst_growth
             - restricted_safe
+            - zuora_api_sandbox_stitch
         warehouses:
             - dev_xs
             - dev_m
