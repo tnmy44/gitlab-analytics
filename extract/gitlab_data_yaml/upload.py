@@ -17,7 +17,6 @@ from gitlabdata.orchestration_utils import (
 
 
 if __name__ == "__main__":
-
     handbook_dict = dict(
         categories="categories", stages="stages", release_managers="release_managers"
     )
@@ -76,7 +75,8 @@ if __name__ == "__main__":
         """This function is designed to stream the API content by using Python request library.
         Also it will be responsible for decoding and generating json file output and upload
         it to external stage of snowflake. Once the file gets loaded it will be deleted from external stage.
-        This function can be extended but for now this used for the decoding the encoded content"""
+        This function can be extended but for now this used for the decoding the encoded content
+        """
         logging.info(f"Downloading {file_name} to {file_name}.json file.")
         # Check if there is private token issued for the URL
         if private_token is not None:

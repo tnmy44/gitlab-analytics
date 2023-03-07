@@ -20,7 +20,7 @@ WITH RECURSIVE managers AS (
     users.manager_name,
     users.manager_id,
     level + 1,
-    path || managers.role_name || '::'
+    path || COALESCE(managers.role_name,'') || '::'
   FROM {{ ref('sfdc_users_xf') }} users
   INNER JOIN managers
     ON users.manager_id = managers.user_id

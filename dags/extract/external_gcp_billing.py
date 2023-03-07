@@ -31,6 +31,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_PASSWORD,
+    SNOWFLAKE_STATIC_DATABASE,
     SNOWFLAKE_TRANSFORM_ROLE,
     SNOWFLAKE_TRANSFORM_SCHEMA,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
@@ -53,6 +54,7 @@ dbt_secrets = [
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_PASSWORD,
+    SNOWFLAKE_STATIC_DATABASE,
     SNOWFLAKE_TRANSFORM_ROLE,
     SNOWFLAKE_TRANSFORM_SCHEMA,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
@@ -115,7 +117,6 @@ with open(
         print(exc)
 
 for export in stream["exports"]:
-
     export_name = export["name"]
 
     billing_extract_command = f"""

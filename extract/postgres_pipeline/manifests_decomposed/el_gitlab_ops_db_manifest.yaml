@@ -234,13 +234,12 @@ tables:
       , confirmation_sent_at
       , unconfirmed_email
       , hide_no_ssh_key
-      , website_url
       , admin_email_unsubscribed_at
       , notification_email
       , hide_no_password
       , password_automatically_set
-      , location
       , public_email
+      , NULL AS location
       , dashboard
       , project_view
       , consumed_timestep
@@ -249,7 +248,7 @@ tables:
       , note
       , otp_grace_period_started_at
       , external
-      , organization
+      , NULL AS organization
       , auditor
       , require_two_factor_authentication_from_group
       , two_factor_grace_period

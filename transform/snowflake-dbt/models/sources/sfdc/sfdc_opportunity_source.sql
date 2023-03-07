@@ -65,7 +65,8 @@ WITH source AS (
         {{  sfdc_source_buckets('leadsource') }}
         stagename                                       AS stage_name,
         revenue_type__c                                 AS order_type,
-        deal_path__c                                    AS deal_path,
+        IFF(deal_path__c = 'Partner', 'Channel', deal_path__c)
+                                                        AS deal_path,
 
         -- opportunity information
         acv_2__c                                        AS acv,
@@ -100,6 +101,7 @@ WITH source AS (
                                                         AS sales_qualified_source,
         CASE
           WHEN sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
+          WHEN sales_qualified_source = 'Partner Generated' THEN 'Channel Generated'
           WHEN sales_qualified_source LIKE ANY ('Web%', 'Missing%', 'Other') OR sales_qualified_source IS NULL THEN 'Web Direct Generated'
           ELSE sales_qualified_source
         END                                             AS sales_qualified_source_grouped,
@@ -292,6 +294,7 @@ WITH source AS (
                          CURRENT_DATE)                  AS days_since_last_activity,
         isdeleted                                       AS is_deleted,
         lastactivitydate                                AS last_activity_date,
+        sales_last_activity_date__c                     AS sales_last_activity_date,
         recordtypeid                                    AS record_type_id
 
       FROM source

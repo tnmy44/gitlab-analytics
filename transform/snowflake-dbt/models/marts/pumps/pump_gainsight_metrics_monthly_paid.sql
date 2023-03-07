@@ -14,7 +14,8 @@
     ('namespaces', 'dim_namespace'),
     ('charges', 'mart_charge'),
     ('dates', 'dim_date'),
-    ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace')
+    ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace'),
+    ('redis_metrics', 'wk_rpt_user_based_metric_counts_namespace_monthly')
 ]) }}
 
 
@@ -65,6 +66,34 @@
     FROM aggregated_metrics 
     WHERE event_action = 'action_active_users_project_repo'
   
+), user_packages AS (
+
+    SELECT
+      *
+    FROM redis_metrics
+    WHERE metrics_path = 'redis_hll_counters.user_packages.user_packages_total_unique_counts_monthly'
+
+), project_repo AS (
+
+    SELECT
+      *
+    FROM redis_metrics
+    WHERE metrics_path = 'usage_activity_by_stage_monthly.create.action_monthly_active_users_project_repo'
+
+), analytics_valuestream AS (
+
+    SELECT
+      *
+    FROM redis_metrics
+    WHERE metrics_path = 'redis_hll_counters.analytics.g_analytics_valuestream_monthly'
+
+), ci_templates AS (
+
+    SELECT
+      *
+    FROM redis_metrics
+    WHERE metrics_path = 'redis_hll_counters.ci_templates.ci_templates_total_unique_counts_monthly'
+
 ), sm_paid_user_metrics AS (
 
     SELECT
@@ -340,7 +369,7 @@
         'gitlabdotcom')                                                             AS license_user_count_source,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
-      COALESCE(action_active_users_project_repo_users.distinct_users, 0)            AS action_monthly_active_users_project_repo_28_days_user,
+      COALESCE(project_repo.distinct_users_whole_month, action_active_users_project_repo_users.distinct_users, 0)            AS action_monthly_active_users_project_repo_28_days_user,
       monthly_saas_metrics.merge_requests_28_days_user,
       monthly_saas_metrics.projects_with_repositories_enabled_28_days_user,
       monthly_saas_metrics.commit_comment_all_time_event,
@@ -400,7 +429,7 @@
       monthly_saas_metrics.project_clusters_enabled_28_days_user,
       monthly_saas_metrics.analytics_28_days_user,
       monthly_saas_metrics.issues_edit_28_days_user,
-      monthly_saas_metrics.user_packages_28_days_user,
+      COALESCE(user_packages.distinct_users_whole_month, 0) AS user_packages_28_days_user,
       monthly_saas_metrics.terraform_state_api_28_days_user,
       monthly_saas_metrics.incident_management_28_days_user,
       -- Wave 3.2
@@ -422,10 +451,10 @@
       monthly_saas_metrics.projects_jira_dvcs_cloud_active_28_days_user,
       monthly_saas_metrics.projects_jira_dvcs_server_active_28_days_user,
       monthly_saas_metrics.merge_requests_with_required_code_owners_28_days_user,
-      monthly_saas_metrics.analytics_value_stream_28_days_event,
+      COALESCE(analytics_valuestream.distinct_users_whole_month, 0) AS analytics_value_stream_28_days_event,
       monthly_saas_metrics.code_review_user_approve_mr_28_days_user,
       monthly_saas_metrics.epics_usage_28_days_user,
-      monthly_saas_metrics.ci_templates_usage_28_days_event,
+      COALESCE(ci_templates.distinct_users_whole_month, 0) AS ci_templates_usage_28_days_event,
       monthly_saas_metrics.project_management_issue_milestone_changed_28_days_user,
       monthly_saas_metrics.project_management_issue_iteration_changed_28_days_user,
       -- Wave 5.1
@@ -523,6 +552,18 @@
     LEFT JOIN action_active_users_project_repo_users
       ON action_active_users_project_repo_users.date_month = monthly_saas_metrics.snapshot_month 
       AND action_active_users_project_repo_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN user_packages
+      ON user_packages.date_month = monthly_saas_metrics.snapshot_month
+      AND user_packages.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN project_repo
+      ON project_repo.date_month = monthly_saas_metrics.snapshot_month
+      AND project_repo.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN analytics_valuestream
+      ON analytics_valuestream.date_month = monthly_saas_metrics.snapshot_month
+      AND analytics_valuestream.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN ci_templates
+      ON ci_templates.date_month = monthly_saas_metrics.snapshot_month
+      AND ci_templates.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -556,5 +597,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-10-12",
-    updated_date="2022-10-12"
+    updated_date="2023-01-23"
 ) }}

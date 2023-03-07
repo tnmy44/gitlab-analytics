@@ -121,20 +121,6 @@ tables:
       , cluster_id
       , group_id
       FROM cluster_groups
-  columns:
-    advanced_metadata: true
-    export_schema: 'gitlab_com'
-    export_table: 'columns'
-    export_table_primary_key: CONCAT(table_name, '_', column_name, table_schema)
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT CONCAT(table_name, '_', column_name, table_schema) AS column_id
-      , column_name
-      , data_type
-      , ordinal_position
-      , table_name
-      , table_schema
-      FROM information_schema.columns
     import_schema: information_schema
   clusters_integration_prometheus:
     advanced_metadata: true
@@ -317,17 +303,6 @@ tables:
       , last_error
       , user_id
       FROM group_import_states
-  ip_restrictions:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'ip_restrictions'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , group_id
-      , range
-      FROM ip_restrictions
   issuable_severities:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -446,6 +421,7 @@ tables:
       , CASE WHEN expires_at > '2262-01-01' THEN '2262-01-01' ELSE expires_at END AS expires_at
       , ldap
       , override
+      , member_role_id
       FROM members     
   merge_request_reviewers:
     advanced_metadata: true
@@ -472,19 +448,6 @@ tables:
       SELECT milestone_id
       , release_id
       FROM milestone_releases
-  namespace_package_settings:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'namespace_package_settings'
-    export_table_primary_key: namespace_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT namespace_id
-      , maven_duplicates_allowed
-      , maven_duplicate_exception_regex
-      , generic_duplicates_allowed
-      , generic_duplicate_exception_regex
-      FROM namespace_package_settings
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true
@@ -513,17 +476,6 @@ tables:
       , created_at
       , scopes
       FROM oauth_access_tokens
-  packages_build_infos:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'packages_build_infos'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-    
-      SELECT  id
-      , package_id
-      , pipeline_id 
-      FROM packages_build_infos
   pages_domains:
     dbt_source_model: true 
     export_schema: 'gitlab_com' 
@@ -591,6 +543,29 @@ tables:
       SELECT id
       , name
       FROM programming_languages
+  project_ci_cd_settings:
+    export_schema: "gitlab_com"
+    export_table: project_ci_cd_settings
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , group_runners_enabled
+      , merge_pipelines_enabled
+      , default_git_depth
+      , forward_deployment_enabled
+      , merge_trains_enabled
+      , auto_rollback_enabled
+      , keep_latest_artifact
+      , restrict_user_defined_variables
+      , job_token_scope_enabled
+      , runner_token_expiration_interval
+      , separated_caches
+      , opt_in_jwt
+      , allow_fork_pipelines_to_run_in_parent_project
+      , inbound_job_token_scope_enabled
+      FROM project_ci_cd_settings
   project_compliance_framework_settings:
     export_schema: "gitlab_com"
     export_table: project_compliance_framework_settings

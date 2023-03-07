@@ -1,9 +1,14 @@
-WITH base AS (
+{{
+    config(
+        materialized='view'
+    )
+}}
+
+WITH source AS (
 
     SELECT *
-    FROM {{ ref('driveload_ssa_coverage_fitted_curves_source') }}
+    FROM {{ ref('ssa_coverage_fitted_curves_source') }}
 
 )
-
 SELECT *
-FROM base
+FROM source

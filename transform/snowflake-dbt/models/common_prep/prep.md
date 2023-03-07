@@ -211,16 +211,6 @@ The grain of the table is license_id.
 
 {% enddocs %}
 
-{% docs prep_usage_ping_subscription_mapped_smau %}
-
-This data model contains the values of each SMAU metric for **Self-Managed** instances with a non-null `license_md5`. Rows missing a `dim_subscription_id` indicate that either no matching license was found in `map_license_subscription_account`, or no `dim_subscription_id` exists in `map_license_subscription_account` associated with the given `license_md5`.
-
-This data model is used for the Customer Health Dashboards.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs prep_usage_self_managed_seat_link %}
 
 This prep table contains Seat Link data at a daily grain for downstream aggregation and summarization, as well as flags for data quality.
@@ -350,32 +340,6 @@ The final result:
 
 {% enddocs %}
 
-{% docs prep_usage_ping %}
-This data model is a prep model that supports a new dimension model, dim_usage_ping, that will replace PROD.legacy.version_usage_data, dim_usage_pings, version_usage_data_source, and version_raw_usage_data_source in the future .
-
-This is currently a WIP but inherits a lot of code from PROD.legacy.version_usage_data. See https://gitlab.com/gitlab-data/analytics/-/merge_requests/4064/diffs#bc1d7221ae33626053b22854f3ecbbfff3ffe633 for rationale. This curent version is for Sales team only.
-
-This is a sensitive model that should not be surfaced into Sisense because it contains IP Address. It also contains a mapping to remove the dependency on the IP Address.
-
-By the end of the data model, we have set up additional columns that clean up the data and ensures there is one SSOT for any given metric on a usage ping.
-{% enddocs %}
-
-
-{% docs prep_usage_ping_no_license_key %}
-This data model is a prep model that depends on prep_usage_ping and supports the creation of dim_usage_ping that will replace PROD.legacy.version_usage_data, dim_usage_pings, version_usage_data_source, and version_raw_usage_data_source in the future.
-
-This curent version is for Sales team only.
-
-Ideally, the purpose of this data model is to unpack all the metrics from the `raw_usage_data_payload` column, strips all the sensitive data out, and has one value for each metric in that column.
-{% enddocs %}
-
-{% docs prep_usage_ping_subscription_mapped %}
-This data model is a prep model that depends on prep_usage_ping and supports the creation of dim_usage_ping that will replace PROD.legacy.version_usage_data, dim_usage_pings, version_usage_data_source, and version_raw_usage_data_source in the future.
-
-This curent version is for Sales team only.
-
-Ideally, the purpose of this data model is to identify the usage pings that can be mapped to a subscription.
-{% enddocs %}
 
 {% docs prep_gainsight_source_model_counts %}
 This data model is used to capture the counts for all the source tables used for Gainsight.
@@ -399,14 +363,6 @@ fct table from the usage_ping_namespace. Granularity of one row per namespace pe
 Table containing **free** SaaS users in preparation for free user usage ping metrics fact table.
 
 The grain of this table is one row per namespace per month.
-
-{% enddocs %}
-
-{% docs prep_usage_ping_free_user_metrics %}
-
-Table containing **free** Self-Managed users in preparation for free user usage ping metrics fact table.
-
-The grain of this table is one row per uuid-hostname combination per month.
 
 {% enddocs %}
 
@@ -495,16 +451,6 @@ Prep table for the dim table `dim_note`.
 
 {% enddocs %}
 
-{% docs prep_usage_ping_payload %}
-
-prep table used to build fct_usage_ping_payload.
-
-{% enddocs %}
-
-{% docs prep_usage_ping_settings %}
-
-prep table selecting for a specific usage ping a list of metadata related to specific instance settings. Any metric which is not based on timeseries could be  selected.
-{% enddocs %}
 {% docs prep_deployment %}
 
 Prep table for the dim table `dim_deployment` that is not yet created.

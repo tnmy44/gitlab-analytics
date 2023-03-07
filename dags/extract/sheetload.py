@@ -35,6 +35,7 @@ from kube_secrets import (
     SNOWFLAKE_USER,
     MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_STATIC_DATABASE,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -80,7 +81,6 @@ dag = DAG(
 )
 
 for sheet in sheets:
-
     # Set the command for the container
     container_cmd = f"""
         {clone_and_setup_extraction_cmd} &&
@@ -145,6 +145,7 @@ dbt_sheetload = KubernetesPodOperator(
         SNOWFLAKE_USER,
         MCD_DEFAULT_API_ID,
         MCD_DEFAULT_API_TOKEN,
+        SNOWFLAKE_STATIC_DATABASE,
     ],
     env_vars=pod_env_vars,
     affinity=get_affinity(False),

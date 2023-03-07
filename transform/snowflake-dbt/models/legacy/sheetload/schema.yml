@@ -87,7 +87,6 @@ models:
 - name: sheetload_osat
 - name: sheetload_percent_over_comp_band_historical
 - name: sheetload_planned_values
-- name: sheetload_procurement_cost_savings
 - name: sheetload_product_maturity_historical
 - name: sheetload_rep_quotas
   description: Sales representative quota data

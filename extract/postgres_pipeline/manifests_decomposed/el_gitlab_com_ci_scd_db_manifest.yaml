@@ -24,9 +24,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT build_id
-      , url
-      , certificate
-      , "authorization"
       FROM ci_builds_runner_session
   ci_namespace_monthly_usages:
     export_schema: 'gitlab_com'
