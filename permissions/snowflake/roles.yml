@@ -555,7 +555,6 @@ roles:
             - data_team_analyst
             - data_science_readonly
             - postgres_pipeline
-            - salesforce
             - snapshots
             - snowplow
             - zuora
