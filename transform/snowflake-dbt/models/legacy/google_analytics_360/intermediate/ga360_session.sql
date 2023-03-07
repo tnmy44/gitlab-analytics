@@ -26,8 +26,37 @@ WITH source AS (
 ), final AS (
 
     SELECT  
-        source.*,
-        joined.custom_dimensions
+      source.visit_id, 
+      source.visitor_id,
+      source.visit_start_time, 
+      source.session_date, 
+      source.export_date,
+      source.client_id,      
+      source.visit_number,
+      source.total_visits,
+      source.total_pageviews,
+      source.total_screenviews,
+      source.total_unique_screenviews,
+      source.total_hits,
+      source.total_new_visits,
+      source.total_time_on_screen,
+      source.total_time_on_site,
+      source.traffic_source,
+      source.traffic_source_referral_path,
+      source.traffic_source_campaign,
+      source.traffic_source_medium,
+      source.traffic_source_keyword,
+      source.device_category,
+      source.device_browser,
+      source.device_browser_version,
+      source.device_browser_size,
+      source.device_operating_system,
+      source.device_operating_system_version,
+      source.geo_network_continent,
+      source.geo_network_sub_continent,
+      source.geo_network_country,
+      source.geo_network_city,
+      joined.custom_dimensions
     FROM source
     LEFT JOIN joined
     ON joined.visit_id = source.visit_id 

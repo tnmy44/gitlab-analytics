@@ -25,7 +25,23 @@ WITH source AS (
 ), final AS (
 
     SELECT  
-        source.*,
+        source.visit_id,
+        source.visitor_id,
+        source.visit_start_time,
+        source.session_date, 
+        source.hit_number,
+        source.hit_at,
+        source.is_entrance,
+        source.is_exit,
+        source.referer,
+        source.hit_type,
+        source.data_source,
+        source.host_name,
+        source.page_path,
+        source.page_title,
+        source.event_category,
+        source.event_action,
+        source.event_label,
         joined.custom_dimensions
     FROM source
     LEFT JOIN joined
