@@ -37,7 +37,7 @@ default_args = {
     "owner": "airflow",
     "retries": 2,
     "retry_delay": timedelta(minutes=10),
-    "start_date": datetime(2022, 8, 9),
+    "start_date": datetime(2023, 1, 1),
     "dagrun_timeout": timedelta(hours=2),
 }
 
@@ -45,7 +45,9 @@ default_args = {
 DATA_SCIENCE_PTPF_SSH_REPO = (
     "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-purchase.git"
 )
-DATA_SCIENCE_PTPF_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science-projects/propensity-to-purchase.git"
+DATA_SCIENCE_PTPF_HTTP_REPO = (
+    "https://gitlab.com/gitlab-data/data-science-projects/propensity-to-purchase.git"
+)
 
 clone_data_science_ptpf_repo_cmd = f"""
     {data_test_ssh_key_cmd} &&
@@ -66,15 +68,15 @@ clone_data_science_ptpf_repo_cmd = f"""
     cd .."""
 
 # Create the DAG
-# Run on the 3rd day of every month at 4AM
+# Run every the 2nd day of the month at 6AM
 dag = DAG(
     "ds_propensity_to_purchase_free",
     default_args=default_args,
-    schedule_interval="0 4 3 * *",
+    schedule_interval="0 6 2 * *",
 )
 
 # Task 1
-namespace_segmentation_scoring_command = f"""
+ptpf_scoring_command = f"""
     {clone_data_science_ptpf_repo_cmd} &&
     cd propensity-to-purchase/prod/saas-free &&
     papermill scoring_code.ipynb -p is_local_development False
@@ -93,6 +95,6 @@ KubernetesPodOperator(
         GITLAB_ANALYTICS_PRIVATE_TOKEN,
     ],
     env_vars=pod_env_vars,
-    arguments=[namespace_segmentation_scoring_command],
+    arguments=[ptpf_scoring_command],
     dag=dag,
 )

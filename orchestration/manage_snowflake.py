@@ -232,7 +232,6 @@ class SnowflakeManager:
             logging.info("Found {} grants".format(len(grants)))
 
             if len(grants) > 0:
-
                 logging.info(f"Granting database usage via {grant_usage_on_db}")
                 [result] = connection.execute(grant_usage_on_db).fetchone()
                 logging.info("Command Result: {}".format(result))
@@ -373,14 +372,12 @@ class SnowflakeManager:
         stages = query_executor(self.engine, stages_query)
 
         for stage in stages:
-
             output_stage_name = (
                 f""" "{create_db}"."{stage['stage_schema']}"."{stage['stage_name']}" """
             )
             from_stage_name = f""" "{database.upper()}"."{stage['stage_schema']}"."{stage['stage_name']}" """
 
             if stage["stage_type"] == "External Named":
-
                 clone_stage_query = f"""
                     CREATE OR REPLACE STAGE {output_stage_name} LIKE
                     {from_stage_name}
