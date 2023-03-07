@@ -3102,8 +3102,10 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
+            - data_science_readonly
             - data_team_analyst
             - data_manager
+            - marketo
             - restricted_safe
             - salesforce_sandbox
             - xactly
@@ -3551,7 +3553,9 @@ roles:
             - bamboohr
             - bamboohr_analytics
             - customers_db
+            - data_science_readonly
             - data_team_analyst
+            - marketo
             - prometheus
             - restricted_safe
             - salesforce_sandbox
