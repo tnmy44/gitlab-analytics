@@ -1,7 +1,3 @@
-{{ config(
-    tags=["six_hourly"]
-) }}
-
 {{ sfdc_account_fields('live') }}
 
 {{ dbt_audit(

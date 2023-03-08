@@ -4558,7 +4558,7 @@ models:
           - dbt_utils.relationships_where:
               to: ref('dim_crm_account')
               field: dim_crm_account_id
-              from_condition: created_date <= DATEADD('day', -2, CURRENT_DATE)::DATE
+              from_condition: created_date <= DATEADD('day', -3, CURRENT_DATE)::DATE
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_alliance_type_id
         description: join key for dim_alliance_type_scd.

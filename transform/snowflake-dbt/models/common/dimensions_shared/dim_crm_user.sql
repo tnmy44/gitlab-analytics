@@ -1,7 +1,3 @@
-{{ config(
-    tags=["six_hourly"]
-) }}
-
 WITH final AS (
 
     SELECT 
