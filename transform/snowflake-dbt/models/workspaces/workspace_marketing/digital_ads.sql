@@ -19,7 +19,7 @@
 
 */
 
-with union_sources AS (
+WITH union_sources AS (
     SELECT
     google_ads.ad_stats_date AS report_date,
     'google_ads' AS platform,
@@ -40,34 +40,34 @@ with union_sources AS (
     NULL                                           AS linkedin_leads,
     sum(cost_micros / 1000000)                     AS spend
 
-  FROM
-  PROD.WORKSPACE_MARKETING.GOOGLE_ADS
-  GROUP BY 1,2,3,4,5,6,7,8,9,10
+    FROM
+    {{ ref('google_ads') }}
+    GROUP BY 1,2,3,4,5,6,7,8,9,10
 
-  union all
+  UNION ALL
 
-  SELECT
-  linkedin_ads.day                    AS report_date,
-  'linkedin_ads'                      AS platform,
+    SELECT
+    linkedin_ads.day                    AS report_date,
+    'linkedin_ads'                      AS platform,
 
-  linkedin_ads.campaign_id,
-  linkedin_ads.campaign_name,
-  linkedin_ads.campaign_status,
-  linkedin_ads.campaign_end_date,
-  linkedin_ads.campaign_start_date,
+    linkedin_ads.campaign_id,
+    linkedin_ads.campaign_name,
+    linkedin_ads.campaign_status,
+    linkedin_ads.campaign_end_date,
+    linkedin_ads.campaign_start_date,
 
-  linkedin_ads.ad_status,
-  linkedin_ads.creative_type,
-  linkedin_ads.click_uri              AS landing_page_url,
-  
-  sum(impressions)                    AS impressions,
-  sum(clicks)                         AS clicks,
-  sum(linkedin_leads)                 AS linkedin_leads,
-  sum(cost_in_usd)                    AS spend
+    linkedin_ads.ad_status,
+    linkedin_ads.creative_type,
+    linkedin_ads.click_uri              AS landing_page_url,
+    
+    sum(impressions)                    AS impressions,
+    sum(clicks)                         AS clicks,
+    sum(linkedin_leads)                 AS linkedin_leads,
+    sum(cost_in_usd)                    AS spend
 
-  FROM
-  PROD.WORKSPACE_MARKETING.LINKEDIN_ADS
-  GROUP BY 1,2,3,4,5,6,7,8,9,10
+    FROM
+        {{ ref('linkedin_ads') }}
+    GROUP BY 1,2,3,4,5,6,7,8,9,10
 
   union all
 
@@ -91,7 +91,7 @@ with union_sources AS (
   sum(spend)                  AS spend
 
   FROM
-  PROD.WORKSPACE_MARKETING.FACEBOOK_ADS
+      {{ ref('facebook_ads') }}
   GROUP BY 1,2,3,4,5,6,7,8,9,10
 
 ), parse_utms AS (
@@ -128,7 +128,7 @@ with union_sources AS (
   union_sources
 
 )
-select
+SELECT
 *
-from
+FROM
 parse_utms
