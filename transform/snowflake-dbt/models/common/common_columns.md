@@ -1862,9 +1862,3 @@ Change in the price per seat paid in the arr_month.
 Boolean flag which is set to True if the namespace is the ultimate parent.
 
 {% enddocs %}
-
-{% docs namespace_created_at %}
-
-Date the namespace was created.
-
-{% enddocs %}
