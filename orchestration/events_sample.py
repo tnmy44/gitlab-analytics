@@ -38,7 +38,6 @@ def main(engine: Engine) -> None:
     query_list = [gitlab_create_query, gitlab_grant_query]
 
     for query in query_list:
-
         try:
             logging.info("Executing Query: {}".format(query))
             connection = engine.connect()

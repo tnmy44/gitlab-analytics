@@ -107,7 +107,6 @@ def load_manifest_file(file_name: str) -> dict:
 config_dict = load_manifest_file("analytics/dags/general/backup_manifest.yaml")
 
 for task_name, task_details in config_dict.items():
-
     generate_task(
         task=task_name,
         backup_list=task_details.get("TABLE_LIST_BACKUP"),

@@ -59,7 +59,6 @@ next_execution_date = "{{ next_execution_date }}"
 # Loop through pumps to create tasks
 
 for pump_model in pumps:
-
     task_identifier = pump_model["model"].replace("_", "-")
 
     run_pumps_command = f"""

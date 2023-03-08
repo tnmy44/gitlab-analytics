@@ -285,3 +285,20 @@ dbt run -s my_model --full-refresh --vars '{"full_refresh_force": true}'
 → full refresh
 ```
 {% enddocs %}
+
+
+
+{% docs orphaned_db_table_check %}
+
+The operation will output, to the log file and terminal window, a list of database tables that do not match to model or source in the dbt code base.
+
+Example Usage:
+dbt run-operation orphaned_db_table_check
+dbt run-operation orphaned_db_table_check --args "{databases: ['raw']}"
+
+Arguments:
+  databases: The list of databases to retrieve the table names from
+
+Known exceptions and not yet implemented source tables were identified from observation.
+
+{% enddocs %}

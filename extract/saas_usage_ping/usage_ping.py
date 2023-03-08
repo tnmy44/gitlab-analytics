@@ -39,7 +39,6 @@ class UsagePing:
     """
 
     def __init__(self, ping_date=None, namespace_metrics_filter=None):
-
         self.engine_factory = EngineFactory()
         self.utils = Utils()
 
@@ -286,7 +285,6 @@ class UsagePing:
                     errors[key] = errors_returned
             # reached a 'select statement' value, run it in snowflake
             elif isinstance(query, str) and query.startswith("SELECT"):
-
                 data_to_write = error_data_to_write = None
 
                 data_to_write, error_data_to_write = self.get_instance_sql_data(
@@ -335,7 +333,6 @@ class UsagePing:
     def saas_instance_redis_metrics(
         self, metric_definition_dict: Dict
     ) -> Tuple[Dict, Dict]:
-
         """
         Call the Non SQL Metrics API and store the results in Snowflake RAW database
         """

@@ -173,7 +173,6 @@ for line in models_to_match:
     match = periscope_table_dict.get(line, [])
 
     if len(match) > 0:
-
         for key, value in match.items():
             if key in dashboards_spaces_to_check:
                 charts = match[key]

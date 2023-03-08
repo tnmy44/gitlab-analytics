@@ -17,17 +17,7 @@ All tasks below should be checked off at the end of Triage day.
 * [ ] Review each slack message request in the **#data** channel 
     - [ ] Reply to slack threads by pointing GitLab team member to the appropriate handbook page or visualization.
     - [ ] Direct GitLab team member to the channel description, which has the link to the Data team project, if the request requires more than 5 minutes of investigative effort from a Data team member.
-    - [ ] Ping [Triage Group](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#enterprise-data-program-triage-instructions) who may know more about the topic. (Slack Aliases for the Triage Groups are still under construction)
- * [ ] Review each slack message in the **#data-triage** channel, which will inform the triager of what issues have been opened in the data team project that day.  Because this channel can sometimes be difficult to keep track of, you **should** also look at [issues with the ~"Needs Triage" label](https://gitlab.com/gitlab-data/analytics/-/issues?label_name%5B%5D=Needs+Triage&scope=all&state=opened), as this label is added every hour to issues that may have been missed.
-    - [ ] For each issue opened by a non-Data Team member, label the issue by: 
-        - [ ] Adding the `Workflow::start (triage)` and `Triage` label
-        - [ ] Adding additional [labels](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling)
-        - [ ] Assigning the issue based on:
-            - [ ] the [CODEOWNERS file](https://gitlab.com/gitlab-data/analytics/blob/master/CODEOWNERS) for specific dbt model failures 
-            - [ ] the [functional DRIs](https://about.gitlab.com/handbook/business-ops/data-team/organization/#team-organization)
-            - [ ] OR to the  Manager, Data if you aren't sure. 
-        - [ ] Asking initial questions (data source, business logic clarification, etc) to groom the issue. 
-* [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
+    - [ ] Ping [Triage Group](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#enterprise-data-program-triage-instructions) who may know more about the topic. You can also ping the Slack Alias for the relevant Triage Group.
 
 ### Friends and family days
 * [ ] As we currently have a no-merge Friday rule if there is an upcoming family and friends day during your triage week which affects this please ensure this message (or similar) is shared #data channel by Tuesday at the latest: 
@@ -36,6 +26,15 @@ All tasks below should be checked off at the end of Triage day.
 ## Analytics Engineer tasks
 
 The focus area for the Analytics Engineer are the `DBT` models including the applied tests. The source for the tasks below are the Airflow logs posted in **#analytics-pipelines** and the Sisense Trusted Data Operations [Dashboard](https://app.periscopedata.com/app/gitlab/756199/TD:-Trusted-Data-Operations-Dashboard). 
+
+* [ ] Review each slack message in the **#data-triage** channel, which will inform the triager of what issues have been opened in the data team project that day.  Because this channel can sometimes be difficult to keep track of, you **should** also look at [issues with the ~"Needs Triage" label](https://gitlab.com/gitlab-data/analytics/-/issues?label_name%5B%5D=Needs+Triage&scope=all&state=opened), as this label is added every hour to issues that may have been missed.
+    - [ ] For each issue opened by a non-Data Team member, label the issue by: 
+        - [ ] Adding the `Workflow::start (triage)` and `Triage` label
+        - [ ] Adding additional [labels](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling)
+        - [ ] Assigning the issue based on:
+            - [ ] the [CODEOWNERS file](https://gitlab.com/gitlab-data/analytics/blob/master/CODEOWNERS) for specific dbt model failures 
+            - [ ] the [functional DRIs](https://about.gitlab.com/handbook/business-ops/data-team/organization/#team-organization)
+            - [ ] OR to the  Manager, Data if you aren't sure. 
 
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) for each new failed DBT model.
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**. 
@@ -50,9 +49,9 @@ The focus area for the Analytics Engineer are the `DBT` models including the app
     * [ ] [Opening an incident issue](https://gitlab.com/gitlab-data/analytics/-/issues/new?issuable_template=incident&issue[issue_type]=incident) when the failure requires [immediate action](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#incidents) in order to avoid or rememdy a data outage.
         * [ ] Link to all resulting incidents/issues and MRs in Slack
 
-*Occaisionally you we encounter connection errors, in which case [re-running the Airflow task](https://airflow.apache.org/docs/apache-airflow/1.10.15/dag-run.html#re-run-tasks) may be more appropriate than creating an issue. If the connection error persists then create an issue and escalate to the triage Data Engineer.*
+*Occasionally you we encounter connection errors, in which case [re-running the Airflow task](https://airflow.apache.org/docs/apache-airflow/1.10.15/dag-run.html#re-run-tasks) may be more appropriate than creating an issue. If the connection error persists then create an issue and escalate to the triage Data Engineer.*
 
-* [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** so that it is clear for the next triager what time to check for issues from.
+* [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** and **#data-triage** so that it is clear for the next triager what time to check for issues from.
 
 ### Prepare for Next Milestone 
 * [ ] Groom Issues for Next Milestone: for issues that have missing or poor requirements, add comments in the issue asking questions to the Business DRI. 

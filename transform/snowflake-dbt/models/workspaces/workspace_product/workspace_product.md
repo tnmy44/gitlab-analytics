@@ -1,9 +1,3 @@
-{% docs mart_ping_estimations_monthly %}
-
-Estimation model to estimate the usage for unreported self-managed instances.
-
-{% enddocs %}
-
 {% docs wk_rpt_event_namespace_plan_monthly %}
 
 **Description:**
