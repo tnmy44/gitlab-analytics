@@ -268,7 +268,6 @@ tables:
       , seats
       , trial
       , seats_in_use
-      , max_seats_used
       , seats_owed
       , trial_extension_type
       FROM gitlab_subscriptions
@@ -543,6 +542,29 @@ tables:
       SELECT id
       , name
       FROM programming_languages
+  project_ci_cd_settings:
+    export_schema: "gitlab_com"
+    export_table: project_ci_cd_settings
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , group_runners_enabled
+      , merge_pipelines_enabled
+      , default_git_depth
+      , forward_deployment_enabled
+      , merge_trains_enabled
+      , auto_rollback_enabled
+      , keep_latest_artifact
+      , restrict_user_defined_variables
+      , job_token_scope_enabled
+      , runner_token_expiration_interval
+      , separated_caches
+      , opt_in_jwt
+      , allow_fork_pipelines_to_run_in_parent_project
+      , inbound_job_token_scope_enabled
+      FROM project_ci_cd_settings
   project_compliance_framework_settings:
     export_schema: "gitlab_com"
     export_table: project_compliance_framework_settings

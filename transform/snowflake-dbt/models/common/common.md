@@ -567,33 +567,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_event_instance_daily %}
-
-**Description:** GitLab.com usage event data for valid events, grouped by date and event name
-- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  
-
-**Data Grain:**
-- event_date
-- event_name
-
-**Filters Applied to Model:**
-- `Inherited` - Include valid events for standard analysis and reporting:
-  - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
-    - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
-  - Exclude events from blocked users (based on the current user state)
-- Rolling 24 months of data
-
-**Business Logic in this Model:**
-- `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
-- `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
-- Not all events have a user associated with them (ex: 'milestones'), and not all events have a namespace associated with them (ex: 'users_created'). Therefore it is expected that `user_count = 0` or `ultimate_parent_namespace_count = 0` for these events.
-
-**Other Comments:**
-- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
-
-{% enddocs %}
-
 {% docs fct_event_namespace_daily %}
 
 **Description:** GitLab.com usage event data for valid events, grouped by date, event name, and ultimate parent namespace
@@ -837,19 +810,6 @@ Easy joins available with:
 * dim_project through `dim_project_id`
 * dim_namespace through `dim_namespace_id` and `ultimate_parent_namespace_id`
 * dim_date through `ci_pipeline_creation_dim_date_id`
-{% enddocs %}
-
-{% docs dim_action %}
-
-Dimensional table representing actions recorded by the Events API. [More info about actions tracked here](https://docs.gitlab.com/ee/api/events.html)
-
-The grain of the table is the `dim_action_id`. This table is easily joinable with:
-
-- `dim_plan` through `dim_plan_id`
-- `dim_user` through `dim_user_id`
-- `dim_project` through `dim_project_id`
-- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
-
 {% enddocs %}
 
 {% docs dim_issue %}

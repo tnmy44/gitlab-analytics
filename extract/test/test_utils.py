@@ -139,7 +139,6 @@ def test_headers_error(utils):
 
 
 def test_convert_response_to_json(utils, fake_response):
-
     """
     Test function: convert_response_to_json
     """

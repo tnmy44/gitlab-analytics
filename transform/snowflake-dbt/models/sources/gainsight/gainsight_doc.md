@@ -7,3 +7,4 @@ This field is manually populated in Gainsight by CSMs, and indicates whether an 
 This field is most useful when a customer has multiple production installations. More details can be found on 
 [this issue](https://gitlab.com/gitlab-data/analytics/-/issues/15523#note_1261452392).
 {% enddocs %}
+

@@ -12,7 +12,6 @@ models:
         - name: instance_uuid
         - name: instance_type
         - name: namespace_id
-        - name: _updated_at
         - name: included_in_health_measures_str
           description: '{{ doc("included_in_health_measures_str") }}'
-          
+        - name: _updated_at

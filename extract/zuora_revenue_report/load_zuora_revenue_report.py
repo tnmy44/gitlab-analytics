@@ -77,7 +77,6 @@ def load_report_header_snow(
 
 
 def data_frame_enricher(raw_df: pd.DataFrame, file_name: str) -> pd.DataFrame:
-
     """Add file_name to the data frame before persisting also doing some data cleansing."""
     # raw_df["uploaded_at"] = time()
     raw_df.loc[:, "file_name"] = file_name

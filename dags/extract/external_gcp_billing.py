@@ -117,7 +117,6 @@ with open(
         print(exc)
 
 for export in stream["exports"]:
-
     export_name = export["name"]
 
     billing_extract_command = f"""
