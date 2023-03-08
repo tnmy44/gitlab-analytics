@@ -616,7 +616,9 @@ models:
       - name: is_monthly_release
         description: Derived boolean flag noting if the version number corresponds to a major monthly release.
       - name: is_vulnerable
-        description: Boolean flag noting if vulnerabilities have been detected for the release.
+        description: For historical data, the Boolean values of `t` or `f` indicate if vulnerabilities have been detected for the release. For the ongoing data, the values represent the `vulnerability_type` of 0, 1 or 2.
+      - name: vulnerability_type_desc
+        description: The description of the vulnerability_type - { not_vulnerable - 0, non_critical - 1, critical - 2, vulnerable - t, not_vulnerable - f }
       - name: created_date
         description: The date the release was created in the Version app.
       - name: updated_date
