@@ -1863,3 +1863,8 @@ Boolean flag which is set to True if the namespace is the ultimate parent.
 
 {% enddocs %}
 
+{% docs namespace_created_at %}
+
+Date the namespace was created.
+
+{% enddocs %}

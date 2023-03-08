@@ -1311,6 +1311,8 @@ models:
       - name: billable_user_count
       - name: license_utilization
       - name: max_historical_user_count
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
       - name: umau_28_days_user
         description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
@@ -2238,8 +2240,9 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: has_avatar
-      - name: namespace_created_at
-      - name: namespace_updated_at
+      - name: created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: updated_at
       - name: is_membership_locked
       - name: has_request_access_enabled
       - name: has_share_with_group_locked
@@ -3219,6 +3222,8 @@ models:
         description: Data quality flag to check if the subscription_id in the license table is valid (does it exist in the subscription table?)
       - name: is_service_ping_license_in_customerDot
         description: Data quality flag to check if the license from service ping exist in CustomerDot.
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
       - name: merge_requests_28_days_user
       - name: projects_with_repositories_enabled_28_days_user
