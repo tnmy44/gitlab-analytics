@@ -52,7 +52,7 @@ WITH versions AS (
       ELSE NULL END AS vulnerability_type_desc,
       created_date,
       updated_date
-    FROM calculated  
+    FROM renamed  
 
 )
 
