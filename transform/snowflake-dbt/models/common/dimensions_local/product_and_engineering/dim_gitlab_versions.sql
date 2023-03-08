@@ -45,10 +45,10 @@ WITH versions AS (
       patch_number,
       is_monthly_release,
       is_vulnerable,
-      CASE WHEN is_vulnerable IN ('0','f') THEN 'not_vulnerable'
+      CASE WHEN is_vulnerable IN ('0','false') THEN 'not_vulnerable'
            WHEN is_vulnerable = '1' THEN 'non_critical'
            WHEN is_vulnerable = '2' THEN 'critical'
-           WHEN is_vulnerable = 't' THEN 'vulnerable'
+           WHEN is_vulnerable = 'true' THEN 'vulnerable'
       ELSE NULL END AS vulnerability_type_desc,
       created_date,
       updated_date
