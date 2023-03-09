@@ -241,6 +241,9 @@ models:
       license:
         +schema: license_db
 
+      linkedin_ads:
+        +schema: linkedin_ads
+
       mailgun:
         +schema: mailgun
         sensitive:

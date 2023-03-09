@@ -55,7 +55,6 @@ def load_incremental(
       This block of code raises an Exception whenever replication is far enough behind that data will be missed.
     """
     if table_dict["export_schema"] == "gitlab_com":
-
         # Just fetch and print the last pg_last_xact_replay_timestamp in present in system database or not.
 
         last_replication_check_query = "select pg_last_xact_replay_timestamp();"

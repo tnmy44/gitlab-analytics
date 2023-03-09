@@ -553,6 +553,11 @@ roles:
             - analyst_core
             - snowflake_db
             - data_team_analyst
+            - data_science_readonly
+            - postgres_pipeline
+            - snapshots
+            - snowplow
+            - zuora
 
     - data_manager:
         warehouses:
@@ -786,6 +791,105 @@ roles:
                 write:
                     - prod.boneyard.*
                     - raw.*.*
+
+    - data_science:
+          warehouses:
+              - dev_xs
+              - dev_l
+          privileges:
+              databases:
+                  read:
+                      - prep
+                      - prod
+                      - raw
+              schemas:
+                  read:
+                      - prod.workspace_data_science
+                      - prod.common
+                      - prod.legacy
+                      - prod.common_mart_product
+                      - prod.restricted_safe_common_mart_sales
+                      - prod.common_mart_marketing
+                      - prod.restricted_safe_workspace_sales
+                      - prod.restricted_safe_common
+                      - prep.snowplow_*
+                      - prep.gitlab_dotcom
+                      - prep.zendesk
+                      - prep.preparation
+                      - prep.customers
+                      - raw.data_science
+                      - raw.salesforce_stitch
+                      - raw.snapshots
+              tables:
+                  read:
+                      - prod.workspace_data_science.*
+                      - prep.snowplow_*.*
+                      - prep.snowplow_*.*
+                      - prep.zendesk.*
+                      - prep.gitlab_dotcom.*
+                      - prep.preparation.*
+                      - prep.customers.*
+                      - prod.common.*
+                      - prod.legacy.*
+                      - prod.common_mart_product.*
+                      - prod.restricted_safe_common_mart_sales.*
+                      - prod.restricted_safe_common.*
+                      - prod.restricted_safe_workspace_sales.*
+                      - prod.common_mart_marketing.*
+                      - raw.salesforce_stitch.*
+                      - raw.snapshots.*
+                      - raw.data_science.*
+
+    - data_science_sensitive:
+          warehouses:
+              - dev_xs
+              - dev_l
+          privileges:
+              databases:
+                  read:
+                      - prep
+                      - prod
+                      - raw
+              schemas:
+                  read:
+                      - prod.workspace_data_science
+                      - prod.common
+                      - prod.legacy
+                      - prod.common_mart_product
+                      - prod.restricted_safe_common_mart_sales
+                      - prod.common_mart_marketing
+                      - prod.restricted_safe_workspace_sales
+                      - prod.restricted_safe_common
+                      - prod.pumps_sensitive
+                      - prep.snowplow_*
+                      - prep.gitlab_dotcom
+                      - prep.zendesk
+                      - prep.preparation
+                      - prep.customers
+                      - raw.data_science
+                      - raw.salesforce_stitch
+                      - raw.snapshots
+
+              tables:
+                  read:
+                      - prod.workspace_data_science.*
+                      - prep.snowplow_*.*
+                      - prep.snowplow_*.*
+                      - prep.zendesk.*
+                      - prep.gitlab_dotcom.*
+                      - prep.preparation.*
+                      - prep.customers.*
+                      - prod.common.*
+                      - prod.legacy.*
+                      - prod.common_mart_product.*
+                      - prod.restricted_safe_common_mart_sales.*
+                      - prod.restricted_safe_common.*
+                      - prod.restricted_safe_workspace_sales.*
+                      - prod.common_mart_marketing.*
+                      - prod.pumps_sensitive.*
+                      - raw.salesforce_stitch.*
+                      - raw.snapshots.*
+                      - raw.data_science.*
 
     - data_science_loader:
           warehouses:
@@ -1230,6 +1334,21 @@ roles:
                 read:
                     - bi_tool_eval.*.*
 
+    - coupa:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.coupa_sandbox
+            tables:
+                read:
+                    - raw.coupa_sandbox.*
+
+
     - covid19:
         privileges:
             databases:
@@ -1393,33 +1512,6 @@ roles:
             tables:
                 read:
                     - prep.sensitive.*
-
-    - dbt_data_science:
-          warehouses:
-              - dev_xs
-          privileges:
-              databases:
-                  read:
-                      - prod
-                      - prep
-                      - raw
-              schemas:
-                  read:
-                      - prod.workspace_data_science
-                      - prod.restricted_safe_common_mart_sales
-                      - prod.restricted_safe_workspace_sales
-                      - prod.common_mart_product
-                      - prod.common_mart_marketing
-                      - prep.data_science
-              tables:
-                  read:
-                      - prod.workspace_data_science.*
-                      - prod.restricted_safe_common_mart_sales.*
-                      - prod.restricted_safe_workspace_sales.*
-                      - prod.common_mart_product.*
-                      - prod.common_mart_marketing.*
-                      - prep.data_science.*
-
 
     - demandbase:
         warehouses:
@@ -2646,8 +2738,12 @@ roles:
     - csharp:
         member_of:
             - analytics_engineer_core
+            - analyst_engineering
+            - analyst_growth
+            - coupa
             - restricted_safe
             - bi_tool_eval_read
+            - salesforce
         warehouses:
             - dev_xs
             - dev_m
@@ -3032,8 +3128,10 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - customers_db
+            - data_science_readonly
             - data_team_analyst
             - data_manager
+            - marketo
             - restricted_safe
             - salesforce_sandbox
             - xactly
@@ -3131,6 +3229,12 @@ roles:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
 
+    - jhope:
+        member_of:
+            - gitlab_dotcom
+        warehouses:
+            - dev_xs
+
     - jng:
         member_of:
          - restricted_safe
@@ -3182,9 +3286,10 @@ roles:
             - analyst_finance
             - gainsight
             - restricted_safe
-            - dbt_data_science
             - snowplow
             - workday
+            - data_science
+            - data_science_sensitive
         warehouses:
             - dev_xs
             - dev_l
@@ -3288,6 +3393,8 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - zoominfo_inbound
+            - data_science
+            - data_science_sensitive
         warehouses:
             - dev_xs
             - dev_xl
@@ -3339,7 +3446,6 @@ roles:
             - analyst_core
             - bi_tool_eval_read
             - data_team_analyst
-            - dbt_data_science
             - google_analytics_360
             - marketo
             - salesforce
@@ -3347,6 +3453,8 @@ roles:
             - snowplow
             - zendesk
             - zendesk_community_relations
+            - data_science
+            - data_science_sensitive
         warehouses:
             - dev_xs
         owns:
@@ -3391,8 +3499,9 @@ roles:
             - gainsight
             - analyst_core
             - restricted_safe
-            - dbt_data_science
             - snowplow
+            - data_science
+            - data_science_sensitive
         warehouses:
             - dev_xs
         owns:
@@ -3476,7 +3585,9 @@ roles:
             - bamboohr
             - bamboohr_analytics
             - customers_db
+            - data_science_readonly
             - data_team_analyst
+            - marketo
             - prometheus
             - restricted_safe
             - salesforce_sandbox
@@ -4047,8 +4158,12 @@ roles:
     - pempey:
         member_of:
             - analytics_engineer_core
-            - analyst_people
             - analyst_engineering
+            - analyst_finance
+            - analyst_growth
+            - analyst_marketing
+            - analyst_people
+            - analyst_sales
             - bamboohr
             - bi_tool_eval_db
             - prometheus
@@ -4328,7 +4443,10 @@ roles:
     - snalamaru:
         member_of:
             - analytics_engineer_core
+            - analyst_engineering
+            - analyst_growth
             - restricted_safe
+            - zuora_api_sandbox_stitch
         warehouses:
             - dev_xs
             - dev_m
@@ -4583,7 +4701,6 @@ roles:
             - data_team_analyst
             - analyst_core
             - restricted_safe
-            - dbt_data_science
             - snowplow
         warehouses:
             - dev_xs
@@ -4775,6 +4892,11 @@ users:
         can_login: yes
         member_of:
             - jcaine
+
+    - jhope:
+        can_login: yes
+        member_of:
+            - jhope
 
     - jng:
         can_login: yes

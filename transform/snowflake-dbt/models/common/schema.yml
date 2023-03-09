@@ -616,7 +616,9 @@ models:
       - name: is_monthly_release
         description: Derived boolean flag noting if the version number corresponds to a major monthly release.
       - name: is_vulnerable
-        description: Boolean flag noting if vulnerabilities have been detected for the release.
+        description: For historical data, the Boolean values of `t` or `f` indicate if vulnerabilities have been detected for the release. For the ongoing data, the values represent the `vulnerability_type` of 0, 1 or 2.
+      - name: vulnerability_type_desc
+        description: The description of the vulnerability_type - { not_vulnerable - 0, non_critical - 1, critical - 2, vulnerable - t, not_vulnerable - f }
       - name: created_date
         description: The date the release was created in the Version app.
       - name: updated_date
@@ -772,6 +774,8 @@ models:
         tags: ["gainsight"]
       - name: crm_account_name
         description: Name of the CRM account associated with the instance
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
 
   - name: dim_instances
     description: '{{ doc("dim_instances") }}'
@@ -1309,6 +1313,8 @@ models:
       - name: billable_user_count
       - name: license_utilization
       - name: max_historical_user_count
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
       - name: umau_28_days_user
         description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
@@ -1659,6 +1665,46 @@ models:
         description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: snippets_28_days_event
+        description: '{{ doc("snippets_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: single_file_editor_28_days_user
+        description: '{{ doc("single_file_editor_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_event
+        description: '{{ doc("merge_requests_created_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_user
+        description: '{{ doc("merge_requests_created_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_approval_rules_28_days_event
+        description: '{{ doc("merge_requests_approval_rules_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: custom_compliance_frameworks_28_days_event
+        description: '{{ doc("custom_compliance_frameworks_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_security_policy_28_days_event
+        description: '{{ doc("projects_security_policy_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_security_policy_28_days_user
+        description: '{{ doc("merge_requests_security_policy_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipelines_implicit_auto_devops_28_days_event
+        description: '{{ doc("pipelines_implicit_auto_devops_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_28_days_user
+        description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_missing_paid_seats
         description: Flags if there are currently active users, but no seats have been paid for
       - name: is_data_in_subscription_month
@@ -1909,35 +1955,6 @@ models:
         description: '{{ doc("data_source") }}'
       - name: event_count
         description: '{{ doc("event_count") }}'
-      - name: created_by
-        description: '{{ doc("created_by") }}'
-      - name: updated_by
-        description: '{{ doc("updated_by") }}'
-      - name: model_created_date
-        description: '{{ doc("model_created_date") }}'
-      - name: model_updated_date
-        description: '{{ doc("model_updated_date") }}'
-
-  - name: fct_event_instance_daily
-    description: '{{ doc("fct_event_instance_daily") }}'
-    columns:
-      - name: event_instance_daily_pk
-        description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance_daily.
-        tests:
-          - not_null
-          - unique
-      - name: event_date
-        description: '{{ doc("event_date") }}'
-      - name: event_name
-        description: '{{ doc("event_name") }}'
-      - name: data_source
-        description: '{{ doc("data_source") }}'
-      - name: event_count
-        description: '{{ doc("event_count") }}'
-      - name: user_count
-        description: '{{ doc("user_count") }}'
-      - name: ultimate_parent_namespace_count
-        description: '{{ doc("ultimate_parent_namespace_count") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -2225,8 +2242,9 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: has_avatar
-      - name: namespace_created_at
-      - name: namespace_updated_at
+      - name: created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: updated_at
       - name: is_membership_locked
       - name: has_request_access_enabled
       - name: has_share_with_group_locked
@@ -2436,27 +2454,6 @@ models:
           - not_null
       - name: ci_pipeline_internal_id
         description: Internal ID for the CI Pipeline. This is project specific
-
-  - name: dim_action
-    description: '{{ doc("dim_action") }}'
-    columns:
-      - name: dim_action_id
-        description: The unique identifier for each of the actions.
-        tests:
-          - not_null
-          - unique
-      - name: dim_project_id
-      - name: dim_namespace_id
-      - name: ultimate_parent_namespace_id
-      - name: dim_user_id
-      - name: created_date_id
-      - name: dim_plan_id
-        tests:
-          - not_null
-      - name: target_id
-      - name: target_type
-      - name: created_at
-      - name: event_action_type
 
   - name: dim_user
     description: '{{ doc("dim_user") }}'
@@ -3227,6 +3224,8 @@ models:
         description: Data quality flag to check if the subscription_id in the license table is valid (does it exist in the subscription table?)
       - name: is_service_ping_license_in_customerDot
         description: Data quality flag to check if the license from service ping exist in CustomerDot.
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
       - name: merge_requests_28_days_user
       - name: projects_with_repositories_enabled_28_days_user
@@ -3782,6 +3781,46 @@ models:
         description: '{{ doc("sast_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: snippets_28_days_event
+        description: '{{ doc("snippets_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: single_file_editor_28_days_user
+        description: '{{ doc("single_file_editor_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_event
+        description: '{{ doc("merge_requests_created_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_user
+        description: '{{ doc("merge_requests_created_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_approval_rules_28_days_event
+        description: '{{ doc("merge_requests_approval_rules_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: custom_compliance_frameworks_28_days_event
+        description: '{{ doc("custom_compliance_frameworks_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_security_policy_28_days_event
+        description: '{{ doc("projects_security_policy_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_security_policy_28_days_user
+        description: '{{ doc("merge_requests_security_policy_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipelines_implicit_auto_devops_28_days_event
+        description: '{{ doc("pipelines_implicit_auto_devops_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_28_days_user
+        description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one    
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
@@ -4558,7 +4597,7 @@ models:
           - dbt_utils.relationships_where:
               to: ref('dim_crm_account')
               field: dim_crm_account_id
-              from_condition: created_date <= DATEADD('day', -2, CURRENT_DATE)::DATE
+              from_condition: created_date <= DATEADD('day', -3, CURRENT_DATE)::DATE
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_alliance_type_id
         description: join key for dim_alliance_type_scd.

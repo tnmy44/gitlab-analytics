@@ -2169,6 +2169,19 @@ tables:
       FROM web_hooks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  work_item_progresses:
+    export_schema: 'gitlab_com'
+    export_table: work_item_progresses
+    export_table_primary_key: issue_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT created_at
+      , updated_at
+      , issue_id
+      , progress
+      FROM work_item_progresses
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   zoom_meetings:
     export_schema: "gitlab_com"
     export_table: zoom_meetings
