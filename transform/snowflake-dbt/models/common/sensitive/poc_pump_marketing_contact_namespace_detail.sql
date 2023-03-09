@@ -332,30 +332,56 @@
   FROM namespace_details
   GROUP BY 1
   
+), user_details_and_namespace_details AS (
+
+  SELECT
+    dim_marketing_contact.dim_marketing_contact_id,
+    dim_marketing_contact.email_address,
+    dim_marketing_contact.first_name,
+    dim_marketing_contact.last_name,
+    dim_marketing_contact.country,
+    dim_marketing_contact.company_name,
+    dim_marketing_contact.job_title,
+    dim_marketing_contact.gitlab_dotcom_user_id,
+    dim_marketing_contact.gitlab_user_name,
+    dim_marketing_contact.gitlab_dotcom_active_state,
+    dim_marketing_contact.gitlab_dotcom_confirmed_date,
+    dim_marketing_contact.gitlab_dotcom_created_date,
+    dim_marketing_contact.gitlab_dotcom_last_login_date,
+    dim_marketing_contact.gitlab_dotcom_email_opted_in,
+    IFF(pqls_by_user.user_id IS NOT NULL, TRUE, FALSE) AS is_pql,
+    user_aggregated_namespace_details.namespaces_array
+
+  FROM dim_marketing_contact
+  LEFT JOIN user_aggregated_namespace_details
+    ON dim_marketing_contact.gitlab_dotcom_user_id = user_aggregated_namespace_details.user_id
+  LEFT JOIN pqls_by_user
+    ON pqls_by_user.user_id = dim_marketing_contact.gitlab_dotcom_user_id
+
+  WHERE dim_marketing_contact.gitlab_dotcom_user_id IS NOT NULL
+
 )
 
-SELECT
-  dim_marketing_contact.dim_marketing_contact_id,
-  dim_marketing_contact.email_address,
-  dim_marketing_contact.first_name,
-  dim_marketing_contact.last_name,
-  dim_marketing_contact.country,
-  dim_marketing_contact.company_name,
-  dim_marketing_contact.job_title,
-  dim_marketing_contact.gitlab_dotcom_user_id,
-  dim_marketing_contact.gitlab_user_name,
-  dim_marketing_contact.gitlab_dotcom_active_state,
-  dim_marketing_contact.gitlab_dotcom_confirmed_date,
-  dim_marketing_contact.gitlab_dotcom_created_date,
-  dim_marketing_contact.gitlab_dotcom_last_login_date,
-  dim_marketing_contact.gitlab_dotcom_email_opted_in,
-  IFF(pqls_by_user.user_id IS NOT NULL, TRUE, FALSE) AS is_pql,
-  user_aggregated_namespace_details.namespaces_array
+{{ hash_diff(
+    cte_ref="user_details_and_namespace_details",
+    return_cte="final",
+    columns=[
+      'first_name',
+      'last_name',
+      'country',
+      'company_name',
+      'job_title',
+      'gitlab_dotcom_user_id',
+      'gitlab_user_name',
+      'gitlab_dotcom_active_state',
+      'gitlab_dotcom_confirmed_date',
+      'gitlab_dotcom_created_date',
+      'gitlab_dotcom_last_login_date',
+      'gitlab_dotcom_email_opted_in',
+      'is_pql',
+      'namespaces_array'
+      ]
+) }}
 
-FROM dim_marketing_contact
-LEFT JOIN user_aggregated_namespace_details
-  ON dim_marketing_contact.gitlab_dotcom_user_id = user_aggregated_namespace_details.user_id
-LEFT JOIN pqls_by_user
-  ON pqls_by_user.user_id = dim_marketing_contact.gitlab_dotcom_user_id
-
-WHERE dim_marketing_contact.gitlab_dotcom_user_id IS NOT NULL
+SELECT *
+FROM final
