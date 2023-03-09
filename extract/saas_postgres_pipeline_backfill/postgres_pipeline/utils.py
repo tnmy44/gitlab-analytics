@@ -40,6 +40,7 @@ from sqlalchemy.schema import CreateTable, DropTable
 SCHEMA = "tap_postgres"
 BUCKET_NAME = "saas-pipeline-backfills"
 
+
 def get_gcs_scoped_credentials():
     """Get scoped credential """
     # create the credentials object
@@ -59,23 +60,23 @@ def get_gcs_bucket() -> Bucket:
 
 
 def upload_to_gcs(
-    advanced_metadata: bool, upload_df: pd.DataFrame, upload_file_dir: str,
-    upload_file_name: str
+    advanced_metadata: bool, upload_df: pd.DataFrame, upload_file_name: str
 ) -> bool:
     """
     Write a dataframe to local storage and then upload it to a GCS bucket.
     """
-    bucket = get_gcs_bucket(keyfile)
+    bucket = get_gcs_bucket()
 
     # Write out the parquet and upload it
     enriched_df = dataframe_enricher(advanced_metadata, upload_df)
+    os.makedirs(os.path.dirname(upload_file_name), exist_ok=True) # need to create director(ies) prior to to_parquet()
     enriched_df.to_parquet(
         upload_file_name,
         compression="gzip",
         index=False,
     )
-    logging.info(f'GCS save location: {upload_file_dir + upload_file_name}')
-    blob = bucket.blob(upload_file_dir + upload_file_name)
+    logging.info(f'GCS save location: {upload_file_name}')
+    blob = bucket.blob(upload_file_name)
     blob.upload_from_filename(upload_file_name)
 
     return True
@@ -237,12 +238,96 @@ def seed_table(
     logging.info(f"{target_table_name} created")
 
 
+def write_backfill_metadata(
+    metadata_engine, table_name: str, initial_load_start_date: datetime,
+    upload_date: datetime, upload_file_name: str, last_extracted_id: int,
+    max_id: int, is_backfill_completed: bool
+):
+
+    insert_query = f"""
+        INSERT INTO saas_db_metadata.backfill_metadata (
+            table_name,
+            initial_load_start_date,
+            upload_date,
+            upload_file_name,
+            last_extracted_id,
+            max_id,
+            is_backfill_completed
+        )
+        VALUES (
+            '{table_name}',
+            '{initial_load_start_date}',
+            '{upload_date}',
+            '{upload_file_name}',
+            {last_extracted_id},
+            {max_id},
+            {is_backfill_completed}
+        );
+    """
+    with metadata_engine.connect() as connection:
+        connection.execute(insert_query)
+
+
+def get_upload_file_name(
+    table: str,
+    initial_load_start_date: datetime,
+    version: str = None,
+    filetype: str = 'parquet',
+    compression: str = 'gzip',
+    prefix_template: str = '{table}/{initial_load_prefix}/',
+    filename_template:
+    str = '{timestamp}_{table}_{version}.{filetype}.{compression}'
+) -> str:
+    """Generate a unique and descriptive filename for uploading data to cloud storage.
+
+    Args:
+        table (str): The name of the table.
+        initial_load_start_date (datetime): The date and time when the initial load started.
+        version (str, optional): The version of the data. Defaults to None.
+        filetype (str, optional): The file format. Defaults to 'parquet'.
+        compression (str, optional): The compression method. Defaults to 'gzip'.
+        prefix_template (str, optional): The prefix template for the folder structure.
+            Defaults to '{table}/{initial_load_prefix}/'.
+        filename_template (str, optional): The filename template.
+            Defaults to '{timestamp}_{table}_{version}.{filetype}.{compression}'.
+
+    Returns:
+        str: The upload name with the folder structure and filename.
+    """
+    # Format folder structure
+    initial_load_prefix = f"initial_load_start_{initial_load_start_date.isoformat(timespec='milliseconds')}"
+    folder_prefix = prefix_template.format(
+        table=table, initial_load_prefix=initial_load_prefix
+    )
+
+    # Format filename
+    upload_date = datetime.now()
+    timestamp = upload_date.isoformat(timespec='milliseconds')
+    if version is None:
+        version = ''
+    else:
+        version = f'_{version}'
+    filename = filename_template.format(
+        timestamp=timestamp,
+        table=table,
+        version=version,
+        filetype=filetype,
+        compression=compression
+    )
+
+    # Combine folder structure and filename
+    return os.path.join(folder_prefix, filename).lower(), upload_date
+
+
 def chunk_and_upload(
     query: str,
+    primary_key: str,
     source_engine: Engine,
     target_engine: Engine,
+    metadata_engine: Engine,
     target_table: str,
     source_table: str,
+    max_source_id: datetime,
     initial_load_start_date: datetime,
     advanced_metadata: bool = False,
     backfill: bool = False,
@@ -258,6 +343,9 @@ def chunk_and_upload(
     All of the chunks are uploaded by using a regex that gets all of the files.
     """
 
+    logging.info(
+        f'\ninitial_load_start_date / chunk_upload(): {initial_load_start_date}'
+    )
     rows_uploaded = 0
 
     with tempfile.TemporaryFile() as tmpfile:
@@ -265,6 +353,7 @@ def chunk_and_upload(
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
 
         for idx, chunk_df in enumerate(iter_csv):
+            logging.info(f'\nchunk_df: {chunk_df}')
             '''
             if backfill:
                 schema_types = transform_source_types_to_snowflake_types(
@@ -276,21 +365,25 @@ def chunk_and_upload(
 
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
+            last_extracted_id = chunk_df[primary_key].max()
+            upload_file_name, upload_date = get_upload_file_name(
+                source_table, initial_load_start_date
+            )
 
-            initial_load_start_prefix = f'load_start_{initial_load_start_date.isoformat()}'  # TODO this needs to turned into a variable later
-
-            # i.e '2023-02-17T11:02:44.672'
-            now = datetime.now().isoformat(timespec='milliseconds')
-            upload_file_dir = f"{target_table}/{initial_load_start_prefix}/".lower()
-            upload_file_name = f"{now}_{target_table}.parquet.gzip".lower()
             if row_count > 0:
-                upload_to_gcs(
-                    advanced_metadata, chunk_df, upload_file_dir,
-                    upload_file_name
-                )
+                upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
                 logging.info(
                     f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}"
                 )
+                is_backfill_completed = last_extracted_id >= max_source_id
+                write_backfill_metadata(
+                    metadata_engine, source_table, initial_load_start_date,
+                    upload_date, upload_file_name, last_extracted_id,
+                    max_source_id, is_backfill_completed
+                )
+
+                logging.info(f'Wrote to posgres for upload_file_name: {upload_file_name}')
+
     '''
     if rows_uploaded > 0:
         trigger_snowflake_upload(
@@ -318,7 +411,7 @@ def read_sql_tmpfile(
     logging.info("Reading csv")
     # TODO change back to chunksize=750_000
     df = pd.read_csv(
-        tmp_file, chunksize=400, parse_dates=True, low_memory=False
+        tmp_file, chunksize=200, parse_dates=True, low_memory=False
     )
     logging.info("CSV read")
     return df
@@ -348,7 +441,6 @@ def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
     query = f"SELECT * FROM saas_db_metadata.backfill_metadata WHERE table_name = '{source_table}' LIMIT 1;"
     logging.info(f'\nquery: {query}')
     results = query_executor(metadata_engine, query)
-    return False # TODO remove this later
     return len(results) == 0
 
 
@@ -359,14 +451,14 @@ def query_backfill_status(metadata_engine: Engine, source_table: str) -> bool:
     """
 
     query = (
-        "SELECT is_backfill_complete, load_start_date, last_extracted_id, last_write_date "
+        "SELECT is_backfill_completed, initial_load_start_date, last_extracted_id, upload_date "
         "FROM saas_db_metadata.backfill_metadata "
-        "WHERE write_date = ("
-        "  SELECT MAX(write_date) "
-        "  FROM saas_db_metadata.backfill_metadata"
-        f"  WHERE table_name = '{source_table}')"
+        "WHERE upload_date = ("
+        "  SELECT MAX(upload_date)"
+        " FROM saas_db_metadata.backfill_metadata"
+        f" WHERE table_name = '{source_table}');"
     )
-    logging.info(f'\nquery: {query}')
+    logging.info(f'\nquery backfill status: {query}')
     results = query_executor(metadata_engine, query)
     return results
 
@@ -375,10 +467,12 @@ def get_source_columns(raw_query, source_engine, source_table):
     # Get the columns from the current query
     query_stem = raw_query.lower().split("where")[0]
     source_query = "{0} limit 1"
-    source_columns = list(pd.read_sql(
-        sql=source_query.format(query_stem),
-        con=source_engine,
-    ).columns)
+    source_columns = list(
+        pd.read_sql(
+            sql=source_query.format(query_stem),
+            con=source_engine,
+        ).columns
+    )
     return source_columns
 
 
@@ -386,8 +480,7 @@ def get_latest_parquet_file(source_table):
     # first filter for the most recent load_time directory for the source table
     bucket = get_gcs_bucket()
 
-    prefix = f"{source_table}/load_start_"  # TODO use this one once files are being written correctly
-    prefix = "load_start_"
+    prefix = f"{source_table}/initial_load_start_"
 
     blobs = bucket.list_blobs(prefix=prefix)
     parquet_files = []
@@ -403,16 +496,18 @@ def get_gcs_parquet_schema(parquet_file):
 
     # create a GCSFileSystem instance with credentials
     scoped_credentials = get_gcs_scoped_credentials()
-    fs = gcsfs.GCSFileSystem(project='gitlab-analysis', token=scoped_credentials)
+    fs = gcsfs.GCSFileSystem(
+        project='gitlab-analysis', token=scoped_credentials
+    )
 
     parquet_file_full_path = f'gs://{BUCKET_NAME}/{parquet_file}'
-    logging.info(f'\nreading parquet_file_full_path for latest schema: {parquet_file_full_path}')
+    logging.info(
+        f'\nreading parquet_file_full_path for latest schema: {parquet_file_full_path}'
+    )
 
     with fs.open(parquet_file_full_path) as f:
-        columns = pq.ParquetFile(f).schema.names
-    drop_columns = ["_uploaded_at", "_task_instance"]
-    columns = list(set(columns) - set(drop_columns))
-    return columns
+        arrow_file = pq.ParquetFile(f)
+    return arrow_file.schema.names
 
 
 def get_gcs_columns(source_table):
@@ -455,6 +550,38 @@ def schema_addition_check(
     return has_new_columns(source_columns, gcs_columns)
 
 
+def get_min_or_max_id(
+    primary_key: str, engine: sqlalchemy.engine.Engine, table: str,
+    min_or_max: str
+) -> int:
+    """
+    Retrieve the minimum or maximum value of the specified primary key column in the specified table.
+
+    Parameters:
+    primary_key (str): The name of the primary key column.
+    engine (sqlalchemy.engine.Engine): The database engine to use for the query.
+    table (str): The name of the table to query.
+    min_or_max (str): Either "min" or "max" to indicate whether to retrieve the minimum or maximum ID.
+
+    Returns:
+    int: The minimum or maximum ID value.
+    """
+    logging.info(f"Getting {min_or_max} ID from table: {table}")
+    id_query = f"SELECT {min_or_max}({primary_key}) as {primary_key} FROM {table}"
+    try:
+        id_results = query_results_generator(id_query, engine)
+        id_value = next(id_results)[primary_key].tolist()[0]
+    except sqlalchemy.exc.ProgrammingError as e:
+        logging.exception(e)
+        raise
+    logging.info(f"{min_or_max} ID: {id_value}")
+
+    if id_value is None:
+        logging.info(f"No data found when querying {min_or_max}(id) -- exiting")
+        sys.exit(0)
+    return id_value
+
+
 def id_query_generator(
     postgres_engine: Engine,
     primary_key: str,
@@ -462,6 +589,8 @@ def id_query_generator(
     snowflake_engine: Engine,
     source_table: str,
     target_table: str,
+    min_source_id: int,
+    max_source_id: int,
     id_range: int = 750_000,
 ) -> Generator[str, Any, None]:
     """
@@ -473,7 +602,6 @@ def id_query_generator(
     i.e. if the table in Snowflake has a max id of 2000, but postgres has a max id of 5000,
     it will return a list of queries that load chunks of IDs until it has the same max id.
     """
-
     '''
     # Get the max ID from the target DB
     logging.info(f"Getting max primary key from target_table: {target_table}")
@@ -488,27 +616,6 @@ def id_query_generator(
     else:
         max_target_id = 0
     logging.info(f"Target Max ID: {max_target_id}")
-    '''
-
-    # Get the max ID from the source DB
-    logging.info(f"Getting max ID from source_table: {source_table}")
-    max_source_id_query = (
-        f"SELECT MAX({primary_key}) as {primary_key} FROM {source_table}"
-    )
-    try:
-        max_source_id_results = query_results_generator(
-            max_source_id_query, postgres_engine
-        )
-        max_source_id = next(max_source_id_results)[primary_key].tolist()[0]
-    except sqlalchemy.exc.ProgrammingError as e:
-        logging.exception(e)
-        sys.exit(1)
-    logging.info(f"Source Max ID: {max_source_id}")
-
-    if max_source_id is None:
-        logging.info("No source data found -- exiting")
-        append_to_xcom_file({target_table: 0, "load_ran": False})
-        sys.exit(0)
 
     # Get the min ID from the source DB
     logging.info(f"Getting min ID from source_table: {source_table}")
@@ -524,6 +631,7 @@ def id_query_generator(
         logging.exception(e)
         sys.exit(1)
     logging.info(f"Source Min ID: {min_source_id}")
+    '''
 
     # Generate the range pairs based on the max source id and the
     # greatest of either the min_source_id or the max_target_id

@@ -20,6 +20,7 @@ from utils import (
     get_engines,
     id_query_generator,
     manifest_reader,
+    get_min_or_max_id
 )
 
 
@@ -175,6 +176,7 @@ def sync_incremental_ids(
     table: str,
     table_dict: Dict[Any, Any],
     table_name: str,
+    metadata_engine,
     initial_load_start_date
 ) -> bool:
     """
@@ -200,6 +202,7 @@ def sync_incremental_ids(
         table,
         table_name,
         target_engine,
+        metadata_engine,
         initial_load_start_date
     )
     return True
@@ -267,11 +270,15 @@ def load_ids(
     source_table_name: str,
     table_name: str,
     target_engine: Engine,
+    metadata_engine: Engine,
     initial_load_start_date: datetime,
     id_range: int = 750_000,
     backfill: bool = True,
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
+
+    min_source_id = get_min_or_max_id(primary_key, source_engine, source_table_name, 'min')
+    max_source_id = get_min_or_max_id(primary_key, source_engine, source_table_name, 'max')
 
     # Create a generator for queries that are chunked by ID range
     id_queries = id_query_generator(
@@ -281,6 +288,8 @@ def load_ids(
         target_engine,
         source_table_name,
         table_name,
+        min_source_id,
+        max_source_id,
         id_range=id_range,
     )
     # Iterate through the generated queries
@@ -289,11 +298,14 @@ def load_ids(
         logging.info(filtered_query)
         chunk_and_upload(
             filtered_query,
+            primary_key,
             source_engine,
             target_engine,
+            metadata_engine,
             table_name,
-            initial_load_start_date,
             source_table_name,
+            max_source_id,
+            initial_load_start_date,
             backfill=backfill,
         )
         backfill = False  # this prevents it from seeding rows for every chunk

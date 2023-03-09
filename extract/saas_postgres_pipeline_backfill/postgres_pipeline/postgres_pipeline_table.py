@@ -26,6 +26,9 @@ class PostgresPipelineTable:
         self.table_dict = table_config
         self.target_table_name_td_sf = table_config["export_table"]
 
+    def set_initial_load_start_date(self, initial_load_start_date):
+        self.initial_load_start_date = initial_load_start_date
+
     def is_scd(self) -> bool:
         return not self.is_incremental()
 
@@ -51,8 +54,6 @@ class PostgresPipelineTable:
     def is_incremental(self) -> bool:
         return "{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query
 
-
-
     def needs_incremental_backfill(
         self, source_engine: Engine, target_engine: Engine
     ) -> bool:
@@ -62,9 +63,9 @@ class PostgresPipelineTable:
         return self.is_incremental()
 
     def do_incremental_backfill(
-        self, source_engine: Engine, target_engine: Engine, schema_changed: bool
+            self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine, is_backfill_needed: bool
     ) -> bool:
-        if not self.is_incremental() or not schema_changed:
+        if not self.is_incremental() or not is_backfill_needed:
             logging.info("table does not need incremental backfill")
             return False
         target_table = self.get_target_table_name()
@@ -74,7 +75,8 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
-            initial_load_start_date
+            metadata_engine,
+            self.initial_load_start_date
         )
 
     def check_new_table(
@@ -99,23 +101,24 @@ class PostgresPipelineTable:
         load_type: str,
         source_engine: Engine,
         target_engine: Engine,
-        schema_changed: bool,
+        metadata_engine: Engine,
+        is_backfill_needed: bool,
     ) -> bool:
         load_types = {
             "scd": self.do_scd,
             "backfill": self.do_incremental_backfill,
             "test": self.check_new_table,
         }
-        return load_types[load_type](source_engine, target_engine, schema_changed)
+        return load_types[load_type](source_engine, target_engine, metadata_engine, is_backfill_needed)
 
     def check_is_backfill_needed(self, source_engine: Engine, metadata_engine: Engine):
-        load_start_date = datetime.now()
+        initial_load_start_date = datetime.now()
         start_pk = 1
         is_backfill_needed = True
 
         if is_new_table(metadata_engine, self.source_table_name):
             logging.info(f"New table: {self.source_table_name}.")
-            return is_backfill_needed, start_pk, load_start_date
+            return is_backfill_needed, start_pk, initial_load_start_date
 
         if schema_addition_check(
             self.query,
@@ -124,7 +127,7 @@ class PostgresPipelineTable:
             self.source_table_primary_key,
         ):
             logging.info(f"Schema has changed for table: {self.source_table_name}.")
-            return is_backfill_needed, start_pk, load_start_date
+            return is_backfill_needed, start_pk, initial_load_start_date
 
         return self.is_resume_backfill(metadata_engine)
 
@@ -135,17 +138,18 @@ class PostgresPipelineTable:
         If the backfill is in progress, check when the last file was written
         If last file was written within 24 hours, continue from last_extrated_id
         """
-        is_backfill_needed, last_extracted_id, load_start_date = False, None, None
+        is_backfill_needed, last_extracted_id, initial_load_start_date = False, None, None
         results = query_backfill_status(metadata_engine, self.source_table_name)
         if results:
-            is_backfill_complete, load_start_date, last_extracted_id, last_write_date = results[0]
+            is_backfill_completed, initial_load_start_date, last_extracted_id, last_write_date = results[0]
             time_difference = datetime.now() - last_write_date
 
-            if not is_backfill_complete and time_difference < timedelta(hours=24):
+            if not is_backfill_completed and time_difference < timedelta(hours=24):
+                logging.info(f'Resuming backfill with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}')
                 is_backfill_needed = True
-                return is_backfill_needed, last_extracted_id + 1, load_start_date
+                return is_backfill_needed, last_extracted_id + 1, initial_load_start_date
 
-        return is_backfill_needed, last_extracted_id, load_start_date
+        return is_backfill_needed, last_extracted_id, initial_load_start_date
 
     def get_target_table_name(self):
         return self.target_table_name
