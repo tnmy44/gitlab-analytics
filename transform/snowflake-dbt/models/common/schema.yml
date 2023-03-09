@@ -1313,6 +1313,8 @@ models:
       - name: billable_user_count
       - name: license_utilization
       - name: max_historical_user_count
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
       - name: umau_28_days_user
         description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
@@ -1661,6 +1663,46 @@ models:
           - dbt_utils.at_least_one
       - name: gitaly_servers_all_time_event
         description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: snippets_28_days_event
+        description: '{{ doc("snippets_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: single_file_editor_28_days_user
+        description: '{{ doc("single_file_editor_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_event
+        description: '{{ doc("merge_requests_created_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_user
+        description: '{{ doc("merge_requests_created_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_approval_rules_28_days_event
+        description: '{{ doc("merge_requests_approval_rules_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: custom_compliance_frameworks_28_days_event
+        description: '{{ doc("custom_compliance_frameworks_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_security_policy_28_days_event
+        description: '{{ doc("projects_security_policy_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_security_policy_28_days_user
+        description: '{{ doc("merge_requests_security_policy_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipelines_implicit_auto_devops_28_days_event
+        description: '{{ doc("pipelines_implicit_auto_devops_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_28_days_user
+        description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: is_missing_paid_seats
@@ -2200,8 +2242,9 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: has_avatar
-      - name: namespace_created_at
-      - name: namespace_updated_at
+      - name: created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: updated_at
       - name: is_membership_locked
       - name: has_request_access_enabled
       - name: has_share_with_group_locked
@@ -3181,6 +3224,8 @@ models:
         description: Data quality flag to check if the subscription_id in the license table is valid (does it exist in the subscription table?)
       - name: is_service_ping_license_in_customerDot
         description: Data quality flag to check if the license from service ping exist in CustomerDot.
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
       - name: merge_requests_28_days_user
       - name: projects_with_repositories_enabled_28_days_user
@@ -3736,6 +3781,46 @@ models:
         description: '{{ doc("sast_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: snippets_28_days_event
+        description: '{{ doc("snippets_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: single_file_editor_28_days_user
+        description: '{{ doc("single_file_editor_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_event
+        description: '{{ doc("merge_requests_created_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_user
+        description: '{{ doc("merge_requests_created_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_approval_rules_28_days_event
+        description: '{{ doc("merge_requests_approval_rules_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: custom_compliance_frameworks_28_days_event
+        description: '{{ doc("custom_compliance_frameworks_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_security_policy_28_days_event
+        description: '{{ doc("projects_security_policy_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_security_policy_28_days_user
+        description: '{{ doc("merge_requests_security_policy_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipelines_implicit_auto_devops_28_days_event
+        description: '{{ doc("pipelines_implicit_auto_devops_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_28_days_user
+        description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one    
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
