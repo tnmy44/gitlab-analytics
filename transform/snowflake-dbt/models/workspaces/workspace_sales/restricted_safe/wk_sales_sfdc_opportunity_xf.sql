@@ -446,7 +446,40 @@ WITH edm_opty AS (
    
     edm_opty.deal_size,
     edm_opty.calculated_deal_size,
+
+    ---------------------------------------------
+    ---------------------------------------------
+
+    -- NF: calculated age only considers created date to close date or actual date if open
     edm_opty.calculated_age_in_days,
+
+    -- NF: cycle time will consider if the opty is renewal and eligible to be considered 
+    -- using the is_eligible_cycle_time_analysis
+    CASE 
+        WHEN edm_opty.is_edu_oss = 0
+            AND edm_opty.is_deleted = 0
+            -- For stage age we exclude only ps/other
+            AND edm_opty.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+            -- Only include deal types with meaningful journeys through the stages
+            AND edm_opty.opportunity_category IN ('Standard')
+            -- Web Purchase have a different dynamic and should not be included
+            AND edm_opty.is_web_portal_purchase = 0
+                THEN 1
+        ELSE 0
+    END                                                           AS is_eligible_cycle_time_analysis_flag,
+
+    -- NF: we consider net_arr_created date for renewals as they haver a very distinct motion than 
+    -- Add on and First Orders
+    CASE
+        WHEN edm_opty.is_renewal = 1
+        THEN DATEDIFF(day, edm_opty.net_arr_created_date, edm_opty.close_date)
+        ELSE DATEDIFF(day, edm_opty.created_date, edm_opty.close_date)
+    END                                                           AS cycle_time_in_days,
+
+    
+    ---------------------------------------------
+    ---------------------------------------------
+
     edm_opty.is_eligible_open_pipeline              AS is_eligible_open_pipeline_flag,
     edm_opty.is_eligible_asp_analysis               AS is_eligible_asp_analysis_flag,
     edm_opty.is_eligible_age_analysis               AS is_eligible_age_analysis_flag,
