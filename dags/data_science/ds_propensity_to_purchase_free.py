@@ -24,6 +24,8 @@ from kube_secrets import (
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
@@ -97,5 +99,7 @@ KubernetesPodOperator(
     ],
     env_vars=pod_env_vars,
     arguments=[ptpf_scoring_command],
+    affinity=get_affinity(True),
+    tolerations=get_toleration(True),
     dag=dag,
 )
