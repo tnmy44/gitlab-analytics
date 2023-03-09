@@ -175,6 +175,7 @@ def sync_incremental_ids(
     table: str,
     table_dict: Dict[Any, Any],
     table_name: str,
+    initial_load_start_date
 ) -> bool:
     """
     Sync incrementally-loaded tables based on their IDs.
@@ -199,6 +200,7 @@ def sync_incremental_ids(
         table,
         table_name,
         target_engine,
+        initial_load_start_date
     )
     return True
 
@@ -265,6 +267,7 @@ def load_ids(
     source_table_name: str,
     table_name: str,
     target_engine: Engine,
+    initial_load_start_date: datetime,
     id_range: int = 750_000,
     backfill: bool = True,
 ) -> None:
@@ -289,6 +292,7 @@ def load_ids(
             source_engine,
             target_engine,
             table_name,
+            initial_load_start_date,
             source_table_name,
             backfill=backfill,
         )

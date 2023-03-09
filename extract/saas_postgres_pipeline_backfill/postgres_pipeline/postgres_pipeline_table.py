@@ -1,12 +1,12 @@
 import logging
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, Any
 
 from sqlalchemy.engine.base import Engine
 
 import load_functions
-from utils import is_new_table, schema_addition_check
+from utils import is_new_table, schema_addition_check, query_backfill_status
 
 
 class PostgresPipelineTable:
@@ -74,6 +74,7 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
+            initial_load_start_date
         )
 
     def check_new_table(
@@ -107,19 +108,13 @@ class PostgresPipelineTable:
         }
         return load_types[load_type](source_engine, target_engine, schema_changed)
 
-    def query_backfill_metadata():
-        #TODO
-        latest_backfill_status = 'in progress'
-        latest_backfill_updated_at = datetime.now()
-        return latest_backfill_status, latest_backfill_updated_at
-
-    def no_gcs_schema_change():
-        pass
-
     def check_if_backfill_needed(self, source_engine: Engine, metadata_engine: Engine):
+        load_start_date = datetime.now()
+        start_pk = 1
+
         if is_new_table(metadata_engine, self.source_table_name):
             logging.info(f"New table: {self.source_table_name}.")
-            return True
+            return (True, start_pk, load_start_date)
 
         if schema_addition_check(
             self.query,
@@ -128,41 +123,19 @@ class PostgresPipelineTable:
             self.source_table_primary_key,
         ):
             logging.info(f"Schema has changed for table: {self.target_table_name}.")
-            return True
+            return (True, start_pk, load_start_date)
 
-    def check_latest_backfill_status(self, source_engine: Engine, metadata_engine: Engine):
+        return self.is_resume_backfill(metadata_engine)
 
-        latest_backfill_status, latest_backfill_updated_at = query_backfill_metadata()
+    def is_resume_backfill(self, metadata_engine: Engine):
 
-        if latest_backfill_status == 'in progress':
+        is_backfill_complete, load_start_date, last_extracted_id, last_write_date = query_backfill_status()
 
-            # last backfill file was less than 24 hr ago
-            if latest_backfill_updated_at < '24hr':
-
-                # no schema change since backfill started
-                if no_gcs_schema_change():
-                    return 'Start from last file'
-            return False
-
-        # backfill not already in progres
-        else:
-            return self.check_if_schema_changed()
-
-
-    def check_if_schema_changed(
-        self, source_engine: Engine, target_engine: Engine
-    ) -> bool:
-        schema_changed = schema_addition_check(
-            self.query,
-            source_engine,
-            self.source_table_name,
-            self.source_table_primary_key,
-            target_engine,
-            self.target_table_name,
-        )
-        if schema_changed:
-            logging.info(f"Schema has changed for table: {self.target_table_name}.")
-        return schema_changed
+        if not is_backfill_complete:
+            time_difference = datetime.now() - last_write_date
+            if time_difference < timedelta(hours=24):
+                return (True, last_extracted_id, load_start_date)
+        return (False, None, None)
 
     def get_target_table_name(self):
         return self.target_table_name

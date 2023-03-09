@@ -237,6 +237,7 @@ def chunk_and_upload(
     target_engine: Engine,
     target_table: str,
     source_table: str,
+    initial_load_start_date: datetime,
     advanced_metadata: bool = False,
     backfill: bool = False,
 ) -> None:
@@ -270,11 +271,11 @@ def chunk_and_upload(
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
 
-            load_start_prefix = 'load_start_2023-02-17T11:02:44.672'  # TODO this needs to turned into a variable later
+            initial_load_start_prefix = f'load_start_{initial_load_start_date.isoformat()}'  # TODO this needs to turned into a variable later
 
             # i.e '2023-02-17T11:02:44.672'
             now = datetime.now().isoformat(timespec='milliseconds')
-            upload_file_dir = f"{target_table}/{load_start_prefix}/".lower()
+            upload_file_dir = f"{target_table}/{initial_load_start_prefix}/".lower()
             upload_file_name = f"{now}_{target_table}.parquet.gzip".lower()
             if row_count > 0:
                 upload_to_gcs(
@@ -332,7 +333,6 @@ def range_generator(
             yield tuple([start, start + step])
         start += step
 
-
 def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
     """
     Check if backfill table exists in backfill metadata table.
@@ -343,6 +343,24 @@ def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
     results = query_executor(metadata_engine, query)
     return False # TODO remove this later
     return len(results) == 0
+
+def query_backfill_status(metadata_engine: Engine, source_table: str) -> bool:
+    """
+    Check if backfill table exists in backfill metadata table.
+    If the table doesn't exist, then it's a 'new' table
+    """
+
+    query = (
+        "SELECT is_backfill_complete, load_start_date, last_extracted_id, last_write_date "
+        "FROM saas_db_metadata.backfill_metadata "
+        "WHERE write_date = ("
+        "  SELECT MAX(write_date) "
+        "  FROM saas_db_metadata.backfill_metadata"
+        f"  WHERE table_name = '{source_table}')"
+    )
+    logging.info(f'\nquery: {query}')
+    results = query_executor(metadata_engine, query)
+    return results
 
 
 def get_source_columns(raw_query, source_engine, source_table):

@@ -68,7 +68,7 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         table_dict = manifest_dict["tables"][table]
         current_table = PostgresPipelineTable(table_dict)
 
-        is_backfill_needed = current_table.check_if_backfill_needed(
+        is_backfill_needed, start_pk, load_start_date = current_table.check_if_backfill_needed(
             source_engine, metadata_engine
         )
         print(f'\nis_backfill_needed: {is_backfill_needed}')
