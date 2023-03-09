@@ -123,7 +123,7 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.source_table_primary_key,
         ):
-            logging.info(f"Schema has changed for table: {self.target_table_name}.")
+            logging.info(f"Schema has changed for table: {self.source_table_name}.")
             return is_backfill_needed, start_pk, load_start_date
 
         return self.is_resume_backfill(metadata_engine)
@@ -136,7 +136,7 @@ class PostgresPipelineTable:
         If last file was written within 24 hours, continue from last_extrated_id
         """
         is_backfill_needed, last_extracted_id, load_start_date = False, None, None
-        results = query_backfill_status()
+        results = query_backfill_status(metadata_engine, self.source_table_name)
         if results:
             is_backfill_complete, load_start_date, last_extracted_id, last_write_date = results[0]
             time_difference = datetime.now() - last_write_date

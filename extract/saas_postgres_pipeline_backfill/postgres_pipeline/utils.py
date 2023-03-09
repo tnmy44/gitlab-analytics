@@ -1,9 +1,11 @@
-import csv
 import logging
 import os
 import sys
 import yaml
 import tempfile
+import gcsfs
+import pyarrow.parquet as pq
+
 from datetime import datetime
 from time import time
 from typing import Dict, List, Generator, Any, Tuple
@@ -38,14 +40,20 @@ from sqlalchemy.schema import CreateTable, DropTable
 SCHEMA = "tap_postgres"
 BUCKET_NAME = "saas-pipeline-backfills"
 
+def get_gcs_scoped_credentials():
+    """Get scoped credential """
+    # create the credentials object
+    keyfile = yaml.load(os.environ["GCP_SERVICE_CREDS"], Loader=yaml.FullLoader)
+    credentials = service_account.Credentials.from_service_account_info(keyfile)
 
-def get_gcs_bucket(gapi_keyfile: str) -> Bucket:
-    """Do the auth and return a usable gcs bucket object."""
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    credentials = service_account.Credentials.from_service_account_info(
-        gapi_keyfile
-    )
     scoped_credentials = credentials.with_scopes(scope)
+    return scoped_credentials
+
+
+def get_gcs_bucket() -> Bucket:
+    """Do the auth and return a usable gcs bucket object."""
+    scoped_credentials = get_gcs_scoped_credentials()
     storage_client = storage.Client(credentials=scoped_credentials)
     return storage_client.get_bucket(BUCKET_NAME)
 
@@ -57,8 +65,6 @@ def upload_to_gcs(
     """
     Write a dataframe to local storage and then upload it to a GCS bucket.
     """
-
-    keyfile = yaml.load(os.environ["GCP_SERVICE_CREDS"], Loader=yaml.FullLoader)
     bucket = get_gcs_bucket(keyfile)
 
     # Write out the parquet and upload it
@@ -376,18 +382,9 @@ def get_source_columns(raw_query, source_engine, source_table):
     return source_columns
 
 
-def get_gcs_parquet_schema(parquet_file):
-    parquet_file_full_path = f'gs://{BUCKET_NAME}/{parquet_file}'
-    logging.info(f'\nreading parquet_file_full_path for latest schema: {parquet_file_full_path}')
-    df = pd.read_parquet(parquet_file_full_path).head(1).drop(axis=1, columns=["_uploaded_at", "_task_instance"], errors="ignore")
-    # parquet_table = pq.read_table(parquet_file_full_path) -- better, but unsupported in v0.17
-    return list(df.columns)
-
-
 def get_latest_parquet_file(source_table):
     # first filter for the most recent load_time directory for the source table
-    keyfile = yaml.load(os.environ["GCP_SERVICE_CREDS"], Loader=yaml.FullLoader)
-    bucket = get_gcs_bucket(keyfile)
+    bucket = get_gcs_bucket()
 
     prefix = f"{source_table}/load_start_"  # TODO use this one once files are being written correctly
     prefix = "load_start_"
@@ -402,6 +399,22 @@ def get_latest_parquet_file(source_table):
     return latest_parquet_file
 
 
+def get_gcs_parquet_schema(parquet_file):
+
+    # create a GCSFileSystem instance with credentials
+    scoped_credentials = get_gcs_scoped_credentials()
+    fs = gcsfs.GCSFileSystem(project='gitlab-analysis', token=scoped_credentials)
+
+    parquet_file_full_path = f'gs://{BUCKET_NAME}/{parquet_file}'
+    logging.info(f'\nreading parquet_file_full_path for latest schema: {parquet_file_full_path}')
+
+    with fs.open(parquet_file_full_path) as f:
+        columns = pq.ParquetFile(f).schema.names
+    drop_columns = ["_uploaded_at", "_task_instance"]
+    columns = list(set(columns) - set(drop_columns))
+    return columns
+
+
 def get_gcs_columns(source_table):
     latest_file_name = get_latest_parquet_file(source_table)
     gcs_cols = get_gcs_parquet_schema(latest_file_name)
@@ -409,6 +422,13 @@ def get_gcs_columns(source_table):
 
 
 def has_new_columns(source_columns, gcs_columns):
+    """
+    Checks if source has any new columns compared to gcs
+
+    Note: If GCS has extra columns, this will be ignored as this implies
+    that at one point those cols were being brought in from source
+    but are no longer needed.
+    """
     source_columns, gcs_columns = set(source_columns), set(gcs_columns)
     # does latest gcs NOT include all the source cols?
     return not all(elem in gcs_columns for elem in source_columns)
