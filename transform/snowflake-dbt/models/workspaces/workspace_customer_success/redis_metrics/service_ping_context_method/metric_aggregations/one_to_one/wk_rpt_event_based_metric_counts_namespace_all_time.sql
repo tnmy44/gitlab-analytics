@@ -35,7 +35,14 @@ final AS (
     agg.ultimate_parent_namespace_id,
     agg.metrics_path,
     agg.monthly_value,
-    SUM(agg.monthly_value) OVER(PARTITION BY agg.ultimate_parent_namespace_id ORDER BY agg.month ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cum_metric_value
+    SUM(agg.monthly_value) OVER(
+      PARTITION BY
+        agg.ultimate_parent_namespace_id,
+        agg.metrics_path
+      ORDER BY
+        agg.month ASC
+      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS cum_metric_value
   FROM agg
 )
 
