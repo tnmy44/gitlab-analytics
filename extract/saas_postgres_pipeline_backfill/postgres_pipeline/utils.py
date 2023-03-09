@@ -333,6 +333,7 @@ def range_generator(
             yield tuple([start, start + step])
         start += step
 
+
 def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
     """
     Check if backfill table exists in backfill metadata table.
@@ -343,6 +344,7 @@ def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
     results = query_executor(metadata_engine, query)
     return False # TODO remove this later
     return len(results) == 0
+
 
 def query_backfill_status(metadata_engine: Engine, source_table: str) -> bool:
     """

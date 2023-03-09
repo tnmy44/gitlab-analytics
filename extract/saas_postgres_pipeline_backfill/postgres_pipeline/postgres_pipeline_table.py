@@ -108,13 +108,14 @@ class PostgresPipelineTable:
         }
         return load_types[load_type](source_engine, target_engine, schema_changed)
 
-    def check_if_backfill_needed(self, source_engine: Engine, metadata_engine: Engine):
+    def check_is_backfill_needed(self, source_engine: Engine, metadata_engine: Engine):
         load_start_date = datetime.now()
         start_pk = 1
+        is_backfill_needed = True
 
         if is_new_table(metadata_engine, self.source_table_name):
             logging.info(f"New table: {self.source_table_name}.")
-            return (True, start_pk, load_start_date)
+            return is_backfill_needed, start_pk, load_start_date
 
         if schema_addition_check(
             self.query,
@@ -123,19 +124,28 @@ class PostgresPipelineTable:
             self.source_table_primary_key,
         ):
             logging.info(f"Schema has changed for table: {self.target_table_name}.")
-            return (True, start_pk, load_start_date)
+            return is_backfill_needed, start_pk, load_start_date
 
         return self.is_resume_backfill(metadata_engine)
 
     def is_resume_backfill(self, metadata_engine: Engine):
-
-        is_backfill_complete, load_start_date, last_extracted_id, last_write_date = query_backfill_status()
-
-        if not is_backfill_complete:
+        """
+        Determine if backfill should be resumed.
+        First query the backfill database to see if there's a backfill in progress
+        If the backfill is in progress, check when the last file was written
+        If last file was written within 24 hours, continue from last_extrated_id
+        """
+        is_backfill_needed, last_extracted_id, load_start_date = False, None, None
+        results = query_backfill_status()
+        if results:
+            is_backfill_complete, load_start_date, last_extracted_id, last_write_date = results[0]
             time_difference = datetime.now() - last_write_date
-            if time_difference < timedelta(hours=24):
-                return (True, last_extracted_id, load_start_date)
-        return (False, None, None)
+
+            if not is_backfill_complete and time_difference < timedelta(hours=24):
+                is_backfill_needed = True
+                return is_backfill_needed, last_extracted_id + 1, load_start_date
+
+        return is_backfill_needed, last_extracted_id, load_start_date
 
     def get_target_table_name(self):
         return self.target_table_name
