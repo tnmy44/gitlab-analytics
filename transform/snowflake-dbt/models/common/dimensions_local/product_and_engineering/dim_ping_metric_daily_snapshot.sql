@@ -55,7 +55,7 @@ WITH source AS (
       ping_metric_hist.sql_friendly_path,
       ping_metric_hist.data_source,
       ping_metric_hist.description,
-      ping_metric_hist.product_category,
+      ping_metric_hist.instrumentation_class,
       ping_metric_hist.group_name,
       ping_metric_hist.section_name,
       ping_metric_hist.stage_name,
