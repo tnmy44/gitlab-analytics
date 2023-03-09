@@ -3229,6 +3229,12 @@ roles:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
 
+    - jhope:
+        member_of:
+            - gitlab_dotcom
+        warehouses:
+            - dev_xs
+
     - jng:
         member_of:
          - restricted_safe
@@ -4886,6 +4892,11 @@ users:
         can_login: yes
         member_of:
             - jcaine
+
+    - jhope:
+        can_login: yes
+        member_of:
+            - jhope
 
     - jng:
         can_login: yes
