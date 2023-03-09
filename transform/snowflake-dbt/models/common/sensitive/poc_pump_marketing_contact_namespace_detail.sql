@@ -234,7 +234,14 @@
     FROM services
     LEFT JOIN project
       ON services.project_id = project.dim_project_id
+    INNER JOIN namespaces
+      ON namespaces.dim_namespace_id = project.dim_namespace_id
     GROUP BY 1
+
+), pqls_by_user AS (
+
+    SELECT DISTINCT user_id
+    FROM pqls
 
 )
 
@@ -252,23 +259,33 @@
 
   SELECT
     namespace_user_mapping.user_id,
-    dim_namespace.dim_namespace_id,
+    dim_namespace.dim_namespace_id                                              AS namespace_id,
     namespace_user_mapping.access_level                                         AS user_access_level,
-    -- dim_namespace.namespace_is_ultimate_parent,
-    -- dim_namespace.ultimate_parent_namespace_id,
+    CASE user_access_level
+      WHEN 50 THEN 'Owner'
+      WHEN 40 THEN 'Maintainer'
+      WHEN 30 THEN 'Developer'
+      WHEN 20 THEN 'Reporter'
+      WHEN 10 THEN 'Guest'
+      WHEN 5  THEN 'Minimal access'
+      ELSE 'Other'
+    END                                                                         AS user_access_level_name,
+
     dim_namespace.gitlab_plan_title,
     dim_namespace.gitlab_plan_is_paid,
     dim_namespace.is_setup_for_company,
     dim_namespace.current_member_count,
+    dim_namespace.created_at                                                    AS created_at,
+    dim_namespace.creator_id                                                    AS creator_user_id,
 
     customers_db_trial_histories_source.start_date                              AS trial_start_date,
     customers_db_trial_histories_source.expired_on                              AS trial_expired_date,
     IFF(CURRENT_DATE() >= trial_start_date AND CURRENT_DATE() <= COALESCE(trial_expired_date, CURRENT_DATE()), TRUE, FALSE) 
-                                                                                AS active_trial,
+                                                                                AS is_active_trial,
     customers_db_trial_histories_source.glm_content,
     customers_db_trial_histories_source.glm_source,
 
-    IFF(pqls_filtered.pql_namespace_id IS NOT NULL, TRUE, FALSE)                AS is_pql,
+    IFF(pqls_filtered.pql_namespace_id IS NOT NULL, TRUE, FALSE)                AS is_namespace_pql,
 
     stages_adopted_by_namespace.list_of_stages,
     stages_adopted_by_namespace.active_stage_count,
@@ -332,10 +349,13 @@ SELECT
   dim_marketing_contact.gitlab_dotcom_created_date,
   dim_marketing_contact.gitlab_dotcom_last_login_date,
   dim_marketing_contact.gitlab_dotcom_email_opted_in,
+  IFF(pqls_by_user.user_id IS NOT NULL, TRUE, FALSE) AS is_pql,
   user_aggregated_namespace_details.namespaces_array
 
 FROM dim_marketing_contact
 LEFT JOIN user_aggregated_namespace_details
   ON dim_marketing_contact.gitlab_dotcom_user_id = user_aggregated_namespace_details.user_id
+LEFT JOIN pqls_by_user
+  ON pqls_by_user.user_id = dim_marketing_contact.gitlab_dotcom_user_id
 
 WHERE dim_marketing_contact.gitlab_dotcom_user_id IS NOT NULL
