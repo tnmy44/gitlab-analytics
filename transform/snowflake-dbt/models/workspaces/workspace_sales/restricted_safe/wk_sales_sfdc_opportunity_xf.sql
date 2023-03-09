@@ -109,7 +109,6 @@ WITH edm_opty AS (
     ----------------------------------------------------------
     ----------------------------------------------------------
 
-
     edm_opty.dbt_updated_at                         AS _last_dbt_run,
     edm_opty.dim_crm_account_id                     AS account_id,
     edm_opty.dim_crm_opportunity_id                 AS opportunity_id,
@@ -143,7 +142,6 @@ WITH edm_opty AS (
     edm_opty.stage_name                            AS stage_name,
     edm_opty.order_type                            AS order_type_stamped,
     edm_opty.order_type_live                       AS order_type_live,
-
 
     -- stage rank
     CASE edm_opty.stage_name
