@@ -838,6 +838,7 @@ roles:
                       - prod.common_mart_marketing.*
                       - raw.salesforce_stitch.*
                       - raw.snapshots.*
+                      - raw.data_science.*
 
     - data_science_sensitive:
           warehouses:
@@ -888,6 +889,7 @@ roles:
                       - prod.pumps_sensitive.*
                       - raw.salesforce_stitch.*
                       - raw.snapshots.*
+                      - raw.data_science.*
 
     - data_science_loader:
           warehouses:
