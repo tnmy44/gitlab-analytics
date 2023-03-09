@@ -30,9 +30,6 @@ GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 
-from kubernetes_helpers import get_affinity, get_toleration
-
-
 # Default arguments for the DAG
 default_args = {
     "catchup": False,
@@ -99,8 +96,6 @@ KubernetesPodOperator(
         GITLAB_ANALYTICS_PRIVATE_TOKEN,
     ],
     env_vars=pod_env_vars,
-    affinity=get_affinity(True),
-    tolerations=get_toleration(True),
     arguments=[ptpf_scoring_command],
     dag=dag,
 )
