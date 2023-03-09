@@ -23,7 +23,7 @@ sheets:
     owner: '@s_mccauley'
     tabs:
       - ar_aging_details
-  - name: bizible_to_pathfactory_matching
+  - name: bizible_to_pathfactory_mapping
     owner: '@dmicovic'
     tabs: 
       - final_mapping
