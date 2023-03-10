@@ -112,6 +112,16 @@ class PostgresPipelineTable:
         return load_types[load_type](source_engine, target_engine, metadata_engine, is_backfill_needed, start_pk, initial_load_start_date)
 
     def check_is_backfill_needed(self, source_engine: Engine, metadata_engine: Engine):
+        """
+        There are 3 criteria that determine if a backfill is necessary:
+            1. New table
+            2. New columns in source
+            3. In the middle of a backfill
+
+        Will check in the above order.
+        If in the middle of a valid backfill, need to return the metadata
+        associated with it so that backfill can start in correct spot.
+        """
         initial_load_start_date = None
         start_pk = 1
         is_backfill_needed = True
@@ -138,12 +148,14 @@ class PostgresPipelineTable:
         If the backfill is in progress, check when the last file was written
         If last file was written within 24 hours, continue from last_extrated_id
         """
-        is_backfill_needed, last_extracted_id, initial_load_start_date = False, None, None
+        is_backfill_needed, last_extracted_id, initial_load_start_date = False, -1, None # init
         results = query_backfill_status(metadata_engine, self.source_table_name)
+        # will always enter this block if not new table
         if results:
             is_backfill_completed, initial_load_start_date, last_extracted_id, last_write_date = results[0]
             time_difference = datetime.now() - last_write_date
 
+            # If backfill not complete, and last file written within 24 HR
             if not is_backfill_completed and time_difference < timedelta(hours=24):
                 logging.info(f'Resuming backfill with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}')
                 is_backfill_needed = True

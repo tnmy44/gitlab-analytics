@@ -385,6 +385,9 @@ def chunk_and_upload(
                 )
 
                 logging.info(f'Wrote to backfill metadata db for: {upload_file_name}')
+                # TODO: allow us 'mock' a mid backfill
+                if last_extracted_id == 215:
+                    return
 
     '''
     if rows_uploaded > 0:

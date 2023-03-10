@@ -71,6 +71,12 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         is_backfill_needed, start_pk, initial_load_start_date = current_table.check_is_backfill_needed(
             source_engine, metadata_engine
         )
+
+        # TODO: to delete, used for testing
+        is_backfill_needed = True
+        start_pk = 1
+        initial_load_start_date = None
+
         logging.info(f'\ninitial_load_start_date: {initial_load_start_date}')
         logging.info(f'\nis_backfill_needed: {is_backfill_needed}')
         '''
