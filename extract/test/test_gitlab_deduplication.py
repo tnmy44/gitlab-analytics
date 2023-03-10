@@ -35,7 +35,7 @@ def test_build_table_name(table_prefix, table_name, table_suffix, expected):
 
 
 @pytest.mark.parametrize(
-    "raw_database, raw_schema, temp_table_name, original_table_name,expected",
+    "raw_database, raw_schema, temp_table_name, original_table_name, expected",
     [
         (
             None,
