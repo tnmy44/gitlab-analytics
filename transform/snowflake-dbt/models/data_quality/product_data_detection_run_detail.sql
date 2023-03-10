@@ -59,7 +59,6 @@
     SELECT DISTINCT
       dim_subscription.dim_subscription_id, 
       dim_license.dim_license_id, 
-      dim_license.license_md5,
       dim_license.license_start_date,
       dim_license.License_expire_date, 
       dim_subscription.subscription_start_date,
