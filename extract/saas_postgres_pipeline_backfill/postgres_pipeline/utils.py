@@ -316,7 +316,7 @@ def get_upload_file_name(
     )
 
     # Combine folder structure and filename
-    return os.path.join(folder_prefix, filename).lower(), upload_date
+    return os.path.join(folder_prefix, filename).lower()
 
 
 def chunk_and_upload(
