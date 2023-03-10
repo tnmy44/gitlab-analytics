@@ -68,3 +68,28 @@ def test_create_swap_table_ddl(
     )
 
     assert actual == expected
+
+
+@pytest.mark.parametrize(
+    "raw_database, raw_schema, temp_table_name, expected",
+    [
+        (None, None, None, "DROP TABLE None.None.None;"),
+        ("", "", "", "DROP TABLE ..;"),
+        (
+            "RAW",
+            "TAP_POSTGRES",
+            "gitlab_db_columns_name",
+            "DROP TABLE RAW.TAP_POSTGRES.gitlab_db_columns_name;",
+        ),
+    ],
+)
+def test_create_drop_table_ddl(raw_database, raw_schema, temp_table_name, expected):
+    """
+    Test Drop table DDL
+    """
+    actual = create_drop_table_ddl(
+        raw_database=raw_database,
+        raw_schema=raw_schema,
+        temp_table_name=temp_table_name,
+    )
+    assert actual == expected

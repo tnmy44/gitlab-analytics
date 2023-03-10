@@ -114,7 +114,7 @@ def create_swap_table_ddl(
     raw_database: str, raw_schema: str, temp_table_name: str, original_table_name: str
 ) -> str:
 
-    return f"ALTER TABLE {raw_database}.{raw_schema}.{temp_table_name} SWAP WITH {raw_database}.{raw_schema}.{original_table_name}; "
+    return f"ALTER TABLE {raw_database}.{raw_schema}.{temp_table_name} SWAP WITH {raw_database}.{raw_schema}.{original_table_name};"
 
 
 def create_drop_table_ddl(
@@ -144,7 +144,6 @@ def swap_and_drop_temp_table(manifest_dict: Dict, table_name: str):
 
     logging.info(f"Swap query:{swap_query}")
     swap_table = query_executor(snowflake_engine, swap_query)
-
     logging.info(swap_table)
 
     if swap_table:
