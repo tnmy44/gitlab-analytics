@@ -29,7 +29,7 @@ models:
     - name: invoice_period
       tests:
         - not_null
-- name: sheetload_bizible_to_pathfactory_mapping
+- name: sheetload_bizible_to_pathfactory_mapping_source
   description: Mapping file for bizible URLs to PathFactory content types. 
 - name: sheetload_books_source
   description: Book rating data used in @lisvinueza's data internship program.

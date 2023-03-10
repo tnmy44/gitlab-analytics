@@ -26,7 +26,7 @@ sheets:
   - name: bizible_to_pathfactory_mapping
     owner: '@dmicovic'
     tabs: 
-      - final_mapping
+      - bizible_to_pathfactory_mapping
   - name: books_tracer_bullet
     owner: '@lisvinueza'
     tabs:
