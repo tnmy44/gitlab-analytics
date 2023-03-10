@@ -2451,6 +2451,23 @@ roles:
                       - prep.zendesk_community_relations.*
                       - raw.tap_zendesk__community_relations.*
 
+    - zengrc:
+          warehouses:
+              - dev_xs
+          privileges:
+              databases:
+                  read:
+                      - prep
+                      - raw
+              schemas:
+                  read:
+                      - prep.zengrc
+                      - raw.zengrc
+              tables:
+                  read:
+                      - prep.zengrc.*
+                      - raw.zengrc.*
+
     - zoom:
         warehouses:
             - dev_xs
@@ -2744,6 +2761,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - salesforce
+            - zuora_stitch_rest_api
         warehouses:
             - dev_xs
             - dev_m
@@ -4029,6 +4047,7 @@ roles:
             - salesforce_sandbox
             - xactly
             - bi_tool_eval_db
+            - zuora_stitch_rest_api
         warehouses:
             - dev_xs
         owns:
