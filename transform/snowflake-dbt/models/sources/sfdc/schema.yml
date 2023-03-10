@@ -415,3 +415,12 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: sfdc_customer_subscription_source
+    description: Source model for SFDC custom object customer customer_subscription
+    columns:
+      - name: customer_subscription_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
