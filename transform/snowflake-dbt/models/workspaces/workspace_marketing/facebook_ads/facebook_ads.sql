@@ -40,21 +40,21 @@ select
     current_ads.campaign_id,
     basic_all_levels.campaign_name,
     basic_all_levels.adset_name,
-    current_ads.name              AS ad_name,
-    current_ads.status            AS ad_status,
+    current_ads.ad_name              AS ad_name,
+    current_ads.ad_status            AS ad_status,
     
 
     /* Creative Info */
 
-    current_creatives.name        AS creative_name,
-    current_creatives.OBJECT_TYPE AS creative_type,
-    current_creatives.status      AS creative_status,
+    current_creatives.creative_name,
+    current_creatives.OBJECT_TYPE      AS creative_type,
+    current_creatives.creative_status  AS creative_status,
     current_creatives.page_link,
     current_creatives.body        AS text_ad_text,
     current_creatives.title       AS text_ad_title,
     
     /* Creative Stats */
-    basic_all_levels.date         AS campaign_day,
+    basic_all_levels.ad_date         AS campaign_day,
     basic_all_levels.impressions,
     basic_all_levels.inline_link_clicks,
     basic_all_levels.spend
