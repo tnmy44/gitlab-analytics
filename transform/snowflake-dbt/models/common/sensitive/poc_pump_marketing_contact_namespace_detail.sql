@@ -359,6 +359,7 @@
     ON pqls_by_user.user_id = dim_marketing_contact.gitlab_dotcom_user_id
 
   WHERE dim_marketing_contact.gitlab_dotcom_user_id IS NOT NULL
+    AND dim_marketing_contact.gitlab_dotcom_created_date::DATE >= '2022-06-01'
 
 )
 
