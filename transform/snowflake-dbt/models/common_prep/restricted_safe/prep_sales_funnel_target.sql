@@ -62,6 +62,35 @@
                       '-',
                       UPPER(sheetload_sales_funnel_targets_matrix_source.user_area), 
                       '-',
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_segment),
+                      '-',
+                      fiscal_months.fiscal_year
+                      )
+        WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(sheetload_sales_funnel_targets_matrix_source.user_business_unit) IN ('other', 'all') -- account for non-sales reps
+          THEN CONCAT(
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_business_unit), 
+                      '-',
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_segment), 
+                      '-',
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_geo), 
+                      '-',
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_region), 
+                      '-',
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_area),
+                      '-',
+                      fiscal_months.fiscal_year
+                      )
+
+        WHEN fiscal_months.fiscal_year >= 2024 AND sheetload_sales_funnel_targets_matrix_source.user_business_unit IS NULL -- account for nulls/possible data issues
+          THEN CONCAT(
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_segment), 
+                      '-',
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_geo), 
+                      '-',
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_region), 
+                      '-',
+                      UPPER(sheetload_sales_funnel_targets_matrix_source.user_area),
+                      '-',
                       fiscal_months.fiscal_year
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,
@@ -77,6 +106,6 @@
     cte_ref="final",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2023-02-07",
-    updated_date="2023-02-07"
+    created_date="2023-03-10",
+    updated_date="2023-03-10"
 ) }}

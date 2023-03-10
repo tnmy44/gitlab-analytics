@@ -117,6 +117,33 @@
                       '-',
                       current_fiscal_year.fiscal_year
                       )
+        WHEN LOWER(sfdc_users.user_business_unit)  IN ('other', 'all') -- account for non-sales reps
+          THEN CONCAT(
+                      UPPER(sfdc_users.user_business_unit), 
+                      '-',
+                      UPPER(sfdc_users.user_segment), 
+                      '-',
+                      UPPER(sfdc_users.user_geo), 
+                      '-',
+                      UPPER(sfdc_users.user_region), 
+                      '-',
+                      UPPER(sfdc_users.user_area),
+                      '-',
+                      current_fiscal_year.fiscal_year
+                      )
+
+        WHEN sfdc_users.user_business_unit IS NULL -- account for nulls/possible data issues
+          THEN CONCAT(
+                      UPPER(sfdc_users.user_segment), 
+                      '-',
+                      UPPER(sfdc_users.user_geo), 
+                      '-',
+                      UPPER(sfdc_users.user_region), 
+                      '-',
+                      UPPER(sfdc_users.user_area),
+                      '-',
+                      current_fiscal_year.fiscal_year
+                      )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,
       {%- elif model_type == 'snapshot' %}
       CASE
@@ -160,7 +187,22 @@
                       '-',
                       sfdc_users.snapshot_fiscal_year
                       )
-        WHEN sfdc_users.snapshot_fiscal_year >= 2024 AND sfdc_users.user_business_unit IS NULL
+        WHEN sfdc_users.snapshot_fiscal_year >= 2024 AND LOWER(sfdc_users.user_business_unit)  IN ('other', 'all') -- account for non-sales reps
+          THEN CONCAT(
+                      UPPER(sfdc_users.user_business_unit), 
+                      '-',
+                      UPPER(sfdc_users.user_segment), 
+                      '-',
+                      UPPER(sfdc_users.user_geo), 
+                      '-',
+                      UPPER(sfdc_users.user_region), 
+                      '-',
+                      UPPER(sfdc_users.user_area),
+                      '-',
+                      sfdc_users.snapshot_fiscal_year
+                      )
+
+        WHEN sfdc_users.snapshot_fiscal_year >= 2024 AND sfdc_users.user_business_unit IS NULL -- account for nulls/possible data issues
           THEN CONCAT(
                       UPPER(sfdc_users.user_segment), 
                       '-',

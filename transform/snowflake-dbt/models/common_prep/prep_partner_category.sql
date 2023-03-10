@@ -42,6 +42,6 @@ WITH source AS (
     cte_ref="unioned",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2023-02-23",
-    updated_date="2023-02-23"
+    created_date="2023-03-10",
+    updated_date="2023-03-10"
 ) }}
