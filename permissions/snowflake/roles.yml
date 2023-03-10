@@ -2451,6 +2451,23 @@ roles:
                       - prep.zendesk_community_relations.*
                       - raw.tap_zendesk__community_relations.*
 
+    - zengrc:
+          warehouses:
+              - dev_xs
+          privileges:
+              databases:
+                  read:
+                      - prep
+                      - raw
+              schemas:
+                  read:
+                      - prep.zengrc
+                      - raw.zengrc
+              tables:
+                  read:
+                      - prep.zengrc.*
+                      - raw.zengrc.*
+
     - zoom:
         warehouses:
             - dev_xs
