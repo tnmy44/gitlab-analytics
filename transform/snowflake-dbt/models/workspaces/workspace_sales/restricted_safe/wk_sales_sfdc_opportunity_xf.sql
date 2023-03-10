@@ -182,6 +182,7 @@ WITH edm_opty AS (
     edm_opty.reason_for_loss,
     edm_opty.reason_for_loss_details,
     edm_opty.downgrade_reason,
+    edm_opty.lead_source,
 
     edm_opty.is_downgrade,
     edm_opty.is_edu_oss,
@@ -466,12 +467,18 @@ WITH edm_opty AS (
         ELSE 0
     END                                                           AS is_eligible_cycle_time_analysis_flag,
 
-    -- NF: we consider net_arr_created date for renewals as they haver a very distinct motion than 
-    -- Add on and First Orders
+    -- NF: We consider net_arr_created date for renewals as they haver a very distinct motion than 
+    --      add on and First Orders
+    --     Logic is different for open deals so we can evaluate their current cycle time.
     CASE
-        WHEN edm_opty.is_renewal = 1
-        THEN DATEDIFF(day, edm_opty.net_arr_created_date, edm_opty.close_date)
-        ELSE DATEDIFF(day, edm_opty.created_date, edm_opty.close_date)
+        WHEN edm_opty.is_renewal = 1 AND is_closed = 1
+            THEN DATEDIFF(day, edm_opty.net_arr_created_date, edm_opty.close_date)
+        WHEN edm_opty.is_renewal = 0 AND is_closed = 1
+            THEN DATEDIFF(day, edm_opty.created_date, edm_opty.close_date)
+         WHEN edm_opty.is_renewal = 1 AND is_open = 1
+            THEN DATEDIFF(day, edm_opty.net_arr_created_date, CURRENT_DATE)
+        WHEN edm_opty.is_renewal = 0 AND is_open = 1
+            THEN DATEDIFF(day, edm_opty.created_date, CURRENT_DATE)
     END                                                           AS cycle_time_in_days,
 
     

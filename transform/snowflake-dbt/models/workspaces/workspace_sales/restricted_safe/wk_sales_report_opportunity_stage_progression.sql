@@ -31,7 +31,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
 
     SELECT *,
         LAG(snapshot_date,1) OVER(PARTITION BY opportunity_id ORDER BY snapshot_date) 	AS old_stage_date,
-        DATEDIFF(DAY,coalesce(old_stage_name,snapshot_date),snapshot_date)			    AS days_in_old_stage
+        DATEDIFF(DAY,coalesce(old_stage_date,snapshot_date),snapshot_date)			    AS days_in_old_stage
     FROM stage_delta
 
 ), final AS (
