@@ -1354,7 +1354,8 @@ WITH first_contact  AS (
                     '-',
                     close_fiscal_year
                     )
-      WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) IN ('other', 'all') -- some opps are closed by non-sales reps, so fill in their values completely
+      WHEN sfdc_opportunity.close_date >= '2023-02-01'
+        AND (sfdc_opportunity.crm_opp_owner_business_unit_stamped IS NOT NULL AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) NOT IN ('comm', 'entg')) -- some opps are closed by non-sales reps, so fill in their values completely
         THEN CONCAT(
                     UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
                     '-',

@@ -187,7 +187,8 @@
                       '-',
                       sfdc_users.snapshot_fiscal_year
                       )
-        WHEN sfdc_users.snapshot_fiscal_year >= 2024 AND LOWER(sfdc_users.user_business_unit)  IN ('other', 'all') -- account for non-sales reps
+        WHEN sfdc_users.snapshot_fiscal_year >= 2024
+          AND (sfdc_users.user_business_unit IS NOT NULL AND LOWER(sfdc_users.user_business_unit) NOT IN ('comm', 'entg'))  -- account for non-sales reps
           THEN CONCAT(
                       UPPER(sfdc_users.user_business_unit), 
                       '-',

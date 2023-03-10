@@ -67,7 +67,8 @@
                     '-',
                     fiscal_months.fiscal_year
                     )
-      WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_business_unit) IN ('other', 'all') -- account for non-sales reps
+      WHEN fiscal_months.fiscal_year >= 2024 
+        AND (sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_business_unit IS NOT NULL AND LOWER(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_business_unit) NOT IN ('comm', 'entg')) -- account for non-sales reps
           THEN CONCAT(
                       UPPER(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_business_unit), 
                       '-',
