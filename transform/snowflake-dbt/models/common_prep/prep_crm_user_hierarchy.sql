@@ -52,7 +52,7 @@
       AND prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
-      AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, 1=1) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
+      --AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, 1=1) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
 
 ), user_hierarchy_sheetload AS (
 /*
@@ -97,7 +97,7 @@
 */
 
     SELECT DISTINCT
-      dim_date.fiscal_year,
+      prep_crm_opportunity.close_fiscal_year                         AS fiscal_year,
       prep_crm_opportunity.user_segment_stamped                      AS user_segment,
       prep_crm_opportunity.user_geo_stamped                          AS user_geo,
       prep_crm_opportunity.user_region_stamped                       AS user_region,
@@ -105,8 +105,6 @@
       prep_crm_opportunity.user_business_unit_stamped                AS user_business_unit,
       prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk    AS dim_crm_user_hierarchy_sk
     FROM prep_crm_opportunity
-    INNER JOIN dim_date 
-      ON prep_crm_opportunity.close_date = dim_date.date_actual
   
 ), unioned AS (
 /*
@@ -174,7 +172,7 @@
     SELECT DISTINCT
       fiscal_year
     FROM dim_date
-    WHERE date_actual = '2023-02-02' -- Pretend like its 2024
+    WHERE date_actual = CURRENT_DATE()
 
 ), final AS (
 

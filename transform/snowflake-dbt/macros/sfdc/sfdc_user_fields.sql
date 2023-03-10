@@ -156,6 +156,20 @@
                       '-',
                       UPPER(sfdc_users.user_area), 
                       '-',
+                      UPPER(sfdc_users.user_segment),
+                      '-',
+                      sfdc_users.snapshot_fiscal_year
+                      )
+        WHEN sfdc_users.snapshot_fiscal_year >= 2024 AND sfdc_users.user_business_unit IS NULL
+          THEN CONCAT(
+                      UPPER(sfdc_users.user_segment), 
+                      '-',
+                      UPPER(sfdc_users.user_geo), 
+                      '-',
+                      UPPER(sfdc_users.user_region), 
+                      '-',
+                      UPPER(sfdc_users.user_area),
+                      '-',
                       sfdc_users.snapshot_fiscal_year
                       )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,

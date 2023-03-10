@@ -470,6 +470,11 @@ WITH map_merged_crm_account AS (
       sfdc_account.customer_since_date,
       {{ get_date_id('sfdc_account.next_renewal_date') }}                 AS next_renewal_date_id,
       sfdc_account.next_renewal_date,
+      {{ get_date_id('sfdc_account.gs_first_value_date') }}               AS gs_first_value_date_id,
+      sfdc_account.gs_first_value_date,
+      {{ get_date_id('sfdc_account.gs_last_csm_activity_date') }}         AS gs_last_csm_activity_date_id,
+      sfdc_account.gs_last_csm_activity_date,
+
 
       --measures
       sfdc_account.count_active_subscription_charges,
