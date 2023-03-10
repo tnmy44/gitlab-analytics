@@ -39,11 +39,17 @@ def create_table_name(table_prefix: str, table_name: str) -> tuple:
     table_suffix = "_" + datetime.now().strftime("%Y%m%d")
 
     if table_prefix:
-        bkp_table_name = build_table_name(table_name, table_prefix, table_suffix)
-        original_table_name = build_table_name(table_name, table_prefix)
+        bkp_table_name = build_table_name(
+            table_prefix=table_prefix, table_name=table_name, table_suffix=table_suffix
+        )
+        original_table_name = build_table_name(
+            table_prefix=table_prefix, table_name=table_name
+        )
     else:
-        bkp_table_name = build_table_name(table_name, table_suffix)
-        original_table_name = build_table_name(table_name)
+        bkp_table_name = build_table_name(
+            table_name=table_name, table_suffix=table_suffix
+        )
+        original_table_name = build_table_name(table_name=table_name)
     return bkp_table_name, original_table_name
 
 
@@ -60,7 +66,9 @@ def create_backup_table(
     backup_schema_name = manifest_dict["generic_info"]["backup_schema"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
     table_prefix = manifest_dict["generic_info"]["table_prefix"]
-    bkp_table_name, original_table_name = create_table_name(table_prefix, table_name)
+    bkp_table_name, original_table_name = create_table_name(
+        table_prefix=table_prefix, table_name=table_name
+    )
     query_create_backup_table = f"CREATE TABLE {raw_database}.{backup_schema_name}.{bkp_table_name} CLONE {raw_database}.{raw_schema}.{original_table_name}; "
 
     logging.info(f"Backup table DDL : {query_create_backup_table}")
@@ -74,13 +82,15 @@ def create_temp_table_ddl(manifest_dict: Dict, table_name: str):
     raw_database = manifest_dict["raw_database"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
     table_prefix = manifest_dict["generic_info"]["table_prefix"]
-    bkp_table_name, original_table_name = create_table_name(table_prefix, table_name)
+    bkp_table_name, original_table_name = create_table_name(
+        table_prefix=table_prefix, table_name=table_name
+    )
     backup_schema = manifest_dict["generic_info"]["backup_schema"]
     build_ddl_statement = f"""SELECT CONCAT('CREATE TABLE {raw_database}.{raw_schema}.{original_table_name}_temp\n AS (' ,'SELECT  \n',
                                     LISTAGG(
                                             CASE
                                             WHEN LOWER(column_name) = '_uploaded_at' THEN 'MIN( _uploaded_at) AS _uploaded_at'
-                                            WHEN LOWER(column_name) = '_task_instance' THEN 'MAX(_task_instance)  AS _task_instance'
+                                            WHEN LOWER(column_name) = '_task_instance' THEN 'MIN(_task_instance)  AS _task_instance'
                                             ELSE column_name
                                             END ,',\n') WITHIN GROUP (ORDER BY ordinal_position ASC)
                                             , ' \n FROM {raw_database}.{backup_schema}.{bkp_table_name}' ,
@@ -113,14 +123,18 @@ def create_temp_table(manifest_dict: Dict, table_name: str) -> None:
 def create_swap_table_ddl(
     raw_database: str, raw_schema: str, temp_table_name: str, original_table_name: str
 ) -> str:
-
+    """
+    This function responsible for the creating the swap table DDL.
+    """
     return f"ALTER TABLE {raw_database}.{raw_schema}.{temp_table_name} SWAP WITH {raw_database}.{raw_schema}.{original_table_name};"
 
 
 def create_drop_table_ddl(
     raw_database: str, raw_schema: str, temp_table_name: str
 ) -> str:
-
+    """
+    The function return the drop ddl statement for the temp table.
+    """
     return f"DROP TABLE {raw_database}.{raw_schema}.{temp_table_name};"
 
 
@@ -131,16 +145,25 @@ def swap_and_drop_temp_table(manifest_dict: Dict, table_name: str):
     raw_database = manifest_dict["raw_database"]
     raw_schema = manifest_dict["generic_info"]["raw_schema"]
     table_prefix = manifest_dict["generic_info"]["table_prefix"]
-    _, original_table_name = create_table_name(table_prefix, table_name)
+    _, original_table_name = create_table_name(
+        table_prefix=table_prefix, table_name=table_name
+    )
 
     # Swap the table name with main table.
     temp_table_name = f"{original_table_name}_temp"
     swap_query = create_swap_table_ddl(
-        raw_database, raw_schema, temp_table_name, original_table_name
+        raw_database=raw_database,
+        raw_schema=raw_schema,
+        temp_table_name=temp_table_name,
+        original_table_name=original_table_name,
     )
 
     # Drop the temp table in tap_postgres schema
-    drop_query = create_drop_table_ddl(raw_database, raw_schema, temp_table_name)
+    drop_query = create_drop_table_ddl(
+        raw_database=raw_database,
+        raw_schema=raw_schema,
+        temp_table_name=temp_table_name,
+    )
 
     logging.info(f"Swap query:{swap_query}")
     swap_table = query_executor(snowflake_engine, swap_query)
