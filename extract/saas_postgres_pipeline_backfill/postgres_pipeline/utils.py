@@ -271,6 +271,7 @@ def write_backfill_metadata(
 def get_upload_file_name(
     table: str,
     initial_load_start_date: datetime,
+    upload_date: datetime,
     version: str = None,
     filetype: str = 'parquet',
     compression: str = 'gzip',
@@ -301,7 +302,6 @@ def get_upload_file_name(
     )
 
     # Format filename
-    upload_date = datetime.now()
     timestamp = upload_date.isoformat(timespec='milliseconds')
     if version is None:
         version = ''
@@ -366,11 +366,14 @@ def chunk_and_upload(
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
             last_extracted_id = chunk_df[primary_key].max()
-            upload_file_name, upload_date = get_upload_file_name(
-                source_table, initial_load_start_date
-            )
+
+            upload_date = datetime.now()
             if initial_load_start_date is None:
                 initial_load_start_date = upload_date
+
+            upload_file_name = get_upload_file_name(
+                source_table, initial_load_start_date, upload_date
+            )
 
             if row_count > 0:
                 upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
