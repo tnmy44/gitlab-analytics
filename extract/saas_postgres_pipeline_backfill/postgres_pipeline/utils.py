@@ -369,6 +369,8 @@ def chunk_and_upload(
             upload_file_name, upload_date = get_upload_file_name(
                 source_table, initial_load_start_date
             )
+            if initial_load_start_date is None:
+                initial_load_start_date = upload_date
 
             if row_count > 0:
                 upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
@@ -382,7 +384,7 @@ def chunk_and_upload(
                     max_source_id, is_backfill_completed
                 )
 
-                logging.info(f'Wrote to posgres for upload_file_name: {upload_file_name}')
+                logging.info(f'Wrote to backfill metadata db for: {upload_file_name}')
 
     '''
     if rows_uploaded > 0:

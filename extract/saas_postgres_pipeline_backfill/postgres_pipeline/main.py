@@ -72,7 +72,6 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
             source_engine, metadata_engine
         )
         logging.info(f'\ninitial_load_start_date: {initial_load_start_date}')
-        current_table.set_initial_load_start_date(initial_load_start_date)
         logging.info(f'\nis_backfill_needed: {is_backfill_needed}')
         '''
         # Check if the schema has changed or the table is new
@@ -85,7 +84,7 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
 
         # Call the correct function based on the load_type
         loaded = current_table.do_load(
-            load_type, source_engine, snowflake_engine, metadata_engine, is_backfill_needed
+            load_type, source_engine, snowflake_engine, metadata_engine, is_backfill_needed, start_pk, initial_load_start_date
         )
         logging.info(f"Finished upload for table: {table}")
 

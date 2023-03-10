@@ -26,9 +26,6 @@ class PostgresPipelineTable:
         self.table_dict = table_config
         self.target_table_name_td_sf = table_config["export_table"]
 
-    def set_initial_load_start_date(self, initial_load_start_date):
-        self.initial_load_start_date = initial_load_start_date
-
     def is_scd(self) -> bool:
         return not self.is_incremental()
 
@@ -63,7 +60,7 @@ class PostgresPipelineTable:
         return self.is_incremental()
 
     def do_incremental_backfill(
-            self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine, is_backfill_needed: bool
+            self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine, is_backfill_needed: bool, start_pk, initial_load_start_date
     ) -> bool:
         if not self.is_incremental() or not is_backfill_needed:
             logging.info("table does not need incremental backfill")
@@ -76,7 +73,8 @@ class PostgresPipelineTable:
             self.table_dict,
             target_table,
             metadata_engine,
-            self.initial_load_start_date
+            start_pk,
+            initial_load_start_date
         )
 
     def check_new_table(
@@ -103,16 +101,18 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
         is_backfill_needed: bool,
+        start_pk: int,
+        initial_load_start_date: datetime,
     ) -> bool:
         load_types = {
             "scd": self.do_scd,
             "backfill": self.do_incremental_backfill,
             "test": self.check_new_table,
         }
-        return load_types[load_type](source_engine, target_engine, metadata_engine, is_backfill_needed)
+        return load_types[load_type](source_engine, target_engine, metadata_engine, is_backfill_needed, start_pk, initial_load_start_date)
 
     def check_is_backfill_needed(self, source_engine: Engine, metadata_engine: Engine):
-        initial_load_start_date = datetime.now()
+        initial_load_start_date = None
         start_pk = 1
         is_backfill_needed = True
 

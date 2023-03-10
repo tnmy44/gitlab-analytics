@@ -177,6 +177,7 @@ def sync_incremental_ids(
     table_dict: Dict[Any, Any],
     table_name: str,
     metadata_engine,
+    start_pk,
     initial_load_start_date
 ) -> bool:
     """
@@ -203,6 +204,7 @@ def sync_incremental_ids(
         table_name,
         target_engine,
         metadata_engine,
+        start_pk,
         initial_load_start_date
     )
     return True
@@ -271,13 +273,13 @@ def load_ids(
     table_name: str,
     target_engine: Engine,
     metadata_engine: Engine,
+    start_source_id: int,
     initial_load_start_date: datetime,
     id_range: int = 750_000,
     backfill: bool = True,
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
 
-    min_source_id = get_min_or_max_id(primary_key, source_engine, source_table_name, 'min')
     max_source_id = get_min_or_max_id(primary_key, source_engine, source_table_name, 'max')
 
     # Create a generator for queries that are chunked by ID range
@@ -288,7 +290,7 @@ def load_ids(
         target_engine,
         source_table_name,
         table_name,
-        min_source_id,
+        start_source_id,
         max_source_id,
         id_range=id_range,
     )
