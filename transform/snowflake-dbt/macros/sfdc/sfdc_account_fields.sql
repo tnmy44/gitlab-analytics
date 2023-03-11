@@ -356,6 +356,9 @@ WITH map_merged_crm_account AS (
       sfdc_account.gs_health_devsecops,
       sfdc_account.gs_health_ci,
       sfdc_account.gs_health_scm,
+      sfdc_account.risk_impact,
+      sfdc_account.risk_reason,
+      sfdc_account.last_timeline_at_risk_update,
 
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,
