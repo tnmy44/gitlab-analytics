@@ -13,22 +13,27 @@ WITH service_base AS (
 
 infra_allocation as (
 
-  SELECT * FROM {{ ref('gcp_billing_infra_pl_mapping') }}
+  SELECT * FROM {{ ref('infralabel_pl') }}
   unpivot(allocation for type in (free, internal, paid))
 
 ),
 
 sandbox as (
 
-  SELECT * FROM {{ ref('gcp_billing_sandbox_projects') }}
+  SELECT * FROM {{ ref('sandbox_projects_pl') }}
 
 ),
 
 project_pl as (
 
-  SELECT * FROM {{ ref('gcp_billing_project_pl_mapping') }}
+  SELECT * FROM {{ ref('projects_pl') }}
     unpivot(allocation for type in (free, internal, paid))
 
+),
+
+repo_size AS (
+
+    SELECT * FROM {{ ref('repo_storage_pl_daily')}}
 )
 
 SELECT
