@@ -226,15 +226,21 @@ models:
           description: Merge request URL
     - name: rpt_gcp_billing_infra_mapping_day
       description: GCP costs with base attributes and infra labels (gl_product_category)
+
     - name: rpt_gcp_billing_pl_mapping_infra_day
       description: output pl mapping table
+
     - name: infralabel_pl
       description: Direct infra label and pl relationship
+
     - name: namespace_pl_daily
       description: pl namespace classification per namespace per day
+
     - name: repo_storage_pl_daily
       description: size of repository per pl (namespace classification) per day
+
     - name: sandbox_projects_pl
-      description: Direct GCP project pl relationship
+      description: Direct GCP project and pl relationship
+
     - name: rpt_gcp_billing_skus_day
       description: GCP costs mapped with usage sku mapping
