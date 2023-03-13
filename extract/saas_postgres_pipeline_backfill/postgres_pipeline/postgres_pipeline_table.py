@@ -146,29 +146,32 @@ class PostgresPipelineTable:
         Determine if backfill should be resumed.
         First query the backfill database to see if there's a backfill in progress
         If the backfill is in progress, check when the last file was written
-        If last file was written within 24 hours, continue from last_extrated_id
+        If last file was written within 24 hours, continue from last_extracted_id
         """
         # initialize variables
         is_backfill_needed = False
-        last_extracted_id = -1
+        start_pk = -1
         initial_load_start_date = None
 
         results = query_backfill_status(metadata_engine, self.source_table_name)
 
-        # if there are results from the query
+        # if backfill metadata exists for table
         if results:
             # unpack the results
-            is_backfill_completed, initial_load_start_date, last_extracted_id, last_write_date = results[0]
-            time_difference = datetime.now() - last_write_date
+            is_backfill_completed, initial_load_start_date, last_extracted_id, last_upload_date = results[0]
+            time_since_last_upload = datetime.now() - last_upload_date
 
-            # if the backfill is not complete and the last file was written within 24 hours
-            if not is_backfill_completed and time_difference < timedelta(hours=24):
-                # resume backfill
-                logging.info(f'Resuming backfill with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}')
+            if not is_backfill_completed:
                 is_backfill_needed = True
-                last_extracted_id += 1
+                # if more than 24 HR since last upload, start backfill over,
+                # else proceed with last extracted_id
+                if time_since_last_upload > timedelta(hours=24):
+                    initial_load_start_date = None
+                    last_extracted_id = 0
+                start_pk = last_extracted_id + 1
+                logging.info(f'Resuming backfill with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}')
 
-        return is_backfill_needed, last_extracted_id, initial_load_start_date
+        return is_backfill_needed, start_pk, initial_load_start_date
 
     def get_target_table_name(self):
         return self.target_table_name

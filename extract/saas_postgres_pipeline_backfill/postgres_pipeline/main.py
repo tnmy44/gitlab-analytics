@@ -74,6 +74,7 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
 
         # TODO: to delete, used for testing
         if not is_backfill_needed:
+            logging.info('\nmade it to manual is_backfill_needed=True block')
             is_backfill_needed = True
             start_pk = 1
             initial_load_start_date = None
