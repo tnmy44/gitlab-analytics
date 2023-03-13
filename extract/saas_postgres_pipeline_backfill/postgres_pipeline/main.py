@@ -1,4 +1,3 @@
-
 import logging
 from typing import Dict
 
@@ -13,7 +12,6 @@ from utils import (
     get_engines,
     manifest_reader,
 )
-
 
 SCHEMA = "tap_postgres"
 
@@ -57,10 +55,12 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
     manifest_dict = manifest_reader(file_path)
     # When load_only_table specified reduce manifest to keep only relevant table config
     filter_manifest(manifest_dict, load_only_table)
-    print(manifest_dict)
+    logging.info(f'\nmanifest_dict: {manifest_dict}')
 
     # REVERT
-    postgres_engine, snowflake_engine = get_engines(manifest_dict["connection_info"])
+    source_engine, metadata_engine, snowflake_engine = get_engines(
+        manifest_dict["connection_info"]
+    )
     logging.info(snowflake_engine)
 
     for table in manifest_dict["tables"]:
@@ -68,9 +68,11 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         table_dict = manifest_dict["tables"][table]
         current_table = PostgresPipelineTable(table_dict)
 
-        is_backfill_needed = current_table.check_if_backfill_needed(source_engine, metadata_engine)
+        is_backfill_needed = current_table.check_if_backfill_needed(
+            source_engine, metadata_engine
+        )
         print(f'\nis_backfill_needed: {is_backfill_needed}')
-
+        return  # REVERT
         '''
         # Check if the schema has changed or the table is new
         schema_changed = current_table.check_if_schema_changed(

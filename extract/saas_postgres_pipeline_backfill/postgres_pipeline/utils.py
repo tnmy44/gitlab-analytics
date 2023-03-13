@@ -105,18 +105,19 @@ def trigger_snowflake_upload(
 
 
 def postgres_engine_factory(
-    connection_dict: Dict[str, str], env: Dict[str, str]
+        database_connection: Dict[str, str], env: Dict[str, str]
 ) -> Engine:
     """
     Create a postgres engine to be used by pandas.
     """
 
+    logging.info(f'\ndatabase_connection: {database_connection}')
     # Set the Vars
-    user = env[connection_dict["user"]]
-    password = env[connection_dict["pass"]]
-    host = env[connection_dict["host"]]
-    database = env[connection_dict["database"]]
-    port = env[connection_dict["port"]]
+    user = env[database_connection["user"]]
+    password = env[database_connection["pass"]]
+    host = env[database_connection["host"]]
+    database = env[database_connection["database"]]
+    port = env[database_connection["port"]]
 
     # Inject the values to create the engine
     engine = create_engine(
@@ -459,13 +460,14 @@ def id_query_generator(
         yield id_range_query
 
 
-def get_engines(connection_dict: Dict[str, str]) -> Tuple[Engine, Engine]:
+def get_engines(connection_dict: Dict[str, str]) -> Tuple[Engine, Engine, Engine]:
     """
     Generates Snowflake and Postgres engines from env vars and returns them.
     """
 
     logging.info("Creating database engines...")
     env = os.environ.copy()
-    postgres_engine = postgres_engine_factory(connection_dict, env)
+    postgres_engine = postgres_engine_factory(connection_dict['postgres_source_connection'], env)
+    metadata_engine = postgres_engine_factory(connection_dict['postgres_metadata_connection'], env)
     snowflake_engine = snowflake_engine_factory(env, "LOADER", SCHEMA)
-    return postgres_engine, snowflake_engine
+    return postgres_engine, metadata_engine, snowflake_engine

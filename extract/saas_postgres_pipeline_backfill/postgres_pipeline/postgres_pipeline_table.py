@@ -6,7 +6,7 @@ from typing import Dict, Any
 from sqlalchemy.engine.base import Engine
 
 import load_functions
-from utils import check_is_new_table, schema_addition_check
+from utils import is_new_table, schema_addition_check
 
 
 class PostgresPipelineTable:
@@ -117,7 +117,19 @@ class PostgresPipelineTable:
         pass
 
     def check_if_backfill_needed(self, source_engine: Engine, metadata_engine: Engine):
-        is_new_table = check_is_new_table(metadata_engine, self.source_table_name)
+        if is_new_table(metadata_engine, self.source_table_name):
+            logging.info(f"New table: {self.source_table_name}.")
+            return True
+
+        if schema_addition_check(
+            self.query,
+            source_engine,
+            self.source_table_name,
+            self.source_table_primary_key,
+            self.target_table_name,
+        ):
+            logging.info(f"Schema has changed for table: {self.target_table_name}.")
+            return True
 
         #TODO later:
         '''
