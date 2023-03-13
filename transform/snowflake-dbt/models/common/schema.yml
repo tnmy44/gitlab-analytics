@@ -5378,6 +5378,10 @@ models:
         description: '{{ doc("page_url_scheme") }}'
       - name: page_url_host
         description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -5388,8 +5392,8 @@ models:
         description: '{{ doc("gsc_plan") }}'
       - name: gsc_source
         description: '{{ doc("gsc_source") }}'
-      - name: event_value
-        description: '{{ doc("event_value") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
