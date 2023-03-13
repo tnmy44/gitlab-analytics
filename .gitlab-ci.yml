@@ -266,6 +266,7 @@ clone_stop:
   script:
     - permifrost spec-test permissions/snowflake/roles.yml
   when: manual
+  allow_failure: false
 
 # ======
 # dbt docs to GitLab Pages
