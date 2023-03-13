@@ -4187,6 +4187,7 @@ roles:
             - bi_tool_eval_db
             - prometheus
             - workday
+            - zengrc
         warehouses:
             - dev_xs
             - dev_m
