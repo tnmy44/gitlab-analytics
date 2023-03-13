@@ -2,10 +2,6 @@
     tags=["mnpi_exception"]
 ) }}
 
-{{ config(
-    tags=["mnpi_exception"]
-) }}
-
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('prep_crm_user_daily_snapshot', 'prep_crm_user_daily_snapshot'),
@@ -52,11 +48,10 @@
       AND prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
-      --AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, 1=1) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
 
 ), user_hierarchy_sheetload AS (
 /*
-  To get a complete picture of the hierarchy and to ensure fidelity with the TOPO model, we will union in the distinct hierarchy values from the file.
+  To get a complete picture of the hierarchy and to ensure fidelity with the target setting model, we will union in the distinct hierarchy values from the file.
 */
 
     SELECT DISTINCT 
@@ -76,7 +71,7 @@
 
 ), user_hierarchy_sheetload_partner_alliance AS (
 /*
-  To get a complete picture of the hierarchy and to ensure fidelity with the TOPO model, we will union in the distinct hierarchy values from the partner and alliance file.
+  To get a complete picture of the hierarchy and to ensure fidelity with the target setting model, we will union in the distinct hierarchy values from the partner and alliance file.
 */
 
     SELECT DISTINCT 
@@ -108,8 +103,7 @@
   
 ), unioned AS (
 /*
-  Full outer join with all three hierarchy sources and coalesce the fields, prioritizing the SFDC versions to maintain consistency in how the hierarchy appears
-  The full outer join will allow all possible hierarchies to flow in from all three sources
+  Union all four hierarchy sources to combine all possible hierarchies generated used in the past, as well as those not currently used in the system, but used in target setting.
 */
 
     SELECT *
@@ -132,6 +126,10 @@
 
 ), pre_fy24_hierarchy AS (
 
+/*
+  Before FY24, the hierarchy only uncluded segment, geo, region, and area.
+*/
+
     SELECT DISTINCT
       fiscal_year,
       UPPER(user_segment) AS user_segment,
@@ -144,6 +142,11 @@
     WHERE fiscal_year < 2024
 
 ), fy24_and_beyond_hierarchy AS (
+
+/*
+  After FY24, business unit was added to the hierarchy.
+*/
+
 
     SELECT DISTINCT
       fiscal_year,

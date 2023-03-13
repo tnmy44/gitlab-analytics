@@ -2,7 +2,6 @@
       ('prep_crm_user_hierarchy', 'prep_crm_user_hierarchy'),
       ('sales_qualified_source', 'prep_sales_qualified_source'),
       ('order_type', 'prep_order_type'),
-      ('date_details_source', 'date_details_source'),
       ('prep_sales_funnel_target', 'prep_sales_funnel_target')
 ])}}
 
@@ -47,7 +46,7 @@
     LEFT JOIN prep_crm_user_hierarchy
       ON prep_sales_funnel_target.dim_crm_user_hierarchy_sk = prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk
         AND prep_sales_funnel_target.fiscal_year = prep_crm_user_hierarchy.fiscal_year
-    {{ dbt_utils.group_by(n=22)}}
+    {{ dbt_utils.group_by(n=23)}}
 
 )
 
@@ -56,5 +55,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2023-02-07",
-    updated_date="2023-02-07"
+    updated_date="2023-03-10"
 ) }}
