@@ -3301,7 +3301,6 @@ roles:
             - customers_db
             - data_team_analyst
             - data_science_sensitive
-            - fake_role_for_error
             - data_science
             - gainsight
             - netsuite
