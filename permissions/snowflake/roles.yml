@@ -2462,11 +2462,11 @@ roles:
               schemas:
                   read:
                       - prep.zengrc
-                      - raw.zengrc
+                      - raw.tap_zengrc
               tables:
                   read:
                       - prep.zengrc.*
-                      - raw.zengrc.*
+                      - raw.tap_zengrc.*
 
     - zoom:
         warehouses:
