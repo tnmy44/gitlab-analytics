@@ -267,6 +267,7 @@ WITH sfdc_lead AS (
       marketo_lead.marketo_email_bounced_date                                                                            AS marketo_email_hard_bounced_date,
       marketo_lead.is_marketo_unsubscribed,
       marketo_lead.is_marketo_opted_in,
+      marketo_lead.has_marketo_unsubscribed,
       marketo_lead.marketo_compliance_segment_value                                                                      AS marketo_compliance_segment_value,
       IFNULL(marketo_lead.is_pql_marketo, FALSE)                                                                         AS is_pql_marketo,
       IFNULL(marketo_lead.is_paid_tier_marketo, FALSE)                                                                   AS is_paid_tier_marketo,
