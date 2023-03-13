@@ -73,10 +73,12 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         )
 
         # TODO: to delete, used for testing
-        is_backfill_needed = True
-        start_pk = 1
-        initial_load_start_date = None
+        if not is_backfill_needed:
+            is_backfill_needed = True
+            start_pk = 1
+            initial_load_start_date = None
 
+        logging.info(f'\nstart_pk: {start_pk}')
         logging.info(f'\ninitial_load_start_date: {initial_load_start_date}')
         logging.info(f'\nis_backfill_needed: {is_backfill_needed}')
         '''

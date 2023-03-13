@@ -148,18 +148,25 @@ class PostgresPipelineTable:
         If the backfill is in progress, check when the last file was written
         If last file was written within 24 hours, continue from last_extrated_id
         """
-        is_backfill_needed, last_extracted_id, initial_load_start_date = False, -1, None # init
+        # initialize variables
+        is_backfill_needed = False
+        last_extracted_id = -1
+        initial_load_start_date = None
+
         results = query_backfill_status(metadata_engine, self.source_table_name)
-        # will always enter this block if not new table
+
+        # if there are results from the query
         if results:
+            # unpack the results
             is_backfill_completed, initial_load_start_date, last_extracted_id, last_write_date = results[0]
             time_difference = datetime.now() - last_write_date
 
-            # If backfill not complete, and last file written within 24 HR
+            # if the backfill is not complete and the last file was written within 24 hours
             if not is_backfill_completed and time_difference < timedelta(hours=24):
+                # resume backfill
                 logging.info(f'Resuming backfill with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}')
                 is_backfill_needed = True
-                return is_backfill_needed, last_extracted_id + 1, initial_load_start_date
+                last_extracted_id += 1
 
         return is_backfill_needed, last_extracted_id, initial_load_start_date
 
