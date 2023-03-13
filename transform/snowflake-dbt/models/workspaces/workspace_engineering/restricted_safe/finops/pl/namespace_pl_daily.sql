@@ -1,7 +1,7 @@
 WITH date_spine AS (
 
   SELECT date_day FROM {{ ref('dim_date') }}
-  WHERE date_day < GETDATE() AND date_day >= '2022-01-01'
+  WHERE date_day < GETDATE() AND date_day >= '2020-01-01'
 ),
 
 plan_ids AS (
@@ -21,5 +21,5 @@ SELECT
   hist.dim_plan_id,
   coalesce(plan_ids.gitlab_plan_title, 'Internal') AS finance_pl
 FROM date_spine
-LEFT JOIN {{ ref('dim_namespace_plan_hist') }} hist ON date_spine.date_day BETWEEN hist.valid_from AND COALESCE(hist.valid_to, GETDATE())
+LEFT JOIN {{ ref('dim_namespace_plan_hist') }} hist ON date_spine.date_day BETWEEN hist.valid_from AND COALESCE(hist.valid_to, getdate())
 LEFT JOIN plan_ids ON plan_ids.gitlab_plan_id = hist.dim_plan_id
