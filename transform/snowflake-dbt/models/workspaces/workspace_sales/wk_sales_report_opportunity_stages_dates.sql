@@ -117,8 +117,8 @@ SELECT
         base.opportunity_id,
         opty.stage_name,
         opty.close_date,
-        opty.sales_team_cro_level,
-        opty.sales_team_rd_asm_level,
+        opty.created_date,
+        opty.cycle_time_in_days,
 
         -- adjusted dates for throughput analysis
         -- missing stage dates are completed using the next available stage date, up to a closed date
@@ -188,17 +188,6 @@ SELECT
             ELSE 0
         END AS was_stage_7_skipped_flag
 
-        -- unadjusted fields
-        /*
-        base.max_stage_0_date,
-        base.max_stage_1_date,
-        base.max_stage_2_date,
-        base.max_stage_3_date,
-        base.max_stage_4_date,
-        base.max_stage_5_date,
-        base.max_stage_6_date,
-        base.max_stage_7_date
-        */
     FROM pivoted_combined base
     INNER JOIN sfdc_opportunity_xf opty
       ON opty.opportunity_id = base.opportunity_id
@@ -250,6 +239,9 @@ SELECT
         stage_7.fiscal_quarter_name_fy      AS stage_7_fiscal_quarter_name,
         stage_7.first_day_of_fiscal_quarter AS stage_7_fiscal_quarter_date,
         stage_7.fiscal_year                 AS stage_7_fiscal_year
+
+        -- calculated cycle times
+        
 
 FROM pre_final base
   LEFT JOIN  date_details stage_0

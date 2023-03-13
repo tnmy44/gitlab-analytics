@@ -18,7 +18,8 @@ WITH source AS (
       instance_uuid::VARCHAR                               AS instance_uuid,
       hostname::VARCHAR                                    AS instance_hostname,
       instancetype::VARCHAR                                AS instance_type,
-      "Namespace_ID"::VARCHAR                              AS namespace_id, 
+      "Namespace_ID"::VARCHAR                              AS namespace_id,
+      included_in_health_measures::VARCHAR                 AS included_in_health_measures_str,
       to_timestamp(_updated_at::NUMBER)                    AS uploaded_at
     FROM source
 

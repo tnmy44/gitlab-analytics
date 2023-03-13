@@ -109,7 +109,6 @@ WITH edm_opty AS (
     ----------------------------------------------------------
     ----------------------------------------------------------
 
-
     edm_opty.dbt_updated_at                         AS _last_dbt_run,
     edm_opty.dim_crm_account_id                     AS account_id,
     edm_opty.dim_crm_opportunity_id                 AS opportunity_id,
@@ -143,7 +142,6 @@ WITH edm_opty AS (
     edm_opty.stage_name                            AS stage_name,
     edm_opty.order_type                            AS order_type_stamped,
     edm_opty.order_type_live                       AS order_type_live,
-
 
     -- stage rank
     CASE edm_opty.stage_name
@@ -184,6 +182,7 @@ WITH edm_opty AS (
     edm_opty.reason_for_loss,
     edm_opty.reason_for_loss_details,
     edm_opty.downgrade_reason,
+    edm_opty.lead_source,
 
     edm_opty.is_downgrade,
     edm_opty.is_edu_oss,
@@ -446,7 +445,46 @@ WITH edm_opty AS (
    
     edm_opty.deal_size,
     edm_opty.calculated_deal_size,
+
+    ---------------------------------------------
+    ---------------------------------------------
+
+    -- NF: calculated age only considers created date to close date or actual date if open
     edm_opty.calculated_age_in_days,
+
+    -- NF: cycle time will consider if the opty is renewal and eligible to be considered 
+    -- using the is_eligible_cycle_time_analysis
+    CASE 
+        WHEN edm_opty.is_edu_oss = 0
+            AND edm_opty.is_deleted = 0
+            -- For stage age we exclude only ps/other
+            AND edm_opty.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+            -- Only include deal types with meaningful journeys through the stages
+            AND edm_opty.opportunity_category IN ('Standard')
+            -- Web Purchase have a different dynamic and should not be included
+            AND edm_opty.is_web_portal_purchase = 0
+                THEN 1
+        ELSE 0
+    END                                                           AS is_eligible_cycle_time_analysis_flag,
+
+    -- NF: We consider net_arr_created date for renewals as they haver a very distinct motion than 
+    --      add on and First Orders
+    --     Logic is different for open deals so we can evaluate their current cycle time.
+    CASE
+        WHEN edm_opty.is_renewal = 1 AND is_closed = 1
+            THEN DATEDIFF(day, edm_opty.net_arr_created_date, edm_opty.close_date)
+        WHEN edm_opty.is_renewal = 0 AND is_closed = 1
+            THEN DATEDIFF(day, edm_opty.created_date, edm_opty.close_date)
+         WHEN edm_opty.is_renewal = 1 AND is_open = 1
+            THEN DATEDIFF(day, edm_opty.net_arr_created_date, CURRENT_DATE)
+        WHEN edm_opty.is_renewal = 0 AND is_open = 1
+            THEN DATEDIFF(day, edm_opty.created_date, CURRENT_DATE)
+    END                                                           AS cycle_time_in_days,
+
+    
+    ---------------------------------------------
+    ---------------------------------------------
+
     edm_opty.is_eligible_open_pipeline              AS is_eligible_open_pipeline_flag,
     edm_opty.is_eligible_asp_analysis               AS is_eligible_asp_analysis_flag,
     edm_opty.is_eligible_age_analysis               AS is_eligible_age_analysis_flag,

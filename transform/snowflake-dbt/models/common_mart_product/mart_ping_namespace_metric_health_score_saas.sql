@@ -27,7 +27,15 @@
         WHEN instance_type = 'Non-Production' THEN 2
         WHEN instance_type = 'Unknown' THEN 3
         ELSE 4
-      END AS ordering_field
+      END AS instance_type_ordering_field,
+      /*
+        Adding an ordering field to account for namespace that are associated with multiple production installations
+      */
+      CASE
+        WHEN included_in_health_measures_str = 'Included in Health Score' THEN 1
+        WHEN included_in_health_measures_str = 'Opt-Out' THEN 2
+        WHEN included_in_health_measures_str = NULL THEN 3
+      END AS health_score_ordering_field
     FROM instance_types
 )
 
@@ -59,7 +67,8 @@
         map_subscription_namespace_month.dim_subscription_id_original, 
         namespace_subscription_monthly_distinct.dim_subscription_id_original
       ) AS dim_subscription_id_original,
-      instance_types_ordering.instance_type
+      instance_types_ordering.instance_type,
+      instance_types_ordering.included_in_health_measures_str
     FROM prep_saas_usage_ping_namespace
     LEFT JOIN instance_types_ordering
       ON prep_saas_usage_ping_namespace.dim_namespace_id = instance_types_ordering.namespace_id
@@ -85,7 +94,8 @@
         prep_saas_usage_ping_namespace.ping_name
       ORDER BY 
         prep_saas_usage_ping_namespace.ping_date DESC,
-        instance_types_ordering.ordering_field ASC, --prioritizing Production instances
+        instance_types_ordering.instance_type_ordering_field ASC, --prioritizing Production instances
+        instance_types_ordering.health_score_ordering_field ASC,
         COALESCE(
           map_subscription_namespace_month.subscription_version,
           namespace_subscription_monthly_distinct.subscription_version
@@ -101,10 +111,11 @@
       dim_subscription_id_original,
       reporting_month,
       instance_type,
+      included_in_health_measures_str,
       MAX(ping_date)                                        AS ping_date,
       {{ dbt_utils.pivot('ping_name', gainsight_wave_metrics, then_value='counter_value') }}
     FROM joined
-    {{ dbt_utils.group_by(n=5)}}
+    {{ dbt_utils.group_by(n=6)}}
 
 )
 
@@ -113,5 +124,5 @@
     created_by="@mdrusell",
     updated_by="@mdrussell",
     created_date="2022-10-12",
-    updated_date="2022-10-21"
+    updated_date="2023-03-01"
 ) }}
