@@ -7,8 +7,7 @@ WITH source AS (
         score_group,
         insights,
         sub_model,
-        days_since_trial_start,
-        uploaded_at::TIMESTAMP AS uploaded_at
+        days_since_trial_start
     FROM {{ source('data_science', 'ptpf_scores') }}
 )
 
