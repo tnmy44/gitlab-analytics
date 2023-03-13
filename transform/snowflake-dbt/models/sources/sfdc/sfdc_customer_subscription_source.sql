@@ -52,7 +52,7 @@ WITH source AS (
       _sdc_table_version                        AS _sdc_table_version,
       current_renewal_arr_basis__c              AS current_renewal_arr_basis,
       current_open_renewal_id__c                AS current_open_renewal_id,
-      stamped_arr_basis__c                      AS stamped_arr_basis__c,
+      stamped_arr_basis__c                      AS stamped_arr_basis,
       sub_to_basis_status__c                    AS sub_to_basis_status,
       suppress_update__c                        AS suppress_update,
       fy22_entering_arr__c                      AS fy22_entering_arr,
