@@ -199,6 +199,9 @@ models:
         +schema: edcast
         +tags: ["people", "edcast"]
 
+      facebook_ads:
+        +schema: facebook_ads
+
       gainsight:
         +materialized: table
         +schema: gainsight
