@@ -502,7 +502,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- Rolling 24 months of data
+- Rolling 36 months of data
 
 **Business Logic in this Model:**
 - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
@@ -553,7 +553,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
+- Rolling 24 months of data
 - Exclude events not associated with a user (ex: 'milestones')
 
 **Business Logic in this Model:**
@@ -561,33 +561,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
 - `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
-
-**Other Comments:**
-- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
-
-{% enddocs %}
-
-{% docs fct_event_instance_daily %}
-
-**Description:** GitLab.com usage event data for valid events, grouped by date and event name
-- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  
-
-**Data Grain:**
-- event_date
-- event_name
-
-**Filters Applied to Model:**
-- `Inherited` - Include valid events for standard analysis and reporting:
-  - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
-    - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
-  - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
-
-**Business Logic in this Model:**
-- `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
-- `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
-- Not all events have a user associated with them (ex: 'milestones'), and not all events have a namespace associated with them (ex: 'users_created'). Therefore it is expected that `user_count = 0` or `ultimate_parent_namespace_count = 0` for these events.
 
 **Other Comments:**
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
@@ -609,7 +582,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
+- Rolling 24 months of data
 - Exclude events not associated with a namespace (ex: 'users_created')
 
 **Business Logic in this Model:**
@@ -837,19 +810,6 @@ Easy joins available with:
 * dim_project through `dim_project_id`
 * dim_namespace through `dim_namespace_id` and `ultimate_parent_namespace_id`
 * dim_date through `ci_pipeline_creation_dim_date_id`
-{% enddocs %}
-
-{% docs dim_action %}
-
-Dimensional table representing actions recorded by the Events API. [More info about actions tracked here](https://docs.gitlab.com/ee/api/events.html)
-
-The grain of the table is the `dim_action_id`. This table is easily joinable with:
-
-- `dim_plan` through `dim_plan_id`
-- `dim_user` through `dim_user_id`
-- `dim_project` through `dim_project_id`
-- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
-
 {% enddocs %}
 
 {% docs dim_issue %}
@@ -1675,7 +1635,7 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
+- `Inherited` - Rolling 36 months of data
 
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_month`) is determined by the plan for the last event on a given month
@@ -1773,5 +1733,29 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
+
+{% enddocs %}
+
+{% docs fct_delta_arr_subscription_lineage_product_monthly %}
+
+Delta ARR is a measure of changes to ARR compared to the prior month. The [ARR Analysis Framework](https://internal-handbook.gitlab.io/handbook/sales/annual-recurring-revenue-arr/#arr-analysis-framework) handbook page provides more details on the analysis.
+
+The model uses the subscription_lineage grain to calculate the Delta ARR. This is a fundamental change from previous Delta ARR models at the subscription grain. When looking at the subscription grain, debook-book scenarios are not captured. Therefore, it is necessary to analyze the subscription_lineage grain for accurate product level Delta ARR changes. This model provides a method to analyze the 6 subscription linkage scenarios provided in this [Linking Subscriptions for Data Retention[https://docs.google.com/spreadsheets/d/1SYFy0Xqau1dbOm2YXmp0NvWDEkL_vIcWaFhKzwcocCM/edit#gid=0] file.
+
+The model ERD can be found [HERE](https://lucid.app/lucidchart/invitations/accept/inv_07d25d39-3076-408f-b768-67d1895ea064). 
+
+Model Validation:
+
+The model ties out 100% to mart_arr with the below 3 exceptions:
+
+1. The model removes subscriptions with data quality problems in the subscription_name_slugify field that is used for the subscription lineage. These were 5 subscriptions at the time of model creation and they do not have a material impact on the model insights.
+
+1. The model removes Storage product charges. The model is intended to focus on the paid plan tiers only.
+
+1. At the time of model creation, there were 23 subscriptions that were part of lineages where subscriptions in the lineage roll up to different Salesforce ultimate parent accounts. All of the ARR for these subscriptions is in the model; however, the model rolls up the ARR for these subscriptions to the ultimate parent account of the oldest subscription in the lineage. This results in these 23 parent accounts not tieing out 100% to mart_arr.
+
+Model Caveat:
+
+1. It should be that a subscription only has 1 paid tier plan attached to it. However, there are a small minority of subscriptions that have more than 1 product. Therefore, it is necessary to put the product tiers into an array in the model for completeness. In virtually all cases, it is 2 product tiers on the subscription with many of them having old Bronze/Starter plans in addition to Premium plans.
 
 {% enddocs %}

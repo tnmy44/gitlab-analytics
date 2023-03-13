@@ -6,7 +6,7 @@ WITH session_custom_dims AS (
 ), ga_index_names AS (
 
 	SELECT * 
-	FROM  {{ ref('google_analytics_custom_dimension_indexes') }}
+	FROM  {{ ref('sheetload_ga360_custom_dimensions') }}
 
 ), named_dims AS(
 
@@ -15,11 +15,11 @@ WITH session_custom_dims AS (
 	  session_custom_dims.*,
 	    
 	  --index names
-	  ga_index_names.name	AS dimension_name
+	  ga_index_names.dimension_name	AS dimension_name
 	    
 	FROM session_custom_dims
 	LEFT JOIN ga_index_names 
-		ON session_custom_dims.dimension_index = ga_index_names.index
+		ON session_custom_dims.dimension_index = ga_index_names.dimension_index
 
 )
 

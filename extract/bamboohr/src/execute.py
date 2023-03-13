@@ -36,7 +36,6 @@ def get_snowflake_latest_entry_count(table_name, snowflake_engine, field_name):
 
 
 if __name__ == "__main__":
-
     logging.basicConfig(stream=sys.stdout, level=20)
 
     record_counts = {}

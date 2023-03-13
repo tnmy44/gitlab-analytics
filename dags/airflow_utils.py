@@ -12,15 +12,14 @@ from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperato
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.31"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.24"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.1"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
-ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v1.0.25"
+ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.1"
 
 SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
 
 
 def get_sales_analytics_notebooks(frequency: str) -> Dict:
-
     notebooks = []
     fileNames = []
 
@@ -66,7 +65,6 @@ sales_analytics_pipelines_dag = [
 
 
 def split_date_parts(day: date, partition: str) -> Dict:
-
     if partition == "month":
         split_dict = {
             "year": day.strftime("%Y"),
