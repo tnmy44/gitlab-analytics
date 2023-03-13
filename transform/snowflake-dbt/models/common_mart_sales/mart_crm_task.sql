@@ -109,11 +109,15 @@
 
     -- Flags
     dim_crm_task.is_reminder_task,
+    dim_crm_task.is_completed_task,
+    dim_crm_task.is_gainsight_integration_user_task,
     dim_crm_task.is_demand_gen_task,
     dim_crm_task.is_demo_task,
     dim_crm_task.is_workshop_task,
     dim_crm_task.is_meeting_task,
     dim_crm_task.is_email_task,
+    dim_crm_task.is_incoming_email_task,
+    dim_crm_task.is_outgoing_email_task,
     dim_crm_task.is_high_priority_email_task,
     dim_crm_task.is_low_priority_email_task,
     dim_crm_task.is_normal_priority_email_task,
@@ -154,5 +158,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-12-05",
-    updated_date="2023-02-15"
+    updated_date="2023-03-13"
 ) }}

@@ -120,6 +120,16 @@ WITH source AS (
         0
         )                                                                                               AS is_reminder_task,
       IFF(
+        source.task_status = 'Completed', 
+          1,
+        0
+        )                                                                                               AS is_completed_task,
+      IFF(
+        source.owner_id != '0054M000004M9pdQAC', 
+          1,
+        0
+        )                                                                                               AS is_gainsight_integration_user_task,
+      IFF(
         source.task_type ='Demand Gen' 
           OR LOWER(source.task_subject) LIKE '%demand gen%'
             OR LOWER(source.full_comments) LIKE '%demand gen%',
@@ -159,6 +169,16 @@ WITH source AS (
           1,
         0
         )                                                                                               AS is_email_task,
+      IFF(
+        source.task_subject LIKE '%[In]%', 
+          1,
+         0
+         )                                                                                              AS is_incoming_email_task,
+      IFF(
+        source.task_subject LIKE '%[Out]%', 
+          1,
+         0
+         )                                                                                              AS is_outgoing_email_task,
       IFF(
         is_email_task = 1
           AND LOWER(source.task_priority) ='high',
