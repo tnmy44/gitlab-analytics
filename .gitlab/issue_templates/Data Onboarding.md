@@ -575,3 +575,4 @@ Suggested bookmarks: none of these are required, but bookmarking these links wil
 - [Ways of working (WoW) template](https://docs.google.com/document/d/1r_bn6tZjIbZ84o0QqMfSueBHQjR0MRWCGPnQoH6w45c/edit) - it allows you to establish expectations regarding your work, more details can be found [here](https://gitlab.com/gitlab-data/analytics/-/issues/9741). Recommended to use on 1:1 calls with your manager and team members you may work with.
 
 
+
