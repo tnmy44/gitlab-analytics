@@ -202,6 +202,6 @@ Source model for SFDC custom object representing a quote rate plan charge from Z
 
 {% docs sfdc_customer_subscription_source %}
 
-Custom source table: This table contains custom subscription data.
+Custom source table: This table contains customer subscription data.
 
 {% enddocs %}
