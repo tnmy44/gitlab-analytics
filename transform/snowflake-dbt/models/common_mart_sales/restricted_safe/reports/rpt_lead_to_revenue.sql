@@ -135,6 +135,7 @@
     cohort_base.dim_crm_opportunity_id,
     mart_crm_touchpoint.dim_crm_touchpoint_id,
     cohort_base.sfdc_record_id,
+    cohort_base.dim_crm_account_id,
   
     --person data
     CASE 
@@ -211,7 +212,7 @@
   FROM cohort_base
   LEFT JOIN mart_crm_touchpoint
     ON mart_crm_touchpoint.email_hash=cohort_base.email_hash
-  {{ dbt_utils.group_by(n=61) }}
+  {{ dbt_utils.group_by(n=62) }}
     
 ), cohort_base_with_batp AS (
   
@@ -222,6 +223,7 @@
     cohort_base.dim_crm_opportunity_id,
     mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
     cohort_base.sfdc_record_id,
+    cohort_base.dim_crm_account_id,
   
     --person data
     CASE 
@@ -434,7 +436,7 @@
   FROM cohort_base
   LEFT JOIN mart_crm_attribution_touchpoint
     ON cohort_base.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
-  {{ dbt_utils.group_by(n=69) }}
+  {{ dbt_utils.group_by(n=70) }}
     
 ), cohort_base_with_touchpoints AS (
   
@@ -445,6 +447,7 @@
     dim_crm_opportunity_id,
     dim_crm_touchpoint_id,
     sfdc_record_id,
+    dim_crm_account_id,
   
     --person data
     person_order_type,
@@ -567,6 +570,7 @@
     dim_crm_opportunity_id,
     dim_crm_touchpoint_id,
     sfdc_record_id,
+    dim_crm_account_id, 
   
     --person data
     person_order_type,
@@ -682,10 +686,69 @@
     won_linear_net_arr
   FROM cohort_base_with_batp
 
+), intermediate AS (
+
+  SELECT DISTINCT
+    cohort_base_with_touchpoints.*,
+    --inquiry_date fields
+    inquiry_date.fiscal_year                     AS inquiry_date_range_year,
+    inquiry_date.fiscal_quarter_name_fy          AS inquiry_date_range_quarter,
+    DATE_TRUNC(month, inquiry_date.date_actual)  AS inquiry_date_range_month,
+    inquiry_date.first_day_of_week               AS inquiry_date_range_week,
+    inquiry_date.date_id                         AS inquiry_date_range_id,
+  
+    --mql_date fields
+    mql_date.fiscal_year                     AS mql_date_range_year,
+    mql_date.fiscal_quarter_name_fy          AS mql_date_range_quarter,
+    DATE_TRUNC(month, mql_date.date_actual)  AS mql_date_range_month,
+    mql_date.first_day_of_week               AS mql_date_range_week,
+    mql_date.date_id                         AS mql_date_range_id,
+  
+    --opp_create_date fields
+    opp_create_date.fiscal_year                     AS opportunity_created_date_range_year,
+    opp_create_date.fiscal_quarter_name_fy          AS opportunity_created_date_range_quarter,
+    DATE_TRUNC(month, opp_create_date.date_actual)  AS opportunity_created_date_range_month,
+    opp_create_date.first_day_of_week               AS opportunity_created_date_range_week,
+    opp_create_date.date_id                         AS opportunity_created_date_range_id,
+  
+    --sao_date fields
+    sao_date.fiscal_year                     AS sao_date_range_year,
+    sao_date.fiscal_quarter_name_fy          AS sao_date_range_quarter,
+    DATE_TRUNC(month, sao_date.date_actual)  AS sao_date_range_month,
+    sao_date.first_day_of_week               AS sao_date_range_week,
+    sao_date.date_id                         AS sao_date_range_id,
+  
+    --closed_date fields
+    closed_date.fiscal_year                     AS closed_date_range_year,
+    closed_date.fiscal_quarter_name_fy          AS closed_date_range_quarter,
+    DATE_TRUNC(month, closed_date.date_actual)  AS closed_date_range_month,
+    closed_date.first_day_of_week               AS closed_date_range_week,
+    closed_date.date_id                         AS closed_date_range_id,
+
+    --bizible_date fields
+    bizible_date.fiscal_year                     AS bizible_date_range_year,
+    bizible_date.fiscal_quarter_name_fy          AS bizible_date_range_quarter,
+    DATE_TRUNC(month, bizible_date.date_actual)  AS bizible_date_range_month,
+    bizible_date.first_day_of_week               AS bizible_date_range_week,
+    bizible_date.date_id                         AS bizible_date_range_id
+  FROM cohort_base_with_touchpoints
+  LEFT JOIN dim_date inquiry_date
+    ON cohort_base_with_touchpoints.true_inquiry_date=dim_date.date_day
+  LEFT JOIN dim_date mql_date
+    ON cohort_base_with_touchpoints.mql_date_first_pt=dim_date.date_day
+  LEFT JOIN dim_date opp_create_date
+    ON cohort_base_with_touchpoints.opp_created_date=dim_date.date_day
+  LEFT JOIN dim_date sao_date
+    ON cohort_base_with_touchpoints.sales_accepted_date=dim_date.date_day
+  LEFT JOIN dim_date closed_date
+    ON cohort_base_with_touchpoints.close_date=dim_date.date_day
+  LEFT JOIN dim_date bizible_date
+    ON cohort_base_with_touchpoints.bizible_touchpoint_date=dim_date.date_day
+    
 ), final AS (
 
     SELECT DISTINCT *
-    FROM cohort_base_with_touchpoints
+    FROM intermediate
 
 )
 
@@ -694,5 +757,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-03-10",
+    updated_date="2023-03-13",
   ) }}
