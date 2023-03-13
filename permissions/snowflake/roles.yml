@@ -3458,6 +3458,7 @@ roles:
                 write:
                     - juwong_prep.*.*
                     - juwong_prod.*.*
+bad yaml
 
     - kdietz:
         member_of:
