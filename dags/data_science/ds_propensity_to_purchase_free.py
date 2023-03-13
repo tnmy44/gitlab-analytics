@@ -78,7 +78,6 @@ dag = DAG(
     schedule_interval="0 6 2 * *",
 )
 
-# Task 1
 ptpf_scoring_command = f"""
     {clone_data_science_ptpf_repo_cmd} &&
     cd propensity-to-purchase/prod/saas-free &&
