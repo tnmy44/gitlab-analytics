@@ -98,6 +98,7 @@ tables:
       , jid
       , created_at
       , updated_at
+      , has_failures
       FROM bulk_import_entities
   board_labels:
     dbt_source_model: true
@@ -818,6 +819,7 @@ tables:
       , job_title
       , NULL AS other_role
       , registration_objective
+      , provisioned_by_group_id
       FROM user_details
   users_security_dashboard_projects:
     dbt_source_model: true

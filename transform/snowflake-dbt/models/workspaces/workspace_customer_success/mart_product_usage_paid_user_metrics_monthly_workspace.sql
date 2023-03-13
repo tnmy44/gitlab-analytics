@@ -108,6 +108,7 @@
       monthly_sm_metrics.dim_subscription_id,
       NULL                                                                         AS dim_namespace_id,
       NULL                                                                         AS namespace_name,
+      NULL                                                                         AS namespace_creation_date,
       monthly_sm_metrics.dim_instance_id                                           AS uuid,
       monthly_sm_metrics.hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
@@ -124,6 +125,7 @@
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_ping_instance_id                                       AS dim_usage_ping_id,
       monthly_sm_metrics.instance_type,
+      monthly_sm_metrics.included_in_health_measures_str,
       monthly_sm_metrics.cleaned_version,
       location_country.country_name,
       location_country.iso_2_country_code,
@@ -314,6 +316,17 @@
       monthly_sm_metrics.external_status_checks_all_time_event,
       monthly_sm_metrics.paid_license_search_28_days_user,
       monthly_sm_metrics.last_activity_28_days_user,
+      -- Wave 7
+      monthly_sm_metrics.snippets_28_days_event,
+      monthly_sm_metrics.single_file_editor_28_days_user,
+      monthly_sm_metrics.merge_requests_created_28_days_event,
+      monthly_sm_metrics.merge_requests_created_28_days_user,
+      monthly_sm_metrics.merge_requests_approval_rules_28_days_event,
+      monthly_sm_metrics.custom_compliance_frameworks_28_days_event,
+      monthly_sm_metrics.projects_security_policy_28_days_event,
+      monthly_sm_metrics.merge_requests_security_policy_28_days_user,
+      monthly_sm_metrics.pipelines_implicit_auto_devops_28_days_event,
+      monthly_sm_metrics.pipeline_schedules_28_days_user,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -336,6 +349,7 @@
       monthly_saas_metrics.dim_subscription_id,
       monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
       namespaces.namespace_name,
+      namespaces.created_at                                                         AS namespace_creation_date,
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
@@ -352,6 +366,7 @@
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
       monthly_saas_metrics.instance_type                                            AS instance_type,
+      monthly_saas_metrics.included_in_health_measures_str                          AS included_in_health_measures_str,
       NULL                                                                          AS cleaned_version,
       NULL                                                                          AS country_name,
       NULL                                                                          AS iso_2_country_code,
@@ -542,6 +557,17 @@
       monthly_saas_metrics.external_status_checks_all_time_event,
       monthly_saas_metrics.paid_license_search_28_days_user,
       monthly_saas_metrics.last_activity_28_days_user,
+      -- Wave 7
+      monthly_saas_metrics.snippets_28_days_event,
+      monthly_saas_metrics.single_file_editor_28_days_user,
+      monthly_saas_metrics.merge_requests_created_28_days_event,
+      monthly_saas_metrics.merge_requests_created_28_days_user,
+      monthly_saas_metrics.merge_requests_approval_rules_28_days_event,
+      monthly_saas_metrics.custom_compliance_frameworks_28_days_event,
+      monthly_saas_metrics.projects_security_policy_28_days_event,
+      monthly_saas_metrics.merge_requests_security_policy_28_days_user,
+      monthly_saas_metrics.pipelines_implicit_auto_devops_28_days_event,
+      monthly_saas_metrics.pipeline_schedules_28_days_user,
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -608,5 +634,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2023-01-17"
+    updated_date="2023-02-23"
 ) }}

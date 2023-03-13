@@ -25,6 +25,7 @@ WITH
       expires_at::TIMESTAMP                          AS expires_at,
       ldap::BOOLEAN                                  AS has_ldap,
       override::BOOLEAN                              AS has_override,
+      member_role_id,
       invite_token::VARCHAR AS invite_token,
       valid_from -- Column was added in distinct_source CTE
 
