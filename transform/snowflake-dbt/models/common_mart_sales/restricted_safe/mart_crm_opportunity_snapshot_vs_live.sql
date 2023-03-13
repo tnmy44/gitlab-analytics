@@ -254,7 +254,7 @@
     mart_crm_opportunity.crm_account_name AS crm_account_name_live,
     mart_crm_opportunity_daily_snapshot.parent_crm_account_name AS parent_crm_account_name_snapshot,
     mart_crm_opportunity.parent_crm_account_name AS parent_crm_account_name_live,
-    mart_crm_opportunity_daily_snapshot.parent_crm_account_demographics_business_unit AS account_demographics_business_unit_snapshot,
+    mart_crm_opportunity_daily_snapshot.account_demographics_business_unit AS account_demographics_business_unit_snapshot,
     mart_crm_opportunity.account_demographics_business_unit AS account_demographics_business_unit_live,
     mart_crm_opportunity_daily_snapshot.account_demographics_segment AS account_demographics_segment_snapshot,
     mart_crm_opportunity.account_demographics_segment AS account_demographics_segment_live,
