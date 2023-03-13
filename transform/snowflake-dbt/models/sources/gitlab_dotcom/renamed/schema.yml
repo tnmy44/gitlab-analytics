@@ -1363,7 +1363,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_project_project_ci_cd_settings
+  - name: gitlab_dotcom_project_project_ci_cd_settings_source
     description: Base model for Gitlab.com auto devops
     columns:
       - name: project_ci_cd_settings_id
