@@ -258,7 +258,7 @@ for source_name, config in config_dict.items():
             file_path = f"analytics/extract/saas_postgres_pipeline_backfill/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
-            table_list = ["alert_management_http_integrations"]
+            table_list = ["alert_management_http_integrations", 'epics']
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "backfill"

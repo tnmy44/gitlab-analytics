@@ -391,7 +391,7 @@ def chunk_and_upload(
 
                 logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
                 # TODO: allow us 'mock' a mid backfill
-                if last_extracted_id == 215:
+                if last_extracted_id > 2000000 and last_extracted_id < 2700000:
                     return
     """
     if rows_uploaded > 0:
@@ -416,8 +416,7 @@ def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFra
     cur.copy_expert(copy_sql, tmp_file)
     tmp_file.seek(0)
     logging.info("Reading csv")
-    # TODO change back to chunksize=750_000
-    df = pd.read_csv(tmp_file, chunksize=200, parse_dates=True, low_memory=False)
+    df = pd.read_csv(tmp_file, chunksize=750_000, parse_dates=True, low_memory=False)
     logging.info("CSV read")
     return df
 
