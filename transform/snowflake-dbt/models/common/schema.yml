@@ -5112,6 +5112,12 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common"]
+      - name: full_comments
+        meta:
+           masking_policy: data_science_sensitive
+      - name: task_subject
+        meta:
+           masking_policy: data_science_sensitive
 
   - name: fct_crm_task
     description: '{{ doc("fct_crm_task") }}'
