@@ -465,7 +465,7 @@ def query_backfill_status(metadata_engine: Engine, source_table: str) -> bool:
     return results
 
 
-def is_resume_backfill(self, metadata_engine: Engine):
+def is_resume_backfill(metadata_engine: Engine, source_table: str):
     """
     Determine if backfill should be resumed.
     First query the backfill database to see if there's a backfill in progress
@@ -477,7 +477,7 @@ def is_resume_backfill(self, metadata_engine: Engine):
     start_pk = -1
     initial_load_start_date = None
 
-    results = query_backfill_status(metadata_engine, self.source_table_name)
+    results = query_backfill_status(metadata_engine, source_table)
 
     # if backfill metadata exists for table
     if results:

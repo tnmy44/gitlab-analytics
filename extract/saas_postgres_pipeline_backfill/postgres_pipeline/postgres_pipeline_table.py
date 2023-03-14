@@ -156,7 +156,7 @@ class PostgresPipelineTable:
             )
             return is_backfill_needed, start_pk, initial_load_start_date
 
-        return self.is_resume_backfill(metadata_engine)
+        return is_resume_backfill(metadata_engine, self.source_table_name)
 
     def get_target_table_name(self):
         return self.target_table_name
