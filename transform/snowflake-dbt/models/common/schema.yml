@@ -5128,12 +5128,6 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common"]
-      - name: full_comments
-        meta:
-           masking_policy: sensitive
-      - name: task_subject
-        meta:
-           masking_policy: sensitive
 
   - name: dim_behavior_browser
     description: '{{ doc("dim_behavior_browser") }}'
