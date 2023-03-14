@@ -838,6 +838,7 @@ roles:
                       - prod.common_mart_marketing.*
                       - raw.salesforce_stitch.*
                       - raw.snapshots.*
+                      - raw.data_science.*
 
     - data_science_sensitive:
           warehouses:
@@ -888,6 +889,7 @@ roles:
                       - prod.pumps_sensitive.*
                       - raw.salesforce_stitch.*
                       - raw.snapshots.*
+                      - raw.data_science.*
 
     - data_science_loader:
           warehouses:
@@ -1331,6 +1333,21 @@ roles:
             tables:
                 read:
                     - bi_tool_eval.*.*
+
+    - coupa:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.coupa_sandbox
+            tables:
+                read:
+                    - raw.coupa_sandbox.*
+
 
     - covid19:
         privileges:
@@ -2434,6 +2451,23 @@ roles:
                       - prep.zendesk_community_relations.*
                       - raw.tap_zendesk__community_relations.*
 
+    - zengrc:
+          warehouses:
+              - dev_xs
+          privileges:
+              databases:
+                  read:
+                      - prep
+                      - raw
+              schemas:
+                  read:
+                      - prep.zengrc
+                      - raw.tap_zengrc
+              tables:
+                  read:
+                      - prep.zengrc.*
+                      - raw.tap_zengrc.*
+
     - zoom:
         warehouses:
             - dev_xs
@@ -2723,9 +2757,11 @@ roles:
             - analytics_engineer_core
             - analyst_engineering
             - analyst_growth
+            - coupa
             - restricted_safe
             - bi_tool_eval_read
             - salesforce
+            - zuora_stitch_rest_api
         warehouses:
             - dev_xs
             - dev_m
@@ -3210,6 +3246,12 @@ roles:
                 write:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
+
+    - jhope:
+        member_of:
+            - gitlab_dotcom
+        warehouses:
+            - dev_xs
 
     - jng:
         member_of:
@@ -4005,6 +4047,7 @@ roles:
             - salesforce_sandbox
             - xactly
             - bi_tool_eval_db
+            - zuora_stitch_rest_api
         warehouses:
             - dev_xs
         owns:
@@ -4144,6 +4187,7 @@ roles:
             - bi_tool_eval_db
             - prometheus
             - workday
+            - zengrc
         warehouses:
             - dev_xs
             - dev_m
@@ -4868,6 +4912,11 @@ users:
         can_login: yes
         member_of:
             - jcaine
+
+    - jhope:
+        can_login: yes
+        member_of:
+            - jhope
 
     - jng:
         can_login: yes
