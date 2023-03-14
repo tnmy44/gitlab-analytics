@@ -12,7 +12,7 @@ WITH service_ping_events AS (
 
    {% if is_incremental() %}
   
-    WHERE behavior_at >= (SELECT MAX(behavior_at) FROM {{this}})
+    WHERE behavior_at > (SELECT MAX(behavior_at) FROM {{this}})
   
   {% endif %}
 ),
