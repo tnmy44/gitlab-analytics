@@ -448,6 +448,8 @@ sources:
         identifier: gitlab_db_path_locks
       - name: pool_repositories
         identifier: gitlab_db_pool_repositories
+      - name: project_ci_cd_settings
+        identifier: gitlab_db_project_ci_cd_settings
       - name: project_compliance_framework_settings
         identifier: gitlab_db_project_compliance_framework_settings
       - name: project_error_tracking_settings

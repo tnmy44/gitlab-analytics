@@ -1362,6 +1362,16 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
+
+  - name: gitlab_dotcom_project_ci_cd_settings_source
+    description: Base model for Gitlab.com auto devops
+    columns:
+      - name: project_ci_cd_settings_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+  
   - name: gitlab_dotcom_project_features_source
     description: Base model for Gitlab.com project features
     columns:

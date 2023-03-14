@@ -411,6 +411,7 @@ There are many data sets brought into the Enterprise Data Warehouse, the followi
 - [ ] Watch [Overview of Growth Data at GitLab](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
 - [ ] Review the [Data Guide for Growth](https://about.gitlab.com/handbook/product/product-analysis/growth-data-guide/) for an overview of commonly used query snippets used by the Growth sub-group.
 - [ ] Explore the [Product Analysis handbook page](https://about.gitlab.com/handbook/product/product-analysis/) for a high level overview of how the Product Analysis team works. This page contains a number of links that should help with starting to understand how the Data team approaches Product specific data questions.
+- [ ] Read the [runbook on how to add new source tables in the gitlab-product/SaaS/postgres pipeline](https://gitlab.com/gitlab-data/runbooks/-/blob/main/Gitlab_dotcom/postgres_new_source_table_.md), to understand how we add new source tables and/or modify existing ones.
 
 #### Service Ping Deep Dive
 
@@ -571,7 +572,4 @@ Suggested bookmarks: none of these are required, but bookmarking these links wil
 - [Data Team GitLab Activity](https://gitlab.com/groups/gitlab-data/-/activity)
 - [Data Kitchen Data Ops Cookbook](https://drive.google.com/file/d/14KyYdFB-DOeD0y2rNyb2SqjXKygo10lg/view?usp=sharing) 
 - [Data Engineering Cookbook](https://drive.google.com/file/d/1Tm3GiV3P6c5S3mhfF9bm7VaKCtio-9hm/view?usp=sharing) 
-- [Ways of working (WoW) template](https://docs.google.com/document/d/1r_bn6tZjIbZ84o0QqMfSueBHQjR0MRWCGPnQoH6w45c/edit) - it allows you to establish expectations regarding your work, more details can be found [here](https://gitlab.com/gitlab-data/analytics/-/issues/9741). Recommended to use on 1:1 calls with your manager and team members you may work with. 
-        
-
-
+- [Ways of working (WoW) template](https://docs.google.com/document/d/1r_bn6tZjIbZ84o0QqMfSueBHQjR0MRWCGPnQoH6w45c/edit) - it allows you to establish expectations regarding your work, more details can be found [here](https://gitlab.com/gitlab-data/analytics/-/issues/9741). Recommended to use on 1:1 calls with your manager and team members you may work with.

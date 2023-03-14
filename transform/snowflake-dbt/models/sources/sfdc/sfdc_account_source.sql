@@ -227,6 +227,11 @@ renamed AS (
     gs_health_ci__c AS gs_health_ci,
     gs_health_scm__c AS gs_health_scm,
 
+    -- Risk Fields
+    risk_impact__c AS risk_impact,
+    risk_reason__c AS risk_reason,
+    last_timeline_at_risk_update__c AS last_timeline_at_risk_update,
+
     -- metadata
     createdbyid AS created_by_id,
     createddate AS created_date,
