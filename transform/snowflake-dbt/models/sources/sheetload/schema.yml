@@ -29,6 +29,8 @@ models:
     - name: invoice_period
       tests:
         - not_null
+- name: sheetload_bizible_to_pathfactory_mapping_source
+  description: Mapping file for bizible URLs to PathFactory content types. 
 - name: sheetload_books_source
   description: Book rating data used in @lisvinueza's data internship program.
 - name: sheetload_cert_product_geo_dashboard_source
@@ -329,17 +331,6 @@ models:
       tests:
       - not_null
       - unique
-- name: sheetload_procurement_cost_savings_source
-  description: This is the source of the KPI - Deliver Quantified Savings of greater than three million over a rolling 12 month period
-  columns:
-    - name: calendar_month
-      tests:
-      - not_null
-      - unique
-    - name: savings
-    - name: rolling_12_month_savings_without_audit
-    - name: rolling_12_month_savings_with_audit
-    - name: target
 - name: sheetload_product_group_mappings_source
   description: This is the mapping between group, stage, and section.
   columns:

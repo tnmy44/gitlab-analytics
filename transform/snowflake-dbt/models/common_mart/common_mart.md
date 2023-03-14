@@ -1,6 +1,6 @@
 {% docs mart_event_valid %}
 
-**Description:** Enriched GitLab.com usage event data for valid events. This is an enhanced version of `fct_event_valid`
+**Description:** Enriched GitLab.com usage event data for valid events. This is an enhanced version of `fct_event_valid`, filtered to the last 24 months
 - [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.
 - This data is enriched with additional user, namespace, and project attributes for ease of analysis
 
@@ -12,7 +12,7 @@
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
+- Rolling 24 months of data
 
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
@@ -360,7 +360,7 @@
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
+- `Inherited` - Rolling 36 months of data
 - `Inherited` - Exclude events not associated with a namespace (ex: 'users_created')
 
 **Business Logic in this Model:**
