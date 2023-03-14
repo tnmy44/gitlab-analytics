@@ -56,11 +56,11 @@
       ROW_NUMBER() OVER( PARTITION BY email_hash ORDER BY person_order_type) AS person_order_type_number
     FROM person_base
     FULL JOIN upa_base
-      ON person_base.dim_crm_account_id=upa_base.dim_crm_account_id
+      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     FULL JOIN opportunity_base
-      ON upa_base.dim_parent_crm_account_id=opportunity_base.dim_parent_crm_account_id
+      ON upa_base.dim_parent_crm_account_id = opportunity_base.dim_parent_crm_account_id
 
 ), person_order_type_final AS (
 
@@ -116,15 +116,15 @@
       opp.parent_crm_account_demographics_territory
     FROM person_base
     INNER JOIN dim_crm_person
-      ON person_base.dim_crm_person_id=dim_crm_person.dim_crm_person_id
+      ON person_base.dim_crm_person_id = dim_crm_person.dim_crm_person_id
     LEFT JOIN upa_base
-    ON person_base.dim_crm_account_id=upa_base.dim_crm_account_id
+    ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     FULL JOIN mart_crm_opportunity_stamped_hierarchy_hist opp
-      ON upa_base.dim_parent_crm_account_id=opp.dim_parent_crm_account_id
+      ON upa_base.dim_parent_crm_account_id = opp.dim_parent_crm_account_id
     LEFT JOIN person_order_type_final
-      ON person_base.email_hash=person_order_type_final.email_hash
+      ON person_base.email_hash = person_order_type_final.email_hash
   
   ), cohort_base_with_btp AS (
 
@@ -143,7 +143,7 @@
       WHEN cohort_base.person_order_type IS null THEN cohort_base.opp_order_type
       ELSE person_order_type
     END AS person_order_type,
-    cohort_base.lead_source,    
+    cohort_base.lead_source,
     cohort_base.email_domain_type,
     cohort_base.is_mql,
     cohort_base.account_demographics_sales_segment,
@@ -211,7 +211,7 @@
     SUM(mart_crm_touchpoint.count_net_new_accepted) AS new_accepted_sum
   FROM cohort_base
   LEFT JOIN mart_crm_touchpoint
-    ON mart_crm_touchpoint.email_hash=cohort_base.email_hash
+    ON mart_crm_touchpoint.email_hash = cohort_base.email_hash
   {{ dbt_utils.group_by(n=62) }}
     
 ), cohort_base_with_batp AS (
@@ -435,7 +435,7 @@
     END AS won_linear_net_arr
   FROM cohort_base
   LEFT JOIN mart_crm_attribution_touchpoint
-    ON cohort_base.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
+    ON cohort_base.dim_crm_opportunity_id = mart_crm_attribution_touchpoint.dim_crm_opportunity_id
   {{ dbt_utils.group_by(n=70) }}
     
 ), cohort_base_with_touchpoints AS (
@@ -732,18 +732,18 @@
     bizible_date.first_day_of_week               AS bizible_date_range_week,
     bizible_date.date_id                         AS bizible_date_range_id
   FROM cohort_base_with_touchpoints
-  LEFT JOIN dim_date inquiry_date
-    ON cohort_base_with_touchpoints.true_inquiry_date=dim_date.date_day
-  LEFT JOIN dim_date mql_date
-    ON cohort_base_with_touchpoints.mql_date_first_pt=dim_date.date_day
-  LEFT JOIN dim_date opp_create_date
-    ON cohort_base_with_touchpoints.opp_created_date=dim_date.date_day
-  LEFT JOIN dim_date sao_date
-    ON cohort_base_with_touchpoints.sales_accepted_date=dim_date.date_day
-  LEFT JOIN dim_date closed_date
-    ON cohort_base_with_touchpoints.close_date=dim_date.date_day
-  LEFT JOIN dim_date bizible_date
-    ON cohort_base_with_touchpoints.bizible_touchpoint_date=dim_date.date_day
+  LEFT JOIN dim_date AS inquiry_date
+    ON cohort_base_with_touchpoints.true_inquiry_date = inquiry_date.date_day
+  LEFT JOIN dim_date AS mql_date
+    ON cohort_base_with_touchpoints.mql_date_first_pt = mql_date.date_day
+  LEFT JOIN dim_date AS opp_create_date
+    ON cohort_base_with_touchpoints.opp_created_date = opp_create_date.date_day
+  LEFT JOIN dim_date AS sao_date
+    ON cohort_base_with_touchpoints.sales_accepted_date = sao_date.date_day
+  LEFT JOIN dim_date AS closed_date
+    ON cohort_base_with_touchpoints.close_date = closed_date.date_day
+  LEFT JOIN dim_date AS bizible_date
+    ON cohort_base_with_touchpoints.bizible_touchpoint_date = bizible_date.date_day
     
 ), final AS (
 
