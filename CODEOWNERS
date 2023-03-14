@@ -119,8 +119,8 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
 /transform/snowflake-dbt/models/sources/saas_usage_ping     @vedprakash @rbacovic @jjstark
 
-/transform/snowflake-dbt/models/sources/sfdc/               @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks
-/transform/snowflake-dbt/models/legacy/sfdc/                @michellecooper @jeanpeguero @iweeks
+/transform/snowflake-dbt/models/sources/sfdc/               @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks @chrissharp
+/transform/snowflake-dbt/models/legacy/sfdc/                @michellecooper @jeanpeguero @iweeks @chrissharp
 
 /transform/snowflake-dbt/models/sources/snowflake/          @jjstark @paul_armstrong @pempey @iweeks
 /transform/snowflake-dbt/models/legacy/snowflake/           @pempey @iweeks
