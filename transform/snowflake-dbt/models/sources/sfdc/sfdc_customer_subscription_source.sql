@@ -27,7 +27,7 @@ WITH source AS (
       id                                        AS customer_subscription_id,
       isdeleted                                 AS is_deleted,
       lastmodifiedbyid                          AS last_modified_by_id,
-      lastmodifieddate                          AS lastmodifieddate,
+      lastmodifieddate                          AS last_modified_date,
       license_usage_report_date__c              AS license_usage_report_date,
       linkage_problem__c                        AS is_linkage_problem,
       name                                      AS name,
