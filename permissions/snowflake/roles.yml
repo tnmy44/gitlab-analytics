@@ -3294,20 +3294,20 @@ roles:
 
     - jpeguero:
         member_of:
+            - analyst_finance
             - analyst_marketing
             - analyst_sales
             - bamboohr
             - customers_db
-            - netsuite
-            - static_admin
             - data_team_analyst
-            - analyst_finance
+            - data_science_sensitive
+            - data_science
             - gainsight
+            - netsuite
             - restricted_safe
             - snowplow
+            - static_admin
             - workday
-            - data_science
-            - data_science_sensitive
         warehouses:
             - dev_xs
             - dev_l
