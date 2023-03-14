@@ -275,7 +275,7 @@ def get_upload_file_name(
     filetype: str = "parquet",
     compression: str = "gzip",
     prefix_template: str = "{table}/{initial_load_prefix}/",
-    filename_template: str = "{timestamp}_{table}_{version}.{filetype}.{compression}",
+    filename_template: str = "{timestamp}_{table}{version}.{filetype}.{compression}",
 ) -> str:
     """Generate a unique and descriptive filename for uploading data to cloud storage.
 
@@ -403,6 +403,8 @@ def chunk_and_upload(
     target_engine.dispose()
     """
     source_engine.dispose()
+    # need to return in case it was first set here
+    return initial_load_start_date
 
 
 def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFrame:
