@@ -392,7 +392,8 @@ def chunk_and_upload(
                 logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
                 # TODO: allow us 'mock' a mid backfill
                 if last_extracted_id > 2000000 and last_extracted_id < 2700000:
-                    return
+                    import sys
+                    sys.exit()
     """
     if rows_uploaded > 0:
         trigger_snowflake_upload(
