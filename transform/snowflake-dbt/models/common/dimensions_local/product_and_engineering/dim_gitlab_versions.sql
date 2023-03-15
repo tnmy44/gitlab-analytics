@@ -34,7 +34,7 @@ WITH versions AS (
 , final AS (
 
     SELECT
-      version_id,
+      version_id as dim_version_id,
       version,
       major_version,
       minor_version,
