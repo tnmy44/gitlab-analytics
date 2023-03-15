@@ -2873,8 +2873,8 @@ models:
         description: '{{ doc("data_source_ping_metric") }}'
       - name: description
         description: A description of the metric
-      - name: product_category
-        description: '{{ doc("product_category_ping_metric") }}'
+      - name: instrumentation_class
+        description: '{{ doc("instrumentation_class_ping_metric") }}'
       - name: group_name
         description: '{{ doc("group_name") }}'
       - name: section_name
@@ -2932,8 +2932,8 @@ models:
         description: '{{ doc("data_source_ping_metric") }}'
       - name: description
         description: A description of the metric
-      - name: product_category
-        description: '{{ doc("product_category_ping_metric") }}'
+      - name: instrumentation_class
+        description: '{{ doc("instrumentation_class_ping_metric") }}'
       - name: group_name
         description: '{{ doc("group_name") }}'
       - name: section_name
