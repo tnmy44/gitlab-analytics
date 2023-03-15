@@ -72,8 +72,8 @@ qualtrics_operator = KubernetesPodOperator(
             "QUALTRICS_DATA_CENTER": "eu",
         },
     },
-    affinity=get_affinity(False),
-    tolerations=get_toleration(False),
+    affinity=get_affinity(False, False),
+    tolerations=get_toleration(False, False),
     arguments=[qualtrics_extract_command],
     dag=dag,
 )

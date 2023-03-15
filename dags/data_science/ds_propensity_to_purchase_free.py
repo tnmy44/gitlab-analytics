@@ -98,7 +98,7 @@ KubernetesPodOperator(
     ],
     env_vars=pod_env_vars,
     arguments=[ptpf_scoring_command],
-    affinity=get_affinity(True),
-    tolerations=get_toleration(True),
+    affinity=get_affinity(False, True),
+    tolerations=get_toleration(False, True),
     dag=dag,
 )

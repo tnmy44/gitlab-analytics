@@ -69,8 +69,8 @@ zuora_data_query_extract_extract = KubernetesPodOperator(
         ZUORA_API_CLIENT_SECRET,
     ],
     env_vars=pod_env_vars,
-    affinity=get_affinity(False),
-    tolerations=get_toleration(False),
+    affinity=get_affinity(False, False),
+    tolerations=get_toleration(False, False),
     arguments=[zuora_data_query_extract_cmd],
     dag=dag,
 )

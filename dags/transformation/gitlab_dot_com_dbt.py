@@ -126,8 +126,8 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
         secrets=dbt_secrets,
         env_vars=gitlab_pod_env_vars,
         arguments=[snapshot_cmd],
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity(False, False),
+        tolerations=get_toleration(False, False),
     )
 
     # Run de dupe / rename /scd model
@@ -147,8 +147,8 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
         secrets=dbt_secrets,
         env_vars=gitlab_pod_env_vars,
         arguments=[model_run_cmd],
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity(False, False),
+        tolerations=get_toleration(False, False),
     )
 
     # Test all source models
@@ -167,8 +167,8 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
         secrets=dbt_secrets,
         env_vars=gitlab_pod_env_vars,
         arguments=[model_test_cmd],
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity(False, False),
+        tolerations=get_toleration(False, False),
     )
 
     return snapshot_task, dedupe_dbt_model_task, source_schema_model_test

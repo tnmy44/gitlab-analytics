@@ -105,8 +105,8 @@ for sheet in sheets:
             SNOWFLAKE_LOAD_PASSWORD,
         ],
         env_vars=pod_env_vars,
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity(False, False),
+        tolerations=get_toleration(False, False),
         arguments=[container_cmd],
         dag=dag,
     )
@@ -148,8 +148,8 @@ dbt_sheetload = KubernetesPodOperator(
         SNOWFLAKE_STATIC_DATABASE,
     ],
     env_vars=pod_env_vars,
-    affinity=get_affinity(False),
-    tolerations=get_toleration(False),
+    affinity=get_affinity(False, False),
+    tolerations=get_toleration(False, False),
     arguments=[dbt_sheetload_cmd],
     dag=dag,
 )

@@ -90,8 +90,8 @@ for endpoint_class in endpoint_classes:
                 ".int_timestamp }}"
             ),
         },
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity(False, False),
+        tolerations=get_toleration(False, False),
         arguments=[extract_command],
         dag=dag,
         trigger_rule=TriggerRule.ALL_DONE,  # run task regardless of upstream

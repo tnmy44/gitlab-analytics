@@ -83,8 +83,8 @@ for notebook, task_name in notebooks.items():
             GITLAB_ANALYTICS_PRIVATE_TOKEN,
         ],
         env_vars=pod_env_vars,
-        affinity=get_affinity(True),
-        tolerations=get_toleration(True),
+        affinity=get_affinity(True, False),
+        tolerations=get_toleration(True, False),
         arguments=[container_cmd_load],
         dag=dag,
     )

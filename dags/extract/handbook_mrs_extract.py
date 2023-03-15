@@ -74,8 +74,8 @@ part_of_product_mrs_run = KubernetesPodOperator(
             "END": "{{ next_execution_date.isoformat() }}",
         },
     },  # merge the dictionaries into one
-    affinity=get_affinity(False),
-    tolerations=get_toleration(False),
+    affinity=get_affinity(False, False),
+    tolerations=get_toleration(False, False),
     arguments=[container_cmd],
     dag=dag,
 )

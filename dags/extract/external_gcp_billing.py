@@ -136,8 +136,8 @@ for export in stream["exports"]:
             **pod_env_vars,
             "EXPORT_DATE": "{{ yesterday_ds }}",
         },
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity(False, False),
+        tolerations=get_toleration(False, False),
         arguments=[billing_extract_command],
         dag=dag,
     )
