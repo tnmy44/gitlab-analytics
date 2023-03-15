@@ -39,7 +39,7 @@ from sqlalchemy.schema import CreateTable, DropTable
 
 SCHEMA = "tap_postgres"
 BUCKET_NAME = "saas-pipeline-backfills"
-DEFAULT_CHUNK_SIZE = 1_500_000
+DEFAULT_CHUNK_SIZE = 3_000_000
 
 
 def get_gcs_scoped_credentials():
@@ -392,7 +392,7 @@ def chunk_and_upload(
 
                 logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
                 # TODO: allow us 'mock' a mid backfill
-                if last_extracted_id > 3000000 and last_extracted_id < 3700000:
+                if last_extracted_id > 9000000 and last_extracted_id < 9900000:
                     import sys
                     sys.exit()
     """

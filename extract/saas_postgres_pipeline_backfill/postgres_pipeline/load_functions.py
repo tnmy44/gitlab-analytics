@@ -271,7 +271,6 @@ def load_ids(
     metadata_engine: Engine,
     start_source_id: int,
     initial_load_start_date: datetime,
-    id_range: int = 1_500_000,
     backfill: bool = True,
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
@@ -290,7 +289,6 @@ def load_ids(
         table_name,
         start_source_id,
         max_source_id,
-        id_range=id_range,
     )
 
     # Iterate through the generated queries
