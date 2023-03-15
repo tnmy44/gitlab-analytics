@@ -265,7 +265,7 @@ for source_name, config in config_dict.items():
         """
 
         incremental_backfill_dag = DAG(
-            f"{config['dag_name']}_db_incremental_backfillv4",
+            f"{config['dag_name']}_db_incremental_backfillv5",
             default_args=incremental_backfill_dag_args,
             schedule_interval=config["incremental_backfill_interval"],
             concurrency=1,
@@ -277,13 +277,17 @@ for source_name, config in config_dict.items():
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             if config["dag_name"] == "el_gitlab_com_new":
+                table_list = ['alert_management_http_integrations']
+                '''
                 table_list = [
                     "alert_management_http_integrations",
                     "epics",
                     "container_expiration_policies",
                 ]
+                '''
             elif config["dag_name"] == "el_gitlab_com_ci_new":
-                table_list = ["ci_runners", "ci_trigger_requests"]
+                # table_list = ["ci_runners", "ci_trigger_requests"]
+                table_list = ['ci_secure_files']
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "backfill"
