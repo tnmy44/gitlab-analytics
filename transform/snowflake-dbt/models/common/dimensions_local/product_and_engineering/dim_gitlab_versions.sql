@@ -1,7 +1,3 @@
-{{config({
-    "schema": "legacy"
-  })
-}}
 
 WITH versions AS (
 
@@ -61,6 +57,6 @@ WITH versions AS (
     created_by="@derekatwood",
     updated_by="@snalamaru",
     created_date="2020-08-06",
-    updated_date="2023-03-08"
+    updated_date="2023-03-15"
 ) }}
 
