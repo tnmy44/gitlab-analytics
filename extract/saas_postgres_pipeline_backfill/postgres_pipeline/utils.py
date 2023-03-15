@@ -39,6 +39,7 @@ from sqlalchemy.schema import CreateTable, DropTable
 
 SCHEMA = "tap_postgres"
 BUCKET_NAME = "saas-pipeline-backfills"
+DEFAULT_CHUNK_SIZE = 1_500_000
 
 
 def get_gcs_scoped_credentials():
@@ -152,7 +153,7 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
 
 
 def query_results_generator(
-    query: str, engine: Engine, chunksize: int = 750_000
+    query: str, engine: Engine, chunksize: int = DEFAULT_CHUNK_SIZE
 ) -> pd.DataFrame:
     """
     Use pandas to run a sql query and load it into a dataframe.
@@ -391,7 +392,7 @@ def chunk_and_upload(
 
                 logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
                 # TODO: allow us 'mock' a mid backfill
-                if last_extracted_id > 2000000 and last_extracted_id < 2700000:
+                if last_extracted_id > 3000000 and last_extracted_id < 3700000:
                     import sys
                     sys.exit()
     """
@@ -419,13 +420,13 @@ def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFra
     cur.copy_expert(copy_sql, tmp_file)
     tmp_file.seek(0)
     logging.info("Reading csv")
-    df = pd.read_csv(tmp_file, chunksize=750_000, parse_dates=True, low_memory=False)
+    df = pd.read_csv(tmp_file, chunksize=DEFAULT_CHUNK_SIZE, parse_dates=True, low_memory=False)
     logging.info("CSV read")
     return df
 
 
 def range_generator(
-    start: int, stop: int, step: int = 750_000
+    start: int, stop: int, step: int = DEFAULT_CHUNK_SIZE
 ) -> Generator[Tuple[int, ...], None, None]:
     """
     Yields a list that contains the starting and ending number for a given window.
@@ -635,7 +636,7 @@ def id_query_generator(
     target_table: str,
     min_source_id: int,
     max_source_id: int,
-    id_range: int = 750_000,
+    id_range: int = DEFAULT_CHUNK_SIZE,
 ) -> Generator[str, Any, None]:
     """
     This function generates a list of queries based on the max ID in the target table.
