@@ -39,7 +39,7 @@ from sqlalchemy.schema import CreateTable, DropTable
 
 SCHEMA = "tap_postgres"
 BUCKET_NAME = "saas-pipeline-backfills"
-DEFAULT_CHUNK_SIZE = 3_000_000
+DEFAULT_CHUNK_SIZE = 5_000_000
 
 
 def get_gcs_scoped_credentials():
@@ -246,6 +246,7 @@ def write_backfill_metadata(
 ):
     insert_query = f"""
         INSERT INTO saas_db_metadata.backfill_metadata (
+            database_name,
             table_name,
             initial_load_start_date,
             upload_date,
@@ -352,14 +353,6 @@ def chunk_and_upload(
 
         for idx, chunk_df in enumerate(iter_csv):
             logging.info(f"\nchunk_df: {chunk_df}")
-            """
-            if backfill:
-                schema_types = transform_source_types_to_snowflake_types(
-                    chunk_df, source_table, source_engine
-                )
-                seed_table(advanced_metadata, schema_types, target_table, target_engine)
-                backfill = False
-            """
 
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
@@ -394,16 +387,9 @@ def chunk_and_upload(
                 # TODO: allow us 'mock' a mid backfill
                 if last_extracted_id > 9000000 and last_extracted_id < 9900000:
                     import sys
-                    sys.exit()
-    """
-    if rows_uploaded > 0:
-        trigger_snowflake_upload(
-            target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
-        )
-        logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
 
-    target_engine.dispose()
-    """
+                    sys.exit()
+
     source_engine.dispose()
     # need to return in case it was first set here
     return initial_load_start_date
@@ -420,7 +406,9 @@ def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFra
     cur.copy_expert(copy_sql, tmp_file)
     tmp_file.seek(0)
     logging.info("Reading csv")
-    df = pd.read_csv(tmp_file, chunksize=DEFAULT_CHUNK_SIZE, parse_dates=True, low_memory=False)
+    df = pd.read_csv(
+        tmp_file, chunksize=DEFAULT_CHUNK_SIZE, parse_dates=True, low_memory=False
+    )
     logging.info("CSV read")
     return df
 
@@ -639,43 +627,7 @@ def id_query_generator(
     id_range: int = DEFAULT_CHUNK_SIZE,
 ) -> Generator[str, Any, None]:
     """
-    This function generates a list of queries based on the max ID in the target table.
-
-    Gets the diff between the IDs that exist in the DB vs the DW, generates queries for any rows
-    with IDs that are missing from the DW.
-
-    i.e. if the table in Snowflake has a max id of 2000, but postgres has a max id of 5000,
-    it will return a list of queries that load chunks of IDs until it has the same max id.
-    """
-    """
-    # Get the max ID from the target DB
-    logging.info(f"Getting max primary key from target_table: {target_table}")
-    max_target_id_query = f"SELECT MAX({primary_key}) as id FROM {target_table}"
-    # If the table doesn't exist it will throw an error, ignore it and set a default ID
-    if snowflake_engine.has_table(target_table):
-        max_target_id_results = query_results_generator(
-            max_target_id_query, snowflake_engine
-        )
-        # Grab the max primary key, or if the table is empty default to 0
-        max_target_id = next(max_target_id_results)[primary_key].tolist()[0] or 0
-    else:
-        max_target_id = 0
-    logging.info(f"Target Max ID: {max_target_id}")
-
-    # Get the min ID from the source DB
-    logging.info(f"Getting min ID from source_table: {source_table}")
-    min_source_id_query = (
-        f"SELECT MIN({primary_key}) as {primary_key} FROM {source_table}"
-    )
-    try:
-        min_source_id_results = query_results_generator(
-            min_source_id_query, postgres_engine
-        )
-        min_source_id = next(min_source_id_results)[primary_key].tolist()[0]
-    except sqlalchemy.exc.ProgrammingError as e:
-        logging.exception(e)
-        sys.exit(1)
-    logging.info(f"Source Min ID: {min_source_id}")
+    Yields a new query containing incrementing min/max id's based on the chunk size.
     """
 
     # Generate the range pairs based on the max source id and the

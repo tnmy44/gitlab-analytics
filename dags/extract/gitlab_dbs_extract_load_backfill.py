@@ -91,7 +91,25 @@ config_dict = {
         "task_name": "gitlab-com",
         "description": "This DAG does Incremental extract & load  of gitlab.com database(Postgres) to snowflake",
         "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com database(Postgres) to snowflake",
-    }
+    },
+    "el_gitlab_com_ci": {
+        "cloudsql_instance_name": None,
+        "dag_name": "el_gitlab_com_ci_new",
+        "env_vars": {"HOURS": "96"},
+        "extract_schedule_interval": "30 2,14 */1 * *",
+        "incremental_backfill_interval": "30 2 * * *",
+        "secrets": [
+            GITLAB_COM_CI_DB_NAME,
+            GITLAB_COM_CI_DB_HOST,
+            GITLAB_COM_CI_DB_PASS,
+            GITLAB_COM_CI_DB_PORT,
+            GITLAB_COM_CI_DB_USER,
+        ],
+        "start_date": datetime(2019, 5, 30),
+        "task_name": "gitlab-com",
+        "description": "This DAG does Incremental extract & load of gitlab.com CI* database(Postgres) to snowflake",
+        "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com CI* database(Postgres) to snowflake",
+    },
 }
 
 
@@ -258,7 +276,14 @@ for source_name, config in config_dict.items():
             file_path = f"analytics/extract/saas_postgres_pipeline_backfill/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
-            table_list = ["alert_management_http_integrations", "epics", "container_expiration_policies"]
+            if config["dag_name"] == "el_gitlab_com_new":
+                table_list = [
+                    "alert_management_http_integrations",
+                    "epics",
+                    "container_expiration_policies",
+                ]
+            elif config["dag_name"] == "el_gitlab_com_ci_new":
+                table_list = ["ci_runners", "ci_trigger_requests"]
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "backfill"
