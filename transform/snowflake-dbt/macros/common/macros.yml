@@ -155,3 +155,10 @@ macros:
         type: variant
       - name: ping_created_at
         type: timestamp
+  - name: partner_category
+    description: ' {{ doc("partner_category") }}'
+    arguments:
+      - name: sales_qualified_source
+        type: string
+      - name: fulfillment_partner_name
+        type: string

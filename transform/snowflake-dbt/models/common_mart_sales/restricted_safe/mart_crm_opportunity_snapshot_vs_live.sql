@@ -254,6 +254,8 @@
     mart_crm_opportunity.crm_account_name AS crm_account_name_live,
     mart_crm_opportunity_daily_snapshot.parent_crm_account_name AS parent_crm_account_name_snapshot,
     mart_crm_opportunity.parent_crm_account_name AS parent_crm_account_name_live,
+    mart_crm_opportunity_daily_snapshot.account_demographics_business_unit AS account_demographics_business_unit_snapshot,
+    mart_crm_opportunity.account_demographics_business_unit AS account_demographics_business_unit_live,
     mart_crm_opportunity_daily_snapshot.account_demographics_segment AS account_demographics_segment_snapshot,
     mart_crm_opportunity.account_demographics_segment AS account_demographics_segment_live,
     mart_crm_opportunity_daily_snapshot.account_demographics_geo AS account_demographics_geo_snapshot,
@@ -262,6 +264,8 @@
     mart_crm_opportunity.account_demographics_region AS account_demographics_region_live,
     mart_crm_opportunity_daily_snapshot.account_demographics_area AS account_demographics_area_snapshot,
     mart_crm_opportunity.account_demographics_area AS account_demographics_area_live,
+    mart_crm_opportunity_daily_snapshot.account_demographics_role_type AS account_demographics_role_type_snapshot,
+    mart_crm_opportunity.account_demographics_role_type AS account_demographics_role_type_live,
     mart_crm_opportunity_daily_snapshot.account_demographics_territory AS account_demographics_territory_snapshot,
     mart_crm_opportunity.account_demographics_territory AS account_demographics_territory_live,
     mart_crm_opportunity_daily_snapshot.parent_crm_account_gtm_strategy AS parent_crm_account_gtm_strategy_snapshot,
@@ -884,5 +888,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-08-08",
-    updated_date="2022-12-28"
+    updated_date="2023-03-10"
 ) }}

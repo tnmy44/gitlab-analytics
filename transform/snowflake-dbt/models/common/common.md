@@ -130,12 +130,7 @@ The grain of this table is `DIM_CRM_USER_SNAPSHOT_ID` which is a combination of 
 
 {% enddocs %}
 
-{% docs dim_crm_user_hierarchy_live %}
-Dimension table representing the current state of the sales hierarchy, including the user segment, geo, region, and area as it is in the crm user object.
-
-{% enddocs %}
-
-{% docs dim_crm_user_hierarchy_stamped %}
+{% docs dim_crm_user_hierarchy %}
 Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
 
 {% enddocs %}
