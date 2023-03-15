@@ -15,8 +15,7 @@ namespaces_child as (
 
     SELECT * FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
 
-)
-
+),
 
 storage AS (
   SELECT

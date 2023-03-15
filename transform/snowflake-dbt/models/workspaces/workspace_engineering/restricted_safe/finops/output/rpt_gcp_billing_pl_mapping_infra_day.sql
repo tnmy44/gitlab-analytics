@@ -14,7 +14,6 @@ WITH service_base AS (
 infra_allocation AS (
 
   SELECT * FROM {{ ref('infralabel_pl') }}
-  UNPIVOT(allocation FOR type IN (free, internal, paid))
 
 ),
 
@@ -27,7 +26,7 @@ sandbox AS (
 project_pl AS (
 
   SELECT * FROM {{ ref('projects_pl') }}
-  UNPIVOT(allocation FOR type IN (free, internal, paid))
+
 
 ),
 
