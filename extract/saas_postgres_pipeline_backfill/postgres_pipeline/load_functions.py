@@ -294,7 +294,6 @@ def load_ids(
         max_source_id,
     )
 
-    print(f'\n load_ids(): source_database: {source_database}')
     # Iterate through the generated queries
     for query in id_queries:
         filtered_query = f"{query} {additional_filtering} ORDER BY {primary_key}"

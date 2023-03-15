@@ -325,7 +325,7 @@ def chunk_and_upload(
     query: str,
     primary_key: str,
     source_engine: Engine,
-    source_database: Engine,
+    source_database: str,
     target_engine: Engine,
     metadata_engine: Engine,
     target_table: str,
@@ -351,7 +351,6 @@ def chunk_and_upload(
     )
     rows_uploaded = 0
 
-    print(f'\n chunk_and_upload(): source_database: {source_database}')
     with tempfile.TemporaryFile() as tmpfile:
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
 
