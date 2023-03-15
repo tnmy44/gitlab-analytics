@@ -75,6 +75,7 @@ class PostgresPipelineTable:
         return load_functions.sync_incremental_ids(
             source_engine,
             target_engine,
+            self.import_db,
             self.source_table_name,
             self.table_dict,
             target_table,

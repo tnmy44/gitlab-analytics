@@ -235,7 +235,8 @@ def seed_table(
 
 
 def write_backfill_metadata(
-    metadata_engine,
+    metadata_engine: Engine,
+    database_name: str,
     table_name: str,
     initial_load_start_date: datetime,
     upload_date: datetime,
@@ -256,6 +257,7 @@ def write_backfill_metadata(
             is_backfill_completed
         )
         VALUES (
+            '{database_name}',
             '{table_name}',
             '{initial_load_start_date}',
             '{upload_date}',
@@ -323,6 +325,7 @@ def chunk_and_upload(
     query: str,
     primary_key: str,
     source_engine: Engine,
+    source_database: Engine,
     target_engine: Engine,
     metadata_engine: Engine,
     target_table: str,
@@ -374,6 +377,7 @@ def chunk_and_upload(
                 is_backfill_completed = last_extracted_id >= max_source_id
                 write_backfill_metadata(
                     metadata_engine,
+                    source_database,
                     source_table,
                     initial_load_start_date,
                     upload_date,
