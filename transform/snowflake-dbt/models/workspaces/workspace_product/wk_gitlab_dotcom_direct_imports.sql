@@ -17,7 +17,7 @@ WITH final AS (
     LEFT JOIN 
     {{ ref( 'gitlab_dotcom_bulk_imports_dedupe_source') }} bi ON e.bulk_import_id = bi.id
     GROUP BY 
-    1,2,3
+    1,2,3,4
     )
 
 
