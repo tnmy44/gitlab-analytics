@@ -376,7 +376,7 @@
 
 {% docs mart_behavior_structured_event %}
 
-**Description:** Enriched Snowplow table for the analysis of structured events. This is an enhanved version of `fct_behavior_structured_event`. 
+**Description:** Enriched Snowplow table for the analysis of structured events. This is an enhanced version of `fct_behavior_structured_event`. 
 
 **Data Grain:** behavior_structured_event_pk
 
