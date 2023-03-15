@@ -4,6 +4,18 @@ WITH ns_type AS (
 
 ),
 
+projects as (SELECT * FROM {{ ref('gitlab_dotcom_projects_xf') }}),
+
+project_statistics as (
+
+    SELECT * FROM {{ ref('gitlab_dotcom_project_statistic_snapshots_daily') }} 
+),
+
+namespaces_child as (
+
+    SELECT * FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
+
+)
 
 
 storage AS (
@@ -12,13 +24,13 @@ storage AS (
     namespaces_child.namespace_ultimate_parent_id                       AS namespace_id,
     SUM(COALESCE(project_statistics.repository_size, 0) / POW(1024, 3)) AS repo_size_gb
   FROM
-    {{ ref('gitlab_dotcom_projects_xf') }} projects
+     projects
   LEFT JOIN
-    {{ ref('gitlab_dotcom_project_statistic_snapshots_daily') }} project_statistics
+    project_statistics
     ON
       projects.project_id = project_statistics.project_id
   INNER JOIN
-    {{ ref('gitlab_dotcom_namespaces_xf') }} namespaces_child
+    namespaces_child
     ON
       projects.namespace_id = namespaces_child.namespace_id
   -- WHERE
