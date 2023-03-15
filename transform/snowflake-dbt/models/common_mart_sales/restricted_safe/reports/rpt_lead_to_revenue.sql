@@ -84,7 +84,9 @@
       person_base.status,
       person_base.lead_source,
       person_base.dim_crm_person_id,
-      person_base.dim_crm_account_id,
+      CASE
+        WHEN person_base.dim_crm_account_id IS NULL THEN opp.dim_crm_account_id
+      END AS dim_crm_account_id,
       person_base.is_mql,
       dim_crm_person.sfdc_record_id,
       person_base.account_demographics_sales_segment,
