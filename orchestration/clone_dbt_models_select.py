@@ -150,7 +150,7 @@ class DbtModelClone:
 
         return output_query
 
-    def clone_dbt_models(self, model_input: List[str]):
+    def clone_dbt_models(self, model_input: List[str], is_local: bool = False):
         """
 
         :param model_input:
@@ -158,7 +158,6 @@ class DbtModelClone:
         """
 
         sorted_list = self.clean_dbt_input(model_input)
-
         for i in sorted_list:
             database_name = i.get("database").upper()
             schema_name = i.get("schema").upper()
@@ -237,7 +236,8 @@ class DbtModelClone:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("INPUT", nargs="+")
+    parser.add_argument("IS_LOCAL")
     args = parser.parse_args()
 
     cloner = DbtModelClone(env.copy())
-    cloner.clone_dbt_models(args.INPUT)
+    cloner.clone_dbt_models(args.INPUT, args.IS_LOCAL)
