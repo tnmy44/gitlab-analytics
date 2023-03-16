@@ -3593,6 +3593,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - lstahlman:
+        member_of:
+            - analyst_core
+            - data_team_analyst
+        warehouses:
+            - dev_xs
 
     - lvinueza:
         member_of:
@@ -4979,6 +4985,11 @@ users:
         can_login: yes
         member_of:
             - lmai
+
+    - lstahlman:
+        can_login: yes
+        member_of:
+            - lstahlman
 
     - lvinueza:
         can_login: yes
