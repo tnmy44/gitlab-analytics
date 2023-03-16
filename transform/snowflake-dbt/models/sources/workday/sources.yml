@@ -47,3 +47,6 @@ sources:
 
       - name: supervisory_organization
         description: '{{ doc("supervisory_organization") }}'
+
+      - name: performance_growth_potential
+        description: '{{ doc("performance_growth_potential") }}'

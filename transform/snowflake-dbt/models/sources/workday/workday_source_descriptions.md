@@ -225,6 +225,15 @@ A custom report built in Workday for the creation of the Supervisory Organizatio
 
 {% enddocs %}
 
+
+{% docs performance_growth_potential %}
+
+A custom report built in Workday for the creation of the dim_team_member model. The data is extracted using Fivetran and loaded into Snowflake, with a sync frequency of 12 hours. The grain of the table is one row per Workday ID, which is the unique ID for the business process. 
+
+
+
+{% enddocs %}
+
 ## Columns
 
 {% docs workday_employee_id %}
