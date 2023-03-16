@@ -14,7 +14,7 @@ WITH sfdc_zqu_quote_source AS (
       zqu__primary                                  AS is_primary_quote,
       quote_entity,
       zqu__start_date                               AS quote_start_date,
-      zqu__subscriptiontype                         AS subscription_type
+      zqu__subscriptiontype                         AS subscription_action_type
     FROM sfdc_zqu_quote_source
 
 )

@@ -10,7 +10,7 @@ WITH quote AS (
       quote_name,
       quote_status,
       quote_entity,
-      subscription_type,
+      subscription_action_type,
       is_primary_quote,
       quote_start_date
     FROM {{ ref('prep_quote') }}
