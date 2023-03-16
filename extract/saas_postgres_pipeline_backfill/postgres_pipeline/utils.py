@@ -1,3 +1,4 @@
+""" Util functions """
 import logging
 import os
 import sys
@@ -7,8 +8,7 @@ import gcsfs
 import pyarrow.parquet as pq
 
 from datetime import datetime, timedelta
-from time import time
-from typing import Dict, List, Generator, Any, Tuple
+from typing import Dict, List, Generator, Any, Tuple, Optional
 
 from gitlabdata.orchestration_utils import (
     append_to_xcom_file,
@@ -146,7 +146,7 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
     Read a yaml manifest file into a dictionary and return it.
     """
 
-    with open(file_path, "r") as file:
+    with open(file_path, "r", encoding="UTF-8") as file:
         manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
 
     return manifest_dict
@@ -246,6 +246,8 @@ def write_backfill_metadata(
     is_backfill_completed: bool,
     chunk_row_count: int,
 ):
+    """Write status of backfill to postgres"""
+
     insert_query = f"""
         INSERT INTO saas_db_metadata.backfill_metadata (
             database_name,
@@ -392,11 +394,6 @@ def chunk_and_upload(
                 )
 
                 logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
-                # TODO: allow us 'mock' a mid backfill
-                if last_extracted_id > 9000000 and last_extracted_id < 9900000:
-                    import sys
-
-                    sys.exit()
 
     source_engine.dispose()
     # need to return in case it was first set here
@@ -446,7 +443,9 @@ def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
     return len(results) == 0
 
 
-def query_backfill_status(metadata_engine: Engine, source_table: str) -> List[Tuple[Any, Any, Any, Any]]:
+def query_backfill_status(
+    metadata_engine: Engine, source_table: str
+) -> List[Tuple[Any, Any, Any, Any]]:
     """
     Check if backfill table exists in backfill metadata table.
     If the table doesn't exist, then it's a 'new' table
@@ -465,7 +464,9 @@ def query_backfill_status(metadata_engine: Engine, source_table: str) -> List[Tu
     return results
 
 
-def is_resume_backfill(metadata_engine: Engine, source_table: str):
+def is_resume_backfill(
+    metadata_engine: Engine, source_table: str
+) -> Tuple[bool, int, Optional[Any]]:
     """
     Determine if backfill should be resumed.
     First query the backfill database to see if there's a backfill in progress
@@ -508,8 +509,10 @@ def is_resume_backfill(metadata_engine: Engine, source_table: str):
     return is_backfill_needed, start_pk, initial_load_start_date
 
 
-def get_source_columns(raw_query, source_engine, source_table):
-    # Get the columns from the current query
+def get_source_columns(
+    raw_query: str, source_engine: Engine, source_table: str
+) -> list:
+    """Get the columns from the raw query in the manifest file"""
     query_stem = raw_query.lower().split("where")[0]
     source_query = "{0} limit 1"
     source_columns = list(
@@ -521,8 +524,11 @@ def get_source_columns(raw_query, source_engine, source_table):
     return source_columns
 
 
-def get_latest_parquet_file(source_table):
-    # first filter for the most recent load_time directory for the source table
+def get_latest_parquet_file(source_table: str) -> str:
+    """
+    Get the most recent parquet file for a table.
+    Each table is saved in its own prefix in GCS, so scan only that sub-prefix
+    """
     bucket = get_gcs_bucket()
 
     prefix = f"{source_table}/initial_load_start_"
@@ -537,7 +543,8 @@ def get_latest_parquet_file(source_table):
     return latest_parquet_file
 
 
-def get_gcs_parquet_schema(parquet_file):
+def get_gcs_parquet_schema(parquet_file: str) -> list:
+    """Get the schema (columns) from a parquet file"""
     # create a GCSFileSystem instance with credentials
     scoped_credentials = get_gcs_scoped_credentials()
     fs = gcsfs.GCSFileSystem(project="gitlab-analysis", token=scoped_credentials)
@@ -552,13 +559,16 @@ def get_gcs_parquet_schema(parquet_file):
     return arrow_file.schema.names
 
 
-def get_gcs_columns(source_table):
+def get_gcs_columns(source_table: str) -> list:
+    """
+    From the most recent parquet file, get the columns
+    """
     latest_file_name = get_latest_parquet_file(source_table)
     gcs_cols = get_gcs_parquet_schema(latest_file_name)
     return gcs_cols
 
 
-def has_new_columns(source_columns, gcs_columns):
+def has_new_columns(source_columns: list, gcs_columns: list) -> bool:
     """
     Checks if source has any new columns compared to gcs
 
@@ -566,7 +576,6 @@ def has_new_columns(source_columns, gcs_columns):
     that at one point those cols were being brought in from source
     but are no longer needed.
     """
-    source_columns, gcs_columns = set(source_columns), set(gcs_columns)
     # does latest gcs NOT include all the source cols?
     return not all(elem in gcs_columns for elem in source_columns)
 
@@ -593,14 +602,14 @@ def schema_addition_check(
 
 
 def get_min_or_max_id(
-    primary_key: str, engine: sqlalchemy.engine.Engine, table: str, min_or_max: str
+    primary_key: str, engine: Engine, table: str, min_or_max: str
 ) -> int:
     """
     Retrieve the minimum or maximum value of the specified primary key column in the specified table.
 
     Parameters:
     primary_key (str): The name of the primary key column.
-    engine (sqlalchemy.engine.Engine): The database engine to use for the query.
+    engine (Engine): The database engine to use for the query.
     table (str): The name of the table to query.
     min_or_max (str): Either "min" or "max" to indicate whether to retrieve the minimum or maximum ID.
 

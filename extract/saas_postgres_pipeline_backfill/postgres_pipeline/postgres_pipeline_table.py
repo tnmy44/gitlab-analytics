@@ -111,13 +111,13 @@ class PostgresPipelineTable:
         start_pk: int,
         initial_load_start_date: datetime,
     ) -> bool:
-        '''
+        """
         load_types = {
             "scd": self.do_scd,
             "backfill": self.do_incremental_backfill,
             "test": self.check_new_table,
         }
-        '''
+        """
         return self.do_incremental_backfill(
             source_engine,
             target_engine,

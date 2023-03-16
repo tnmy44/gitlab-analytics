@@ -1,9 +1,9 @@
 """ Gitlab.Com Extract and load DAG"""
 import os
-import string
+import yaml
 from tokenize import String
 from datetime import datetime, timedelta
-import yaml
+from typing import Union
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -140,7 +140,7 @@ def use_cloudsql_proxy(dag_name, operation, instance_name):
     """
 
 
-def get_last_loaded(dag_name: str) -> str:
+def get_last_loaded(dag_name: str) -> Union[None, str]:
     """Pull from xcom value  last loaded timestamp for the table"""
     if dag_name == "el_gitlab_ops":
         return None

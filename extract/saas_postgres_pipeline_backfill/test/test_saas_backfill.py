@@ -16,7 +16,7 @@ from utils import has_new_columns
 
 
 def test_has_new_columns():
-    """ Test that new col is source is ascertained correctly """
+    """Test that new col is source is ascertained correctly"""
     source_columns = ["a", "b"]
     gcs_columns = ["a", "b"]
     res = has_new_columns(source_columns, gcs_columns)
