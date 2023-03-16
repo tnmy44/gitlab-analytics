@@ -24,6 +24,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_SALES_ANALYTICS_LOAD_ROLE,
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
+    GSHEETS_SERVICE_ACCOUNT_CREDENTIALS,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -38,7 +39,7 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "retries": 1,
+    "retries": 0,
     "retry_delay": timedelta(minutes=5),
     "start_date": datetime(2022, 10, 12),
     "dagrun_timeout": timedelta(hours=2),
@@ -64,7 +65,7 @@ for notebook, task_name in notebooks.items():
     container_cmd_load = f"""
         {clone_repo_cmd} &&
         cd {DAILY_NOTEBOOKS_PATH} &&
-        papermill {notebook} -p is_local_development True
+        papermill {notebook} -p is_local_development False
         """
     task_identifier = f"{task_name}"
     # Task 2
@@ -81,6 +82,7 @@ for notebook, task_name in notebooks.items():
             SNOWFLAKE_LOAD_USER,
             SNOWFLAKE_LOAD_WAREHOUSE,
             GITLAB_ANALYTICS_PRIVATE_TOKEN,
+            GSHEETS_SERVICE_ACCOUNT_CREDENTIALS,
         ],
         env_vars=pod_env_vars,
         affinity=get_affinity(True),
