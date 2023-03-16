@@ -208,6 +208,7 @@ def sync_incremental_ids(
     return True
 
 
+'''
 def load_scd(
     source_engine: Engine,
     target_engine: Engine,
@@ -260,6 +261,7 @@ def load_scd(
         backfill,
     )
     return True
+'''
 
 
 def load_ids(
@@ -273,7 +275,7 @@ def load_ids(
     target_engine: Engine,
     metadata_engine: Engine,
     start_source_id: int,
-    initial_load_start_date: datetime,
+    initial_load_start_date: datetime.datetime,
     backfill: bool = True,
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""

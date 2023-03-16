@@ -118,7 +118,7 @@ config_dict = {
 }
 
 
-def get_task_pool(task_name) -> string:
+def get_task_pool(task_name) -> str:
     """Return airflow pool name"""
     return f"{task_name}-pool"
 
@@ -140,7 +140,7 @@ def use_cloudsql_proxy(dag_name, operation, instance_name):
     """
 
 
-def get_last_loaded(dag_name: String) -> string:
+def get_last_loaded(dag_name: str) -> str:
     """Pull from xcom value  last loaded timestamp for the table"""
     if dag_name == "el_gitlab_ops":
         return None

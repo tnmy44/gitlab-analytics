@@ -266,7 +266,7 @@ def write_backfill_metadata(
             '{upload_file_name}',
             {last_extracted_id},
             {max_id},
-            {is_backfill_completed}
+            {is_backfill_completed},
             {chunk_row_count}
         );
     """
@@ -333,11 +333,11 @@ def chunk_and_upload(
     metadata_engine: Engine,
     target_table: str,
     source_table: str,
-    max_source_id: datetime,
+    max_source_id: int,
     initial_load_start_date: datetime,
     advanced_metadata: bool = False,
     backfill: bool = False,
-) -> None:
+) -> datetime:
     """
     Call the functions that upload the dataframes as TSVs in GCS and then trigger Snowflake
     to load those new files.
@@ -446,7 +446,7 @@ def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
     return len(results) == 0
 
 
-def query_backfill_status(metadata_engine: Engine, source_table: str) -> bool:
+def query_backfill_status(metadata_engine: Engine, source_table: str) -> List[Tuple[Any, Any, Any, Any]]:
     """
     Check if backfill table exists in backfill metadata table.
     If the table doesn't exist, then it's a 'new' table
@@ -649,7 +649,7 @@ def id_query_generator(
         yield id_range_query
 
 
-def get_engines(connection_dict: Dict[str, str]) -> Tuple[Engine, Engine, Engine]:
+def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine]:
     """
     Generates Snowflake and Postgres engines from env vars and returns them.
     """

@@ -65,8 +65,8 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
         is_backfill_needed: bool,
-        start_pk,
-        initial_load_start_date,
+        start_pk: int,
+        initial_load_start_date: datetime,
     ) -> bool:
         if not self.is_incremental() or not is_backfill_needed:
             logging.info("table does not need incremental backfill")
@@ -111,12 +111,14 @@ class PostgresPipelineTable:
         start_pk: int,
         initial_load_start_date: datetime,
     ) -> bool:
+        '''
         load_types = {
             "scd": self.do_scd,
             "backfill": self.do_incremental_backfill,
             "test": self.check_new_table,
         }
-        return load_types[load_type](
+        '''
+        return self.do_incremental_backfill(
             source_engine,
             target_engine,
             metadata_engine,
@@ -161,3 +163,6 @@ class PostgresPipelineTable:
 
     def get_target_table_name(self):
         return self.target_table_name
+
+    def get_temp_target_table_name(self):
+        return self.get_target_table_name() + "_TEMP"
