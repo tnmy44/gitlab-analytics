@@ -244,6 +244,7 @@ def write_backfill_metadata(
     last_extracted_id: int,
     max_id: int,
     is_backfill_completed: bool,
+    chunk_row_count: int,
 ):
     insert_query = f"""
         INSERT INTO saas_db_metadata.backfill_metadata (
@@ -254,7 +255,8 @@ def write_backfill_metadata(
             upload_file_name,
             last_extracted_id,
             max_id,
-            is_backfill_completed
+            is_backfill_completed,
+            chunk_row_count
         )
         VALUES (
             '{database_name}',
@@ -265,6 +267,7 @@ def write_backfill_metadata(
             {last_extracted_id},
             {max_id},
             {is_backfill_completed}
+            {chunk_row_count}
         );
     """
     with metadata_engine.connect() as connection:
@@ -385,6 +388,7 @@ def chunk_and_upload(
                     last_extracted_id,
                     max_source_id,
                     is_backfill_completed,
+                    row_count,
                 )
 
                 logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")

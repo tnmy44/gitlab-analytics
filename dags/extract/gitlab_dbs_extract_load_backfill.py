@@ -104,6 +104,11 @@ config_dict = {
             GITLAB_COM_CI_DB_PASS,
             GITLAB_COM_CI_DB_PORT,
             GITLAB_COM_CI_DB_USER,
+            GITLAB_METADATA_DB_NAME,
+            GITLAB_METADATA_DB_HOST,
+            GITLAB_METADATA_DB_PASS,
+            GITLAB_METADATA_PG_PORT,
+            GITLAB_METADATA_DB_USER,
         ],
         "start_date": datetime(2019, 5, 30),
         "task_name": "gitlab-com",
@@ -265,7 +270,7 @@ for source_name, config in config_dict.items():
         """
 
         incremental_backfill_dag = DAG(
-            f"{config['dag_name']}_db_incremental_backfillv5",
+            f"{config['dag_name']}_db_incremental_backfillv6",
             default_args=incremental_backfill_dag_args,
             schedule_interval=config["incremental_backfill_interval"],
             concurrency=1,
@@ -277,17 +282,14 @@ for source_name, config in config_dict.items():
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             if config["dag_name"] == "el_gitlab_com_new":
-                table_list = ['alert_management_http_integrations']
-                '''
                 table_list = [
                     "alert_management_http_integrations",
-                    "epics",
                     "container_expiration_policies",
+                    "merge_request_metrics",
                 ]
-                '''
             elif config["dag_name"] == "el_gitlab_com_ci_new":
-                # table_list = ["ci_runners", "ci_trigger_requests"]
-                table_list = ['ci_secure_files']
+                table_list = ["ci_runners", "ci_trigger_requests"]
+                # table_list = ['ci_secure_files']
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "backfill"
