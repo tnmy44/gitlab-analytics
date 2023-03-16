@@ -104,17 +104,18 @@ WITH sfdc_account_xf AS (
         LOWER(
             CONCAT(
             report_opportunity_user_business_unit,
+            '-',report_opportunity_user_sub_business_unit,
+            '-',report_opportunity_user_division,
+            '-',report_opportunity_user_asm,
             '-',report_opportunity_raw_user_segment,
             '-',report_opportunity_user_geo,
             '-',report_opportunity_user_region,
             '-',report_opportunity_user_area,
             '-',sales_qualified_source,
-            '-',order_type_stamped,
-            '-',report_opportunity_user_role_type,
-            '-',partner_category,
-            '-',alliance_partner
+            '-',order_type_stamped
             )
-        ) AS report_bu_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
+            ) AS report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
+
 
         LOWER(
             CONCAT(
@@ -175,18 +176,18 @@ WITH sfdc_account_xf AS (
 
         LOWER(
             CONCAT(
-            account_owner_user_business_unit,
+            account_owner_user_sub_business_unit,
+            '-',account_owner_user_sub_business_unit,
+            '-',account_owner_user_division,
+            '-',account_owner_user_asm,
             '-',account_owner_raw_user_segment,
             '-',account_owner_user_geo,
             '-',account_owner_user_region,
             '-',account_owner_user_area,
             '-',sales_qualified_source,
-            '-',order_type_stamped,
-            '-',account_owner_user_role_type,
-            '-',partner_category,
-            '-',alliance_partner
+            '-',order_type_stamped
             )
-        ) AS report_bu_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
+            ) AS report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
 
         LOWER(
             CONCAT(

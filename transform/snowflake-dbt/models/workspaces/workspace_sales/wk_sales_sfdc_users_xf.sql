@@ -3,9 +3,13 @@
 WITH source_user AS (
 
     SELECT 
-        id                AS user_id,
-        user_segment__c   AS user_segment
-    FROM {{ source('salesforce', 'user') }}
+        sfdc_users.id                   AS user_id,
+        sfdc_users.user_segment__c      AS user_segment,
+        sfdc_users.user_role_type__c    AS user_role_type,
+        sfdc_user_roles_source.name     AS user_role_name
+    FROM {{ source('salesforce', 'user') }} sfdc_users
+    LEFT JOIN {{ ref('sfdc_user_roles_source') }} sfdc_user_roles_source
+      ON sfdc_users.userroleid = sfdc_user_roles_source.id
 
 ),  base AS (
     SELECT
@@ -67,8 +71,8 @@ WITH source_user AS (
         END                                            AS adjusted_user_segment,
 
       IFNULL(edm_user.crm_user_area, 'Other')          AS user_area,
-      IFNULL(edm_user.user_role_name, 'Other')         AS role_name,
-      IFNULL(edm_user.user_role_type, 'Other')         AS role_type,
+      IFNULL(source_user.user_role_name, 'Other')         AS role_name,
+      IFNULL(source_user.user_role_type, 'Other')         AS role_type,
       edm_user.start_date,
       edm_user.is_active,
       edm_user.employee_number
@@ -118,7 +122,7 @@ WITH source_user AS (
       -- Business Unit (X-Ray 1st hierarchy)
       -- will be replaced with the actual field
       CASE 
-        WHEN LOWER(user_segment) IN ('large','pubsec','all') 
+        WHEN LOWER(user_segment) IN ('large','pubsec','all') -- "all" segment is PubSec for ROW
             THEN 'ENTG'
         WHEN LOWER(user_region) IN ('latam','meta')
             OR LOWER(user_geo) IN ('apac')
