@@ -2761,6 +2761,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - salesforce
+            - zuora_api_sandbox_stitch            
             - zuora_stitch_rest_api
         warehouses:
             - dev_xs
