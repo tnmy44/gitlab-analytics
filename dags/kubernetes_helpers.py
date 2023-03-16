@@ -44,21 +44,21 @@ def is_local_test():
     return "NAMESPACE" in env and env["NAMESPACE"] == "testing"
 
 
-def get_affinity(is_scd, is_data_science):
+def get_affinity(affinity):
     if is_local_test():
         return test_affinity
-    if is_scd:
+    if affinity == "scd":
         return scd_affinity
-    if is_data_science:
+    if affinity == "data_science":
         return data_science_affinity
     return production_affinity
 
 
-def get_toleration(is_scd, is_data_science):
+def get_toleration(tolerations):
     if is_local_test():
         return test_tolerations
-    if is_scd:
+    if tolerations == "scd":
         return scd_tolerations
-    if is_data_science:
+    if tolerations == "data_science":
         return data_science_tolerations
     return production_tolerations

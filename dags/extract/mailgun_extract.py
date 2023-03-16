@@ -80,8 +80,8 @@ for e in events:
             "START_TIME": "{{ execution_date }}",
             "END_TIME": "{{ next_execution_date }}",
         },
-        affinity=get_affinity(False, False),
-        tolerations=get_toleration(False, False),
+        affinity=get_affinity("production"),
+        tolerations=get_toleration("production"),
         arguments=[mailgun_extract_command],
         dag=dag,
     )

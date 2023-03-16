@@ -25,11 +25,11 @@ def get_affinity_name_from_value(affinity):
 
 
 def test_affinity():
-    scd_affinity = get_affinity(True, False)
-    prod_affinity = get_affinity(False, False)
+    scd_affinity = get_affinity("scd")
+    prod_affinity = get_affinity("production")
 
     set_testing_env()
-    test_affinity = get_affinity(False, False)
+    test_affinity = get_affinity("production")
 
     assert get_affinity_name_from_value(scd_affinity) == "pgp"
     assert get_affinity_name_from_value(prod_affinity) == "production"
@@ -41,12 +41,12 @@ def get_toleration_name_from_value(toleration):
 
 
 def test_toleration():
-    scd_toleration = get_toleration(True, False)
-    prod_toleration = get_toleration(False, False)
-    data_science_toleration = get_toleration(False, True)
+    scd_toleration = get_toleration("scd")
+    prod_toleration = get_toleration("production")
+    data_science_toleration = get_toleration("data_science")
 
     set_testing_env()
-    test_toleration = get_toleration(False, False)
+    test_toleration = get_toleration("production")
 
     assert get_toleration_name_from_value(scd_toleration) == "scd"
     assert get_toleration_name_from_value(test_toleration) == "test"
