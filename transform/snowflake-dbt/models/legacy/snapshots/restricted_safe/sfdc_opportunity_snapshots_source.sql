@@ -163,6 +163,7 @@ SELECT
                user_area_stamped
               )                                         AS user_segment_geo_region_area_stamped,
         stamped_opp_owner_user_role_type__c             AS crm_opp_owner_user_role_type_stamped,
+        stamped_opp_owner_user_business_unit__c         AS user_business_unit_stamped,
         stamped_opportunity_owner__c                    AS crm_opp_owner_stamped_name,
         stamped_account_owner__c                        AS crm_account_owner_stamped_name,
         sao_opportunity_owner__c                        AS sao_crm_opp_owner_stamped_name,

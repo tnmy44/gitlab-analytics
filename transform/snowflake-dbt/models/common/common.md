@@ -130,12 +130,7 @@ The grain of this table is `DIM_CRM_USER_SNAPSHOT_ID` which is a combination of 
 
 {% enddocs %}
 
-{% docs dim_crm_user_hierarchy_live %}
-Dimension table representing the current state of the sales hierarchy, including the user segment, geo, region, and area as it is in the crm user object.
-
-{% enddocs %}
-
-{% docs dim_crm_user_hierarchy_stamped %}
+{% docs dim_crm_user_hierarchy %}
 Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
 
 {% enddocs %}
@@ -1547,7 +1542,12 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 - This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
 
 **Tips for use:**
-- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on `event_action`, `event_category`, etc.
+- There is a cluster key on `behavior_at::DATE`. Using `behavior_at` in a WHERE clause or INNER JOIN will improve query performance.
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
 {% enddocs %}
 
@@ -1594,6 +1594,8 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
 **Tips for use:**
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
 - Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
 {% enddocs %}
 
@@ -1666,6 +1668,7 @@ This model only includes structured events implemented for experiments. Experime
 - Unlike the previous legacy version, you do _not_ need to join this model back to the fact. It includes all columns on the fact, in addition to experiment-specific columns (ex. `experiment_name`, etc).
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS details 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser details
 
@@ -1687,6 +1690,7 @@ This model excludes assignment events (`event_action = 'assignment'`)
 
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
@@ -1709,6 +1713,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
@@ -1731,6 +1736,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
@@ -1740,7 +1746,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 Delta ARR is a measure of changes to ARR compared to the prior month. The [ARR Analysis Framework](https://internal-handbook.gitlab.io/handbook/sales/annual-recurring-revenue-arr/#arr-analysis-framework) handbook page provides more details on the analysis.
 
-The model uses the subscription_lineage grain to calculate the Delta ARR. This is a fundamental change from previous Delta ARR models at the subscription grain. When looking at the subscription grain, debook-book scenarios are not captured. Therefore, it is necessary to analyze the subscription_lineage grain for accurate product level Delta ARR changes. This model provides a method to analyze the 6 subscription linkage scenarios provided in this [Linking Subscriptions for Data Retention[https://docs.google.com/spreadsheets/d/1SYFy0Xqau1dbOm2YXmp0NvWDEkL_vIcWaFhKzwcocCM/edit#gid=0] file.
+The model uses the subscription_lineage grain to calculate the Delta ARR. This is a fundamental change from previous Delta ARR models at the subscription grain. When looking at the subscription grain, debook-book scenarios are not captured. Therefore, it is necessary to analyze the subscription_lineage grain for accurate product level Delta ARR changes. This model provides a method to analyze the 6 subscription linkage scenarios provided in this [Linking Subscriptions for Data Retention](https://docs.google.com/spreadsheets/d/1SYFy0Xqau1dbOm2YXmp0NvWDEkL_vIcWaFhKzwcocCM/edit#gid=0) file.
 
 The model ERD can be found [HERE](https://lucid.app/lucidchart/invitations/accept/inv_07d25d39-3076-408f-b768-67d1895ea064). 
 

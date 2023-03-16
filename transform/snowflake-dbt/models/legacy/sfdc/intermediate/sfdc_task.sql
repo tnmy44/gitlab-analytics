@@ -1,6 +1,7 @@
 WITH source AS (
 
-    SELECT *
+    SELECT
+    {{ hash_sensitive_columns('sfdc_task_source') }}
     FROM {{ ref('sfdc_task_source') }}
     WHERE is_deleted = FALSE
 

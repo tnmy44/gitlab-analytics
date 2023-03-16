@@ -374,19 +374,10 @@ models:
           - not_null
         tags: [ "tdf", "common" ]
 
-  - name: dim_crm_user_hierarchy_live
-    description: '{{ doc("dim_crm_user_hierarchy_live") }}'
+  - name: dim_crm_user_hierarchy
+    description: '{{ doc("dim_crm_user_hierarchy") }}'
     columns:
-      - name: dim_crm_user_hierarchy_live_id
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "sales_funnel"]
-
-  - name: dim_crm_user_hierarchy_stamped
-    description: '{{ doc("dim_crm_user_hierarchy_stamped") }}'
-    columns:
-      - name: dim_crm_user_hierarchy_stamped_id
+      - name: dim_crm_user_hierarchy_id
         tests:
           - not_null
           - unique
@@ -5104,6 +5095,12 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common"]
+      - name: full_comments
+        meta:
+           masking_policy: data_science_sensitive
+      - name: task_subject
+        meta:
+           masking_policy: data_science_sensitive
 
   - name: fct_crm_task
     description: '{{ doc("fct_crm_task") }}'
@@ -5370,6 +5367,10 @@ models:
         description: '{{ doc("page_url_scheme") }}'
       - name: page_url_host
         description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -5380,8 +5381,8 @@ models:
         description: '{{ doc("gsc_plan") }}'
       - name: gsc_source
         description: '{{ doc("gsc_source") }}'
-      - name: event_value
-        description: '{{ doc("event_value") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
