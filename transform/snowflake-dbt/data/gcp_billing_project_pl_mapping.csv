@@ -1,13 +1,4 @@
 project_id,free,paid,internal
-gitlab-ci-plan-free-3-35411a,1,0,0
-gitlab-ci-plan-free-4-3ba81e,1,0,0
-gitlab-ci-plan-free-5-6ef84d,1,0,0
-gitlab-ci-plan-free-6-f2de7a,1,0,0
-gitlab-ci-plan-free-7-7fe256,1,0,0
-gitlab-ci-private-1,0,1,0
-gitlab-ci-private-2,0,1,0
-gitlab-ci-private-3,0,1,0
-gitlab-ci-private-4,0,1,0
 hackystack-gitops,0,0,1
 opstrace-dev-bee41fca,0,0,1
 opstrace-prd-ac6ca492,0,0,1
@@ -98,7 +89,6 @@ support-resources-c801eb,0,0,1
 support-testing-168620,0,0,1
 t4cc0re,0,0,1
 unreview-poc-390200e5,0,0,1
-gitlab-staging-1,0,0,1
 gitlab-r-saas-l-l-amd64-4,0,1,0
 gitlab-r-saas-l-l-amd64-5,0,1,0
 gitlab-r-saas-l-l-amd64-1,0,1,0

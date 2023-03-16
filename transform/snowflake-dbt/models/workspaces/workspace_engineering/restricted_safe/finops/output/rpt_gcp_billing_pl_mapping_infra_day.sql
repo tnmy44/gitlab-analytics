@@ -11,32 +11,14 @@ WITH service_base AS (
 
 ),
 
-infra_allocation AS (
+combined_pl_mapping as (
 
-  SELECT * FROM {{ ref('infralabel_pl') }}
+SELECT * FROM {{ ref('combined_pl_mapping') }}
 
-),
-
-sandbox AS (
-
-  SELECT * FROM {{ ref('sandbox_projects_pl') }}
-
-),
-
-project_pl AS (
-
-  SELECT * FROM {{ ref('projects_pl') }}
-
-
-),
-
-repo_size AS (
-
-  SELECT * FROM {{ ref('repo_storage_pl_daily') }}
 )
 
 SELECT
-  service_base.day,
+  {# service_base.day,
   service_base.gcp_project_id,
   service_base.gcp_service_description,
   service_base.gcp_sku_description,
@@ -51,10 +33,19 @@ SELECT
   -- cost before discounts
   service_base.cost_before_credits * COALESCE(infra_allocation.allocation, project_pl.allocation, 1)           AS cost_before_credits,
   -- net costs
-  service_base.net_cost * COALESCE(infra_allocation.allocation, project_pl.allocation, 1)                      AS net_cost
+  service_base.net_cost * COALESCE(infra_allocation.allocation, project_pl.allocation, 1)                      AS net_cost #}
+  *
 FROM
   service_base
-LEFT JOIN infra_allocation ON infra_allocation.infra_label = service_base.infra_label
-LEFT JOIN sandbox ON sandbox.project_name = service_base.gcp_project_id
-LEFT JOIN project_pl ON project_pl.project_id = service_base.gcp_project_id
+LEFT JOIN combined_pl_mapping ON combined_pl_mapping.date_day = service_base.day
+AND coalesce(combined_pl_mapping.gcp_project_id, service_base.gcp_project_id) = service_base.gcp_project_id
+AND coalesce(combined_pl_mapping.gcp_service_description, service_base.gcp_service_description) = service_base.gcp_service_description
+AND coalesce(combined_pl_mapping.gcp_sku_description, service_base.gcp_sku_description) = service_base.gcp_sku_description
+AND coalesce(combined_pl_mapping.infra_label, service_base.infra_label) = service_base.infra_label
 WHERE net_cost != 0
+{# and pl_category is not null #}
+{# and service_base.gcp_sku_description = 'SSD backed PD Capacity'
+and combined_pl_mapping.infra_label = 'gitaly' #}
+
+
+SELECT * FROM "CLEROUX_PROD".restricted_safe_workspace_engineering.combined_pl_mapping where gcp_project_id like '%staging%'
