@@ -42,7 +42,7 @@ WITH union_sources AS (
 
   FROM
     {{ ref('google_ads') }}
-  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  {{ dbt_utils.group_by(n=10) }}
 
   UNION ALL
 
@@ -67,7 +67,7 @@ WITH union_sources AS (
 
   FROM
     {{ ref('linkedin_ads') }}
-  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  {{ dbt_utils.group_by(n=10) }}
 
   UNION ALL
 
@@ -92,7 +92,7 @@ WITH union_sources AS (
 
   FROM
     {{ ref('facebook_ads') }}
-  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  {{ dbt_utils.group_by(n=10) }}
 
 ),
 
