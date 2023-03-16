@@ -48,7 +48,7 @@ dag = DAG(
     default_args=default_args,
     # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
-    start_date=datetime(2023, 2, 20),  # TODO: testing only
+    start_date=datetime(2023, 2, 25),  # TODO: testing only
     # start_date=datetime(2022, 1, 12),  # CourseCompletion data starts: 2022-01-13
     catchup=True,
     max_active_runs=1,  # due to API rate limiting
