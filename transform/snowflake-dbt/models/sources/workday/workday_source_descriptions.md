@@ -228,9 +228,7 @@ A custom report built in Workday for the creation of the Supervisory Organizatio
 
 {% docs performance_growth_potential %}
 
-A custom report built in Workday for the creation of the dim_team_member model. The data is extracted using Fivetran and loaded into Snowflake, with a sync frequency of 12 hours. The grain of the table is one row per Workday ID, which is the unique ID for the business process. 
-
-
+A custom report built in Workday for the creation of the dim_team_member model. The data is extracted using Fivetran and loaded into Snowflake, with a sync frequency of 12 hours. The grain of the table is one row per Workday ID, which is the unique ID for the business process. GitLab started using Workday for Talent Assessment in FY23, and all team members who were part of the talent assessment process in FY23 should have both performance and growth potential rating. Historical data from BambooHR might have null values. 
 
 {% enddocs %}
 

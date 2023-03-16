@@ -7,7 +7,9 @@ WITH source AS (
 
     SELECT
         d.value AS data_by_row,
-        source.employee_id
+        source.employee_id,
+        source._fivetran_synced, 
+        source._fivetran_deleted    
     FROM
         source,
         LATERAL FLATTEN(input => parse_json(REVIEWS_ALL_STATUSES_GROUP)) AS d
@@ -26,5 +28,4 @@ WITH source AS (
 )
 
 SELECT * 
-FROM  parsed;
-
+FROM  parsed
