@@ -151,7 +151,6 @@
       free_user_metrics.successful_deployments_28_days_user,
       -- Wave 5.3
       free_user_metrics.geo_enabled,
-      free_user_metrics.geo_nodes_all_time_event,
       free_user_metrics.auto_devops_pipelines_28_days_user,
       free_user_metrics.active_instance_runners_all_time_event,
       free_user_metrics.active_group_runners_all_time_event,
@@ -348,7 +347,6 @@
         'failed_deployments_28_days_user',
         'successful_deployments_28_days_user',
         'geo_enabled',
-        'geo_nodes_all_time_event',
         'auto_devops_pipelines_28_days_user',
         'active_instance_runners_all_time_event',
         'active_group_runners_all_time_event',
@@ -404,5 +402,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2023-02-24"
+    updated_date="2023-03-15"
 ) }}

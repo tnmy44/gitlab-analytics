@@ -201,7 +201,6 @@
       "usage_activity_by_stage_monthly.release.successful_deployments"                          AS successful_deployments_28_days_user,
       -- Wave 5.3
       "geo_enabled"                                                                             AS geo_enabled,
-      "counts.geo_nodes"                                                                        AS geo_nodes_all_time_event,
       "usage_activity_by_stage_monthly.verify.ci_pipeline_config_auto_devops"                   AS auto_devops_pipelines_28_days_user,
       "counts.ci_runners_instance_type_active"                                                  AS active_instance_runners_all_time_event,
       "counts.ci_runners_group_type_active"                                                     AS active_group_runners_all_time_event,
@@ -280,5 +279,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-10-12",
-    updated_date="2023-02-21"
+    updated_date="2023-03-15"
 ) }}

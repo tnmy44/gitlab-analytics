@@ -403,10 +403,6 @@ models:
         description: '{{ doc("geo_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_nodes_all_time_event
-        description: '{{ doc("geo_nodes_all_time_event_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
       - name: auto_devops_pipelines_28_days_user
         description: '{{ doc("auto_devops_pipelines_28_days_user_desc") }}'
         tests:
@@ -933,10 +929,6 @@ models:
           - dbt_utils.at_least_one
       - name: geo_enabled
         description: '{{ doc("geo_enabled_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
-      - name: geo_nodes_all_time_event
-        description: '{{ doc("geo_nodes_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: auto_devops_pipelines_28_days_user
