@@ -130,9 +130,9 @@ The name of the [product group](https://gitlab.com/gitlab-com/www-gitlab-com/blo
 
 {% enddocs %}
 
-{% docs product_category_ping_metric %}
+{% docs instrumentation_class_ping_metric %}
 
-The name of the [product category](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/categories.yml) (ex. audit_events, integrations, continuous_delivery, etc)
+The name of the [instrumentation class](https://docs.gitlab.com/ee/development/service_ping/metrics_instrumentation.html#nomenclature) (ex. DatabaseMetric, RedisMetric, RedisHLLMetric, etc)
 
 {% enddocs %}
 
