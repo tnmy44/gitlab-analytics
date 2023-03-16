@@ -628,10 +628,10 @@
       AND ci_templates.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
     LEFT JOIN packages_pushed
       ON packages_pushed.month = monthly_saas_metrics.snapshot_month
-      AND packages_pushed.ultimate_parent_namespace_id = monthly_saas_metrics.ultimate_parent_namespace_id
+      AND packages_pushed.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
     LEFT JOIN packages_pulled
       ON packages_pulled.month = monthly_saas_metrics.snapshot_month
-      AND packages_pulled.ultimate_parent_namespace_id = monthly_saas_metrics.ultimate_parent_namespace_id
+      AND packages_pulled.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
     LEFT JOIN single_file_edit
       ON single_file_edit.date_month = monthly_saas_metrics.snapshot_month
       AND single_file_edit.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
