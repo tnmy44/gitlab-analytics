@@ -137,7 +137,7 @@ models:
         tests:
           - not_null
   - name: level_up_visits
-    description: Returns information about logged-in users visiting the paltform
+    description: Returns information about logged-in users visiting the platform
     columns:
       - name: company_host
       - name: company_id
@@ -146,12 +146,12 @@ models:
       - name: event_timestamp
         tests:
           - not_null
-      - name: client_id
-      - name: department_id
       - name: username
       - name: user_id
         tests:
           - not_null
+      - name: user_client_id
+      - name: user_department_id
       - name: ref1_user_type
       - name: ref2_user_job
       - name: sf_account_id
