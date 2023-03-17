@@ -131,7 +131,6 @@ MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.release.successful
 
 -- 5.3 metrics
 MAX(CASE WHEN metrics_path = 'geo_enabled' THEN {{ convert_variant_to_boolean_field("metric_value") }}  ELSE 0 END ) AS geo_enabled,
-MAX(CASE WHEN metrics_path = 'counts.geo_nodes' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS geo_nodes_all_time_event,
 MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.verify.ci_pipeline_config_auto_devops' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS auto_devops_pipelines_28_days_user,
 MAX(CASE WHEN metrics_path = 'counts.ci_runners_instance_type_active' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS active_instance_runners_all_time_event,
 MAX(CASE WHEN metrics_path = 'counts.ci_runners_group_type_active' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS active_group_runners_all_time_event,

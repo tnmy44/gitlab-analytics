@@ -212,7 +212,6 @@
       ping_instance_wave_sm.successful_deployments_28_days_user,
       -- Wave 5.3
       ping_instance_wave_sm.geo_enabled,
-      ping_instance_wave_sm.geo_nodes_all_time_event,
       ping_instance_wave_sm.auto_devops_pipelines_28_days_user,
       ping_instance_wave_sm.active_instance_runners_all_time_event,
       ping_instance_wave_sm.active_group_runners_all_time_event,
@@ -311,5 +310,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-10-12",
-    updated_date="2023-02-21"
+    updated_date="2023-03-15"
 ) }}
