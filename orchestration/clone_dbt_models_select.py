@@ -112,7 +112,7 @@ class DbtModelClone:
         :param object_name:
         :return:
         """
-        if self.environment == 'LOCAL_USER' or self.environment == 'LOCAL_BRANCH':
+        if self.environment in ('LOCAL_USER', 'LOCAL_BRANCH'):
             grants_query = f"""
                         GRANT ALL ON {object_type.upper()} {object_name.upper()} TO TRANSFORMER 
                         """
