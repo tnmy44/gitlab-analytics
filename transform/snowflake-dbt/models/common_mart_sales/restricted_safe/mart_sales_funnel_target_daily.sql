@@ -60,6 +60,7 @@
       kpi_name,
       crm_user_sales_segment,
       crm_user_sales_segment_grouped,
+      crm_user_business_unit,
       crm_user_geo,
       crm_user_region,
       crm_user_area,
@@ -88,5 +89,5 @@
     created_by="@jpeguero",
     updated_by="@michellecooper",
     created_date="2021-02-18",
-    updated_date="2023-03-10",
+    updated_date="2023-03-17",
   ) }}
