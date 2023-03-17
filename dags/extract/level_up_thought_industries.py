@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.utils.trigger_rule import TriggerRule
 
 from airflow_utils import (
     DATA_IMAGE,
