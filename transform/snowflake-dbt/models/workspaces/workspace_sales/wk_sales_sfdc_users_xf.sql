@@ -187,7 +187,8 @@ WITH source_user AS (
 
         WHEN 
           LOWER(business_unit) = 'comm'
-          AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+          AND (LOWER(sub_business_unit) = 'amer' 
+            OR LOWER(sub_business_unit) = 'emea')
           AND LOWER(user_segment) = 'mid-market'
           THEN 'Mid-Market'
         WHEN
