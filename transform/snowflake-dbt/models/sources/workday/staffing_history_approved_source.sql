@@ -20,7 +20,7 @@ renamed AS (
     d.value['DATE_TIME_INITIATED']::DATE          AS date_time_initiated,
     d.value['EFFECTIVE_DATE']::DATE               AS effective_date
   FROM source
-  INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON('STAFFING_HISTORY_APPROVED')) AS d
+  INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(STAFFING_HISTORY_APPROVED)) AS d
 
 )
 
