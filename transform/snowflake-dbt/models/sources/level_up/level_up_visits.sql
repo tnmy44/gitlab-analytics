@@ -20,12 +20,18 @@ parsed AS (
     value['companySubdomain']::VARCHAR           AS company_subdomain,
     value['event']::VARCHAR                      AS event,
     value['timestamp']::TIMESTAMP                AS event_timestamp,
+
     value['userDetail']['id']::VARCHAR           AS user_id,
-    value['userDetail']['clientId']::VARCHAR     AS client_id,
-    value['userDetail']['departmentId']::VARCHAR AS department_id,
+    CASE
+      WHEN value['user'] ILIKE '%@gitlab.com' THEN value['user']::VARCHAR
+    END                                          AS username,
+
+    value['userDetail']['clientId']::VARCHAR     AS user_client_id,
+    value['userDetail']['departmentId']::VARCHAR AS user_department_id,
+
     value['userDetail']['ref1']::VARCHAR         AS ref1_user_type,
     value['userDetail']['ref2']::VARCHAR         AS ref2_user_job,
-    value['userDetail']['ref3']::VARCHAR         AS ref3,
+
     value['userDetail']['sfAccountId']::VARCHAR  AS sf_account_id,
     value['userDetail']['sfContactId']::VARCHAR  AS sf_contact_id,
     uploaded_at

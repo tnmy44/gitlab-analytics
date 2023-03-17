@@ -22,12 +22,18 @@ parsed AS (
     value['event']::VARCHAR                     AS event,
     value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['userAgent']::VARCHAR                 AS user_agent,
+
+    CASE
+      WHEN value['user'] ILIKE '%@gitlab.com' THEN value['user']::VARCHAR
+    END                                         AS username,
     value['userDetail']['id']::VARCHAR          AS user_id,
+
     value['userDetail']['ref1']::VARCHAR        AS ref1_user_type,
     value['userDetail']['ref2']::VARCHAR        AS ref2_user_job,
-    value['userDetail']['ref3']::VARCHAR        AS ref3,
+
     value['userDetail']['sfAccountId']::VARCHAR AS sf_account_id,
     value['userDetail']['sfContactId']::VARCHAR AS sf_contact_id,
+
     uploaded_at
   FROM intermediate
 

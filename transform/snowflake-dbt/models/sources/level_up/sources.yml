@@ -17,6 +17,7 @@ sources:
       error_after: {count: 48, period: hour}
 
     tables:
+      - name: course_actions
       - name: course_completions
       - name: course_views
       - name: logins
