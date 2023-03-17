@@ -104,13 +104,13 @@
       {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_region_id') }}                                                     AS dim_crm_opp_owner_region_stamped_id,
       {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_area_id') }}                                                       AS dim_crm_opp_owner_area_stamped_id,
       {{ get_keyed_nulls('sales_rep.dim_crm_user_hierarchy_sk') }}                                                                AS dim_crm_user_hierarchy_live_sk,
-      {{ get_keyed_nulls('sales_rep.dim_crm_user_business_unit_id') }}                                                            AS dim_crm_user_business_unit_stamped_id,
+      {{ get_keyed_nulls('sales_rep.dim_crm_user_business_unit_id') }}                                                            AS dim_crm_user_business_unit_id,
       {{ get_keyed_nulls('sales_rep.dim_crm_user_sales_segment_id') }}                                                            AS dim_crm_user_sales_segment_id,
       {{ get_keyed_nulls('sales_rep.dim_crm_user_geo_id') }}                                                                      AS dim_crm_user_geo_id,
       {{ get_keyed_nulls('sales_rep.dim_crm_user_region_id') }}                                                                   AS dim_crm_user_region_id,
       {{ get_keyed_nulls('sales_rep.dim_crm_user_area_id') }}                                                                     AS dim_crm_user_area_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_hierarchy_sk') }}                                                        AS dim_crm_user_hierarchy_account_user_sk,
-      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_business_unit_id') }}                                                    AS dim_crm_account_user_business_stamped_unit_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_business_unit_id') }}                                                    AS dim_crm_account_user_business_unit_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_sales_segment_id') }}                                                    AS dim_crm_account_user_sales_segment_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_geo_id') }}                                                              AS dim_crm_account_user_geo_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                           AS dim_crm_account_user_region_id,
@@ -258,5 +258,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2023-03-10"
+    updated_date="2023-03-16"
 ) }}

@@ -213,7 +213,7 @@
 
       
        -- crm account owner/sales rep live fields
-      dim_crm_user_hierarchy_account_owner.crm_user_business_unit                                                       AS crm_account_business_unit,
+      dim_crm_user_hierarchy_account_owner.crm_user_business_unit                                                       AS crm_account_user_business_unit,
       dim_crm_user_hierarchy_account_owner.crm_user_sales_segment                                                       AS crm_account_user_sales_segment,
       dim_crm_user_hierarchy_account_owner.crm_user_sales_segment_grouped                                               AS crm_account_user_sales_segment_grouped,
       dim_crm_user_hierarchy_account_owner.crm_user_geo                                                                 AS crm_account_user_geo,
@@ -566,7 +566,7 @@
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-12-07",
-    updated_date="2023-03-10"
+    updated_date="2023-03-16"
   ) }}
 
 
