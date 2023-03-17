@@ -285,6 +285,12 @@ final AS (
     fct_crm_opportunity.sa_tech_evaluation_close_status,
     fct_crm_opportunity.sa_tech_evaluation_end_date,
     fct_crm_opportunity.sa_tech_evaluation_start_date,
+    fct_crm_opportunity.vsa_readout,
+    fct_crm_opportunity.vsa_start_date_net_arr,
+    fct_crm_opportunity.vsa_start_date,
+    fct_crm_opportunity.vsa_url,
+    fct_crm_opportunity.vsa_status,
+    fct_crm_opportunity.vsa_end_date,
 
     -- Command Plan fields
     fct_crm_opportunity.cp_partner,
