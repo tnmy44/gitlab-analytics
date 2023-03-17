@@ -150,7 +150,7 @@ class DbtModelClone:
 
         return output_query
 
-    def clone_dbt_models(self, model_input: List[str], is_local: bool = False):
+    def clone_dbt_models(self, model_input: List[str]):
         """
 
         :param model_input:
@@ -236,8 +236,7 @@ class DbtModelClone:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("INPUT", nargs="+")
-    parser.add_argument("IS_LOCAL")
     args = parser.parse_args()
 
     cloner = DbtModelClone(env.copy())
-    cloner.clone_dbt_models(args.INPUT, args.IS_LOCAL)
+    cloner.clone_dbt_models(args.INPUT)

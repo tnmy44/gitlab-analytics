@@ -128,11 +128,11 @@ run-dbt-no-deps:
 
 clone-dbt-select-local-branch:
 	cd transform/snowflake-dbt/ && export INPUT=$$(poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id alias") && \
-	export ENVIRONMENT="LOCAL_BRANCH" && export GIT_BRANCH=$(GIT_BRANCH) && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT "True";
+	export ENVIRONMENT="LOCAL_BRANCH" && export GIT_BRANCH=$(GIT_BRANCH) && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT;
 
 clone-dbt-select-local-user:
 	cd transform/snowflake-dbt/ && export INPUT=$$(poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id alias") && \
-	export ENVIRONMENT="LOCAL_USER" && export GIT_BRANCH=$(GIT_BRANCH) && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT "True";
+	export ENVIRONMENT="LOCAL_USER" && export GIT_BRANCH=$(GIT_BRANCH) && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT;
 
 dbt-deps:
 	"$(DBT_DEPS)"
