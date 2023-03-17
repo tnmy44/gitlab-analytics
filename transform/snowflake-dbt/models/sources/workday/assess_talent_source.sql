@@ -17,7 +17,7 @@ SELECT
 
 
 SELECT
-  employee_id::NUMBER AS employee_id, 
+  employee_id::NUMBER                             AS employee_id, 
   data_by_row['WORKDAY_ID']::VARCHAR              AS workday_id,
   data_by_row['KEY_TALENT']::VARCHAR              AS key_talent,
   data_by_row['EFFECTIVE_DATE']::VARCHAR          AS effective_date,
@@ -29,4 +29,4 @@ FROM
 )
 
 SELECT
-* from parsed;
+* from parsed

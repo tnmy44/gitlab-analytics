@@ -14,7 +14,7 @@ SELECT
     gender::VARCHAR                 AS gender,
     work_email::VARCHAR             AS work_email,
     date_of_birth::DATE             AS date_of_birth,
-    _fivetran_deleted::BOLEAN       AS is_deleted,
+    _fivetran_deleted::BOOLEAN       AS is_deleted,
     _fivetran_synced::TIMESTAMP_TZ  AS uploaded_at
     
 FROM  source
