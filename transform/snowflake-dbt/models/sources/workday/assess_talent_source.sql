@@ -15,7 +15,7 @@ renamed AS (
     source._fivetran_synced::TIMESTAMP    AS uploaded_at,
     source._fivetran_deleted::BOOLEAN     AS is_deleted
   FROM source
-  INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON('KEY_TALENT_HISTORY_GROUP')) AS d
+  INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(KEY_TALENT_HISTORY_GROUP)) AS d
 
 )
 

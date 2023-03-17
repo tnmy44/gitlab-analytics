@@ -15,9 +15,9 @@ renamed AS (
     d.value['Review_Period_-_Start_Date']::DATE     AS review_period_start_date,
     d.value['Review_Period_-_End_Date']::DATE       AS review_period_end_date
   FROM source
-  INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON('REVIEWS_ALL_STATUSES_GROUP')) AS d
+  INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON(REVIEWS_ALL_STATUSES_GROUP)) AS d
 
 )
 
 SELECT * 
-FROM  parsed
+FROM renamed
