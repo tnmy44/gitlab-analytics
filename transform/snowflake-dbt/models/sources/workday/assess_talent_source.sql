@@ -12,7 +12,7 @@ renamed AS (
     d.value['WORKDAY_ID']::VARCHAR        AS workday_id,
     d.value['KEY_TALENT']::VARCHAR        AS key_talent,
     d.value['EFFECTIVE_DATE']::VARCHAR    AS effective_date,
-    source._fivetran_synced::TIMESTAMP_TZ AS uploaded_at,
+    source._fivetran_synced::TIMESTAMP    AS uploaded_at,
     source._fivetran_deleted::BOOLEAN     AS is_deleted
   FROM source
   INNER JOIN LATERAL FLATTEN(INPUT => PARSE_JSON('KEY_TALENT_HISTORY_GROUP')) AS d

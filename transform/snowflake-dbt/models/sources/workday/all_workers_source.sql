@@ -17,7 +17,7 @@ renamed AS (
     work_email::VARCHAR               AS work_email,
     date_of_birth::DATE               AS date_of_birth,
     _fivetran_deleted::BOOLEAN        AS is_deleted,
-    _fivetran_synced::TIMESTAMP_TZ    AS uploaded_at
+    _fivetran_synced::TIMESTAMP       AS uploaded_at
   FROM source
 
 )
