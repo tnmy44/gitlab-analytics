@@ -65,9 +65,6 @@ sandbox_projects_pl AS (
   FROM date_spine
   CROSS JOIN {{ ref ('sandbox_projects_pl') }}
 )
-SELECT * FROM repo_storage_pl_daily
-
-
 
 SELECT * FROM infralabel_pl
 UNION ALL

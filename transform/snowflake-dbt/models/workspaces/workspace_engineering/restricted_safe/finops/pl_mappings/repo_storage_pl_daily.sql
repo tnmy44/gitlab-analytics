@@ -44,7 +44,7 @@ SELECT
   storage.snapshot_day,
   coalesce(ns_type.finance_pl, 'Internal') as finance_pl,
   SUM(repo_size_gb) AS repo_size_gb,
-  100 * RATIO_TO_REPORT(SUM(repo_size_gb)) OVER (PARTITION BY snapshot_day) AS percent_repo_size_gb
+  RATIO_TO_REPORT(SUM(repo_size_gb)) OVER (PARTITION BY snapshot_day) AS percent_repo_size_gb
 FROM
   storage
 LEFT JOIN
