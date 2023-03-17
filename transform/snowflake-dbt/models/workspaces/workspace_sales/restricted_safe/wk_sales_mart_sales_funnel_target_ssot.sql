@@ -18,7 +18,7 @@
         FROM {{ ref('wk_sales_report_agg_keys_ssot') }}
         --FROM restricted_safe_workspace_sales.report_agg_keys_ssot
 
-  ), mart_sales_funnel_target_prep AS (
+ ), mart_sales_funnel_target_prep AS (
     -- JK 2023-01-19: additional grouping CTE in case more keys/grains are created in the target file
 
     SELECT
@@ -57,10 +57,11 @@
           AND
             (
             LOWER(crm_user_sales_segment) = 'mid-market'
-            AND (LOWER(crm_user_geo) = 'amer' OR LOWER(crm_user_geo) = 'emea')
+            AND (LOWER(crm_user_geo) = 'amer' 
+                OR LOWER(crm_user_geo) = 'emea')
             AND LOWER(order_type_name) = '1. new - first order'
             )
-          THEN 'MM First Orders'  --mid-market FO(?)
+          THEN 'MM First Orders'  --mid-market FO
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
           AND LOWER(crm_user_geo) = 'emea'
@@ -79,20 +80,25 @@
 
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
-          AND (LOWER(crm_user_sub_business_unit) = 'amer' OR LOWER(crm_user_sub_business_unit) = 'emea')
+          AND (LOWER(crm_user_sub_business_unit) = 'amer'
+                   OR LOWER(crm_user_sub_business_unit) = 'emea')
+            AND LOWER(order_type_name) != '1. new - first order'
           AND LOWER(crm_user_sales_segment) = 'mid-market'
           THEN 'Mid-Market'
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
-          AND (LOWER(crm_user_sub_business_unit) = 'amer' OR LOWER(crm_user_sub_business_unit) = 'emea')
-          AND LOWER(crm_user_sales_segment) = 'smb'
-          THEN 'SMB'
-        WHEN
-          LOWER(crm_user_business_unit) = 'comm'
+          AND LOWER(crm_user_sales_segment) = 'mid-market'
           AND LOWER(order_type_name) = '1. new - first order' -- TODO: special logic for targets
           THEN 'MM First Orders'
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
+          AND (LOWER(crm_user_sub_business_unit) = 'amer'
+                OR LOWER(crm_user_sub_business_unit) = 'emea')
+          AND LOWER(crm_user_sales_segment) = 'smb'
+          THEN 'SMB'
+        WHEN
+          LOWER(crm_user_business_unit) = 'comm'
+            AND LOWER(crm_user_sales_segment) = 'smb'
           AND LOWER(crm_user_sub_business_unit) = 'amer low-touch'
           THEN 'AMER Low-Touch'
         ELSE 'Other'
@@ -136,7 +142,7 @@
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
           AND (LOWER(crm_user_sub_business_unit) = 'amer'
-                   OR LOWER(crm_user_business_unit) = 'emea')
+                   OR LOWER(crm_user_sub_business_unit) = 'emea')
           THEN crm_user_area
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
@@ -144,13 +150,15 @@
           THEN crm_user_geo
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
-          AND LOWER(crm_user_sub_business_unit) = 'amer low-touch'
-          AND LOWER(order_type_name) = '1. new - first order'
+            AND LOWER(crm_user_sales_segment) = 'smb'
+            AND LOWER(crm_user_sub_business_unit) = 'amer low-touch'
+            AND LOWER(order_type_name) = '1. new - first order'
           THEN 'LowTouch FO'
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
-          AND LOWER(crm_user_sub_business_unit) = 'amer low-touch'
-          AND LOWER(order_type_name) != '1. new - first order'
+            AND LOWER(crm_user_sales_segment) = 'smb'
+            AND LOWER(crm_user_sub_business_unit) = 'amer low-touch'
+            AND LOWER(order_type_name) != '1. new - first order'
           THEN 'LowTouch Pool'
         ELSE 'Other'
       END AS crm_user_asm,
@@ -191,26 +199,6 @@
       END                                                       AS deal_group,
       COALESCE(funnel_target.sales_qualified_source_name,'NA')  AS sales_qualified_source,
 
-      LOWER(CONCAT(
-                    funnel_target.crm_user_sales_segment,'-',
-                    funnel_target.crm_user_geo,'-',
-                    funnel_target.crm_user_region,'-',
-                    funnel_target.crm_user_area, '-',
-                    sales_qualified_source, '-',
-                    funnel_target.order_type_name)
-                ) AS report_user_segment_geo_region_area_sqs_ot,
-
-      -- FY24 target link with Business Unit field
-      LOWER(CONCAT(
-                    funnel_target.crm_user_business_unit,'-',
-                    funnel_target.crm_user_sales_segment,'-',
-                    funnel_target.crm_user_geo,'-',
-                    funnel_target.crm_user_region,'-',
-                    funnel_target.crm_user_area, '-',
-                    sales_qualified_source, '-',
-                    funnel_target.order_type_name)
-                ) AS report_bu_user_segment_geo_region_area_sqs_ot,
-
     LOWER(
             CONCAT(
             funnel_target.crm_user_business_unit, '-',
@@ -222,7 +210,7 @@
             funnel_target.crm_user_region,'-',
             funnel_target.crm_user_area, '-',
             sales_qualified_source, '-',
-            funnel_target.order_type_name)
+            deal_group)
             ) AS report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
 
     FROM mart_sales_funnel_target_prep AS funnel_target
@@ -260,7 +248,7 @@
       agg_demo_keys.key_bu_segment_geo_region_area_ot,
       agg_demo_keys.key_bu_segment_geo_region_area_sqs,
       agg_demo_keys.key_bu_segment_geo_region_area_ot_sqs,
-     
+
       agg_demo_keys.key_bu,
       agg_demo_keys.key_bu_subbu,
       agg_demo_keys.key_bu_subbu_division,

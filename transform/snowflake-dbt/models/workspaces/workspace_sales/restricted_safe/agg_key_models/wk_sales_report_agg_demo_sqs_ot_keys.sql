@@ -17,7 +17,6 @@ WITH report_agg_keys_base AS (
         sales_qualified_source,
         order_type_stamped,
 
-        deal_category,
         deal_group,
 
         report_user_segment_geo_region_area,

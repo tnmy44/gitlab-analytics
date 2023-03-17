@@ -28,7 +28,6 @@ SELECT DISTINCT
 
     sales_qualified_source,
     order_type_stamped,
-    deal_category,
     deal_group,
 
     key_segment,
