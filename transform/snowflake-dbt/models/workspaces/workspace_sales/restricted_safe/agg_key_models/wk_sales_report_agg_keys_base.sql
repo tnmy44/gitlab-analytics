@@ -2,7 +2,7 @@
 -- supports FY22, FY23 and FY24 granularity 
 
 -- grains include:
--- segment, geo, region, area, sqs, ot, deal_category, deal_group
+-- segment, geo, region, area, sqs, ot, deal_group
 -- business_unit, role_type, partner_category, alliance_partner 
 
 

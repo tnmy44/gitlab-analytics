@@ -27,7 +27,6 @@ SELECT DISTINCT
     report_opportunity_user_asm,
 
     sales_qualified_source,
-    order_type_stamped,
     deal_group,
 
     key_segment,
