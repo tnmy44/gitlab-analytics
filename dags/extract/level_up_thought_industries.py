@@ -58,11 +58,11 @@ dummy_start = DummyOperator(task_id="dummy_start", dag=dag)
 dummy_end = DummyOperator(task_id="dummy_end", dag=dag)
 
 endpoint_classes = (
+    "CourseActions",
     "CourseCompletions",
+    "CourseViews",
     "Logins",
     "Visits",
-    "CourseViews",
-    "CourseActions",
 )
 extract_tasks = []
 
