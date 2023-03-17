@@ -188,10 +188,6 @@ Users who set personal preference to see Security Dashboard on Group
  Is Geo enabled? [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/settings/20210216180406_geo_enabled.yml)
 {% enddocs %}
 
-{% docs geo_nodes_all_time_event_desc %}
- Total number of sites in a Geo deployment. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210201124936_geo_nodes.yml)
-{% enddocs %}
-
 {% docs auto_devops_pipelines_28_days_user_desc %}
  Distinct users that ran an auto DevOps pipeline without a .gitlab-ci.yml file. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216175548_ci_pipeline_config_auto_devops.yml)
 {% enddocs %}
