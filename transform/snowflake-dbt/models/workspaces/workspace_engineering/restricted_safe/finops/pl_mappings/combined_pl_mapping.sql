@@ -13,7 +13,7 @@ infralabel_pl AS (
     NULL                     AS gcp_service_description,
     NULL                     AS gcp_sku_description,
     infralabel_pl.infra_label,
-    infralabel_pl.type       AS pl_category,
+    lower(infralabel_pl.type)       AS pl_category,
     infralabel_pl.allocation AS pl_percent,
     'infralabel_pl'          AS from_mapping
   FROM date_spine
@@ -29,7 +29,7 @@ projects_pl AS (
     NULL                   AS gcp_service_description,
     NULL                   AS gcp_sku_description,
     NULL                   AS infra_label,
-    projects_pl.type       AS pl_category,
+    lower(projects_pl.type)       AS pl_category,
     projects_pl.allocation AS pl_percent,
     'projects_pl'          AS from_mapping
   FROM date_spine
@@ -45,7 +45,7 @@ repo_storage_pl_daily AS (
     'Compute Engine'                           AS gcp_service_description,
     'SSD backed PD Capacity'                   AS gcp_sku_description,
     'gitaly'                                   AS infra_label,
-    repo_storage_pl_daily.finance_pl           AS pl_category,
+    lower(repo_storage_pl_daily.finance_pl)           AS pl_category,
     repo_storage_pl_daily.percent_repo_size_gb AS pl_percent,
     'repo_storage_pl_daily'                    AS from_mapping
   FROM {{ ref ('repo_storage_pl_daily') }}
@@ -59,7 +59,7 @@ sandbox_projects_pl AS (
     NULL                               AS gcp_service_description,
     NULL                               AS gcp_sku_description,
     NULL                               AS infra_label,
-    sandbox_projects_pl.classification AS pl_category,
+    lower(sandbox_projects_pl.classification) AS pl_category,
     1                                  AS pl_percent,
     'sandbox_projects_pl'              AS from_mapping
   FROM date_spine

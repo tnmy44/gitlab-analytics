@@ -54,3 +54,6 @@ overlaps AS (
 )
 
 SELECT * EXCLUDE(priority) FROM overlaps WHERE priority = 1
+
+
+
