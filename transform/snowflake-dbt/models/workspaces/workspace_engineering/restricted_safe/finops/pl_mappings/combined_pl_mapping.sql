@@ -64,6 +64,22 @@ sandbox_projects_pl AS (
     'sandbox_projects_pl'              AS from_mapping
   FROM date_spine
   CROSS JOIN {{ ref ('sandbox_projects_pl') }}
+),
+
+container_registry_pl_daily AS (
+
+  SELECT
+    snapshot_day                               AS date_day,
+    'gitlab-production'                        AS gcp_project_id,
+    'Cloud Storage'                           AS gcp_service_description,
+    'Standard Storage US Multi-region'        AS gcp_sku_description,
+    'registry'                                   AS infra_label,
+    lower(container_registry_pl_daily.finance_pl)           AS pl_category,
+    container_registry_pl_daily.percent_container_registry_size AS pl_percent,
+    'container_registry_pl_daily'                    AS from_mapping
+  FROM {{ ref ('container_registry_pl_daily') }}
+  where snapshot_day > '2022-06-10'
+
 )
 
 SELECT * FROM infralabel_pl
@@ -73,3 +89,5 @@ UNION ALL
 SELECT * FROM repo_storage_pl_daily
 UNION ALL
 SELECT * FROM sandbox_projects_pl
+UNION ALL
+SELECT * FROM container_registry_pl_daily
