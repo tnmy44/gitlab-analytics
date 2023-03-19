@@ -80,6 +80,36 @@ container_registry_pl_daily AS (
   FROM {{ ref ('container_registry_pl_daily') }}
   where snapshot_day > '2022-06-10'
 
+),
+
+build_artifacts_pl_daily AS (
+
+  SELECT
+    snapshot_day                               AS date_day,
+    'gitlab-production'                        AS gcp_project_id,
+    'Cloud Storage'                           AS gcp_service_description,
+    'Standard Storage US Multi-region'        AS gcp_sku_description,
+    'build_artifacts'                                   AS infra_label,
+    lower(build_artifacts_pl_daily.finance_pl)           AS pl_category,
+    build_artifacts_pl_daily.percent_build_artifacts_size AS pl_percent,
+    'build_artifacts_pl_daily'                    AS from_mapping
+  FROM {{ ref ('build_artifacts_pl_daily') }}
+
+),
+
+single_sku_pl AS (
+
+  SELECT
+    date_spine.date_day,
+    NULL   AS gcp_project_id,
+    single_sku_pl.service_description        AS gcp_service_description,
+    single_sku_pl.sku_description       AS gcp_sku_description,
+    NULL                               AS infra_label,
+    lower(single_sku_pl.type) AS pl_category,
+    single_sku_pl.allocation             AS pl_percent,
+    'single_sku_pl'              AS from_mapping
+  FROM date_spine
+  CROSS JOIN {{ ref ('single_sku_pl') }}
 )
 
 SELECT * FROM infralabel_pl
@@ -91,3 +121,7 @@ UNION ALL
 SELECT * FROM sandbox_projects_pl
 UNION ALL
 SELECT * FROM container_registry_pl_daily
+UNION ALL
+SELECT * FROM build_artifacts_pl_daily
+UNION ALL
+SELECT * FROM single_sku_pl

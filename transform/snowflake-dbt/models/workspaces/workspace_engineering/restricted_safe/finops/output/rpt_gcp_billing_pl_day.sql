@@ -47,13 +47,13 @@ overlaps AS (
   FROM
     service_base
   LEFT JOIN combined_pl_mapping ON combined_pl_mapping.date_day = service_base.day
-    AND COALESCE(combined_pl_mapping.gcp_project_id, service_base.gcp_project_id) = service_base.gcp_project_id
+    AND COALESCE(combined_pl_mapping.gcp_project_id, coalesce(service_base.gcp_project_id, '')) = coalesce(service_base.gcp_project_id, '')
     AND COALESCE(combined_pl_mapping.gcp_service_description, service_base.gcp_service_description) = service_base.gcp_service_description
     AND COALESCE(combined_pl_mapping.gcp_sku_description, service_base.gcp_sku_description) = service_base.gcp_sku_description
-    AND COALESCE(combined_pl_mapping.infra_label, service_base.infra_label) = service_base.infra_label
+    AND COALESCE(combined_pl_mapping.infra_label, coalesce(service_base.infra_label, '')) = coalesce(service_base.infra_label, '')
 )
 
-SELECT * EXCLUDE(priority) FROM overlaps WHERE priority = 1
-
-
-
+SELECT * 
+EXCLUDE(priority)
+FROM overlaps 
+WHERE priority = 1

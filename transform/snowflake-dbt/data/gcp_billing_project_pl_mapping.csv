@@ -15,6 +15,7 @@ demosys-sandbox,0,1,0
 demosys-spt-training-cloud,0,1,0
 demosys-workshop-cloud,0,1,0
 billing-tools-277316,0,0,1
+billing-data-278815,0,0,1
 demosys-ux-gitlabdemo-cloud,0,0,1
 dev-eco-integrations-00928fe7,0,0,1
 dev-package-container-96a3ff34,0,0,1
@@ -22,6 +23,7 @@ eng-dev-secure-vuln-2251a841,0,0,1
 ext-license-db-dev-d6ba6f35,0,0,1
 ext-license-db-prd-43e2753d,0,0,1
 gitlab-analysis,0,0,1
+gitlab-db-benchmarking,0,0,1
 gitlab-demos,0,0,1
 gitlab-internal-153318,0,0,1
 gitlab-qa-10k-cd77c7,0,0,1
