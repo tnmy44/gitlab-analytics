@@ -4,7 +4,6 @@
 ) }}
 
 WITH final AS (
-WITH final AS (
     SELECT
     bi.user_id,
     e.namespace_id, -- This attribute is only populated when source_type = 0 (groups). If the status is failed, probably the value will be NULL since the migration failed
