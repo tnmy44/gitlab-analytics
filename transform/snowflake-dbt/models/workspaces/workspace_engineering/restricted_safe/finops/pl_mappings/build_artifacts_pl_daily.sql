@@ -4,25 +4,34 @@ WITH ns_type AS (
 
 ),
 
+projects as (SELECT * FROM {{ ref('gitlab_dotcom_projects_xf') }}),
 
+project_statistics as (
+
+    SELECT * FROM {{ ref('gitlab_dotcom_project_statistic_snapshots_daily') }} 
+),
+
+namespaces_child as (
+
+    SELECT * FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
+
+),
 
 storage AS (
   SELECT
     project_statistics.snapshot_day,
     namespaces_child.namespace_ultimate_parent_id                       AS namespace_id,
-    SUM(COALESCE(project_statistics.repository_size, 0) / POW(1024, 3)) AS repo_size_gb
+    SUM(COALESCE(project_statistics.build_artifacts_size, 0) / POW(1024, 3)) AS build_artifacts_gb
   FROM
-    {{ ref('gitlab_dotcom_projects_xf') }} projects
+     projects
   LEFT JOIN
-    {{ ref('gitlab_dotcom_project_statistic_snapshots_daily') }} project_statistics
+    project_statistics
     ON
       projects.project_id = project_statistics.project_id
   INNER JOIN
-    {{ ref('gitlab_dotcom_namespaces_xf') }} namespaces_child
+    namespaces_child
     ON
       projects.namespace_id = namespaces_child.namespace_id
-  -- WHERE
-  --   date_trunc('month', project_statistics.snapshot_day) = '2023-02-01'
   GROUP BY
     1, 2
 )
@@ -32,8 +41,8 @@ storage AS (
 SELECT
   storage.snapshot_day,
   coalesce(ns_type.finance_pl, 'Internal') as finance_pl,
-  SUM(repo_size_gb) AS repo_size_gb,
-  100 * RATIO_TO_REPORT(SUM(repo_size_gb)) OVER (PARTITION BY snapshot_day) AS percent_repo_size_gb
+  SUM(build_artifacts_gb) AS build_artifacts_gb,
+  RATIO_TO_REPORT(SUM(build_artifacts_gb)) OVER (PARTITION BY snapshot_day) AS percent_build_artifacts_size
 FROM
   storage
 LEFT JOIN

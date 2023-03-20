@@ -65,6 +65,8 @@
                     '-',
                     UPPER(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area), 
                     '-',
+                    UPPER(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment),
+                    '-',
                     fiscal_months.fiscal_year
                     )
       WHEN fiscal_months.fiscal_year >= 2024 
@@ -109,5 +111,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2023-03-10",
-    updated_date="2023-03-10"
+    updated_date="2023-03-17"
 ) }}
