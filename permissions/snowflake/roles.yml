@@ -1917,6 +1917,20 @@ roles:
                     - prep.handbook.*
                     - raw.handbook.*
 
+    - hightouch_role:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.sensitive
+            tables:
+                read:
+                    - prep.sensitive.poc_pump_marketing_contact_namespace_detail
+
     - license_db:
         privileges:
             databases:
@@ -4894,6 +4908,11 @@ users:
         can_login: yes
         member_of:
             - gweaver
+
+    - hightouch_user:
+        can_login: yes
+        member_of:
+            - hightouch_role
 
     - hkacmarski:
         can_login: yes
