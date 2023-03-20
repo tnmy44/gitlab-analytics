@@ -3260,6 +3260,9 @@ roles:
         member_of:
          - restricted_safe
          - analytics_engineer_core
+         - salesforce
+         - sheetload
+         - zuora
         warehouses:
             - dev_xs
         owns:
