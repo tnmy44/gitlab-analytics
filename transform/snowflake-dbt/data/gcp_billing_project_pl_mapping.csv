@@ -1,13 +1,4 @@
 project_id,free,paid,internal
-gitlab-ci-plan-free-3-35411a,1,0,0
-gitlab-ci-plan-free-4-3ba81e,1,0,0
-gitlab-ci-plan-free-5-6ef84d,1,0,0
-gitlab-ci-plan-free-6-f2de7a,1,0,0
-gitlab-ci-plan-free-7-7fe256,1,0,0
-gitlab-ci-private-1,0,1,0
-gitlab-ci-private-2,0,1,0
-gitlab-ci-private-3,0,1,0
-gitlab-ci-private-4,0,1,0
 hackystack-gitops,0,0,1
 opstrace-dev-bee41fca,0,0,1
 opstrace-prd-ac6ca492,0,0,1
@@ -24,6 +15,7 @@ demosys-sandbox,0,1,0
 demosys-spt-training-cloud,0,1,0
 demosys-workshop-cloud,0,1,0
 billing-tools-277316,0,0,1
+billing-data-278815,0,0,1
 demosys-ux-gitlabdemo-cloud,0,0,1
 dev-eco-integrations-00928fe7,0,0,1
 dev-package-container-96a3ff34,0,0,1
@@ -31,6 +23,7 @@ eng-dev-secure-vuln-2251a841,0,0,1
 ext-license-db-dev-d6ba6f35,0,0,1
 ext-license-db-prd-43e2753d,0,0,1
 gitlab-analysis,0,0,1
+gitlab-db-benchmarking,0,0,1
 gitlab-demos,0,0,1
 gitlab-internal-153318,0,0,1
 gitlab-qa-10k-cd77c7,0,0,1
@@ -98,7 +91,6 @@ support-resources-c801eb,0,0,1
 support-testing-168620,0,0,1
 t4cc0re,0,0,1
 unreview-poc-390200e5,0,0,1
-gitlab-staging-1,0,0,1
 gitlab-r-saas-l-l-amd64-4,0,1,0
 gitlab-r-saas-l-l-amd64-5,0,1,0
 gitlab-r-saas-l-l-amd64-1,0,1,0

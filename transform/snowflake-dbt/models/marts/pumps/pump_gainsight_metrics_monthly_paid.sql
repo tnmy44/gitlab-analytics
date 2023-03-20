@@ -268,7 +268,6 @@
       monthly_sm_metrics.successful_deployments_28_days_user,
       -- Wave 5.3
       monthly_sm_metrics.geo_enabled,
-      monthly_sm_metrics.geo_nodes_all_time_event,
       monthly_sm_metrics.auto_devops_pipelines_28_days_user,
       monthly_sm_metrics.active_instance_runners_all_time_event,
       monthly_sm_metrics.active_group_runners_all_time_event,
@@ -496,7 +495,6 @@
       monthly_saas_metrics.successful_deployments_28_days_user,
       -- Wave 5.3
       monthly_saas_metrics.geo_enabled,
-      monthly_saas_metrics.geo_nodes_all_time_event,
       monthly_saas_metrics.auto_devops_pipelines_28_days_user,
       monthly_saas_metrics.active_instance_runners_all_time_event,
       monthly_saas_metrics.active_group_runners_all_time_event,
@@ -597,5 +595,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-10-12",
-    updated_date="2023-01-23"
+    updated_date="2023-03-15"
 ) }}

@@ -2114,6 +2114,7 @@ roles:
                     - prod.restricted_safe_workspace_marketing
                     - prod.restricted_safe_workspace_sales
                     - prod.restricted_safe_common_mart_product
+                    - prod.restricted_safe_workspace_engineering
                     - prod.workspace_data_science
                     - prod.workspace_sales
 
@@ -2128,6 +2129,7 @@ roles:
                     - prod.restricted_safe_workspace_finance.*
                     - prod.restricted_safe_workspace_marketing.*
                     - prod.restricted_safe_workspace_sales.*
+                    - prod.restricted_safe_workspace_engineering.*
                     - prod.restricted_safe_common_mart_product.*
                     - prod.workspace_data_science.*
                     - prod.workspace_sales.*
@@ -3258,6 +3260,9 @@ roles:
         member_of:
          - restricted_safe
          - analytics_engineer_core
+         - salesforce
+         - sheetload
+         - zuora
         warehouses:
             - dev_xs
         owns:

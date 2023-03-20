@@ -103,7 +103,9 @@ WITH edm_opty AS (
     edm_opty.report_user_segment_geo_region_area_sqs_ot,
     edm_opty.report_user_segment_geo_region_area,
     ------------------------------------------------------------------------
-
+    -- FY24 keys
+    edm_opty.report_bu_user_segment_geo_region_area_sqs_ot,
+    edm_opty.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
     edm_opty.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
 
     ----------------------------------------------------------
