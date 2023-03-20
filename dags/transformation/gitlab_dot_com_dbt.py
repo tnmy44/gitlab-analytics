@@ -27,6 +27,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_TRANSFORM_ROLE,
     SNOWFLAKE_TRANSFORM_SCHEMA,
@@ -53,6 +54,7 @@ dbt_secrets = [
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_TRANSFORM_ROLE,
     SNOWFLAKE_TRANSFORM_SCHEMA,
@@ -111,7 +113,7 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
     snapshot_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-        dbt snapshot --profiles-dir profile --target prod --select path:snapshots/{dbt_module_name}; ret=$?;
+        dbt snapshot --profiles-dir profile --target prod --select path:snapshots/{dbt_module_name} ; ret=$?;
         montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
     """
@@ -132,7 +134,7 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
     model_run_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-        dbt run --profiles-dir profile --target prod --models +sources.{dbt_module_name}; ret=$?;
+        dbt run --profiles-dir profile --target prod --models +sources.{dbt_module_name} ; ret=$?;
         montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
     """
@@ -152,7 +154,7 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
     # Test all source models
     model_test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt test --profiles-dir profile --target prod --models +sources.{dbt_module_name} {run_command_test_exclude}; ret=$?;
+        dbt test --profiles-dir profile --target prod --models +sources.{dbt_module_name} {run_command_test_exclude} ; ret=$?;
         montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
     """

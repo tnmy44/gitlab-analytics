@@ -6,7 +6,7 @@ Prep model for the live crm account dimension.
 
 {% docs prep_crm_opportunity %}
 
-Prep model for the live and snapshot crm opportunity dimension and fact models.
+Prep model for the live crm opportunity dimension and fact models. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
 
 {% enddocs %}
 

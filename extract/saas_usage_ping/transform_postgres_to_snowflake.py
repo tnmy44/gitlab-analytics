@@ -371,7 +371,6 @@ def get_transformed_having_clause(postgres_sql: str) -> str:
     snowflake_having_clause = postgres_sql
 
     if utils.HAVING_CLAUSE_PATTERN.findall(snowflake_having_clause):
-
         snowflake_having_clause = postgres_sql.replace(
             "(approval_project_rules_users)", "(approval_project_rules_users.id)"
         )
@@ -440,7 +439,6 @@ def transform(json_data: Dict[Any, Any]) -> Dict[Any, Any]:
 
 
 if __name__ == "__main__":
-
     url = "https://gitlab.com/api/v4/usage_data/queries"
 
     json_payload = utils.get_response_as_dict(url=url)

@@ -106,7 +106,6 @@ models:
         description: ID of the Zuora account associated with a given Subscription ID
         tests:
           - not_null
-        description: Zuora account id
       - name: dim_crm_account_id
         description: Account ID from SFDC identifing the customer
       - name: dim_date_id
@@ -324,5 +323,21 @@ models:
         tests:
           - not_null
       - name: dbt_valid_from
+        tests:
+          - not_null
+
+  - name: prep_order_action_rate_plan
+    description: Prep table for Zuora order action. This it at the order action grain i.e. one order can have multiple order actions.
+  
+  - name: prep_sales_funnel_target
+    description: Prep model for SSOT sales funnel targets
+    columns:
+      - name: dim_crm_user_hierarchy_sk
+        tests:
+          - not_null
+  - name: prep_sales_funnel_partner_alliance_target
+    description: Prep model for sales funnel partner targets
+    columns:
+      - name: dim_crm_user_hierarchy_sk
         tests:
           - not_null

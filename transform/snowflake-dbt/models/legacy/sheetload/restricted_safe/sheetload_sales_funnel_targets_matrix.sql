@@ -15,7 +15,8 @@ WITH source AS (
       user_segment,
       user_geo,
       user_region,
-      user_area
+      user_area,
+      user_business_unit
     FROM source
 
 )
@@ -25,5 +26,5 @@ WITH source AS (
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-11-18",
-    updated_date="2022-02-10"
+    updated_date="2023-03-10"
 ) }}

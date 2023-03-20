@@ -33,14 +33,34 @@ WITH versions AS (
       created_date,
       updated_date
     FROM calculated  
+)
+
+, final AS (
+
+    SELECT
+      version_id,
+      version,
+      major_version,
+      minor_version,
+      patch_number,
+      is_monthly_release,
+      is_vulnerable,
+      CASE WHEN is_vulnerable IN ('0','f') THEN 'not_vulnerable'
+           WHEN is_vulnerable = '1' THEN 'non_critical'
+           WHEN is_vulnerable = '2' THEN 'critical'
+           WHEN is_vulnerable = 't' THEN 'vulnerable'
+      ELSE NULL END AS vulnerability_type_desc,
+      created_date,
+      updated_date
+    FROM renamed  
 
 )
 
 {{ dbt_audit(
-    cte_ref="renamed",
+    cte_ref="final",
     created_by="@derekatwood",
-    updated_by="@msendal",
+    updated_by="@snalamaru",
     created_date="2020-08-06",
-    updated_date="2020-09-17"
+    updated_date="2023-03-08"
 ) }}
 

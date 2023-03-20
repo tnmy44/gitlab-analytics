@@ -1,6 +1,6 @@
 {% docs mart_event_valid %}
 
-**Description:** Enriched GitLab.com usage event data for valid events. This is an enhanced version of `fct_event_valid`
+**Description:** Enriched GitLab.com usage event data for valid events. This is an enhanced version of `fct_event_valid`, filtered to the last 24 months
 - [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.
 - This data is enriched with additional user, namespace, and project attributes for ease of analysis
 
@@ -12,7 +12,7 @@
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
+- Rolling 24 months of data
 
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
@@ -341,5 +341,58 @@
 - The different types of Service Pings are shown here with the [Self-Managed Service Ping](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#self-managed-service-ping), [GitLab Hosted Implementation](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#saas-service-ping).
 - [GitLab Dedicated Implementation](https://docs.gitlab.com/ee/subscriptions/gitlab_dedicated/#gitlab-dedicated) service pings will function similar to Self-Managed Implementations.
 - [Service Ping Guide](https://docs.gitlab.com/ee/development/service_ping/) shows a technical overview of the Service Ping data flow.
+
+{% enddocs %}
+
+{% docs mart_event_namespace_monthly %}
+
+**Description:** Enriched GitLab.com usage event data for valid events, grouped by month, event name, and ultimate parent namespace. This is an enhanced version of `fct_event_namespace_monthly`
+- This data is enhanced with additional namespace attributes for ease of analysis
+
+**Data Grain:**
+- event_calendar_month
+- event_name
+- dim_ultimate_parent_namespace_id
+
+**Filters Applied to Model:**
+- Exclude current month
+- `Inherited` - Include valid events for standard analysis and reporting:
+  - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
+    - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
+  - Exclude events from blocked users (based on the current user state)
+- `Inherited` - Rolling 36 months of data
+- `Inherited` - Exclude events not associated with a namespace (ex: 'users_created')
+
+**Business Logic in this Model:**
+- `Inherited` - A namespace's plan information (ex: `plan_name_at_event_month`) is determined by the plan for the last event on a given month
+- `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
+- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
+
+**Other Comments:**
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
+
+{% enddocs %}
+
+{% docs mart_behavior_structured_event %}
+
+**Description:** Enriched Snowplow table for the analysis of structured events. This is an enhanced version of `fct_behavior_structured_event`. 
+
+**Data Grain:** behavior_structured_event_pk
+
+This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all) 
+
+**Filters Applied to Model:**
+- `Inherited` - This model only includes Structured events (when `event=struct` from `dim_behavior_event`)
+
+**Tips for use:**
+- There is a cluster key on `behavior_at::DATE`. Using `behavior_at` in a WHERE clause or INNER JOIN will improve query performance.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
+
+**Other Comments:**
+- Structured events are custom events implemented with five parameters: event_category, event_action, event_label, event_property and event_value. Snowplow documentation on [types of events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/).
+- There is information on some Snowplow structured events in the [Snowplow event dictionary](https://metrics.gitlab.com/snowplow)
 
 {% enddocs %}

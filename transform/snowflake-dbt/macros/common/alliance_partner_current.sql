@@ -9,6 +9,7 @@ CASE
     THEN 'IBM (OEM)'
   WHEN NOT EQUAL_NULL({{ resale_partner_track }}, 'Technology') AND NOT EQUAL_NULL({{ partner_track }}, 'Technology') AND {{deal_path }} = 'Channel'
     THEN 'Channel Partners'
+  ELSE 'Other Alliance Partners'
 END
 
 {%- endmacro -%}

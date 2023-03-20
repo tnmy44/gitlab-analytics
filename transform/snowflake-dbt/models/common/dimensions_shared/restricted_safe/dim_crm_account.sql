@@ -51,11 +51,13 @@ WITH final AS (
       prep_crm_account.parent_crm_account_zoom_info_parent_company_name,
       prep_crm_account.parent_crm_account_zoom_info_ultimate_parent_company_zi_id,
       prep_crm_account.parent_crm_account_zoom_info_ultimate_parent_company_name,
-      prep_crm_account.parent_crm_account_demographics_sales_segment,
+      prep_crm_account.parent_crm_account_demographics_business_unit,
       prep_crm_account.parent_crm_account_demographics_geo,
       prep_crm_account.parent_crm_account_demographics_region,
+      prep_crm_account.parent_crm_account_demographics_sales_segment,
       prep_crm_account.parent_crm_account_demographics_area,
       prep_crm_account.parent_crm_account_demographics_territory,
+      prep_crm_account.parent_crm_account_demographics_role_type,
       prep_crm_account.parent_crm_account_demographics_max_family_employee,
       prep_crm_account.parent_crm_account_demographics_upa_country,
       prep_crm_account.parent_crm_account_demographics_upa_state,
@@ -90,6 +92,7 @@ WITH final AS (
       prep_crm_account.business_development_rep,
       prep_crm_account.dedicated_service_engineer,
       prep_crm_account.account_tier,
+      prep_crm_account.account_tier_notes,
       prep_crm_account.license_utilization,
       prep_crm_account.support_level,
       prep_crm_account.named_account,
@@ -139,6 +142,15 @@ WITH final AS (
       prep_crm_account.sales_development_rep,
       prep_crm_account.admin_manual_source_number_of_employees,
       prep_crm_account.admin_manual_source_account_address,
+      prep_crm_account.eoa_sentiment,
+      prep_crm_account.gs_health_user_engagement,
+      prep_crm_account.gs_health_cd,
+      prep_crm_account.gs_health_devsecops,
+      prep_crm_account.gs_health_ci,
+      prep_crm_account.gs_health_scm,
+      prep_crm_account.risk_impact,
+      prep_crm_account.risk_reason,
+      prep_crm_account.last_timeline_at_risk_update,
 
       --measures (maintain for now to not break reporting)
       prep_crm_account.parent_crm_account_lam,
@@ -182,6 +194,8 @@ WITH final AS (
       prep_crm_account.technical_account_manager_date,
       prep_crm_account.customer_since_date,
       prep_crm_account.next_renewal_date,
+      prep_crm_account.gs_first_value_date,
+      prep_crm_account.gs_last_csm_activity_date,
 
       --metadata
       prep_crm_account.created_by_name,
@@ -202,9 +216,9 @@ WITH final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@lisvinueza",
+    updated_by="@michellecooper",
     created_date="2020-06-01",
-    updated_date="2023-01-13"
+    updated_date="2023-03-10"
 ) }}
 
 

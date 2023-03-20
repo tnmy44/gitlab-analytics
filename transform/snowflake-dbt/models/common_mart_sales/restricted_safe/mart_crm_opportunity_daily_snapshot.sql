@@ -134,11 +134,13 @@ final AS (
     -- account fields
     dim_crm_account.crm_account_name,
     dim_crm_account.parent_crm_account_name,
+    dim_crm_account.parent_crm_account_demographics_business_unit AS account_demographics_business_unit,
     dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
     dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
     dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
     dim_crm_account.parent_crm_account_demographics_area AS account_demographics_area,
     dim_crm_account.parent_crm_account_demographics_territory AS account_demographics_territory,
+    dim_crm_account.parent_crm_account_demographics_role_type AS account_demographics_role_type,
     dim_crm_account.parent_crm_account_gtm_strategy,
     dim_crm_account.parent_crm_account_focus_account,
     dim_crm_account.parent_crm_account_sales_segment,
@@ -179,6 +181,7 @@ final AS (
     fct_crm_opportunity.user_geo_stamped AS crm_opp_owner_geo_stamped,
     fct_crm_opportunity.user_region_stamped AS crm_opp_owner_region_stamped,
     fct_crm_opportunity.user_area_stamped AS crm_opp_owner_area_stamped,
+    fct_crm_opportunity.user_business_unit_stamped AS crm_opp_owner_business_unit_stamped,
     {{ sales_segment_region_grouped('fct_crm_opportunity.user_segment_stamped',
         'fct_crm_opportunity.user_geo_stamped', 'fct_crm_opportunity.user_region_stamped') }}
     AS crm_opp_owner_sales_segment_region_stamped_grouped,
@@ -191,6 +194,7 @@ final AS (
     opp_owner_live.crm_user_geo,
     opp_owner_live.crm_user_region,
     opp_owner_live.crm_user_area,
+    opp_owner_live.crm_user_business_unit,
     {{ sales_segment_region_grouped('opp_owner_live.crm_user_sales_segment',
         'opp_owner_live.crm_user_geo', 'opp_owner_live.crm_user_region') }}
     AS crm_user_sales_segment_region_grouped,
@@ -407,6 +411,11 @@ final AS (
     last_activity_date.first_day_of_fiscal_quarter                  AS last_activity_fiscal_quarter_date,
     last_activity_date.fiscal_quarter_name_fy                       AS last_activity_fiscal_quarter_name,
     last_activity_date.fiscal_year                                  AS last_activity_fiscal_year,
+    sales_last_activity_date.date_actual                            AS sales_last_activity_date,
+    sales_last_activity_date.first_day_of_month                     AS sales_last_activity_month,
+    sales_last_activity_date.first_day_of_fiscal_quarter            AS sales_last_activity_fiscal_quarter_date,
+    sales_last_activity_date.fiscal_quarter_name_fy                 AS sales_last_activity_fiscal_quarter_name,
+    sales_last_activity_date.fiscal_year                            AS sales_last_activity_fiscal_year,
     technical_evaluation_date.date_actual                           AS technical_evaluation_date,
     technical_evaluation_date.first_day_of_month                    AS technical_evaluation_month,
     technical_evaluation_date.first_day_of_fiscal_quarter           AS technical_evaluation_fiscal_quarter_date,
@@ -517,6 +526,8 @@ final AS (
     ON fct_crm_opportunity.sales_qualified_date = sales_qualified_date.date_actual
   LEFT JOIN dim_date last_activity_date
     ON fct_crm_opportunity.last_activity_date = last_activity_date.date_actual
+  LEFT JOIN dim_date sales_last_activity_date
+    ON fct_crm_opportunity.sales_last_activity_date = sales_last_activity_date.date_actual
   LEFT JOIN dim_date technical_evaluation_date
     ON fct_crm_opportunity.technical_evaluation_date = technical_evaluation_date.date_actual
   LEFT JOIN dim_date arr_created_date 
@@ -536,5 +547,5 @@ final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-05-05",
-    updated_date="2022-12-28"
+    updated_date="2023-03-10"
   ) }}
