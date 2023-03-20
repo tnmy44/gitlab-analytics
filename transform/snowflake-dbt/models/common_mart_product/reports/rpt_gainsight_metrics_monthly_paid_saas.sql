@@ -31,7 +31,7 @@
           'Gitlab Storage 10GB - 1 Year',
           'Premium Support'
         )
-        OR charges.charge_type != 'OneTime'
+        AND charges.charge_type != 'OneTime'
       )
 
 ), gitlab_seats AS (
