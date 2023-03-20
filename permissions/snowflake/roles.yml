@@ -4912,7 +4912,7 @@ users:
     - hightouch_user:
         can_login: yes
         member_of:
-            - HIGHTOUCH_ROLE
+            - hightouch_role
 
     - hkacmarski:
         can_login: yes
