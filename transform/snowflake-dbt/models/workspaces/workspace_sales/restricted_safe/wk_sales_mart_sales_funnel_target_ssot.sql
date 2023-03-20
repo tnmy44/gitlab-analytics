@@ -18,7 +18,7 @@
         FROM {{ ref('wk_sales_report_agg_keys_ssot') }}
         --FROM restricted_safe_workspace_sales.report_agg_keys_ssot
 
- , mart_sales_funnel_target_prep AS (
+ ), mart_sales_funnel_target_prep AS (
     -- JK 2023-01-19: additional grouping CTE in case more keys/grains are created in the target file
 
     SELECT
