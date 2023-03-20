@@ -1,4 +1,9 @@
-WITH source AS (
+{{ config(
+    materialized='view',
+    tags=["mnpi_exception", "product"]
+) }}
+
+WITH final AS (
 
     SELECT 
     *
@@ -6,5 +11,12 @@ WITH source AS (
 
 )
 
-SELECT *
-FROM source
+
+
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@mpetersen",
+    updated_by="@mpetersen",
+    created_date="2023-03-20",
+    updated_date="2023-03-20"
+) }}
