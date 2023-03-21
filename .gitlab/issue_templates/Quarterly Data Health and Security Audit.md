@@ -69,6 +69,16 @@ Below checklist of activities would be run once for quarter to validate security
  
     ```
 
+4. [ ] Drop orphaned tables.
+    <details>
+
+    * [ ] Using the current main branch of the [analytics repository](https://gitlab.com/gitlab-data/analytics/-/tree/master) run the dbt operation `orphaned_db_table_check`
+    ```
+    dbt run-operation orphaned_db_table_check
+    ```
+    * [ ] Using the list of output tables validate that the tables are no longer in use.
+    * [ ] Drop tables that are no longer in use.
+
 ## SISENSE
 1. [ ] Validate off-boarded employees have been removed from Sisense access.
     <details>
