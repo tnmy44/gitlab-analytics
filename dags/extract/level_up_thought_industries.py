@@ -43,11 +43,12 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "el_level_up_thought_industries_v2",
+    "el_level_up_thought_industry",  # TODO
     default_args=default_args,
     # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
-    start_date=datetime(2022, 1, 12),  # CourseCompletion data starts: 2022-01-13
+    start_date=datetime(2021, 12, 31),  # CourseCompletion data starts: 2020-04-06
+    end_date=datetime(2022, 1, 31), # TODO
     catchup=True,
     max_active_runs=1,  # due to API rate limiting
     concurrency=3,  # num of max_tasks, limit due to API rate limiting

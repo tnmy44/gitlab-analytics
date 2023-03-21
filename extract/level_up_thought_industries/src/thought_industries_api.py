@@ -86,7 +86,7 @@ class ThoughtIndustries(ABC):
                 max_retry_count=7,
             )
 
-            events = response.json()["events"]
+            events = response.json().get('events')
 
             # response has events
             if events:
@@ -146,7 +146,9 @@ class ThoughtIndustries(ABC):
                 "Invalid epoch timestamp(s). Make sure epoch timestamp is in MILLISECONDS. "
                 "Aborting now..."
             )
+
         events = self.fetch_from_endpoint(epoch_start_ms, epoch_end_ms)
+
         if events:
             self.upload_events_to_snowflake(events, epoch_start_ms, epoch_end_ms)
         else:
