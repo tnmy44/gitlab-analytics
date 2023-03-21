@@ -266,10 +266,10 @@ models:
           description: The start date of the milestone
         - name: milestone_due_date
           description: The due date of the milestone
-        - name: namespace_id
-          description: The namespace_id related to the issue
         - name: weight
           description: The weight applied to the issue
+        - name: namespace_id
+          description: The namespace_id related to the issue
         - name: labels
           description: The labels on a issue
         - name: masked_label_title
