@@ -118,7 +118,9 @@ WITH source AS (
       RATIO_TO_REPORT(headcount_end_leader) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_leaders,
       RATIO_TO_REPORT(headcount_end_manager) 
-        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_manager,          
+        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_manager,    
+      RATIO_TO_REPORT(headcount_end_management) 
+        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_management,          
       RATIO_TO_REPORT(headcount_end_individual_contributor) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_contributor,
       
