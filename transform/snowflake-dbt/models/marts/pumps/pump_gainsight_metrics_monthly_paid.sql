@@ -15,7 +15,7 @@
     ('charges', 'mart_charge'),
     ('dates', 'dim_date'),
     ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace'),
-    ('redis_metrics', 'wk_rpt_user_based_metric_counts_namespace_monthly'),
+    ('redis_metrics_28d_user', 'wk_rpt_user_based_metric_counts_namespace_monthly'),
     ('redis_metrics_all_time_event', 'wk_rpt_event_based_metric_counts_namespace_all_time')
 ]) }}
 
@@ -71,28 +71,28 @@
 
     SELECT
       *
-    FROM redis_metrics
+    FROM redis_metrics_28d_user
     WHERE metrics_path = 'redis_hll_counters.user_packages.user_packages_total_unique_counts_monthly'
 
 ), project_repo AS (
 
     SELECT
       *
-    FROM redis_metrics
+    FROM redis_metrics_28d_user
     WHERE metrics_path = 'usage_activity_by_stage_monthly.create.action_monthly_active_users_project_repo'
 
 ), analytics_valuestream AS (
 
     SELECT
       *
-    FROM redis_metrics
+    FROM redis_metrics_28d_user
     WHERE metrics_path = 'redis_hll_counters.analytics.g_analytics_valuestream_monthly'
 
 ), ci_templates AS (
 
     SELECT
       *
-    FROM redis_metrics
+    FROM redis_metrics_28d_user
     WHERE metrics_path = 'redis_hll_counters.ci_templates.ci_templates_total_unique_counts_monthly'
 
 ), packages_pushed AS (
