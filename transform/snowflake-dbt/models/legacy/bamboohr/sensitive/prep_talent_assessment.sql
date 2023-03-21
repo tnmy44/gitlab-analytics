@@ -23,10 +23,10 @@ key_talent_no_gaps AS (
   LEFT JOIN key_talent t2
     ON t1.employee_id = t2.employee_id
     AND t1.effective_date < t2.effective_date
-  GROUP BY 1,2,3
+  {{ dbt_utils.group_by(n=3)}}
 ),
 
-performance_no_gaps (
+performance_no_gaps AS (
 
   SELECT
     t1.employee_id,
@@ -38,7 +38,7 @@ performance_no_gaps (
   LEFT JOIN performance t2
     ON t1.employee_id = t2.employee_id
     AND t1.review_period_end_date < t2.review_period_end_date
-  GROUP BY 1,2,3,4
+  {{ dbt_utils.group_by(n=4)}}
 ),
 
 final AS (
