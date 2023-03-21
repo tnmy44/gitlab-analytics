@@ -94,6 +94,41 @@
     FROM redis_metrics
     WHERE metrics_path = 'redis_hll_counters.ci_templates.ci_templates_total_unique_counts_monthly'
 
+), packages_pushed AS (
+
+    SELECT
+      *
+    FROM redis_metrics_all_time_event
+    WHERE metrics_path = 'counts.package_events_i_package_push_package_by_deploy_token'
+
+), packages_pulled AS (
+
+    SELECT
+      *
+    FROM redis_metrics_all_time_event
+    WHERE metrics_path = 'counts.package_events_i_package_pull_package_by_guest'
+
+), single_file_edit AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'redis_hll_counters.ide_edit.g_edit_by_sfe_monthly'
+
+), mrs_created AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'redis_hll_counters.code_review.i_code_review_user_create_mr_monthly'
+
+), pipelines_devops AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'redis_hll_counters.ci_templates.p_ci_templates_implicit_auto_devops_monthly'
+
 ), sm_paid_user_metrics AS (
 
     SELECT
@@ -306,6 +341,17 @@
       monthly_sm_metrics.external_status_checks_all_time_event,
       monthly_sm_metrics.paid_license_search_28_days_user,
       monthly_sm_metrics.last_activity_28_days_user,
+      -- Wave 7
+      monthly_sm_metrics.snippets_28_days_event,
+      monthly_sm_metrics.single_file_editor_28_days_user,
+      monthly_sm_metrics.merge_requests_created_28_days_event,
+      monthly_sm_metrics.merge_requests_created_28_days_user,
+      monthly_sm_metrics.merge_requests_approval_rules_28_days_event,
+      monthly_sm_metrics.custom_compliance_frameworks_28_days_event,
+      monthly_sm_metrics.projects_security_policy_28_days_event,
+      monthly_sm_metrics.merge_requests_security_policy_28_days_user,
+      monthly_sm_metrics.pipelines_implicit_auto_devops_28_days_event,
+      monthly_sm_metrics.pipeline_schedules_28_days_user,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -533,6 +579,17 @@
       monthly_saas_metrics.external_status_checks_all_time_event,
       monthly_saas_metrics.paid_license_search_28_days_user,
       monthly_saas_metrics.last_activity_28_days_user,
+      -- Wave 7
+      monthly_saas_metrics.snippets_28_days_event,
+      COALESCE(single_file_edit.distinct_users_whole_month, 0) AS single_file_editor_28_days_user,
+      monthly_saas_metrics.merge_requests_created_28_days_event,
+      COALESCE(mrs_created.distinct_users_whole_month, 0) AS merge_requests_created_28_days_user,
+      monthly_saas_metrics.merge_requests_approval_rules_28_days_event,
+      monthly_saas_metrics.custom_compliance_frameworks_28_days_event,
+      monthly_saas_metrics.projects_security_policy_28_days_event,
+      monthly_saas_metrics.merge_requests_security_policy_28_days_user,
+      COALESCE(pipelines_devops.distinct_users_whole_month, 0) AS pipelines_implicit_auto_devops_28_days_event,
+      monthly_saas_metrics.pipeline_schedules_28_days_user,
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -562,6 +619,21 @@
     LEFT JOIN ci_templates
       ON ci_templates.date_month = monthly_saas_metrics.snapshot_month
       AND ci_templates.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN packages_pushed
+      ON packages_pushed.month = monthly_saas_metrics.snapshot_month
+      AND packages_pushed.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN packages_pulled
+      ON packages_pulled.month = monthly_saas_metrics.snapshot_month
+      AND packages_pulled.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN single_file_edit
+      ON single_file_edit.date_month = monthly_saas_metrics.snapshot_month
+      AND single_file_edit.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN mrs_created
+      ON mrs_created.date_month = monthly_saas_metrics.snapshot_month
+      AND mrs_created.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN pipelines_devops
+      ON pipelines_devops.date_month = monthly_saas_metrics.snapshot_month
+      AND pipelines_devops.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -595,5 +667,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-10-12",
-    updated_date="2023-03-15"
+    updated_date="2023-03-21"
 ) }}
