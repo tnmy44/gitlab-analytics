@@ -563,8 +563,8 @@
       monthly_saas_metrics.sast_scans_all_time_event,
       monthly_saas_metrics.sast_scans_28_days_event,
       -- Wave 6.1
-      monthly_saas_metrics.packages_pushed_registry_all_time_event,
-      monthly_saas_metrics.packages_pulled_registry_all_time_event,
+      COALESCE(packages_pushed.monthly_value, 0) AS packages_pushed_registry_all_time_event,
+      COALESCE(packages_pulled.monthly_value, 0) AS packages_pulled_registry_all_time_event,
       monthly_saas_metrics.compliance_dashboard_view_28_days_user,
       monthly_saas_metrics.audit_screen_view_28_days_user,
       monthly_saas_metrics.instance_audit_screen_view_28_days_user,
