@@ -93,7 +93,7 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            7                       AS stage_rank,
+            8                       AS stage_rank,
            'Closed'                 AS cycle_time_category,
            'Closed Won'             AS stage_name,
            stage_8_won_date         AS stage_date,
@@ -102,7 +102,7 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            8                       AS stage_rank,
+            9                       AS stage_rank,
            'Closed'                 AS cycle_time_category,
            '8-Closed Lost'          AS stage_name,
            stage_8_lost_date        AS stage_date,
@@ -120,7 +120,7 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            9                       AS stage_rank,
+            10                      AS stage_rank,
            'Closed'                 AS cycle_time_category,
            '9-Unqualified'          AS stage_name,
            stage_9_date             AS stage_date,
@@ -138,7 +138,7 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            9                       AS stage_rank,
+            11                      AS stage_rank,
            'Closed'                 AS cycle_time_category,
            '10-Duplicate'           AS stage_name,
            stage_10_date            AS stage_date,

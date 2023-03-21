@@ -123,7 +123,10 @@ SELECT
         -- adjusted dates for throughput analysis
         -- missing stage dates are completed using the next available stage date, up to a closed date
         -- do not populate date of stages that are not reach yet
+
+        -- Stage 0 is set by default to Creted Date
         IFF(stage_name_rank >= 0, coalesce(base.max_stage_0_date,opty.created_date),Null) as stage_0_date,
+        --IFF(stage_name_rank >= 0, opty.created_date,Null) AS stage_0_date,
         IFF(stage_name_rank >= 1, coalesce(base.max_stage_1_date,base.max_stage_2_date,base.max_stage_3_date,base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)  AS stage_1_date,
         IFF(stage_name_rank >= 2, coalesce(base.max_stage_2_date,base.max_stage_3_date,base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)                     AS stage_2_date,
         IFF(stage_name_rank >= 3, coalesce(base.max_stage_3_date,base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)                                        AS stage_3_date,
