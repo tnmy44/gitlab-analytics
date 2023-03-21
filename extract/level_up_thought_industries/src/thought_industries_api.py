@@ -147,7 +147,10 @@ class ThoughtIndustries(ABC):
                 "Aborting now..."
             )
         events = self.fetch_from_endpoint(epoch_start_ms, epoch_end_ms)
-        self.upload_events_to_snowflake(events, epoch_start_ms, epoch_end_ms)
+        if events:
+            self.upload_events_to_snowflake(events, epoch_start_ms, epoch_end_ms)
+        else:
+            info("No events data returned, nothing to upload")
         return events
 
 
@@ -197,6 +200,18 @@ class CourseViews(ThoughtIndustries):
     def get_endpoint_url(self) -> str:
         """implement abstract class"""
         return "incoming/v2/events/courseView"
+
+
+class CourseActions(ThoughtIndustries):
+    """Class for CourseActions endpoint"""
+
+    def get_name(self) -> str:
+        """implement abstract class"""
+        return "course_actions"
+
+    def get_endpoint_url(self) -> str:
+        """implement abstract class"""
+        return "incoming/v2/events/courseAction"
 
 
 if __name__ == "__main__":
