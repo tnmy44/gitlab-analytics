@@ -6,8 +6,8 @@
 WITH final AS (
 
     SELECT 
-    *
-    FROM {{ ref('gitlab_dotcom_member_roles_source') }}
+    * EXCLUDE (created_by, updated_by)
+    FROM {{ ref('gitlab_dotcom_member_roles_source') }} 
 
 )
 
