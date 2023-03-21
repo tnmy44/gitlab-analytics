@@ -15,7 +15,8 @@
     ('charges', 'mart_charge'),
     ('dates', 'dim_date'),
     ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace'),
-    ('redis_metrics', 'wk_rpt_user_based_metric_counts_namespace_monthly')
+    ('redis_metrics', 'wk_rpt_user_based_metric_counts_namespace_monthly'),
+    ('redis_metrics_all_time_event', 'wk_rpt_event_based_metric_counts_namespace_all_time')
 ]) }}
 
 
