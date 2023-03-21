@@ -55,6 +55,7 @@ WITH internal_issues AS (
     milestones.milestone_description                                                                               AS milestone_description,
     milestones.start_date                                                                                           AS milestone_start_date,
     milestones.due_date                                                                                                 AS milestone_due_date,
+    internal_issues.weight                                                                                        AS weight,
     internal_issues.namespace_id                                                                                        AS namespace_id,
     internal_issues.labels                                                                                              AS labels,
     ARRAY_TO_STRING(internal_issues.labels,'|')                                                                         AS masked_label_title,
