@@ -597,6 +597,11 @@ models:
   - name: dim_gitlab_versions
     description: '{{ doc("dim_gitlab_versions") }}'
     columns:
+      - name: dim_gitlab_versions_sk
+        tests:
+          - not_null
+          - unique
+        description: '{{ doc("dim_gitlab_versions_sk") }}'
       - name: dim_version_id
         description: The unique identifier of the release maintained by the Version app.
         tests:
