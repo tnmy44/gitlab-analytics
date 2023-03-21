@@ -24,6 +24,22 @@ months AS (
 
 ),
 
+bdg_subscription_product_rate_plan AS (
+
+  SELECT
+    *
+  FROM {{ ref('bdg_subscription_product_rate_plan') }}
+
+),
+
+charges AS (
+
+  SELECT 
+    *
+  FROM {{ ref('fct_charge') }}
+
+),
+
 joined AS (
 
   SELECT
@@ -34,11 +50,16 @@ joined AS (
     subscriptions.dim_subscription_id_original,
     subscriptions.namespace_id AS dim_namespace_id,
     subscriptions.subscription_version,
-    subscriptions.subscription_created_date
+    subscriptions.subscription_created_date,
+    bdg_subscription_product_rate_plan.product_rate_plan_charge_name,
+    charges.charge_type
   FROM subscriptions
   INNER JOIN months
     ON (months.date_month >= subscriptions.term_start_month
         AND months.date_month <= subscriptions.term_end_month)
+  LEFT JOIN bdg_subscription_product_rate_plan
+    ON bdg_subscription_product_rate_plan.dim_subscription_id = subscriptions.dim_subscription_id
+  LEFT JOIN charges ON charges.dim_subscription_id = subscriptions.dim_subscription_id
 
 ),
 
@@ -51,6 +72,12 @@ final AS (
     dim_namespace_id,
     subscription_version
   FROM joined
+  WHERE product_rate_plan_charge_name NOT IN (
+    '1,000 CI Minutes',
+    'Gitlab Storage 10GB - 1 Year',
+    'Premium Support'
+  )
+    AND charge_type != 'OneTime'
   --picking most recent subscription version
   QUALIFY
     ROW_NUMBER() OVER(
@@ -66,5 +93,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-10-28",
-    updated_date="2022-10-28"
+    updated_date="2023-03-20"
 ) }}

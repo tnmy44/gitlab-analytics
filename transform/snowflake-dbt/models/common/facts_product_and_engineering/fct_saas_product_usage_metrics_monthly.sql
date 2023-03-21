@@ -29,7 +29,7 @@
           'Gitlab Storage 10GB - 1 Year',
           'Premium Support'
         )
-        AND charges.charge_type != 'OneTime'
+        OR charges.charge_type != 'OneTime'
       )
     {{ dbt_utils.group_by(n=4)}}
 
