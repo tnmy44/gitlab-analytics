@@ -71,13 +71,13 @@
       sales_qualified_source_grouped,
       allocated_target                                                                                                            AS monthly_allocated_target,
       daily_allocated_target,
-      SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
+      SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region, crm_user_business_unit,
                              crm_user_area, order_type_name, sales_qualified_source_name, first_day_of_week ORDER BY date_day)    AS wtd_allocated_target,
-      SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
+      SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region, crm_user_business_unit,
                              crm_user_area, order_type_name, sales_qualified_source_name, target_month ORDER BY date_day)         AS mtd_allocated_target,
-      SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
+      SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region, crm_user_business_unit,
                              crm_user_area, order_type_name, sales_qualified_source_name, fiscal_quarter_name ORDER BY date_day)  AS qtd_allocated_target,
-      SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
+      SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region, crm_user_business_unit,
                              crm_user_area, order_type_name, sales_qualified_source_name, fiscal_year ORDER BY date_day)          AS ytd_allocated_target
 
     FROM monthly_targets_daily
