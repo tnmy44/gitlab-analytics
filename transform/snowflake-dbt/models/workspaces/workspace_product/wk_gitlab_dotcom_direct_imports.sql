@@ -3,8 +3,12 @@
     tags=["mnpi_exception", "product"]
 ) }}
 
+-- This model is to enable looking at direct imports as this pulls the individual entities as well as the bulk import attempts together. To look at individual direct import attempts the intention is to aggregate up to the bulk_import_id. This model is intended to allow for a join to common.dim_namespace for supplementary data on project or group.
+
 WITH final AS (
     SELECT
+    bi.id AS bulk_import_id,
+    e.id AS bulk_import_entity_id,
     bi.user_id,
     e.namespace_id, -- This attribute is only populated when source_type = 0 (groups). If the status is failed, probably the value will be NULL since the migration failed
     e.project_id,   -- This attribute is only populated when source_type = 1 (project). If the status is failed, probably the value will be NULL since the migration failed
@@ -28,7 +32,7 @@ WITH final AS (
     END AS status
     FROM
     {{ ref( 'gitlab_dotcom_bulk_import_entities_dedupe_source') }} e
-    LEFT JOIN 
+    JOIN 
     {{ ref( 'gitlab_dotcom_bulk_imports_dedupe_source') }} bi ON e.bulk_import_id = bi.id
 
     )
