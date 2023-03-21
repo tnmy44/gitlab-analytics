@@ -2329,7 +2329,7 @@ models:
       - name: is_primary_quote
       - name: quote_start_date
       - name: subscription_action_type
-        description: The action to be carried out on the subscription. For example, 'Amend Subscription' or 'Renew Subscription'
+        description: '{{ doc("subscription_action_type") }}'
 
   - name: dim_license
     description: '{{ doc("dim_license") }}'

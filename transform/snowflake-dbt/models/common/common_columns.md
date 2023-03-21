@@ -1856,9 +1856,14 @@ Change in the price per seat paid in the arr_month.
 
 {% enddocs %}
 
-
 {% docs namespace_is_ultimate_parent %}
 
 Boolean flag which is set to True if the namespace is the ultimate parent.
+
+{% enddocs %}
+
+{% docs subscription_action_type %}
+
+The action to be carried out on the subscription. For example, 'Amend Subscription' or 'Renew Subscription'
 
 {% enddocs %}
