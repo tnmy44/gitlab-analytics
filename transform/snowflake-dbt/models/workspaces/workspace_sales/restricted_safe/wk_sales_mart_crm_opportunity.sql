@@ -600,7 +600,7 @@ WITH sfdc_users_xf AS (
         '-',
         sales_qualified_source_name,
         '-',
-        order_type
+        deal_group
       )
     ) AS report_user_segment_geo_region_area_sqs_ot,
 
@@ -634,7 +634,7 @@ WITH sfdc_users_xf AS (
         '-',
         sales_qualified_source_name,
         '-',
-        order_type
+        deal_group
       )
     ) AS report_bu_user_segment_geo_region_area_sqs_ot,
 
@@ -658,7 +658,7 @@ WITH sfdc_users_xf AS (
         '-',
         edm_opty.sales_qualified_source_name,
         '-',
-        edm_opty.order_type
+        edm_opty.deal_group
       )
     ) AS report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
 
@@ -682,7 +682,7 @@ WITH sfdc_users_xf AS (
         '-',       
         edm_opty.sales_qualified_source_name,
         '-',
-        edm_opty.order_type,
+        edm_opty.deal_group,
         '-',
         opportunity_owner.role_type,
         '-',

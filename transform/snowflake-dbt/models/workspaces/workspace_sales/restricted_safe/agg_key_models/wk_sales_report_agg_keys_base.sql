@@ -77,7 +77,6 @@ WITH sfdc_account_xf AS (
 
         LOWER(sqs.sales_qualified_source)                   AS sales_qualified_source,
         LOWER(ot.deal_group)                                AS deal_group,
-        LOWER(ot.order_type_stamped)                        AS order_type_stamped,
         LOWER(partner_cat.partner_category)                 AS partner_category,
         LOWER(alliance_partner.alliance_partner)            AS alliance_partner,
 
@@ -137,7 +136,6 @@ WITH sfdc_account_xf AS (
                     sales_qualified_source_name AS sales_qualified_source
                 FROM mart_crm_opportunity)  sqs
     CROSS JOIN (SELECT DISTINCT
-                    order_type AS order_type_stamped,
                     deal_group
                 FROM mart_crm_opportunity) ot
     CROSS JOIN (SELECT DISTINCT

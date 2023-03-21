@@ -57,11 +57,12 @@
           AND
             (
             LOWER(crm_user_sales_segment) = 'mid-market'
-            AND (LOWER(crm_user_geo) = 'amer' 
-                OR LOWER(crm_user_geo) = 'emea')
+            AND (LOWER(crm_user_geo) = 'amer'
+                     OR LOWER(crm_user_geo) = 'emea')
+            AND LOWER(crm_user_area) != 'norben'
             AND LOWER(order_type_name) = '1. new - first order'
             )
-          THEN 'MM First Orders'  --mid-market FO
+          THEN 'MM First Orders'  --mid-market FO(?)
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
           AND LOWER(crm_user_geo) = 'emea'
@@ -78,18 +79,21 @@
         WHEN LOWER(crm_user_business_unit) = 'entg'
           THEN crm_user_region
 
+
+        WHEN
+          LOWER(crm_user_business_unit) = 'comm'
+          AND LOWER(crm_user_sales_segment) = 'mid-market'
+          AND LOWER(crm_user_area) != 'norben'
+          AND LOWER(order_type_name) = '1. new - first order'
+          THEN 'MM First Orders'
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
           AND (LOWER(crm_user_sub_business_unit) = 'amer'
                    OR LOWER(crm_user_sub_business_unit) = 'emea')
-            AND LOWER(order_type_name) != '1. new - first order'
+          AND (LOWER(order_type_name) != '1. new - first order'
+                    OR LOWER(crm_user_area) = 'norben')
           AND LOWER(crm_user_sales_segment) = 'mid-market'
           THEN 'Mid-Market'
-        WHEN
-          LOWER(crm_user_business_unit) = 'comm'
-          AND LOWER(crm_user_sales_segment) = 'mid-market'
-          AND LOWER(order_type_name) = '1. new - first order' -- TODO: special logic for targets
-          THEN 'MM First Orders'
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
           AND (LOWER(crm_user_sub_business_unit) = 'amer'
@@ -104,7 +108,7 @@
         ELSE 'Other'
       END AS crm_user_division,
 
-      -- ASM (X-Ray 4th hierarchy): definition pending
+       -- ASM (X-Ray 4th hierarchy): definition pending
       CASE
         WHEN
           LOWER(crm_user_business_unit) = 'entg'
