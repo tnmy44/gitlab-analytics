@@ -1863,7 +1863,7 @@ Boolean flag which is set to True if the namespace is the ultimate parent.
 
 {% enddocs %}
 
-{% docs dim_gitlab_versions_sk %}
+{% docs dim_gitlab_version_sk %}
 
 The unique surrogate key created by using `version_id` which is a unique identifier of a release maintained by the versions app. 
 
