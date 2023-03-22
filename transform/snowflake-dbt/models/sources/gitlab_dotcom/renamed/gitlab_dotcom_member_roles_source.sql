@@ -2,15 +2,15 @@
 WITH final AS (
 
     SELECT 
-    r.id::INT AS id,
-    r.namespace_id::INT AS namespace_id,
-    r.created_at::TIMESTAMP AS created_at,
-    r.updated_at::TIMESTAMP AS updated_at,
-    r.base_access_level::INT,
-    r.download_code::BOOLEAN,
-    r.read_code::BOOLEAN,
-    _uploaded_at::FLOAT
-    FROM {{ ref('gitlab_dotcom_member_roles_dedupe_source') }} r
+      id::INT AS id,
+      namespace_id::INT AS namespace_id,
+      created_at::TIMESTAMP AS created_at,
+      updated_at::TIMESTAMP AS updated_at,
+      base_access_level::INT,
+      download_code::BOOLEAN,
+      read_code::BOOLEAN,
+      _uploaded_at::FLOAT
+    FROM {{ ref('gitlab_dotcom_member_roles_dedupe_source') }} 
 
 )
 
