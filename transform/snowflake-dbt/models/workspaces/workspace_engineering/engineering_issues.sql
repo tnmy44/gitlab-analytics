@@ -70,13 +70,14 @@ WITH internal_issues AS (
                                                                                                                                 AS type_label,
     CASE
         WHEN type_label = 'bug' 
-            THEN REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','),'\\bbug::*([^,]*)') 
+            THEN IFNULL(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','),'\\bbug::*([^,]*)'),'undefined') 
         WHEN type_label = 'maintenance' 
-            THEN REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','),'\\bmaintenance::*([^,]*)') 
+            THEN IFNULL(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','),'\\bmaintenance::*([^,]*)'),'undefined') 
         WHEN type_label = 'feature' 
-            THEN REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','),'\\bfeature::*([^,]*)') 
+            THEN IFNULL(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','),'\\bfeature::*([^,]*)'),'undefined') 
         ELSE 'undefined' END                                                                                                    AS subtype_label,
     projects.visibility_level                                                                                                   AS visibility_level,
+    projects.project_path                                                                                                       AS project_path,
     CASE
         WHEN ns_4.dim_namespace_id IS NOT NULL
             THEN ns_4.namespace_path || '/' || ns_3.namespace_path || '/' || ns_2.namespace_path || '/' || ns_1.namespace_path || '/' ||  ns.namespace_path
