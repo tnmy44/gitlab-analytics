@@ -18,7 +18,8 @@ def cls_factory(class_name_to_run: str) -> Type:
 def calculate_epoch():
     """
     Retrieve the epoch start/end dates environ variables.
-    If the start_date is before 12/31/2021, set the start_date to 2010.
+    If the start_date is before epoch_threshold_backfill_all,
+    set the start_date to 2010.
 
     This is to capture all data in one call prior to 12/31/2021 as
     current Airflow isn't happy with backfilling daily tasks
@@ -26,8 +27,17 @@ def calculate_epoch():
     """
     # add 1 ms so that there's no overlap between runs
     epoch_start_ms = (int(os.environ["EPOCH_START_STR"]) * 1000) + 1
-    if epoch_start_ms < 1640991600000:  # 12/31/2021
-        epoch_start_ms = 1293755421000  # 12/31/2010
+
+    # if start_epoch ts is before threshold, backfill all
+    epoch_threshold_backfill_all = 1646175600000  # 3/1/2022
+    if epoch_start_ms < epoch_threshold_backfill_all:
+        logging.info(
+            "epoch_start_ms '%s' from airflow is before threshold '%s' "
+            "and is being switched to 1265041161000",
+            epoch_start_ms,
+            epoch_threshold_backfill_all,
+        )
+        epoch_start_ms = 1264982400000  # 2/1/2010
 
     epoch_end_ms = int(os.environ["EPOCH_END_STR"]) * 1000
     return epoch_start_ms, epoch_end_ms
@@ -38,8 +48,8 @@ def main(class_name_to_run: str):
     # add 1 ms to avoid overlap
     class_to_run = cls_factory(class_name_to_run)
     epoch_start_ms, epoch_end_ms = calculate_epoch()
-    print(f"\nepoch_start_ms: {epoch_start_ms}")
-    print(f"\nepoch_end_ms : {epoch_end_ms }")
+    logging.info("\nstart EPOCH_START_MS: %s", epoch_start_ms)
+    logging.info("\nstart EPOCH_END_MS : %s", epoch_end_ms)
     class_to_run.fetch_and_upload_data(epoch_start_ms, epoch_end_ms)
 
 

@@ -86,7 +86,7 @@ class ThoughtIndustries(ABC):
                 max_retry_count=7,
             )
 
-            events = response.json().get('events')
+            events = response.json().get("events")
 
             # response has events
             if events:
