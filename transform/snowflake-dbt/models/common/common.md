@@ -395,7 +395,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_gitlab_versions %}
+{% docs dim_gitlab_version %}
 Dimensional table representing released versions of GitLab.
 
 The grain of the table is a version_id.
