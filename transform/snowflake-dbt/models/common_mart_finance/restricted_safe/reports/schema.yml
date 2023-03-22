@@ -6,3 +6,6 @@ models:
 
   - name: rpt_available_to_renew_45th_calendar_day
     description: Snapshot of the daily available to renew model taken on the 45th calendar day after month-end close.
+
+  - name: rpt_available_to_renew_top_monthly_changes
+    description: Report showing the subscriptions which moved into and out of available to renew status by month. Filtered to the top 10 subscriptions by ARR.
