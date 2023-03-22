@@ -585,10 +585,15 @@ models:
           - not_null
           - unique
 
-  - name: dim_gitlab_versions
-    description: '{{ doc("dim_gitlab_versions") }}'
+  - name: dim_gitlab_version
+    description: '{{ doc("dim_gitlab_version") }}'
     columns:
-      - name: version_id
+      - name: dim_gitlab_version_sk
+        tests:
+          - not_null
+          - unique
+        description: '{{ doc("dim_gitlab_version_sk") }}'
+      - name: dim_version_id
         description: The unique identifier of the release maintained by the Version app.
         tests:
           - not_null
@@ -2315,6 +2320,8 @@ models:
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
+      - name: subscription_action_type
+        description: '{{ doc("subscription_action_type") }}'
 
   - name: dim_license
     description: '{{ doc("dim_license") }}'
