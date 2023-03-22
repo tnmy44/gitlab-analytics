@@ -12,289 +12,289 @@ WITH export AS (
 )
 
 SELECT
-  date(export.usage_end_time) AS day,
-  export.project_id AS gcp_project_id,
-  export.service_description AS gcp_service_description,
-  export.sku_description AS gcp_sku_description,
+  DATE(export.usage_end_time)               AS day,
+  export.project_id                         AS gcp_project_id,
+  export.service_description                AS gcp_service_description,
+  export.sku_description                    AS gcp_sku_description,
   CASE
     -- STORAGE
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'cloud storage' AND (
-        lower(gcp_sku_description) LIKE '%standard storage%'
+        LOWER(gcp_sku_description) LIKE '%standard storage%'
       ) THEN 'Storage'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'cloud storage' AND (
-        lower(gcp_sku_description) LIKE '%coldline storage%'
+        LOWER(gcp_sku_description) LIKE '%coldline storage%'
       ) THEN 'Storage'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'cloud storage' AND (
-        lower(gcp_sku_description) LIKE '%archive storage%'
+        LOWER(gcp_sku_description) LIKE '%archive storage%'
       ) THEN 'Storage'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'cloud storage' AND (
-        lower(gcp_sku_description) LIKE '%nearline storage%'
+        LOWER(gcp_sku_description) LIKE '%nearline storage%'
       ) THEN 'Storage'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'cloud storage' AND (lower(gcp_sku_description) LIKE '%operations%') THEN 'Storage'
+      ) LIKE 'cloud storage' AND (LOWER(gcp_sku_description) LIKE '%operations%') THEN 'Storage'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'compute engine' AND lower(gcp_sku_description) LIKE '%pd capacity%' THEN 'Storage'
+      ) LIKE 'compute engine' AND LOWER(gcp_sku_description) LIKE '%pd capacity%' THEN 'Storage'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'compute engine' AND lower(gcp_sku_description) LIKE '%pd snapshot%' THEN 'Storage'
+      ) LIKE 'compute engine' AND LOWER(gcp_sku_description) LIKE '%pd snapshot%' THEN 'Storage'
     WHEN
       (
-        lower(
+        LOWER(
           gcp_service_description
-        ) LIKE 'bigquery' AND lower(gcp_sku_description) LIKE '%storage%'
+        ) LIKE 'bigquery' AND LOWER(gcp_sku_description) LIKE '%storage%'
       ) THEN 'Storage'
     WHEN
       (
-        lower(
+        LOWER(
           gcp_service_description
-        ) LIKE 'cloud sql' AND lower(gcp_sku_description) LIKE '%storage%'
+        ) LIKE 'cloud sql' AND LOWER(gcp_sku_description) LIKE '%storage%'
       ) THEN 'Storage'
 
     -- COMPUTE
-    WHEN lower(gcp_sku_description) LIKE '%commitment%' THEN 'Committed Usage'
+    WHEN LOWER(gcp_sku_description) LIKE '%commitment%' THEN 'Committed Usage'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'bigquery' AND lower(gcp_sku_description) NOT LIKE 'storage' THEN 'Compute'
+      ) LIKE 'bigquery' AND LOWER(gcp_sku_description) NOT LIKE 'storage' THEN 'Compute'
     WHEN
-      lower(gcp_service_description) LIKE 'cloud sql' AND (lower(gcp_sku_description) LIKE '%cpu%'
-        OR lower(gcp_sku_description) LIKE '%ram%') THEN 'Compute'
-    WHEN lower(gcp_service_description) LIKE 'kubernetes engine' THEN 'Compute'
-    WHEN lower(gcp_service_description) LIKE 'vertex ai' THEN 'Compute'
+      LOWER(gcp_service_description) LIKE 'cloud sql' AND (LOWER(gcp_sku_description) LIKE '%cpu%'
+        OR LOWER(gcp_sku_description) LIKE '%ram%') THEN 'Compute'
+    WHEN LOWER(gcp_service_description) LIKE 'kubernetes engine' THEN 'Compute'
+    WHEN LOWER(gcp_service_description) LIKE 'vertex ai' THEN 'Compute'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'compute engine' AND lower(gcp_sku_description) LIKE '%gpu%' THEN 'Compute'
+      ) LIKE 'compute engine' AND LOWER(gcp_sku_description) LIKE '%gpu%' THEN 'Compute'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%memorystore%' AND lower(gcp_sku_description) LIKE '%capacity%' THEN 'Compute'
+      ) LIKE '%memorystore%' AND LOWER(gcp_sku_description) LIKE '%capacity%' THEN 'Compute'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'compute engine' AND (lower(gcp_sku_description) LIKE '%ram%'
-        OR lower(gcp_sku_description) LIKE '%cpu%'
-        OR lower(gcp_sku_description) LIKE '%core%') THEN 'Compute'
+      ) LIKE 'compute engine' AND (LOWER(gcp_sku_description) LIKE '%ram%'
+        OR LOWER(gcp_sku_description) LIKE '%cpu%'
+        OR LOWER(gcp_sku_description) LIKE '%core%') THEN 'Compute'
 
     -- NETWORKING
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%cloud sql%' AND lower(gcp_sku_description) LIKE '%networking%' THEN 'Networking'
-    WHEN lower(gcp_service_description) LIKE '%cloud pub/sub%' THEN 'Networking'
+      ) LIKE '%cloud sql%' AND LOWER(gcp_sku_description) LIKE '%networking%' THEN 'Networking'
+    WHEN LOWER(gcp_service_description) LIKE '%cloud pub/sub%' THEN 'Networking'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%memorystore%' AND lower(gcp_sku_description) LIKE '%networking%' THEN 'Networking'
+      ) LIKE '%memorystore%' AND LOWER(gcp_sku_description) LIKE '%networking%' THEN 'Networking'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%cloud storage%' AND lower(gcp_sku_description) LIKE '%egress%' THEN 'Networking'
+      ) LIKE '%cloud storage%' AND LOWER(gcp_sku_description) LIKE '%egress%' THEN 'Networking'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%cloud storage%' AND lower(gcp_sku_description) LIKE '%cdn%' THEN 'Networking'
-    WHEN lower(gcp_service_description) = 'networking' THEN 'Networking'
-    WHEN lower(gcp_sku_description) LIKE '%load balanc%' THEN 'Networking'
+      ) LIKE '%cloud storage%' AND LOWER(gcp_sku_description) LIKE '%cdn%' THEN 'Networking'
+    WHEN LOWER(gcp_service_description) = 'networking' THEN 'Networking'
+    WHEN LOWER(gcp_sku_description) LIKE '%load balanc%' THEN 'Networking'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%compute engine%' AND lower(gcp_sku_description) LIKE '%ip%' THEN 'Networking'
+      ) LIKE '%compute engine%' AND LOWER(gcp_sku_description) LIKE '%ip%' THEN 'Networking'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%compute engine%' AND lower(gcp_sku_description) LIKE '%network%' THEN 'Networking'
+      ) LIKE '%compute engine%' AND LOWER(gcp_sku_description) LIKE '%network%' THEN 'Networking'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%cloud storage%' AND (lower(gcp_sku_description) LIKE '%network%'
-        OR lower(gcp_sku_description) LIKE '%download%') THEN 'Networking'
+      ) LIKE '%cloud storage%' AND (LOWER(gcp_sku_description) LIKE '%network%'
+        OR LOWER(gcp_sku_description) LIKE '%download%') THEN 'Networking'
 
 
     -- LOGGING AND METRICS
-    WHEN lower(gcp_service_description) LIKE 'stackdriver monitoring' THEN 'Logging and Metrics'
-    WHEN lower(gcp_service_description) LIKE 'cloud logging' THEN 'Logging and Metrics'
+    WHEN LOWER(gcp_service_description) LIKE 'stackdriver monitoring' THEN 'Logging and Metrics'
+    WHEN LOWER(gcp_service_description) LIKE 'cloud logging' THEN 'Logging and Metrics'
 
     -- SUPPORT
-    WHEN lower(gcp_sku_description) LIKE '%support%' THEN 'Support'
-    WHEN lower(gcp_sku_description) LIKE '%security command center%' THEN 'Support'
-    WHEN lower(gcp_sku_description) LIKE '%marketplace%' THEN 'Support'
+    WHEN LOWER(gcp_sku_description) LIKE '%support%' THEN 'Support'
+    WHEN LOWER(gcp_sku_description) LIKE '%security command center%' THEN 'Support'
+    WHEN LOWER(gcp_sku_description) LIKE '%marketplace%' THEN 'Support'
     ELSE 'Other'
-  END AS finance_sku_type,
+  END                                       AS finance_sku_type,
   CASE
     -- STORAGE
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'cloud storage' AND (
-        lower(gcp_sku_description) LIKE '%standard storage%'
+        LOWER(gcp_sku_description) LIKE '%standard storage%'
       ) THEN 'Object (storage)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'cloud storage' AND (
-        lower(gcp_sku_description) LIKE '%coldline storage%'
+        LOWER(gcp_sku_description) LIKE '%coldline storage%'
       ) THEN 'Object (storage)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'cloud storage' AND (
-        lower(gcp_sku_description) LIKE '%archive storage%'
+        LOWER(gcp_sku_description) LIKE '%archive storage%'
       ) THEN 'Object (storage)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'cloud storage' AND (
-        lower(gcp_sku_description) LIKE '%nearline storage%'
+        LOWER(gcp_sku_description) LIKE '%nearline storage%'
       ) THEN 'Object (storage)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'cloud storage' AND (
-        lower(gcp_sku_description) LIKE '%operations%'
+        LOWER(gcp_sku_description) LIKE '%operations%'
       ) THEN 'Object (operations)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'compute engine' AND lower(
+      ) LIKE 'compute engine' AND LOWER(
         gcp_sku_description
       ) LIKE '%pd capacity%' THEN 'Repository (storage)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'compute engine' AND lower(
+      ) LIKE 'compute engine' AND LOWER(
         gcp_sku_description
       ) LIKE '%pd snapshot%' THEN 'Repository (storage)'
     WHEN
       (
-        lower(
+        LOWER(
           gcp_service_description
-        ) LIKE 'bigquery' AND lower(gcp_sku_description) LIKE '%storage%'
+        ) LIKE 'bigquery' AND LOWER(gcp_sku_description) LIKE '%storage%'
       ) THEN 'Data Warehouse (storage)'
     WHEN
       (
-        lower(
+        LOWER(
           gcp_service_description
-        ) LIKE 'cloud sql' AND lower(gcp_sku_description) LIKE '%storage%'
+        ) LIKE 'cloud sql' AND LOWER(gcp_sku_description) LIKE '%storage%'
       ) THEN 'Databases (storage)'
 
     -- COMPUTE
-    WHEN lower(gcp_sku_description) LIKE '%commitment%' THEN 'Committed Usage'
+    WHEN LOWER(gcp_sku_description) LIKE '%commitment%' THEN 'Committed Usage'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'bigquery' AND lower(
+      ) LIKE 'bigquery' AND LOWER(
         gcp_sku_description
       ) NOT LIKE 'storage' THEN 'Data Warehouse (compute)'
     WHEN
-      lower(gcp_service_description) LIKE 'cloud sql' AND (lower(gcp_sku_description) LIKE '%cpu%'
-        OR lower(gcp_sku_description) LIKE '%ram%') THEN 'Data Warehouse (compute)'
+      LOWER(gcp_service_description) LIKE 'cloud sql' AND (LOWER(gcp_sku_description) LIKE '%cpu%'
+        OR LOWER(gcp_sku_description) LIKE '%ram%') THEN 'Data Warehouse (compute)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'kubernetes engine' THEN 'Container orchestration (compute)'
-    WHEN lower(gcp_service_description) LIKE 'vertex ai' THEN 'AI/ML (compute)'
+    WHEN LOWER(gcp_service_description) LIKE 'vertex ai' THEN 'AI/ML (compute)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'compute engine' AND lower(gcp_sku_description) LIKE '%gpu%' THEN 'AI/ML (compute)'
+      ) LIKE 'compute engine' AND LOWER(gcp_sku_description) LIKE '%gpu%' THEN 'AI/ML (compute)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%memorystore%' AND lower(
+      ) LIKE '%memorystore%' AND LOWER(
         gcp_sku_description
       ) LIKE '%capacity%' THEN 'Memorystores (compute)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE 'compute engine' AND (lower(gcp_sku_description) LIKE '%ram%'
-        OR lower(gcp_sku_description) LIKE '%cpu%'
-        OR lower(gcp_sku_description) LIKE '%core%') THEN 'Containers (compute)'
+      ) LIKE 'compute engine' AND (LOWER(gcp_sku_description) LIKE '%ram%'
+        OR LOWER(gcp_sku_description) LIKE '%cpu%'
+        OR LOWER(gcp_sku_description) LIKE '%core%') THEN 'Containers (compute)'
 
     -- NETWORKING
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%cloud sql%' AND lower(
+      ) LIKE '%cloud sql%' AND LOWER(
         gcp_sku_description
       ) LIKE '%networking%' THEN 'Databases (networking)'
-    WHEN lower(gcp_service_description) LIKE '%cloud pub/sub%' THEN 'Messaging (networking)'
+    WHEN LOWER(gcp_service_description) LIKE '%cloud pub/sub%' THEN 'Messaging (networking)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%memorystore%' AND lower(
+      ) LIKE '%memorystore%' AND LOWER(
         gcp_sku_description
       ) LIKE '%networking%' THEN 'Memorystores (networking)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%cloud storage%' AND lower(
+      ) LIKE '%cloud storage%' AND LOWER(
         gcp_sku_description
       ) LIKE '%egress%' THEN 'Object (networking)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%cloud storage%' AND lower(
+      ) LIKE '%cloud storage%' AND LOWER(
         gcp_sku_description
       ) LIKE '%cdn%' THEN 'Object CDN (networking)'
-    WHEN lower(gcp_service_description) = 'networking' THEN 'Networking (mixed)'
-    WHEN lower(gcp_sku_description) LIKE '%load balanc%' THEN 'Load Balancing (networking)'
+    WHEN LOWER(gcp_service_description) = 'networking' THEN 'Networking (mixed)'
+    WHEN LOWER(gcp_sku_description) LIKE '%load balanc%' THEN 'Load Balancing (networking)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%compute engine%' AND lower(
+      ) LIKE '%compute engine%' AND LOWER(
         gcp_sku_description
       ) LIKE '%ip%' THEN 'Container networking (networking)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%compute engine%' AND lower(
+      ) LIKE '%compute engine%' AND LOWER(
         gcp_sku_description
       ) LIKE '%network%' THEN 'Container networking (networking)'
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
-      ) LIKE '%cloud storage%' AND (lower(gcp_sku_description) LIKE '%network%'
-        OR lower(gcp_sku_description) LIKE '%download%') THEN 'Container networking (networking)'
+      ) LIKE '%cloud storage%' AND (LOWER(gcp_sku_description) LIKE '%network%'
+        OR LOWER(gcp_sku_description) LIKE '%download%') THEN 'Container networking (networking)'
 
 
     -- LOGGING AND METRICS
     WHEN
-      lower(
+      LOWER(
         gcp_service_description
       ) LIKE 'stackdriver monitoring' THEN 'Metrics (logging and metrics)'
-    WHEN lower(gcp_service_description) LIKE 'cloud logging' THEN 'Logging (logging and metrics)'
+    WHEN LOWER(gcp_service_description) LIKE 'cloud logging' THEN 'Logging (logging and metrics)'
 
     -- SUPPORT
-    WHEN lower(gcp_sku_description) LIKE '%support%' THEN 'Google Support (support)'
-    WHEN lower(gcp_sku_description) LIKE '%security command center%' THEN 'Security (support)'
-    WHEN lower(gcp_sku_description) LIKE '%marketplace%' THEN 'Marketplace (support)'
+    WHEN LOWER(gcp_sku_description) LIKE '%support%' THEN 'Google Support (support)'
+    WHEN LOWER(gcp_sku_description) LIKE '%security command center%' THEN 'Security (support)'
+    WHEN LOWER(gcp_sku_description) LIKE '%marketplace%' THEN 'Marketplace (support)'
     ELSE 'Other'
-  END AS finance_sku_subtype,
-  export.usage_unit as usage_unit,
-  export.pricing_unit as pricing_unit,
+  END                                       AS finance_sku_subtype,
+  export.usage_unit                         AS usage_unit,
+  export.pricing_unit                       AS pricing_unit,
   -- usage amount
-  sum(export.usage_amount) as usage_amount,
+  SUM(export.usage_amount)                  AS usage_amount,
   -- usage amount in p unit
-  sum(export.usage_amount_in_pricing_units) as usage_amount_in_pricing_units,
-  sum(export.cost_before_credits) as cost_before_credits,
-  sum(export.total_cost) AS net_cost
+  SUM(export.usage_amount_in_pricing_units) AS usage_amount_in_pricing_units,
+  SUM(export.cost_before_credits)           AS cost_before_credits,
+  SUM(export.total_cost)                    AS net_cost
 FROM export
 {{ dbt_utils.group_by(n=8) }}

@@ -18,7 +18,7 @@ WITH source AS (
       data_by_row['key_path']::TEXT                                                     AS metrics_path,
       data_by_row['data_source']::TEXT                                                  AS data_source,
       data_by_row['description']::TEXT                                                  AS description,
-      data_by_row['product_category']::TEXT                                             AS product_category,
+      data_by_row['instrumentation_class']::TEXT                                        AS instrumentation_class,
       data_by_row['product_group']::TEXT                                                AS product_group,
       data_by_row['product_section']::TEXT                                              AS product_section,
       data_by_row['product_stage']::TEXT                                                AS product_stage,

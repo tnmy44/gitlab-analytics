@@ -182,11 +182,11 @@ _**THE SCRIPT SHOULD ONLY BE RUN ON YOUR GITLAB-ISSUED LAPTOP.** If you run this
 
 **Note:** If the `gl_open` command does not work inspect your `~/.zshrc` file to make sure it has the command `source make_life_easier.zsh`.
 - [ ] Configure VSCode (via the VSCode UI) with the [VSCode setup](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243?) section of Claire's post and [adding the tip](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243/10?u=tmurphy) from tmurphy later in the thread. It will add improved syntax highlighting and searching capabilities.
-- [ ] Configure VSCode (via the VSCode UI) so that all tabs are converted to 4 spaces. This will minimize messy looking diffs and provide consistency across the team.
+- [ ] Configure VSCode (via the VSCode UI) so that all tabs are converted to 2 spaces. This will minimize messy looking diffs and provide consistency across the team.
     - VSCode
         - `Editor: Detect Indentation` is deselected
         - `Editor: Insert Spaces` is selected
-        - `Editor: Tab Size` is set to 4 spaces per tab
+        - `Editor: Tab Size` is set to 2 spaces per tab
 
 ### Command Line Interface
 

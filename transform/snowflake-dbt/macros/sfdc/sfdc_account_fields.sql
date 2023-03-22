@@ -125,6 +125,8 @@ WITH map_merged_crm_account AS (
       account_demographics_geo,
       account_demographics_region,
       account_demographics_area,
+      account_demographics_business_unit,
+      account_demographics_role_type,
       account_demographics_territory,
       account_demographics_employee_count,
       account_demographics_max_family_employee,
@@ -258,6 +260,8 @@ WITH map_merged_crm_account AS (
       sfdc_account.account_demographics_region                            AS parent_crm_account_demographics_region,
       sfdc_account.account_demographics_area                              AS parent_crm_account_demographics_area,
       sfdc_account.account_demographics_territory                         AS parent_crm_account_demographics_territory,
+      sfdc_account.account_demographics_business_unit                     AS parent_crm_account_demographics_business_unit,
+      sfdc_account.account_demographics_role_type                         AS parent_crm_account_demographics_role_type,
       sfdc_account.account_demographics_max_family_employee               AS parent_crm_account_demographics_max_family_employee,
       sfdc_account.account_demographics_upa_country                       AS parent_crm_account_demographics_upa_country,
       sfdc_account.account_demographics_upa_state                         AS parent_crm_account_demographics_upa_state,
@@ -474,6 +478,7 @@ WITH map_merged_crm_account AS (
       {{ get_date_id('sfdc_account.gs_last_csm_activity_date') }}         AS gs_last_csm_activity_date_id,
       sfdc_account.gs_last_csm_activity_date,
 
+
       --measures
       sfdc_account.count_active_subscription_charges,
       sfdc_account.count_active_subscriptions,
@@ -496,7 +501,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.number_of_licenses_this_account,
       sfdc_account.decision_maker_count_linkedin,
       sfdc_account.number_of_employees,
-      crm_user.user_role_type                                             AS user_role_type,
+      crm_user.crm_user_role_type                                         AS user_role_type,
       crm_user.user_role_name                                             AS owner_role,
       {%- if model_type == 'live' %}
       sfdc_account.lam                                                    AS parent_crm_account_lam,

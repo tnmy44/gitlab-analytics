@@ -454,7 +454,6 @@ WITH date_details AS (
       agg_demo_keys.sales_team_vp_level,
       agg_demo_keys.sales_team_avp_rd_level,
       agg_demo_keys.sales_team_asm_level,
-      agg_demo_keys.deal_category,
       agg_demo_keys.deal_group,
       agg_demo_keys.sales_qualified_source,
       agg_demo_keys.sales_team_rd_asm_level,

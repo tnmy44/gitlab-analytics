@@ -1917,6 +1917,20 @@ roles:
                     - prep.handbook.*
                     - raw.handbook.*
 
+    - hightouch_role:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.sensitive
+            tables:
+                read:
+                    - prep.sensitive.poc_pump_marketing_contact_namespace_detail
+
     - license_db:
         privileges:
             databases:
@@ -2114,6 +2128,7 @@ roles:
                     - prod.restricted_safe_workspace_marketing
                     - prod.restricted_safe_workspace_sales
                     - prod.restricted_safe_common_mart_product
+                    - prod.restricted_safe_workspace_engineering
                     - prod.workspace_data_science
                     - prod.workspace_sales
 
@@ -2128,6 +2143,7 @@ roles:
                     - prod.restricted_safe_workspace_finance.*
                     - prod.restricted_safe_workspace_marketing.*
                     - prod.restricted_safe_workspace_sales.*
+                    - prod.restricted_safe_workspace_engineering.*
                     - prod.restricted_safe_common_mart_product.*
                     - prod.workspace_data_science.*
                     - prod.workspace_sales.*
@@ -2761,6 +2777,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - salesforce
+            - zuora_api_sandbox_stitch            
             - zuora_stitch_rest_api
         warehouses:
             - dev_xs
@@ -3255,8 +3272,13 @@ roles:
 
     - jng:
         member_of:
-         - restricted_safe
          - analytics_engineer_core
+         - analyst_engineering
+         - analyst_growth
+         - data_team_analyst
+         - restricted_safe
+         - bi_tool_eval_read
+         - zuora
         warehouses:
             - dev_xs
         owns:
@@ -3592,6 +3614,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - lstahlman:
+        member_of:
+            - analyst_core
+            - data_team_analyst
+        warehouses:
+            - dev_xs
 
     - lvinueza:
         member_of:
@@ -4883,6 +4911,11 @@ users:
         member_of:
             - gweaver
 
+    - hightouch_user:
+        can_login: yes
+        member_of:
+            - hightouch_role
+
     - hkacmarski:
         can_login: yes
         member_of:
@@ -4978,6 +5011,11 @@ users:
         can_login: yes
         member_of:
             - lmai
+
+    - lstahlman:
+        can_login: yes
+        member_of:
+            - lstahlman
 
     - lvinueza:
         can_login: yes
