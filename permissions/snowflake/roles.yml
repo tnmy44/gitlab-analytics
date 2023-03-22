@@ -3272,10 +3272,12 @@ roles:
 
     - jng:
         member_of:
-         - restricted_safe
          - analytics_engineer_core
-         - salesforce
-         - sheetload
+         - analyst_engineering
+         - analyst_growth
+         - data_team_analyst
+         - restricted_safe
+         - bi_tool_eval_read
          - zuora
         warehouses:
             - dev_xs
