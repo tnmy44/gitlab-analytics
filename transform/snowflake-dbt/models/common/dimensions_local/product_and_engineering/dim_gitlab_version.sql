@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["product"]
 ) }}
 
 WITH versions AS (
@@ -24,7 +24,7 @@ WITH versions AS (
     SELECT
 
      --surrogate_key
-      {{ dbt_utils.surrogate_key(['id']) }} AS dim_gitlab_versions_sk,
+      {{ dbt_utils.surrogate_key(['id']) }} AS dim_gitlab_version_sk,
 
       --natural key
       id as dim_version_id,
@@ -51,7 +51,7 @@ UNION ALL
 SELECT 
 
      --surrogate_key
-      {{ dbt_utils.surrogate_key(['-1']) }} AS dim_gitlab_versions_sk,
+      {{ dbt_utils.surrogate_key(['-1']) }} AS dim_gitlab_version_sk,
 
       --natural key
       -1 as dim_version_id,
