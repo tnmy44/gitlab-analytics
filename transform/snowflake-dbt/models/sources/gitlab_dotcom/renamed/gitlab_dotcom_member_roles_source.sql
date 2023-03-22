@@ -1,7 +1,3 @@
-{{ config(
-    materialized='view',
-    tags=["product"]
-) }}
 
 WITH final AS (
 
