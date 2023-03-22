@@ -6,7 +6,7 @@
 WITH final AS (
 
     SELECT 
-    * EXCLUDE (created_by, updated_by,model_created_date)
+    * EXCLUDE (created_by, updated_by,model_created_date,model_updated_date,dbt_updated_at,dbt_created_at)
     FROM {{ ref('gitlab_dotcom_member_roles_source') }} 
 
 )
