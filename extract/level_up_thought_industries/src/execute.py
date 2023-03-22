@@ -21,14 +21,18 @@ def calculate_epoch():
     If the start_date is before epoch_threshold_backfill_all,
     set the start_date to 2010.
 
-    The data actually goes all the way through 4/6/2020,
-    but there is very little data in between,
-    so it would be a waste to have a daily task.
+    The DAG start_date is 3/1/2022, but we need to retrieve
+    data all the way back from when data started- 4/6/2020.
+
+    However, between 4/6/20 and 3/1/22, there's very little data
+    so rather than doing it in a seperate daily task, do it all
+    in one task.
     """
     # add 1 ms so that there's no overlap between runs
     epoch_start_ms = (int(os.environ["EPOCH_START_STR"]) * 1000) + 1
 
     # if start_epoch ts is before threshold, backfill all
+    # This should only happen on the first DAG run
     epoch_threshold_backfill_all = 1646175600000  # 3/1/2022
     if epoch_start_ms < epoch_threshold_backfill_all:
         logging.info(
