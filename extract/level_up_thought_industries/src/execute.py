@@ -21,9 +21,9 @@ def calculate_epoch():
     If the start_date is before epoch_threshold_backfill_all,
     set the start_date to 2010.
 
-    This is to capture all data in one call prior to 12/31/2021 as
-    current Airflow isn't happy with backfilling daily tasks
-    too far back.
+    The data actually goes all the way through 4/6/2020,
+    but there is very little data in between,
+    so it would be a waste to have a daily task.
     """
     # add 1 ms so that there's no overlap between runs
     epoch_start_ms = (int(os.environ["EPOCH_START_STR"]) * 1000) + 1
@@ -47,9 +47,11 @@ def main(class_name_to_run: str):
     """dynamically create class, then call its fetch_and_upload_data()"""
     # add 1 ms to avoid overlap
     class_to_run = cls_factory(class_name_to_run)
+
     epoch_start_ms, epoch_end_ms = calculate_epoch()
     logging.info("\nstart EPOCH_START_MS: %s", epoch_start_ms)
     logging.info("\nstart EPOCH_END_MS : %s", epoch_end_ms)
+
     class_to_run.fetch_and_upload_data(epoch_start_ms, epoch_end_ms)
 
 
