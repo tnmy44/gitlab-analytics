@@ -24,11 +24,11 @@ months AS (
 
 ),
 
-bdg_subscription_product_rate_plan AS (
+product_detail AS (
 
   SELECT
     *
-  FROM {{ ref('bdg_subscription_product_rate_plan') }}
+  FROM {{ ref('dim_product_detail') }}
 
 ),
 
@@ -51,15 +51,14 @@ joined AS (
     subscriptions.namespace_id AS dim_namespace_id,
     subscriptions.subscription_version,
     subscriptions.subscription_created_date,
-    bdg_subscription_product_rate_plan.product_rate_plan_charge_name,
+    product_detail.product_rate_plan_charge_name,
     charges.charge_type
   FROM subscriptions
   INNER JOIN months
     ON (months.date_month >= subscriptions.term_start_month
         AND months.date_month <= subscriptions.term_end_month)
-  LEFT JOIN bdg_subscription_product_rate_plan
-    ON bdg_subscription_product_rate_plan.dim_subscription_id = subscriptions.dim_subscription_id
   LEFT JOIN charges ON charges.dim_subscription_id = subscriptions.dim_subscription_id
+  LEFT JOIN product_detail ON product_detail.dim_product_detail_id = charges.dim_product_detail_id
 
 ),
 
@@ -70,7 +69,9 @@ final AS (
     dim_subscription_id,
     dim_subscription_id_original,
     dim_namespace_id,
-    subscription_version
+    subscription_version,
+    product_rate_plan_charge_name,
+    charge_type
   FROM joined
   WHERE product_rate_plan_charge_name NOT IN (
     '1,000 CI Minutes',
@@ -93,5 +94,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-10-28",
-    updated_date="2023-03-20"
+    updated_date="2023-03-22"
 ) }}
