@@ -101,11 +101,11 @@ SELECT
     'app_id', 
     'referrer_url_scheme'
     ]) }}                                                                                                           AS dim_behavior_referrer_page_sk,
-  IFNULL(geo_city, 'Unknown')                                                                                       AS user_city,
-  IFNULL(geo_country, 'Unknown')                                                                                    AS user_country,
-  IFNULL(geo_region, 'Unknown')                                                                                     AS user_region,
-  IFNULL(geo_region_name, 'Unknown')                                                                                AS user_region_name,
-  IFNULL(geo_timezone, 'Unknown')                                                                                   AS user_timezone_name,
+  IFNULL(geo_city, 'Unknown')::VARCHAR                                                                              AS user_city,
+  IFNULL(geo_country, 'Unknown')::VARCHAR                                                                           AS user_country,
+  IFNULL(geo_region, 'Unknown')::VARCHAR                                                                            AS user_region,
+  IFNULL(geo_region_name, 'Unknown')::VARCHAR                                                                       AS user_region_name,
+  IFNULL(geo_timezone, 'Unknown')::VARCHAR                                                                          AS user_timezone_name,
   {{ dbt_utils.surrogate_key([
     'user_city', 
     'user_country',
