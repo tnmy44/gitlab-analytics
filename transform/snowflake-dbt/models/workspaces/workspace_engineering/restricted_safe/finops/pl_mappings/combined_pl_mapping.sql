@@ -41,7 +41,11 @@ repo_storage_pl_daily AS (
 
   WITH sku_list AS (SELECT 'SSD backed PD Capacity' AS sku
     UNION ALL
-    SELECT 'Balanced PD Capacity' AS sku)
+    SELECT 'Balanced PD Capacity'
+    UNION ALL
+    SELECT 'Storage PD Snapshot in US'
+    UNION ALL
+    SELECT 'Storage PD Capacity')
 
   SELECT
     snapshot_day                               AS date_day,
