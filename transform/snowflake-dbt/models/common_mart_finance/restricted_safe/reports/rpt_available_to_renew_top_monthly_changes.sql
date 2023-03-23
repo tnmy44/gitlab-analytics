@@ -38,7 +38,7 @@ atr_comparison AS (
         THEN 'New subscription'
       WHEN subscription_final_month = first_day_of_month
         THEN 'Subscription ends this month'
-      WHEN is_available_to_renew = false 
+      WHEN is_available_to_renew = FALSE 
       AND dense_rank() OVER (PARTITION BY first_day_of_month ORDER BY total_arr DESC) <= 10 
         THEN 'Top available to renew excluded deal'
       ELSE 'No change'
