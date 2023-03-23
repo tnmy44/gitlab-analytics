@@ -4071,6 +4071,7 @@ roles:
             - customers_db
             - data_team_analyst
             - data_manager
+            - data_science_readonly
             - restricted_safe
             - salesforce_sandbox
             - xactly
