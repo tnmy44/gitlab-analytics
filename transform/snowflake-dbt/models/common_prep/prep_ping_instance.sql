@@ -54,7 +54,6 @@
       CASE
         WHEN original_edition = 'CE'                                     THEN 'Core'
         WHEN original_edition = 'EE Free'                                THEN 'Core'
-        WHEN license_expires_at < ping_created_at                        THEN 'Core'
         WHEN original_edition = 'EE'                                     THEN 'Starter'
         WHEN original_edition = 'EES'                                    THEN 'Starter'
         WHEN original_edition = 'EEP'                                    THEN 'Premium'
@@ -138,7 +137,6 @@
       CASE
         WHEN edition = 'CE'                   THEN 'Core'
         WHEN edition = 'EE Free'              THEN 'Core'
-        WHEN license_expires_at < created_at  THEN 'Core'
         WHEN edition = 'EE'                   THEN 'Starter'
         WHEN edition = 'EES'                  THEN 'Starter'
         WHEN edition = 'EEP'                  THEN 'Premium'
@@ -165,5 +163,5 @@
     created_by="@icooper-acp",
     updated_by="@mdrussell",
     created_date="2022-03-17",
-    updated_date="2023-02-21"
+    updated_date="2023-03-23"
 ) }}
