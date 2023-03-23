@@ -4588,6 +4588,7 @@ models:
               to: ref('dim_crm_account')
               field: dim_crm_account_id
               from_condition: created_date <= DATEADD('day', -3, CURRENT_DATE)::DATE
+              severity: warn
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_alliance_type_id
         description: join key for dim_alliance_type_scd.
