@@ -76,6 +76,7 @@ WITH internal_issues AS (
         WHEN type_label = 'feature' 
             THEN IFNULL(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','),'\\bfeature::*([^,]*)'),'undefined') 
         ELSE 'undefined' END                                                                                                    AS subtype_label,
+    IFNULL(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(labels, ','),'\\bworkflow::*([^,]*)'), 'workflow::', ''),'undefined')          AS workflow_label,
     projects.visibility_level                                                                                                   AS visibility_level,
     projects.project_path                                                                                                       AS project_path,
     CASE

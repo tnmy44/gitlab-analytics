@@ -292,6 +292,8 @@ models:
           description: The worktype type classification, defined as either a bug, maintenance, or feature.
         - name: subtype_label
           description: The worktype subtype classification that matches a type_label
+        - name: workflow_label
+          description: The workflow label extracted from ('workflow::%') from issues
         - name: visibility_level
           description: Indicate if the issue lives in a private or public project
         - name: full_group_path
