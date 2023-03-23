@@ -51,6 +51,7 @@ dag = DAG(
     start_date=datetime(2022, 3, 1),
     catchup=True,
     max_active_runs=1,  # due to API rate limiting
+    concurrency=3,  # num of max_tasks, limit due to API rate limiting
 )
 
 endpoint_classes = (
