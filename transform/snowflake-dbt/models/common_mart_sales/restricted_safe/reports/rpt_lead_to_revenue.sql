@@ -212,6 +212,8 @@
   FROM cohort_base
   LEFT JOIN mart_crm_touchpoint
     ON mart_crm_touchpoint.email_hash = cohort_base.email_hash
+        and cohort_base.dim_crm_person_id = mart_crm_touchpoint.dim_crm_person_id
+  
   {{ dbt_utils.group_by(n=62) }}
     
 ), cohort_base_with_batp AS (
@@ -436,6 +438,10 @@
   FROM cohort_base
   LEFT JOIN mart_crm_attribution_touchpoint
     ON cohort_base.dim_crm_opportunity_id = mart_crm_attribution_touchpoint.dim_crm_opportunity_id
+        and cohort_base.email_hash = mart_crm_attribution_touchpoint.email_hash
+        and cohort_base.dim_crm_person_id = mart_crm_attribution_touchpoint.dim_crm_person_id
+        and cohort_base.dim_crm_opportunity_id = mart_crm_attribution_touchpoint.dim_crm_opportunity_id
+
   {{ dbt_utils.group_by(n=70) }}
     
 ), cohort_base_with_touchpoints AS (
