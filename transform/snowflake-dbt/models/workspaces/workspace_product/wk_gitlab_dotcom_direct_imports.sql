@@ -1,6 +1,6 @@
 {{ config(
     materialized='view',
-    tags=["mnpi_exception", "product"]
+    tags=["product"]
 ) }}
 
 -- This model is to enable looking at direct imports as this pulls the individual entities as well as the bulk import attempts together. To look at individual direct import attempts the intention is to aggregate up to the bulk_import_id. This model is intended to allow for a join to common.dim_namespace for supplementary data on project or group.
