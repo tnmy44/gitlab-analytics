@@ -6,4 +6,3 @@ WITH source AS (
         )
         SELECT * 
         FROM source
-\ No newline at end of file
