@@ -26,9 +26,9 @@ atr_comparison AS (
     *,
     LAG(is_available_to_renew) OVER (PARTITION BY subscription_name ORDER BY snapshot_date) AS is_available_to_renew_previous_day,
     CASE WHEN is_available_to_renew = TRUE
-      AND LAG(is_available_to_renew)
-      OVER (PARTITION BY subscription_name ORDER BY snapshot_date) = FALSE
-      THEN 'Became available to renew'
+        AND LAG(is_available_to_renew)
+        OVER (PARTITION BY subscription_name ORDER BY snapshot_date) = FALSE
+        THEN 'Became available to renew'
       WHEN is_available_to_renew = FALSE
         AND LAG(is_available_to_renew)
         OVER (PARTITION BY subscription_name ORDER BY snapshot_date) = TRUE
