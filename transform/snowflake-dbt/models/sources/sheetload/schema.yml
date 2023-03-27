@@ -31,6 +31,8 @@ models:
         - not_null
 - name: sheetload_bizible_to_pathfactory_mapping_source
   description: Mapping file for bizible URLs to PathFactory content types. 
+- name: sheetload_abm_key_account_list
+  description: Mapping file for quarterly ABM key account lists to enable historical reporting.
 - name: sheetload_books_source
   description: Book rating data used in @lisvinueza's data internship program.
 - name: sheetload_cert_product_geo_dashboard_source
