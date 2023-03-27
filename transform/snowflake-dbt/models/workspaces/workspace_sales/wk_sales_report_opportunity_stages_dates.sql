@@ -6,6 +6,7 @@
 
  --TODO
  -- Check out for deals created in a stage that is not 0, use the creation date
+-- Trying to restore
 
 WITH sfdc_opportunity_field_history AS (
 
@@ -22,44 +23,104 @@ WITH sfdc_opportunity_field_history AS (
   SELECT *
   FROM {{ ref('wk_sales_sfdc_opportunity_xf')}}
 
-)
 -- after every stage change, as it is a tracked field
 -- a record would be created in the field history table
-, history_base AS (
+), new_history_base AS (
+    SELECT opportunity_id,
+           REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(new_value_string, '2-Developing', '2-Scoping'), '7 - Closing',
+                                           '7-Closing'), 'Developing', '2-Scoping'), 'Closed Lost', '8-Closed Lost'),
+                   '8-8-Closed Lost', '8-Closed Lost') AS new_value_string,
+           MAX(field_modified_at::date)                AS max_stage_date
 
-  SELECT
-          opportunity_id,
-          replace(replace(replace(replace(replace(new_value_string,'2-Developing','2-Scoping'),'7 - Closing','7-Closing'),'Developing','2-Scoping'),'Closed Lost','8-Closed Lost'),'8-8-Closed Lost','8-Closed Lost') AS new_value_string,
-          MAX(field_modified_at::date) AS max_stage_date
-
-  FROM sfdc_opportunity_field_history
-  WHERE opportunity_field = 'stagename'
-  GROUP BY 1,2
+    FROM sfdc_opportunity_field_history
+    WHERE opportunity_field = 'stagename'
+    GROUP BY 1, 2
 
 -- just created opportunities won't have any historical record
 -- next CTE accounts for them
 ), opty_base AS (
+    SELECT o.opportunity_id,
+           o.stage_name,
+           o.created_date AS max_stage_date
+    FROM sfdc_opportunity_xf o
+             LEFT JOIN (SELECT DISTINCT opportunity_id FROM new_history_base) h
+                       ON h.opportunity_id = o.opportunity_id
+    WHERE h.opportunity_id IS NULL
 
- SELECT
-    o.opportunity_id,
-    o.stage_name,
-    o.created_date AS max_stage_date
- FROM sfdc_opportunity_xf o
- LEFT JOIN (SELECT DISTINCT opportunity_id FROM history_base) h
-    ON h.opportunity_id = o.opportunity_id
- WHERE h.opportunity_id is null
+), old_history_base AS (
+
+    SELECT opportunity_id,
+           REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(old_value_string, '2-Developing', '2-Scoping'),
+                                                   '7 - Closing', '7-Closing'), 'Developing', '2-Scoping'),
+                                   'Closed Lost', '8-Closed Lost'), '8-8-Closed Lost', '8-Closed Lost'),
+                   '00-Pre Opportunity', '0-Pending Acceptance')                            AS stage_name,
+           field_modified_at::date                                                          AS change_stage_date
+    FROM prep.sfdc.sfdc_opportunity_field_history_source
+    WHERE opportunity_field = 'stagename'
+      AND old_value_string != '00-Pre Opportunity'
+    UNION
+    SELECT opportunity_id,
+           stage_name,
+           CURRENT_DATE
+    FROM sfdc_opportunity_xf
+
+), old_history_base_rank AS (
+
+    SELECT old.*,
+           ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY change_stage_date) AS rank_stage
+    FROM old_history_base old
+    QUALIFY rank_stage = 1
+
+), not_skipped AS (
+-- to asses if a deal was skipped we leverage the old stage value
+-- if a stage never shows up on an old stage value at the stage date it was skipped
+
+    SELECT
+           opportunity_id,
+           MAX(CASE WHEN stage_name = '0-Pending Acceptance'
+                THEN 1
+            ELSE 0 END)                  AS not_skipped_stage_0_flag,
+           MAX(CASE WHEN stage_name = '1-Discovery'
+              THEN 1
+           ELSE 0 END)                  AS not_skipped_stage_1_flag,
+           MAX(CASE WHEN stage_name = '2-Scoping'
+              THEN 1
+           ELSE 0 END)                  AS not_skipped_stage_2_flag,
+           MAX(CASE WHEN stage_name = '3-Technical Evaluation'
+              THEN 1
+           ELSE 0 END)                  AS not_skipped_stage_3_flag,
+           MAX(CASE WHEN stage_name = '4-Proposal'
+              THEN 1
+           ELSE 0 END)                  AS not_skipped_stage_4_flag,
+           MAX(CASE WHEN stage_name = '5-Negotiating'
+              THEN 1
+           ELSE 0 END)                  AS not_skipped_stage_5_flag,
+           MAX(CASE WHEN stage_name = '6-Awaiting Signature'
+              THEN 1
+           ELSE 0 END)                  AS not_skipped_stage_6_flag,
+           MAX(CASE WHEN stage_name = '7-Closing'
+              THEN 1
+           ELSE 0 END)                  AS not_skipped_stage_7_flag
+    FROM old_history_base
+    GROUP BY 1
 
 ), combined AS (
 
   SELECT opportunity_id,
       new_value_string AS stage_name,
       max_stage_date
-  FROM history_base
+  FROM new_history_base
   UNION
   SELECT opportunity_id,
       stage_name,
       max_stage_date
   FROM opty_base
+  UNION
+  -- add opportunities created on stages above 0
+  SELECT opportunity_id,
+      stage_name,
+      change_stage_date
+  FROM old_history_base_rank
 
 ), pivoted_combined AS (
 
@@ -123,17 +184,14 @@ SELECT
         -- adjusted dates for throughput analysis
         -- missing stage dates are completed using the next available stage date, up to a closed date
         -- do not populate date of stages that are not reach yet
-
-        -- Stage 0 is set by default to Creted Date
-        IFF(stage_name_rank >= 0, coalesce(base.max_stage_0_date,opty.created_date),Null) as stage_0_date,
-        --IFF(stage_name_rank >= 0, opty.created_date,Null) AS stage_0_date,
-        IFF(stage_name_rank >= 1, coalesce(base.max_stage_1_date,base.max_stage_2_date,base.max_stage_3_date,base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)  AS stage_1_date,
-        IFF(stage_name_rank >= 2, coalesce(base.max_stage_2_date,base.max_stage_3_date,base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)                     AS stage_2_date,
-        IFF(stage_name_rank >= 3, coalesce(base.max_stage_3_date,base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)                                        AS stage_3_date,
-        IFF(stage_name_rank >= 4, coalesce(base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)                                                           AS stage_4_date,
-        IFF(stage_name_rank >= 5, coalesce(base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date) ,Null)                                              AS stage_5_date,
-        IFF(stage_name_rank >= 6, coalesce(base.max_stage_6_date,base.max_stage_7_date,max_stage_8_won_date) ,Null)                                                                                                  AS stage_6_date,
-        IFF(stage_name_rank >= 7, coalesce(base.max_stage_7_date,base.max_stage_8_won_date),Null)                                                                                                                    AS stage_7_date,
+        IFF(stage_name_rank >= 0, coalesce(base.max_stage_0_date,opty.created_date),Null) as pre_stage_0_date,
+        IFF(stage_name_rank >= 1, coalesce(base.max_stage_1_date,base.max_stage_2_date,base.max_stage_3_date,base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)  AS pre_stage_1_date,
+        IFF(stage_name_rank >= 2, coalesce(base.max_stage_2_date,base.max_stage_3_date,base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)                     AS pre_stage_2_date,
+        IFF(stage_name_rank >= 3, coalesce(base.max_stage_3_date,base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)                                        AS pre_stage_3_date,
+        IFF(stage_name_rank >= 4, coalesce(base.max_stage_4_date,base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date),Null)                                                           AS pre_stage_4_date,
+        IFF(stage_name_rank >= 5, coalesce(base.max_stage_5_date,base.max_stage_6_date,base.max_stage_7_date,base.max_stage_8_won_date) ,Null)                                              AS pre_stage_5_date,
+        IFF(stage_name_rank >= 6, coalesce(base.max_stage_6_date,base.max_stage_7_date,max_stage_8_won_date) ,Null)                                                                                                  AS pre_stage_6_date,
+        IFF(stage_name_rank >= 7, coalesce(base.max_stage_7_date,base.max_stage_8_won_date),Null)                                                                                                                    AS pre_stage_7_date,
         IFF(stage_name_rank = 8, base.max_stage_8_lost_date,Null)                      AS stage_8_lost_date,
         IFF(stage_name_rank = 9, base.max_stage_8_won_date,Null)                       AS stage_8_won_date,
         IFF(stage_name_rank = 11, base.max_stage_9_date,Null)                          AS stage_9_date,
@@ -143,50 +201,50 @@ SELECT
 
         -- was stage skipped flag
         CASE
-            WHEN base.max_stage_0_date IS NULL
-                AND stage_0_date IS NOT NULL
+            WHEN not_skipped.not_skipped_stage_0_flag = 0
+                AND pre_stage_0_date IS NOT NULL
                 THEN 1
             ELSE 0
         END AS was_stage_0_skipped_flag,
         CASE
-            WHEN base.max_stage_1_date IS NULL
-                AND stage_1_date IS NOT NULL
+            WHEN not_skipped.not_skipped_stage_1_flag = 0
+                AND pre_stage_1_date IS NOT NULL
                 THEN 1
             ELSE 0
         END AS was_stage_1_skipped_flag,
         CASE
-            WHEN base.max_stage_2_date IS NULL
-                AND stage_2_date IS NOT NULL
+            WHEN not_skipped.not_skipped_stage_2_flag = 0
+                AND pre_stage_2_date IS NOT NULL
                 THEN 1
             ELSE 0
         END AS was_stage_2_skipped_flag,
         CASE
-            WHEN base.max_stage_3_date IS NULL
-                AND stage_3_date IS NOT NULL
+            WHEN not_skipped.not_skipped_stage_3_flag = 0
+                AND pre_stage_3_date IS NOT NULL
                 THEN 1
             ELSE 0
         END AS was_stage_3_skipped_flag,
         CASE
-            WHEN base.max_stage_4_date IS NULL
-                AND stage_4_date IS NOT NULL
+            WHEN not_skipped.not_skipped_stage_4_flag = 0
+                AND pre_stage_4_date IS NOT NULL
                 THEN 1
             ELSE 0
         END AS was_stage_4_skipped_flag,
         CASE
-            WHEN base.max_stage_5_date IS NULL
-                AND stage_5_date IS NOT NULL
+            WHEN not_skipped.not_skipped_stage_5_flag = 0
+                AND pre_stage_5_date IS NOT NULL
                 THEN 1
             ELSE 0
         END AS was_stage_5_skipped_flag,
         CASE
-            WHEN base.max_stage_6_date IS NULL
-                AND stage_6_date IS NOT NULL
+            WHEN not_skipped.not_skipped_stage_6_flag = 0
+                AND pre_stage_6_date IS NOT NULL
                 THEN 1
             ELSE 0
         END AS was_stage_6_skipped_flag,
         CASE
-            WHEN base.max_stage_7_date IS NULL
-                AND stage_7_date IS NOT  NULL
+            WHEN not_skipped.not_skipped_stage_7_flag = 0
+                AND pre_stage_7_date IS NOT  NULL
                 THEN 1
             ELSE 0
         END AS was_stage_7_skipped_flag
@@ -194,8 +252,83 @@ SELECT
     FROM pivoted_combined base
     INNER JOIN sfdc_opportunity_xf opty
       ON opty.opportunity_id = base.opportunity_id
-)
-, final AS (
+    LEFT JOIN not_skipped
+        ON not_skipped.opportunity_id = opty.opportunity_id
+
+
+), adjusted_date AS (
+
+
+    SELECT
+        pre_final.opportunity_id,
+        pre_final.stage_name,
+        pre_final.close_date,
+        pre_final.created_date,
+        pre_final.cycle_time_in_days,
+
+        -- second layer of adjustment, to avoid having dates
+        -- show up, if previous date is higher.
+        CASE
+            WHEN  pre_final.pre_stage_0_date < created_date
+                THEN  pre_final.created_date
+            ELSE  pre_final.pre_stage_0_date
+        END AS  stage_0_date,
+        CASE
+            WHEN  pre_final.pre_stage_1_date < pre_final.pre_stage_0_date
+                THEN stage_0_date
+            ELSE  pre_final.pre_stage_1_date
+        END AS stage_1_date,
+        CASE
+            WHEN  pre_final.pre_stage_2_date < stage_1_date
+                THEN stage_1_date
+            ELSE  pre_final.pre_stage_2_date
+        END AS stage_2_date,
+        CASE
+            WHEN  pre_final.pre_stage_3_date < stage_2_date
+                THEN stage_2_date
+            ELSE  pre_final.pre_stage_3_date
+        END AS stage_3_date,
+        CASE
+            WHEN  pre_final.pre_stage_4_date < stage_3_date
+                THEN stage_3_date
+            ELSE  pre_final.pre_stage_4_date
+        END AS stage_4_date,
+        CASE
+            WHEN  pre_final.pre_stage_5_date < stage_4_date
+                THEN stage_4_date
+            ELSE  pre_final.pre_stage_5_date
+        END AS stage_5_date,
+        CASE
+            WHEN  pre_final.pre_stage_6_date < stage_5_date
+                THEN stage_5_date
+            ELSE  pre_final.pre_stage_6_date
+        END AS stage_6_date,
+        CASE
+            WHEN  pre_final.pre_stage_7_date < stage_6_date
+                THEN stage_6_date
+            ELSE  pre_final.pre_stage_7_date
+        END AS stage_7_date,
+
+        pre_final.stage_8_lost_date,
+        pre_final.stage_8_won_date,
+        pre_final.stage_9_date,
+        pre_final.stage_10_date,
+        pre_final.stage_closed_date,
+        pre_final.stage_close_lost_unqualified_duplicate_date,
+
+        -- was stage skipped flag
+        pre_final.was_stage_0_skipped_flag,
+        pre_final.was_stage_1_skipped_flag,
+        pre_final.was_stage_2_skipped_flag,
+        pre_final.was_stage_3_skipped_flag,
+        pre_final.was_stage_4_skipped_flag,
+        pre_final.was_stage_5_skipped_flag,
+        pre_final.was_stage_6_skipped_flag,
+        pre_final.was_stage_7_skipped_flag
+
+    FROM pre_final
+
+), final AS (
 
 SELECT
         base.*,
@@ -244,9 +377,9 @@ SELECT
         stage_7.fiscal_year                 AS stage_7_fiscal_year
 
         -- calculated cycle times
-        
 
-FROM pre_final base
+
+FROM adjusted_date base
   LEFT JOIN  date_details stage_0
     ON stage_0.date_actual = base.stage_0_date::date
   LEFT JOIN  date_details stage_1
