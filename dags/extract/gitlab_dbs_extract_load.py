@@ -423,8 +423,8 @@ for source_name, config in config_dict.items():
                             "task_id": task_identifier,
                         },
                         arguments=[scd_cmd],
-                        affinity=get_affinity("production"),
-                        tolerations=get_toleration("production"),
+                        affinity=get_affinity("scd"),
+                        tolerations=get_toleration("scd"),
                         do_xcom_push=True,
                     )
         globals()[f"{config['dag_name']}_db_sync"] = sync_dag
