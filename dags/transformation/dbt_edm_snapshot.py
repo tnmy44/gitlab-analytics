@@ -86,7 +86,7 @@ dag = DAG(
 # dbt-snapshot for daily tag
 dbt_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt --debug --log-format json snapshot -s tag:edm_snapshot --profiles-dir profile; ret=$?;
+    dbt snapshot -s tag:edm_snapshot --profiles-dir profile; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """

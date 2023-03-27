@@ -11,6 +11,7 @@ CASE
     THEN 'Channel Partners'
   WHEN {{ close_date }} < '2022-02-01' AND ( {{ fulfillment_partner_name }} IS NOT NULL OR {{ partner_account_name }} IS NOT NULL )
     THEN 'Non-Alliance Partners'
+  ELSE 'Other Alliance Partners'
 END
 
 {%- endmacro -%}

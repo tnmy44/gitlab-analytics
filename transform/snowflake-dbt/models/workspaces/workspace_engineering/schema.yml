@@ -224,3 +224,77 @@ models:
           description: The group path in the merge request URL
         - name: url
           description: Merge request URL
+
+    - name: engineering_issues
+      description: A model containing all issues that affect our product. This model includes relevant and common flags that are used in engineering metrics.
+      columns: 
+        - name: issue_id
+          tests:
+            - not_null
+            - unique
+        - name: issue_iid
+          description: The ID appended to the issue link
+        - name: author_id
+          description: The user_id that created the issue
+        - name: is_created_by_bot
+          description: Boolean field that identifies whether the issue was created by a bot
+        - name: project_id
+          description: The project_id related to the issue
+        - name: created_at
+          description: When the issue was created
+        - name: updated_at
+          description: When the issue was updated
+        - name: closed_at
+          description: When the issue was closed
+        - name: created_month
+          description: Which month the issue was created
+        - name: closed_month
+          description: Which month the issue was closed
+        - name: days_to_close
+          description: Number of days it takes from when the issue was created to closed
+        - name: issue_title
+          description: Title of issue
+        - name: issue_description
+          description: Description of issue
+        - name: milestone_id
+          description: The milestone_id related to the issue
+        - name: milestone_title
+          description: The title of the related milestone_id
+        - name: milestone_description
+          description: The description of the related milestone_id
+        - name: milestone_start_date
+          description: The start date of the milestone
+        - name: milestone_due_date
+          description: The due date of the milestone
+        - name: weight
+          description: The weight applied to the issue
+        - name: namespace_id
+          description: The namespace_id related to the issue
+        - name: labels
+          description: The labels on a issue
+        - name: masked_label_title
+          description: String version of labels, separated by '|'
+        - name: is_community_contribution
+          description: Boolean field that identifies whether the issue is a community contribution via labels
+        - name: is_security
+          description: Boolean field that identifies whether the issue is related to security via labels
+        - name: priority_label
+          description: The value following a priority label ('priority::%'')
+        - name: severity_label
+          description: The value following a severity label ('severity::%'')
+        - name: group_label
+          description: The group that the issue is related to. This is extracted from labels ('group::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: section_label
+          description: The section that the issue is related to. This is extracted from labels ('section::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: stage_label
+          description: The stage that the issue is related to. This is extracted from labels ('devops::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: type_label
+          description: The worktype type classification, defined as either a bug, maintenance, or feature.
+        - name: subtype_label
+          description: The worktype subtype classification that matches a type_label
+        - name: visibility_level
+          description: Indicate if the issue lives in a private or public project
+        - name: full_group_path
+          description: The group path in the issue URL
+        - name: url
+          description: Issue URL

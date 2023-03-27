@@ -108,6 +108,8 @@ WITH source AS (
       SUM(headcount_average_leader) {{ratio_to_report_partition_statement}}         AS total_headcount_leader,
       MIN(headcount_average_manager) {{ratio_to_report_partition_statement}}        AS min_headcount_manager,
       SUM(headcount_average_manager) {{ratio_to_report_partition_statement}}        AS total_headcount_manager,
+      MIN(headcount_average_management) {{ratio_to_report_partition_statement}}     AS min_headcount_management,
+      SUM(headcount_average_management) {{ratio_to_report_partition_statement}}     AS total_headcount_management,
       MIN(headcount_average_contributor) {{ratio_to_report_partition_statement}}    AS min_headcount_contributor,
 
 
@@ -118,7 +120,9 @@ WITH source AS (
       RATIO_TO_REPORT(headcount_end_leader) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_leaders,
       RATIO_TO_REPORT(headcount_end_manager) 
-        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_manager,          
+        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_manager,    
+      RATIO_TO_REPORT(headcount_end_management) 
+        {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_management,          
       RATIO_TO_REPORT(headcount_end_individual_contributor) 
         {{ratio_to_report_partition_statement}}                                     AS percent_of_headcount_contributor,
       
@@ -245,7 +249,9 @@ WITH source AS (
       IFF(total_headcount_leader < 3 AND show_value_criteria = FALSE, 
         NULL, percent_of_headcount_leaders)                                      AS percent_of_headcount_leaders,
       IFF(total_headcount_manager < 3 AND show_value_criteria = FALSE,  
-        NULL, percent_of_headcount_manager)                                      AS percent_of_headcount_manager,    
+        NULL, percent_of_headcount_manager)                                      AS percent_of_headcount_manager,
+      IFF(total_headcount_management < 3 AND show_value_criteria = FALSE,  
+        NULL, percent_of_headcount_management)                                   AS percent_of_headcount_management,
       IFF(total_headcount_end_contributor < 5 AND show_value_criteria = FALSE, 
         NULL, percent_of_headcount_contributor)                                  AS percent_of_headcount_contributor,
 

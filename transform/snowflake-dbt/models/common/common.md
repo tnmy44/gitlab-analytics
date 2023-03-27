@@ -130,12 +130,7 @@ The grain of this table is `DIM_CRM_USER_SNAPSHOT_ID` which is a combination of 
 
 {% enddocs %}
 
-{% docs dim_crm_user_hierarchy_live %}
-Dimension table representing the current state of the sales hierarchy, including the user segment, geo, region, and area as it is in the crm user object.
-
-{% enddocs %}
-
-{% docs dim_crm_user_hierarchy_stamped %}
+{% docs dim_crm_user_hierarchy %}
 Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
 
 {% enddocs %}
@@ -400,7 +395,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_gitlab_versions %}
+{% docs dim_gitlab_version %}
 Dimensional table representing released versions of GitLab.
 
 The grain of the table is a version_id.
@@ -561,33 +556,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
 - `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
-
-**Other Comments:**
-- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
-
-{% enddocs %}
-
-{% docs fct_event_instance_daily %}
-
-**Description:** GitLab.com usage event data for valid events, grouped by date and event name
-- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  
-
-**Data Grain:**
-- event_date
-- event_name
-
-**Filters Applied to Model:**
-- `Inherited` - Include valid events for standard analysis and reporting:
-  - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
-    - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
-  - Exclude events from blocked users (based on the current user state)
-- Rolling 24 months of data
-
-**Business Logic in this Model:**
-- `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
-- `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
-- Not all events have a user associated with them (ex: 'milestones'), and not all events have a namespace associated with them (ex: 'users_created'). Therefore it is expected that `user_count = 0` or `ultimate_parent_namespace_count = 0` for these events.
 
 **Other Comments:**
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
@@ -837,19 +805,6 @@ Easy joins available with:
 * dim_project through `dim_project_id`
 * dim_namespace through `dim_namespace_id` and `ultimate_parent_namespace_id`
 * dim_date through `ci_pipeline_creation_dim_date_id`
-{% enddocs %}
-
-{% docs dim_action %}
-
-Dimensional table representing actions recorded by the Events API. [More info about actions tracked here](https://docs.gitlab.com/ee/api/events.html)
-
-The grain of the table is the `dim_action_id`. This table is easily joinable with:
-
-- `dim_plan` through `dim_plan_id`
-- `dim_user` through `dim_user_id`
-- `dim_project` through `dim_project_id`
-- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
-
 {% enddocs %}
 
 {% docs dim_issue %}
@@ -1587,7 +1542,12 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 - This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
 
 **Tips for use:**
-- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on `event_action`, `event_category`, etc.
+- There is a cluster key on `behavior_at::DATE`. Using `behavior_at` in a WHERE clause or INNER JOIN will improve query performance.
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
 {% enddocs %}
 
@@ -1634,6 +1594,8 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
 **Tips for use:**
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
 - Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
 {% enddocs %}
 
@@ -1706,6 +1668,7 @@ This model only includes structured events implemented for experiments. Experime
 - Unlike the previous legacy version, you do _not_ need to join this model back to the fact. It includes all columns on the fact, in addition to experiment-specific columns (ex. `experiment_name`, etc).
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS details 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser details
 
@@ -1727,6 +1690,7 @@ This model excludes assignment events (`event_action = 'assignment'`)
 
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
@@ -1749,6 +1713,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
@@ -1771,6 +1736,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
@@ -1780,7 +1746,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 Delta ARR is a measure of changes to ARR compared to the prior month. The [ARR Analysis Framework](https://internal-handbook.gitlab.io/handbook/sales/annual-recurring-revenue-arr/#arr-analysis-framework) handbook page provides more details on the analysis.
 
-The model uses the subscription_lineage grain to calculate the Delta ARR. This is a fundamental change from previous Delta ARR models at the subscription grain. When looking at the subscription grain, debook-book scenarios are not captured. Therefore, it is necessary to analyze the subscription_lineage grain for accurate product level Delta ARR changes. This model provides a method to analyze the 6 subscription linkage scenarios provided in this [Linking Subscriptions for Data Retention[https://docs.google.com/spreadsheets/d/1SYFy0Xqau1dbOm2YXmp0NvWDEkL_vIcWaFhKzwcocCM/edit#gid=0] file.
+The model uses the subscription_lineage grain to calculate the Delta ARR. This is a fundamental change from previous Delta ARR models at the subscription grain. When looking at the subscription grain, debook-book scenarios are not captured. Therefore, it is necessary to analyze the subscription_lineage grain for accurate product level Delta ARR changes. This model provides a method to analyze the 6 subscription linkage scenarios provided in this [Linking Subscriptions for Data Retention](https://docs.google.com/spreadsheets/d/1SYFy0Xqau1dbOm2YXmp0NvWDEkL_vIcWaFhKzwcocCM/edit#gid=0) file.
 
 The model ERD can be found [HERE](https://lucid.app/lucidchart/invitations/accept/inv_07d25d39-3076-408f-b768-67d1895ea064). 
 

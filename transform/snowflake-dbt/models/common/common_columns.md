@@ -130,9 +130,9 @@ The name of the [product group](https://gitlab.com/gitlab-com/www-gitlab-com/blo
 
 {% enddocs %}
 
-{% docs product_category_ping_metric %}
+{% docs instrumentation_class_ping_metric %}
 
-The name of the [product category](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/categories.yml) (ex. audit_events, integrations, continuous_delivery, etc)
+The name of the [instrumentation class](https://docs.gitlab.com/ee/development/service_ping/metrics_instrumentation.html#nomenclature) (ex. DatabaseMetric, RedisMetric, RedisHLLMetric, etc)
 
 {% enddocs %}
 
@@ -1856,10 +1856,20 @@ Change in the price per seat paid in the arr_month.
 
 {% enddocs %}
 
-
 {% docs namespace_is_ultimate_parent %}
 
 Boolean flag which is set to True if the namespace is the ultimate parent.
 
 {% enddocs %}
 
+{% docs subscription_action_type %}
+
+The action to be carried out on the subscription. For example, 'Amend Subscription' or 'Renew Subscription'
+
+{% enddocs %}
+
+{% docs dim_gitlab_version_sk %}
+
+The unique surrogate key created by using `version_id` which is a unique identifier of a release maintained by the versions app. 
+
+{% enddocs %}

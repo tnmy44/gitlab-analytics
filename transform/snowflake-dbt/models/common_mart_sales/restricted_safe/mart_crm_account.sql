@@ -63,11 +63,13 @@
       dim_crm_account.parent_crm_account_zoom_info_parent_company_name,
       dim_crm_account.parent_crm_account_zoom_info_ultimate_parent_company_zi_id,
       dim_crm_account.parent_crm_account_zoom_info_ultimate_parent_company_name,
-      dim_crm_account.parent_crm_account_demographics_sales_segment,
+      dim_crm_account.parent_crm_account_demographics_business_unit,
       dim_crm_account.parent_crm_account_demographics_geo,
       dim_crm_account.parent_crm_account_demographics_region,
+      dim_crm_account.parent_crm_account_demographics_sales_segment,
       dim_crm_account.parent_crm_account_demographics_area,
       dim_crm_account.parent_crm_account_demographics_territory,
+      dim_crm_account.parent_crm_account_demographics_role_type,
       dim_crm_account.parent_crm_account_demographics_max_family_employee,
       dim_crm_account.parent_crm_account_demographics_upa_country,
       dim_crm_account.parent_crm_account_demographics_upa_state,
@@ -158,6 +160,9 @@
       dim_crm_account.gs_health_devsecops,
       dim_crm_account.gs_health_ci,
       dim_crm_account.gs_health_scm,
+      dim_crm_account.risk_impact,
+      dim_crm_account.risk_reason,
+      dim_crm_account.last_timeline_at_risk_update,
 
       --degenerative dimensions
       dim_crm_account.is_sdr_target_account,
@@ -248,5 +253,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-08-10",
-    updated_date="2023-02-21"
+    updated_date="2023-03-10"
 ) }}

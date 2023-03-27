@@ -410,10 +410,6 @@ models:
         description: '{{ doc("geo_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_nodes_all_time_event
-        description: '{{ doc("geo_nodes_all_time_event_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
       - name: auto_devops_pipelines_28_days_user
         description: '{{ doc("auto_devops_pipelines_28_days_user_desc") }}'
         tests:
@@ -556,6 +552,46 @@ models:
           - dbt_utils.at_least_one
       - name: last_activity_28_days_user
         description: '{{ doc("last_activity_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: snippets_28_days_event
+        description: '{{ doc("snippets_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: single_file_editor_28_days_user
+        description: '{{ doc("single_file_editor_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_event
+        description: '{{ doc("merge_requests_created_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_user
+        description: '{{ doc("merge_requests_created_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_approval_rules_28_days_event
+        description: '{{ doc("merge_requests_approval_rules_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: custom_compliance_frameworks_28_days_event
+        description: '{{ doc("custom_compliance_frameworks_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_security_policy_28_days_event
+        description: '{{ doc("projects_security_policy_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_security_policy_28_days_user
+        description: '{{ doc("merge_requests_security_policy_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipelines_implicit_auto_devops_28_days_event
+        description: '{{ doc("pipelines_implicit_auto_devops_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_28_days_user
+        description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: is_latest_data

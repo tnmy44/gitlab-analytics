@@ -87,7 +87,7 @@ renamed AS (
     numberofemployees                AS number_of_employees,
     phone AS account_phone,
     zi_phone__c AS zoominfo_account_phone,
-	number_of_employees_manual_source_admin__c AS admin_manual_source_number_of_employees,
+    number_of_employees_manual_source_admin__c AS admin_manual_source_number_of_employees,
     account_address_manual_source_admin__c AS admin_manual_source_account_address,
 
     -- territory success planning fields
@@ -111,6 +111,8 @@ renamed AS (
     account_demographics_region__c AS account_demographics_region,
     account_demographics_area__c AS account_demographics_area,
     account_demographics_territory__c AS account_demographics_territory,
+    account_demographics_business_unit__c AS account_demographics_business_unit,
+    account_demographics_role_type__c AS account_demographics_role_type,
     account_demographics_employee_count__c AS account_demographics_employee_count,
     account_demographic_max_family_employees__c AS account_demographics_max_family_employee,
     account_demographics_upa_country__c AS account_demographics_upa_country,
@@ -223,6 +225,11 @@ renamed AS (
     gs_health_devsecops__c AS gs_health_devsecops,
     gs_health_ci__c AS gs_health_ci,
     gs_health_scm__c AS gs_health_scm,
+
+    -- Risk Fields
+    risk_impact__c AS risk_impact,
+    risk_reason__c AS risk_reason,
+    last_timeline_at_risk_update__c AS last_timeline_at_risk_update,
 
     -- metadata
     createdbyid AS created_by_id,

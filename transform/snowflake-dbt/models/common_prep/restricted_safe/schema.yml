@@ -86,7 +86,8 @@ models:
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
-
+      - name: subscription_action_type
+        description: '{{ doc("subscription_action_type") }}'
 
   - name: prep_recurring_charge_subscription_monthly
     description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
@@ -327,3 +328,16 @@ models:
 
   - name: prep_order_action_rate_plan
     description: Prep table for Zuora order action. This it at the order action grain i.e. one order can have multiple order actions.
+  
+  - name: prep_sales_funnel_target
+    description: Prep model for SSOT sales funnel targets
+    columns:
+      - name: dim_crm_user_hierarchy_sk
+        tests:
+          - not_null
+  - name: prep_sales_funnel_partner_alliance_target
+    description: Prep model for sales funnel partner targets
+    columns:
+      - name: dim_crm_user_hierarchy_sk
+        tests:
+          - not_null

@@ -132,13 +132,13 @@ WITH dates AS (
       voluntary_separation + involuntary_separation                                 AS separation_count,
 
       IFF(dates.start_date = date_actual 
-          AND job_role_modified = 'Dirctor+',1,0)                          AS headcount_start_leader,
+          AND job_role_modified = 'Director+',1,0)                          AS headcount_start_leader,
       IFF(dates.end_date = date_actual
-          AND job_role_modified = 'Dirctor+',1,0)                          AS headcount_end_leader,
+          AND job_role_modified = 'Director+',1,0)                          AS headcount_end_leader,
       IFF(is_hire_date = True 
-          AND job_role_modified = 'Dirctor+',1,0)                          AS hired_leaders,
+          AND job_role_modified = 'Director+',1,0)                          AS hired_leaders,
       IFF(is_termination_date = True
-          AND job_role_modified = 'Dirctor+',1,0)                          AS separated_leaders,
+          AND job_role_modified = 'Director+',1,0)                          AS separated_leaders,
       
       IFF(dates.start_date = date_actual 
           AND job_role_modified = 'Manager',1,0)                                    AS headcount_start_manager,
