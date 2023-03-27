@@ -7,27 +7,27 @@ WITH all_team_members AS (
 
 blended_dates AS (
 
-  SELECT * 
+  SELECT *
   FROM {{ref('blended_dates')}}
 
 ),
 
 key_talent AS (
 
-  SELECT * 
+  SELECT *
   FROM {{ref('assess_talent_source')}}
 
 ),
 
 gitlab_usernames AS (
 
-  SELECT * 
+  SELECT *
   FROM {{ref('gitlab_usernames_source')}}
 ),
 
 performance_growth_potential AS (
 
-  SELECT * 
+  SELECT *
   FROM {{ref('performance_growth_potential_source')}}
 
 ), 
@@ -44,7 +44,6 @@ final AS (
   SELECT 
     {{ dbt_utils.surrogate_key(['blended_dates.employee_id', 'blended_dates.valid_from']) }}                AS dim_team_member_sk,
     blended_dates.employee_id                                                                               AS employee_id,
-    blended_dates.business_process                                                                          AS business_process,
     all_team_members.nationality                                                                            AS nationality,
     all_team_members.ethnicity                                                                              AS ethnicity,
     all_team_members.preferred_first_name                                                                   AS first_name,

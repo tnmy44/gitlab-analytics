@@ -60,7 +60,6 @@ unioned AS (
 
   SELECT 
     employee_id,
-    'Key Talent Assessment' AS business_process,
     valid_from
   FROM key_talent
 
@@ -68,7 +67,6 @@ unioned AS (
 
   SELECT 
     employee_id,
-    'Change GitLab Username' AS business_process,
     valid_from
   FROM gitlab_usernames
 
@@ -76,7 +74,6 @@ unioned AS (
 
   SELECT 
     employee_id,
-    'Key Talent Assessment' AS business_process,
     valid_from
   FROM performance_growth_potential
 
@@ -84,7 +81,6 @@ unioned AS (
 
   SELECT 
     employee_id,
-    business_process_type AS business_process,
     valid_from
   FROM staffing_history
 
@@ -93,19 +89,18 @@ unioned AS (
 final AS (
 
   SELECT 
-    unioned.employee_id                          AS employee_id,
-    unioned.business_process                     AS business_process,
-    key_talent.valid_from                        AS key_talent_valid_from,
-    key_talent.valid_to                          AS key_talent_valid_to,
-    gitlab_usernames.valid_from                  AS usernames_valid_from,
-    gitlab_usernames.valid_to                    AS usernames_valid_to,
-    performance_growth_potential.valid_from      AS performance_growth_potential_valid_from,
-    performance_growth_potential.valid_to        AS performance_growth_potential_valid_to,
-    staffing_history.valid_from                  AS staffing_history_valid_from,
-    staffing_history.valid_to                    AS staffing_history_valid_to,
-    unioned.valid_from                           AS valid_from,
-    COALESCE(LEAD(unioned.valid_from) OVER (PARTITION BY unioned.employee_id, unioned.business_process ORDER BY unioned.valid_from), {{var('tomorrow')}}) AS valid_to,
-    ROW_NUMBER() OVER (PARTITION BY unioned.employee_id, unioned.business_process ORDER BY unioned.valid_from) AS row_num
+    unioned.employee_id                                                                                                         AS employee_id,
+    key_talent.valid_from                                                                                                       AS key_talent_valid_from,
+    key_talent.valid_to                                                                                                         AS key_talent_valid_to,
+    gitlab_usernames.valid_from                                                                                                 AS usernames_valid_from,
+    gitlab_usernames.valid_to                                                                                                   AS usernames_valid_to,
+    performance_growth_potential.valid_from                                                                                     AS performance_growth_potential_valid_from,
+    performance_growth_potential.valid_to                                                                                       AS performance_growth_potential_valid_to,
+    staffing_history.valid_from                                                                                                 AS staffing_history_valid_from,
+    staffing_history.valid_to                                                                                                   AS staffing_history_valid_to,
+    unioned.valid_from                                                                                                          AS valid_from,
+    COALESCE(LEAD(unioned.valid_from) OVER (PARTITION BY unioned.employee_id ORDER BY unioned.valid_from), {{var('tomorrow')}}) AS valid_to,
+    ROW_NUMBER() OVER (PARTITION BY unioned.employee_id ORDER BY unioned.valid_from)                                            AS row_num
     FROM unioned
     INNER JOIN key_talent
       ON key_talent.employee_id = unioned.employee_id 
