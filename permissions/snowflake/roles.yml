@@ -3267,6 +3267,7 @@ roles:
     - jhope:
         member_of:
             - gitlab_dotcom
+            - reporter
         warehouses:
             - dev_xs
 
@@ -4071,6 +4072,7 @@ roles:
             - customers_db
             - data_team_analyst
             - data_manager
+            - data_science_readonly
             - restricted_safe
             - salesforce_sandbox
             - xactly

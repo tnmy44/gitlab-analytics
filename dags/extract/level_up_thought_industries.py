@@ -43,18 +43,16 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "el_level_up_thought_industries_v2",
+    "el_level_up_thought_industries",
     default_args=default_args,
     # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
-    start_date=datetime(2022, 1, 12),  # CourseCompletion data starts: 2022-01-13
+    # FYI: on first run, data is backfilled thru 2022-03-01
+    start_date=datetime(2022, 3, 1),
     catchup=True,
     max_active_runs=1,  # due to API rate limiting
     concurrency=3,  # num of max_tasks, limit due to API rate limiting
 )
-
-dummy_start = DummyOperator(task_id="dummy_start", dag=dag)
-dummy_end = DummyOperator(task_id="dummy_end", dag=dag)
 
 endpoint_classes = (
     "CourseActions",
@@ -96,11 +94,9 @@ for endpoint_class in endpoint_classes:
                 ".int_timestamp }}"
             ),
         },
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity("production"),
+        tolerations=get_toleration("production"),
         arguments=[extract_command],
         dag=dag,
     )
     extract_tasks.append(extract_task)
-
-dummy_start >> extract_tasks >> dummy_end
