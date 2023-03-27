@@ -154,7 +154,7 @@ WITH stage_dates AS (
                )                    AS days_in_previous_stage,
            0                        AS was_stage_skipped_flag
     FROM stage_dates
-
+    
 ), final AS (
 
     SELECT  prog.*,
