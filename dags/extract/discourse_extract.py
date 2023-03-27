@@ -66,8 +66,8 @@ kubernetes_operator = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
     ],
-    affinity=get_affinity(False),
-    tolerations=get_toleration(False),
+    affinity=get_affinity("production"),
+    tolerations=get_toleration("production"),
     env_vars={
         **pod_env_vars,
         **{
