@@ -884,7 +884,6 @@ tables:
       , created_at
       , updated_at
       , base_access_level
-      , download_code
       , read_code
       FROM member_roles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
