@@ -3301,8 +3301,8 @@ models:
       - name: seat_link_report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
       - name: seat_link_report_date_id
-      - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping.
+      - name: dim_ping_instance_id
+        description: JOIN key to dim_ping_instance and prep_ping_instance. Represents a single ping.
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
       - name: ping_created_date_id
