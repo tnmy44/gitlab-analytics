@@ -41,11 +41,11 @@ models:
     description: Returns information when a course is completed by a user
     columns:
       - name: id
-      - name: company_id
-      - name: event
         tests:
           - not_null
           - unique
+      - name: company_id
+      - name: event
       - name: license
       - name: notifiable_id
       - name: course_action
