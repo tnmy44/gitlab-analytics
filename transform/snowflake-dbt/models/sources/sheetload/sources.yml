@@ -22,6 +22,7 @@ sources:
       - name: ally_certificate
       - name: ar_aging_details
       - name: bizible_to_pathfactory_mapping
+      - name: abm_key_account_list
       - name: books
       - name: calendar
       - name: cert_customer_segmentation_dashboard
