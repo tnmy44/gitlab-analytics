@@ -402,3 +402,4 @@ FROM adjusted_date base
 SELECT *
 FROM final
 
+
