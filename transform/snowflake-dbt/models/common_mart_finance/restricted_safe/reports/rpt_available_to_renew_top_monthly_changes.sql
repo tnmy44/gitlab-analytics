@@ -42,7 +42,7 @@ atr_comparison AS (
       AND dense_rank() OVER (PARTITION BY first_day_of_month ORDER BY total_arr DESC) <= 10 
         THEN 'Top available to renew excluded deal'
       ELSE 'No change'
-    END                                                                                     AS flag
+    END                                                                                     AS atr_change_flag
   FROM atr_daily
   WHERE max_year = DATE_PART(YEAR, CURRENT_DATE())
 
@@ -55,7 +55,7 @@ monthly_agg AS (
     parent_crm_account_name,
     subscription_name,
     total_arr,
-    flag
+    atr_change_flag
   FROM atr_comparison
 
 ),
@@ -67,12 +67,12 @@ final AS (
     parent_crm_account_name,
     subscription_name,
     total_arr,
-    flag
+    atr_change_flag
   FROM monthly_agg
-  WHERE flag != 'No change'
+  WHERE atr_change_flag != 'No change'
     AND first_day_of_month != '2021-12-01' -- exclude first month otherwise everyone is a new subscription
   QUALIFY RANK() OVER (
-      PARTITION BY first_day_of_month, flag
+      PARTITION BY first_day_of_month, atr_change_flag
       ORDER BY total_arr DESC) <= 10
 
 )

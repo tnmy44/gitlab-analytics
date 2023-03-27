@@ -18,5 +18,5 @@ models:
         description: Name applied to the subscription.
       - name: total_arr
         description: Annual recurring revenue associated with the subscription.
-      - name: flag
-        description: Field showing movement of the top subscriptions by arr each month. Available values - 'Became available to renew', 'Dropped as available to renew', 'New subscription', 'Subscription ends this month' or 'Top available to renew excluded deal'
+      - name: atr_change_flag
+        description: ' {{ doc("atr_change_flag") }} '
