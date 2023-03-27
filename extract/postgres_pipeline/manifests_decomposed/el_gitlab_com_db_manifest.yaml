@@ -1057,7 +1057,7 @@ tables:
       SELECT id
       , created_at
       , updated_at
-      , iid
+      , eid
       , experiment_id
       , user_id
       , start_time
