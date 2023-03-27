@@ -54,11 +54,11 @@
       CASE
         WHEN original_edition = 'CE'                                     THEN 'Core'
         WHEN original_edition = 'EE Free'                                THEN 'Core'
+        WHEN license_expires_at < ping_created_at                        THEN 'Core'
         WHEN original_edition = 'EE'                                     THEN 'Starter'
         WHEN original_edition = 'EES'                                    THEN 'Starter'
         WHEN original_edition = 'EEP'                                    THEN 'Premium'
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
-        WHEN license_expires_at < ping_created_at                        THEN 'Core'
         ELSE NULL END                                                                                                                             AS product_tier,
         COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)                                          AS raw_usage_data_payload,
       IFF(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7', 'SaaS - Manual', 'Self-Managed') AS ping_type --GitLab SaaS pings here are manual, everything else is SM
@@ -138,11 +138,11 @@
       CASE
         WHEN edition = 'CE'                   THEN 'Core'
         WHEN edition = 'EE Free'              THEN 'Core'
+        WHEN license_expires_at < created_at  THEN 'Core'
         WHEN edition = 'EE'                   THEN 'Starter'
         WHEN edition = 'EES'                  THEN 'Starter'
         WHEN edition = 'EEP'                  THEN 'Premium'
         WHEN edition = 'EEU'                  THEN 'Ultimate'
-        WHEN license_expires_at < created_at  THEN 'Core'
         ELSE NULL 
       END AS product_tier,
       raw_usage_data_payload,
