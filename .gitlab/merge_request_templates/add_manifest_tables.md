@@ -22,3 +22,10 @@ Closes
 #### Red data
 
 * [ ] Confirm no [red data](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/new-data-source/#red-data) is loaded into Snowflake or the data is masked.
+
+#### Check: is the manual full refresh needed
+
+- [ ] **Check required**: If the MR adds/renames columns to a table in the `RAW.TAP_POSTGRES` schema and the following model exists in the `PREP.GITLAB_DOTCOM` schema, a `dbt run --full-refresh` will be needed after merging the `MR`. Please, add it to the Reviewer Checklist to warn them that this step is required.
+    - [ ] DBT full refresh required post merge?[
+        - [ ] `Yes`. Create an issue with the model name which needs to be refreshed and assign it to the Reviewer to run it post merge. Use the page [**DBT model manual full refresh**](https://about.gitlab.com/handbook/business-technology/data-team/platform/infrastructure/#dbt-model-manual-full-refresh) for the detailed explanation about the full refresh 
+        - [ ] `No`.
