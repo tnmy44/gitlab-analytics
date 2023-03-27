@@ -9,4 +9,7 @@ models:
       description: '{{ doc("ptpt_scores_source") }}'
     - name: namespace_segmentation_scores_source
       description: '{{ doc("ptpt_scores_source") }}'
+    - name: ptpf_scores_source
+      description: '{{ doc("ptpf_scores_source") }}'
+
 
