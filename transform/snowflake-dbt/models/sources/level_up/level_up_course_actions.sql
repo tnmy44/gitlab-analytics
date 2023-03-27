@@ -33,7 +33,6 @@ parsed AS (
     value['userDetail']['country']::VARCHAR            AS user_country,
 
     value['userDetail']['client']::VARCHAR             AS user_client,
-    value['userDetail']['externalCustomerId']::VARCHAR AS external_customer_id,
 
     value['userDetail']['ref1']::VARCHAR               AS ref1_user_type,
     value['userDetail']['ref2']::VARCHAR               AS ref2_user_job,
