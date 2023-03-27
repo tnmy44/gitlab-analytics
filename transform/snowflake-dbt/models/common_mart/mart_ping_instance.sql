@@ -45,12 +45,13 @@
 
 ), license_subscriptions AS (
 
-    SELECT DISTINCT
+    SELECT
       dim_date.first_day_of_month                                                 AS reporting_month,
       dim_license.dim_license_id                                                  AS license_id,
       dim_license.license_sha256                                                  AS license_sha256,
       dim_license.license_md5                                                     AS license_md5,
       dim_license.company                                                         AS license_company_name,
+      dim_license.license_expire_date                                             AS license_expire_date,
       subscription_source.subscription_name_slugify                               AS original_subscription_name_slugify,
       dim_subscription.dim_subscription_id                                        AS latest_subscription_id,
       dim_subscription.subscription_start_date                                    AS subscription_start_date,
@@ -67,7 +68,7 @@
       dim_crm_accounts.parent_crm_account_owner_team                              AS parent_crm_account_owner_team,
       dim_crm_accounts.parent_crm_account_sales_territory                         AS parent_crm_account_sales_territory,
       dim_crm_accounts.technical_account_manager                                  AS technical_account_manager,
-      IFF(MAX(fct_charge.mrr) > 0, TRUE, FALSE)                                   AS is_paid_subscription,
+      MAX(fct_charge.mrr > 0)                                                     AS max_monthly_mrr,
       MAX(IFF(dim_product_detail.product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE)) 
                                                                                   AS is_program_subscription,
       ARRAY_AGG(DISTINCT dim_product_detail.product_tier_name)
@@ -96,7 +97,7 @@
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
     INNER JOIN dim_date
       ON fct_charge.effective_start_month <= dim_date.date_day AND fct_charge.effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=21)}}
+    {{ dbt_utils.group_by(n=22)}}
 
 
   ), joined AS (
@@ -129,7 +130,13 @@
         COALESCE(sha256.parent_crm_account_owner_team, md5.parent_crm_account_owner_team)                                               AS parent_crm_account_owner_team,
         COALESCE(sha256.parent_crm_account_sales_territory, md5.parent_crm_account_sales_territory)                                     AS parent_crm_account_sales_territory,
         COALESCE(sha256.technical_account_manager, md5.technical_account_manager)                                                       AS technical_account_manager,
-        COALESCE(sha256.is_paid_subscription, md5.is_paid_subscription, FALSE)                                                          AS is_paid_subscription,
+        CASE
+          WHEN sha256.license_expire_date < dim_ping_instance.ping_created_at THEN FALSE
+          WHEN md5.license_expire_date < dim_ping_instance.ping_created_at THEN FALSE
+          WHEN sha256.max_monthly_mrr > 0 THEN TRUE
+          WHEN md5.max_monthly_mrr > 0 THEN TRUE
+          ELSE FALSE
+        END                                                                                                                             AS is_paid_subscription,
         COALESCE(sha256.is_program_subscription, md5.is_program_subscription, FALSE)                                                    AS is_program_subscription,
         dim_ping_instance.ping_delivery_type                                                                                            AS ping_delivery_type,
         dim_ping_instance.ping_edition                                                                                                  AS ping_edition,
@@ -240,7 +247,7 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@jpeguero",
+    updated_by="@mdrussell",
     created_date="2022-03-11",
-    updated_date="2023-02-01"
+    updated_date="2023-03-27"
 ) }}
