@@ -3267,6 +3267,7 @@ roles:
     - jhope:
         member_of:
             - gitlab_dotcom
+            - reporter
         warehouses:
             - dev_xs
 
