@@ -6,6 +6,7 @@
 
  --TODO
  -- Check out for deals created in a stage that is not 0, use the creation date
+-- Trying to restore
 
 WITH sfdc_opportunity_field_history AS (
 
