@@ -28,4 +28,12 @@ Closes
 - [ ] **Check required**: If the MR adds/renames columns to a table in the `RAW` database and the following model exists in the `PREP.GITLAB_DOTCOM` schema, a `dbt run --full-refresh` will be needed after merging the `MR`. Please, add it to the Reviewer Checklist to warn them that this step is required.
     - [ ] DBT full refresh required post merge?[
         - [ ] `Yes`. Create an issue with the model name which needs to be refreshed and assign it to the Reviewer to run it post merge. Use the page [**DBT model manual full refresh**](https://about.gitlab.com/handbook/business-technology/data-team/platform/infrastructure/#dbt-model-manual-full-refresh) for the detailed explanation about the full refresh 
-        - [ ] `No`.
+#### Check downstream impact
+
+Determine if there is downstream impact. I.e. additional changes to downstream models or the need for a manual full refresh in dbt. 
+
+- [ ] Downstream impact has been determined and;
+   - [ ] changes to the manifest do not have downstream impact.
+   - [ ] changes to the manifest have downstream impact and
+      - [ ] is handled in this MR.
+      - [ ] new MR and or issue is opened.
