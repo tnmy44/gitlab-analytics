@@ -7,15 +7,14 @@
 
 WITH subscriptions AS (
 
-  SELECT
-    *
+  SELECT *
   FROM {{ ref('dim_subscription') }}
 
 ),
 
 months AS (
 
-    {{ dbt_utils.date_spine(
+{{ dbt_utils.date_spine(
         datepart="month",
         start_date="cast('2017-01-01' as date)",
         end_date="DATEADD('month', 1,DATE_TRUNC('month', CURRENT_DATE()))"
@@ -26,16 +25,14 @@ months AS (
 
 product_detail AS (
 
-  SELECT
-    *
+  SELECT *
   FROM {{ ref('dim_product_detail') }}
 
 ),
 
 charges AS (
 
-  SELECT 
-    *
+  SELECT *
   FROM {{ ref('fct_charge') }}
 
 ),
@@ -78,7 +75,7 @@ final AS (
     'Gitlab Storage 10GB - 1 Year',
     'Premium Support'
   )
-    AND charge_type != 'OneTime'
+  AND charge_type != 'OneTime'
   --picking most recent subscription version
   QUALIFY
     ROW_NUMBER() OVER(
