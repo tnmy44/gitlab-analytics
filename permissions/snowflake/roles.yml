@@ -2680,6 +2680,13 @@ roles:
         warehouses:
             - reporting
 
+    - bmandavia:
+        member_of:
+            - reporter
+            - salesforce
+        warehouses:
+            - dev_xs
+
     - bnguyen:
         member_of:
             - analyst_finance
@@ -4804,6 +4811,11 @@ users:
         can_login: yes
         member_of:
             - bbutterfield
+
+    - bmandavia:
+        can_login: yes
+        member_of:
+            - bmandavia
 
     - bnguyen:
         can_login: yes
