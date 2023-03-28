@@ -19,9 +19,9 @@ parsed AS (
     value['companyId']::VARCHAR                 AS company_id,
     value['courseSku']::VARCHAR                 AS course_sku,
     value['courseTitle']::VARCHAR               AS course_title,
+    value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['notifiableId']::VARCHAR              AS notifiable_id,
     value['source']::VARCHAR                    AS course_action,
-    value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['type']::VARCHAR                      AS transaction_type,
 
     CASE
