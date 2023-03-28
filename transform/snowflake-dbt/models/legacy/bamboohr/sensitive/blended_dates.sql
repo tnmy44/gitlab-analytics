@@ -1,58 +1,40 @@
 WITH key_talent AS (
 
   SELECT
-    t1.employee_id,
-    t1.effective_date AS valid_from,
-    COALESCE(MIN(t2.effective_date), {{ var('tomorrow') }}) AS valid_to
-  FROM {{ref('assess_talent_source')}} t1
-  LEFT JOIN {{ref('assess_talent_source')}} t2
-    ON t1.employee_id = t2.employee_id
-    AND t1.effective_date < t2.effective_date
-  GROUP BY 1, 2
-
+    employee_id,
+    effective_date AS valid_from,
+    LEAD(valid_from, 1, DATEADD('day',1,CURRENT_DATE())) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+  FROM {{ref('assess_talent_source')}}
+  
 ),
 
 gitlab_usernames AS (
 
-  SELECT
-    t1.employee_id,
-    t1.date_time_completed AS valid_from,
-    COALESCE(MIN(t2.date_time_completed), {{ var('tomorrow') }}) AS valid_to
-  FROM {{ref('gitlab_usernames_source')}} t1
-  LEFT JOIN {{ref('gitlab_usernames_source')}} t2
-    ON t1.employee_id = t2.employee_id
-    AND t1.date_time_completed < t2.date_time_completed
-  GROUP BY 1, 2
+   SELECT
+    employee_id,
+    date_time_completed AS valid_from,
+    LEAD(valid_from, 1, DATEADD('day',1,CURRENT_DATE())) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+  FROM {{ref('gitlab_usernames_source')}}
 
 ),
 
 performance_growth_potential AS (
 
   SELECT
-    t1.employee_id,
-    t1.review_period_end_date AS valid_from,
-    COALESCE(MIN(t2.review_period_end_date), {{ var('tomorrow') }}) AS valid_to
-  FROM {{ref('performance_growth_potential_source')}} t1
-  LEFT JOIN {{ref('performance_growth_potential_source')}} t2
-    ON t1.employee_id = t2.employee_id
-    AND t1.review_period_end_date < t2.review_period_end_date
-  GROUP BY 1, 2
+    employee_id,
+    review_period_end_date AS valid_from,
+    LEAD(valid_from, 1, DATEADD('day',1,CURRENT_DATE())) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+  FROM {{ref('performance_growth_potential_source')}}
 
 ), 
 
 staffing_history AS (
 
   SELECT
-    t1.employee_id,
-    t1.business_process_type,
-    t1.effective_date AS valid_from,
-    COALESCE(MIN(t2.effective_date), {{ var('tomorrow') }}) AS valid_to
-  FROM {{ref('staffing_history_approved_source')}} t1
-  LEFT JOIN {{ref('staffing_history_approved_source')}} t2
-    ON t1.employee_id = t2.employee_id
-    AND t1.effective_date < t2.effective_date
-    AND t1.business_process_type = t2.business_process_type
-  GROUP BY 1, 2, 3
+    employee_id,
+    effective_date AS valid_from,
+    LEAD(valid_from, 1, DATEADD('day',1,CURRENT_DATE())) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+  FROM {{ref('staffing_history_approved_source')}}
 
 ),
 
