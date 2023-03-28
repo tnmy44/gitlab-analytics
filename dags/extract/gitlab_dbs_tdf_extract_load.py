@@ -181,8 +181,8 @@ for source_name, config in config_dict_td_pgp.items():
                     "task_id": task_identifier,
                 },
                 arguments=[td_pgp_extract_cmd],
-                affinity=get_affinity(False),
-                tolerations=get_toleration(False),
+                affinity=get_affinity("production"),
+                tolerations=get_toleration("production"),
                 do_xcom_push=True,
             )
             td_pgp_extract

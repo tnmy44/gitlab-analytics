@@ -211,6 +211,11 @@ databases:
     - srehm_prep:
         shared: no
 
+    - svogel_prod:
+        shared: no
+    - svogel_prep:
+        shared: no
+
     - tnguyen_prod:
         shared: no
     - tnguyen_prep:
@@ -2643,6 +2648,13 @@ roles:
             - transforming_l
             - transforming_xl
 
+    - akramer:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - alpcohen:
         member_of:
             - analyst_sales
@@ -2679,6 +2691,13 @@ roles:
             - bi_tool_eval_read
         warehouses:
             - reporting
+
+    - bmandavia:
+        member_of:
+            - reporter
+            - salesforce
+        warehouses:
+            - dev_xs
 
     - bnguyen:
         member_of:
@@ -3267,15 +3286,18 @@ roles:
     - jhope:
         member_of:
             - gitlab_dotcom
+            - reporter
         warehouses:
             - dev_xs
 
     - jng:
         member_of:
-         - restricted_safe
          - analytics_engineer_core
-         - salesforce
-         - sheetload
+         - analyst_engineering
+         - analyst_growth
+         - data_team_analyst
+         - restricted_safe
+         - bi_tool_eval_read
          - zuora
         warehouses:
             - dev_xs
@@ -4069,6 +4091,7 @@ roles:
             - customers_db
             - data_team_analyst
             - data_manager
+            - data_science_readonly
             - restricted_safe
             - salesforce_sandbox
             - xactly
@@ -4597,6 +4620,51 @@ roles:
                     - raw.stitch_google_sheets.*
                     - raw.zuora_stitch.*
 
+    - svogel:
+        member_of:
+         - analytics_engineer_core
+         - analyst_engineering
+         - analyst_growth
+         - data_team_analyst
+         - restricted_safe
+         - bi_tool_eval_read
+         - zuora
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - svogel_prep
+                - svogel_prod
+            schemas:
+                - svogel_prep.*
+                - svogel_prod.*
+            tables:
+                - svogel_prep.*.*
+                - svogel_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - svogel_prep
+                    - svogel_prod
+                write:
+                    - svogel_prep
+                    - svogel_prod
+            schemas:
+                read:
+                    - svogel_prep.*
+                    - svogel_prod.*
+                write:
+                    - svogel_prep.*
+                    - svogel_prod.*
+            tables:
+                read:
+                    - svogel_prep.*.*
+                    - svogel_prod.*.*
+                write:
+                    - svogel_prep.*.*
+                    - svogel_prod.*.*
+
+
     - tableau:
         warehouses:
             - reporting
@@ -4776,6 +4844,11 @@ users:
             - sales_analytics
             - reporter
 
+    - akramer:
+        can_login: yes
+        member_of:
+            - akramer
+
     - alpcohen:
         can_login: yes
         member_of:
@@ -4800,6 +4873,11 @@ users:
         can_login: yes
         member_of:
             - bbutterfield
+
+    - bmandavia:
+        can_login: yes
+        member_of:
+            - bmandavia
 
     - bnguyen:
         can_login: yes
@@ -5210,6 +5288,11 @@ users:
         can_login: yes
         member_of:
             - stitch
+
+    - svogel:
+        can_login: yes
+        member_of:
+            - svogel
 
     - tableau:
         can_login: yes

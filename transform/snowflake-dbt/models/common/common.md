@@ -395,7 +395,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_gitlab_versions %}
+{% docs dim_gitlab_version %}
 Dimensional table representing released versions of GitLab.
 
 The grain of the table is a version_id.
@@ -622,16 +622,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% docs fct_waterfall_summary %}
 
 A derived model using the revenue contract schedule to spread the recognized revenue across from the revenue start date to the revenue end date as defined by the revenue contract performance obligation's schedule.
-
-{% enddocs %}
-
-{% docs dim_usage_pings %}
-Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead.
-
-[Core represents both CE and EE](https://about.gitlab.com/handbook/marketing/product-marketing/tiers/#history-of-ce-and-ee-distributions).
-
-Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page.
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
 
@@ -994,12 +984,6 @@ The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
 
 {% enddocs %}
 
-{% docs dim_usage_ping_metric %}
-
-This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). In addition to all metrics currently in the Service Ping, it also contains metrics that have been removed.
-
-{% enddocs %}
-
 {% docs dim_ping_instance %}
 
 **Description:** Atomic level instance Service Ping data including installation settings and metadata, along with JSON payloads with usage metrics
@@ -1055,7 +1039,7 @@ Some other enhancements in this model include : addition of a surrogate key, exc
 
 {% docs dim_ping_metric_daily_snapshot %}
 
-This slowly changing dimension type 2 model allows for historic reporting of the  `dim_usage_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `snapshot_id` has been included to be used in the join.
+This slowly changing dimension type 2 model allows for historic reporting of the  `dim_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `snapshot_id` has been included to be used in the join.
 
 For this reason `metrics_path` is not unique.
 
