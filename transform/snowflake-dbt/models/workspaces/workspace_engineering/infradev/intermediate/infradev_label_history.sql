@@ -28,19 +28,19 @@ WITH labels AS (
 ),  base_labels AS (
 
     SELECT
-      label_links.label_link_id                                                                                           AS dim_issue_id,
+      label_links.target_id                                                                                           AS dim_issue_id,
       label_type.label_title,
       label_type.label_type,
       label_links.label_link_created_at                                                                                   AS label_added_at,
       label_links.label_link_created_at                                                                                   AS label_valid_from,
       LEAD(label_links.label_link_created_at, 1, CURRENT_DATE())
-           OVER (PARTITION BY label_links.label_link_id,label_type.label_type ORDER BY label_links.label_link_created_at) AS label_valid_to
+           OVER (PARTITION BY label_links.target_id,label_type.label_type ORDER BY label_links.label_link_created_at) AS label_valid_to
     FROM label_type
     LEFT JOIN label_links
-      ON label_type.dim_label_id = label_links.target_id
+      ON label_type.dim_label_id = label_links.label_id
       AND label_links.target_type = 'Issue'
     WHERE label_type.label_type != 'other'
-      AND label_links.label_link_id IS NOT NULL
+      AND label_links.target_id IS NOT NULL
 
 ),  label_groups AS (
 
