@@ -5265,7 +5265,7 @@ users:
         member_of:
             - stitch
 
- - svogel:
+    - svogel:
         can_login: yes
         member_of:
             - svogel
