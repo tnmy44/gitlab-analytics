@@ -17,11 +17,11 @@ parsed AS (
   SELECT
     value['id']::VARCHAR                        AS id,
     value['companyId']::VARCHAR                 AS company_id,
+    value['source']::VARCHAR                    AS course_action,
     value['event']::VARCHAR                     AS event,
     value['timestamp']::TIMESTAMP               AS event_timestamp,
     value['license']::VARCHAR                   AS license,
     value['notifiableId']::VARCHAR              AS notifiable_id,
-    value['source']::VARCHAR                    AS course_action,
     value['title']::VARCHAR                     AS title,
     value['type']::VARCHAR                      AS transaction_type,
     value['updatedAt']::TIMESTAMP               AS updated_at,
