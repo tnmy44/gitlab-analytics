@@ -31,3 +31,8 @@ config.json
 /transform/snowflake-dbt/dbt_packages/*
 /transform/safe_models.json
 .env
+
+.sqlfluff-local
+.sqlfluff
+.pre-commit-config.yaml
+.sqlfluffignore

@@ -176,8 +176,7 @@ WITH sfdc_opportunity_field_history AS (
   FROM combined
   GROUP BY 1
 
-)
-, pre_final AS (
+), pre_final AS (
 
 SELECT
         base.opportunity_id,
