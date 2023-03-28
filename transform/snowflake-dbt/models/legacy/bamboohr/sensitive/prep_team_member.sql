@@ -5,45 +5,129 @@ WITH all_team_members AS (
 
 ),
 
-blended_dates AS (
-
-  SELECT *
-  FROM {{ref('blended_dates')}}
-
-),
-
 key_talent AS (
 
-  SELECT *
+  SELECT
+    employee_id,
+    key_talent,
+    effective_date AS valid_from,
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),DATEADD('day',1,CURRENT_DATE())) AS valid_to
   FROM {{ref('assess_talent_source')}}
 
 ),
 
 gitlab_usernames AS (
 
-  SELECT *
+
+  SELECT
+    employee_id,
+    gitlab_username,
+    effective_date AS valid_from,
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),DATEADD('day',1,CURRENT_DATE())) AS valid_to
   FROM {{ref('gitlab_usernames_source')}}
+
 ),
 
 performance_growth_potential AS (
 
-  SELECT *
+  SELECT
+    employee_id,
+    growth_potential_rating,
+    performance_rating,
+    review_period_end_date AS valid_from,
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),DATEADD('day',1,CURRENT_DATE())) AS valid_to
   FROM {{ref('performance_growth_potential_source')}}
 
 ), 
 
 staffing_history AS (
 
-  SELECT * 
+  SELECT
+    employee_id,
+    business_process_type,
+    hire_date,
+    termination_date,
+    current_country            AS country,
+    current_region             AS region,
+    effective_date             AS valid_from,
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),DATEADD('day',1,CURRENT_DATE())) AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
 
 ),
 
-final AS (
+unioned AS (
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['blended_dates.employee_id', 'blended_dates.valid_from']) }}                AS dim_team_member_sk,
-    blended_dates.employee_id                                                                               AS employee_id,
+    employee_id,
+    valid_from
+  FROM key_talent
+
+  UNION
+
+  SELECT 
+    employee_id,
+    valid_to
+  FROM key_talent
+
+  UNION
+
+  SELECT 
+    employee_id,
+    valid_from
+  FROM gitlab_usernames
+
+  UNION 
+
+  SELECT 
+    employee_id,
+    valid_to
+  FROM gitlab_usernames
+
+  UNION
+
+  SELECT 
+    employee_id,
+    valid_from
+  FROM performance_growth_potential
+
+  UNION 
+
+  SELECT 
+    employee_id,
+    valid_to
+  FROM performance_growth_potential
+
+  UNION
+
+  SELECT 
+    employee_id,
+    valid_from
+  FROM staffing_history
+
+  UNION
+
+  SELECT 
+    employee_id,
+    valid_to
+  FROM staffing_history
+
+),
+
+date_range AS (
+
+  SELECT 
+    employee_id,
+    valid_from,
+    lead(valid_from,1) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+  FROM unioned
+  
+),
+
+
+final AS (
+
+ SELECT 
+    all_team_members.employee_id                                                                            AS employee_id,
     all_team_members.nationality                                                                            AS nationality,
     all_team_members.ethnicity                                                                              AS ethnicity,
     all_team_members.preferred_first_name                                                                   AS first_name,
@@ -55,28 +139,32 @@ final AS (
     gitlab_usernames.gitlab_username                                                                        AS gitlab_username,
     performance_growth_potential.growth_potential_rating                                                    AS growth_potential_rating,
     performance_growth_potential.performance_rating                                                         AS performance_rating,
-    staffing_history.current_country                                                                        AS country,
-    staffing_history.current_region                                                                         AS region,
+    staffing_history.country                                                                                AS country,
+    staffing_history.region                                                                                 AS region,
     staffing_history.hire_date                                                                              AS hire_date,
     staffing_history.termination_date                                                                       AS termination_date,
-    blended_dates.valid_from                                                                                AS valid_from,
-    blended_dates.valid_to                                                                                  AS valid_to,
-    blended_dates.row_num                                                                                   AS event_sequence
-  FROM blended_dates
-  INNER JOIN key_talent
-      ON key_talent.employee_id = blended_dates.employee_id 
-      AND key_talent.effective_date = blended_dates.key_talent_valid_from
-  INNER JOIN gitlab_usernames
-    ON gitlab_usernames.employee_id = blended_dates.employee_id 
-    AND gitlab_usernames.date_time_completed = blended_dates.usernames_valid_from
-  INNER JOIN performance_growth_potential
-    ON performance_growth_potential.employee_id = blended_dates.employee_id 
-    AND performance_growth_potential.review_period_end_date = blended_dates.performance_growth_potential_valid_from
-  INNER JOIN staffing_history
-    ON staffing_history.employee_id = blended_dates.employee_id 
-    AND staffing_history.effective_date = blended_dates.staffing_history_valid_from
-  INNER JOIN all_team_members
-    ON all_team_members.employee_id = blended_dates.employee_id 
+    date_range.valid_from,
+    date_range.valid_to
+    FROM all_team_members
+    INNER JOIN date_range
+        ON date_range.employee_id = all_team_members.employee_id 
+    LEFT JOIN key_talent
+      ON key_talent.employee_id = date_range.employee_id 
+      AND key_talent.valid_to > date_range.valid_from
+      AND key_talent.valid_from < date_range.valid_to
+    LEFT JOIN gitlab_usernames
+        ON gitlab_usernames.employee_id = date_range.employee_id 
+        AND gitlab_usernames.valid_to > date_range.valid_from
+        AND gitlab_usernames.valid_from < date_range.valid_to
+    LEFT JOIN performance_growth_potential
+        ON performance_growth_potential.employee_id = date_range.employee_id 
+        AND performance_growth_potential.valid_to > date_range.valid_from
+        AND performance_growth_potential.valid_from < date_range.valid_to
+    LEFT JOIN staffing_history
+        ON staffing_history.employee_id = date_range.employee_id 
+        AND staffing_history.valid_to > date_range.valid_from
+        AND staffing_history.valid_from < date_range.valid_to
+    WHERE date_range.valid_to IS NOT NULL
 
 )
 
