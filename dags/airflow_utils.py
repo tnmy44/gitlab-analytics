@@ -54,6 +54,7 @@ data_science_pipelines_dag = [
     "ds_propensity_to_contract",
     "ds_propensity_to_purchase_trial",
     "ds_namespace_segmentation",
+    "ds_propensity_to_purchase_free",
 ]
 
 sales_analytics_pipelines_dag = [
