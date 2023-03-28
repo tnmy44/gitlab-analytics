@@ -2,10 +2,19 @@
     tags=["mnpi"]
 ) }}
 
-WITH map_merged_crm_account AS (
+{{ simple_cte([
+    ('map_merged_crm_account', 'map_merged_crm_account'),
+    ('zuora_rate_plan', 'zuora_api_sandbox_rate_plan_source'),
+    ('zuora_rate_plan_charge', 'zuora_api_sandbox_rate_plan_charge_source'),
+    ('zuora_order_action', 'zuora_api_sandbox_order_action_source'),
+    ('revenue_contract_line', 'zuora_revenue_revenue_contract_line_source'),
+    ('zuora_order', 'zuora_order_source'),
+])}}
+
+, zuora_order_action_rate_plan AS (
 
     SELECT *
-    FROM {{ ref('map_merged_crm_account') }}
+    FROM prod.boneyard.orderactionrateplan
 
 ), sfdc_account AS (
 
@@ -140,6 +149,20 @@ WITH map_merged_crm_account AS (
       AND ABS(ROUND(adjustment,5)) > 0
     {{ dbt_utils.group_by(n=7) }}
 
+), charge_to_order AS (
+
+    SELECT 
+      zuora_rate_plan_charge.rate_plan_charge_id,
+      zuora_order_action.dim_order_id
+    FROM zuora_rate_plan
+    INNER JOIN zuora_rate_plan_charge
+      ON zuora_rate_plan.rate_plan_id = zuora_rate_plan_charge.rate_plan_id
+    INNER JOIN zuora_order_action_rate_plan
+      ON zuora_rate_plan.rate_plan_id = zuora_order_action_rate_plan.RatePlanId
+    INNER JOIN zuora_order_action
+      ON zuora_order_action_rate_plan.OrderActionId = zuora_order_action.dim_order_action_id
+    {{ dbt_utils.group_by(n=2) }}
+
 ), non_manual_charges AS (
 
     SELECT
@@ -161,6 +184,7 @@ WITH map_merged_crm_account AS (
       zuora_rate_plan_charge.account_id                                 AS dim_billing_account_id,
       map_merged_crm_account.dim_crm_account_id                         AS dim_crm_account_id,
       ultimate_parent_account.account_id                                AS dim_parent_crm_account_id,
+      charge_to_order.dim_order_id                                      AS dim_order_id,
       {{ get_date_id('zuora_rate_plan_charge.effective_start_date') }}  AS effective_start_date_id,
       {{ get_date_id('zuora_rate_plan_charge.effective_end_date') }}    AS effective_end_date_id,
 
@@ -257,6 +281,8 @@ WITH map_merged_crm_account AS (
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
+    LEFT JOIN charge_to_order
+      ON zuora_rate_plan_charge.rate_plan_charge_id = charge_to_order.rate_plan_charge_id
 
  ), manual_charges_prep AS (
   
@@ -294,6 +320,7 @@ WITH map_merged_crm_account AS (
       manual_charges_prep.dim_billing_account_id                                            AS dim_billing_account_id,
       zuora_account.crm_id                                                                  AS dim_crm_account_id,
       sfdc_account.ultimate_parent_account_id                                               AS dim_parent_crm_account_id,
+      MD5(-1)                                                                               AS dim_order_id,
       {{ get_date_id('manual_charges_prep.effective_start_date') }}                         AS effective_start_date_id,
       {{ get_date_id('manual_charges_prep.effective_end_date') }}                           AS effective_end_date_id,
       active_zuora_subscription.subscription_status                                         AS subscription_status,
