@@ -7,6 +7,7 @@ WITH source AS (
 
 SELECT
   source.issue_id,
+  source.dim_issue_id,
   mapped_controls.value['id']::NUMBER     AS control_id
 FROM source
 INNER JOIN LATERAL FLATTEN(INPUT => TRY_PARSE_JSON(source.mapped_controls)) mapped_controls
