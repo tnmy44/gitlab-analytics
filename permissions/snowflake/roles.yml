@@ -2643,6 +2643,13 @@ roles:
             - transforming_l
             - transforming_xl
 
+    - akramer:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - alpcohen:
         member_of:
             - analyst_sales
@@ -4786,6 +4793,11 @@ users:
             - data_science_loader
             - sales_analytics
             - reporter
+
+    - akramer:
+        can_login: yes
+        member_of:
+            - akramer
 
     - alpcohen:
         can_login: yes
