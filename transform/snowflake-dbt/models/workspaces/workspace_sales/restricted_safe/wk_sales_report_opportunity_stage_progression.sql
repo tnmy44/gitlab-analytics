@@ -185,6 +185,7 @@ WITH stage_dates AS (
             opp.sales_type,
             opp.order_type_stamped,
             opp.deal_size,
+            opp.deal_group,
             opp.sales_qualified_source,
 
             -- business keys

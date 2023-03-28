@@ -619,7 +619,8 @@ WITH sfdc_users_xf AS (
     
     ------------------------------------------------------------------------
     -- FY24 keys
-
+    -- These keys must leverage the unadjusted raw_segment field 
+    
     LOWER(
       CONCAT(
         report_opportunity_user_business_unit,
