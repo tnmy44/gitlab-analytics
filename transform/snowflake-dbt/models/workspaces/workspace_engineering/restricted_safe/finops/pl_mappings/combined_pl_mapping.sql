@@ -9,9 +9,9 @@ infralabel_pl AS (
 
   SELECT
     date_spine.date_day,
-    NULL                     AS gcp_project_id,
-    NULL                     AS gcp_service_description,
-    NULL                     AS gcp_sku_description,
+    NULL                      AS gcp_project_id,
+    NULL                      AS gcp_service_description,
+    NULL                      AS gcp_sku_description,
     infralabel_pl.infra_label,
     NULL                     AS env_label,
     lower(infralabel_pl.type)       AS pl_category,
@@ -41,17 +41,26 @@ projects_pl AS (
 
 repo_storage_pl_daily AS (
 
+  WITH sku_list AS (SELECT 'SSD backed PD Capacity' AS sku
+    UNION ALL
+    SELECT 'Balanced PD Capacity'
+    UNION ALL
+    SELECT 'Storage PD Snapshot in US'
+    UNION ALL
+    SELECT 'Storage PD Capacity')
+
   SELECT
     snapshot_day                               AS date_day,
     'gitlab-production'                        AS gcp_project_id,
     'Compute Engine'                           AS gcp_service_description,
-    'SSD backed PD Capacity'                   AS gcp_sku_description,
+    sku_list.sku                               AS gcp_sku_description,
     'gitaly'                                   AS infra_label,
     NULL                                       AS env_label,
     lower(repo_storage_pl_daily.finance_pl)    AS pl_category,
     repo_storage_pl_daily.percent_repo_size_gb AS pl_percent,
     'repo_storage_pl_daily'                    AS from_mapping
   FROM {{ ref ('repo_storage_pl_daily') }}
+  CROSS JOIN sku_list
 ),
 
 sandbox_projects_pl AS (
@@ -81,9 +90,9 @@ container_registry_pl_daily AS (
     NULL                     AS env_label,
     lower(container_registry_pl_daily.finance_pl)           AS pl_category,
     container_registry_pl_daily.percent_container_registry_size AS pl_percent,
-    'container_registry_pl_daily'                    AS from_mapping
+    'container_registry_pl_daily'                               AS from_mapping
   FROM {{ ref ('container_registry_pl_daily') }}
-  where snapshot_day > '2022-06-10'
+  WHERE snapshot_day > '2022-06-10'
 
 ),
 
@@ -98,7 +107,7 @@ build_artifacts_pl_daily AS (
     NULL                    AS env_label,
     lower(build_artifacts_pl_daily.finance_pl)           AS pl_category,
     build_artifacts_pl_daily.percent_build_artifacts_size AS pl_percent,
-    'build_artifacts_pl_daily'                    AS from_mapping
+    'build_artifacts_pl_daily'                            AS from_mapping
   FROM {{ ref ('build_artifacts_pl_daily') }}
 
 ),

@@ -1203,51 +1203,6 @@ models:
                 where: bizible_created_date <= DATEADD('day', -2, CURRENT_DATE)::DATE
         tags: ["tdf", "common"]
 
-  - name: dim_usage_ping_metric
-    description: '{{ doc("dim_usage_ping_metric") }}'
-    columns:
-      - name: metrics_path
-        tests:
-          - not_null
-          - unique
-      - name: is_gmau
-        description: Flag to show whether metric is part of Group Monthly Active Users (GMAU) calculations.
-      - name: is_smau
-        description: Flag to show whether metric is part of Stage Monthly Active Users (SMAU) calculations.
-      - name: is_paid_gmau
-        description: Flag to show whether metric is part of paid Group Monthly Active Users (GMAU) calculations.
-      - name: is_umau
-        description: Flag to show whether metric is part of Unique Monthly Active Users (UMAU) calculations.
-
-  - name: dim_usage_pings
-    description: '{{ doc("dim_usage_pings") }}'
-    columns:
-      - name: id
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "gainsight"]
-      - name: uuid
-        description: concatenate this field with host_id for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832 and https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_428035384 and https://gitlab.com/gitlab-org/gitlab/-/merge_requests/44972
-      - name: host_id
-        description: uuid concatenated with this field for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832
-      - name: license_md5
-        description: JOIN key to license_db_licenses (see - https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.license_db_licenses). Note - License is only for self-managed instances and not for namespaces. CE and EE free should not have licenses. Known issue with EE version 9-10 having null records https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_431390413
-      - name: installation_type
-        description: segmentation for how instances are installed. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_429097420 for how this field is populated and known data concerns, such as all the instances without installation_type seem to be between 9 and 10, which lines up with the date that installation_type was added to usage ping.
-      - name: main_edition
-        description: segmentation for Edition. Values - CE, EE
-      - name: product_tier
-        description: segmentation for Product Tier. Values - Core (CE, EE), Starter, Premium, Ultimate, NULL
-      - name: main_edition_product_tier
-        description: segmentation for the product tier, including separate records for Core CE and Core EE
-      - name: ping_source
-        description: segmentation for SaaS data (from the self-managed instance that hosts the SaaS GitLab.com website) and data sent from customer self-managed instances
-      - name: is_internal
-        description: this instance is used by the company or a GitLab team member
-      - name: is_staging
-        descrition: DRAFT - need to better identify instances used for staging environments
-
   - name: fct_crm_person
     description: '{{ doc("fct_crm_person") }}'
     columns:
@@ -3346,8 +3301,8 @@ models:
       - name: seat_link_report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
       - name: seat_link_report_date_id
-      - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping.
+      - name: dim_ping_instance_id
+        description: JOIN key to dim_ping_instance and prep_ping_instance. Represents a single ping.
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
       - name: ping_created_date_id
@@ -4588,6 +4543,7 @@ models:
               to: ref('dim_crm_account')
               field: dim_crm_account_id
               from_condition: created_date <= DATEADD('day', -3, CURRENT_DATE)::DATE
+              severity: warn
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_alliance_type_id
         description: join key for dim_alliance_type_scd.

@@ -244,6 +244,9 @@ models:
       handbook:
         +schema: handbook
 
+      level_up:
+        +schema: level_up
+         
       license:
         +schema: license_db
 
