@@ -12,7 +12,7 @@
 ])}}
 
 , zuora_order_action_rate_plan AS (
-
+    -- referencing a static table as there is not currectly a method for extracting this data from Zuora API sandbox
     SELECT *
     FROM prod.boneyard.orderactionrateplan
 
