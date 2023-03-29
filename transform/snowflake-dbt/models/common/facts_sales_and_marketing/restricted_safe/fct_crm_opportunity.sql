@@ -14,12 +14,18 @@
     ('dr_partner_engagement', 'prep_dr_partner_engagement'),
     ('alliance_type', 'prep_alliance_type_scd'),
     ('channel_type', 'prep_channel_type'),
-    ('sfdc_opportunity', 'prep_crm_opportunity'),
+    ('prep_crm_opportunity', 'prep_crm_opportunity'),
     ('prep_crm_user_hierarchy', 'prep_crm_user_hierarchy')
 
 ]) }}
 
-, final_opportunities AS (
+, sfdc_opportunity AS (
+
+    SELECT *
+    FROM prep_crm_opportunity
+    WHERE is_live = 1
+
+), final_opportunities AS (
 
     SELECT
 

@@ -1,5 +1,6 @@
 {{ config(
-    tags=["mnpi"]
+    tags=["mnpi"],
+    materialized="incremental"
 ) }}
 
 /*
@@ -23,10 +24,15 @@ WITH source AS (
       END                                                                                   AS calculation_days_in_stage_date,
       DATEDIFF(days,calculation_days_in_stage_date::DATE,CURRENT_DATE::DATE) + 1            AS days_in_stage
     FROM {{ source('snapshots', 'sfdc_opportunity_snapshots') }}  AS opportunity
+    {% if is_incremental() %}
+
+    WHERE dbt_updated_at >= (SELECT MAX(dbt_updated_at) FROM {{this}})
+
+    {% endif %}
 
 ), renamed AS (
 
-SELECT
+     SELECT
         -- keys
         accountid                                       AS account_id,
         id                                              AS opportunity_id,

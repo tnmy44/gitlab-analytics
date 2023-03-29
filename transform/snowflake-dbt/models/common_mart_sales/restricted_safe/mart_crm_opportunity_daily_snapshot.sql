@@ -1,3 +1,7 @@
+{{ config(
+    materialized="incremental"
+) }}
+
 {{ simple_cte([
     ('fct_crm_opportunity','fct_crm_opportunity_daily_snapshot'),
     ('dim_crm_account','dim_crm_account_daily_snapshot'),
@@ -538,6 +542,12 @@ final AS (
   LEFT JOIN dim_crm_account AS fulfillment_partner
     ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
       AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
+  WHERE 1 = 1
+  {% if is_incremental() %}
+  
+    AND fct_crm_opportunity.snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+
+  {% endif %}
 
 
 )

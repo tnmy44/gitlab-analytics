@@ -1,5 +1,6 @@
 {{ config(
-    tags=["six_hourly"]
+    tags=["six_hourly"],
+    materialized="incremental"
 ) }}
 
 {{ simple_cte([
@@ -53,27 +54,23 @@
 
 ), sfdc_account_snapshot AS (
 
-    SELECT
-      {{ dbt_utils.surrogate_key(['sfdc_account_snapshots_source.account_id','snapshot_dates.date_id'])}}   AS crm_account_snapshot_id,
-      snapshot_dates.date_id                                                                                AS snapshot_id,
-      sfdc_account_snapshots_source.*
-    FROM {{ ref('sfdc_account_snapshots_source') }}
-    INNER JOIN snapshot_dates
-      ON sfdc_account_snapshots_source.dbt_valid_from::DATE <= snapshot_dates.date_actual
-        AND (sfdc_account_snapshots_source.dbt_valid_to::DATE > snapshot_dates.date_actual OR sfdc_account_snapshots_source.dbt_valid_to IS NULL)
-    WHERE account_id IS NOT NULL
+    SELECT *
+    FROM {{ ref('prep_crm_account_daily_snapshot') }}
+    {% if is_incremental() %}
+
+       WHERE snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+
+    {% endif %}
 
 ), sfdc_user_snapshot AS (
 
-    SELECT
-      {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}         AS crm_user_snapshot_id,
-      snapshot_dates.date_id                                                                                AS snapshot_id,
-      sfdc_user_snapshots_source.*
-    FROM {{ ref('sfdc_user_snapshots_source') }}
-    INNER JOIN snapshot_dates
-      ON sfdc_user_snapshots_source.dbt_valid_from::DATE <= snapshot_dates.date_actual
-        AND (sfdc_user_snapshots_source.dbt_valid_to::DATE > snapshot_dates.date_actual OR sfdc_user_snapshots_source.dbt_valid_to IS NULL)
-    WHERE user_id IS NOT NULL
+    SELECT *
+    FROM {{ ref('prep_crm_user_daily_snapshot') }}
+    {% if is_incremental() %}
+
+    WHERE snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+
+    {% endif %}
 
 ), sfdc_account AS (
 
@@ -90,21 +87,22 @@
 ), sfdc_opportunity_snapshot AS (
 
     SELECT
-      sfdc_opportunity_snapshots_source.account_id                                                         AS dim_crm_account_id,
-      sfdc_opportunity_snapshots_source.opportunity_id                                                     AS dim_crm_opportunity_id,
-      sfdc_opportunity_snapshots_source.owner_id                                                           AS dim_crm_user_id,
-      sfdc_opportunity_snapshots_source.order_type_stamped                                                 AS order_type,
-      sfdc_opportunity_snapshots_source.opportunity_term                                                   AS opportunity_term_base,
-      {{ sales_qualified_source_cleaning('sfdc_opportunity_snapshots_source.sales_qualified_source') }}    AS sales_qualified_source,
-      sfdc_opportunity_snapshots_source.user_segment_stamped                                               AS crm_opp_owner_sales_segment_stamped,
-      sfdc_opportunity_snapshots_source.user_geo_stamped                                                   AS crm_opp_owner_geo_stamped,
-      sfdc_opportunity_snapshots_source.user_region_stamped                                                AS crm_opp_owner_region_stamped,
-      sfdc_opportunity_snapshots_source.user_area_stamped                                                  AS crm_opp_owner_area_stamped,
-      sfdc_opportunity_snapshots_source.user_segment_geo_region_area_stamped                               AS crm_opp_owner_sales_segment_geo_region_area_stamped,
-      sfdc_opportunity_snapshots_source.created_date::DATE                                                 AS created_date,
-      sfdc_opportunity_snapshots_source.sales_accepted_date::DATE                                          AS sales_accepted_date,
-      sfdc_opportunity_snapshots_source.close_date::DATE                                                   AS close_date,
-      sfdc_opportunity_snapshots_source.net_arr                                                            AS raw_net_arr,
+      sfdc_opportunity_snapshots_source.account_id                                                                  AS dim_crm_account_id,
+      sfdc_opportunity_snapshots_source.opportunity_id                                                              AS dim_crm_opportunity_id,
+      sfdc_opportunity_snapshots_source.owner_id                                                                    AS dim_crm_user_id,
+      sfdc_opportunity_snapshots_source.order_type_stamped                                                          AS order_type,
+      sfdc_opportunity_snapshots_source.opportunity_term                                                            AS opportunity_term_base,
+      {{ sales_qualified_source_cleaning('sfdc_opportunity_snapshots_source.sales_qualified_source') }}             AS sales_qualified_source,
+      sfdc_opportunity_snapshots_source.user_segment_stamped                                                        AS crm_opp_owner_sales_segment_stamped,
+      sfdc_opportunity_snapshots_source.user_geo_stamped                                                            AS crm_opp_owner_geo_stamped,
+      sfdc_opportunity_snapshots_source.user_region_stamped                                                         AS crm_opp_owner_region_stamped,
+      sfdc_opportunity_snapshots_source.user_area_stamped                                                           AS crm_opp_owner_area_stamped,
+      sfdc_opportunity_snapshots_source.user_segment_geo_region_area_stamped                                        AS crm_opp_owner_sales_segment_geo_region_area_stamped,
+      sfdc_opportunity_snapshots_source.user_business_unit_stamped                                                  AS crm_opp_owner_business_unit_stamped,
+      sfdc_opportunity_snapshots_source.created_date::DATE                                                          AS created_date,
+      sfdc_opportunity_snapshots_source.sales_accepted_date::DATE                                                   AS sales_accepted_date,
+      sfdc_opportunity_snapshots_source.close_date::DATE                                                            AS close_date,
+      sfdc_opportunity_snapshots_source.net_arr                                                                     AS raw_net_arr,
       {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
       snapshot_dates.date_id                                                                                        AS snapshot_id,
       snapshot_dates.date_actual                                                                                    AS snapshot_date,
@@ -114,149 +112,157 @@
       snapshot_dates.first_day_of_fiscal_quarter                                                                    AS snapshot_fiscal_quarter_date,
       snapshot_dates.day_of_fiscal_quarter_normalised                                                               AS snapshot_day_of_fiscal_quarter_normalised,
       snapshot_dates.day_of_fiscal_year_normalised                                                                  AS snapshot_day_of_fiscal_year_normalised,
-      account_owner.user_segment  AS crm_account_owner_sales_segment,
-      account_owner.user_geo  AS crm_account_owner_geo,
-      account_owner.user_region AS crm_account_owner_region,
-      account_owner.user_area AS crm_account_owner_area,
-      account_owner.user_segment_geo_region_area  AS crm_account_owner_sales_segment_geo_region_area,
-      fulfillment_partner.account_name AS fulfillment_partner_account_name,
+      sfdc_account_snapshot.crm_account_owner_sales_segment,
+      sfdc_account_snapshot.crm_account_owner_geo,
+      sfdc_account_snapshot.crm_account_owner_region,
+      sfdc_account_snapshot.crm_account_owner_area,
+      sfdc_account_snapshot.crm_account_owner_sales_segment_geo_region_area,
+      fulfillment_partner.crm_account_name AS fulfillment_partner_account_name,
       fulfillment_partner.partner_track AS fulfillment_partner_partner_track,
-      partner_account.account_name AS partner_account_account_name,
+      partner_account.crm_account_name AS partner_account_account_name,
       partner_account.partner_track AS partner_account_partner_track,
       sfdc_account_snapshot.is_jihu_account,
-      sfdc_account_snapshot.ultimate_parent_account_id,
+      sfdc_account_snapshot.dim_parent_crm_account_id,
       CASE
-        WHEN sfdc_opportunity_snapshots_source.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
+        WHEN sfdc_opportunity_snapshots_source.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 
+                                                              'Closed Won', '10-Duplicate')
             THEN 0
         ELSE 1
-      END                                                                                         AS is_open,
+      END                                                                                                         AS is_open,
       CASE
         WHEN sfdc_opportunity_snapshots_source.user_segment_stamped IS NULL
           OR is_open = 1
-          THEN account_owner.user_segment
+          THEN sfdc_account_snapshot.crm_account_owner_sales_segment
         ELSE sfdc_opportunity_snapshots_source.user_segment_stamped
-      END                                                                   AS opportunity_owner_user_segment,
+      END                                                                                                         AS opportunity_owner_user_segment,
       CASE
         WHEN sfdc_opportunity_snapshots_source.user_geo_stamped IS NULL
           OR is_open = 1
-        THEN account_owner.user_geo
+        THEN sfdc_account_snapshot.crm_account_owner_geo
       ELSE sfdc_opportunity_snapshots_source.user_geo_stamped
-      END                                                                   AS opportunity_owner_user_geo,
+      END                                                                                                         AS opportunity_owner_user_geo,
 
       CASE
         WHEN sfdc_opportunity_snapshots_source.user_region_stamped IS NULL
              OR is_open = 1
-          THEN account_owner.user_region
+          THEN sfdc_account_snapshot.crm_account_owner_region
           ELSE sfdc_opportunity_snapshots_source.user_region_stamped
-      END                                                                   AS opportunity_owner_user_region,
+      END                                                                                                         AS opportunity_owner_user_region,
 
       CASE
         WHEN sfdc_opportunity_snapshots_source.user_area_stamped IS NULL
              OR is_open = 1
-          THEN account_owner.user_area
+          THEN sfdc_account_snapshot.crm_account_owner_area
         ELSE sfdc_opportunity_snapshots_source.user_area_stamped
-      END                                                                   AS opportunity_owner_user_area,
-      sfdc_user_roles_source.name                                           AS opportunity_owner_role,
-      account_owner.title                                                   AS opportunity_owner_title,
-      {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_snapshots_source")}},
+      END                                                                                                         AS opportunity_owner_user_area,
+      sfdc_account_snapshot.crm_account_owner_role                                                                AS opportunity_owner_role,
+      sfdc_account_snapshot.crm_account_owner_title                                                               AS opportunity_owner_title,
+      {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED",
+                                                                               "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", 
+                                                                               "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", 
+                                                                               "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_snapshots_source")}},
       0 AS is_live
     FROM sfdc_opportunity_snapshots_source
     INNER JOIN snapshot_dates
       ON sfdc_opportunity_snapshots_source.dbt_valid_from::DATE <= snapshot_dates.date_actual
         AND (sfdc_opportunity_snapshots_source.dbt_valid_to::DATE > snapshot_dates.date_actual OR sfdc_opportunity_snapshots_source.dbt_valid_to IS NULL)
     LEFT JOIN sfdc_account_snapshot AS fulfillment_partner
-      ON sfdc_opportunity_snapshots_source.fulfillment_partner = fulfillment_partner.account_id
+      ON sfdc_opportunity_snapshots_source.fulfillment_partner = fulfillment_partner.dim_crm_account_id
         AND snapshot_dates.date_id = fulfillment_partner.snapshot_id
     LEFT JOIN sfdc_account_snapshot AS partner_account
-      ON sfdc_opportunity_snapshots_source.partner_account = partner_account.account_id
+      ON sfdc_opportunity_snapshots_source.partner_account = partner_account.dim_crm_account_id
         AND snapshot_dates.date_id = partner_account.snapshot_id
     LEFT JOIN sfdc_account_snapshot
-      ON sfdc_opportunity_snapshots_source.account_id= sfdc_account_snapshot.account_id
+      ON sfdc_opportunity_snapshots_source.account_id = sfdc_account_snapshot.dim_crm_account_id
         AND snapshot_dates.date_id = sfdc_account_snapshot.snapshot_id
-    LEFT JOIN sfdc_user_snapshot account_owner
-      ON sfdc_account_snapshot.owner_id = account_owner.user_id
-        AND snapshot_dates.date_id = account_owner.snapshot_id
-    LEFT JOIN sfdc_user_roles_source
-      ON account_owner.user_role_id = sfdc_user_roles_source.id
     WHERE sfdc_opportunity_snapshots_source.account_id IS NOT NULL
       AND sfdc_opportunity_snapshots_source.is_deleted = FALSE
+     {% if is_incremental() %}
+
+       AND snapshot_dates.date_actual >= (SELECT MAX(snapshot_date) FROM {{this}})
+
+    {% endif %}
 
 ), sfdc_opportunity_live AS (
 
     SELECT
-      sfdc_opportunity_source.account_id                                                         AS dim_crm_account_id,
-      sfdc_opportunity_source.opportunity_id                                                     AS dim_crm_opportunity_id,
-      sfdc_opportunity_source.owner_id                                                           AS dim_crm_user_id,
-      sfdc_opportunity_source.order_type_stamped                                                 AS order_type,
-      sfdc_opportunity_source.opportunity_term                                                   AS opportunity_term_base,
-      {{ sales_qualified_source_cleaning('sfdc_opportunity_source.sales_qualified_source') }}    AS sales_qualified_source,
-      sfdc_opportunity_source.user_segment_stamped                                               AS crm_opp_owner_sales_segment_stamped,
-      sfdc_opportunity_source.user_geo_stamped                                                   AS crm_opp_owner_geo_stamped,
-      sfdc_opportunity_source.user_region_stamped                                                AS crm_opp_owner_region_stamped,
-      sfdc_opportunity_source.user_area_stamped                                                  AS crm_opp_owner_area_stamped,
-      sfdc_opportunity_source.user_segment_geo_region_area_stamped                               AS crm_opp_owner_sales_segment_geo_region_area_stamped,
-      sfdc_opportunity_source.created_date::DATE                                                 AS created_date,
-      sfdc_opportunity_source.sales_accepted_date::DATE                                          AS sales_accepted_date,
-      sfdc_opportunity_source.close_date::DATE                                                   AS close_date,
-      sfdc_opportunity_source.net_arr                                                            AS raw_net_arr,
-      {{ dbt_utils.surrogate_key(['sfdc_opportunity_source.opportunity_id','snapshot_dates.date_id'])}}             AS crm_opportunity_snapshot_id,
-      snapshot_dates.date_id                                                                                        AS snapshot_id,
-      snapshot_dates.date_actual                                                                                    AS snapshot_date,
-      snapshot_dates.first_day_of_month                                                                             AS snapshot_month,
-      snapshot_dates.fiscal_year                                                                                    AS snapshot_fiscal_year,
-      snapshot_dates.fiscal_quarter_name_fy                                                                         AS snapshot_fiscal_quarter_name,
-      snapshot_dates.first_day_of_fiscal_quarter                                                                    AS snapshot_fiscal_quarter_date,
-      snapshot_dates.day_of_fiscal_quarter_normalised                                                               AS snapshot_day_of_fiscal_quarter_normalised,
-      snapshot_dates.day_of_fiscal_year_normalised                                                                  AS snapshot_day_of_fiscal_year_normalised,
-      account_owner.user_segment  AS crm_account_owner_sales_segment_segment,
-      account_owner.user_geo  AS crm_account_owner_geo,
-      account_owner.user_region AS crm_account_owner_region,
-      account_owner.user_area AS crm_account_owner_area,
-      account_owner.user_segment_geo_region_area  AS crm_account_owner_sales_segment_geo_region_area,
-      fulfillment_partner.account_name AS fulfillment_partner_account_name,
-      fulfillment_partner.partner_track AS fulfillment_partner_partner_track,
-      partner_account.account_name AS partner_account_account_name,
-      partner_account.partner_track AS partner_account_partner_track,
+      sfdc_opportunity_source.account_id                                                                    AS dim_crm_account_id,
+      sfdc_opportunity_source.opportunity_id                                                                AS dim_crm_opportunity_id,
+      sfdc_opportunity_source.owner_id                                                                      AS dim_crm_user_id,
+      sfdc_opportunity_source.order_type_stamped                                                            AS order_type,
+      sfdc_opportunity_source.opportunity_term                                                              AS opportunity_term_base,
+      {{ sales_qualified_source_cleaning('sfdc_opportunity_source.sales_qualified_source') }}               AS sales_qualified_source,
+      sfdc_opportunity_source.user_segment_stamped                                                          AS crm_opp_owner_sales_segment_stamped,
+      sfdc_opportunity_source.user_geo_stamped                                                              AS crm_opp_owner_geo_stamped,
+      sfdc_opportunity_source.user_region_stamped                                                           AS crm_opp_owner_region_stamped,
+      sfdc_opportunity_source.user_area_stamped                                                             AS crm_opp_owner_area_stamped,
+      sfdc_opportunity_source.user_segment_geo_region_area_stamped                                          AS crm_opp_owner_sales_segment_geo_region_area_stamped,
+      sfdc_opportunity_source.user_business_unit_stamped                                                    AS crm_opp_owner_business_unit_stamped,
+      sfdc_opportunity_source.created_date::DATE                                                            AS created_date,
+      sfdc_opportunity_source.sales_accepted_date::DATE                                                     AS sales_accepted_date,
+      sfdc_opportunity_source.close_date::DATE                                                              AS close_date,
+      sfdc_opportunity_source.net_arr                                                                       AS raw_net_arr,
+      {{ dbt_utils.surrogate_key(['sfdc_opportunity_source.opportunity_id','snapshot_dates.date_id'])}}     AS crm_opportunity_snapshot_id,
+      snapshot_dates.date_id                                                                                AS snapshot_id,
+      snapshot_dates.date_actual                                                                            AS snapshot_date,
+      snapshot_dates.first_day_of_month                                                                     AS snapshot_month,
+      snapshot_dates.fiscal_year                                                                            AS snapshot_fiscal_year,
+      snapshot_dates.fiscal_quarter_name_fy                                                                 AS snapshot_fiscal_quarter_name,
+      snapshot_dates.first_day_of_fiscal_quarter                                                            AS snapshot_fiscal_quarter_date,
+      snapshot_dates.day_of_fiscal_quarter_normalised                                                       AS snapshot_day_of_fiscal_quarter_normalised,
+      snapshot_dates.day_of_fiscal_year_normalised                                                          AS snapshot_day_of_fiscal_year_normalised,
+      account_owner.user_segment                                                                            AS crm_account_owner_sales_segment_segment,
+      account_owner.user_geo                                                                                AS crm_account_owner_geo,
+      account_owner.user_region                                                                             AS crm_account_owner_region,
+      account_owner.user_area                                                                               AS crm_account_owner_area,
+      account_owner.user_segment_geo_region_area                                                            AS crm_account_owner_sales_segment_geo_region_area,
+      fulfillment_partner.account_name                                                                      AS fulfillment_partner_account_name,
+      fulfillment_partner.partner_track                                                                     AS fulfillment_partner_partner_track,
+      partner_account.account_name                                                                          AS partner_account_account_name,
+      partner_account.partner_track                                                                         AS partner_account_partner_track,
       sfdc_account.is_jihu_account,
-      sfdc_account.ultimate_parent_account_id,
+      sfdc_account.ultimate_parent_account_id                                                               AS dim_parent_crm_account_id,
       CASE
-        WHEN sfdc_opportunity_source.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
+        WHEN sfdc_opportunity_source.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 
+                                                    'Closed Won', '10-Duplicate')
             THEN 0
         ELSE 1
-      END                                                                                         AS is_open,
+      END                                                                                                   AS is_open,
       CASE
         WHEN sfdc_opportunity_source.user_segment_stamped IS NULL
           OR is_open = 1
           THEN account_owner.user_segment
         ELSE sfdc_opportunity_source.user_segment_stamped
-      END                                                                   AS opportunity_owner_user_segment,
+      END                                                                                                   AS opportunity_owner_user_segment,
       CASE
         WHEN sfdc_opportunity_source.user_geo_stamped IS NULL
           OR is_open = 1
         THEN account_owner.user_geo
       ELSE sfdc_opportunity_source.user_geo_stamped
-      END                                                                   AS opportunity_owner_user_geo,
+      END                                                                                                   AS opportunity_owner_user_geo,
 
       CASE
         WHEN sfdc_opportunity_source.user_region_stamped IS NULL
              OR is_open = 1
           THEN account_owner.user_region
           ELSE sfdc_opportunity_source.user_region_stamped
-      END                                                                   AS opportunity_owner_user_region,
+      END                                                                                                   AS opportunity_owner_user_region,
 
       CASE
         WHEN sfdc_opportunity_source.user_area_stamped IS NULL
              OR is_open = 1
           THEN account_owner.user_area
         ELSE sfdc_opportunity_source.user_area_stamped
-      END                                                                   AS opportunity_owner_user_area,
-      sfdc_user_roles_source.name                                           AS opportunity_owner_role,
-      account_owner.title                                                   AS opportunity_owner_title,
-      {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_source")}},
-      NULL AS dbt_scd_id,
-      CURRENT_DATE() AS dbt_valid_from,
-      CURRENT_DATE() AS dbt_valid_to,
-      1 AS is_live
+      END                                                                                                   AS opportunity_owner_user_area,
+      sfdc_user_roles_source.name                                                                           AS opportunity_owner_role,
+      account_owner.title                                                                                   AS opportunity_owner_title,
+      {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", 
+                                                                     "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", 
+                                                                     "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_source")}},
+      NULL                                                                                                  AS dbt_scd_id,
+      CURRENT_DATE()                                                                                        AS dbt_valid_from,
+      CURRENT_DATE()                                                                                        AS dbt_valid_to,
+      1                                                                                                     AS is_live
     FROM sfdc_opportunity_source
     LEFT JOIN snapshot_dates
       ON CURRENT_DATE() = snapshot_dates.date_actual
@@ -272,6 +278,11 @@
       ON account_owner.user_role_id = sfdc_user_roles_source.id
     WHERE sfdc_opportunity_source.account_id IS NOT NULL
       AND sfdc_opportunity_source.is_deleted = FALSE
+    {% if is_incremental() %}
+
+       AND snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+
+    {% endif %}
 
 ), sfdc_opportunity AS (
 
@@ -325,12 +336,19 @@
       {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}                              AS stage_6_closed_lost_date_id,
       {{ get_date_id('sfdc_opportunity.technical_evaluation_date') }}                             AS technical_evaluation_date_id,
       {{ get_date_id('sfdc_opportunity.last_activity_date') }}                                    AS last_activity_date_id,
+      {{ get_date_id('sfdc_opportunity.sales_last_activity_date') }}                              AS sales_last_activity_date_id,
       {{ get_date_id('sfdc_opportunity.subscription_start_date') }}                               AS subscription_start_date_id,
       {{ get_date_id('sfdc_opportunity.subscription_end_date') }}                                 AS subscription_end_date_id,
       {{ get_date_id('sfdc_opportunity.sales_qualified_date') }}                                  AS sales_qualified_date_id,
 
       close_date.first_day_of_fiscal_quarter                                                      AS close_fiscal_quarter_date,
       90 - DATEDIFF(DAY, sfdc_opportunity.snapshot_date, close_date.last_day_of_fiscal_quarter)   AS close_day_of_fiscal_quarter_normalised,
+      -- The fiscal year has to be created from scratch instead of joining to the date model because of sales practices which put close dates out 100+ years in the future
+      CASE 
+        WHEN DATE_PART('month', sfdc_opportunity.close_date) < 2
+          THEN DATE_PART('year', sfdc_opportunity.close_date)
+        ELSE (DATE_PART('year', sfdc_opportunity.close_date)+1) 
+      END                                                                                         AS close_fiscal_year,
 
       {{ get_date_id('sfdc_opportunity.iacv_created_date')}}                                      AS arr_created_date_id,
       sfdc_opportunity.iacv_created_date                                                          AS arr_created_date,
@@ -911,7 +929,7 @@
       END                                                                                           AS calculated_partner_track,
       CASE
         WHEN
-        sfdc_opportunity.ultimate_parent_account_id IN (
+        sfdc_opportunity.dim_parent_crm_account_id IN (
           '001610000111bA3',
           '0016100001F4xla',
           '0016100001CXGCs',
@@ -943,7 +961,7 @@
          sfdc_opportunity.dim_crm_account_id = '0014M00001kGcORQA0'
          THEN 1
        --remove test accounts
-       WHEN (sfdc_opportunity.ultimate_parent_account_id = ('0016100001YUkWVAA1')
+       WHEN (sfdc_opportunity.dim_parent_crm_account_id = ('0016100001YUkWVAA1')
             OR sfdc_opportunity.dim_crm_account_id IS NULL)
          THEN 1
        -- remove jihu accounts
@@ -1104,7 +1122,76 @@
           )
           THEN 'Mid-Market'
         ELSE 'SMB'
-      END AS account_owner_team_stamped_cro_level
+      END AS account_owner_team_stamped_cro_level,
+      CASE
+        WHEN sfdc_opportunity.close_date < '2023-02-01'
+          THEN CONCAT(
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    close_fiscal_year
+                    )
+        WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'comm'
+          THEN CONCAT(
+                    UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    close_fiscal_year
+                    )
+        WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'entg'
+          THEN CONCAT(
+                    UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    close_fiscal_year
+                    )
+        WHEN sfdc_opportunity.close_date >= '2023-02-01'
+          AND (sfdc_opportunity.crm_opp_owner_business_unit_stamped IS NOT NULL AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) NOT IN ('comm', 'entg')) -- some opps are closed by non-sales reps, so fill in their values completely
+          THEN CONCAT(
+                    UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    close_fiscal_year
+                    )
+        WHEN sfdc_opportunity.close_date >= '2023-02-01' AND sfdc_opportunity.crm_opp_owner_business_unit_stamped IS NULL -- done for data quality issues
+          THEN CONCAT(
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    close_fiscal_year
+                    )
+    END AS dim_crm_opp_owner_stamped_hierarchy_sk
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
@@ -1136,5 +1223,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-02-23",
-    updated_date="2022-12-19"
+    updated_date="2023-03-20"
 ) }}

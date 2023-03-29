@@ -22,7 +22,7 @@
     {% if is_incremental() %}
 
    -- this filter will only be applied on an incremental run
-   AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
+   AND date_id > (SELECT MAX(snapshot_id) FROM {{ this }})
 
    {% endif %}
 {%- endif %}
@@ -36,6 +36,7 @@
       {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
       snapshot_dates.date_id                                                                           AS snapshot_id,
       snapshot_dates.fiscal_year                                                                       AS snapshot_fiscal_year,
+      snapshot_dates.date_actual                                                                       AS snapshot_date,
       sfdc_user_snapshots_source.*
       {%- endif %}
     FROM
@@ -61,6 +62,7 @@
       {%- if model_type == 'snapshot' %}
       sfdc_users.crm_user_snapshot_id,
       sfdc_users.snapshot_id,
+      sfdc_users.snapshot_date,
       {%- endif %}
       sfdc_users.user_id                                                                                                              AS dim_crm_user_id,
       sfdc_users.employee_number,
