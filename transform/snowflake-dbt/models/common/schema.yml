@@ -4481,6 +4481,18 @@ models:
         description: '{{ doc("order_type") }}'
       - name: order_type_live
         description: '{{ doc("order_type_live") }}'
+      - name: vsa_readout
+        description: The sentiment from the Value Stream Assessment readout meeting.
+      - name: vsa_start_date_net_arr
+        description: The stamped Opportunity Net ARR when Value Stream Assessment start date is populated and is after the opportunity created date. Otherwise, will stamp $0.
+      - name: vsa_start_date
+        description: Date of the Value Stream Assessment kickoff call with the prospect/customer.
+      - name: vsa_url
+        description: The URL to the Value Stream Assesment readout presentation.
+      - name: vsa_status
+        description: The status of the Value Stream Assessment.
+      - name: vsa_end_date
+        description: The date the Value Stream Assessment readout is presented to the prospect/customer.
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
