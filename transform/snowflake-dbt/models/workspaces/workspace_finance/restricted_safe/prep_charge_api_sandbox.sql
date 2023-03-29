@@ -8,7 +8,7 @@
     ('zuora_rate_plan_charge', 'zuora_api_sandbox_rate_plan_charge_source'),
     ('zuora_order_action', 'zuora_api_sandbox_order_action_source'),
     ('revenue_contract_line', 'zuora_revenue_revenue_contract_line_source'),
-    ('zuora_order', 'zuora_order_source'),
+    ('zuora_order', 'zuora_api_sandbox_order_source'),
 ])}}
 
 , zuora_order_action_rate_plan AS (
