@@ -20,3 +20,11 @@ models:
         description: Annual recurring revenue associated with the subscription.
       - name: atr_change_flag
         description: ' {{ doc("atr_change_flag") }} '
+      - name: renewal_month
+      - name: fiscal_quarter_name_fy
+      - name: dim_subscription_id
+      - name: dim_crm_opportunity_id
+      - name: product_tier_name
+      - name: subscription_start_month
+      - name: subscription_end_month
+      - name: multi_year_booking_subscription_end_month
