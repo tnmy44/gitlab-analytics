@@ -50,10 +50,34 @@ staffing_history AS (
     current_country             AS country,
     current_region              AS region,
     effective_date              AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),DATEADD('day',1,CURRENT_DATE())) AS valid_to
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),DATEADD('day',1,CURRENT_DATE())) AS valid_to,
+    ROW_NUMBER() OVER (PARTITION BY employee_id, business_process_type  ORDER BY TERMINATION_DATE DESC, HIRE_DATE DESC) AS event_sequence
   FROM {{ref('staffing_history_approved_source')}}
 
 ),
+
+team_member_aggregate_dates AS (
+
+  SELECT 
+    employee_id, 
+    MAX(hire_date) as hire_date,
+    MAX(termination_date) as termination_date
+  FROM staffing_history
+  WHERE event_sequence = 1 
+  GROUP BY 1
+
+),
+
+team_member_status AS (
+
+  SELECT 
+   employee_id, 
+   hire_date, 
+   IFF(hire_date < termination_date, termination_date, NULL)  AS termination_date,
+   IFF(termination_date IS NULL, TRUE, FALSE)                 AS is_current_team_member
+  FROM team_member_aggregate_dates
+
+)
 
 unioned AS (
 
@@ -123,7 +147,7 @@ date_range AS (
   SELECT 
     employee_id,
     unioned_dates AS valid_from,
-    lead(valid_from,1) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+    LEAD(valid_from,1) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM unioned
   
 ),
@@ -151,8 +175,8 @@ final AS (
     staffing_history.business_process_type                                                                  AS business_process_type,
     staffing_history.country                                                                                AS country,
     staffing_history.region                                                                                 AS region,
-    staffing_history.hire_date                                                                              AS hire_date,
-    staffing_history.termination_date                                                                       AS termination_date,
+    team_member_status.hire_date                                                                            AS current_hire_date,
+    team_member_status.termination_date                                                                     AS current_termination_date,
     date_range.valid_from,
     date_range.valid_to
     FROM all_team_members
@@ -181,6 +205,8 @@ final AS (
       ON staffing_history.employee_id = date_range.employee_id 
       AND staffing_history.valid_to > date_range.valid_from
       AND staffing_history.valid_from < date_range.valid_to
+    LEFT JOIN team_member_status
+      ON team_member_status.employee_id = date_range.employee_id 
     WHERE date_range.valid_to IS NOT NULL
 
 )
