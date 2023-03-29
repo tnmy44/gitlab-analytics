@@ -74,7 +74,7 @@ license_subscriptions AS (
     dim_crm_accounts.parent_crm_account_owner_team                                                AS parent_crm_account_owner_team,
     dim_crm_accounts.parent_crm_account_sales_territory                                           AS parent_crm_account_sales_territory,
     dim_crm_accounts.technical_account_manager                                                    AS technical_account_manager,
-    MAX(fct_charge.mrr > 0)                                                                       AS max_monthly_mrr,
+    MAX(fct_charge.mrr)                                                                           AS max_monthly_mrr,
     MAX(IFF(dim_product_detail.product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))
     AS is_program_subscription,
     ARRAY_AGG(DISTINCT dim_product_detail.product_tier_name)
@@ -259,5 +259,5 @@ sorted AS (
     created_by="@icooper-acp",
     updated_by="@mdrussell",
     created_date="2022-03-11",
-    updated_date="2023-03-27"
+    updated_date="2023-03-29"
 ) }}
