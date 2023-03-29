@@ -6,11 +6,11 @@ source AS (
 
 intermediate AS (
   SELECT
-    d.value,
+    data.value,
     source.uploaded_at
   FROM
-    source,
-    LATERAL FLATTEN(input => source.jsontext['data']) AS d
+    source
+  INNER JOIN LATERAL FLATTEN(input => source.jsontext['data']) AS data
 ),
 
 parsed AS (
@@ -27,7 +27,7 @@ parsed AS (
     value['updatedAt']::TIMESTAMP               AS updated_at,
 
     CASE
-      WHEN value['user'] ILIKE '%@gitlab.com' THEN value['user']::VARCHAR
+      WHEN LOWER(value['user']) LIKE '%@gitlab.com' THEN value['user']::VARCHAR
     END                                         AS username,
     value['userDetail']['id']::VARCHAR          AS user_id,
 
