@@ -103,7 +103,7 @@ license_subscriptions AS (
     ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
   INNER JOIN dim_date
     ON fct_charge.effective_start_month <= dim_date.date_day AND fct_charge.effective_end_month > dim_date.date_day
-  {{ dbt_utils.GROUP_by(n=22)}}
+  {{ dbt_utils.group_by(n=22)}}
 
 
 ),
