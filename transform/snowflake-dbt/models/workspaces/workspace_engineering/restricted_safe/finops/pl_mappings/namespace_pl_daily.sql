@@ -26,7 +26,7 @@ SELECT
   date_spine.date_day,
   hist.dim_namespace_id,
   hist.dim_plan_id,
-  COALESCE(plan_ids.gitlab_plan_title, 'Internal') AS finance_pl
+  COALESCE(plan_ids.gitlab_plan_title, 'internal') AS finance_pl
 FROM date_spine
 LEFT JOIN dim_namespace_plan_hist hist ON date_spine.date_day BETWEEN hist.valid_from AND COALESCE(hist.valid_to, GETDATE())
 LEFT JOIN plan_ids ON plan_ids.gitlab_plan_id = hist.dim_plan_id
