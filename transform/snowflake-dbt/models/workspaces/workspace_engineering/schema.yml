@@ -298,3 +298,21 @@ models:
           description: The group path in the issue URL
         - name: url
           description: Issue URL
+
+    - name: merge_request_rate
+      description: A model containing merge request rate by department and group.
+      columns: 
+        - name: merge_month
+          description: Month the merge request was merged
+        - name: group_name
+          description: Group name
+        - name: department
+          description: Department name
+        - name: mrs
+          description: Count of merge requests
+        - name: employees
+          description: Count of employees
+        - name: mr_rate
+          description: Ratio of mrs to employees
+        - name: granularity_level
+          description: Department or group
