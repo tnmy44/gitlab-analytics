@@ -4304,6 +4304,8 @@ models:
         description: ' {{ doc("gs_first_value_date") }} '
       - name: gs_last_csm_activity_date
         description: ' {{ doc("gs_last_csm_activity_date") }} '
+      - name: last_at_risk_update_comments
+        description: ' {{ doc("last_at_risk_update_comments") }} '
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'

@@ -1873,3 +1873,9 @@ The action to be carried out on the subscription. For example, 'Amend Subscripti
 The unique surrogate key created by using `version_id` which is a unique identifier of a release maintained by the versions app. 
 
 {% enddocs %}
+
+{% docs last_at_risk_update_comments %}
+
+The most recent Account-level At-Risk Update timeline activity in Gainsight, synced to Salesforce.
+
+{% enddocs %}

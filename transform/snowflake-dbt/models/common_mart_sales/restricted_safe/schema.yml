@@ -194,6 +194,8 @@ models:
         description: ' {{ doc("gs_first_value_date") }} '
       - name: gs_last_csm_activity_date
         description: ' {{ doc("gs_last_csm_activity_date") }} '
+      - name: last_at_risk_update_comments
+        description: ' {{ doc("last_at_risk_update_comments") }} '
 
   - name: mart_crm_opportunity
     description: Model with single pane of glass sales and marketing metrics. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
