@@ -48,6 +48,7 @@
       AND prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
+      AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
 
 ), user_hierarchy_sheetload AS (
 /*

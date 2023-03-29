@@ -112,10 +112,14 @@ class DbtModelClone:
         :param object_name:
         :return:
         """
-
-        grants_query = f"""
-            GRANT OWNERSHIP ON {object_type.upper()} {object_name.upper()} TO TRANSFORMER REVOKE CURRENT GRANTS
-            """
+        if self.environment in ("LOCAL_USER", "LOCAL_BRANCH"):
+            grants_query = f"""
+                        GRANT ALL ON {object_type.upper()} {object_name.upper()} TO TRANSFORMER 
+                        """
+        else:
+            grants_query = f"""
+                GRANT OWNERSHIP ON {object_type.upper()} {object_name.upper()} TO TRANSFORMER REVOKE CURRENT GRANTS
+                """
         query_executor(self.engine, grants_query)
 
         grants_query = (
@@ -158,7 +162,6 @@ class DbtModelClone:
         """
 
         sorted_list = self.clean_dbt_input(model_input)
-
         for i in sorted_list:
             database_name = i.get("database").upper()
             schema_name = i.get("schema").upper()

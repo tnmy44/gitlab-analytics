@@ -820,6 +820,7 @@ tables:
       , NULL AS other_role
       , registration_objective
       , provisioned_by_group_id
+      , provisioned_by_group_at
       FROM user_details
   users_security_dashboard_projects:
     dbt_source_model: true

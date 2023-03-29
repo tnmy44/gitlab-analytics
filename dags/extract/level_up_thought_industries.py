@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.utils.trigger_rule import TriggerRule
 
 from airflow_utils import (
     DATA_IMAGE,
@@ -48,17 +47,22 @@ dag = DAG(
     default_args=default_args,
     # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
-    start_date=datetime(2022, 7, 1),  # program launched 2022-08-01
+    # FYI: on first run, data is backfilled thru 2022-03-01
+    start_date=datetime(2022, 3, 1),
     catchup=True,
     max_active_runs=1,  # due to API rate limiting
+    concurrency=3,  # num of max_tasks, limit due to API rate limiting
 )
 
-dummy_start = DummyOperator(task_id="dummy_start", dag=dag)
-dummy_end = DummyOperator(task_id="dummy_end", dag=dag)
+endpoint_classes = (
+    "CourseActions",
+    "CourseCompletions",
+    "CourseViews",
+    "Logins",
+    "Visits",
+)
+extract_tasks = []
 
-endpoint_classes = ("CourseCompletions", "Logins", "Visits", "CourseViews")
-
-prev_task = dummy_start
 for endpoint_class in endpoint_classes:
     extract_command = (
         f"{clone_and_setup_extraction_cmd} && "
@@ -90,14 +94,9 @@ for endpoint_class in endpoint_classes:
                 ".int_timestamp }}"
             ),
         },
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity("production"),
+        tolerations=get_toleration("production"),
         arguments=[extract_command],
         dag=dag,
-        trigger_rule=TriggerRule.ALL_DONE,  # run task regardless of upstream
     )
-    prev_task >> extract_task
-    prev_task = extract_task
-
-# cannot paralleize bc of concurrent snowflake_stage_load_copy_remove collisions
-extract_task >> dummy_end
+    extract_tasks.append(extract_task)

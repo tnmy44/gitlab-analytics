@@ -3,9 +3,17 @@
 WITH source_user AS (
 
     SELECT 
-        id                AS user_id,
-        user_segment__c   AS user_segment
-    FROM {{ source('salesforce', 'user') }}
+        sfdc_users.id                   AS user_id,
+        sfdc_users.user_segment__c      AS user_segment,
+        sfdc_users.user_role_type__c    AS user_role_type,
+        sfdc_user_roles_source.name     AS user_role_name,
+        COALESCE(CAST(REPLACE(
+                REPLACE(sfdc_users.hybrid__c,'Yes','1')
+                ,'No','0') 
+            AS INTEGER),0)              AS is_hybrid_flag
+    FROM {{ source('salesforce', 'user') }} sfdc_users
+    LEFT JOIN {{ ref('sfdc_user_roles_source') }} sfdc_user_roles_source
+      ON sfdc_users.userroleid = sfdc_user_roles_source.id
 
 ),  base AS (
     SELECT
@@ -68,10 +76,13 @@ WITH source_user AS (
 
       IFNULL(edm_user.crm_user_area, 'Other')          AS user_area,
       IFNULL(edm_user.user_role_name, 'Other')         AS role_name,
-      IFNULL(edm_user.user_role_type, 'Other')         AS role_type,
+      IFNULL(edm_user.crm_user_role_type, 'Other')     AS role_type,
       edm_user.start_date,
       edm_user.is_active,
-      edm_user.employee_number
+      edm_user.employee_number,
+
+      source_user.is_hybrid_flag
+
     FROM {{ref('dim_crm_user')}} edm_user
     LEFT JOIN source_user
         ON edm_user.dim_crm_user_id = source_user.user_id
@@ -98,6 +109,7 @@ WITH source_user AS (
       base.role_type,
       base.start_date,
       base.is_active,
+      base.is_hybrid_flag,
       base.employee_number,
      
       CASE
@@ -118,7 +130,7 @@ WITH source_user AS (
       -- Business Unit (X-Ray 1st hierarchy)
       -- will be replaced with the actual field
       CASE 
-        WHEN LOWER(user_segment) IN ('large','pubsec','all') 
+        WHEN LOWER(user_segment) IN ('large','pubsec','all') -- "all" segment is PubSec for ROW
             THEN 'ENTG'
         WHEN LOWER(user_region) IN ('latam','meta')
             OR LOWER(user_geo) IN ('apac')
@@ -152,7 +164,8 @@ WITH source_user AS (
           AND
             (
             LOWER(user_segment) = 'mid-market'
-            AND (LOWER(user_geo) = 'amer' OR LOWER(user_geo) = 'emea')
+            AND (LOWER(user_geo) = 'amer' 
+                OR LOWER(user_geo) = 'emea')
             AND LOWER(role_type) = 'fo'
             )
           THEN 'MM First Orders'  --mid-market FO(?)
@@ -174,22 +187,26 @@ WITH source_user AS (
 
         WHEN 
           LOWER(business_unit) = 'comm'
-          AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
+          AND (LOWER(sub_business_unit) = 'amer' 
+            OR LOWER(sub_business_unit) = 'emea')
           AND LOWER(user_segment) = 'mid-market'
           THEN 'Mid-Market'
         WHEN
           LOWER(business_unit) = 'comm'
-          AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
-          AND LOWER(user_segment) = 'smb'
-          THEN 'SMB'
-        WHEN
-          LOWER(business_unit) = 'comm'
+          AND LOWER(user_segment) = 'mid-market'         
           AND LOWER(sub_business_unit) = 'mm first orders'
           THEN 'MM First Orders'
         WHEN
           LOWER(business_unit) = 'comm'
+          AND LOWER(user_segment) = 'smb'
           AND LOWER(sub_business_unit) = 'amer low-touch'
           THEN 'AMER Low-Touch'
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND (LOWER(sub_business_unit) = 'amer'
+             OR LOWER(sub_business_unit) = 'emea')
+          AND LOWER(user_segment) = 'smb'
+          THEN 'SMB'
         ELSE 'Other'
       END AS division,
 
@@ -202,7 +219,9 @@ WITH source_user AS (
         WHEN 
           LOWER(business_unit) = 'entg'
           AND LOWER(sub_business_unit) = 'emea'
-          AND (LOWER(division) = 'dach' OR LOWER(division) = 'neur' OR LOWER(division) = 'seur')
+          AND (LOWER(division) = 'dach' 
+            OR LOWER(division) = 'neur' 
+            OR LOWER(division) = 'seur')
           THEN user_area
         WHEN
           LOWER(business_unit) = 'entg'
@@ -223,25 +242,27 @@ WITH source_user AS (
           AND LOWER(sub_business_unit) = 'pubsec'
           AND LOWER(division) = 'sled'
           THEN user_region
-
-        WHEN
-          LOWER(business_unit) = 'comm'
-          AND (LOWER(sub_business_unit) = 'amer' OR LOWER(sub_business_unit) = 'emea')
-          THEN user_area
         WHEN 
           LOWER(business_unit) = 'comm'
           AND LOWER(sub_business_unit) = 'mm first orders'
           THEN user_geo
         WHEN
           LOWER(business_unit) = 'comm'
+          AND LOWER(user_segment) = 'smb'
           AND LOWER(sub_business_unit) = 'amer low-touch'
-          AND LOWER(role_type) = 'first order'
+          AND LOWER(role_type) = 'fo'
           THEN 'LowTouch FO'
         WHEN
           LOWER(business_unit) = 'comm'
+          AND LOWER(user_segment) = 'smb'
           AND LOWER(sub_business_unit) = 'amer low-touch'
-          AND LOWER(role_type) != 'first order'
+          AND LOWER(role_type) != 'fo'
           THEN 'LowTouch Pool'
+        WHEN
+          LOWER(business_unit) = 'comm'
+          AND (LOWER(sub_business_unit) = 'amer' 
+            OR LOWER(sub_business_unit) = 'emea')
+          THEN user_area
         ELSE 'Other'
       END AS asm
     FROM consolidation

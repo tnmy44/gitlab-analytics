@@ -502,11 +502,14 @@ WITH sfdc_users_xf AS (
    CASE 
         WHEN edm_opty.close_date < today.current_fiscal_year_date
           THEN account_owner.adjusted_user_segment
+        -- TODO: Add hybrid reps logic
         ELSE opportunity_owner.adjusted_user_segment
     END                                                       AS report_opportunity_user_segment,
 
     -- NF: unadjusted version of segment used to create the FY24 GTM key
     CASE 
+        WHEN account_owner.is_hybrid_flag = 1
+          THEN account.account_demographics_sales_segment
         WHEN edm_opty.close_date < today.current_fiscal_year_date
           THEN account_owner.user_segment
         ELSE opportunity_owner.user_segment
@@ -522,7 +525,9 @@ WITH sfdc_users_xf AS (
           THEN account_owner.user_region
         ELSE opportunity_owner.user_region
     END                                                       AS report_opportunity_user_region,
-    CASE 
+    CASE
+        WHEN account_owner.is_hybrid_flag = 1 
+            THEN account.account_demographics_area
         WHEN edm_opty.close_date < today.current_fiscal_year_date
           THEN account_owner.user_area
         ELSE opportunity_owner.user_area
@@ -595,7 +600,7 @@ WITH sfdc_users_xf AS (
         '-',
         sales_qualified_source_name,
         '-',
-        order_type
+        deal_group
       )
     ) AS report_user_segment_geo_region_area_sqs_ot,
 
@@ -613,6 +618,49 @@ WITH sfdc_users_xf AS (
     ) AS report_user_segment_geo_region_area,
     
     ------------------------------------------------------------------------
+    -- FY24 keys
+
+    LOWER(
+      CONCAT(
+        report_opportunity_user_business_unit,
+        '-',
+        report_opportunity_user_segment,
+        '-',
+        report_opportunity_user_geo,
+        '-',
+        report_opportunity_user_region,
+        '-',
+        report_opportunity_user_area,
+        '-',
+        sales_qualified_source_name,
+        '-',
+        deal_group
+      )
+    ) AS report_bu_user_segment_geo_region_area_sqs_ot,
+
+   LOWER(
+      CONCAT(
+        report_opportunity_user_business_unit,
+        '-',
+        report_opportunity_user_sub_business_unit,
+        '-',
+        report_opportunity_user_division,
+        '-',
+        report_opportunity_user_asm,
+        '-',
+        report_opportunity_user_segment,
+        '-',
+        report_opportunity_user_geo,
+        '-',
+        report_opportunity_user_region,
+        '-',
+        report_opportunity_user_area,
+        '-',
+        edm_opty.sales_qualified_source_name,
+        '-',
+        edm_opty.deal_group
+      )
+    ) AS report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
 
     LOWER(
       CONCAT(
@@ -624,17 +672,17 @@ WITH sfdc_users_xf AS (
         '-',
         report_opportunity_user_asm,
         '-',
-        report_opportunity_raw_user_segment,
+        report_opportunity_user_segment,
         '-',
         report_opportunity_user_geo,
         '-',
         report_opportunity_user_region,
         '-',
         report_opportunity_user_area,
-        '-',
+        '-',       
         edm_opty.sales_qualified_source_name,
         '-',
-        edm_opty.order_type,
+        edm_opty.deal_group,
         '-',
         opportunity_owner.role_type,
         '-',

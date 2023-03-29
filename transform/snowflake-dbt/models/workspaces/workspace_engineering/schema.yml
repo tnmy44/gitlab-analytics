@@ -262,6 +262,12 @@ models:
           description: The title of the related milestone_id
         - name: milestone_description
           description: The description of the related milestone_id
+        - name: milestone_start_date
+          description: The start date of the milestone
+        - name: milestone_due_date
+          description: The due date of the milestone
+        - name: weight
+          description: The weight applied to the issue
         - name: namespace_id
           description: The namespace_id related to the issue
         - name: labels
