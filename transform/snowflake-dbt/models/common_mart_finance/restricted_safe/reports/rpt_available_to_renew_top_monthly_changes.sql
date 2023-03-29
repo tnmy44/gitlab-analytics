@@ -11,12 +11,20 @@ atr_daily AS (
     mart_atr_snapshot.snapshot_date,
     mart_atr_snapshot.subscription_name,
     COALESCE(multi_year_booking_subscription_end_month, bookings_term_end_month) AS subscription_final_month,
+    mart_atr_snapshot.renewal_month,
+    mart_atr_snapshot.fiscal_quarter_name_fy,
+    mart_atr_snapshot.dim_subscription_id,
+    mart_atr_snapshot.dim_crm_opportunity_id,
+    mart_atr_snapshot.product_tier_name,
+    mart_atr_snapshot.subscription_start_month,
+    mart_atr_snapshot.subscription_end_month,
+    mart_atr_snapshot.multi_year_booking_subscription_end_month,
     mart_atr_snapshot.is_available_to_renew,
     SUM(arr)::NUMBER                                                             AS total_arr,
     MAX(mart_atr_snapshot.fiscal_year)                                           AS max_year
   FROM mart_atr_snapshot
   INNER JOIN dim_date ON mart_atr_snapshot.snapshot_date = dim_date.date_day
-  {{ dbt_utils.group_by(n=6) }}
+  {{ dbt_utils.group_by(n=14) }}
 
 ),
 
@@ -54,6 +62,14 @@ monthly_agg AS (
     first_day_of_month,
     parent_crm_account_name,
     subscription_name,
+    renewal_month,
+    fiscal_quarter_name_fy,
+    dim_subscription_id,
+    dim_crm_opportunity_id,
+    product_tier_name,
+    subscription_start_month,
+    subscription_end_month,
+    multi_year_booking_subscription_end_month,
     total_arr,
     atr_change_flag
   FROM atr_comparison
@@ -66,6 +82,14 @@ final AS (
     first_day_of_month,
     parent_crm_account_name,
     subscription_name,
+    renewal_month,
+    fiscal_quarter_name_fy,
+    dim_subscription_id,
+    dim_crm_opportunity_id,
+    product_tier_name,
+    subscription_start_month,
+    subscription_end_month,
+    multi_year_booking_subscription_end_month,
     total_arr,
     atr_change_flag
   FROM monthly_agg
