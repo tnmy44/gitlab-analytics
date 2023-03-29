@@ -400,3 +400,58 @@ models:
         tests:
           - accepted_values:
               values: ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+  
+  - name: prep_team_member
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - valid_from
+
+  - name: dim_team_member
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - valid_from
+    columns:
+      - name: employee_id
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: nationality
+        meta:
+          masking_policy: people_operations
+      - name: ethnicity 
+        meta:
+          masking_policy: people_operations
+      - name: first_name
+        meta:
+          masking_policy: people_operations 
+      - name: last_name 
+        meta:
+          masking_policy: people_operations
+      - name: gender 
+        meta:
+          masking_policy: people_operations
+      - name: work_email 
+        meta:
+          masking_policy: people_operations
+      - name: date_of_birth 
+        meta:
+          masking_policy: people_operations
+      - name: key_talent_status 
+        meta:
+          masking_policy: people_operations
+      - name: gitlab_username 
+        meta:
+          masking_policy: people_operations
+      - name: growth_potential_rating 
+        meta:
+          masking_policy: people_operations
+      - name: performance_rating 
+        meta:
+          masking_policy: people_operations
+

@@ -1,7 +1,6 @@
 WITH final AS (
 
     SELECT 
-
       prep_team_member.dim_team_member_sk,
       prep_team_member.employee_id,
       prep_team_member.business_process,
@@ -21,8 +20,7 @@ WITH final AS (
       prep_team_member.hire_date,
       prep_team_member.termination_date,
       prep_team_member.valid_from,
-      prep_team_member.valid_to,
-      prep_team_member.event_sequence
+      prep_team_member.valid_to
     FROM {{ ref('prep_team_member') }}
 
 )
