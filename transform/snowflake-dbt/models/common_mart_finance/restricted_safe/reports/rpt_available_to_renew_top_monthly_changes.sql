@@ -6,7 +6,7 @@
 atr_daily AS (
 
   SELECT
-    dim_date.first_day_of_month,
+    dim_date.first_day_of_month                                                  AS snapshot_month,
     mart_atr_snapshot.parent_crm_account_name,
     mart_atr_snapshot.snapshot_date,
     mart_atr_snapshot.subscription_name,
@@ -44,10 +44,10 @@ atr_comparison AS (
       WHEN LAG(is_available_to_renew)
         OVER (PARTITION BY subscription_name ORDER BY snapshot_date) IS NULL
         THEN 'New subscription'
-      WHEN subscription_final_month = first_day_of_month
+      WHEN subscription_final_month = snapshot_month
         THEN 'Subscription ends this month'
       WHEN is_available_to_renew = FALSE 
-      AND dense_rank() OVER (PARTITION BY first_day_of_month ORDER BY total_arr DESC) <= 10 
+      AND dense_rank() OVER (PARTITION BY snapshot_month ORDER BY total_arr DESC) <= 10 
         THEN 'Top available to renew excluded deal'
       ELSE 'No change'
     END                                                                                     AS atr_change_flag
@@ -59,7 +59,7 @@ atr_comparison AS (
 monthly_agg AS (
 
   SELECT DISTINCT
-    first_day_of_month,
+    snapshot_month,
     parent_crm_account_name,
     subscription_name,
     renewal_month,
@@ -79,7 +79,7 @@ monthly_agg AS (
 final AS (
 
   SELECT 
-    first_day_of_month,
+    snapshot_month,
     parent_crm_account_name,
     subscription_name,
     renewal_month,
@@ -94,9 +94,9 @@ final AS (
     atr_change_flag
   FROM monthly_agg
   WHERE atr_change_flag != 'No change'
-    AND first_day_of_month != '2021-12-01' -- exclude first month otherwise everyone is a new subscription
+    AND snapshot_month != '2021-12-01' -- exclude first month otherwise everyone is a new subscription
   QUALIFY RANK() OVER (
-      PARTITION BY first_day_of_month, atr_change_flag
+      PARTITION BY snapshot_month, atr_change_flag
       ORDER BY total_arr DESC) <= 10
 
 )
