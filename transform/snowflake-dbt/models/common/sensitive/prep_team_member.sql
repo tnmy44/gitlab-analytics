@@ -72,9 +72,9 @@ team_member_status AS (
 
   SELECT 
    employee_id, 
-   hire_date, 
-   IFF(hire_date < termination_date, termination_date, NULL)  AS termination_date,
-   IFF(termination_date IS NULL, TRUE, FALSE)                 AS is_current_team_member
+   current_hire_date, 
+   IFF(hire_date < termination_date, termination_date, NULL)          AS current_termination_date,
+   IFF(current_termination_date IS NULL, TRUE, FALSE)                 AS is_current_team_member
   FROM team_member_aggregate_dates
 
 ),
@@ -95,13 +95,6 @@ unioned AS (
 
   SELECT 
     employee_id,
-    valid_to
-  FROM key_talent
-
-  UNION
-
-  SELECT 
-    employee_id,
     valid_from
   FROM gitlab_usernames
 
@@ -109,21 +102,7 @@ unioned AS (
 
   SELECT 
     employee_id,
-    valid_to
-  FROM gitlab_usernames
-
-  UNION
-
-  SELECT 
-    employee_id,
     valid_from
-  FROM performance_growth_potential
-
-  UNION 
-
-  SELECT 
-    employee_id,
-    valid_to
   FROM performance_growth_potential
 
   UNION
@@ -131,13 +110,6 @@ unioned AS (
   SELECT 
     employee_id,
     valid_from
-  FROM staffing_history
-
-  UNION
-
-  SELECT 
-    employee_id,
-    valid_to
   FROM staffing_history
 
 ),
@@ -171,8 +143,8 @@ final AS (
     performance_growth_potential.performance_rating                                                         AS performance_rating,
     staffing_history.country                                                                                AS country,
     staffing_history.region                                                                                 AS region,
-    team_member_status.hire_date                                                                            AS current_hire_date,
-    team_member_status.termination_date                                                                     AS current_termination_date,
+    team_member_status.current_hire_date                                                                    AS current_hire_date,
+    team_member_status.current_termination_date                                                             AS current_termination_date,
     team_member_status.is_current_team_member                                                               AS is_current_team_member,
     date_range.valid_from                                                                                   AS valid_from,
     date_range.valid_to                                                                                     AS valid_to
