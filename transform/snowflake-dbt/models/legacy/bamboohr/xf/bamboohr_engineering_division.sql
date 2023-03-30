@@ -11,8 +11,13 @@ WITH employees AS (
 
 ), bamboohr_engineering_division_mapping AS (
 
-    SELECT *
-    FROM {{ ref('sheetload_product_group_mappings') }}
+    SELECT DISTINCT
+      LOWER(group_name)                                                        AS group_name,
+      LOWER(stage_section)                                                     AS section_name,
+      snapshot_date,
+      RANK() OVER (PARTITION BY LOWER(group_name) ORDER BY snapshot_date DESC) AS section_rank
+    FROM {{ ref('stages_groups_yaml_source') }}
+    QUALIFY section_rank = 1
 
 ), engineering_employees AS (
 

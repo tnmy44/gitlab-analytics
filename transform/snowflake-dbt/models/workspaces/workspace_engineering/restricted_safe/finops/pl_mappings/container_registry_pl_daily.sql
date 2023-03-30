@@ -40,7 +40,7 @@ storage AS (
 
 SELECT
   storage.snapshot_day,
-  coalesce(ns_type.finance_pl, 'Internal') as finance_pl,
+  coalesce(ns_type.finance_pl, 'internal') as finance_pl,
   SUM(container_registry_gb) AS container_registry_gb,
   RATIO_TO_REPORT(SUM(container_registry_gb)) OVER (PARTITION BY snapshot_day) AS percent_container_registry_size
 FROM
