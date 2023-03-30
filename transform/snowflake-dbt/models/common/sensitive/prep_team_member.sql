@@ -10,8 +10,8 @@ key_talent AS (
   SELECT
     employee_id,
     key_talent,
-    effective_date              AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),NULL) AS valid_to
+    effective_date AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ref('assess_talent_source')}}
 
 ),
@@ -22,8 +22,8 @@ gitlab_usernames AS (
   SELECT
     employee_id,
     gitlab_username,
-    effective_date              AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from, date_time_completed),NULL) AS valid_to
+    effective_date AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY valid_from, date_time_completed) AS valid_to
   FROM {{ref('gitlab_usernames_source')}}
 
 ),
@@ -34,8 +34,8 @@ performance_growth_potential AS (
     employee_id,
     growth_potential_rating,
     performance_rating,
-    review_period_end_date      AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),NULL) AS valid_to
+    review_period_end_date AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ref('performance_growth_potential_source')}}
 
 ), 
@@ -47,35 +47,15 @@ staffing_history AS (
     business_process_type,
     hire_date,
     termination_date,
-    current_country             AS country,
-    current_region              AS region,
-    effective_date              AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),NULL) AS valid_to,
-    ROW_NUMBER() OVER (PARTITION BY employee_id, business_process_type  ORDER BY termination_date DESC, hire_date DESC) AS hire_event_sequence
+    LAST_VALUE(hire_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_hire_date,
+    LAST_VALUE(termination_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_termination_date,
+    current_country AS country,
+    current_region AS region,
+    IFF(most_recent_hire_date IS NULL, TRUE, FALSE) AS is_current_team_member,
+    IFF(DENSE_RANK() OVER (PARTITION BY employee_id,business_process_type ORDER BY effective_date ASC ROWS UNBOUNDED PRECEDING) > 1 AND business_process_type = 'Hire', TRUE, FALSE) AS is_rehire,
+    effective_date AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
-
-),
-
-team_member_aggregate_dates AS (
-
-  SELECT 
-    employee_id, 
-    MAX(hire_date) as hire_date,
-    MAX(termination_date) as termination_date
-  FROM staffing_history
-  WHERE hire_event_sequence = 1 
-  GROUP BY 1
-
-),
-
-team_member_status AS (
-
-  SELECT 
-   employee_id, 
-   current_hire_date, 
-   IFF(hire_date < termination_date, termination_date, NULL)          AS current_termination_date,
-   IFF(current_termination_date IS NULL, TRUE, FALSE)                 AS is_current_team_member
-  FROM team_member_aggregate_dates
 
 ),
 
@@ -119,11 +99,10 @@ date_range AS (
   SELECT 
     employee_id,
     unioned_dates AS valid_from,
-    LEAD(valid_from,1) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+    LEAD(valid_from, 1) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM unioned
   
 ),
-
 
 final AS (
 
@@ -143,9 +122,10 @@ final AS (
     performance_growth_potential.performance_rating                                                         AS performance_rating,
     staffing_history.country                                                                                AS country,
     staffing_history.region                                                                                 AS region,
-    team_member_status.current_hire_date                                                                    AS current_hire_date,
-    team_member_status.current_termination_date                                                             AS current_termination_date,
-    team_member_status.is_current_team_member                                                               AS is_current_team_member,
+    staffing_history.most_recent_hire_date                                                                  AS most_recent_hire_date,
+    staffing_history.termination_date                                                                       AS termination_date,
+    staffing_history.is_current_team_member                                                                 AS is_current_team_member,
+    staffing_history.is_rehire                                                                              AS is_rehire,
     date_range.valid_from                                                                                   AS valid_from,
     date_range.valid_to                                                                                     AS valid_to
     FROM all_team_members
@@ -195,9 +175,6 @@ final AS (
             WHEN staffing_history.valid_from >= date_range.valid_from AND staffing_history.valid_from < date_range.valid_to THEN TRUE
             ELSE FALSE
           END) = TRUE
-    LEFT JOIN team_member_status
-      ON team_member_status.employee_id = date_range.employee_id 
-    WHERE date_range.valid_to IS NOT NULL
 
 )
 
