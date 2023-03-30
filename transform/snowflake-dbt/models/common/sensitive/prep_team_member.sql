@@ -11,7 +11,7 @@ key_talent AS (
     employee_id,
     key_talent,
     effective_date              AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),{{ var('tomorrow') }}) AS valid_to
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),NULL) AS valid_to
   FROM {{ref('assess_talent_source')}}
 
 ),
@@ -23,7 +23,7 @@ gitlab_usernames AS (
     employee_id,
     gitlab_username,
     effective_date              AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),{{ var('tomorrow') }}) AS valid_to
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from, date_time_completed),NULL) AS valid_to
   FROM {{ref('gitlab_usernames_source')}}
 
 ),
@@ -35,7 +35,7 @@ performance_growth_potential AS (
     growth_potential_rating,
     performance_rating,
     review_period_end_date      AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),{{ var('tomorrow') }}) AS valid_to
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),NULL) AS valid_to
   FROM {{ref('performance_growth_potential_source')}}
 
 ), 
@@ -50,7 +50,7 @@ staffing_history AS (
     current_country             AS country,
     current_region              AS region,
     effective_date              AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),{{ var('tomorrow') }}) AS valid_to,
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),NULL) AS valid_to,
     ROW_NUMBER() OVER (PARTITION BY employee_id, business_process_type  ORDER BY termination_date DESC, hire_date DESC) AS hire_event_sequence
   FROM {{ref('staffing_history_approved_source')}}
 
@@ -204,6 +204,7 @@ final AS (
             WHEN gitlab_usernames.valid_from >= date_range.valid_from AND gitlab_usernames.valid_from < date_range.valid_to THEN TRUE
             ELSE FALSE
           END) = TRUE
+        AND gitlab_usernames.valid_from != gitlab_usernames.valid_to
     LEFT JOIN performance_growth_potential
       ON performance_growth_potential.employee_id = date_range.employee_id 
         AND (
