@@ -281,6 +281,29 @@ WITH dates AS (
     WHERE department IS NOT NULL
     {{ dbt_utils.group_by(n=8) }} 
 
+    UNION ALL
+
+    SELECT
+      DATE_TRUNC(month,start_date)      AS month_date,
+      'division_group_breakout'         AS breakout_type, 
+      'division_group_breakout'         AS department,
+      CASE
+        WHEN division = 'Sales' 
+          THEN 'Sales'
+        WHEN division in ('Product', 'Engineering')
+          THEN 'Tech'
+        ELSE 'Non-Tech' END             AS division,
+      NULL                              AS job_role,
+      NULL                              AS job_grade,
+      eeoc_field_name,                                                       
+      eeoc_value,
+      {{repeated_metric_columns}}
+    FROM dates 
+    LEFT JOIN intermediate 
+      ON DATE_TRUNC(month, start_date) = DATE_TRUNC(month, date_actual)
+    WHERE department IS NOT NULL
+    {{ dbt_utils.group_by(n=8) }} 
+
 ), breakout_modified AS (
 
     SELECT 
