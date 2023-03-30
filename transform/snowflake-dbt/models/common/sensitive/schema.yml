@@ -407,6 +407,34 @@ models:
             combination_of_columns:
               - employee_id
               - valid_from
+    columns:
+      - name: employee_id
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: nationality
+        meta:
+          masking_policy: analyst_people
+      - name: ethnicity 
+        meta:
+          masking_policy: analyst_people
+      - name: gender 
+        meta:
+          masking_policy: analyst_people
+      - name: date_of_birth 
+        meta:
+          masking_policy: analyst_people
+      - name: key_talent_status 
+        meta:
+          masking_policy: analyst_people
+      - name: growth_potential_rating 
+        meta:
+          masking_policy: analyst_people
+      - name: performance_rating 
+        meta:
+          masking_policy: analyst_people
 
   - name: dim_team_member
     tests:
@@ -434,9 +462,6 @@ models:
         meta:
           masking_policy: analyst_people
       - name: key_talent_status 
-        meta:
-          masking_policy: analyst_people
-      - name: gitlab_username 
         meta:
           masking_policy: analyst_people
       - name: growth_potential_rating 
