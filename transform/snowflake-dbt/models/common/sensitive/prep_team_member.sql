@@ -99,7 +99,7 @@ date_range AS (
   SELECT 
     employee_id,
     unioned_dates AS valid_from,
-    LEAD(valid_from, 1) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM unioned
   
 ),
