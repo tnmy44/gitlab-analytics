@@ -123,8 +123,7 @@ WITH dates AS (
         SPLIT_PART(mapping_enhanced.eeoc_value,'_',1)|| '_' || 
           IFF(employees.country in ('United States of America', 'United States'),
             'United States of America','Non-US'),
-        mapping_enhanced.eeoc_value)                                                AS eeoc_value,
-      mapping_enhanced.eeoc_value,                                          
+        mapping_enhanced.eeoc_value)                                                AS eeoc_value,                                         
       IFF(dates.start_date = date_actual,1,0)                                       AS headcount_start,
       IFF(dates.start_date = date_actual 
         AND employees.department_modified != 'Sales Development', 1,0)              AS headcount_start_excluding_sdr,
