@@ -51,7 +51,7 @@ staffing_history AS (
     current_region              AS region,
     effective_date              AS valid_from,
     COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),{{ var('tomorrow') }}) AS valid_to,
-    ROW_NUMBER() OVER (PARTITION BY employee_id, business_process_type  ORDER BY TERMINATION_DATE DESC, HIRE_DATE DESC) AS event_sequence
+    ROW_NUMBER() OVER (PARTITION BY employee_id, business_process_type  ORDER BY termination_date DESC, hire_date DESC) AS hire_event_sequence
   FROM {{ref('staffing_history_approved_source')}}
 
 ),
@@ -63,7 +63,7 @@ team_member_aggregate_dates AS (
     MAX(hire_date) as hire_date,
     MAX(termination_date) as termination_date
   FROM staffing_history
-  WHERE event_sequence = 1 
+  WHERE hire_event_sequence = 1 
   GROUP BY 1
 
 ),
@@ -87,8 +87,8 @@ unioned AS (
   */
 
   SELECT 
-    employee_id AS unioned_dates,
-    valid_from
+    employee_id,
+    valid_from AS unioned_dates
   FROM key_talent
 
   UNION
@@ -168,14 +168,13 @@ final AS (
     gitlab_usernames.gitlab_username                                                                        AS gitlab_username,
     performance_growth_potential.growth_potential_rating                                                    AS growth_potential_rating,
     performance_growth_potential.performance_rating                                                         AS performance_rating,
-    staffing_history.business_process_type                                                                  AS business_process_type,
     staffing_history.country                                                                                AS country,
     staffing_history.region                                                                                 AS region,
     team_member_status.hire_date                                                                            AS current_hire_date,
     team_member_status.termination_date                                                                     AS current_termination_date,
     team_member_status.is_current_team_member                                                               AS is_current_team_member,
-    date_range.valid_from,
-    date_range.valid_to
+    date_range.valid_from                                                                                   AS valid_from,
+    date_range.valid_to                                                                                     AS valid_to
     FROM all_team_members
     INNER JOIN date_range
       ON date_range.employee_id = all_team_members.employee_id 
@@ -188,20 +187,40 @@ final AS (
 
     LEFT JOIN key_talent
       ON key_talent.employee_id = date_range.employee_id 
-      AND key_talent.valid_to > date_range.valid_from
-      AND key_talent.valid_from < date_range.valid_to
+        AND (
+          CASE
+            WHEN date_range.valid_from >= key_talent.valid_from AND date_range.valid_from < key_talent.valid_to THEN TRUE
+            WHEN date_range.valid_to > key_talent.valid_from AND date_range.valid_to <= key_talent.valid_to THEN TRUE
+            WHEN key_talent.valid_from >= date_range.valid_from AND key_talent.valid_from < date_range.valid_to THEN TRUE
+            ELSE FALSE
+          END) = TRUE
     LEFT JOIN gitlab_usernames
       ON gitlab_usernames.employee_id = date_range.employee_id 
-      AND gitlab_usernames.valid_to > date_range.valid_from
-      AND gitlab_usernames.valid_from < date_range.valid_to
+        AND (
+          CASE
+            WHEN date_range.valid_from >= gitlab_usernames.valid_from AND date_range.valid_from < gitlab_usernames.valid_to THEN TRUE
+            WHEN date_range.valid_to > gitlab_usernames.valid_from AND date_range.valid_to <= gitlab_usernames.valid_to THEN TRUE
+            WHEN gitlab_usernames.valid_from >= date_range.valid_from AND gitlab_usernames.valid_from < date_range.valid_to THEN TRUE
+            ELSE FALSE
+          END) = TRUE
     LEFT JOIN performance_growth_potential
       ON performance_growth_potential.employee_id = date_range.employee_id 
-      AND performance_growth_potential.valid_to > date_range.valid_from        
-      AND performance_growth_potential.valid_from < date_range.valid_to
+        AND (
+          CASE
+            WHEN date_range.valid_from >= performance_growth_potential.valid_from AND date_range.valid_from < performance_growth_potential.valid_to THEN TRUE
+            WHEN date_range.valid_to > performance_growth_potential.valid_from AND date_range.valid_to <= performance_growth_potential.valid_to THEN TRUE
+            WHEN performance_growth_potential.valid_from >= date_range.valid_from AND performance_growth_potential.valid_from < date_range.valid_to THEN TRUE
+            ELSE FALSE
+          END) = TRUE
     LEFT JOIN staffing_history
       ON staffing_history.employee_id = date_range.employee_id 
-      AND staffing_history.valid_to > date_range.valid_from
-      AND staffing_history.valid_from < date_range.valid_to
+        AND (
+          CASE
+            WHEN date_range.valid_from >= staffing_history.valid_from AND date_range.valid_from < staffing_history.valid_to THEN TRUE
+            WHEN date_range.valid_to > staffing_history.valid_from AND date_range.valid_to <= staffing_history.valid_to THEN TRUE
+            WHEN staffing_history.valid_from >= date_range.valid_from AND staffing_history.valid_from < date_range.valid_to THEN TRUE
+            ELSE FALSE
+          END) = TRUE
     LEFT JOIN team_member_status
       ON team_member_status.employee_id = date_range.employee_id 
     WHERE date_range.valid_to IS NOT NULL

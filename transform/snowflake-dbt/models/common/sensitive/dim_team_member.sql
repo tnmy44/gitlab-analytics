@@ -1,9 +1,7 @@
 WITH final AS (
 
     SELECT 
-      prep_team_member.dim_team_member_sk,
       prep_team_member.employee_id,
-      prep_team_member.business_process,
       prep_team_member.nationality,
       prep_team_member.ethnicity,
       prep_team_member.first_name,
@@ -19,6 +17,7 @@ WITH final AS (
       prep_team_member.region,
       prep_team_member.current_hire_date,
       prep_team_member.current_termination_date,
+      prep_team_member.is_current_team_member,
       prep_team_member.valid_from,
       prep_team_member.valid_to
     FROM {{ ref('prep_team_member') }}
