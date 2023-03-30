@@ -1,6 +1,7 @@
 WITH final AS (
 
     SELECT 
+      prep_team_member.dim_team_member_sk,
       prep_team_member.employee_id,
       prep_team_member.nationality,
       prep_team_member.ethnicity,

@@ -423,35 +423,26 @@ models:
           - not_null
       - name: nationality
         meta:
-          masking_policy: people_operations
+          masking_policy: analyst_people
       - name: ethnicity 
         meta:
-          masking_policy: people_operations
-      - name: first_name
-        meta:
-          masking_policy: people_operations 
-      - name: last_name 
-        meta:
-          masking_policy: people_operations
+          masking_policy: analyst_people
       - name: gender 
         meta:
-          masking_policy: people_operations
-      - name: work_email 
-        meta:
-          masking_policy: people_operations
+          masking_policy: analyst_people
       - name: date_of_birth 
         meta:
-          masking_policy: people_operations
+          masking_policy: analyst_people
       - name: key_talent_status 
         meta:
-          masking_policy: people_operations
+          masking_policy: analyst_people
       - name: gitlab_username 
         meta:
-          masking_policy: people_operations
+          masking_policy: analyst_people
       - name: growth_potential_rating 
         meta:
-          masking_policy: people_operations
+          masking_policy: analyst_people
       - name: performance_rating 
         meta:
-          masking_policy: people_operations
+          masking_policy: analyst_people
 

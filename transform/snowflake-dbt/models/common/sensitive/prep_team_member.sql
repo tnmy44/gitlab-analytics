@@ -156,6 +156,7 @@ date_range AS (
 final AS (
 
  SELECT 
+    {{ dbt_utils.surrogate_key(['all_team_members.employee_id'])}}                                          AS dim_team_member_sk,
     all_team_members.employee_id                                                                            AS employee_id,
     all_team_members.nationality                                                                            AS nationality,
     all_team_members.ethnicity                                                                              AS ethnicity,
