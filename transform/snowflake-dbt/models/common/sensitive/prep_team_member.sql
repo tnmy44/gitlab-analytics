@@ -62,7 +62,7 @@ staffing_history AS (
 unioned AS (
 
   /*
-    We union all valid_from and valid_to dates from each type 2 SCD table (except the type 1 SCD - all_team_members)
+    We union all valid_from dates from each type 2 SCD table (except the type 1 SCD - all_team_members)
     to create a date spine that we can then use to join our events into
   */
 
