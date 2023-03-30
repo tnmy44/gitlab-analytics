@@ -17,8 +17,8 @@ WITH final AS (
       prep_team_member.performance_rating,
       prep_team_member.country,
       prep_team_member.region,
-      prep_team_member.hire_date,
-      prep_team_member.termination_date,
+      prep_team_member.current_hire_date,
+      prep_team_member.current_termination_date,
       prep_team_member.valid_from,
       prep_team_member.valid_to
     FROM {{ ref('prep_team_member') }}

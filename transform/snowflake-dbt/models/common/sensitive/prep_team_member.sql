@@ -11,7 +11,7 @@ key_talent AS (
     employee_id,
     key_talent,
     effective_date              AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),DATEADD('day',1,CURRENT_DATE())) AS valid_to
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),{{ var('tomorrow') }}) AS valid_to
   FROM {{ref('assess_talent_source')}}
 
 ),
@@ -23,7 +23,7 @@ gitlab_usernames AS (
     employee_id,
     gitlab_username,
     effective_date              AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),DATEADD('day',1,CURRENT_DATE())) AS valid_to
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),{{ var('tomorrow') }}) AS valid_to
   FROM {{ref('gitlab_usernames_source')}}
 
 ),
@@ -35,7 +35,7 @@ performance_growth_potential AS (
     growth_potential_rating,
     performance_rating,
     review_period_end_date      AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),DATEADD('day',1,CURRENT_DATE())) AS valid_to
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),{{ var('tomorrow') }}) AS valid_to
   FROM {{ref('performance_growth_potential_source')}}
 
 ), 
@@ -50,7 +50,7 @@ staffing_history AS (
     current_country             AS country,
     current_region              AS region,
     effective_date              AS valid_from,
-    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),DATEADD('day',1,CURRENT_DATE())) AS valid_to,
+    COALESCE(LEAD(valid_from) OVER (PARTITION BY employee_id ORDER BY valid_from),{{ var('tomorrow') }}) AS valid_to,
     ROW_NUMBER() OVER (PARTITION BY employee_id, business_process_type  ORDER BY TERMINATION_DATE DESC, HIRE_DATE DESC) AS event_sequence
   FROM {{ref('staffing_history_approved_source')}}
 
@@ -77,7 +77,7 @@ team_member_status AS (
    IFF(termination_date IS NULL, TRUE, FALSE)                 AS is_current_team_member
   FROM team_member_aggregate_dates
 
-)
+),
 
 unioned AS (
 
@@ -156,10 +156,6 @@ date_range AS (
 final AS (
 
  SELECT 
-    -- surrogate key
-    {{ dbt_utils.surrogate_key(['all_team_members.employee_id', 'date_range.valid_from']) }}                AS dim_team_member_sk,
-    -- The table should return at most one row per employee and date range
-
     all_team_members.employee_id                                                                            AS employee_id,
     all_team_members.nationality                                                                            AS nationality,
     all_team_members.ethnicity                                                                              AS ethnicity,
@@ -177,6 +173,7 @@ final AS (
     staffing_history.region                                                                                 AS region,
     team_member_status.hire_date                                                                            AS current_hire_date,
     team_member_status.termination_date                                                                     AS current_termination_date,
+    team_member_status.is_current_team_member                                                               AS is_current_team_member,
     date_range.valid_from,
     date_range.valid_to
     FROM all_team_members
