@@ -1810,7 +1810,7 @@ models:
     description: >
       This table looks at `installation_creation_date` metric values from Service Ping. Initially when the metric was implemented, it
       returned the creation date of the installation's root user (id = 1). However, if the root user was deleted, then the metric would return null.
-      Later, it will be adjusted to return the earliest creation date of any user in the installation. As a result, we select the 
+      Later, it will be adjusted to return the earliest creation date of any user in the installation. As a result, we will select the 
       `MIN(installation_creation_date)` for each installation. This ensures that installations that deleted the root user will have a date backfilled
       once the metric is updated to return a value for the earliest created user. It also futureproofs the model for any installations that delete their
       root user in the future, as we'd still want to retain the root user's creation date for that installation. We run an automated test on the table to
@@ -1823,7 +1823,6 @@ models:
       - name: dim_installation_id
         description:  '{{ doc("dim_installation_id") }}'
         tests:
-          - unique
           - not_null
       - name: installation_creation_date
         description: '{{ doc("installation_creation_date") }}'

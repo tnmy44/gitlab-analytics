@@ -17,18 +17,10 @@ WITH filtered_ping_metrics AS (
       AND ping_created_at > (SELECT MAX(ping_created_at) FROM {{ this }})
 
     {% endif %}
-),
-
-agg AS (
-  SELECT
-    dim_installation_id,
-    MIN(installation_creation_date) AS installation_creation_date
-  FROM filtered_ping_metrics
-  {{ dbt_utils.group_by(n=1) }}
 )
 
 {{ dbt_audit(
-    cte_ref="agg",
+    cte_ref="filtered_ping_metrics",
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2023-03-31",

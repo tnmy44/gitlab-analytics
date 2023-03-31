@@ -2,6 +2,14 @@
 ('prep_ping_instance', 'prep_ping_instance'),
 ('prep_installation_creation', 'prep_installation_creation')])}},
 
+installation_agg AS (
+  SELECT
+    dim_installation_id,
+    MIN(installation_creation_date) AS installation_creation_date
+  FROM prep_installation_creation
+  {{ dbt_utils.group_by(n=1) }}
+),
+
 joined AS (
 
   SELECT DISTINCT
@@ -14,10 +22,10 @@ joined AS (
 
     -- Dimensional contexts  
     prep_host.host_name,
-    prep_installation_creation.installation_creation_date
+    installation_agg.installation_creation_date
   FROM prep_ping_instance
   INNER JOIN prep_host ON prep_ping_instance.dim_host_id = prep_host.dim_host_id
-  LEFT JOIN prep_installation_creation ON prep_installation_creation.dim_installation_id = prep_ping_instance.dim_installation_id
+  LEFT JOIN installation_agg ON installation_agg.dim_installation_id = prep_ping_instance.dim_installation_id
 
   UNION ALL
 
