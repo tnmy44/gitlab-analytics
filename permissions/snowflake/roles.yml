@@ -109,6 +109,11 @@ databases:
     - kdietz_prep:
         shared: no
 
+    - kgliksman_prod:
+        shared: no
+    - kgliksman_prep:
+        shared: no
+
     - kmagda_prod:
         shared: no
     - kmagda_prep:
@@ -3550,6 +3555,45 @@ roles:
                     - kdietz_prep.*.*
                     - kdietz_prod.*.*
 
+    - kgliksman:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - kgliksman_prep
+                - kgliksman_prod
+            schemas:
+                - kgliksman_prep.*
+                - kgliksman_prod.*
+            tables:
+                - kgliksman_prep.*.*
+                - kgliksman_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - kgliksman_prep
+                    - kgliksman_prod
+                write:
+                    - kgliksman_prep
+                    - kgliksman_prod
+            schemas:
+                read:
+                    - kgliksman_prep.*
+                    - kgliksman_prod.*
+                write:
+                    - kgliksman_prep.*
+                    - kgliksman_prod.*
+            tables:
+                read:
+                    - kgliksman_prep.*.*
+                    - kgliksman_prod.*.*
+                write:
+                    - kgliksman_prep.*.*
+                    - kgliksman_prod.*.*
+
     - kmagda:
         member_of:
             - analyst_marketing
@@ -5067,6 +5111,11 @@ users:
         can_login: yes
         member_of:
             - kdietz
+
+    - kgliksman: 
+        can_login: yes
+        member_of:
+            - kgliksman
 
     - kmagda:
         can_login: yes
