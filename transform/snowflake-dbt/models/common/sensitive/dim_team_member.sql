@@ -16,20 +16,47 @@ WITH final AS (
       prep_team_member.performance_rating,
       prep_team_member.country,
       prep_team_member.region,
-      prep_team_member.most_recent_hire_date,
+      prep_team_member.hire_date,
       prep_team_member.termination_date,
       prep_team_member.is_current_team_member,
       prep_team_member.is_rehire,
       prep_team_member.valid_from,
-      prep_team_member.valid_to
+      prep_team_member.valid_to,
+      prep_team_member.is_current
     FROM {{ ref('prep_team_member') }}
+
+    UNION ALL
+    
+    SELECT
+      MD5('-1')                                                       AS dim_team_member_sk,
+      -1                                                              AS employee_id,
+      'Missing nationality'                                           AS nationality,
+      'Missing ethnicity'                                             AS ethnicity,
+      'Missing first_name'                                            AS first_name,
+      'Missing last_name'                                             AS last_name,
+      'Missing gender'                                                AS gender,
+      'Missing work_email'                                            AS work_email,
+      '9999-12-31 00:00:00.000 +0000'                                 AS date_of_birth,
+      'Missing key_talent_status'                                     AS key_talent_status,
+      'Missing gitlab_username'                                       AS gitlab_username,
+      'Missing growth_potential_rating'                               AS growth_potential_rating,
+      'Missing performance_rating'                                    AS performance_rating,
+      'Missing country'                                               AS country,
+      'Missing region'                                                AS region,
+      '9999-12-31 00:00:00.000 +0000'                                 AS hire_date,
+      '9999-12-31 00:00:00.000 +0000'                                 AS termination_date,
+      NULL                                                            AS is_current_team_member,
+      NULL                                                            AS is_rehire,
+      '9999-12-31 00:00:00.000 +0000'                                 AS valid_from,
+      '9999-12-31 00:00:00.000 +0000'                                 AS valid_to,
+      NULL                                                            AS is_current
 
 )
 
 {{ dbt_audit(
-    cte_ref="final",
-    created_by="@lisvinueza",
-    updated_by="@lisvinueza",
-    created_date="2023-03-27",
-    updated_date="2023-03-27"
+    cte_ref='final',
+    created_by='@lisvinueza',
+    updated_by='@lisvinueza',
+    created_date='2023-03-27',
+    updated_date='2023-03-27'
 ) }}

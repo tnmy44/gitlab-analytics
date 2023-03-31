@@ -425,7 +425,7 @@ models:
         description: Current/latest country the team member resides in
       - name: region
         description: Current/latest region the team member resides in
-      - name: most_recent_hire_date
+      - name: hire_date
         description: Most recent hire date. Field is updated if a team member is re-hired after a termination
       - name: termination_date
         description: NULL if team member is a current employee, otherwise it contains the most recent termination date
@@ -433,6 +433,8 @@ models:
         description: True if the termination_date field is NULL, false otherwise. This flag captures whether the employee was employed at GitLab within the valid_from/valid_to timeframe
       - name: is_rehire
         description: True if team member has more than one hire event (more than one occurrance of hire_date)
+      - name: is_current
+        description: True if the current team member event is the most recent event
       - name: nationality
         description: Masked. Team member nationality.
         meta:
@@ -486,7 +488,7 @@ models:
         description: Current/latest country the team member resides in
       - name: region
         description: Current/latest region the team member resides in
-      - name: most_recent_hire_date
+      - name: hire_date
         description: Most recent hire date. Field is updated if a team member is re-hired after a termination
       - name: termination_date
         description: NULL if team member is a current employee, otherwise it contains the most recent termination date
@@ -494,6 +496,8 @@ models:
         description: True if the termination_date field is NULL, false otherwise. This flag captures whether the employee was employed at GitLab within the valid_from/valid_to timeframe
       - name: is_rehire
         description: True if team member has more than one hire event (more than one occurrance of hire_date)
+      - name: is_current
+        description: True if the current team member event is the most recent event
       - name: nationality
         description: Masked. Team member nationality.
         meta:

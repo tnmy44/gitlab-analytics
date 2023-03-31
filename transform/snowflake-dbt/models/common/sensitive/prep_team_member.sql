@@ -98,7 +98,8 @@ date_range AS (
   SELECT 
     employee_id,
     unioned_dates AS valid_from,
-    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to,
+    IFF(valid_to = {{var('tomorrow')}}, TRUE, FALSE) AS is_current
   FROM unioned
   
 ),
@@ -108,25 +109,26 @@ final AS (
  SELECT 
     {{ dbt_utils.surrogate_key(['all_team_members.employee_id'])}}                                          AS dim_team_member_sk,
     all_team_members.employee_id                                                                            AS employee_id,
-    all_team_members.nationality                                                                            AS nationality,
-    all_team_members.ethnicity                                                                              AS ethnicity,
-    all_team_members.preferred_first_name                                                                   AS first_name,
-    all_team_members.preferred_last_name                                                                    AS last_name,
-    all_team_members.gender                                                                                 AS gender,
-    all_team_members.work_email                                                                             AS work_email,
+    COALESCE(all_team_members.nationality, 'Unknown Nationality')                                           AS nationality,
+    COALESCE(all_team_members.ethnicity, 'Unknown Ethnicity')                                               AS ethnicity,
+    COALESCE(all_team_members.preferred_first_name, 'Unknown First Name')                                   AS first_name,
+    COALESCE(all_team_members.preferred_last_name, 'Unknown Last Name')                                     AS last_name,
+    COALESCE(all_team_members.gender, 'Unknown Gender')                                                     AS gender,
+    COALESCE(all_team_members.work_email, 'Unknown Work Email')                                             AS work_email,
     all_team_members.date_of_birth                                                                          AS date_of_birth,
-    key_talent.key_talent                                                                                   AS key_talent_status,
-    gitlab_usernames.gitlab_username                                                                        AS gitlab_username,
-    performance_growth_potential.growth_potential_rating                                                    AS growth_potential_rating,
-    performance_growth_potential.performance_rating                                                         AS performance_rating,
-    staffing_history.country                                                                                AS country,
-    staffing_history.region                                                                                 AS region,
-    staffing_history.most_recent_hire_date                                                                  AS most_recent_hire_date,
+    COALESCE(key_talent.key_talent, 'Unknown Yes/No Status')                                                AS key_talent_status,
+    COALESCE(gitlab_usernames.gitlab_username, 'Unknown Username')                                          AS gitlab_username,
+    COALESCE(performance_growth_potential.growth_potential_rating, 'Unknown Rating')                        AS growth_potential_rating,
+    COALESCE(performance_growth_potential.performance_rating, 'Unknown Rating')                             AS performance_rating,
+    COALESCE(staffing_history.country, 'Unknown Country')                                                   AS country,
+    COALESCE(staffing_history.region, 'Unknown Region')                                                     AS region,
+    staffing_history.most_recent_hire_date                                                                  AS hire_date,
     staffing_history.termination_date                                                                       AS termination_date,
     staffing_history.is_current_team_member                                                                 AS is_current_team_member,
     staffing_history.is_rehire                                                                              AS is_rehire,
     date_range.valid_from                                                                                   AS valid_from,
-    date_range.valid_to                                                                                     AS valid_to
+    date_range.valid_to                                                                                     AS valid_to,
+    date_range.is_current                                                                                   AS is_current
     FROM all_team_members
     INNER JOIN date_range
       ON date_range.employee_id = all_team_members.employee_id 
