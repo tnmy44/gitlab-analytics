@@ -1,6 +1,7 @@
 WITH source AS (
 
     SELECT
+        namespace_id,
         score_date,
         score,
         decile,
