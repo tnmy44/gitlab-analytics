@@ -33,6 +33,10 @@ WITH internal_issues AS (
 	SELECT *
     FROM {{ ref('gitlab_dotcom_milestones') }}
 
+), workflow_labels AS (
+
+    SELECT * FROM {{ ref('engineering_analytics_workflow_labels')}}
+
 ), engineering_issues AS (
 
   SELECT
@@ -76,7 +80,7 @@ WITH internal_issues AS (
         WHEN type_label = 'feature' 
             THEN IFNULL(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','),'\\bfeature::*([^,]*)'),'undefined') 
         ELSE 'undefined' END                                                                                                    AS subtype_label,
-    IFNULL(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(labels, ','),'\\bworkflow::*([^,]*)'), 'workflow::', ''),'undefined')          AS workflow_label,
+    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bworkflow::*([^,]*)'), 'workflow::', '') IN (SELECT workflow_label FROM workflow_labels),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bworkflow::*([^,]*)'), 'workflow::', ''),'undefined')            AS workflow_label,
     projects.visibility_level                                                                                                   AS visibility_level,
     projects.project_path                                                                                                       AS project_path,
     CASE
