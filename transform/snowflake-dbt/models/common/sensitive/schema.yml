@@ -417,16 +417,11 @@ models:
           - not_null
       - name: work_email
         description: Team member work email
-        tests:
-          - not_null
       - name: gitlab_username
         description: Team member gitlab username 
       - name: country
-        description: 
       - name: region
       - name: most_recent_hire_date
-        tests:
-          - not_null
       - name: termination_date
       - name: is_current_team_member
       - name: is_rehire
@@ -452,11 +447,7 @@ models:
         meta:
           masking_policy: analyst_people
   - name: dim_team_member
-    description: >-
-      This table contains team members work and personal information. Sensitive columns are masked and only visible by team members with the analyst_people
-      role assigned in Snowflake. The table includes information regarding current team members and team members who were terminated in 2021 onwards.  
-      Team members who were terminated before 2021 are not captured in this model at this time. The grain of this table is one row per employee_id per 
-      valid_to/valid_from combination.
+    description: '{{ doc("dim_team_member") }}'
     tests:
       - dbt_utils.unique_combination_of_columns:
             combination_of_columns:
@@ -472,16 +463,11 @@ models:
           - not_null
       - name: work_email
         description: Team member work email
-        tests:
-          - not_null
       - name: gitlab_username
         description: Team member gitlab username 
       - name: country
-        description: 
       - name: region
       - name: most_recent_hire_date
-        tests:
-          - not_null
       - name: termination_date
       - name: is_current_team_member
       - name: is_rehire

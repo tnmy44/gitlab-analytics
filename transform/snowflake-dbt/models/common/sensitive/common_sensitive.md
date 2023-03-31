@@ -24,3 +24,9 @@ This table aggregates data from namespaces, orders, and subscriptions to the lev
 All the usage metrics, fields prefixed by `usage_` come from the latest month of data from the Self-Managed Usage Ping data. This data is related to marketing contact by the user that makes the order in the customers portal or the billing account related to the subscription_id  of the self-managed instance. In case there are multiple self-managed instances per user, then these are summed.
 
 {% enddocs %}
+
+{% docs dim_team_member %}
+
+This table contains team members work and personal information. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. The table includes information regarding current team members, new hires who have records created in Workday before their start date and team members who were terminated in 2021 onwards. Team members who were terminated before 2021 are not captured in this model at this time. The grain of this table is one row per employee_id per valid_to/valid_from combination.
+
+{% enddocs %}
