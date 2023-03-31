@@ -1826,4 +1826,4 @@ models:
           - unique
           - not_null
       - name: installation_creation_date
-        description:  '{{ doc("installation_creation_date") }}'
+        description: '{{ doc("installation_creation_date") }}'
