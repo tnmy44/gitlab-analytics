@@ -48,7 +48,6 @@ staffing_history AS (
     hire_date,
     termination_date,
     LAST_VALUE(hire_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_hire_date,
-    LAST_VALUE(termination_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_termination_date, 
     current_country AS country,
     current_region AS region,
     IFF(termination_date IS NULL, TRUE, FALSE) AS is_current_team_member,
