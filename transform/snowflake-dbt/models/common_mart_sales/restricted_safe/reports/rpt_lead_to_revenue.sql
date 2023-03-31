@@ -144,7 +144,7 @@
       ON person_base.email_hash = person_order_type_final.email_hash
     LEFT JOIN mart_crm_touchpoint
       ON mart_crm_touchpoint.email_hash = person_base.email_hash
-    {dbt_utils.group_by(n=45)}
+    {{dbt_utils.group_by(n=45)}}
 
   ), opp_base_wtih_batp AS (
     
@@ -347,7 +347,7 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
- 	{dbt_utils.group_by(n=55)}
+ 	{{dbt_utils.group_by(n=55)}}
     
 ), cohort_base_combined AS (
   
@@ -673,5 +673,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-03-16",
+    updated_date="2023-03-31",
   ) }}
