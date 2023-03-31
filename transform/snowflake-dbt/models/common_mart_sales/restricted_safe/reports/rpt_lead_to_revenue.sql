@@ -73,7 +73,7 @@
     FROM person_order_type_base
     WHERE person_order_type_number=1
 
-)), person_base_with_tp AS (
+), person_base_with_tp AS (
 
     SELECT DISTINCT
   --IDs
