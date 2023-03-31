@@ -14,3 +14,4 @@ sources:
 
     tables:
       - name: xray_curves_qtd_fitted
+      - name: xray_curves_fy_n4q_fitted
