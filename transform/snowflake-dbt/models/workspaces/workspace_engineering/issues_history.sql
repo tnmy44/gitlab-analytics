@@ -55,7 +55,7 @@ SELECT
   issues.stage_label,
   issues.subtype_label,
   IFF(ARRAY_CONTAINS('infradev'::VARIANT, issues.labels), TRUE, FALSE) AS is_infradev,
-  IFF(issues.masked_label_title ilike '%fedramp%', TRUE, FALSE) as fedramp_vulnerability,
+  IFF(ARRAY_CONTAINS('fedramp::vulnerability'::VARIANT, issues.labels), TRUE, FALSE) as fedramp_vulnerability,
   issues.workflow_label,
   ROW_NUMBER() OVER (PARTITION BY daily_issue_id 
   ORDER BY LEAST(COALESCE(severity_label_valid_to, CURRENT_DATE),COALESCE(team_label_valid_to,CURRENT_DATE))) AS rn
