@@ -48,11 +48,11 @@ staffing_history AS (
     hire_date,
     termination_date,
     LAST_VALUE(hire_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_hire_date,
-    LAST_VALUE(termination_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_termination_date,
+    LAST_VALUE(termination_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_termination_date, 
     current_country AS country,
     current_region AS region,
-    IFF(most_recent_hire_date IS NULL, TRUE, FALSE) AS is_current_team_member,
-    IFF(DENSE_RANK() OVER (PARTITION BY employee_id,business_process_type ORDER BY effective_date ASC ROWS UNBOUNDED PRECEDING) > 1 AND business_process_type = 'Hire', TRUE, FALSE) AS is_rehire,
+    IFF(termination_date IS NULL, TRUE, FALSE) AS is_current_team_member,
+    IFF(COUNT(hire_date) OVER (PARTITION BY employee_id ORDER BY effective_date ASC ROWS UNBOUNDED PRECEDING) > 1, TRUE, FALSE) AS is_rehire, -- team member is a rehire if they have more than 1 hire_date event
     effective_date AS valid_from,
     LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
