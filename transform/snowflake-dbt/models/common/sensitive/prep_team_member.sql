@@ -18,7 +18,6 @@ key_talent AS (
 
 gitlab_usernames AS (
 
-
   SELECT
     employee_id,
     gitlab_username,
