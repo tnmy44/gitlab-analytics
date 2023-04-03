@@ -89,7 +89,7 @@ WITH l2r AS (
              THEN 'Digital Marketing'
         ELSE 'No Budget Holder' END AS intergrated_budget_holder
   FROM
-  {{ ref('grpt_lead_to_revenue') }}
+  {{ ref('rpt_lead_to_revenue') }}
     left join {{ ref('dim_campaign') }} on rpt_lead_to_revenue.dim_campaign_id = dim_campaign.dim_campaign_id
     left join {{ ref('fct_campaign') }} on rpt_lead_to_revenue.dim_campaign_id = fct_campaign.dim_campaign_id
   where
