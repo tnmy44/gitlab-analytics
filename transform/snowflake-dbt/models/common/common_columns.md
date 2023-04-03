@@ -1873,3 +1873,11 @@ The action to be carried out on the subscription. For example, 'Amend Subscripti
 The unique surrogate key created by using `version_id` which is a unique identifier of a release maintained by the versions app. 
 
 {% enddocs %}
+
+{% docs installation_creation_date %}
+
+Based off of the [`installation_creation_date`](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/license/20230228110448_installation_creation_date.yml) 
+Service Ping metric. For installations where the root user (id = 1) is not deleted, it returns the root user creation date. For installations where the root user 
+is deleted, it returns the earliest available user creation date.
+
+{% enddocs %}

@@ -1,13 +1,16 @@
 {{ simple_cte([('prep_host', 'prep_host'),
 ('prep_ping_instance', 'prep_ping_instance'),
-('prep_installation_creation', 'prep_installation_creation')])}},
+('prep_ping_instance_flattened', 'prep_ping_instance_flattened')])}},
 
 installation_agg AS (
   SELECT
     dim_installation_id,
-    MIN(installation_creation_date) AS installation_creation_date
-  FROM prep_installation_creation
-  {{ dbt_utils.group_by(n=1) }}
+    MIN(metric_value::TIMESTAMP) AS installation_creation_date
+  FROM {{ ref('prep_ping_instance_flattened') }}
+  WHERE ping_created_at > '2023-03-15' --filtering out records that came before GitLab v15.10, when metric was released. Filter in place for full refresh runs.
+    AND metrics_path = 'installation_creation_date'
+    AND metric_value != 0 -- 0, when cast to timestamp, returns 1970-01-01
+  {{ dbt_utils.group_by(n = 1) }}
 ),
 
 joined AS (
@@ -42,5 +45,5 @@ joined AS (
     created_by="@mpeychet_",
     updated_by="@mdrussell",
     created_date="2021-05-20",
-    updated_date="2023-03-31"
+    updated_date="2023-04-03"
 ) }}

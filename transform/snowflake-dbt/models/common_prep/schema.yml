@@ -1805,24 +1805,3 @@ models:
 
   - name: prep_snowplow_gitlab_events_experiment_contexts_all
     description: View combining all snowplow_gitlab_events_experiment_contexts partitions.
-
-  - name: prep_installation_creation
-    description: >
-      This table looks at `installation_creation_date` metric values from Service Ping. Initially when the metric was implemented, it
-      returned the creation date of the installation's root user (id = 1). However, if the root user was deleted, then the metric would return null.
-      Later, it will be adjusted to return the earliest creation date of any user in the installation. As a result, we will select the 
-      `MIN(installation_creation_date)` for each installation. This ensures that installations that deleted the root user will have a date backfilled
-      once the metric is updated to return a value for the earliest created user. It also futureproofs the model for any installations that delete their
-      root user in the future, as we'd still want to retain the root user's creation date for that installation. We run an automated test on the table to
-      make sure that no installations show a creation date before the year 2000, which would be impossible, and likely due to an integer being returned
-      in the metric_value field.
-    tests:
-      - dbt_utils.expression_is_true:
-          expression: "installation_creation_date > '2000-01-01'"
-    columns:
-      - name: dim_installation_id
-        description:  '{{ doc("dim_installation_id") }}'
-        tests:
-          - not_null
-      - name: installation_creation_date
-        description: '{{ doc("installation_creation_date") }}'
