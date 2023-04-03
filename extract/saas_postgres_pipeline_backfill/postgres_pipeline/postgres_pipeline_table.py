@@ -6,7 +6,7 @@ from typing import Dict, Any
 from sqlalchemy.engine.base import Engine
 
 import load_functions
-from utils import is_new_table, schema_addition_check, is_resume_backfill
+from utils import is_new_table, schema_addition_check, is_resume_export, update_import_query_for_delete_export
 
 
 class PostgresPipelineTable:
@@ -51,26 +51,27 @@ class PostgresPipelineTable:
     def is_incremental(self) -> bool:
         return "{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query
 
-    def needs_incremental_backfill(
-        self, source_engine: Engine, target_engine: Engine
-    ) -> bool:
-        """
-        Temporary logic for now
-        """
-        return self.is_incremental()
-
     def do_incremental_backfill(
         self,
         source_engine: Engine,
         target_engine: Engine,
         metadata_engine: Engine,
-        is_backfill_needed: bool,
-        start_pk: int,
-        initial_load_start_date: datetime,
     ) -> bool:
+
+        (
+            is_backfill_needed,
+            start_pk,
+            initial_load_start_date,
+        ) = self.check_is_backfill_needed(source_engine, metadata_engine)
+
+        logging.info(f"\nstart_pk: {start_pk}")
+        logging.info(f"\ninitial_load_start_date: {initial_load_start_date}")
+        logging.info(f"\nis_backfill_needed: {is_backfill_needed}")
+
         if not self.is_incremental() or not is_backfill_needed:
             logging.info("table does not need incremental backfill")
             return False
+
         target_table = self.get_target_table_name()
         return load_functions.sync_incremental_ids(
             source_engine,
@@ -101,6 +102,36 @@ class PostgresPipelineTable:
             target_table,
         )
 
+    def do_incremental_delete_export(
+       self,
+       source_engine: Engine,
+       target_engine: Engine,
+       metadata_engine: Engine,
+    ) -> bool:
+
+        start_pk, initial_load_start_date = 0, None
+        metadata_table = 'delete_export_metadata'
+
+        is_resume_export_needed, resume_pk, resume_initial_load_start_date = is_resume_export(metadata_engine, metadata_table, self.source_table_name)
+        if is_resume_export_needed:
+            start_pk = resume_pk
+            initial_load_start_date = resume_initial_load_start_date
+
+        self.table_dict['import_query'] = update_import_query_for_delete_export(self.query, self.source_table_primary_key)
+
+        target_table = self.get_target_table_name()
+        return load_functions.sync_incremental_ids(
+           source_engine,
+           target_engine,
+           self.import_db,
+           self.source_table_name,
+           self.table_dict,
+           target_table,
+           metadata_engine,
+           start_pk,
+           initial_load_start_date,
+        )
+
     def do_load(
         self,
         load_type: str,
@@ -111,14 +142,13 @@ class PostgresPipelineTable:
         start_pk: int,
         initial_load_start_date: datetime,
     ) -> bool:
-        """
         load_types = {
-            "scd": self.do_scd,
             "backfill": self.do_incremental_backfill,
-            "test": self.check_new_table,
+            "delete_export": self.do_incremental_delete_export,
+            # "test": self.check_new_table,
+            # "scd": self.do_scd,
         }
-        """
-        return self.do_incremental_backfill(
+        return load_types[load_type](
             source_engine,
             target_engine,
             metadata_engine,
@@ -141,6 +171,7 @@ class PostgresPipelineTable:
         initial_load_start_date = None
         start_pk = 1
         is_backfill_needed = True
+        metadata_table = 'backfill_metadata'
 
         if is_new_table(metadata_engine, self.source_table_name):
             logging.info(
@@ -159,7 +190,7 @@ class PostgresPipelineTable:
             )
             return is_backfill_needed, start_pk, initial_load_start_date
 
-        return is_resume_backfill(metadata_engine, self.source_table_name)
+        return is_resume_export(metadata_engine, metadata_table, self.source_table_name)
 
     def get_target_table_name(self):
         return self.target_table_name

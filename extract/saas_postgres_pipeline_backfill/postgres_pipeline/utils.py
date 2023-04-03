@@ -236,6 +236,7 @@ def seed_table(
 
 def write_backfill_metadata(
     metadata_engine: Engine,
+    metadata_table: Engine,
     database_name: str,
     table_name: str,
     initial_load_start_date: datetime,
@@ -243,13 +244,13 @@ def write_backfill_metadata(
     upload_file_name: str,
     last_extracted_id: int,
     max_id: int,
-    is_backfill_completed: bool,
+    is_export_completed: bool,
     chunk_row_count: int,
 ):
     """Write status of backfill to postgres"""
 
     insert_query = f"""
-        INSERT INTO saas_db_metadata.backfill_metadata (
+        INSERT INTO saas_db_metadata.{metadata_table} (
             database_name,
             table_name,
             initial_load_start_date,
@@ -257,7 +258,7 @@ def write_backfill_metadata(
             upload_file_name,
             last_extracted_id,
             max_id,
-            is_backfill_completed,
+            is_export_completed,
             chunk_row_count
         )
         VALUES (
@@ -268,7 +269,7 @@ def write_backfill_metadata(
             '{upload_file_name}',
             {last_extracted_id},
             {max_id},
-            {is_backfill_completed},
+            {is_export_completed},
             {chunk_row_count}
         );
     """
@@ -277,13 +278,14 @@ def write_backfill_metadata(
 
 
 def get_upload_file_name(
+    metadata_table: str,
     table: str,
     initial_load_start_date: datetime,
     upload_date: datetime,
     version: str = None,
     filetype: str = "parquet",
     compression: str = "gzip",
-    prefix_template: str = "{table}/{initial_load_prefix}/",
+    prefix_template: str = "{metadata_table}/{table}/{initial_load_prefix}/",
     filename_template: str = "{timestamp}_{table}{version}.{filetype}.{compression}",
 ) -> str:
     """Generate a unique and descriptive filename for uploading data to cloud storage.
@@ -305,7 +307,7 @@ def get_upload_file_name(
     # Format folder structure
     initial_load_prefix = f"initial_load_start_{initial_load_start_date.isoformat(timespec='milliseconds')}"
     folder_prefix = prefix_template.format(
-        table=table, initial_load_prefix=initial_load_prefix
+        metadata_table=metadata_table, table=table, initial_load_prefix=initial_load_prefix
     )
 
     # Format filename
@@ -333,12 +335,12 @@ def chunk_and_upload(
     source_database: str,
     target_engine: Engine,
     metadata_engine: Engine,
+    metadata_table: str,
     target_table: str,
     source_table: str,
     max_source_id: int,
     initial_load_start_date: datetime,
     advanced_metadata: bool = False,
-    backfill: bool = False,
 ) -> datetime:
     """
     Call the functions that upload the dataframes as TSVs in GCS and then trigger Snowflake
@@ -371,7 +373,7 @@ def chunk_and_upload(
                 initial_load_start_date = upload_date
 
             upload_file_name = get_upload_file_name(
-                source_table, initial_load_start_date, upload_date
+                metadata_table, source_table, initial_load_start_date, upload_date
             )
 
             if row_count > 0:
@@ -379,7 +381,7 @@ def chunk_and_upload(
                 logging.info(
                     f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}"
                 )
-                is_backfill_completed = last_extracted_id >= max_source_id
+                is_export_completed = last_extracted_id >= max_source_id
                 write_backfill_metadata(
                     metadata_engine,
                     source_database,
@@ -389,7 +391,7 @@ def chunk_and_upload(
                     upload_file_name,
                     last_extracted_id,
                     max_source_id,
-                    is_backfill_completed,
+                    is_export_completed,
                     row_count,
                 )
 
@@ -443,8 +445,8 @@ def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
     return len(results) == 0
 
 
-def query_backfill_status(
-    metadata_engine: Engine, source_table: str
+def query_export_status(
+        metadata_engine: Engine, metadata_table: str, source_table: str
 ) -> List[Tuple[Any, Any, Any, Any]]:
     """
     Check if backfill table exists in backfill metadata table.
@@ -452,8 +454,8 @@ def query_backfill_status(
     """
 
     query = (
-        "SELECT is_backfill_completed, initial_load_start_date, last_extracted_id, upload_date "
-        "FROM saas_db_metadata.backfill_metadata "
+        "SELECT is_export_completed, initial_load_start_date, last_extracted_id, upload_date "
+        f"FROM saas_db_metadata.{metadata_table} "
         "WHERE upload_date = ("
         "  SELECT MAX(upload_date)"
         " FROM saas_db_metadata.backfill_metadata"
@@ -464,49 +466,50 @@ def query_backfill_status(
     return results
 
 
-def is_resume_backfill(
-    metadata_engine: Engine, source_table: str
+def is_resume_export(
+        metadata_engine: Engine, metadata_table: str, source_table: str
 ) -> Tuple[bool, int, Optional[Any]]:
     """
-    Determine if backfill should be resumed.
+    Determine if export should be resumed, either 'backfill or 'delete' export
+
     First query the backfill database to see if there's a backfill in progress
     If the backfill is in progress, check when the last file was written
     If last file was written within 24 hours, continue from last_extracted_id
     """
     # initialize variables
-    is_backfill_needed = False
+    is_resume_export_needed = False
     start_pk = -1
     initial_load_start_date = None
 
-    results = query_backfill_status(metadata_engine, source_table)
+    results = query_export_status(metadata_engine, metadata_table, source_table)
 
     # if backfill metadata exists for table
     if results:
         # unpack the results
         (
-            is_backfill_completed,
+            is_export_completed,
             initial_load_start_date,
             last_extracted_id,
             last_upload_date,
         ) = results[0]
         time_since_last_upload = datetime.now() - last_upload_date
 
-        if not is_backfill_completed:
-            is_backfill_needed = True
+        if not is_export_completed:
+            is_resume_export_needed = True
             # if more than 24 HR since last upload, start backfill over,
             # else proceed with last extracted_id
             if time_since_last_upload > timedelta(hours=24):
                 initial_load_start_date = None
                 last_extracted_id = 0
                 logging.info(
-                    f"In middle of backfill, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Start backfill from beginning."
+                    f"In middle of export for {source_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Start backfill from beginning."
                 )
             start_pk = last_extracted_id + 1
             logging.info(
                 f"Resuming backfill with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}"
             )
 
-    return is_backfill_needed, start_pk, initial_load_start_date
+    return is_resume_export_needed, start_pk, initial_load_start_date
 
 
 def get_source_columns(
@@ -673,3 +676,15 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
     )
     snowflake_engine = snowflake_engine_factory(env, "LOADER", SCHEMA)
     return postgres_engine, metadata_engine, snowflake_engine
+
+
+def update_import_query_for_delete_export(import_query, primary_key):
+    select_part, from_part = import_query.split("FROM")
+
+    # Replace the field names with pk
+    new_select_part = f"SELECT {primary_key}"
+
+    # Combine the new SELECT part with the original FROM part
+    updated_query = f"{new_select_part} FROM {from_part}"
+
+    return updated_query

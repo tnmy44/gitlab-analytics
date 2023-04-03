@@ -174,6 +174,7 @@ def sync_incremental_ids(
     table_dict: Dict[Any, Any],
     target_table: str,
     metadata_engine,
+    metadata_table,
     start_pk,
     initial_load_start_date,
 ) -> bool:
@@ -202,6 +203,7 @@ def sync_incremental_ids(
         target_table,
         target_engine,
         metadata_engine,
+        metadata_table,
         start_pk,
         initial_load_start_date,
     )
@@ -274,6 +276,7 @@ def load_ids(
     table_name: str,
     target_engine: Engine,
     metadata_engine: Engine,
+    metadata_table: str,
     start_source_id: int,
     initial_load_start_date: datetime.datetime,
     backfill: bool = True,
@@ -308,13 +311,12 @@ def load_ids(
             source_database,
             target_engine,
             metadata_engine,
+            metadata_table,
             table_name,
             source_table_name,
             max_source_id,
             initial_load_start_date,
-            backfill=backfill,
         )
-        backfill = False  # this prevents it from seeding rows for every chunk
 
 
 def check_new_tables(
