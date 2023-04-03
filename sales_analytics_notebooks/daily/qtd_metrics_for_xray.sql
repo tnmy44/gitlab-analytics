@@ -1,7 +1,7 @@
 WITH sfdc_opportunity_xf AS (
 
     SELECT *
-    FROM nfiguera_prod.restricted_safe_workspace_sales.sfdc_opportunity_xf
+    FROM prod.restricted_safe_workspace_sales.sfdc_opportunity_xf
     WHERE
         is_edu_oss = 0
         AND is_deleted = 0
@@ -11,7 +11,7 @@ WITH sfdc_opportunity_xf AS (
 sfdc_opportunity_snapshot_history_xf AS (
 
     SELECT *
-    FROM nfiguera_prod.restricted_safe_workspace_sales.sfdc_opportunity_snapshot_history_xf
+    FROM prod.restricted_safe_workspace_sales.sfdc_opportunity_snapshot_history_xf
 
 ),
 
@@ -26,7 +26,7 @@ agg_demo_keys AS (
     -- keys used for aggregated historical analysis
 
     SELECT *
-    FROM nfiguera_prod.restricted_safe_workspace_sales.report_agg_keys_ssot
+    FROM prod.restricted_safe_workspace_sales.report_agg_keys_ssot
 --FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }} 
 
 ),
