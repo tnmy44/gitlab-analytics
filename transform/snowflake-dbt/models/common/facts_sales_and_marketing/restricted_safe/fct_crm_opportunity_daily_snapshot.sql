@@ -1,5 +1,6 @@
 {{ config(
-    materialized="incremental"
+    materialized="incremental",
+    unique_key="crm_opportunity_snapshot_id"
 ) }}
 
 WITH final AS (
@@ -21,5 +22,5 @@ WITH final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-02-23",
-    updated_date="2022-11-07"
+    updated_date="2023-03-29"
 ) }}

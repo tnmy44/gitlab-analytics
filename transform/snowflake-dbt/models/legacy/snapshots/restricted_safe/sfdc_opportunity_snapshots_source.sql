@@ -1,6 +1,7 @@
 {{ config(
     tags=["mnpi"],
-    materialized="incremental"
+    materialized="incremental",
+    unique_key="dbt_scd_id"
 ) }}
 
 /*

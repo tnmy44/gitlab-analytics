@@ -1,6 +1,7 @@
 {{ config(
     tags=["six_hourly"],
-    materialized="incremental"
+    materialized="incremental",
+    unique_key="primary_key"
 ) }}
 
 {{ simple_cte([
@@ -320,6 +321,7 @@
     SELECT
       -- opportunity information
       sfdc_opportunity.*,
+      sfdc_opportunity.crm_opportunity_snapshot_id||'-'||sfdc_opportunity.is_live                  AS primary_key,
 
       -- dates & date ids
       {{ get_date_id('sfdc_opportunity.created_date') }}                                          AS created_date_id,

@@ -1,5 +1,6 @@
 {{ config(
-    materialized="incremental"
+    materialized="incremental",
+    unique_key="crm_opportunity_snapshot_id"
 ) }}
 
 {{ simple_cte([
@@ -542,10 +543,9 @@ final AS (
   LEFT JOIN dim_crm_account AS fulfillment_partner
     ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
       AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
-  WHERE 1 = 1
   {% if is_incremental() %}
   
-    AND fct_crm_opportunity.snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+  WHERE fct_crm_opportunity.snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
 
   {% endif %}
 
@@ -557,5 +557,5 @@ final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-05-05",
-    updated_date="2023-03-10"
+    updated_date="2023-03-29"
   ) }}
