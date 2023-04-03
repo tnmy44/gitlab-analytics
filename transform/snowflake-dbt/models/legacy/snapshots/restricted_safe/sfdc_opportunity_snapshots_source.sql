@@ -288,6 +288,14 @@ SELECT
         ssp_id__c                                       AS ssp_id,
         gaclientid__c                                   AS ga_client_id,
 
+        -- vsa data - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/customer-success-operations/-/issues/2399
+        vsa_readout__c                                  AS vsa_readout,
+        vsa_start_date_net_arr__c                       AS vsa_start_date_net_arr,
+        vsa_start_date__c                               AS vsa_start_date,
+        vsa_url__c                                      AS vsa_url,
+        vsa_status__c                                   AS vsa_status,
+        vsa_end_date__c                                 AS vsa_end_date,
+
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
                  CURRENT_TIMESTAMP()))                  AS _last_dbt_run,

@@ -619,12 +619,13 @@ WITH sfdc_users_xf AS (
     
     ------------------------------------------------------------------------
     -- FY24 keys
-
+    -- These keys must leverage the unadjusted raw_segment field 
+    
     LOWER(
       CONCAT(
         report_opportunity_user_business_unit,
         '-',
-        report_opportunity_user_segment,
+        report_opportunity_raw_user_segment,
         '-',
         report_opportunity_user_geo,
         '-',
@@ -648,7 +649,7 @@ WITH sfdc_users_xf AS (
         '-',
         report_opportunity_user_asm,
         '-',
-        report_opportunity_user_segment,
+        report_opportunity_raw_user_segment,
         '-',
         report_opportunity_user_geo,
         '-',
@@ -672,7 +673,7 @@ WITH sfdc_users_xf AS (
         '-',
         report_opportunity_user_asm,
         '-',
-        report_opportunity_user_segment,
+        report_opportunity_raw_user_segment,
         '-',
         report_opportunity_user_geo,
         '-',
@@ -684,7 +685,7 @@ WITH sfdc_users_xf AS (
         '-',
         edm_opty.deal_group,
         '-',
-        opportunity_owner.role_type,
+        report_opportunity_user_role_type,
         '-',
         partner_category,
         '-',

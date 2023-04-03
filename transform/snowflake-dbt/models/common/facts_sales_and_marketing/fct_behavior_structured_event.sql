@@ -43,7 +43,23 @@ WITH structured_event_renamed AS (
       gsc_google_analytics_client_id,
       gsc_project_id,
       gsc_pseudonymized_user_id,
-      gsc_source
+      gsc_source,
+      user_city, 
+      user_country,
+      user_region,
+      user_timezone_name,
+      has_performance_timing_context, 
+      has_web_page_context,
+      has_ci_build_failed_context,
+      has_wiki_page_context,
+      has_gitlab_standard_context,
+      has_email_campaigns_context,
+      has_gitlab_service_ping_context,
+      has_design_management_context,
+      has_customer_standard_context,
+      has_secure_scan_context,
+      has_gitlab_experiment_context, 
+      has_subscription_auto_renew_context
 
     FROM {{ ref('prep_snowplow_unnested_events_all') }}
     WHERE event = 'struct'
@@ -95,7 +111,27 @@ WITH structured_event_renamed AS (
       structured_event_renamed.gsc_environment,
       structured_event_renamed.gsc_extra,
       structured_event_renamed.gsc_plan,
-      structured_event_renamed.gsc_source
+      structured_event_renamed.gsc_source,
+
+      -- Degenerate Dimensions (User Location)
+      structured_event_renamed.user_city, 
+      structured_event_renamed.user_country,
+      structured_event_renamed.user_region,
+      structured_event_renamed.user_timezone_name,
+
+      -- Junk Dimensions (Context Flags)
+      structured_event_renamed.has_performance_timing_context, 
+      structured_event_renamed.has_web_page_context,
+      structured_event_renamed.has_ci_build_failed_context,
+      structured_event_renamed.has_wiki_page_context,
+      structured_event_renamed.has_gitlab_standard_context,
+      structured_event_renamed.has_email_campaigns_context,
+      structured_event_renamed.has_gitlab_service_ping_context,
+      structured_event_renamed.has_design_management_context,
+      structured_event_renamed.has_customer_standard_context,
+      structured_event_renamed.has_secure_scan_context,
+      structured_event_renamed.has_gitlab_experiment_context, 
+      structured_event_renamed.has_subscription_auto_renew_context
 
     FROM structured_event_renamed
 
@@ -104,7 +140,7 @@ WITH structured_event_renamed AS (
 {{ dbt_audit(
     cte_ref="structured_events_w_dim",
     created_by="@michellecooper",
-    updated_by="@chrissharp",
+    updated_by="@pempey",
     created_date="2022-09-01",
-    updated_date="2023-01-20"
+    updated_date="2023-03-27"
 ) }}

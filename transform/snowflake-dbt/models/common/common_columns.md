@@ -1874,6 +1874,42 @@ The unique surrogate key created by using `version_id` which is a unique identif
 
 {% enddocs %}
 
+{% docs vsa_readout %}
+
+The sentiment from the Value Stream Assessment readout meeting.
+
+{% enddocs %}
+
+{% docs vsa_start_date_net_arr %}
+
+The stamped Opportunity Net ARR when Value Stream Assessment start date is populated and is after the opportunity created date. Otherwise, will stamp $0.
+
+{% enddocs %}
+
+{% docs vsa_start_date %}
+
+Date of the Value Stream Assessment kickoff call with the prospect/customer.
+
+{% enddocs %}
+
+{% docs vsa_url %}
+
+The URL to the Value Stream Assesment readout presentation.
+
+{% enddocs %}
+
+{% docs vsa_status %}
+
+The status of the Value Stream Assessment.
+
+{% enddocs %}
+
+{% docs vsa_end_date %}
+
+The date the Value Stream Assessment readout is presented to the prospect/customer.
+
+{% enddocs %}
+
 {% docs last_at_risk_update_comments %}
 
 The most recent Account-level At-Risk Update timeline activity in Gainsight, synced to Salesforce.

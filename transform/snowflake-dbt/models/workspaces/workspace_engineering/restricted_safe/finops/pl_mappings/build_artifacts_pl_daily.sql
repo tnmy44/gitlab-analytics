@@ -40,7 +40,7 @@ storage AS (
 
 SELECT
   storage.snapshot_day,
-  coalesce(ns_type.finance_pl, 'Internal') as finance_pl,
+  coalesce(ns_type.finance_pl, 'internal') as finance_pl,
   SUM(build_artifacts_gb) AS build_artifacts_gb,
   RATIO_TO_REPORT(SUM(build_artifacts_gb)) OVER (PARTITION BY snapshot_day) AS percent_build_artifacts_size
 FROM
