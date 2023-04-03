@@ -4481,6 +4481,18 @@ models:
         description: '{{ doc("order_type") }}'
       - name: order_type_live
         description: '{{ doc("order_type_live") }}'
+      - name: vsa_readout
+        description: '{{ doc("vsa_readout") }}'
+      - name: vsa_start_date_net_arr
+        description: '{{ doc("vsa_start_date_net_arr") }}'
+      - name: vsa_start_date
+        description: '{{ doc("vsa_start_date") }}'
+      - name: vsa_url
+        description: '{{ doc("vsa_url") }}'
+      - name: vsa_status
+        description: '{{ doc("vsa_status") }}'
+      - name: vsa_end_date
+        description: '{{ doc("vsa_end_date") }}'
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
