@@ -5366,19 +5366,53 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: has_performance_timing_context
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}'
 
   - name: fct_behavior_structured_event_experiment
     description:  '{{ doc("fct_behavior_structured_event_experiment") }}'
-    columns:
+    columns: 
       - name: behavior_structured_event_pk
         tests:
           - not_null
           - unique
         description: '{{ doc("behavior_structured_event_pk") }}'
-      - name: dim_behavior_website_page_sk
-        description: '{{ doc("dim_behavior_website_page_sk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
       - name: dim_behavior_operating_system_sk
         description: '{{ doc("dim_behavior_operating_system_sk") }}'
       - name: dim_namespace_id
@@ -5403,18 +5437,70 @@ models:
         description: '{{ doc("user_snowplow_domain_id") }}'
       - name: contexts
         description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
-        description: '{{ doc("gsc_google_analytics_client_id") }}'   
-      - name: gsc_environment
-        description: '{{ doc("environment_behavior_model") }}'        
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
       - name: gsc_extra
         description: '{{ doc("gsc_extra") }}'
       - name: gsc_plan
         description: '{{ doc("gsc_plan") }}'
       - name: gsc_source
         description: '{{ doc("gsc_source") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: has_performance_timing_context
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}'
       - name: experiment_name
         tests:
           - not_null      
@@ -5427,6 +5513,69 @@ models:
         description: '{{ doc("context_key") }}'
       - name: experiment_migration_keys
         description: '{{ doc("experiment_migration_keys") }}'
+
+  - name: fct_behavior_structured_event_without_assignment
+    description: '{{ doc("fct_behavior_structured_event_without_assignment") }}'
+    columns: 
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
+          - unique
+        description: '{{ doc("behavior_structured_event_pk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("dvce_created_tstamp") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: tracker_version
+        description: '{{ doc("tracker_version") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -5435,78 +5584,53 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
-
-  - name: fct_behavior_structured_event_without_assignment
-    description: '{{ doc("fct_behavior_structured_event_without_assignment") }}'
-    columns:
-      - name: behavior_structured_event_pk
-        tests:
-          - not_null
-          - unique
-        description: '{{ doc("behavior_structured_event_pk") }}'
-      - name: dim_behavior_website_page_sk
-        description: '{{ doc("dim_behavior_website_page_sk") }}'
-      - name: dim_behavior_browser_sk
-        description: '{{ doc("dim_behavior_browser_sk") }}'
-      - name: dim_behavior_operating_system_sk
-        description: '{{ doc("dim_behavior_operating_system_sk") }}'
-      - name: dim_namespace_id
-        description: '{{ doc("dim_namespace_id_behavior_model") }}'
-      - name: dim_project_id
-        description: '{{ doc("dim_project_id_behavior_model") }}'
-      - name: dim_behavior_event_sk
-        description: '{{ doc("dim_behavior_event_sk") }}'
-      - name: dvce_created_tstamp
-        description: '{{ doc("dvce_created_tstamp") }}'
-      - name: behavior_at
-        description: '{{ doc("behavior_at") }}'
-      - name: tracker_version
-        description: '{{ doc("tracker_version") }}'
-      - name: session_index
-        description: '{{ doc("session_index") }}'
-      - name: app_id
-        description: '{{ doc("app_id") }}'
-      - name: session_id
-        description: '{{ doc("session_id") }}'
-      - name: user_snowplow_domain_id
-        description: '{{ doc("user_snowplow_domain_id") }}'
-      - name: contexts
-        description: '{{ doc("contexts") }}'
-      - name: event_value
-        description: '{{ doc("event_value") }}'
-      - name: gsc_pseudonymized_user_id
-        description: '{{ doc("gsc_pseudonymized_user_id") }}'
-      - name: gsc_google_analytics_client_id
-        description: '{{ doc("gsc_google_analytics_client_id") }}'   
-      - name: gsc_environment
-        description: '{{ doc("environment_behavior_model") }}'        
-      - name: gsc_extra
-        description: '{{ doc("gsc_extra") }}'
-      - name: gsc_plan
-        description: '{{ doc("gsc_plan") }}'
-      - name: gsc_source
-        description: '{{ doc("gsc_source") }}'
-      - name: created_by
-        description: '{{ doc("created_by") }}'
-      - name: updated_by
-        description: '{{ doc("updated_by") }}'
-      - name: model_created_date
-        description: '{{ doc("model_created_date") }}'
-      - name: model_updated_date
-        description: '{{ doc("model_updated_date") }}'        
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: has_performance_timing_context
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}'        
 
   - name: fct_behavior_structured_event_without_assignment_190
     description: '{{ doc("fct_behavior_structured_event_without_assignment_190") }}'
-    columns:
+    columns: 
       - name: behavior_structured_event_pk
         tests:
           - not_null
           - unique
         description: '{{ doc("behavior_structured_event_pk") }}'
-      - name: dim_behavior_website_page_sk
-        description: '{{ doc("dim_behavior_website_page_sk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
       - name: dim_behavior_operating_system_sk
         description: '{{ doc("dim_behavior_operating_system_sk") }}'
       - name: dim_namespace_id
@@ -5531,20 +5655,30 @@ models:
         description: '{{ doc("user_snowplow_domain_id") }}'
       - name: contexts
         description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
-        description: '{{ doc("gsc_google_analytics_client_id") }}'   
-      - name: gsc_environment
-        description: '{{ doc("environment_behavior_model") }}'        
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
       - name: gsc_extra
         description: '{{ doc("gsc_extra") }}'
       - name: gsc_plan
         description: '{{ doc("gsc_plan") }}'
       - name: gsc_source
         description: '{{ doc("gsc_source") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -5552,21 +5686,55 @@ models:
       - name: model_created_date
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
-        description: '{{ doc("model_updated_date") }}' 
+        description: '{{ doc("model_updated_date") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: has_performance_timing_context
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}' 
 
 
   - name: fct_behavior_structured_event_without_assignment_400
     description: '{{ doc("fct_behavior_structured_event_without_assignment_400") }}'
-    columns:
+    columns: 
       - name: behavior_structured_event_pk
         tests:
           - not_null
           - unique
         description: '{{ doc("behavior_structured_event_pk") }}'
-      - name: dim_behavior_website_page_sk
-        description: '{{ doc("dim_behavior_website_page_sk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
       - name: dim_behavior_operating_system_sk
         description: '{{ doc("dim_behavior_operating_system_sk") }}'
       - name: dim_namespace_id
@@ -5591,20 +5759,30 @@ models:
         description: '{{ doc("user_snowplow_domain_id") }}'
       - name: contexts
         description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
       - name: event_value
         description: '{{ doc("event_value") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
-        description: '{{ doc("gsc_google_analytics_client_id") }}'   
-      - name: gsc_environment
-        description: '{{ doc("environment_behavior_model") }}'        
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
       - name: gsc_extra
         description: '{{ doc("gsc_extra") }}'
       - name: gsc_plan
         description: '{{ doc("gsc_plan") }}'
       - name: gsc_source
         description: '{{ doc("gsc_source") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -5612,7 +5790,39 @@ models:
       - name: model_created_date
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
-        description: '{{ doc("model_updated_date") }}' 
+        description: '{{ doc("model_updated_date") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: has_performance_timing_context
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}'  
 
 
   - name: fct_behavior_unstructured_event
