@@ -126,13 +126,13 @@
     mart_crm_touchpoint.bizible_count_u_shaped,
     mart_crm_touchpoint.is_fmm_influenced,
     mart_crm_touchpoint.is_fmm_sourced,
-    SUM(mart_crm_touchpoint.bizible_count_lead_creation_touch) AS new_lead_created_sum,
-    SUM(mart_crm_touchpoint.count_true_inquiry) AS count_true_inquiry,
-    SUM(mart_crm_touchpoint.count_inquiry) AS inquiry_sum, 
-    SUM(mart_crm_touchpoint.pre_mql_weight) AS mql_sum,
-    SUM(mart_crm_touchpoint.count_accepted) AS accepted_sum,
-    SUM(mart_crm_touchpoint.count_net_new_mql) AS new_mql_sum,
-    SUM(mart_crm_touchpoint.count_net_new_accepted) AS new_accepted_sum    
+    mart_crm_touchpoint.bizible_count_lead_creation_touch AS new_lead_created_sum,
+    mart_crm_touchpoint.count_true_inquiry) AS count_true_inquiry,
+    mart_crm_touchpoint.count_inquiry AS inquiry_sum, 
+    mart_crm_touchpoint.pre_mql_weight AS mql_sum,
+    mart_crm_touchpoint.count_accepted AS accepted_sum,
+    mart_crm_touchpoint.count_net_new_mql AS new_mql_sum,
+    mart_crm_touchpoint.count_net_new_accepted AS new_accepted_sum    
     FROM person_base
     INNER JOIN dim_crm_person
       ON person_base.dim_crm_person_id = dim_crm_person.dim_crm_person_id
@@ -144,7 +144,6 @@
       ON person_base.email_hash = person_order_type_final.email_hash
     LEFT JOIN mart_crm_touchpoint
       ON mart_crm_touchpoint.email_hash = person_base.email_hash
-    {{dbt_utils.group_by(n=45)}}
 
   ), opp_base_wtih_batp AS (
     
@@ -673,5 +672,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-03-31",
+    updated_date="2023-04-04",
   ) }}
