@@ -12,7 +12,8 @@
     ('locations', 'prep_location_country'),
     ('dim_product_tier', 'dim_product_tier'),
     ('prep_ping_instance', 'prep_ping_instance'),
-    ('dim_crm_account','dim_crm_account')
+    ('dim_crm_account','dim_crm_account'),
+    ('prep_gitlab_version_major_minor', 'prep_gitlab_version_major_minor')
     ])
 
 }}
@@ -43,7 +44,11 @@
 
     SELECT
       source.*,
-      map_ip_location.dim_location_country_id     AS dim_location_country_id
+      REGEXP_REPLACE(NULLIF(source.version, ''), '[^0-9.]+')                                              AS cleaned_version,
+      SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                         AS major_version,
+      SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                         AS minor_version,
+      major_version || '.' || minor_version                                                               AS major_minor_version,
+      map_ip_location.dim_location_country_id                                                             AS dim_location_country_id
     FROM source
     LEFT JOIN map_ip_location
       ON source.ip_address_hash = map_ip_location.ip_address_hash
@@ -56,6 +61,7 @@
       add_country_info_to_usage_ping.dim_instance_id                                     AS dim_instance_id,
       add_country_info_to_usage_ping.dim_installation_id                                 AS dim_installation_id,
       dim_product_tier.dim_product_tier_id                                               AS dim_product_tier_id,
+      prep_gitlab_version_major_minor.dim_gitlab_version_major_minor_sk                  AS dim_gitlab_version_major_minor_sk,
       add_country_info_to_usage_ping.ping_created_at                                     AS ping_created_at,
       add_country_info_to_usage_ping.hostname                                            AS hostname,
       add_country_info_to_usage_ping.license_sha256                                      AS license_sha256,
@@ -76,6 +82,8 @@
       ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
       AND IFF( add_country_info_to_usage_ping.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
       AND dim_product_tier.product_tier_name != 'Dedicated - Ultimate'
+    LEFT JOIN prep_gitlab_version_major_minor
+      ON prep_gitlab_version_major_minor.major_minor_version = add_country_info_to_usage_ping.major_minor_version
   
 ), prep_usage_ping_and_license AS (
 
@@ -92,6 +100,7 @@
       prep_usage_ping_cte.dim_host_id                                                                     AS dim_host_id,
       prep_usage_ping_cte.dim_installation_id                                                             AS dim_installation_id,
       COALESCE(sha256.dim_license_id, md5.dim_license_id)                                                 AS dim_license_id,
+      prep_usage_ping_cte.dim_gitlab_version_major_minor_sk                                               AS dim_gitlab_version_major_minor_sk,                                    
       prep_usage_ping_cte.license_sha256                                                                  AS license_sha256,
       prep_usage_ping_cte.license_md5                                                                     AS license_md5,
       prep_usage_ping_cte.license_billable_users                                                          AS license_billable_users,
@@ -130,6 +139,7 @@
       prep_usage_ping_and_license.dim_host_id                                                                AS dim_host_id,
       prep_usage_ping_and_license.dim_installation_id                                                        AS dim_installation_id,
       prep_usage_ping_and_license.dim_license_id                                                             AS dim_license_id,
+      prep_usage_ping_and_license.dim_gitlab_version_major_minor_sk                                          AS dim_gitlab_version_major_minor_sk,
       prep_usage_ping_and_license.license_sha256                                                             AS license_sha256,
       prep_usage_ping_and_license.license_md5                                                                AS license_md5,
       prep_usage_ping_and_license.license_billable_users                                                     AS license_billable_users,
@@ -156,5 +166,5 @@
     created_by="@icooper-acp",
     updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2023-02-01"
+    updated_date="2023-04-04"
 ) }}
