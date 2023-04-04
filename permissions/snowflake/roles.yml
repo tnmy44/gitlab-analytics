@@ -1941,20 +1941,6 @@ roles:
                 read:
                     - prep.sensitive.poc_pump_marketing_contact_namespace_detail
 
-    - hightouch_role:
-        warehouses:
-            - reporting
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.sensitive
-            tables:
-                read:
-                    - prep.sensitive.poc_pump_marketing_contact_namespace_detail
-
     - license_db:
         privileges:
             databases:
@@ -5048,7 +5034,7 @@ users:
     - hightouch_user:
         can_login: yes
         member_of:
-            - HIGHTOUCH_ROLE
+            - hightouch_role
 
     - hkacmarski:
         can_login: yes

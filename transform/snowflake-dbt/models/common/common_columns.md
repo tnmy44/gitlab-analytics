@@ -1909,3 +1909,11 @@ The status of the Value Stream Assessment.
 The date the Value Stream Assessment readout is presented to the prospect/customer.
 
 {% enddocs %}
+
+{% docs installation_creation_date %}
+
+Based off of the [`installation_creation_date`](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/license/20230228110448_installation_creation_date.yml) 
+Service Ping metric. For installations where the root user (id = 1) is not deleted, it returns the root user creation date. For installations where the root user 
+is deleted, it returns the earliest available user creation date.
+
+{% enddocs %}
