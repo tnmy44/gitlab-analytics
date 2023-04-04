@@ -1178,18 +1178,23 @@ roles:
             databases:
                 read:
                     - raw
+                    - prod
                 write:
                     - raw
             schemas:
                 read:
                     - raw.sales_analytics
+                    - prod.workspace_sales
                 write:
                     - raw.sales_analytics
+                    - prod.workspace_sales
             tables:
                 read:
                     - raw.sales_analytics.*
+                    - prod.workspace_sales.*
                 write:
                     - raw.sales_analytics.*
+                    - prod.workspace_sales.*
 
     - data_science_readonly:
         warehouses:
