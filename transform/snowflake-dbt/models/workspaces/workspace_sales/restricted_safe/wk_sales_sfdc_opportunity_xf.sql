@@ -583,23 +583,20 @@ WITH edm_opty AS (
       LOWER(agg_demo_keys_fy23.key_segment_geo_region_area_sqs)     AS key_segment_geo_region_area_sqs,
       LOWER(agg_demo_keys_fy23.key_segment_geo_region_area_ot)      AS key_segment_geo_region_area_ot,
       LOWER(agg_demo_keys_fy23.key_segment_geo_area)                AS key_segment_geo_area,
-      agg_demo_keys_fy23.sales_team_cro_level,
-      agg_demo_keys_fy23.sales_team_rd_asm_level,
-      agg_demo_keys_fy23.sales_team_vp_level,
-      agg_demo_keys_fy23.sales_team_avp_rd_level,
-      agg_demo_keys_fy23.sales_team_asm_level,
-
+      LOWER(agg_demo_keys_fy23.sales_team_cro_level)                AS sales_team_cro_level,
+      LOWER(agg_demo_keys_fy23.sales_team_rd_asm_level)             AS sales_team_rd_asm_level,
+      LOWER(agg_demo_keys_fy23.sales_team_vp_level)                 AS sales_team_vp_level,
+      LOWER(agg_demo_keys_fy23.sales_team_avp_rd_level)             AS sales_team_avp_rd_level,
+      LOWER(agg_demo_keys_fy23.sales_team_asm_level)                AS sales_team_asm_level,
 
       -- JK 2023-02-06: FY24 keys
-      /*
-      LOWER(agg_demo_keys_base.report_opportunity_user_business_unit)               AS business_unit,
-      LOWER(agg_demo_keys_base.report_opportunity_user_sub_business_unit)           AS sub_business_unit,
-      LOWER(agg_demo_keys_base.report_opportunity_user_division)                    AS division,
-      LOWER(agg_demo_keys_base.report_opportunity_user_asm)                         AS asm,
-      */
       LOWER(agg_demo_keys_base.key_bu)                      AS key_bu,
       LOWER(agg_demo_keys_base.key_bu_subbu)                AS key_bu_subbu,
+      LOWER(agg_demo_keys_base.key_bu_subbu_ot)             AS key_bu_subbu_ot,
+      LOWER(agg_demo_keys_base.key_bu_subbu_sqs)            AS key_bu_subbu_sqs,
       LOWER(agg_demo_keys_base.key_bu_subbu_division)       AS key_bu_subbu_division,
+      LOWER(agg_demo_keys_base.key_bu_subbu_division_ot)    AS key_bu_subbu_division_ot,
+      LOWER(agg_demo_keys_base.key_bu_subbu_division_sqs)   AS key_bu_subbu_division_sqs,
       LOWER(agg_demo_keys_base.key_bu_subbu_division_asm)   AS key_bu_subbu_division_asm,
 
       -- Created pipeline eligibility definition

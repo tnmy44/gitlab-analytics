@@ -59,7 +59,11 @@ SELECT DISTINCT
      
     key_bu,
     key_bu_subbu,
+    key_bu_subbu_ot,
+    key_bu_subbu_sqs,
     key_bu_subbu_division,
+    key_bu_subbu_division_ot,
+    key_bu_subbu_division_sqs,
     key_bu_subbu_division_asm
 
 FROM report_agg_keys_base

@@ -283,10 +283,17 @@ WITH source AS (
 
         -- flag to identify eligible booking deals, excluding jihu - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
         fp_a_master_bookings_flag__c::BOOLEAN           AS fpa_master_bookings_flag,
-
         downgrade_reason__c                             AS downgrade_reason,
         ssp_id__c                                       AS ssp_id,
         gaclientid__c                                   AS ga_client_id,
+
+        -- vsa data - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/customer-success-operations/-/issues/2399
+        vsa_readout__c                                  AS vsa_readout,
+        vsa_start_date_net_arr__c                       AS vsa_start_date_net_arr,
+        vsa_start_date__c                               AS vsa_start_date,
+        vsa_url__c                                      AS vsa_url,
+        vsa_status__c                                   AS vsa_status,
+        vsa_end_date__c                                 AS vsa_end_date,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
