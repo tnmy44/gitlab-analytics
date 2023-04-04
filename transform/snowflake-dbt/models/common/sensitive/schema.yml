@@ -174,6 +174,12 @@ models:
         description: Flags if marketing contact email has hard bounced
       - name: marketo_email_hard_bounced_date
         description: Date when the marketing contact email hard bounced
+      - name: is_marketo_unsubscribed
+        description: A flag indicating if a lead is unsubscribed in Marketo
+      - name: is_marketo_opted_in
+        description: Flag if a lead in marketo is opted in. This can be false and `has_marketo_unsubscribed` can be false as a lead could have started unsubscribed
+      - name: has_marketo_unsubscribed
+        description: A flag to indicate if a lead in Marketo has been unsubscribed either the preference center or other method
       - name: days_since_saas_trial_ended
         description: Number of days since saas trial ended
       - name: days_until_saas_trial_ends
@@ -366,3 +372,31 @@ models:
         description: Date time indicating when the marketing contact user_limit_namespace_id entered the user limit notification state. More information about this field can be seen [HERE](https://gitlab.com/gitlab-org/gitlab/-/issues/375748)
       - name: user_limit_enforcement_at
         description: Date time indicating when the marketing contact user_limit_namespace_id entered the user limit enforcement state. More information about this field can be seen [HERE](https://gitlab.com/gitlab-org/gitlab/-/issues/375748)
+
+  - name: poc_pump_marketing_contact_namespace_detail
+    description: >-
+      This table contains information of the marketing contact (email address) and namespace information for Gitlab.com users. The grain of the table is one row per email address, the namespace details are then stored in an array
+      of JSON objects. 
+      Only the ultimate parent namespaces are being synced into the namespace details array. If an user has access only to a subgroup of a ultimate parent namespace, the ultimate namespace is not linked to the ultimate namespace.
+      For example, user A is a member of the sub group namespace 2. The ultimate parent namespace of namespace 2 is namespace 1. Since user A is only a direct member of namespace 2 and namespace 2 is not an ultimate namespace,
+      user A has no namespaces listed in the namespace array list.  
+    columns:
+      - name: dim_marketing_contact_id
+        description: A primary key for the marketing contact
+        tests: 
+          - unique
+          - not_null
+      - name: namespaces_array
+        description: Ultimate parent namespaces that the marketing contact is directly related to.
+
+  - name: dim_team
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - team_id
+            - valid_from
+    columns:
+      - name: team_hierarchy_level
+        tests:
+          - accepted_values:
+              values: ['1', '2', '3', '4', '5', '6', '7', '8', '9']

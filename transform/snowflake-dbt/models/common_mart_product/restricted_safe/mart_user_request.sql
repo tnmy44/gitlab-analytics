@@ -15,7 +15,8 @@
     ('fct_quote_item', 'fct_quote_item'),
     ('dim_quote', 'dim_quote'),
     ('dim_crm_opportunity', 'dim_crm_opportunity'),
-    ('dim_order_type', 'dim_order_type')
+    ('dim_order_type', 'dim_order_type'),
+    ('dim_crm_user', 'dim_crm_user')
 ])}}
 
 , opportunity_seats AS (
@@ -181,6 +182,10 @@
 
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
+
+      IFF(LOWER(label_links_joined.label_title) LIKE 'theme:%'
+        AND NOT CONTAINS(label_links_joined.label_title, '::'), -- This second condition makes sure we are not matching the scoped label theme::*, only the non scoped theme:*
+          SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)                                                             AS theme_label,
       CASE
         WHEN group_label IS NOT NULL THEN 3
         WHEN devops_label IS NOT NULL THEN 2
@@ -200,6 +205,11 @@
 
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
+
+      IFF(LOWER(label_links_joined.label_title) LIKE 'theme:%'
+        AND NOT CONTAINS(label_links_joined.label_title, '::'), -- This second condition makes sure we are not matching the scoped label theme::*, only the non scoped theme:*
+          SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)                                                             AS theme_label,
+
       CASE
         WHEN group_label IS NOT NULL THEN 3
         WHEN devops_label IS NOT NULL THEN 2
@@ -207,6 +217,22 @@
         ELSE 0
       END product_group_level
     FROM label_links_joined
+
+), issue_theme_labels AS (
+
+    SELECT
+      dim_issue_id,
+      ARRAY_AGG(theme_label) WITHIN GROUP (ORDER BY theme_label) AS theme_labels
+    FROM issue_labels
+    GROUP BY 1
+
+), epic_theme_labels AS (
+
+    SELECT
+      dim_epic_id,
+      ARRAY_AGG(theme_label) WITHIN GROUP (ORDER BY theme_label) AS theme_labels
+    FROM epic_labels
+    GROUP BY 1
 
 ), issue_group_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the group::* label
 
@@ -368,6 +394,7 @@
         WHEN 'feature' THEN 'feature request'
       END                                                                         AS issue_epic_type,
       IFNULL(issue_status.workflow_label, 'Not Started')                          AS issue_status,
+      issue_theme_labels.theme_labels                                             AS theme_labels,
       -1                                                                          AS epic_status,
       dim_epic.epic_url                                                           AS parent_epic_path,
       dim_epic.epic_title                                                         AS parent_epic_title,
@@ -391,6 +418,8 @@
       ON devops_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN issue_type_label AS type_label
       ON type_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
+    LEFT JOIN issue_theme_labels
+      ON issue_theme_labels.dim_issue_id = bdg_issue_user_request.dim_issue_id
 
     UNION
 
@@ -444,6 +473,7 @@
         WHEN 'feature' THEN 'feature request'
       END                                                                         AS issue_epic_type,
       'Not Applicable'                                                            AS issue_status,
+      epic_theme_labels.theme_labels                                              AS theme_labels,
       IFNULL(epic_weight.epic_status, 0)                                          AS epic_status,
       parent_epic.epic_url                                                        AS parent_epic_path,
       parent_epic.epic_title                                                      AS parent_epic_title,
@@ -471,6 +501,8 @@
       ON devops_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN epic_type_label AS type_label
       ON type_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
+    LEFT JOIN epic_theme_labels
+      ON epic_theme_labels.dim_epic_id = bdg_epic_user_request.dim_epic_id
 
 ), user_request_with_account_opp_attributes AS (
 
@@ -503,10 +535,12 @@
 
       -- CRM Opportunity attributes
       dim_crm_opportunity.stage_name                                              AS crm_opp_stage_name,
-      fct_crm_opportunity.is_closed                                         AS crm_opp_is_closed,
+      fct_crm_opportunity.is_closed                                               AS crm_opp_is_closed,
       fct_crm_opportunity.close_date                                              AS crm_opp_close_date,
       dim_order_type.order_type_name                                              AS crm_opp_order_type,
       dim_order_type.order_type_grouped                                           AS crm_opp_order_type_grouped,
+      primary_solution_architect.dim_crm_user_id                                  AS primary_solution_architect_id,
+      primary_solution_architect.user_name                                        AS primary_solution_architect_user_name,
       IFF(DATE_TRUNC('month', dim_crm_opportunity.subscription_end_date) >= DATE_TRUNC('month',CURRENT_DATE),
         DATE_TRUNC('month', dim_crm_opportunity.subscription_end_date),
         NULL
@@ -547,6 +581,9 @@
       ON dim_crm_opportunity.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
     LEFT JOIN opportunity_seats
       ON opportunity_seats.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
+    LEFT JOIN dim_crm_user AS primary_solution_architect
+      ON primary_solution_architect.dim_crm_user_id = dim_crm_opportunity.primary_solution_architect
+
 
 ), customer_value_scores AS (
 
@@ -676,7 +713,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jpeguero",
-    updated_by="@chrissharp",
+    updated_by="@jpeguero",
     created_date="2021-10-22",
-    updated_date="2023-01-24",
+    updated_date="2023-02-15",
   ) }}

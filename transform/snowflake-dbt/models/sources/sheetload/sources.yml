@@ -21,6 +21,8 @@ sources:
       - name: abuse_top_storage_data
       - name: ally_certificate
       - name: ar_aging_details
+      - name: bizible_to_pathfactory_mapping
+      - name: abm_key_account_list
       - name: books
       - name: calendar
       - name: cert_customer_segmentation_dashboard
@@ -99,7 +101,6 @@ sources:
       - name: people_budget
       - name: planned_values
       - name: procurement_cost_savings
-      - name: product_group_mappings
       - name: product_maturity_historical
       - name: rep_quotas
       - name: rep_quotas_full_ps_fy2020

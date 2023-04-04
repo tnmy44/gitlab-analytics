@@ -12,12 +12,15 @@
     ])
 }},
 
+--limit mart to rolling 24 months for performance reasons
+
 fact AS (
 
   SELECT
     {{ dbt_utils.star(from=ref('fct_event_valid'), except=["CREATED_BY",
         "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
   FROM fct_event_valid
+  WHERE event_date >= DATEADD('month', -24, DATE_TRUNC('month',CURRENT_DATE))
   
 ), 
 
@@ -51,7 +54,7 @@ fact_with_dims AS (
 {{ dbt_audit(
     cte_ref="fact_with_dims",
     created_by="@iweeks",
-    updated_by="@tpoole1",
+    updated_by="@cbraza",
     created_date="2022-05-05",
-    updated_date="2022-08-01"
+    updated_date="2023-03-01"
 ) }}

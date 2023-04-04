@@ -133,7 +133,6 @@
 
     -- 5.3 metrics
     {{ convert_variant_to_boolean_field("raw_usage_data_payload['geo_enabled']") }}                                                                     AS geo_enabled,
-    {{ null_negative_numbers("raw_usage_data_payload['counts']['geo_nodes']") }}                                                                        AS geo_nodes_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['verify']['ci_pipeline_config_auto_devops']") }}                AS auto_devops_pipelines_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_instance_type_active']") }}                                                  AS active_instance_runners_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_group_type_active']") }}                                                     AS active_group_runners_all_time_event,
@@ -173,6 +172,18 @@
     {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_with_external_status_checks']") }}                                             AS projects_status_checks_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['external_status_checks']") }}                                                           AS external_status_checks_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['search']['i_search_paid_monthly']") }}                                      AS paid_license_search_28_days_user,
-    {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['manage']['unique_active_users_monthly']") }}                                AS last_activity_28_days_user
+    {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['manage']['unique_active_users_monthly']") }}                                AS last_activity_28_days_user,
+
+    -- 7 metrics
+    {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['snippets']") }}                                                                                                 AS snippets_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['ide_edit']['g_edit_by_sfe_monthly']") }}                                                                    AS single_file_editor_28_days_user,
+    {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['code_review']['i_code_review_create_mr_monthly']") }}                                                       AS merge_requests_created_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['code_review']['i_code_review_user_create_mr_monthly']") }}                                                  AS merge_requests_created_28_days_user,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['govern']['merged_merge_requests_using_approval_rules_distinct']") }}                           AS merge_requests_approval_rules_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['manage']['custom_compliance_frameworks']") }}                                                  AS custom_compliance_frameworks_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['govern']['distinct_count_project_id_from_security_orchestration_policy_configurations']") }}   AS projects_security_policy_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['govern']['user_merge_requests_for_projects_with_assigned_security_policy_project']") }}        AS merge_requests_security_policy_28_days_user,
+    {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['ci_templates']['p_ci_templates_implicit_auto_devops_monthly']") }}                                          AS pipelines_implicit_auto_devops_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['verify']['ci_pipeline_schedules']") }}                                                         AS pipeline_schedules_28_days_user
     
 {%- endmacro -%}

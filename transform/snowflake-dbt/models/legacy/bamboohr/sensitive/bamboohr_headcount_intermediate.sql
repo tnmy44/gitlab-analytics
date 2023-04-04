@@ -4,58 +4,60 @@
 }}
 
 {% set repeated_metric_columns = 
-      "SUM(headcount_start)                             AS headcount_start,
-      SUM(headcount_end)                                AS headcount_end,
-      SUM(headcount_end_excluding_sdr)                  AS headcount_end_excluding_sdr,
-      (SUM(headcount_start) + SUM(headcount_end))/2     AS headcount_average,
-      SUM(hire_count)                                   AS hire_count,
-      SUM(separation_count)                             AS separation_count,
-      SUM(voluntary_separation)                         AS voluntary_separation,
-      SUM(involuntary_separation)                       AS involuntary_separation,
+      "SUM(headcount_start)                                                         AS headcount_start,
+      SUM(headcount_start_excluding_sdr)                                            AS headcount_start_excluding_sdr,
+      SUM(headcount_end)                                                            AS headcount_end,
+      SUM(headcount_end_excluding_sdr)                                              AS headcount_end_excluding_sdr,
+      (SUM(headcount_start) + SUM(headcount_end))/2                                 AS headcount_average,
+      (SUM(headcount_start_excluding_sdr) + SUM(headcount_end_excluding_sdr))/2     AS headcount_average_excluding_sdr,
+      SUM(hire_count)                                                               AS hire_count,
+      SUM(separation_count)                                                         AS separation_count,
+      SUM(voluntary_separation)                                                     AS voluntary_separation,
+      SUM(involuntary_separation)                                                   AS involuntary_separation,
 
-      SUM(headcount_start_leader)                       AS headcount_start_leader,
-      SUM(headcount_end_leader)                         AS headcount_end_leader,
+      SUM(headcount_start_leader)                                                   AS headcount_start_leader,
+      SUM(headcount_end_leader)                                                     AS headcount_end_leader,
       (SUM(headcount_start_leader) 
-        + SUM(headcount_end_leader))/2                  AS headcount_average_leader,
-      SUM(hired_leaders)                                AS hired_leaders,
-      SUM(separated_leaders)                            AS separated_leaders,
+        + SUM(headcount_end_leader))/2                                              AS headcount_average_leader,
+      SUM(hired_leaders)                                                            AS hired_leaders,
+      SUM(separated_leaders)                                                        AS separated_leaders,
 
-      SUM(headcount_start_manager)                      AS headcount_start_manager,
-      SUM(headcount_end_manager)                        AS headcount_end_manager,
+      SUM(headcount_start_manager)                                                  AS headcount_start_manager,
+      SUM(headcount_end_manager)                                                    AS headcount_end_manager,
       (SUM(headcount_start_manager) 
-        + SUM(headcount_end_leader))/2                  AS headcount_average_manager,
-      SUM(hired_manager)                                AS hired_manager,
-      SUM(separated_manager)                            AS separated_manager,
+        + SUM(headcount_end_leader))/2                                              AS headcount_average_manager,
+      SUM(hired_manager)                                                            AS hired_manager,
+      SUM(separated_manager)                                                        AS separated_manager,
 
-      SUM(headcount_start_management)                   AS headcount_start_management,
-      SUM(headcount_end_management)                     AS headcount_end_management,
+      SUM(headcount_start_management)                                               AS headcount_start_management,
+      SUM(headcount_end_management)                                                 AS headcount_end_management,
       (SUM(headcount_start_management) 
-        + SUM(headcount_end_management))/2              AS headcount_average_management,
-      SUM(hired_management)                             AS hired_management,
-      SUM(separated_management)                         AS separated_management,
+        + SUM(headcount_end_management))/2                                          AS headcount_average_management,
+      SUM(hired_management)                                                         AS hired_management,
+      SUM(separated_management)                                                     AS separated_management,
             
-      SUM(headcount_start_contributor)                  AS headcount_start_contributor,
-      SUM(headcount_end_contributor)                    AS headcount_end_individual_contributor,
+      SUM(headcount_start_contributor)                                              AS headcount_start_contributor,
+      SUM(headcount_end_contributor)                                                AS headcount_end_individual_contributor,
       (SUM(headcount_start_contributor) 
-        + SUM(headcount_end_contributor))/2             AS headcount_average_contributor,
-      SUM(hired_contributor)                            AS hired_contributor,
-      SUM(separated_contributor)                        AS separated_contributor,
+        + SUM(headcount_end_contributor))/2                                         AS headcount_average_contributor,
+      SUM(hired_contributor)                                                        AS hired_contributor,
+      SUM(separated_contributor)                                                    AS separated_contributor,
 
-      SUM(IFF(is_promotion = TRUE,1,0))                 AS promotion,
-      SUM(IFF(is_promotion_excluding_sdr = TRUE,1,0))   AS promotion_excluding_sdr,
+      SUM(IFF(is_promotion = TRUE,1,0))                                             AS promotion,
+      SUM(IFF(is_promotion_excluding_sdr = TRUE,1,0))                               AS promotion_excluding_sdr,
       
-      SUM(percent_change_in_comp)                       AS percent_change_in_comp,
-      SUM(percent_change_in_comp_excluding_sdr)         AS percent_change_in_comp_excluding_sdr,
+      SUM(percent_change_in_comp)                                                   AS percent_change_in_comp,
+      SUM(percent_change_in_comp_excluding_sdr)                                     AS percent_change_in_comp_excluding_sdr,
 
-      AVG(location_factor)                              AS location_factor,
-      AVG(new_hire_location_factor)                     AS new_hire_location_factor,
-      SUM(discretionary_bonus)                          AS discretionary_bonus, 
-      AVG(tenure_months)                                AS tenure_months,
-      SUM(tenure_zero_to_six_months)                    AS tenure_zero_to_six_months,
-      SUM(tenure_six_to_twelve_months)                  AS tenure_six_to_twelve_months,
-      SUM(tenure_one_to_two_years)                      AS tenure_one_to_two_years,
-      SUM(tenure_two_to_four_years)                     AS tenure_two_to_four_years,
-      SUM(tenure_four_plus_years)                       AS tenure_four_plus_years
+      AVG(location_factor)                                                          AS location_factor,
+      AVG(new_hire_location_factor)                                                 AS new_hire_location_factor,
+      SUM(discretionary_bonus)                                                      AS discretionary_bonus, 
+      AVG(tenure_months)                                                            AS tenure_months,
+      SUM(tenure_zero_to_six_months)                                                AS tenure_zero_to_six_months,
+      SUM(tenure_six_to_twelve_months)                                              AS tenure_six_to_twelve_months,
+      SUM(tenure_one_to_two_years)                                                  AS tenure_one_to_two_years,
+      SUM(tenure_two_to_four_years)                                                 AS tenure_two_to_four_years,
+      SUM(tenure_four_plus_years)                                                   AS tenure_four_plus_years
       "%}
 
 
@@ -73,7 +75,7 @@ WITH dates AS (
 ), mapping AS (
 
     {{ dbt_utils.unpivot(relation=ref('bamboohr_id_employee_number_mapping'), cast_to='varchar', 
-       exclude=['employee_number', 'employee_id','first_name', 'last_name', 'hire_date', 'termination_date', 'greenhouse_candidate_id','region','country','nationality', 'last_updated_date']) }}
+       exclude=['employee_number', 'employee_id','first_name', 'last_name', 'hire_date', 'termination_date', 'greenhouse_candidate_id','region','country','nationality', 'last_updated_date', 'first_inactive_date']) }}
 
 ), mapping_enhanced AS (
 
@@ -116,9 +118,17 @@ WITH dates AS (
       --using the current division - department mapping for reporting
       job_role_modified                                                             AS job_role,
       COALESCE(job_grade,'NA')                                                      AS job_grade,
-      mapping_enhanced.eeoc_field_name,                                                       
-      mapping_enhanced.eeoc_value,                                          
+      mapping_enhanced.eeoc_field_name,
+      CASE
+        WHEN mapping_enhanced.eeoc_field_name like '%_region'
+          THEN SPLIT_PART(mapping_enhanced.eeoc_value,'_',1)|| '_' || 
+            IFF(employees.country in ('United States of America', 'United States'),'United States of America', 'Non-US')
+        WHEN mapping_enhanced.eeoc_field_name = 'region_modified'
+          THEN employees.region_modified
+        ELSE mapping_enhanced.eeoc_value END                                        AS eeoc_value,   
       IFF(dates.start_date = date_actual,1,0)                                       AS headcount_start,
+      IFF(dates.start_date = date_actual 
+        AND employees.department_modified != 'Sales Development', 1,0)              AS headcount_start_excluding_sdr,
       IFF(dates.end_date = date_actual,1,0)                                         AS headcount_end,
       IFF(dates.end_date = date_actual 
         AND employees.department_modified != 'Sales Development', 1,0)              AS headcount_end_excluding_sdr,
@@ -128,13 +138,13 @@ WITH dates AS (
       voluntary_separation + involuntary_separation                                 AS separation_count,
 
       IFF(dates.start_date = date_actual 
-          AND job_role_modified = 'Dirctor+',1,0)                          AS headcount_start_leader,
+          AND job_role_modified = 'Director+',1,0)                          AS headcount_start_leader,
       IFF(dates.end_date = date_actual
-          AND job_role_modified = 'Dirctor+',1,0)                          AS headcount_end_leader,
+          AND job_role_modified = 'Director+',1,0)                          AS headcount_end_leader,
       IFF(is_hire_date = True 
-          AND job_role_modified = 'Dirctor+',1,0)                          AS hired_leaders,
+          AND job_role_modified = 'Director+',1,0)                          AS hired_leaders,
       IFF(is_termination_date = True
-          AND job_role_modified = 'Dirctor+',1,0)                          AS separated_leaders,
+          AND job_role_modified = 'Director+',1,0)                          AS separated_leaders,
       
       IFF(dates.start_date = date_actual 
           AND job_role_modified = 'Manager',1,0)                                    AS headcount_start_manager,
@@ -260,6 +270,29 @@ WITH dates AS (
       'division_breakout'               AS breakout_type, 
       'division_breakout'               AS department,
       division,
+      NULL                              AS job_role,
+      NULL                              AS job_grade,
+      eeoc_field_name,                                                       
+      eeoc_value,
+      {{repeated_metric_columns}}
+    FROM dates 
+    LEFT JOIN intermediate 
+      ON DATE_TRUNC(month, start_date) = DATE_TRUNC(month, date_actual)
+    WHERE department IS NOT NULL
+    {{ dbt_utils.group_by(n=8) }} 
+
+    UNION ALL
+
+    SELECT
+      DATE_TRUNC(month,start_date)      AS month_date,
+      'division_group_breakout'         AS breakout_type, 
+      'division_group_breakout'         AS department,
+      CASE
+        WHEN division = 'Sales' 
+          THEN 'Sales'
+        WHEN division in ('Product', 'Engineering')
+          THEN 'Tech'
+        ELSE 'Non-Tech' END             AS division,
       NULL                              AS job_role,
       NULL                              AS job_grade,
       eeoc_field_name,                                                       

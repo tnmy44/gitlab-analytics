@@ -236,7 +236,6 @@ tables:
       , group_id
       , created_at
       , updated_at
-      , name
       FROM boards_epic_boards
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -367,9 +366,7 @@ tables:
       , migration_skipped_at
       , migration_retries_count
       , migration_skipped_reason
-      , migration_state
       , migration_aborted_in_state
-      , migration_plan
       , last_cleanup_deleted_tags_count
       FROM container_repositories
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -417,9 +414,6 @@ tables:
       , dast_scanner_profile_id
       , created_at
       , updated_at
-      , name
-      , description
-      , branch_name
       FROM dast_profiles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -782,7 +776,6 @@ tables:
       SELECT id
       , project_id
       , label_id
-      , priority
       , created_at
       , updated_at
       FROM label_priorities
@@ -877,6 +870,22 @@ tables:
       , max_issue_weight
       , limit_metric
       FROM lists
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  member_roles:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'member_roles'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , namespace_id
+      , created_at
+      , updated_at
+      , base_access_level
+      , read_code
+      FROM member_roles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   merge_request_blocks:
@@ -1037,6 +1046,43 @@ tables:
       FROM milestones
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  ml_candidates:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'ml_candidates'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , experiment_id
+      , user_id
+      , start_time
+      , end_time
+      , status
+      , name
+      FROM ml_candidates
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  ml_experiments:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'ml_experiments'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , iid
+      , project_id
+      , user_id
+      , name
+      , deleted_on
+      FROM ml_experiments
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   namespace_details:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1183,22 +1229,8 @@ tables:
       SELECT id
       , user_id
       , source_id
-      , source_type
-      , level
       , created_at
       , updated_at
-      , new_note
-      , new_issue
-      , reopen_issue
-      , close_issue
-      , reassign_issue
-      , new_merge_request
-      , reopen_merge_request
-      , close_merge_request
-      , reassign_merge_request
-      , merge_merge_request
-      , failed_pipeline
-      , success_pipeline
       FROM notification_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2133,6 +2165,19 @@ tables:
       , type
       , integration_id
       FROM web_hooks
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  work_item_progresses:
+    export_schema: 'gitlab_com'
+    export_table: work_item_progresses
+    export_table_primary_key: issue_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT created_at
+      , updated_at
+      , issue_id
+      , progress
+      FROM work_item_progresses
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   zoom_meetings:

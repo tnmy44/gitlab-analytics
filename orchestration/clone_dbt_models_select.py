@@ -20,7 +20,6 @@ class DbtModelClone:
     def __init__(self, config_vars: Dict):
         self.environment = config_vars["ENVIRONMENT"].upper()
         if self.environment == "CI":
-
             self.engine = create_engine(
                 URL(
                     user=config_vars["SNOWFLAKE_USER"],
@@ -36,14 +35,12 @@ class DbtModelClone:
             self.branch_name = config_vars["GIT_BRANCH"].upper()
 
         elif self.environment == "LOCAL_BRANCH":
-
             self.engine = data_science_engine_factory()
             # Snowflake database name should be in CAPS
             # see https://gitlab.com/meltano/analytics/issues/491
             self.branch_name = config_vars["GIT_BRANCH"].upper()
 
         elif self.environment == "LOCAL_USER":
-
             self.engine = data_science_engine_factory()
 
             self.branch_name = self.engine.url.database.replace("/", "").upper()
@@ -115,10 +112,14 @@ class DbtModelClone:
         :param object_name:
         :return:
         """
-
-        grants_query = f"""
-            GRANT OWNERSHIP ON {object_type.upper()} {object_name.upper()} TO TRANSFORMER REVOKE CURRENT GRANTS
-            """
+        if self.environment in ("LOCAL_USER", "LOCAL_BRANCH"):
+            grants_query = f"""
+                        GRANT ALL ON {object_type.upper()} {object_name.upper()} TO TRANSFORMER 
+                        """
+        else:
+            grants_query = f"""
+                GRANT OWNERSHIP ON {object_type.upper()} {object_name.upper()} TO TRANSFORMER REVOKE CURRENT GRANTS
+                """
         query_executor(self.engine, grants_query)
 
         grants_query = (
@@ -161,23 +162,17 @@ class DbtModelClone:
         """
 
         sorted_list = self.clean_dbt_input(model_input)
-
         for i in sorted_list:
             database_name = i.get("database").upper()
             schema_name = i.get("schema").upper()
             table_name = i.get("name").upper()
-            config = i.get("config")
+            alias = i.get("alias").upper()
 
             if "PROD" in database_name:
                 database_name = "PROD"
 
             if "PREP" in database_name:
                 database_name = "PREP"
-
-            if config:
-                alias = config.get("alias")
-            else:
-                alias = None
 
             if alias:
                 table_name = alias.upper()
@@ -210,7 +205,6 @@ class DbtModelClone:
             self.create_schema(output_schema_name)
 
             if table_or_view == "VIEW":
-
                 query = (
                     f"""SELECT GET_DDL('VIEW', '{full_name.replace('"', '')}', TRUE)"""
                 )
@@ -232,7 +226,6 @@ class DbtModelClone:
             transient_table = res[0][1]
 
             try:
-
                 clone_statement = f"CREATE OR REPLACE {'TRANSIENT' if transient_table == 'YES' else ''} TABLE {output_table_name} CLONE {full_name} COPY GRANTS;"
 
                 query_executor(self.engine, clone_statement)

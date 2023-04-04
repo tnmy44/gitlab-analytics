@@ -74,6 +74,17 @@ def test_static_variables(utils):
     assert utils.REDIS_KEY == "redis"
 
 
+def test_exluded_sql_metrics(utils):
+    """
+    Test content of excluded metrics
+    """
+    actual = (
+        1 if "clusters_platforms" in x else 0
+        for x in utils.METRICS_EXCEPTION_INSTANCE_SQL
+    )
+    assert all(actual)
+
+
 def test_engine_factory(engine_factory):
     """
     Test Class creation
@@ -139,7 +150,6 @@ def test_headers_error(utils):
 
 
 def test_convert_response_to_json(utils, fake_response):
-
     """
     Test function: convert_response_to_json
     """

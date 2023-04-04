@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH map_merged_crm_account AS (
 
     SELECT *

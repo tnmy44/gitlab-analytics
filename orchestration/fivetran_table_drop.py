@@ -25,7 +25,6 @@ def main(engine: Engine) -> None:
     query_list = [transactions_drop, lines_drop]
 
     for query in query_list:
-
         try:
             logging.info("Executing Query: {}".format(query))
             connection = engine.connect()

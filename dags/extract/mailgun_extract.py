@@ -31,6 +31,7 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
+    "retries": 1,
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
@@ -79,8 +80,8 @@ for e in events:
             "START_TIME": "{{ execution_date }}",
             "END_TIME": "{{ next_execution_date }}",
         },
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity("production"),
+        tolerations=get_toleration("production"),
         arguments=[mailgun_extract_command],
         dag=dag,
     )

@@ -191,6 +191,7 @@ WITH first_contact  AS (
       user_geo_stamped                                                   AS crm_opp_owner_geo_stamped,
       user_region_stamped                                                AS crm_opp_owner_region_stamped,
       user_area_stamped                                                  AS crm_opp_owner_area_stamped,
+      user_business_unit_stamped                                         AS crm_opp_owner_business_unit_stamped,
       user_segment_geo_region_area_stamped                               AS crm_opp_owner_sales_segment_geo_region_area_stamped,
       created_date::DATE                                                 AS created_date,
       sales_accepted_date::DATE                                          AS sales_accepted_date,
@@ -333,6 +334,7 @@ WITH first_contact  AS (
       {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}                              AS stage_6_closed_lost_date_id,
       {{ get_date_id('sfdc_opportunity.technical_evaluation_date') }}                             AS technical_evaluation_date_id,
       {{ get_date_id('sfdc_opportunity.last_activity_date') }}                                    AS last_activity_date_id,
+      {{ get_date_id('sfdc_opportunity.sales_last_activity_date') }}                              AS sales_last_activity_date_id,
       {{ get_date_id('sfdc_opportunity.subscription_start_date') }}                               AS subscription_start_date_id,
       {{ get_date_id('sfdc_opportunity.subscription_end_date') }}                                 AS subscription_end_date_id,
       {{ get_date_id('sfdc_opportunity.sales_qualified_date') }}                                  AS sales_qualified_date_id,
@@ -349,6 +351,12 @@ WITH first_contact  AS (
       {%- if model_type == 'snapshot' %}
       90 - DATEDIFF(DAY, sfdc_opportunity.snapshot_date, close_date.last_day_of_fiscal_quarter) AS close_day_of_fiscal_quarter_normalised,
       {%- endif %}
+      -- The fiscal year has to be created from scratch instead of joining to the date model because of sales practices which put close dates out 100+ years in the future
+      CASE 
+        WHEN DATE_PART('month', sfdc_opportunity.close_date) < 2
+          THEN DATE_PART('year', sfdc_opportunity.close_date)
+        ELSE (DATE_PART('year', sfdc_opportunity.close_date)+1) 
+      END                                                                                         AS close_fiscal_year,
 
       {{ get_date_id('sfdc_opportunity.iacv_created_date')}}                                      AS arr_created_date_id,
       sfdc_opportunity.iacv_created_date                                                          AS arr_created_date,
@@ -619,6 +627,8 @@ WITH first_contact  AS (
       {{ alliance_partner_short('fulfillment_partner.account_name', 'partner_account.account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }} AS alliance_type_short,
 
       fulfillment_partner.account_name AS resale_partner_name,
+
+      {{ partner_category('sfdc_opportunity.sales_qualified_source', 'fulfillment_partner.account_name') }} AS partner_category,
 
       --  quote information
       quote.dim_quote_id,
@@ -1302,7 +1312,77 @@ WITH first_contact  AS (
         )
         THEN 'Mid-Market'
       ELSE 'SMB'
-    END AS account_owner_team_stamped_cro_level
+    END AS account_owner_team_stamped_cro_level,
+    CASE
+      WHEN sfdc_opportunity.close_date < '2023-02-01'
+        THEN CONCAT(
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    close_fiscal_year
+                    )
+      WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'comm'
+        THEN CONCAT(
+                    UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    close_fiscal_year
+                    )
+      WHEN sfdc_opportunity.close_date >= '2023-02-01' AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) = 'entg'
+        THEN CONCAT(
+                    UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    close_fiscal_year
+                    )
+      WHEN sfdc_opportunity.close_date >= '2023-02-01'
+        AND (sfdc_opportunity.crm_opp_owner_business_unit_stamped IS NOT NULL AND LOWER(sfdc_opportunity.crm_opp_owner_business_unit_stamped) NOT IN ('comm', 'entg')) -- some opps are closed by non-sales reps, so fill in their values completely
+        THEN CONCAT(
+                    UPPER(sfdc_opportunity.crm_opp_owner_business_unit_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    close_fiscal_year
+                    )
+      WHEN sfdc_opportunity.close_date >= '2023-02-01' AND sfdc_opportunity.crm_opp_owner_business_unit_stamped IS NULL -- done for data quality issues
+        THEN CONCAT(
+                    UPPER(sfdc_opportunity.crm_opp_owner_sales_segment_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_geo_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_region_stamped),
+                    '-',
+                    UPPER(sfdc_opportunity.crm_opp_owner_area_stamped),
+                    '-',
+                    close_fiscal_year
+                    )
+      
+    END AS dim_crm_opp_owner_stamped_hierarchy_sk
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage

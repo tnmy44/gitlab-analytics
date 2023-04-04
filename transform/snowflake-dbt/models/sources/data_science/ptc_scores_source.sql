@@ -23,10 +23,11 @@ WITH source AS (
       data_by_row['grouping']::INT                          AS score_group,
       data_by_row['insights']::VARCHAR                      AS insights,
       data_by_row['renewal_date']::TIMESTAMP                AS renewal_date,
+      data_by_row['downtier_likely']::BOOLEAN               AS downtier_likely,
       uploaded_at::TIMESTAMP                                AS uploaded_at
 
     FROM intermediate
 
 )
-SELECT * 
+SELECT *
 FROM parsed
