@@ -127,7 +127,7 @@
     mart_crm_touchpoint.is_fmm_influenced,
     mart_crm_touchpoint.is_fmm_sourced,
     mart_crm_touchpoint.bizible_count_lead_creation_touch AS new_lead_created_sum,
-    mart_crm_touchpoint.count_true_inquiry) AS count_true_inquiry,
+    mart_crm_touchpoint.count_true_inquiry AS count_true_inquiry,
     mart_crm_touchpoint.count_inquiry AS inquiry_sum, 
     mart_crm_touchpoint.pre_mql_weight AS mql_sum,
     mart_crm_touchpoint.count_accepted AS accepted_sum,
