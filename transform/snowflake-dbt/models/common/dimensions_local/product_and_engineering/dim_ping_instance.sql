@@ -80,8 +80,9 @@ fct_w_month_flag AS (
 
   SELECT
     usage_data_w_date.*,
-    last_ping_of_month_flag.last_ping_of_month_flag   AS last_ping_of_month_flag,
-    last_ping_of_week_flag.last_ping_of_week_flag     AS last_ping_of_week_flag
+    last_ping_of_month_flag.last_ping_of_month_flag                                                             AS last_ping_of_month_flag,
+    last_ping_of_week_flag.last_ping_of_week_flag                                                               AS last_ping_of_week_flag,
+    REGEXP_REPLACE(NULLIF(usage_data_w_date.version, ''), '[^0-9.]+')                                           AS cleaned_version
   FROM usage_data_w_date
   LEFT JOIN last_ping_of_month_flag
     ON usage_data_w_date.id = last_ping_of_month_flag.id
@@ -181,7 +182,7 @@ final AS (
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                 AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                                 AS minor_version,
       major_version || '.' || minor_version                                                                       AS major_minor_version,
-      major_version * 100 + minor_version                                                                         AS major_minor_version_id,
+      major_version * 100 + minor_version                                                                         AS major_minor_version_id, -- legacy field
       CASE
         WHEN fct_w_month_flag.uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'
@@ -225,5 +226,5 @@ final AS (
     created_by="@icooper-acp",
     updated_by="@cbraza",
     created_date="2022-03-08",
-    updated_date="2022-12-28"
+    updated_date="2023-04-04"
 ) }}
