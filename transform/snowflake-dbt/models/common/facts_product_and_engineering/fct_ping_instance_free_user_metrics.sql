@@ -105,7 +105,8 @@
     core_instance_pings.dim_host_id, 
     core_instance_pings.installation_type, 
     core_instance_pings.is_internal, 
-    core_instance_pings.is_staging,    
+    core_instance_pings.is_staging,
+    core_instance_pings.installation_creation_date,    
 
     -- instance user statistics 
     core_instance_pings.raw_usage_data_payload['license_billable_users']::NUMBER(38,0)                                AS license_billable_users, --does not exist in dim_ping_instance,may need to add it eventually
@@ -134,7 +135,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
+    updated_by="@mdrussell",
     created_date="2023-01-20",
-    updated_date="2023-01-20"
+    updated_date="2023-04-04"
 ) }}

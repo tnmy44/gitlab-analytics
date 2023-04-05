@@ -38,6 +38,7 @@
       sm_free_users.cleaned_version,
       sm_free_users.dim_crm_account_id,
       sm_free_users.ping_created_date                                                           AS ping_date,
+      sm_free_users.installation_creation_date,
       sm_free_users.umau_28_days_user,
       sm_free_users.action_monthly_active_users_project_repo_28_days_user,
       sm_free_users.merge_requests_28_days_user,
@@ -244,6 +245,7 @@
       NULL                                                                                      AS cleaned_version,
       dim_crm_account_id,
       ping_date::DATE                                                                           AS ping_date,
+      NULL                                                                                      AS installation_creation_date,
       -- Wave 2 & 3
       "usage_activity_by_stage_monthly.manage.events"                                           AS umau_28_days_user,
       "usage_activity_by_stage_monthly.create.action_monthly_active_users_project_repo"         AS action_monthly_active_users_project_repo_28_days_user,
@@ -444,5 +446,5 @@
     created_by="@snalamaru",
     updated_by="@mdrussell",
     created_date="2021-06-08",
-    updated_date="2023-03-15"
+    updated_date="2023-04-05"
 ) }}

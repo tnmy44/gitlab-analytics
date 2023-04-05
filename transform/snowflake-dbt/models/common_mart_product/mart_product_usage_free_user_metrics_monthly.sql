@@ -22,6 +22,7 @@
       crm_account_name,
       parent_crm_account_name,
       free_user_metrics.ping_date,
+      free_user_metrics.installation_creation_date,
       -- Wave 2 & 3
       free_user_metrics.umau_28_days_user,
       free_user_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -224,6 +225,7 @@
         'crm_account_name',
         'parent_crm_account_name',
         'ping_date',
+        'installation_creation_date',
         'umau_28_days_user',
         'action_monthly_active_users_project_repo_28_days_user',
         'merge_requests_28_days_user',
@@ -402,5 +404,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2023-03-15"
+    updated_date="2023-04-05"
 ) }}
