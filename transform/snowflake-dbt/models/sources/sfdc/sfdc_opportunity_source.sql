@@ -65,8 +65,7 @@ WITH source AS (
         {{  sfdc_source_buckets('leadsource') }}
         stagename                                       AS stage_name,
         revenue_type__c                                 AS order_type,
-        IFF(deal_path__c = 'Partner', 'Channel', deal_path__c)
-                                                        AS deal_path,
+        {{ deal_path_cleaning('deal_path__c') }}        AS deal_path,
 
         -- opportunity information
         acv_2__c                                        AS acv,
@@ -99,14 +98,8 @@ WITH source AS (
         renewal_amount__c                               AS renewal_amount,
         {{ sales_qualified_source_cleaning('sql_source__c') }}
                                                         AS sales_qualified_source,
-        CASE
-          WHEN sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
-          WHEN sales_qualified_source = 'Partner Generated' THEN 'Channel Generated'
-          WHEN sales_qualified_source LIKE ANY ('Web%', 'Missing%', 'Other') OR sales_qualified_source IS NULL THEN 'Web Direct Generated'
-          ELSE sales_qualified_source
-        END                                             AS sales_qualified_source_grouped,
-        IFF(sales_qualified_source = 'Channel Generated', 'Partner Sourced', 'Co-sell')
-                                                        AS sqs_bucket_engagement,
+        {{ sales_qualified_source_grouped('sales_qualified_source') }}  AS sales_qualified_source_grouped,
+        {{ sqs_bucket_engagement('sales_qualified_source') }}           AS sqs_bucket_engagement,
         sdr_pipeline_contribution__c                    AS sdr_pipeline_contribution,
         solutions_to_be_replaced__c                     AS solutions_to_be_replaced,
         x3_technical_evaluation_date__c
