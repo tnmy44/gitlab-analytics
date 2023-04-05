@@ -75,6 +75,7 @@
       ping_instance_wave_sm.cleaned_version,
       ping_instance_wave_sm.dim_location_country_id,
       ping_instance_wave_sm.installation_creation_date,
+      ping_instance_wave_sm.dim_installation_id,
       -- Wave 1
       DIV0(
           ping_instance_wave_sm.license_billable_users,
