@@ -21,3 +21,9 @@ macros:
     description: '{{ doc("sales_hierarchy_sales_segment_cleaning") }}'
   - name: sales_funnel_text_slugify
     description: '{{ doc("sales_funnel_text_slugify")}}'
+  - name: deal_path_cleaning
+    description: '{{ doc("deal_path_cleaning")}}'
+  - name: sales_qualified_source_grouped
+    description: '{{ doc("sales_qualified_source_grouped")}}'
+  - name: sqs_bucket_engagement
+    description: '{{ doc("sqs_bucket_engagement")}}'

@@ -212,7 +212,7 @@ WITH date_details AS (
             THEN o.net_arr
             ELSE 0 END) AS last_12m_booked_web_direct_sourced_net_arr,  --ttm_web_direct_sourced_net_arr
       SUM(CASE
-            WHEN (o.sales_qualified_source = 'Channel Generated' OR o.sales_qualified_source = 'Partner Generated')
+            WHEN (o.sales_qualified_source = 'Partner Generated' OR o.sales_qualified_source = 'Partner Generated')
             THEN o.net_arr
             ELSE 0 END) AS last_12m_booked_channel_sourced_net_arr,  -- ttm_web_direct_sourced_net_arr
       SUM(CASE
@@ -341,7 +341,7 @@ WITH date_details AS (
             THEN o.booked_net_arr
             ELSE 0 END) AS fy_booked_web_direct_sourced_net_arr,
       SUM(CASE
-            WHEN (o.sales_qualified_source = 'Channel Generated' OR o.sales_qualified_source = 'Partner Generated')
+            WHEN (o.sales_qualified_source = 'Partner Generated' OR o.sales_qualified_source = 'Partner Generated')
             THEN o.booked_net_arr
             ELSE 0 END) AS fy_booked_channel_sourced_net_arr,
       SUM(CASE
@@ -457,7 +457,7 @@ WITH date_details AS (
             THEN h.net_arr
             ELSE 0 END)              AS pg_last_12m_web_direct_sourced_net_arr,
       SUM(CASE
-            WHEN (h.sales_qualified_source = 'Channel Generated' OR h.sales_qualified_source = 'Partner Generated')
+            WHEN (h.sales_qualified_source = 'Partner Generated' OR h.sales_qualified_source = 'Partner Generated')
             THEN h.net_arr
             ELSE 0 END)              AS pg_last_12m_channel_sourced_net_arr,
       SUM(CASE
@@ -474,7 +474,7 @@ WITH date_details AS (
             THEN h.calculated_deal_count
             ELSE 0 END)              AS pg_last_12m_web_direct_sourced_deal_count,
       SUM(CASE
-            WHEN (h.sales_qualified_source = 'Channel Generated' OR h.sales_qualified_source = 'Partner Generated')
+            WHEN (h.sales_qualified_source = 'Partner Generated' OR h.sales_qualified_source = 'Partner Generated')
             THEN h.calculated_deal_count
             ELSE 0 END)              AS pg_last_12m_channel_sourced_deal_count,
       SUM(CASE
@@ -508,7 +508,7 @@ WITH date_details AS (
             THEN h.net_arr
             ELSE 0 END) AS pg_ytd_web_direct_sourced_net_arr,
       SUM(CASE
-            WHEN (h.sales_qualified_source = 'Channel Generated' OR h.sales_qualified_source = 'Partner Generated')
+            WHEN (h.sales_qualified_source = 'Partner Generated' OR h.sales_qualified_source = 'Partner Generated')
             THEN h.net_arr
             ELSE 0 END) AS pg_ytd_channel_sourced_net_arr,
       SUM(CASE
