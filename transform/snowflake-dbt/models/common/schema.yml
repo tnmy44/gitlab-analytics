@@ -3243,7 +3243,7 @@ models:
         description: SMAU Metric
       - name: incident_management_total_unique_counts_monthly
         description: SMAU Metric
-            - name: installation_creation_date
+      - name: installation_creation_date
         description: '{{ doc("installation_creation_date") }}'
 
   - name: fct_ping_instance_metric_wave_monthly
