@@ -1,8 +1,20 @@
 WITH base AS (
 
     SELECT
+
+        -- Surrogate key
         {{ dbt_utils.surrogate_key(['major_minor_version']) }} AS dim_gitlab_version_major_minor_sk,
-        *
+
+        -- Natural key
+        major_version * 100 + minor_version                    AS gitlab_version_major_minor_id,
+
+        major_minor_version,
+        major_version,
+        minor_version,
+        release_date,
+        release_manager_americas,
+        release_manager_emea
+
     FROM {{ ref('release_managers_source') }}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY major_minor_version ORDER BY snapshot_date DESC, rank DESC) = 1
 
