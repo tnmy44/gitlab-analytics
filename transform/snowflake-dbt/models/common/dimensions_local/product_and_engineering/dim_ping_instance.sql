@@ -82,7 +82,13 @@ fct_w_month_flag AS (
     usage_data_w_date.*,
     last_ping_of_month_flag.last_ping_of_month_flag                                                             AS last_ping_of_month_flag,
     last_ping_of_week_flag.last_ping_of_week_flag                                                               AS last_ping_of_week_flag,
-    REGEXP_REPLACE(NULLIF(usage_data_w_date.version, ''), '[^0-9.]+')                                           AS cleaned_version
+    REGEXP_REPLACE(NULLIF(usage_data_w_date.version, ''), '[^0-9.]+')                                           AS cleaned_version,
+    IFF(usage_data_w_date.version ILIKE '%-pre', True, False)                                                   AS version_is_prerelease,
+    SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                 AS major_version,
+    SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                                 AS minor_version,
+    major_version || '.' || minor_version                                                                       AS major_minor_version,
+    major_version * 100 + minor_version                                                                         AS major_minor_version_id,
+    major_minor_version_id                                                                                      AS gitlab_version_major_minor_id
   FROM usage_data_w_date
   LEFT JOIN last_ping_of_month_flag
     ON usage_data_w_date.id = last_ping_of_month_flag.id
@@ -115,6 +121,7 @@ final AS (
       fct_w_month_flag.dim_host_id                                                                                AS dim_host_id,
       fct_w_month_flag.dim_instance_id                                                                            AS dim_instance_id,
       fct_w_month_flag.dim_installation_id                                                                        AS dim_installation_id,
+      fct_w_month_flag.gitlab_version_major_minor_id                                                              AS gitlab_version_major_minor_id,
       fct_w_month_flag.ping_created_at                                                                            AS ping_created_at,
       TO_DATE(DATEADD('days', -28, fct_w_month_flag.ping_created_at))                                             AS ping_created_date_28_days_earlier,
       TO_DATE(DATE_TRUNC('YEAR', fct_w_month_flag.ping_created_at))                                               AS ping_created_date_year,
@@ -177,12 +184,12 @@ final AS (
       fct_w_month_flag.container_registry_version                                                                 AS container_registry_version,
       IFF(fct_w_month_flag.license_expires_at >= fct_w_month_flag.ping_created_at 
           OR fct_w_month_flag.license_expires_at IS NULL, fct_w_month_flag.main_edition, 'EE Free')               AS cleaned_edition,
-      REGEXP_REPLACE(NULLIF(fct_w_month_flag.version, ''), '[^0-9.]+')                                            AS cleaned_version,
-      IFF(fct_w_month_flag.version ILIKE '%-pre', True, False)                                                    AS version_is_prerelease,
-      SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                 AS major_version,
-      SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                                 AS minor_version,
-      major_version || '.' || minor_version                                                                       AS major_minor_version,
-      major_version * 100 + minor_version                                                                         AS major_minor_version_id, -- legacy field
+      fct_w_month_flag.cleaned_version                                                                            AS cleaned_version,
+      fct_w_month_flag.version_is_prerelease                                                                      AS version_is_prerelease,
+      fct_w_month_flag.major_version                                                                              AS major_version,
+      fct_w_month_flag.minor_version                                                                              AS minor_version,
+      fct_w_month_flag.major_minor_version                                                                        AS major_minor_version,
+      fct_w_month_flag.major_minor_version_id                                                                     AS major_minor_version_id, -- legacy field - to be drep
       CASE
         WHEN fct_w_month_flag.uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'
@@ -224,7 +231,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@cbraza",
+    updated_by="@jpeguero",
     created_date="2022-03-08",
     updated_date="2023-04-04"
 ) }}
