@@ -421,8 +421,6 @@ models:
         description: Team member work email
       - name: gitlab_username
         description: Team member gitlab username 
-      - name: country
-        description: Current/latest country the team member resides in
       - name: region
         description: Current/latest region the team member resides in
       - name: hire_date
@@ -435,6 +433,10 @@ models:
         description: True if team member has more than one hire event (more than one occurrance of hire_date)
       - name: is_current
         description: True if the current team member event is the most recent event
+      - name: country
+        description: Current/latest country the team member resides in
+        meta:
+          masking_policy: analyst_people
       - name: nationality
         description: Masked. Team member nationality.
         meta:
@@ -484,8 +486,6 @@ models:
         description: Team member work email
       - name: gitlab_username
         description: Team member gitlab username 
-      - name: country
-        description: Current/latest country the team member resides in
       - name: region
         description: Current/latest region the team member resides in
       - name: hire_date
@@ -498,6 +498,10 @@ models:
         description: True if team member has more than one hire event (more than one occurrance of hire_date)
       - name: is_current
         description: True if the current team member event is the most recent event
+      - name: country
+        description: Current/latest country the team member resides in
+        meta:
+          masking_policy: analyst_people
       - name: nationality
         description: Masked. Team member nationality.
         meta:
