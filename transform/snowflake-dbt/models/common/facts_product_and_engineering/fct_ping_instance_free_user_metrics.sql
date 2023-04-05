@@ -98,6 +98,7 @@
     -- instance settings 
     core_instance_pings.dim_instance_id                                                                                AS uuid, 
     core_instance_pings.ping_delivery_type, 
+    core_instance_pings.dim_installation_id,
     version                                                                                                            AS instance_version, 
     core_instance_pings.cleaned_version,
     core_instance_pings.version_is_prerelease,

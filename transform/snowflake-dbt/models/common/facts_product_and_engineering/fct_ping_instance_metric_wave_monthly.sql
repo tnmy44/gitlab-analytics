@@ -70,6 +70,7 @@
       instance_type_ordering.included_in_health_measures_str,
       ping_instance_wave_sm.hostname,
       ping_instance_wave_sm.dim_license_id,
+      ping_instance_wave_sm.dim_installation_id,
       ping_instance_wave_sm.license_sha256,
       ping_instance_wave_sm.license_md5,
       ping_instance_wave_sm.cleaned_version,
