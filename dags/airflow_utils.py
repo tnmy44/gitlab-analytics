@@ -14,7 +14,7 @@ HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.34"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.1"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
-ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.1"
+ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
 
 SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
 
