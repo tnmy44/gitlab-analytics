@@ -356,15 +356,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_licenses %}
-Dimensional table representing generated licenses and associated metadata.
-
-The grain of the table is a license_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs dim_gitlab_dotcom_gitlab_emails %}
 Dimensional table representing the best email address for GitLab employees from the GitLab.com data source
 
