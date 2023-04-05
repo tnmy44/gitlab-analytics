@@ -159,8 +159,8 @@
       location_country.country_name,
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
-      monthly_sm_metrics.installation_creation_date,
       'Self-Managed'                                                               AS delivery_type,
+      monthly_sm_metrics.installation_creation_date,
       -- Wave 1
       DIV0(
         monthly_sm_metrics.billable_user_count, 

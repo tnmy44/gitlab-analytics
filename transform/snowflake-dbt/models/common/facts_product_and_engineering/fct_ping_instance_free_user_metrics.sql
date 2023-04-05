@@ -10,7 +10,8 @@
 {{ simple_cte([
     ('instance_pings', 'dim_ping_instance'),
     ('map_license_account', 'map_license_subscription_account'),
-    ('instance_types', 'dim_host_instance_type')
+    ('instance_types', 'dim_host_instance_type'),
+    ('installations', 'dim_installation')
     ])
 
 }},
@@ -42,13 +43,14 @@
       instance_pings.dim_ping_instance_id,
       instance_pings.dim_instance_id,
       instance_pings.dim_host_id,
+      instance_pings.dim_installation_id,
       instance_pings.ping_created_at,
       instance_pings.ping_created_date_28_days_earlier,
       instance_pings.ping_created_date_year,
       instance_pings.ping_created_date_month,
       instance_pings.ping_created_date_week,
       instance_pings.ping_created_date,
-      instance_pings.installation_creation_date,
+      installations.installation_creation_date,
       instance_pings.raw_usage_data_id,
       instance_pings.raw_usage_data_payload,
       instance_pings.license_md5,
@@ -76,6 +78,8 @@
     ON instance_pings.license_md5 = map_license_account_md5.license_md5
     LEFT JOIN map_license_account_sha256
     ON instance_pings.license_sha256 = map_license_account_sha256.license_sha256
+    LEFT JOIN installations
+     ON installations.dim_installation_id = instance_pings.dim_installation_id
     WHERE instance_pings.product_tier = 'Core'
 
 ), joined AS (
