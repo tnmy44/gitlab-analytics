@@ -3243,6 +3243,8 @@ models:
         description: SMAU Metric
       - name: incident_management_total_unique_counts_monthly
         description: SMAU Metric
+            - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
 
   - name: fct_ping_instance_metric_wave_monthly
     description: '{{ doc("fct_ping_instance_metric_wave_monthly") }}'
@@ -3752,6 +3754,10 @@ models:
         description: Flags rows where there is Usage Ping data and/or Seat Link data present
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping and/or Seat Link
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
   - name: fct_ping_instance
     description: ' {{ doc("fct_ping_instance") }} '
@@ -3820,6 +3826,8 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
 
 
   - name: fct_ping_instance_metric_28_day
@@ -6023,6 +6031,10 @@ models:
       - name: ci_templates_usage_28_days_event
       - name: project_management_issue_milestone_changed_28_days_user
       - name: project_management_issue_iteration_changed_28_days_user
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
 
   - name: fct_ping_instance_free_user_metrics_monthly
@@ -6509,6 +6521,10 @@ models:
           - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
   - name: fct_event_namespace_monthly
     description: '{{ doc("fct_event_namespace_monthly") }}'
