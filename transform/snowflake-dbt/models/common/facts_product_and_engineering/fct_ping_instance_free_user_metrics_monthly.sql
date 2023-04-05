@@ -34,7 +34,7 @@
       NULL                                                                                      AS dim_namespace_id,
       sm_free_users.uuid,                                                            
       sm_free_users.host_name                                                                   AS hostname,
-      sm_free_user_metrics.dim_installation_id,
+      sm_free_users.dim_installation_id,
       'Self-Managed'                                                                            AS delivery_type,
       sm_free_users.cleaned_version,
       sm_free_users.dim_crm_account_id,
