@@ -74,6 +74,7 @@
       ping_instance_wave_sm.license_md5,
       ping_instance_wave_sm.cleaned_version,
       ping_instance_wave_sm.dim_location_country_id,
+      ping_instance_wave_sm.installation_creation_date,
       -- Wave 1
       DIV0(
           ping_instance_wave_sm.license_billable_users,
@@ -312,5 +313,5 @@
     created_by="@snalamaru",
     updated_by="@jpeguero",
     created_date="2022-07-21",
-    updated_date="2023-03-15"
+    updated_date="2023-04-04"
 ) }}

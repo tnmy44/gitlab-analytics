@@ -160,6 +160,7 @@
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
       'Self-Managed'                                                               AS delivery_type,
+      monthly_sm_metrics.installation_creation_date,
       -- Wave 1
       DIV0(
         monthly_sm_metrics.billable_user_count, 
@@ -400,6 +401,7 @@
       NULL                                                                          AS iso_2_country_code,
       NULL                                                                          AS iso_3_country_code,
       'SaaS'                                                                        AS delivery_type,
+      NULL                                                                          AS installation_creation_date,
       -- Wave 1
       DIV0(
         monthly_saas_metrics.billable_user_count, 
@@ -672,5 +674,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-09-09",
-    updated_date="2023-03-16"
+    updated_date="2023-04-04"
 ) }}

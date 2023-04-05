@@ -12,7 +12,8 @@
     ('locations', 'prep_location_country'),
     ('dim_product_tier', 'dim_product_tier'),
     ('prep_ping_instance', 'prep_ping_instance'),
-    ('dim_crm_account','dim_crm_account')
+    ('dim_crm_account','dim_crm_account'),
+    ('dim_installation', 'dim_installation') 
     ])
 
 }}
@@ -134,6 +135,7 @@
       prep_usage_ping_and_license.license_md5                                                                AS license_md5,
       prep_usage_ping_and_license.license_billable_users                                                     AS license_billable_users,
       prep_usage_ping_and_license.instance_user_count                                                        AS instance_user_count,
+      dim_installation.installation_creation_date                                                            AS installation_creation_date,
       prep_usage_ping_and_license.historical_max_user_count                                                  AS historical_max_user_count,
       prep_usage_ping_and_license.license_user_count                                                         AS license_user_count,
       prep_usage_ping_and_license.hostname                                                                   AS hostname,
@@ -148,13 +150,15 @@
       ON prep_usage_ping_and_license.dim_subscription_id = prep_subscription.dim_subscription_id
     LEFT JOIN dim_crm_account
       ON prep_subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+    LEFT JOIN dim_installation
+      ON dim_installation.dim_installation_id = prep_usage_ping_and_license.dim_installation_id
 
 )
 
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@jpeguero",
+    updated_by="@mdrussell",
     created_date="2022-03-08",
-    updated_date="2023-02-01"
+    updated_date="2023-04-04"
 ) }}
