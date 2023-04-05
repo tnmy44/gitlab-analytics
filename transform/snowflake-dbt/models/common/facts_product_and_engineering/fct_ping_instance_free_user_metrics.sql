@@ -48,6 +48,7 @@
       instance_pings.ping_created_date_month,
       instance_pings.ping_created_date_week,
       instance_pings.ping_created_date,
+      instance_pings.installation_creation_date,
       instance_pings.raw_usage_data_id,
       instance_pings.raw_usage_data_payload,
       instance_pings.license_md5,
