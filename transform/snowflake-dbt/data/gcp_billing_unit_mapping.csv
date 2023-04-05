@@ -3,6 +3,7 @@ byte-seconds,usage,gigabyte_per_day,86400000000000
 seconds,usage,day,86400
 bytes,usage,gigabyte,1000000000
 requests,usage,count,1
+USD,usage,USD,1
 gibibyte month,pricing,gigabyte_per_day,0.03061882437
 gibibyte,pricing,gigabyte,0.9313225746
 hour,pricing,day,24
@@ -16,3 +17,4 @@ gibibyte second,pricing,gigabyte_per_day,80466.27045
 year,pricing,day,0.002739726027
 gibibyte day,pricing,gigabyte_per_day,0.9313225746
 minute,pricing,day,1440
+USD,pricing,USD,1
