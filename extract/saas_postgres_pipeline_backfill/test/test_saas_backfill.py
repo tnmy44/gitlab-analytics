@@ -17,26 +17,58 @@ from utils import (
     has_new_columns,
     get_latest_parquet_file,
     update_import_query_for_delete_export,
+    schema_addition_check
 )
 
 
 def test_has_new_columns():
     """Test that new col is source is ascertained correctly"""
+    # same columns between source/gcs, no new source cols
     source_columns = ["a", "b"]
     gcs_columns = ["a", "b"]
     res = has_new_columns(source_columns, gcs_columns)
     assert res is False
 
+    # gcs has more cols, no new source cols
     source_columns = ["a", "b"]
     gcs_columns = ["a", "b", "c"]
     res = has_new_columns(source_columns, gcs_columns)
     assert res is False
 
+    # source has more cols, yes new source cols
     source_columns = ["a", "b", "c"]
     gcs_columns = ["a", "b"]
     res = has_new_columns(source_columns, gcs_columns)
     assert res
 
+
+@patch("utils.get_gcs_columns")
+@patch("utils.get_source_columns")
+def test_schema_addition_check(mock_get_source_columns, mock_get_gcs_columns):
+    raw_query = MagicMock()
+    source_engine = MagicMock()
+    source_table = MagicMock()
+
+    # same columns between source/gcs, no new source cols
+    mock_get_source_columns.return_value = ['a', 'b']
+    mock_get_gcs_columns.return_value = ['a', 'b']
+    result = schema_addition_check(raw_query, source_engine, source_table)
+    expected_result = False
+    assert result == expected_result
+
+    # gcs has more cols, no new source cols
+    mock_get_source_columns.return_value = ['a', 'b']
+    mock_get_gcs_columns.return_value = ['a', 'b', 'c']
+    result = schema_addition_check(raw_query, source_engine, source_table)
+    expected_result = False
+    assert result == expected_result
+
+    # source has more cols
+    mock_get_source_columns.return_value = ['a', 'b', 'c']
+    mock_get_gcs_columns.return_value = ['a', 'b']
+    result = schema_addition_check(raw_query, source_engine, source_table)
+    expected_result = True
+    assert result == expected_result
 
 @patch("utils.get_gcs_bucket")
 def test_get_latest_parquet_file(get_gcs_bucket_mock):

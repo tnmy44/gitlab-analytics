@@ -173,7 +173,7 @@ class PostgresPipelineTable:
         is_backfill_needed = True
         metadata_table = 'backfill_metadata'
 
-        if is_new_table(metadata_engine, self.source_table_name):
+        if is_new_table(metadata_engine, metadata_table, self.source_table_name):
             logging.info(
                 f"Backfill needed- processing new table: {self.source_table_name}."
             )

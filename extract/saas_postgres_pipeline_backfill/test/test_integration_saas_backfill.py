@@ -2,6 +2,7 @@ import os
 import pytest
 import re
 import sys
+from datetime import datetime
 from unittest.mock import Mock, MagicMock, patch
 
 abs_path = os.path.dirname(os.path.realpath(__file__))
@@ -12,12 +13,11 @@ abs_path = (
 sys.path.append(abs_path)
 
 from utils import (
-    has_new_columns,
-    get_latest_parquet_file,
     update_import_query_for_delete_export,
     # get_engines,
     postgres_engine_factory,
-    manifest_reader
+    manifest_reader,
+    is_new_table
 )
 
 class TestBackfillIntegration():
@@ -26,70 +26,96 @@ class TestBackfillIntegration():
 
         manifest_dict = manifest_reader(manifest_file_path)
         env = os.environ.copy()
-        metadata_engine = postgres_engine_factory(
+        self.metadata_engine = postgres_engine_factory(
             manifest_dict["connection_info"]['postgres_metadata_connection'], env
         )
         metadata_schema = 'saas_db_metadata'
         metadata_table = 'backfill_metadata'
-        test_table_full_path = f'{metadata_schema}.test_{metadata_table}'
+        self.test_metadata_table = f'test_{metadata_table}'
+        self.test_table_full_path = f'{metadata_schema}.{self.test_metadata_table}'
 
-        delete_query = f""" drop table if exists {test_table_full_path}"""
+        delete_query = f""" drop table if exists {self.test_table_full_path}"""
 
         create_table_query = f"""
-        create table {test_table_full_path}
+        create table {self.test_table_full_path}
         (like {metadata_schema}.{metadata_table});
         """
 
         # TODO: remove once Ved has approved other MR
-        alter_query = f"""alter table {test_table_full_path} rename column is_backfill_completed to is_export_completed;"""
+        alter_query = f"""alter table {self.test_table_full_path} rename column is_backfill_completed to is_export_completed;"""
 
-        with metadata_engine.connect() as connection:
+        with self.metadata_engine.connect() as connection:
             connection.execute(delete_query)
             connection.execute(create_table_query)
             connection.execute(alter_query)
 
+    def teardown(self):
+        manifest_file_path = 'extract/saas_postgres_pipeline_backfill/manifests_decomposed/el_gitlab_com_new_db_manifest.yaml'
+
+        manifest_dict = manifest_reader(manifest_file_path)
+        env = os.environ.copy()
+        self.metadata_engine = postgres_engine_factory(
+            manifest_dict["connection_info"]['postgres_metadata_connection'], env
+        )
+        metadata_schema = 'saas_db_metadata'
+        metadata_table = 'backfill_metadata'
+        self.test_metadata_table = f'test_{metadata_table}'
+        self.test_table_full_path = f'{metadata_schema}.{self.test_metadata_table}'
+
+        delete_query = f""" drop table if exists {self.test_table_full_path}"""
+
+        create_table_query = f"""
+        create table {self.test_table_full_path}
+        (like {metadata_schema}.{metadata_table});
+        """
+
+        # TODO: remove once Ved has approved other MR
+        alter_query = f"""alter table {self.test_table_full_path} rename column is_backfill_completed to is_export_completed;"""
+
+        with self.metadata_engine.connect() as connection:
+            connection.execute(delete_query)
+            connection.execute(create_table_query)
+            connection.execute(alter_query)
 
     def test_if_new_table_backfill(self):
-        # Arrange
-        # Code to create a new table and populate it with data for testing.
+        source_table = 'some_table'
 
-        # Act
-        # Code to backfill the new table.
+        # Test when table is missing in metadata
+        result = is_new_table(self.metadata_engine, self.test_metadata_table, source_table)
+        expected_result = True
+        assert result == expected_result
 
-        # Assert
-        # Code to verify that the backfill was successful.
-        pass
+        # Insert test record
+        database_name = 'some_db'
+        initial_load_start_date=datetime(2023, 1, 1)
+        upload_date=datetime(2023, 1, 1)
+        upload_file_name='some_file'
+        last_extracted_id=10
+        max_id=20
+        is_export_completed=True
+        chunk_row_count=3
 
-    '''
-    def test_if_new_column_in_source_backfill(self):
-        # Arrange
-        # Code to add a new column to the source and populate it with data for testing.
+        insert_query = f'''
+        INSERT INTO {self.test_table_full_path}
+        VALUES (
+            '{database_name}',
+            '{source_table}',
+            '{initial_load_start_date}',
+            '{upload_date}',
+            '{upload_file_name}',
+            {last_extracted_id},
+            {max_id},
+            {is_export_completed},
+            {chunk_row_count});
+        '''
 
-        # Act
-        # Code to backfill the table.
+        # Test when table is inserted into metadata
+        with self.metadata_engine.connect() as connection:
+            connection.execute(insert_query)
 
-        # Assert
-        # Code to verify that the backfill was successful.
-
-    def test_if_removed_column_in_source_dont_backfill(self):
-        # Arrange
-        # Code to remove a column from the source and populate it with data for testing.
-
-        # Act
-        # Code to attempt to backfill the table.
-
-        # Assert
-        # Code to verify that the backfill was not attempted.
-
-    def test_if_in_middle_of_backfill_less_than_24hr_since_last_write(self):
-        # Arrange
-        # Code to simulate being in the middle of a backfill with less than 24 hours since the last write.
-
-        # Act
-        # Code to resume the backfill.
-
-        # Assert
-        # Code to verify that the backfill was successful and resumed from the correct point.
+        result = is_new_table(self.metadata_engine, self.test_metadata_table, source_table)
+        expected_result = False
+        assert result == expected_result
 
     def test_if_in_middle_of_backfill_more_than_24hr_since_last_write(self):
         # Arrange

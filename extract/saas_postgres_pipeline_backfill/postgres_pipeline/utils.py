@@ -434,12 +434,12 @@ def range_generator(
         start += step
 
 
-def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
+def is_new_table(metadata_engine: Engine, metadata_table: str, source_table: str) -> bool:
     """
     Check if backfill table exists in backfill metadata table.
     If the table doesn't exist, then it's a 'new' table
     """
-    query = f"SELECT * FROM saas_db_metadata.backfill_metadata WHERE table_name = '{source_table}' LIMIT 1;"
+    query = f"SELECT * FROM saas_db_metadata.{metadata_table} WHERE table_name = '{source_table}' LIMIT 1;"
     logging.info(f"\nquery: {query}")
     results = query_executor(metadata_engine, query)
     return len(results) == 0
@@ -587,7 +587,6 @@ def schema_addition_check(
     raw_query: str,
     source_engine: Engine,
     source_table: str,
-    table_index: str,
 ) -> bool:
     """
     Query the source table with the manifest query to get the columns, then check
