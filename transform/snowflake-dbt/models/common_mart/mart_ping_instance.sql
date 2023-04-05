@@ -15,7 +15,8 @@
     ('dim_license', 'dim_license'),
     ('dim_location', 'dim_location_country'),
     ('fct_ping_instance', 'fct_ping_instance'),
-    ('dim_ping_metric', 'dim_ping_metric')
+    ('dim_ping_metric', 'dim_ping_metric'),
+    ('dim_gitlab_version_major_minor', 'dim_gitlab_version_major_minor')
     ])
 
 }}
@@ -107,6 +108,8 @@
         fct_ping_instance_metric.dim_license_id                                                                                         AS dim_license_id,
         fct_ping_instance_metric.dim_installation_id                                                                                    AS dim_installation_id,
         fct_ping_instance_metric.dim_ping_instance_id                                                                                   AS dim_ping_instance_id,
+        fct_ping_instance_metric.dim_gitlab_version_major_minor_sk                                                                      AS dim_gitlab_version_major_minor_sk,
+        fct_ping_instance_metric.dim_latest_available_gitlab_version_major_minor_sk                                                     AS dim_latest_available_gitlab_version_major_minor_sk,
         dim_ping_instance.license_sha256                                                                                                AS license_sha256,
         dim_ping_instance.license_md5                                                                                                   AS license_md5,
         dim_ping_instance.is_trial                                                                                                      AS is_trial,
@@ -140,6 +143,10 @@
         dim_ping_instance.major_minor_version                                                                                           AS major_minor_version,
         dim_ping_instance.major_minor_version_id                                                                                        AS major_minor_version_id,
         dim_ping_instance.version_is_prerelease                                                                                         AS version_is_prerelease,
+        dim_gitlab_version_major_minor.version_number                                                                                   AS version_number,
+        DATEDIFF('days', dim_gitlab_version_major_minor.release_date, fct_ping_instance_metric.ping_created_at)                         AS days_after_version_release_date,
+        latest_version.major_minor_version                                                                                              AS latest_version_available_at_ping_creation,
+        latest_version.version_number - dim_gitlab_version_major_minor.version_number                                                   AS versions_behind_latest_at_ping_creation,
         dim_ping_instance.is_internal                                                                                                   AS is_internal,
         dim_ping_instance.is_staging                                                                                                    AS is_staging,
         dim_ping_instance.instance_user_count                                                                                           AS instance_user_count,
@@ -166,6 +173,10 @@
         AND dim_date.first_day_of_month = sha256.reporting_month
       LEFT JOIN dim_location
         ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
+      LEFT JOIN dim_gitlab_version_major_minor
+        ON fct_ping_instance_metric.dim_gitlab_version_major_minor_sk = dim_gitlab_version_major_minor.dim_gitlab_version_major_minor_sk
+      LEFT JOIN dim_gitlab_version_major_minor AS latest_version
+        ON fct_ping_instance_metric.dim_latest_available_gitlab_version_major_minor_sk = latest_version.dim_gitlab_version_major_minor_sk
       WHERE dim_ping_instance.ping_delivery_type = 'Self-Managed'
         OR (dim_ping_instance.ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
 
@@ -189,6 +200,8 @@
       dim_host_id,
       host_name,
       dim_location_country_id,
+      dim_gitlab_version_major_minor_sk,
+      dim_latest_available_gitlab_version_major_minor_sk,
 
       --Service Ping metadata
       ping_delivery_type,
@@ -199,6 +212,10 @@
       minor_version,
       major_minor_version,
       version_is_prerelease,
+      version_number,
+      days_after_version_release_date,
+      latest_version_available_at_ping_creation,
+      versions_behind_latest_at_ping_creation,
       is_internal,
       is_staging,
       is_trial,
@@ -242,5 +259,5 @@
     created_by="@icooper-acp",
     updated_by="@jpeguero",
     created_date="2022-03-11",
-    updated_date="2023-02-01"
+    updated_date="2023-04-05"
 ) }}
