@@ -62,6 +62,7 @@
       add_country_info_to_usage_ping.dim_installation_id                                 AS dim_installation_id,
       dim_product_tier.dim_product_tier_id                                               AS dim_product_tier_id,
       prep_gitlab_version_major_minor.dim_gitlab_version_major_minor_sk                  AS dim_gitlab_version_major_minor_sk,
+      latest_version.dim_gitlab_version_major_minor_sk                                   AS dim_latest_available_gitlab_version_major_minor_sk,
       add_country_info_to_usage_ping.ping_created_at                                     AS ping_created_at,
       add_country_info_to_usage_ping.hostname                                            AS hostname,
       add_country_info_to_usage_ping.license_sha256                                      AS license_sha256,
@@ -84,6 +85,8 @@
       AND dim_product_tier.product_tier_name != 'Dedicated - Ultimate'
     LEFT JOIN prep_gitlab_version_major_minor
       ON prep_gitlab_version_major_minor.major_minor_version = add_country_info_to_usage_ping.major_minor_version
+    LEFT JOIN prep_gitlab_version_major_minor AS latest_version -- Join the latest version released at the time of the ping.
+      ON add_country_info_to_usage_ping.ping_created_at BETWEEN latest_version.release_date AND {{ coalesce_to_infinity('latest_version.next_version_release_date') }}
   
 ), prep_usage_ping_and_license AS (
 
@@ -100,7 +103,8 @@
       prep_usage_ping_cte.dim_host_id                                                                     AS dim_host_id,
       prep_usage_ping_cte.dim_installation_id                                                             AS dim_installation_id,
       COALESCE(sha256.dim_license_id, md5.dim_license_id)                                                 AS dim_license_id,
-      prep_usage_ping_cte.dim_gitlab_version_major_minor_sk                                               AS dim_gitlab_version_major_minor_sk,                                    
+      prep_usage_ping_cte.dim_gitlab_version_major_minor_sk                                               AS dim_gitlab_version_major_minor_sk, 
+      prep_usage_ping_cte.dim_latest_available_gitlab_version_major_minor_sk                              AS dim_latest_available_gitlab_version_major_minor_sk,
       prep_usage_ping_cte.license_sha256                                                                  AS license_sha256,
       prep_usage_ping_cte.license_md5                                                                     AS license_md5,
       prep_usage_ping_cte.license_billable_users                                                          AS license_billable_users,
@@ -140,6 +144,7 @@
       prep_usage_ping_and_license.dim_installation_id                                                        AS dim_installation_id,
       prep_usage_ping_and_license.dim_license_id                                                             AS dim_license_id,
       prep_usage_ping_and_license.dim_gitlab_version_major_minor_sk                                          AS dim_gitlab_version_major_minor_sk,
+      prep_usage_ping_and_license.dim_latest_available_gitlab_version_major_minor_sk                         AS dim_latest_available_gitlab_version_major_minor_sk,
       prep_usage_ping_and_license.license_sha256                                                             AS license_sha256,
       prep_usage_ping_and_license.license_md5                                                                AS license_md5,
       prep_usage_ping_and_license.license_billable_users                                                     AS license_billable_users,
