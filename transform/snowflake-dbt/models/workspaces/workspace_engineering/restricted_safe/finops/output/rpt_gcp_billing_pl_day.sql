@@ -33,6 +33,8 @@ overlaps AS (
     service_base.usage_amount_in_pricing_units * COALESCE(combined_pl_mapping.pl_percent, 1) AS usage_amount_in_pricing_units,
     service_base.cost_before_credits * COALESCE(combined_pl_mapping.pl_percent, 1)           AS cost_before_credits,
     service_base.net_cost * COALESCE(combined_pl_mapping.pl_percent, 1)                      AS net_cost,
+    service_base.usage_standard_unit,
+    service_base.usage_amount_in_standard_unit * COALESCE(combined_pl_mapping.pl_percent, 1) AS usage_amount_in_standard_unit,
     combined_pl_mapping.from_mapping,
     DENSE_RANK() OVER (PARTITION BY service_base.day,
       service_base.gcp_project_id,
