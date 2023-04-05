@@ -75,7 +75,7 @@ WITH dates AS (
 ), mapping AS (
 
     {{ dbt_utils.unpivot(relation=ref('bamboohr_id_employee_number_mapping'), cast_to='varchar', 
-       exclude=['employee_number', 'employee_id','first_name', 'last_name', 'hire_date', 'termination_date', 'greenhouse_candidate_id','region','country','nationality', 'last_updated_date']) }}
+       exclude=['employee_number', 'employee_id','first_name', 'last_name', 'hire_date', 'termination_date', 'greenhouse_candidate_id','region','country','nationality', 'last_updated_date', 'first_inactive_date']) }}
 
 ), mapping_enhanced AS (
 
@@ -118,8 +118,14 @@ WITH dates AS (
       --using the current division - department mapping for reporting
       job_role_modified                                                             AS job_role,
       COALESCE(job_grade,'NA')                                                      AS job_grade,
-      mapping_enhanced.eeoc_field_name,                                                       
-      mapping_enhanced.eeoc_value,                                          
+      mapping_enhanced.eeoc_field_name,
+      CASE
+        WHEN mapping_enhanced.eeoc_field_name like '%_region'
+          THEN SPLIT_PART(mapping_enhanced.eeoc_value,'_',1)|| '_' || 
+            IFF(employees.country in ('United States of America', 'United States'),'United States of America', 'Non-US')
+        WHEN mapping_enhanced.eeoc_field_name = 'region_modified'
+          THEN employees.region_modified
+        ELSE mapping_enhanced.eeoc_value END                                        AS eeoc_value,   
       IFF(dates.start_date = date_actual,1,0)                                       AS headcount_start,
       IFF(dates.start_date = date_actual 
         AND employees.department_modified != 'Sales Development', 1,0)              AS headcount_start_excluding_sdr,
@@ -264,6 +270,29 @@ WITH dates AS (
       'division_breakout'               AS breakout_type, 
       'division_breakout'               AS department,
       division,
+      NULL                              AS job_role,
+      NULL                              AS job_grade,
+      eeoc_field_name,                                                       
+      eeoc_value,
+      {{repeated_metric_columns}}
+    FROM dates 
+    LEFT JOIN intermediate 
+      ON DATE_TRUNC(month, start_date) = DATE_TRUNC(month, date_actual)
+    WHERE department IS NOT NULL
+    {{ dbt_utils.group_by(n=8) }} 
+
+    UNION ALL
+
+    SELECT
+      DATE_TRUNC(month,start_date)      AS month_date,
+      'division_group_breakout'         AS breakout_type, 
+      'division_group_breakout'         AS department,
+      CASE
+        WHEN division = 'Sales' 
+          THEN 'Sales'
+        WHEN division in ('Product', 'Engineering')
+          THEN 'Tech'
+        ELSE 'Non-Tech' END             AS division,
       NULL                              AS job_role,
       NULL                              AS job_grade,
       eeoc_field_name,                                                       
