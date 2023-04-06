@@ -5,7 +5,7 @@
     tags=['product'],
     full_refresh= only_force_full_refresh(),
     on_schema_change='sync_all_columns',
-    cluster_by=['behavior_at::DATE']
+    cluster_by=['behavior_at::DATE','event_action']
   )
 
 }}
@@ -15,6 +15,7 @@
     ('namespace', 'dim_namespace'),
     ('project', 'dim_project'),
     ('operating_system', 'dim_behavior_operating_system'),
+    ('browser','dim_behavior_browser'),
     ('dates', 'dim_date')
 ]) }},
 
@@ -36,11 +37,15 @@ structured_behavior AS (
     event_value,
     session_index,
     session_id,
+    has_gitlab_service_ping_context,
+    has_gitlab_experiment_context,
+    has_customer_standard_context,
     dim_behavior_referrer_page_sk,
     dim_behavior_event_sk,
     dim_namespace_id,
     dim_project_id,
-    dim_behavior_operating_system_sk
+    dim_behavior_operating_system_sk,
+    dim_behavior_browser_sk
   FROM {{ ref('fct_behavior_structured_event') }}
   {% if is_incremental() %}
 
@@ -73,6 +78,9 @@ report AS (
     structured_behavior.event_value,
     structured_behavior.session_index,
     structured_behavior.session_id,
+    structured_behavior.has_gitlab_service_ping_context,
+    structured_behavior.has_gitlab_experiment_context,
+    structured_behavior.has_customer_standard_context,
     event.event_category,
     event.event_action,
     event.event_label,
@@ -86,6 +94,8 @@ report AS (
     project.dim_project_id,
     operating_system.device_type,
     operating_system.is_device_mobile,
+    browser.browser_name,
+    browser.dim_behavior_browser_sk,
     structured_behavior.dim_behavior_referrer_page_sk
   FROM structured_behavior
   LEFT JOIN event
@@ -96,6 +106,8 @@ report AS (
     ON structured_behavior.dim_project_id = project.dim_project_id
   LEFT JOIN operating_system
     ON structured_behavior.dim_behavior_operating_system_sk = operating_system.dim_behavior_operating_system_sk
+  LEFT JOIN browser
+    ON structured_behavior.dim_behavior_browser_sk = browser.dim_behavior_browser_sk
   LEFT JOIN dates
     ON{{ get_date_id('structured_behavior.behavior_at') }} = dates.date_id
 )
@@ -105,5 +117,5 @@ report AS (
     created_by="@pempey",
     updated_by="@pempey",
     created_date="2023-02-22",
-    updated_date="2023-02-22"
+    updated_date="2023-03-27"
 ) }}

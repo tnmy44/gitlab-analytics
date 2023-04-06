@@ -1302,6 +1302,16 @@ models:
       description: '{{ doc("namespace_is_ultimate_parent") }}'
     - name: dim_behavior_referrer_page_sk
       description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+    - name: has_gitlab_service_ping_context
+      description: '{{ doc("has_gitlab_service_ping_context") }}'
+    - name: has_gitlab_experiment_context
+      description: '{{ doc("has_gitlab_experiment_context") }}'
+    - name: has_customer_standard_context
+      description: '{{ doc("has_customer_standard_context") }}'
+    - name: browser_name
+      description: '{{ doc("browser_name") }}'
+    - name: dim_behavior_browser_sk
+      description: '{{ doc("dim_behavior_browser_sk") }}'
     - name: created_by
       description: '{{ doc("created_by") }}'
     - name: updated_by

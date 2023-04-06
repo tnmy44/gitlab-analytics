@@ -46,11 +46,11 @@ default_args = {
 }
 
 # Create the DAG
-# Schedule to run daily at 6AM
+# Schedule to run daily at 6PM
 dag = DAG(
     "sales_analytics_daily_notebooks",
     default_args=default_args,
-    schedule_interval="0 6 * * *",
+    schedule_interval="0 18 * * *",
     concurrency=1,
 )
 

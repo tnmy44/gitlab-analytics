@@ -1178,16 +1178,19 @@ roles:
             databases:
                 read:
                     - raw
+                    - prod
                 write:
                     - raw
             schemas:
                 read:
                     - raw.sales_analytics
+                    - prod.workspace_sales
                 write:
                     - raw.sales_analytics
             tables:
                 read:
                     - raw.sales_analytics.*
+                    - prod.workspace_sales.*
                 write:
                     - raw.sales_analytics.*
 
@@ -2893,6 +2896,7 @@ roles:
     - ddeng:
         member_of:
             - analyst_engineering
+            - restricted_safe
         warehouses:
             - dev_xs
         owns:
