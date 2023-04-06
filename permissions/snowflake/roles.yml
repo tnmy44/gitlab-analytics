@@ -199,6 +199,11 @@ databases:
     - rkohnke_prep:
         shared: no
 
+    - rrendon_prod:
+        shared: no
+    - rrendon_prep:
+        shared: no
+
     - schaturvedi_prod:
         shared: no
     - schaturvedi_prep:
@@ -4468,6 +4473,28 @@ roles:
             - analyst_engineering
         warehouses:
             - dev_xs
+        privileges:
+            databases:
+                read:
+                    - rrendon_prep
+                    - rrendon_prod
+                write:
+                    - rrendon_prep
+                    - rrendon_prod
+            schemas:
+                read:
+                    - rrendon_prep.*
+                    - rrendon_prod.*
+                write:
+                    - rrendon_prep.*
+                    - rrendon_prod.*
+            tables:
+                read:
+                    - rrendon_prep.*.*
+                    - rrendon_prod.*.*
+                write:
+                    - rrendon_prep.*.*
+                    - rrendon_prod.*.*
 
     - rwoo:
         member_of:
