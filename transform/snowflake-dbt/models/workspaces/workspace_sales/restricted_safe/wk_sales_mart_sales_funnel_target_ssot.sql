@@ -251,6 +251,8 @@
       LOWER(agg_demo_keys.key_sqs)                             AS key_sqs,
       LOWER(agg_demo_keys.key_ot)                              AS key_ot,
       LOWER(agg_demo_keys.key_bu)                      AS key_bu,
+      LOWER(agg_demo_keys.key_bu_ot)                   AS key_bu_ot,
+      LOWER(agg_demo_keys.key_bu_sqs)                  AS key_bu_sqs,
       LOWER(agg_demo_keys.key_bu_subbu)                AS key_bu_subbu,
       LOWER(agg_demo_keys.key_bu_subbu_ot)             AS key_bu_subbu_ot,
       LOWER(agg_demo_keys.key_bu_subbu_sqs)            AS key_bu_subbu_sqs,
