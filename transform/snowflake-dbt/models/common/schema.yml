@@ -3861,6 +3861,10 @@ models:
         description: '{{ doc("dim_installation_id") }}'
       - name: dim_license_id
         description:  '{{ doc("dim_license_id") }}'
+      - name: dim_gitlab_version_major_minor_sk
+        description:  '{{ doc("dim_gitlab_version_major_minor_sk") }}'
+      - name: dim_latest_available_gitlab_version_major_minor_sk
+        description: '{{ doc("dim_latest_available_gitlab_version_major_minor_sk") }}'
       - name: license_md5
         description: '{{ doc("license_md5") }}'
       - name: license_sha256

@@ -479,6 +479,12 @@ Surrogate key of dim_gitlab_version_major_minor. Currently identified by hashing
 
 {% enddocs %}
 
+{% docs dim_latest_available_gitlab_version_major_minor_sk %}
+
+The latest avaiable dim_gitlab_version_major_minor_sk at the moment the ping is sent.
+
+{% enddocs %}
+
 {% docs version_is_prerelease %}
 
 Boolean flag which is set to True if the version is a pre-release Version of the GitLab App. See more details [here](https://docs.gitlab.com/ee/policy/maintenance.html). This is defined as `IFF(version ILIKE '%-pre', TRUE, FALSE)`.
