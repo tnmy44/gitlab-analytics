@@ -509,6 +509,24 @@ Release date of the next GitLab version.
 
 {% enddocs %}
 
+{% docs days_after_version_release_date %}
+
+The number of days between the date the ping was sent and the release date of the version associated with the ping. 
+
+{% enddocs %}
+
+{% docs latest_version_available_at_ping_creation %}
+
+The most recent version that is available at the time the ping is created. 
+
+{% enddocs %}
+
+{% docs versions_behind_latest_at_ping_creation %}
+
+The number of versions by which the ping-associated version lags behind.
+
+{% enddocs %}
+
 {% docs is_internal_ping_model %}
 
 Boolean flag set to True if the installation meets our defined "internal" criteria. However, this field seems to also capture some Self-Managed customers, so the best way to identify a gitlab.com installation is using `ping_delivery_type = 'SaaS'`. `is_internal` is defined as
