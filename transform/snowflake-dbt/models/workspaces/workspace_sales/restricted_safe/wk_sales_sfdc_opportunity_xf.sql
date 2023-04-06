@@ -591,6 +591,8 @@ WITH edm_opty AS (
 
       -- JK 2023-02-06: FY24 keys
       LOWER(agg_demo_keys_base.key_bu)                      AS key_bu,
+      LOWER(key_bu_ot)                                      AS key_bu_ot,
+      LOWER(key_bu_sqs)                                     AS key_bu_sqs,
       LOWER(agg_demo_keys_base.key_bu_subbu)                AS key_bu_subbu,
       LOWER(agg_demo_keys_base.key_bu_subbu_ot)             AS key_bu_subbu_ot,
       LOWER(agg_demo_keys_base.key_bu_subbu_sqs)            AS key_bu_subbu_sqs,
