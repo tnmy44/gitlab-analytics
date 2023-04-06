@@ -93,6 +93,12 @@ This model captures a historical record of GitLab's default application settings
 
 {% enddocs %}
 
+{% docs prep_gitlab_version_major_minor %}
+
+Creates base view with generated keys for Gitlab major and minor versions. 
+
+{% enddocs %}
+
 {% docs prep_gitlab_dotcom_plan %}
 
 Creates a base view with generated keys for the plans shared dimension and fact and references in facts.

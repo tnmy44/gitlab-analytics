@@ -154,6 +154,17 @@ models:
           - not_null
           - unique
 
+  - name: prep_gitlab_version_major_minor
+    description: '{{ doc("prep_gitlab_version_major_minor") }}'
+    columns:
+      - name: dim_gitlab_version_major_minor_sk
+        description: '{{ doc("dim_gitlab_version_major_minor_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: gitlab_version_major_minor_id
+        description: '{{ doc("gitlab_version_major_minor_id") }}'
+
   - name: prep_industry
     description: '{{ doc("prep_industry") }}'
     columns:
