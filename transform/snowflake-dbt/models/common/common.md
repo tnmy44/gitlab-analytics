@@ -395,6 +395,17 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs dim_gitlab_version_major_minor %}
+Dimensional table representing released versions (major and minor) of GitLab.
+
+The grain of the table is a major_minor_version.
+
+Additional information can be found on the [GitLab Releases](https://about.gitlab.com/releases/categories/releases/) page.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs dim_gitlab_version %}
 Dimensional table representing released versions of GitLab.
 

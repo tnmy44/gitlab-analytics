@@ -491,6 +491,24 @@ Boolean flag which is set to True if the version is a pre-release Version of the
 
 {% enddocs %}
 
+{% docs release_date %}
+
+Release date of the GitLab version.
+
+{% enddocs %}
+
+{% docs version_number %}
+
+The sequential number of the major_minor_version.
+
+{% enddocs %}
+
+{% docs next_version_release_date %}
+
+Release date of the next GitLab version.
+
+{% enddocs %}
+
 {% docs is_internal_ping_model %}
 
 Boolean flag set to True if the installation meets our defined "internal" criteria. However, this field seems to also capture some Self-Managed customers, so the best way to identify a gitlab.com installation is using `ping_delivery_type = 'SaaS'`. `is_internal` is defined as
