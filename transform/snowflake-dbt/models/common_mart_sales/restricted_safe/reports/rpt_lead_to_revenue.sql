@@ -156,6 +156,7 @@
     --Opp Data
       opp.order_type AS opp_order_type,
       opp.sales_qualified_source_name,
+      opp.opportunity_name,
       opp.deal_path_name,
       opp.sales_type,
       opp.sales_accepted_date,
@@ -346,7 +347,7 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
- 	{{dbt_utils.group_by(n=55)}}
+ 	{{dbt_utils.group_by(n=56)}}
     
 ), cohort_base_combined AS (
   
@@ -376,6 +377,7 @@
       person_order_type,
   
   --Opp Data
+      null AS opportunity_name,
       null AS opp_order_type,
       null AS sales_qualified_source_name,
       null AS deal_path_name,
@@ -501,6 +503,7 @@
       null AS person_order_type,
   
   --Opp Data
+      opportunity_name,
       opp_order_type,
       sales_qualified_source_name,
       deal_path_name,
@@ -672,5 +675,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-04-04",
+    updated_date="2023-04-06",
   ) }}
