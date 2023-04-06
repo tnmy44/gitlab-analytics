@@ -177,7 +177,7 @@ SELECT date_day,
        env_label,
        pl_category,
        pl_percent,
-       LISTAGG(from_mapping, ' || ') WITHIN GROUP (
+       LISTAGG(DISTINCT from_mapping, ' || ') WITHIN GROUP (
        ORDER BY from_mapping ASC) AS from_mapping
 FROM cte_append
 {{ dbt_utils.group_by(n=8) }}
