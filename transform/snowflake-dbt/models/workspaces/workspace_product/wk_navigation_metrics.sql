@@ -20,7 +20,7 @@ p.derived_tstamp > '2022-06-01'
 {% if is_incremental() %}
 
 AND
-page_view_month >= (SELECT MAX(_date) FROM {{this}}) -- goal is to add entire new months only. 
+page_view_month > (SELECT MAX(_date) FROM {{this}}) -- goal is to add entire new months only. 
 
 {% endif %}
 
@@ -45,7 +45,7 @@ mr.derived_tstamp > '2022-06-01'
 {% if is_incremental() %}
 
 AND
-_month >= (SELECT MAX(_date) FROM {{this}}) -- goal is to add entire new months only. 
+_month > (SELECT MAX(_date) FROM {{this}}) -- goal is to add entire new months only. 
 
 {% endif %}
 GROUP BY 
