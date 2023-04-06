@@ -78,6 +78,8 @@ WITH date_details AS (
 
       -- FY24 keys
       key_bu,
+      key_bu_ot,
+      key_bu_sqs,
       key_bu_subbu,
       key_bu_subbu_ot,
       key_bu_subbu_sqs,
