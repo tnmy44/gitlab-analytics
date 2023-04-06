@@ -41,7 +41,7 @@ mr.app_id = 'gitlab'
 AND
 _month < DATE_TRUNC(MONTH,CURRENT_DATE())
 AND
-p.derived_tstamp > '2022-06-01'
+mr.derived_tstamp > '2022-06-01'
 {% if is_incremental() %}
 
 AND
