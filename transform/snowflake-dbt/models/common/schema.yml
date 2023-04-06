@@ -6625,3 +6625,68 @@ models:
         description: '{{ doc("end_quantity") }}'
       - name: annual_price_per_seat_change
         description: '{{ doc("annual_price_per_seat_change") }}'
+  - name: dim_team_member
+    description: '{{ doc("dim_team_member") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - valid_from
+    columns:
+      - name: employee_id
+        description: Workday Employee Identification 
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: first_name
+      - name: last_name
+      - name: work_email
+        description: Team member work email
+      - name: gitlab_username
+        description: Team member gitlab username 
+      - name: region
+        description: Current/latest region the team member resides in
+      - name: hire_date
+        description: Most recent hire date. Field is updated if a team member is re-hired after a termination
+      - name: termination_date
+        description: NULL if team member is a current employee, otherwise it contains the most recent termination date
+      - name: is_current_team_member
+        description: True if the termination_date field is NULL, false otherwise. This flag captures whether the employee was employed at GitLab within the valid_from/valid_to timeframe
+      - name: is_rehire
+        description: True if team member has more than one hire event (more than one occurrance of hire_date)
+      - name: is_current
+        description: True if the current team member event is the most recent event
+      - name: country
+        description: Current/latest country the team member resides in
+        meta:
+          masking_policy: analyst_people
+      - name: nationality
+        description: Masked. Team member nationality.
+        meta:
+          masking_policy: analyst_people
+      - name: ethnicity 
+        description: Masked. Team member ethnicity.
+        meta:
+          masking_policy: analyst_people
+      - name: gender 
+        description: Masked. Team member gender
+        meta:
+          masking_policy: analyst_people
+      - name: date_of_birth 
+        description: Masked. Team member date of birth
+        meta:
+          masking_policy: analyst_people
+      - name: key_talent_status 
+        description: Masked. Team member Key Talent status
+        meta:
+          masking_policy: analyst_people
+      - name: growth_potential_rating 
+        description: Masked. Team member growth potential rating
+        meta:
+          masking_policy: analyst_people
+      - name: performance_rating 
+        description: Masked. Team member performance rating
+        meta:
+          masking_policy: analyst_people
