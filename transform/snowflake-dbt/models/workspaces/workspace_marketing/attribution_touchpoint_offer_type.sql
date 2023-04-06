@@ -10,8 +10,7 @@ WITH attribution_touchpoint AS (
   bizible_touchpoint_type,
   LOWER(bizible_form_url) AS bizible_form_url,
   REPLACE(bizible_form_url,'.html','') AS bizible_form_url_clean,
-  pathfactory_content_type,
-  custom_net_arr
+  pathfactory_content_type
   FROM {{ ref('mart_crm_attribution_touchpoint') }}
   LEFT JOIN {{ ref('sheetload_bizible_to_pathfactory_mapping') }}  ON bizible_form_url_clean=bizible_url
 ),
