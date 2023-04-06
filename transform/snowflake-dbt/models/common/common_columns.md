@@ -467,6 +467,12 @@ The id of the major minor version, defined as `major_version*100 + minor_version
 
 {% enddocs %}
 
+{% docs gitlab_version_major_minor_id %}
+
+The natural key of dim_gitlab_version_major_minor. This natural key is defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `gitlab_version_major_minor_id` is 1306. This id is also intended to facilitate easy filtering on versions
+
+{% enddocs %}
+
 {% docs version_is_prerelease %}
 
 Boolean flag which is set to True if the version is a pre-release Version of the GitLab App. See more details [here](https://docs.gitlab.com/ee/policy/maintenance.html). This is defined as `IFF(version ILIKE '%-pre', TRUE, FALSE)`.

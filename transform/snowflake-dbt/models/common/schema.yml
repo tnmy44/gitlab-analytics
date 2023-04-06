@@ -2699,6 +2699,8 @@ models:
         description: '{{ doc("dim_instance_id") }}'
       - name: dim_installation_id
         description: '{{ doc("dim_installation_id") }}'
+      - name: gitlab_version_major_minor_id
+        description: '{{ doc("gitlab_version_major_minor_id") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
       - name: ping_created_date_28_days_earlier

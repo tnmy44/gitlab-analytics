@@ -1026,7 +1026,7 @@ This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitl
   - (OR) hostname IN ('staging.gitlab.com','dr.gitlab.com')
 - `is_trial` = `IFF(ping_created_at < license_trial_ends_on, TRUE, FALSE)`
 - `major_minor_version` = `major_version || '.' || minor_version`
-- `major_minor_version_id` = `major_version * 100 + minor_version` (helpful for sorting or filtering versions)
+- `gitlab_version_major_minor_id` = `major_version * 100 + minor_version` (helpful for sorting or filtering versions)
 - `version_is_prerelease` = `IFF(version ILIKE '%-pre', TRUE, FALSE)`
 - `cleaned_edition` = `IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, ping_edition, 'EE Free')`
 
