@@ -567,7 +567,7 @@ WITH map_merged_crm_account AS (
       ON sfdc_account.account_id = ptc_scores.account_id 
         AND ptc_scores.is_current = TRUE
     LEFT JOIN ultimate_parent_account
-      ON sfdc_account.dim_crm_parent_account_id = ultimate_parent_account.account_id
+      ON sfdc_account.dim_parent_crm_account_id = ultimate_parent_account.account_id
     LEFT OUTER JOIN sfdc_users AS technical_account_manager
       ON sfdc_account.technical_account_manager_id = technical_account_manager.user_id
     LEFT JOIN sfdc_users AS account_owner
