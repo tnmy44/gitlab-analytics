@@ -45,6 +45,7 @@
 
     SELECT DISTINCT
       person_base.email_hash, 
+      person_base.sfdc_record_id,
       person_base.dim_crm_account_id,
       upa_base.dim_parent_crm_account_id,
       opportunity_base.dim_crm_opportunity_id,
@@ -66,6 +67,7 @@
 
     SELECT DISTINCT
       email_hash,
+      sfdc_record_id,
       dim_crm_opportunity_id,
       dim_parent_crm_account_id,
       dim_crm_account_id,
