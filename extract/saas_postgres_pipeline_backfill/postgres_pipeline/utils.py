@@ -18,6 +18,7 @@ from gitlabdata.orchestration_utils import (
 import pandas as pd
 import sqlalchemy
 from google.cloud import storage
+from google.cloud.storage.client import Client
 from google.cloud.storage.bucket import Bucket
 from google.oauth2 import service_account
 from sqlalchemy import (
@@ -35,28 +36,30 @@ from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
 
 SCHEMA = "tap_postgres"
+BUCKET_NAME = "saas-pipeline-backfills"
 
 
-def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
+def get_gcs_bucket(gapi_keyfile: str) -> Bucket:
     """Do the auth and return a usable gcs bucket object."""
-
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    credentials = service_account.Credentials.from_service_account_info(gapi_keyfile)
+    credentials = service_account.Credentials.from_service_account_info(
+        gapi_keyfile
+    )
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
-    return storage_client.get_bucket(bucket_name)
+    return storage_client.get_bucket(BUCKET_NAME)
 
 
 def upload_to_gcs(
-        advanced_metadata: bool, upload_df: pd.DataFrame, upload_file_dir: str, upload_file_name: str
+    advanced_metadata: bool, upload_df: pd.DataFrame, upload_file_dir: str,
+    upload_file_name: str
 ) -> bool:
     """
     Write a dataframe to local storage and then upload it to a GCS bucket.
     """
 
     keyfile = yaml.load(os.environ["GCP_SERVICE_CREDS"], Loader=yaml.FullLoader)
-    bucket_name = "saas-pipeline-backfills"
-    bucket = get_gcs_bucket(keyfile, bucket_name)
+    bucket = get_gcs_bucket(keyfile)
 
     # Write out the parquet and upload it
     enriched_df = dataframe_enricher(advanced_metadata, upload_df)
@@ -73,7 +76,10 @@ def upload_to_gcs(
 
 
 def trigger_snowflake_upload(
-    engine: Engine, table: str, upload_file_name: str, purge: bool = False
+    engine: Engine,
+    table: str,
+    upload_file_name: str,
+    purge: bool = False
 ) -> None:
     """Trigger Snowflake to upload a tsv file from GCS."""
     logging.info("Loading from GCS into SnowFlake")
@@ -105,7 +111,7 @@ def trigger_snowflake_upload(
 
 
 def postgres_engine_factory(
-        database_connection: Dict[str, str], env: Dict[str, str]
+    database_connection: Dict[str, str], env: Dict[str, str]
 ) -> Engine:
     """
     Create a postgres engine to be used by pandas.
@@ -122,7 +128,10 @@ def postgres_engine_factory(
     # Inject the values to create the engine
     engine = create_engine(
         f"postgresql://{user}:{password}@{host}:{port}/{database}",
-        connect_args={"sslcompression": 0, "options": "-c statement_timeout=9000000"},
+        connect_args={
+            "sslcompression": 0,
+            "options": "-c statement_timeout=9000000"
+        },
     )
     logging.info(engine)
     return engine
@@ -148,7 +157,9 @@ def query_results_generator(
     """
 
     try:
-        query_df_iterator = pd.read_sql(sql=query, con=engine, chunksize=chunksize)
+        query_df_iterator = pd.read_sql(
+            sql=query, con=engine, chunksize=chunksize
+        )
     except Exception as e:
         logging.exception(e)
         sys.exit(1)
@@ -159,10 +170,8 @@ def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
     if pg_type == "timestamp with time zone":
         return Column(column_name, DateTime)
     elif (
-        pg_type == "integer"
-        or pg_type == "smallint"
-        or pg_type == "numeric"
-        or pg_type == "bigint"
+        pg_type == "integer" or pg_type == "smallint" or pg_type == "numeric" or
+        pg_type == "bigint"
     ):
         return Column(column_name, Integer)
     elif pg_type == "date":
@@ -175,7 +184,8 @@ def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
         return Column(column_name, String)
 
 
-def get_postgres_types(table_name: str, source_engine: Engine) -> Dict[str, str]:
+def get_postgres_types(table_name: str,
+                       source_engine: Engine) -> Dict[str, str]:
     query = f"""
       SELECT column_name, data_type
       FROM information_schema.columns
@@ -248,7 +258,6 @@ def chunk_and_upload(
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
 
         for idx, chunk_df in enumerate(iter_csv):
-
             '''
             if backfill:
                 schema_types = transform_source_types_to_snowflake_types(
@@ -261,20 +270,20 @@ def chunk_and_upload(
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
 
-            load_start_prefix = 'load_start_2023-02-17T11:02:44.672' # TODO this needs to turned into a variable later
+            load_start_prefix = 'load_start_2023-02-17T11:02:44.672'  # TODO this needs to turned into a variable later
 
             # i.e '2023-02-17T11:02:44.672'
             now = datetime.now().isoformat(timespec='milliseconds')
             upload_file_dir = f"{target_table}/{load_start_prefix}/".lower()
-            upload_file_name = f"{target_table}_chunk_{now}.parquet.gzip".lower()
+            upload_file_name = f"{now}_{target_table}.parquet.gzip".lower()
             if row_count > 0:
                 upload_to_gcs(
-                    advanced_metadata, chunk_df, upload_file_dir, upload_file_name
+                    advanced_metadata, chunk_df, upload_file_dir,
+                    upload_file_name
                 )
                 logging.info(
                     f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}"
                 )
-
     '''
     if rows_uploaded > 0:
         trigger_snowflake_upload(
@@ -287,7 +296,9 @@ def chunk_and_upload(
     source_engine.dispose()
 
 
-def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFrame:
+def read_sql_tmpfile(
+    query: str, db_engine: Engine, tmp_file: Any
+) -> pd.DataFrame:
     """
     Uses postGres commands to copy data out of the DB and return a DF iterator
     """
@@ -299,13 +310,17 @@ def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFra
     tmp_file.seek(0)
     logging.info("Reading csv")
     # TODO change back to chunksize=750_000
-    df = pd.read_csv(tmp_file, chunksize=400, parse_dates=True, low_memory=False)
+    df = pd.read_csv(
+        tmp_file, chunksize=400, parse_dates=True, low_memory=False
+    )
     logging.info("CSV read")
     return df
 
 
 def range_generator(
-    start: int, stop: int, step: int = 750_000
+    start: int,
+    stop: int,
+    step: int = 750_000
 ) -> Generator[Tuple[int, ...], None, None]:
     """
     Yields a list that contains the starting and ending number for a given window.
@@ -326,7 +341,57 @@ def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
     query = f"SELECT * FROM saas_db_metadata.backfill_metadata WHERE table_name = '{source_table}' LIMIT 1;"
     logging.info(f'\nquery: {query}')
     results = query_executor(metadata_engine, query)
+    return False # TODO remove this later
     return len(results) == 0
+
+
+def get_source_columns(raw_query, source_engine, source_table):
+    # Get the columns from the current query
+    query_stem = raw_query.lower().split("where")[0]
+    source_query = "{0} limit 1"
+    source_columns = list(pd.read_sql(
+        sql=source_query.format(query_stem),
+        con=source_engine,
+    ).columns)
+    return source_columns
+
+
+def get_gcs_parquet_schema(parquet_file):
+    parquet_file_full_path = f'gs://{BUCKET_NAME}/{parquet_file}'
+    logging.info(f'\nreading parquet_file_full_path for latest schema: {parquet_file_full_path}')
+    df = pd.read_parquet(parquet_file_full_path).head(1).drop(axis=1, columns=["_uploaded_at", "_task_instance"], errors="ignore")
+    # parquet_table = pq.read_table(parquet_file_full_path) -- better, but unsupported in v0.17
+    return list(df.columns)
+
+
+def get_latest_parquet_file(source_table):
+    # first filter for the most recent load_time directory for the source table
+    keyfile = yaml.load(os.environ["GCP_SERVICE_CREDS"], Loader=yaml.FullLoader)
+    bucket = get_gcs_bucket(keyfile)
+
+    prefix = f"{source_table}/load_start_"  # TODO use this one once files are being written correctly
+    prefix = "load_start_"
+
+    blobs = bucket.list_blobs(prefix=prefix)
+    parquet_files = []
+    for blob in blobs:
+        if blob.name.endswith(".parquet.gzip"):
+            parquet_files.append(blob.name)
+
+    latest_parquet_file = max(parquet_files)
+    return latest_parquet_file
+
+
+def get_gcs_columns(source_table):
+    latest_file_name = get_latest_parquet_file(source_table)
+    gcs_cols = get_gcs_parquet_schema(latest_file_name)
+    return gcs_cols
+
+
+def has_new_columns(source_columns, gcs_columns):
+    source_columns, gcs_columns = set(source_columns), set(gcs_columns)
+    # does latest gcs NOT include all the source cols?
+    return not all(elem in gcs_columns for elem in source_columns)
 
 
 def schema_addition_check(
@@ -334,8 +399,6 @@ def schema_addition_check(
     source_engine: Engine,
     source_table: str,
     table_index: str,
-    target_engine: Engine,
-    target_table: str,
 ) -> bool:
     """
     Query the source table with the manifest query to get the columns, then check
@@ -344,28 +407,12 @@ def schema_addition_check(
 
     If the table does not exist this function will also return True.
     """
+    source_columns = get_source_columns(raw_query, source_engine, source_table)
+    logging.info(f'\nsource_columns: {source_columns}')
 
-    if not target_engine.has_table(target_table):
-        return True
-    # Get the columns from the current query
-    query_stem = raw_query.lower().split("where")[0]
-    source_query = "{0} limit 1"
-    source_columns = pd.read_sql(
-        sql=source_query.format(query_stem),
-        con=source_engine,
-    ).columns
-
-    # Get the columns from the target_table
-    target_query = "select * from {0} limit 1"
-    target_columns = (
-        pd.read_sql(sql=target_query.format(target_table), con=target_engine)
-        .drop(axis=1, columns=["_uploaded_at", "_task_instance"], errors="ignore")
-        .columns
-    )
-
-    source_columns, target_columns = set(source_columns), set(target_columns)
-    # does target include all the new_source cols?
-    return all(elem in target_columns for elem in source_columns)
+    gcs_columns = get_gcs_columns(source_table)
+    logging.info(f'\ngcs_columns: {gcs_columns}')
+    return has_new_columns(source_columns, gcs_columns)
 
 
 def id_query_generator(
@@ -440,25 +487,29 @@ def id_query_generator(
 
     # Generate the range pairs based on the max source id and the
     # greatest of either the min_source_id or the max_target_id
-    for id_pair in range_generator(
-        min_source_id, max_source_id, step=id_range
-    ):
+    for id_pair in range_generator(min_source_id, max_source_id, step=id_range):
         id_range_query = (
-            "".join(raw_query.lower().split("where")[0])
-            + f" WHERE {primary_key} BETWEEN {id_pair[0]} AND {id_pair[1]}"
+            "".join(raw_query.lower().split("where")[0]) +
+            f" WHERE {primary_key} BETWEEN {id_pair[0]} AND {id_pair[1]}"
         )
         logging.info(f"ID Range: {id_pair}")
         yield id_range_query
 
 
-def get_engines(connection_dict: Dict[str, str]) -> Tuple[Engine, Engine, Engine]:
+def get_engines(
+    connection_dict: Dict[str, str]
+) -> Tuple[Engine, Engine, Engine]:
     """
     Generates Snowflake and Postgres engines from env vars and returns them.
     """
 
     logging.info("Creating database engines...")
     env = os.environ.copy()
-    postgres_engine = postgres_engine_factory(connection_dict['postgres_source_connection'], env)
-    metadata_engine = postgres_engine_factory(connection_dict['postgres_metadata_connection'], env)
+    postgres_engine = postgres_engine_factory(
+        connection_dict['postgres_source_connection'], env
+    )
+    metadata_engine = postgres_engine_factory(
+        connection_dict['postgres_metadata_connection'], env
+    )
     snowflake_engine = snowflake_engine_factory(env, "LOADER", SCHEMA)
     return postgres_engine, metadata_engine, snowflake_engine

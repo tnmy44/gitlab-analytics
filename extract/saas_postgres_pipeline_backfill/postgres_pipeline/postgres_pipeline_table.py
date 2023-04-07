@@ -126,13 +126,12 @@ class PostgresPipelineTable:
             source_engine,
             self.source_table_name,
             self.source_table_primary_key,
-            self.target_table_name,
         ):
             logging.info(f"Schema has changed for table: {self.target_table_name}.")
             return True
 
-        #TODO later:
-        '''
+    def check_latest_backfill_status(self, source_engine: Engine, metadata_engine: Engine):
+
         latest_backfill_status, latest_backfill_updated_at = query_backfill_metadata()
 
         if latest_backfill_status == 'in progress':
@@ -148,7 +147,6 @@ class PostgresPipelineTable:
         # backfill not already in progres
         else:
             return self.check_if_schema_changed()
-        '''
 
 
     def check_if_schema_changed(
