@@ -1856,9 +1856,64 @@ Change in the price per seat paid in the arr_month.
 
 {% enddocs %}
 
-
 {% docs namespace_is_ultimate_parent %}
 
 Boolean flag which is set to True if the namespace is the ultimate parent.
+
+{% enddocs %}
+
+{% docs subscription_action_type %}
+
+The action to be carried out on the subscription. For example, 'Amend Subscription' or 'Renew Subscription'
+
+{% enddocs %}
+
+{% docs dim_gitlab_version_sk %}
+
+The unique surrogate key created by using `version_id` which is a unique identifier of a release maintained by the versions app. 
+
+{% enddocs %}
+
+{% docs vsa_readout %}
+
+The sentiment from the Value Stream Assessment readout meeting.
+
+{% enddocs %}
+
+{% docs vsa_start_date_net_arr %}
+
+The stamped Opportunity Net ARR when Value Stream Assessment start date is populated and is after the opportunity created date. Otherwise, will stamp $0.
+
+{% enddocs %}
+
+{% docs vsa_start_date %}
+
+Date of the Value Stream Assessment kickoff call with the prospect/customer.
+
+{% enddocs %}
+
+{% docs vsa_url %}
+
+The URL to the Value Stream Assesment readout presentation.
+
+{% enddocs %}
+
+{% docs vsa_status %}
+
+The status of the Value Stream Assessment.
+
+{% enddocs %}
+
+{% docs vsa_end_date %}
+
+The date the Value Stream Assessment readout is presented to the prospect/customer.
+
+{% enddocs %}
+
+{% docs installation_creation_date %}
+
+Based off of the [`installation_creation_date`](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/license/20230228110448_installation_creation_date.yml) 
+Service Ping metric. For installations where the root user (id = 1) is not deleted, it returns the root user creation date. For installations where the root user 
+is deleted, it returns the earliest available user creation date.
 
 {% enddocs %}

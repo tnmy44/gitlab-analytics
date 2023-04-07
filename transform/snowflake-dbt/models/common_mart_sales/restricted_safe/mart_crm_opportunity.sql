@@ -298,6 +298,12 @@
       dim_crm_opportunity.sa_tech_evaluation_close_status,
       dim_crm_opportunity.sa_tech_evaluation_end_date,
       dim_crm_opportunity.sa_tech_evaluation_start_date,
+      dim_crm_opportunity.vsa_readout,
+      dim_crm_opportunity.vsa_start_date_net_arr,
+      dim_crm_opportunity.vsa_start_date,
+      dim_crm_opportunity.vsa_url,
+      dim_crm_opportunity.vsa_status,
+      dim_crm_opportunity.vsa_end_date,
 
       --Command Plan fields
       dim_crm_opportunity.cp_partner,
@@ -560,9 +566,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@michellecooper",
+    updated_by="@nmcavinue",
     created_date="2020-12-07",
-    updated_date="2023-03-16"
+    updated_date="2023-03-28"
   ) }}
 
 

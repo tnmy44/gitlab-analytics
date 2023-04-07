@@ -725,11 +725,11 @@
           THEN 'Direct'
         WHEN sfdc_opportunity.deal_path = 'Web Direct'
           THEN 'Web Direct'
-        WHEN sfdc_opportunity.deal_path = 'Channel'
-            AND sfdc_opportunity.sales_qualified_source = 'Channel Generated'
+        WHEN sfdc_opportunity.deal_path = 'Partner'
+            AND sfdc_opportunity.sales_qualified_source = 'Partner Generated'
           THEN 'Partner Sourced'
-        WHEN sfdc_opportunity.deal_path = 'Channel'
-            AND sfdc_opportunity.sales_qualified_source != 'Channel Generated'
+        WHEN sfdc_opportunity.deal_path = 'Partner'
+            AND sfdc_opportunity.sales_qualified_source != 'Partner Generated'
           THEN 'Partner Co-Sell'
       END                                                                                       AS deal_path_engagement,
       CASE
@@ -925,7 +925,7 @@
           ELSE 0
       END                                                           AS is_booked_net_arr,
       CASE
-        WHEN sfdc_opportunity.deal_path = 'Channel'
+        WHEN sfdc_opportunity.deal_path = 'Partner'
           THEN REPLACE(COALESCE(sfdc_opportunity.partner_track, sfdc_opportunity.partner_account_partner_track, sfdc_opportunity.fulfillment_partner_partner_track,'Open'),'select','Select')
         ELSE 'Direct'
       END                                                                                           AS calculated_partner_track,
@@ -1225,5 +1225,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-02-23",
-    updated_date="2023-03-20"
+    updated_date="2023-04-07"
 ) }}

@@ -11,8 +11,12 @@ WITH employees AS (
 
 ), bamboohr_engineering_division_mapping AS (
 
-    SELECT *
-    FROM {{ ref('sheetload_product_group_mappings') }}
+    SELECT
+        DISTINCT LOWER(group_name) AS group_name,
+        LOWER(stage_section) AS section_name,
+        LOWER(stage_display_name) AS stage_name
+    FROM {{ ref('stages_groups_yaml_source') }}
+    WHERE snapshot_date = (SELECT max(snapshot_date) FROM {{ ref('stages_groups_yaml_source') }})
 
 ), engineering_employees AS (
 
@@ -38,7 +42,8 @@ WITH employees AS (
       engineering_employees.employee_id,
       engineering_employees.full_name,
       engineering_employees.job_title,
-      bamboohr_engineering_division_mapping.section_name as sub_department,
+      bamboohr_engineering_division_mapping.section_name,
+      bamboohr_engineering_division_mapping.stage_name,
       engineering_employees.job_title_speciality,
       CASE 
         WHEN engineering_employees.employee_id IN (11480,11522,11500,11555,11013,11008,10979,10442,10072,11491) 

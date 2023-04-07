@@ -57,11 +57,12 @@
           AND
             (
             LOWER(crm_user_sales_segment) = 'mid-market'
-            AND (LOWER(crm_user_geo) = 'amer' 
-                OR LOWER(crm_user_geo) = 'emea')
+            AND (LOWER(crm_user_geo) = 'amer'
+                     OR LOWER(crm_user_geo) = 'emea')
+            AND LOWER(crm_user_area) != 'norben'
             AND LOWER(order_type_name) = '1. new - first order'
             )
-          THEN 'MM First Orders'  --mid-market FO
+          THEN 'MM First Orders'  --mid-market FO(?)
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
           AND LOWER(crm_user_geo) = 'emea'
@@ -78,18 +79,21 @@
         WHEN LOWER(crm_user_business_unit) = 'entg'
           THEN crm_user_region
 
+
+        WHEN
+          LOWER(crm_user_business_unit) = 'comm'
+          AND LOWER(crm_user_sales_segment) = 'mid-market'
+          AND LOWER(crm_user_area) != 'norben'
+          AND LOWER(order_type_name) = '1. new - first order'
+          THEN 'MM First Orders'
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
           AND (LOWER(crm_user_sub_business_unit) = 'amer'
                    OR LOWER(crm_user_sub_business_unit) = 'emea')
-            AND LOWER(order_type_name) != '1. new - first order'
+          AND (LOWER(order_type_name) != '1. new - first order'
+                    OR LOWER(crm_user_area) = 'norben')
           AND LOWER(crm_user_sales_segment) = 'mid-market'
           THEN 'Mid-Market'
-        WHEN
-          LOWER(crm_user_business_unit) = 'comm'
-          AND LOWER(crm_user_sales_segment) = 'mid-market'
-          AND LOWER(order_type_name) = '1. new - first order' -- TODO: special logic for targets
-          THEN 'MM First Orders'
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
           AND (LOWER(crm_user_sub_business_unit) = 'amer'
@@ -104,7 +108,7 @@
         ELSE 'Other'
       END AS crm_user_division,
 
-      -- ASM (X-Ray 4th hierarchy): definition pending
+       -- ASM (X-Ray 4th hierarchy): definition pending
       CASE
         WHEN
           LOWER(crm_user_business_unit) = 'entg'
@@ -223,36 +227,39 @@
       target_month.first_day_of_fiscal_quarter      AS target_fiscal_quarter_date,
       target_month.fiscal_year                      AS target_fiscal_year,
 
-      agg_demo_keys.sales_team_cro_level,
-      agg_demo_keys.sales_team_vp_level,
-      agg_demo_keys.sales_team_avp_rd_level,
-      agg_demo_keys.sales_team_asm_level,
-      agg_demo_keys.sales_team_rd_asm_level,
+      -- FY23 keys
+      LOWER(agg_demo_keys.key_segment)                         AS key_segment,
+      LOWER(agg_demo_keys.key_segment_sqs)                     AS key_segment_sqs,
+      LOWER(agg_demo_keys.key_segment_ot)                      AS key_segment_ot,
+      LOWER(agg_demo_keys.key_segment_geo)                     AS key_segment_geo,
+      LOWER(agg_demo_keys.key_segment_geo_sqs)                 AS key_segment_geo_sqs,
+      LOWER(agg_demo_keys.key_segment_geo_ot)                  AS key_segment_geo_ot,
+      LOWER(agg_demo_keys.key_segment_geo_region)              AS key_segment_geo_region,
+      LOWER(agg_demo_keys.key_segment_geo_region_sqs)          AS key_segment_geo_region_sqs,
+      LOWER(agg_demo_keys.key_segment_geo_region_ot)           AS key_segment_geo_region_ot,
+      LOWER(agg_demo_keys.key_segment_geo_region_area)         AS key_segment_geo_region_area,
+      LOWER(agg_demo_keys.key_segment_geo_region_area_sqs)     AS key_segment_geo_region_area_sqs,
+      LOWER(agg_demo_keys.key_segment_geo_region_area_ot)      AS key_segment_geo_region_area_ot,
+      LOWER(agg_demo_keys.key_segment_geo_area)                AS key_segment_geo_area,
+      LOWER(agg_demo_keys.sales_team_cro_level)                AS sales_team_cro_level,
+      LOWER(agg_demo_keys.sales_team_rd_asm_level)             AS sales_team_rd_asm_level,
+      LOWER(agg_demo_keys.sales_team_vp_level)                 AS sales_team_vp_level,
+      LOWER(agg_demo_keys.sales_team_avp_rd_level)             AS sales_team_avp_rd_level,
+      LOWER(agg_demo_keys.sales_team_asm_level)                AS sales_team_asm_level,
 
-      agg_demo_keys.key_segment,
-      agg_demo_keys.key_sqs,
-      agg_demo_keys.key_ot,
-
-      agg_demo_keys.key_segment_geo,
-      agg_demo_keys.key_segment_geo_sqs,
-      agg_demo_keys.key_segment_geo_ot,
-
-      agg_demo_keys.key_segment_geo_region,
-      agg_demo_keys.key_segment_geo_region_sqs,
-      agg_demo_keys.key_segment_geo_region_ot,
-
-      agg_demo_keys.key_segment_geo_region_area,
-      agg_demo_keys.key_segment_geo_region_area_sqs,
-      agg_demo_keys.key_segment_geo_region_area_ot,
-
-      agg_demo_keys.key_bu_segment_geo_region_area_ot,
-      agg_demo_keys.key_bu_segment_geo_region_area_sqs,
-      agg_demo_keys.key_bu_segment_geo_region_area_ot_sqs,
-
-      agg_demo_keys.key_bu,
-      agg_demo_keys.key_bu_subbu,
-      agg_demo_keys.key_bu_subbu_division,
-      agg_demo_keys.key_bu_subbu_division_asm
+      -- JK 2023-02-06: FY24 keys
+      LOWER(agg_demo_keys.key_sqs)                             AS key_sqs,
+      LOWER(agg_demo_keys.key_ot)                              AS key_ot,
+      LOWER(agg_demo_keys.key_bu)                      AS key_bu,
+      LOWER(agg_demo_keys.key_bu_ot)                   AS key_bu_ot,
+      LOWER(agg_demo_keys.key_bu_sqs)                  AS key_bu_sqs,
+      LOWER(agg_demo_keys.key_bu_subbu)                AS key_bu_subbu,
+      LOWER(agg_demo_keys.key_bu_subbu_ot)             AS key_bu_subbu_ot,
+      LOWER(agg_demo_keys.key_bu_subbu_sqs)            AS key_bu_subbu_sqs,
+      LOWER(agg_demo_keys.key_bu_subbu_division)       AS key_bu_subbu_division,
+      LOWER(agg_demo_keys.key_bu_subbu_division_ot)    AS key_bu_subbu_division_ot,
+      LOWER(agg_demo_keys.key_bu_subbu_division_sqs)   AS key_bu_subbu_division_sqs,
+      LOWER(agg_demo_keys.key_bu_subbu_division_asm)   AS key_bu_subbu_division_asm
 
     FROM mart_sales_funnel_target_expanded funnel_target
     INNER JOIN  date_details target_month

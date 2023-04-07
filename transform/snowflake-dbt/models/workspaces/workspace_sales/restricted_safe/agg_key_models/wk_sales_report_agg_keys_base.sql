@@ -77,7 +77,6 @@ WITH sfdc_account_xf AS (
 
         LOWER(sqs.sales_qualified_source)                   AS sales_qualified_source,
         LOWER(ot.deal_group)                                AS deal_group,
-        LOWER(ot.order_type_stamped)                        AS order_type_stamped,
         LOWER(partner_cat.partner_category)                 AS partner_category,
         LOWER(alliance_partner.alliance_partner)            AS alliance_partner,
 
@@ -137,7 +136,6 @@ WITH sfdc_account_xf AS (
                     sales_qualified_source_name AS sales_qualified_source
                 FROM mart_crm_opportunity)  sqs
     CROSS JOIN (SELECT DISTINCT
-                    order_type AS order_type_stamped,
                     deal_group
                 FROM mart_crm_opportunity) ot
     CROSS JOIN (SELECT DISTINCT
@@ -182,8 +180,19 @@ WITH sfdc_account_xf AS (
 
         -- FY24 structure keys (pending)
         report_opportunity_user_business_unit AS key_bu,
-        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit                                                                                   AS key_bu_subbu,
-        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division                                        AS key_bu_subbu_division,
+        report_opportunity_user_business_unit || '_' || deal_group                 AS key_bu_ot,
+        report_opportunity_user_business_unit || '_' || sales_qualified_source     AS key_bu_sqs,
+        
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit                                       AS key_bu_subbu,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' ||  deal_group                 AS key_bu_subbu_ot,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' ||  sales_qualified_source     AS key_bu_subbu_sqs,
+
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division                                    AS key_bu_subbu_division,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division || '_' ||  deal_group              AS key_bu_subbu_division_ot,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division || '_' ||  sales_qualified_source  AS key_bu_subbu_division_sqs,
+   
+ 
+ 
         report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division || '_' || report_opportunity_user_asm  AS key_bu_subbu_division_asm,
 
 

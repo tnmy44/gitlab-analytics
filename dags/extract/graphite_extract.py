@@ -64,8 +64,8 @@ lcp_operator = KubernetesPodOperator(
         SNOWFLAKE_LOAD_PASSWORD,
     ],
     env_vars={"START_DATE": "{{ ds_nodash }}"},
-    affinity=get_affinity(False),
-    tolerations=get_toleration(False),
+    affinity=get_affinity("production"),
+    tolerations=get_toleration("production"),
     arguments=[extract_command],
     dag=dag,
 )

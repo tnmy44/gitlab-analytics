@@ -87,7 +87,8 @@ models:
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
-
+      - name: subscription_action_type
+        description: '{{ doc("subscription_action_type") }}'
 
   - name: prep_recurring_charge_subscription_monthly
     description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'

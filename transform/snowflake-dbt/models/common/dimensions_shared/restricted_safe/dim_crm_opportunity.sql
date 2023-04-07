@@ -207,6 +207,15 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.dr_partner_deal_type,
       prep_crm_opportunity.dr_partner_engagement,
 
+      -- vsa reporting
+      prep_crm_opportunity.vsa_readout,
+      prep_crm_opportunity.vsa_start_date_net_arr,
+      prep_crm_opportunity.vsa_start_date,
+      prep_crm_opportunity.vsa_url,
+      prep_crm_opportunity.vsa_status,
+      prep_crm_opportunity.vsa_end_date,
+
+
       -- metadata
       prep_crm_opportunity._last_dbt_run
 
@@ -217,7 +226,7 @@ WITH prep_crm_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@michellecooper",
+    updated_by="@nmcavinue",
     created_date="2020-11-20",
-    updated_date="2022-12-28"
+    updated_date="2023-03-28"
 ) }}
