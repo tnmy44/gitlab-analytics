@@ -148,9 +148,6 @@ class PostgresPipelineTable:
         source_engine: Engine,
         target_engine: Engine,
         metadata_engine: Engine,
-        is_backfill_needed: bool,
-        start_pk: int,
-        initial_load_start_date: datetime,
     ) -> bool:
         load_types = {
             "backfill": self.do_incremental_backfill,
@@ -162,9 +159,6 @@ class PostgresPipelineTable:
             source_engine,
             target_engine,
             metadata_engine,
-            is_backfill_needed,
-            start_pk,
-            initial_load_start_date,
         )
 
     def check_is_backfill_needed(self, source_engine: Engine, metadata_engine: Engine):
