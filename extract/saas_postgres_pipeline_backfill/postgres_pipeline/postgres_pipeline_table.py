@@ -77,6 +77,7 @@ class PostgresPipelineTable:
             logging.info("table does not need incremental backfill")
             return False
 
+        metadata_table = "backfill_metadata"
         target_table = self.get_target_table_name()
         return load_functions.sync_incremental_ids(
             source_engine,
@@ -86,6 +87,7 @@ class PostgresPipelineTable:
             self.table_dict,
             target_table,
             metadata_engine,
+            metadata_table,
             start_pk,
             initial_load_start_date,
         )
@@ -138,6 +140,7 @@ class PostgresPipelineTable:
             self.table_dict,
             target_table,
             metadata_engine,
+            metadata_table,
             start_pk,
             initial_load_start_date,
         )

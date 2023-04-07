@@ -386,6 +386,7 @@ def chunk_and_upload(
                 is_export_completed = last_extracted_id >= max_source_id
                 write_backfill_metadata(
                     metadata_engine,
+                    metadata_table,
                     source_database,
                     source_table,
                     initial_load_start_date,
@@ -550,7 +551,7 @@ def get_latest_parquet_file(source_table: str) -> str:
     return latest_parquet_file
 
 
-def delete_from_gcs(source_table: str) -> str:
+def delete_from_gcs(source_table: str):
     """
     Prior to a fresh backfill, remove all previously
     backfilled files that haven't been processed downstream
