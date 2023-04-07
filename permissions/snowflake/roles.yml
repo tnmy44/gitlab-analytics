@@ -3681,6 +3681,16 @@ roles:
             - bi_tool_eval_read
         warehouses:
             - dev_xs
+        owns:
+            databases:
+                - lmai_prep
+                - lmai_prod
+            schemas:
+                - lmai_prep.*
+                - lmai_prod.*
+            tables:
+                - lmai_prep.*.*
+                - lmai_prod.*.*
         privileges:
             databases:
                 read:
