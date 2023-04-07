@@ -200,7 +200,6 @@
       COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
       map_alternative_lead_demographics.geo_custom,
       UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
-	   AS campaign_rep_role_name,
 
   --Person Dates
 		person_base.true_inquiry_date,
