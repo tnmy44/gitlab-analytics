@@ -194,7 +194,7 @@ for source_name, config in config_dict.items():
         incremental_backfill_dag_args["start_date"] = config["start_date"]
 
         # Regular Extract DAG
-        '''
+        """
         extract_dag = DAG(
             f"{config['dag_name']}_db_extract",
             default_args=extract_dag_args,
@@ -244,7 +244,7 @@ for source_name, config in config_dict.items():
                     do_xcom_push=True,
                 )
         globals()[f"{config['dag_name']}_db_extract"] = extract_dag
-        '''
+        """
 
         incremental_backfill_dag = DAG(
             f"{config['dag_name']}_db_incremental_backfill",
@@ -255,11 +255,10 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-
             file_path = f"analytics/extract/saas_postgres_pipeline_backfill/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
-            table_list = ['alert_management_http_integrations']
+            table_list = ["alert_management_http_integrations"]
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "backfill"
@@ -296,7 +295,7 @@ for source_name, config in config_dict.items():
         ] = incremental_backfill_dag
 
     # SCD DAG's
-    '''
+    """
     else:
         scd_dag_args["start_date"] = config["start_date"]
         sync_dag = DAG(
@@ -346,4 +345,4 @@ for source_name, config in config_dict.items():
                         do_xcom_push=True,
                     )
         globals()[f"{config['dag_name']}_db_sync"] = sync_dag
-    '''
+    """

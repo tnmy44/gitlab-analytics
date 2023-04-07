@@ -6,7 +6,7 @@ import tempfile
 import gcsfs
 import pyarrow.parquet as pq
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import time
 from typing import Dict, List, Generator, Any, Tuple
 
@@ -42,7 +42,7 @@ BUCKET_NAME = "saas-pipeline-backfills"
 
 
 def get_gcs_scoped_credentials():
-    """Get scoped credential """
+    """Get scoped credential"""
     # create the credentials object
     keyfile = yaml.load(os.environ["GCP_SERVICE_CREDS"], Loader=yaml.FullLoader)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
@@ -69,13 +69,15 @@ def upload_to_gcs(
 
     # Write out the parquet and upload it
     enriched_df = dataframe_enricher(advanced_metadata, upload_df)
-    os.makedirs(os.path.dirname(upload_file_name), exist_ok=True) # need to create director(ies) prior to to_parquet()
+    os.makedirs(
+        os.path.dirname(upload_file_name), exist_ok=True
+    )  # need to create director(ies) prior to to_parquet()
     enriched_df.to_parquet(
         upload_file_name,
         compression="gzip",
         index=False,
     )
-    logging.info(f'GCS save location: {upload_file_name}')
+    logging.info(f"GCS save location: {upload_file_name}")
     blob = bucket.blob(upload_file_name)
     blob.upload_from_filename(upload_file_name)
 
@@ -83,10 +85,7 @@ def upload_to_gcs(
 
 
 def trigger_snowflake_upload(
-    engine: Engine,
-    table: str,
-    upload_file_name: str,
-    purge: bool = False
+    engine: Engine, table: str, upload_file_name: str, purge: bool = False
 ) -> None:
     """Trigger Snowflake to upload a tsv file from GCS."""
     logging.info("Loading from GCS into SnowFlake")
@@ -124,7 +123,7 @@ def postgres_engine_factory(
     Create a postgres engine to be used by pandas.
     """
 
-    logging.info(f'\ndatabase_connection: {database_connection}')
+    logging.info(f"\ndatabase_connection: {database_connection}")
     # Set the Vars
     user = env[database_connection["user"]]
     password = env[database_connection["pass"]]
@@ -135,10 +134,7 @@ def postgres_engine_factory(
     # Inject the values to create the engine
     engine = create_engine(
         f"postgresql://{user}:{password}@{host}:{port}/{database}",
-        connect_args={
-            "sslcompression": 0,
-            "options": "-c statement_timeout=9000000"
-        },
+        connect_args={"sslcompression": 0, "options": "-c statement_timeout=9000000"},
     )
     logging.info(engine)
     return engine
@@ -164,9 +160,7 @@ def query_results_generator(
     """
 
     try:
-        query_df_iterator = pd.read_sql(
-            sql=query, con=engine, chunksize=chunksize
-        )
+        query_df_iterator = pd.read_sql(sql=query, con=engine, chunksize=chunksize)
     except Exception as e:
         logging.exception(e)
         sys.exit(1)
@@ -177,8 +171,10 @@ def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
     if pg_type == "timestamp with time zone":
         return Column(column_name, DateTime)
     elif (
-        pg_type == "integer" or pg_type == "smallint" or pg_type == "numeric" or
-        pg_type == "bigint"
+        pg_type == "integer"
+        or pg_type == "smallint"
+        or pg_type == "numeric"
+        or pg_type == "bigint"
     ):
         return Column(column_name, Integer)
     elif pg_type == "date":
@@ -191,8 +187,7 @@ def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
         return Column(column_name, String)
 
 
-def get_postgres_types(table_name: str,
-                       source_engine: Engine) -> Dict[str, str]:
+def get_postgres_types(table_name: str, source_engine: Engine) -> Dict[str, str]:
     query = f"""
       SELECT column_name, data_type
       FROM information_schema.columns
@@ -239,11 +234,15 @@ def seed_table(
 
 
 def write_backfill_metadata(
-    metadata_engine, table_name: str, initial_load_start_date: datetime,
-    upload_date: datetime, upload_file_name: str, last_extracted_id: int,
-    max_id: int, is_backfill_completed: bool
+    metadata_engine,
+    table_name: str,
+    initial_load_start_date: datetime,
+    upload_date: datetime,
+    upload_file_name: str,
+    last_extracted_id: int,
+    max_id: int,
+    is_backfill_completed: bool,
 ):
-
     insert_query = f"""
         INSERT INTO saas_db_metadata.backfill_metadata (
             table_name,
@@ -273,11 +272,10 @@ def get_upload_file_name(
     initial_load_start_date: datetime,
     upload_date: datetime,
     version: str = None,
-    filetype: str = 'parquet',
-    compression: str = 'gzip',
-    prefix_template: str = '{table}/{initial_load_prefix}/',
-    filename_template:
-    str = '{timestamp}_{table}_{version}.{filetype}.{compression}'
+    filetype: str = "parquet",
+    compression: str = "gzip",
+    prefix_template: str = "{table}/{initial_load_prefix}/",
+    filename_template: str = "{timestamp}_{table}_{version}.{filetype}.{compression}",
 ) -> str:
     """Generate a unique and descriptive filename for uploading data to cloud storage.
 
@@ -302,17 +300,17 @@ def get_upload_file_name(
     )
 
     # Format filename
-    timestamp = upload_date.isoformat(timespec='milliseconds')
+    timestamp = upload_date.isoformat(timespec="milliseconds")
     if version is None:
-        version = ''
+        version = ""
     else:
-        version = f'_{version}'
+        version = f"_{version}"
     filename = filename_template.format(
         timestamp=timestamp,
         table=table,
         version=version,
         filetype=filetype,
-        compression=compression
+        compression=compression,
     )
 
     # Combine folder structure and filename
@@ -344,24 +342,23 @@ def chunk_and_upload(
     """
 
     logging.info(
-        f'\ninitial_load_start_date / chunk_upload(): {initial_load_start_date}'
+        f"\ninitial_load_start_date / chunk_upload(): {initial_load_start_date}"
     )
     rows_uploaded = 0
 
     with tempfile.TemporaryFile() as tmpfile:
-
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
 
         for idx, chunk_df in enumerate(iter_csv):
-            logging.info(f'\nchunk_df: {chunk_df}')
-            '''
+            logging.info(f"\nchunk_df: {chunk_df}")
+            """
             if backfill:
                 schema_types = transform_source_types_to_snowflake_types(
                     chunk_df, source_table, source_engine
                 )
                 seed_table(advanced_metadata, schema_types, target_table, target_engine)
                 backfill = False
-            '''
+            """
 
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
@@ -382,17 +379,21 @@ def chunk_and_upload(
                 )
                 is_backfill_completed = last_extracted_id >= max_source_id
                 write_backfill_metadata(
-                    metadata_engine, source_table, initial_load_start_date,
-                    upload_date, upload_file_name, last_extracted_id,
-                    max_source_id, is_backfill_completed
+                    metadata_engine,
+                    source_table,
+                    initial_load_start_date,
+                    upload_date,
+                    upload_file_name,
+                    last_extracted_id,
+                    max_source_id,
+                    is_backfill_completed,
                 )
 
-                logging.info(f'Wrote to backfill metadata db for: {upload_file_name}')
+                logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
                 # TODO: allow us 'mock' a mid backfill
                 if last_extracted_id == 215:
                     return
-
-    '''
+    """
     if rows_uploaded > 0:
         trigger_snowflake_upload(
             target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
@@ -400,13 +401,11 @@ def chunk_and_upload(
         logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
 
     target_engine.dispose()
-    '''
+    """
     source_engine.dispose()
 
 
-def read_sql_tmpfile(
-    query: str, db_engine: Engine, tmp_file: Any
-) -> pd.DataFrame:
+def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFrame:
     """
     Uses postGres commands to copy data out of the DB and return a DF iterator
     """
@@ -418,17 +417,13 @@ def read_sql_tmpfile(
     tmp_file.seek(0)
     logging.info("Reading csv")
     # TODO change back to chunksize=750_000
-    df = pd.read_csv(
-        tmp_file, chunksize=200, parse_dates=True, low_memory=False
-    )
+    df = pd.read_csv(tmp_file, chunksize=200, parse_dates=True, low_memory=False)
     logging.info("CSV read")
     return df
 
 
 def range_generator(
-    start: int,
-    stop: int,
-    step: int = 750_000
+    start: int, stop: int, step: int = 750_000
 ) -> Generator[Tuple[int, ...], None, None]:
     """
     Yields a list that contains the starting and ending number for a given window.
@@ -447,7 +442,7 @@ def is_new_table(metadata_engine: Engine, source_table: str) -> bool:
     If the table doesn't exist, then it's a 'new' table
     """
     query = f"SELECT * FROM saas_db_metadata.backfill_metadata WHERE table_name = '{source_table}' LIMIT 1;"
-    logging.info(f'\nquery: {query}')
+    logging.info(f"\nquery: {query}")
     results = query_executor(metadata_engine, query)
     return len(results) == 0
 
@@ -466,9 +461,52 @@ def query_backfill_status(metadata_engine: Engine, source_table: str) -> bool:
         " FROM saas_db_metadata.backfill_metadata"
         f" WHERE table_name = '{source_table}');"
     )
-    logging.info(f'\nquery backfill status: {query}')
+    logging.info(f"\nquery backfill status: {query}")
     results = query_executor(metadata_engine, query)
     return results
+
+
+def is_resume_backfill(self, metadata_engine: Engine):
+    """
+    Determine if backfill should be resumed.
+    First query the backfill database to see if there's a backfill in progress
+    If the backfill is in progress, check when the last file was written
+    If last file was written within 24 hours, continue from last_extracted_id
+    """
+    # initialize variables
+    is_backfill_needed = False
+    start_pk = -1
+    initial_load_start_date = None
+
+    results = query_backfill_status(metadata_engine, self.source_table_name)
+
+    # if backfill metadata exists for table
+    if results:
+        # unpack the results
+        (
+            is_backfill_completed,
+            initial_load_start_date,
+            last_extracted_id,
+            last_upload_date,
+        ) = results[0]
+        time_since_last_upload = datetime.now() - last_upload_date
+
+        if not is_backfill_completed:
+            is_backfill_needed = True
+            # if more than 24 HR since last upload, start backfill over,
+            # else proceed with last extracted_id
+            if time_since_last_upload > timedelta(hours=24):
+                initial_load_start_date = None
+                last_extracted_id = 0
+                logging.info(
+                    f"In middle of backfill, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Start backfill from beginning."
+                )
+            start_pk = last_extracted_id + 1
+            logging.info(
+                f"Resuming backfill with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}"
+            )
+
+    return is_backfill_needed, start_pk, initial_load_start_date
 
 
 def get_source_columns(raw_query, source_engine, source_table):
@@ -501,16 +539,13 @@ def get_latest_parquet_file(source_table):
 
 
 def get_gcs_parquet_schema(parquet_file):
-
     # create a GCSFileSystem instance with credentials
     scoped_credentials = get_gcs_scoped_credentials()
-    fs = gcsfs.GCSFileSystem(
-        project='gitlab-analysis', token=scoped_credentials
-    )
+    fs = gcsfs.GCSFileSystem(project="gitlab-analysis", token=scoped_credentials)
 
-    parquet_file_full_path = f'gs://{BUCKET_NAME}/{parquet_file}'
+    parquet_file_full_path = f"gs://{BUCKET_NAME}/{parquet_file}"
     logging.info(
-        f'\nreading parquet_file_full_path for latest schema: {parquet_file_full_path}'
+        f"\nreading parquet_file_full_path for latest schema: {parquet_file_full_path}"
     )
 
     with fs.open(parquet_file_full_path) as f:
@@ -551,16 +586,15 @@ def schema_addition_check(
     If the table does not exist this function will also return True.
     """
     source_columns = get_source_columns(raw_query, source_engine, source_table)
-    logging.info(f'\nsource_columns: {source_columns}')
+    logging.info(f"\nsource_columns: {source_columns}")
 
     gcs_columns = get_gcs_columns(source_table)
-    logging.info(f'\ngcs_columns: {gcs_columns}')
+    logging.info(f"\ngcs_columns: {gcs_columns}")
     return has_new_columns(source_columns, gcs_columns)
 
 
 def get_min_or_max_id(
-    primary_key: str, engine: sqlalchemy.engine.Engine, table: str,
-    min_or_max: str
+    primary_key: str, engine: sqlalchemy.engine.Engine, table: str, min_or_max: str
 ) -> int:
     """
     Retrieve the minimum or maximum value of the specified primary key column in the specified table.
@@ -610,7 +644,7 @@ def id_query_generator(
     i.e. if the table in Snowflake has a max id of 2000, but postgres has a max id of 5000,
     it will return a list of queries that load chunks of IDs until it has the same max id.
     """
-    '''
+    """
     # Get the max ID from the target DB
     logging.info(f"Getting max primary key from target_table: {target_table}")
     max_target_id_query = f"SELECT MAX({primary_key}) as id FROM {target_table}"
@@ -639,22 +673,20 @@ def id_query_generator(
         logging.exception(e)
         sys.exit(1)
     logging.info(f"Source Min ID: {min_source_id}")
-    '''
+    """
 
     # Generate the range pairs based on the max source id and the
     # greatest of either the min_source_id or the max_target_id
     for id_pair in range_generator(min_source_id, max_source_id, step=id_range):
         id_range_query = (
-            "".join(raw_query.lower().split("where")[0]) +
-            f" WHERE {primary_key} BETWEEN {id_pair[0]} AND {id_pair[1]}"
+            "".join(raw_query.lower().split("where")[0])
+            + f" WHERE {primary_key} BETWEEN {id_pair[0]} AND {id_pair[1]}"
         )
         logging.info(f"ID Range: {id_pair}")
         yield id_range_query
 
 
-def get_engines(
-    connection_dict: Dict[str, str]
-) -> Tuple[Engine, Engine, Engine]:
+def get_engines(connection_dict: Dict[str, str]) -> Tuple[Engine, Engine, Engine]:
     """
     Generates Snowflake and Postgres engines from env vars and returns them.
     """
@@ -662,10 +694,10 @@ def get_engines(
     logging.info("Creating database engines...")
     env = os.environ.copy()
     postgres_engine = postgres_engine_factory(
-        connection_dict['postgres_source_connection'], env
+        connection_dict["postgres_source_connection"], env
     )
     metadata_engine = postgres_engine_factory(
-        connection_dict['postgres_metadata_connection'], env
+        connection_dict["postgres_metadata_connection"], env
     )
     snowflake_engine = snowflake_engine_factory(env, "LOADER", SCHEMA)
     return postgres_engine, metadata_engine, snowflake_engine

@@ -1,12 +1,10 @@
 import datetime
 import logging
 import os
-import sys
 from typing import Dict, Any, Optional
 import pytz
 
 utc = pytz.UTC
-
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -20,7 +18,7 @@ from utils import (
     get_engines,
     id_query_generator,
     manifest_reader,
-    get_min_or_max_id
+    get_min_or_max_id,
 )
 
 
@@ -49,14 +47,12 @@ def load_incremental(
     additional_filter = table_dict.get("additional_filtering", "")
 
     env = os.environ.copy()
-
     """
       If postgres replication is too far behind for gitlab_com, then data will not be replicated in this DAGRun that
       will not be replicated in future DAGruns -- thus forcing the DE team to backfill.
       This block of code raises an Exception whenever replication is far enough behind that data will be missed.
     """
     if table_dict["export_schema"] == "gitlab_com":
-
         # Just fetch and print the last pg_last_xact_replay_timestamp in present in system database or not.
 
         last_replication_check_query = "select pg_last_xact_replay_timestamp();"
@@ -178,7 +174,7 @@ def sync_incremental_ids(
     table_name: str,
     metadata_engine,
     start_pk,
-    initial_load_start_date
+    initial_load_start_date,
 ) -> bool:
     """
     Sync incrementally-loaded tables based on their IDs.
@@ -189,11 +185,11 @@ def sync_incremental_ids(
     primary_key = table_dict["export_table_primary_key"]
     # If temp isn't in the name, we don't need to full sync.
     # If a temp table exists, we know the sync didn't complete successfully
-    '''
+    """
     if "_TEMP" != table_name[-5:]:
         logging.info(f"Table {table} doesn't need a full sync.")
         return False
-    '''
+    """
 
     load_ids(
         additional_filtering,
@@ -205,7 +201,7 @@ def sync_incremental_ids(
         target_engine,
         metadata_engine,
         start_pk,
-        initial_load_start_date
+        initial_load_start_date,
     )
     return True
 
@@ -280,7 +276,9 @@ def load_ids(
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
 
-    max_source_id = get_min_or_max_id(primary_key, source_engine, source_table_name, 'max')
+    max_source_id = get_min_or_max_id(
+        primary_key, source_engine, source_table_name, "max"
+    )
 
     # Create a generator for queries that are chunked by ID range
     id_queries = id_query_generator(

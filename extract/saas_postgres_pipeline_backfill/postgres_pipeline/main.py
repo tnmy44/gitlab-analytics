@@ -55,7 +55,7 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
     manifest_dict = manifest_reader(file_path)
     # When load_only_table specified reduce manifest to keep only relevant table config
     filter_manifest(manifest_dict, load_only_table)
-    logging.info(f'\nmanifest_dict: {manifest_dict}')
+    logging.info(f"\nmanifest_dict: {manifest_dict}")
 
     # REVERT
     source_engine, metadata_engine, snowflake_engine = get_engines(
@@ -68,45 +68,45 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         table_dict = manifest_dict["tables"][table]
         current_table = PostgresPipelineTable(table_dict)
 
-        is_backfill_needed, start_pk, initial_load_start_date = current_table.check_is_backfill_needed(
-            source_engine, metadata_engine
-        )
+        (
+            is_backfill_needed,
+            start_pk,
+            initial_load_start_date,
+        ) = current_table.check_is_backfill_needed(source_engine, metadata_engine)
 
         # TODO: to delete, used for testing
         if not is_backfill_needed:
-            logging.info('\nmade it to manual is_backfill_needed=True block')
+            logging.info("\nmade it to manual is_backfill_needed=True block")
             is_backfill_needed = True
             start_pk = 1
             initial_load_start_date = None
 
-        logging.info(f'\nstart_pk: {start_pk}')
-        logging.info(f'\ninitial_load_start_date: {initial_load_start_date}')
-        logging.info(f'\nis_backfill_needed: {is_backfill_needed}')
-        '''
+        logging.info(f"\nstart_pk: {start_pk}")
+        logging.info(f"\ninitial_load_start_date: {initial_load_start_date}")
+        logging.info(f"\nis_backfill_needed: {is_backfill_needed}")
+        """
         # Check if the schema has changed or the table is new
         schema_changed = current_table.check_if_schema_changed(
             postgres_engine, snowflake_engine
         )
-        '''
+        """
 
         # schema_changed = True #REVERT
 
         # Call the correct function based on the load_type
         loaded = current_table.do_load(
-            load_type, source_engine, snowflake_engine, metadata_engine, is_backfill_needed, start_pk, initial_load_start_date
+            load_type,
+            source_engine,
+            snowflake_engine,
+            metadata_engine,
+            is_backfill_needed,
+            start_pk,
+            initial_load_start_date,
         )
         logging.info(f"Finished upload for table: {table}")
 
         # REVERT
-        '''
-        # Drop the original table and rename the temp table
-        if schema_changed and loaded:
-            swap_temp_table(
-                snowflake_engine,
-                current_table.get_target_table_name(),
-                current_table.get_temp_target_table_name(),
-            )
-
+        """
         count_query = f"SELECT COUNT(*) FROM {current_table.get_target_table_name()}"
         count = 0
 
@@ -118,14 +118,10 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         append_to_xcom_file(
             {current_table.get_target_table_name(): count, "load_ran": loaded}
         )
-        '''
+        """
 
 
 if __name__ == "__main__":
-    # file_path = "analytics/extract/postgres_pipeline/manifests_decomposed/el_gitlab_com_db_manifest.yaml"
-    # load_type = 'backfill'
-    # load_only_table = 'alert_management_http_integrations'
-    # main(file_path, load_type, load_only_table)
     logging.basicConfig(level=logging.INFO)
     logging.getLogger("snowflake.connector.cursor").disabled = True
     logging.getLogger("snowflake.connector.connection").disabled = True
