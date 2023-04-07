@@ -4,6 +4,7 @@
     ('dim_crm_person','dim_crm_person'),
     ('mart_crm_opportunity_stamped_hierarchy_hist', 'mart_crm_opportunity_stamped_hierarchy_hist'), 
     ('mart_crm_touchpoint', 'mart_crm_touchpoint'),
+    ('map_alternative_lead_demographics','map_alternative_lead_demographics'),
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_date','dim_date')
@@ -261,6 +262,8 @@
       ON person_base.email_hash = order_type_final.email_hash
     LEFT JOIN mart_crm_touchpoint
       ON mart_crm_touchpoint.email_hash = person_base.email_hash
+    LEFT JOIN map_alternative_lead_demographics
+      ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
 
   ), opp_base_wtih_batp AS (
     
