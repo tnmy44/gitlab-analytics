@@ -194,7 +194,6 @@ class PostgresPipelineTable:
             self.query,
             source_engine,
             self.source_table_name,
-            self.source_table_primary_key,
         ):
             logging.info(
                 f"Backfill needed- schema has changed for table: {self.source_table_name}."
