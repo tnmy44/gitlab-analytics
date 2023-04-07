@@ -17,22 +17,23 @@ from utils import (
     # get_engines,
     postgres_engine_factory,
     manifest_reader,
-    is_new_table
+    is_new_table,
 )
 
-class TestBackfillIntegration():
+
+class TestBackfillIntegration:
     def setup(self):
-        manifest_file_path = 'extract/saas_postgres_pipeline_backfill/manifests_decomposed/el_gitlab_com_new_db_manifest.yaml'
+        manifest_file_path = "extract/saas_postgres_pipeline_backfill/manifests_decomposed/el_gitlab_com_new_db_manifest.yaml"
 
         manifest_dict = manifest_reader(manifest_file_path)
         env = os.environ.copy()
         self.metadata_engine = postgres_engine_factory(
-            manifest_dict["connection_info"]['postgres_metadata_connection'], env
+            manifest_dict["connection_info"]["postgres_metadata_connection"], env
         )
-        metadata_schema = 'saas_db_metadata'
-        metadata_table = 'backfill_metadata'
-        self.test_metadata_table = f'test_{metadata_table}'
-        self.test_table_full_path = f'{metadata_schema}.{self.test_metadata_table}'
+        metadata_schema = "saas_db_metadata"
+        metadata_table = "backfill_metadata"
+        self.test_metadata_table = f"test_{metadata_table}"
+        self.test_table_full_path = f"{metadata_schema}.{self.test_metadata_table}"
 
         delete_query = f""" drop table if exists {self.test_table_full_path}"""
 
@@ -40,9 +41,6 @@ class TestBackfillIntegration():
         create table {self.test_table_full_path}
         (like {metadata_schema}.{metadata_table});
         """
-
-        # TODO: remove once Ved has approved other MR
-        alter_query = f"""alter table {self.test_table_full_path} rename column is_backfill_completed to is_export_completed;"""
 
         with self.metadata_engine.connect() as connection:
             connection.execute(delete_query)
@@ -50,17 +48,17 @@ class TestBackfillIntegration():
             connection.execute(alter_query)
 
     def teardown(self):
-        manifest_file_path = 'extract/saas_postgres_pipeline_backfill/manifests_decomposed/el_gitlab_com_new_db_manifest.yaml'
+        manifest_file_path = "extract/saas_postgres_pipeline_backfill/manifests_decomposed/el_gitlab_com_new_db_manifest.yaml"
 
         manifest_dict = manifest_reader(manifest_file_path)
         env = os.environ.copy()
         self.metadata_engine = postgres_engine_factory(
-            manifest_dict["connection_info"]['postgres_metadata_connection'], env
+            manifest_dict["connection_info"]["postgres_metadata_connection"], env
         )
-        metadata_schema = 'saas_db_metadata'
-        metadata_table = 'backfill_metadata'
-        self.test_metadata_table = f'test_{metadata_table}'
-        self.test_table_full_path = f'{metadata_schema}.{self.test_metadata_table}'
+        metadata_schema = "saas_db_metadata"
+        metadata_table = "backfill_metadata"
+        self.test_metadata_table = f"test_{metadata_table}"
+        self.test_table_full_path = f"{metadata_schema}.{self.test_metadata_table}"
 
         delete_query = f""" drop table if exists {self.test_table_full_path}"""
 
@@ -69,33 +67,32 @@ class TestBackfillIntegration():
         (like {metadata_schema}.{metadata_table});
         """
 
-        # TODO: remove once Ved has approved other MR
-        alter_query = f"""alter table {self.test_table_full_path} rename column is_backfill_completed to is_export_completed;"""
-
         with self.metadata_engine.connect() as connection:
             connection.execute(delete_query)
             connection.execute(create_table_query)
             connection.execute(alter_query)
 
     def test_if_new_table_backfill(self):
-        source_table = 'some_table'
+        source_table = "some_table"
 
         # Test when table is missing in metadata
-        result = is_new_table(self.metadata_engine, self.test_metadata_table, source_table)
+        result = is_new_table(
+            self.metadata_engine, self.test_metadata_table, source_table
+        )
         expected_result = True
         assert result == expected_result
 
         # Insert test record
-        database_name = 'some_db'
-        initial_load_start_date=datetime(2023, 1, 1)
-        upload_date=datetime(2023, 1, 1)
-        upload_file_name='some_file'
-        last_extracted_id=10
-        max_id=20
-        is_export_completed=True
-        chunk_row_count=3
+        database_name = "some_db"
+        initial_load_start_date = datetime(2023, 1, 1)
+        upload_date = datetime(2023, 1, 1)
+        upload_file_name = "some_file"
+        last_extracted_id = 10
+        max_id = 20
+        is_export_completed = True
+        chunk_row_count = 3
 
-        insert_query = f'''
+        insert_query = f"""
         INSERT INTO {self.test_table_full_path}
         VALUES (
             '{database_name}',
@@ -107,16 +104,19 @@ class TestBackfillIntegration():
             {max_id},
             {is_export_completed},
             {chunk_row_count});
-        '''
+        """
 
         # Test when table is inserted into metadata
         with self.metadata_engine.connect() as connection:
             connection.execute(insert_query)
 
-        result = is_new_table(self.metadata_engine, self.test_metadata_table, source_table)
+        result = is_new_table(
+            self.metadata_engine, self.test_metadata_table, source_table
+        )
         expected_result = False
         assert result == expected_result
 
+    """
     def test_if_in_middle_of_backfill_more_than_24hr_since_last_write(self):
         # Arrange
         # Code to simulate being in the middle of a backfill with more than 24 hours since the last write.
@@ -146,7 +146,4 @@ class TestBackfillIntegration():
 
         # Assert
         # Code to verify that the row counts in the Parquet file and source match.
-        '''
-
-if __name__ == '__main__':
-    unittest.main()
+        """

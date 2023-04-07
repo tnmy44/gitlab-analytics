@@ -307,7 +307,9 @@ def get_upload_file_name(
     # Format folder structure
     initial_load_prefix = f"initial_load_start_{initial_load_start_date.isoformat(timespec='milliseconds')}"
     folder_prefix = prefix_template.format(
-        metadata_table=metadata_table, table=table, initial_load_prefix=initial_load_prefix
+        metadata_table=metadata_table,
+        table=table,
+        initial_load_prefix=initial_load_prefix,
     )
 
     # Format filename
@@ -434,7 +436,9 @@ def range_generator(
         start += step
 
 
-def is_new_table(metadata_engine: Engine, metadata_table: str, source_table: str) -> bool:
+def is_new_table(
+    metadata_engine: Engine, metadata_table: str, source_table: str
+) -> bool:
     """
     Check if backfill table exists in backfill metadata table.
     If the table doesn't exist, then it's a 'new' table
@@ -446,7 +450,7 @@ def is_new_table(metadata_engine: Engine, metadata_table: str, source_table: str
 
 
 def query_export_status(
-        metadata_engine: Engine, metadata_table: str, source_table: str
+    metadata_engine: Engine, metadata_table: str, source_table: str
 ) -> List[Tuple[Any, Any, Any, Any]]:
     """
     Check if backfill table exists in backfill metadata table.
@@ -467,7 +471,7 @@ def query_export_status(
 
 
 def is_resume_export(
-        metadata_engine: Engine, metadata_table: str, source_table: str
+    metadata_engine: Engine, metadata_table: str, source_table: str
 ) -> Tuple[bool, int, Optional[Any]]:
     """
     Determine if export should be resumed, either 'backfill or 'delete' export
@@ -556,7 +560,9 @@ def delete_from_gcs(source_table: str) -> str:
     prefix = f"staging/{source_table}/initial_load_start_"
 
     blobs = bucket.list_blobs(prefix=prefix)
-    logging.info('In preperation of backfill, removing unprocessed files with prefix: {prefix}')
+    logging.info(
+        "In preperation of backfill, removing unprocessed files with prefix: {prefix}"
+    )
     for blob in blobs:
         blob.delete()
 
