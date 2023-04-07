@@ -6,7 +6,7 @@ from typing import Dict, Any
 from sqlalchemy.engine.base import Engine
 
 import load_functions
-from utils import is_new_table, schema_addition_check, is_resume_export, update_import_query_for_delete_export
+from utils import is_new_table, schema_addition_check, is_resume_export, update_import_query_for_delete_export, delete_from_gcs
 
 
 class PostgresPipelineTable:
@@ -167,6 +167,9 @@ class PostgresPipelineTable:
         Will check in the above order.
         If in the middle of a valid backfill, need to return the metadata
         associated with it so that backfill can start in correct spot.
+
+        Furthermore, if backfill needed, but NOT in middle of backfill,
+        delete any unprocessed backfill files
         """
         initial_load_start_date = None
         start_pk = 1
@@ -177,6 +180,7 @@ class PostgresPipelineTable:
             logging.info(
                 f"Backfill needed- processing new table: {self.source_table_name}."
             )
+            delete_from_gcs(self.source_table_name)
             return is_backfill_needed, start_pk, initial_load_start_date
 
         if schema_addition_check(
@@ -188,6 +192,7 @@ class PostgresPipelineTable:
             logging.info(
                 f"Backfill needed- schema has changed for table: {self.source_table_name}."
             )
+            delete_from_gcs(self.source_table_name)
             return is_backfill_needed, start_pk, initial_load_start_date
 
         return is_resume_export(metadata_engine, metadata_table, self.source_table_name)

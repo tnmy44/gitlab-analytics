@@ -285,7 +285,7 @@ def get_upload_file_name(
     version: str = None,
     filetype: str = "parquet",
     compression: str = "gzip",
-    prefix_template: str = "{metadata_table}/{table}/{initial_load_prefix}/",
+    prefix_template: str = "staging/{metadata_table}/{table}/{initial_load_prefix}/",
     filename_template: str = "{timestamp}_{table}{version}.{filetype}.{compression}",
 ) -> str:
     """Generate a unique and descriptive filename for uploading data to cloud storage.
@@ -529,12 +529,12 @@ def get_source_columns(
 
 def get_latest_parquet_file(source_table: str) -> str:
     """
-    Get the most recent parquet file for a table.
+    Get the most recent processed parquet file.
     Each table is saved in its own prefix in GCS, so scan only that sub-prefix
     """
     bucket = get_gcs_bucket()
 
-    prefix = f"{source_table}/initial_load_start_"
+    prefix = f"processed/{source_table}/initial_load_start_"
 
     blobs = bucket.list_blobs(prefix=prefix)
     parquet_files = []
@@ -544,6 +544,21 @@ def get_latest_parquet_file(source_table: str) -> str:
 
     latest_parquet_file = max(parquet_files)
     return latest_parquet_file
+
+
+def delete_from_gcs(source_table: str) -> str:
+    """
+    Prior to a fresh backfill, remove all previously
+    backfilled files that haven't been processed downstream
+    """
+    bucket = get_gcs_bucket()
+
+    prefix = f"staging/{source_table}/initial_load_start_"
+
+    blobs = bucket.list_blobs(prefix=prefix)
+    logging.info('In preperation of backfill, removing unprocessed files with prefix: {prefix}')
+    for blob in blobs:
+        blob.delete()
 
 
 def get_gcs_parquet_schema(parquet_file: str) -> list:
