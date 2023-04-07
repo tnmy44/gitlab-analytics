@@ -11,7 +11,9 @@ from utils import (
     schema_addition_check,
     is_resume_export,
     update_import_query_for_delete_export,
-    delete_from_gcs,
+    remove_unprocessed_files_from_gcs,
+    BACKFILL_METADATA_TABLE,
+    DELETE_METADATA_TABLE,
 )
 
 
@@ -77,7 +79,6 @@ class PostgresPipelineTable:
             logging.info("table does not need incremental backfill")
             return False
 
-        metadata_table = "backfill_metadata"
         target_table = self.get_target_table_name()
         return load_functions.sync_incremental_ids(
             source_engine,
@@ -87,7 +88,7 @@ class PostgresPipelineTable:
             self.table_dict,
             target_table,
             metadata_engine,
-            metadata_table,
+            BACKFILL_METADATA_TABLE,
             start_pk,
             initial_load_start_date,
         )
@@ -116,13 +117,14 @@ class PostgresPipelineTable:
         metadata_engine: Engine,
     ) -> bool:
         start_pk, initial_load_start_date = 0, None
-        metadata_table = "delete_export_metadata"
 
         (
             is_resume_export_needed,
             resume_pk,
             resume_initial_load_start_date,
-        ) = is_resume_export(metadata_engine, metadata_table, self.source_table_name)
+        ) = is_resume_export(
+            metadata_engine, DELETE_METADATA_TABLE, self.source_table_name
+        )
         if is_resume_export_needed:
             start_pk = resume_pk
             initial_load_start_date = resume_initial_load_start_date
@@ -140,7 +142,7 @@ class PostgresPipelineTable:
             self.table_dict,
             target_table,
             metadata_engine,
-            metadata_table,
+            DELETE_METADATA_TABLE,
             start_pk,
             initial_load_start_date,
         )
@@ -181,13 +183,16 @@ class PostgresPipelineTable:
         initial_load_start_date = None
         start_pk = 1
         is_backfill_needed = True
-        metadata_table = "backfill_metadata"
 
-        if is_new_table(metadata_engine, metadata_table, self.source_table_name):
+        if is_new_table(
+            metadata_engine, BACKFILL_METADATA_TABLE, self.source_table_name
+        ):
             logging.info(
                 f"Backfill needed- processing new table: {self.source_table_name}."
             )
-            delete_from_gcs(self.source_table_name)
+            remove_unprocessed_files_from_gcs(
+                BACKFILL_METADATA_TABLE, self.source_table_name
+            )
             return is_backfill_needed, start_pk, initial_load_start_date
 
         if schema_addition_check(
@@ -198,10 +203,14 @@ class PostgresPipelineTable:
             logging.info(
                 f"Backfill needed- schema has changed for table: {self.source_table_name}."
             )
-            delete_from_gcs(self.source_table_name)
+            remove_unprocessed_files_from_gcs(
+                BACKFILL_METADATA_TABLE, self.source_table_name
+            )
             return is_backfill_needed, start_pk, initial_load_start_date
 
-        return is_resume_export(metadata_engine, metadata_table, self.source_table_name)
+        return is_resume_export(
+            metadata_engine, BACKFILL_METADATA_TABLE, self.source_table_name
+        )
 
     def get_target_table_name(self):
         return self.target_table_name

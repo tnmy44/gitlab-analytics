@@ -41,6 +41,9 @@ SCHEMA = "tap_postgres"
 BUCKET_NAME = "saas-pipeline-backfills"
 DEFAULT_CHUNK_SIZE = 5_000_000
 
+BACKFILL_METADATA_TABLE = "backfill_metadata"
+DELETE_METADATA_TABLE = "delete_metadata"
+
 
 def get_gcs_scoped_credentials():
     """Get scoped credential"""
@@ -277,6 +280,14 @@ def write_backfill_metadata(
         connection.execute(insert_query)
 
 
+def get_prefix_template():
+    """
+    Returns something like this:
+    staging/backfill_metadata/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
+    """
+    return "{staging_or_processed}/{metadata_table}/{table}/{initial_load_prefix}"
+
+
 def get_upload_file_name(
     metadata_table: str,
     table: str,
@@ -285,7 +296,7 @@ def get_upload_file_name(
     version: str = None,
     filetype: str = "parquet",
     compression: str = "gzip",
-    prefix_template: str = "staging/{metadata_table}/{table}/{initial_load_prefix}/",
+    prefix_template: str = get_prefix_template(),
     filename_template: str = "{timestamp}_{table}{version}.{filetype}.{compression}",
 ) -> str:
     """Generate a unique and descriptive filename for uploading data to cloud storage.
@@ -297,7 +308,7 @@ def get_upload_file_name(
         filetype (str, optional): The file format. Defaults to 'parquet'.
         compression (str, optional): The compression method. Defaults to 'gzip'.
         prefix_template (str, optional): The prefix template for the folder structure.
-            Defaults to '{table}/{initial_load_prefix}/'.
+            Defaults to get_prefix_template()'s template
         filename_template (str, optional): The filename template.
             Defaults to '{timestamp}_{table}_{version}.{filetype}.{compression}'.
 
@@ -306,7 +317,8 @@ def get_upload_file_name(
     """
     # Format folder structure
     initial_load_prefix = f"initial_load_start_{initial_load_start_date.isoformat(timespec='milliseconds')}"
-    folder_prefix = prefix_template.format(
+    prefix = prefix_template.format(
+        staging_or_processed="staging",
         metadata_table=metadata_table,
         table=table,
         initial_load_prefix=initial_load_prefix,
@@ -327,7 +339,7 @@ def get_upload_file_name(
     )
 
     # Combine folder structure and filename
-    return os.path.join(folder_prefix, filename).lower()
+    return os.path.join(prefix, filename).lower()
 
 
 def chunk_and_upload(
@@ -539,7 +551,12 @@ def get_latest_parquet_file(source_table: str) -> str:
     """
     bucket = get_gcs_bucket()
 
-    prefix = f"processed/{source_table}/initial_load_start_"
+    prefix = get_prefix_template().format(
+        staging_or_processed="processed",
+        metadata_table=BACKFILL_METADATA_TABLE,
+        table=source_table,
+        initial_load_prefix="initial_load_start_",
+    )
 
     blobs = bucket.list_blobs(prefix=prefix)
     parquet_files = []
@@ -551,21 +568,26 @@ def get_latest_parquet_file(source_table: str) -> str:
     return latest_parquet_file
 
 
-def delete_from_gcs(source_table: str):
+def remove_unprocessed_files_from_gcs(metadata_table: str, source_table: str):
     """
-    Prior to a fresh backfill, remove all previously
+    Prior to a fresh backfill/delete, remove all previously
     backfilled files that haven't been processed downstream
     """
     bucket = get_gcs_bucket()
 
-    prefix = f"staging/{source_table}/initial_load_start_"
+    prefix = get_prefix_template().format(
+        staging_or_processed="staging",
+        metadata_table=metadata_table,
+        table=source_table,
+        initial_load_prefix="initial_load_start_",
+    )
 
     blobs = bucket.list_blobs(prefix=prefix)
 
     for i, blob in enumerate(blobs):
         if i == 0:
             logging.info(
-                "In preperation of backfill, removing unprocessed files with prefix: {prefix}"
+                f"In preparation of backfill, removing unprocessed files with prefix: {prefix}"
             )
         blob.delete()
 
