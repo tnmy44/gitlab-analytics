@@ -463,7 +463,7 @@ def query_export_status(
         f"FROM saas_db_metadata.{metadata_table} "
         "WHERE upload_date = ("
         "  SELECT MAX(upload_date)"
-        " FROM saas_db_metadata.backfill_metadata"
+        f" FROM saas_db_metadata.{metadata_table}"
         f" WHERE table_name = '{source_table}');"
     )
     logging.info(f"\nquery backfill status: {query}")
@@ -561,10 +561,12 @@ def delete_from_gcs(source_table: str):
     prefix = f"staging/{source_table}/initial_load_start_"
 
     blobs = bucket.list_blobs(prefix=prefix)
-    logging.info(
-        "In preperation of backfill, removing unprocessed files with prefix: {prefix}"
-    )
-    for blob in blobs:
+
+    for i, blob in enumerate(blobs):
+        if i == 0:
+            logging.info(
+                "In preperation of backfill, removing unprocessed files with prefix: {prefix}"
+            )
         blob.delete()
 
 
