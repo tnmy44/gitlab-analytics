@@ -119,6 +119,11 @@ databases:
     - kmagda_prep:
         shared: no
 
+    - lmai_prod:
+        shared: no
+    - lmai_prep:
+        shared: no
+
     - lvinueza_prod:
         shared: no
     - lvinueza_prep:
@@ -3674,18 +3679,33 @@ roles:
         member_of:
             - analyst_engineering
             - bi_tool_eval_read
+        warehouses:
+            - dev_xs
         privileges:
             databases:
                 read:
                     - prep
+                    - lmai_prep
+                    - lmai_prod
+                write:
+                    - lmai_prep
+                    - lmai_prod
             schemas:
                 read:
                     - prep.sensitive
+                    - lmai_prep.*
+                    - lmai_prod.*
+                write:
+                    - lmai_prep.*
+                    - lmai_prod.*
             tables: # https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/6311
                 read:
                     - prep.sensitive.bamboohr_id_employee_number_mapping
-        warehouses:
-            - dev_xs
+                    - lmai_prep.*.*
+                    - lmai_prod.*.*
+                write:
+                    - lmai_prep.*.*
+                    - lmai_prod.*.*
 
     - lstahlman:
         member_of:
