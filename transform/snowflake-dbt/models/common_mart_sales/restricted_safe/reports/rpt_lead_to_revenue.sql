@@ -135,7 +135,6 @@
     person_order_type_final.dim_crm_account_id,
     person_order_type_final.dim_parent_crm_account_id,
     person_order_type_final.dim_crm_opportunity_id,
-    person_order_type_final.order_type,
     person_order_type_final.person_order_type,
     inquiry_order_type_final.inquiry_order_type_historical,
     mql_order_type_final.mql_order_type_historical
