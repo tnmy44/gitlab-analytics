@@ -133,8 +133,6 @@
     person_order_type_final.sfdc_record_id,
     person_order_type_final.email_hash,
     person_order_type_final.dim_crm_account_id,
-    person_order_type_final.mql_date_lastest_pt,
-    person_order_type_final.close_date,
     person_order_type_final.dim_parent_crm_account_id,
     person_order_type_final.dim_crm_opportunity_id,
     person_order_type_final.order_type,
