@@ -76,23 +76,23 @@
 ), mql_order_type_base AS (
 
     SELECT DISTINCT
-      mart_crm_person.sfdc_record_id,
-      mart_crm_person.email_hash, 
+      person_base.sfdc_record_id,
+      person_base.email_hash, 
       CASE 
-        WHEN mql_date_lastest_pt < mart_crm_opportunity.close_date 
-          THEN mart_crm_opportunity.order_type
-        WHEN mql_date_lastest_pt > mart_crm_opportunity.close_date 
+        WHEN mql_date_lastest_pt < opportunity_base.close_date 
+          THEN opportunity_base.order_type
+        WHEN mql_date_lastest_pt > opportunity_base.close_date 
           THEN '3. Growth'
         ELSE NULL
       END AS mql_order_type_historical,
-      ROW_NUMBER() OVER( PARTITION BY mart_crm_person.email_hash ORDER BY mql_order_type_historical) AS mql_order_type_number
-    FROM mart_crm_person
+      ROW_NUMBER() OVER( PARTITION BY person_base.email_hash ORDER BY mql_order_type_historical) AS mql_order_type_number
+    FROM person_base
     FULL JOIN upa_base 
-      ON mart_crm_person.dim_crm_account_id = upa_base.dim_crm_account_id
+      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps 
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    FULL JOIN mart_crm_opportunity 
-      ON upa_base.dim_parent_crm_account_id = mart_crm_opportunity.dim_parent_crm_account_id
+    FULL JOIN opportunity_base 
+      ON upa_base.dim_parent_crm_account_id = opportunity_base.dim_parent_crm_account_id
     
 ), mql_order_type_final AS (
   
@@ -103,21 +103,21 @@
 ), inquiry_order_type_base AS (
 
     SELECT DISTINCT
-      mart_crm_person.sfdc_record_id,
-      mart_crm_person.email_hash, 
+      person_base.sfdc_record_id,
+      person_base.email_hash, 
       CASE 
-         WHEN true_inquiry_date < mart_crm_opportunity.close_date THEN mart_crm_opportunity.order_type
-         WHEN true_inquiry_date > mart_crm_opportunity.close_date THEN '3. Growth'
+         WHEN true_inquiry_date < opportunity_base.close_date THEN opportunity_base.order_type
+         WHEN true_inquiry_date > opportunity_base.close_date THEN '3. Growth'
       ELSE NULL
       END AS inquiry_order_type_historical,
-      ROW_NUMBER() OVER( PARTITION BY mart_crm_person.email_hash ORDER BY inquiry_order_type_historical) AS inquiry_order_type_number
-    FROM mart_crm_person
+      ROW_NUMBER() OVER( PARTITION BY person_base.email_hash ORDER BY inquiry_order_type_historical) AS inquiry_order_type_number
+    FROM person_base
     FULL JOIN upa_base 
-      ON mart_crm_person.dim_crm_account_id = upa_base.dim_crm_account_id
+      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps 
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    FULL JOIN mart_crm_opportunity 
-      ON upa_base.dim_parent_crm_account_id = mart_crm_opportunity.dim_parent_crm_account_id
+    FULL JOIN opportunity_base 
+      ON upa_base.dim_parent_crm_account_id = opportunity_base.dim_parent_crm_account_id
 
 ), inquiry_order_type_final AS (
   
@@ -156,6 +156,7 @@
 	  person_base.partner_prospect_id,
       dim_crm_person.sfdc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
+
   
   --Person Data
       person_base.email_hash,
@@ -199,7 +200,8 @@
       COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
       map_alternative_lead_demographics.geo_custom,
       UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
-  
+	   AS campaign_rep_role_name,
+
   --Person Dates
 		person_base.true_inquiry_date,
 		person_base.mql_date_lastest_pt,
@@ -232,6 +234,7 @@
 		mart_crm_touchpoint.bizible_referrer_page,
 		mart_crm_touchpoint.bizible_referrer_page_raw,
 		mart_crm_touchpoint.bizible_integrated_campaign_grouping,
+		mart_crm_touchpoint.campaign_rep_role_name,
 		mart_crm_touchpoint.touchpoint_segment,
 		mart_crm_touchpoint.gtm_motion,
 		mart_crm_touchpoint.pipe_name,
@@ -421,6 +424,7 @@
       mart_crm_attribution_touchpoint.bizible_referrer_page,
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
+	  mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.gtm_motion,
       mart_crm_attribution_touchpoint.pipe_name,
@@ -577,7 +581,7 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
- 	{{dbt_utils.group_by(n=166)}}
+ 	{{dbt_utils.group_by(n=167)}}
     
 ), cohort_base_combined AS (
   
@@ -801,6 +805,7 @@
     bizible_referrer_page,
     bizible_referrer_page_raw,
     bizible_integrated_campaign_grouping,
+	campaign_rep_role_name,
     touchpoint_segment,
     gtm_motion,
     pipe_name,
@@ -1084,6 +1089,7 @@
       bizible_referrer_page,
       bizible_referrer_page_raw,
       bizible_integrated_campaign_grouping,
+	  campaign_rep_role_name,
       touchpoint_segment,
       gtm_motion,
       pipe_name,
