@@ -281,7 +281,7 @@
 	  opp.owner_id AS opp_owner_id,
 
 	--Opp Dates
-	  opp.opp_created_date,
+	  opp.created_date AS opp_created_date,
    	  opp.sales_accepted_date,
 	  opp.close_date,
 	  opp.stage_0_pending_acceptance_date,
@@ -329,7 +329,7 @@
 	  opp.net_arr,
 	  opp.amount,
 	  opp.invoice_number,
-	  opp.opp_order_type,
+	  opp.order_type AS opp_order_type,
 	  opp.sales_qualified_source_name,
 	  opp.deal_path_name,
 	  opp.sales_type,
