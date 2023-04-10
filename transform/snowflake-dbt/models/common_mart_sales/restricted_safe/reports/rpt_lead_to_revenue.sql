@@ -7,6 +7,7 @@
     ('map_alternative_lead_demographics','map_alternative_lead_demographics'),
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('dim_crm_account', 'dim_crm_account'),
+    ('dim_crm_user','dim_crm_user'),
     ('dim_date','dim_date')
 ]) }}
         
@@ -405,7 +406,7 @@
 	  opp.churned_contraction_net_arr,
 	  opp.calculated_deal_count,
 	  opp.days_in_stage,
-	  opp.opp_user_role_name,
+	  dim_crm_user.user_role_name AS opp_user_role_name,
 	  opp.record_type_name,
     
     -- Touchpoint Data
@@ -584,6 +585,8 @@
       ON opp.dim_crm_opportunity_id=opportunity_base.dim_crm_opportunity_id
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
+    LEFT JOIN dim_crm_user
+      ON opp.dim_crm_user_id=dim_crm_user.dim_crm_user_id
   {{dbt_utils.group_by(n=167)}}
     
 ), cohort_base_combined AS (
