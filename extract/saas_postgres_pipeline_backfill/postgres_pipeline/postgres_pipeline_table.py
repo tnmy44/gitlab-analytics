@@ -208,6 +208,7 @@ class PostgresPipelineTable:
             )
             return is_backfill_needed, start_pk, initial_load_start_date
 
+        # do not remove unprocessed files as we are mid-backfill
         return is_resume_export(
             metadata_engine, BACKFILL_METADATA_TABLE, self.source_table_name
         )
