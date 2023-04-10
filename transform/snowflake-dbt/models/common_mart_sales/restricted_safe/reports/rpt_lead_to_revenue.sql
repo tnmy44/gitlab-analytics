@@ -272,7 +272,7 @@
       opp.dim_crm_opportunity_id,
       opp.dim_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
-      opp.opp_dim_crm_user_id,
+      opp.dim_crm_user_id AS opp_dim_crm_user_id,
 	  opp.duplicate_opportunity_id,
 	  opp.merged_crm_opportunity_id,
 	  opp.record_type_id,
