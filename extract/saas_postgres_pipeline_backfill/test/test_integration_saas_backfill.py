@@ -199,7 +199,45 @@ class TestBackfillIntegration:
             BACKFILL_METADATA_TABLE, pipeline_table.source_table_name
         )
 
-    """
+    @patch("postgres_pipeline_table.is_resume_export")
+    @patch("postgres_pipeline_table.schema_addition_check")
+    @patch("postgres_pipeline_table.is_new_table")
+    @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
+    def test_remove_unprocessed_mid_backfill(
+        self,
+        mock_remove_unprocessed_files,
+        mock_is_new_table,
+        mock_schema_addition_check,
+        mock_is_resume_export,
+    ):
+        """
+        Test that after is_resume_export(),
+        remove_unprocessed_files_from_gcs() is NEVER called
+        """
+
+        # Create a mock source_engine and metadata_engine objects
+        source_engine = MagicMock(spec=Engine)
+        metadata_engine = MagicMock(spec=Engine)
+
+        # Create a mock PostgresPipelineTable object
+        table_config = {
+            "import_query": "SELECT * FROM some_table",
+            "import_db": "some_database",
+            "export_table": "some_table",
+            "export_table_primary_key": "id",
+        }
+        pipeline_table = PostgresPipelineTable(table_config)
+
+        mock_is_new_table.return_value = False
+        mock_schema_addition_check.return_value = False
+        mock_is_resume_export.return_value = True
+
+        # Call the function being tested
+        pipeline_table.check_is_backfill_needed(source_engine, metadata_engine)
+
+        # Assert that remove_unprocessed_files_from_gcs was called with the correct arguments
+        mock_remove_unprocessed_files.assert_not_called()
+
     def test_if_in_middle_of_backfill_more_than_24hr_since_last_write(self):
         # Arrange
         # Code to simulate being in the middle of a backfill with more than 24 hours since the last write.
@@ -210,6 +248,7 @@ class TestBackfillIntegration:
         # Assert
         # Code to verify that the backfill was successful and started over from the beginning.
 
+    """
     def test_dont_backfill_if_conditions_not_met(self):
         # Arrange
         # Code to simulate a scenario where the backfill conditions are not met.
