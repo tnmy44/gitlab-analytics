@@ -9,7 +9,8 @@ DATE_TRUNC(MONTH,p.derived_tstamp) AS page_view_month,
 COUNT(DISTINCT p.gsc_pseudonymized_user_id) AS unique_users,
 COUNT(DISTINCT p.session_id) AS sessions,
 COUNT(1) AS total_pageviews
-FROM "PROD".legacy.snowplow_structured_events_all p
+FROM 
+{{ ref('snowplow_structured_events_all') }} p
 WHERE 
 p.page_url_host = 'gitlab.com'
 AND
@@ -33,7 +34,7 @@ COUNT(DISTINCT mr.gsc_pseudonymized_user_id) AS users_count,
 COUNT(DISTINCT mr.session_id) AS sessions,
 COUNT(1) AS total_occurences
 FROM
-"PROD".workspace_product.wk_rpt_product_navigation_base mr
+{{ ref('wk_rpt_product_navigation_base') }} mr
 WHERE
 mr.derived_tstamp > DATEADD(DAY,1,LAST_DAY(DATEADD(MONTH,-19,CURRENT_DATE())))
 AND
