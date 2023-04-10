@@ -163,6 +163,7 @@
       dim_crm_account.risk_impact,
       dim_crm_account.risk_reason,
       dim_crm_account.last_timeline_at_risk_update,
+      dim_crm_account.last_at_risk_update_comments,
 
       --degenerative dimensions
       dim_crm_account.is_sdr_target_account,
@@ -253,5 +254,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-08-10",
-    updated_date="2023-03-10"
+    updated_date="2023-03-29"
 ) }}
