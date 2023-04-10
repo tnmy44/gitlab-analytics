@@ -34,6 +34,11 @@ databases:
     - cbraza_prep:
         shared: no
 
+    - cdeleon_prod:
+        shared: no
+    - cdeleon_prep:
+        shared: no
+
     - cleroux_prod:
         shared: no
     - cleroux_prep:
@@ -2758,6 +2763,22 @@ roles:
             tables:
                 - cbraza_prep.*.*
                 - cbraza_prod.*.*
+
+    - cdeleon:
+        member_of:
+            - analyst_engineering
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - cdeleon_prep
+                - cdeleon_prod
+            schemas:
+                - cdeleon_prep.*
+                - cdeleon_prod.*
+            tables:
+                - cdeleon_prep.*.*
+                - cdeleon_prod.*.*
 
     - cleroux:
         member_of:
