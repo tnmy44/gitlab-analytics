@@ -582,7 +582,9 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
     LEFT JOIN opportunity_base
       ON opp.dim_crm_opportunity_id=opportunity_base.dim_crm_opportunity_id
- 	{{dbt_utils.group_by(n=167)}}
+    LEFT JOIN mart_crm_attribution_touchpoint
+      ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
+  {{dbt_utils.group_by(n=167)}}
     
 ), cohort_base_combined AS (
   
