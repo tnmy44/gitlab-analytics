@@ -502,6 +502,7 @@ def is_resume_export(
 
     # if backfill metadata exists for table
     if results:
+        print(results)
         # unpack the results
         (
             is_export_completed,
@@ -521,6 +522,7 @@ def is_resume_export(
                 logging.info(
                     f"In middle of export for {source_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Start backfill from beginning."
                 )
+
             start_pk = last_extracted_id + 1
             logging.info(
                 f"Resuming backfill with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}"

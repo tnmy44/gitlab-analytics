@@ -69,7 +69,9 @@ class PostgresPipelineTable:
             is_backfill_needed,
             start_pk,
             initial_load_start_date,
-        ) = self.check_is_backfill_needed(source_engine, metadata_engine)
+        ) = self.check_is_backfill_needed(
+            source_engine, metadata_engine, BACKFILL_METADATA_TABLE
+        )
 
         logging.info(f"\nstart_pk: {start_pk}")
         logging.info(f"\ninitial_load_start_date: {initial_load_start_date}")
@@ -116,7 +118,7 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
     ) -> bool:
-        start_pk, initial_load_start_date = 0, None
+        start_pk, initial_load_start_date = 1, None
 
         (
             is_resume_export_needed,
@@ -156,7 +158,7 @@ class PostgresPipelineTable:
     ) -> bool:
         load_types = {
             "backfill": self.do_incremental_backfill,
-            "delete_export": self.do_incremental_delete_export,
+            "deletes": self.do_incremental_delete_export,
             # "test": self.check_new_table,
             # "scd": self.do_scd,
         }
@@ -166,7 +168,12 @@ class PostgresPipelineTable:
             metadata_engine,
         )
 
-    def check_is_backfill_needed(self, source_engine: Engine, metadata_engine: Engine):
+    def check_is_backfill_needed(
+        self,
+        source_engine: Engine,
+        metadata_engine: Engine,
+        backfill_metadata_table: str,
+    ):
         """
         There are 3 criteria that determine if a backfill is necessary:
             1. New table
@@ -180,22 +187,19 @@ class PostgresPipelineTable:
         Furthermore, if backfill needed, but NOT in middle of backfill,
         delete any unprocessed backfill files
         """
+        # default args if backfill is needed, will be overriden if is_resume_export=True
         initial_load_start_date = None
         start_pk = 1
         is_backfill_needed = True
 
         if is_new_table(
-            metadata_engine, BACKFILL_METADATA_TABLE, self.source_table_name
+            metadata_engine, backfill_metadata_table, self.source_table_name
         ):
             logging.info(
                 f"Backfill needed- processing new table: {self.source_table_name}."
             )
-            remove_unprocessed_files_from_gcs(
-                BACKFILL_METADATA_TABLE, self.source_table_name
-            )
-            return is_backfill_needed, start_pk, initial_load_start_date
 
-        if schema_addition_check(
+        elif schema_addition_check(
             self.query,
             source_engine,
             self.source_table_name,
@@ -203,15 +207,20 @@ class PostgresPipelineTable:
             logging.info(
                 f"Backfill needed- schema has changed for table: {self.source_table_name}."
             )
-            remove_unprocessed_files_from_gcs(
-                BACKFILL_METADATA_TABLE, self.source_table_name
-            )
-            return is_backfill_needed, start_pk, initial_load_start_date
 
-        # do not remove unprocessed files as we are mid-backfill
-        return is_resume_export(
-            metadata_engine, BACKFILL_METADATA_TABLE, self.source_table_name
-        )
+        # check if mid-backfill
+        else:
+            is_backfill_needed, start_pk, initial_load_start_date = is_resume_export(
+                metadata_engine, backfill_metadata_table, self.source_table_name
+            )
+
+        # remove unprocessed files if backfill needed but not in middle of backfill
+        if is_backfill_needed and initial_load_start_date is None:
+            remove_unprocessed_files_from_gcs(
+                backfill_metadata_table, self.source_table_name
+            )
+
+        return is_backfill_needed, start_pk, initial_load_start_date
 
     def get_target_table_name(self):
         return self.target_table_name
