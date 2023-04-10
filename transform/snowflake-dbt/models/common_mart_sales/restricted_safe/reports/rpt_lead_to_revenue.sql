@@ -333,7 +333,7 @@
 	  opp.sales_qualified_source_name,
 	  opp.deal_path_name,
 	  opp.sales_type,
-	  opp.parent_crm_account_lam_dev_count,
+	  opportunity_base.parent_crm_account_lam_dev_count,
 	  opp.crm_opp_owner_geo_stamped,
 	  opp.crm_opp_owner_sales_segment_stamped,
 	  opp.crm_opp_owner_region_stamped,
@@ -580,8 +580,10 @@
         ELSE 0 
       END AS won_linear_net_arr
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
-    LEFT JOIN mart_crm_attribution_touchpoint
-      ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
+    LEFT JOIN mart_crm_opportunity
+      ON opp.dim_crm_opportunity_id=mart_crm_opportunity.dim_crm_opportunity_id
+    LEFT JOIN opportunity_base
+      ON opp.dim_crm_opportunity_id=opportunity_base.dim_crm_opportunity_id
  	{{dbt_utils.group_by(n=167)}}
     
 ), cohort_base_combined AS (
