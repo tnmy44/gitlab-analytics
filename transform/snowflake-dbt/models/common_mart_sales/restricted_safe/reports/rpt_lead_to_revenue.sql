@@ -157,6 +157,7 @@
 	  person_base.partner_prospect_id,
       dim_crm_person.sfdc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
+      mart_crm_touchpoint.dim_campaign_id,
 
   
   --Person Data
@@ -165,7 +166,7 @@
 	  person_base.was_converted_lead,
       person_base.email_domain_type,
 	  person_base.is_valuable_signup,
-      person_base.status,
+      person_base.status AS crm_person_status,
       person_base.lead_source,
 	  person_base.source_buckets,
       person_base.is_mql,
@@ -232,6 +233,7 @@
 		mart_crm_touchpoint.bizible_referrer_page,
 		mart_crm_touchpoint.bizible_referrer_page_raw,
 		mart_crm_touchpoint.bizible_integrated_campaign_grouping,
+    mart_crm_touchpoint.bizible_ad_group_name,
 		mart_crm_touchpoint.campaign_rep_role_name,
 		mart_crm_touchpoint.touchpoint_segment,
 		mart_crm_touchpoint.gtm_motion,
@@ -278,6 +280,7 @@
 	  opp.ssp_id,
 	  opp.primary_campaign_source_id AS opp_primary_campaign_source_id,
 	  opp.owner_id AS opp_owner_id,
+    mart_crm_attribution_touchpoint.dim_campaign_id,
 
 	--Opp Dates
 	  opp.created_date AS opp_created_date,
@@ -414,6 +417,7 @@
       mart_crm_attribution_touchpoint.bizible_touchpoint_source,
       mart_crm_attribution_touchpoint.bizible_touchpoint_type,
       mart_crm_attribution_touchpoint.bizible_ad_campaign_name,
+      mart_crm_attribution_touchpoint.bizible_ad_group_name,
       mart_crm_attribution_touchpoint.bizible_form_url,
       mart_crm_attribution_touchpoint.bizible_landing_page,
       mart_crm_attribution_touchpoint.bizible_form_url_raw,
@@ -585,7 +589,7 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_user
       ON opp.dim_crm_user_id=dim_crm_user.dim_crm_user_id
-  {{dbt_utils.group_by(n=167)}}
+  {{dbt_utils.group_by(n=169)}}
     
 ), cohort_base_combined AS (
   
@@ -598,6 +602,7 @@
 	  partner_prospect_id,
       sfdc_record_id,
       dim_crm_touchpoint_id,
+      dim_campaign_id,
 	  null AS dim_crm_opportunity_id,
       null AS opp_dim_crm_user_id,
 	  null AS duplicate_opportunity_id,
@@ -613,7 +618,7 @@
 	  was_converted_lead,
       email_domain_type,
 	  is_valuable_signup,
-      status,
+      crm_person_status,
       lead_source,
 	  source_buckets,
       is_mql,
@@ -797,6 +802,7 @@
     bizible_touchpoint_source,
     bizible_touchpoint_type,
     bizible_ad_campaign_name,
+    bizible_ad_group_name,
     bizible_form_url,
     bizible_landing_page,
     bizible_form_url_raw,
@@ -880,6 +886,7 @@
 	  null AS partner_prospect_id,
       null AS sfdc_record_id,
       dim_crm_touchpoint_id,
+      dim_campaign_id,
 	  dim_crm_opportunity_id,
       opp_dim_crm_user_id,
 	  duplicate_opportunity_id,
@@ -895,7 +902,7 @@
 	  null AS was_converted_lead,
       null AS email_domain_type,
 	  null AS is_valuable_signup,
-      null AS status,
+      null AS crm_person_status,
       null AS lead_source,
 	  null AS source_buckets,
       null AS is_mql,
@@ -1079,6 +1086,7 @@
       bizible_touchpoint_source,
       bizible_touchpoint_type,
       bizible_ad_campaign_name,
+      bizible_ad_group_name,
       bizible_form_url,
       bizible_landing_page,
       bizible_form_url_raw,
@@ -1225,5 +1233,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-04-07",
+    updated_date="2023-04-11",
   ) }}
