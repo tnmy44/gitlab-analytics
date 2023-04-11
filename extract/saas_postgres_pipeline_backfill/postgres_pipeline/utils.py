@@ -466,8 +466,7 @@ def query_export_status(
     metadata_engine: Engine, metadata_table: str, source_table: str
 ) -> List[Tuple[Any, Any, Any, Any]]:
     """
-    Check if backfill table exists in backfill metadata table.
-    If the table doesn't exist, then it's a 'new' table
+    Query the most recent record in the table to get the state of the backfill
     """
 
     query = (
@@ -487,9 +486,9 @@ def is_resume_export(
     metadata_engine: Engine, metadata_table: str, source_table: str
 ) -> Tuple[bool, int, Optional[Any]]:
     """
-    Determine if export should be resumed, either 'backfill or 'delete' export
+    Determine if export should be resumed, for either 'backfill or 'delete'
 
-    First query the backfill database to see if there's a backfill in progress
+    First query the metadata database to see if there's a backfill in progress
     If the backfill is in progress, check when the last file was written
     If last file was written within 24 hours, continue from last_extracted_id
     """
@@ -502,8 +501,6 @@ def is_resume_export(
 
     # if backfill metadata exists for table
     if results:
-        print(results)
-        # unpack the results
         (
             is_export_completed,
             initial_load_start_date,
@@ -640,8 +637,6 @@ def schema_addition_check(
     Query the source table with the manifest query to get the columns, then check
     what columns currently exist in the DW. Return a bool depending on whether
     there has been a change or not.
-
-    If the table does not exist this function will also return True.
     """
     source_columns = get_source_columns(raw_query, source_engine, source_table)
     logging.info(f"\nsource_columns: {source_columns}")

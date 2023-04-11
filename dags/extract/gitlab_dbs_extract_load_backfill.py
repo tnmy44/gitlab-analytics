@@ -335,7 +335,7 @@ for source_name, config in config_dict.items():
             schedule_interval=config["delete_interval"],
             concurrency=1,
             description=config["description_deletes"],
-         )
+        )
 
         with deletes_dag:
             file_path = f"analytics/extract/saas_postgres_pipeline_backfill/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
@@ -381,9 +381,7 @@ for source_name, config in config_dict.items():
                         # do_xcom_push=True, # TODO: do we need this still?
                     )
 
-        globals()[
-            f"{config['dag_name']}_db_deletes"
-        ] = deletes_dag
+        globals()[f"{config['dag_name']}_db_deletes"] = deletes_dag
 
     # SCD DAG's
     """

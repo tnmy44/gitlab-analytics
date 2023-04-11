@@ -2,6 +2,8 @@
 Performs integration testing on the backfill metadata database, using
 a test table.
 
+Mostly tests the 'check_is_backfill_needed()' function as it has many conditions
+
 Note that all GCS / Gitlab DB components still need to be mocked
 
 1. If new table, backfill
@@ -63,7 +65,7 @@ class TestCheckIsBackfillNeeded:
             f"{metadata_schema}.{self.test_metadata_table}"
         )
 
-        delete_query = f""" drop table if exists {self.test_metadata_table_full_path}"""
+        drop_query = f""" drop table if exists {self.test_metadata_table_full_path}"""
 
         create_table_query = f"""
         create table {self.test_metadata_table_full_path}
@@ -71,9 +73,8 @@ class TestCheckIsBackfillNeeded:
         """
 
         with self.metadata_engine.connect() as connection:
-            connection.execute(delete_query)
+            connection.execute(drop_query)
             connection.execute(create_table_query)
-            # connection.execute(alter_query)
 
         # Create a mock PostgresPipelineTable object
         table_config = {
@@ -104,8 +105,7 @@ class TestCheckIsBackfillNeeded:
         result = is_new_table(
             self.metadata_engine, self.test_metadata_table, source_table
         )
-        expected_result = True
-        assert result == expected_result
+        assert result is True
 
         # Insert test record
         database_name = "some_db"
@@ -138,8 +138,7 @@ class TestCheckIsBackfillNeeded:
         result = is_new_table(
             self.metadata_engine, self.test_metadata_table, source_table
         )
-        expected_result = False
-        assert result == expected_result
+        assert result is False
 
     @patch("postgres_pipeline_table.is_new_table")
     @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
@@ -151,7 +150,7 @@ class TestCheckIsBackfillNeeded:
         remove_unprocessed_files_from_gcs() is called
         """
 
-        # Create a mock s ource_engine and metadata_engine objects
+        # Create a mock source_engine and metadata_engine objects
         source_engine = MagicMock(spec=Engine)
         metadata_engine = MagicMock(spec=Engine)
 
@@ -251,7 +250,7 @@ class TestCheckIsBackfillNeeded:
     @patch("postgres_pipeline_table.schema_addition_check")
     @patch("postgres_pipeline_table.is_new_table")
     @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
-    def test_is_resume_export_not_completed_within_24hr(
+    def test_is_resume_export_past_24hr(
         self,
         mock_remove_unprocessed_files,
         mock_is_new_table,
@@ -318,7 +317,7 @@ class TestCheckIsBackfillNeeded:
     @patch("postgres_pipeline_table.schema_addition_check")
     @patch("postgres_pipeline_table.is_new_table")
     @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
-    def test_is_resume_export_not_completed_less_than_24hr(
+    def test_is_resume_export_within_24hr(
         self,
         mock_remove_unprocessed_files,
         mock_is_new_table,
@@ -332,11 +331,11 @@ class TestCheckIsBackfillNeeded:
         Should backfill, but need to start from beginning
         """
 
-        upload_date_less_than_24hr = datetime.utcnow() - timedelta(hours=23, minutes=40)
         # Arrange metadata table
         source_table = "some_table"
         database_name = "some_db"
         initial_load_start_date = datetime(2023, 2, 1)
+        upload_date_less_than_24hr = datetime.utcnow() - timedelta(hours=23, minutes=40)
         upload_date = upload_date_less_than_24hr
         upload_file_name = "some_file"
         last_extracted_id = 10

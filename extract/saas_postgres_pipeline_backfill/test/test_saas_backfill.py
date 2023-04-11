@@ -1,5 +1,5 @@
 """
-Testing routine for manifest decomposition
+Unit testing various 'pgp backfill' methods
 """
 import os
 import re
@@ -45,6 +45,12 @@ def test_has_new_columns():
 @patch("utils.get_gcs_columns")
 @patch("utils.get_source_columns")
 def test_schema_addition_check(mock_get_source_columns, mock_get_gcs_columns):
+    """
+    Test that the program correctly handles the following:
+        - column additions
+        - column deletions
+        - no changes
+    """
     raw_query = MagicMock()
     source_engine = MagicMock()
     source_table = MagicMock()
@@ -73,6 +79,7 @@ def test_schema_addition_check(mock_get_source_columns, mock_get_gcs_columns):
 
 @patch("utils.get_gcs_bucket")
 def test_get_latest_parquet_file(get_gcs_bucket_mock):
+    """Test that the latest parquet file is correctly chosen"""
     # Create a mock bucket object
     bucket = MagicMock()
     # get_gcs_bucket = MagicMock()
@@ -93,6 +100,11 @@ def test_get_latest_parquet_file(get_gcs_bucket_mock):
 
 
 def test_update_import_query_for_delete_export():
+    """
+    For deletes, test that the import query is updated to reflect
+    only the pk within the select
+    """
+
     def clean_res(res):
         res = res.replace("\n", " ")
         res = re.sub(" +", " ", res)
