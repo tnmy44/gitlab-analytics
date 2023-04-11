@@ -1209,6 +1209,21 @@ roles:
                 write:
                     - raw.sales_analytics.*
 
+    - sales_systems_snowflake_api_role:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.common_mart_product
+            tables:
+                read:
+                    - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly_report_view
+
     - data_science_readonly:
         warehouses:
             - dev_xs
@@ -5028,7 +5043,7 @@ users:
     - cleroux:
         can_login: yes
         member_of:
-            - cleroux            
+            - cleroux
 
     - cmeddaugh:
         can_login: yes
@@ -5063,7 +5078,7 @@ users:
     - dgupta:
         can_login: yes
         member_of:
-            - dgupta            
+            - dgupta
 
     - dmicovic:
         can_login: yes
@@ -5102,6 +5117,11 @@ users:
         member_of:
             - gitlab_ci
             - sysadmin
+
+    - sales_systems_api_user:
+        can_login: yes
+        member_of:
+            - sales_systems_snowflake_api_role
 
     - grafana:
         can_login: yes
@@ -5386,7 +5406,7 @@ users:
             - securityadmin
 
     - sgladchun:
-        can_login: yes 
+        can_login: yes
         member_of:
             - sgladchun
 
