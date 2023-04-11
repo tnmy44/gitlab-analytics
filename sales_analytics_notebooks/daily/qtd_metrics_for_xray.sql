@@ -531,9 +531,9 @@ report_opportunity_metrics_qtd AS (
         COALESCE(agg_demo_keys.key_bu_subbu_ot, 'other')    AS key_bu_subbu_ot,
         COALESCE(agg_demo_keys.key_bu_subbu_sqs, 'other')   AS key_bu_subbu_sqs,
   
-        COALESCE(agg_demo_keys.key_bu_subbu_division, 'other')  AS key_bu_subbu_division,
-        COALESCE(agg_demo_keys.key_bu_subbu_division_ot, 'other') AS key_bu_subbu_division_ot,
-        COALESCE(agg_demo_keys.key_bu_subbu_division_sqs, 'other')       AS key_bu_subbu_division_sqs
+        COALESCE(agg_demo_keys.key_bu_subbu_division, 'other')          AS key_bu_subbu_division,
+        COALESCE(agg_demo_keys.key_bu_subbu_division_ot, 'other')       AS key_bu_subbu_division_ot,
+        COALESCE(agg_demo_keys.key_bu_subbu_division_sqs, 'other')      AS key_bu_subbu_division_sqs
 
     FROM aggregation AS agg
     -- Add keys for aggregated analysis
