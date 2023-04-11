@@ -654,7 +654,7 @@
       inferred_geo,
   
   --Person Dates
-		true_inquiry_date,
+		true_inquiry_date AS inquiry_date,
 		mql_date_lastest_pt,
 		legacy_mql_date_first_pt,
 		mql_sfdc_date_pt,
@@ -1208,7 +1208,7 @@
     bizible_date.date_id                         AS bizible_date_range_id
   FROM cohort_base_combined
   LEFT JOIN dim_date AS inquiry_date
-    ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
+    ON cohort_base_combined.inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date AS mql_date
     ON cohort_base_combined.mql_date_first_pt = mql_date.date_day
   LEFT JOIN dim_date AS opp_create_date
