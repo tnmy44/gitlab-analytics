@@ -991,14 +991,15 @@ roles:
                    - raw
             schemas:
               write:
-                  - raw.tap_zoom
+                  - raw.tap_zengrc
                   - raw.tap_adaptive
                   - raw.tap_xactly
                   - raw.tap_zendesk
                   - raw.tap_zendesk__community_relations
+                  - raw.public # because the shared FILE FORMAT MELTANO_FILE_FORMAT needed for the target-snowflake resides in raw.public
             tables:
               write:
-                  - raw.tap_zoom.*
+                  - raw.tap_zengrc.*
                   - raw.tap_adaptive.*
                   - raw.tap_xactly.*
                   - raw.tap_zendesk.*
