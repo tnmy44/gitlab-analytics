@@ -19,19 +19,7 @@
       zuora_rate_plan.amendement_type,
       zuora_order_action.type                                           AS order_action_type,
       zuora_order_action.sequence                                       AS order_action_sequence,
-      zuora_order_action.auto_renew                                     AS is_auto_renew,
-      zuora_order_action.cancellation_policy,
-      zuora_order_action.term_type,
       zuora_order_action.created_date                                   AS order_action_created_date,
-      zuora_order_action.customer_acceptance_date,
-      zuora_order_action.contract_effective_date,
-      zuora_order_action.service_activation_date,
-      zuora_order_action.current_term,
-      zuora_order_action.current_term_period_type,
-      zuora_order_action.renewal_term,
-      zuora_order_action.renewal_term_period_type,
-      zuora_order_action.renew_setting                                  AS renewal_setting,
-      zuora_order_action.term_start_date,
       zuora_rate_plan.created_date                                      AS rate_plan_created_date
     FROM zuora_order
     INNER JOIN zuora_order_action 

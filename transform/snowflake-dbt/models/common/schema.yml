@@ -734,10 +734,36 @@ models:
     description: '{{ doc("dim_order_action") }}'
     columns:
       - name: dim_order_action_id
-        description: Unique identifier for each order action. These represent any action taken grouped under a single order.
+        description: Unique identifier for each order action. These represent any action taken grouped under a single order
         tests:
           - not_null
           - unique
+      - name: dim_order_id
+        description: Unique identifier for each order which groups all order actions within an order
+      - name: dim_subscription_id
+        description: Unique identifier of a subscription
+      - name: dim_amendment_id
+      - name: order_action_type
+        description: The type of order action which took place. For example; 'UpdateProduct', 'RenewSubscription'
+      - name: order_action_sequence
+        description: The sequence in which the actions were carried out on an order
+      - name: is_auto_renew
+        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term 
+      - name: cancellation_policy
+        description: The type of cancellation policy on the subscription
+      - name: term_type
+      - name: order_action_created_date
+        description: The date the order action was created
+      - name: customer_acceptance_date
+        description: The date the customer accepted the order
+      - name: contract_effective_date
+      - name: service_activation_date
+      - name: current_term
+      - name: current_term_period_type
+      - name: renewal_term
+      - name: renewal_term_period_type
+      - name: renewal_setting
+      - name: term_start_date
 
   - name: dim_order_type
     description: '{{ doc("dim_order_type") }}'
