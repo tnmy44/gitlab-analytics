@@ -37,10 +37,9 @@ from sqlalchemy import (
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
 
+# bucket_name: test_saas-pipeline-backfills
+BUCKET_NAME = os.environ["GITLAB_BACKFILL_BUCKET"]
 SCHEMA = "tap_postgres"
-BUCKET_NAME = "saas-pipeline-backfills"
-DEFAULT_CHUNK_SIZE = 5_000_000
-
 BACKFILL_METADATA_TABLE = "backfill_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
 
@@ -155,9 +154,7 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
     return manifest_dict
 
 
-def query_results_generator(
-    query: str, engine: Engine, chunksize: int = DEFAULT_CHUNK_SIZE
-) -> pd.DataFrame:
+def query_results_generator(query: str, engine: Engine, chunksize: int) -> pd.DataFrame:
     """
     Use pandas to run a sql query and load it into a dataframe.
     Yield it back in chunks for scalability.
@@ -249,7 +246,7 @@ def write_backfill_metadata(
     max_id: int,
     is_export_completed: bool,
     chunk_row_count: int,
-):
+) -> None:
     """Write status of backfill to postgres"""
 
     insert_query = f"""
@@ -280,7 +277,7 @@ def write_backfill_metadata(
         connection.execute(insert_query)
 
 
-def get_prefix_template():
+def get_prefix_template() -> str:
     """
     Returns something like this:
     staging/backfill_metadata/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
@@ -303,7 +300,7 @@ def get_upload_file_name(
 
     Args:
         table (str): The name of the table.
-        initial_load_start_date (datetime): The date and time when the initial load started.
+        initial_load_start_date (datetime): When load started
         version (str, optional): The version of the data. Defaults to None.
         filetype (str, optional): The file format. Defaults to 'parquet'.
         compression (str, optional): The compression method. Defaults to 'gzip'.
@@ -354,6 +351,7 @@ def chunk_and_upload(
     source_table: str,
     max_source_id: int,
     initial_load_start_date: datetime,
+    chunksize: int,
     advanced_metadata: bool = False,
 ) -> datetime:
     """
@@ -373,7 +371,7 @@ def chunk_and_upload(
     rows_uploaded = 0
 
     with tempfile.TemporaryFile() as tmpfile:
-        iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
+        iter_csv = read_sql_tmpfile(query, source_engine, tmpfile, chunksize)
 
         for idx, chunk_df in enumerate(iter_csv):
             logging.info(f"\nchunk_df: {chunk_df}")
@@ -417,7 +415,9 @@ def chunk_and_upload(
     return initial_load_start_date
 
 
-def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFrame:
+def read_sql_tmpfile(
+    query: str, db_engine: Engine, tmp_file: Any, chunksize: int
+) -> pd.DataFrame:
     """
     Uses postGres commands to copy data out of the DB and return a DF iterator
     """
@@ -428,15 +428,13 @@ def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFra
     cur.copy_expert(copy_sql, tmp_file)
     tmp_file.seek(0)
     logging.info("Reading csv")
-    df = pd.read_csv(
-        tmp_file, chunksize=DEFAULT_CHUNK_SIZE, parse_dates=True, low_memory=False
-    )
+    df = pd.read_csv(tmp_file, chunksize=chunksize, parse_dates=True, low_memory=False)
     logging.info("CSV read")
     return df
 
 
 def range_generator(
-    start: int, stop: int, step: int = DEFAULT_CHUNK_SIZE
+    start: int, stop: int, step: int
 ) -> Generator[Tuple[int, ...], None, None]:
     """
     Yields a list that contains the starting and ending number for a given window.
@@ -647,7 +645,7 @@ def schema_addition_check(
 
 
 def get_min_or_max_id(
-    primary_key: str, engine: Engine, table: str, min_or_max: str
+    primary_key: str, engine: Engine, table: str, min_or_max: str, chunksize: int
 ) -> int:
     """
     Retrieve the minimum or maximum value of the specified primary key column in the specified table.
@@ -664,7 +662,7 @@ def get_min_or_max_id(
     logging.info(f"Getting {min_or_max} ID from table: {table}")
     id_query = f"SELECT {min_or_max}({primary_key}) as {primary_key} FROM {table}"
     try:
-        id_results = query_results_generator(id_query, engine)
+        id_results = query_results_generator(id_query, engine, chunksize)
         id_value = next(id_results)[primary_key].tolist()[0]
     except sqlalchemy.exc.ProgrammingError as e:
         logging.exception(e)
@@ -686,7 +684,7 @@ def id_query_generator(
     target_table: str,
     min_source_id: int,
     max_source_id: int,
-    id_range: int = DEFAULT_CHUNK_SIZE,
+    id_range: int,
 ) -> Generator[str, Any, None]:
     """
     Yields a new query containing incrementing min/max id's based on the chunk size.

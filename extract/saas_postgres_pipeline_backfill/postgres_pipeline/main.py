@@ -13,8 +13,6 @@ from postgres_utils import (
     manifest_reader,
 )
 
-SCHEMA = "tap_postgres"
-
 
 def swap_temp_table(engine: Engine, real_table: str, temp_table: str) -> None:
     """

@@ -166,6 +166,7 @@ def trusted_data_pgp(
     return True
 
 
+'''
 def sync_incremental_ids(
     source_engine: Engine,
     target_engine: Engine,
@@ -182,9 +183,6 @@ def sync_incremental_ids(
     Sync incrementally-loaded tables based on their IDs.
     """
 
-    raw_query = table_dict["import_query"]
-    additional_filtering = table_dict.get("additional_filtering", "")
-    primary_key = table_dict["export_table_primary_key"]
     # If temp isn't in the name, we don't need to full sync.
     # If a temp table exists, we know the sync didn't complete successfully
     """
@@ -208,6 +206,7 @@ def sync_incremental_ids(
         initial_load_start_date,
     )
     return True
+'''
 
 
 '''
@@ -267,24 +266,27 @@ def load_scd(
 
 
 def load_ids(
-    additional_filtering: str,
-    primary_key: str,
-    raw_query: str,
+    table_dict: Dict[Any, Any],
     source_engine: Engine,
     source_database: str,
     source_table_name: str,
-    table_name: str,
     target_engine: Engine,
+    table_name: str,
     metadata_engine: Engine,
     metadata_table: str,
     start_source_id: int,
     initial_load_start_date: datetime.datetime,
+    chunksize: int,
     backfill: bool = True,
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
 
+    raw_query = table_dict["import_query"]
+    additional_filtering = table_dict.get("additional_filtering", "")
+    primary_key = table_dict["export_table_primary_key"]
+
     max_source_id = get_min_or_max_id(
-        primary_key, source_engine, source_table_name, "max"
+        primary_key, source_engine, source_table_name, "max", chunksize
     )
 
     # Create a generator for queries that are chunked by ID range
@@ -297,11 +299,12 @@ def load_ids(
         table_name,
         start_source_id,
         max_source_id,
+        chunksize,
     )
 
     # Iterate through the generated queries
     for query in id_queries:
-        filtered_query = f"{query} {additional_filtering} ORDER BY {primary_key}"
+        filtered_query = f"{query} {additional_filtering}"
         logging.info(f"\nfiltered_query: {filtered_query}")
         # if no original load_start, need to preserve it for subsequent calls
         initial_load_start_date = chunk_and_upload(
@@ -316,6 +319,7 @@ def load_ids(
             source_table_name,
             max_source_id,
             initial_load_start_date,
+            chunksize,
         )
 
 

@@ -73,6 +73,7 @@ class PostgresPipelineTable:
             source_engine, metadata_engine, BACKFILL_METADATA_TABLE
         )
 
+        backfill_chunksize = 5_000_000
         logging.info(f"\nstart_pk: {start_pk}")
         logging.info(f"\ninitial_load_start_date: {initial_load_start_date}")
         logging.info(f"\nis_backfill_needed: {is_backfill_needed}")
@@ -82,17 +83,18 @@ class PostgresPipelineTable:
             return False
 
         target_table = self.get_target_table_name()
-        return load_functions.sync_incremental_ids(
+        return load_functions.load_ids(
+            self.table_dict,
             source_engine,
-            target_engine,
             self.import_db,
             self.source_table_name,
-            self.table_dict,
+            target_engine,
             target_table,
             metadata_engine,
             BACKFILL_METADATA_TABLE,
             start_pk,
             initial_load_start_date,
+            backfill_chunksize,
         )
 
     def check_new_table(
@@ -119,6 +121,7 @@ class PostgresPipelineTable:
         metadata_engine: Engine,
     ) -> bool:
         start_pk, initial_load_start_date = 1, None
+        backfill_chunksize = 10_000_000
 
         (
             is_resume_export_needed,
@@ -136,17 +139,19 @@ class PostgresPipelineTable:
         )
 
         target_table = self.get_target_table_name()
-        return load_functions.sync_incremental_ids(
+
+        return load_functions.load_ids(
+            self.table_dict,
             source_engine,
-            target_engine,
             self.import_db,
             self.source_table_name,
-            self.table_dict,
+            target_engine,
             target_table,
             metadata_engine,
             DELETE_METADATA_TABLE,
             start_pk,
             initial_load_start_date,
+            backfill_chunksize,
         )
 
     def do_load(
