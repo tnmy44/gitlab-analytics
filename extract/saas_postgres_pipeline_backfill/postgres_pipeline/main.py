@@ -8,7 +8,7 @@ from gitlabdata.orchestration_utils import (
 )
 from sqlalchemy.engine.base import Engine
 from postgres_pipeline_table import PostgresPipelineTable
-from utils import (
+from postgres_utils import (
     get_engines,
     manifest_reader,
 )

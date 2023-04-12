@@ -13,7 +13,7 @@ from gitlabdata.orchestration_utils import (
 )
 from sqlalchemy.engine.base import Engine
 
-from utils import (
+from postgres_utils import (
     chunk_and_upload,
     get_engines,
     id_query_generator,
@@ -176,7 +176,7 @@ def sync_incremental_ids(
     metadata_engine: Engine,
     metadata_table: str,
     start_pk: int,
-    initial_load_start_date: datetime,
+    initial_load_start_date: datetime.datetime,
 ) -> bool:
     """
     Sync incrementally-loaded tables based on their IDs.

@@ -13,7 +13,7 @@ abs_path = (
 )
 sys.path.append(abs_path)
 
-from utils import (
+from postgres_utils import (
     has_new_columns,
     get_latest_parquet_file,
     update_import_query_for_delete_export,
@@ -42,8 +42,8 @@ def test_has_new_columns():
     assert res
 
 
-@patch("utils.get_gcs_columns")
-@patch("utils.get_source_columns")
+@patch("postgres_utils.get_gcs_columns")
+@patch("postgres_utils.get_source_columns")
 def test_schema_addition_check(mock_get_source_columns, mock_get_gcs_columns):
     """
     Test that the program correctly handles the following:
@@ -77,7 +77,7 @@ def test_schema_addition_check(mock_get_source_columns, mock_get_gcs_columns):
     assert result == expected_result
 
 
-@patch("utils.get_gcs_bucket")
+@patch("postgres_utils.get_gcs_bucket")
 def test_get_latest_parquet_file(get_gcs_bucket_mock):
     """Test that the latest parquet file is correctly chosen"""
     # Create a mock bucket object

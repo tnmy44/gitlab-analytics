@@ -6,7 +6,7 @@ from typing import Dict, Any
 from sqlalchemy.engine.base import Engine
 
 import load_functions
-from utils import (
+from postgres_utils import (
     is_new_table,
     schema_addition_check,
     is_resume_export,

@@ -37,7 +37,7 @@ abs_path = (
 sys.path.append(abs_path)
 
 from postgres_pipeline_table import PostgresPipelineTable
-from utils import (
+from postgres_utils import (
     postgres_engine_factory,
     manifest_reader,
     is_new_table,
