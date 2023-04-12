@@ -1,3 +1,5 @@
+{{ config(materialized='table') }}
+
 {{ simple_cte([
     ('opportunity_base','mart_crm_opportunity'),
     ('person_base','mart_crm_person'),
