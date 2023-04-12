@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('opportunity_base','mart_crm_opportunity'),
+    ('mart_crm_opportunity','mart_crm_opportunity'),
     ('person_base','mart_crm_person'),
     ('dim_crm_person','dim_crm_person'),
     ('mart_crm_opportunity_stamped_hierarchy_hist', 'mart_crm_opportunity_stamped_hierarchy_hist'), 
@@ -86,9 +86,9 @@
       person_base.sfdc_record_id,
       person_base.email_hash, 
       CASE 
-        WHEN mql_date_lastest_pt < opportunity_base.close_date 
-          THEN opportunity_base.order_type
-        WHEN mql_date_lastest_pt > opportunity_base.close_date 
+        WHEN mql_date_lastest_pt < mart_crm_opportunity.close_date 
+          THEN mart_crm_opportunity.order_type
+        WHEN mql_date_lastest_pt > mart_crm_opportunity.close_date 
           THEN '3. Growth'
         ELSE NULL
       END AS mql_order_type_historical,
@@ -98,8 +98,8 @@
       ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps 
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    FULL JOIN opportunity_base 
-      ON upa_base.dim_parent_crm_account_id = opportunity_base.dim_parent_crm_account_id
+    FULL JOIN mart_crm_opportunity 
+      ON upa_base.dim_parent_crm_account_id = mart_crm_opportunity.dim_parent_crm_account_id
     
 ), mql_order_type_final AS (
   
@@ -113,8 +113,8 @@
       person_base.sfdc_record_id,
       person_base.email_hash, 
       CASE 
-         WHEN true_inquiry_date < opportunity_base.close_date THEN opportunity_base.order_type
-         WHEN true_inquiry_date > opportunity_base.close_date THEN '3. Growth'
+         WHEN true_inquiry_date < mart_crm_opportunity.close_date THEN mart_crm_opportunity.order_type
+         WHEN true_inquiry_date > mart_crm_opportunity.close_date THEN '3. Growth'
       ELSE NULL
       END AS inquiry_order_type_historical,
       ROW_NUMBER() OVER( PARTITION BY person_base.email_hash ORDER BY inquiry_order_type_historical) AS inquiry_order_type_number
@@ -123,8 +123,8 @@
       ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps 
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    FULL JOIN opportunity_base 
-      ON upa_base.dim_parent_crm_account_id = opportunity_base.dim_parent_crm_account_id
+    FULL JOIN mart_crm_opportunity 
+      ON upa_base.dim_parent_crm_account_id = mart_crm_opportunity.dim_parent_crm_account_id
 
 ), inquiry_order_type_final AS (
   
@@ -338,7 +338,7 @@
 	  opp.sales_qualified_source_name,
 	  opp.deal_path_name,
 	  opp.sales_type,
-	  opportunity_base.parent_crm_account_lam_dev_count,
+	  mart_crm_opportunity.parent_crm_account_lam_dev_count,
 	  opp.crm_opp_owner_geo_stamped,
 	  opp.crm_opp_owner_sales_segment_stamped,
 	  opp.crm_opp_owner_region_stamped,
@@ -586,8 +586,8 @@
         ELSE 0 
       END AS won_linear_net_arr
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
-    LEFT JOIN opportunity_base
-      ON opp.dim_crm_opportunity_id=opportunity_base.dim_crm_opportunity_id
+    LEFT JOIN mart_crm_opportunity
+      ON opp.dim_crm_opportunity_id=mart_crm_opportunity.dim_crm_opportunity_id
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_user
