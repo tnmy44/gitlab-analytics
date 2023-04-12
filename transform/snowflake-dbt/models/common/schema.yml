@@ -734,10 +734,45 @@ models:
     description: '{{ doc("dim_order_action") }}'
     columns:
       - name: dim_order_action_id
-        description: Unique identifier for each order action. These represent any action taken grouped under a single order.
+        description: Unique identifier for each order action. These represent any action taken grouped under a single order
         tests:
           - not_null
           - unique
+      - name: dim_order_id
+        description: Unique identifier for each order which groups all order actions within an order
+      - name: dim_subscription_id
+        description: Unique identifier of a subscription
+      - name: dim_amendment_id
+        description: Unique identifier of an amendment
+      - name: order_action_type
+        description: The type of order action which took place. For example; 'UpdateProduct', 'RenewSubscription'
+      - name: order_action_sequence
+        description: The sequence in which the actions were carried out on an order
+      - name: is_auto_renew
+        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term 
+      - name: cancellation_policy
+        description: The type of cancellation policy on the subscription
+      - name: term_type
+      - name: order_action_created_date
+        description: The date the order action was created
+      - name: customer_acceptance_date
+        description: The date on which the services or products within a subscription has been accepted by the customer
+      - name: contract_effective_date
+        description: The date of the contract that governs the subscription
+      - name: service_activation_date
+        description: The date on which the services or products within a subscription have been activated and access has been provided to the customer
+      - name: current_term
+        description: The length of the period for the current subscription term
+      - name: current_term_period_type
+        description: The period type for the current subscription term
+      - name: renewal_term
+        description: The length of the period for the subscription renewal term
+      - name: renewal_term_period_type
+        description: The period type for the subscription renewal term
+      - name: renewal_setting
+        description: Specifies whether a termed subscription will remain TERMED or change to EVERGREEN when it is renewed
+      - name: term_start_date
+        description: Date the subscription term begins, as yyyy-mm-dd. If this is a renewal subscription, this date is different from the subscription start date
 
   - name: dim_order_type
     description: '{{ doc("dim_order_type") }}'
@@ -3243,6 +3278,8 @@ models:
         description: SMAU Metric
       - name: incident_management_total_unique_counts_monthly
         description: SMAU Metric
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
 
   - name: fct_ping_instance_metric_wave_monthly
     description: '{{ doc("fct_ping_instance_metric_wave_monthly") }}'
@@ -3752,6 +3789,10 @@ models:
         description: Flags rows where there is Usage Ping data and/or Seat Link data present
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping and/or Seat Link
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
   - name: fct_ping_instance
     description: ' {{ doc("fct_ping_instance") }} '
@@ -3820,6 +3861,8 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
 
 
   - name: fct_ping_instance_metric_28_day
@@ -4274,6 +4317,8 @@ models:
         description: ' {{ doc("gs_first_value_date") }} '
       - name: gs_last_csm_activity_date
         description: ' {{ doc("gs_last_csm_activity_date") }} '
+      - name: last_at_risk_update_comments
+        description: ' {{ doc("last_at_risk_update_comments") }} '
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
@@ -6023,6 +6068,10 @@ models:
       - name: ci_templates_usage_28_days_event
       - name: project_management_issue_milestone_changed_28_days_user
       - name: project_management_issue_iteration_changed_28_days_user
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
 
   - name: fct_ping_instance_free_user_metrics_monthly
@@ -6509,6 +6558,10 @@ models:
           - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
   - name: fct_event_namespace_monthly
     description: '{{ doc("fct_event_namespace_monthly") }}'

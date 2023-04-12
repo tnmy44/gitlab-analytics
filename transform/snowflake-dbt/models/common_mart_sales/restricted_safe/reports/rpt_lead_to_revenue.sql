@@ -10,15 +10,14 @@
     ('dim_crm_user','dim_crm_user'),
     ('dim_date','dim_date')
 ]) }}
-        
-, upa_base AS ( --pulls every account and it's UPA
-  
+
+, upa_base AS ( 
     SELECT 
       dim_parent_crm_account_id,
       dim_crm_account_id
     FROM dim_crm_account
 
-), first_order_opps AS ( -- pulls only FO CW Opps and their UPA/Account ID
+), first_order_opps AS ( 
 
     SELECT
       dim_parent_crm_account_id,
@@ -27,11 +26,11 @@
       close_date,
       is_sao,
       sales_accepted_date
-    FROM opportunity_base
+    FROM mart_crm_opportunity
     WHERE is_won = true
       AND order_type = '1. New - First Order'
 
-), accounts_with_first_order_opps AS ( -- shows only UPA/Account with a FO Available Opp on it
+), accounts_with_first_order_opps AS ( 
 
     SELECT
       upa_base.dim_parent_crm_account_id,
@@ -40,7 +39,7 @@
       FALSE AS is_first_order_available
     FROM upa_base 
     LEFT JOIN first_order_opps
-      ON upa_base.dim_crm_account_id=first_order_opps.dim_crm_account_id
+      ON upa_base.dim_crm_account_id = first_order_opps.dim_crm_account_id
     WHERE dim_crm_opportunity_id IS NOT NULL
 
 ), person_order_type_base AS (
@@ -50,20 +49,24 @@
       person_base.sfdc_record_id,
       person_base.dim_crm_account_id,
       upa_base.dim_parent_crm_account_id,
-      opportunity_base.dim_crm_opportunity_id,
+      mart_crm_opportunity.dim_crm_opportunity_id,
+      mart_crm_opportunity.close_date,
+      mart_crm_opportunity.order_type,
       CASE 
-         WHEN is_first_order_available = False AND opportunity_base.order_type = '1. New - First Order' THEN '3. Growth'
-         WHEN is_first_order_available = False AND opportunity_base.order_type != '1. New - First Order' THEN opportunity_base.order_type
-      ELSE '1. New - First Order'
+        WHEN is_first_order_available = False AND mart_crm_opportunity.order_type = '1. New - First Order' 
+          THEN '3. Growth'
+        WHEN is_first_order_available = False AND mart_crm_opportunity.order_type != '1. New - First Order' 
+          THEN mart_crm_opportunity.order_type
+        ELSE '1. New - First Order'
       END AS person_order_type,
       ROW_NUMBER() OVER( PARTITION BY email_hash ORDER BY person_order_type) AS person_order_type_number
-    FROM person_base
+    FROM mart_crm_person
     FULL JOIN upa_base
-      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
+      ON mart_crm_person.dim_crm_account_id = upa_base.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    FULL JOIN opportunity_base
-      ON upa_base.dim_parent_crm_account_id = opportunity_base.dim_parent_crm_account_id
+    FULL JOIN mart_crm_opportunity
+      ON upa_base.dim_parent_crm_account_id = mart_crm_opportunity.dim_parent_crm_account_id
 
 ), person_order_type_final AS (
 
@@ -75,7 +78,7 @@
       dim_crm_account_id,
       person_order_type
     FROM person_order_type_base
-    WHERE person_order_type_number=1
+    WHERE person_order_type_number = 1
 
 ), mql_order_type_base AS (
 
@@ -1161,11 +1164,7 @@
       won_linear_net_arr
   FROM opp_base_wtih_batp
 
-), intermediate AS (
-
-  SELECT DISTINCT
-    cohort_base_combined.*,
-    --inquiry_date fields
+     --inquiry_date fields
     inquiry_date.fiscal_year                     AS inquiry_date_range_year,
     inquiry_date.fiscal_quarter_name_fy          AS inquiry_date_range_quarter,
     DATE_TRUNC(month, inquiry_date.date_actual)  AS inquiry_date_range_month,
@@ -1210,27 +1209,25 @@
   LEFT JOIN dim_date AS inquiry_date
     ON cohort_base_combined.inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date AS mql_date
-    ON cohort_base_combined.mql_date_first_pt = mql_date.date_day
+    ON cohort_base.mql_date_lastest_pt = mql_date.date_day
   LEFT JOIN dim_date AS opp_create_date
-    ON cohort_base_combined.opp_created_date = opp_create_date.date_day
+    ON cohort_base.opp_created_date = opp_create_date.date_day
   LEFT JOIN dim_date AS sao_date
-    ON cohort_base_combined.sales_accepted_date = sao_date.date_day
+    ON cohort_base.sales_accepted_date = sao_date.date_day
   LEFT JOIN dim_date AS closed_date
-    ON cohort_base_combined.close_date = closed_date.date_day
-  LEFT JOIN dim_date AS bizible_date
-    ON cohort_base_combined.bizible_touchpoint_date = bizible_date.date_day
-    
+    ON cohort_base.close_date=closed_date.date_day
+
 ), final AS (
 
-    SELECT DISTINCT 
-	intermediate.*
-    FROM intermediate
+    SELECT DISTINCT *
+    FROM cohort
 
 )
 
+
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@rkohnke",
+    created_by="@michellecooper",
     updated_by="@rkohnke",
     created_date="2022-10-05",
     updated_date="2023-04-11",

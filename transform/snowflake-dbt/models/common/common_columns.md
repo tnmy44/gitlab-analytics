@@ -1917,3 +1917,9 @@ Service Ping metric. For installations where the root user (id = 1) is not delet
 is deleted, it returns the earliest available user creation date.
 
 {% enddocs %}
+
+{% docs last_at_risk_update_comments %}
+
+The most recent Account-level At-Risk Update timeline activity in Gainsight, synced to Salesforce.
+
+{% enddocs %}
