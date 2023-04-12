@@ -8,7 +8,12 @@
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_date','dim_date')
 ]) }}
-        
+, upa_base AS ( --pulls every account and it's UPA
+  
+    SELECT 
+      dim_parent_crm_account_id,
+      dim_crm_account_id
+    FROM dim_crm_account
 ), first_order_opps AS ( -- pulls only FO CW Opps and their UPA/Account ID
 
     SELECT
