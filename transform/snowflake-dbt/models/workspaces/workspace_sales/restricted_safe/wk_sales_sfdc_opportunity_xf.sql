@@ -275,13 +275,13 @@ WITH edm_opty AS (
     edm_opty.is_jihu_account,
 
     account_owner.name                                  AS account_owner_name,
-    account_owner.user_id                               AS account_owner_id,                                       
+    account_owner.user_id                               AS account_owner_id,                                               
 
-    edm_opty.account_demographics_segment,
-    edm_opty.account_demographics_geo,
-    edm_opty.account_demographics_region,
-    edm_opty.account_demographics_area,
-    edm_opty.account_demographics_territory,
+    edm_opty.parent_crm_account_sales_segment,
+    edm_opty.parent_crm_account_geo,
+    edm_opty.parent_crm_account_region,
+    edm_opty.parent_crm_account_area,
+    edm_opty.parent_crm_account_sales_territory,
 
     upa.account_demographics_sales_segment            AS upa_demographics_segment,
     upa.account_demographics_geo                      AS upa_demographics_geo,

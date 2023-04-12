@@ -69,8 +69,6 @@ WITH crm_account AS (
       crm_account.dim_parent_sales_segment_id,
       crm_account.dim_parent_sales_territory_id,
       crm_account.dim_parent_industry_id,
-      crm_account.dim_parent_location_country_id,
-      crm_account.dim_parent_location_region_id,
       crm_account.dim_account_sales_segment_id,
       crm_account.dim_account_sales_territory_id,
       crm_account.dim_account_industry_id,

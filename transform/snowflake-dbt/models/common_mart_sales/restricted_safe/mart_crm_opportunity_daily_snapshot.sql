@@ -133,23 +133,14 @@ final AS (
 
     -- account fields
     dim_crm_account.crm_account_name,
-    dim_crm_account.parent_crm_account_name,
-    dim_crm_account.parent_crm_account_demographics_business_unit AS account_demographics_business_unit,
-    dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
-    dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
-    dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
-    dim_crm_account.parent_crm_account_demographics_area AS account_demographics_area,
-    dim_crm_account.parent_crm_account_demographics_territory AS account_demographics_territory,
-    dim_crm_account.parent_crm_account_demographics_role_type AS account_demographics_role_type,
-    dim_crm_account.parent_crm_account_gtm_strategy,
-    dim_crm_account.parent_crm_account_focus_account,
-    dim_crm_account.parent_crm_account_sales_segment,
-    dim_crm_account.parent_crm_account_zi_technologies,
-    dim_crm_account.parent_crm_account_demographics_sales_segment,
-    dim_crm_account.parent_crm_account_demographics_geo,
-    dim_crm_account.parent_crm_account_demographics_region,
-    dim_crm_account.parent_crm_account_demographics_area,
-    dim_crm_account.parent_crm_account_demographics_territory,
+    dim_crm_account.parent_crm_account_name                                         AS parent_crm_account_name,
+    dim_crm_account.parent_crm_account_demographics_business_unit                   AS account_demographics_business_unit,
+    dim_crm_account.parent_crm_account_sales_segment                                AS parent_crm_account_sales_segment,
+    dim_crm_account.parent_crm_account_demographics_geo                             AS parent_crm_account_geo,
+    dim_crm_account.parent_crm_account_demographics_region                          AS parent_crm_account_region,
+    dim_crm_account.parent_crm_account_demographics_area                            AS parent_crm_account_area,
+    dim_crm_account.parent_crm_account_demographics_territory                       AS parent_crm_account_sales_territory,
+    dim_crm_account.parent_crm_account_demographics_role_type                       AS account_demographics_role_type,
     dim_crm_account.parent_crm_account_demographics_max_family_employee,
     dim_crm_account.parent_crm_account_demographics_upa_country,
     dim_crm_account.parent_crm_account_demographics_upa_state,
@@ -554,7 +545,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@nmcavinue",
+    updated_by="@lisvinueza",
     created_date="2022-05-05",
-    updated_date="2023-03-28"
+    updated_date="2023-04-11"
   ) }}
