@@ -173,10 +173,10 @@ def sync_incremental_ids(
     source_table: str,
     table_dict: Dict[Any, Any],
     target_table: str,
-    metadata_engine,
-    metadata_table,
-    start_pk,
-    initial_load_start_date,
+    metadata_engine: Engine,
+    metadata_table: str,
+    start_pk: int,
+    initial_load_start_date: datetime,
 ) -> bool:
     """
     Sync incrementally-loaded tables based on their IDs.
