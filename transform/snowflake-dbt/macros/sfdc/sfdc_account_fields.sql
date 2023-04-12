@@ -42,7 +42,7 @@ WITH map_merged_crm_account AS (
       dim_parent_crm_account_id               AS dim_parent_crm_account_id,
       dev_count                               AS dev_count,
       estimated_capped_lam                    AS estimated_capped_lam,
-      dim_parent_crm_account_sales_segment    AS dim_parent_crm_account_sales_segment
+      dim_parent_crm_account_sales_segment    AS parent_crm_account_sales_segment
     FROM {{ ref('driveload_lam_corrections_source') }}
     INNER JOIN snapshot_dates
         ON snapshot_dates.date_actual >= valid_from

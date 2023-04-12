@@ -116,6 +116,7 @@
       dim_crm_account.parent_crm_account_demographics_area                            AS parent_crm_account_area,
       dim_crm_account.parent_crm_account_demographics_business_unit                   AS account_demographics_business_unit,
       dim_crm_account.parent_crm_account_demographics_role_type                       AS account_demographics_role_type,
+      dim_crm_account.parent_crm_account_demographics_max_family_employee,
       dim_crm_account.parent_crm_account_demographics_upa_country,
       dim_crm_account.parent_crm_account_demographics_upa_state,
       dim_crm_account.parent_crm_account_demographics_upa_city,
