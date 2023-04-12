@@ -93,7 +93,7 @@ This model captures a historical record of GitLab's default application settings
 
 {% enddocs %}
 
-{% docs prep_gitlab_version_major_minor %}
+{% docs prep_major_minor_release %}
 
 Creates base view with generated keys for Gitlab major and minor versions. 
 

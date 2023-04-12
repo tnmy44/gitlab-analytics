@@ -88,7 +88,7 @@ fct_w_month_flag AS (
     SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                                 AS minor_version,
     major_version || '.' || minor_version                                                                       AS major_minor_version,
     major_version * 100 + minor_version                                                                         AS major_minor_version_id,
-    major_minor_version_id                                                                                      AS gitlab_version_major_minor_id
+    major_minor_version_id                                                                                      AS major_minor_release_id
   FROM usage_data_w_date
   LEFT JOIN last_ping_of_month_flag
     ON usage_data_w_date.id = last_ping_of_month_flag.id
@@ -121,7 +121,7 @@ final AS (
       fct_w_month_flag.dim_host_id                                                                                AS dim_host_id,
       fct_w_month_flag.dim_instance_id                                                                            AS dim_instance_id,
       fct_w_month_flag.dim_installation_id                                                                        AS dim_installation_id,
-      fct_w_month_flag.gitlab_version_major_minor_id                                                              AS gitlab_version_major_minor_id,
+      fct_w_month_flag.major_minor_release_id                                                                     AS major_minor_release_id,
       fct_w_month_flag.ping_created_at                                                                            AS ping_created_at,
       TO_DATE(DATEADD('days', -28, fct_w_month_flag.ping_created_at))                                             AS ping_created_date_28_days_earlier,
       TO_DATE(DATE_TRUNC('YEAR', fct_w_month_flag.ping_created_at))                                               AS ping_created_date_year,

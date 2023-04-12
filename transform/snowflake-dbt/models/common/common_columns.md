@@ -467,21 +467,21 @@ The id of the major minor version, defined as `major_version*100 + minor_version
 
 {% enddocs %}
 
-{% docs gitlab_version_major_minor_id %}
+{% docs major_minor_release_id %}
 
-The natural key of dim_gitlab_version_major_minor. This natural key is defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `gitlab_version_major_minor_id` is 1306. This id is also intended to facilitate easy filtering on versions
-
-{% enddocs %}
-
-{% docs dim_gitlab_version_major_minor_sk %}
-
-Surrogate key of dim_gitlab_version_major_minor. Currently identified by hashing the major_minor_version field.
+The natural key of dim_major_minor_release. This natural key is defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_release_id` is 1306. This id is also intended to facilitate easy filtering on versions
 
 {% enddocs %}
 
-{% docs dim_latest_available_gitlab_version_major_minor_sk %}
+{% docs dim_major_minor_release_sk %}
 
-The latest avaiable dim_gitlab_version_major_minor_sk at the moment the ping is sent.
+Surrogate key of dim_major_minor_release. Currently identified by hashing the major_minor_version field.
+
+{% enddocs %}
+
+{% docs dim_latest_available_major_minor_release_sk %}
+
+The latest avaiable dim_major_minor_release_sk at the moment the ping is sent.
 
 {% enddocs %}
 
