@@ -51,7 +51,7 @@ SELECT row_number() OVER (ORDER BY lead_source) AS lead_source_id,
                                 'Public Relations')
             THEN 'Marketing Site'
            WHEN lead_source IN ('SDR Generated', 'Linkedin', 'LeadWare', 'AE Generated', 
-                                'Datanyze', 'DiscoverOrg', 'Clearbit')
+                                'Datanyze', 'DiscoverOrg', 'Clearbit','GovWin IQ')
             THEN 'Prospecting'
            WHEN lead_source IN ('Gitorious', 'GitLab Hosted', 'GitLab EE instance', 
                                 'GitLab.com', 'CE Download', 'CE Usage Ping')
