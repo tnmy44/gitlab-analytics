@@ -1142,6 +1142,10 @@ models:
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
       - name: was_purchased_through_reseller
         description: Boolean field that indicates whether the subscription was purchased through a reseller. If TRUE, the `invoice_owner_account` will contain the name of the reseller.
+      - name: dim_crm_opportunity_id_current_open_renewal
+        description: '{{ doc("dim_crm_opportunity_id_current_open_renewal") }}'
+      - name: dim_crm_opportunity_id_closed_lost_renewal
+        description: '{{ doc("dim_crm_opportunity_id_closed_lost_renewal") }}'
 
   - name: dim_subscription_snapshot_bottom_up
     description: Daily snapshot of subscriptions starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.

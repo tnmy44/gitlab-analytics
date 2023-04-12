@@ -1923,3 +1923,17 @@ is deleted, it returns the earliest available user creation date.
 The most recent Account-level At-Risk Update timeline activity in Gainsight, synced to Salesforce.
 
 {% enddocs %}
+
+{% docs dim_crm_opportunity_id_current_open_renewal %}
+
+The current open renewal opportunity mapped to a subscription.
+
+{% enddocs %}
+
+{% docs dim_crm_opportunity_id_closed_lost_renewal %}
+
+The closed lost renewal opportunity, where applicable, mapped mapped to a subscription.
+
+{% enddocs %}
+
+
