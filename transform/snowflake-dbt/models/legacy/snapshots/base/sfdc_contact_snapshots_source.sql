@@ -110,9 +110,9 @@ WITH source AS (
     is_first_order_person__c AS is_first_order_person,
     true_initial_mql_date__c AS true_initial_mql_date,
     true_mql_date__c AS true_mql_date,
-	last_transfer_date_time__c AS last_transfer_date_time,
-	time_from_last_transfer_to_sequence__c AS time_from_last_transfer_to_sequence,
-	time_from_mql_to_last_transfer__c AS time_from_mql_to_last_transfer,
+    last_transfer_date_time__c AS last_transfer_date_time,
+    time_from_last_transfer_to_sequence__c AS time_from_last_transfer_to_sequence,
+    time_from_mql_to_last_transfer__c AS time_from_mql_to_last_transfer,
     {{ sfdc_source_buckets('leadsource') }}
 
 
@@ -161,13 +161,13 @@ WITH source AS (
     lastmodifieddate AS last_modified_date,
     systemmodstamp,
 
-      -- snapshot metadata
-      dbt_scd_id,
-      dbt_updated_at,
-      dbt_valid_from,
-      dbt_valid_to
+    -- snapshot metadata
+    dbt_scd_id,
+    dbt_updated_at,
+    dbt_valid_from,
+    dbt_valid_to
 
-    FROM source
+  FROM source
 )
 
 SELECT *

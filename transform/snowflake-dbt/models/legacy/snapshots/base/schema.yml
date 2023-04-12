@@ -189,7 +189,7 @@ models:
         tests:
           - not_null
 
-    - name: sfdc_lead_snapshots_source
+  - name: sfdc_lead_snapshots_source
     description: This is the source model for snapshots of the salesforce lead table.
     tests:
       - dbt_utils.unique_combination_of_columns:
