@@ -1213,15 +1213,15 @@
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
-    ON cohort_base.mql_date_lastest_pt = mql_date.date_day
+    ON cohort_base_combined.mql_date_lastest_pt = mql_date.date_day
   LEFT JOIN dim_date opp_create_date
-    ON cohort_base.opp_created_date = opp_create_date.date_day
+    ON cohort_base_combined.opp_created_date = opp_create_date.date_day
   LEFT JOIN dim_date sao_date
-    ON cohort_base.sales_accepted_date = sao_date.date_day
+    ON cohort_base_combined.sales_accepted_date = sao_date.date_day
   LEFT JOIN dim_date closed_date
-    ON cohort_base.close_date=closed_date.date_day
+    ON cohort_base_combined.close_date=closed_date.date_day
   LEFT JOIN dim_date bizible_date
-    ON cohort_base.bizible_touchpoint_date=bizible_date.date_day
+    ON cohort_base_combined.bizible_touchpoint_date=bizible_date.date_day
 
 ), final AS (
 
