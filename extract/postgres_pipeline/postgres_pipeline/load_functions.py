@@ -55,7 +55,6 @@ def load_incremental(
       This block of code raises an Exception whenever replication is far enough behind that data will be missed.
     """
     if table_dict["export_schema"] == "gitlab_com":
-
         # Just fetch and print the last pg_last_xact_replay_timestamp in present in system database or not.
 
         last_replication_check_query = "select pg_last_xact_replay_timestamp();"
@@ -263,7 +262,7 @@ def load_ids(
     source_table_name: str,
     table_name: str,
     target_engine: Engine,
-    id_range: int = 750_000,
+    id_range: int = 3_050_000,
     backfill: bool = True,
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""

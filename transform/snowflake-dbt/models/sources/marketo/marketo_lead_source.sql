@@ -28,11 +28,15 @@ WITH source AS (
       is_email_bounced::BOOLEAN                 AS is_email_bounced,
       email_bounced_date::DATE                  AS email_bounced_date,
       unsubscribed::BOOLEAN                     AS is_unsubscribed,
+      opt_in::BOOLEAN                           AS is_opt_in,
       compliance_segment_value::VARCHAR         AS compliance_segment_value,
       pql_product_qualified_lead_c::BOOLEAN     AS is_pql_marketo,
       cdbispaidtier_c::BOOLEAN                  AS is_paid_tier_marketo,
       ptpt_is_contact_c::BOOLEAN                AS is_ptpt_contact_marketo,
       cdb_impacted_by_user_limit_c::BOOLEAN     AS is_impacted_by_user_limit_marketo,
+      currently_in_trial_c::BOOLEAN             AS is_currently_in_trial_marketo,
+      trial_start_date_c::DATE                  AS trial_start_date_marketo,
+      trial_end_date_c::DATE                    AS trial_end_date_marketo,
       updated_at::TIMESTAMP                     AS updated_at
 
     FROM source

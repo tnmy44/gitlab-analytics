@@ -86,7 +86,8 @@ models:
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
-
+      - name: subscription_action_type
+        description: '{{ doc("subscription_action_type") }}'
 
   - name: prep_recurring_charge_subscription_monthly
     description: '{{ doc("prep_recurring_charge_subscription_monthly") }}'
@@ -105,7 +106,6 @@ models:
         description: ID of the Zuora account associated with a given Subscription ID
         tests:
           - not_null
-        description: Zuora account id
       - name: dim_crm_account_id
         description: Account ID from SFDC identifing the customer
       - name: dim_date_id
@@ -323,5 +323,46 @@ models:
         tests:
           - not_null
       - name: dbt_valid_from
+        tests:
+          - not_null
+
+  - name: prep_order_action_rate_plan
+    description: Prep table for Zuora order action. This it at the order action grain i.e. one order can have multiple order actions.
+    columns:
+      - name: dim_order_action_id
+        description: Unique identifier of a version of an order action
+      - name: dim_order_id
+        description: Unique identifier for each order which groups all order actions within an order
+      - name: dim_subscription_id
+      - name: dim_amendment_id
+      - name: order_number
+        description: Order number from Zuora. Not unique in this model as one order can have multiple order actions
+      - name: rate_plan_id
+        description: ID of the Zuora rate plan
+      - name: rate_plan_name
+        description: Name of the Zuora rate plan
+      - name: product_rate_plan_id
+        description: The id of the rate plan coming from the Zuora product catalog
+      - name: amendement_type
+        description: Shows the type of the most recent amendment that touched a particular RatePlan.
+      - name: order_action_type
+        description: The type of order action which took place. For example; 'UpdateProduct', 'RenewSubscription'
+      - name: order_action_sequence
+        description: The sequence in which the actions were carried out on an order.
+      - name: order_action_created_date
+        description: The date the order action was created
+      - name: rate_plan_created_date
+        description: The date the rate plan was created
+  
+  - name: prep_sales_funnel_target
+    description: Prep model for SSOT sales funnel targets
+    columns:
+      - name: dim_crm_user_hierarchy_sk
+        tests:
+          - not_null
+  - name: prep_sales_funnel_partner_alliance_target
+    description: Prep model for sales funnel partner targets
+    columns:
+      - name: dim_crm_user_hierarchy_sk
         tests:
           - not_null

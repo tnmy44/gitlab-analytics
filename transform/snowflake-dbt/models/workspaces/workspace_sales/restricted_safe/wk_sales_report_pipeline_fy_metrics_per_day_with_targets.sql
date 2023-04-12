@@ -19,13 +19,13 @@ WITH date_details AS (
 -- keys used for aggregated historical analysis
 
     SELECT *
-    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }} 
+    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
 
 
 ), today_date AS (
 
     SELECT DISTINCT fiscal_year                         AS current_fiscal_fiscal_year,
-                    day_of_fiscal_year_normalised    AS current_day_of_fiscal_year_normalised
+                    day_of_fiscal_year_normalised       AS current_day_of_fiscal_year_normalised
     FROM date_details 
     WHERE date_actual = CURRENT_DATE
 
@@ -62,7 +62,7 @@ WITH date_details AS (
         SUM(cfy_pipe_gen_net_arr)                     AS cfy_pipe_gen_net_arr,
 
         -- sao gen
-        SUM(cfy_sao_deal_count)                   AS cfy_sao_deal_count,
+        SUM(cfy_sao_deal_count)                       AS cfy_sao_deal_count,
         SUM(cfy_sao_net_arr)                          AS cfy_sao_net_arr,
 
         -- churned net_arr
@@ -231,7 +231,8 @@ WITH date_details AS (
 
         ----------------------------------------
 
-        agg_demo_keys.report_opportunity_user_segment,     
+        -- agg_demo_keys.report_opportunity_user_segment,
+        agg_demo_keys.report_opportunity_user_segment,
         agg_demo_keys.report_opportunity_user_geo,
         agg_demo_keys.report_opportunity_user_region,    
         agg_demo_keys.report_opportunity_user_area,  
@@ -240,7 +241,6 @@ WITH date_details AS (
         agg_demo_keys.sales_team_vp_level,
         agg_demo_keys.sales_team_avp_rd_level,
         agg_demo_keys.sales_team_asm_level,
-        agg_demo_keys.deal_category,
         agg_demo_keys.deal_group,
         agg_demo_keys.sales_qualified_source,
         agg_demo_keys.sales_team_rd_asm_level,
@@ -290,7 +290,7 @@ WITH date_details AS (
         COALESCE(metrics.cfy_pipe_gen_net_arr,0)                     AS cfy_pipe_gen_net_arr,
 
         -- sao gen
-        COALESCE(metrics.cfy_sao_deal_count,0)                        AS cfy_sao_deal_count,
+        COALESCE(metrics.cfy_sao_deal_count,0)                       AS cfy_sao_deal_count,
         COALESCE(metrics.cfy_sao_net_arr,0)                          AS cfy_sao_net_arr,
 
         -- churned net_arr
@@ -299,28 +299,28 @@ WITH date_details AS (
         -----------------------------------------------------------------------------------
 
         -- targets current quarter
-        COALESCE(targets.target_net_arr,0)                        AS target_net_arr,
-        COALESCE(targets.target_deal_count,0)                     AS target_deal_count,
-        COALESCE(targets.target_pipe_generation_net_arr,0)        AS target_pipe_generation_net_arr, 
+        COALESCE(targets.target_net_arr,0)                           AS target_net_arr,
+        COALESCE(targets.target_deal_count,0)                        AS target_deal_count,
+        COALESCE(targets.target_pipe_generation_net_arr,0)           AS target_pipe_generation_net_arr, 
   
-        COALESCE(total_fy_deal_count,0)                       AS total_fy_deal_count,
-        COALESCE(total_fy_booked_deal_count,0)                AS total_fy_booked_deal_count,
-        COALESCE(total_fy_churned_contraction_deal_count,0)   AS total_fy_churned_contraction_deal_count,
+        COALESCE(total_fy_deal_count,0)                              AS total_fy_deal_count,
+        COALESCE(total_fy_booked_deal_count,0)                       AS total_fy_booked_deal_count,
+        COALESCE(total_fy_churned_contraction_deal_count,0)          AS total_fy_churned_contraction_deal_count,
 
-        COALESCE(total_fy_booked_net_arr,0)                   AS total_fy_booked_net_arr,
-        COALESCE(total_fy_churned_contraction_net_arr,0)      AS total_fy_churned_contraction_net_arr,
+        COALESCE(total_fy_booked_net_arr,0)                          AS total_fy_booked_net_arr,
+        COALESCE(total_fy_churned_contraction_net_arr,0)             AS total_fy_churned_contraction_net_arr,
 
         -- pipe gen
-        COALESCE(total_fy_pipe_gen_count,0)                   AS total_fy_pipe_gen_count,
-        COALESCE(total_fy_pipe_gen_net_arr,0)                 AS total_fy_pipe_gen_net_arr,
+        COALESCE(total_fy_pipe_gen_count,0)                          AS total_fy_pipe_gen_count,
+        COALESCE(total_fy_pipe_gen_net_arr,0)                        AS total_fy_pipe_gen_net_arr,
 
         -- sao gen
-        COALESCE(total_fy_sao_deal_count,0)                   AS total_fy_sao_deal_count,
-        COALESCE(total_fy_sao_net_arr,0)                      AS total_fy_sao_net_arr,
+        COALESCE(total_fy_sao_deal_count,0)                          AS total_fy_sao_deal_count,
+        COALESCE(total_fy_sao_net_arr,0)                             AS total_fy_sao_net_arr,
   
-        COALESCE(targets.calculated_target_net_arr,0)             AS calculated_target_net_arr, 
-        COALESCE(targets.calculated_target_deal_count,0)          AS calculated_target_deal_count,  
-        COALESCE(targets.calculated_target_pipe_generation,0)     AS calculated_target_pipe_generation,
+        COALESCE(targets.calculated_target_net_arr,0)                AS calculated_target_net_arr, 
+        COALESCE(targets.calculated_target_deal_count,0)             AS calculated_target_deal_count,  
+        COALESCE(targets.calculated_target_pipe_generation,0)        AS calculated_target_pipe_generation,
 
       -- TIMESTAMP
       current_timestamp                                              AS dbt_last_run_at

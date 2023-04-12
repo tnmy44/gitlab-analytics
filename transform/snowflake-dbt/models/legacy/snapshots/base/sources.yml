@@ -31,7 +31,6 @@ sources:
       - name: gitlab_dotcom_project_statistics_snapshots
       - name: mart_arr_snapshot
       - name: mart_retention_parent_account_snapshot
-      - name: license_db_licenses_snapshots
       - name: customers_db_licenses_snapshots
       - name: sfdc_account_snapshots
       - name: sfdc_bizible_attribution_touchpoint_snapshots
@@ -67,6 +66,7 @@ sources:
       - name: gitlab_dotcom_user_preferences_snapshots
       - name: gitlab_dotcom_user_details_snapshots
       - name: gitlab_dotcom_identities_snapshots
+      - name: gitlab_dotcom_namespace_details_snapshots
       - name: rpt_ping_metric_totals_w_estimates_monthly_snapshot
       - name: rpt_event_xmau_metric_monthly_snapshot
       - name: dim_user_snapshot

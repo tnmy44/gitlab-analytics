@@ -3,6 +3,9 @@
     "schema": "legacy"
     })
 }}
+
+-- depends_on: {{ ref('internal_gitlab_namespaces') }}
+
 WITH RECURSIVE namespaces AS (
 
     SELECT *

@@ -43,11 +43,9 @@ def csv_to_chart_list(input_csv):
 
 
 def generate_periscope_embed_url(chart_dict_list, output_csv):
-
     chart_links_list = []
 
     for chart in chart_dict_list:
-
         chart_link_dict = {}
         chart_link_dict["chart_name"] = chart["chart_name"]
 

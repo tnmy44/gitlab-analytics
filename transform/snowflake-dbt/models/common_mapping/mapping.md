@@ -51,14 +51,6 @@ Then in our mapping table we would have:
 
 {% enddocs %}
 
-{% docs map_namespace_lineage %}
-
-Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.
-
-The grain of this table is one row per namespace. The Primary Key is `dim_namespace_id`.
-
-{% enddocs %}
-
 {% docs map_product_tier %}
 
  Table for mapping Zuora Product Rate Plans to Product Tier, Delivery Type, and Ranking.
@@ -82,12 +74,6 @@ Table for mapping GitLab.com CI Runner to a specific project.
 More info about [CI Runners here](https://docs.gitlab.com/ee/ci/runners/)
 {% enddocs %}
 
-{% docs map_usage_ping_active_subscription %}
-
-Mapping table used to link a usage ping (dim_usage_ping_id) to an active zuora subscription at the ping creation date (dim_subscription_id).
-
-This table is needed to identify how many active subscriptions send us on a month M sent us at least 1 usage ping. 
-{% enddocs %}
 
 {% docs map_subscription_opportunity %}
 
@@ -108,5 +94,18 @@ This table is the distinct combination of the Gitlab team members and there Gitl
 This table contains the most recent subscription version associated with each namespace in each month, and represents the most complete namespace <> subscription mapping we have. It prefers the Zuora namespace <> subscription mappings, then fills in any nulls with bridge logic. The end objective is to backfill Zuora with all mappings so that `dim_subscription` can be the SSOT for namespace <> subscription relationships.
 
 Although in the prep data, namespaces can be associated with multiple `dim_subscription_id`s and/or multiple `dim_subscription_id_original`s in a single month, we use a `QUALIFY` statement in this table to limit down to **one** subscription per namespace per month (the most recently created subscription).
+
+{% enddocs %}
+
+
+{% docs map_alternative_lead_demographics %}
+
+This tables creates an [alterntive mapping](https://about.gitlab.com/handbook/marketing/strategy-performance/marketing-metrics/#alternative-method-for-account-demographics-fields-on-leads) for GEO and Segment values for leads based on data from data enrichment services.
+
+{% enddocs %}
+
+{% docs map_project_internal %}
+
+This View contains the list of projects that are under ultimate parent namespace ids that are internal to gitlab. This mapping should be used to filter entities such as Issues and Merge requests when only internal GitLab data is needed.
 
 {% enddocs %}

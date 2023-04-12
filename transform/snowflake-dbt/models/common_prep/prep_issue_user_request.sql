@@ -5,7 +5,7 @@
 {{ simple_cte([
     ('issue', 'gitlab_dotcom_issues_source'),
     ('map_namespace_internal', 'map_namespace_internal'),
-    ('map_namespace_lineage', 'map_namespace_lineage'),
+    ('prep_namespace', 'prep_namespace'),
     ('project', 'gitlab_dotcom_projects_source'),
     ('zendesk_ticket', 'zendesk_tickets_source'),
     ('zendesk_organization', 'zendesk_organizations_source'),
@@ -25,14 +25,14 @@
 ), issue_extended AS (
 
     SELECT
-      map_namespace_lineage.dim_namespace_ultimate_parent_id,
+      prep_namespace.ultimate_parent_namespace_id AS dim_namespace_ultimate_parent_id,
       issue.*
     FROM issue
     INNER JOIN project
       ON project.project_id = issue.project_id
-    INNER JOIN map_namespace_lineage
-      ON project.namespace_id = map_namespace_lineage.dim_namespace_id
-    WHERE map_namespace_lineage.dim_namespace_ultimate_parent_id = 9970 -- Gitlab-org group namespace id
+    INNER JOIN prep_namespace
+      ON project.namespace_id = prep_namespace.dim_namespace_id
+    WHERE prep_namespace.ultimate_parent_namespace_id = 9970 -- Gitlab-org group namespace id
 
 ),  gitlab_issue_description_parsing AS (
 
@@ -294,5 +294,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2022-01-10"
+    updated_date="2023-03-14"
 ) }}

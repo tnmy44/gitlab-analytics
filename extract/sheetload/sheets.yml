@@ -23,6 +23,10 @@ sheets:
     owner: '@s_mccauley'
     tabs:
       - ar_aging_details
+  - name: bizible_to_pathfactory_mapping
+    owner: '@dmicovic'
+    tabs: 
+      - bizible_to_pathfactory_mapping
   - name: books_tracer_bullet
     owner: '@lisvinueza'
     tabs:
@@ -206,11 +210,6 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - osat
-  - description: Data used by people team for budget spend.
-    name: people_budget
-    owner: '@mwilkins'
-    tabs:
-      - people_budget
   - name: percent_over_comp_band_historical
     owner: '@ken_aguilar'
     tabs:
@@ -219,14 +218,6 @@ sheets:
     owner: '@iweeks'
     tabs:
       - planned_values
-  - name: procurement_cost_savings
-    owner: '@iweeks'
-    tabs:
-      - procurement_cost_savings
-  - name: product_group_mappings
-    owner: '@lmai1'
-    tabs:
-      - product_group_mappings
   - name: product_maturity_historical
     owner: '@dpeterson1'
     tabs:
@@ -349,3 +340,8 @@ sheets:
     owner: '@nick_vh'
     tabs:
       - leading_organization_entry_dates
+
+  - name: abm_key_account_list
+    owner: '@dmicovic'
+    tabs: 
+      - abm_key_account_list

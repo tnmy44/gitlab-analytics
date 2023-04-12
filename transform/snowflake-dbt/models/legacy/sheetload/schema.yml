@@ -11,6 +11,10 @@ models:
   description: Trust and Safety currently tracks largest namespaces and report on the volume implicated in abuse.
 - name: sheetload_ally_certificate
 - name: sheetload_ar_aging_details
+- name: sheetload_bizible_to_pathfactory_mapping
+  description: Mapping file for bizible URLs to PathFactory content types. 
+- name: sheetload_abm_key_account_list
+  description: Mapping file for quarterly ABM key account lists to enable historical reporting.
 - name: sheetload_books
   description: Book rating data used in @lisvinueza's data internship program.
 - name: sheetload_certificates_unioned
@@ -87,7 +91,6 @@ models:
 - name: sheetload_osat
 - name: sheetload_percent_over_comp_band_historical
 - name: sheetload_planned_values
-- name: sheetload_procurement_cost_savings
 - name: sheetload_product_maturity_historical
 - name: sheetload_rep_quotas
   description: Sales representative quota data
@@ -180,15 +183,6 @@ models:
       tests:
         - not_null
         - unique
-- name: sheetload_product_group_mappings
-  description: This is the mapping between group, stage, and section.
-  columns:
-    - name: group_name
-      tests:
-      - not_null
-      - unique
-    - name: stage_name
-    - name: section_name
 - name: sheetload_sales_analytics_tableau_rls_users
   description: Users for SS&A Tableau row-level-security
 - name: sheetload_sales_analytics_tableau_rls_roles

@@ -85,7 +85,6 @@ def sheet_loader(
     google_sheet_client = GoogleSheetsClient()
 
     for sheet_name, tab in sheets:
-
         info(f"Processing sheet: {sheet_name}")
 
         dataframe = google_sheet_client.load_google_sheet(
@@ -216,7 +215,6 @@ def check_s3_csv_count_integrity(
 
 
 def get_s3_credentials(schema: str) -> tuple:
-
     """
     This function returns the set of aws_access_key_id,aws_secret_access_key,path_prefix
     based on the the schema name provided.
@@ -235,7 +233,6 @@ def get_s3_credentials(schema: str) -> tuple:
 
 
 def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> None:
-
     """
     Load data from csv files stored in an S3 Bucket into a DataFrame and pass it to dw_uploader
     for loading into Snowflake.
@@ -264,7 +261,6 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
         info(f"Working on {file}...")
 
         if re.search(r"\.csv", file):
-
             csv_obj = s3_client.get_object(Bucket=bucket, Key=file)
             body = csv_obj["Body"]
             csv_string = body.read().decode("utf-8")
