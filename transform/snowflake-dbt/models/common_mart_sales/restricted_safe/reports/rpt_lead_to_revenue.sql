@@ -1164,6 +1164,10 @@
       won_linear_net_arr
   FROM opp_base_wtih_batp
 
+), intermediate AS (
+  
+    SELECT DISTINCT
+      cohort_base_combined.*,
      --inquiry_date fields
     inquiry_date.fiscal_year                     AS inquiry_date_range_year,
     inquiry_date.fiscal_quarter_name_fy          AS inquiry_date_range_quarter,
@@ -1222,7 +1226,7 @@
 ), final AS (
 
     SELECT DISTINCT *
-    FROM cohort
+    FROM intermediate
 
 )
 
