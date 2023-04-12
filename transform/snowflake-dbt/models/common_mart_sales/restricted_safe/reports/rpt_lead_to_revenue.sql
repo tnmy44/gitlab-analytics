@@ -60,9 +60,9 @@
         ELSE '1. New - First Order'
       END AS person_order_type,
       ROW_NUMBER() OVER( PARTITION BY email_hash ORDER BY person_order_type) AS person_order_type_number
-    FROM mart_crm_person
+    FROM person_base
     FULL JOIN upa_base
-      ON mart_crm_person.dim_crm_account_id = upa_base.dim_crm_account_id
+      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     FULL JOIN mart_crm_opportunity
