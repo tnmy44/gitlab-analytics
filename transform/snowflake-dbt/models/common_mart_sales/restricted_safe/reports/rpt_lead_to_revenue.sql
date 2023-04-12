@@ -1206,16 +1206,18 @@
     bizible_date.first_day_of_week               AS bizible_date_range_week,
     bizible_date.date_id                         AS bizible_date_range_id
   FROM cohort_base_combined
-  LEFT JOIN dim_date AS inquiry_date
+  LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.inquiry_date = inquiry_date.date_day
-  LEFT JOIN dim_date AS mql_date
+  LEFT JOIN dim_date mql_date
     ON cohort_base.mql_date_lastest_pt = mql_date.date_day
-  LEFT JOIN dim_date AS opp_create_date
+  LEFT JOIN dim_date opp_create_date
     ON cohort_base.opp_created_date = opp_create_date.date_day
-  LEFT JOIN dim_date AS sao_date
+  LEFT JOIN dim_date sao_date
     ON cohort_base.sales_accepted_date = sao_date.date_day
-  LEFT JOIN dim_date AS closed_date
+  LEFT JOIN dim_date closed_date
     ON cohort_base.close_date=closed_date.date_day
+  LEFT JOIN dim_date bizible_date
+    ON cohort_base.bizible_touchpoint_date=bizible_date.date_day
 
 ), final AS (
 
@@ -1230,5 +1232,5 @@
     created_by="@michellecooper",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-04-11",
+    updated_date="2023-04-12",
   ) }}
