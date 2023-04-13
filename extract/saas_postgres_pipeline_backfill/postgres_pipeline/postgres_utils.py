@@ -8,7 +8,7 @@ import gcsfs
 import pyarrow.parquet as pq
 
 from datetime import datetime, timedelta
-from typing import Dict, List, Generator, Any, Tuple, Optional
+from typing import Dict, List, Generator, Any, Tuple, Optional, Union
 
 from gitlabdata.orchestration_utils import (
     append_to_xcom_file,
@@ -541,7 +541,7 @@ def get_source_columns(
     return source_columns
 
 
-def get_latest_parquet_file(source_table: str) -> str:
+def get_latest_parquet_file(source_table: str) -> Union[str, None]:
     """
     Get the most recent processed parquet file.
     Each table is saved in its own prefix in GCS, so scan only that sub-prefix
