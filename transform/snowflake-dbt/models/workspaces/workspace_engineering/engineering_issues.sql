@@ -10,14 +10,28 @@ namespaces AS (
   SELECT *
   FROM {{ ref('dim_namespace') }}
 
-), product_categories_yml AS (
+), product_categories_yml_base AS (
 
     SELECT
         DISTINCT LOWER(group_name) AS group_name,
         LOWER(stage_section) AS section_name,
-        LOWER(stage_display_name) AS stage_name
+        LOWER(stage_display_name) AS stage_name,
+        IFF(group_name LIKE '%::%',SPLIT_PART(LOWER(group_name),'::',1),NULL) as root_name
     FROM {{ ref('stages_groups_yaml_source') }}
     WHERE snapshot_date = (SELECT max(snapshot_date) FROM {{ ref('stages_groups_yaml_source') }})
+
+), product_categories_yml AS (
+
+    SELECT group_name,
+       section_name,
+       stage_name
+    FROM product_categories_yml_base
+    UNION ALL
+    SELECT DISTINCT root_name AS group_name,
+                section_name,
+                stage_name
+    FROM product_categories_yml_base
+    WHERE root_name IS NOT NULL
 
 ), bot_users AS (
 
