@@ -191,7 +191,7 @@ WITH map_merged_crm_account AS (
         WHEN LOWER(sfdc_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
         ELSE 'Non - Focus Account'
       END                                                                 AS crm_account_focus_account,
-      sfdc_account.crm_account_demographics_employee_count                AS crm_account_employees,
+      sfdc_account.account_demographics_employee_count                    AS crm_account_employees,
       sfdc_account.billing_country                                        AS crm_account_billing_country,
       sfdc_account.billing_country_code                                   AS crm_account_billing_country_code,
       sfdc_account.account_type                                           AS crm_account_type,
