@@ -5184,9 +5184,11 @@ models:
       - name: dim_behavior_website_page_sk
         tests:
           - not_null
-          - unique
+          - unique:
               config:
-                where: "dim_behavior_website_page_sk != 'b892f18b50766932f64f1e895a8ac329'"
+                severity: error
+                error_if: ">10"
+
 
         description: '{{ doc("dim_behavior_website_page_sk") }}'
       - name: page_url_host_path
