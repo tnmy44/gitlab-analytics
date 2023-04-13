@@ -12,8 +12,6 @@ COUNT(1) AS total_pageviews
 FROM 
 {{ ref('fct_behavior_website_page_view') }} p
 WHERE 
-p.page_url_host = 'gitlab.com'
-AND
 page_view_month < DATE_TRUNC(MONTH,CURRENT_DATE())
 AND
 p.page_view_start_at > '2022-06-01'
