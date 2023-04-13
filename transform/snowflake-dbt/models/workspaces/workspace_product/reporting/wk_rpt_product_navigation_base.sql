@@ -1,6 +1,6 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "event_id"
+    "unique_key": "behavior_structured_event_pk"
     })
 }}
 
@@ -29,9 +29,9 @@ WITH filtered_snowplow_events AS (
     event_property,
     gsc_plan,
     device_type,
-    event_id,
+    behavior_structured_event_pk,
     app_id,
-    gsc_namespace_id,
+    ultimate_parent_namespace_id,
     session_id
   FROM {{ ref('mart_behavior_structured_event') }}
   WHERE 
