@@ -52,6 +52,7 @@ from kube_secrets import (
     GITLAB_METADATA_DB_PASS,
     GITLAB_METADATA_PG_PORT,
     GITLAB_METADATA_DB_USER,
+    GITLAB_METADATA_SCHEMA,
 )
 
 # Load the env vars into a dict and set env vars
@@ -89,6 +90,7 @@ config_dict = {
             GITLAB_METADATA_DB_PASS,
             GITLAB_METADATA_PG_PORT,
             GITLAB_METADATA_DB_USER,
+            GITLAB_METADATA_SCHEMA,
         ],
         "start_date": datetime(2019, 5, 30),
         "task_name": "gitlab-com",
@@ -115,6 +117,7 @@ config_dict = {
             GITLAB_METADATA_DB_PASS,
             GITLAB_METADATA_PG_PORT,
             GITLAB_METADATA_DB_USER,
+            GITLAB_METADATA_SCHEMA,
         ],
         "start_date": datetime(2019, 5, 30),
         "task_name": "gitlab-com",

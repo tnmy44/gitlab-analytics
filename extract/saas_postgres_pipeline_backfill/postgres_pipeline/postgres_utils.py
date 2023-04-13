@@ -37,9 +37,9 @@ from sqlalchemy import (
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
 
-# bucket_name: test_saas-pipeline-backfills
+# bucket_name: test-saas-pipeline-backfills
 BUCKET_NAME = os.environ["GITLAB_BACKFILL_BUCKET"]
-SCHEMA = "tap_postgres"
+METADATA_SCHEMA = os.environ["GITLAB_METADATA_SCHEMA"]
 BACKFILL_METADATA_TABLE = "backfill_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
 
@@ -250,7 +250,7 @@ def write_backfill_metadata(
     """Write status of backfill to postgres"""
 
     insert_query = f"""
-        INSERT INTO saas_db_metadata.{metadata_table} (
+        INSERT INTO {METADATA_SCHEMA}.{metadata_table} (
             database_name,
             table_name,
             initial_load_start_date,
@@ -454,7 +454,7 @@ def is_new_table(
     Check if backfill table exists in backfill metadata table.
     If the table doesn't exist, then it's a 'new' table
     """
-    query = f"SELECT * FROM saas_db_metadata.{metadata_table} WHERE table_name = '{source_table}' LIMIT 1;"
+    query = f"SELECT * FROM {METADATA_SCHEMA}.{metadata_table} WHERE table_name = '{source_table}' LIMIT 1;"
     logging.info(f"\nquery: {query}")
     results = query_executor(metadata_engine, query)
     return len(results) == 0
@@ -469,10 +469,10 @@ def query_export_status(
 
     query = (
         "SELECT is_export_completed, initial_load_start_date, last_extracted_id, upload_date "
-        f"FROM saas_db_metadata.{metadata_table} "
+        f"FROM {METADATA_SCHEMA}.{metadata_table} "
         "WHERE upload_date = ("
         "  SELECT MAX(upload_date)"
-        f" FROM saas_db_metadata.{metadata_table}"
+        f" FROM {METADATA_SCHEMA}.{metadata_table}"
         f" WHERE table_name = '{source_table}');"
     )
     logging.info(f"\nquery backfill status: {query}")
@@ -716,7 +716,8 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
     metadata_engine = postgres_engine_factory(
         connection_dict["postgres_metadata_connection"], env
     )
-    snowflake_engine = snowflake_engine_factory(env, "LOADER", SCHEMA)
+    snowflake_target_schema = "tap_postgres"
+    snowflake_engine = snowflake_engine_factory(env, "LOADER", snowflake_target_schema)
     return postgres_engine, metadata_engine, snowflake_engine
 
 

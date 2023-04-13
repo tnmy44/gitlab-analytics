@@ -42,6 +42,7 @@ from postgres_utils import (
     manifest_reader,
     is_new_table,
     is_resume_export,
+    METADATA_SCHEMA,
 )
 
 
@@ -58,18 +59,17 @@ class TestCheckIsBackfillNeeded:
         self.metadata_engine = postgres_engine_factory(
             manifest_dict["connection_info"]["postgres_metadata_connection"], env
         )
-        metadata_schema = "saas_db_metadata"
         metadata_table = "backfill_metadata"
         self.test_metadata_table = f"test_{metadata_table}"
         self.test_metadata_table_full_path = (
-            f"{metadata_schema}.{self.test_metadata_table}"
+            f"{METADATA_SCHEMA}.{self.test_metadata_table}"
         )
 
         drop_query = f""" drop table if exists {self.test_metadata_table_full_path}"""
 
         create_table_query = f"""
         create table {self.test_metadata_table_full_path}
-        (like {metadata_schema}.{metadata_table});
+        (like {METADATA_SCHEMA}.{metadata_table});
         """
 
         with self.metadata_engine.connect() as connection:
