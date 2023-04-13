@@ -7,7 +7,7 @@
 WITH filtered_snowplow_events AS (
 
   SELECT
-    derived_tstamp,
+    behavior_at,
     gsc_pseudonymized_user_id,
     event_category,
     event_action,
@@ -33,9 +33,9 @@ WITH filtered_snowplow_events AS (
     app_id,
     gsc_namespace_id,
     session_id
-  FROM {{ ref('snowplow_structured_events_all') }}
+  FROM {{ ref('mart_behavior_structured_event') }}
   WHERE 
-  derived_tstamp >= '2021-10-01'
+  behavior_at >= '2021-10-01'
   AND
   (
       (
@@ -95,7 +95,7 @@ WITH filtered_snowplow_events AS (
     )  
     {% if is_incremental() %}
 
-    AND  derived_tstamp > (SELECT MAX(derived_tstamp) FROM {{ this }})
+    AND  behavior_at > (SELECT MAX(behavior_at) FROM {{ this }})
 
   {% endif %}
 )
