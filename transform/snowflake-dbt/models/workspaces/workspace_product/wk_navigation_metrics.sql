@@ -5,18 +5,18 @@
 
 WITH alls AS (
 SELECT
-DATE_TRUNC(MONTH,p.derived_tstamp) AS page_view_month,
+DATE_TRUNC(MONTH,p.page_view_start_at) AS page_view_month,
 COUNT(DISTINCT p.gsc_pseudonymized_user_id) AS unique_users,
 COUNT(DISTINCT p.session_id) AS sessions,
 COUNT(1) AS total_pageviews
 FROM 
-{{ ref('snowplow_structured_events_all') }} p
+{{ ref('fct_behavior_website_page_view') }} p
 WHERE 
 p.page_url_host = 'gitlab.com'
 AND
 page_view_month < DATE_TRUNC(MONTH,CURRENT_DATE())
 AND
-p.derived_tstamp > '2022-06-01'
+p.page_view_start_at > '2022-06-01'
 
 {% if is_incremental() %}
 
@@ -29,20 +29,20 @@ GROUP BY 1
 ), news AS 
 (
 SELECT
-DATE_TRUNC(MONTH,mr.derived_tstamp) AS _month,
+DATE_TRUNC(MONTH,mr.page_view_start_at) AS page_view_month,
 COUNT(DISTINCT mr.gsc_pseudonymized_user_id) AS users_count,
 COUNT(DISTINCT mr.session_id) AS sessions,
 COUNT(1) AS total_occurences
 FROM
 {{ ref('wk_rpt_product_navigation_base') }} mr
 WHERE
-mr.derived_tstamp > DATEADD(DAY,1,LAST_DAY(DATEADD(MONTH,-19,CURRENT_DATE())))
+mr.page_view_start_at > DATEADD(DAY,1,LAST_DAY(DATEADD(MONTH,-19,CURRENT_DATE())))
 AND
 mr.app_id = 'gitlab'
 AND
 _month < DATE_TRUNC(MONTH,CURRENT_DATE())
 AND
-mr.derived_tstamp > '2022-06-01'
+mr.page_view_start_at > '2022-06-01'
 {% if is_incremental() %}
 
 AND
