@@ -4502,8 +4502,6 @@ models:
         description: '{{ doc("order_type_live") }}'
       - name: vsa_readout
         description: '{{ doc("vsa_readout") }}'
-      - name: vsa_start_date_net_arr
-        description: '{{ doc("vsa_start_date_net_arr") }}'
       - name: vsa_start_date
         description: '{{ doc("vsa_start_date") }}'
       - name: vsa_url
@@ -4512,6 +4510,12 @@ models:
         description: '{{ doc("vsa_status") }}'
       - name: vsa_end_date
         description: '{{ doc("vsa_end_date") }}'
+      - name: military_invasion_comments
+        description: '{{ doc("military_invasion_comments") }}'
+      - name: military_invasion_risk_scale
+        description: '{{ doc("military_invasion_risk_scale") }}'
+      - name: downgrade_details
+        description: '{{ doc("downgrade_details") }}'
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
@@ -4788,6 +4792,18 @@ models:
         description: '{{ doc("order_type") }}'
       - name: dim_order_type_live_id
         description: '{{ doc("order_type_live") }}'
+      - name: pre_military_invasion_arr
+        description: '{{ doc("pre_military_invasion_arr") }}'
+      - name: won_arr_basis_for_clari
+        description: '{{ doc("won_arr_basis_for_clari") }}'
+      - name: arr_basis_for_clari
+        description: '{{ doc("arr_basis_for_clari") }}'
+      - name: forecasted_churn_for_clari
+        description: '{{ doc("forecasted_churn_for_clari") }}'
+      - name: override_arr_basis_clari
+        description: '{{ doc("override_arr_basis_clari") }}'
+      - name: vsa_start_date_net_arr
+        description: '{{ doc("vsa_start_date_net_arr") }}'
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'

@@ -101,7 +101,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.subscription_start_date,
       prep_crm_opportunity.subscription_end_date,
       prep_crm_opportunity.resale_partner_name,
-	  prep_crm_opportunity.record_type_name,
+      prep_crm_opportunity.record_type_name,
 
       --account people attributes
       prep_crm_opportunity.crm_account_owner_sales_segment,
@@ -208,11 +208,16 @@ WITH prep_crm_opportunity AS (
 
       -- vsa reporting
       prep_crm_opportunity.vsa_readout,
-      prep_crm_opportunity.vsa_start_date_net_arr,
       prep_crm_opportunity.vsa_start_date,
       prep_crm_opportunity.vsa_url,
       prep_crm_opportunity.vsa_status,
       prep_crm_opportunity.vsa_end_date,
+
+      -- military invasion information
+      prep_crm_opportunity.military_invasion_comments,
+      prep_crm_opportunity.military_invasion_risk_scale,
+
+      prep_crm_opportunity.downgrade_details,
 
 
       -- metadata
@@ -225,7 +230,7 @@ WITH prep_crm_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@nmcavinue",
+    updated_by="@jngCES",
     created_date="2020-11-20",
-    updated_date="2023-03-28"
+    updated_date="2023-04-06"
 ) }}

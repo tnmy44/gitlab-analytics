@@ -2725,6 +2725,7 @@ roles:
 
     - bbutterfield:
         member_of:
+            - analyst_sales
             - reporter
             - restricted_safe
             - bi_tool_eval_read
