@@ -5,7 +5,7 @@
 
 WITH alls AS (
 SELECT
-DATE_TRUNC(MONTH,p.page_view_start_at) AS page_view_month,
+DATE_TRUNC(MONTH,p.page_view_start_at)::DATE AS page_view_month,
 COUNT(DISTINCT p.gsc_pseudonymized_user_id) AS unique_users,
 COUNT(DISTINCT p.session_id) AS sessions,
 COUNT(1) AS total_pageviews
@@ -27,7 +27,7 @@ GROUP BY 1
 ), news AS 
 (
 SELECT
-DATE_TRUNC(MONTH,mr.behavior_at) AS page_view_month,
+DATE_TRUNC(MONTH,mr.behavior_at)::DATE AS page_view_month,
 COUNT(DISTINCT mr.gsc_pseudonymized_user_id) AS users_count,
 COUNT(DISTINCT mr.session_id) AS sessions,
 COUNT(1) AS total_occurences
