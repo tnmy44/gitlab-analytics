@@ -98,6 +98,15 @@ def test_get_latest_parquet_file(get_gcs_bucket_mock):
         latest_parquet_file == "source_table/initial_load_start_2021-01-02.parquet.gzip"
     )
 
+    # Test when the bucket doesn't have any files
+    bucket.list_blobs.return_value = []
+
+    # Call the function with the mock bucket object
+    latest_parquet_file = get_latest_parquet_file("source_table")
+
+    # Assert that the correct file name is returned
+    assert latest_parquet_file is None
+
 
 def test_update_import_query_for_delete_export():
     """

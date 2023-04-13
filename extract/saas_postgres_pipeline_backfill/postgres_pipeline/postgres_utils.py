@@ -561,7 +561,7 @@ def get_latest_parquet_file(source_table: str) -> str:
         if blob.name.endswith(".parquet.gzip"):
             parquet_files.append(blob.name)
 
-    latest_parquet_file = max(parquet_files)
+    latest_parquet_file = max(parquet_files, default=None)
     return latest_parquet_file
 
 
@@ -610,6 +610,8 @@ def get_gcs_columns(source_table: str) -> list:
     From the most recent parquet file, get the columns
     """
     latest_file_name = get_latest_parquet_file(source_table)
+    if latest_file_name is None:
+        return []
     gcs_cols = get_gcs_parquet_schema(latest_file_name)
     return gcs_cols
 
