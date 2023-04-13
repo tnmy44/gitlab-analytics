@@ -219,7 +219,13 @@
       sfdc_opportunity.total_contract_value,
       sfdc_opportunity.days_in_stage,
       sfdc_opportunity.calculated_age_in_days,
-      sfdc_opportunity.days_since_last_activity
+      sfdc_opportunity.days_since_last_activity,
+      sfdc_opportunity.pre_military_invasion_arr,
+      sfdc_opportunity.won_arr_basis_for_clari,
+      sfdc_opportunity.arr_basis_for_clari,
+      sfdc_opportunity.forecasted_churn_for_clari,
+      sfdc_opportunity.override_arr_basis_clari,
+      sfdc_opportunity.vsa_start_date_net_arr
 
     FROM sfdc_opportunity
     LEFT JOIN crm_account_dimensions
