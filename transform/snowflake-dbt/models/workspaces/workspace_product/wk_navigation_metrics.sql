@@ -34,13 +34,13 @@ COUNT(1) AS total_occurences
 FROM
 {{ ref('wk_rpt_product_navigation_base') }} mr
 WHERE
-mr.derived_tstamp > DATEADD(DAY,1,LAST_DAY(DATEADD(MONTH,-19,CURRENT_DATE())))
+mr.behavior_at > DATEADD(DAY,1,LAST_DAY(DATEADD(MONTH,-19,CURRENT_DATE())))
 AND
 mr.app_id IN ('gitlab.com', 'gitlab_customers')
 AND
 _month < DATE_TRUNC(MONTH,CURRENT_DATE())
 AND
-mr.derived_tstamp > '2022-06-01'
+mr.behavior_at > '2022-06-01'
 {% if is_incremental() %}
 
 AND
