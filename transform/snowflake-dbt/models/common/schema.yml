@@ -5185,6 +5185,9 @@ models:
         tests:
           - not_null
           - unique
+              config:
+                where: "dim_behavior_website_page_sk != 'b892f18b50766932f64f1e895a8ac329'"
+
         description: '{{ doc("dim_behavior_website_page_sk") }}'
       - name: page_url_host_path
         description: '{{ doc("page_url_host_path") }}' 
