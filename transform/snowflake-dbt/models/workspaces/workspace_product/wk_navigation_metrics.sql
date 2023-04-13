@@ -29,20 +29,20 @@ GROUP BY 1
 ), news AS 
 (
 SELECT
-DATE_TRUNC(MONTH,mr.page_view_start_at) AS page_view_month,
+DATE_TRUNC(MONTH,mr.derived_tstamp) AS page_view_month,
 COUNT(DISTINCT mr.gsc_pseudonymized_user_id) AS users_count,
 COUNT(DISTINCT mr.session_id) AS sessions,
 COUNT(1) AS total_occurences
 FROM
 {{ ref('wk_rpt_product_navigation_base') }} mr
 WHERE
-mr.page_view_start_at > DATEADD(DAY,1,LAST_DAY(DATEADD(MONTH,-19,CURRENT_DATE())))
+mr.derived_tstamp > DATEADD(DAY,1,LAST_DAY(DATEADD(MONTH,-19,CURRENT_DATE())))
 AND
 mr.app_id = 'gitlab'
 AND
 _month < DATE_TRUNC(MONTH,CURRENT_DATE())
 AND
-mr.page_view_start_at > '2022-06-01'
+mr.derived_tstamp > '2022-06-01'
 {% if is_incremental() %}
 
 AND
