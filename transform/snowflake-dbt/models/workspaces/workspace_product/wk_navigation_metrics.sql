@@ -38,7 +38,7 @@ FROM
 WHERE
 mr.derived_tstamp > DATEADD(DAY,1,LAST_DAY(DATEADD(MONTH,-19,CURRENT_DATE())))
 AND
-mr.app_id = 'gitlab'
+mr.app_id IN ('gitlab.com', 'gitlab_customers')
 AND
 _month < DATE_TRUNC(MONTH,CURRENT_DATE())
 AND
