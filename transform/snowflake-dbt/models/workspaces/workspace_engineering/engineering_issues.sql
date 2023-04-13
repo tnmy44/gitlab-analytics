@@ -71,13 +71,13 @@ engineering_issues AS (
     internal_issues.priority_tag                                                                                                                                                                                                                                                                       AS priority_label,
     internal_issues.severity_tag                                                                                                                                                                                                                                                                       AS severity_label,
     CASE
-      WHEN array_contains('gitaly::cluster'::variant,labels)
+      WHEN array_contains('gitaly::cluster'::variant,internal_issues.labels)
         THEN 'gitaly::cluster'
-      WHEN array_contains('gitaly::git'::variant,labels)
+      WHEN array_contains('gitaly::git'::variant,internal_issues.labels)
         THEN 'gitaly::git'
-      WHEN array_contains('distribution::build'::variant,labels)
+      WHEN array_contains('distribution::build'::variant,internal_issues.labels)
         THEN 'distribution::build'
-      WHEN array_contains('distribution::deploy'::variant,labels)
+      WHEN array_contains('distribution::deploy'::variant,internal_issues.labels)
         THEN 'distribution::deploy'
         ELSE
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''),'undefined') END                    AS group_label,
