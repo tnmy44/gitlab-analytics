@@ -38,13 +38,13 @@ mr.behavior_at > DATEADD(DAY,1,LAST_DAY(DATEADD(MONTH,-19,CURRENT_DATE())))
 AND
 mr.app_id IN ('gitlab.com', 'gitlab_customers')
 AND
-_month < DATE_TRUNC(MONTH,CURRENT_DATE())
+page_view_month < DATE_TRUNC(MONTH,CURRENT_DATE())
 AND
 mr.behavior_at > '2022-06-01'
 {% if is_incremental() %}
 
 AND
-_month > (SELECT MAX(page_view_month) FROM {{this}}) -- goal is to add entire new months only. 
+page_view_month > (SELECT MAX(page_view_month) FROM {{this}}) -- goal is to add entire new months only. 
 
 {% endif %}
 GROUP BY 
@@ -65,4 +65,4 @@ news.total_occurences/alls.total_pageviews AS ratio_nav_views_to_all
 FROM
 alls 
 LEFT JOIN 
-news ON alls.page_view_month = news._month
+news ON alls.page_view_month = news.page_view_month
