@@ -32,6 +32,7 @@ final AS (
     fct_crm_opportunity.risk_type,
     fct_crm_opportunity.risk_reasons,
     fct_crm_opportunity.downgrade_reason,
+    fct_crm_opportunity.downgrade_details,
     fct_crm_opportunity.sales_type,
     fct_crm_opportunity.deal_path AS deal_path_name,
     fct_crm_opportunity.order_type,
@@ -67,6 +68,13 @@ final AS (
     fct_crm_opportunity.invoice_number,
     fct_crm_opportunity.primary_campaign_source_id,
     fct_crm_opportunity.ga_client_id,
+    fct_crm_opportunity.military_invasion_comments,
+    fct_crm_opportunity.military_invasion_risk_scale,
+    fct_crm_opportunity.vsa_readout,
+    fct_crm_opportunity.vsa_start_date,
+    fct_crm_opportunity.vsa_end_date,
+    fct_crm_opportunity.vsa_url,
+    fct_crm_opportunity.vsa_status,
     fct_crm_opportunity.opportunity_term,
     fct_crm_opportunity.record_type_id,
     fct_crm_opportunity.opportunity_owner_manager,
@@ -276,12 +284,6 @@ final AS (
     fct_crm_opportunity.sa_tech_evaluation_close_status,
     fct_crm_opportunity.sa_tech_evaluation_end_date,
     fct_crm_opportunity.sa_tech_evaluation_start_date,
-    fct_crm_opportunity.vsa_readout,
-    fct_crm_opportunity.vsa_start_date_net_arr,
-    fct_crm_opportunity.vsa_start_date,
-    fct_crm_opportunity.vsa_url,
-    fct_crm_opportunity.vsa_status,
-    fct_crm_opportunity.vsa_end_date,
 
     -- Command Plan fields
     fct_crm_opportunity.cp_partner,
@@ -482,7 +484,13 @@ final AS (
     fct_crm_opportunity.total_contract_value,
     fct_crm_opportunity.created_in_snapshot_quarter_net_arr,
     fct_crm_opportunity.created_in_snapshot_quarter_deal_count,
-    fct_crm_opportunity.days_in_stage
+    fct_crm_opportunity.days_in_stage,
+    fct_crm_opportunity.pre_military_invasion_arr,
+    fct_crm_opportunity.vsa_start_date_net_arr,
+    fct_crm_opportunity.won_arr_basis_for_clari,
+    fct_crm_opportunity.arr_basis_for_clari,
+    fct_crm_opportunity.forecasted_churn_for_clari,
+    fct_crm_opportunity.override_arr_basis_clari
 
   FROM fct_crm_opportunity
   LEFT JOIN dim_crm_account

@@ -42,6 +42,7 @@
       dim_crm_opportunity.risk_type,
       dim_crm_opportunity.risk_reasons,
       dim_crm_opportunity.downgrade_reason,
+      dim_crm_opportunity.downgrade_details,
       dim_crm_opportunity.sales_type,
       fct_crm_opportunity.closed_buckets,
       dim_crm_opportunity.opportunity_category,
@@ -63,6 +64,13 @@
       fct_crm_opportunity.opportunity_deal_size,
       dim_crm_opportunity.primary_campaign_source_id,
       fct_crm_opportunity.ga_client_id,
+      dim_crm_opportunity.military_invasion_comments,
+      dim_crm_opportunity.military_invasion_risk_scale,
+      dim_crm_opportunity.vsa_readout,
+      dim_crm_opportunity.vsa_start_date,
+      dim_crm_opportunity.vsa_end_date,
+      dim_crm_opportunity.vsa_url,
+      dim_crm_opportunity.vsa_status,
       dim_crm_opportunity.deployment_preference,
       dim_crm_opportunity.net_new_source_categories,
       dim_crm_opportunity.invoice_number,
@@ -290,12 +298,6 @@
       dim_crm_opportunity.sa_tech_evaluation_close_status,
       dim_crm_opportunity.sa_tech_evaluation_end_date,
       dim_crm_opportunity.sa_tech_evaluation_start_date,
-      dim_crm_opportunity.vsa_readout,
-      dim_crm_opportunity.vsa_start_date_net_arr,
-      dim_crm_opportunity.vsa_start_date,
-      dim_crm_opportunity.vsa_url,
-      dim_crm_opportunity.vsa_status,
-      dim_crm_opportunity.vsa_end_date,
 
       --Command Plan fields
       dim_crm_opportunity.cp_partner,
@@ -487,7 +489,13 @@
       fct_crm_opportunity.other_non_recurring_amount,
       fct_crm_opportunity.renewal_amount,
       fct_crm_opportunity.total_contract_value,
-      fct_crm_opportunity.days_in_stage
+      fct_crm_opportunity.days_in_stage,
+      fct_crm_opportunity.pre_military_invasion_arr,
+      fct_crm_opportunity.vsa_start_date_net_arr,
+      fct_crm_opportunity.won_arr_basis_for_clari,
+      fct_crm_opportunity.arr_basis_for_clari,
+      fct_crm_opportunity.forecasted_churn_for_clari,
+      fct_crm_opportunity.override_arr_basis_clari
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity

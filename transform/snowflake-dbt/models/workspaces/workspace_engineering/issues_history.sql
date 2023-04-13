@@ -34,7 +34,9 @@ SELECT
   issues.issue_title,
   issues.full_group_path,
   issues.url,
-  IFF(dates.date_actual > issues.closed_at, 'closed', 'open')        AS issue_state,
+  issues.milestone_id,
+  issues.milestone_title,
+  IFF(dates.date_actual > issues.closed_at, 'closed', 'opened')        AS issue_state,
   issues.created_at                                                        AS issue_created_at,
   issues.closed_at                                                       AS issue_closed_at,
   issues.priority_label,
@@ -53,6 +55,7 @@ SELECT
   issues.group_label,
   issues.section_label,
   issues.stage_label,
+  issues.type_label,
   issues.subtype_label,
   IFF(ARRAY_CONTAINS('infradev'::VARIANT, issues.labels), TRUE, FALSE) AS is_infradev,
   IFF(ARRAY_CONTAINS('fedramp::vulnerability'::VARIANT, issues.labels), TRUE, FALSE) as fedramp_vulnerability,
@@ -61,8 +64,7 @@ SELECT
   ORDER BY LEAST(COALESCE(severity_label_valid_to, CURRENT_DATE),COALESCE(team_label_valid_to,CURRENT_DATE))) AS rn
 FROM issues 
 INNER JOIN dates 
-  ON issues.created_at <= dates.date_actual
-  AND (issues.created_at > dates.min_date_actual  OR issues.created_at IS NULL) 
+  ON COALESCE(issues.created_at,dates.date_actual) <= dates.date_actual 
 LEFT JOIN assigend_users
   ON issues.issue_id = assigend_users.dim_issue_id
 LEFT JOIN label_groups as severity
@@ -84,6 +86,8 @@ LEFT JOIN label_groups as team
        issue_title,
        full_group_path,
        url,
+       milestone_id,
+       milestone_title,
        issue_state,
        issue_created_at,
        issue_closed_at,
@@ -100,6 +104,7 @@ LEFT JOIN label_groups as team
        group_label,
        section_label,
        stage_label,
+       type_label,
        subtype_label,
        is_infradev,
        fedramp_vulnerability,
