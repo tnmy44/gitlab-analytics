@@ -62,6 +62,8 @@ WITH internal_merge_requests AS (
         THEN 'distribution::build'
       WHEN array_contains('distribution::deploy'::variant,internal_issues.labels)
         THEN 'distribution::deploy'
+      WHEN array_contains('distribution::operate'::variant,internal_issues.labels)
+        THEN 'distribution::operate'
         ELSE
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''),'undefined') END                    AS group_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bsection::*([^,]*)'), 'section::', '') IN (SELECT section_name FROM product_categories_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bsection::*([^,]*)'), 'section::', ''),'undefined')                                                                                                                AS section_label,
