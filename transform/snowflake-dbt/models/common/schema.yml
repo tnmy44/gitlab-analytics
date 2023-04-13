@@ -5189,8 +5189,6 @@ models:
                 severity: error
                 error_if: ">10"
                 warn_if: ">10"
-
-
         description: '{{ doc("dim_behavior_website_page_sk") }}'
       - name: page_url_host_path
         description: '{{ doc("page_url_host_path") }}' 
