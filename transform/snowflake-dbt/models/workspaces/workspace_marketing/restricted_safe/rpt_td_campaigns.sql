@@ -25,6 +25,7 @@ WITH l2r AS (
    rpt_lead_to_revenue.inferred_employee_segment,
    rpt_lead_to_revenue.inferred_geo,
    rpt_lead_to_revenue.lead_source,
+   rpt_lead_to_revenue.accepted_date
    rpt_lead_to_revenue.bizible_landing_page,
    rpt_lead_to_revenue.bizible_form_url,
 
