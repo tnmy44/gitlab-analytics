@@ -70,7 +70,17 @@ engineering_issues AS (
     ARRAY_CONTAINS('security'::VARIANT, internal_issues.labels)                                                                                                                                                                                                                                        AS is_security,
     internal_issues.priority_tag                                                                                                                                                                                                                                                                       AS priority_label,
     internal_issues.severity_tag                                                                                                                                                                                                                                                                       AS severity_label,
-    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''), 'undefined')                      AS group_label,
+    CASE
+      WHEN array_contains('gitaly::cluster'::variant,labels)
+        THEN 'gitaly::cluster'
+      WHEN array_contains('gitaly::git'::variant,labels)
+        THEN 'gitaly::git'
+      WHEN array_contains('distribution::build'::variant,labels)
+        THEN 'distribution::build'
+      WHEN array_contains('distribution::deploy'::variant,labels)
+        THEN 'distribution::deploy'
+        ELSE
+    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''),'undefined') END                    AS group_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bsection::*([^,]*)'), 'section::', '') IN (SELECT section_name FROM product_categories_yml), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bsection::*([^,]*)'), 'section::', ''), 'undefined')            AS section_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bdevops::*([^,]*)'), 'devops::', '') IN (SELECT stage_name FROM product_categories_yml), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bdevops::*([^,]*)'), 'devops::', ''), 'undefined')                  AS stage_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\btype::*([^,]*)'), 'type::', '') IN ('bug', 'feature', 'maintenance'), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\btype::*([^,]*)'), 'type::', ''), 'undefined')
