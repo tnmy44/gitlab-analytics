@@ -21,6 +21,8 @@
     LEFT JOIN map_merged_crm_account
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     WHERE dim_crm_account_id_merged != dim_crm_account_id_zuora
+      OR dim_crm_account_id_zuora IS NULL
+      OR dim_crm_account_id_merged IS NULL
 
 )
 
@@ -29,5 +31,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-10-07",
-    updated_date="2022-10-07"
+    updated_date="2023-04-13"
 ) }}
