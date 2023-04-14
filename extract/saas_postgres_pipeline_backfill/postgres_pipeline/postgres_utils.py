@@ -475,7 +475,7 @@ def query_export_status(
         f" FROM {METADATA_SCHEMA}.{metadata_table}"
         f" WHERE table_name = '{source_table}');"
     )
-    logging.info(f"\nquery backfill status: {query}")
+    logging.info(f"\nquery export status: {query}")
     results = query_executor(metadata_engine, query)
     return results
 

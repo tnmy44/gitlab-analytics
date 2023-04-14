@@ -131,6 +131,7 @@ class PostgresPipelineTable:
         )
         target_table = self.get_target_table_name()
 
+        logging.info("Starting delete export...")
         return load_functions.load_ids(
             self.table_dict,
             source_engine,
