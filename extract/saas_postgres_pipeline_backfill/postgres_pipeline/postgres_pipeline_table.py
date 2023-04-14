@@ -120,29 +120,14 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
     ) -> bool:
-        start_pk, initial_load_start_date = 1, None
-        backfill_chunksize = 40_000_000
-
-        (
-            is_resume_export_needed,
-            resume_pk,
-            resume_initial_load_start_date,
-        ) = is_resume_export(
-            metadata_engine, DELETE_METADATA_TABLE, self.source_table_name
-        )
-        # need to resume previous export and less than 24 hr has elapsed
-        if is_resume_export_needed and resume_initial_load_start_date is not None:
-            start_pk = resume_pk
-            initial_load_start_date = resume_initial_load_start_date
-        else:
-            remove_unprocessed_files_from_gcs(
-                DELETE_METADATA_TABLE, self.source_table_name
-            )
-
+        delete_chunksize = 50_000_000
         self.table_dict["import_query"] = update_import_query_for_delete_export(
             self.query, self.source_table_primary_key
         )
 
+        start_pk, initial_load_start_date = self.check_delete(
+            metadata_engine, DELETE_METADATA_TABLE
+        )
         target_table = self.get_target_table_name()
 
         return load_functions.load_ids(
@@ -156,7 +141,7 @@ class PostgresPipelineTable:
             DELETE_METADATA_TABLE,
             start_pk,
             initial_load_start_date,
-            backfill_chunksize,
+            delete_chunksize,
         )
 
     def do_load(
@@ -231,6 +216,26 @@ class PostgresPipelineTable:
             )
 
         return is_backfill_needed, start_pk, initial_load_start_date
+
+    def check_delete(self, metadata_engine, delete_metadata_table):
+        start_pk, initial_load_start_date = 1, None
+
+        (
+            is_resume_export_needed,
+            resume_pk,
+            resume_initial_load_start_date,
+        ) = is_resume_export(
+            metadata_engine, delete_metadata_table, self.source_table_name
+        )
+        # need to resume previous export and less than 24 hr has elapsed
+        if is_resume_export_needed and resume_initial_load_start_date is not None:
+            start_pk = resume_pk
+            initial_load_start_date = resume_initial_load_start_date
+        else:
+            remove_unprocessed_files_from_gcs(
+                delete_metadata_table, self.source_table_name
+            )
+        return start_pk, initial_load_start_date
 
     def get_target_table_name(self):
         return self.target_table_name

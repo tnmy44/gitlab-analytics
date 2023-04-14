@@ -46,7 +46,7 @@ from postgres_utils import (
 )
 
 
-class TestCheckIsBackfillNeeded:
+class TestCheckBackfill:
     def setup(self):
         """
         - Create test metdata table
@@ -370,7 +370,7 @@ class TestCheckIsBackfillNeeded:
         (
             is_backfill_needed,
             start_pk,
-            initial_load_start_date,
+            returned_initial_load_start_date,
         ) = self.pipeline_table.check_is_backfill_needed(
             source_engine, self.metadata_engine, self.test_metadata_table
         )
@@ -378,7 +378,7 @@ class TestCheckIsBackfillNeeded:
         # Verify results
         assert is_backfill_needed is True
         assert start_pk == last_extracted_id + 1
-        assert initial_load_start_date == initial_load_start_date
+        assert returned_initial_load_start_date == initial_load_start_date
         mock_remove_unprocessed_files.assert_not_called()
 
     @patch("postgres_pipeline_table.schema_addition_check")
@@ -438,5 +438,223 @@ class TestCheckIsBackfillNeeded:
         assert is_backfill_needed is False
 
 
-class TestCheckIsBackfillNeededDeletes:
-    pass
+class TestCheckDelete:
+    def setup(self):
+        """
+        - Create test metdata table
+        - Create a mock PostgresPipelineTable object
+        """
+        manifest_file_path = "extract/saas_postgres_pipeline_backfill/manifests_decomposed/el_gitlab_com_new_db_manifest.yaml"
+
+        manifest_dict = manifest_reader(manifest_file_path)
+        env = os.environ.copy()
+        self.metadata_engine = postgres_engine_factory(
+            manifest_dict["connection_info"]["postgres_metadata_connection"], env
+        )
+        metadata_table = "delete_metadata"
+        self.test_metadata_table = f"test_{metadata_table}"
+        self.test_metadata_table_full_path = (
+            f"{METADATA_SCHEMA}.{self.test_metadata_table}"
+        )
+
+        drop_query = f""" drop table if exists {self.test_metadata_table_full_path}"""
+
+        create_table_query = f"""
+        create table {self.test_metadata_table_full_path}
+        (like {METADATA_SCHEMA}.{metadata_table});
+        """
+
+        with self.metadata_engine.connect() as connection:
+            connection.execute(drop_query)
+            connection.execute(create_table_query)
+
+        # Create a mock PostgresPipelineTable object
+        table_config = {
+            "import_query": "SELECT * FROM some_table;",
+            "import_db": "some_database",
+            "export_table": "some_table",
+            "export_table_primary_key": "id",
+        }
+        self.pipeline_table = PostgresPipelineTable(table_config)
+
+    def teardown(self):
+        drop_query = f""" drop table if exists {self.test_metadata_table_full_path}"""
+
+        with self.metadata_engine.connect() as connection:
+            connection.execute(drop_query)
+
+    @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
+    def test_check_delete_normal(self, mock_remove_unprocessed_files):
+        """
+        Check that regular deletes
+        are processed correctly
+
+        Test the following conditions:
+            1. start_pk = 1
+            2. initial_load_start_date = None
+            3. remove_unprocessed_files_from_gcs() is called
+
+        In addition, check that is_resume_export() returns correct values:
+            1. Not resuming export
+        """
+        start_pk, initial_load_start_date = self.pipeline_table.check_delete(
+            self.metadata_engine, self.test_metadata_table
+        )
+        # Tests
+        mock_remove_unprocessed_files.assert_called_once_with(
+            self.test_metadata_table, self.pipeline_table.source_table_name
+        )
+        assert start_pk == 1
+        assert initial_load_start_date is None
+
+        # Test is_resume_export as well
+        (
+            is_resume_export_needed,
+            resume_pk,
+            resume_initial_load_start_date,
+        ) = is_resume_export(
+            self.metadata_engine,
+            self.test_metadata_table,
+            self.pipeline_table.source_table_name,
+        )
+        assert is_resume_export_needed is False
+        assert resume_pk == -1
+        assert resume_initial_load_start_date is None
+
+    @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
+    def test_check_delete_past_24hr(self, mock_remove_unprocessed_files):
+        """
+        Check that midway deletes past 24 hr
+        are processed correctly
+
+        Test the following conditions:
+            1. start_pk = 1
+            2. initial_load_start_date = None
+            3. remove_unprocessed_files_from_gcs() is called
+
+        In addition, check that is_resume_export() returns correct values:
+            1. resuming export, but starting over since past 24hr
+        """
+
+        # Insert test record
+        source_table = "some_table"
+        database_name = "some_db"
+        initial_load_start_date = datetime(2023, 1, 1)
+        upload_date = datetime(2023, 1, 1)
+        upload_file_name = "some_file"
+        last_extracted_id = 10
+        max_id = 20
+        is_export_completed = False
+        chunk_row_count = 3
+
+        insert_query = f"""
+        INSERT INTO {self.test_metadata_table_full_path}
+        VALUES (
+            '{database_name}',
+            '{source_table}',
+            '{initial_load_start_date}',
+            '{upload_date}',
+            '{upload_file_name}',
+            {last_extracted_id},
+            {max_id},
+            {is_export_completed},
+            {chunk_row_count});
+        """
+
+        # Test when table is inserted into metadata
+        with self.metadata_engine.connect() as connection:
+            connection.execute(insert_query)
+
+        start_pk, initial_load_start_date = self.pipeline_table.check_delete(
+            self.metadata_engine, self.test_metadata_table
+        )
+        # Tests
+        mock_remove_unprocessed_files.assert_called_once_with(
+            self.test_metadata_table, self.pipeline_table.source_table_name
+        )
+        assert start_pk == 1
+        assert initial_load_start_date is None
+
+        # Test is_resume_export as well
+        (
+            is_resume_export_needed,
+            resume_pk,
+            resume_initial_load_start_date,
+        ) = is_resume_export(
+            self.metadata_engine,
+            self.test_metadata_table,
+            self.pipeline_table.source_table_name,
+        )
+        assert is_resume_export_needed is True
+        assert resume_pk == 1
+        assert resume_initial_load_start_date is None
+
+    @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
+    def test_check_delete_within_24hr(self, mock_remove_unprocessed_files):
+        """
+        Check that midway deletes within 24 hr
+        are processed correctly
+
+        Test the following conditions:
+            1. start_pk = 1
+            2. initial_load_start_date = None
+            3. remove_unprocessed_files_from_gcs() is called
+
+        In addition, check that is_resume_export() returns correct values:
+            1. resuming export from last pk / initial_load_start_date
+        """
+
+        # Insert test record
+        source_table = "some_table"
+        database_name = "some_db"
+        initial_load_start_date = datetime(2023, 2, 1)
+        upload_date_less_than_24hr = datetime.utcnow() - timedelta(hours=23, minutes=40)
+        upload_date = upload_date_less_than_24hr
+        upload_file_name = "some_file"
+        last_extracted_id = 10
+        max_id = 20
+        is_export_completed = False
+        chunk_row_count = 3
+
+        insert_query = f"""
+        INSERT INTO {self.test_metadata_table_full_path}
+        VALUES (
+            '{database_name}',
+            '{source_table}',
+            '{initial_load_start_date}',
+            '{upload_date}',
+            '{upload_file_name}',
+            {last_extracted_id},
+            {max_id},
+            {is_export_completed},
+            {chunk_row_count});
+        """
+
+        # Test when table is inserted into metadata
+        with self.metadata_engine.connect() as connection:
+            connection.execute(insert_query)
+
+        (
+            start_pk,
+            returned_initial_load_start_date,
+        ) = self.pipeline_table.check_delete(
+            self.metadata_engine, self.test_metadata_table
+        )
+        # Tests
+        mock_remove_unprocessed_files.assert_not_called()
+        assert start_pk == last_extracted_id + 1
+        assert returned_initial_load_start_date == initial_load_start_date
+
+        # Test is_resume_export as well
+        (
+            is_resume_export_needed,
+            resume_pk,
+            resume_initial_load_start_date,
+        ) = is_resume_export(
+            self.metadata_engine,
+            self.test_metadata_table,
+            self.pipeline_table.source_table_name,
+        )
+        assert is_resume_export_needed is True
+        assert resume_pk == last_extracted_id + 1
+        assert resume_initial_load_start_date == initial_load_start_date
