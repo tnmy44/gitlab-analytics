@@ -4,6 +4,12 @@ Creates a base view with generated keys for the alliance type shared dimension a
 
 {% enddocs %}
 
+{% docs prep_application_release %}
+
+Creates base view with generated keys for application releaes. 
+
+{% enddocs %}
+
 {% docs prep_audit_event_details_clean %}
 
 All GitLab audit event details, with pii replaced with hashes. Created by a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
@@ -93,9 +99,9 @@ This model captures a historical record of GitLab's default application settings
 
 {% enddocs %}
 
-{% docs prep_major_minor_release %}
+{% docs prep_release_major_minor %}
 
-Creates base view with generated keys for Gitlab major and minor versions. 
+Creates base view with generated keys for application major and minor versions. 
 
 {% enddocs %}
 

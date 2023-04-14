@@ -395,7 +395,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_major_minor_release %}
+{% docs dim_release_major_minor %}
 Dimensional table representing released versions (major and minor) of GitLab.
 
 The grain of the table is a major_minor_version.
@@ -406,12 +406,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_gitlab_version %}
-Dimensional table representing released versions of GitLab.
+{% docs dim_application_release %}
+Dimensional table representing released versions of an application. As on now, it only holds releases from GitLab.
 
-The grain of the table is a version_id.
+The grain of the table is the major, minor and patch version together with the application that these represent.
 
-Additional information can be found on the [GitLab Releases](https://about.gitlab.com/releases/categories/releases/) page.
+Additional information specific to the GitLab Releases can be found in the following [page](https://about.gitlab.com/releases/categories/releases/).
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
@@ -1037,7 +1037,7 @@ This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitl
   - (OR) hostname IN ('staging.gitlab.com','dr.gitlab.com')
 - `is_trial` = `IFF(ping_created_at < license_trial_ends_on, TRUE, FALSE)`
 - `major_minor_version` = `major_version || '.' || minor_version`
-- `major_minor_release_id` = `major_version * 100 + minor_version` (helpful for sorting or filtering versions)
+- `release_major_minor_id` = `major_version * 100 + minor_version` (helpful for sorting or filtering versions)
 - `version_is_prerelease` = `IFF(version ILIKE '%-pre', TRUE, FALSE)`
 - `cleaned_edition` = `IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, ping_edition, 'EE Free')`
 

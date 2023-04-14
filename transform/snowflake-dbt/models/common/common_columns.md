@@ -463,25 +463,31 @@ The concatenation of major and minor version, easily joined to `dim_gitlab_relea
 
 {% docs major_minor_version_id %}
 
-The id of the major minor version, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_id` is 1306. This id is intended to facilitate easy filtering on versions
+The id of the major minor version, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_id` is 1306. This id is intended to facilitate easy filtering on versions. To be replaced with `major_minor_version_num`.
 
 {% enddocs %}
 
-{% docs major_minor_release_id %}
+{% docs major_minor_version_num %}
 
-The natural key of dim_major_minor_release. This natural key is defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_release_id` is 1306. This id is also intended to facilitate easy filtering on versions
-
-{% enddocs %}
-
-{% docs dim_major_minor_release_sk %}
-
-Surrogate key of dim_major_minor_release. Currently identified by hashing the major_minor_version field.
+The numeric variation of `major_minor_version`, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_num` is 1306. This id is intended to facilitate easy ordering on versions.
 
 {% enddocs %}
 
-{% docs dim_latest_available_major_minor_release_sk %}
+{% docs release_major_minor_id %}
 
-The latest avaiable dim_major_minor_release_sk at the moment the ping is sent.
+The natural key of dim_release_major_minor. This natural key is defined as the concatenation of the `application` and the major minor version. For example, for the GitLab version 13.6.2, the `release_major_minor_id` is `GiLab-13.06`.
+
+{% enddocs %}
+
+{% docs dim_release_major_minor_sk %}
+
+Surrogate key of dim_release_major_minor. Currently identified by hashing the major_minor_version field combined with the application field.
+
+{% enddocs %}
+
+{% docs dim_latest_available_release_major_minor_sk %}
+
+The latest avaiable dim_release_major_minor_sk at the moment the ping is sent.
 
 {% enddocs %}
 
@@ -1922,8 +1928,14 @@ The action to be carried out on the subscription. For example, 'Amend Subscripti
 
 {% enddocs %}
 
-{% docs dim_gitlab_version_sk %}
+{% docs dim_application_release_sk %}
 
-The unique surrogate key created by using `version_id` which is a unique identifier of a release maintained by the versions app. 
+Unique identifier of an application release. Identifies the combination of major, minor and patch version of a release from an specific application.
+
+{% enddocs %}
+
+{% docs application_release_id %}
+
+The unique identifier of the release of an application.
 
 {% enddocs %}

@@ -19,6 +19,17 @@ models:
           - unique
         tags: ["tdf", "common", "arr"]
 
+  - name: prep_application_release
+    description: '{{ doc("prep_application_release") }}'
+    columns:
+      - name: dim_application_release_sk
+        description: '{{ ("dim_application_release_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: application_release_id
+        description: '{{ ("application_release_id") }}'
+
   - name: prep_audit_event_details_clean
     description: '{{ doc("prep_audit_event_details_clean") }}'
     columns:
@@ -154,16 +165,16 @@ models:
           - not_null
           - unique
 
-  - name: prep_major_minor_release
-    description: '{{ doc("prep_major_minor_release") }}'
+  - name: prep_release_major_minor
+    description: '{{ doc("prep_release_major_minor") }}'
     columns:
-      - name: dim_major_minor_release_sk
-        description: '{{ doc("dim_major_minor_release_sk") }}'
+      - name: dim_release_major_minor_sk
+        description: '{{ doc("dim_release_major_minor_sk") }}'
         tests:
           - not_null
           - unique
-      - name: major_minor_release_id
-        description: '{{ doc("major_minor_release_id") }}'
+      - name: release_major_minor_id
+        description: '{{ doc("release_major_minor_id") }}'
 
   - name: prep_industry
     description: '{{ doc("prep_industry") }}'

@@ -87,8 +87,8 @@ fct_w_month_flag AS (
     SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                 AS major_version,
     SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                                 AS minor_version,
     major_version || '.' || minor_version                                                                       AS major_minor_version,
-    major_version * 100 + minor_version                                                                         AS major_minor_version_id,
-    major_minor_version_id                                                                                      AS major_minor_release_id
+    major_version * 100 + minor_version                                                                         AS major_minor_version_id, -- legacy field - to be replaced with major_minor_version_ num
+    major_version * 100 + minor_version                                                                         AS major_minor_version_num
   FROM usage_data_w_date
   LEFT JOIN last_ping_of_month_flag
     ON usage_data_w_date.id = last_ping_of_month_flag.id
@@ -121,7 +121,6 @@ final AS (
       fct_w_month_flag.dim_host_id                                                                                AS dim_host_id,
       fct_w_month_flag.dim_instance_id                                                                            AS dim_instance_id,
       fct_w_month_flag.dim_installation_id                                                                        AS dim_installation_id,
-      fct_w_month_flag.major_minor_release_id                                                                     AS major_minor_release_id,
       fct_w_month_flag.ping_created_at                                                                            AS ping_created_at,
       TO_DATE(DATEADD('days', -28, fct_w_month_flag.ping_created_at))                                             AS ping_created_date_28_days_earlier,
       TO_DATE(DATE_TRUNC('YEAR', fct_w_month_flag.ping_created_at))                                               AS ping_created_date_year,
@@ -189,7 +188,8 @@ final AS (
       fct_w_month_flag.major_version                                                                              AS major_version,
       fct_w_month_flag.minor_version                                                                              AS minor_version,
       fct_w_month_flag.major_minor_version                                                                        AS major_minor_version,
-      fct_w_month_flag.major_minor_version_id                                                                     AS major_minor_version_id, -- legacy field - to be drep
+      fct_w_month_flag.major_minor_version_num                                                                    AS major_minor_version_num,
+      fct_w_month_flag.major_minor_version_id                                                                     AS major_minor_version_id, -- legacy field - to be replaced with major_minor_version_ num
       CASE
         WHEN fct_w_month_flag.uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'
@@ -233,5 +233,5 @@ final AS (
     created_by="@icooper-acp",
     updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2023-04-04"
+    updated_date="2023-04-14"
 ) }}
