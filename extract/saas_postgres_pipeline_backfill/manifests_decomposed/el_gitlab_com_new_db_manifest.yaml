@@ -43,6 +43,7 @@ tables:
     export_schema: "gitlab_com"
     export_table: alert_management_http_integrations
     export_table_primary_key: id
+    export_table_composite_key: id, created_at
     import_db: GITLAB_DB
     import_query: |-
       SELECT id

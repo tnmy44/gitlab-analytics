@@ -23,6 +23,7 @@ class PostgresPipelineTable:
         self.import_db = table_config["import_db"]
         self.source_table_name = table_config["export_table"]
         self.source_table_primary_key = table_config["export_table_primary_key"]
+        self.source_table_composite_key = table_config.get("export_table_composite_key")
         if "additional_filtering" in table_config:
             self.additional_filtering = table_config["additional_filtering"]
         self.advanced_metadata = ("advanced_metadata" in table_config) and table_config[
@@ -122,7 +123,7 @@ class PostgresPipelineTable:
     ) -> bool:
         delete_chunksize = 50_000_000
         self.table_dict["import_query"] = update_import_query_for_delete_export(
-            self.query, self.source_table_primary_key
+            self.query, self.source_table_primary_key, self.source_table_composite_key
         )
 
         start_pk, initial_load_start_date = self.check_delete(

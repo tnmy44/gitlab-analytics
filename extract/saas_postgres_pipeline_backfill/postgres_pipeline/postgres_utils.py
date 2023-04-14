@@ -374,7 +374,7 @@ def chunk_and_upload(
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile, chunksize)
 
         for idx, chunk_df in enumerate(iter_csv):
-            logging.info(f"\nchunk_df: {chunk_df}")
+            logging.info(f"\nchunk_df.head(): {chunk_df.head()}")
 
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
@@ -584,7 +584,7 @@ def remove_unprocessed_files_from_gcs(metadata_table: str, source_table: str):
     for i, blob in enumerate(blobs):
         if i == 0:
             logging.info(
-                f"In preparation of backfill, removing unprocessed files with prefix: {prefix}"
+                f"In preparation of export, removing unprocessed files with prefix: {prefix}"
             )
         blob.delete()
 
@@ -721,11 +721,14 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
     return postgres_engine, metadata_engine, snowflake_engine
 
 
-def update_import_query_for_delete_export(import_query, primary_key):
+def update_import_query_for_delete_export(import_query, primary_key, composite_key):
     select_part, from_part = import_query.split("FROM")
 
     # Replace the field names with pk
-    new_select_part = f"SELECT {primary_key}"
+    if composite_key:
+        new_select_part = f"SELECT {composite_key}"
+    else:
+        new_select_part = f"SELECT {primary_key}"
 
     # Combine the new SELECT part with the original FROM part
     updated_query = f"{new_select_part} FROM {from_part}"

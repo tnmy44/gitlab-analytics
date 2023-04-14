@@ -137,9 +137,12 @@ def test_update_import_query_for_delete_export():
     WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
       AND '{END_TIMESTAMP}'::timestamp"""
     primary_key = "id"
+    composite_key = None
 
     # Call the function with the test data
-    updated_query = update_import_query_for_delete_export(import_query, primary_key)
+    updated_query = update_import_query_for_delete_export(
+        import_query, primary_key, composite_key
+    )
 
     # Assert that the function returns the expected result
     expected_query = "SELECT id FROM  analytics_cycle_analytics_group_stages\nWHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp\n  AND '{END_TIMESTAMP}'::timestamp"
@@ -156,13 +159,16 @@ def test_update_import_query_for_delete_export():
     , author_id
     FROM design_management_versions"""
 
-    primary_key = "CONCAT(sha,'_', issue_id)"
+    primary_key = "id"
+    composite_key = "sha, issue_id"
 
     # Call the function with the test data
-    updated_query = update_import_query_for_delete_export(import_query, primary_key)
+    updated_query = update_import_query_for_delete_export(
+        import_query, primary_key, composite_key
+    )
 
     # Assert that the function returns the expected result
-    expected_query = "SELECT CONCAT(sha,'_', issue_id) FROM  design_management_versions"
+    expected_query = "SELECT sha, issue_id FROM  design_management_versions"
 
     expected_query_cleaned = clean_res(expected_query)
     updated_query_cleaned = clean_res(updated_query)
