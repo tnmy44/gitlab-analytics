@@ -20,7 +20,7 @@ WITH prep_ci_runner AS (
           THEN 'linux-runner-mgr'
         WHEN ci_runner_description LIKE '%saas-linux-%-amd64%'
             AND ci_runner_description NOT LIKE '%shell%'
-        THEN 'linux-runner-mgr'
+          THEN 'linux-runner-mgr'
         --- Internal GitLab Runners
         WHEN ci_runner_description LIKE 'gitlab-shared-runners-manager%'
           THEN 'gitlab-internal-runner-mgr'
