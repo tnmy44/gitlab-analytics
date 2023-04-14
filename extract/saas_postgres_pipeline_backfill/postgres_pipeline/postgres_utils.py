@@ -515,12 +515,12 @@ def is_resume_export(
                 initial_load_start_date = None
                 last_extracted_id = 0
                 logging.info(
-                    f"In middle of export for {source_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Start backfill from beginning."
+                    f"In middle of export for {source_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Start export from beginning."
                 )
 
             start_pk = last_extracted_id + 1
             logging.info(
-                f"Resuming backfill with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}"
+                f"Resuming export with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}"
             )
 
     return is_resume_export_needed, start_pk, initial_load_start_date
