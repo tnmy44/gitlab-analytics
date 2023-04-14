@@ -39,21 +39,21 @@ WITH prep_ci_runner AS (
 
       --- CI Runner Machine Type Mapping
       CASE
-      --- SaaS Linux Runners
-      WHEN ci_runner_description LIKE '%.shared.runners-manager.%'
+        --- SaaS Linux Runners
+        WHEN ci_runner_description LIKE '%.shared.runners-manager.%'
           THEN 'SaaS Runner Linux - Small'
-      WHEN ci_runner_description LIKE '%saas-linux-medium-amd64%'
+        WHEN ci_runner_description LIKE '%saas-linux-medium-amd64%'
           THEN 'SaaS Runner Linux - Medium'
-      WHEN ci_runner_description LIKE '%saas-linux-large-amd64%'
+        WHEN ci_runner_description LIKE '%saas-linux-large-amd64%'
           THEN 'SaaS Runner Linux - Large'
-      --- MacOS Runners
-      WHEN ci_runner_description LIKE '%macOS%'
+        --- MacOS Runners
+        WHEN ci_runner_description LIKE '%macOS%'
           THEN 'SaaS Runners macOS - Medium - amd64'
-      --- Window Runners 
-      WHEN ci_runner_description LIKE 'windows-shared-runners-manager%'
+        --- Window Runners 
+        WHEN ci_runner_description LIKE 'windows-shared-runners-manager%'
           THEN 'SaaS Runners Windows - Medium'
       ELSE 'Other'
-      END as ci_runner_machine_type,
+      END                                           AS ci_runner_machine_type,
       contacted_at,
       is_active,
       ci_runner_version,
@@ -82,6 +82,6 @@ WITH prep_ci_runner AS (
     created_by="@snalamaru",
     updated_by="@nhervas",
     created_date="2021-06-23",
-    updated_date="2021-04-13"
+    updated_date="2023-04-13"
 ) }}
 
