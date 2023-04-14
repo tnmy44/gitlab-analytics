@@ -229,6 +229,8 @@ WITH sfdc_opportunity AS (
 
       -- sales segment refactor
       sfdc_opportunity.division_sales_segment_stamped,
+      {{ sales_segment_cleaning('sfdc_account.parent_crm_account_demographics_sales_segment') }}                      
+                                                                                                        AS parent_crm_account_sales_segment,
       sfdc_account.division_sales_segment,
       sfdc_account.ultimate_parent_sales_segment,
       sfdc_account.is_jihu_account,

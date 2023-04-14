@@ -169,9 +169,11 @@ WITH map_merged_crm_account AS (
 
       --descriptive attributes
       sfdc_account.account_name                                           AS crm_account_name,
-      sfdc_account.account_demographics_sales_segment                     AS parent_crm_account_sales_segment,
+      {{ sales_segment_cleaning('sfdc_account.account_demographics_sales_segment') }} 
+                                                                          AS parent_crm_account_sales_segment,
       -- DO NOT USE parent_crm_account_demographics_sales_segment, use parent_crm_account_sales_segment
-      sfdc_account.account_demographics_sales_segment                     AS parent_crm_account_demographics_sales_segment,
+      {{ sales_segment_cleaning('sfdc_account.account_demographics_sales_segment') }}                      
+                                                                          AS parent_crm_account_demographics_sales_segment,
       sfdc_account.account_demographics_geo                               AS parent_crm_account_demographics_geo,
       sfdc_account.account_demographics_region                            AS parent_crm_account_demographics_region,
       sfdc_account.account_demographics_area                              AS parent_crm_account_demographics_area,
