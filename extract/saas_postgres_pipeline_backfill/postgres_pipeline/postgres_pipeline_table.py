@@ -121,7 +121,7 @@ class PostgresPipelineTable:
         metadata_engine: Engine,
     ) -> bool:
         start_pk, initial_load_start_date = 1, None
-        backfill_chunksize = 10_000_000
+        backfill_chunksize = 25_000_000
 
         (
             is_resume_export_needed,
@@ -133,6 +133,10 @@ class PostgresPipelineTable:
         if is_resume_export_needed:
             start_pk = resume_pk
             initial_load_start_date = resume_initial_load_start_date
+        else:
+            remove_unprocessed_files_from_gcs(
+                DELETE_METADATA_TABLE, self.source_table_name
+            )
 
         self.table_dict["import_query"] = update_import_query_for_delete_export(
             self.query, self.source_table_primary_key
