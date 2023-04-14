@@ -89,6 +89,15 @@
       sfdc_users.user_business_unit                                                                                                   AS crm_user_business_unit,
       {{ dbt_utils.surrogate_key(['sfdc_users.user_role_type']) }}                                                                    AS dim_crm_user_role_type_id,
       sfdc_users.user_role_type                                                                                                       AS crm_user_role_type,
+      CASE 
+        WHEN sfdc_users.is_hybrid_user = 'Yes' 
+          THEN 1
+        WHEN sfdc_users.is_hybrid_user = 'No' 
+          THEN  0
+        WHEN sfdc_users.is_hybrid_user IS NULL 
+          THEN 0
+        ELSE 0 
+      END                                                                                                                             AS is_hybrid_user,
       {%- if model_type == 'live' %}
       CASE
         WHEN LOWER(sfdc_users.user_business_unit) = 'comm'

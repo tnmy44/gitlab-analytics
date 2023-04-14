@@ -7,7 +7,6 @@ CASE WHEN LOWER({{ column_1 }}) = 'smb' THEN 'SMB'
      WHEN LOWER({{ column_1 }}) = 'pubsec' THEN 'PubSec'
      WHEN LOWER({{ column_1 }}) = 'mm' THEN 'Mid-Market'
      WHEN LOWER({{ column_1 }}) = 'lrg' THEN 'Large'
-     WHEN LOWER({{ column_1 }}) = 'all' THEN 'Other'
      WHEN LOWER({{ column_1 }}) = 'jihu' THEN 'JiHu'
      WHEN {{ column_1 }} IS NOT NULL THEN initcap({{ column_1 }})
 END
