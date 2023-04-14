@@ -884,7 +884,6 @@ tables:
       , created_at
       , updated_at
       , base_access_level
-      , download_code
       , read_code
       FROM member_roles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -1057,7 +1056,6 @@ tables:
       SELECT id
       , created_at
       , updated_at
-      , iid
       , experiment_id
       , user_id
       , start_time
@@ -2022,6 +2020,7 @@ tables:
       , id
       , gitpod_enabled
       , use_legacy_web_ide
+      , use_new_navigation
       FROM user_preferences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

@@ -16,12 +16,14 @@
       namespaces.namespace_name,
       free_user_metrics.uuid,
       free_user_metrics.hostname,
+      free_user_metrics.dim_installation_id,
       free_user_metrics.delivery_type,
       free_user_metrics.cleaned_version,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       crm_account_name,
       parent_crm_account_name,
       free_user_metrics.ping_date,
+      free_user_metrics.installation_creation_date,
       -- Wave 2 & 3
       free_user_metrics.umau_28_days_user,
       free_user_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -218,12 +220,14 @@
         'dim_namespace_id',
         'uuid',
         'hostname',
+        'dim_installation_id',
         'delivery_type',
         'cleaned_version',
         'dim_crm_account_id',
         'crm_account_name',
         'parent_crm_account_name',
         'ping_date',
+        'installation_creation_date',
         'umau_28_days_user',
         'action_monthly_active_users_project_repo_28_days_user',
         'merge_requests_28_days_user',
@@ -402,5 +406,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2023-03-15"
+    updated_date="2023-04-05"
 ) }}

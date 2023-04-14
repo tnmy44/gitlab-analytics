@@ -230,6 +230,7 @@ renamed AS (
     risk_impact__c AS risk_impact,
     risk_reason__c AS risk_reason,
     last_timeline_at_risk_update__c AS last_timeline_at_risk_update,
+    last_at_risk_update_comments__c AS last_at_risk_update_comments,
 
     -- metadata
     createdbyid AS created_by_id,

@@ -42,3 +42,10 @@ This table contains combined information on PtE and PtC scores per account and s
 Detailed information on this model can be found on this [issue] (https://gitlab.com/gitlab-data/data-science/-/issues/62).
 
 {% enddocs %}
+
+{% docs mart_product_usage_paid_user_metrics_monthly_report_view %}
+
+This table contains information to be queried via the Snowflake API from the Sales Systems team.
+Detailed information on this use-case can be found on this [issue] (https://gitlab.com/gitlab-data/analytics/-/issues/15456).
+
+{% enddocs %}

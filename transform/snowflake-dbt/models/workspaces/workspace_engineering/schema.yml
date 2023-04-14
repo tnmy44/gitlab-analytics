@@ -107,7 +107,7 @@ models:
             - unique
       
 
-    - name: wk_infradev_base
+    - name: issues_history
       description: >
         Table containing age metrics & related metadata for gitlab.com internal issues. Used for tracking internal work progress for things like Engineering Allocation & Corrective Actions
         These metrics are available for individual issues at daily level & can be aggregated up from there
@@ -124,8 +124,8 @@ models:
     - name: infradev_current_issue_users
       description: A model to generate a list of current assigned users on an issue. Not explicitly limited to the infradev team. 
 
-    - name: infradev_label_history
-      description: A model identify the valid historic range of specific labels that are explicitly related to the infradev team.
+    - name: labels_history
+      description: A model identify the valid historic range of specific labels.
 
     - name: infradev_namespace_path
       description: A model to concatenate the full namespace path, up to four levels deep.  Not explicitly limited to the infradev team.
@@ -292,9 +292,29 @@ models:
           description: The worktype type classification, defined as either a bug, maintenance, or feature.
         - name: subtype_label
           description: The worktype subtype classification that matches a type_label
+        - name: workflow_label
+          description: The workflow label extracted from ('workflow::%') from issues
         - name: visibility_level
           description: Indicate if the issue lives in a private or public project
         - name: full_group_path
           description: The group path in the issue URL
         - name: url
           description: Issue URL
+
+    - name: merge_request_rate
+      description: A model containing merge request rate by department and group.
+      columns: 
+        - name: merge_month
+          description: Month the merge request was merged
+        - name: group_name
+          description: Group name
+        - name: department
+          description: Department name
+        - name: mrs
+          description: Count of merge requests
+        - name: employees
+          description: Count of employees
+        - name: mr_rate
+          description: Ratio of mrs to employees
+        - name: granularity_level
+          description: Department or group

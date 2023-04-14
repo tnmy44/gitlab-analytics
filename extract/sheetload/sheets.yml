@@ -218,10 +218,6 @@ sheets:
     owner: '@iweeks'
     tabs:
       - planned_values
-  - name: product_group_mappings
-    owner: '@lmai1'
-    tabs:
-      - product_group_mappings
   - name: product_maturity_historical
     owner: '@dpeterson1'
     tabs:
@@ -344,3 +340,8 @@ sheets:
     owner: '@nick_vh'
     tabs:
       - leading_organization_entry_dates
+
+  - name: abm_key_account_list
+    owner: '@dmicovic'
+    tabs: 
+      - abm_key_account_list

@@ -356,15 +356,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_licenses %}
-Dimensional table representing generated licenses and associated metadata.
-
-The grain of the table is a license_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs dim_gitlab_dotcom_gitlab_emails %}
 Dimensional table representing the best email address for GitLab employees from the GitLab.com data source
 
@@ -633,16 +624,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% docs fct_waterfall_summary %}
 
 A derived model using the revenue contract schedule to spread the recognized revenue across from the revenue start date to the revenue end date as defined by the revenue contract performance obligation's schedule.
-
-{% enddocs %}
-
-{% docs dim_usage_pings %}
-Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead.
-
-[Core represents both CE and EE](https://about.gitlab.com/handbook/marketing/product-marketing/tiers/#history-of-ce-and-ee-distributions).
-
-Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page.
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
 
@@ -1005,12 +986,6 @@ The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
 
 {% enddocs %}
 
-{% docs dim_usage_ping_metric %}
-
-This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). In addition to all metrics currently in the Service Ping, it also contains metrics that have been removed.
-
-{% enddocs %}
-
 {% docs dim_ping_instance %}
 
 **Description:** Atomic level instance Service Ping data including installation settings and metadata, along with JSON payloads with usage metrics
@@ -1066,7 +1041,7 @@ Some other enhancements in this model include : addition of a surrogate key, exc
 
 {% docs dim_ping_metric_daily_snapshot %}
 
-This slowly changing dimension type 2 model allows for historic reporting of the  `dim_usage_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `snapshot_id` has been included to be used in the join.
+This slowly changing dimension type 2 model allows for historic reporting of the  `dim_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `snapshot_id` has been included to be used in the join.
 
 For this reason `metrics_path` is not unique.
 
@@ -1774,5 +1749,11 @@ The model ties out 100% to mart_arr with the below 3 exceptions:
 Model Caveat:
 
 1. It should be that a subscription only has 1 paid tier plan attached to it. However, there are a small minority of subscriptions that have more than 1 product. Therefore, it is necessary to put the product tiers into an array in the model for completeness. In virtually all cases, it is 2 product tiers on the subscription with many of them having old Bronze/Starter plans in addition to Premium plans.
+
+{% enddocs %}
+
+{% docs dim_team_member %}
+
+This table contains team members work and personal information. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. The table includes information regarding current team members, new hires who have records created in Workday before their start date and team members who were terminated in 2021 onwards. Team members who were terminated before 2021 are not captured in this model at this time. The grain of this table is one row per employee_id per valid_to/valid_from combination.
 
 {% enddocs %}

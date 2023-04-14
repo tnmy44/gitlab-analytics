@@ -1782,9 +1782,113 @@ models:
 
   - name: prep_snowplow_unnested_events_all
     description: This is the primary events view which is the union of the Fishtown and GitLab tables across the last 25 months of snowplow_YYYY_MM schemas. All of the unstructured events are unpacked - [link click tracking](https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#39-link-click-tracking), [form tracking](https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#3101-enableformtracking), and [time tracking](https://github.com/snowplow/snowplow/wiki/2-Specific-event-tracking-with-the-Javascript-tracker#timing).
+    columns:
+      - name: has_performance_timing_context 
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}'
+      - name: dim_behavior_contexts_sk
+        description: '{{ doc("dim_behavior_contexts_sk") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_region_name
+        description: '{{ doc("user_region_name") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: dim_user_location_sk
+        description: '{{ doc("dim_user_location_sk") }}'
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.
 
   - name: prep_snowplow_gitlab_events_experiment_contexts_all
     description: View combining all snowplow_gitlab_events_experiment_contexts partitions.
+    
+  - name: prep_team_member
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - valid_from
+    columns:
+      - name: employee_id
+        description: Workday Employee Identification 
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: first_name
+      - name: last_name
+      - name: work_email
+        description: Team member work email
+      - name: gitlab_username
+        description: Team member gitlab username 
+      - name: region
+        description: Current/latest region the team member resides in
+      - name: hire_date
+        description: Most recent hire date. Field is updated if a team member is re-hired after a termination
+      - name: termination_date
+        description: NULL if team member is a current employee, otherwise it contains the most recent termination date
+      - name: is_current_team_member
+        description: True if the termination_date field is NULL, false otherwise. This flag captures whether the employee was employed at GitLab within the valid_from/valid_to timeframe
+      - name: is_rehire
+        description: True if team member has more than one hire event (more than one occurrance of hire_date)
+      - name: is_current
+        description: True if the current team member event is the most recent event
+      - name: country
+        description: Current/latest country the team member resides in
+        meta:
+          masking_policy: analyst_people
+      - name: nationality
+        description: Masked. Team member nationality.
+        meta:
+          masking_policy: analyst_people
+      - name: ethnicity 
+        description: Masked. Team member ethnicity.
+        meta:
+          masking_policy: analyst_people
+      - name: gender 
+        description: Masked. Team member gender
+        meta:
+          masking_policy: analyst_people
+      - name: date_of_birth 
+        description: Masked. Team member date of birth
+        meta:
+          masking_policy: analyst_people
+      - name: key_talent_status 
+        description: Masked. Team member Key Talent status
+        meta:
+          masking_policy: analyst_people
+      - name: growth_potential_rating 
+        description: Masked. Team member growth potential rating
+        meta:
+          masking_policy: analyst_people
+      - name: performance_rating 
+        description: Masked. Team member performance rating
+        meta:
+          masking_policy: analyst_people

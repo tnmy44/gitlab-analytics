@@ -1939,3 +1939,101 @@ Unique identifier of an application release. Identifies the combination of major
 The unique identifier of the release of an application.
 
 {% enddocs %}
+
+{% docs vsa_readout %}
+
+The sentiment from the Value Stream Assessment readout meeting.
+
+{% enddocs %}
+
+{% docs vsa_start_date_net_arr %}
+
+The stamped Opportunity Net ARR when Value Stream Assessment start date is populated and is after the opportunity created date. Otherwise, will stamp $0.
+
+{% enddocs %}
+
+{% docs vsa_start_date %}
+
+Date of the Value Stream Assessment kickoff call with the prospect/customer.
+
+{% enddocs %}
+
+{% docs vsa_url %}
+
+The URL to the Value Stream Assesment readout presentation.
+
+{% enddocs %}
+
+{% docs vsa_status %}
+
+The status of the Value Stream Assessment.
+
+{% enddocs %}
+
+{% docs vsa_end_date %}
+
+The date the Value Stream Assessment readout is presented to the prospect/customer.
+
+{% enddocs %}
+
+{% docs installation_creation_date %}
+
+Based off of the [`installation_creation_date`](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/license/20230228110448_installation_creation_date.yml) 
+Service Ping metric. For installations where the root user (id = 1) is not deleted, it returns the root user creation date. For installations where the root user 
+is deleted, it returns the earliest available user creation date.
+
+{% enddocs %}
+
+{% docs last_at_risk_update_comments %}
+
+The most recent Account-level At-Risk Update timeline activity in Gainsight, synced to Salesforce.
+
+{% enddocs %}
+
+{% docs pre_military_invasion_arr %}
+
+The original amount prior to impact of military invasion(s).
+
+{% enddocs %}
+
+{% docs won_arr_basis_for_clari %}
+
+This will be used for forecasting, and depending on the Renewal Forecast field would calculate the Won ARR Basis portion for a given opp. For example, reduce ARR Basis being booked if Net ARR is negative in contractions.
+
+{% enddocs %}
+
+{% docs arr_basis_for_clari %}
+
+This is the ARR Basis of the opportunity, except for contract resets where we are taking it from the subscription. In some cases where we have more than 1 credit opp, we would require a manual override of this value in order to capture the ARR Basis for all the subscriptions being consolidated.
+
+{% enddocs %}
+
+{% docs forecasted_churn_for_clari %}
+
+This field forecasts churn before the opportunity is closed as lost or won if it is contraction.
+
+{% enddocs %}
+
+{% docs override_arr_basis_clari %}
+
+Field that allows for manual overrides in the event when the reset is a consolidation of more than 1 subscription.  This field allows us to manually override the ARR Basis (for Clari) value since we would need to take into account all of the subscriptions consolidated.
+
+{% enddocs %}
+
+{% docs military_invasion_comments %}
+
+Field where rep can add in more details as to why and how ARR was impacted by military invasions.
+
+{% enddocs %}
+
+{% docs military_invasion_risk_scale %}
+
+This field is for tracking the risk of this deal being impacted by military invasions.  Definitions can be found in the Internal Sales HB under "Sales Forecasting.
+
+{% enddocs %}
+
+{% docs downgrade_details %}
+
+Field where rep can add in more details as to why the customer has downgraded.
+
+{% enddocs %}

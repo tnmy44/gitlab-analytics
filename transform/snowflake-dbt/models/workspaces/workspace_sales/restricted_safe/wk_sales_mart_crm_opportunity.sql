@@ -12,6 +12,11 @@ WITH sfdc_users_xf AS (
     FROM {{ref('wk_sales_sfdc_accounts_xf')}}
     -- FROM PROD.restricted_safe_workspace_sales.sfdc_accounts_xf
 
+), sfdc_opportunity_source AS (
+
+    SELECT *
+    FROM {{ref('sfdc_opportunity_source')}}
+
 ), date_details AS (
 
     SELECT *
@@ -565,12 +570,12 @@ WITH sfdc_users_xf AS (
 
     -- NF 20230210 These next two fields will be eventually sourced from the EDM
     CASE
-      WHEN (edm_opty.sales_qualified_source_name = 'Channel Generated' OR edm_opty.sales_qualified_source_name = 'Partner Generated')
+      WHEN (edm_opty.sales_qualified_source_name = 'Partner Generated' OR edm_opty.sales_qualified_source_name = 'Partner Generated')
           THEN 'Partner Sourced'
-      WHEN (edm_opty.sales_qualified_source_name != 'Channel Generated' AND edm_opty.sales_qualified_source_name != 'Partner Generated')
+      WHEN (edm_opty.sales_qualified_source_name != 'Partner Generated' AND edm_opty.sales_qualified_source_name != 'Partner Generated')
           AND NOT LOWER(resale_account.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
           THEN 'Channel Co-Sell'
-      WHEN (edm_opty.sales_qualified_source_name != 'Channel Generated' AND edm_opty.sales_qualified_source_name != 'Partner Generated')
+      WHEN (edm_opty.sales_qualified_source_name != 'Partner Generated' AND edm_opty.sales_qualified_source_name != 'Partner Generated')
           AND LOWER(resale_account.account_name) LIKE ANY ('%google%','%gcp%','%amazon%')
           THEN 'Alliance Co-Sell'
       ELSE 'Direct'
@@ -619,12 +624,13 @@ WITH sfdc_users_xf AS (
     
     ------------------------------------------------------------------------
     -- FY24 keys
-
+    -- These keys must leverage the unadjusted raw_segment field 
+    
     LOWER(
       CONCAT(
         report_opportunity_user_business_unit,
         '-',
-        report_opportunity_user_segment,
+        report_opportunity_raw_user_segment,
         '-',
         report_opportunity_user_geo,
         '-',
@@ -648,7 +654,7 @@ WITH sfdc_users_xf AS (
         '-',
         report_opportunity_user_asm,
         '-',
-        report_opportunity_user_segment,
+        report_opportunity_raw_user_segment,
         '-',
         report_opportunity_user_geo,
         '-',
@@ -672,7 +678,7 @@ WITH sfdc_users_xf AS (
         '-',
         report_opportunity_user_asm,
         '-',
-        report_opportunity_user_segment,
+        report_opportunity_raw_user_segment,
         '-',
         report_opportunity_user_geo,
         '-',
@@ -684,13 +690,17 @@ WITH sfdc_users_xf AS (
         '-',
         edm_opty.deal_group,
         '-',
-        opportunity_owner.role_type,
+        report_opportunity_user_role_type,
         '-',
         partner_category,
         '-',
         alliance_partner
       )
-    ) AS report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap
+    ) AS report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
+
+    --- SOURCE fields
+    -- NF: These should be moved eventually to the MART table
+    opty_source.pushed_count
 
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
     FROM edm_opty
@@ -701,6 +711,8 @@ WITH sfdc_users_xf AS (
       ON account_owner.user_id = account.owner_id
     INNER JOIN sfdc_users_xf AS opportunity_owner
       ON opportunity_owner.user_id = edm_opty.owner_id
+    INNER JOIN sfdc_opportunity_source opty_source 
+      ON opty_source.opportunity_id = edm_opty.dim_crm_opportunity_id
     LEFT JOIN sfdc_accounts_xf AS resale_account
       ON resale_account.account_id = edm_opty.fulfillment_partner
 

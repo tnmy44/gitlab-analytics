@@ -11,10 +11,10 @@ from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperato
 
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
-DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.34"
+DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.27"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.1"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
-ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.1"
+ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
 
 SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
 
@@ -54,6 +54,7 @@ data_science_pipelines_dag = [
     "ds_propensity_to_contract",
     "ds_propensity_to_purchase_trial",
     "ds_namespace_segmentation",
+    "ds_propensity_to_purchase_free",
 ]
 
 sales_analytics_pipelines_dag = [

@@ -180,8 +180,19 @@ WITH sfdc_account_xf AS (
 
         -- FY24 structure keys (pending)
         report_opportunity_user_business_unit AS key_bu,
-        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit                                                                                   AS key_bu_subbu,
-        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division                                        AS key_bu_subbu_division,
+        report_opportunity_user_business_unit || '_' || deal_group                 AS key_bu_ot,
+        report_opportunity_user_business_unit || '_' || sales_qualified_source     AS key_bu_sqs,
+        
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit                                       AS key_bu_subbu,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' ||  deal_group                 AS key_bu_subbu_ot,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' ||  sales_qualified_source     AS key_bu_subbu_sqs,
+
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division                                    AS key_bu_subbu_division,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division || '_' ||  deal_group              AS key_bu_subbu_division_ot,
+        report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division || '_' ||  sales_qualified_source  AS key_bu_subbu_division_sqs,
+   
+ 
+ 
         report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division || '_' || report_opportunity_user_asm  AS key_bu_subbu_division_asm,
 
 

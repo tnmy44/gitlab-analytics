@@ -8,20 +8,29 @@ WITH internal_merge_requests AS (
     SELECT *
     FROM {{ ref('dim_namespace') }}
 
-), stages_yml AS (
+), product_categories_yml_base AS (
 
     SELECT
-        DISTINCT LOWER(stage_display_name) AS stage_name,
-        LOWER(stage_section) AS section_name
-    FROM {{ ref('stages_yaml_source') }}
-    WHERE snapshot_date = (SELECT max(snapshot_date) FROM {{ ref('stages_yaml_source') }})
-
-), groups_yml AS (
-
-    SELECT DISTINCT LOWER(group_name) AS group_name
+        DISTINCT LOWER(group_name) AS group_name,
+        LOWER(stage_section) AS section_name,
+        LOWER(stage_display_name) AS stage_name,
+        IFF(group_name LIKE '%::%',SPLIT_PART(LOWER(group_name),'::',1),NULL) as root_name
     FROM {{ ref('stages_groups_yaml_source') }}
     WHERE snapshot_date = (SELECT max(snapshot_date) FROM {{ ref('stages_groups_yaml_source') }})
 
+), product_categories_yml AS (
+
+    SELECT group_name,
+       section_name,
+       stage_name
+    FROM product_categories_yml_base
+    UNION ALL
+    SELECT DISTINCT root_name AS group_name,
+                section_name,
+                stage_name
+    FROM product_categories_yml_base
+    WHERE root_name IS NOT NULL
+    
 ), bot_users AS (
 
     SELECT dim_user_id
@@ -58,9 +67,21 @@ WITH internal_merge_requests AS (
     ARRAY_CONTAINS('security'::variant, internal_merge_requests.labels)                                                         AS is_security,
     IFNULL(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bpriority::([0-9]+)'), 'priority::', ''),'undefined')                                                                                                                    AS priority_label,
     IFNULL(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bseverity::([0-9]+)'), 'severity::', ''),'undefined')                                                                                                                    AS severity_label,
-    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM groups_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''),'undefined')                                                                                                                    AS group_label,
-    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bsection::*([^,]*)'), 'section::', '') IN (SELECT section_name FROM stages_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bsection::*([^,]*)'), 'section::', ''),'undefined')                                                                                                                AS section_label,
-    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bdevops::*([^,]*)'), 'devops::', '') IN (SELECT stage_name FROM stages_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bdevops::*([^,]*)'), 'devops::', ''),'undefined')                                                                                                                    AS stage_label,
+    CASE
+      WHEN array_contains('gitaly::cluster'::variant,internal_merge_requests.labels)
+        THEN 'gitaly::cluster'
+      WHEN array_contains('gitaly::git'::variant,internal_merge_requests.labels)
+        THEN 'gitaly::git'
+      WHEN array_contains('distribution::build'::variant,internal_merge_requests.labels)
+        THEN 'distribution::build'
+      WHEN array_contains('distribution::deploy'::variant,internal_merge_requests.labels)
+        THEN 'distribution::deploy'
+      WHEN array_contains('distribution::operate'::variant,internal_merge_requests.labels)
+        THEN 'distribution::operate'
+        ELSE
+    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''),'undefined') END                    AS group_label,
+    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bsection::*([^,]*)'), 'section::', '') IN (SELECT section_name FROM product_categories_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bsection::*([^,]*)'), 'section::', ''),'undefined')                                                                                                                AS section_label,
+    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bdevops::*([^,]*)'), 'devops::', '') IN (SELECT stage_name FROM product_categories_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bdevops::*([^,]*)'), 'devops::', ''),'undefined')                                                                                                                    AS stage_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\btype::*([^,]*)'), 'type::', '') IN ('bug','feature','maintenance'),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\btype::*([^,]*)'), 'type::', ''),'undefined') 
                                                                                                                                 AS type_label,
     CASE

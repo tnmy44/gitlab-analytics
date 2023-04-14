@@ -339,6 +339,7 @@ specify_dbt_parameters:
         config.schema:restricted_safe_legacy
         config.schema:restricted_safe_workspace_finance
         config.schema:restricted_safe_workspace_sales 
+        config.schema:restricted_safe_workspace_marketing
       --output json > safe_models.json
     - python3 safe_model_check.py
 

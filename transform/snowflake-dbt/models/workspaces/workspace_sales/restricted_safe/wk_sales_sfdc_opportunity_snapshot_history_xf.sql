@@ -48,6 +48,7 @@ WITH date_details AS (
       report_user_segment_geo_region_area_sqs_ot,
 
       -- FY24 new fields
+      report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
       report_opportunity_user_business_unit,
       report_opportunity_user_sub_business_unit,
       report_opportunity_user_division,
@@ -77,8 +78,14 @@ WITH date_details AS (
 
       -- FY24 keys
       key_bu,
+      key_bu_ot,
+      key_bu_sqs,
       key_bu_subbu,
+      key_bu_subbu_ot,
+      key_bu_subbu_sqs,
       key_bu_subbu_division,
+      key_bu_subbu_division_ot,
+      key_bu_subbu_division_sqs,
       key_bu_subbu_division_asm,
 
       -------------------------------------
@@ -430,6 +437,9 @@ WITH date_details AS (
       sfdc_opportunity_xf.report_opportunity_raw_user_segment,
       sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
 
+      -- FY24 base key
+      sfdc_opportunity_xf.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
+
       sfdc_opportunity_xf.key_sqs,
       sfdc_opportunity_xf.key_ot,
       sfdc_opportunity_xf.key_segment,
@@ -461,7 +471,11 @@ WITH date_details AS (
 
       sfdc_opportunity_xf.key_bu,
       sfdc_opportunity_xf.key_bu_subbu,
+      sfdc_opportunity_xf.key_bu_subbu_ot,
+      sfdc_opportunity_xf.key_bu_subbu_sqs,
       sfdc_opportunity_xf.key_bu_subbu_division,
+      sfdc_opportunity_xf.key_bu_subbu_division_ot,
+      sfdc_opportunity_xf.key_bu_subbu_division_sqs,
       sfdc_opportunity_xf.key_bu_subbu_division_asm,
 
       -- fields calculated with both live and snapshot fields
