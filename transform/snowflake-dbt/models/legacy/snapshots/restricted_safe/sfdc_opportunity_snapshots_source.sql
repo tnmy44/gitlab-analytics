@@ -294,6 +294,16 @@ WITH source AS (
         vsa_status__c                                                                       AS vsa_status,
         vsa_end_date__c                                                                     AS vsa_end_date,
 
+       -- original issue: https://gitlab.com/gitlab-com/sales-team/field-operations/customer-success-operations/-/issues/2464
+        military_invasion_comments__c                   AS military_invasion_comments,
+        pre_military_invasion_arr__c                    AS pre_military_invasion_arr,
+        military_invasion_risk_scale__c                 AS military_invasion_risk_scale,
+        downgrade_details__c                            AS downgrade_details,
+        won_arr_basis_for_clari__c                      AS won_arr_basis_for_clari,
+        arr_basis_for_clari__c                          AS arr_basis_for_clari,
+        forecasted_churn_for_clari__c                   AS forecasted_churn_for_clari,
+        override_arr_basis_clari__c                     AS override_arr_basis_clari,
+
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
                  CURRENT_TIMESTAMP()))                                                      AS _last_dbt_run,

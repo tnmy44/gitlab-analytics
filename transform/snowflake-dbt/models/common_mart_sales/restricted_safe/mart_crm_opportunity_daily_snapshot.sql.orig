@@ -494,14 +494,17 @@ final AS (
     fct_crm_opportunity.created_in_snapshot_quarter_net_arr,
     fct_crm_opportunity.created_in_snapshot_quarter_deal_count,
     fct_crm_opportunity.days_in_stage,
+<<<<<<< HEAD
+    fct_crm_opportunity.net_incremental_acv,
+    fct_crm_opportunity.incremental_acv
+=======
     fct_crm_opportunity.pre_military_invasion_arr,
     fct_crm_opportunity.vsa_start_date_net_arr,
     fct_crm_opportunity.won_arr_basis_for_clari,
     fct_crm_opportunity.arr_basis_for_clari,
-    fct_crm_opportunity.net_incremental_acv,
-    fct_crm_opportunity.incremental_acv,
     fct_crm_opportunity.forecasted_churn_for_clari,
     fct_crm_opportunity.override_arr_basis_clari
+>>>>>>> master
 
   FROM fct_crm_opportunity
   LEFT JOIN dim_crm_account
@@ -569,7 +572,13 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
+<<<<<<< HEAD
     updated_by="@michellecooper",
     created_date="2022-05-05",
-    updated_date="2023-04-14"
+    updated_date="2023-03-29"
+=======
+    updated_by="@jngces",
+    created_date="2022-05-05",
+    updated_date="2023-04-06"
+>>>>>>> master
   ) }}

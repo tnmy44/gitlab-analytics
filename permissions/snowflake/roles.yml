@@ -34,6 +34,11 @@ databases:
     - cbraza_prep:
         shared: no
 
+    - cdeleon_prod:
+        shared: no
+    - cdeleon_prep:
+        shared: no
+
     - cleroux_prod:
         shared: no
     - cleroux_prep:
@@ -986,14 +991,15 @@ roles:
                    - raw
             schemas:
               write:
-                  - raw.tap_zoom
+                  - raw.tap_zengrc
                   - raw.tap_adaptive
                   - raw.tap_xactly
                   - raw.tap_zendesk
                   - raw.tap_zendesk__community_relations
+                  - raw.public # because the shared FILE FORMAT MELTANO_FILE_FORMAT needed for the target-snowflake resides in raw.public
             tables:
               write:
-                  - raw.tap_zoom.*
+                  - raw.tap_zengrc.*
                   - raw.tap_adaptive.*
                   - raw.tap_xactly.*
                   - raw.tap_zendesk.*
@@ -1203,6 +1209,21 @@ roles:
                     - prod.workspace_sales.*
                 write:
                     - raw.sales_analytics.*
+
+    - sales_systems_snowflake_api_role:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.common_mart_product
+            tables:
+                read:
+                    - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
+                    - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly_report_view
 
     - data_science_readonly:
         warehouses:
@@ -2704,6 +2725,7 @@ roles:
 
     - bbutterfield:
         member_of:
+            - analyst_sales
             - reporter
             - restricted_safe
             - bi_tool_eval_read
@@ -2758,6 +2780,22 @@ roles:
             tables:
                 - cbraza_prep.*.*
                 - cbraza_prod.*.*
+
+    - cdeleon:
+        member_of:
+            - analyst_engineering
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - cdeleon_prep
+                - cdeleon_prod
+            schemas:
+                - cdeleon_prep.*
+                - cdeleon_prod.*
+            tables:
+                - cdeleon_prep.*.*
+                - cdeleon_prod.*.*
 
     - cleroux:
         member_of:
@@ -5007,7 +5045,7 @@ users:
     - cleroux:
         can_login: yes
         member_of:
-            - cleroux            
+            - cleroux
 
     - cmeddaugh:
         can_login: yes
@@ -5042,7 +5080,7 @@ users:
     - dgupta:
         can_login: yes
         member_of:
-            - dgupta            
+            - dgupta
 
     - dmicovic:
         can_login: yes
@@ -5081,6 +5119,11 @@ users:
         member_of:
             - gitlab_ci
             - sysadmin
+
+    - sales_systems_api_user:
+        can_login: yes
+        member_of:
+            - sales_systems_snowflake_api_role
 
     - grafana:
         can_login: yes
@@ -5365,7 +5408,7 @@ users:
             - securityadmin
 
     - sgladchun:
-        can_login: yes 
+        can_login: yes
         member_of:
             - sgladchun
 

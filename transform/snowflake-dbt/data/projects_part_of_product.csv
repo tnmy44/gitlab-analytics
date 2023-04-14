@@ -298,3 +298,6 @@ gitlab-org/modelops/applied-ml/review-recommender/etl,31202862
 gitlab-org/modelops/applied-ml/review-recommender/recommender-ci,31203942
 gitlab-org/modelops/anti-abuse/pipeline-validation-service,24631368
 https://gitlab.com/gitlab-org/gitlab-web-ide,35104827, @oregand
+https://gitlab.com/gitlab-org/remote-development/devfile-gem,43473862, @oregand
+https://gitlab.com/gitlab-org/gitlab-web-ide-vscode-fork,37966217, @oregand
+https://gitlab.com/gitlab-org/remote-development/gitlab-workspaces-proxy,43788427, @oregand
