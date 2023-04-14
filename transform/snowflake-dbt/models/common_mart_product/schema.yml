@@ -596,6 +596,10 @@ models:
           - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
   - name: mart_ping_instance_metric_health_score_self_managed
     description: '{{ doc("mart_ping_instance_metric_health_score_self_managed") }}'
@@ -604,6 +608,10 @@ models:
         tests:
           - not_null
           - unique
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
   - name: mart_ping_namespace_metric_health_score_saas
     description: '{{ doc("mart_ping_namespace_metric_health_score_saas") }}'

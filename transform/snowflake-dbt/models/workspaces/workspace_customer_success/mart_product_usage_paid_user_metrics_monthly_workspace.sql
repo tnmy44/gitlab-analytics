@@ -147,6 +147,7 @@
       NULL                                                                         AS namespace_creation_date,
       monthly_sm_metrics.dim_instance_id                                           AS uuid,
       monthly_sm_metrics.hostname,
+      monthly_sm_metrics.dim_installation_id,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                  AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
@@ -167,6 +168,7 @@
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
       'Self-Managed'                                                                AS delivery_type,
+      monthly_sm_metrics.installation_creation_date,
       -- Wave 1
       DIV0(
         monthly_sm_metrics.billable_user_count, 
@@ -387,6 +389,7 @@
       namespaces.created_at                                                         AS namespace_creation_date,
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
+      NULL                                                                          AS dim_installation_id,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
@@ -407,6 +410,7 @@
       NULL                                                                          AS iso_2_country_code,
       NULL                                                                          AS iso_3_country_code,
       'SaaS'                                                                        AS delivery_type,
+      NULL                                                                          AS installation_creation_date,
       -- Wave 1
       DIV0(
         monthly_saas_metrics.billable_user_count, 
@@ -683,5 +687,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2023-03-16"
+    updated_date="2023-04-04"
 ) }}

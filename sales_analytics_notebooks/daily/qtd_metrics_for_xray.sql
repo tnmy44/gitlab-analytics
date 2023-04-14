@@ -525,10 +525,16 @@ report_opportunity_metrics_qtd AS (
 
         -- FY24 GTM keys
         COALESCE(agg_demo_keys.key_bu, 'other')                          AS key_bu,
+        COALESCE(agg_demo_keys.key_bu_ot, 'other')                       AS key_bu_ot,
+        COALESCE(agg_demo_keys.key_bu_sqs, 'other')                      AS key_bu_sqs,
         COALESCE(agg_demo_keys.key_bu_subbu, 'other')                    AS key_bu_subbu,
+        COALESCE(agg_demo_keys.key_bu_subbu_ot, 'other')                 AS key_bu_subbu_ot,
+        COALESCE(agg_demo_keys.key_bu_subbu_sqs, 'other')                AS key_bu_subbu_sqs,
+
         COALESCE(agg_demo_keys.key_bu_subbu_division, 'other')           AS key_bu_subbu_division,
         COALESCE(agg_demo_keys.key_bu_subbu_division_ot, 'other')        AS key_bu_subbu_division_ot,
-        COALESCE(agg_demo_keys.key_bu_subbu_division_sqs, 'other')       AS key_bu_subbu_division_sqs
+        COALESCE(agg_demo_keys.key_bu_subbu_division_sqs, 'other')       AS key_bu_subbu_division_sqs,
+        COALESCE(agg_demo_keys.key_bu_subbu_division_asm, 'other')       AS key_bu_subbu_division_asm
 
     FROM aggregation AS agg
     -- Add keys for aggregated analysis

@@ -593,6 +593,10 @@ models:
         tests:
           - unique
           - not_null
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
   - name: pump_gainsight_metrics_monthly_paid
     description: '{{ doc("pump_gainsight_metrics_monthly_paid") }}'
@@ -1161,6 +1165,10 @@ models:
         tests:
           - unique
           - not_null
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
   - name: mart_crm_account_id
     description: '{{ doc("mart_crm_account_id") }}'
@@ -1168,3 +1176,6 @@ models:
       - name: id
         tests:
           - not_null
+
+  - name: mart_product_usage_paid_user_metrics_monthly_report_view
+    description: '{{ doc("mart_product_usage_paid_user_metrics_monthly_report_view") }}'

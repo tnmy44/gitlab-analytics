@@ -151,6 +151,7 @@ WITH final AS (
       prep_crm_account.risk_impact,
       prep_crm_account.risk_reason,
       prep_crm_account.last_timeline_at_risk_update,
+      prep_crm_account.last_at_risk_update_comments,
 
       --measures (maintain for now to not break reporting)
       prep_crm_account.parent_crm_account_lam,
@@ -218,7 +219,7 @@ WITH final AS (
     created_by="@msendal",
     updated_by="@michellecooper",
     created_date="2020-06-01",
-    updated_date="2023-03-10"
+    updated_date="2023-03-29"
 ) }}
 
 
