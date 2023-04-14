@@ -1923,3 +1923,51 @@ is deleted, it returns the earliest available user creation date.
 The most recent Account-level At-Risk Update timeline activity in Gainsight, synced to Salesforce.
 
 {% enddocs %}
+
+{% docs pre_military_invasion_arr %}
+
+The original amount prior to impact of military invasion(s).
+
+{% enddocs %}
+
+{% docs won_arr_basis_for_clari %}
+
+This will be used for forecasting, and depending on the Renewal Forecast field would calculate the Won ARR Basis portion for a given opp. For example, reduce ARR Basis being booked if Net ARR is negative in contractions.
+
+{% enddocs %}
+
+{% docs arr_basis_for_clari %}
+
+This is the ARR Basis of the opportunity, except for contract resets where we are taking it from the subscription. In some cases where we have more than 1 credit opp, we would require a manual override of this value in order to capture the ARR Basis for all the subscriptions being consolidated.
+
+{% enddocs %}
+
+{% docs forecasted_churn_for_clari %}
+
+This field forecasts churn before the opportunity is closed as lost or won if it is contraction.
+
+{% enddocs %}
+
+{% docs override_arr_basis_clari %}
+
+Field that allows for manual overrides in the event when the reset is a consolidation of more than 1 subscription.  This field allows us to manually override the ARR Basis (for Clari) value since we would need to take into account all of the subscriptions consolidated.
+
+{% enddocs %}
+
+{% docs military_invasion_comments %}
+
+Field where rep can add in more details as to why and how ARR was impacted by military invasions.
+
+{% enddocs %}
+
+{% docs military_invasion_risk_scale %}
+
+This field is for tracking the risk of this deal being impacted by military invasions.  Definitions can be found in the Internal Sales HB under "Sales Forecasting.
+
+{% enddocs %}
+
+{% docs downgrade_details %}
+
+Field where rep can add in more details as to why the customer has downgraded.
+
+{% enddocs %}

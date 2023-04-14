@@ -10,14 +10,28 @@ namespaces AS (
   SELECT *
   FROM {{ ref('dim_namespace') }}
 
-), product_categories_yml AS (
+), product_categories_yml_base AS (
 
     SELECT
         DISTINCT LOWER(group_name) AS group_name,
         LOWER(stage_section) AS section_name,
-        LOWER(stage_display_name) AS stage_name
+        LOWER(stage_display_name) AS stage_name,
+        IFF(group_name LIKE '%::%',SPLIT_PART(LOWER(group_name),'::',1),NULL) as root_name
     FROM {{ ref('stages_groups_yaml_source') }}
     WHERE snapshot_date = (SELECT max(snapshot_date) FROM {{ ref('stages_groups_yaml_source') }})
+
+), product_categories_yml AS (
+
+    SELECT group_name,
+       section_name,
+       stage_name
+    FROM product_categories_yml_base
+    UNION ALL
+    SELECT DISTINCT root_name AS group_name,
+                section_name,
+                stage_name
+    FROM product_categories_yml_base
+    WHERE root_name IS NOT NULL
 
 ), bot_users AS (
 
@@ -70,7 +84,19 @@ engineering_issues AS (
     ARRAY_CONTAINS('security'::VARIANT, internal_issues.labels)                                                                                                                                                                                                                                        AS is_security,
     internal_issues.priority_tag                                                                                                                                                                                                                                                                       AS priority_label,
     internal_issues.severity_tag                                                                                                                                                                                                                                                                       AS severity_label,
-    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''), 'undefined')                      AS group_label,
+    CASE
+      WHEN array_contains('gitaly::cluster'::variant,internal_issues.labels)
+        THEN 'gitaly::cluster'
+      WHEN array_contains('gitaly::git'::variant,internal_issues.labels)
+        THEN 'gitaly::git'
+      WHEN array_contains('distribution::build'::variant,internal_issues.labels)
+        THEN 'distribution::build'
+      WHEN array_contains('distribution::deploy'::variant,internal_issues.labels)
+        THEN 'distribution::deploy'
+      WHEN array_contains('distribution::operate'::variant,internal_issues.labels)
+        THEN 'distribution::operate'
+        ELSE
+    IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''),'undefined') END                    AS group_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bsection::*([^,]*)'), 'section::', '') IN (SELECT section_name FROM product_categories_yml), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bsection::*([^,]*)'), 'section::', ''), 'undefined')            AS section_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bdevops::*([^,]*)'), 'devops::', '') IN (SELECT stage_name FROM product_categories_yml), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bdevops::*([^,]*)'), 'devops::', ''), 'undefined')                  AS stage_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\btype::*([^,]*)'), 'type::', '') IN ('bug', 'feature', 'maintenance'), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\btype::*([^,]*)'), 'type::', ''), 'undefined')

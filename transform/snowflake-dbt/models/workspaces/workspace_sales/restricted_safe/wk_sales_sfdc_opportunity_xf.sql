@@ -523,7 +523,8 @@ WITH edm_opty AS (
       ELSE 0 
     END                                             AS is_eligible_sao_flag,
     edm_opty.is_deleted,
-    opportunity_owner.is_rep_flag
+    opportunity_owner.is_rep_flag,
+    edm_opty.pushed_count
     
     FROM edm_opty
     -- Date helpers
