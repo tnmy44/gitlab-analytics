@@ -529,7 +529,7 @@ The most recent version that is available at the time the ping is created.
 
 {% docs versions_behind_latest_at_ping_creation %}
 
-The number of versions by which the ping-associated version lags behind.
+The number of versions by which the ping-associated version lags behind. When `version_is_prerelease = TRUE`, then this field is less than 0.
 
 {% enddocs %}
 

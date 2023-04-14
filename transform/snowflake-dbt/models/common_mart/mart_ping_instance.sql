@@ -164,7 +164,6 @@ joined AS (
     DATEDIFF('days', dim_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at)        AS days_after_version_release_date,
     latest_version.major_minor_version                                                                      AS latest_version_available_at_ping_creation,
     latest_version.version_number - dim_release_major_minor.version_number                                  AS versions_behind_latest_at_ping_creation,
-    dim_ping_instance.version_is_prerelease                                                                 AS version_is_prerelease,
     dim_ping_instance.is_internal                                                                           AS is_internal,
     dim_ping_instance.is_staging                                                                            AS is_staging,
     dim_ping_instance.instance_user_count                                                                   AS instance_user_count,
