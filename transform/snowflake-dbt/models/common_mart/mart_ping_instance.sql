@@ -161,6 +161,7 @@ joined AS (
     dim_ping_instance.major_minor_version_id                                                                AS major_minor_version_id, -- legacy field - to be deprecated
     dim_ping_instance.version_is_prerelease                                                                 AS version_is_prerelease,
     dim_release_major_minor.version_number                                                                  AS version_number,
+    dim_release_major_minor.release_date                                                                    AS release_date,
     DATEDIFF('days', dim_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at)        AS days_after_version_release_date,
     latest_version.major_minor_version                                                                      AS latest_version_available_at_ping_creation,
     latest_version.version_number - dim_release_major_minor.version_number                                  AS versions_behind_latest_at_ping_creation,
@@ -231,6 +232,7 @@ sorted AS (
     major_minor_version_num,
     major_minor_version_id, -- legacy field - to be replaced with major_minor_version_ num
     version_is_prerelease,
+    release_date,
     version_number,
     days_after_version_release_date,
     latest_version_available_at_ping_creation,
