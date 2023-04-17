@@ -137,3 +137,5 @@ glsec-trust-safety-dev,0,0,1
 glsec-trust-safety-live,0,0,1
 glsec-infrasec-live-0,0,0,1
 gitlab-teleport,0,0,1
+gitlab-eng-productivity,0,0,1
+gitlab-com-pkgs,0,0,1
