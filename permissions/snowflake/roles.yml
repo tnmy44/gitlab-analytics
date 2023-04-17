@@ -2854,6 +2854,7 @@ roles:
             - salesforce
             - zuora_api_sandbox_stitch            
             - zuora_stitch_rest_api
+            - zuora
         warehouses:
             - dev_xs
             - dev_m
