@@ -48,6 +48,7 @@ gitlab-security,0,0,1
 gitlab-security-testing,0,0,1
 gitlab-testbed,0,0,1
 gitlab-training-236723,0,0,1
+gitlab-ops,0,0,1
 gl-sandbox-andrewn,0,0,1
 glam-test-021fcaf1,0,0,1
 glsec-appsec-dev,0,0,1
@@ -109,4 +110,17 @@ gitlab-ci-private-1,0,0,1
 gitlab-ci-private-2,0,0,1
 gitlab-ci-private-3,0,0,1
 gitlab-ci-private-4,0,0,1
+cloud-natiove-182609,0,0,1
+glsec-spamcheck-dev,0,0,1
+gitlab-dr-testing,0,0,1
+gitlab-review-apps,0,0,1
+gitlab-dev-1,0,0,1
+glsec-spamcheck-live,0,0,1
+gitlab-scalability-epic-619,0,0,1
+version-prod-674cf6,0,0,1
+gitlab-pre,0,0,1
+version-staging,0,0,1
+gitlab-dev-1,0,0,1
+gitlab-staging-1,0,0,1
+transient-imports,0,0,1
 null,0,0,1
