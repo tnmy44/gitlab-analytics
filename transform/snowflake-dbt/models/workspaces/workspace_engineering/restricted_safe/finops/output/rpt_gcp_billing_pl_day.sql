@@ -21,7 +21,7 @@ overlaps AS (
 
   SELECT
     service_base.day                                                                         AS date_day,
-    service_base.gcp_project_id,
+    coalesce(service_base.gcp_project_id, 'null')                                            AS gcp_project_id,
     service_base.gcp_service_description,
     service_base.gcp_sku_description,
     service_base.infra_label,

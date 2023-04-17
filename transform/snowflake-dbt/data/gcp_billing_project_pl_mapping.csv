@@ -42,6 +42,7 @@ gitlab-qa-hybrid-70daa2,0,0,1
 gitlab-qa-lnr-quers-5628c8,0,0,1
 gitlab-qa-resources,0,0,1
 gitlab-qa-runners,0,0,1
+gitlab-restore,0,0,1
 gitlab-sandbox-db,0,0,1
 gitlab-security,0,0,1
 gitlab-security-testing,0,0,1
@@ -118,3 +119,4 @@ gitlab-ci-private-1,0,0,1
 gitlab-ci-private-2,0,0,1
 gitlab-ci-private-3,0,0,1
 gitlab-ci-private-4,0,0,1
+null,0,0,1
