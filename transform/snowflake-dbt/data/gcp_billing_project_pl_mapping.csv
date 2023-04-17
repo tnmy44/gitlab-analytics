@@ -131,3 +131,9 @@ null,0,0,1
 monitoring-development-241420,0,0,1
 box-assessment,0,0,1
 gitlab-subscriptions-stg-ref,0,0,1
+gitlab-sb-db-alpha,0,0,1
+glsec-secauto-dev,0,0,1
+glsec-trust-safety-dev,0,0,1
+glsec-trust-safety-live,0,0,1
+glsec-infrasec-live-0,0,0,1
+gitlab-teleport,0,0,1
