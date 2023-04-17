@@ -10,7 +10,7 @@ WITH alls AS (
         COUNT(DISTINCT p.session_id) AS sessions,
         COUNT(*) AS total_pageviews
     FROM
-        {{ ref('fct_behavior_website_page_view') }} AS p
+        {{ ref('mart_behavior_structured_event') }} AS p
     WHERE
         page_view_month < DATE_TRUNC(MONTH, CURRENT_DATE())
         AND

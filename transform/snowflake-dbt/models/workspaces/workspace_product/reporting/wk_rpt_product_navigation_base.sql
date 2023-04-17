@@ -37,6 +37,8 @@ WITH filtered_snowplow_events AS (
   WHERE 
   behavior_at >= '2021-10-01'
   AND
+  app_id IN ('gitlab', 'gitlab_customers')
+  AND
   (
       (
         event_label IN (
