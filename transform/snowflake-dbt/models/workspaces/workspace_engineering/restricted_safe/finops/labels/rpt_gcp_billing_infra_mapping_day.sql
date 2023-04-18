@@ -25,6 +25,13 @@ env_labels as (
 
 ),
 
+runner_labels as (
+
+  SELECT * FROM {{ ref('gcp_billing_export_resource_labels') }}
+  WHERE resource_label_key = 'runner_manager_name'
+
+),
+
 
 billing_base AS (
   SELECT
@@ -34,6 +41,7 @@ billing_base AS (
     export.sku_description                    AS sku_description,
     infra_labels.resource_label_value         AS infra_label,
     env_labels.resource_label_value           AS env_label,
+    runner_labels.resource_label_value        AS runner_label,
     export.usage_unit                         AS usage_unit,
     export.pricing_unit                       AS pricing_unit,
     SUM(export.usage_amount)                  AS usage_amount,
@@ -50,7 +58,11 @@ billing_base AS (
     env_labels
     ON
       export.source_primary_key = env_labels.source_primary_key
-  {{ dbt_utils.group_by(n=8) }}
+  LEFT JOIN
+    runner_labels
+    ON
+      export.source_primary_key = runner_labels.source_primary_key
+  {{ dbt_utils.group_by(n=9) }}
 )
 
 SELECT
@@ -60,6 +72,7 @@ SELECT
   billing_base.sku_description                    AS gcp_sku_description,
   billing_base.infra_label                        AS infra_label,
   billing_base.env_label                          AS env_label,
+  billing_base.runner_label                       AS runner_label,
   billing_base.usage_unit,
   billing_base.pricing_unit,
   SUM(billing_base.usage_amount)                  AS usage_amount,
@@ -67,4 +80,4 @@ SELECT
   SUM(billing_base.cost_before_credits)           AS cost_before_credits,
   SUM(billing_base.net_cost)                      AS net_cost
 FROM billing_base
-{{ dbt_utils.group_by(n=8) }}
+{{ dbt_utils.group_by(n=9) }}
