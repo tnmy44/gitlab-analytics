@@ -14,6 +14,7 @@ WHEN plan_title = 'Open Source Program' THEN 'free'
 WHEN plan_title = 'Free' THEN 'free'
 
 ELSE plan_title
+
 END AS pl,
 
 
@@ -33,7 +34,7 @@ END AS ci_runner_manager,
 
 is_paid_by_gitlab,
 
-CASE --mapping here: https://docs.google.com/spreadsheets/d/1UQxU0PvzZPlu3kufcvSNEhFtepkO6iQFoDYmUSN9Jt4/edit?usp=sharing
+CASE 
 WHEN LOWER(ci_runner_description) LIKE 'green-%.saas-linux-large-amd64-gpu.%' THEN 'green-_.saas-linux-large-amd64-gpu.'
 WHEN LOWER(ci_runner_description) LIKE 'green-%.saas-linux-large-amd64.%' THEN 'green-_.saas-linux-large-amd64.'
 WHEN LOWER(ci_runner_description) LIKE 'green-%.saas-linux-medium-amd64.%' THEN 'green-_.saas-linux-medium-amd64.'
