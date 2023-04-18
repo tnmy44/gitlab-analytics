@@ -2724,7 +2724,7 @@ roles:
                     - abright_prod.*
                 write:
                     - abright_prep.*
-                    - abrightprod.*
+                    - abright_prod.*
             tables:
                 read:
                     - abright_prep.*.*
