@@ -28,6 +28,7 @@ env_labels as (
 runner_labels as (
 
   SELECT 
+  source_primary_key,
   case 
     when resource_label_value like '%runners-manager-shared-blue-%' then 'runners-manager-shared-blue-'
     when resource_label_value like '%runners-manager-shared-green-%' then 'runners-manager-shared-green-'
@@ -55,7 +56,7 @@ runner_labels as (
     when resource_label_value like '%/bastion-%' then 'bastion'
     when resource_label_value like '%/gitlab-qa-tunnel%' then 'gitlab-qa-tunnel'
   else resource_label_value
-  end as resource_label_value,
+  end as resource_label_value
   FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'runner_manager_name'
 

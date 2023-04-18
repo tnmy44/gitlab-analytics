@@ -6,7 +6,6 @@ WITH date_spine AS (
 
 infralabel_pl AS (
 
-
   SELECT
     date_spine.date_day,
     NULL                      AS gcp_project_id,
@@ -70,7 +69,7 @@ sandbox_projects_pl AS (
 
   SELECT
     date_spine.date_day,
-    sandbox_projects_pl.project_name   AS gcp_project_id,
+    sandbox_projects_pl.gcp_project_id   AS gcp_project_id,
     NULL                               AS gcp_service_description,
     NULL                               AS gcp_sku_description,
     NULL                               AS infra_label,
@@ -167,6 +166,7 @@ runner_shared_gitlab_org AS (
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily'        AS from_mapping
   FROM {{ ref ('ci_runners_pl_daily') }}
+  where runner_label = '1 - shared gitlab org runners'
 
 )
 
