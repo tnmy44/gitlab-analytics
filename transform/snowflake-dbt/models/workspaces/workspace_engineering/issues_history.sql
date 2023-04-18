@@ -64,7 +64,7 @@ SELECT
   ORDER BY LEAST(COALESCE(severity_label_valid_to, CURRENT_DATE),COALESCE(team_label_valid_to,CURRENT_DATE))) AS rn
 FROM issues 
 INNER JOIN dates 
-  ON COALESCE(issues.created_at,dates.date_actual) <= dates.date_actual 
+  ON COALESCE(date_trunc('day',issues.created_at),dates.date_actual) <= dates.date_actual 
 LEFT JOIN assigend_users
   ON issues.issue_id = assigend_users.dim_issue_id
 LEFT JOIN label_groups as severity
