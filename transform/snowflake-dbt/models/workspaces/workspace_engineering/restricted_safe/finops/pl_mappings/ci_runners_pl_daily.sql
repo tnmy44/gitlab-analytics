@@ -2,6 +2,7 @@ WITH ci_minutes AS (
 
 SELECT
 DATE_TRUNC('day', ci_build_started_at)::DATE AS reporting_day,
+
 CASE
 WHEN plan_name_modified LIKE '%trial%' THEN 'free' 
 WHEN (plan_name_modified = 'ultimate' and dim_namespace.namespace_is_internal = FALSE) THEN 'paid'
@@ -66,15 +67,17 @@ WHEN LOWER(ci_runner_description) LIKE 'windows-shared-runners-manager-%' THEN '
 WHEN LOWER(ci_runner_description) LIKE 'macos shared%' THEN ci_runner_description
 ELSE 'Other'
 END AS dashboard_mapping,
+
 SUM(ci_build_duration_in_s) / 60 AS ci_build_minutes
-FROM common.fct_ci_runner_activity
-JOIN common.dim_ci_runner
+
+FROM {{ ref('fct_ci_runner_activity') }} --common.fct_ci_runner_activity 
+JOIN {{ ref('dim_ci_runner') }} --common.dim_ci_runner
 ON fct_ci_runner_activity.dim_ci_runner_id = dim_ci_runner.dim_ci_runner_id
-JOIN common.dim_namespace
+JOIN {{ ref('dim_namespace') }} --common.dim_namespace
 ON fct_ci_runner_activity.dim_namespace_id = dim_namespace.dim_namespace_id
-JOIN common_prep.prep_gitlab_dotcom_plan
+JOIN {{ ref('prep_gitlab_dotcom_plan') }} --common_prep.prep_gitlab_dotcom_plan
 ON fct_ci_runner_activity.dim_plan_id = prep_gitlab_dotcom_plan.dim_plan_id
-WHERE date_trunc('month', ci_build_started_at) = '2023-03-01'
+WHERE date_trunc('month', ci_build_started_at) >= '2023-02-01'
 AND ci_build_finished_at IS NOT NULL
 AND namespace_creator_is_blocked = FALSE
 GROUP BY 1,2,3,4,5,6,7
