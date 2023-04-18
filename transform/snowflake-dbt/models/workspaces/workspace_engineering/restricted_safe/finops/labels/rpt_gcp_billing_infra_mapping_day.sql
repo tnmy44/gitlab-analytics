@@ -27,7 +27,36 @@ env_labels as (
 
 runner_labels as (
 
-  SELECT * FROM {{ ref('gcp_billing_export_resource_labels') }}
+  SELECT 
+  case 
+    when resource_label_value like '%runners-manager-shared-blue-%' then 'runners-manager-shared-blue-'
+    when resource_label_value like '%runners-manager-shared-green-%' then 'runners-manager-shared-green-'
+    when resource_label_value like '%runners-manager-saas-linux-large-amd64-green-%' then 'runners-manager-saas-linux-large-amd64-green-'
+    when resource_label_value like '%runners-manager-saas-linux-medium-amd64-green-%' then 'runners-manager-saas-linux-medium-amd64-green-'
+    when resource_label_value like '%runners-manager-saas-linux-medium-amd64-blue-%' then 'runners-manager-saas-linux-medium-amd64-blue-'
+    when resource_label_value like '%runners-manager-saas-linux-large-amd64-blue-%' then 'runners-manager-saas-linux-large-amd64-blue-'
+    when resource_label_value like '%runners-manager-saas-macos-staging-green-%' then 'runners-manager-saas-macos-staging-green-'
+    when resource_label_value like '%runners-manager-saas-macos-staging-blue-%' then 'runners-manager-saas-macos-staging-blue-'
+    when resource_label_value like '%runners-manager-shared-gitlab-org-green-%' then 'runners-manager-shared-gitlab-org-green-'
+    when resource_label_value like '%runners-manager-shared-gitlab-org-blue-%' then 'runners-manager-shared-gitlab-org-blue-'
+    when resource_label_value like '%runners-manager-private-blue-%' then 'runners-manager-private-blue-'
+    when resource_label_value like '%runners-manager-private-green-%' then 'runners-manager-private-green-'
+    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%shared-gitlab-org-%') then 'runners-shared-gitlab-org'
+    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%amd64%') then 'runners-amd64'
+    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%s-shared-%') then 'runners-s-shared'
+    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%-shared-%' and resource_label_value not like '%gitlab%') then 'runners-shared'
+    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%-private-%') then 'runners-private'
+    when resource_label_value like '%gke-runners-gke-default-pool-%' then 'gke-runners-gke-default-pool-'
+    when resource_label_value like '%test-machine-%' then 'test-machine-'
+    when resource_label_value like '%tm-runner-%' then 'tm-runner-'
+    when resource_label_value like '%tm-test-instance%' then 'tm-test-instance'
+    when resource_label_value like '%gitlab-temporary-gcp-image-%' then 'gitlab-temporary-gcp-image-'
+    when resource_label_value like '%sd-exporter%' then 'sd-exporter'
+    when resource_label_value like '%/bastion-%' then 'bastion'
+    when resource_label_value like '%/gitlab-qa-tunnel%' then 'gitlab-qa-tunnel'
+  else resource_label_value
+  end as resource_label_value,
+  FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'runner_manager_name'
 
 ),
