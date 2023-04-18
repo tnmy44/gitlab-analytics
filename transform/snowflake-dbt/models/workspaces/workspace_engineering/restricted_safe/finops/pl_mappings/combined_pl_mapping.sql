@@ -67,7 +67,7 @@ sandbox_projects_pl AS (
 
   SELECT
     date_spine.date_day,
-    sandbox_projects_pl.project_name   AS gcp_project_id,
+    sandbox_projects_pl.gcp_project_id   AS gcp_project_id,
     NULL                               AS gcp_service_description,
     NULL                               AS gcp_sku_description,
     NULL                               AS infra_label,
