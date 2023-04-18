@@ -14,6 +14,7 @@ infralabel_pl AS (
     NULL                      AS gcp_sku_description,
     infralabel_pl.infra_label,
     NULL                     AS env_label,
+    NULL AS runner_label,
     lower(infralabel_pl.type)       AS pl_category,
     infralabel_pl.allocation AS pl_percent,
     'infralabel_pl'          AS from_mapping
@@ -31,6 +32,7 @@ projects_pl AS (
     NULL                   AS gcp_sku_description,
     NULL                   AS infra_label,
     NULL                     AS env_label,
+    NULL AS runner_label,
     lower(projects_pl.type)       AS pl_category,
     projects_pl.allocation AS pl_percent,
     'projects_pl'          AS from_mapping
@@ -56,6 +58,7 @@ repo_storage_pl_daily AS (
     sku_list.sku                               AS gcp_sku_description,
     'gitaly'                                   AS infra_label,
     NULL                                       AS env_label,
+    NULL AS runner_label,
     lower(repo_storage_pl_daily.finance_pl)    AS pl_category,
     repo_storage_pl_daily.percent_repo_size_gb AS pl_percent,
     'repo_storage_pl_daily'                    AS from_mapping
@@ -72,6 +75,7 @@ sandbox_projects_pl AS (
     NULL                               AS gcp_sku_description,
     NULL                               AS infra_label,
     NULL                     AS env_label,
+    NULL AS runner_label,
     lower(sandbox_projects_pl.classification) AS pl_category,
     1                                  AS pl_percent,
     'sandbox_projects_pl'              AS from_mapping
@@ -88,6 +92,7 @@ container_registry_pl_daily AS (
     'Standard Storage US Multi-region'        AS gcp_sku_description,
     'registry'                                   AS infra_label,
     NULL                     AS env_label,
+    NULL AS runner_label,
     lower(container_registry_pl_daily.finance_pl)           AS pl_category,
     container_registry_pl_daily.percent_container_registry_size AS pl_percent,
     'container_registry_pl_daily'                               AS from_mapping
@@ -105,6 +110,7 @@ build_artifacts_pl_daily AS (
     'Standard Storage US Multi-region'        AS gcp_sku_description,
     'build_artifacts'                                   AS infra_label,
     NULL                    AS env_label,
+    NULL AS runner_label,
     lower(build_artifacts_pl_daily.finance_pl)           AS pl_category,
     build_artifacts_pl_daily.percent_build_artifacts_size AS pl_percent,
     'build_artifacts_pl_daily'                            AS from_mapping
@@ -121,6 +127,7 @@ build_artifacts_pl_dev_daily AS (
     'Standard Storage US Multi-region'        AS gcp_sku_description,
     'build_artifacts'                                   AS infra_label,
     'dev'                                     AS env_label,
+    NULL AS runner_label,
     'Internal'                                AS pl_category,
     1 AS pl_percent,
     'build_artifacts_pl_dev_daily'                    AS from_mapping
@@ -137,11 +144,30 @@ single_sku_pl AS (
     single_sku_pl.sku_description       AS gcp_sku_description,
     NULL                               AS infra_label,
     NULL                    AS env_label,
+    NULL AS runner_label,
     lower(single_sku_pl.type) AS pl_category,
     single_sku_pl.allocation             AS pl_percent,
     'single_sku_pl'              AS from_mapping
   FROM date_spine
   CROSS JOIN {{ ref ('single_sku_pl') }}
+
+),
+
+runner_shared_gitlab_org AS (
+-- shared gitlab org runner
+  SELECT DISTINCT
+    reporting_day               AS date_day,
+    'gitlab-ci-155816'          AS gcp_project_id,
+    NULL                        AS gcp_service_description,
+    NULL                        AS gcp_sku_description,
+    NULL                        AS infra_label,
+    NULL                        AS env_label,
+    '1 - shared gitlab org runners' AS runner_label,
+    ci_runners_pl_daily.pl      AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily'        AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+
 )
 
 SELECT * FROM infralabel_pl
@@ -159,3 +185,5 @@ UNION ALL
 SELECT * FROM build_artifacts_pl_dev_daily
 UNION ALL
 SELECT * FROM single_sku_pl
+UNION ALL
+SELECT * FROM runner_shared_gitlab_org
