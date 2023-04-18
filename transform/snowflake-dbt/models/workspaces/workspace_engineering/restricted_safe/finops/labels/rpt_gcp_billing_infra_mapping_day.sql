@@ -62,27 +62,6 @@ runner_labels as (
 
 ),
 
-machine_type as (
-
-  SELECT 
-  source_primary_key,
-  case 
-    when resource_label_value like '%n1-standard-1%' then 'linux small - n1-standard-1'
-    when resource_label_value like '%n2d-standard-2%' then 'linux medium - n2d-standard-2'
-    when resource_label_value like '%n2d-standard-4%' then 'linux large - n2d-standard-4'
-    when resource_label_value like '%n1-standard-4%' then 'linux mlops - n1-standard-4-gpu'
-    when resource_label_value like '%c2-standard-30%' then 'linux shared - c2-standard-30'
-    when resource_label_value like '%n1-standard-2%' then 'linux medium - n1-standard-2'
-    when resource_label_value like '%e2-standard-16%' then 'e2-standard-16'
-    when resource_label_value like '%e2-standard-4%' then 'e2-standard-4'
-    else resource_label_value
-  end as resource_label_value
-  FROM {{ ref('gcp_billing_export_resource_labels') }}
-  WHERE resource_label_key = 'machine_type'
-
-),
-
-
 billing_base AS (
   SELECT
     DATE(export.usage_start_time)             AS day,
@@ -92,7 +71,6 @@ billing_base AS (
     infra_labels.resource_label_value         AS infra_label,
     env_labels.resource_label_value           AS env_label,
     runner_labels.resource_label_value        AS runner_label,
-    machine_type.resource_label_value         AS machine_type,
     export.usage_unit                         AS usage_unit,
     export.pricing_unit                       AS pricing_unit,
     SUM(export.usage_amount)                  AS usage_amount,
@@ -113,11 +91,7 @@ billing_base AS (
     runner_labels
     ON
       export.source_primary_key = runner_labels.source_primary_key
-  LEFT JOIN
-    machine_type
-    ON
-      export.source_primary_key = machine_type.source_primary_key
-  {{ dbt_utils.group_by(n=10) }}
+  {{ dbt_utils.group_by(n=9) }}
 )
 
 SELECT
@@ -128,7 +102,6 @@ SELECT
   billing_base.infra_label                        AS infra_label,
   billing_base.env_label                          AS env_label,
   billing_base.runner_label                       AS runner_label,
-  billing_base.machine_type                       AS machine_type,
   billing_base.usage_unit,
   billing_base.pricing_unit,
   SUM(billing_base.usage_amount)                  AS usage_amount,
@@ -136,4 +109,4 @@ SELECT
   SUM(billing_base.cost_before_credits)           AS cost_before_credits,
   SUM(billing_base.net_cost)                      AS net_cost
 FROM billing_base
-{{ dbt_utils.group_by(n=10) }}
+{{ dbt_utils.group_by(n=9) }}

@@ -199,7 +199,7 @@ runner_saas_small AS (
 ),
 
 runner_saas_medium AS (
--- small saas runners in gitlab-ci-plan-free-*
+
   SELECT DISTINCT
     reporting_day               AS date_day,
     NULL                        AS gcp_project_id,
