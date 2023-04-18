@@ -39,7 +39,8 @@ overlaps AS (
       service_base.gcp_service_description,
       service_base.gcp_sku_description,
       service_base.infra_label,
-      service_base.env_label    
+      service_base.env_label,
+      service_base.runner_label    
       ORDER BY
         (CASE WHEN combined_pl_mapping.gcp_project_id IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN combined_pl_mapping.gcp_service_description IS NOT NULL THEN 1 ELSE 0 END) DESC,

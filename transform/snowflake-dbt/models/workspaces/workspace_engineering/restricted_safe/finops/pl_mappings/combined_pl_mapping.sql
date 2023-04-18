@@ -14,7 +14,6 @@ infralabel_pl AS (
     infralabel_pl.infra_label,
     NULL                     AS env_label,
     NULL AS runner_label,
-    NULL AS machine_type,
     lower(infralabel_pl.type)       AS pl_category,
     infralabel_pl.allocation AS pl_percent,
     'infralabel_pl'          AS from_mapping
@@ -33,7 +32,6 @@ projects_pl AS (
     NULL                   AS infra_label,
     NULL                     AS env_label,
     NULL AS runner_label,
-    NULL AS machine_type,
     lower(projects_pl.type)       AS pl_category,
     projects_pl.allocation AS pl_percent,
     'projects_pl'          AS from_mapping
@@ -60,7 +58,6 @@ repo_storage_pl_daily AS (
     'gitaly'                                   AS infra_label,
     NULL                                       AS env_label,
     NULL AS runner_label,
-    NULL AS machine_type,
     lower(repo_storage_pl_daily.finance_pl)    AS pl_category,
     repo_storage_pl_daily.percent_repo_size_gb AS pl_percent,
     'repo_storage_pl_daily'                    AS from_mapping
@@ -78,7 +75,6 @@ sandbox_projects_pl AS (
     NULL                               AS infra_label,
     NULL                     AS env_label,
     NULL AS runner_label,
-    NULL AS machine_type,
     lower(sandbox_projects_pl.classification) AS pl_category,
     1                                  AS pl_percent,
     'sandbox_projects_pl'              AS from_mapping
@@ -96,7 +92,6 @@ container_registry_pl_daily AS (
     'registry'                                   AS infra_label,
     NULL                     AS env_label,
     NULL AS runner_label,
-    NULL AS machine_type,
     lower(container_registry_pl_daily.finance_pl)           AS pl_category,
     container_registry_pl_daily.percent_container_registry_size AS pl_percent,
     'container_registry_pl_daily'                               AS from_mapping
@@ -115,7 +110,6 @@ build_artifacts_pl_daily AS (
     'build_artifacts'                                   AS infra_label,
     NULL                    AS env_label,
     NULL AS runner_label,
-    NULL AS machine_type,
     lower(build_artifacts_pl_daily.finance_pl)           AS pl_category,
     build_artifacts_pl_daily.percent_build_artifacts_size AS pl_percent,
     'build_artifacts_pl_daily'                            AS from_mapping
@@ -133,7 +127,6 @@ build_artifacts_pl_dev_daily AS (
     'build_artifacts'                                   AS infra_label,
     'dev'                                     AS env_label,
     NULL AS runner_label,
-    NULL AS machine_type,
     'Internal'                                AS pl_category,
     1 AS pl_percent,
     'build_artifacts_pl_dev_daily'                    AS from_mapping
@@ -151,7 +144,6 @@ single_sku_pl AS (
     NULL                               AS infra_label,
     NULL                    AS env_label,
     NULL AS runner_label,
-    NULL AS machine_type,
     lower(single_sku_pl.type) AS pl_category,
     single_sku_pl.allocation             AS pl_percent,
     'single_sku_pl'              AS from_mapping
@@ -170,7 +162,6 @@ runner_shared_gitlab_org AS (
     NULL                        AS infra_label,
     NULL                        AS env_label,
     '1 - shared gitlab org runners' AS runner_label,
-    NULL AS machine_type,
     ci_runners_pl_daily.pl      AS pl_category,
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 1'        AS from_mapping
@@ -189,7 +180,6 @@ runner_saas_small AS (
     NULL                        AS infra_label,
     NULL                        AS env_label,
     '2 - shared saas runners - small' AS runner_label,
-    NULL AS machine_type,
     ci_runners_pl_daily.pl      AS pl_category,
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 2'        AS from_mapping
@@ -208,12 +198,29 @@ runner_saas_medium AS (
     NULL                        AS infra_label,
     NULL                        AS env_label,
     '3 - shared saas runners - medium' AS runner_label,
-    'linux medium - n2d-standard-2' AS machine_type,
     ci_runners_pl_daily.pl      AS pl_category,
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 3'        AS from_mapping
   FROM {{ ref ('ci_runners_pl_daily') }}
   where runner_label = '3 - shared saas runners - medium'
+
+),
+
+runner_saas_large AS (
+
+  SELECT DISTINCT
+    reporting_day               AS date_day,
+    NULL                        AS gcp_project_id,
+    NULL                        AS gcp_service_description,
+    NULL                        AS gcp_sku_description,
+    NULL                        AS infra_label,
+    NULL                        AS env_label,
+    '4 - shared saas runners - large' AS runner_label,
+    ci_runners_pl_daily.pl      AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 4'        AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  where runner_label = '4 - shared saas runners - large'
 
 )
 
@@ -238,3 +245,5 @@ UNION ALL
 SELECT * FROM runner_saas_small
 UNION ALL
 SELECT * FROM runner_saas_medium
+UNION ALL
+SELECT * FROM runner_saas_large

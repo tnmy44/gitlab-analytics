@@ -32,10 +32,10 @@ runner_labels as (
   case 
     when resource_label_value like '%runners-manager-shared-blue-%' then '2 - shared saas runners - small' --ok
     when resource_label_value like '%runners-manager-shared-green-%' then '2 - shared saas runners - small' --ok
-    when resource_label_value like '%runners-manager-saas-linux-large-amd64-green-%' then 'runners-manager-saas-linux-large-amd64-green-'
+    when resource_label_value like '%runners-manager-saas-linux-large-amd64-green-%' then '4 - shared saas runners - large' --ok
     when resource_label_value like '%runners-manager-saas-linux-medium-amd64-green-%' then '3 - shared saas runners - medium' --ok
     when resource_label_value like '%runners-manager-saas-linux-medium-amd64-blue-%' then '3 - shared saas runners - medium' --ok
-    when resource_label_value like '%runners-manager-saas-linux-large-amd64-blue-%' then 'runners-manager-saas-linux-large-amd64-blue-'
+    when resource_label_value like '%runners-manager-saas-linux-large-amd64-blue-%' then '4 - shared saas runners - large' --ok
     when resource_label_value like '%runners-manager-saas-macos-staging-green-%' then 'runners-manager-saas-macos-staging-green-'
     when resource_label_value like '%runners-manager-saas-macos-staging-blue-%' then 'runners-manager-saas-macos-staging-blue-'
     when resource_label_value like '%runners-manager-shared-gitlab-org-green-%' then '1 - shared gitlab org runners' --ok
