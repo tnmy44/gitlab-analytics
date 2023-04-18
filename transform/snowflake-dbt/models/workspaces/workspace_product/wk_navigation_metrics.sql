@@ -5,7 +5,7 @@
 
 WITH alls AS (
     SELECT
-        DATE_TRUNC(MONTH, p.page_view_start_at)::DATE AS page_view_month,
+        DATE_TRUNC(MONTH, p.behavior_at)::DATE AS page_view_month,
         COUNT(DISTINCT p.gsc_pseudonymized_user_id) AS unique_users,
         COUNT(DISTINCT p.session_id) AS sessions,
         COUNT(*) AS total_pageviews
@@ -14,7 +14,7 @@ WITH alls AS (
     WHERE
         page_view_month < DATE_TRUNC(MONTH, CURRENT_DATE())
         AND
-        p.page_view_start_at > '2022-06-01'
+        p.behavior_at > '2022-06-01'
 
         {% if is_incremental() %}
 
