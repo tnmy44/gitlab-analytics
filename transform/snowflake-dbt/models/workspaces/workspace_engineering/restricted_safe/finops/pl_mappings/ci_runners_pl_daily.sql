@@ -3,7 +3,7 @@ WITH ci_minutes AS (
 SELECT
 DATE_TRUNC('day', ci_build_started_at)::DATE AS reporting_day,
 CASE
-WHEN plan_name_modified LIKE '%trial%' THEN 'free' --plan_name_modified maps to current plan names
+WHEN plan_name_modified LIKE '%trial%' THEN 'free' 
 WHEN (plan_name_modified = 'ultimate' and dim_namespace.namespace_is_internal = FALSE) THEN 'paid'
 WHEN (plan_name_modified = 'ultimate' and dim_namespace.namespace_is_internal = TRUE) THEN 'internal'
 WHEN plan_name_modified = 'premium' THEN 'paid'
@@ -50,7 +50,7 @@ WHEN LOWER(ci_runner_description) LIKE 'blue-_.private.runners-manager%' THEN 'b
 WHEN LOWER(ci_runner_description) LIKE '_-blue.shared.runners-manager%' THEN '_-blue.shared.runners-manager'
 WHEN LOWER(ci_runner_description) LIKE '_-green.shared.runners-manager%' THEN '_-green.shared.runners-manager'
 
-WHEN LOWER(ci_runner_description) LIKE 'windows-shared-runners-manager-%' THEN 'windows-shared-runners-manager-'  --'SaaS Runners Windows - Medium'
+WHEN LOWER(ci_runner_description) LIKE 'windows-shared-runners-manager-%' THEN 'windows-shared-runners-manager-'  
 
 
 end as ci_runner_description,
@@ -75,7 +75,6 @@ JOIN common_prep.prep_gitlab_dotcom_plan
 ON fct_ci_runner_activity.dim_plan_id = prep_gitlab_dotcom_plan.dim_plan_id
 WHERE date_trunc('month', ci_build_started_at) = '2023-03-01'
 AND ci_build_finished_at IS NOT NULL
---AND namespace_is_internal = FALSE
 AND namespace_creator_is_blocked = FALSE
 GROUP BY 1,2,3,4,5,6,7
 
@@ -83,12 +82,6 @@ GROUP BY 1,2,3,4,5,6,7
 
 SELECT
 reporting_day,
-
--- runner_type,
--- ci_runner_description,
--- ci_runner_manager,
--- dashboard_mapping,
--- is_paid_by_gitlab,
 
 CASE
 WHEN runner_type = 'Self-Managed Runners' and ci_runner_manager = 'private-runner-mgr' THEN '6 - private internal runners'
@@ -114,9 +107,6 @@ WHEN runner_type = 'Shared Runners' and ci_runner_manager = 'windows-runner-mgr'
 END AS mapping,
 
 pl,
-
-
-
 
 TRUNC(SUM(ci_build_minutes)) AS total_ci_minutes,
 TRUNC(RATIO_TO_REPORT(total_ci_minutes) OVER(PARTITION BY reporting_day, mapping), 2) AS pct_ci_minutes
