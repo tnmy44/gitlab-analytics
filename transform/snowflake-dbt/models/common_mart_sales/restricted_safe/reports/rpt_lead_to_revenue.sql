@@ -201,7 +201,8 @@
 	  person_base.leandata_matched_account_sales_Segment,
 	  map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
-      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
+      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
+      map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
       map_alternative_lead_demographics.geo_custom,
       UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
 
@@ -237,7 +238,7 @@
 		mart_crm_touchpoint.bizible_referrer_page,
 		mart_crm_touchpoint.bizible_referrer_page_raw,
 		mart_crm_touchpoint.bizible_integrated_campaign_grouping,
-    mart_crm_touchpoint.bizible_ad_group_name,
+        mart_crm_touchpoint.bizible_ad_group_name,
 		mart_crm_touchpoint.campaign_rep_role_name,
 		mart_crm_touchpoint.touchpoint_segment,
 		mart_crm_touchpoint.gtm_motion,
@@ -454,7 +455,8 @@
 	  person_base.leandata_matched_account_sales_Segment,
 	  map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
-      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
+      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
+      map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
       map_alternative_lead_demographics.geo_custom,
       UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
 
