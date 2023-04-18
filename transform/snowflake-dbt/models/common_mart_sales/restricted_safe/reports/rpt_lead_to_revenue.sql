@@ -656,6 +656,8 @@
       ON person_base.email_hash = order_type_final.email_hash
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
+    LEFT JOIN accounts_with_first_order_opps
+      ON dim_crm_account.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     LEFT JOIN dim_crm_user
       ON opp.dim_crm_user_id=dim_crm_user.dim_crm_user_id
   {{dbt_utils.group_by(n=222)}}
