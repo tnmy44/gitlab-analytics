@@ -272,6 +272,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.gtm_strategy                                           AS crm_account_gtm_strategy,
       CASE 
         WHEN sfdc_account.account_demographics_sales_segment IN ('Large', 'PubSec') THEN 'Large'
+        WHEN sfdc_account.account_demographics_sales_segment = 'Unknown' THEN 'SMB'
         ELSE sfdc_account.account_demographics_sales_segment
       END                                                                 AS parent_crm_account_demographics_sales_segment_grouped,
       {{ sales_segment_region_grouped('sfdc_account.account_demographics_sales_segment',
