@@ -309,5 +309,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2022-10-18"
+    updated_date="2023-04-13"
 ) }}
