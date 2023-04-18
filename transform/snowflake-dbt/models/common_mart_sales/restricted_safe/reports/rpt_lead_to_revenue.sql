@@ -652,6 +652,8 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN person_base
       ON mart_crm_attribution_touchpoint.dim_crm_person_id = person_base.dim_crm_person_id
+    LEFT JOIN map_alternative_lead_demographics
+      ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
     LEFT JOIN order_type_final
       ON person_base.email_hash = order_type_final.email_hash
     LEFT JOIN dim_crm_account
