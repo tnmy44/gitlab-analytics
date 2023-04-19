@@ -41,13 +41,15 @@ overlaps AS (
       service_base.gcp_service_description,
       service_base.gcp_sku_description,
       service_base.infra_label,
-      service_base.env_label    
+      service_base.env_label,
+      service_base.runner_label    
       ORDER BY
         (CASE WHEN combined_pl_mapping.gcp_project_id IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN combined_pl_mapping.gcp_service_description IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN combined_pl_mapping.gcp_sku_description IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN combined_pl_mapping.infra_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
-        (CASE WHEN combined_pl_mapping.env_label IS NOT NULL THEN 1 ELSE 0 END) DESC
+        (CASE WHEN combined_pl_mapping.env_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
+        (CASE WHEN combined_pl_mapping.runner_label IS NOT NULL THEN 1 ELSE 0 END) DESC
     )                                                                                        AS priority
   FROM
     service_base
@@ -57,6 +59,7 @@ overlaps AS (
     AND COALESCE(combined_pl_mapping.gcp_sku_description, service_base.gcp_sku_description) = service_base.gcp_sku_description
     AND COALESCE(combined_pl_mapping.infra_label, coalesce(service_base.infra_label, '')) = coalesce(service_base.infra_label, '')
     AND COALESCE(combined_pl_mapping.env_label, coalesce(service_base.env_label, '')) = coalesce(service_base.env_label, '')
+    AND COALESCE(combined_pl_mapping.runner_label, coalesce(service_base.runner_label, '')) = coalesce(service_base.runner_label, '')
 
 )
 
