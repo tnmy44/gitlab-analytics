@@ -4418,6 +4418,7 @@ roles:
             - bamboohr
             - bi_tool_eval_db
             - prometheus
+            - snowflake
             - workday
             - zengrc
         warehouses:
