@@ -2286,6 +2286,21 @@ roles:
                 read:
                     - raw.snapshots.*
 
+    - snowflake:
+        privileges:
+            databases:
+                read:
+                    - raw.snowflake
+                    - prep.snowflake
+            schemas:
+                read:
+                    - raw.snowflake.*
+                    - prep.snowflake.*
+            tables:
+                read:
+                    - raw.snowflake.*.*
+                    - prep.snowflake.*.*
+
     - snowflake_db:
         privileges:
             databases:
