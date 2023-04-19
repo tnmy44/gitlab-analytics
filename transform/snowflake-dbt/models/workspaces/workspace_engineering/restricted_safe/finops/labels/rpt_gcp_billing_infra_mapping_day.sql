@@ -101,15 +101,15 @@ billing_base AS (
 )
 
 SELECT
-  billing_base.day                                AS day,
-  billing_base.project_id                         AS gcp_project_id,
-  billing_base.service                            AS gcp_service_description,
-  billing_base.sku_description                    AS gcp_sku_description,
-  billing_base.infra_label                        AS infra_label,
-  billing_base.env_label                          AS env_label,
-  billing_base.runner_label                       AS runner_label,
-  billing_base.usage_unit,
-  billing_base.pricing_unit,
+  bill.day                                AS day,
+  bill.project_id                         AS gcp_project_id,
+  bill.service                            AS gcp_service_description,
+  bill.sku_description                    AS gcp_sku_description,
+  bill.infra_label                        AS infra_label,
+  bill.env_label                          AS env_label,
+  bill.runner_label                       AS runner_label,
+  bill.usage_unit,
+  bill.pricing_unit,
   bill.usage_amount                  AS usage_amount,
   bill.usage_amount_in_pricing_units AS usage_amount_in_pricing_units,
   bill.cost_before_credits           AS cost_before_credits,
@@ -117,5 +117,4 @@ SELECT
   usage.converted_unit               AS usage_standard_unit,
   bill.usage_amount / usage.rate     AS usage_amount_in_standard_unit
 FROM billing_base as bill
-{{ dbt_utils.group_by(n=9) }}
-
+LEFT JOIN unit_mapping as usage on usage.raw_unit = bill.usage_unit
