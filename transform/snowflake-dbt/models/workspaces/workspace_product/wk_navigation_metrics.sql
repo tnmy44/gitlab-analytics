@@ -15,6 +15,8 @@ WITH alls AS (
         page_view_month < DATE_TRUNC(MONTH, CURRENT_DATE())
         AND
         p.behavior_at > '2022-06-01'
+        AND
+        mr.app_id IN ('gitlab', 'gitlab_customers')
 
         {% if is_incremental() %}
 
