@@ -398,7 +398,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs dim_application_release %}
-Dimensional table representing released versions of an application. As on now, it only holds releases from GitLab.
+Dimensional table representing released versions of an application. Currently, it only holds releases from GitLab.
 
 The grain of the table is the major, minor and patch version together with the application that these represent.
 
