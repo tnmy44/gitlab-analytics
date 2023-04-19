@@ -2290,16 +2290,16 @@ roles:
         privileges:
             databases:
                 read:
+                    - raw
+                    - prep
+            schemas:
+                read:
                     - raw.snowflake
                     - prep.snowflake
-            schemas:
+            tables:
                 read:
                     - raw.snowflake.*
                     - prep.snowflake.*
-            tables:
-                read:
-                    - raw.snowflake.*.*
-                    - prep.snowflake.*.*
 
     - snowflake_db:
         privileges:
