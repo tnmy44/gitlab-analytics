@@ -1,7 +1,32 @@
-WITH RECURSIVE sfdc_account_source AS (
+WITH last_account_snapshot AS (
 
     SELECT *
+    FROM {{ ref('sfdc_account_snapshots_source') }}
+    WHERE dbt_valid_to IS NULL
+
+), unioned AS (
+
+
+    SELECT 
+      account_id,
+      master_record_id,
+      is_deleted
     FROM {{ ref('sfdc_account_source') }}
+
+    UNION ALL
+
+    /*
+      Union in accounts which have been hard deleted but are captured in the snapshot models for completeness. 
+    */
+
+    SELECT 
+      last_account_snapshot.account_id,
+      last_account_snapshot.master_record_id,
+      last_account_snapshot.is_deleted
+    FROM last_account_snapshot
+    LEFT JOIN {{ ref('sfdc_account_source') }}
+      ON last_account_snapshot.account_id = sfdc_account_source.account_id
+    WHERE sfdc_account_source.account_id IS NULL
 
 ), recursive_cte(account_id, master_record_id, is_deleted, lineage) AS (
 
@@ -10,7 +35,7 @@ WITH RECURSIVE sfdc_account_source AS (
       master_record_id,
       is_deleted,
       TO_ARRAY(account_id) AS lineage
-    FROM sfdc_account_source
+    FROM unioned
     WHERE master_record_id IS NULL
 
     UNION ALL
@@ -21,7 +46,7 @@ WITH RECURSIVE sfdc_account_source AS (
       iter.is_deleted,
       ARRAY_INSERT(anchor.lineage, 0, iter.account_id)  AS lineage
     FROM recursive_cte AS anchor
-    INNER JOIN sfdc_account_source AS iter
+    INNER JOIN unioned AS iter
       ON iter.master_record_id = anchor.account_id
 
 ), final AS (
@@ -41,7 +66,7 @@ WITH RECURSIVE sfdc_account_source AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@michellecooper",
     created_date="2020-11-23",
-    updated_date="2020-11-23",
+    updated_date="2023-04-13",
 ) }}

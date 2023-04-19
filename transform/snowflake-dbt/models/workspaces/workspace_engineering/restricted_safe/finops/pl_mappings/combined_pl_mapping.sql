@@ -67,7 +67,7 @@ sandbox_projects_pl AS (
 
   SELECT
     date_spine.date_day,
-    sandbox_projects_pl.project_name   AS gcp_project_id,
+    sandbox_projects_pl.gcp_project_id   AS gcp_project_id,
     NULL                               AS gcp_service_description,
     NULL                               AS gcp_sku_description,
     NULL                               AS infra_label,
@@ -142,20 +142,42 @@ single_sku_pl AS (
     'single_sku_pl'              AS from_mapping
   FROM date_spine
   CROSS JOIN {{ ref ('single_sku_pl') }}
-)
+),
 
-SELECT * FROM infralabel_pl
-UNION ALL
-SELECT * FROM projects_pl
-UNION ALL
-SELECT * FROM repo_storage_pl_daily
-UNION ALL
-SELECT * FROM sandbox_projects_pl
-UNION ALL
-SELECT * FROM container_registry_pl_daily
-UNION ALL
-SELECT * FROM build_artifacts_pl_daily
-UNION ALL
-SELECT * FROM build_artifacts_pl_dev_daily
-UNION ALL
-SELECT * FROM single_sku_pl
+cte_append AS
+  (SELECT *
+   FROM infralabel_pl
+   UNION ALL 
+   SELECT *
+   FROM projects_pl
+   UNION ALL 
+   SELECT *
+   FROM repo_storage_pl_daily
+   UNION ALL 
+   SELECT *
+   FROM sandbox_projects_pl
+   UNION ALL 
+   SELECT *
+   FROM container_registry_pl_daily
+   UNION ALL 
+   SELECT *
+   FROM build_artifacts_pl_daily
+   UNION ALL 
+   SELECT *
+   FROM build_artifacts_pl_dev_daily
+   UNION ALL 
+   SELECT *
+   FROM single_sku_pl)
+
+SELECT date_day,
+       gcp_project_id,
+       gcp_service_description,
+       gcp_sku_description,
+       infra_label,
+       env_label,
+       pl_category,
+       pl_percent,
+       LISTAGG(DISTINCT from_mapping, ' || ') WITHIN GROUP (
+       ORDER BY from_mapping ASC) AS from_mapping
+FROM cte_append
+{{ dbt_utils.group_by(n=8) }}

@@ -1971,3 +1971,15 @@ This field is for tracking the risk of this deal being impacted by military inva
 Field where rep can add in more details as to why the customer has downgraded.
 
 {% enddocs %}
+
+{% docs dim_crm_opportunity_id_current_open_renewal %}
+
+The current open renewal opportunity mapped to a subscription.
+
+{% enddocs %}
+
+{% docs dim_crm_opportunity_id_closed_lost_renewal %}
+
+The closed lost renewal opportunity, where applicable, mapped mapped to a subscription.
+
+{% enddocs %}

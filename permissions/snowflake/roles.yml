@@ -23,6 +23,11 @@ databases:
         shared: yes
 
 # User / Testing
+    - abright_prod:
+        shared: no
+    - abright_prep:
+        shared: no
+ 
     - bi_tool_eval:
         shared: no
 
@@ -2687,6 +2692,47 @@ roles:
             - transforming_l
             - transforming_xl
 
+    - abright:
+        member_of:
+            - analyst_core
+            - data_manager
+            - restricted_safe
+            - orgadmin
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - abright_prep
+                - abright_prod
+            schemas:
+                - abright_prep.*
+                - abright_prod.*
+            tables:
+                - abright_prep.*.*
+                - abright_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - abright_prep
+                    - abright_prod
+                write:
+                    - abright_prep
+                    - abright_prod
+            schemas:
+                read:
+                    - abright_prep.*
+                    - abright_prod.*
+                write:
+                    - abright_prep.*
+                    - abright_prod.*
+            tables:
+                read:
+                    - abright_prep.*.*
+                    - abright_prod.*.*
+                write:
+                    - abright_prep.*.*
+                    - abright_prod.*.*
+
     - akramer:
         member_of:
             - reporter
@@ -2854,6 +2900,7 @@ roles:
             - salesforce
             - zuora_api_sandbox_stitch            
             - zuora_stitch_rest_api
+            - zuora
         warehouses:
             - dev_xs
             - dev_m
@@ -4986,6 +5033,13 @@ users:
             - data_science_loader
             - sales_analytics
             - reporter
+
+    - abright:
+        can_login: yes
+        member_of:
+            - abright
+            - accountadmin
+            - securityadmin
 
     - akramer:
         can_login: yes
