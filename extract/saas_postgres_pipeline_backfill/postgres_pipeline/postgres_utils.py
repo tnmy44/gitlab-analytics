@@ -280,9 +280,16 @@ def write_backfill_metadata(
 def get_prefix_template() -> str:
     """
     Returns something like this:
-    staging/backfill_metadata/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
+    staging/backfill_data/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
     """
-    return "{staging_or_processed}/{metadata_table}/{table}/{initial_load_prefix}"
+    return "{staging_or_processed}/{export_type}/{table}/{initial_load_prefix}"
+
+
+def get_export_type(metadata_table):
+    export_type = metadata_table.replace(
+        "_metadata", ""
+    )  # 'backfill_metadata' -> 'backfill'
+    return export_type
 
 
 def get_upload_file_name(
@@ -316,7 +323,7 @@ def get_upload_file_name(
     initial_load_prefix = f"initial_load_start_{initial_load_start_date.isoformat(timespec='milliseconds')}"
     prefix = prefix_template.format(
         staging_or_processed="staging",
-        metadata_table=metadata_table,
+        export_type=get_export_type(metadata_table),
         table=table,
         initial_load_prefix=initial_load_prefix,
     )
@@ -550,7 +557,7 @@ def get_latest_parquet_file(source_table: str) -> Union[str, None]:
 
     prefix = get_prefix_template().format(
         staging_or_processed="processed",
-        metadata_table=BACKFILL_METADATA_TABLE,
+        export_type=get_export_type(BACKFILL_METADATA_TABLE),
         table=source_table,
         initial_load_prefix="initial_load_start_",
     )
@@ -574,7 +581,7 @@ def remove_unprocessed_files_from_gcs(metadata_table: str, source_table: str):
 
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
-        metadata_table=metadata_table,
+        export_type=get_export_type(metadata_table),
         table=source_table,
         initial_load_prefix="initial_load_start_",
     )
