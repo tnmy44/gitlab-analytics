@@ -32,7 +32,8 @@ WITH filtered_snowplow_events AS (
     behavior_structured_event_pk,
     app_id,
     ultimate_parent_namespace_id,
-    session_id
+    session_id,
+    gsc_extra
   FROM {{ ref('mart_behavior_structured_event') }}
   WHERE 
   behavior_at >= '2021-10-01'

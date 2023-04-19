@@ -5,6 +5,11 @@
 
 WITH alls AS (
     SELECT
+        CASE 
+            WHEN p.gsc_extra:new_nav = TRUE
+            THEN 1
+            ELSE 0 
+        END AS using_new_nav,
         DATE_TRUNC(MONTH, p.behavior_at)::DATE AS page_view_month,
         COUNT(DISTINCT p.gsc_pseudonymized_user_id) AS unique_users,
         COUNT(DISTINCT p.session_id) AS sessions,
@@ -16,7 +21,7 @@ WITH alls AS (
         AND
         p.behavior_at > '2022-06-01'
         AND
-        mr.app_id IN ('gitlab', 'gitlab_customers')
+        p.app_id IN ('gitlab', 'gitlab_customers')
 
         {% if is_incremental() %}
 
@@ -26,11 +31,16 @@ WITH alls AS (
 
         {% endif %}
 
-    GROUP BY 1
+    GROUP BY 1,2
 ),
 
 news AS (
     SELECT
+        CASE 
+            WHEN mr.gsc_extra:new_nav = TRUE
+            THEN 1
+            ELSE 0 
+        END AS using_new_nav,
         DATE_TRUNC(MONTH, mr.behavior_at)::DATE AS page_view_month,
         COUNT(DISTINCT mr.gsc_pseudonymized_user_id) AS users_count,
         COUNT(DISTINCT mr.session_id) AS sessions,
@@ -52,7 +62,7 @@ news AS (
 
         {% endif %}
     GROUP BY
-        1
+        1, 2
 )
 
 SELECT
@@ -69,4 +79,4 @@ SELECT
 FROM
     alls
 LEFT JOIN
-    news ON alls.page_view_month = news.page_view_month
+    news ON alls.page_view_month = news.page_view_month AND alls.using_new_nav = news.using_new_nav
