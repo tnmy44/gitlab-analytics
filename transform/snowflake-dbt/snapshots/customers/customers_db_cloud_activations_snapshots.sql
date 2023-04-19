@@ -18,6 +18,6 @@
 
     SELECT *
     FROM source
-    WHERE orders_rank_in_key = 1
+    WHERE cloud_activation_rank_in_key = 1
 
 {% endsnapshot %}
