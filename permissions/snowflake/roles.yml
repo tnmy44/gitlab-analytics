@@ -4256,6 +4256,7 @@ roles:
         member_of:
             - adaptive
             - analyst_finance
+            - coupa
             - customers_db
             - data_team_analyst
             - data_manager
