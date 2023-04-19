@@ -517,7 +517,9 @@ Release date of the next GitLab version.
 
 {% docs days_after_version_release_date %}
 
-The number of days between the date the ping was sent and the release date of the version associated with the ping. 
+The number of days between the date the ping was sent and the release date of the version associated with the ping. When `version_is_prerelease = TRUE`, then this field is less than 0.
+
+There are some cases when `version_is_prerelease = FALSE` and the field is still lower than 0. These cases where manually set to zero in the data model.
 
 {% enddocs %}
 
@@ -530,6 +532,8 @@ The most recent version that is available at the time the ping is created.
 {% docs versions_behind_latest_at_ping_creation %}
 
 The number of versions by which the ping-associated version lags behind. When `version_is_prerelease = TRUE`, then this field is less than 0.
+
+There are some cases when `version_is_prerelease = FALSE` and the field is still lower than 0. These cases where manually set to zero in the data model.
 
 {% enddocs %}
 
