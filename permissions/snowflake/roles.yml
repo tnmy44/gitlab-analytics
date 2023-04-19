@@ -2912,6 +2912,7 @@ roles:
             - coupa
             - restricted_safe
             - bi_tool_eval_read
+            - marketo
             - salesforce
             - zuora_api_sandbox_stitch            
             - zuora_stitch_rest_api
