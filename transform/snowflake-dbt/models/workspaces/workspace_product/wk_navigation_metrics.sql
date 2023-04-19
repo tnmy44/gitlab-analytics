@@ -67,6 +67,7 @@ news AS (
 
 SELECT
     alls.page_view_month,
+    alls.using_new_nav,
     news.users_count AS nav_users,
     alls.unique_users,
     news.sessions AS nav_sessions,
