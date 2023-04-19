@@ -71,3 +71,37 @@ sources:
             tests:
               - not_null
         freshness: null
+      - name: customers_db_billing_accounts
+        columns:
+          - name: id
+            tests:
+              - not_null
+          - name: created_at
+            tests:
+              - not_null
+          - name: updated_at
+            tests:
+              - not_null
+      - name: customers_db_billing_account_memberships
+        columns:
+          - name: id
+            tests:
+              - not_null
+          - name: created_at
+            tests:
+              - not_null
+          - name: updated_at
+            tests:
+              - not_null
+      - name: customers_db_cloud_activations
+        columns:
+          - name: id
+            tests:
+              - not_null
+          - name: created_at
+            tests:
+              - not_null
+          - name: updated_at
+            tests:
+              - not_null
+        

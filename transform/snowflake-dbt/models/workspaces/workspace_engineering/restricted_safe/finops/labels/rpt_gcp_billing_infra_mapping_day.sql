@@ -59,6 +59,12 @@ runner_labels as (
   end as resource_label_value
   FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'runner_manager_name'
+),
+
+unit_mapping as (
+
+  SELECT * FROM {{ ref('gcp_billing_unit_mapping') }}
+  WHERE category='usage'
 
 ),
 
@@ -104,9 +110,12 @@ SELECT
   billing_base.runner_label                       AS runner_label,
   billing_base.usage_unit,
   billing_base.pricing_unit,
-  SUM(billing_base.usage_amount)                  AS usage_amount,
-  SUM(billing_base.usage_amount_in_pricing_units) AS usage_amount_in_pricing_units,
-  SUM(billing_base.cost_before_credits)           AS cost_before_credits,
-  SUM(billing_base.net_cost)                      AS net_cost
-FROM billing_base
+  bill.usage_amount                  AS usage_amount,
+  bill.usage_amount_in_pricing_units AS usage_amount_in_pricing_units,
+  bill.cost_before_credits           AS cost_before_credits,
+  bill.net_cost                      AS net_cost,
+  usage.converted_unit               AS usage_standard_unit,
+  bill.usage_amount / usage.rate     AS usage_amount_in_standard_unit
+FROM billing_base as bill
 {{ dbt_utils.group_by(n=9) }}
+

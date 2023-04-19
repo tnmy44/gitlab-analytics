@@ -222,28 +222,55 @@ runner_saas_large AS (
   FROM {{ ref ('ci_runners_pl_daily') }}
   where runner_label = '4 - shared saas runners - large'
 
-)
+),
 
-SELECT * FROM infralabel_pl
-UNION ALL
-SELECT * FROM projects_pl
-UNION ALL
-SELECT * FROM repo_storage_pl_daily
-UNION ALL
-SELECT * FROM sandbox_projects_pl
-UNION ALL
-SELECT * FROM container_registry_pl_daily
-UNION ALL
-SELECT * FROM build_artifacts_pl_daily
-UNION ALL
-SELECT * FROM build_artifacts_pl_dev_daily
-UNION ALL
-SELECT * FROM single_sku_pl
-UNION ALL
-SELECT * FROM runner_shared_gitlab_org
-UNION ALL
-SELECT * FROM runner_saas_small
-UNION ALL
-SELECT * FROM runner_saas_medium
-UNION ALL
-SELECT * FROM runner_saas_large
+cte_append AS
+  (SELECT *
+   FROM infralabel_pl
+   UNION ALL 
+   SELECT *
+   FROM projects_pl
+   UNION ALL 
+   SELECT *
+   FROM repo_storage_pl_daily
+   UNION ALL 
+   SELECT *
+   FROM sandbox_projects_pl
+   UNION ALL 
+   SELECT *
+   FROM container_registry_pl_daily
+   UNION ALL 
+   SELECT *
+   FROM build_artifacts_pl_daily
+   UNION ALL 
+   SELECT *
+   FROM build_artifacts_pl_dev_daily
+   UNION ALL 
+   SELECT *
+   FROM single_sku_pl
+   UNION ALL
+   SELECT *
+   FROM runner_shared_gitlab_org
+   UNION ALL
+   SELECT * 
+   FROM runner_saas_small
+   UNION ALL
+   SELECT *
+   FROM runner_saas_medium
+   UNION ALL
+   SELECT *
+   FROM runner_saas_large)
+
+SELECT date_day,
+       gcp_project_id,
+       gcp_service_description,
+       gcp_sku_description,
+       infra_label,
+       env_label,
+       runner_label,
+       pl_category,
+       pl_percent,
+       LISTAGG(DISTINCT from_mapping, ' || ') WITHIN GROUP (
+       ORDER BY from_mapping ASC) AS from_mapping
+FROM cte_append
+{{ dbt_utils.group_by(n=9) }}
