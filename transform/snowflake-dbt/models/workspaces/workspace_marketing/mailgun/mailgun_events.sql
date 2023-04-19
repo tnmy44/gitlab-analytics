@@ -1,3 +1,5 @@
+{{ config(materialized='table') }}
+
 WITH source AS (
 
     SELECT {{ hash_sensitive_columns('mailgun_events_source') }}
