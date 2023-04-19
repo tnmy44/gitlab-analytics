@@ -103,6 +103,9 @@
       dim_crm_account.health_number                                                   AS health_number,
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
 
+      -- order info
+      fct_charge.dim_order_id                                                         AS dim_order_id,
+
       --Cohort Information
       dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
       dim_subscription.subscription_cohort_quarter                                    AS subscription_cohort_quarter,
