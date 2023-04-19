@@ -524,7 +524,8 @@ WITH edm_opty AS (
     END                                             AS is_eligible_sao_flag,
     edm_opty.is_deleted,
     opportunity_owner.is_rep_flag,
-    edm_opty.pushed_count
+    edm_opty.pushed_count,
+    edm_opty.intented_product_tier
     
     FROM edm_opty
     -- Date helpers
