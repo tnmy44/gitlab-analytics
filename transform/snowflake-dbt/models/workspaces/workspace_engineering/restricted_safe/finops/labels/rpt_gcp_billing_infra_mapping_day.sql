@@ -40,13 +40,13 @@ runner_labels as (
     when resource_label_value like '%runners-manager-saas-macos-staging-blue-%' then 'runners-manager-saas-macos-staging-blue-'
     when resource_label_value like '%runners-manager-shared-gitlab-org-green-%' then '1 - shared gitlab org runners' --ok
     when resource_label_value like '%runners-manager-shared-gitlab-org-blue-%' then '1 - shared gitlab org runners' --ok
-    when resource_label_value like '%runners-manager-private-blue-%' then 'runners-manager-private-blue-'
-    when resource_label_value like '%runners-manager-private-green-%' then 'runners-manager-private-green-'
+    when resource_label_value like '%runners-manager-private-blue-%' then '6 - private internal runners' --ok, project_pl internal
+    when resource_label_value like '%runners-manager-private-green-%' then '6 - private internal runners' --ok, project_pl internal
     when (resource_label_value like '%instances/runner-%' and resource_label_value like '%shared-gitlab-org-%') then '1 - shared gitlab org runners' --ok
     when (resource_label_value like '%instances/runner-%' and resource_label_value like '%amd64%') then 'runners-saas'
     when (resource_label_value like '%instances/runner-%' and resource_label_value like '%s-shared-%') then '2 - shared saas runners - small' --ok
     when (resource_label_value like '%instances/runner-%' and resource_label_value like '%-shared-%' and resource_label_value not like '%gitlab%') then '2 - shared saas runners - small' --ok
-    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%-private-%') then 'runners-private'
+    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%-private-%') then '6 - private internal runners' --ok, project_pl internal
     when resource_label_value like '%gke-runners-gke-default-pool-%' then 'gke-runners-gke-default-pool-'
     when resource_label_value like '%test-machine-%' then 'test-machine-'
     when resource_label_value like '%tm-runner-%' then 'tm-runner-'
