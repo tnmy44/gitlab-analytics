@@ -41,7 +41,7 @@ renamed AS (
     leadsource AS lead_source,
     lead_from__c AS lead_from,
     lead_source_type__c AS lead_source_type,
-    lead_conversion_approval_status__c AS lead_conversiona_approval_status,
+    lead_conversion_approval_status__c AS lead_conversion_approval_status,
     street AS street,
     city AS city,
     state AS state,
