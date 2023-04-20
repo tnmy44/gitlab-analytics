@@ -39,10 +39,12 @@ WITH project_statistics_snapshot_monthly_all AS (
     
     --namespace_lineage_current
     SELECT
-      DATE_TRUNC('month', CURRENT_DATE)                                         AS snapshot_month,
-      dim_namespace_id,
-      ultimate_parent_namespace_id
-    FROM {{ ref('prep_namespace_lineage') }}
+      DATE_TRUNC('month', snapshot_day)                         AS snapshot_month,
+      namespace_id,
+      ultimate_parent_id
+    FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_daily') }}
+    WHERE snapshot_day = CURRENT_DATE - 1
+      AND IFF(DAY(CURRENT_DATE) = 1, FALSE, TRUE) -- If it is the first day of the month, do not return lineage as it will conflict with the statement above
 
 ), namespace_storage_statistic_monthly_all AS (
 
