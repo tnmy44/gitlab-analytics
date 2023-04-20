@@ -298,3 +298,9 @@ Arguments:
 Known exceptions and not yet implemented source tables were identified from observation.
 
 {% enddocs %}
+
+{% docs missing_member_column %}
+
+This macro will generate a 'missing member' record which can be added to any dimension to handle late arriving dimensions in fact tables. It constructs an 'Unknown' record with null or unknown dimension attributes to maintain join integrity to facts models.
+
+{% enddocs %}
