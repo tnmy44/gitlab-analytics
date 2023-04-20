@@ -25,10 +25,10 @@ WITH versions AS (
     SELECT
 
      --surrogate_key
-      {{ dbt_utils.surrogate_key(['application', 'id']) }} AS dim_application_release_sk,
+      {{ dbt_utils.surrogate_key(['application', 'id']) }} AS dim_app_release_sk,
 
       --natural key
-      CONCAT(application, '-', id)                         AS application_release_id,
+      CONCAT(application, '-', id)                         AS app_release_id,
 
      --attributes
       application,
@@ -53,10 +53,10 @@ UNION ALL
 SELECT 
 
      --surrogate_key
-      {{ dbt_utils.surrogate_key(['-1']) }} AS dim_application_release_sk,
+      {{ dbt_utils.surrogate_key(['-1']) }} AS dim_app_release_sk,
 
       --natural key
-      '-1'                                  AS dim_application_release_id,
+      '-1'                                  AS dim_app_release_id,
     
      --attributes
      'Missing application'                  AS missing_application,
@@ -77,6 +77,6 @@ SELECT
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2023-04-13",
-    updated_date="2023-04-13"
+    updated_date="2023-04-20"
 ) }}
 

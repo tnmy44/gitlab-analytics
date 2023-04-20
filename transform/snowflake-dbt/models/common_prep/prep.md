@@ -4,7 +4,7 @@ Creates a base view with generated keys for the alliance type shared dimension a
 
 {% enddocs %}
 
-{% docs prep_application_release %}
+{% docs prep_app_release %}
 
 Creates base view with generated keys for application releaes. 
 
@@ -99,7 +99,7 @@ This model captures a historical record of GitLab's default application settings
 
 {% enddocs %}
 
-{% docs prep_release_major_minor %}
+{% docs prep_app_release_major_minor %}
 
 Creates base view with generated keys for application major and minor versions. 
 

@@ -473,21 +473,21 @@ The numeric variation of `major_minor_version`, defined as `major_version*100 + 
 
 {% enddocs %}
 
-{% docs release_major_minor_id %}
+{% docs app_release_major_minor_id %}
 
-The natural key of dim_release_major_minor. This natural key is defined as the concatenation of the `application` and the major minor version. For example, for the GitLab version 13.6.2, the `release_major_minor_id` is `GiLab-13.06`.
-
-{% enddocs %}
-
-{% docs dim_release_major_minor_sk %}
-
-Surrogate key of dim_release_major_minor. Currently identified by hashing the major_minor_version field combined with the application field.
+The natural key of dim_app_release_major_minor. This natural key is defined as the concatenation of the `application` and the major minor version. For example, for the GitLab version 13.6.2, the `app_release_major_minor_id` is `GiLab-13.06`.
 
 {% enddocs %}
 
-{% docs dim_latest_available_release_major_minor_sk %}
+{% docs dim_app_release_major_minor_sk %}
 
-The latest avaiable dim_release_major_minor_sk at the moment the ping is sent.
+Surrogate key of dim_app_release_major_minor. Currently identified by hashing the major_minor_version field combined with the application field.
+
+{% enddocs %}
+
+{% docs dim_latest_available_app_release_major_minor_sk %}
+
+The latest avaiable dim_app_release_major_minor_sk at the moment the ping is sent.
 
 {% enddocs %}
 
@@ -1932,13 +1932,13 @@ The action to be carried out on the subscription. For example, 'Amend Subscripti
 
 {% enddocs %}
 
-{% docs dim_application_release_sk %}
+{% docs dim_app_release_sk %}
 
-Unique identifier of an application release. Identifies the combination of major, minor and patch version of a release from an specific application.
+Unique identifier of an application (app) release. Identifies the combination of major, minor and patch version of a release from an specific application.
 
 {% enddocs %}
 
-{% docs application_release_id %}
+{% docs app_release_id %}
 
 The unique identifier of the release of an application.
 

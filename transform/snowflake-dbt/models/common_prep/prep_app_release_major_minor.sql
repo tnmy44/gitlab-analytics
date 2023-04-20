@@ -1,4 +1,4 @@
-WITH prep_application_release AS (
+WITH prep_app_release AS (
 
     SELECT
         major_version || '.' || minor_version AS major_minor_version,
@@ -6,8 +6,8 @@ WITH prep_application_release AS (
         minor_version,
         application,
         MIN(release_date) AS release_date
-    FROM {{ ref('prep_application_release') }}
-    WHERE dim_application_release_sk != {{ dbt_utils.surrogate_key(['-1']) }} -- filter out missing member
+    FROM {{ ref('prep_app_release') }}
+    WHERE dim_app_release_sk != {{ dbt_utils.surrogate_key(['-1']) }} -- filter out missing member
     GROUP BY 1,2,3,4
 
 ), yaml_source AS (
@@ -26,26 +26,26 @@ WITH prep_application_release AS (
 ), joined AS (
 
     SELECT
-        COALESCE(prep_application_release.major_minor_version, yaml_source.major_minor_version)     AS major_minor_version,
-        COALESCE(prep_application_release.application, yaml_source.application)                     AS application,
-        COALESCE(prep_application_release.major_version, yaml_source.major_version)                 AS major_version,
-        COALESCE(prep_application_release.minor_version, yaml_source.minor_version)                 AS minor_version,
-        COALESCE(prep_application_release.release_date, yaml_source.release_date)                   AS release_date,
+        COALESCE(prep_app_release.major_minor_version, yaml_source.major_minor_version)             AS major_minor_version,
+        COALESCE(prep_app_release.application, yaml_source.application)                             AS application,
+        COALESCE(prep_app_release.major_version, yaml_source.major_version)                         AS major_version,
+        COALESCE(prep_app_release.minor_version, yaml_source.minor_version)                         AS minor_version,
+        COALESCE(prep_app_release.release_date, yaml_source.release_date)                           AS release_date,
         IFNULL(yaml_source.release_manager_americas, 'Missing gitlab_release_manager_americas')     AS gitlab_release_manager_americas,
         IFNULL(yaml_source.release_manager_emea, 'Missing gitlab_release_manager_emea')             AS gitlab_release_manager_emea
-    FROM prep_application_release
+    FROM prep_app_release
     FULL OUTER JOIN yaml_source
-      ON prep_application_release.major_version = yaml_source.major_version
-      AND prep_application_release.minor_version = yaml_source.minor_version
+      ON prep_app_release.major_version = yaml_source.major_version
+      AND prep_app_release.minor_version = yaml_source.minor_version
 
 ), add_keys AS (
 
     SELECT
         -- Surrogate key
-        {{ dbt_utils.surrogate_key(['application', 'major_minor_version']) }}                       AS dim_release_major_minor_sk,
+        {{ dbt_utils.surrogate_key(['application', 'major_minor_version']) }}                       AS dim_app_release_major_minor_sk,
 
         -- Natural key
-        CONCAT(application, '-', major_minor_version)                                               AS release_major_minor_id,
+        CONCAT(application, '-', major_minor_version)                                               AS app_release_major_minor_id,
 
 
         major_version * 100 + minor_version                                                         AS major_minor_version_num,
@@ -71,10 +71,10 @@ WITH prep_application_release AS (
     -- Add missing member information
     SELECT
     --surrogate_key
-      {{ dbt_utils.surrogate_key(['-1']) }}     AS dim_release_major_minor_sk,
+      {{ dbt_utils.surrogate_key(['-1']) }}     AS dim_app_release_major_minor_sk,
 
       --natural key
-      '-1'                                      AS release_major_minor_id,
+      '-1'                                      AS app_release_major_minor_id,
     
      --attributes
      -1                                         AS major_minor_version_num,
@@ -94,5 +94,5 @@ WITH prep_application_release AS (
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2023-04-04",
-    updated_date="2023-04-04"
+    updated_date="2023-04-20"
 ) }}

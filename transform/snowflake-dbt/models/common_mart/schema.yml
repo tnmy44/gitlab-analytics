@@ -436,12 +436,12 @@ models:
       description: '{{ doc("dim_parent_crm_account_id") }}'
     - name: dim_host_id
       description: '{{ doc("dim_host_id") }}'
-    - name: dim_release_major_minor_sk
-      description: '{{ doc("dim_release_major_minor_sk") }}'
-    - name: dim_latest_available_release_major_minor_sk
-      description: '{{ doc("dim_latest_available_release_major_minor_sk") }}'
-    - name: release_major_minor_id
-      description: '{{ doc("release_major_minor_id") }}'
+    - name: dim_app_release_major_minor_sk
+      description: '{{ doc("dim_app_release_major_minor_sk") }}'
+    - name: dim_latest_available_app_release_major_minor_sk
+      description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
+    - name: app_release_major_minor_id
+      description: '{{ doc("app_release_major_minor_id") }}'
     - name: major_minor_version_id
       description: '{{ doc("major_minor_version_id") }}'
     - name: host_name

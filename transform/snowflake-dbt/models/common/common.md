@@ -386,8 +386,8 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_release_major_minor %}
-Dimensional table representing released versions (major and minor) of GitLab.
+{% docs dim_app_release_major_minor %}
+Dimensional table representing released versions (major and minor) of GitLab. Here `app` stands for application. 
 
 The grain of the table is a major_minor_version.
 
@@ -397,8 +397,8 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_application_release %}
-Dimensional table representing released versions of an application. Currently, it only holds releases from GitLab.
+{% docs dim_app_release %}
+Dimensional table representing released versions of an application (app). Currently, it only holds releases from GitLab.
 
 The grain of the table is the major, minor and patch version together with the application that these represent.
 
@@ -1012,7 +1012,7 @@ The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
   - (OR) hostname IN ('staging.gitlab.com','dr.gitlab.com')
 - `is_trial` = `IFF(ping_created_at < license_trial_ends_on, TRUE, FALSE)`
 - `major_minor_version` = `major_version || '.' || minor_version`
-- `release_major_minor_id` = `major_version * 100 + minor_version` (helpful for sorting or filtering versions)
+- `app_release_major_minor_id` = `major_version * 100 + minor_version` (helpful for sorting or filtering versions)
 - `version_is_prerelease` = `IFF(version ILIKE '%-pre', TRUE, FALSE)`
 - `cleaned_edition` = `IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, ping_edition, 'EE Free')`
 

@@ -16,7 +16,7 @@
     ('dim_location', 'dim_location_country'),
     ('fct_ping_instance', 'fct_ping_instance'),
     ('dim_ping_metric', 'dim_ping_metric'),
-    ('dim_release_major_minor', 'dim_release_major_minor')
+    ('dim_app_release_major_minor', 'dim_app_release_major_minor')
     ])
 
 }},
@@ -117,9 +117,9 @@ joined AS (
     fct_ping_instance_metric.dim_license_id                                                     AS dim_license_id,
     fct_ping_instance_metric.dim_installation_id                                                AS dim_installation_id,
     fct_ping_instance_metric.dim_ping_instance_id                                               AS dim_ping_instance_id,
-    fct_ping_instance_metric.dim_release_major_minor_sk                                         AS dim_release_major_minor_sk,
-    fct_ping_instance_metric.dim_latest_available_release_major_minor_sk                        AS dim_latest_available_release_major_minor_sk,
-    dim_release_major_minor.release_major_minor_id                                              AS release_major_minor_id,
+    fct_ping_instance_metric.dim_app_release_major_minor_sk                                     AS dim_app_release_major_minor_sk,
+    fct_ping_instance_metric.dim_latest_available_app_release_major_minor_sk                    AS dim_latest_available_app_release_major_minor_sk,
+    dim_app_release_major_minor.app_release_major_minor_id                                      AS app_release_major_minor_id,
     dim_ping_instance.license_sha256                                                            AS license_sha256,
     dim_ping_instance.license_md5                                                               AS license_md5,
     dim_ping_instance.is_trial                                                                  AS is_trial,
@@ -154,19 +154,20 @@ joined AS (
     dim_ping_instance.ping_edition                                                                          AS ping_edition,
     dim_ping_instance.product_tier                                                                          AS ping_product_tier,
     dim_ping_instance.ping_edition || ' - ' || dim_ping_instance.product_tier                               AS ping_edition_product_tier,
-    dim_release_major_minor.major_version                                                                   AS major_version,
-    dim_release_major_minor.minor_version                                                                   AS minor_version,
-    dim_release_major_minor.major_minor_version                                                             AS major_minor_version,
-    dim_release_major_minor.major_minor_version_num                                                         AS major_minor_version_num,
+    dim_app_release_major_minor.major_version                                                               AS major_version,
+    dim_app_release_major_minor.minor_version                                                               AS minor_version,
+    dim_app_release_major_minor.major_minor_version                                                         AS major_minor_version,
+    dim_app_release_major_minor.major_minor_version_num                                                     AS major_minor_version_num,
     dim_ping_instance.major_minor_version_id                                                                AS major_minor_version_id, -- legacy field - to be deprecated
     dim_ping_instance.version_is_prerelease                                                                 AS version_is_prerelease,
-    dim_release_major_minor.version_number                                                                  AS version_number,
-    dim_release_major_minor.release_date                                                                    AS release_date,
-    IFF(DATEDIFF('days', dim_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at) < 0 AND version_is_prerelease = FALSE,
-      0, DATEDIFF('days', dim_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at))  AS days_after_version_release_date,
+    dim_app_release_major_minor.version_number                                                              AS version_number,
+    dim_app_release_major_minor.release_date                                                                AS release_date,
+    IFF(DATEDIFF('days', dim_app_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at) < 0 AND version_is_prerelease = FALSE,
+      0, DATEDIFF('days', dim_app_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at)) 
+                                                                                                            AS days_after_version_release_date,
     latest_version.major_minor_version                                                                      AS latest_version_available_at_ping_creation,
-    IFF(latest_version.version_number - dim_release_major_minor.version_number < 0 AND version_is_prerelease = FALSE,
-      0, latest_version.version_number - dim_release_major_minor.version_number)                            AS versions_behind_latest_at_ping_creation,
+    IFF(latest_version.version_number - dim_app_release_major_minor.version_number < 0 AND version_is_prerelease = FALSE,
+      0, latest_version.version_number - dim_app_release_major_minor.version_number)                        AS versions_behind_latest_at_ping_creation,
     dim_ping_instance.is_internal                                                                           AS is_internal,
     dim_ping_instance.is_staging                                                                            AS is_staging,
     dim_ping_instance.instance_user_count                                                                   AS instance_user_count,
@@ -193,10 +194,10 @@ joined AS (
       AND dim_date.first_day_of_month = sha256.reporting_month
   LEFT JOIN dim_location
     ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
-  LEFT JOIN dim_release_major_minor
-    ON fct_ping_instance_metric.dim_release_major_minor_sk = dim_release_major_minor.dim_release_major_minor_sk
-  LEFT JOIN dim_release_major_minor AS latest_version
-    ON fct_ping_instance_metric.dim_latest_available_release_major_minor_sk = latest_version.dim_release_major_minor_sk
+  LEFT JOIN dim_app_release_major_minor
+    ON fct_ping_instance_metric.dim_app_release_major_minor_sk = dim_app_release_major_minor.dim_app_release_major_minor_sk
+  LEFT JOIN dim_app_release_major_minor AS latest_version
+    ON fct_ping_instance_metric.dim_latest_available_app_release_major_minor_sk = latest_version.dim_app_release_major_minor_sk
   WHERE dim_ping_instance.ping_delivery_type = 'Self-Managed'
     OR (dim_ping_instance.ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
 
@@ -218,7 +219,8 @@ sorted AS (
     latest_subscription_id,
     dim_billing_account_id,
     dim_parent_crm_account_id,
-    release_major_minor_id,
+    dim_app_release_major_minor_sk,
+    app_release_major_minor_id,
     dim_host_id,
     host_name,
     dim_location_country_id,
@@ -282,5 +284,5 @@ sorted AS (
     created_by="@icooper-acp",
     updated_by="@jpeguero",
     created_date="2022-03-11",
-    updated_date="2023-04-14"
+    updated_date="2023-04-20"
 ) }}

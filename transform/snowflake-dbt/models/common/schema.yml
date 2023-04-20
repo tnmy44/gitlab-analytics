@@ -585,16 +585,16 @@ models:
           - not_null
           - unique
 
-  - name: dim_application_release
-    description: '{{ doc("dim_application_release") }}'
+  - name: dim_app_release
+    description: '{{ doc("dim_app_release") }}'
     columns:
-      - name: dim_application_release_sk
+      - name: dim_app_release_sk
         tests:
           - not_null
           - unique
-        description: '{{ doc("dim_application_release_sk") }}'
-      - name: application_release_id
-        description: '{{ doc("application_release_id") }}'
+        description: '{{ doc("dim_app_release_sk") }}'
+      - name: app_release_id
+        description: '{{ doc("app_release_id") }}'
         tests:
           - not_null
           - unique
@@ -1145,16 +1145,16 @@ models:
       - name: was_purchased_through_reseller
         description: Boolean field that indicates whether the subscription was purchased through a reseller. If TRUE, the `invoice_owner_account` will contain the name of the reseller.
 
-  - name: dim_release_major_minor
-    description: '{{ doc("dim_release_major_minor") }}'
+  - name: dim_app_release_major_minor
+    description: '{{ doc("dim_app_release_major_minor") }}'
     columns:
-      - name: dim_release_major_minor_sk
-        description: '{{ doc("dim_release_major_minor_sk") }}'
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
         tests:
           - not_null
           - unique
-      - name: release_major_minor_id
-        description: '{{ doc("release_major_minor_id") }}'
+      - name: app_release_major_minor_id
+        description: '{{ doc("app_release_major_minor_id") }}'
       - name: application
         description: The application that the release refers to.
       - name: major_minor_version
@@ -2689,8 +2689,6 @@ models:
         description: '{{ doc("dim_instance_id") }}'
       - name: dim_installation_id
         description: '{{ doc("dim_installation_id") }}'
-      - name: release_major_minor_id
-        description: '{{ doc("release_major_minor_id") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
       - name: ping_created_date_28_days_earlier
@@ -2823,7 +2821,9 @@ models:
         description: '{{ doc("minor_version") }}'
       - name: major_minor_version
         description: '{{ doc("major_minor_version") }}'
-      - name: major_minor_version_id
+      - name: major_minor_version_num
+        description: '{{ doc("major_minor_version_num") }}'
+      - name: major_minor_version_num
         description: '{{ doc("major_minor_version_id") }}'
       - name: ping_delivery_type
         description: '{{ doc("ping_delivery_type") }}'
@@ -3857,10 +3857,10 @@ models:
         description: '{{ doc("dim_installation_id") }}'
       - name: dim_license_id
         description:  '{{ doc("dim_license_id") }}'
-      - name: dim_release_major_minor_sk
-        description:  '{{ doc("dim_release_major_minor_sk") }}'
-      - name: dim_latest_available_release_major_minor_sk
-        description: '{{ doc("dim_latest_available_release_major_minor_sk") }}'
+      - name: dim_app_release_major_minor_sk
+        description:  '{{ doc("dim_app_release_major_minor_sk") }}'
+      - name: dim_latest_available_app_release_major_minor_sk
+        description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
       - name: license_md5
         description: '{{ doc("license_md5") }}'
       - name: license_sha256

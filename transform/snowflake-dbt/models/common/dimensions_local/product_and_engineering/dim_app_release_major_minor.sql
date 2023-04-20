@@ -1,7 +1,7 @@
 WITH base AS (
 
     SELECT *
-    FROM {{ ref('prep_release_major_minor') }}
+    FROM {{ ref('prep_app_release_major_minor') }}
 
 )
 
