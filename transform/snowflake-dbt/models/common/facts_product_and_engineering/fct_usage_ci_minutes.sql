@@ -43,9 +43,11 @@ WITH project_snapshot_monthly_all AS (
       namespace_id,
       parent_id,
       upstream_lineage,
-      ultimate_parent_namespace_id
+      ultimate_parent_id
     FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_daily') }}
     WHERE snapshot_day = CURRENT_DATE - 1
+      AND IFF(DAY(CURRENT_DATE) = 1, FALSE, TRUE) -- If it is the first day of the month, do not return lineage as it will conflict with the statement above
+
 
 ), namespace_snapshots_monthly_all AS (
 
@@ -76,7 +78,6 @@ WITH project_snapshot_monthly_all AS (
       shared_runners_minutes_limit,
       extra_shared_runners_minutes_limit
     FROM {{ ref('gitlab_dotcom_namespaces_source') }} 
-      AND IFF(DAY(CURRENT_DATE) = 1, FALSE, TRUE) -- If it is the first day of the month, do not return lineage as it will conflict with the statement above
 
 ), namespace_statistics_monthly_all AS (
 
