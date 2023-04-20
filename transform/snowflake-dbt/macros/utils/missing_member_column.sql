@@ -5,8 +5,8 @@
 
     {%- set columns = adapter.get_columns_in_relation(this) -%}
 
-    {% set primary_key =["{{primary_key}}"] %}
-
+    CREATE OR REPLACE TABLE {{ this }} AS 
+    
     SELECT 
       *,
       0 AS is_missing_member_record
@@ -14,10 +14,9 @@
 
     UNION ALL 
 
-    SELECT 
-
+    SELECT DISTINCT
     {%- for col in columns %}
-      {% if col.name|lower == primary_key %}
+      {% if col.name|lower == '{{ primary_key }}' %}
       '-1' AS {{ col.name|lower }},
       {% elif col.data_type == 'BOOLEAN' %}
       NULL AS {{ col.name|lower }},
@@ -27,8 +26,14 @@
       NULL AS {{ col.name|lower }},
       {% elif col.data_type == 'DATE' %}
       '9999-01-01' AS {{ col.name|lower }},
+      {% elif col.data_type == 'DATETIME' %}
+      '9999-01-01 00:00:00.000 +0000' AS {{ col.name|lower }},
       {% elif col.data_type == 'TIMESTAMP_TZ' %}
       '9999-01-01 00:00:00.000 +0000' AS {{ col.name|lower }},
+      {% elif col.data_type == 'TIMESTAMP_NTZ' %}
+      '9999-01-01 00:00:00.000 +0000' AS {{ col.name|lower }},
+      {% elif col.data_type == 'TIMESTAMP' %}
+      '9999-01-01 00:00:00 +0000' AS {{ col.name|lower }},
       {% elif col.data_type == 'FLOAT' %}
       NULL AS {{ col.name|lower }},
       {% elif col.data_type == 'NUMBER' %}
@@ -49,7 +54,7 @@
     {%- endfor %}
     1 AS is_missing_member_record
 
-    from {{ this }}
+    FROM {{ this }}
 
 {%- endmacro -%}
 
