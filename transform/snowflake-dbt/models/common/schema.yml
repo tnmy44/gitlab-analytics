@@ -2481,6 +2481,7 @@ models:
       - name: updated_at
       - name: ci_runner_description
       - name: ci_runner_manager
+      - name: ci_runner_machine_type
       - name: contacted_at
       - name: is_active
       - name: ci_runner_version
