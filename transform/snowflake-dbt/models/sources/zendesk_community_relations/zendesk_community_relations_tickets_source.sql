@@ -4,7 +4,7 @@ WITH source AS (
     FROM {{ source('zendesk_community_relations', 'tickets') }}
 ),
 
-renamed AS (
+flattened AS (
 
     SELECT
       id                                      AS ticket_id,
@@ -24,16 +24,17 @@ renamed AS (
       md5(recipient)                          AS ticket_recipient,
       url                                     AS ticket_url,
       tags                                    AS ticket_tags,
-      -- added ':score'
-      -- satisfaction_rating['score']::VARCHAR   AS satisfaction_rating_score,
-      via__channel::VARCHAR                 AS submission_channel,
+
+      flat_via.value::varchar                 AS submission_channel,
 
       --dates
       updated_at::DATE                        AS date_updated
 
     FROM source
+        INNER JOIN LATERAL FLATTEN(INPUT => parse_json(via), OUTER => false, RECURSIVE => false) flat_via
+    WHERE submission_channel in ('api', 'web', 'any_channel', 'twitter', 'facebook', 'email')
 
 )
 
 SELECT *
-FROM renamed
+FROM flattened
