@@ -147,7 +147,7 @@ gitlab-org/security-products/analyzers/gemnasium-maven-plugin,13150952,@gonzoyum
 gitlab-org/security-products/analyzers/go-ast-scanner,5971589
 gitlab-org/security-products/analyzers/security-code-scan,6535935, @amarpatel
 gitlab-org/security-products/analyzers/api-fuzzing,19617580
-gitlab-org/security-products/analyzers/api-fuzzing-src,5964710, @sethgitlab
+gitlab-org/security-products/analyzers/api-fuzzing-src,5964710, @twoodham
 gitlab-org/security-products/demos/api-fuzzing/graphql-api-fuzzing-example,24298348
 gitlab-org/security-products/demos/api-fuzzing/postman-api-fuzzing-example,22111360
 gitlab-org/security-products/tests/api-fuzzing-e2e/openapi-v2-tls,25538517
@@ -172,11 +172,11 @@ gitlab-org/security-products/tests/api-fuzzing-e2e/e2e-image,23069956
 gitlab-org/security-products/tests/api-fuzzing-e2e/har-remote-target,23069693
 gitlab-org/security-products/protocol-fuzzer-ce,24111720
 gitlab-org/security-products/protocol-fuzzer-ee,24112430
-gitlab-org/security-products/analyzers/gitlab-cov-fuzz,19413101, @sethgitlab
-gitlab-org/security-products/analyzers/gitlab-cov-fuzz-src,19413012, @sethgitlab
+gitlab-org/security-products/analyzers/gitlab-cov-fuzz,19413101, @twoodham
+gitlab-org/security-products/analyzers/gitlab-cov-fuzz-src,19413012, @twoodham
 gitlab-org/security-products/analyzers/fuzzers/javafuzz,19871573
 gitlab-org/security-products/analyzers/fuzzers/pythonfuzz,19904939
-gitlab-org/security-products/analyzers/fuzzers/jsfuzz,19871264, @sethgitlab
+gitlab-org/security-products/analyzers/fuzzers/jsfuzz,19871264, @twoodham
 gitlab-org/security-products/demos/coverage-fuzzing/afl-fuzzing-example,24225194
 gitlab-org/security-products/demos/coverage-fuzzing/pythonfuzz-fuzzing-example,23465101
 gitlab-org/security-products/demos/coverage-fuzzing/jsfuzz-fuzzing-example,23365123
