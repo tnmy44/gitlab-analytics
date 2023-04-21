@@ -574,6 +574,10 @@ roles:
             - zuora
             - zuora_central_sandbox
 
+    - analyst_sales_sensitive:
+        warehouse:
+            - dev_xs
+
     - analytics_engineer_core:
         warehouses:
             - dev_xs
