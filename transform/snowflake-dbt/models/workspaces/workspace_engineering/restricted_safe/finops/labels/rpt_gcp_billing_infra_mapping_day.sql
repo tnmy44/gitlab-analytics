@@ -102,7 +102,7 @@ billing_base AS (
 
 SELECT
   bill.day                                AS day,
-  bill.project_id                         AS gcp_project_id,
+  coalesce(bill.project_id, 'no_id')       AS gcp_project_id,
   bill.service                            AS gcp_service_description,
   bill.sku_description                    AS gcp_sku_description,
   bill.infra_label                        AS infra_label,
