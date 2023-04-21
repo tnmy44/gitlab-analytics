@@ -123,7 +123,7 @@ renamed AS (
     -- account demographics fields
     account_demographics_sales_segment_2__c AS account_demographics_sales_segment,
     account_demographics_sales_segment__c AS account_demographics_sales_segment_deprecated,
-    CASE
+  CASE
       WHEN account_demographics_sales_segment_2__c IN ('Large', 'PubSec') THEN 'Large'
       ELSE account_demographics_sales_segment_2__c
     END AS account_demographics_sales_segment_grouped,

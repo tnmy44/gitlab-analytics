@@ -134,13 +134,13 @@ renamed AS (
     account_demographics_sales_segment_2__c AS account_demographics_sales_segment,
     account_demographics_sales_segment__c AS account_demographics_sales_segment_deprecated,
     CASE
-      WHEN account_demographics_sales_segment__c IN ('Large', 'PubSec') THEN 'Large'
-      ELSE account_demographics_sales_segment__c
+      WHEN account_demographics_sales_segment_2__c IN ('Large', 'PubSec') THEN 'Large'
+      ELSE account_demographics_sales_segment_2__c
     END AS account_demographics_sales_segment_grouped,
     account_demographics_geo__c AS account_demographics_geo,
     account_demographics_region__c AS account_demographics_region,
     account_demographics_area__c AS account_demographics_area,
-    {{ sales_segment_region_grouped('account_demographics_sales_segment__c', 'account_demographics_geo__c', 'account_demographics_region__c') }}
+    {{ sales_segment_region_grouped('account_demographics_sales_segment_2__c', 'account_demographics_geo__c', 'account_demographics_region__c') }}
     AS account_demographics_segment_region_grouped,
     account_demographics_territory__c AS account_demographics_territory,
     account_demographics_employee_count__c AS account_demographics_employee_count,
