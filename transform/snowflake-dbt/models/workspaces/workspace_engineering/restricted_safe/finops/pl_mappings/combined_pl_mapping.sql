@@ -166,7 +166,7 @@ runner_shared_gitlab_org AS (
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 1'        AS from_mapping
   FROM {{ ref ('ci_runners_pl_daily') }}
-  where runner_label = '1 - shared gitlab org runners'
+  where mapping = '1 - shared gitlab org runners'
 
 ),
 
@@ -184,7 +184,7 @@ runner_saas_small AS (
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 2'        AS from_mapping
   FROM {{ ref ('ci_runners_pl_daily') }}
-  where runner_label = '2 - shared saas runners - small'
+  where mapping = '2 - shared saas runners - small'
 
 ),
 
@@ -202,7 +202,7 @@ runner_saas_medium AS (
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 3'        AS from_mapping
   FROM {{ ref ('ci_runners_pl_daily') }}
-  where runner_label = '3 - shared saas runners - medium'
+  where mapping = '3 - shared saas runners - medium'
 
 ),
 
@@ -220,7 +220,7 @@ runner_saas_large AS (
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 4'        AS from_mapping
   FROM {{ ref ('ci_runners_pl_daily') }}
-  where runner_label = '4 - shared saas runners - large'
+  where mapping = '4 - shared saas runners - large'
 
 ),
 

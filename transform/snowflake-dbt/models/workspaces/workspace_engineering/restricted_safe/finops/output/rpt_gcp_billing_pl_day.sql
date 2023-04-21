@@ -26,6 +26,7 @@ overlaps AS (
     service_base.gcp_sku_description,
     service_base.infra_label,
     service_base.env_label,
+    service_base.runner_label,
     combined_pl_mapping.pl_category,
     service_base.usage_unit,
     service_base.pricing_unit,
