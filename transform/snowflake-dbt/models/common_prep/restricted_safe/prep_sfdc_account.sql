@@ -15,14 +15,14 @@ WITH sfdc_account AS (
       sfdc_account.account_id                                                                                        AS dim_crm_account_id,
       sfdc_account.ultimate_parent_account_id                                                                        AS ultimate_parent_account_id,
       {{ sales_segment_cleaning('sfdc_account.account_demographics_sales_segment') }} 
-                                                                                                                     AS ultimate_parent_sales_segment,
+                                                                                                                     AS ultimate_parent_sales_segment_name,
       sfdc_account.parent_account_industry_hierarchy                                                                 AS ultimate_parent_industry,
       sfdc_account.account_demographics_territory                                                                    AS ultimate_parent_territory,
       CASE 
-        WHEN ultimate_parent_sales_segment IN ('Large', 'PubSec')
+        WHEN ultimate_parent_sales_segment_name IN ('Large', 'PubSec')
           THEN 'Large'
-        ELSE ultimate_parent_sales_segment
-      END                                                                                                            AS ultimate_parent_sales_segment_grouped,     
+        ELSE ultimate_parent_sales_segment_name
+      END                                                                                                            AS ultimate_parent_sales_segment_grouped,
       sfdc_account.billing_country,
       sfdc_account.industry
     FROM sfdc_account
@@ -33,7 +33,7 @@ WITH sfdc_account AS (
       dim_crm_account_id                                                                                             AS dim_crm_account_id,
       ultimate_parent_territory                                                                                      AS dim_parent_sales_territory_name_source,
       ultimate_parent_account_id                                                                                     AS dim_parent_crm_account_id,
-      ultimate_parent_sales_segment                                                                                  AS dim_parent_sales_segment_name_source,
+      ultimate_parent_sales_segment_name                                                                             AS dim_parent_sales_segment_name_source,
       ultimate_parent_sales_segment_grouped                                                                          AS dim_parent_sales_segment_grouped_source,
       industry                                                                                                       AS dim_account_industry_name_source,
       ultimate_parent_industry                                                                                       AS dim_parent_industry_name_source,
