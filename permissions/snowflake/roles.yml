@@ -2137,12 +2137,15 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.prometheus
+                    - prep.prometheus
             tables:
                 read:
                     - raw.prometheus.*
+                    - prep.prometheus.*
     
     - pumps_sensitive:
         warehouses:
@@ -2861,6 +2864,7 @@ roles:
     - cleroux:
         member_of:
             - analyst_engineering
+            - prometheus
             - restricted_safe
         warehouses:
             - dev_xs
