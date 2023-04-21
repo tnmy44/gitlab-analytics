@@ -3997,6 +3997,7 @@ roles:
             - analyst_finance
             - customers_db
             - analyst_marketing
+            - analyst_sales_sensitive
             - data_team_analyst
             - restricted_safe
         warehouses:
@@ -4687,6 +4688,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
+            - analyst_sales_sensitive
             - data_team_analyst
             - restricted_safe
         warehouses:
