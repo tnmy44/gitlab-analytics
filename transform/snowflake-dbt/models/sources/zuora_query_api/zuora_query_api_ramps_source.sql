@@ -1,18 +1,18 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('zuora_query_api', 'ramps') }}
+    FROM {{ source('zuora_query_api', 'ramp') }}
 
 ), renamed AS (
 
     SELECT
 
-      Id::TEXT                                                             AS id,
-      OrderId::TEXT                                                        AS orderid,
+      Id::TEXT                                                             AS ramp_id,
+      OrderId::TEXT                                                        AS order_id,
       Name::TEXT                                                           AS name,
       Description::TEXT                                                    AS description,
-      GrossTcb::TEXT                                                       AS grosstcb,
-      DiscountTcv::TEXT                                                    AS discounttcv,
+      GrossTcb::TEXT                                                       AS gross_tcb,
+      DiscountTcv::TEXT                                                    AS discount_tcv,
       NetTcb::TEXT                                                         AS net_tcb,
       MetricsProcessingStatus::TEXT                                        AS metrics_processing_status,
       GrossTcv::TEXT                                                       AS gross_tcv,
