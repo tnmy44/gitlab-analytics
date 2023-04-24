@@ -18,7 +18,7 @@ Welcome to the GitLab Data Program -- we're excited to have you! The goal of thi
 - [ ] Read (skim) through this full issue, just so you have a sense of what's coming.
 - [ ] Create a new issue in the Analytics project (this project). As you proceed and things are unclear, document it in the issue. Don't worry about organizing it; just brain dump it into the issue! This will help us iterate on the onboarding process. Please tag your manager and the Director of the team.
 - [ ] Read the following pages of the handbook in their entirety. Bookmark them as you should soon be making MR's to improve our documentation!
-   - [ ] [Data Team](https://about.gitlab.com/handbook/business-ops/data-team/)
+   - [ ] [Data Team](https://about.gitlab.com/handbook/business-technology/data-team/)
    - [ ] [Data Direction page](https://about.gitlab.com/handbook/business-technology/data-team/direction/) to get a sense of what our short and longer-term roadmap.
    - [ ] [Data Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/)
 - [ ] Watch @rbacovic [talk at Data Science Conference](https://www.youtube.com/watch?v=x74Koq-cNqM&list=PLQyyxph2CGupNGhGLZ1ofCxqJe_RzM7ME&index=5) that gives a phenomenal overview of how the team works.
