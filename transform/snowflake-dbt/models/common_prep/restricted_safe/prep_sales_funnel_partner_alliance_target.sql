@@ -102,7 +102,7 @@
       fiscal_months.first_day_of_month
   FROM sheetload_sales_funnel_partner_alliance_targets_matrix_source
   INNER JOIN fiscal_months
-    ON sheetload_sales_funnel_partner_alliance_targets_matrix_source.month = fiscal_months.fiscal_month_name_fy
+    ON {{ sales_funnel_text_slugify("sheetload_sales_funnel_partner_alliance_targets_matrix_source.month") }} = {{ sales_funnel_text_slugify("fiscal_months.fiscal_month_name_fy") }}
 
 )
 
@@ -111,5 +111,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2023-03-10",
-    updated_date="2023-03-17"
+    updated_date="2023-04-24"
 ) }}
