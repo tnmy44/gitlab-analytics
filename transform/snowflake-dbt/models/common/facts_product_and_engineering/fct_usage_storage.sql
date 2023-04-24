@@ -2,7 +2,13 @@
 {% set bytes_to_mib_conversion = 1048576 %} -- To convert storage (usage) sizes from bytes in source to MiB for reporting (1 MiB = 2^20 bytes = 1,048,576 bytes)
 {% set mib_to_gib_conversion = 1024 %} -- To convert storage limit sizes from GiB in "source" to MiB for reporting (1 GiB = 1024 MiB)
 
-WITH project_statistics_snapshot_monthly_all AS (
+WITH namespace_current AS (
+
+    SELECT dim_namespace_id
+    FROM {{ ref('prep_namespace') }}
+    WHERE is_currently_valid = TRUE
+  
+), project_statistics_snapshot_monthly_all AS (
 
     --project_statistics_snapshot_monthly 
     SELECT
@@ -45,6 +51,7 @@ WITH project_statistics_snapshot_monthly_all AS (
     FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_daily') }}
     WHERE snapshot_day = CURRENT_DATE - 1
       AND IFF(DAY(CURRENT_DATE) = 1, FALSE, TRUE) -- If it is the first day of the month, do not return lineage as it will conflict with the statement above
+      AND namespace_id IN (SELECT * FROM namespace_current)
 
 ), namespace_storage_statistic_monthly_all AS (
 
