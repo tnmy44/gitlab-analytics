@@ -145,23 +145,6 @@ WITH edm_opty AS (
     edm_opty.order_type                            AS order_type_stamped,
     edm_opty.order_type_live                       AS order_type_live,
 
-    -- stage rank
-    CASE edm_opty.stage_name
-        WHEN '0-Pending Acceptance'      THEN 0
-        WHEN '1-Discovery'               THEN 1
-        WHEN '2-Scoping'                 THEN 2
-        WHEN '3-Technical Evaluation'    THEN 3
-        WHEN '4-Proposal'                THEN 4
-        WHEN '5-Negotiating'             THEN 5
-        WHEN '6-Awaiting Signature'      THEN 6
-        WHEN '7-Closing'                 THEN 7
-        WHEN '8-Closed Lost'             THEN 8
-        WHEN 'Closed Won'                 THEN 9
-        WHEN '9-Unqualified'             THEN 11
-        WHEN '10-Duplicate'              THEN 10
-    ELSE NULL
-    END                                             AS stage_name_rank,
-
     ----------------------------------------------------------
     ----------------------------------------------------------
     -- Amount fields
@@ -483,7 +466,47 @@ WITH edm_opty AS (
             THEN DATEDIFF(day, edm_opty.created_date, CURRENT_DATE)
     END                                                           AS cycle_time_in_days,
 
-    
+    -- For some analysis it is important to order stages by rank
+    CASE
+            WHEN edm_opty.stage_name = '0-Pending Acceptance'
+                THEN 0
+            WHEN edm_opty.stage_name = '1-Discovery'
+                THEN 1
+             WHEN edm_opty.stage_name = '2-Scoping'
+                THEN 2
+            WHEN edm_opty.stage_name = '3-Technical Evaluation'
+                THEN 3
+            WHEN edm_opty.stage_name = '4-Proposal'
+                THEN 4
+            WHEN edm_opty.stage_name = '5-Negotiating'
+                THEN 5
+            WHEN edm_opty.stage_name = '6-Awaiting Signature'
+                THEN 6
+            WHEN edm_opty.stage_name = '7-Closing'
+                THEN 7
+            WHEN edm_opty.stage_name = 'Closed Won'
+                THEN 8
+            WHEN edm_opty.stage_name = '8-Closed Lost'
+                THEN 9
+            WHEN edm_opty.stage_name = '9-Unqualified'
+                THEN 10
+            WHEN edm_opty.stage_name = '10-Duplicate'
+                THEN 11
+            ELSE NULL
+    END                     AS stage_name_rank,
+
+    CASE
+        WHEN edm_opty.stage_name IN ('0-Pending Acceptance')
+            THEN '0. Acceptance' 
+         WHEN edm_opty.stage_name IN ('1-Discovery','2-Scoping')
+            THEN '1. Early'
+         WHEN edm_opty.stage_name IN ('3-Technical Evaluation','4-Proposal')
+            THEN '2. Middle'
+         WHEN edm_opty.stage_name IN ('5-Negotiating','6-Awaiting Signature')
+            THEN '3. Late'
+        ELSE '4. Closed'
+    END                     AS pipeline_category,
+   
     ---------------------------------------------
     ---------------------------------------------
 
@@ -501,7 +524,8 @@ WITH edm_opty AS (
     END                                             AS is_eligible_sao_flag,
     edm_opty.is_deleted,
     opportunity_owner.is_rep_flag,
-    edm_opty.pushed_count
+    edm_opty.pushed_count,
+    edm_opty.intented_product_tier
     
     FROM edm_opty
     -- Date helpers
