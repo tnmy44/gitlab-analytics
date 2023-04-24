@@ -24,3 +24,13 @@ tables:
         , UpdatedById
         , UpdatedDate
       FROM orderactionrateplan
+  ramp:
+    query: |-
+      SELECT
+        *
+      FROM Ramp
+  rampinterval:
+    query: |-
+      SELECT
+        *
+      FROM rampinterval
