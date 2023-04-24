@@ -33,4 +33,4 @@ tables:
     query: |-
       SELECT
         *
-      FROM rampinterval
+      FROM RampInterval
