@@ -21,3 +21,5 @@ sources:
       - name: users
       - name: order_action_rate_plan
         identifier: orderactionrateplan
+      - name: ramps
+      - name: ramp_interval
