@@ -715,3 +715,9 @@ The name of the timezone associated with the user related to the event.
 A surrogate key for the attributes of the user location.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fct table.
 
 {% enddocs %}
+
+{% docs link_click_element_id %}
+
+The element id from the unstructured link click event
+
+{% enddocs %}

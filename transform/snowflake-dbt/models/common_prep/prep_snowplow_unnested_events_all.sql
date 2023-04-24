@@ -38,6 +38,7 @@ SELECT
   app_id                                                                                                            AS app_id,
   domain_sessionid                                                                                                  AS session_id,
   lc_targeturl                                                                                                      AS link_click_target_url,
+  NULLIF(lc_elementid,'')                                                                                           AS link_click_element_id,
   sf_formid                                                                                                         AS submit_form_id,
   cf_formid                                                                                                         AS change_form_id,
   cf_type                                                                                                           AS change_form_type,

@@ -1824,6 +1824,8 @@ models:
         description: '{{ doc("user_timezone_name") }}'
       - name: dim_user_location_sk
         description: '{{ doc("dim_user_location_sk") }}'
+      - name: link_click_element_id
+        description: '{{ doc("link_click_element_id") }}'
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.
