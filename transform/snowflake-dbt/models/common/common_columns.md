@@ -463,13 +463,77 @@ The concatenation of major and minor version, easily joined to `dim_gitlab_relea
 
 {% docs major_minor_version_id %}
 
-The id of the major minor version, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_id` is 1306. This id is intended to facilitate easy filtering on versions
+The id of the major minor version, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_id` is 1306. This id is intended to facilitate easy filtering on versions. To be replaced with `major_minor_version_num`.
+
+{% enddocs %}
+
+{% docs major_minor_version_num %}
+
+The numeric variation of `major_minor_version`, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_num` is 1306. This id is intended to facilitate easy ordering on versions.
+
+{% enddocs %}
+
+{% docs app_release_major_minor_id %}
+
+The natural key of dim_app_release_major_minor. This natural key is defined as the concatenation of the `application` and the major minor version. For example, for the GitLab version 13.6.2, the `app_release_major_minor_id` is `GiLab-13.06`.
+
+{% enddocs %}
+
+{% docs dim_app_release_major_minor_sk %}
+
+Surrogate key of dim_app_release_major_minor. Currently identified by hashing the major_minor_version field combined with the application field.
+
+{% enddocs %}
+
+{% docs dim_latest_available_app_release_major_minor_sk %}
+
+The latest avaiable dim_app_release_major_minor_sk at the moment the ping is sent.
 
 {% enddocs %}
 
 {% docs version_is_prerelease %}
 
 Boolean flag which is set to True if the version is a pre-release Version of the GitLab App. See more details [here](https://docs.gitlab.com/ee/policy/maintenance.html). This is defined as `IFF(version ILIKE '%-pre', TRUE, FALSE)`.
+
+{% enddocs %}
+
+{% docs release_date %}
+
+Release date of the GitLab version.
+
+{% enddocs %}
+
+{% docs version_number %}
+
+The sequential number of the major_minor_version.
+
+{% enddocs %}
+
+{% docs next_version_release_date %}
+
+Release date of the next GitLab version.
+
+{% enddocs %}
+
+{% docs days_after_version_release_date %}
+
+The number of days between the date the ping was sent and the release date of the version associated with the ping. When `version_is_prerelease = TRUE`, then this field is less than 0.
+
+There are some cases when `version_is_prerelease = FALSE` and the field is still lower than 0. These cases where manually set to zero in the data model.
+
+{% enddocs %}
+
+{% docs latest_version_available_at_ping_creation %}
+
+The most recent version that is available at the time the ping is created. 
+
+{% enddocs %}
+
+{% docs versions_behind_latest_at_ping_creation %}
+
+The number of versions by which the ping-associated version lags behind. When `version_is_prerelease = TRUE`, then this field is less than 0.
+
+There are some cases when `version_is_prerelease = FALSE` and the field is still lower than 0. These cases where manually set to zero in the data model.
 
 {% enddocs %}
 
@@ -1868,9 +1932,15 @@ The action to be carried out on the subscription. For example, 'Amend Subscripti
 
 {% enddocs %}
 
-{% docs dim_gitlab_version_sk %}
+{% docs dim_app_release_sk %}
 
-The unique surrogate key created by using `version_id` which is a unique identifier of a release maintained by the versions app. 
+Unique identifier of an application (app) release. Identifies the combination of major, minor and patch version of a release from an specific application.
+
+{% enddocs %}
+
+{% docs app_release_id %}
+
+The unique identifier of the release of an application.
 
 {% enddocs %}
 
