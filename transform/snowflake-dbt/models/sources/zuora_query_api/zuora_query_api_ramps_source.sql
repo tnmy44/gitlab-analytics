@@ -22,11 +22,10 @@ WITH source AS (
       "ChargeNumbers"::TEXT                                                  AS charge_numbers,
       "DiscountTcb"::TEXT                                                    AS discount_tcb,
       "CreatedById"::TEXT                                                    AS created_by_id,
-      "CreatedDate"::TEXT                                                    AS created_date,
+      TO_TIMESTAMP(CONVERT_TIMEZONE('UTC', "CreatedDate"))::TIMESTAMP        AS created_date,
       "UpdatedById"::TEXT                                                    AS updated_by_id,
       "UpdatedDate"::TEXT                                                    AS updated_date,
-      TO_TIMESTAMP(CONVERT_TIMEZONE('UTC', "CreatedDate"))::TIMESTAMP      AS created_date,
-      TO_TIMESTAMP_NTZ(CAST(_uploaded_at AS INT))::TIMESTAMP               AS uploaded_at
+      TO_TIMESTAMP_NTZ(CAST(_uploaded_at AS INT))::TIMESTAMP                 AS uploaded_at
 
     FROM source
 
