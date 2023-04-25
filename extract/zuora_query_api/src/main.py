@@ -37,7 +37,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
     logging.info(manifest_dict)
 
     for table_spec in manifest_dict:
-        info(f"Processing {table_spec}")
+        logging.info(f"Processing {table_spec}")
         job_id = zq.request_data_query_data(
                 query_string=tables.get(table_spec).get("query")
         )
@@ -49,7 +49,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
                 schema="ZUORA_QUERY_API",
                 if_exists="replace",
         )
-        info(f"Processed {table_spec}")
+        logging.info(f"Processed {table_spec}")
 
 
 if __name__ == "__main__":
