@@ -36,7 +36,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
 
     logging.info(manifest_dict)
 
-    for table_spec in manifest_dict:
+    for table_spec in manifest_dict.get('tables'):
         logging.info(f"Processing {table_spec}")
         logging.info(manifest_dict.get(table_spec))
         job_id = zq.request_data_query_data(
