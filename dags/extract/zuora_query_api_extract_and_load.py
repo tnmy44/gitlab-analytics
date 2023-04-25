@@ -69,7 +69,7 @@ for table_name in tables:
         {clone_and_setup_extraction_cmd} &&
             python zuora_query_api/src/main.py tap zuora_query_api/src/queries.yml --load_only_table {table_name}
     """
-    task_identifier = f"zuora-query-api-extract-{table_name.replace('_', '-')}"
+    task_identifier = f"{table_name.replace('_', '-')}"
 
     zuora_data_query_extract = KubernetesPodOperator(
         **gitlab_defaults,
