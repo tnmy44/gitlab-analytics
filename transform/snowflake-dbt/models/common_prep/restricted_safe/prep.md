@@ -43,3 +43,11 @@ Prep model for the live crm opportunity dimension and fact models. This model is
  - If all of the methods for finding an opportunity-subscription mapping match for one record, select this subscription-opportunity pair.
 
 {% enddocs %}
+
+{% docs prep_billing_account %}
+
+Prep model for merging the billing accounts data from both Zuora and CDot sources. This model will be used as a source model for creating `dim_billing_account` core business data object downstream.
+
+{% enddocs %}
+
+
