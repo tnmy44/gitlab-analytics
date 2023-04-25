@@ -31,6 +31,7 @@ from gitlabdata.orchestration_utils import (
 
 config_dict = os.environ.copy()
 HEADERS = {"apikey": config_dict.get("CLARI_API_KEY")}
+TIMEOUT = 60
 BASE_URL = "https://api.clari.com/v4"
 FORECAST_ID = "net_arr"
 
@@ -147,7 +148,9 @@ def get_forecast(fiscal_quarter: str) -> Dict[Any, Any]:
     """
     params = {"timePeriod": fiscal_quarter}
     forecast_url = f"{BASE_URL}/forecast/{FORECAST_ID}"
-    response = make_request("GET", forecast_url, headers=HEADERS, params=params)
+    response = make_request(
+        "GET", forecast_url, headers=HEADERS, params=params, timeout=TIMEOUT
+    )
     info("Successful response from GET forecast API (latest week only)")
     return response.json()
 
@@ -160,7 +163,7 @@ def start_export_report(fiscal_quarter: str) -> str:
 
     json_body = {"timePeriod": fiscal_quarter, "includeHistorical": True}
     response = make_request(
-        "POST", export_forecast_url, headers=HEADERS, json=json_body
+        "POST", export_forecast_url, headers=HEADERS, json=json_body, timeout=TIMEOUT
     )
     return response.json()["jobId"]
 
@@ -168,7 +171,7 @@ def start_export_report(fiscal_quarter: str) -> str:
 def get_job_status(job_id: str) -> Dict[Any, Any]:
     """Returns the status of the job with the specified ID."""
     job_status_url = f"{BASE_URL}/export/jobs/{job_id}"
-    response = make_request("GET", job_status_url, headers=HEADERS)
+    response = make_request("GET", job_status_url, headers=HEADERS, timeout=TIMEOUT)
     info(f'\njobStatus response:\n {response.json()["job"]}')
     return response.json()["job"]
 
@@ -212,7 +215,7 @@ def poll_job_status(
 def get_report_results(job_id: str) -> Dict[Any, Any]:
     """Get the report results as a json/dict object"""
     results_url = f"{BASE_URL}/export/jobs/{job_id}/results"
-    response = make_request("GET", results_url, headers=HEADERS)
+    response = make_request("GET", results_url, headers=HEADERS, timeout=TIMEOUT)
     info("Successfully obtained report data")
     return response.json()
 
