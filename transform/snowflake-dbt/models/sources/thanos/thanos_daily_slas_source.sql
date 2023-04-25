@@ -24,8 +24,8 @@ overall_ratio AS (
     jsonpath_root.this['success']::BOOLEAN                               AS is_success
   FROM
     source INNER JOIN
-    LATERAL FLATTEN(input => json.jsontext['overall_ratio']) jsonpath_root INNER JOIN
-    LATERAL FLATTEN(input => json.jsontext['overall_ratio']['body']['data']['result'], outer => TRUE) jsonpath_result
+    LATERAL FLATTEN(input => source.jsontext['overall_ratio']) jsonpath_root INNER JOIN
+    LATERAL FLATTEN(input => source.jsontext['overall_ratio']['body']['data']['result'], outer => TRUE) jsonpath_result
   WHERE result_type IS NOT NULL AND status_type IS NOT NULL
 ),
 
@@ -48,11 +48,25 @@ overall_target AS (
     jsonpath_root.this['success']::BOOLEAN                               AS is_success
   FROM
     source INNER JOIN
-    LATERAL FLATTEN(input => json.jsontext['overall_target']) jsonpath_root INNER JOIN
-    LATERAL FLATTEN(input => json.jsontext['overall_target']['body']['data']['result'], outer => TRUE) jsonpath_result
+    LATERAL FLATTEN(input => source.jsontext['overall_target']) jsonpath_root INNER JOIN
+    LATERAL FLATTEN(input => source.jsontext['overall_target']['body']['data']['result'], outer => TRUE) jsonpath_result
   WHERE result_type IS NOT NULL AND status_type IS NOT NULL
+),
+
+unioned as (
+
+SELECT *, 
+  rank() over (partition by metric_created_at 
+  order by metric_created_at asc nulls last)                             AS nth_daily_measurement 
+FROM overall_ratio
+
+UNION ALL
+
+SELECT *, 
+  rank() over (partition by metric_created_at 
+  order by metric_created_at asc nulls last)                             AS nth_daily_measurement 
+FROM overall_target
+
 )
 
-SELECT * FROM overall_ratio
-UNION ALL
-SELECT * FROM overall_target
+SELECT * exclude nth_daily_measurement FROM unioned WHERE nth_daily_measurement = 1

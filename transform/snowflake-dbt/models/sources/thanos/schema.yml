@@ -72,12 +72,19 @@ models:
     - name: thanos_daily_slas_source
       columns:
         - name: metric_query
+          description: string, query selector
         - name: metric_env
+          description: string, environment selector, can be gprd or ops
         - name: metric_environment
+          description: string, environment selector, gprd only
         - name: metric_monitor
+          description: string, monitor selector
         - name: metric_ruler_cluster
+          description: string, thanos or null. name of cluster called
         - name: metric_sla_type
+          description: string, selector for calculation mode
         - name: metric_stage
+          description: string
         - name: metric_created_at
         - name: metric_value
           tests:
