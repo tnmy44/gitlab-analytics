@@ -6,9 +6,29 @@
     {%- set columns = adapter.get_columns_in_relation(this) -%}
     {%- set referential_integrity_columns = referential_integrity_cols|list -%}
     {%- set not_null_test_columns = not_null_test_cols|list -%}
-    {%- set columns_for_insert = dbt_utils.get_filtered_columns_in_relation(this)|list -%}
+    {%- set columns_for_insert = dbt_utils.get_filtered_columns_in_relation(this)|join(", ") -%}
+    {%- set columns_for_insert_aliased =  "b." + dbt_utils.get_filtered_columns_in_relation(this)|join(", b.") -%}
+    {%- set columns_from_insert_aliased =  "a." + dbt_utils.get_filtered_columns_in_relation(this)|join(", a.") -%}
+    
+    {%- set join_columns = [] %}
+    {%- for col in columns %}
+       {%-if not loop.last %}
+         {%- do join_columns.append('a.{} = b.{} AND '.format(col.name, col.name)) %}
+        {%-elif loop.last %}
+         {%- do join_columns.append('a.{} = b.{}'.format(col.name, col.name)) %} 
+      {%- endif %}
+    {%- endfor %}
 
-    MERGE INTO {{ this }} USING (
+    {%- set update_columns = [] %}
+    {%- for col in columns %}
+      {%- do update_columns.append('a.{} = b.{}'.format(col.name, col.name)) %}
+    {%- endfor %}
+
+    {%- set join_columns_items = ''.join(join_columns) %}
+    {%- set update_columns_items=  ', '.join(update_columns) %}
+
+
+    MERGE INTO {{ this }} a USING (
 
     SELECT 
     {%- for col in columns %}
@@ -39,6 +59,8 @@
         '9999-01-01 00:00:00.000 +0000' AS {{ col.name|lower }},
         {% elif col.data_type == 'TIMESTAMP' %}
         '9999-01-01 00:00:00 +0000' AS {{ col.name|lower }},
+        {% elif col.data_type == 'TIMESTAMP_LTZ(9)' %}
+        '9999-01-01 00:00:00.000 +0000' AS {{ col.name|lower }},
         {% elif col.data_type == 'FLOAT' %}
         NULL AS {{ col.name|lower }},
         {% elif col.data_type == 'NUMBER' %}
@@ -54,7 +76,7 @@
         {% elif col.data_type == 'BIGINT' %}
         NULL AS {{ col.name|lower }},
         {% else %}
-        'not available' AS {{ col.name|lower }},
+        NULL AS {{ col.name|lower }},
         {% endif %}
       {% elif loop.last %}
         {% if col.name|lower == primary_key %}
@@ -83,6 +105,8 @@
         '9999-01-01 00:00:00.000 +0000' AS {{ col.name|lower }}
         {% elif col.data_type == 'TIMESTAMP' %}
         '9999-01-01 00:00:00 +0000' AS {{ col.name|lower }}
+        {% elif col.data_type == 'TIMESTAMP_LTZ(9)' %}
+        '9999-01-01 00:00:00.000 +0000' AS {{ col.name|lower }}
         {% elif col.data_type == 'FLOAT' %}
         NULL AS {{ col.name|lower }}
         {% elif col.data_type == 'NUMBER' %}
@@ -98,7 +122,7 @@
         {% elif col.data_type == 'BIGINT' %}
         NULL AS {{ col.name|lower }}
         {% else %}
-        'not available' AS {{ col.name|lower }}
+        NULL AS {{ col.name|lower }}
         {% endif %}
       {% endif %}
     {%- endfor %}
@@ -106,8 +130,9 @@
     FROM {{this}}
     LIMIT 1
     
-    ) AS b ON {{ this }}.dim_crm_account_id = b.dim_crm_account_id
-  WHEN NOT MATCHED THEN INSERT ({{columns_for_insert}}) VALUES ({{dbt_utils.get_column_values}})
+    ) AS b ON {{join_columns_items}}
+  WHEN MATCHED THEN UPDATE SET {{update_columns_items}} 
+  WHEN NOT MATCHED THEN INSERT ({{ columns_for_insert }}) VALUES ({{ columns_for_insert_aliased }})
 
 
 {%- endmacro -%}
