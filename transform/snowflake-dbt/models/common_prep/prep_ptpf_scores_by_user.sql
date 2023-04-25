@@ -12,7 +12,8 @@
       score,
       decile,
       score_group,
-      insights
+      insights,
+      days_since_trial_start
     FROM {{ ref('ptpf_scores_source') }}
 
 ), score_dates AS (
@@ -47,6 +48,7 @@
       ptpf_scores_last.namespace_id,
       ptpf_scores_last.score,
       ptpf_scores_last.insights,
+      ptpf_scores_last.days_since_trial_start,
       ptpf_scores_last.score_group,
       ptpf_scores_last.score_date::DATE                    AS score_date
     FROM prep_namespace
@@ -79,6 +81,7 @@ SELECT
   namespace_creator_ptpf_score.insights,
   namespace_creator_ptpf_score.score_group,
   namespace_creator_ptpf_score.score_date,
+  namespace_creator_ptpf_score.days_since_trial_start,
   namespace_creator_ptpf_score_last_2.insights          AS past_insights,
   namespace_creator_ptpf_score_last_2.score_group       AS past_score_group,
   namespace_creator_ptpf_score_last_2.score_date::DATE  AS past_score_date

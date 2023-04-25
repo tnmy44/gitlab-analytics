@@ -23,6 +23,16 @@
       {% endfor %}
       CASE
         WHEN prep_ptpt_scores_by_user.score_group >= 4
+          THEN NULL
+        WHEN prep_ptpf_scores_by_user.score_group >= 4
+          THEN prep_ptpf_scores_by_user.days_since_trial_start
+        WHEN prep_ptpt_scores_by_user.dim_marketing_contact_id IS NOT NULL
+          THEN NULL
+        ELSE
+          prep_ptpf_scores_by_user.days_since_trial_start
+      END days_since_trial_start,
+      CASE
+        WHEN prep_ptpt_scores_by_user.score_group >= 4
           THEN 'Trial'
         WHEN prep_ptpf_scores_by_user.score_group >= 4
           THEN 'Free'

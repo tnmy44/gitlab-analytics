@@ -390,6 +390,8 @@ models:
         description: Past ptp_score_group assigned to the marketing contact
       - name: ptp_past_score_date
         description: Past ptp_score_date assigned to the marketing contact
+      - name: ptp_days_since_trial_start
+        description: Days since last trial started. Currently, only filled for marketing contacts with `ptp_source = Free`.
       - name: ptp_source
         description: The source of the score. Currently, only two values are possible, Free (PtPF model) or Trial (PtPT model)
       - name: is_ptp_contact
