@@ -53,19 +53,23 @@ overall_target AS (
   WHERE result_type IS NOT NULL AND status_type IS NOT NULL
 ),
 
-unioned as (
+unioned AS (
 
-SELECT *, rank() over (partition by date(metric_created_at) 
-  order by metric_created_at asc nulls last) as nth_daily_measurement
-FROM overall_ratio
+  SELECT
+    *,
+    RANK() OVER (PARTITION BY DATE(metric_created_at)
+      ORDER BY metric_created_at ASC NULLS LAST) AS nth_daily_measurement
+  FROM overall_ratio
 
-UNION ALL
+  UNION ALL
 
-SELECT *, rank() over (partition by date(metric_created_at) 
-  order by metric_created_at asc nulls last) as nth_daily_measurement
-FROM overall_target
+  SELECT
+    *,
+    RANK() OVER (PARTITION BY DATE(metric_created_at)
+      ORDER BY metric_created_at ASC NULLS LAST) AS nth_daily_measurement
+  FROM overall_target
 
 )
 
-SELECT *  FROM unioned 
+SELECT * FROM unioned
 WHERE nth_daily_measurement = 1
