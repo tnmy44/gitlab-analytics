@@ -58,9 +58,7 @@ def extract_manifest(file_path):
     return manifest_dict
 
 
-manifest = extract_manifest(
-    "analytics/extract/zuora_query_api/src/queries.yml"
-)
+manifest = extract_manifest("analytics/extract/zuora_query_api/src/queries.yml")
 tables = manifest.get("tables")
 
 for table_name in tables:

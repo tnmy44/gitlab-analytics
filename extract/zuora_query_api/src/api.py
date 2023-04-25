@@ -148,5 +148,3 @@ class ZuoraQueriesAPI:
             df = pd.read_csv(StringIO(response.text))
             info("File downloaded")
             return df
-
-
