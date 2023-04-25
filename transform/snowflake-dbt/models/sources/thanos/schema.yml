@@ -70,6 +70,12 @@ models:
         - name: status_code
         - name: is_success
     - name: thanos_daily_slas_source
+      tests:
+        - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - metric_query
+            - metric_created_at
+            - metric_value
       columns:
         - name: metric_query
           description: string, query selector
@@ -84,13 +90,18 @@ models:
         - name: metric_sla_type
           description: string, selector for calculation mode
         - name: metric_stage
-          description: string
+          description: string, stage 
         - name: metric_created_at
+          description: metric called at timestamp
         - name: metric_value
+          description: percentage of availability over the 24 hours preceeding metric_created_at
           tests:
               - not_null
         - name: result_type
         - name: status_type
+          description: status of the query
         - name: message_type
         - name: status_code
+          description: http status code of the request
         - name: is_success
+          description: boolean, true if request was successful (200)
