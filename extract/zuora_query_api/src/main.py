@@ -1,6 +1,7 @@
 from os import environ as env
 from api import ZuoraQueriesAPI
 from typing import Dict
+import logging
 
 def manifest_reader(file_path: str) -> Dict[str, Dict]:
     """
