@@ -67,7 +67,7 @@ for table_name in tables:
 
     extract_command = f"""
         {clone_and_setup_extraction_cmd} &&
-            python zuora_query_api/src/main.py tap analytics/extract/zuora_query_api/src/queries.yml --load_only_table {table_name}
+            python zuora_query_api/src/main.py tap zuora_query_api/src/queries.yml --load_only_table {table_name}
     """
     task_identifier = f"zuora-query-api-extract-{table_name.replace('_', '-')}"
 

@@ -4,6 +4,7 @@ from typing import Dict
 from fire import Fire
 import logging
 
+
 def manifest_reader(file_path: str) -> Dict[str, Dict]:
     """
     Read a yaml manifest file into a dictionary and return it.
@@ -51,6 +52,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
                     if_exists="replace",
             )
             info(f"Processed {table_spec}")
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
