@@ -104,7 +104,6 @@ def make_request(
     **kwargs,
 ) -> requests.models.Response:
     """Generic function that handles making GET and POST requests"""
-
     additional_backoff = 20
     if current_retry_count >= max_retry_count:
         raise requests.exceptions.HTTPError(
@@ -148,7 +147,7 @@ def get_forecast(fiscal_quarter: str) -> Dict[Any, Any]:
     """
     params = {"timePeriod": fiscal_quarter}
     forecast_url = f"{BASE_URL}/forecast/{FORECAST_ID}"
-    response = make_request("GET", forecast_url, HEADERS, params=params)
+    response = make_request("GET", forecast_url, headers=HEADERS, params=params)
     info("Successful response from GET forecast API (latest week only)")
     return response.json()
 
@@ -160,14 +159,16 @@ def start_export_report(fiscal_quarter: str) -> str:
     export_forecast_url = f"{BASE_URL}/export/forecast/{FORECAST_ID}"
 
     json_body = {"timePeriod": fiscal_quarter, "includeHistorical": True}
-    response = make_request("POST", export_forecast_url, HEADERS, json_body=json_body)
+    response = make_request(
+        "POST", export_forecast_url, headers=HEADERS, json=json_body
+    )
     return response.json()["jobId"]
 
 
 def get_job_status(job_id: str) -> Dict[Any, Any]:
     """Returns the status of the job with the specified ID."""
     job_status_url = f"{BASE_URL}/export/jobs/{job_id}"
-    response = make_request("GET", job_status_url, HEADERS)
+    response = make_request("GET", job_status_url, headers=HEADERS)
     info(f'\njobStatus response:\n {response.json()["job"]}')
     return response.json()["job"]
 
@@ -211,7 +212,7 @@ def poll_job_status(
 def get_report_results(job_id: str) -> Dict[Any, Any]:
     """Get the report results as a json/dict object"""
     results_url = f"{BASE_URL}/export/jobs/{job_id}/results"
-    response = make_request("GET", results_url, HEADERS)
+    response = make_request("GET", results_url, headers=HEADERS)
     info("Successfully obtained report data")
     return response.json()
 
