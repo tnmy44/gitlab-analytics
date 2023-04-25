@@ -34,24 +34,22 @@ def main(file_path: str, load_only_table: str = None) -> None:
     # When load_only_table specified reduce manifest to keep only relevant table config
     manifest_dict = filter_manifest(manifest_dict, load_only_table)
 
-    with open(manifest_dict) as file:
-        query_specs = yaml.load(file, Loader=yaml.FullLoader)
+    logging.info(manifest_dict)
 
-        tables = query_specs.get("tables")
-        for table_spec in tables:
-            info(f"Processing {table_spec}")
-            job_id = zq.request_data_query_data(
-                    query_string=tables.get(table_spec).get("query")
-            )
-            df = zq.get_data_query_file(job_id)
-            dataframe_uploader(
-                    df,
-                    zq.snowflake_engine,
-                    table_spec,
-                    schema="ZUORA_QUERY_API",
-                    if_exists="replace",
-            )
-            info(f"Processed {table_spec}")
+    for table_spec in manifest_dict:
+        info(f"Processing {table_spec}")
+        job_id = zq.request_data_query_data(
+                query_string=tables.get(table_spec).get("query")
+        )
+        df = zq.get_data_query_file(job_id)
+        dataframe_uploader(
+                df,
+                zq.snowflake_engine,
+                table_spec,
+                schema="ZUORA_QUERY_API",
+                if_exists="replace",
+        )
+        info(f"Processed {table_spec}")
 
 
 if __name__ == "__main__":
