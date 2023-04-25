@@ -837,8 +837,11 @@
       ptp_scores_by_user.namespace_id             AS ptp_namespace_id,
       ptp_scores_by_user.score_group              AS ptp_score_group,
       ptp_scores_by_user.score_date               AS ptp_score_date,
+      ptp_scores_by_user.insights                 AS ptp_insights,
+      ptp_scores_by_user.past_insights            AS ptp_past_insights,
       ptp_scores_by_user.past_score_group         AS ptp_past_score_group,
       ptp_scores_by_user.past_score_date          AS ptp_past_score_date,
+      ptp_scores_by_user.ptp_source               AS ptp_source,
 
       -- Namespace notification dates
       namespace_notifications.user_limit_namespace_id,

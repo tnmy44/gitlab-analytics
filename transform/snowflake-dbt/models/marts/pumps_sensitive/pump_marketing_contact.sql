@@ -100,6 +100,8 @@ SELECT
   is_ptp_contact,
   ptp_namespace_id,
   ptp_score_group,
+  ptp_insights,
+  ptp_past_insights,
   ptp_score_date,
   ptp_past_score_group,
 
