@@ -4,6 +4,7 @@ from typing import Dict
 from fire import Fire
 import logging
 import yaml
+from gitlabdata.orchestration_utils import dataframe_uploader
 
 def manifest_reader(file_path: str) -> Dict[str, Dict]:
     """
@@ -38,7 +39,6 @@ def main(file_path: str, load_only_table: str = None) -> None:
 
     for table_spec in manifest_dict.get('tables'):
         logging.info(f"Processing {table_spec}")
-        logging.info(manifest_dict)
         job_id = zq.request_data_query_data(
                 query_string=manifest_dict.get('tables').get(table_spec).get('query')
         )
