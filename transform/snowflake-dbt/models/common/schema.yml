@@ -5933,6 +5933,8 @@ models:
         description: '{{ doc("user_snowplow_domain_id") }}'
       - name: link_click_target_url
         description: '{{ doc("link_click_target_url") }}'
+      - name: link_click_element_id
+        description: '{{ doc("link_click_element_id") }}'
       - name: submit_form_id
         description: '{{ doc("submit_form_id") }}'
       - name: change_form_id
