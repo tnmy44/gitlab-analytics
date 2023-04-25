@@ -41,7 +41,9 @@ def main(file_path: str, load_only_table: str = None) -> None:
     for table_spec in manifest_dict.get("tables", ""):
         logging.info(f"Processing {table_spec}")
         job_id = zq.request_data_query_data(
-            query_string=manifest_dict.get("tables", {}).get(table_spec, {}).get("query")
+            query_string=manifest_dict.get("tables", {})
+            .get(table_spec, {})
+            .get("query")
         )
         df = zq.get_data_query_file(job_id)
         dataframe_uploader(
