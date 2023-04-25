@@ -48,6 +48,7 @@ dag = DAG(
     "zuora_query_api_extract_and_load",
     default_args=default_args,
     schedule_interval="0 3 * * *",
+    concurrency=2,
 )
 
 
