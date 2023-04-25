@@ -2053,3 +2053,51 @@ The current open renewal opportunity mapped to a subscription.
 The closed lost renewal opportunity, where applicable, mapped mapped to a subscription.
 
 {% enddocs %}
+
+{% docs dim_plan_sk %}
+
+The surrogate key for joining to the `dim_plan` table
+
+{% enddocs %}
+
+
+
+
+
+
+
+{% docs dim_plan_id %}
+
+The id of the plan as given by GitLab.com
+
+{% enddocs %}
+
+{% docs plan_id_modified %}
+
+Modified plan id to conform legacy gold and silver plan ids to ultimate and premium plan ids.
+
+{% enddocs %}
+
+{% docs plan_name %}
+
+The name of the plan as given by GitLab.com
+
+{% enddocs %}
+
+{% docs plan_name_modified %}
+
+Modified plan name to conform legacy gold and silver plan names to ultimate and premium plan names.
+
+{% enddocs %}
+
+{% docs plan_title %}
+
+The title of the plan as given by GitLab.com
+
+{% enddocs %}
+
+{% docs is_plan_paid %}
+
+A flag to indicate if the plan is a paid plan or not.
+
+{% enddocs %}
