@@ -1,7 +1,6 @@
 {{ config(materialized='table') }}
 
 {{ simple_cte([
-    ('opportunity_base','mart_crm_opportunity'),
     ('person_base','mart_crm_person'),
     ('dim_crm_person','dim_crm_person'),
     ('mart_crm_opportunity_stamped_hierarchy_hist', 'mart_crm_opportunity_stamped_hierarchy_hist'), 
@@ -25,7 +24,7 @@
       close_date,
       is_sao,
       sales_accepted_date
-    FROM opportunity_base
+    FROM mart_crm_opportunity_stamped_hierarchy_hist
     WHERE is_won = true
       AND order_type = '1. New - First Order'
 
@@ -47,10 +46,10 @@
       person_base.email_hash, 
       person_base.dim_crm_account_id,
       upa_base.dim_parent_crm_account_id,
-      opportunity_base.dim_crm_opportunity_id,
+      mart_crm_opportunity_stamped_hierarchy_hist.dim_crm_opportunity_id,
       CASE 
-         WHEN is_first_order_available = False AND opportunity_base.order_type = '1. New - First Order' THEN '3. Growth'
-         WHEN is_first_order_available = False AND opportunity_base.order_type != '1. New - First Order' THEN opportunity_base.order_type
+         WHEN is_first_order_available = False AND mart_crm_opportunity_stamped_hierarchy_hist.order_type = '1. New - First Order' THEN '3. Growth'
+         WHEN is_first_order_available = False AND mart_crm_opportunity_stamped_hierarchy_hist.order_type != '1. New - First Order' THEN mart_crm_opportunity_stamped_hierarchy_hist.order_type
       ELSE '1. New - First Order'
       END AS person_order_type,
       ROW_NUMBER() OVER( PARTITION BY email_hash ORDER BY person_order_type) AS person_order_type_number
@@ -59,8 +58,8 @@
       ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    FULL JOIN opportunity_base
-      ON upa_base.dim_parent_crm_account_id = opportunity_base.dim_parent_crm_account_id
+    FULL JOIN mart_crm_opportunity_stamped_hierarchy_hist
+      ON upa_base.dim_parent_crm_account_id = mart_crm_opportunity_stamped_hierarchy_hist.dim_parent_crm_account_id
 
 ), person_order_type_final AS (
 
@@ -506,7 +505,7 @@
       won_custom_net_arr,
       won_linear_net_arr
   FROM person_base_with_tp
-  LEFT JOIN opp_base_with_batp
+  FULL JOIN opp_base_with_batp
     ON person_base_with_tp.dim_crm_account_id=opp_base_with_batp.dim_crm_account_id
 
 ), intermediate AS (
