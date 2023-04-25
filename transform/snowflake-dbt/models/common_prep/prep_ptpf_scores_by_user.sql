@@ -11,7 +11,8 @@
       score_date,
       score,
       decile,
-      score_group
+      score_group,
+      insights
     FROM {{ ref('ptpf_scores_source') }}
 
 ), score_dates AS (
@@ -45,6 +46,7 @@
       COALESCE(users.notification_email, users.email) AS email_address,
       ptpf_scores_last.namespace_id,
       ptpf_scores_last.score,
+      ptpf_scores_last.insights,
       ptpf_scores_last.score_group,
       ptpf_scores_last.score_date::DATE                    AS score_date
     FROM prep_namespace
@@ -58,6 +60,7 @@
 
     SELECT
       COALESCE(users.notification_email, users.email) AS email_address,
+      ptpf_scores_last_2.insights,
       ptpf_scores_last_2.score_group,
       ptpf_scores_last_2.score_date
     FROM prep_namespace
@@ -73,8 +76,10 @@ SELECT
   {{ dbt_utils.surrogate_key(['namespace_creator_ptpf_score.email_address']) }} AS dim_marketing_contact_id,
   namespace_creator_ptpf_score.namespace_id,
   namespace_creator_ptpf_score.score,
+  namespace_creator_ptpf_score.insights,
   namespace_creator_ptpf_score.score_group,
   namespace_creator_ptpf_score.score_date,
+  namespace_creator_ptpf_score_last_2.insights          AS past_insights,
   namespace_creator_ptpf_score_last_2.score_group       AS past_score_group,
   namespace_creator_ptpf_score_last_2.score_date::DATE  AS past_score_date
 FROM namespace_creator_ptpf_score
