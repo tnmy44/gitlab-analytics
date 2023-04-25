@@ -34,7 +34,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
     # When load_only_table specified reduce manifest to keep only relevant table config
     manifest_dict = filter_manifest(manifest_dict, load_only_table)
 
-    with open(file_path) as file:
+    with open(manifest_dict) as file:
         query_specs = yaml.load(file, Loader=yaml.FullLoader)
 
         tables = query_specs.get("tables")
