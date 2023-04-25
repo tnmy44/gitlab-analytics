@@ -72,10 +72,10 @@ models:
     - name: thanos_daily_slas_source
       tests:
         - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - metric_query
-            - metric_created_at
-            - metric_value
+            combination_of_columns:
+              - metric_query
+              - metric_created_at
+              - metric_value
       columns:
         - name: metric_query
           description: string, query selector
