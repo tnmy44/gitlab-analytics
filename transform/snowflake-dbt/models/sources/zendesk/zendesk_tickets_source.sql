@@ -27,9 +27,9 @@ renamed AS (
       description                             AS ticket_description,
       type                                    AS ticket_type,
       -- added ':score'
-      satisfaction_rating__id::VARCHAR        AS satisfaction_rating_id,
-      satisfaction_rating__score::VARCHAR     AS satisfaction_rating_score,
-      via__channel::VARCHAR                   AS submission_channel,
+      satisfaction_rating['id']::VARCHAR      AS satisfaction_rating_id,
+      satisfaction_rating['score']::VARCHAR     AS satisfaction_rating_score,
+      via['channel']::VARCHAR                 AS submission_channel,
       custom_fields::VARIANT                  AS ticket_custom_field_values,
 
       --dates
