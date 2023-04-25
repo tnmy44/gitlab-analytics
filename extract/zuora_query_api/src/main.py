@@ -3,7 +3,7 @@ from api import ZuoraQueriesAPI
 from typing import Dict
 from fire import Fire
 import logging
-
+import yaml
 
 def manifest_reader(file_path: str) -> Dict[str, Dict]:
     """
