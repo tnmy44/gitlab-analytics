@@ -1,6 +1,6 @@
 {{ config({
     "alias": "dim_crm_account",
-    "post-hook": "{{missing_member_column('dim_crm_account_id')}}"
+    "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_account_id', not_null_test_cols = ['is_reseller']) }}"
 }) }}
 
 WITH final AS (
