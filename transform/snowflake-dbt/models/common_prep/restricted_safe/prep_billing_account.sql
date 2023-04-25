@@ -54,7 +54,7 @@
       billing_account_created_at,
       billing_account_updated_at,
       'Y' as exists_in_cdot
-    FROM {{ref('customers_db_billing_account_source')}}
+    FROM {{ref('customers_db_billing_accounts_source')}}
 
 ), final AS (
 
