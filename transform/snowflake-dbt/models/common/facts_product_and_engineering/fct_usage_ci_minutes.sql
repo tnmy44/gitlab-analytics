@@ -45,7 +45,7 @@ WITH project_snapshot_monthly_all AS (
       upstream_lineage,
       ultimate_parent_id
     FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_daily') }}
-    WHERE snapshot_day = CURRENT_DATE - 1
+    WHERE snapshot_day = DATEADD('DAY', -1, CURRENT_DATE)
       AND IFF(DAY(CURRENT_DATE) = 1, FALSE, TRUE) -- If it is the first day of the month, do not return lineage as it will conflict with the statement above
 
 

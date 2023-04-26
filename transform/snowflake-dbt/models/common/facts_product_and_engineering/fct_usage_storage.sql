@@ -45,13 +45,14 @@ WITH namespace_current AS (
     
     --namespace_lineage_current
     SELECT
-      DATE_TRUNC('month', snapshot_day)                         AS snapshot_month,
-      namespace_id,
-      ultimate_parent_id
-    FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_daily') }}
-    WHERE snapshot_day = CURRENT_DATE - 1
+      DATE_TRUNC('month', namespace_lineage.snapshot_day)                         AS snapshot_month,
+      namespace_lineage.namespace_id                                              AS namespace_id,
+      namespace_lineage.ultimate_parent_id                                        AS ultimate_parent_id
+    FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_daily') }} AS namespace_lineage
+    INNER JOIN namespace_current -- To filter for non deleted namespaces
+      ON namespace_lineage.namespace_id = namespace_current.dim_namespace_id
+    WHERE namespace_lineage.snapshot_day = DATEADD('DAY', -1, CURRENT_DATE)
       AND IFF(DAY(CURRENT_DATE) = 1, FALSE, TRUE) -- If it is the first day of the month, do not return lineage as it will conflict with the statement above
-      AND namespace_id IN (SELECT * FROM namespace_current)
 
 ), namespace_storage_statistic_monthly_all AS (
 
