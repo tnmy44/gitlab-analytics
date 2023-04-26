@@ -1208,6 +1208,6 @@ models:
       - name: is_deleted
         description: The flag indicating if account has been deleted
       - name: batch
-      - name: is_record_in_data_source
+      - name: record_data_source
         description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources
 

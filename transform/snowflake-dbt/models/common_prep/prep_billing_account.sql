@@ -59,10 +59,18 @@
 ), final AS (
 
     SELECT 
-      COALESCE(zuora_billing_account.dim_billing_account_id, cdot_billing_account.zuora_account_id)     AS dim_billing_account_id,
-      COALESCE(zuora_billing_account.dim_crm_account_id, cdot_billing_account.sfdc_account_id)          AS dim_crm_account_id,
+      --surrogate key
+      {{ dbt_utils.surrogate_key(['COALESCE(zuora_billing_account.dim_billing_account_id, cdot_billing_account.zuora_account_id)']) }}  AS dim_billing_account_sk,
+
+      --natural key
+      COALESCE(zuora_billing_account.dim_billing_account_id, cdot_billing_account.zuora_account_id)                                     AS dim_billing_account_id,
+
+      --foreign key
+      COALESCE(zuora_billing_account.dim_crm_account_id, cdot_billing_account.sfdc_account_id)                                          AS dim_crm_account_id,
+
+      --other relevant attributes
       zuora_billing_account.billing_account_number,
-      COALESCE(zuora_billing_account.billing_account_name, cdot_billing_account.zuora_account_name)     AS billing_account_name,
+      COALESCE(zuora_billing_account.billing_account_name, cdot_billing_account.zuora_account_name)                                     AS billing_account_name,
       zuora_billing_account.account_status,
       zuora_billing_account.parent_id,
       zuora_billing_account.sfdc_account_code,
@@ -80,7 +88,7 @@
             WHEN exists_in_zuora = 'Y' and exists_in_cdot IS NULL THEN 'exists only in Zuora'
             WHEN exists_in_zuora IS NULL and exists_in_cdot = 'Y' THEN 'exists only in CDot'
             ELSE NULL 
-      END                                                                                              AS is_record_in_data_source
+      END                                                                                                                               AS record_data_source
       FROM zuora_billing_account 
     FULL JOIN cdot_billing_account 
       ON zuora_billing_account.dim_billing_account_id = cdot_billing_account.zuora_account_id

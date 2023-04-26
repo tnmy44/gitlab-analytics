@@ -700,6 +700,18 @@ The name of the timezone associated with the user related to the event.
 
 {% docs dim_user_location_sk %}
 
-A surrogate key for the attributes of the user location.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fct table.
+A surrogate key for the attributes of the user location.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
+
+{% enddocs %}
+
+{% docs prep_billing_account %}
+
+Prep model for merging the billing accounts data from both Zuora and CDot sources. This model will be used as a source model for creating `dim_billing_account` core business data object downstream.
+
+{% enddocs %}
+
+{% docs dim_billing_account_sk %}
+
+A surrogate key that uniquely identifes each row of the billing account table.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
 
 {% enddocs %}

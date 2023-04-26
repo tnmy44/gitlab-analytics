@@ -12,7 +12,7 @@
 
     SELECT
     --surrogate key
-       {{ dbt_utils.surrogate_key(['prep_billing_account.dim_billing_account_id']) }}  AS dim_billing_account_sk,
+      prep_billing_account.dim_billing_account_sk,
     
      --natural key
        prep_billing_account.dim_billing_account_id,
@@ -35,7 +35,7 @@
       prep_billing_account.default_payment_method_type,
       prep_billing_account.is_deleted,
       prep_billing_account.batch,
-      prep_billing_account.is_record_in_data_source
+      prep_billing_account.record_data_source
     FROM prep_billing_account
 
 )
