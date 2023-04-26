@@ -5301,7 +5301,7 @@ models:
         description: '{{ doc("event_id_behavior_model") }}'  
       - name: user_snowplow_domain_id
         description: '{{ doc("user_snowplow_domain_id") }}' 
-      - name: environment
+      - name: gsc_environment
         description: '{{ doc("environment_behavior_model") }}' 
       - name: gsc_extra
         description: '{{ doc("gsc_extra") }}' 
