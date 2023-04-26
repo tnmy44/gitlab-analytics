@@ -2060,12 +2060,6 @@ The surrogate key for joining to the `dim_plan` table
 
 {% enddocs %}
 
-
-
-
-
-
-
 {% docs dim_plan_id %}
 
 The id of the plan as given by GitLab.com
