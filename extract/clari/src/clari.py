@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from logging import info, basicConfig, getLogger, error
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from dateutil import parser as date_parser
 
 import requests
