@@ -401,10 +401,11 @@ models:
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_plan_id") }}'
       - name: plan_id_modified
-        description: Modified plan id to conform legacy gold and silver plan ids to ultimate and premium plan ids.
+        description: '{{ doc("plan_id_modified") }}'
       - name: plan_name_modified
-        description: Modified plan name to conform legacy gold and silver plan names to ultimate and premium plan names.
+        description: '{{ doc("plan_name_modified") }}'
 
   - name: prep_product_detail
     columns:
