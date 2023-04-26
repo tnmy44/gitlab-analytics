@@ -18,53 +18,53 @@ infra_labels AS (
 
 ),
 
-env_labels as (
+env_labels AS (
 
   SELECT * FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'env'
 
 ),
 
-runner_labels as (
+runner_labels AS (
 
-  SELECT 
-  source_primary_key,
-  case 
-    when resource_label_value like '%runners-manager-shared-blue-%' then '2 - shared saas runners - small' --ok
-    when resource_label_value like '%runners-manager-shared-green-%' then '2 - shared saas runners - small' --ok
-    when resource_label_value like '%runners-manager-saas-linux-large-amd64-green-%' then '4 - shared saas runners - large' --ok
-    when resource_label_value like '%runners-manager-saas-linux-medium-amd64-green-%' then '3 - shared saas runners - medium' --ok
-    when resource_label_value like '%runners-manager-saas-linux-medium-amd64-blue-%' then '3 - shared saas runners - medium' --ok
-    when resource_label_value like '%runners-manager-saas-linux-large-amd64-blue-%' then '4 - shared saas runners - large' --ok
-    when resource_label_value like '%runners-manager-saas-macos-staging-green-%' then 'runners-manager-saas-macos-staging-green-'
-    when resource_label_value like '%runners-manager-saas-macos-staging-blue-%' then 'runners-manager-saas-macos-staging-blue-'
-    when resource_label_value like '%runners-manager-shared-gitlab-org-green-%' then '1 - shared gitlab org runners' --ok
-    when resource_label_value like '%runners-manager-shared-gitlab-org-blue-%' then '1 - shared gitlab org runners' --ok
-    when resource_label_value like '%runners-manager-private-blue-%' then '6 - private internal runners' --ok, project_pl internal
-    when resource_label_value like '%runners-manager-private-green-%' then '6 - private internal runners' --ok, project_pl internal
-    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%shared-gitlab-org-%') then '1 - shared gitlab org runners' --ok
-    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%amd64%') then 'runners-saas'
-    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%s-shared-%') then '2 - shared saas runners - small' --ok
-    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%-shared-%' and resource_label_value not like '%gitlab%') then '2 - shared saas runners - small' --ok
-    when (resource_label_value like '%instances/runner-%' and resource_label_value like '%-private-%') then '6 - private internal runners' --ok, project_pl internal
-    when resource_label_value like '%gke-runners-gke-default-pool-%' then 'gke-runners-gke-default-pool-'
-    when resource_label_value like '%test-machine-%' then 'test-machine-'
-    when resource_label_value like '%tm-runner-%' then 'tm-runner-'
-    when resource_label_value like '%tm-test-instance%' then 'tm-test-instance'
-    when resource_label_value like '%gitlab-temporary-gcp-image-%' then 'gitlab-temporary-gcp-image-'
-    when resource_label_value like '%sd-exporter%' then 'sd-exporter'
-    when resource_label_value like '%/bastion-%' then 'bastion'
-    when resource_label_value like '%/gitlab-qa-tunnel%' then 'gitlab-qa-tunnel'
-  else resource_label_value
-  end as resource_label_value
+  SELECT
+    source_primary_key,
+    CASE
+      WHEN resource_label_value LIKE '%runners-manager-shared-blue-%' THEN '2 - shared saas runners - small' --ok
+      WHEN resource_label_value LIKE '%runners-manager-shared-green-%' THEN '2 - shared saas runners - small' --ok
+      WHEN resource_label_value LIKE '%runners-manager-saas-linux-large-amd64-green-%' THEN '4 - shared saas runners - large' --ok
+      WHEN resource_label_value LIKE '%runners-manager-saas-linux-medium-amd64-green-%' THEN '3 - shared saas runners - medium' --ok
+      WHEN resource_label_value LIKE '%runners-manager-saas-linux-medium-amd64-blue-%' THEN '3 - shared saas runners - medium' --ok
+      WHEN resource_label_value LIKE '%runners-manager-saas-linux-large-amd64-blue-%' THEN '4 - shared saas runners - large' --ok
+      WHEN resource_label_value LIKE '%runners-manager-saas-macos-staging-green-%' THEN 'runners-manager-saas-macos-staging-green-'
+      WHEN resource_label_value LIKE '%runners-manager-saas-macos-staging-blue-%' THEN 'runners-manager-saas-macos-staging-blue-'
+      WHEN resource_label_value LIKE '%runners-manager-shared-gitlab-org-green-%' THEN '1 - shared gitlab org runners' --ok
+      WHEN resource_label_value LIKE '%runners-manager-shared-gitlab-org-blue-%' THEN '1 - shared gitlab org runners' --ok
+      WHEN resource_label_value LIKE '%runners-manager-private-blue-%' THEN '6 - private internal runners' --ok, project_pl internal
+      WHEN resource_label_value LIKE '%runners-manager-private-green-%' THEN '6 - private internal runners' --ok, project_pl internal
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%shared-gitlab-org-%') THEN '1 - shared gitlab org runners' --ok
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%amd64%') THEN 'runners-saas'
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%s-shared-%') THEN '2 - shared saas runners - small' --ok
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%-shared-%' AND resource_label_value NOT LIKE '%gitlab%') THEN '2 - shared saas runners - small' --ok
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%-private-%') THEN '6 - private internal runners' --ok, project_pl internal
+      WHEN resource_label_value LIKE '%gke-runners-gke-default-pool-%' THEN 'gke-runners-gke-default-pool-'
+      WHEN resource_label_value LIKE '%test-machine-%' THEN 'test-machine-'
+      WHEN resource_label_value LIKE '%tm-runner-%' THEN 'tm-runner-'
+      WHEN resource_label_value LIKE '%tm-test-instance%' THEN 'tm-test-instance'
+      WHEN resource_label_value LIKE '%gitlab-temporary-gcp-image-%' THEN 'gitlab-temporary-gcp-image-'
+      WHEN resource_label_value LIKE '%sd-exporter%' THEN 'sd-exporter'
+      WHEN resource_label_value LIKE '%/bastion-%' THEN 'bastion'
+      WHEN resource_label_value LIKE '%/gitlab-qa-tunnel%' THEN 'gitlab-qa-tunnel'
+      ELSE resource_label_value
+    END AS resource_label_value
   FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'runner_manager_name'
 ),
 
-unit_mapping as (
+unit_mapping AS (
 
   SELECT * FROM {{ ref('gcp_billing_unit_mapping') }}
-  WHERE category='usage'
+  WHERE category = 'usage'
 
 ),
 
@@ -101,13 +101,13 @@ billing_base AS (
 )
 
 SELECT
-  bill.day                                AS day,
-  bill.project_id                         AS gcp_project_id,
-  bill.service                            AS gcp_service_description,
-  bill.sku_description                    AS gcp_sku_description,
-  bill.infra_label                        AS infra_label,
-  bill.env_label                          AS env_label,
-  bill.runner_label                       AS runner_label,
+  bill.day                           AS day,
+  COALESCE(bill.project_id, 'no_id') AS gcp_project_id,
+  bill.service                       AS gcp_service_description,
+  bill.sku_description               AS gcp_sku_description,
+  bill.infra_label                   AS infra_label,
+  bill.env_label                     AS env_label,
+  bill.runner_label                  AS runner_label,
   bill.usage_unit,
   bill.pricing_unit,
   bill.usage_amount                  AS usage_amount,
@@ -116,5 +116,5 @@ SELECT
   bill.net_cost                      AS net_cost,
   usage.converted_unit               AS usage_standard_unit,
   bill.usage_amount / usage.rate     AS usage_amount_in_standard_unit
-FROM billing_base as bill
-LEFT JOIN unit_mapping as usage on usage.raw_unit = bill.usage_unit
+FROM billing_base AS bill
+LEFT JOIN unit_mapping AS usage ON usage.raw_unit = bill.usage_unit

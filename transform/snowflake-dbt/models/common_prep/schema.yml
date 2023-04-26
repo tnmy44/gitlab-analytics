@@ -19,6 +19,17 @@ models:
           - unique
         tags: ["tdf", "common", "arr"]
 
+  - name: prep_app_release
+    description: '{{ doc("prep_app_release") }}'
+    columns:
+      - name: dim_app_release_sk
+        description: '{{ ("dim_app_release_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: app_release_id
+        description: '{{ ("app_release_id") }}'
+
   - name: prep_audit_event_details_clean
     description: '{{ doc("prep_audit_event_details_clean") }}'
     columns:
@@ -153,6 +164,17 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_app_release_major_minor
+    description: '{{ doc("prep_app_release_major_minor") }}'
+    columns:
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: app_release_major_minor_id
+        description: '{{ doc("app_release_major_minor_id") }}'
 
   - name: prep_industry
     description: '{{ doc("prep_industry") }}'
@@ -1802,6 +1824,8 @@ models:
         description: '{{ doc("user_timezone_name") }}'
       - name: dim_user_location_sk
         description: '{{ doc("dim_user_location_sk") }}'
+      - name: link_click_element_id
+        description: '{{ doc("link_click_element_id") }}'
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.

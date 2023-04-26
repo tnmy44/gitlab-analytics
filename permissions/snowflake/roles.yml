@@ -2137,12 +2137,15 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.prometheus
+                    - prep.prometheus
             tables:
                 read:
                     - raw.prometheus.*
+                    - prep.prometheus.*
     
     - pumps_sensitive:
         warehouses:
@@ -2709,10 +2712,21 @@ roles:
 
     - abright:
         member_of:
+            - adaptive
             - analyst_core
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - data_science_readonly
+            - data_team_analyst
             - data_manager
-            - restricted_safe
+            - marketo
             - orgadmin
+            - restricted_safe
+            - salesforce_sandbox
+            - xactly
+            - bi_tool_eval_db
+
         warehouses:
             - dev_xs
         owns:
@@ -2861,6 +2875,7 @@ roles:
     - cleroux:
         member_of:
             - analyst_engineering
+            - prometheus
             - restricted_safe
         warehouses:
             - dev_xs

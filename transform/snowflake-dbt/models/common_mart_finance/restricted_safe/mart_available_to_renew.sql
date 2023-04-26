@@ -11,7 +11,10 @@
                               '2023',
                               '2024',
                               '2025',
-                              '2026'] %}
+                              '2026',
+                              '2027',
+                              '2028',
+                              '2029'] %}
 
 {{ simple_cte([
     ('dim_date','dim_date'),
@@ -966,5 +969,5 @@
     created_by="@michellecooper",
     updated_by="@lisvinueza",
     created_date="2021-12-06",
-    updated_date="2023-04-11"
+    updated_date="2023-04-24"
 ) }}
