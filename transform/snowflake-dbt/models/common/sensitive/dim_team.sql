@@ -8,7 +8,6 @@ WITH source AS (
 team_data AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['team_id']) }}        AS dim_team_sk,
     source.team_id,
     source.team_superior_team_id,
     source.team_hierarchy_level,
@@ -151,6 +150,7 @@ team_hierarchy AS (
 final AS (
 
   SELECT
+    {{ dbt_utils.surrogate_key(['team_id']) }}        AS dim_team_sk,
     team_data.team_id,
     team_data.team_superior_team_id,
     team_hierarchy.hierarchy_level_1,
