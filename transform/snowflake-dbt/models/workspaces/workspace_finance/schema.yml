@@ -941,6 +941,8 @@ models:
         tests:
           - not_null:
               severity: warn
+      - name: dim_crm_account_id
+        description: join key for dim_crm_account
       - name: dim_subscription_id
         description: The identifier of subscription in dim_subscription table
         tests:
