@@ -1172,3 +1172,42 @@ models:
       - name: product_tier_name 
         tests:
           - not_null
+
+  - name: wk_dim_billing_account
+    description: '{{ doc("dim_billing_account") }}'
+    columns:
+      - name: dim_billing_account_sk
+        tests:
+          - not_null
+          - unique
+      - name: dim_billing_account_id
+        description: The unique identifier of the Zuora account associated with a given Subscription ID
+        tests:
+          - not_null
+          - unique
+      - name: dim_crm_account_id
+        description: The customer account ID for the account
+      - name: billing_account_number
+        description: A unique Zuora account number
+      - name: billing_account_name
+        description: The name of the Zuora account
+      - name: account_status
+        description: The status of the account in the system. Can be draft, active, cancelled.
+      - name: parent_id
+        description: The identifier of the parent customer account      
+      - name: sfdc_account_code
+        description: The code for the account
+      - name: sfdc_entity
+      - name: account_currency
+        description: A currency as defined in Billing Settings in the Zuora UI
+      - name: sold_to_country
+        description: The country of the sold to contact
+      - name: ssp_channel
+      - name: po_required
+      - name: auto_pay
+      - name: is_deleted
+        description: The flag indicating if account has been deleted
+      - name: batch
+      - name: is_record_in_data_source
+        description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources
+
