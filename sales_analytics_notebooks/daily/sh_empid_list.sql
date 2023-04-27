@@ -1,7 +1,7 @@
 WITH sfdc_users_xf AS (
 
     SELECT *
-    FROM nfiguera_prod.workspace_sales.sfdc_users_xf
+    FROM prod.workspace_sales.sfdc_users_xf
     WHERE
         key_sal_heatmap NOT LIKE '%other%'
         AND lower(asm
