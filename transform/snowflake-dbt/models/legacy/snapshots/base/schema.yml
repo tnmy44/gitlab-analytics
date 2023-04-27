@@ -173,6 +173,37 @@ models:
           - not_null
       - name: valid_from
           - not_null
+  
+  - name: sfdc_contact_snapshots_source
+    description: This is the source model for snapshots of the salesforce contact table.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - contact_id
+            - dbt_valid_from
+    columns:
+      - name: contact_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
+  - name: sfdc_lead_snapshots_source
+    description: This is the source model for snapshots of the salesforce lead table.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - lead_id
+            - dbt_valid_from
+    columns:
+      - name: lead_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
   - name: sfdc_user_snapshots_source
     description: This is the source model for snapshots of the salesforce user table for cleaning and renaming.
     columns:
