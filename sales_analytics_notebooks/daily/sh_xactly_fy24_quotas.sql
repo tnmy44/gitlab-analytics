@@ -183,18 +183,18 @@ final AS (
         pivoted_quotas.fy24_q3                                                                            AS cfy_q3,
         pivoted_quotas.fy24_q4                                                                            AS cfy_q4,
 
+        sfdc_users.role_type                                                                              AS role_type,
         pivoted_quotas.fy24_q1 + pivoted_quotas.fy24_q2 + pivoted_quotas.fy24_q3 + pivoted_quotas.fy24_q4 AS cfy_total,
+
         LOWER(
             sfdc_users.key_bu_subbu_division_asm
             || '_' || sfdc_users.role_type || '_' || TO_VARCHAR(sfdc_users.employee_number)
         )                                                                                                 AS sal_heatmap_key,
-
         LOWER(sfdc_users.key_bu_subbu)                                                                    AS sal_region_key,
         LOWER(sfdc_users.business_unit)                                                                   AS business_unit,
         LOWER(sfdc_users.sub_business_unit)                                                               AS sub_business_unit,
         LOWER(sfdc_users.division)                                                                        AS division,
         LOWER(sfdc_users.asm)                                                                             AS asm,
-        sfdc_users.role_type                                                                              AS role_type,
         CASE
             WHEN LOWER(sfdc_users.title) LIKE '%strategic account%' AND DATEADD(MONTH, 10, pivoted_quotas.start_date) < '2022-08-15'
                 THEN 'Ramped'
