@@ -64,7 +64,7 @@ WITH l2r AS (
    COALESCE(bizible_landing_page_utm_content, bizible_form_page_utm_content)     AS utm_content,
    COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)     AS utm_allptnr,
    COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid) AS utm_partnerid,
-   contains(rpt_lead_to_revenue.bizible_form_url_raw, 'https://gitlab.com/-/trial') AS is_trial_signup_touchpoint,
+   CONTAINS(rpt_lead_to_revenue.bizible_form_url_raw, 'https://gitlab.com/-/trial') AS is_trial_signup_touchpoint,
 
    fct_campaign.budgeted_cost,
    fct_campaign.actual_cost,
@@ -101,14 +101,14 @@ WITH l2r AS (
 
 )
 
-  select
+  SELECT
     l2r.*,
     tpd.fiscal_year                     AS date_range_year,
     tpd.fiscal_quarter_name_fy          AS date_range_quarter,
-    DATE_TRUNC(month, tpd.date_actual)  AS date_range_month,
+    DATE_TRUNC(MONTH, tpd.date_actual)  AS date_range_month,
     tpd.first_day_of_week               AS date_range_week
-  from
+  FROM
   l2r
     JOIN {{ ref('dim_date') }} tpd on l2r.bizible_touchpoint_date = tpd.date_actual
-    left JOIN {{ ref('dim_date') }} saod on l2r.sales_accepted_date = saod.date_actual
+    LEFT JOIN {{ ref('dim_date') }} saod on l2r.sales_accepted_date = saod.date_actual
 
