@@ -19,7 +19,7 @@
           THEN prep_ptpt_scores_by_user.{{column}}
         ELSE
           prep_ptpf_scores_by_user.{{column}}
-      END {{column}},
+      END AS {{column}},
       {% endfor %}
       CASE
         WHEN prep_ptpt_scores_by_user.score_group >= 4
