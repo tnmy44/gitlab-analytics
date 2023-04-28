@@ -1,68 +1,91 @@
 connection_info:
   pass: ZUORA_API_PASS
   user: ZUORA_API_USER
-tables:
-  users:
+#tables:
+#  users:
+#    query: |-
+#      SELECT
+#          Id
+#        , Email
+#        , FirstName
+#        , LastName
+#        , Username
+#        , CreatedDate
+#      FROM User
+#  orderactionrateplan:
+#    query: |-
+#      SELECT
+#        deleted
+#        , Id
+#        , OrderActionId
+#        , RatePlanId
+#        , CreatedById
+#        , CreatedDate
+#        , UpdatedById
+#        , UpdatedDate
+#      FROM orderactionrateplan
+#  ramp:
+#    query: |-
+#      SELECT
+#        Id
+#        ,OrderId
+#        ,Name
+#        ,Description
+#        ,GrossTcb
+#        ,DiscountTcv
+#        ,NetTcb
+#        ,MetricsProcessingStatus
+#        ,GrossTcv
+#        ,Number
+#        ,NetTcv
+#        ,SubscriptionNumbers
+#        ,ChargeNumbers
+#        ,DiscountTcb
+#        ,CreatedById
+#        ,CreatedDate
+#        ,UpdatedById
+#        ,UpdatedDate
+#      FROM Ramp
+#  rampinterval:
+#    query: |-
+#      SELECT
+#        Id
+#        ,Rampid
+#        ,StartDate
+#        ,EndDate
+#        ,Name
+#        ,Description
+#        ,GrossTcb
+#        ,DiscountTcv
+#        ,NetTcb
+#        ,GrossTcv
+#        ,NetTcv
+#        ,DiscountTcb
+#        ,CreatedById
+#        ,CreatedDate
+#        ,UpdatedById
+#        ,UpdatedDate
+#      FROM RampInterval
+  rampintervalmetrics:
     query: |-
       SELECT
-          Id
-        , Email
-        , FirstName
-        , LastName
-        , Username
-        , CreatedDate
-      FROM User
-  orderactionrateplan:
-    query: |-
-      SELECT
-        deleted
-        , Id
-        , OrderActionId
-        , RatePlanId
-        , CreatedById
-        , CreatedDate
-        , UpdatedById
-        , UpdatedDate
-      FROM orderactionrateplan
-  ramp:
-    query: |-
-      SELECT
-        Id
-        ,OrderId
-        ,Name
-        ,Description
-        ,GrossTcb
-        ,DiscountTcv
-        ,NetTcb
-        ,MetricsProcessingStatus
-        ,GrossTcv
-        ,Number
-        ,NetTcv
-        ,SubscriptionNumbers
-        ,ChargeNumbers
-        ,DiscountTcb 
-        ,CreatedById
-        ,CreatedDate
-        ,UpdatedById
-        ,UpdatedDate
-      FROM Ramp
-  rampinterval:
-    query: |-
-      SELECT
-        Id
-        ,Rampid
+        Id 
+        ,ChargeNumber
+        ,ProductRatePlanChargeId
         ,StartDate
         ,EndDate
-        ,Name
-        ,Description
+        ,Quantity
         ,GrossTcb
-        ,DiscountTcv
         ,NetTcb
+        ,DiscountTcb
         ,GrossTcv
         ,NetTcv
-        ,DiscountTcb
+        ,DiscountTcv
+        ,RampIntervalId
+        ,RatePlanChargeId
+        ,SubscriptionNumber
         ,CreatedById
         ,CreatedDate
         ,UpdatedById
         ,UpdatedDate
-      FROM RampInterval
+    FROM RampIntervalMetrics
