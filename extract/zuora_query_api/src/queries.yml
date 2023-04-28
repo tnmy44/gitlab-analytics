@@ -6,10 +6,6 @@ tables:
     rampintervalmetrics: |-
       SELECT
           Id
-          ,CreatedById
-          ,CreatedDate
-          ,UpdatedById
-          ,UpdatedDate
           ,ChargeNumber
           ,ProductRatePlanChargeId
           ,StartDate
@@ -24,4 +20,8 @@ tables:
           ,RampIntervalId
           ,RatePlanChargeId
           ,SubscriptionNumber
+          ,CreatedById
+          ,CreatedDate
+          ,UpdatedById
+          ,UpdatedDate
       from rampintervalmetrics
