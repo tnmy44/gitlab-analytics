@@ -3,7 +3,7 @@ connection_info:
   user: ZUORA_API_USER
 tables:
   users:
-    query: |-
+    rampintervalmetrics: |-
       SELECT
           Id
           ,CreatedById
