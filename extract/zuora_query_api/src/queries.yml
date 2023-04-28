@@ -1,7 +1,7 @@
 connection_info:
   pass: ZUORA_API_PASS
   user: ZUORA_API_USER
-#tables:
+tables:
 #  users:
 #    query: |-
 #      SELECT
