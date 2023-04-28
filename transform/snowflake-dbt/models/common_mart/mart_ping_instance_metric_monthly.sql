@@ -277,7 +277,7 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@jpeguero",
+    updated_by="@lisvinueza",
     created_date="2022-03-11",
-    updated_date="2022-02-01"
+    updated_date="2022-04-26"
 ) }}
