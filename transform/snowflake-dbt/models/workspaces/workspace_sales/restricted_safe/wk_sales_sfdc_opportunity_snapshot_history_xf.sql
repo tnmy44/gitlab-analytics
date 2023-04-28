@@ -401,11 +401,11 @@ WITH date_details AS (
       edm_snapshot_opty.account_owner_user_geo,
       edm_snapshot_opty.account_owner_user_region,
       edm_snapshot_opty.account_owner_user_area,
-      edm_snapshot_opty.parent_crm_account_sales_segment,
-      edm_snapshot_opty.parent_crm_account_geo,
-      edm_snapshot_opty.parent_crm_account_region,
-      edm_snapshot_opty.parent_crm_account_area,
-      edm_snapshot_opty.parent_crm_account_sales_territory
+      edm_snapshot_opty.parent_crm_account_sales_segment AS account_demographics_segment,
+      edm_snapshot_opty.parent_crm_account_geo AS account_demographics_geo,
+      edm_snapshot_opty.parent_crm_account_region AS account_demographics_region,
+      edm_snapshot_opty.parent_crm_account_area AS account_demographics_area,
+      edm_snapshot_opty.parent_crm_account_sales_territory AS account_demographics_territory
       
 
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
