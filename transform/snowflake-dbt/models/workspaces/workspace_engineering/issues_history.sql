@@ -74,6 +74,7 @@ SELECT
 FROM issues 
 INNER JOIN dates 
   ON COALESCE(date_trunc('day',issues.created_at),dates.date_actual) <= dates.date_actual 
+  AND COALESCE(date_trunc('day',issues.closed_at),dates.date_actual) >= dates.min_date_actual
 LEFT JOIN assigend_users
   ON issues.issue_id = assigend_users.dim_issue_id
 LEFT JOIN label_groups as severity
