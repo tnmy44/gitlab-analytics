@@ -2,8 +2,8 @@ connection_info:
   pass: ZUORA_API_PASS
   user: ZUORA_API_USER
 tables:
-  users:
-    rampintervalmetrics: |-
+  rampintervalmetrics:
+    query: |-
       SELECT
           Id
           ,ChargeNumber
