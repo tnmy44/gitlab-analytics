@@ -11,7 +11,7 @@
     {% for col in columns -%}
         {%- do quoted.append(adapter.quote(col.name)) -%}
     {%- endfor %}
-    {%- set dest_cols = quoted | join(', ') -%}
+    {%- set insert_cols = quoted | join(', ') -%}
 
     {%- set join_columns = [] %}
     {% for col in columns %}
@@ -98,9 +98,9 @@
       {%- endif %}
     {%- endfor %}
   WHEN NOT MATCHED THEN INSERT
-  ({{ dest_cols }})
+  ({{ insert_cols }})
   VALUES
-  ({{ dest_cols }})
+  ({{ insert_cols }})
 
 
 {%- endmacro -%}
