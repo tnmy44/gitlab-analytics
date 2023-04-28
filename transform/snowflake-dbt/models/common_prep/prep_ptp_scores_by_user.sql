@@ -30,7 +30,7 @@
           THEN NULL
         ELSE
           prep_ptpf_scores_by_user.days_since_trial_start
-      END days_since_trial_start,
+      END AS days_since_trial_start,
       CASE
         WHEN prep_ptpt_scores_by_user.score_group >= 4
           THEN 'Trial'
