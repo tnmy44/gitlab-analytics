@@ -12,7 +12,10 @@
     ('dim_product_detail','dim_product_detail'),
     ('dim_subscription','dim_subscription'),
     ('dim_crm_user','dim_crm_user'),
-    ('fct_charge','fct_charge')
+    ('dim_order', 'dim_order'),
+    ('dim_order_action', 'dim_order_action'),
+    ('fct_charge','fct_charge'),
+    ('dim_billing_account_user', 'dim_billing_account_user')
 ]) }}
 
 , mart_charge AS (
@@ -105,6 +108,20 @@
 
       -- order info
       fct_charge.dim_order_id                                                         AS dim_order_id,
+      dim_order.order_description                                                     AS order_description,
+      CASE
+        WHEN dim_order.order_description = 'AutoRenew by CustomersDot'
+          THEN 'Auto-Renewal'
+        WHEN dim_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
+        OR dim_subscription.subscription_sales_type = 'Sales-Assisted'
+          THEN 'Sales-Assisted'
+        WHEN dim_order.order_description != 'AutoRenew by CustomersDot'
+        AND dim_billing_account_user.user_name IN (
+            'svc_zuora_fulfillment_int@gitlab.com',
+            'ruben_APIproduction@gitlab.com')
+        THEN 'Customer Portal'
+        ELSE NULL    
+      END                                                                             AS renewal_type,
 
       --Cohort Information
       dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
@@ -136,11 +153,13 @@
       dim_subscription.dim_amendment_id_subscription,
       fct_charge.dim_amendment_id_charge,
       dim_amendment_subscription.effective_date                                       AS subscription_amendment_effective_date,
+      COALESCE(
+        dim_order_action.order_action_type,
       CASE
         WHEN dim_charge.subscription_version = 1
           THEN 'NewSubscription'
           ELSE dim_amendment_subscription.amendment_type
-      END                                                                             AS subscription_amendment_type,
+      END)                                                                            AS subscription_amendment_type,
       dim_amendment_subscription.amendment_name                                       AS subscription_amendment_name,
       CASE
         WHEN dim_charge.subscription_version = 1
@@ -181,6 +200,13 @@
       ON dim_subscription.dim_amendment_id_subscription = dim_amendment_subscription.dim_amendment_id
     LEFT JOIN dim_amendment AS dim_amendment_charge
       ON fct_charge.dim_amendment_id_charge = dim_amendment_charge.dim_amendment_id
+    LEFT JOIN dim_order
+      ON fct_charge.dim_order_id = dim_order.dim_order_id
+    LEFT JOIN dim_order_action
+      ON fct_charge.dim_order_id = dim_order_action.dim_order_id
+      AND dim_order_action.order_action_type LIKE '%Subscription'
+    LEFT JOIN dim_billing_account_user
+      ON dim_subscription.created_by_id = dim_billing_account_user.dim_billing_account_user_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,
@@ -191,7 +217,7 @@
 {{ dbt_audit(
     cte_ref="mart_charge",
     created_by="@iweeks",
-    updated_by="@lisvinueza",
+    updated_by="@chrissharp",
     created_date="2021-06-07",
-    updated_date="2023-05-22"
+    updated_date="2023-06-13"
 ) }}
