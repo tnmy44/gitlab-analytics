@@ -23,6 +23,7 @@ WITH mart_arr_snapshot_bottom_up AS (
 
     SELECT dim_crm_account_id
         , COUNT(dim_subscription_id) AS num_of_subs
+        , MAX(parent_crm_account_sales_segment) AS parent_crm_account_sales_segment
         , MAX(parent_crm_account_industry) AS parent_crm_account_industry
         , MAX(parent_crm_account_demographics_region) AS parent_crm_account_demographics_region
         , MAX(parent_crm_account_demographics_area) AS parent_crm_account_demographics_area

@@ -804,7 +804,7 @@
 	  null AS crm_opp_owner_region_stamped,
 	  null AS crm_opp_owner_area_stamped,
 	  null AS parent_crm_account_demographics_upa_country,
-	  null AS parent_crm_account_sales_territory,
+	  null AS parent_crm_account_demographics_territory,
 	  null AS opportunity_name,
 	  null AS crm_account_name,
 	  null AS parent_crm_account_name,

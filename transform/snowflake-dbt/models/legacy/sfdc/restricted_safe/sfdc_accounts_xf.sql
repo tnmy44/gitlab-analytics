@@ -19,12 +19,19 @@ WITH sfdc_account AS (
     SELECT *
     FROM {{ ref('sfdc_account_deal_size_segmentation') }}
 
+), parent_account AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_account') }}
+
 ), joined AS (
+
 
     SELECT
       sfdc_account.*,
       tam_user.name                                                                   AS technical_account_manager,
-      sfdc_account.ultimate_parent_sales_segment                                        AS ultimate_parent_account_segment,
+      parent_account.account_name                                                     AS ultimate_parent_account_name, 
+      sfdc_account.ultimate_parent_sales_segment                                      AS ultimate_parent_account_segment,
       sfdc_record_type.record_type_name,
       sfdc_record_type.business_process_id,
       sfdc_record_type.record_type_label,
