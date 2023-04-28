@@ -155,6 +155,7 @@
   --IDs
       person_base.dim_crm_person_id,
       person_base.dim_crm_account_id,
+      dim_crm_account.dim_parent_crm_account_id,
 	  person_base.dim_crm_user_id,
 	  person_base.crm_partner_id,
 	  person_base.partner_prospect_id,
@@ -200,7 +201,8 @@
 	  person_base.leandata_matched_account_sales_Segment,
 	  map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
-      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
+      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
+      map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
       map_alternative_lead_demographics.geo_custom,
       UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
 
@@ -236,7 +238,8 @@
 		mart_crm_touchpoint.bizible_referrer_page,
 		mart_crm_touchpoint.bizible_referrer_page_raw,
 		mart_crm_touchpoint.bizible_integrated_campaign_grouping,
-    mart_crm_touchpoint.bizible_ad_group_name,
+    mart_crm_touchpoint.bizible_salesforce_campaign,
+        mart_crm_touchpoint.bizible_ad_group_name,
 		mart_crm_touchpoint.campaign_rep_role_name,
 		mart_crm_touchpoint.touchpoint_segment,
 		mart_crm_touchpoint.gtm_motion,
@@ -268,13 +271,16 @@
       ON mart_crm_touchpoint.email_hash = person_base.email_hash
     LEFT JOIN map_alternative_lead_demographics
       ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
+    LEFT JOIN dim_crm_account
+      ON person_base.dim_crm_account_id=dim_crm_account.dim_crm_account_id
 
-  ), opp_base_wtih_batp AS (
+  ), opp_base_with_batp AS (
     
     SELECT
     --IDs
       opp.dim_crm_opportunity_id,
       opp.dim_crm_account_id,
+      dim_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
       opp.dim_crm_user_id AS opp_dim_crm_user_id,
 	  opp.duplicate_opportunity_id,
@@ -412,6 +418,63 @@
 	  opp.days_in_stage,
 	  dim_crm_user.user_role_name AS opp_user_role_name,
 	  opp.record_type_name,
+
+    --Person Data
+      person_base.email_hash,
+	  person_base.email_domain,
+	  person_base.was_converted_lead,
+      person_base.email_domain_type,
+	  person_base.is_valuable_signup,
+      person_base.status AS crm_person_status,
+      person_base.lead_source,
+	  person_base.source_buckets,
+      person_base.is_mql,
+	  person_base.is_inquiry,
+	  person_base.is_lead_source_trial,
+	  person_base.account_demographics_sales_segment_grouped,
+      person_base.account_demographics_sales_segment,
+	  person_base.account_demographics_segment_region_grouped,
+	  person_base.account_demographics_upa_state,
+	  person_base.account_demographics_upa_postal_code,
+	  person_base.zoominfo_company_employee_count,
+      person_base.account_demographics_region,
+      person_base.account_demographics_geo,
+      person_base.account_demographics_area,
+      person_base.account_demographics_upa_country,
+      person_base.account_demographics_territory,
+      accounts_with_first_order_opps.is_first_order_available,
+      order_type_final.person_order_type,
+      order_type_final.inquiry_order_type_historical,
+      order_type_final.mql_order_type_historical,
+	  person_base.sales_segment_name AS person_sales_segment_name,
+      person_base.sales_segment_grouped AS person_sales_segment_grouped,
+      person_base.person_score,
+      person_base.behavior_score,
+      person_base.marketo_last_interesting_moment,
+      person_base.marketo_last_interesting_moment_date,
+	  person_base.employee_bucket,
+	  person_base.leandata_matched_account_sales_Segment,
+	  map_alternative_lead_demographics.employee_count_segment_custom,
+      map_alternative_lead_demographics.employee_bucket_segment_custom,
+      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
+      map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
+      map_alternative_lead_demographics.geo_custom,
+      UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
+
+  --Person Dates
+		person_base.true_inquiry_date,
+		person_base.mql_date_lastest_pt,
+		person_base.legacy_mql_date_first_pt,
+		person_base.mql_sfdc_date_pt,
+		person_base.mql_date_first_pt,
+		person_base.accepted_date,
+		person_base.accepted_date_pt,
+		person_base.qualifying_date,
+		person_base.qualifying_date_pt,
+		person_base.converted_date,
+		person_base.converted_date_pt,
+		person_base.worked_date,
+		person_base.worked_date_pt,
     
     -- Touchpoint Data
       'Attribution Touchpoint' AS touchpoint_type,
@@ -431,6 +494,7 @@
       mart_crm_attribution_touchpoint.bizible_referrer_page,
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
+      mart_crm_attribution_touchpoint.bizible_salesforce_campaign,
 	  mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.gtm_motion,
@@ -590,9 +654,19 @@
       ON opp.dim_crm_opportunity_id=mart_crm_opportunity.dim_crm_opportunity_id
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
+    LEFT JOIN person_base
+      ON mart_crm_attribution_touchpoint.dim_crm_person_id = person_base.dim_crm_person_id
+    LEFT JOIN map_alternative_lead_demographics
+      ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
+    LEFT JOIN order_type_final
+      ON person_base.email_hash = order_type_final.email_hash
+    LEFT JOIN dim_crm_account
+      ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
+    LEFT JOIN accounts_with_first_order_opps
+      ON dim_crm_account.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     LEFT JOIN dim_crm_user
       ON opp.dim_crm_user_id=dim_crm_user.dim_crm_user_id
-  {{dbt_utils.group_by(n=169)}}
+  {{dbt_utils.group_by(n=223)}}
     
 ), cohort_base_combined AS (
   
@@ -600,6 +674,7 @@
 	--IDs
       dim_crm_person_id,
       dim_crm_account_id,
+      dim_parent_crm_account_id,
 	  dim_crm_user_id,
 	  crm_partner_id,
 	  partner_prospect_id,
@@ -657,7 +732,7 @@
       inferred_geo,
   
   --Person Dates
-		true_inquiry_date AS inquiry_date,
+		true_inquiry_date,
 		mql_date_lastest_pt,
 		legacy_mql_date_first_pt,
 		mql_sfdc_date_pt,
@@ -816,6 +891,7 @@
     bizible_referrer_page,
     bizible_referrer_page_raw,
     bizible_integrated_campaign_grouping,
+    bizible_salesforce_campaign,
 	campaign_rep_role_name,
     touchpoint_segment,
     gtm_motion,
@@ -884,6 +960,7 @@
    --IDs
       null AS dim_crm_person_id,
       dim_crm_account_id,
+      dim_parent_crm_account_id,
 	  null AS dim_crm_user_id,
 	  null AS crm_partner_id,
 	  null AS partner_prospect_id,
@@ -900,60 +977,60 @@
 	  opp_owner_id,
 
   --Person Data
-      null AS email_hash,
-	  null AS email_domain,
-	  null AS was_converted_lead,
-      null AS email_domain_type,
-	  null AS is_valuable_signup,
-      null AS crm_person_status,
-      null AS lead_source,
-	  null AS source_buckets,
-      null AS is_mql,
-	  null AS is_inquiry,
-	  null AS is_lead_source_trial,
-	  null AS account_demographics_sales_segment_grouped,
-      null AS account_demographics_sales_segment,
-	  null AS account_demographics_segment_region_grouped,
-	  null AS account_demographics_upa_state,
-	  null AS account_demographics_upa_postal_code,
-	  null AS zoominfo_company_employee_count,
-      null AS account_demographics_region,
-      null AS account_demographics_geo,
-      null AS account_demographics_area,
-      null AS account_demographics_upa_country,
-      null AS account_demographics_territory,
-      null AS is_first_order_available,
-      null AS person_order_type,
-      null AS inquiry_order_type_historical,
-      null AS mql_order_type_historical,
-	  null AS person_sales_segment_name,
-      null AS person_sales_segment_grouped,
-      null AS person_score,
-      null AS behavior_score,
-      null AS marketo_last_interesting_moment,
-      null AS marketo_last_interesting_moment_date,
-	  null AS employee_bucket,
-	  null AS leandata_matched_account_sales_Segment,
-	  null AS employee_count_segment_custom,
-      null AS employee_bucket_segment_custom,
-      null AS inferred_employee_segment,
-      null AS geo_custom,
-      null AS inferred_geo,
+      email_hash,
+	  email_domain,
+	  was_converted_lead,
+      email_domain_type,
+	  is_valuable_signup,
+      crm_person_status,
+      lead_source,
+	  source_buckets,
+      is_mql,
+	  is_inquiry,
+	  is_lead_source_trial,
+	  account_demographics_sales_segment_grouped,
+      account_demographics_sales_segment,
+	  account_demographics_segment_region_grouped,
+	  account_demographics_upa_state,
+	  account_demographics_upa_postal_code,
+	  zoominfo_company_employee_count,
+      account_demographics_region,
+      account_demographics_geo,
+      account_demographics_area,
+      account_demographics_upa_country,
+      account_demographics_territory,
+      is_first_order_available,
+      person_order_type,
+      inquiry_order_type_historical,
+      mql_order_type_historical,
+	  person_sales_segment_name,
+      person_sales_segment_grouped,
+      person_score,
+      behavior_score,
+      marketo_last_interesting_moment,
+      marketo_last_interesting_moment_date,
+	  employee_bucket,
+	  leandata_matched_account_sales_Segment,
+	  employee_count_segment_custom,
+      employee_bucket_segment_custom,
+      inferred_employee_segment,
+      geo_custom,
+      inferred_geo,
   
   --Person Dates
-	  null AS true_inquiry_date,
-	  null AS mql_date_lastest_pt,
-	  null AS legacy_mql_date_first_pt,
-	  null AS mql_sfdc_date_pt,
-	  null AS mql_date_first_pt,
-	  null AS accepted_date,
-	  null AS accepted_date_pt,
-	  null AS qualifying_date,
-	  null AS qualifying_date_pt,
-	  null AS converted_date,
-	  null AS converted_date_pt,
-	  null AS worked_date,
-	  null AS worked_date_pt,
+		true_inquiry_date,
+		mql_date_lastest_pt,
+		legacy_mql_date_first_pt,
+		mql_sfdc_date_pt,
+		mql_date_first_pt,
+		accepted_date,
+		accepted_date_pt,
+		qualifying_date,
+		qualifying_date_pt,
+		converted_date,
+		converted_date_pt,
+		worked_date,
+		worked_date_pt,
 
   --Opp Dates
 	  opp_created_date,
@@ -1100,6 +1177,7 @@
       bizible_referrer_page,
       bizible_referrer_page_raw,
       bizible_integrated_campaign_grouping,
+      bizible_salesforce_campaign,
 	  campaign_rep_role_name,
       touchpoint_segment,
       gtm_motion,
@@ -1162,7 +1240,7 @@
       won_full_net_arr,
       won_custom_net_arr,
       won_linear_net_arr
-  FROM opp_base_wtih_batp
+  FROM opp_base_with_batp
 
 ), intermediate AS (
   
@@ -1211,7 +1289,7 @@
     bizible_date.date_id                         AS bizible_date_range_id
   FROM cohort_base_combined
   LEFT JOIN dim_date inquiry_date
-    ON cohort_base_combined.inquiry_date = inquiry_date.date_day
+    ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
     ON cohort_base_combined.mql_date_lastest_pt = mql_date.date_day
   LEFT JOIN dim_date opp_create_date
@@ -1236,5 +1314,5 @@
     created_by="@michellecooper",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-04-12",
+    updated_date="2023-04-24",
   ) }}

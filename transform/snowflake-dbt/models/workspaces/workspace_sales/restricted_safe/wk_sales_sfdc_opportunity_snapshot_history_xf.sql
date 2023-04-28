@@ -811,7 +811,48 @@ WITH date_details AS (
         WHEN net_arr >= 1000000 
           THEN '8. (>1000k)'
         ELSE 'Other' 
-      END                                                           AS calculated_deal_size
+      END                                                           AS calculated_deal_size,
+
+    -- For some analysis it is important to order stages by rank
+    CASE
+            WHEN stage_name = '0-Pending Acceptance'
+                THEN 0
+            WHEN stage_name = '1-Discovery'
+                THEN 1
+             WHEN stage_name = '2-Scoping'
+                THEN 2
+            WHEN stage_name = '3-Technical Evaluation'
+                THEN 3
+            WHEN stage_name = '4-Proposal'
+                THEN 4
+            WHEN stage_name = '5-Negotiating'
+                THEN 5
+            WHEN stage_name = '6-Awaiting Signature'
+                THEN 6
+            WHEN stage_name = '7-Closing'
+                THEN 7
+            WHEN stage_name = 'Closed Won'
+                THEN 8
+            WHEN stage_name = '8-Closed Lost'
+                THEN 9
+            WHEN stage_name = '9-Unqualified'
+                THEN 10
+            WHEN stage_name = '10-Duplicate'
+                THEN 11
+            ELSE NULL
+    END                     AS stage_name_rank,
+    
+    CASE
+        WHEN stage_name IN ('0-Pending Acceptance')
+            THEN '0. Acceptance' 
+         WHEN stage_name IN ('1-Discovery','2-Scoping')
+            THEN '1. Early'
+         WHEN stage_name IN ('3-Technical Evaluation','4-Proposal')
+            THEN '2. Middle'
+         WHEN stage_name IN ('5-Negotiating','6-Awaiting Signature')
+            THEN '3. Late'
+        ELSE '4. Closed'
+    END                     AS pipeline_category
 
     FROM add_compound_metrics
 )

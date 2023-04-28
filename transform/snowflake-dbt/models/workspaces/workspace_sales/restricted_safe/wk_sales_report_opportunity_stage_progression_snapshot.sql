@@ -46,8 +46,10 @@ WITH date_details AS (
 
     SELECT *
     FROM date_details
-    WHERE first_day_of_fiscal_quarter = date_actual
+    WHERE(first_day_of_fiscal_quarter = date_actual
+            OR date_actual = DATEADD(DAY,-1,CURRENT_DATE))
     AND fiscal_year IN (2022,2023,2024)
+    AND date_actual < CURRENT_DATE
 
 ), specific_date_open_pipeline AS (
 
@@ -62,6 +64,7 @@ WITH date_details AS (
            prog.deal_size,
            prog.deal_group,
            prog.sales_qualified_source,
+           prog.stage_is_open_flag,
 
            -- keys
            prog.key_bu,
@@ -76,20 +79,28 @@ WITH date_details AS (
            ROW_NUMBER() OVER (PARTITION BY prog.opportunity_id,
                                         report_dates.date_actual
                                 ORDER BY prog.stage_date DESC,
-                                    prog.stage_rank DESC) AS rank_date
+                                    prog.stage_rank DESC) AS rank_stage_date,
+           ROW_NUMBER() OVER (PARTITION BY prog.opportunity_id,
+                                        report_dates.date_actual
+                                ORDER BY prog.cycle_time_category DESC,
+                                    prog.stage_rank DESC) AS rank_category_date
     FROM open_deals prog
         CROSS JOIN report_dates
     WHERE prog.stage_date <= report_dates.date_actual
 
     -- include only the last stage change before the cutoff date
-    QUALIFY rank_date = 1
-
+    QUALIFY rank_stage_date = 1
 
 ), final AS (
 
     SELECT prog.*,
            snap.net_arr,
-           DATEDIFF(DAY, stage_date, report_date) AS days_in_current_stage
+           snap.snapshot_date,
+           CASE
+               WHEN prog.stage_is_open_flag = 1
+                THEN DATEDIFF(DAY, stage_date, report_date)
+                ELSE 0
+           END AS days_in_current_stage
     FROM specific_date_open_pipeline prog
         INNER JOIN opportunity_snapshot snap
         ON prog.opportunity_id = snap.opportunity_id
@@ -97,7 +108,6 @@ WITH date_details AS (
         AND prog.report_date = snap.snapshot_date
         -- multiple stages hitting the same day
         AND prog.stage_name = snap.stage_name
-    WHERE snap.is_open = 1
 
 )
 

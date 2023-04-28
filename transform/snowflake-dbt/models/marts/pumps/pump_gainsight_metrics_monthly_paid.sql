@@ -67,6 +67,13 @@
     FROM aggregated_metrics 
     WHERE event_action = 'action_active_users_project_repo'
   
+), p_terraform_state_api_unique_users AS (	
+  	
+    SELECT	
+      *	
+    FROM aggregated_metrics 	
+    WHERE event_action = 'p_terraform_state_api_unique_users'	
+   	
 ), user_packages AS (
 
     SELECT
@@ -139,8 +146,8 @@
       NULL                                                                         AS namespace_name,
       NULL                                                                         AS namespace_creation_date,
       monthly_sm_metrics.dim_instance_id                                           AS uuid,
-      monthly_sm_metrics.dim_installation_id,
       monthly_sm_metrics.hostname,
+      monthly_sm_metrics.dim_installation_id,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}             AS dim_billing_account_id,
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                 AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
@@ -484,7 +491,7 @@
       monthly_saas_metrics.analytics_28_days_user,
       monthly_saas_metrics.issues_edit_28_days_user,
       COALESCE(user_packages.distinct_users_whole_month, 0) AS user_packages_28_days_user,
-      monthly_saas_metrics.terraform_state_api_28_days_user,
+      COALESCE(p_terraform_state_api_unique_users.distinct_users, 0) AS terraform_state_api_28_days_user,
       monthly_saas_metrics.incident_management_28_days_user,
       -- Wave 3.2
       monthly_saas_metrics.auto_devops_enabled,
@@ -616,6 +623,9 @@
     LEFT JOIN action_active_users_project_repo_users
       ON action_active_users_project_repo_users.date_month = monthly_saas_metrics.snapshot_month 
       AND action_active_users_project_repo_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN p_terraform_state_api_unique_users	
+      ON p_terraform_state_api_unique_users.date_month = monthly_saas_metrics.snapshot_month 	
+      AND p_terraform_state_api_unique_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
     LEFT JOIN user_packages
       ON user_packages.date_month = monthly_saas_metrics.snapshot_month
       AND user_packages.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
@@ -676,5 +686,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-10-12",
-    updated_date="2023-04-04"
+    updated_date="2023-04-14"
 ) }}

@@ -68,15 +68,15 @@ WITH internal_merge_requests AS (
     IFNULL(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bpriority::([0-9]+)'), 'priority::', ''),'undefined')                                                                                                                    AS priority_label,
     IFNULL(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bseverity::([0-9]+)'), 'severity::', ''),'undefined')                                                                                                                    AS severity_label,
     CASE
-      WHEN array_contains('gitaly::cluster'::variant,internal_merge_requests.labels)
+      WHEN array_contains('group::gitaly::cluster'::variant,internal_merge_requests.labels)
         THEN 'gitaly::cluster'
-      WHEN array_contains('gitaly::git'::variant,internal_merge_requests.labels)
+      WHEN array_contains('group::gitaly::git'::variant,internal_merge_requests.labels)
         THEN 'gitaly::git'
-      WHEN array_contains('distribution::build'::variant,internal_merge_requests.labels)
+      WHEN array_contains('group::distribution::build'::variant,internal_merge_requests.labels)
         THEN 'distribution::build'
-      WHEN array_contains('distribution::deploy'::variant,internal_merge_requests.labels)
+      WHEN array_contains('group::distribution::deploy'::variant,internal_merge_requests.labels)
         THEN 'distribution::deploy'
-      WHEN array_contains('distribution::operate'::variant,internal_merge_requests.labels)
+      WHEN array_contains('group::distribution::operate'::variant,internal_merge_requests.labels)
         THEN 'distribution::operate'
         ELSE
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''),'undefined') END                    AS group_label,

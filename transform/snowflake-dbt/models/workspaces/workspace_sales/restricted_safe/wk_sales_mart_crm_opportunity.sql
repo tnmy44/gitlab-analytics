@@ -12,10 +12,21 @@ WITH sfdc_users_xf AS (
     FROM {{ref('wk_sales_sfdc_accounts_xf')}}
     -- FROM PROD.restricted_safe_workspace_sales.sfdc_accounts_xf
 
-), sfdc_opportunity_source AS (
+), sfdc_opportunity_raw AS (
+
 
     SELECT *
-    FROM {{ref('sfdc_opportunity_source')}}
+    FROM {{ source('salesforce', 'opportunity') }}  AS opportunity
+
+
+), sfdc_opportunity_source AS (
+
+    SELECT source.*,
+        raw.intended_product_tier__c AS intented_product_tier
+
+    FROM {{ref('sfdc_opportunity_source')}} source
+        LEFT JOIN sfdc_opportunity_raw raw
+            ON source.opportunity_id = raw.id
 
 ), date_details AS (
 
@@ -700,7 +711,8 @@ WITH sfdc_users_xf AS (
 
     --- SOURCE fields
     -- NF: These should be moved eventually to the MART table
-    opty_source.pushed_count
+    opty_source.pushed_count,
+    opty_source.intented_product_tier
 
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
     FROM edm_opty

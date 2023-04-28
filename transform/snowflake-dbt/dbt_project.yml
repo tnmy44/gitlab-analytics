@@ -346,6 +346,10 @@ models:
         +schema: zuora_central_sandbox
         +tags: [ "zuora_central_sandbox", "mnpi" ]
 
+      zuora_api_sandbox:
+        +schema: zuora_api_sandbox
+        +tags: [ "zuora_api_sandbox", "mnpi" ]
+
       zuora_revenue:
         +schema: zuora_revenue
         +tags: ["zuora_revenue"]

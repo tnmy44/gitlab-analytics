@@ -24,9 +24,8 @@ renamed AS (
       md5(recipient)                          AS ticket_recipient,
       url                                     AS ticket_url,
       tags                                    AS ticket_tags,
-      -- added ':score'
-      -- satisfaction_rating['score']::VARCHAR   AS satisfaction_rating_score,
-      via__channel::VARCHAR                 AS submission_channel,
+
+      via['channel']::VARCHAR                 AS submission_channel,
 
       --dates
       updated_at::DATE                        AS date_updated

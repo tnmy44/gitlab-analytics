@@ -4,6 +4,12 @@ Creates a base view with generated keys for the alliance type shared dimension a
 
 {% enddocs %}
 
+{% docs prep_app_release %}
+
+Creates base view with generated keys for application releaes. 
+
+{% enddocs %}
+
 {% docs prep_audit_event_details_clean %}
 
 All GitLab audit event details, with pii replaced with hashes. Created by a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
@@ -90,6 +96,12 @@ Creates a base view with generated keys for the CRM user hierarchy (live and his
 {% docs prep_gitlab_dotcom_application_settings_monthly %}
 
 This model captures a historical record of GitLab's default application settings for CI minutes and storage at a monthly grain.
+
+{% enddocs %}
+
+{% docs prep_app_release_major_minor %}
+
+Creates base view with generated keys for application major and minor versions. 
 
 {% enddocs %}
 
@@ -700,6 +712,24 @@ The name of the timezone associated with the user related to the event.
 
 {% docs dim_user_location_sk %}
 
-A surrogate key for the attributes of the user location.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fct table.
+A surrogate key for the attributes of the user location.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
+
+{% enddocs %}
+
+{% docs prep_billing_account %}
+
+Prep model for merging the billing accounts data from both Zuora and CDot sources. This model will be used as a source model for creating `dim_billing_account` core business data object downstream.
+
+{% enddocs %}
+
+{% docs dim_billing_account_sk %}
+
+A surrogate key that uniquely identifes each row of the billing account table.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
+
+{% enddocs %}
+
+{% docs link_click_element_id %}
+
+The element id from the unstructured link click event
 
 {% enddocs %}

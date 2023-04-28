@@ -151,6 +151,9 @@ models:
     - name: leading_organization_entry_dates
       description: The entry and exit dates of organizations that are admitted into our Leading Organization program
 
+    - name: internal_issues_enhanced
+      description: A model containing all issues. This model includes relevant and common flags that are used in engineering metrics.
+
     - name: engineering_merge_requests
       description: A model containing all MRs that affect our product. This model includes relevant and common flags that are used in engineering metrics.
       columns: 

@@ -16,6 +16,7 @@
     ('project', 'dim_project'),
     ('operating_system', 'dim_behavior_operating_system'),
     ('browser','dim_behavior_browser'),
+    ('plan','dim_plan'),
     ('dates', 'dim_date')
 ]) }},
 
@@ -45,7 +46,8 @@ structured_behavior AS (
     dim_namespace_id,
     dim_project_id,
     dim_behavior_operating_system_sk,
-    dim_behavior_browser_sk
+    dim_behavior_browser_sk,
+    dim_plan_sk
   FROM {{ ref('fct_behavior_structured_event') }}
   {% if is_incremental() %}
 
@@ -96,6 +98,10 @@ report AS (
     operating_system.is_device_mobile,
     browser.browser_name,
     browser.dim_behavior_browser_sk,
+    plan.dim_plan_id,
+    plan.plan_id_modified,
+    plan.plan_name,
+    plan.plan_name_modified,
     structured_behavior.dim_behavior_referrer_page_sk
   FROM structured_behavior
   LEFT JOIN event
@@ -108,6 +114,8 @@ report AS (
     ON structured_behavior.dim_behavior_operating_system_sk = operating_system.dim_behavior_operating_system_sk
   LEFT JOIN browser
     ON structured_behavior.dim_behavior_browser_sk = browser.dim_behavior_browser_sk
+  LEFT JOIN plan
+    ON structured_behavior.dim_plan_sk = plan.dim_plan_sk
   LEFT JOIN dates
     ON{{ get_date_id('structured_behavior.behavior_at') }} = dates.date_id
 )
