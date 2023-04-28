@@ -39,7 +39,7 @@
         WHEN prep_ptpt_scores_by_user.dim_marketing_contact_id IS NOT NULL
           THEN 'Trial'
         ELSE 'Free'
-      END ptp_source
+      END AS ptp_source
     FROM prep_ptpt_scores_by_user
     FULL OUTER JOIN prep_ptpf_scores_by_user
       ON prep_ptpt_scores_by_user.dim_marketing_contact_id = prep_ptpf_scores_by_user.dim_marketing_contact_id
