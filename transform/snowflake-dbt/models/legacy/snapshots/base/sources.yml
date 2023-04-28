@@ -35,6 +35,8 @@ sources:
       - name: sfdc_account_snapshots
       - name: sfdc_bizible_attribution_touchpoint_snapshots
       - name: sfdc_bizible_touchpoint_snapshots
+      - name: sfdc_contact_snapshots
+      - name: sfdc_lead_snapshots
       - name: sfdc_opportunity_snapshots
       - name: sfdc_user_snapshots
       - name: sheetload_comp_band_snapshots

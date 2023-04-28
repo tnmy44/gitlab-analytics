@@ -1,11 +1,9 @@
 WITH source AS (
+    SELECT *
+    FROM {{ source('snapshots', 'sfdc_lead_snapshots') }}
 
-  SELECT *
-  FROM {{ source('salesforce', 'lead') }}
+), renamed AS (
 
-),
-
-renamed AS (
 
   SELECT
     --id
@@ -118,9 +116,8 @@ renamed AS (
     true_initial_mql_date__c AS true_initial_mql_date,
     true_mql_date__c AS true_mql_date,
     last_transfer_date_time__c AS last_transfer_date_time,
-    initial_mql_date__c AS initial_marketo_mql_date_time,
-	time_from_last_transfer_to_sequence__c AS time_from_last_transfer_to_sequence,
-	time_from_mql_to_last_transfer__c AS time_from_mql_to_last_transfer,
+    time_from_last_transfer_to_sequence__c AS time_from_last_transfer_to_sequence,
+    time_from_mql_to_last_transfer__c AS time_from_mql_to_last_transfer,
 
 
     {{ sfdc_source_buckets('leadsource') }}
@@ -132,16 +129,15 @@ renamed AS (
     leandata_territory__c AS tsp_territory,
 
     -- account demographics fields
-    account_demographics_sales_segment_2__c AS account_demographics_sales_segment,
-    account_demographics_sales_segment__c AS account_demographics_sales_segment_deprecated,
+    account_demographics_sales_segment__c AS account_demographics_sales_segment,
     CASE
-      WHEN account_demographics_sales_segment_2__c IN ('Large', 'PubSec') THEN 'Large'
-      ELSE account_demographics_sales_segment_2__c
+      WHEN account_demographics_sales_segment__c IN ('Large', 'PubSec') THEN 'Large'
+      ELSE account_demographics_sales_segment__c
     END AS account_demographics_sales_segment_grouped,
     account_demographics_geo__c AS account_demographics_geo,
     account_demographics_region__c AS account_demographics_region,
     account_demographics_area__c AS account_demographics_area,
-    {{ sales_segment_region_grouped('account_demographics_sales_segment_2__c', 'account_demographics_geo__c', 'account_demographics_region__c') }}
+    {{ sales_segment_region_grouped('account_demographics_sales_segment__c', 'account_demographics_geo__c', 'account_demographics_region__c') }}
     AS account_demographics_segment_region_grouped,
     account_demographics_territory__c AS account_demographics_territory,
     account_demographics_employee_count__c AS account_demographics_employee_count,
@@ -196,10 +192,15 @@ renamed AS (
     lastactivitydate::DATE AS last_activity_date,
     lastmodifiedbyid AS last_modified_id,
     lastmodifieddate AS last_modified_date,
-    systemmodstamp
+    systemmodstamp,
+
+    -- snapshot metadata
+    dbt_scd_id,
+    dbt_updated_at,
+    dbt_valid_from,
+    dbt_valid_to
 
   FROM source
-
 )
 
 SELECT *
