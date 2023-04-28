@@ -1,13 +1,9 @@
 WITH source AS (
+    SELECT *
+    FROM {{ source('snapshots', 'sfdc_contact_snapshots') }}
 
-  SELECT *
-  FROM {{ source('salesforce', 'contact') }}
+), renamed AS (
 
-
-
-),
-
-renamed AS (
 
   SELECT
     -- id
@@ -114,10 +110,9 @@ renamed AS (
     is_first_order_person__c AS is_first_order_person,
     true_initial_mql_date__c AS true_initial_mql_date,
     true_mql_date__c AS true_mql_date,
-    initial_mql_date__c AS initial_marketo_mql_date_time,
-	last_transfer_date_time__c AS last_transfer_date_time,
-	time_from_last_transfer_to_sequence__c AS time_from_last_transfer_to_sequence,
-	time_from_mql_to_last_transfer__c AS time_from_mql_to_last_transfer,
+    last_transfer_date_time__c AS last_transfer_date_time,
+    time_from_last_transfer_to_sequence__c AS time_from_last_transfer_to_sequence,
+    time_from_mql_to_last_transfer__c AS time_from_mql_to_last_transfer,
     {{ sfdc_source_buckets('leadsource') }}
 
 
@@ -164,10 +159,15 @@ renamed AS (
     lastcuupdatedate AS last_cu_update_date,
     lastmodifiedbyid AS last_modified_by_id,
     lastmodifieddate AS last_modified_date,
-    systemmodstamp
+    systemmodstamp,
+
+    -- snapshot metadata
+    dbt_scd_id,
+    dbt_updated_at,
+    dbt_valid_from,
+    dbt_valid_to
 
   FROM source
-
 )
 
 SELECT *

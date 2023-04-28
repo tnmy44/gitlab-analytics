@@ -24,3 +24,10 @@ SELECT
     key_sal_heatmap
 FROM sfdc_users_xf
 GROUP BY 1, 2, 3
+UNION
+SELECT
+    'key_bu_subbu_division' AS key_name,
+    key_bu_subbu_division   AS key_value,
+    key_sal_heatmap
+FROM sfdc_users_xf
+GROUP BY 1, 2, 3

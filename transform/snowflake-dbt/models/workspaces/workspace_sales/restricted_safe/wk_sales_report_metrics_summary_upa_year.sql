@@ -425,8 +425,12 @@ FROM selected_hierarchy_virtual_upa final
 
 ), final AS (
 
-    SELECT upa.*,
-            raw.account_demographics_territory__c AS upa_ad_territory
+    SELECT  
+            upa.*,
+            raw.account_demographics_territory__c       AS upa_ad_territory,
+            raw.account_demographics_upa_state__c       AS upa_ad_state_code,
+            raw.account_demographics_upa_state_name__c  AS upa_ad_state_name
+
     FROM consolidated_upa upa
         LEFT JOIN raw_account raw
         ON upa.upa_id = raw.id

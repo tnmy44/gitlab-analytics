@@ -2169,38 +2169,6 @@ models:
           - not_null
       - name: valid_to
 
-  - name: dim_namespace_lineage
-    description: '{{ doc("dim_namespace_lineage") }}'
-    columns:
-      - name: dim_namespace_id
-        tests:
-          - not_null
-          - unique
-      - name: ultimate_parent_namespace_id
-        tests:
-          - not_null
-      - name: parent_id
-      - name: namespace_plan_id
-      - name: ultimate_parent_plan_id
-        tests:
-          - not_null
-          - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101, 102, 103, 135]
-      - name: upstream_lineage
-        tests:
-          - not_null
-      - name: is_currently_valid
-        tests:
-          - not_null
-      - name: namespace_plan_title
-      - name: namespace_plan_is_paid
-      - name: ultimate_parent_plan_title
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_is_paid
-        tests:
-          - not_null
-
   - name: dim_namespace_plan_hist
     description: '{{ doc("dim_namespace_plan_hist") }}'
     columns:
@@ -5301,7 +5269,7 @@ models:
         description: '{{ doc("event_id_behavior_model") }}'  
       - name: user_snowplow_domain_id
         description: '{{ doc("user_snowplow_domain_id") }}' 
-      - name: environment
+      - name: gsc_environment
         description: '{{ doc("environment_behavior_model") }}' 
       - name: gsc_extra
         description: '{{ doc("gsc_extra") }}' 

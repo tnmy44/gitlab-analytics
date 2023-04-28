@@ -24,4 +24,4 @@ AND close_day_of_fiscal_quarter_normalised < (
     FROM prod.workspace_sales.date_details
     WHERE date_actual = CURRENT_DATE
 ) + 5
-AND agg_key_name IN ('key_bu_subbu')
+AND agg_key_name IN ('key_bu', 'key_bu_subbu', 'key_bu_subbu_division')
