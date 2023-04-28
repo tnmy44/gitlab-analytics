@@ -7,7 +7,7 @@
 
 , zuora_account AS (
 
-    SELECT *
+    SELECT zuora_account_source.*
     FROM zuora_account_source
     LEFT JOIN zuora_contact_source AS bill_to_contact
       ON zuora_account_source.bill_to_contact_id = bill_to_contact.contact_id
