@@ -2,26 +2,67 @@ connection_info:
   pass: ZUORA_API_PASS
   user: ZUORA_API_USER
 tables:
+  users:
+    query: |-
+      SELECT
+          Id
+        , Email
+        , FirstName
+        , LastName
+        , Username
+        , CreatedDate
+      FROM User
   orderactionrateplan:
     query: |-
       SELECT
-        Id 
-        ,ChargeNumber
-        ,ProductRatePlanChargeId
-        ,StartDate
-        ,EndDate
-        ,Quantity
+        deleted
+        , Id
+        , OrderActionId
+        , RatePlanId
+        , CreatedById
+        , CreatedDate
+        , UpdatedById
+        , UpdatedDate
+      FROM orderactionrateplan
+  ramp:
+    query: |-
+      SELECT
+        Id
+        ,OrderId
+        ,Name
+        ,Description
         ,GrossTcb
-        ,NetTcb
-        ,DiscountTcb
-        ,GrossTcv
-        ,NetTcv
         ,DiscountTcv
-        ,RampIntervalId
-        ,RatePlanChargeId
-        ,SubscriptionNumber
+        ,NetTcb
+        ,MetricsProcessingStatus
+        ,GrossTcv
+        ,Number
+        ,NetTcv
+        ,SubscriptionNumbers
+        ,ChargeNumbers
+        ,DiscountTcb 
         ,CreatedById
         ,CreatedDate
         ,UpdatedById
         ,UpdatedDate
-    FROM rampintervalmetrics
+      FROM Ramp
+  rampinterval:
+    query: |-
+      SELECT
+        Id
+        ,Rampid
+        ,StartDate
+        ,EndDate
+        ,Name
+        ,Description
+        ,GrossTcb
+        ,DiscountTcv
+        ,NetTcb
+        ,GrossTcv
+        ,NetTcv
+        ,DiscountTcb
+        ,CreatedById
+        ,CreatedDate
+        ,UpdatedById
+        ,UpdatedDate
+      FROM RampInterval
