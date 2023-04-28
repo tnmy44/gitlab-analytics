@@ -2,7 +2,7 @@ connection_info:
   pass: ZUORA_API_PASS
   user: ZUORA_API_USER
 tables:
-  rampintervalmetrics:
+  orderactionrateplan:
     query: |-
       SELECT
         Id 
@@ -24,4 +24,4 @@ tables:
         ,CreatedDate
         ,UpdatedById
         ,UpdatedDate
-    FROM RampIntervalMetrics
+    FROM rampintervalmetrics
