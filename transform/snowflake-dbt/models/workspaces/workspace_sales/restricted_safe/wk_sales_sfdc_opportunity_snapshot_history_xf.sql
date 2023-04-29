@@ -514,11 +514,11 @@ WITH date_details AS (
 
       opportunity_owner.name                                     AS opportunity_owner,
     
-      upa.account_demographics_sales_segment                     AS upa_demographics_segment,
-      upa.account_demographics_geo                               AS upa_demographics_geo,
-      upa.account_demographics_region                            AS upa_demographics_region,
-      upa.account_demographics_area                              AS upa_demographics_area,
-      upa.account_demographics_territory                         AS upa_demographics_territory,
+      upa.account_sales_segment                     AS upa_demographics_segment,
+      upa.account_geo                               AS upa_demographics_geo,
+      upa.account_region                            AS upa_demographics_region,
+      upa.account_area                              AS upa_demographics_area,
+      upa.account_territory                         AS upa_demographics_territory,
 
       opportunity_owner.is_rep_flag
 

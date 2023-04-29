@@ -50,14 +50,14 @@ WITH dim_billing_account_central_sandbox AS (
       dim_date.date_actual                                                              AS arr_month,
       IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL)   AS fiscal_quarter_name_fy,
       IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)                 AS fiscal_year,
-      dim_subscription_central_sandbox.subscription_start_month                             AS subscription_start_month,
-      dim_subscription_central_sandbox.subscription_end_month                               AS subscription_end_month,
+      dim_subscription_central_sandbox.subscription_start_month                         AS subscription_start_month,
+      dim_subscription_central_sandbox.subscription_end_month                           AS subscription_end_month,
 
       --billing account info
-      dim_billing_account_central_sandbox.dim_billing_account_id                            AS dim_billing_account_id,
-      dim_billing_account_central_sandbox.sold_to_country                                   AS sold_to_country,
-      dim_billing_account_central_sandbox.billing_account_name                              AS billing_account_name,
-      dim_billing_account_central_sandbox.billing_account_number                            AS billing_account_number,
+      dim_billing_account_central_sandbox.dim_billing_account_id                        AS dim_billing_account_id,
+      dim_billing_account_central_sandbox.sold_to_country                               AS sold_to_country,
+      dim_billing_account_central_sandbox.billing_account_name                          AS billing_account_name,
+      dim_billing_account_central_sandbox.billing_account_number                        AS billing_account_number,
 
       -- crm account info
       dim_crm_account.dim_crm_account_id                                                AS dim_crm_account_id,
@@ -66,7 +66,7 @@ WITH dim_billing_account_central_sandbox AS (
       dim_crm_account.parent_crm_account_name                                           AS parent_crm_account_name,
       dim_crm_account.parent_crm_account_sales_segment                                  AS parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_industry                                       AS parent_crm_account_industry,
-       dim_crm_account.parent_crm_account_demographics_territory                        AS parent_crm_account_sales_territory,
+      dim_crm_account.parent_crm_account_sales_territory                                AS parent_crm_account_sales_territory,
       dim_crm_account.health_score_color                                                AS health_score_color,
       dim_crm_account.health_number                                                     AS health_number,
       dim_crm_account.is_jihu_account                                                   AS is_jihu_account,

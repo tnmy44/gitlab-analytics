@@ -25,9 +25,9 @@ WITH mart_arr_snapshot_bottom_up AS (
         , COUNT(dim_subscription_id) AS num_of_subs
         , MAX(parent_crm_account_sales_segment) AS parent_crm_account_sales_segment
         , MAX(parent_crm_account_industry) AS parent_crm_account_industry
-        , MAX(parent_crm_account_demographics_region) AS parent_crm_account_demographics_region
-        , MAX(parent_crm_account_demographics_area) AS parent_crm_account_demographics_area
-        , MAX(CASE WHEN parent_crm_account_demographics_territory !='Territory Not Found' THEN parent_crm_account_demographics_territory END) AS parent_crm_account_sales_territory
+        , MAX(parent_crm_account_region) AS parent_crm_account_region
+        , MAX(parent_crm_account_area) AS parent_crm_account_area
+        , MAX(CASE WHEN parent_crm_account_sales_territory !='Territory Not Found' THEN parent_crm_account_sales_territory END) AS parent_crm_account_sales_territory
         , MAX(CASE WHEN product_tier_name LIKE '%Ultimate%' THEN 1 ELSE 0 END) AS is_ultimate_product_tier
         , MAX(CASE WHEN product_tier_name LIKE '%Premium%' THEN 1 ELSE 0 END) AS is_premium_product_tier
         , MAX(CASE WHEN product_tier_name LIKE '%Starter%' or product_tier_name LIKE '%Bronze%' THEN 1 ELSE 0 END) AS is_starter_bronze_product_tier
@@ -358,11 +358,11 @@ SELECT
     , COALESCE(p1.parent_crm_account_sales_segment, 'Unknown') AS account_sales_segment
     , COALESCE(p1.parent_crm_account_industry, 'Unknown') AS account_industry
     , COALESCE(p1.parent_crm_account_sales_territory, 'Unknown') AS account_sales_territory
-    , CASE WHEN p1.parent_crm_account_demographics_region = 'AMER' OR p1.parent_crm_account_demographics_region LIKE 'AMER%' OR p1.parent_crm_account_demographics_region LIKE 'US%' THEN 'AMER'
-           WHEN p1.parent_crm_account_demographics_region = 'EMEA' OR p1.parent_crm_account_demographics_region LIKE 'Germany%' THEN 'EMEA'
-           WHEN p1.parent_crm_account_demographics_region IS NULL THEN 'Unknown'
-           ELSE p1.parent_crm_account_demographics_region END AS parent_account_region
-    , COALESCE(p1.parent_crm_account_demographics_area, 'Unknown') AS parent_account_area
+    , CASE WHEN p1.parent_crm_account_region = 'AMER' OR p1.parent_crm_account_region LIKE 'AMER%' OR p1.parent_crm_account_region LIKE 'US%' THEN 'AMER'
+           WHEN p1.parent_crm_account_region = 'EMEA' OR p1.parent_crm_account_region LIKE 'Germany%' THEN 'EMEA'
+           WHEN p1.parent_crm_account_region IS NULL THEN 'Unknown'
+           ELSE p1.parent_crm_account_region END AS parent_account_region
+    , COALESCE(p1.parent_crm_account_area, 'Unknown') AS parent_account_area
     , p1.is_ultimate_product_tier AS is_ultimate_product_tier_flag
     , p1.is_premium_product_tier AS is_premium_product_tier_flag
     , p1.is_starter_bronze_product_tier AS is_starter_bronze_product_tier_flag

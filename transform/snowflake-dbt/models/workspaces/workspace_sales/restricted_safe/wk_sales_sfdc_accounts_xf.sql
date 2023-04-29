@@ -14,10 +14,10 @@ FROM {{ref('wk_sales_sfdc_users_xf')}}
         dim_crm_account_id,
         dim_crm_user_id,
         parent_crm_account_sales_segment,
-        parent_crm_account_demographics_geo,
-        parent_crm_account_demographics_region,
-        parent_crm_account_demographics_area,
-        parent_crm_account_demographics_territory
+        parent_crm_account_geo,
+        parent_crm_account_region,
+        parent_crm_account_area,
+        parent_crm_account_sales_territory
     FROM {{ref('mart_crm_account')}}
 
 ), sfdc_record_type AS (
@@ -45,7 +45,7 @@ SELECT
     -- If hybrid user we leverage the account demographics data
     CASE 
         WHEN account_owner.is_hybrid_flag = 1
-        THEN mart.parent_crm_account_demographics_sales_segment  
+        THEN mart.parent_crm_account_sales_segment  
         ELSE account_owner.user_segment  
     END                                         AS account_owner_raw_user_segment,
     mart.crm_account_owner_geo                  AS account_owner_user_geo,
@@ -55,7 +55,7 @@ SELECT
     -- If hybrid user we leverage the account demographics data
        CASE 
         WHEN account_owner.is_hybrid_flag = 1
-        THEN mart.parent_crm_account_demographics_area  
+        THEN mart.parent_crm_account_area  
         ELSE account_owner.user_area  
        END                                      AS account_owner_user_area,
 
@@ -116,18 +116,18 @@ SELECT
     mart.zoominfo_account_phone,
     mart.admin_manual_source_number_of_employees,
     mart.admin_manual_source_account_address,
-    mart.parent_crm_account_sales_segment                    AS account_demographics_sales_segment,
-    mart.parent_crm_account_demographics_geo                 AS account_demographics_geo,
-    mart.parent_crm_account_demographics_region              AS account_demographics_region,
-    mart.parent_crm_account_demographics_area                AS account_demographics_area,
-    mart.parent_crm_account_demographics_territory           AS account_demographics_territory,
-    mart.crm_account_demographics_employee_count             AS account_demographics_employee_count,
-    mart.parent_crm_account_demographics_max_family_employee AS account_demographics_max_family_employee,
-    mart.parent_crm_account_demographics_upa_country         AS account_demographics_upa_country,
-    mart.parent_crm_account_demographics_upa_state           AS account_demographics_upa_state,
-    mart.parent_crm_account_demographics_upa_city            AS account_demographics_upa_city,
-    mart.parent_crm_account_demographics_upa_street          AS account_demographics_upa_street,
-    mart.parent_crm_account_demographics_upa_postal_code     AS account_demographics_upa_postal_code,
+    mart.parent_crm_account_sales_segment       AS account_demographics_sales_segment,
+    mart.parent_crm_account_geo                 AS account_demographics_geo,
+    mart.parent_crm_account_region              AS account_demographics_region,
+    mart.parent_crm_account_area                AS account_demographics_area,
+    mart.parent_crm_account_territory           AS account_demographics_territory,
+    mart.crm_account_employee_count             AS account_demographics_employee_count,
+    mart.parent_crm_account_max_family_employee AS account_demographics_max_family_employee,
+    mart.parent_crm_account_upa_country         AS account_demographics_upa_country,
+    mart.parent_crm_account_upa_state           AS account_demographics_upa_state,
+    mart.parent_crm_account_upa_city            AS account_demographics_upa_city,
+    mart.parent_crm_account_upa_street          AS account_demographics_upa_street,
+    mart.parent_crm_account_upa_postal_code     AS account_demographics_upa_postal_code,
     mart.health_number,
     mart.health_score_color,
     mart.count_active_subscription_charges,
@@ -216,11 +216,11 @@ SELECT
 
  
 
-    parent_account.parent_crm_account_sales_segment                 AS upa_demographics_segment,
-    parent_account.parent_crm_account_demographics_geo              AS upa_demographics_geo,
-    parent_account.parent_crm_account_demographics_region           AS upa_demographics_region,
-    parent_account.parent_crm_account_demographics_area             AS upa_demographics_area,
-    parent_account.parent_crm_account_demographics_territory        AS upa_demographics_territory
+    parent_account.parent_crm_account_sales_segment                 AS upa_segment,
+    parent_account.parent_crm_account_geo                           AS upa_geo,
+    parent_account.parent_crm_account_region                        AS upa_region,
+    parent_account.parent_crm_account_area                          AS upa_area,
+    parent_account.parent_crm_account_sales_territory                     AS upa_territory
 
 
 FROM mart_crm_account AS mart

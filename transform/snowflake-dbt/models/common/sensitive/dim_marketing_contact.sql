@@ -87,7 +87,7 @@ WITH sfdc_lead AS (
       crm_person.title                                                                                                      AS job_title,
       crm_person.it_job_title_hierarchy,
       crm_account.parent_crm_account_sales_segment                                                                          AS parent_crm_account_sales_segment,
-      crm_account.parent_crm_account_demographics_region                                                                    AS parent_crm_account_region,
+      crm_account.parent_crm_account_region                                                                                 AS parent_crm_account_region,
       crm_person.account_demographics_geo                                                                                   AS crm_person_region,
       CASE
         WHEN sfdc_lead_contact = 'contact' THEN sfdc_contact.mailing_country

@@ -132,11 +132,11 @@ WITH sfdc_account AS (
     account_owner.user_region             AS account_owner_user_region,
     account_owner.user_area               AS account_owner_user_area,
 
-    sfdc_account.account_demographics_sales_segment                                      AS upa_demographics_segment,
-    sfdc_account.account_demographics_geo                                                AS upa_demographics_geo,
-    sfdc_account.account_demographics_region                                             AS upa_demographics_region,
-    sfdc_account.account_demographics_area                                               AS upa_demographics_area,
-    sfdc_account.account_demographics_territory                                          AS upa_demographics_territory
+    sfdc_account.account_sales_segment                                      AS upa_segment,
+    sfdc_account.account_geo                                                AS upa_geo,
+    sfdc_account.account_region                                             AS upa_region,
+    sfdc_account.account_area                                               AS upa_area,
+    sfdc_account.account_territory                                          AS upa_territory
 
     FROM sfdc_account
     LEFT JOIN sfdc_users tam_user

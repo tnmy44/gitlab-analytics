@@ -169,31 +169,28 @@ WITH map_merged_crm_account AS (
 
       --descriptive attributes
       sfdc_account.account_name                                           AS crm_account_name,
-      {{ sales_segment_cleaning('sfdc_account.account_demographics_sales_segment') }} 
+      {{ sales_segment_cleaning('sfdc_account.account_sales_segment') }} 
                                                                           AS parent_crm_account_sales_segment,
-      -- DO NOT USE parent_crm_account_demographics_sales_segment, use parent_crm_account_sales_segment
-      {{ sales_segment_cleaning('sfdc_account.account_demographics_sales_segment') }}                      
-                                                                          AS parent_crm_account_demographics_sales_segment,
-      sfdc_account.account_demographics_geo                               AS parent_crm_account_demographics_geo,
-      sfdc_account.account_demographics_region                            AS parent_crm_account_demographics_region,
-      sfdc_account.account_demographics_area                              AS parent_crm_account_demographics_area,
-      sfdc_account.account_demographics_territory                         AS parent_crm_account_demographics_territory,
-      sfdc_account.account_demographics_business_unit                     AS parent_crm_account_demographics_business_unit,
-      sfdc_account.account_demographics_role_type                         AS parent_crm_account_demographics_role_type,
-      sfdc_account.account_demographics_max_family_employee               AS parent_crm_account_demographics_max_family_employee,
-      sfdc_account.account_demographics_upa_country                       AS parent_crm_account_demographics_upa_country,
-      sfdc_account.account_demographics_upa_state                         AS parent_crm_account_demographics_upa_state,
-      sfdc_account.account_demographics_upa_city                          AS parent_crm_account_demographics_upa_city,
-      sfdc_account.account_demographics_upa_street                        AS parent_crm_account_demographics_upa_street,
-      sfdc_account.account_demographics_upa_postal_code                   AS parent_crm_account_demographics_upa_postal_code,
-      sfdc_account.account_demographics_employee_count                    AS crm_account_demographics_employee_count,
+      sfdc_account.account_geo                                            AS parent_crm_account_geo,
+      sfdc_account.account_region                                         AS parent_crm_account_region,
+      sfdc_account.account_area                                           AS parent_crm_account_area,
+      sfdc_account.account_territory                                      AS parent_crm_account_sales_territory,
+      sfdc_account.account_business_unit                                  AS parent_crm_account_business_unit,
+      sfdc_account.account_role_type                                      AS parent_crm_account_role_type,
+      sfdc_account.account_max_family_employee                            AS parent_crm_account_max_family_employee,
+      sfdc_account.account_upa_country                                    AS parent_crm_account_upa_country,
+      sfdc_account.account_upa_state                                      AS parent_crm_account_upa_state,
+      sfdc_account.account_upa_city                                       AS parent_crm_account_upa_city,
+      sfdc_account.account_upa_street                                     AS parent_crm_account_upa_street,
+      sfdc_account.account_upa_postal_code                                AS parent_crm_account_upa_postal_code,
+      sfdc_account.account_employee_count                                 AS crm_account_employee_count,
       sfdc_account.parent_account_industry_hierarchy                      AS parent_crm_account_industry,
       sfdc_account.gtm_strategy                                           AS crm_account_gtm_strategy,
       CASE
         WHEN LOWER(sfdc_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
         ELSE 'Non - Focus Account'
       END                                                                 AS crm_account_focus_account,
-      sfdc_account.account_demographics_employee_count                    AS crm_account_employees,
+      sfdc_account.account_employee_count                                 AS crm_account_employees,
       sfdc_account.billing_country                                        AS crm_account_billing_country,
       sfdc_account.billing_country_code                                   AS crm_account_billing_country_code,
       sfdc_account.account_type                                           AS crm_account_type,
@@ -201,9 +198,9 @@ WITH map_merged_crm_account AS (
       sfdc_account.sub_industry                                           AS crm_account_sub_industry,
       sfdc_account.account_owner                                          AS crm_account_owner,
       CASE
-         WHEN sfdc_account.account_demographics_max_family_employee > 2000 THEN 'Employees > 2K'
-         WHEN sfdc_account.account_demographics_max_family_employee <= 2000 AND sfdc_account.account_demographics_max_family_employee > 1500 THEN 'Employees > 1.5K'
-         WHEN sfdc_account.account_demographics_max_family_employee <= 1500 AND sfdc_account.account_demographics_max_family_employee > 1000  THEN 'Employees > 1K'
+         WHEN sfdc_account.account_max_family_employee > 2000 THEN 'Employees > 2K'
+         WHEN sfdc_account.account_max_family_employee <= 2000 AND sfdc_account.account_max_family_employee > 1500 THEN 'Employees > 1.5K'
+         WHEN sfdc_account.account_max_family_employee <= 1500 AND sfdc_account.account_max_family_employee > 1000  THEN 'Employees > 1K'
          ELSE 'Employees < 1K'
       END                                                                 AS crm_account_employee_count_band,
       sfdc_account.account_owner_user_segment                             AS crm_account_owner_user_segment,
@@ -477,7 +474,7 @@ WITH map_merged_crm_account AS (
     LEFT JOIN lam_corrections
       ON sfdc_account.ultimate_parent_account_id = lam_corrections.dim_parent_crm_account_id
         AND sfdc_account.snapshot_id = lam_corrections.snapshot_id
-        AND sfdc_account.account_demographics_sales_segment = lam_corrections.parent_crm_account_sales_segment
+        AND sfdc_account.account_sales_segment = lam_corrections.parent_crm_account_sales_segment
     LEFT JOIN sfdc_users AS created_by
       ON sfdc_account.created_by_id = created_by.user_id
         AND sfdc_account.snapshot_id = created_by.snapshot_id
