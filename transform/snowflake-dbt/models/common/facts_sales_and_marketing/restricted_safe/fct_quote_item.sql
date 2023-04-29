@@ -114,7 +114,7 @@ WITH crm_account AS (
 {{ dbt_audit(
     cte_ref="quote_items",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@lisvinueza",
     created_date="2021-01-12",
-    updated_date="2021-10-28"
+    updated_date="2022-04-28"
 ) }}
