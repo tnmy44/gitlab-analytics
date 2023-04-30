@@ -84,7 +84,6 @@ WITH dim_billing_account AS (
       dim_crm_account.parent_crm_account_lam                                          AS parent_crm_account_lam,
       dim_crm_account.parent_crm_account_lam_dev_count                                AS parent_crm_account_lam_dev_count,
       dim_crm_account.parent_crm_account_business_unit                                AS parent_crm_account_business_unit,
-      dim_crm_account.parent_crm_account_sales_segment                                AS parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_geo                                          AS parent_crm_account_geo,
       dim_crm_account.parent_crm_account_region                                       AS parent_crm_account_region,
       dim_crm_account.parent_crm_account_area                                         AS parent_crm_account_area,

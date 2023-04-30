@@ -87,7 +87,7 @@ WITH dim_amendment AS (
       dim_crm_account.parent_crm_account_name                                         AS parent_crm_account_name,
       dim_crm_account.parent_crm_account_sales_segment                                AS parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_industry                                     AS parent_crm_account_industry,
-      dim_crm_account.parent_crm_account_sales_territory                              AS parent_crm_account_sales_territory,                             AS parent_crm_account_sales_territory,
+      dim_crm_account.parent_crm_account_sales_territory                              AS parent_crm_account_sales_territory,
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
 

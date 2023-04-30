@@ -147,7 +147,7 @@ final AS (
     dim_crm_account.parent_crm_account_geo,
     dim_crm_account.parent_crm_account_region,
     dim_crm_account.parent_crm_account_area,
-    dim_crm_account.parent_crm_account_sales_territory,,
+    dim_crm_account.parent_crm_account_sales_territory,
     dim_crm_account.parent_crm_account_role_type,
     dim_crm_account.parent_crm_account_max_family_employee,
     dim_crm_account.parent_crm_account_upa_country,

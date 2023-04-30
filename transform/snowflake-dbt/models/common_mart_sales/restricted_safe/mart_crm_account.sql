@@ -38,7 +38,6 @@
 
       ----ultimate parent crm account info
       dim_crm_account.parent_crm_account_name,
-      dim_crm_account.parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_industry,
       dim_crm_account.parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_business_unit,

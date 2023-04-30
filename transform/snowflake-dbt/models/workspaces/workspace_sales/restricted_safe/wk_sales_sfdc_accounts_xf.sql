@@ -120,7 +120,7 @@ SELECT
     mart.parent_crm_account_geo                 AS account_demographics_geo,
     mart.parent_crm_account_region              AS account_demographics_region,
     mart.parent_crm_account_area                AS account_demographics_area,
-    mart.parent_crm_account_territory           AS account_demographics_territory,
+    mart.parent_crm_account_sales_territory     AS account_demographics_territory,
     mart.crm_account_employee_count             AS account_demographics_employee_count,
     mart.parent_crm_account_max_family_employee AS account_demographics_max_family_employee,
     mart.parent_crm_account_upa_country         AS account_demographics_upa_country,

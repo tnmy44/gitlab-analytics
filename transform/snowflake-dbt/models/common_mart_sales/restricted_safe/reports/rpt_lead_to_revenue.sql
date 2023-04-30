@@ -665,7 +665,7 @@
       ON dim_crm_account.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     LEFT JOIN dim_crm_user
       ON opp.dim_crm_user_id=dim_crm_user.dim_crm_user_id
-  {{dbt_utils.group_by(n=223)}}
+  {{dbt_utils.group_by(n=222)}}
     
 ), cohort_base_combined AS (
   
