@@ -79,6 +79,8 @@ billing_base AS (
     runner_labels.resource_label_value        AS runner_label,
     export.usage_unit                         AS usage_unit,
     export.pricing_unit                       AS pricing_unit,
+    export.resource_labels,
+    export.system_labels,
     SUM(export.usage_amount)                  AS usage_amount,
     SUM(export.usage_amount_in_pricing_units) AS usage_amount_in_pricing_units,
     SUM(export.cost_before_credits)           AS cost_before_credits,
@@ -97,7 +99,7 @@ billing_base AS (
     runner_labels
     ON
       export.source_primary_key = runner_labels.source_primary_key
-  {{ dbt_utils.group_by(n=9) }}
+  {{ dbt_utils.group_by(n=11) }}
 )
 
 SELECT
@@ -110,6 +112,8 @@ SELECT
   bill.runner_label                  AS runner_label,
   bill.usage_unit,
   bill.pricing_unit,
+  resource_labels,
+  system_labels,
   bill.usage_amount                  AS usage_amount,
   bill.usage_amount_in_pricing_units AS usage_amount_in_pricing_units,
   bill.cost_before_credits           AS cost_before_credits,
