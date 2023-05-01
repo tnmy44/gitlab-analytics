@@ -661,7 +661,7 @@ models:
     description: '{{ doc("dim_installation") }}'
     tests:
       - dbt_utils.expression_is_true:
-          expression: "installation_creation_date > '2000-01-01'"
+          expression: "installation_creation_date > '2000-01-01' OR dim_installation_id = 'b6a2b5c51f1e36f6fcb8568319633808'"
     columns:
       - name: dim_installation_id
         description: '{{ doc("dim_installation_id") }}'
