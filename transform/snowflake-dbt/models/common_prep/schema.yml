@@ -424,8 +424,26 @@ models:
       - name: is_oss_or_edu_rate_plan
         description: Flag for rate plans containing OSS or EDU
 
+  - name: prep_ptp_scores_by_user
+    description: '{{ doc("prep_ptp_scores_by_user") }}'
+    columns:
+      - name: dim_marketing_contact_id
+        description: Unique identifier for the marketing contact.
+        tests:
+          - not_null
+          - unique
+
   - name: prep_ptpt_scores_by_user
     description: '{{ doc("prep_ptpt_scores_by_user") }}'
+    columns:
+      - name: dim_marketing_contact_id
+        description: Unique identifier for the marketing contact.
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_ptpf_scores_by_user
+    description: '{{ doc("prep_ptpf_scores_by_user") }}'
     columns:
       - name: dim_marketing_contact_id
         description: Unique identifier for the marketing contact.
