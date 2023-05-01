@@ -18,9 +18,10 @@
     WHERE -- filters to remove known data quality issues based on feedback from Enterprise Apps
       LOWER(zuora_account_source.batch) != 'batch20'
       AND zuora_account_source.is_deleted = FALSE
-      AND zuora_account_source.status != 'Cancelled'
+      AND zuora_account_source.status != 'Canceled'
       AND (bill_to_contact.work_email NOT LIKE '%@gitlab.com%' AND sold_to_contact.work_email NOT LIKE '%@gitlab.com%')
       AND COALESCE(bill_to_contact.work_email, bill_to_contact.personal_email, sold_to_contact.work_email, sold_to_contact.personal_email) IS NOT NULL
+      AND COALESCE(bill_to_contact.work_email, bill_to_contact.personal_email, sold_to_contact.work_email, sold_to_contact.personal_email) != '' -- sometimes these values look null, but are actually blank spaces
       AND zuora_query_api_users_source.email != 'svc_zuora_fulfillment_int@gitlab.com'
 
 ), final AS (
@@ -44,5 +45,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-10-07",
-    updated_date="2023-04-28"
+    updated_date="2023-05-01"
 ) }}
