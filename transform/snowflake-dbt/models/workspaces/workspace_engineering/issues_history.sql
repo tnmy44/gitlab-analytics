@@ -29,6 +29,7 @@ SELECT
   issues.issue_id,
   issues.issue_iid,
   issues.project_id,
+  issues.project_path,
   issues.namespace_id,
   issues.labels,
   issues.masked_label_title,
