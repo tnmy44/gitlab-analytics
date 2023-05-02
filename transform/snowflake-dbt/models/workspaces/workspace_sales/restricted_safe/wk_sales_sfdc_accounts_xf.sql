@@ -220,7 +220,7 @@ SELECT
     parent_account.parent_crm_account_geo                           AS upa_geo,
     parent_account.parent_crm_account_region                        AS upa_region,
     parent_account.parent_crm_account_area                          AS upa_area,
-    parent_account.parent_crm_account_sales_territory                     AS upa_territory
+    parent_account.parent_crm_account_sales_territory               AS upa_territory
 
 
 FROM mart_crm_account AS mart

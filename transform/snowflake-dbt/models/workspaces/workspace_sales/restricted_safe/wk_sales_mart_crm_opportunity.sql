@@ -522,7 +522,7 @@ WITH sfdc_users_xf AS (
     -- NF: unadjusted version of segment used to create the FY24 GTM key
     CASE 
         WHEN account_owner.is_hybrid_flag = 1
-          THEN account.parent_crm_account_sales_segment
+          THEN account.account_demographics_sales_segment
         WHEN edm_opty.close_date < today.current_fiscal_year_date
           THEN account_owner.user_segment
         ELSE opportunity_owner.user_segment
@@ -540,7 +540,7 @@ WITH sfdc_users_xf AS (
     END                                                       AS report_opportunity_user_region,
     CASE
         WHEN account_owner.is_hybrid_flag = 1 
-            THEN account.parent_crm_account_area
+            THEN account.account_demographics_area
         WHEN edm_opty.close_date < today.current_fiscal_year_date
           THEN account_owner.user_area
         ELSE opportunity_owner.user_area
