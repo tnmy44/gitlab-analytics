@@ -101,10 +101,10 @@ parse_utms AS (
   SELECT
     union_sources.*,
     -- keywords,
-    PARSE_URL(landing_page_url) :parameters:utm_medium:string   AS utm_medium,
-    PARSE_URL(landing_page_url) :parameters:utm_source:string   AS utm_source,
-    PARSE_URL(landing_page_url) :parameters:utm_budget:string   AS utm_budget,
-    PARSE_URL(landing_page_url) :parameters:utm_campaign:string AS utm_campaign,
+    PARSE_URL(landing_page_url) :parameters:utm_medium::string   AS utm_medium,
+    PARSE_URL(landing_page_url) :parameters:utm_source::string   AS utm_source,
+    PARSE_URL(landing_page_url) :parameters:utm_budget::string   AS utm_budget,
+    PARSE_URL(landing_page_url) :parameters:utm_campaign::string AS utm_campaign,
 
     SPLIT_PART(utm_campaign, '_', 1)                            AS utm_campaigncode,
     SPLIT_PART(utm_campaign, '_', 2)                            AS utm_geo,
@@ -113,7 +113,7 @@ parse_utms AS (
     SPLIT_PART(utm_campaign, '_', 5)                            AS utm_br_bn,
     SPLIT_PART(utm_campaign, '_', 6)                            AS utm_matchtype,
 
-    PARSE_URL(landing_page_url) :parameters:utm_content:string  AS utm_content,
+    PARSE_URL(landing_page_url) :parameters:utm_content::string  AS utm_content,
     SPLIT_PART(utm_content, '_', 1)                             AS utm_contentcode,
     SPLIT_PART(utm_content, '_', 2)                             AS utm_team,
     SPLIT_PART(utm_content, '_', 3)                             AS utm_segment,

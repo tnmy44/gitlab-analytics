@@ -89,7 +89,9 @@ WITH date_details AS (
         raw.lam_tier__c                       AS potential_lam_arr,
         raw.billingstatecode                  AS account_billing_state,
         raw.customer_score__c                 AS customer_score,
-        raw.account_demographics_territory__c AS account_demographics_territory
+        raw.account_demographics_territory__c       AS account_demographics_territory,
+        raw.account_demographics_upa_state__c       AS account_demographics_upa_state_code,
+        raw.account_demographics_upa_state_name__c  AS account_demographics_upa_state_name
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_account acc
     FROM {{ref('mart_crm_account')}} acc
     LEFT JOIN raw_account raw
@@ -661,6 +663,8 @@ WITH date_details AS (
     
     mart_crm_account.account_demographics_territory                 AS account_ad_territory,
     upa_account.account_demographics_territory                      AS upa_ad_territory,
+    mart_crm_account.account_demographics_upa_state_code            AS upa_ad_state_code,
+    mart_crm_account.account_demographics_upa_state_name            AS upa_ad_state_name,
 
     
     -- substitute this by key segment

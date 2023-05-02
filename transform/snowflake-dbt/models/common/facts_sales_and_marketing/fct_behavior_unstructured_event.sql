@@ -29,6 +29,7 @@
       app_id,
       session_id,
       link_click_target_url,
+      link_click_element_id,
       submit_form_id,
       change_form_id,
       change_form_type,
@@ -78,6 +79,7 @@
 
       -- Attributes
       link_click_target_url,
+      link_click_element_id,
       submit_form_id,
       change_form_id,
       change_form_type,
@@ -91,7 +93,7 @@
 {{ dbt_audit(
     cte_ref="unstruct_event_with_dims",
     created_by="@chrissharp",
-    updated_by="@chrissharp",
+    updated_by="@pempey",
     created_date="2022-09-27",
-    updated_date="2023-01-20"
+    updated_date="2023-04-24"
 ) }}
