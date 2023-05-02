@@ -157,7 +157,6 @@ WITH dim_billing_account AS (
       dim_product_detail.is_licensed_user                                             AS is_licensed_user,
       dim_product_detail.is_arpu                                                      AS is_arpu,
 
-
       -- MRR values
       --  not needed as all charges in fct_mrr are recurring
       --  fct_mrr.charge_type,
