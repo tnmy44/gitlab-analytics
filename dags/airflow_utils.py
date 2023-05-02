@@ -1,6 +1,7 @@
 """ This file contains common operators/functions to be used across multiple DAGs """
 import os
 import urllib.parse
+import pathlib
 from datetime import date, timedelta
 from typing import List, Dict
 
@@ -23,15 +24,14 @@ def get_sales_analytics_notebooks(frequency: str) -> Dict:
     notebooks = []
     fileNames = []
 
-    path = f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/"
+    path = pathlib.Path(f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/")
+    
+    for file in path.rglob("*.ipynb"):
+       
+        absolute_path = file.absolute()
+        notebooks.append(absolute_path)
+        fileNames.append(os.path.splitext(absolute_path)[0])
 
-    for file in os.listdir(path):
-        filename = os.fsdecode(file)
-        if filename.endswith(".ipynb"):
-            notebooks.append(filename)
-            fileNames.append(os.path.splitext(filename)[0])
-        else:
-            continue
     return dict(zip(notebooks, fileNames))
 
 
