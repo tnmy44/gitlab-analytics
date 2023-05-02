@@ -131,7 +131,6 @@ WITH sfdc_users_xf AS (
        parent_crm_account_area AS account_demographics_area,
        parent_crm_account_sales_territory AS account_demographics_territory,
        parent_crm_account_sales_segment,
-       parent_crm_account_zi_technologies,
        parent_crm_account_sales_segment AS parent_crm_account_demographics_sales_segment,
        parent_crm_account_geo AS parent_crm_account_demographics_geo,
        parent_crm_account_region AS parent_crm_account_demographics_region,
