@@ -19,7 +19,7 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
     Read a yaml manifest file into a dictionary and return it.
     """
 
-    with open(file=file_path, mode="r", encoding='utf-8') as file:
+    with open(file=file_path, mode="r", encoding="utf-8") as file:
         manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
 
     return manifest_dict
