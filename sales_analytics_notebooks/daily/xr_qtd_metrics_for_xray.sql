@@ -27,7 +27,7 @@ agg_demo_keys AS (
 
     SELECT *
     FROM prod.restricted_safe_workspace_sales.report_agg_keys_ssot
---FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }} 
+--FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
 
 ),
 
@@ -48,7 +48,7 @@ aggregation AS (
 
     SELECT
         --------------------------------------------------------------------------------
-        -------------------------------------------------------------------------------- 
+        --------------------------------------------------------------------------------
         -- KEYS
 
         oppty.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
@@ -383,12 +383,12 @@ aggregation AS (
         END) AS cfy_open_4plus_net_arr,
 
         -----------------------------------------------------------------------------------------------------------
-        -----------------------------------------------------------------------------------------------------------    
+        -----------------------------------------------------------------------------------------------------------
 
         SUM(CASE
             WHEN
                 oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
-                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 12, today.current_fiscal_quarter_date
+                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 9, today.current_fiscal_quarter_date
                 )
                 AND oppty.is_stage_1_plus = 1
                 AND oppty.is_eligible_open_pipeline_flag = 1
@@ -399,7 +399,7 @@ aggregation AS (
         SUM(CASE
             WHEN
                 oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
-                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 12, today.current_fiscal_quarter_date
+                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 9, today.current_fiscal_quarter_date
                 )
                 AND oppty.is_stage_3_plus = 1
                 AND oppty.is_eligible_open_pipeline_flag = 1
@@ -410,7 +410,7 @@ aggregation AS (
         SUM(CASE
             WHEN
                 oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
-                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 12, today.current_fiscal_quarter_date
+                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 9, today.current_fiscal_quarter_date
                 )
                 AND oppty.is_stage_4_plus = 1
                 AND oppty.is_eligible_open_pipeline_flag = 1
@@ -421,7 +421,7 @@ aggregation AS (
         SUM(CASE
             WHEN
                 oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
-                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 12, today.current_fiscal_quarter_date)
+                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 9, today.current_fiscal_quarter_date)
                 THEN oppty.booked_net_arr
             ELSE 0
         END) AS next_4q_booked_net_arr,
@@ -429,7 +429,7 @@ aggregation AS (
         SUM(CASE
             WHEN
                 oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
-                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 12, today.current_fiscal_quarter_date
+                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 9, today.current_fiscal_quarter_date
                 )
                 AND oppty.is_eligible_open_pipeline_flag = 1
                 AND oppty.is_stage_1_plus = 1
@@ -440,7 +440,7 @@ aggregation AS (
         SUM(CASE
             WHEN
                 oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
-                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 12, today.current_fiscal_quarter_date
+                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 9, today.current_fiscal_quarter_date
                 )
                 AND oppty.is_eligible_open_pipeline_flag = 1
                 AND oppty.is_stage_3_plus = 1
@@ -451,7 +451,7 @@ aggregation AS (
         SUM(CASE
             WHEN
                 oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
-                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 12, today.current_fiscal_quarter_date
+                AND oppty.close_fiscal_quarter_date <= DATEADD(MONTH, 9, today.current_fiscal_quarter_date
                 )
                 AND oppty.is_eligible_open_pipeline_flag = 1
                 AND oppty.is_stage_4_plus = 1

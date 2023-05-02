@@ -66,3 +66,26 @@ tables:
         ,UpdatedById
         ,UpdatedDate
       FROM RampInterval
+  rampintervalmetrics:
+    query: |-
+      SELECT
+        Id
+        ,ChargeNumber
+        ,ProductRatePlanChargeId
+        ,StartDate
+        ,EndDate
+        ,Quantity
+        ,GrossTcb
+        ,NetTcb
+        ,DiscountTcb
+        ,GrossTcv
+        ,NetTcv
+        ,DiscountTcv
+        ,RampIntervalId
+        ,RatePlanChargeId
+        ,SubscriptionNumber
+        ,CreatedById
+        ,CreatedDate
+        ,UpdatedById
+        ,UpdatedDate
+      FROM rampintervalmetrics

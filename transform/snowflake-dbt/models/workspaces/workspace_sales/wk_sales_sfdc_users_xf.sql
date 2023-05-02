@@ -266,8 +266,20 @@ WITH source_user AS (
         ELSE 'Other'
       END AS asm
     FROM consolidation
+
+), final AS (
+
+    SELECT *
+    FROM user_based_reporting_keys
+
 )
 
+SELECT *,
 
-SELECT *
-FROM user_based_reporting_keys
+    LOWER(business_unit)                                                              AS key_bu,
+    LOWER(business_unit || '_' || sub_business_unit)                                  AS key_bu_subbu,
+    LOWER(business_unit || '_' || sub_business_unit || '_' || division)               AS key_bu_subbu_division,
+    LOWER(business_unit || '_' || sub_business_unit || '_' || division || '_' || asm) AS key_bu_subbu_division_asm,
+    LOWER(key_bu_subbu_division_asm || '_' || role_type || '_' || TO_VARCHAR(employee_number))  AS key_sal_heatmap
+
+FROM final

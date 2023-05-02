@@ -238,6 +238,7 @@
 		mart_crm_touchpoint.bizible_referrer_page,
 		mart_crm_touchpoint.bizible_referrer_page_raw,
 		mart_crm_touchpoint.bizible_integrated_campaign_grouping,
+    mart_crm_touchpoint.bizible_salesforce_campaign,
         mart_crm_touchpoint.bizible_ad_group_name,
 		mart_crm_touchpoint.campaign_rep_role_name,
 		mart_crm_touchpoint.touchpoint_segment,
@@ -493,6 +494,7 @@
       mart_crm_attribution_touchpoint.bizible_referrer_page,
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
+      mart_crm_attribution_touchpoint.bizible_salesforce_campaign,
 	  mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.gtm_motion,
@@ -664,7 +666,7 @@
       ON dim_crm_account.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     LEFT JOIN dim_crm_user
       ON opp.dim_crm_user_id=dim_crm_user.dim_crm_user_id
-  {{dbt_utils.group_by(n=222)}}
+  {{dbt_utils.group_by(n=223)}}
     
 ), cohort_base_combined AS (
   
@@ -889,6 +891,7 @@
     bizible_referrer_page,
     bizible_referrer_page_raw,
     bizible_integrated_campaign_grouping,
+    bizible_salesforce_campaign,
 	campaign_rep_role_name,
     touchpoint_segment,
     gtm_motion,
@@ -1174,6 +1177,7 @@
       bizible_referrer_page,
       bizible_referrer_page_raw,
       bizible_integrated_campaign_grouping,
+      bizible_salesforce_campaign,
 	  campaign_rep_role_name,
       touchpoint_segment,
       gtm_motion,
@@ -1310,5 +1314,5 @@
     created_by="@michellecooper",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-04-18",
+    updated_date="2023-04-24",
   ) }}

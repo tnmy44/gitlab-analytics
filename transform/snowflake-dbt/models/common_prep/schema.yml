@@ -227,26 +227,6 @@ models:
           - not_null
       - name: valid_to
 
-  - name: prep_namespace_lineage
-    description: '{{ doc("dim_namespace_lineage") }}'
-    columns:
-      - name: dim_namespace_id
-        tests:
-          - not_null
-          - unique
-      - name: ultimate_parent_namespace_id
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_id
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_title
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_is_paid
-        tests:
-          - not_null
-
   - name: prep_namespace_plan_hist
     description: '{{ doc("dim_namespace_plan_hist") }}'
     columns:
@@ -401,10 +381,11 @@ models:
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_plan_id") }}'
       - name: plan_id_modified
-        description: Modified plan id to conform legacy gold and silver plan ids to ultimate and premium plan ids.
+        description: '{{ doc("plan_id_modified") }}'
       - name: plan_name_modified
-        description: Modified plan name to conform legacy gold and silver plan names to ultimate and premium plan names.
+        description: '{{ doc("plan_name_modified") }}'
 
   - name: prep_product_detail
     columns:
@@ -443,8 +424,26 @@ models:
       - name: is_oss_or_edu_rate_plan
         description: Flag for rate plans containing OSS or EDU
 
+  - name: prep_ptp_scores_by_user
+    description: '{{ doc("prep_ptp_scores_by_user") }}'
+    columns:
+      - name: dim_marketing_contact_id
+        description: Unique identifier for the marketing contact.
+        tests:
+          - not_null
+          - unique
+
   - name: prep_ptpt_scores_by_user
     description: '{{ doc("prep_ptpt_scores_by_user") }}'
+    columns:
+      - name: dim_marketing_contact_id
+        description: Unique identifier for the marketing contact.
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_ptpf_scores_by_user
+    description: '{{ doc("prep_ptpf_scores_by_user") }}'
     columns:
       - name: dim_marketing_contact_id
         description: Unique identifier for the marketing contact.
@@ -1824,6 +1823,8 @@ models:
         description: '{{ doc("user_timezone_name") }}'
       - name: dim_user_location_sk
         description: '{{ doc("dim_user_location_sk") }}'
+      - name: link_click_element_id
+        description: '{{ doc("link_click_element_id") }}'
 
   - name: prep_snowplow_page_views_all
     description: View combining all snowplow_page_view partitions.
@@ -1895,3 +1896,38 @@ models:
         description: Masked. Team member performance rating
         meta:
           masking_policy: analyst_people
+
+  - name: prep_billing_account
+    description: '{{ doc("prep_billing_account") }}'
+    columns:
+      - name: dim_billing_account_sk
+        description: '{{ doc("dim_billing_account_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: dim_crm_account_id
+        description: The customer account ID for the account
+      - name: billing_account_number
+        description: A unique Zuora account number
+      - name: billing_account_name
+        description: The name of the Zuora account
+      - name: account_status
+        description: The status of the account in the system. Can be draft, active, cancelled.
+      - name: parent_id
+        description: The identifier of the parent customer account      
+      - name: sfdc_account_code
+        description: The code for the account
+      - name: sfdc_entity
+      - name: account_currency
+        description: A currency as defined in Billing Settings in the Zuora UI
+      - name: sold_to_country
+        description: The country of the sold to contact
+      - name: ssp_channel
+      - name: po_required
+      - name: auto_pay
+      - name: is_deleted
+        description: The flag indicating if account has been deleted
+      - name: batch
+      - name: record_data_source
+        description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources.
+
