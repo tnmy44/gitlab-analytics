@@ -19,18 +19,12 @@ WITH sfdc_account AS (
     SELECT *
     FROM {{ ref('sfdc_account_deal_size_segmentation') }}
 
-), parent_account AS (
-
-    SELECT *
-    FROM {{ ref('sfdc_account') }}
-
 ), joined AS (
 
 
     SELECT
       sfdc_account.*,
       tam_user.name                                                                   AS technical_account_manager,
-      parent_account.account_name                                                     AS ultimate_parent_account_name, 
       sfdc_account.ultimate_parent_sales_segment                                      AS ultimate_parent_account_segment,
       sfdc_record_type.record_type_name,
       sfdc_record_type.business_process_id,
@@ -139,8 +133,6 @@ WITH sfdc_account AS (
     sfdc_account.account_territory                                          AS upa_territory
 
     FROM sfdc_account
-    LEFT JOIN parent_account
-      ON sfdc_account.ultimate_parent_account_id = parent_account.account_id
     LEFT JOIN sfdc_users tam_user
       ON sfdc_account.technical_account_manager_id = tam_user.user_id
     LEFT JOIN sfdc_users account_owner
