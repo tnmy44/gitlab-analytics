@@ -38,8 +38,6 @@ def main(file_path: str, load_only_table: str = None) -> None:
     # When load_only_table specified reduce manifest to keep only relevant table config
     manifest_dict = filter_manifest(manifest_dict, load_only_table)
 
-    logging.info(manifest_dict)
-
     for table_spec in manifest_dict.get("tables", ""):
         logging.info(f"Processing {table_spec}")
         job_id = zq.request_data_query_data(
