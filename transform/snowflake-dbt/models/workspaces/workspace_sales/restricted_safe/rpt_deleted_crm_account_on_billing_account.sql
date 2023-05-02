@@ -19,7 +19,7 @@
       LOWER(zuora_account_source.batch) != 'batch20'
       AND zuora_account_source.is_deleted = FALSE
       AND zuora_account_source.status != 'Canceled'
-      AND (bill_to_contact.work_email NOT LIKE '%@gitlab.com%' AND sold_to_contact.work_email NOT LIKE '%@gitlab.com%')
+      AND (LOWER(bill_to_contact.work_email) NOT LIKE '%@gitlab.com%' AND LOWER(sold_to_contact.work_email) NOT LIKE '%@gitlab.com%')
       AND COALESCE(bill_to_contact.work_email, bill_to_contact.personal_email, sold_to_contact.work_email, sold_to_contact.personal_email) IS NOT NULL
       AND COALESCE(bill_to_contact.work_email, bill_to_contact.personal_email, sold_to_contact.work_email, sold_to_contact.personal_email) != '' -- sometimes these values look null, but are actually blank spaces
       AND zuora_query_api_users_source.email != 'svc_zuora_fulfillment_int@gitlab.com'
