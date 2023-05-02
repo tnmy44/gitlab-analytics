@@ -48,6 +48,8 @@
       -- if the column contains "_ID" this indicates it is an id so assign it "-1"
       {% elif '_ID' in col.name|string %}
       '-1' AS {{ col.name|lower }}
+      {% elif col.name|string == 'IS_DELETED' %}
+      '0' AS {{ col.name|lower }}
       -- boolean
       {% elif col.data_type == 'BOOLEAN' %}
       NULL AS {{ col.name|lower }}
@@ -104,8 +106,6 @@
       , 
       {%- endif %}
     {%- endfor %}
-    FROM {{this}}
-    LIMIT 1
     
     ) AS b 
   ON {{"(" ~ join_columns| join(") and (") ~ ")"}}
