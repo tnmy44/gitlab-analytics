@@ -22,7 +22,7 @@ def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> Dict:
 '''
 When load_only_table specified reduce manifest to keep only relevant table config
 '''
-    if load_only_table and load_only_table in manifest_dict["tables"].keys():
+    if manifest_dict["tables"].get(load_only_table, False):
         manifest_dict["tables"] = {
             load_only_table: manifest_dict["tables"][load_only_table]
         }

@@ -12,7 +12,17 @@ from os import environ as env
 
 from typing import Dict
 
-from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
+import json
+import logging
+import time
+from io import StringIO
+from logging import info
+from os import environ as env
+from typing import Dict
+
+import pandas as pd
+import requests
+from gitlabdata.orchestration_utils import snowflake_engine_factory
 
 
 class ZuoraQueriesAPI:
