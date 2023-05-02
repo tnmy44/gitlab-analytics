@@ -39,14 +39,13 @@ WITH dim_billing_account AS (
     dim_product_detail_id,
     dim_billing_account_id,
     dim_crm_account_id,
-    dim_order_id,
     SUM(mrr)                                                                      AS mrr,
     SUM(arr)                                                                      AS arr,
     SUM(quantity)                                                                 AS quantity,
     ARRAY_AGG(DISTINCT unit_of_measure) WITHIN GROUP (ORDER BY unit_of_measure)   AS unit_of_measure
   FROM {{ ref('fct_mrr') }}
   WHERE subscription_status IN ('Active', 'Cancelled')
-  {{ dbt_utils.group_by(n=6) }}
+  {{ dbt_utils.group_by(n=5) }}
 
 ), joined AS (
 
@@ -145,8 +144,6 @@ WITH dim_billing_account AS (
       dim_product_detail.is_licensed_user                                             AS is_licensed_user,
       dim_product_detail.is_arpu                                                      AS is_arpu,
 
-      -- order info
-      fct_mrr.dim_order_id,
 
       -- MRR values
       --  not needed as all charges in fct_mrr are recurring
