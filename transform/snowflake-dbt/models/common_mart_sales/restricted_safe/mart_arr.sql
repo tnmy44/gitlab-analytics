@@ -39,6 +39,7 @@ WITH dim_billing_account AS (
     dim_product_detail_id,
     dim_billing_account_id,
     dim_crm_account_id,
+    dim_order_id,
     SUM(mrr)                                                                      AS mrr,
     SUM(arr)                                                                      AS arr,
     SUM(quantity)                                                                 AS quantity,
@@ -143,6 +144,9 @@ WITH dim_billing_account AS (
       dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
       dim_product_detail.is_licensed_user                                             AS is_licensed_user,
       dim_product_detail.is_arpu                                                      AS is_arpu,
+
+      -- order info
+      fct_mrr.dim_order_id,
 
       -- MRR values
       --  not needed as all charges in fct_mrr are recurring
