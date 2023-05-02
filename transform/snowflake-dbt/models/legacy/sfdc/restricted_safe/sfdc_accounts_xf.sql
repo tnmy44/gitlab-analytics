@@ -139,6 +139,8 @@ WITH sfdc_account AS (
     sfdc_account.account_territory                                          AS upa_territory
 
     FROM sfdc_account
+    LEFT JOIN parent_account
+      ON sfdc_account.ultimate_parent_account_id = parent_account.account_id
     LEFT JOIN sfdc_users tam_user
       ON sfdc_account.technical_account_manager_id = tam_user.user_id
     LEFT JOIN sfdc_users account_owner
