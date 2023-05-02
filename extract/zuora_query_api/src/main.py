@@ -4,6 +4,13 @@ from typing import Dict
 from fire import Fire
 import logging
 import yaml
+import logging
+from os import environ as env
+from typing import Dict
+
+import yaml
+from api import ZuoraQueriesAPI
+from fire import Fire
 from gitlabdata.orchestration_utils import dataframe_uploader
 
 
