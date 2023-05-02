@@ -31,6 +31,7 @@ SELECT
   issues.project_id,
   issues.project_path,
   issues.namespace_id,
+  issues.ultimate_parent_id,
   issues.labels,
   issues.masked_label_title,
   issues.issue_title,
