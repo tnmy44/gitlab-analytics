@@ -1,25 +1,8 @@
 metric_backend,free,paid,internal
-https_git,0.33,0.33,0.33
-api,0.33,0.33,0.33
-stats,0.33,0.33,0.33
-web,0.33,0.33,0.33
-ci_gateway_catch_all,0.33,0.33,0.33
-kas_k8s_proxy,0.33,0.33,0.33
-api_rate_limit,0.33,0.33,0.33
-ci_gateway_git_repo_redirection,0.33,0.33,0.33
-deny_https,0.33,0.33,0.33
-main_web,0.33,0.33,0.33
-registry,0.33,0.33,0.33
-git_lfs,0.33,0.33,0.33
-continuous_integration,0.33,0.33,0.33
-dependency_proxy,0.33,0.33,0.33
-build_artifacts,0.33,0.33,0.33
-registry,0.33,0.33,0.33
-asset_proxy,0.33,0.33,0.33
-websockets,0.33,0.33,0.33
-ssh,0.33,0.33,0.33
-pages_https,0.33,0.33,0.33
-deny_http,0.33,0.33,0.33
-main_api,0.33,0.33,0.33
-pages_http,0.33,0.33,0.33
-kas,0.33,0.33,0.33
+HTTPs Git Data Transfer,0.33,0.33,0.33
+Registry Data Transfer,0.33,0.33,0.33
+API Data Transfer,0.33,0.33,0.33
+Web Data Transfer,0.33,0.33,0.33
+Pages Data Transfer,0.33,0.33,0.33
+WebSockets Data Transfer,0.33,0.33,0.33
+SSH Data Transfer,0.33,0.33,0.33
