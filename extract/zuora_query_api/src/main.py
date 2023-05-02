@@ -19,7 +19,9 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
 
 
 def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> Dict:
-    # When load_only_table specified reduce manifest to keep only relevant table config
+'''
+When load_only_table specified reduce manifest to keep only relevant table config
+'''
     if load_only_table and load_only_table in manifest_dict["tables"].keys():
         manifest_dict["tables"] = {
             load_only_table: manifest_dict["tables"][load_only_table]
