@@ -174,8 +174,8 @@ class PostgresPipelineTable:
     ):
         """
         There are 3 criteria that determine if a backfill is necessary:
-            1. New table
             1. In the middle of a backfill
+            1. New table
             1. New columns in source
 
         Will check in the above order. Must check if in middle of backfill first
@@ -189,25 +189,25 @@ class PostgresPipelineTable:
         Furthermore, if backfill needed, but NOT in middle of backfill,
         delete any unprocessed backfill files
         """
-        initial_load_start_date = None
-        start_pk = 1
 
-        if is_new_table(
+        # check if mid-backfill first, must always check before schema_change
+        # if not mid-backfill, returns start_pk=1, initial_load_start_date=None
+        is_backfill_needed, start_pk, initial_load_start_date = is_resume_export(
             metadata_engine, backfill_metadata_table, self.source_table_name
-        ):
-            logging.info(
-                f"Backfill needed- processing new table: {self.source_table_name}."
-            )
-            is_backfill_needed = True
+        )
 
-        else:
-            # check if mid-backfill
-            is_backfill_needed, start_pk, initial_load_start_date = is_resume_export(
+        if not is_backfill_needed:
+            # check if it's a new table, i.e not in metadata database
+            if is_new_table(
                 metadata_engine, backfill_metadata_table, self.source_table_name
-            )
+            ):
+                logging.info(
+                    f"Backfill needed- processing new table: {self.source_table_name}."
+                )
+                is_backfill_needed = True
 
-            # if not in mid-backfill, check if there was a schema addition
-            if is_backfill_needed is False and schema_addition_check(
+            # check if there was a schema addition
+            elif schema_addition_check(
                 self.query,
                 source_engine,
                 self.source_table_name,
