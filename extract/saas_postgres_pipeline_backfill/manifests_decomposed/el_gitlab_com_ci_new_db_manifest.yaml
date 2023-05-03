@@ -75,6 +75,7 @@ tables:
       , file_store
       , name
       , expires_at
+      , checksum
       FROM ci_secure_files
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
