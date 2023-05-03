@@ -66,21 +66,7 @@ xc_position_part AS (
 sfdc_users AS (
 
     SELECT
-        *,
-        CASE
-            WHEN LOWER(title) LIKE '%strategic account%' AND DATEADD(MONTH, 10, start_date) < '2022-08-15'
-                THEN 'Ramped'
-            WHEN LOWER(title) LIKE '%account executive%mid market%' AND DATEADD(MONTH, 6, start_date) < '2022-06-15'
-                THEN 'Ramped'
-            WHEN LOWER(title) LIKE '%smb account executive%' AND DATEADD(MONTH, 3, start_date) < '2022-05-15'
-                THEN 'Ramped'
-            ELSE 'Ramping'
-        END                                              AS ramp_status,
-        LOWER(
-            business_unit || '_' || sub_business_unit || '_'
-            || division || '_' || asm
-        )                                                AS key_bu_subbu_division_asm,
-        LOWER(business_unit || '_' || sub_business_unit) AS key_bu_subbu
+        *
     FROM prod.workspace_sales.sfdc_users_xf
     WHERE
         employee_number IS NOT NULL
@@ -195,15 +181,16 @@ final AS (
         LOWER(sfdc_users.sub_business_unit)                                                               AS sub_business_unit,
         LOWER(sfdc_users.division)                                                                        AS division,
         LOWER(sfdc_users.asm)                                                                             AS asm,
+
         CASE
-            WHEN LOWER(sfdc_users.title) LIKE '%strategic account%' AND DATEADD(MONTH, 10, pivoted_quotas.start_date) < '2022-08-15'
-                THEN 'Ramped'
-            WHEN LOWER(sfdc_users.title) LIKE '%account executive%mid market%' AND DATEADD(MONTH, 6, pivoted_quotas.start_date) < '2022-06-15'
-                THEN 'Ramped'
-            WHEN LOWER(sfdc_users.title) LIKE '%smb account executive%' AND DATEADD(MONTH, 3, pivoted_quotas.start_date) < '2022-05-15'
-                THEN 'Ramped'
-            ELSE 'Ramping'
-        END                                                                                               AS ramp_status
+                    WHEN LOWER(sfdc_users.title) LIKE '%strategic account%' AND DATEADD(MONTH, 9, pivoted_quotas.start_date) <= '2022-08-15'
+                        THEN 'Ramped'
+                    WHEN LOWER(sfdc_users.title) LIKE '%account executive%mid market%' AND DATEADD(MONTH, 4, pivoted_quotas.start_date) <= '2022-06-15'
+                        THEN 'Ramped'
+                    WHEN LOWER(sfdc_users.title) LIKE '%smb account executive%' AND DATEADD(MONTH, 3, pivoted_quotas.start_date) <= '2022-05-15'
+                        THEN 'Ramped'
+                    ELSE 'Ramping'
+        END  AS ramp_status
 
     FROM pivoted_quotas
     INNER JOIN sfdc_users
