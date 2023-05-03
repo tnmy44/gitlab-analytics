@@ -88,7 +88,7 @@ class PostgresPipelineTable:
             "metadata_engine": metadata_engine,
             "metadata_table": BACKFILL_METADATA_TABLE,
             "source_engine": source_engine,
-            "source_table_name": self.source_table_name,
+            "source_table": self.source_table_name,
             "source_database": self.import_db,
             "target_engine": target_engine,
             "table_name": self.get_target_table_name(),

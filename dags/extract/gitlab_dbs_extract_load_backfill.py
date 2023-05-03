@@ -351,7 +351,7 @@ for source_name, config in config_dict.items():
                 table_list = [
                     "alert_management_http_integrations",
                     "container_expiration_policies",
-                    "merge_request_metrics",
+                    # "merge_request_metrics",
                 ]
             elif config["dag_name"] == "el_gitlab_com_ci_new":
                 table_list = ["ci_runners", "ci_trigger_requests"]

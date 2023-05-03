@@ -280,7 +280,7 @@ def load_ids(
     max_pk = get_min_or_max_id(
         primary_key,
         database_kwargs["source_engine"],
-        database_kwargs["source_table_name"],
+        database_kwargs["source_table"],
         "max",
         database_kwargs["chunksize"],
     )
