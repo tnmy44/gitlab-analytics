@@ -54,7 +54,6 @@ dag = DAG(
     concurrency=1,
 )
 
-DAILY_NOTEBOOKS_PATH = f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/daily/"
 notebooks = get_sales_analytics_notebooks(frequency="daily")
 
 # Task 1
@@ -64,7 +63,7 @@ for notebook, task_name in notebooks.items():
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_repo_cmd} &&
-        cd {DAILY_NOTEBOOKS_PATH} &&
+        cd {SALES_ANALYTICS_NOTEBOOKS_PATH} &&
         papermill {notebook} -p is_local_development False
         """
     task_identifier = f"{task_name}"
