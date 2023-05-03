@@ -16,6 +16,13 @@ models:
         tests:
           - not_null
           - unique
+  - name: monthly_stage_usage_by_subscription
+    description: Product usage metrics by the original subscription_id
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - dim_subscription_id_original
+            - snapshot_month
   - name: prep_saas_flattened_metrics
     description: >-
       Intermediary model used to create monthly_stage_usage_by_namespace.
