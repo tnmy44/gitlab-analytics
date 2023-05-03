@@ -705,18 +705,18 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       sfdc_accounts_xf.account_owner_user_area,
       -- account_owner_subarea_stamped
 
-      sfdc_accounts_xf.account_sales_segment   AS account_demographics_segment,
-      sfdc_accounts_xf.account_geo             AS account_demographics_geo,
-      sfdc_accounts_xf.account_region          AS account_demographics_region,
-      sfdc_accounts_xf.account_area            AS account_demographics_area,
-      sfdc_accounts_xf.account_territory       AS account_demographics_territory,
+      sfdc_accounts_xf.account_demographics_sales_segment   AS account_demographics_segment,
+      sfdc_accounts_xf.account_demographics_geo             AS account_demographics_geo,
+      sfdc_accounts_xf.account_demographics_region          AS account_demographics_region,
+      sfdc_accounts_xf.account_demographics_area            AS account_demographics_area,
+      sfdc_accounts_xf.account_demographics_territory       AS account_demographics_territory,
       -- account_demographics_subarea_stamped
 
-      upa.account_sales_segment                AS upa_demographics_segment,
-      upa.account_geo                          AS upa_demographics_geo,
-      upa.account_region                       AS upa_demographics_region,
-      upa.account_area                         AS upa_demographics_area,
-      upa.account_territory                    AS upa_demographics_territory,
+      upa.account_demographics_sales_segment                AS upa_demographics_segment,
+      upa.account_demographics_geo                          AS upa_demographics_geo,
+      upa.account_demographics_region                       AS upa_demographics_region,
+      upa.account_demographics_area                         AS upa_demographics_area,
+      upa.account_demographics_territory                    AS upa_demographics_territory,
 
       -----------------------------------------------
 
