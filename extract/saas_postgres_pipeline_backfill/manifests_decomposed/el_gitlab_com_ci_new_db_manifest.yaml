@@ -241,7 +241,6 @@ tables:
       , runner_type
       , public_projects_minutes_cost_factor
       , private_projects_minutes_cost_factor
-      , creator_id
       FROM ci_runners
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
