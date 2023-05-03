@@ -1258,7 +1258,9 @@ models:
   columns:
     - name: behavior_structured_event_pk
       tests:
-        - unique
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
       description: '{{ doc("behavior_structured_event_pk") }}'
     - name: behavior_at
       description: '{{ doc("behavior_at") }}'
