@@ -140,7 +140,7 @@ flattened_metrics AS (
 )
 
 SELECT
-    flattened_metrics.dim_subscription_id_original,
+    dim_subscription.dim_subscription_id_original,
     flattened_metrics.snapshot_month,
 
     -- NUMBER OF FEATURES USED BY PRODUCT STAGE
@@ -858,7 +858,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_subscription_id_original,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_plan_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -867,7 +867,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_subscription_id_original,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_create_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -876,7 +876,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_subscription_id_original,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_verify_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -989,7 +989,7 @@ LEFT JOIN
     dim_subscription ON
         dim_subscription.dim_subscription_id = flattened_metrics.dim_subscription_id
 WHERE usage_ping_metrics.metrics_status = 'active'
-      AND flattened_metrics.dim_subscription_id_original IS NOT NULL
+      AND dim_subscription.dim_subscription_id_original IS NOT NULL
 GROUP BY
-    flattened_metrics.dim_subscription_id_original,
+    dim_subscription.dim_subscription_id_original,
     flattened_metrics.snapshot_month
