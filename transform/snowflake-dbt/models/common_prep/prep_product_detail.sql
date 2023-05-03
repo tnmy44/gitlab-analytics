@@ -91,6 +91,7 @@ WITH zuora_product AS (
       ON common_product_tier_mapping.product_tier_historical = common_product_tier.product_tier_historical
     WHERE zuora_product.is_deleted = FALSE
       AND zuora_product_rate_plan_charge_tier.currency = 'USD'
+      AND zuora_product_rate_plan_charge_tier.active = TRUE
     {{ dbt_utils.group_by(n=20) }}
     ORDER BY 1, 3
 
@@ -128,7 +129,7 @@ WITH zuora_product AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-12-16",
-    updated_date="2022-07-29"
+    updated_date="2022-05-03"
 ) }}
