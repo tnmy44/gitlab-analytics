@@ -500,7 +500,7 @@ def is_resume_export(
     """
     # initialize variables
     is_resume_export_needed = False
-    start_pk = -1
+    start_pk = 1
     initial_load_start_date = None
 
     results = query_export_status(metadata_engine, metadata_table, source_table)
@@ -519,7 +519,7 @@ def is_resume_export(
             is_resume_export_needed = True
             # if more than 24 HR since last upload, start backfill over,
             # else proceed with last extracted_id
-            if time_since_last_upload > timedelta(hours=1):
+            if time_since_last_upload > timedelta(hours=24):
                 initial_load_start_date = None
                 last_extracted_id = 0
                 logging.info(
@@ -729,7 +729,13 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
     return postgres_engine, metadata_engine, snowflake_engine
 
 
-def update_import_query_for_delete_export(import_query, primary_key, composite_key):
+def update_import_query_for_delete_export(
+    import_query: str, primary_key: str, composite_key: str
+):
+    """
+    Take the original query and just query the primary / composite key
+    Need to take original query because it may include a WHERE clause
+    """
     select_part, from_part = import_query.split("FROM")
 
     # Replace the field names with pk
