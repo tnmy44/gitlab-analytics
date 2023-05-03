@@ -158,6 +158,7 @@ tables:
     export_schema: 'gitlab_com'
     export_table: 'audit_events'
     export_table_primary_key: id
+    export_table_composite_key: id, created_at
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
@@ -1320,12 +1321,12 @@ tables:
       , mr_default_target_self
       , previous_default_branch
       , warn_about_potentially_unwanted_characters
-      , merge_commit_template 
+      , merge_commit_template
       , has_shimo
       , squash_commit_template
       , legacy_open_source_license_available
       , target_platforms
-      , enforce_auth_checks_on_uploads 
+      , enforce_auth_checks_on_uploads
       FROM project_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1442,7 +1443,7 @@ tables:
       , created_at
       , updated_at
       , user_id
-      , group_id 
+      , group_id
       FROM protected_branch_merge_access_levels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1460,7 +1461,7 @@ tables:
       , updated_at
       , user_id
       , group_id
-      , deploy_key_id 
+      , deploy_key_id
       FROM protected_branch_push_access_levels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
