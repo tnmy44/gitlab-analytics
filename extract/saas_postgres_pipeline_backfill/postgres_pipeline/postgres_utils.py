@@ -350,16 +350,9 @@ def get_upload_file_name(
 def chunk_and_upload(
     query: str,
     primary_key: str,
-    source_engine: Engine,
-    source_database: str,
-    target_engine: Engine,
-    metadata_engine: Engine,
-    metadata_table: str,
-    target_table: str,
-    source_table: str,
     max_source_id: int,
     initial_load_start_date: datetime,
-    chunksize: int,
+    database_kwargs: Dict[Any, Any],
     advanced_metadata: bool = False,
 ) -> datetime:
     """
@@ -379,7 +372,12 @@ def chunk_and_upload(
     rows_uploaded = 0
 
     with tempfile.TemporaryFile() as tmpfile:
-        iter_csv = read_sql_tmpfile(query, source_engine, tmpfile, chunksize)
+        iter_csv = read_sql_tmpfile(
+            query,
+            database_kwargs["source_engine"],
+            tmpfile,
+            database_kwargs["chunksize"],
+        )
 
         for idx, chunk_df in enumerate(iter_csv):
             logging.info(f"\nchunk_df.head(): {chunk_df.head()}")
@@ -393,7 +391,10 @@ def chunk_and_upload(
                 initial_load_start_date = upload_date
 
             upload_file_name = get_upload_file_name(
-                metadata_table, source_table, initial_load_start_date, upload_date
+                database_kwargs["metadata_table"],
+                database_kwargs["source_table"],
+                initial_load_start_date,
+                upload_date,
             )
 
             if row_count > 0:
@@ -403,10 +404,10 @@ def chunk_and_upload(
                 )
                 is_export_completed = last_extracted_id >= max_source_id
                 write_backfill_metadata(
-                    metadata_engine,
-                    metadata_table,
-                    source_database,
-                    source_table,
+                    database_kwargs["metadata_engine"],
+                    database_kwargs["metadata_table"],
+                    database_kwargs["source_database"],
+                    database_kwargs["source_table"],
                     initial_load_start_date,
                     upload_date,
                     upload_file_name,
@@ -418,7 +419,7 @@ def chunk_and_upload(
 
                 logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
 
-    source_engine.dispose()
+    database_kwargs["source_engine"].dispose()
     # need to return in case it was first set here
     return initial_load_start_date
 
@@ -686,12 +687,8 @@ def get_min_or_max_id(
 
 
 def id_query_generator(
-    postgres_engine: Engine,
     primary_key: str,
     raw_query: str,
-    snowflake_engine: Engine,
-    source_table: str,
-    target_table: str,
     min_source_id: int,
     max_source_id: int,
     id_range: int,

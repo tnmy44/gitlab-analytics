@@ -266,18 +266,10 @@ def load_scd(
 
 
 def load_ids(
-    table_dict: Dict[Any, Any],
-    source_engine: Engine,
-    source_database: str,
-    source_table_name: str,
-    target_engine: Engine,
-    table_name: str,
-    metadata_engine: Engine,
-    metadata_table: str,
-    start_source_id: int,
     initial_load_start_date: datetime.datetime,
-    chunksize: int,
-    backfill: bool = True,
+    start_pk: int,
+    table_dict: Dict[Any, Any],
+    database_kwargs: Dict[Any, Any],
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
 
@@ -285,21 +277,21 @@ def load_ids(
     additional_filtering = table_dict.get("additional_filtering", "")
     primary_key = table_dict["export_table_primary_key"]
 
-    max_source_id = get_min_or_max_id(
-        primary_key, source_engine, source_table_name, "max", chunksize
+    max_pk = get_min_or_max_id(
+        primary_key,
+        database_kwargs["source_engine"],
+        database_kwargs["source_table_name"],
+        "max",
+        database_kwargs["chunksize"],
     )
 
     # Create a generator for queries that are chunked by ID range
     id_queries = id_query_generator(
-        source_engine,
         primary_key,
         raw_query,
-        target_engine,
-        source_table_name,
-        table_name,
-        start_source_id,
-        max_source_id,
-        chunksize,
+        start_pk,
+        max_pk,
+        database_kwargs["chunksize"],
     )
 
     # Iterate through the generated queries
@@ -310,16 +302,9 @@ def load_ids(
         initial_load_start_date = chunk_and_upload(
             filtered_query,
             primary_key,
-            source_engine,
-            source_database,
-            target_engine,
-            metadata_engine,
-            metadata_table,
-            table_name,
-            source_table_name,
-            max_source_id,
+            max_pk,
             initial_load_start_date,
-            chunksize,
+            database_kwargs,
         )
 
 

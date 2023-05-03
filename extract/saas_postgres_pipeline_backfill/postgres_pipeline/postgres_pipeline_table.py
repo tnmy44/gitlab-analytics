@@ -83,19 +83,19 @@ class PostgresPipelineTable:
             logging.info("table does not need incremental backfill")
             return False
 
-        target_table = self.get_target_table_name()
+        database_kwargs = {
+            "chunksize": backfill_chunksize,
+            "metadata_engine": metadata_engine,
+            "metadata_table": BACKFILL_METADATA_TABLE,
+            "source_engine": source_engine,
+            "source_table_name": self.source_table_name,
+            "source_database": self.import_db,
+            "target_engine": target_engine,
+            "table_name": self.get_target_table_name(),
+        }
+
         return load_functions.load_ids(
-            self.table_dict,
-            source_engine,
-            self.import_db,
-            self.source_table_name,
-            target_engine,
-            target_table,
-            metadata_engine,
-            BACKFILL_METADATA_TABLE,
-            start_pk,
-            initial_load_start_date,
-            backfill_chunksize,
+            initial_load_start_date, start_pk, self.table_dict, database_kwargs
         )
 
     def check_new_table(
@@ -121,7 +121,7 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
     ) -> bool:
-        """ Incrementally load delete data which is the PK of the table """
+        """Incrementally load delete data which is the PK of the table"""
         delete_chunksize = 50_000_000
         self.table_dict["import_query"] = update_import_query_for_delete_export(
             self.query, self.source_table_primary_key, self.source_table_composite_key
@@ -132,19 +132,20 @@ class PostgresPipelineTable:
         )
         target_table = self.get_target_table_name()
 
+        database_kwargs = {
+            "chunksize": delete_chunksize,
+            "metadata_engine": metadata_engine,
+            "metadata_table": DELETE_METADATA_TABLE,
+            "source_engine": source_engine,
+            "source_table_name": self.source_table_name,
+            "source_database": self.import_db,
+            "target_engine": target_engine,
+            "table_name": target_table,
+        }
+
         logging.info("Starting delete export...")
         return load_functions.load_ids(
-            self.table_dict,
-            source_engine,
-            self.import_db,
-            self.source_table_name,
-            target_engine,
-            target_table,
-            metadata_engine,
-            DELETE_METADATA_TABLE,
-            start_pk,
-            initial_load_start_date,
-            delete_chunksize,
+            initial_load_start_date, start_pk, self.table_dict, database_kwargs
         )
 
     def do_load(
