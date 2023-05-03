@@ -519,7 +519,7 @@ def is_resume_export(
             is_resume_export_needed = True
             # if more than 24 HR since last upload, start backfill over,
             # else proceed with last extracted_id
-            if time_since_last_upload > timedelta(hours=24):
+            if time_since_last_upload > timedelta(hours=1):
                 initial_load_start_date = None
                 last_extracted_id = 0
                 logging.info(
