@@ -510,7 +510,7 @@ def is_resume_export(
     if results:
         (
             is_export_completed,
-            initial_load_start_date,
+            prev_initial_load_start_date,
             last_extracted_id,
             last_upload_date,
         ) = results[0]
@@ -519,18 +519,18 @@ def is_resume_export(
         if not is_export_completed:
             is_resume_export_needed = True
             # if more than 24 HR since last upload, start backfill over,
-            # else proceed with last extracted_id
             if time_since_last_upload > timedelta(hours=24):
-                initial_load_start_date = None
-                last_extracted_id = 0
                 logging.info(
                     f"In middle of export for {source_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Start export from beginning."
                 )
 
-            start_pk = last_extracted_id + 1
-            logging.info(
-                f"Resuming export with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}"
-            )
+            # else proceed with last extracted_id
+            else:
+                start_pk = last_extracted_id + 1
+                initial_load_start_date = prev_initial_load_start_date
+                logging.info(
+                    f"Resuming export with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}"
+                )
 
     return is_resume_export_needed, start_pk, initial_load_start_date
 
