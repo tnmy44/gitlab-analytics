@@ -28,9 +28,10 @@ def get_sales_analytics_notebooks(frequency: str) -> Dict:
     
     for file in path.rglob("*.ipynb"):
        
-        absolute_path = file.absolute()
-        notebooks.append(absolute_path)
-        fileNames.append(os.path.splitext(absolute_path)[0])
+        relative_path = file.relative_to(SALES_ANALYTICS_NOTEBOOKS_PATH)
+        notebooks.append(relative_path.as_posix())
+        expanded_name = str(relative_path.parent).replace('/','_') + '_' +  relative_path.stem
+        fileNames.append(expanded_name)
 
     return dict(zip(notebooks, fileNames))
 
