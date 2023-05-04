@@ -66,6 +66,23 @@ repo_storage_pl_daily AS (
   CROSS JOIN sku_list
 ),
 
+repo_storage_pl_daily_ext AS (
+
+  SELECT
+    snapshot_day                               AS date_day,
+    'gitlab-production'                        AS gcp_project_id,
+    NULL                                       AS gcp_service_description,
+    NULL                                       AS gcp_sku_description,
+    'gitaly'                                   AS infra_label,
+    NULL                                       AS env_label,
+    NULL                                       AS runner_label,
+    LOWER(repo_storage_pl_daily.finance_pl)    AS pl_category,
+    repo_storage_pl_daily.percent_repo_size_gb AS pl_percent,
+    'repo_storage_pl_daily'                    AS from_mapping
+  FROM {{ ref ('repo_storage_pl_daily') }}
+
+),
+
 sandbox_projects_pl AS (
 
   SELECT
@@ -90,6 +107,24 @@ container_registry_pl_daily AS (
     'gitlab-production'                                         AS gcp_project_id,
     'Cloud Storage'                                             AS gcp_service_description,
     'Standard Storage US Multi-region'                          AS gcp_sku_description,
+    'registry'                                                  AS infra_label,
+    NULL                                                        AS env_label,
+    NULL                                                        AS runner_label,
+    LOWER(container_registry_pl_daily.finance_pl)               AS pl_category,
+    container_registry_pl_daily.percent_container_registry_size AS pl_percent,
+    'container_registry_pl_daily'                               AS from_mapping
+  FROM {{ ref ('container_registry_pl_daily') }}
+  WHERE snapshot_day > '2022-06-10'
+
+),
+
+container_registry_pl_daily_ext AS (
+
+  SELECT
+    snapshot_day                                                AS date_day,
+    'gitlab-production'                                         AS gcp_project_id,
+    NULL                                                        AS gcp_service_description,
+    NULL                                                        AS gcp_sku_description,
     'registry'                                                  AS infra_label,
     NULL                                                        AS env_label,
     NULL                                                        AS runner_label,
@@ -128,7 +163,7 @@ build_artifacts_pl_dev_daily AS (
     'build_artifacts'                  AS infra_label,
     'dev'                              AS env_label,
     NULL                               AS runner_label,
-    'Internal'                         AS pl_category,
+    'internal'                         AS pl_category,
     1                                  AS pl_percent,
     'build_artifacts_pl_dev_daily'     AS from_mapping
   FROM {{ ref ('build_artifacts_pl_daily') }}
@@ -172,7 +207,7 @@ runner_shared_gitlab_org AS (
 ),
 
 runner_saas_small AS (
-  -- small saas runners in gitlab-ci-plan-free-*
+  -- small saas runners with small infra label
   SELECT DISTINCT
     reporting_day                      AS date_day,
     NULL                               AS gcp_project_id,
@@ -181,6 +216,24 @@ runner_saas_small AS (
     NULL                               AS infra_label,
     NULL                               AS env_label,
     '2 - shared saas runners - small'  AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 2'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '2 - shared saas runners - small'
+
+),
+
+runner_saas_small_ext AS (
+  -- extension: applying same split to remaining resources in gitlab-ci-plan-free-* projects
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    'gitlab-ci-plan-free-%'            AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    NULL                               AS runner_label,
     ci_runners_pl_daily.pl             AS pl_category,
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 2'           AS from_mapping
@@ -207,6 +260,24 @@ runner_saas_medium AS (
 
 ),
 
+runner_saas_medium_ext AS (
+
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    'gitlab-r-saas-l-m-%'              AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    NULL                               AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 3'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '3 - shared saas runners - medium'
+
+),
+
 runner_saas_large AS (
 
   SELECT DISTINCT
@@ -217,6 +288,24 @@ runner_saas_large AS (
     NULL                               AS infra_label,
     NULL                               AS env_label,
     '4 - shared saas runners - large'  AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 4'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '4 - shared saas runners - large'
+
+),
+
+runner_saas_large_ext AS (
+
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    'gitlab-r-saas-l-l-%'              AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    NULL                               AS runner_label,
     ci_runners_pl_daily.pl             AS pl_category,
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 4'           AS from_mapping
@@ -238,7 +327,6 @@ haproxy_usage AS (
 ),
 
 haproxy_isp AS (
-
 
   SELECT
     haproxy_usage.date_day                                        AS date_day,
@@ -287,10 +375,16 @@ cte_append AS (SELECT *
   FROM repo_storage_pl_daily
   UNION ALL
   SELECT *
+  FROM repo_storage_pl_daily_ext
+  UNION ALL
+  SELECT *
   FROM sandbox_projects_pl
   UNION ALL
   SELECT *
   FROM container_registry_pl_daily
+  UNION ALL
+  SELECT *
+  FROM container_registry_pl_daily_ext
   UNION ALL
   SELECT *
   FROM build_artifacts_pl_daily
@@ -308,10 +402,19 @@ cte_append AS (SELECT *
   FROM runner_saas_small
   UNION ALL
   SELECT *
+  FROM runner_saas_small_ext
+  UNION ALL
+  SELECT *
   FROM runner_saas_medium
   UNION ALL
   SELECT *
+  FROM runner_saas_medium_ext
+  UNION ALL
+  SELECT *
   FROM runner_saas_large
+  UNION ALL
+  SELECT *
+  FROM runner_saas_large_ext
   UNION ALL
   SELECT *
   FROM haproxy_isp
@@ -328,7 +431,7 @@ SELECT
   infra_label,
   env_label,
   runner_label,
-  pl_category,
+  lower(pl_category)      AS pl_category,
   pl_percent,
   LISTAGG(DISTINCT from_mapping, ' || ') WITHIN GROUP (
     ORDER BY from_mapping ASC) AS from_mapping
