@@ -451,11 +451,11 @@ WITH edm_opty AS (
     --     Logic is different for open deals so we can evaluate their current cycle time.
     CASE
         WHEN edm_opty.is_renewal = 1 AND is_closed = 1
-            THEN DATEDIFF(day, edm_opty.net_arr_created_date, edm_opty.close_date)
+            THEN DATEDIFF(day, edm_opty.arr_created_date, edm_opty.close_date)
         WHEN edm_opty.is_renewal = 0 AND is_closed = 1
             THEN DATEDIFF(day, edm_opty.created_date, edm_opty.close_date)
          WHEN edm_opty.is_renewal = 1 AND is_open = 1
-            THEN DATEDIFF(day, edm_opty.net_arr_created_date, CURRENT_DATE)
+            THEN DATEDIFF(day, edm_opty.arr_created_date, CURRENT_DATE)
         WHEN edm_opty.is_renewal = 0 AND is_open = 1
             THEN DATEDIFF(day, edm_opty.created_date, CURRENT_DATE)
     END                                                           AS cycle_time_in_days,
