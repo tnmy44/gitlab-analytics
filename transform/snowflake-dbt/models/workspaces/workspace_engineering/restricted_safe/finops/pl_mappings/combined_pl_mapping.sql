@@ -66,6 +66,23 @@ repo_storage_pl_daily AS (
   CROSS JOIN sku_list
 ),
 
+repo_storage_pl_daily_ext AS (
+
+  SELECT
+    snapshot_day                               AS date_day,
+    'gitlab-production'                        AS gcp_project_id,
+    NULL                                       AS gcp_service_description,
+    NULL                                       AS gcp_sku_description,
+    'gitaly'                                   AS infra_label,
+    NULL                                       AS env_label,
+    NULL                                       AS runner_label,
+    LOWER(repo_storage_pl_daily.finance_pl)    AS pl_category,
+    repo_storage_pl_daily.percent_repo_size_gb AS pl_percent,
+    'repo_storage_pl_daily'                    AS from_mapping
+  FROM {{ ref ('repo_storage_pl_daily') }}
+
+),
+
 sandbox_projects_pl AS (
 
   SELECT
@@ -90,6 +107,24 @@ container_registry_pl_daily AS (
     'gitlab-production'                                         AS gcp_project_id,
     'Cloud Storage'                                             AS gcp_service_description,
     'Standard Storage US Multi-region'                          AS gcp_sku_description,
+    'registry'                                                  AS infra_label,
+    NULL                                                        AS env_label,
+    NULL                                                        AS runner_label,
+    LOWER(container_registry_pl_daily.finance_pl)               AS pl_category,
+    container_registry_pl_daily.percent_container_registry_size AS pl_percent,
+    'container_registry_pl_daily'                               AS from_mapping
+  FROM {{ ref ('container_registry_pl_daily') }}
+  WHERE snapshot_day > '2022-06-10'
+
+),
+
+container_registry_pl_daily_ext AS (
+
+  SELECT
+    snapshot_day                                                AS date_day,
+    'gitlab-production'                                         AS gcp_project_id,
+    NULL                                                        AS gcp_service_description,
+    NULL                                                        AS gcp_sku_description,
     'registry'                                                  AS infra_label,
     NULL                                                        AS env_label,
     NULL                                                        AS runner_label,
@@ -293,7 +328,6 @@ haproxy_usage AS (
 
 haproxy_isp AS (
 
-
   SELECT
     haproxy_usage.date_day                                        AS date_day,
     'gitlab-production'                                           AS gcp_project_id,
@@ -341,10 +375,16 @@ cte_append AS (SELECT *
   FROM repo_storage_pl_daily
   UNION ALL
   SELECT *
+  FROM repo_storage_pl_daily_ext
+  UNION ALL
+  SELECT *
   FROM sandbox_projects_pl
   UNION ALL
   SELECT *
   FROM container_registry_pl_daily
+  UNION ALL
+  SELECT *
+  FROM container_registry_pl_daily_ext
   UNION ALL
   SELECT *
   FROM build_artifacts_pl_daily
