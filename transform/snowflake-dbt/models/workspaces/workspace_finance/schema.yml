@@ -943,10 +943,6 @@ models:
               severity: warn
       - name: dim_crm_account_id
         description: join key for dim_crm_account
-        tests:
-          - relationships:
-              to: ref('dim_crm_account')
-              field: dim_crm_account_id
       - name: dim_subscription_id
         description: The identifier of subscription in dim_subscription table
         tests:

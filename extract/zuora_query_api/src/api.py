@@ -12,7 +12,17 @@ from os import environ as env
 
 from typing import Dict
 
-from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
+import json
+import logging
+import time
+from io import StringIO
+from logging import info
+from os import environ as env
+from typing import Dict
+
+import pandas as pd
+import requests
+from gitlabdata.orchestration_utils import snowflake_engine_factory
 
 
 class ZuoraQueriesAPI:
@@ -148,31 +158,3 @@ class ZuoraQueriesAPI:
             df = pd.read_csv(StringIO(response.text))
             info("File downloaded")
             return df
-
-    def process_queries(
-        self, query_spec_file: str = "./zuora_query_api/src/queries.yml"
-    ) -> None:
-        """
-            Written with downloading only the users table in mind, this table is ±200 rows and will likely not grow further,
-            If any further files are added to the query spec verify that the data set size is small enough to be processed by this function.
-        :param query_spec_file: Yaml file specifying queries to run in Zuora.
-        :type query_spec_file:
-        """
-        with open(query_spec_file) as file:
-            query_specs = yaml.load(file, Loader=yaml.FullLoader)
-
-        tables = query_specs.get("tables")
-        for table_spec in tables:
-            info(f"Processing {table_spec}")
-            job_id = self.request_data_query_data(
-                query_string=tables.get(table_spec).get("query")
-            )
-            df = self.get_data_query_file(job_id)
-            dataframe_uploader(
-                df,
-                self.snowflake_engine,
-                table_spec,
-                schema="ZUORA_QUERY_API",
-                if_exists="replace",
-            )
-            info(f"Processed {table_spec}")
