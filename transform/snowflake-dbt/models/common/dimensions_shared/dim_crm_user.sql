@@ -1,3 +1,4 @@
+-- depends_on: {{ ref('prep_crm_user') }}
 {{ config(
     tags=["six_hourly"]
 ) }}
