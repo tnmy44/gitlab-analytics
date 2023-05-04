@@ -5,10 +5,35 @@ WITH merged_merge_requests AS (
     WHERE merged_at IS NOT NULL
     AND merged_at >= '2020-01-01'
 
-), bamboohr_engineering_division AS (
+), employee_directory_analysis AS (
 
     SELECT *
-    FROM {{ ref('bamboohr_engineering_division') }}
+    FROM {{ ref('employee_directory_analysis')}}
+
+), bamboohr_engineering_division AS (
+
+    SELECT
+      date_actual,
+      employee_id,
+      full_name,
+      job_title,
+      CASE 
+        WHEN LOWER(job_title) LIKE '%backend%' 
+          THEN 'backend'
+        WHEN LOWER(job_title) LIKE '%fullstack%'
+          THEN 'fullstack'
+        WHEN LOWER(job_title) LIKE '%frontend%'
+          THEN 'frontend'
+        ELSE NULL END               AS technology_group,
+      LOWER(TRIM(COALESCE(SUBSTR(REGEXP_SUBSTR(value, ':[^:]*$'), 2),value))) AS job_title_speciality,
+      reports_to,
+      layers,
+      department,
+      work_email
+    FROM employee_directory_analysis,
+    LATERAL FLATTEN(INPUT=>SPLIT(COALESCE(REPLACE(jobtitle_speciality,'&',','),''), ','))
+    WHERE division = 'Engineering'
+      AND date_actual >= '2020-01-01'
 
 ), gitlab_team_members AS (
   
