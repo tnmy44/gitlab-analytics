@@ -142,8 +142,9 @@ class TestCheckBackfill:
 
     @patch("postgres_pipeline_table.is_new_table")
     @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
+    @patch("postgres_pipeline_table.is_resume_export")
     def test_check_is_backfill_needed_new_table(
-        self, mock_remove_unprocessed_files, mock_is_new_table
+        self, mock_is_resume_export, mock_remove_unprocessed_files, mock_is_new_table
     ):
         """
         Test that when is_new_table() is True, that
@@ -154,6 +155,7 @@ class TestCheckBackfill:
         source_engine = MagicMock(spec=Engine)
         metadata_engine = MagicMock(spec=Engine)
 
+        mock_is_resume_export.return_value = False, 1, None
         mock_is_new_table.return_value = True
         # Call the function being tested
         (
@@ -175,8 +177,10 @@ class TestCheckBackfill:
     @patch("postgres_pipeline_table.schema_addition_check")
     @patch("postgres_pipeline_table.is_new_table")
     @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
+    @patch("postgres_pipeline_table.is_resume_export")
     def test_check_is_backfill_needed_schema_change(
         self,
+        mock_is_resume_export,
         mock_remove_unprocessed_files,
         mock_is_new_table,
         mock_schema_addition_check,
@@ -189,6 +193,8 @@ class TestCheckBackfill:
         # Create a mock source_engine and metadata_engine objects
         source_engine = MagicMock(spec=Engine)
         metadata_engine = MagicMock(spec=Engine)
+
+        mock_is_resume_export.return_value = False, 1, None
 
         mock_is_new_table.return_value = False
         mock_schema_addition_check.return_value = True
@@ -243,7 +249,7 @@ class TestCheckBackfill:
 
         # Verify results
         assert is_backfill_needed is False
-        assert start_pk == -1
+        assert start_pk == 1
         assert initial_load_start_date is None
         mock_remove_unprocessed_files.assert_not_called()
 
@@ -518,7 +524,7 @@ class TestCheckDelete:
             self.pipeline_table.source_table_name,
         )
         assert is_resume_export_needed is False
-        assert resume_pk == -1
+        assert resume_pk == 1
         assert resume_initial_load_start_date is None
 
     @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
