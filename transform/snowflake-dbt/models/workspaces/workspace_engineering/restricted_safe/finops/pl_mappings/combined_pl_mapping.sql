@@ -225,6 +225,58 @@ runner_saas_large AS (
 
 ),
 
+haproxy_pl AS (
+
+  SELECT * FROM {{ ref('haproxy_backend_pl') }}
+
+),
+
+haproxy_usage AS (
+
+  SELECT * FROM {{ ref('haproxy_backend_ratio_daily') }}
+
+),
+
+haproxy_isp AS (
+
+
+  SELECT
+    haproxy_usage.date_day                                        AS date_day,
+    'gitlab-production'                                           AS gcp_project_id,
+    'Compute Engine'                                              AS gcp_service_description,
+    'Network Egress via Carrier Peering Network - Americas Based' AS gcp_sku_description,
+    'shared'                                                      AS infra_label,
+    NULL                                                          AS env_label,
+    NULL                                                          AS runner_label,
+    haproxy_pl.type                                               AS pl_category,
+    haproxy_usage.percent_backend_ratio * haproxy_pl.allocation   AS pl_percent,
+    CONCAT('haproxy-', haproxy_usage.backend_category)            AS from_mapping
+  FROM haproxy_usage
+  INNER JOIN haproxy_pl
+    ON haproxy_usage.backend_category = haproxy_pl.metric_backend
+
+),
+
+haproxy_inter AS (
+
+
+  SELECT
+    haproxy_usage.date_day                                      AS date_day,
+    'gitlab-production'                                         AS gcp_project_id,
+    'Compute Engine'                                            AS gcp_service_description,
+    'Network Inter Zone Egress'                                 AS gcp_sku_description,
+    'shared'                                                    AS infra_label,
+    NULL                                                        AS env_label,
+    NULL                                                        AS runner_label,
+    haproxy_pl.type                                             AS pl_category,
+    haproxy_usage.percent_backend_ratio * haproxy_pl.allocation AS pl_percent,
+    CONCAT('haproxy-', haproxy_usage.backend_category)          AS from_mapping
+  FROM haproxy_usage
+  INNER JOIN haproxy_pl
+    ON haproxy_usage.backend_category = haproxy_pl.metric_backend
+
+),
+
 cte_append AS (SELECT *
   FROM infralabel_pl
   UNION ALL
@@ -260,6 +312,12 @@ cte_append AS (SELECT *
   UNION ALL
   SELECT *
   FROM runner_saas_large
+  UNION ALL
+  SELECT *
+  FROM haproxy_isp
+  UNION ALL
+  SELECT *
+  FROM haproxy_inter
 )
 
 SELECT

@@ -21,9 +21,6 @@ dim_users AS (
     SELECT
         user.*,
         user.role_type                                                                                        AS user_role_type,
-        LOWER(user.business_unit || '_' || user.sub_business_unit || '_' || user.division || '_' || user.asm) AS key_bu_subbu_division_asm,
-        LOWER(user.business_unit || '_' || user.sub_business_unit)                                            AS key_bu_subbu,
-        LOWER(key_bu_subbu_division_asm || '_' || user.role_type || '_' || TO_VARCHAR(user.employee_number))  AS key_sal_heatmap,
         LOWER(user.business_unit) || '_' || LOWER(user.sub_business_unit)                                     AS user_segment_region
     FROM prod.workspace_sales.sfdc_users_xf AS user
     WHERE
@@ -46,7 +43,7 @@ sfdc_opportunity_xf AS (
     INNER JOIN prod.restricted_safe_common_mart_sales.mart_crm_account AS acc
         ON acc.dim_crm_account_id = opp.account_id
     WHERE
-        opportunity_id NOT IN ('0064M00000XTr9zQAD') -- EXCLUDED DEAL FROM APAC, IN FY22-Q1 it would show under Tae Ho Hyun, when this deal should not be considered for his performance
+        opp.opportunity_id NOT IN ('0064M00000XTr9zQAD') -- EXCLUDED DEAL FROM APAC, IN FY22-Q1 it would show under Tae Ho Hyun, when this deal should not be considered for his performance
 
 ),
 
@@ -337,7 +334,7 @@ final AS (
         ----------------------------------------------------------------------
         ----------------------------------------------------------------------
         -- keys
-        user.key_sal_heatmap                                                            AS key_owner_name,
+        user.key_sal_heatmap  AS key_owner_name,
         user.employee_number,
         user.key_bu_subbu,
         user.user_role_type,
