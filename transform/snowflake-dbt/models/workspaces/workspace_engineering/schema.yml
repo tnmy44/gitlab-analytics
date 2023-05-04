@@ -340,6 +340,12 @@ models:
     - name: container_registry_pl_daily
       description: '{{ doc("finops-pipeline-desc") }}'
 
+    - name: haproxy_backend_pl
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+    - name: haproxy_backend_ratio_daily
+      description: '{{ doc("finops-pipeline-desc") }}'
+
     - name: infralabel_pl
       description: '{{ doc("finops-pipeline-desc") }}'
 
