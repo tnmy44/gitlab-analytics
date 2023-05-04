@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ source('customers', 'customers_db_reconciliations') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id, order_id, reconcile_on ORDER BY updated_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY id, order_id ORDER BY updated_at DESC) = 1
 
 ), renamed AS (
 
