@@ -321,3 +321,44 @@ models:
           description: Ratio of mrs to employees
         - name: granularity_level
           description: Department or group
+  
+    - name: rpt_gcp_billing_infra_mapping_day
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+    - name: rpt_gcp_billing_pl_day
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+    - name: build_artifacts_pl_daily
+      description: '{{ doc("finops-pipelined-desc") }}'
+
+    - name: ci_runners_pl_daily
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+    - name: combined_pl_mapping
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+    - name: container_registry_pl_daily
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+
+    - name: infralabel_pl
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+    - name: namespace_pl_daily
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+
+    - name: projects_pl
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+    - name: repo_storage_pl_daily
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+    - name: sandbox_projects_pl
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+    - name: single_sku_pl
+      description: '{{ doc("finops-pipeline-desc") }}'
+
+    - name: rpt_gcp_billing_skus_day
+      description: '{{ doc("finops-pipeline-desc") }}'
