@@ -213,7 +213,7 @@
       ON fct_charge.dim_order_id = dim_order_action.dim_order_id
       AND LOWER(dim_order_action.order_action_type) LIKE '%subscription'
     LEFT JOIN dim_billing_account_user
-      ON dim_subscription.created_by_id = dim_billing_account_user.dim_billing_account_user_id
+      ON fct_charge.subscription_created_by_id = dim_billing_account_user.dim_billing_account_user_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,

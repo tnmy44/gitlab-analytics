@@ -147,6 +147,7 @@
       zuora_subscription.subscription_name,
       zuora_subscription.subscription_name_slugify,
       zuora_subscription.version                                        AS subscription_version,
+      zuora_subscription.created_by_id                                  AS subscription_created_by_id,
       zuora_rate_plan_charge.rate_plan_charge_number,
       zuora_rate_plan_charge.version                                    AS rate_plan_charge_version,
       zuora_rate_plan_charge.segment                                    AS rate_plan_charge_segment,
@@ -288,6 +289,7 @@
       active_zuora_subscription.subscription_name                                           AS subscription_name,
       active_zuora_subscription.subscription_name_slugify                                   AS subscription_name_slugify,
       active_zuora_subscription.version                                                     AS subscription_version,
+      active_zuora_subscription.created_by_id                                               AS subscription_created_by_id,
       NULL                                                                                  AS rate_plan_charge_number,
       NULL                                                                                  AS rate_plan_charge_version,
       NULL                                                                                  AS rate_plan_charge_segment,
@@ -399,5 +401,5 @@
     created_by="@iweeks",
     updated_by="@chrissharp",
     created_date="2021-04-28",
-    updated_date="2023-02-10"
+    updated_date="2023-05-04"
 ) }}
