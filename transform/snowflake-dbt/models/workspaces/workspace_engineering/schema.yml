@@ -340,13 +340,11 @@ models:
     - name: container_registry_pl_daily
       description: '{{ doc("finops-pipeline-desc") }}'
 
-
     - name: infralabel_pl
       description: '{{ doc("finops-pipeline-desc") }}'
 
     - name: namespace_pl_daily
       description: '{{ doc("finops-pipeline-desc") }}'
-
 
     - name: projects_pl
       description: '{{ doc("finops-pipeline-desc") }}'
