@@ -225,6 +225,24 @@ runner_saas_medium AS (
 
 ),
 
+runner_saas_medium_ext AS (
+
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    'gitlab-r-saas-l-m-%'              AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    NULL                               AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 3'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '3 - shared saas runners - medium'
+
+),
+
 runner_saas_large AS (
 
   SELECT DISTINCT
@@ -235,6 +253,24 @@ runner_saas_large AS (
     NULL                               AS infra_label,
     NULL                               AS env_label,
     '4 - shared saas runners - large'  AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 4'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '4 - shared saas runners - large'
+
+),
+
+runner_saas_large_ext AS (
+
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    'gitlab-r-saas-l-l-%'              AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    NULL                               AS runner_label,
     ci_runners_pl_daily.pl             AS pl_category,
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 4'           AS from_mapping
@@ -332,7 +368,13 @@ cte_append AS (SELECT *
   FROM runner_saas_medium
   UNION ALL
   SELECT *
+  FROM runner_saas_medium_ext
+  UNION ALL
+  SELECT *
   FROM runner_saas_large
+  UNION ALL
+  SELECT *
+  FROM runner_saas_large_ext
   UNION ALL
   SELECT *
   FROM haproxy_isp
