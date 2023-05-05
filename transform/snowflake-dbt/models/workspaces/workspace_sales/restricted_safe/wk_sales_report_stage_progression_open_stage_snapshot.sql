@@ -1,4 +1,4 @@
-{{ config(alias='report_opportunity_stage_open_snapshot') }}
+{{ config(alias='report_stage_progression_open_stage_snapshot') }}
 
 WITH date_details AS (
 
@@ -17,26 +17,14 @@ WITH date_details AS (
 
     SELECT *
     --FROM prod.restricted_safe_workspace_sales.report_opportunity_stage_progression
-    FROM {{ref('wk_sales_report_opportunity_stage_progression')}}
+    FROM {{ref('wk_sales_report_stage_progression')}}
     WHERE is_eligible_cycle_time_analysis_flag = 1
       AND sales_type != 'Renewal'
       AND deal_group IN ('1. New', '2. Growth')
 
 ), open_deals AS (
 
-    SELECT *,
-            CASE
-               WHEN stage_name IN ('4-Proposal',
-                                 '5-Negotiating',
-                                 '3-Technical Evaluation',
-                                 '0-Pending Acceptance',
-                                 '1-Discovery',
-                                 '2-Scoping',
-                                 '6-Awaiting Signature',
-                                 '7-Closing')
-                   THEN 1
-                ELSE 0
-            END                                     AS stage_is_open_flag
+    SELECT *
     FROM stage_progression
     WHERE is_eligible_cycle_time_analysis_flag = 1
       AND sales_type != 'Renewal'
@@ -48,14 +36,14 @@ WITH date_details AS (
     FROM date_details
     WHERE(first_day_of_fiscal_quarter = date_actual
             OR date_actual = DATEADD(DAY,-1,CURRENT_DATE))
-    AND fiscal_year IN (2022,2023,2024)
-    AND date_actual < CURRENT_DATE
+        AND fiscal_year >= 2022
+        AND date_actual < CURRENT_DATE
 
 ), specific_date_open_pipeline AS (
 
     SELECT prog.opportunity_id,
-           prog.stage_rank,
-           prog.cycle_time_category,
+           prog.stage_name_rank,
+           prog.pipeline_category,
            prog.stage_name,
            prog.stage_date,
            prog.days_in_previous_stage,
@@ -79,11 +67,11 @@ WITH date_details AS (
            ROW_NUMBER() OVER (PARTITION BY prog.opportunity_id,
                                         report_dates.date_actual
                                 ORDER BY prog.stage_date DESC,
-                                    prog.stage_rank DESC) AS rank_stage_date,
+                                    prog.stage_name_rank DESC) AS rank_stage_date,
            ROW_NUMBER() OVER (PARTITION BY prog.opportunity_id,
                                         report_dates.date_actual
-                                ORDER BY prog.cycle_time_category DESC,
-                                    prog.stage_rank DESC) AS rank_category_date
+                                ORDER BY prog.pipeline_category DESC,
+                                    prog.stage_name_rank DESC) AS rank_category_date
     FROM open_deals prog
         CROSS JOIN report_dates
     WHERE prog.stage_date <= report_dates.date_actual
