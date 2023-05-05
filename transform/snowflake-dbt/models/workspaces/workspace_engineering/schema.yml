@@ -323,3 +323,14 @@ models:
           description: Department or group
     - name: internal_notes
       description: Table containing Gitlab.com notes from Epics, Issues and Merge Requests. It includes the namespace ID and the ultimate parent namespace ID.
+      columns:
+        - name: note_id
+          tests:
+            - not_null
+            - unique
+        - name: created_at
+          tests:
+            - not_null
+        - name: updated_at
+          tests:
+            - not_null
