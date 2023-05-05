@@ -4737,6 +4737,7 @@ roles:
             - analytics_engineer_core
             - analyst_engineering
             - analyst_growth
+            - customers_db
             - restricted_safe
             - zuora_api_sandbox_stitch
         warehouses:
