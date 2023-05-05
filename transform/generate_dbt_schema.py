@@ -67,7 +67,6 @@ def write_schema(table_names: List[str]) -> None:
 
 
 def main(engine: Engine) -> None:
-
     query = """
     SELECT table_name
     FROM TABLES

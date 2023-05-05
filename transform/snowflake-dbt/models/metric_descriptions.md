@@ -188,10 +188,6 @@ Users who set personal preference to see Security Dashboard on Group
  Is Geo enabled? [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/settings/20210216180406_geo_enabled.yml)
 {% enddocs %}
 
-{% docs geo_nodes_all_time_event_desc %}
- Total number of sites in a Geo deployment. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210201124936_geo_nodes.yml)
-{% enddocs %}
-
 {% docs auto_devops_pipelines_28_days_user_desc %}
  Distinct users that ran an auto DevOps pipeline without a .gitlab-ci.yml file. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216175548_ci_pipeline_config_auto_devops.yml)
 {% enddocs %}
@@ -341,4 +337,44 @@ Users that have a last_activity_on date within the past 28 days. [link](https://
 
 {% docs projects_with_packages_28_days_event_desc %}
 Projects with package registry enabled. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216181055_projects_with_packages.yml)
+{% enddocs %}
+
+{% docs snippets_28_days_event_desc %}
+ Monthly count of All Snippets. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216180312_snippets.yml)
+{% enddocs %}
+
+{% docs single_file_editor_28_days_user_desc %}
+ Number of users editing a file from the single file editor. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216180334_g_edit_by_sfe_monthly.yml)
+{% enddocs %}
+
+{% docs merge_requests_created_28_days_event_desc %}
+ Count of unique merge requests created per month. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20221213182900_i_code_review_create_mr_monthly.yml)
+{% enddocs %}
+
+{% docs merge_requests_created_28_days_user_desc %}
+ Count of unique users per month who created a MR. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/60dda716679ae92aa368633bdee597b8fa57984f/config/metrics/counts_28d/20210216175132_i_code_review_user_create_mr_monthly.yml)
+{% enddocs %}
+
+{% docs merge_requests_approval_rules_28_days_event_desc %}
+ Count of distinct merge requests merged using approval rules. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20221211202138_merged_merge_requests_using_approval_rules_distinct.yml)
+{% enddocs %}
+
+{% docs custom_compliance_frameworks_28_days_event_desc %}
+ Monthly count of all custom compliance framework labels. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210507165054_custom_compliance_frameworks.yml)
+{% enddocs %}
+
+{% docs projects_security_policy_28_days_event_desc %}
+ The total number of projects with an assigned security policy project. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20220927083011_distinct_count_project_id_from_security_orchestration_policy_configurations.yml)
+{% enddocs %}
+
+{% docs merge_requests_security_policy_28_days_user_desc %}
+ The total number of users who have created merge requests in Projects that have an assigned security policy project. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20220927083016_user_merge_requests_for_projects_with_security_policy_project.yml)
+{% enddocs %}
+
+{% docs pipelines_implicit_auto_devops_28_days_event_desc %}
+ Count of pipelines with implicit Auto DevOps runs. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216184458_p_ci_templates_implicit_auto_devops_monthly.yml)
+{% enddocs %}
+
+{% docs pipeline_schedules_28_days_user_desc %}
+ Distinct users creating pipeline schedules in a month. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216175552_ci_pipeline_schedules.yml)
 {% enddocs %}

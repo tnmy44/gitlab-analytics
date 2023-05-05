@@ -59,7 +59,6 @@
     SELECT DISTINCT
       dim_subscription.dim_subscription_id, 
       dim_license.dim_license_id, 
-      dim_license.license_md5,
       dim_license.license_start_date,
       dim_license.License_expire_date, 
       dim_subscription.subscription_start_date,
@@ -187,5 +186,5 @@
     created_by="@snalamaru",
     updated_by="@jpguero",
     created_date="2021-06-16",
-    updated_date="2021-11-15"
+    updated_date="2023-03-13"
 ) }}

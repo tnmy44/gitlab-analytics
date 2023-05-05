@@ -106,9 +106,9 @@ data-image:
 update-containers:
 	@echo "Pulling latest containers for airflow-image, analyst-image, data-image and dbt-image..."
 	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/analyst-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/analyst-image:latest
 	@docker pull registry.gitlab.com/gitlab-data/data-image/data-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/dbt-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/dbt-image:latest
 
 ########################################################################################################################
 # DBT
@@ -127,11 +127,11 @@ run-dbt-no-deps:
 	cd transform/snowflake-dbt/ && poetry shell;
 
 clone-dbt-select-local-branch:
-	cd transform/snowflake-dbt/ && export INPUT=$$(poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id config") && \
+	cd transform/snowflake-dbt/ && export INPUT=$$(poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id alias") && \
 	export ENVIRONMENT="LOCAL_BRANCH" && export GIT_BRANCH=$(GIT_BRANCH) && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT;
 
 clone-dbt-select-local-user:
-	cd transform/snowflake-dbt/ && export INPUT=$$(poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id config") && \
+	cd transform/snowflake-dbt/ && export INPUT=$$(poetry run dbt --quiet ls --models $(DBT_MODELS) --output json --output-keys "database schema name depends_on unique_id alias") && \
 	export ENVIRONMENT="LOCAL_USER" && export GIT_BRANCH=$(GIT_BRANCH) && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT;
 
 dbt-deps:

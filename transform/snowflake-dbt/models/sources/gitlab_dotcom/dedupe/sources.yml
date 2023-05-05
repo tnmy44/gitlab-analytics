@@ -215,6 +215,8 @@ sources:
         identifier: gitlab_db_lfs_objects_projects
       - name: lists
         identifier: gitlab_db_lists
+      - name: member_roles
+        identifier: gitlab_db_member_roles
       - name: members
         identifier: gitlab_db_members
       - name: merge_request_blocks
@@ -235,6 +237,10 @@ sources:
         identifier: gitlab_db_milestone_releases
       - name: milestones
         identifier: gitlab_db_milestones
+      - name: ml_candidates
+        identifier: gitlab_db_ml_candidates
+      - name: ml_experiments
+        identifier: gitlab_db_ml_experiments
       - name: namespace_details
         identifier: gitlab_db_namespace_details
       - name: namespace_root_storage_statistics
@@ -406,9 +412,6 @@ sources:
           error_after: {count: 15, period: day}
       - name: csv_issue_imports
         identifier: gitlab_db_csv_issue_imports
-      - name: gitlab_pgp_export
-        identifier: gitlab_pgp_export
-        loaded_at_field: DATEADD(sec, _updated_at, '1970-01-01')
       - name: grafana_integrations
         identifier: gitlab_db_grafana_integrations
         freshness:
@@ -442,6 +445,8 @@ sources:
         identifier: gitlab_db_path_locks
       - name: pool_repositories
         identifier: gitlab_db_pool_repositories
+      - name: project_ci_cd_settings
+        identifier: gitlab_db_project_ci_cd_settings
       - name: project_compliance_framework_settings
         identifier: gitlab_db_project_compliance_framework_settings
       - name: project_error_tracking_settings

@@ -49,7 +49,6 @@ def verify_mr_information(
 
 
 if __name__ == "__main__":
-
     logging.basicConfig(stream=sys.stdout, level=20)
 
     config_dict = env.copy()

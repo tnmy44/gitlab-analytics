@@ -8,6 +8,11 @@
     ])
 }},
 
+/*
+Aggregate events by date, user, ultimate parent namespace, and event
+Limit to 24 months of history for performance reasons
+*/
+
 fct_event_user_daily AS (
 
   SELECT
@@ -46,6 +51,7 @@ fct_event_user_daily AS (
     
   FROM fct_event_valid
   WHERE is_null_user = FALSE
+    AND event_date >= DATEADD('month', -24, DATE_TRUNC('month',CURRENT_DATE))
   {{ dbt_utils.group_by(n=23) }}
 
 )
@@ -53,7 +59,7 @@ fct_event_user_daily AS (
 {{ dbt_audit(
     cte_ref="fct_event_user_daily",
     created_by="@iweeks",
-    updated_by="@tpoole1",
+    updated_by="@cbraza",
     created_date="2022-04-09",
-    updated_date="2022-08-01"
+    updated_date="2023-03-01"
 ) }}

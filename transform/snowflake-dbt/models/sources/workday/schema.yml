@@ -296,12 +296,6 @@ models:
 
   - name: workday_on_target_earnings_source
     description: '{{ doc("workday_on_target_earnings") }}'
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - employee_id
-            - effective_date
-            - initiated_at
 
     columns:
       - name: employee_id
@@ -317,6 +311,8 @@ models:
         description: '{{ doc("workday_annual_amount_usd_value") }}'
       - name: effective_date
         description: '{{ doc("workday_effective_date") }}'
+        tests:
+          - not_null
       - name: ote_local
         description: '{{ doc("workday_ote_local") }}'
       - name: ote_local_currency_code
@@ -329,6 +325,12 @@ models:
         description: '{{ doc("workday_uploaded_at") }}'
       - name: initiated_at
         description: '{{ doc("workday_initiated_at") }}'
+        tests:
+          - not_null
+      - name: workday_id
+        description: '{{ doc("workday_workday_id")}}'
+        tests:
+          - unique
 
   - name: blended_bonus_source
     columns:

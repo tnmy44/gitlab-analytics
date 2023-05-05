@@ -1,5 +1,5 @@
 .snowflake_dbt_jobs: &snowflake_dbt_jobs
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.23
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.1
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -216,8 +216,8 @@ specify_dbt_parameters:
     - export GIT_BRANCH=$BRANCH_NAME
     - CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/^/$ANCESTOR_TYPE/g" | sed "s/.sql/$DEPENDENT_TYPE/g" )
     - echo $CHANGED_FILES
-    - INPUT=$(dbt --quiet ls --models $CHANGED_FILES --output json --output-keys "database schema name depends_on unique_id config" --profiles-dir profile --target prod)
-    - ../../orchestration/clone_dbt_models_select.py "$INPUT"
+    - INPUT=$(dbt --quiet ls --models $CHANGED_FILES --output json --output-keys "database schema name depends_on unique_id alias" --profiles-dir profile --target prod)
+    - ../../orchestration/clone_dbt_models_select.py $INPUT
 
 
 🔆⚡️clone_model_dbt_select:
@@ -230,8 +230,8 @@ specify_dbt_parameters:
     - export SNOWFLAKE_PROD_DATABASE="PROD"
     - export GIT_BRANCH=$BRANCH_NAME
     - echo $DBT_MODELS
-    - INPUT=$(dbt --quiet ls --models $DBT_MODELS --output json --output-keys "database schema name depends_on unique_id config" --profiles-dir profile --target prod)
-    - ../../orchestration/clone_dbt_models_select.py "$INPUT"
+    - INPUT=$(dbt --quiet ls --models $DBT_MODELS --output json --output-keys "database schema name depends_on unique_id alias" --profiles-dir profile --target prod)
+    - ../../orchestration/clone_dbt_models_select.py $INPUT
 
 # dbt tests
 .dbt_misc_jobs: &dbt_misc_jobs
@@ -291,7 +291,7 @@ specify_dbt_parameters:
 
 .safe_models_check: &safe_models_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.23
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.1
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -339,6 +339,7 @@ specify_dbt_parameters:
         config.schema:restricted_safe_legacy
         config.schema:restricted_safe_workspace_finance
         config.schema:restricted_safe_workspace_sales 
+        config.schema:restricted_safe_workspace_marketing
       --output json > safe_models.json
     - python3 safe_model_check.py
 
@@ -348,7 +349,7 @@ specify_dbt_parameters:
 
 .dbt_macro_check: &dbt_macro_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.22
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.1
   before_script:
     - cd transform/snowflake-dbt/
   tags:
@@ -396,7 +397,7 @@ specify_dbt_parameters:
 # ======
 .dbt_sql_lint: &dbt_sql_lint
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.23
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.1
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME

@@ -42,25 +42,25 @@ usage_ping_metrics AS (
 
 sm_last_monthly_ping_per_account AS (
     SELECT
-        license_subscription_mapping.dim_crm_account_id,
-        license_subscription_mapping.dim_subscription_id,
-        usage_ping.dim_instance_id AS uuid,
+        COALESCE(sha256.dim_crm_account_id, md5.dim_crm_account_id)     AS dim_crm_account_id,
+        COALESCE(sha256.dim_subscription_id, md5.dim_subscription_id)   AS dim_subscription_id,
+        usage_ping.dim_instance_id                                      AS uuid,
         usage_ping.hostname,
         usage_ping.raw_usage_data_payload,
         CAST(usage_ping.ping_created_at_month AS DATE) AS snapshot_month
     FROM usage_ping
-    LEFT JOIN
-        license_subscription_mapping ON
-            usage_ping.license_md5 = REPLACE(
-                license_subscription_mapping.license_md5, '-'
-            )
-    WHERE usage_ping.license_md5 IS NOT NULL
+    LEFT JOIN license_subscription_mapping AS md5
+      ON usage_ping.license_md5 = md5.license_md5
+    LEFT JOIN license_subscription_mapping AS sha256
+      ON usage_ping.license_sha256 = sha256.license_sha256
+    WHERE (usage_ping.license_md5 IS NOT NULL OR usage_ping.license_sha256 IS NOT NULL)
         AND CAST(
             usage_ping.ping_created_at_month AS DATE
         ) < DATE_TRUNC('month', CURRENT_DATE)
   QUALIFY ROW_NUMBER () OVER (
     PARTITION BY
-      license_subscription_mapping.dim_subscription_id,
+      sha256.dim_subscription_id,
+      md5.dim_subscription_id,
       usage_ping.dim_instance_id,
       usage_ping.hostname,
       CAST(usage_ping.ping_created_at_month AS DATE)

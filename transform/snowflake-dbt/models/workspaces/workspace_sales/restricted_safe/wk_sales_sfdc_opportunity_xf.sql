@@ -2,9 +2,10 @@
 
 WITH edm_opty AS (
 
-    SELECT *
+    SELECT  *
+
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
-    FROM {{ref('mart_crm_opportunity')}}
+    FROM {{ref('wk_sales_mart_crm_opportunity')}} 
 
 ), sfdc_users_xf AS (
 
@@ -24,11 +25,17 @@ WITH edm_opty AS (
     FROM {{ ref('wk_sales_date_details') }}
     --FROM prod.workspace_sales.date_details
 
-), agg_demo_keys AS (
+), agg_demo_keys_fy23 AS (
 -- keys used for aggregated historical analysis
 
     SELECT *
     FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }}
+    --FROM restricted_safe_workspace_sales.report_agg_demo_sqs_ot_keys
+
+), agg_demo_keys_base AS (
+
+    SELECT *
+    FROM {{ ref('wk_sales_report_agg_keys_base') }}
     --FROM restricted_safe_workspace_sales.report_agg_demo_sqs_ot_keys
 
 ), today AS (
@@ -42,6 +49,68 @@ WITH edm_opty AS (
 ), sfdc_opportunity_xf AS (
 
    SELECT
+
+    -- NF: 20230223 FY24 GTM fields, precalculated in the user object
+    edm_opty.account_owner_user_segment,
+    edm_opty.account_owner_raw_user_segment,
+    edm_opty.account_owner_user_geo,
+    edm_opty.account_owner_user_region,
+    edm_opty.account_owner_user_area,
+
+    -- NF: 20230223 FY24 GTM fields, precalculated in the user object
+    edm_opty.account_owner_user_business_unit,
+    edm_opty.account_owner_user_sub_business_unit,
+    edm_opty.account_owner_user_division,
+    edm_opty.account_owner_user_asm,
+    edm_opty.account_owner_user_role_type,
+
+    -- NF: 20230223 FY24 GTM fields, precalculated in the user object
+    edm_opty.opportunity_owner_user_business_unit,
+    edm_opty.opportunity_owner_user_sub_business_unit,
+    edm_opty.opportunity_owner_user_division,
+    edm_opty.opportunity_owner_user_asm,
+    edm_opty.opportunity_owner_user_role_type,
+
+    edm_opty.opportunity_owner_user_segment,
+    edm_opty.opportunity_owner_raw_user_segment,
+    edm_opty.opportunity_owner_user_geo,
+    edm_opty.opportunity_owner_user_region,
+    edm_opty.opportunity_owner_user_area,
+
+    -- NF: adjusted to FY24 GTM structure
+    edm_opty.report_opportunity_user_segment,
+
+    -- NF: unadjusted version of segment used to create the FY24 GTM key
+    edm_opty.report_opportunity_raw_user_segment,
+
+    edm_opty.report_opportunity_user_geo,
+    edm_opty.report_opportunity_user_region,
+    edm_opty.report_opportunity_user_area,
+
+    -- NF 20230214
+    -- FY24 GTM calculated fields. These fields will be sourced from EDM eventually
+    edm_opty.report_opportunity_user_business_unit,
+    edm_opty.report_opportunity_user_sub_business_unit,
+    edm_opty.report_opportunity_user_division,
+    edm_opty.report_opportunity_user_asm,
+    edm_opty.report_opportunity_user_role_type,
+
+    edm_opty.partner_category,
+    edm_opty.alliance_partner,
+
+    ------------------------------------------------------------------------
+    -- creating report_user_segment_geo_region_area_sqs_ot with adjusted segment
+    edm_opty.report_user_segment_geo_region_area_sqs_ot,
+    edm_opty.report_user_segment_geo_region_area,
+    ------------------------------------------------------------------------
+    -- FY24 keys
+    edm_opty.report_bu_user_segment_geo_region_area_sqs_ot,
+    edm_opty.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
+    edm_opty.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap,
+
+    ----------------------------------------------------------
+    ----------------------------------------------------------
+
     edm_opty.dbt_updated_at                         AS _last_dbt_run,
     edm_opty.dim_crm_account_id                     AS account_id,
     edm_opty.dim_crm_opportunity_id                 AS opportunity_id,
@@ -98,6 +167,7 @@ WITH edm_opty AS (
     edm_opty.reason_for_loss,
     edm_opty.reason_for_loss_details,
     edm_opty.downgrade_reason,
+    edm_opty.lead_source,
 
     edm_opty.is_downgrade,
     edm_opty.is_edu_oss,
@@ -187,10 +257,8 @@ WITH edm_opty AS (
     edm_opty.dim_parent_crm_account_id                 AS ultimate_parent_account_id,
     edm_opty.is_jihu_account,
 
-    edm_opty.account_owner_user_segment,
-    edm_opty.account_owner_user_geo,
-    edm_opty.account_owner_user_region,
-    edm_opty.account_owner_user_area,
+    account_owner.name                                  AS account_owner_name,
+    account_owner.user_id                               AS account_owner_id,                                       
 
     edm_opty.account_demographics_segment,
     edm_opty.account_demographics_geo,
@@ -211,6 +279,7 @@ WITH edm_opty AS (
     edm_opty.is_refund,
     edm_opty.is_credit                                AS is_credit_flag,
     edm_opty.is_contract_reset                        AS is_contract_reset_flag,
+    edm_opty.is_net_arr_pipeline_created,
     CAST(edm_opty.is_won AS INTEGER)                  AS is_won,
     edm_opty.is_lost,
     edm_opty.is_open,
@@ -222,6 +291,7 @@ WITH edm_opty AS (
     edm_opty.is_closed                                AS stage_is_closed,
     edm_opty.is_active                                AS stage_is_active,
     edm_opty.is_renewal,
+
 
     -- date fields helpers -- revisit
     edm_opty.close_fiscal_quarter_name,
@@ -273,20 +343,20 @@ WITH edm_opty AS (
     edm_opty.stage_3_technical_evaluation_fiscal_quarter_name            AS stage_3_fiscal_quarter_name,
     edm_opty.stage_3_technical_evaluation_fiscal_quarter_date            AS stage_3_fiscal_quarter_date,
 
-    -----------------------------------------------------------------------------------------------------
-    -----------------------------------------------------------------------------------------------------
-    -- Opportunity User fields
-    -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
+    -- Last Activity Date <- This date can be in the future, it represents the date of the last activity taken or scheduled 
+    edm_opty.last_activity_date,
+    edm_opty.last_activity_fiscal_year,
+    edm_opty.last_activity_fiscal_quarter_name,
+    edm_opty.last_activity_fiscal_quarter_date,
+    edm_opty.last_activity_month                                         AS last_activity_date_month,
 
-    -- Team Segment / ASM - RD
-    -- NF 2022-01-28 Data seems clean in SFDC, but leaving the fallback just in case
-    -- NF 2022-04-27 There are issues with the stamped field not reflecting the real owner of the opportunity
-    --                adding is_open check here to default open deals to opportunity owners fields (instead of stamped)
-    
-    edm_opty.opportunity_owner_user_segment,
-    edm_opty.opportunity_owner_user_geo,
-    edm_opty.opportunity_owner_user_region,
-    edm_opty.opportunity_owner_user_area,
+    -- Sales Activity Date <- Last time an activity was taken against the opportunity
+    edm_opty.sales_last_activity_date,
+    edm_opty.sales_last_activity_fiscal_year,
+    edm_opty.sales_last_activity_fiscal_quarter_name,
+    edm_opty.sales_last_activity_fiscal_quarter_date,
+    edm_opty.sales_last_activity_month                                   AS sales_last_activity_date_month,
+
     edm_opty.competitors_other_flag,
     edm_opty.competitors_gitlab_core_flag,
     edm_opty.competitors_none_flag,
@@ -315,7 +385,7 @@ WITH edm_opty AS (
     edm_opty.stage_name_4plus,
     edm_opty.deal_category,
     edm_opty.deal_group,
-    edm_opty.calculated_deal_count                                           AS calculated_deal_count,
+    edm_opty.calculated_deal_count                                   AS calculated_deal_count,
 
     ----------------------------------------------------------------
     -- NF 2022-01-28 This is probably TO BE DEPRECATED too, need to align with Channel ops
@@ -324,7 +394,7 @@ WITH edm_opty AS (
     WHEN edm_opty.dr_partner_engagement = 'PIO'
         THEN 1
     ELSE 0
-    END                                                                      AS partner_engaged_opportunity_flag,
+    END                                                             AS partner_engaged_opportunity_flag,
 
     -- check if renewal was closed on time or not
     CASE
@@ -334,24 +404,15 @@ WITH edm_opty AS (
     WHEN LOWER(edm_opty.sales_type) like '%renewal%'
         AND start_date.first_day_of_fiscal_quarter   < edm_opty.close_fiscal_quarter_date
         THEN 'Late'
-    END                                                                       AS renewal_timing_status,
+    END                                                            AS renewal_timing_status,
 
     ----------------------------------------------------------------
     ----------------------------------------------------------------
     -- calculated fields for pipeline velocity report
 
     -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
-    edm_opty.is_excluded_from_pipeline_created                                AS is_excluded_flag,
+    edm_opty.is_excluded_from_pipeline_created                     AS is_excluded_flag,
     -----------------------------------------------
-
-    edm_opty.report_opportunity_user_segment,
-    edm_opty.report_opportunity_user_geo,
-    edm_opty.report_opportunity_user_region,
-    edm_opty.report_opportunity_user_area,
-    
-    -- NF 2022-02-17 these next two fields leverage the logic of comparing current fy opportunity demographics stamped vs account demo for previous years
-    edm_opty.report_user_segment_geo_region_area,
-    edm_opty.report_user_segment_geo_region_area_sqs_ot,
 
     ---- measures
     edm_opty.open_1plus_deal_count,
@@ -366,54 +427,112 @@ WITH edm_opty AS (
     edm_opty.booked_net_arr,
     edm_opty.booked_churned_contraction_net_arr,
     edm_opty.churned_contraction_net_arr,
-
-    -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with
-    -- different aggregation levels
-    LOWER(edm_opty.key_sqs)                             AS key_sqs,
-    LOWER(edm_opty.key_ot)                              AS key_ot,
-    LOWER(edm_opty.key_segment)                         AS key_segment,
-    LOWER(edm_opty.key_segment_sqs)                     AS key_segment_sqs,
-    LOWER(edm_opty.key_segment_ot)                      AS key_segment_ot,
-    LOWER(edm_opty.key_segment_geo)                     AS key_segment_geo,
-    LOWER(edm_opty.key_segment_geo_sqs)                 AS key_segment_geo_sqs,
-    LOWER(edm_opty.key_segment_geo_ot)                  AS key_segment_geo_ot,
-    LOWER(edm_opty.key_segment_geo_region)              AS key_segment_geo_region,
-    LOWER(edm_opty.key_segment_geo_region_sqs)          AS key_segment_geo_region_sqs,
-    LOWER(edm_opty.key_segment_geo_region_ot)           AS key_segment_geo_region_ot,
-    LOWER(edm_opty.key_segment_geo_region_area)         AS key_segment_geo_region_area,
-    LOWER(edm_opty.key_segment_geo_region_area_sqs)     AS key_segment_geo_region_area_sqs,
-    LOWER(edm_opty.key_segment_geo_region_area_ot)      AS key_segment_geo_region_area_ot,
-    LOWER(edm_opty.key_segment_geo_area)                AS key_segment_geo_area,
-    edm_opty.sales_team_cro_level,
-    edm_opty.sales_team_rd_asm_level,
-    edm_opty.sales_team_vp_level,
-    edm_opty.sales_team_avp_rd_level,
-    edm_opty.sales_team_asm_level,
-
+   
     edm_opty.deal_size,
     edm_opty.calculated_deal_size,
+
+    ---------------------------------------------
+    ---------------------------------------------
+
+    -- NF: calculated age only considers created date to close date or actual date if open
     edm_opty.calculated_age_in_days,
+
+    -- NF: cycle time will consider if the opty is renewal and eligible to be considered 
+    -- using the is_eligible_cycle_time_analysis
+    CASE 
+        WHEN edm_opty.is_edu_oss = 0
+            AND edm_opty.is_deleted = 0
+            -- For stage age we exclude only ps/other
+            AND edm_opty.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+            -- Only include deal types with meaningful journeys through the stages
+            AND edm_opty.opportunity_category IN ('Standard')
+            -- Web Purchase have a different dynamic and should not be included
+            AND edm_opty.is_web_portal_purchase = 0
+                THEN 1
+        ELSE 0
+    END                                                           AS is_eligible_cycle_time_analysis_flag,
+
+    -- NF: We consider net_arr_created date for renewals as they haver a very distinct motion than 
+    --      add on and First Orders
+    --     Logic is different for open deals so we can evaluate their current cycle time.
+    CASE
+        WHEN edm_opty.is_renewal = 1 AND is_closed = 1
+            THEN DATEDIFF(day, edm_opty.net_arr_created_date, edm_opty.close_date)
+        WHEN edm_opty.is_renewal = 0 AND is_closed = 1
+            THEN DATEDIFF(day, edm_opty.created_date, edm_opty.close_date)
+         WHEN edm_opty.is_renewal = 1 AND is_open = 1
+            THEN DATEDIFF(day, edm_opty.net_arr_created_date, CURRENT_DATE)
+        WHEN edm_opty.is_renewal = 0 AND is_open = 1
+            THEN DATEDIFF(day, edm_opty.created_date, CURRENT_DATE)
+    END                                                           AS cycle_time_in_days,
+
+    -- For some analysis it is important to order stages by rank
+    CASE
+            WHEN edm_opty.stage_name = '0-Pending Acceptance'
+                THEN 0
+            WHEN edm_opty.stage_name = '1-Discovery'
+                THEN 1
+             WHEN edm_opty.stage_name = '2-Scoping'
+                THEN 2
+            WHEN edm_opty.stage_name = '3-Technical Evaluation'
+                THEN 3
+            WHEN edm_opty.stage_name = '4-Proposal'
+                THEN 4
+            WHEN edm_opty.stage_name = '5-Negotiating'
+                THEN 5
+            WHEN edm_opty.stage_name = '6-Awaiting Signature'
+                THEN 6
+            WHEN edm_opty.stage_name = '7-Closing'
+                THEN 7
+            WHEN edm_opty.stage_name = 'Closed Won'
+                THEN 8
+            WHEN edm_opty.stage_name = '8-Closed Lost'
+                THEN 9
+            WHEN edm_opty.stage_name = '9-Unqualified'
+                THEN 10
+            WHEN edm_opty.stage_name = '10-Duplicate'
+                THEN 11
+            ELSE NULL
+    END                     AS stage_name_rank,
+
+    CASE
+        WHEN edm_opty.stage_name IN ('0-Pending Acceptance')
+            THEN '0. Acceptance' 
+         WHEN edm_opty.stage_name IN ('1-Discovery','2-Scoping')
+            THEN '1. Early'
+         WHEN edm_opty.stage_name IN ('3-Technical Evaluation','4-Proposal')
+            THEN '2. Middle'
+         WHEN edm_opty.stage_name IN ('5-Negotiating','6-Awaiting Signature')
+            THEN '3. Late'
+        ELSE '4. Closed'
+    END                     AS pipeline_category,
+   
+    ---------------------------------------------
+    ---------------------------------------------
+
     edm_opty.is_eligible_open_pipeline              AS is_eligible_open_pipeline_flag,
     edm_opty.is_eligible_asp_analysis               AS is_eligible_asp_analysis_flag,
     edm_opty.is_eligible_age_analysis               AS is_eligible_age_analysis_flag,
     edm_opty.is_booked_net_arr                      AS is_booked_net_arr_flag,
     edm_opty.is_eligible_churn_contraction          AS is_eligible_churn_contraction_flag,
     edm_opty.created_and_won_same_quarter_net_arr,
-    --edm_opty.churn_contraction_net_arr_bucket       AS churn_contracton_net_arr_bucket,  --typo in wk sales keeping it until the full migration
     edm_opty.churn_contraction_net_arr_bucket,
-    edm_opty.reason_for_loss_calc,
-    
+    edm_opty.reason_for_loss_calc,    
     CASE edm_opty.is_sao 
       WHEN TRUE THEN 1 
       ELSE 0 
     END                                             AS is_eligible_sao_flag,
     edm_opty.is_deleted,
-    opportunity_owner.is_rep_flag
+    opportunity_owner.is_rep_flag,
+    edm_opty.pushed_count,
+    edm_opty.intented_product_tier
     
     FROM edm_opty
     -- Date helpers
     INNER JOIN sfdc_accounts_xf AS account
       ON account.account_id = edm_opty.dim_crm_account_id
+    INNER JOIN sfdc_users_xf AS account_owner
+      ON account_owner.user_id = account.owner_id
     INNER JOIN sfdc_accounts_xf AS upa
       ON upa.account_id = edm_opty.dim_parent_crm_account_id
     INNER JOIN date_details AS created_date_detail
@@ -454,26 +573,6 @@ WITH edm_opty AS (
     SELECT
       sfdc_opportunity_xf.*,
 
-      /*
-      FY23 fields
-      2022-01-28 NF
-
-        There are different layers of reporting.
-        Account Owner -> Used to report performance of territories year over year, they are comparable across years
-          as it will be restated for all accounts after carving
-        Opportunity Owner -> Used to report performance, the team might be different to the Account Owner due to holdovers
-          (accounts kept by a Sales Rep for a certain amount of time)
-        Account Demographics -> The fields that would be appropiate to that account according to their address, it might not match the one
-          of the account owner
-        Report -> This will be a calculated field, using Opportunity Owner for current fiscal year opties and Account for anything before
-        Sales Team -> Same as report, but with a naming convention closer to the sales org hierarchy
-
-      */
-      -------------------
-      -- BASE KEYS
-      -- 20220214 NF: Temporary keys, until the SFDC key is exposed
-      LOWER(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'-',sfdc_opportunity_xf.opportunity_owner_user_geo,'-',sfdc_opportunity_xf.opportunity_owner_user_region,'-',sfdc_opportunity_xf.opportunity_owner_user_area)) AS opportunity_user_segment_geo_region_area,
-
       -- Customer Success related fields
       -- DRI Michael Armtz
       churn_metrics.reason_for_loss_staged,
@@ -489,6 +588,43 @@ WITH edm_opty AS (
 
     SELECT
       oppty_final.*,
+
+
+      -- JK 2023-02-06: FY23 keys for temp dashboard solution until tools are ready for FY24 keys 
+      -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with
+      -- different aggregation levels
+      LOWER(agg_demo_keys_fy23.key_sqs)                             AS key_sqs,
+      LOWER(agg_demo_keys_fy23.key_ot)                              AS key_ot,
+      LOWER(agg_demo_keys_fy23.key_segment)                         AS key_segment,
+      LOWER(agg_demo_keys_fy23.key_segment_sqs)                     AS key_segment_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_ot)                      AS key_segment_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo)                     AS key_segment_geo,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_sqs)                 AS key_segment_geo_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_ot)                  AS key_segment_geo_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region)              AS key_segment_geo_region,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_sqs)          AS key_segment_geo_region_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_ot)           AS key_segment_geo_region_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_area)         AS key_segment_geo_region_area,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_area_sqs)     AS key_segment_geo_region_area_sqs,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_region_area_ot)      AS key_segment_geo_region_area_ot,
+      LOWER(agg_demo_keys_fy23.key_segment_geo_area)                AS key_segment_geo_area,
+      LOWER(agg_demo_keys_fy23.sales_team_cro_level)                AS sales_team_cro_level,
+      LOWER(agg_demo_keys_fy23.sales_team_rd_asm_level)             AS sales_team_rd_asm_level,
+      LOWER(agg_demo_keys_fy23.sales_team_vp_level)                 AS sales_team_vp_level,
+      LOWER(agg_demo_keys_fy23.sales_team_avp_rd_level)             AS sales_team_avp_rd_level,
+      LOWER(agg_demo_keys_fy23.sales_team_asm_level)                AS sales_team_asm_level,
+
+      -- JK 2023-02-06: FY24 keys
+      LOWER(agg_demo_keys_base.key_bu)                      AS key_bu,
+      LOWER(key_bu_ot)                                      AS key_bu_ot,
+      LOWER(key_bu_sqs)                                     AS key_bu_sqs,
+      LOWER(agg_demo_keys_base.key_bu_subbu)                AS key_bu_subbu,
+      LOWER(agg_demo_keys_base.key_bu_subbu_ot)             AS key_bu_subbu_ot,
+      LOWER(agg_demo_keys_base.key_bu_subbu_sqs)            AS key_bu_subbu_sqs,
+      LOWER(agg_demo_keys_base.key_bu_subbu_division)       AS key_bu_subbu_division,
+      LOWER(agg_demo_keys_base.key_bu_subbu_division_ot)    AS key_bu_subbu_division_ot,
+      LOWER(agg_demo_keys_base.key_bu_subbu_division_sqs)   AS key_bu_subbu_division_sqs,
+      LOWER(agg_demo_keys_base.key_bu_subbu_division_asm)   AS key_bu_subbu_division_asm,
 
       -- Created pipeline eligibility definition
       -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389
@@ -511,8 +647,11 @@ WITH edm_opty AS (
 
     FROM oppty_final
     -- Add keys for aggregated analysis
-    LEFT JOIN agg_demo_keys
-      ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
+    LEFT JOIN agg_demo_keys_fy23
+      ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys_fy23.report_user_segment_geo_region_area_sqs_ot
+    LEFT JOIN agg_demo_keys_base
+      ON oppty_final.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap = agg_demo_keys_base.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot_rt_pc_ap
+
 
 )
 SELECT *

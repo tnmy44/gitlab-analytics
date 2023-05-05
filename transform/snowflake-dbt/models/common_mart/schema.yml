@@ -12,15 +12,15 @@ models:
     - name: dim_event_date_id
       description: '{{ doc("dim_event_date_id") }}'
     - name: dim_ultimate_parent_namespace_id
-      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
     - name: dim_project_id
-      description: '{{ doc("dim_project_id") }}'
+      description: '{{ doc("dim_project_id_event_model") }}'
     - name: dim_user_id
       description: '{{ doc("dim_user_id") }}'
     - name: dim_active_product_tier_id
       description: '{{ doc("dim_active_product_tier_id") }}'
-    - name: dim_active_subscription_id
-      description: '{{ doc("dim_active_subscription_id") }}'
+    - name: dim_latest_subscription_id
+      description: '{{ doc("dim_latest_subscription_id") }}'
     - name: dim_crm_account_id
       description: '{{ doc("dim_crm_account_id") }}'
     - name: dim_billing_account_id
@@ -115,11 +115,11 @@ models:
     - name: dim_event_date_id
       description: '{{ doc("dim_event_date_id") }}'
     - name: dim_ultimate_parent_namespace_id
-      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
     - name: dim_active_product_tier_id
       description: '{{ doc("dim_active_product_tier_id") }}'
-    - name: dim_active_subscription_id
-      description: '{{ doc("dim_active_subscription_id") }}'
+    - name: dim_latest_subscription_id
+      description: '{{ doc("dim_latest_subscription_id") }}'
     - name: dim_crm_account_id
       description: '{{ doc("dim_crm_account_id") }}'
     - name: dim_billing_account_id
@@ -160,6 +160,10 @@ models:
       description: '{{ doc("namespace_created_at") }}'
     - name: ultimate_parent_namespace_type
       description: '{{ doc("ultimate_parent_namespace_type") }}'
+    - name: namespace_is_internal
+      description: '{{ doc("namespace_is_internal") }}'
+    - name: namespace_creator_is_blocked
+      description: '{{ doc("namespace_creator_is_blocked") }}'
     - name: namespace_created_date
       description: '{{ doc("namespace_created_date") }}'
     - name: plan_id_at_event_date
@@ -198,13 +202,13 @@ models:
     - name: dim_event_date_id
       description: '{{ doc("dim_event_date_id") }}'
     - name: dim_ultimate_parent_namespace_id
-      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
     - name: dim_user_id
       description: '{{ doc("dim_user_id") }}'
     - name: dim_active_product_tier_id
       description: '{{ doc("dim_active_product_tier_id") }}'
-    - name: dim_active_subscription_id
-      description: '{{ doc("dim_active_subscription_id") }}'
+    - name: dim_latest_subscription_id
+      description: '{{ doc("dim_latest_subscription_id") }}'
     - name: dim_crm_account_id
       description: '{{ doc("dim_crm_account_id") }}'
     - name: dim_billing_account_id
@@ -249,12 +253,18 @@ models:
       description: '{{ doc("ultimate_parent_namespace_type") }}'
     - name: namespace_is_internal
       description: '{{ doc("namespace_is_internal") }}'
+    - name: namespace_creator_is_blocked
+      description: '{{ doc("namespace_creator_is_blocked") }}'
     - name: namespace_created_at
       description: '{{ doc("namespace_created_at") }}'
     - name: namespace_created_date
       description: '{{ doc("namespace_created_date") }}'
     - name: user_created_at
       description: '{{ doc("user_created_at") }}'
+    - name: days_since_user_creation_at_event_date
+      description: '{{ doc("days_since_user_creation_at_event_date") }}'
+    - name: days_since_namespace_creation_at_event_date
+      description: '{{ doc("days_since_namespace_creation_at_event_date") }}'
     - name: event_calendar_month
       description: '{{ doc("event_calendar_month") }}'
     - name: event_calendar_quarter
@@ -426,6 +436,12 @@ models:
       description: '{{ doc("dim_parent_crm_account_id") }}'
     - name: dim_host_id
       description: '{{ doc("dim_host_id") }}'
+    - name: dim_app_release_major_minor_sk
+      description: '{{ doc("dim_app_release_major_minor_sk") }}'
+    - name: dim_latest_available_app_release_major_minor_sk
+      description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
+    - name: app_release_major_minor_id
+      description: '{{ doc("app_release_major_minor_id") }}'
     - name: major_minor_version_id
       description: '{{ doc("major_minor_version_id") }}'
     - name: host_name
@@ -445,9 +461,19 @@ models:
     - name: minor_version
       description: '{{ doc("minor_version") }}'
     - name: major_minor_version
-      description: '{{ doc("minor_version") }}'
+      description: '{{ doc("major_minor_version") }}'
+    - name: major_minor_version_num
+      description: '{{ doc("major_minor_version_num") }}'
     - name: version_is_prerelease
       description: '{{ doc("version_is_prerelease") }}'
+    - name: version_number
+      description: '{{ doc("version_number") }}'
+    - name: days_after_version_release_date
+      description: '{{ doc("days_after_version_release_date") }}'
+    - name: latest_version_available_at_ping_creation
+      description: '{{ doc("latest_version_available_at_ping_creation") }}'
+    - name: versions_behind_latest_at_ping_creation
+      description: '{{ doc("versions_behind_latest_at_ping_creation") }}'
     - name: is_internal
       description: '{{ doc("is_internal_ping_model") }}'
     - name: is_staging
@@ -1135,6 +1161,175 @@ models:
       description: '{{ doc("ping_created_date_week") }}'
     - name: is_last_ping_of_week
       description: '{{ doc("is_last_ping_of_week") }}'
+    - name: created_by
+      description: '{{ doc("created_by") }}'
+    - name: updated_by
+      description: '{{ doc("updated_by") }}'
+    - name: model_created_date
+      description: '{{ doc("model_created_date") }}'
+    - name: model_updated_date
+      description: '{{ doc("model_updated_date") }}'
+
+- name: mart_event_namespace_monthly
+  description: '{{ doc("mart_event_namespace_monthly") }}'
+  columns:
+    - name: event_namespace_monthly_pk
+      description: The unique composite ID of the mart_event_namespace_monthly model consisting of event_calendar_month, event_name, and dim_ultimate_parent_namespace_id
+      tests:
+        - not_null
+        - unique
+    - name: dim_ultimate_parent_namespace_id
+      description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
+    - name: dim_active_product_tier_id
+      description: '{{ doc("dim_active_product_tier_id") }}'
+    - name: dim_latest_subscription_id
+      description: '{{ doc("dim_latest_subscription_id") }}'
+    - name: dim_crm_account_id
+      description: '{{ doc("dim_crm_account_id") }}'
+    - name: dim_billing_account_id
+      description: '{{ doc("dim_billing_account_id") }}'
+    - name: plan_id_at_event_month
+      description: '{{ doc("plan_id_at_event_month") }}'
+    - name: plan_name_at_event_month
+      description: '{{ doc("plan_name_at_event_month") }}'
+    - name: plan_was_paid_at_event_month
+      description: '{{ doc("plan_was_paid_at_event_month") }}'
+    - name: ultimate_parent_namespace_type
+      description: '{{ doc("ultimate_parent_namespace_type") }}'
+    - name: namespace_is_internal
+      description: '{{ doc("namespace_is_internal") }}'
+    - name: namespace_creator_is_blocked
+      description: '{{ doc("namespace_creator_is_blocked") }}'
+    - name: namespace_created_at
+      description: '{{ doc("namespace_created_at") }}'
+    - name: namespace_created_date
+      description: '{{ doc("namespace_created_date") }}'
+    - name: event_calendar_month
+      description: '{{ doc("event_calendar_month") }}'
+    - name: event_calendar_quarter
+      description: '{{ doc("event_calendar_quarter") }}'
+    - name: event_calendar_year
+      description: '{{ doc("event_calendar_year") }}'
+    - name: event_name
+      description: '{{ doc("event_name") }}'
+    - name: section_name
+      description: '{{ doc("section_name") }}'
+      tests:
+        - not_null
+    - name: stage_name
+      description: '{{ doc("stage_name") }}'
+      tests:
+        - not_null
+    - name: group_name
+      description: '{{ doc("group_name") }}'
+      tests:
+        - not_null
+    - name: is_smau
+      description: '{{ doc("is_smau") }}'
+      tests:
+        - not_null
+    - name: is_gmau
+      description: '{{ doc("is_gmau") }}'
+      tests:
+        - not_null
+    - name: is_umau
+      description: '{{ doc("is_umau") }}'
+      tests:
+        - not_null
+    - name: data_source
+      description: '{{ doc("data_source") }}'
+    - name: event_count
+      description: '{{ doc("event_count") }}'
+    - name: user_count
+      description: '{{ doc("user_count") }}'
+    - name: event_date_count
+      description: '{{ doc("event_date_count") }}'
+    - name: created_by
+      description: '{{ doc("created_by") }}'
+    - name: updated_by
+      description: '{{ doc("updated_by") }}'
+    - name: model_created_date
+      description: '{{ doc("model_created_date") }}'
+    - name: model_updated_date
+      description: '{{ doc("model_updated_date") }}'
+
+- name: mart_behavior_structured_event
+  description: '{{ doc("mart_behavior_structured_event") }}'
+  columns:
+    - name: behavior_structured_event_pk
+      tests:
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+      description: '{{ doc("behavior_structured_event_pk") }}'
+    - name: behavior_at
+      description: '{{ doc("behavior_at") }}'
+    - name: behavior_date
+      description: '{{ doc("behavior_at") }}'
+    - name: dim_namespace_id
+      description: '{{ doc("dim_namespace_id_behavior_model") }}'
+    - name: dim_project_id
+      description: '{{ doc("dim_project_id_behavior_model") }}'
+    - name: app_id
+      description: '{{ doc("app_id") }}'
+    - name: gsc_pseudonymized_user_id
+      description: '{{ doc("gsc_pseudonymized_user_id") }}'
+    - name: gsc_plan
+      description: '{{ doc("gsc_plan") }}'
+    - name: user_snowplow_domain_id
+      description: '{{ doc("user_snowplow_domain_id") }}'
+    - name: gsc_source
+      description: '{{ doc("gsc_source") }}'
+    - name: event_value
+      description: '{{ doc("event_value") }}'
+    - name: event_action
+      description: '{{ doc("event_action") }}'
+    - name: event_category
+      description: '{{ doc("event_category") }}'
+    - name: event_property
+      description: '{{ doc("event_property") }}'
+    - name: event_label
+      description: '{{ doc("event_label") }}'
+    - name: ultimate_parent_namespace_id
+      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+    - name: is_device_mobile
+      description: '{{ doc("is_device_mobile") }}'
+    - name: device_type
+      description: '{{ doc("device_type") }}'
+    - name: contexts
+      description: '{{ doc("contexts") }}'
+    - name: page_url_path
+      description: '{{ doc("page_url_path") }}'
+    - name: page_url_fragment
+      description: '{{ doc("page_url_fragment") }}'
+    - name: gsc_google_analytics_client_id
+      description: '{{ doc("gsc_google_analytics_client_id") }}'
+    - name: gsc_extra
+      description: '{{ doc("gsc_extra") }}'
+    - name: namespace_is_internal
+      description: '{{ doc("namespace_is_internal") }}'
+    - name: namespace_type
+      description: '{{ doc("namespace_type") }}'
+    - name: visibility_level
+      description: '{{ doc("visibility_level") }}'
+    - name: session_index
+      description: '{{ doc("session_index") }}'
+    - name: session_id
+      description: '{{ doc("session_id") }}'
+    - name: namespace_is_ultimate_parent
+      description: '{{ doc("namespace_is_ultimate_parent") }}'
+    - name: dim_behavior_referrer_page_sk
+      description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+    - name: has_gitlab_service_ping_context
+      description: '{{ doc("has_gitlab_service_ping_context") }}'
+    - name: has_gitlab_experiment_context
+      description: '{{ doc("has_gitlab_experiment_context") }}'
+    - name: has_customer_standard_context
+      description: '{{ doc("has_customer_standard_context") }}'
+    - name: browser_name
+      description: '{{ doc("browser_name") }}'
+    - name: dim_behavior_browser_sk
+      description: '{{ doc("dim_behavior_browser_sk") }}'
     - name: created_by
       description: '{{ doc("created_by") }}'
     - name: updated_by

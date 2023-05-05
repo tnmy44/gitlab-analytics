@@ -474,7 +474,7 @@ models:
           - unique
       - name: namespace_path
       - name: namespace_type
-        description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
+        description: '{{ doc("namespace_type") }}'
         tests:
           - not_null
       - name: plan_id

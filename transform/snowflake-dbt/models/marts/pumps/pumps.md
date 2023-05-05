@@ -4,14 +4,6 @@ This model collates a variety of product usage data metrics at the subscription_
 
 {% enddocs %}
 
-{% docs mart_product_usage_wave_1_3_metrics_monthly_diff %}
-
-The purpose of this mart table is to act as a data pump of the `_all_time_event` Usage Ping metrics at a _monthly grain_ into Gainsight for Customer Product Insights (`_all_time_user` columns are not included). To accomplish this goal, this model includes a column that takes the _diff_ erences in `_all_time_event` values between consecutive monthly Usage Pings. Since some months do not contain Usage Ping data, these _diff_ erences are normalized (estimated) to a monthly value based on the average daily value over the time between pings multiplied by the days in the calendar month(s) between the consecutive pings.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs mart_product_usage_paid_user_metrics_monthly %}
 This table unions the sets of all Self-Managed and SaaS **paid users**. The data from this table will be used for Customer Product Insights.
 
@@ -48,5 +40,12 @@ Inherits filters from parent models, but most notably:
 
 This table contains combined information on PtE and PtC scores per account and score date.
 Detailed information on this model can be found on this [issue] (https://gitlab.com/gitlab-data/data-science/-/issues/62).
+
+{% enddocs %}
+
+{% docs mart_product_usage_paid_user_metrics_monthly_report_view %}
+
+This table contains information to be queried via the Snowflake API from the Sales Systems team.
+Detailed information on this use-case can be found on this [issue] (https://gitlab.com/gitlab-data/analytics/-/issues/15456).
 
 {% enddocs %}

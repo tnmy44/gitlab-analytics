@@ -27,6 +27,8 @@ WITH final AS (
       prep_crm_account.technical_account_manager_date_id,
       prep_crm_account.next_renewal_date_id,
       prep_crm_account.customer_since_date_id,
+      prep_crm_account.gs_first_value_date_id,
+      prep_crm_account.gs_last_csm_activity_date_id,
 
       --measures
       prep_crm_account.count_active_subscription_charges,
@@ -70,5 +72,5 @@ WITH final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-08-10",
-    updated_date="2022-11-02"
+    updated_date="2023-02-21"
 ) }}

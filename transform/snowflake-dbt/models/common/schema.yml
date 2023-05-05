@@ -53,6 +53,7 @@ models:
       - name: subscription_id_order
       - name: ultimate_parent_namespace_id
       - name: namespace_type
+        description: '{{ doc("namespace_type") }}'
       - name: is_namespace_active
       - name: namespace_was_trial
       - name: saas_trial_start_date
@@ -91,6 +92,7 @@ models:
       - name: subscription_id_order
       - name: ultimate_parent_namespace_id
       - name: namespace_type
+        description: '{{ doc("namespace_type") }}'
       - name: is_namespace_active
       - name: dim_product_tier_id_namespace
       - name: product_tier_name_namespace
@@ -372,19 +374,10 @@ models:
           - not_null
         tags: [ "tdf", "common" ]
 
-  - name: dim_crm_user_hierarchy_live
-    description: '{{ doc("dim_crm_user_hierarchy_live") }}'
+  - name: dim_crm_user_hierarchy
+    description: '{{ doc("dim_crm_user_hierarchy") }}'
     columns:
-      - name: dim_crm_user_hierarchy_live_id
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "sales_funnel"]
-
-  - name: dim_crm_user_hierarchy_stamped
-    description: '{{ doc("dim_crm_user_hierarchy_stamped") }}'
-    columns:
-      - name: dim_crm_user_hierarchy_stamped_id
+      - name: dim_crm_user_hierarchy_id
         tests:
           - not_null
           - unique
@@ -592,14 +585,21 @@ models:
           - not_null
           - unique
 
-  - name: dim_gitlab_versions
-    description: '{{ doc("dim_gitlab_versions") }}'
+  - name: dim_app_release
+    description: '{{ doc("dim_app_release") }}'
     columns:
-      - name: version_id
-        description: The unique identifier of the release maintained by the Version app.
+      - name: dim_app_release_sk
         tests:
           - not_null
           - unique
+        description: '{{ doc("dim_app_release_sk") }}'
+      - name: app_release_id
+        description: '{{ doc("app_release_id") }}'
+        tests:
+          - not_null
+          - unique
+      - name: application
+        description: The application that the release refers to.
       - name: version
         description: The unique identifier of the release.
         tests:
@@ -614,11 +614,13 @@ models:
       - name: is_monthly_release
         description: Derived boolean flag noting if the version number corresponds to a major monthly release.
       - name: is_vulnerable
-        description: Boolean flag noting if vulnerabilities have been detected for the release.
-      - name: created_date
-        description: The date the release was created in the Version app.
+        description: For historical data, the Boolean values of `t` or `f` indicate if vulnerabilities have been detected for the release. For the ongoing data, the values represent the `vulnerability_type` of 0, 1 or 2.
+      - name: vulnerability_type_desc
+        description: The description of the vulnerability_type - { not_vulnerable - 0, non_critical - 1, critical - 2, vulnerable - t, not_vulnerable - f }
+      - name: release_date
+        description: Date of the release for the given application.
       - name: updated_date
-        description: The date the release was updated in the Version app.
+        description: Update date of the release for the given application.
 
   - name: dim_hold
     description: '{{ doc("dim_hold") }}'
@@ -657,9 +659,12 @@ models:
 
   - name: dim_installation
     description: '{{ doc("dim_installation") }}'
+    tests:
+      - dbt_utils.expression_is_true:
+          expression: "installation_creation_date > '2000-01-01' OR dim_installation_id = 'b6a2b5c51f1e36f6fcb8568319633808'"
     columns:
       - name: dim_installation_id
-        description: Unique identifier of an installation. An installation is unique combination of a host and an instance. The Unique Pkey is built as a surrogate key from the dim_intance_id and the dim_host_id
+        description: '{{ doc("dim_installation_id") }}'
         tests:
           - not_null
           - unique
@@ -670,9 +675,11 @@ models:
           - not_null
         tags: ["tdf", "product", "common"]
       - name: dim_instance_id
-        description: Unique ID for an instance. This ID is stored in the database of the instance
+        description: '{{ doc("dim_instance_id") }}'
         tests:
           - not_null
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
 
   - name: dim_invoice
     description: '{{ doc("dim_invoice") }}'
@@ -729,10 +736,45 @@ models:
     description: '{{ doc("dim_order_action") }}'
     columns:
       - name: dim_order_action_id
-        description: Unique identifier for each order action. These represent any action taken grouped under a single order.
+        description: Unique identifier for each order action. These represent any action taken grouped under a single order
         tests:
           - not_null
           - unique
+      - name: dim_order_id
+        description: Unique identifier for each order which groups all order actions within an order
+      - name: dim_subscription_id
+        description: Unique identifier of a subscription
+      - name: dim_amendment_id
+        description: Unique identifier of an amendment
+      - name: order_action_type
+        description: The type of order action which took place. For example; 'UpdateProduct', 'RenewSubscription'
+      - name: order_action_sequence
+        description: The sequence in which the actions were carried out on an order
+      - name: is_auto_renew
+        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term 
+      - name: cancellation_policy
+        description: The type of cancellation policy on the subscription
+      - name: term_type
+      - name: order_action_created_date
+        description: The date the order action was created
+      - name: customer_acceptance_date
+        description: The date on which the services or products within a subscription has been accepted by the customer
+      - name: contract_effective_date
+        description: The date of the contract that governs the subscription
+      - name: service_activation_date
+        description: The date on which the services or products within a subscription have been activated and access has been provided to the customer
+      - name: current_term
+        description: The length of the period for the current subscription term
+      - name: current_term_period_type
+        description: The period type for the current subscription term
+      - name: renewal_term
+        description: The length of the period for the subscription renewal term
+      - name: renewal_term_period_type
+        description: The period type for the subscription renewal term
+      - name: renewal_setting
+        description: Specifies whether a termed subscription will remain TERMED or change to EVERGREEN when it is renewed
+      - name: term_start_date
+        description: Date the subscription term begins, as yyyy-mm-dd. If this is a renewal subscription, this date is different from the subscription start date
 
   - name: dim_order_type
     description: '{{ doc("dim_order_type") }}'
@@ -770,6 +812,8 @@ models:
         tags: ["gainsight"]
       - name: crm_account_name
         description: Name of the CRM account associated with the instance
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
 
   - name: dim_instances
     description: '{{ doc("dim_instances") }}'
@@ -801,41 +845,6 @@ models:
       - name: recorded_total_installation_type_count
         description: The total number of installation_type related to usage ping for this instance.
 
-  - name: dim_licenses
-    description: '{{ doc("dim_licenses") }}'
-    columns:
-      - name: license_id
-        description: The unique ID of a generated license.
-        tests:
-          - not_null
-          - unique
-      - name: license_md5
-        description: The md5 hash of the license file. Use this field to join to fct_ping_instance.
-        tests:
-          - not_null
-          - unique
-      - name: subscription_id
-        description: The unique identifier of a version of a subscription.
-      - name: subscription_name
-        description: The unique identifier of a subscription.
-      - name: license_user_count
-        description: The user count of the license.
-      - name: license_plan
-        description: The plan code for the product tier of the license.
-      - name: is_trial
-        description: Boolean flag noting if the license was generated as part of a trial.
-      - name: is_internal
-        description: Derived boolean flag noting if the email recipient and company associated with the license is part of GitLab.
-      - name: company
-        description: The company the license was generated for.
-      - name: license_start_date
-        description: The start date of the license.
-      - name: license_expire_date
-        description: The expiration date of the license.
-      - name: created_at
-        description: The timestamp of when the license was generated.
-      - name: updated_at
-        description: The timestamp of when the license was updated.
 
   - name: dim_location_country
     description: '{{ doc("dim_location_country") }}'
@@ -1135,6 +1144,38 @@ models:
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
       - name: was_purchased_through_reseller
         description: Boolean field that indicates whether the subscription was purchased through a reseller. If TRUE, the `invoice_owner_account` will contain the name of the reseller.
+      - name: dim_crm_opportunity_id_current_open_renewal
+        description: '{{ doc("dim_crm_opportunity_id_current_open_renewal") }}'
+      - name: dim_crm_opportunity_id_closed_lost_renewal
+        description: '{{ doc("dim_crm_opportunity_id_closed_lost_renewal") }}'
+
+  - name: dim_app_release_major_minor
+    description: '{{ doc("dim_app_release_major_minor") }}'
+    columns:
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: app_release_major_minor_id
+        description: '{{ doc("app_release_major_minor_id") }}'
+      - name: application
+        description: The application that the release refers to.
+      - name: major_minor_version
+        description: '{{ doc("major_minor_version") }}'
+      - name: major_minor_version_num
+        description: '{{ doc("major_minor_version_num") }}'
+      - name: major_version
+        description: '{{ doc("major_version") }}'
+      - name: minor_version
+        description: '{{ doc("minor_version") }}'
+      - name: release_date
+        description: '{{ doc("release_date") }}'
+      - name: version_number
+        description: '{{ doc("version_number") }}'
+      - name: next_version_release_date
+        description: '{{ doc("next_version_release_date") }}'
+      
 
   - name: dim_subscription_snapshot_bottom_up
     description: Daily snapshot of subscriptions starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
@@ -1201,51 +1242,6 @@ models:
                 where: bizible_created_date <= DATEADD('day', -2, CURRENT_DATE)::DATE
         tags: ["tdf", "common"]
 
-  - name: dim_usage_ping_metric
-    description: '{{ doc("dim_usage_ping_metric") }}'
-    columns:
-      - name: metrics_path
-        tests:
-          - not_null
-          - unique
-      - name: is_gmau
-        description: Flag to show whether metric is part of Group Monthly Active Users (GMAU) calculations.
-      - name: is_smau
-        description: Flag to show whether metric is part of Stage Monthly Active Users (SMAU) calculations.
-      - name: is_paid_gmau
-        description: Flag to show whether metric is part of paid Group Monthly Active Users (GMAU) calculations.
-      - name: is_umau
-        description: Flag to show whether metric is part of Unique Monthly Active Users (UMAU) calculations.
-
-  - name: dim_usage_pings
-    description: '{{ doc("dim_usage_pings") }}'
-    columns:
-      - name: id
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "gainsight"]
-      - name: uuid
-        description: concatenate this field with host_id for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832 and https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_428035384 and https://gitlab.com/gitlab-org/gitlab/-/merge_requests/44972
-      - name: host_id
-        description: uuid concatenated with this field for a unique identifier for instances. See https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_428426837. Business Process Issue - https://gitlab.com/gitlab-data/analytics/-/issues/6413#note_429177832
-      - name: license_md5
-        description: JOIN key to license_db_licenses (see - https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.license_db_licenses). Note - License is only for self-managed instances and not for namespaces. CE and EE free should not have licenses. Known issue with EE version 9-10 having null records https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_431390413
-      - name: installation_type
-        description: segmentation for how instances are installed. See https://gitlab.com/gitlab-data/analytics/-/issues/6560#note_429097420 for how this field is populated and known data concerns, such as all the instances without installation_type seem to be between 9 and 10, which lines up with the date that installation_type was added to usage ping.
-      - name: main_edition
-        description: segmentation for Edition. Values - CE, EE
-      - name: product_tier
-        description: segmentation for Product Tier. Values - Core (CE, EE), Starter, Premium, Ultimate, NULL
-      - name: main_edition_product_tier
-        description: segmentation for the product tier, including separate records for Core CE and Core EE
-      - name: ping_source
-        description: segmentation for SaaS data (from the self-managed instance that hosts the SaaS GitLab.com website) and data sent from customer self-managed instances
-      - name: is_internal
-        description: this instance is used by the company or a GitLab team member
-      - name: is_staging
-        descrition: DRAFT - need to better identify instances used for staging environments
-
   - name: fct_crm_person
     description: '{{ doc("fct_crm_person") }}'
     columns:
@@ -1307,6 +1303,8 @@ models:
       - name: billable_user_count
       - name: license_utilization
       - name: max_historical_user_count
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
       - name: umau_28_days_user
         description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
@@ -1629,10 +1627,6 @@ models:
         description: '{{ doc("geo_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_nodes_all_time_event
-        description: '{{ doc("geo_nodes_all_time_event_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
       - name: auto_devops_pipelines_28_days_user
         description: '{{ doc("auto_devops_pipelines_28_days_user_desc") }}'
         tests:
@@ -1655,6 +1649,46 @@ models:
           - dbt_utils.at_least_one
       - name: gitaly_servers_all_time_event
         description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: snippets_28_days_event
+        description: '{{ doc("snippets_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: single_file_editor_28_days_user
+        description: '{{ doc("single_file_editor_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_event
+        description: '{{ doc("merge_requests_created_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_user
+        description: '{{ doc("merge_requests_created_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_approval_rules_28_days_event
+        description: '{{ doc("merge_requests_approval_rules_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: custom_compliance_frameworks_28_days_event
+        description: '{{ doc("custom_compliance_frameworks_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_security_policy_28_days_event
+        description: '{{ doc("projects_security_policy_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_security_policy_28_days_user
+        description: '{{ doc("merge_requests_security_policy_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipelines_implicit_auto_devops_28_days_event
+        description: '{{ doc("pipelines_implicit_auto_devops_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_28_days_user
+        description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: is_missing_paid_seats
@@ -1683,9 +1717,9 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: namespace_type
-        description: Group, Individual, or NULL. For example https://gitlab.com/gitlab-data is a Group namespace.
+        description: '{{ doc("namespace_type") }}'
       - name: visibility_level
-        description: public, private, or internal.
+        description: '{{ doc("visibility_level") }}'
       - name:  limit
         description: Monthly CI Minutes limit of the namespace, based on its [product tier](https://about.gitlab.com/pricing/). This value will be 'Not supported minutes' if shared runners are not enabled on the namespace and 'Unlimited minutes' for certain GitLab internal namespaces.
         tests:
@@ -1718,19 +1752,21 @@ models:
         description: '{{ doc("event_pk") }}'
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "event_date >= DATEADD('day',-7,CURRENT_DATE())"
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
-        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+        description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
       - name: dim_project_id
-        description: '{{ doc("dim_project_id") }}'
+        description: '{{ doc("dim_project_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
       - name: dim_active_product_tier_id
         description: '{{ doc("dim_active_product_tier_id") }}'
-      - name: dim_active_subscription_id
-        description: '{{ doc("dim_active_subscription_id") }}'
+      - name: dim_latest_subscription_id
+        description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
         description: '{{ doc("dim_crm_account_id") }}'
       - name: dim_billing_account_id
@@ -1805,9 +1841,9 @@ models:
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
-        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+        description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
       - name: dim_project_id
-        description: '{{ doc("dim_project_id") }}'
+        description: '{{ doc("dim_project_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
       - name: event_created_at
@@ -1854,13 +1890,13 @@ models:
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
-        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+        description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
       - name: dim_active_product_tier_id
         description: '{{ doc("dim_active_product_tier_id") }}'
-      - name: dim_active_subscription_id
-        description: '{{ doc("dim_active_subscription_id") }}'
+      - name: dim_latest_subscription_id
+        description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
         description: '{{ doc("dim_crm_account_id") }}'
       - name: dim_billing_account_id
@@ -1916,35 +1952,6 @@ models:
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
 
-  - name: fct_event_instance_daily
-    description: '{{ doc("fct_event_instance_daily") }}'
-    columns:
-      - name: event_instance_daily_pk
-        description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance_daily.
-        tests:
-          - not_null
-          - unique
-      - name: event_date
-        description: '{{ doc("event_date") }}'
-      - name: event_name
-        description: '{{ doc("event_name") }}'
-      - name: data_source
-        description: '{{ doc("data_source") }}'
-      - name: event_count
-        description: '{{ doc("event_count") }}'
-      - name: user_count
-        description: '{{ doc("user_count") }}'
-      - name: ultimate_parent_namespace_count
-        description: '{{ doc("ultimate_parent_namespace_count") }}'
-      - name: created_by
-        description: '{{ doc("created_by") }}'
-      - name: updated_by
-        description: '{{ doc("updated_by") }}'
-      - name: model_created_date
-        description: '{{ doc("model_created_date") }}'
-      - name: model_updated_date
-        description: '{{ doc("model_updated_date") }}'
-
   - name: fct_event_namespace_daily
     description: '{{ doc("fct_event_namespace_daily") }}'
     columns:
@@ -1956,11 +1963,11 @@ models:
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
-        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+        description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
       - name: dim_active_product_tier_id
         description: '{{ doc("dim_active_product_tier_id") }}'
-      - name: dim_active_subscription_id
-        description: '{{ doc("dim_active_subscription_id") }}'
+      - name: dim_latest_subscription_id
+        description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
         description: '{{ doc("dim_crm_account_id") }}'
       - name: dim_billing_account_id
@@ -2164,38 +2171,6 @@ models:
           - not_null
       - name: valid_to
 
-  - name: dim_namespace_lineage
-    description: '{{ doc("dim_namespace_lineage") }}'
-    columns:
-      - name: dim_namespace_id
-        tests:
-          - not_null
-          - unique
-      - name: ultimate_parent_namespace_id
-        tests:
-          - not_null
-      - name: parent_id
-      - name: namespace_plan_id
-      - name: ultimate_parent_plan_id
-        tests:
-          - not_null
-          - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101, 102, 103, 135]
-      - name: upstream_lineage
-        tests:
-          - not_null
-      - name: is_currently_valid
-        tests:
-          - not_null
-      - name: namespace_plan_title
-      - name: namespace_plan_is_paid
-      - name: ultimate_parent_plan_title
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_is_paid
-        tests:
-          - not_null
-
   - name: dim_namespace_plan_hist
     description: '{{ doc("dim_namespace_plan_hist") }}'
     columns:
@@ -2213,21 +2188,24 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: namespace_is_internal
       - name: namespace_is_ultimate_parent
+        description: '{{ doc("namespace_is_ultimate_parent") }}'
       - name: namespace_name
       - name: namespace_path
       - name: owner_id
       - name: namespace_type
-        description: This field should be Group or Individual. A namespace is the first item to come after the / following the domain. For example https://www.gitlab.com/NicoleSchwartz/ is an Individual namespace. There are some namespace_IDs that are missing from this table, when doing certain joins (left) you may get NULL when this data is missing.
+        description: '{{ doc("namespace_type") }}'
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: has_avatar
-      - name: namespace_created_at
-      - name: namespace_updated_at
+      - name: created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: updated_at
       - name: is_membership_locked
       - name: has_request_access_enabled
       - name: has_share_with_group_locked
       - name: visibility_level
+        description: '{{ doc("visibility_level") }}'
       - name: dap_sync_status
       - name: ldap_sync_error
       - name: ldap_sync_last_update_at
@@ -2306,6 +2284,8 @@ models:
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
+      - name: subscription_action_type
+        description: '{{ doc("subscription_action_type") }}'
 
   - name: dim_license
     description: '{{ doc("dim_license") }}'
@@ -2433,27 +2413,6 @@ models:
       - name: ci_pipeline_internal_id
         description: Internal ID for the CI Pipeline. This is project specific
 
-  - name: dim_action
-    description: '{{ doc("dim_action") }}'
-    columns:
-      - name: dim_action_id
-        description: The unique identifier for each of the actions.
-        tests:
-          - not_null
-          - unique
-      - name: dim_project_id
-      - name: dim_namespace_id
-      - name: ultimate_parent_namespace_id
-      - name: dim_user_id
-      - name: created_date_id
-      - name: dim_plan_id
-        tests:
-          - not_null
-      - name: target_id
-      - name: target_type
-      - name: created_at
-      - name: event_action_type
-
   - name: dim_user
     description: '{{ doc("dim_user") }}'
     columns:
@@ -2490,7 +2449,9 @@ models:
         description: Unique key of User.
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "spined_date >= DATEADD('day',-7,CURRENT_DATE())"
       - name: spined_date_id
         description: Unique Date Id between dbt_valid_from and dbt_valid_to in Snapshots    
       - name: is_blocked_user
@@ -2526,6 +2487,7 @@ models:
       - name: updated_at
       - name: ci_runner_description
       - name: ci_runner_manager
+      - name: ci_runner_machine_type
       - name: contacted_at
       - name: is_active
       - name: ci_runner_version
@@ -2836,7 +2798,9 @@ models:
         description: '{{ doc("minor_version") }}'
       - name: major_minor_version
         description: '{{ doc("major_minor_version") }}'
-      - name: major_minor_version_id
+      - name: major_minor_version_num
+        description: '{{ doc("major_minor_version_num") }}'
+      - name: major_minor_version_num
         description: '{{ doc("major_minor_version_id") }}'
       - name: ping_delivery_type
         description: '{{ doc("ping_delivery_type") }}'
@@ -2862,6 +2826,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: ping_type
+        description: '{{ doc("ping_type") }}'
 
   - name: dim_ping_metric
     description: ' {{ doc("dim_ping_metric") }} '
@@ -2879,8 +2845,8 @@ models:
         description: '{{ doc("data_source_ping_metric") }}'
       - name: description
         description: A description of the metric
-      - name: product_category
-        description: '{{ doc("product_category_ping_metric") }}'
+      - name: instrumentation_class
+        description: '{{ doc("instrumentation_class_ping_metric") }}'
       - name: group_name
         description: '{{ doc("group_name") }}'
       - name: section_name
@@ -2938,8 +2904,8 @@ models:
         description: '{{ doc("data_source_ping_metric") }}'
       - name: description
         description: A description of the metric
-      - name: product_category
-        description: '{{ doc("product_category_ping_metric") }}'
+      - name: instrumentation_class
+        description: '{{ doc("instrumentation_class_ping_metric") }}'
       - name: group_name
         description: '{{ doc("group_name") }}'
       - name: section_name
@@ -3041,6 +3007,8 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: ping_type
+        description: '{{ doc("ping_type") }}'
 
   - name: fct_ping_instance_metric_rolling_6_months
     description: '{{ doc("fct_ping_instance_metric_rolling_6_months") }}'
@@ -3219,6 +3187,8 @@ models:
         description: Data quality flag to check if the subscription_id in the license table is valid (does it exist in the subscription table?)
       - name: is_service_ping_license_in_customerDot
         description: Data quality flag to check if the license from service ping exist in CustomerDot.
+      - name: included_in_health_measures_str
+        description: '{{ doc("included_in_health_measures_str") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
       - name: merge_requests_28_days_user
       - name: projects_with_repositories_enabled_28_days_user
@@ -3317,6 +3287,8 @@ models:
         description: SMAU Metric
       - name: incident_management_total_unique_counts_monthly
         description: SMAU Metric
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
 
   - name: fct_ping_instance_metric_wave_monthly
     description: '{{ doc("fct_ping_instance_metric_wave_monthly") }}'
@@ -3345,8 +3317,8 @@ models:
       - name: seat_link_report_date
         description: Day on which Seat Link usage data is reported. Should always be last day of month for historical months.
       - name: seat_link_report_date_id
-      - name: dim_usage_ping_id
-        description: JOIN key to dim_usage_pings and prep_usage_pings. Represents a single usage ping.
+      - name: dim_ping_instance_id
+        description: JOIN key to dim_ping_instance and prep_ping_instance. Represents a single ping.
       - name: ping_created_at
         description: The timestamp at which the usage ping was created.
       - name: ping_created_date_id
@@ -3690,10 +3662,6 @@ models:
         description: '{{ doc("geo_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_nodes_all_time_event
-        description: '{{ doc("geo_nodes_all_time_event_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
       - name: auto_devops_pipelines_28_days_user
         description: '{{ doc("auto_devops_pipelines_28_days_user_desc") }}'
         tests:
@@ -3774,6 +3742,46 @@ models:
         description: '{{ doc("sast_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: snippets_28_days_event
+        description: '{{ doc("snippets_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: single_file_editor_28_days_user
+        description: '{{ doc("single_file_editor_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_event
+        description: '{{ doc("merge_requests_created_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_created_28_days_user
+        description: '{{ doc("merge_requests_created_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_approval_rules_28_days_event
+        description: '{{ doc("merge_requests_approval_rules_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: custom_compliance_frameworks_28_days_event
+        description: '{{ doc("custom_compliance_frameworks_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_security_policy_28_days_event
+        description: '{{ doc("projects_security_policy_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: merge_requests_security_policy_28_days_user
+        description: '{{ doc("merge_requests_security_policy_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipelines_implicit_auto_devops_28_days_event
+        description: '{{ doc("pipelines_implicit_auto_devops_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_28_days_user
+        description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one    
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
@@ -3790,6 +3798,10 @@ models:
         description: Flags rows where there is Usage Ping data and/or Seat Link data present
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping and/or Seat Link
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
   - name: fct_ping_instance
     description: ' {{ doc("fct_ping_instance") }} '
@@ -3822,6 +3834,10 @@ models:
         description: '{{ doc("dim_installation_id") }}'
       - name: dim_license_id
         description:  '{{ doc("dim_license_id") }}'
+      - name: dim_app_release_major_minor_sk
+        description:  '{{ doc("dim_app_release_major_minor_sk") }}'
+      - name: dim_latest_available_app_release_major_minor_sk
+        description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
       - name: license_md5
         description: '{{ doc("license_md5") }}'
       - name: license_sha256
@@ -3856,6 +3872,10 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: ping_type
+        description: '{{ doc("ping_type") }}'
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
 
 
   - name: fct_ping_instance_metric_28_day
@@ -4294,6 +4314,24 @@ models:
         description: for deleted accounts this is the SFDC account they were merged to
       - name: crm_account_created_date
         description: The date on which the CRM account was created in SFDC
+      - name: gs_health_user_engagement
+        description: ' {{ doc("gs_health_user_engagement") }} '
+      - name: gs_health_cd
+        description: ' {{ doc("gs_health_cd") }} '
+      - name: gs_health_devsecops
+        description: ' {{ doc("gs_health_devsecops") }} '
+      - name: gs_health_ci
+        description: ' {{ doc("gs_health_ci") }} '
+      - name: gs_health_scm
+        description: ' {{ doc("gs_health_scm") }} '
+      - name: eoa_sentiment
+        description: ' {{ doc("eoa_sentiment") }} '
+      - name: gs_first_value_date
+        description: ' {{ doc("gs_first_value_date") }} '
+      - name: gs_last_csm_activity_date
+        description: ' {{ doc("gs_last_csm_activity_date") }} '
+      - name: last_at_risk_update_comments
+        description: ' {{ doc("last_at_risk_update_comments") }} '
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
@@ -4471,6 +4509,22 @@ models:
         description: '{{ doc("order_type") }}'
       - name: order_type_live
         description: '{{ doc("order_type_live") }}'
+      - name: vsa_readout
+        description: '{{ doc("vsa_readout") }}'
+      - name: vsa_start_date
+        description: '{{ doc("vsa_start_date") }}'
+      - name: vsa_url
+        description: '{{ doc("vsa_url") }}'
+      - name: vsa_status
+        description: '{{ doc("vsa_status") }}'
+      - name: vsa_end_date
+        description: '{{ doc("vsa_end_date") }}'
+      - name: military_invasion_comments
+        description: '{{ doc("military_invasion_comments") }}'
+      - name: military_invasion_risk_scale
+        description: '{{ doc("military_invasion_risk_scale") }}'
+      - name: downgrade_details
+        description: '{{ doc("downgrade_details") }}'
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
@@ -4486,6 +4540,8 @@ models:
           - unique
       - name: dim_product_detail_id
         description: The unique ID of a product rate plan charge
+      - name: dim_order_id
+        description: Unique identifier for each order which groups all order actions within an order
       - name: rate_plan_charge_number
         description: A unique number that identifies the charge
       - name: effective_start_date_id
@@ -4510,6 +4566,10 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common"]
+      - name: gs_first_value_date_id
+        description: ' {{ doc("gs_first_value_date") }} '
+      - name: gs_last_csm_activity_date_id
+        description: ' {{ doc("gs_last_csm_activity_date") }} '
 
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
@@ -4526,7 +4586,8 @@ models:
           - dbt_utils.relationships_where:
               to: ref('dim_crm_account')
               field: dim_crm_account_id
-              from_condition: created_date <= DATEADD('day', -2, CURRENT_DATE)::DATE
+              from_condition: created_date <= DATEADD('day', -3, CURRENT_DATE)::DATE
+              severity: warn
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_alliance_type_id
         description: join key for dim_alliance_type_scd.
@@ -4740,6 +4801,18 @@ models:
         description: '{{ doc("order_type") }}'
       - name: dim_order_type_live_id
         description: '{{ doc("order_type_live") }}'
+      - name: pre_military_invasion_arr
+        description: '{{ doc("pre_military_invasion_arr") }}'
+      - name: won_arr_basis_for_clari
+        description: '{{ doc("won_arr_basis_for_clari") }}'
+      - name: arr_basis_for_clari
+        description: '{{ doc("arr_basis_for_clari") }}'
+      - name: forecasted_churn_for_clari
+        description: '{{ doc("forecasted_churn_for_clari") }}'
+      - name: override_arr_basis_clari
+        description: '{{ doc("override_arr_basis_clari") }}'
+      - name: vsa_start_date_net_arr
+        description: '{{ doc("vsa_start_date_net_arr") }}'
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'
@@ -4877,6 +4950,8 @@ models:
         description: Zuora account id
       - name:  dim_crm_account_id
         description: account id frm crm
+      - name: dim_order_id
+        description: Unique identifier for each order which groups all order actions within an order
       - name: mrr
         description: Monthly Recurring Revenue value for given month
       - name: arr
@@ -5039,6 +5114,12 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common"]
+      - name: full_comments
+        meta:
+           masking_policy: data_science_sensitive
+      - name: task_subject
+        meta:
+           masking_policy: data_science_sensitive
 
   - name: fct_crm_task
     description: '{{ doc("fct_crm_task") }}'
@@ -5080,7 +5161,7 @@ models:
         description: '{{ doc("model_updated_date") }}'
 
   - name: dim_behavior_operating_system
-    description: Dimension for the analysis of operating systems in Snowplow.
+    description: '{{ doc("dim_behavior_operating_system") }}'
     columns: 
       - name: dim_behavior_operating_system_sk
         tests:
@@ -5116,7 +5197,11 @@ models:
       - name: dim_behavior_website_page_sk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                severity: error
+                error_if: ">10"
+                warn_if: ">10"
         description: '{{ doc("dim_behavior_website_page_sk") }}'
       - name: page_url_host_path
         description: '{{ doc("page_url_host_path") }}' 
@@ -5188,7 +5273,7 @@ models:
         description: '{{ doc("event_id_behavior_model") }}'  
       - name: user_snowplow_domain_id
         description: '{{ doc("user_snowplow_domain_id") }}' 
-      - name: environment
+      - name: gsc_environment
         description: '{{ doc("environment_behavior_model") }}' 
       - name: gsc_extra
         description: '{{ doc("gsc_extra") }}' 
@@ -5265,6 +5350,111 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        description: '{{ doc("behavior_structured_event_pk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("dvce_created_tstamp") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: tracker_version
+        description: '{{ doc("tracker_version") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: has_performance_timing_context
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}'
+
+  - name: fct_behavior_structured_event_experiment
+    description:  '{{ doc("fct_behavior_structured_event_experiment") }}'
+    columns: 
+      - name: behavior_structured_event_pk
+        tests:
+          - not_null
           - unique
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
@@ -5305,6 +5495,10 @@ models:
         description: '{{ doc("page_url_scheme") }}'
       - name: page_url_host
         description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
       - name: gsc_pseudonymized_user_id
         description: '{{ doc("gsc_pseudonymized_user_id") }}'
       - name: gsc_google_analytics_client_id
@@ -5315,8 +5509,8 @@ models:
         description: '{{ doc("gsc_plan") }}'
       - name: gsc_source
         description: '{{ doc("gsc_source") }}'
-      - name: event_value
-        description: '{{ doc("event_value") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -5325,38 +5519,365 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
-
-  - name: fct_behavior_structured_event_experiment
-    description: Derived fact table for structured events related to experiments.
-    columns:
-      - name: behavior_structured_event_pk
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: has_performance_timing_context
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}'
+      - name: experiment_name
         tests:
-          - not_null
-          - unique
+          - not_null      
+        description: '{{ doc("experiment_name") }}'        
+      - name: experiment_variant
+        tests:
+          - not_null      
+        description: '{{ doc("experiment_variant") }}'
+      - name: context_key
+        description: '{{ doc("context_key") }}'
+      - name: experiment_migration_keys
+        description: '{{ doc("experiment_migration_keys") }}'
 
   - name: fct_behavior_structured_event_without_assignment
-    description: Derived fact table for structured events without assignment events.
-    columns:
+    description: '{{ doc("fct_behavior_structured_event_without_assignment") }}'
+    columns: 
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        description: '{{ doc("behavior_structured_event_pk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("dvce_created_tstamp") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: tracker_version
+        description: '{{ doc("tracker_version") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: has_performance_timing_context
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}'        
 
   - name: fct_behavior_structured_event_without_assignment_190
-    description: Derived fact table for structured events without assignment events filtered to the last 190 days.
-    columns:
+    description: '{{ doc("fct_behavior_structured_event_without_assignment_190") }}'
+    columns: 
       - name: behavior_structured_event_pk
         tests:
           - not_null
           - unique
+        description: '{{ doc("behavior_structured_event_pk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("dvce_created_tstamp") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: tracker_version
+        description: '{{ doc("tracker_version") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: has_performance_timing_context
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}' 
+
 
   - name: fct_behavior_structured_event_without_assignment_400
-    description: Derived fact table for structured events without assignment events fitlered to the last 400 days.
-    columns:
+    description: '{{ doc("fct_behavior_structured_event_without_assignment_400") }}'
+    columns: 
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        description: '{{ doc("behavior_structured_event_pk") }}'
+      - name: dim_behavior_browser_sk
+        description: '{{ doc("dim_behavior_browser_sk") }}'
+      - name: dim_behavior_website_page_sk
+        description: '{{ doc("dim_behavior_website_page_sk") }}'
+      - name: dim_behavior_referrer_page_sk
+        description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+      - name: dim_behavior_operating_system_sk
+        description: '{{ doc("dim_behavior_operating_system_sk") }}'
+      - name: dim_namespace_id
+        description: '{{ doc("dim_namespace_id_behavior_model") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id_behavior_model") }}'
+      - name: dim_behavior_event_sk
+        description: '{{ doc("dim_behavior_event_sk") }}'
+      - name: dvce_created_tstamp
+        description: '{{ doc("dvce_created_tstamp") }}'
+      - name: behavior_at
+        description: '{{ doc("behavior_at") }}'
+      - name: tracker_version
+        description: '{{ doc("tracker_version") }}'
+      - name: session_index
+        description: '{{ doc("session_index") }}'
+      - name: app_id
+        description: '{{ doc("app_id") }}'
+      - name: session_id
+        description: '{{ doc("session_id") }}'
+      - name: user_snowplow_domain_id
+        description: '{{ doc("user_snowplow_domain_id") }}'
+      - name: contexts
+        description: '{{ doc("contexts") }}'
+      - name: page_url_host_path
+        description: '{{ doc("page_url_host_path") }}'
+      - name: page_url_path
+        description: '{{ doc("page_url_path") }}'
+      - name: page_url_scheme
+        description: '{{ doc("page_url_scheme") }}'
+      - name: page_url_host
+        description: '{{ doc("page_url_host") }}'
+      - name: page_url_fragment
+        description: '{{ doc("page_url_fragment") }}'
+      - name: event_value
+        description: '{{ doc("event_value") }}'
+      - name: gsc_pseudonymized_user_id
+        description: '{{ doc("gsc_pseudonymized_user_id") }}'
+      - name: gsc_google_analytics_client_id
+        description: '{{ doc("gsc_google_analytics_client_id") }}'
+      - name: gsc_extra
+        description: '{{ doc("gsc_extra") }}'
+      - name: gsc_plan
+        description: '{{ doc("gsc_plan") }}'
+      - name: gsc_source
+        description: '{{ doc("gsc_source") }}'
+      - name: gsc_environment
+        description: '{{ doc("environment_behavior_model") }}'  
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+      - name: user_city
+        description: '{{ doc("user_city") }}'
+      - name: user_country
+        description: '{{ doc("user_country") }}'
+      - name: user_region
+        description: '{{ doc("user_region") }}'
+      - name: user_timezone_name
+        description: '{{ doc("user_timezone_name") }}'
+      - name: has_performance_timing_context
+        description: '{{ doc("has_performance_timing_context") }}'
+      - name: has_web_page_context
+        description: '{{ doc("has_web_page_context") }}'
+      - name: has_ci_build_failed_context
+        description: '{{ doc("has_ci_build_failed_context") }}'
+      - name: has_wiki_page_context
+        description: '{{ doc("has_wiki_page_context") }}'
+      - name: has_gitlab_standard_context
+        description: '{{ doc("has_gitlab_standard_context") }}'
+      - name: has_email_campaigns_context
+        description: '{{ doc("has_email_campaigns_context") }}'
+      - name: has_gitlab_service_ping_context
+        description: '{{ doc("has_gitlab_service_ping_context") }}'
+      - name: has_design_management_context
+        description: '{{ doc("has_design_management_context") }}'
+      - name: has_customer_standard_context
+        description: '{{ doc("has_customer_standard_context") }}'
+      - name: has_secure_scan_context
+        description: '{{ doc("has_secure_scan_context") }}'
+      - name: has_gitlab_experiment_context
+        description: '{{ doc("has_gitlab_experiment_context") }}'
+      - name: has_subscription_auto_renew_context
+        description: '{{ doc("has_subscription_auto_renew_context") }}'  
+
 
   - name: fct_behavior_unstructured_event
     description: '{{ doc("fct_behavior_unstructured_event") }}'
@@ -5390,6 +5911,8 @@ models:
         description: '{{ doc("user_snowplow_domain_id") }}'
       - name: link_click_target_url
         description: '{{ doc("link_click_target_url") }}'
+      - name: link_click_element_id
+        description: '{{ doc("link_click_element_id") }}'
       - name: submit_form_id
         description: '{{ doc("submit_form_id") }}'
       - name: change_form_id
@@ -5586,6 +6109,10 @@ models:
       - name: ci_templates_usage_28_days_event
       - name: project_management_issue_milestone_changed_28_days_user
       - name: project_management_issue_iteration_changed_28_days_user
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
 
 
   - name: fct_ping_instance_free_user_metrics_monthly
@@ -5926,10 +6453,6 @@ models:
         description: '{{ doc("geo_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_nodes_all_time_event
-        description: '{{ doc("geo_nodes_all_time_event_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
       - name: auto_devops_pipelines_28_days_user
         description: '{{ doc("auto_devops_pipelines_28_days_user_desc") }}'
         tests:
@@ -6076,3 +6599,188 @@ models:
           - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
+      - name: installation_creation_date
+        description: '{{ doc("installation_creation_date") }}'
+      - name: dim_installation_id
+        description: '{{ doc("dim_installation_id") }}'
+
+  - name: fct_event_namespace_monthly
+    description: '{{ doc("fct_event_namespace_monthly") }}'
+    columns:
+      - name: event_namespace_monthly_pk
+        description: The unique composite ID of the fct_event_namespace_monthly model consisting of event_calendar_month, event_name, and dim_ultimate_parent_namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
+      - name: dim_active_product_tier_id
+        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_subscription_id
+        description: '{{ doc("dim_latest_subscription_id") }}'
+      - name: dim_crm_account_id
+        description: '{{ doc("dim_crm_account_id") }}'
+      - name: dim_billing_account_id
+        description: '{{ doc("dim_billing_account_id") }}'
+      - name: plan_id_at_event_month
+        description: '{{ doc("plan_id_at_event_month") }}'
+      - name: plan_name_at_event_month
+        description: '{{ doc("plan_name_at_event_month") }}'
+      - name: plan_was_paid_at_event_month
+        description: '{{ doc("plan_was_paid_at_event_month") }}'
+      - name: event_calendar_month
+        description: '{{ doc("event_calendar_month") }}'
+      - name: event_name
+        description: '{{ doc("event_name") }}'
+      - name: section_name
+        description: '{{ doc("section_name") }}'
+        tests:
+          - not_null
+      - name: stage_name
+        description: '{{ doc("stage_name") }}'
+        tests:
+          - not_null
+      - name: group_name
+        description: '{{ doc("group_name") }}'
+        tests:
+          - not_null
+      - name: is_smau
+        description: '{{ doc("is_smau") }}'
+        tests:
+          - not_null
+      - name: is_gmau
+        description: '{{ doc("is_gmau") }}'
+        tests:
+          - not_null
+      - name: is_umau
+        description: '{{ doc("is_umau") }}'
+        tests:
+          - not_null
+      - name: data_source
+        description: '{{ doc("data_source") }}'
+      - name: event_count
+        description: '{{ doc("event_count") }}'
+      - name: user_count
+        description: '{{ doc("user_count") }}'
+      - name: event_date_count
+        description: '{{ doc("event_date_count") }}'
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+
+  - name: fct_delta_arr_subscription_lineage_product_monthly
+    description: '{{ doc("fct_delta_arr_subscription_lineage_product_monthly") }}'
+    columns:
+      - name: delta_arr_subscription_lineage_product_monthly_pk
+        description: The unique composite ID of the fct_delta_arr_subscription_month model consisting of arr_month and dim_oldest_subscription_in_cohort_id.
+        tests:
+          - not_null
+          - unique
+      - name: dim_parent_crm_account_id
+        description: '{{ doc("dim_parent_crm_account_id") }}'
+      - name: dim_crm_account_id
+        description: '{{ doc("dim_crm_account_id") }}'
+      - name: dim_oldest_subscription_in_cohort_id
+        description: '{{ doc("dim_oldest_subscription_in_cohort_id") }}'
+      - name: product_tier_name 
+        description: '{{ doc("product_tier_name") }}'
+      - name: previous_month_product_tier_name 
+        description: '{{ doc("previous_month_product_tier_name") }}'
+      - name: product_delivery_type
+        description: '{{ doc("product_delivery_type") }}'
+      - name: previous_month_product_delivery_type
+        description: '{{ doc("previous_month_product_delivery_type") }}'
+      - name: product_ranking
+        description: '{{ doc("product_ranking") }}'
+      - name: previous_month_product_ranking
+        description: '{{ doc("previous_month_product_ranking") }}'
+      - name: type_of_arr_change
+        description: '{{ doc("type_of_arr_change") }}'
+      - name: beg_arr
+        description: '{{ doc("beg_arr") }}'
+      - name: beg_quantity
+        description: '{{ doc("beg_quantity") }}'
+      - name: seat_change_arr
+        description: '{{ doc("seat_change_arr") }}'
+      - name: seat_change_quantity
+        description: '{{ doc("seat_change_quantity") }}'
+      - name: price_change_arr
+        description: '{{ doc("price_change_arr") }}'
+      - name: tier_change_arr
+        description: '{{ doc("tier_change_arr") }}'
+      - name: end_arr
+        description: '{{ doc("end_arr") }}'
+      - name: end_quantity
+        description: '{{ doc("end_quantity") }}'
+      - name: annual_price_per_seat_change
+        description: '{{ doc("annual_price_per_seat_change") }}'
+  - name: dim_team_member
+    description: '{{ doc("dim_team_member") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - valid_from
+    columns:
+      - name: employee_id
+        description: Workday Employee Identification 
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: first_name
+      - name: last_name
+      - name: work_email
+        description: Team member work email
+      - name: gitlab_username
+        description: Team member gitlab username 
+      - name: region
+        description: Current/latest region the team member resides in
+      - name: hire_date
+        description: Most recent hire date. Field is updated if a team member is re-hired after a termination
+      - name: termination_date
+        description: NULL if team member is a current employee, otherwise it contains the most recent termination date
+      - name: is_current_team_member
+        description: True if the termination_date field is NULL, false otherwise. This flag captures whether the employee was employed at GitLab within the valid_from/valid_to timeframe
+      - name: is_rehire
+        description: True if team member has more than one hire event (more than one occurrance of hire_date)
+      - name: is_current
+        description: True if the current team member event is the most recent event
+      - name: country
+        description: Current/latest country the team member resides in
+        meta:
+          masking_policy: analyst_people
+      - name: nationality
+        description: Masked. Team member nationality.
+        meta:
+          masking_policy: analyst_people
+      - name: ethnicity 
+        description: Masked. Team member ethnicity.
+        meta:
+          masking_policy: analyst_people
+      - name: gender 
+        description: Masked. Team member gender
+        meta:
+          masking_policy: analyst_people
+      - name: date_of_birth 
+        description: Masked. Team member date of birth
+        meta:
+          masking_policy: analyst_people
+      - name: key_talent_status 
+        description: Masked. Team member Key Talent status
+        meta:
+          masking_policy: analyst_people
+      - name: growth_potential_rating 
+        description: Masked. Team member growth potential rating
+        meta:
+          masking_policy: analyst_people
+      - name: performance_rating 
+        description: Masked. Team member performance rating
+        meta:
+          masking_policy: analyst_people

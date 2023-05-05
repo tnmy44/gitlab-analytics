@@ -30,7 +30,18 @@ api_forecast AS (
   INNER JOIN users ON entries.user_id = users.user_id
   INNER JOIN fields ON entries.field_id = fields.field_id
   INNER JOIN time_frames ON entries.time_frame_id = time_frames.time_frame_id
-  ORDER BY entries.fiscal_quarter, time_frames.week_number
+  QUALIFY -- multiple user_id's per crm_user_id, keep latest entry only
+    ROW_NUMBER() OVER (
+      PARTITION BY
+        entries.fiscal_quarter,
+        time_frames.week_start_date,
+        users.crm_user_id,
+        entries.field_id
+      ORDER BY
+        entries.uploaded_at DESC
+    ) = 1
+
+  ORDER BY entries.fiscal_quarter, time_frames.week_start_date
 ),
 
 wk_sales_clari_net_arr_forecast AS (

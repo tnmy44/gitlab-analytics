@@ -1,5 +1,7 @@
 {{ config(alias='report_metrics_summary_account_year') }}
 
+-- TODO: 20221208 TAM fields need to refactored as they are not called TAM anymore
+
 WITH date_details AS (
 
     SELECT *
@@ -56,9 +58,7 @@ WITH date_details AS (
 
     SELECT *
     --FROM prod.restricted_safe_common_mart_sales.mart_arr
-    FROM {{ref('mart_arr')}}
-
-     
+    FROM {{ref('mart_arr')}}   
 
   ), raw_account AS (
   
@@ -66,9 +66,7 @@ WITH date_details AS (
     FROM {{ source('salesforce', 'account') }}
     --FROM raw.salesforce_stitch.account 
 
-      
   -- missing fields in mart crm account so adding dim_crm_account cte here on top of the mart below
- 
   ), dim_crm_account AS (
 
     SELECT *
@@ -81,14 +79,19 @@ WITH date_details AS (
   -- PUBSEC_TYPE__C,
   -- POTENTIAL_ARR_LAM__C
   -- BILLINGSTATE
+  -- customer_score__c
   ), mart_crm_account AS (
 
     SELECT acc.*,
-        raw.has_tam__c                AS has_tam_flag,
-        raw.public_sector_account__c  AS public_sector_account_flag,
-        raw.pubsec_type__c            AS pubsec_type,
-        raw.lam_tier__c               AS potential_lam_arr,
-        raw.billingstatecode          AS account_billing_state
+        raw.has_tam__c                        AS has_tam_flag,
+        raw.public_sector_account__c          AS public_sector_account_flag,
+        raw.pubsec_type__c                    AS pubsec_type,
+        raw.lam_tier__c                       AS potential_lam_arr,
+        raw.billingstatecode                  AS account_billing_state,
+        raw.customer_score__c                 AS customer_score,
+        raw.account_demographics_territory__c       AS account_demographics_territory,
+        raw.account_demographics_upa_state__c       AS account_demographics_upa_state_code,
+        raw.account_demographics_upa_state_name__c  AS account_demographics_upa_state_name
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_account acc
     FROM {{ref('mart_crm_account')}} acc
     LEFT JOIN raw_account raw
@@ -212,7 +215,7 @@ WITH date_details AS (
             THEN o.net_arr
             ELSE 0 END) AS last_12m_booked_web_direct_sourced_net_arr,  --ttm_web_direct_sourced_net_arr
       SUM(CASE
-            WHEN (o.sales_qualified_source = 'Channel Generated' OR o.sales_qualified_source = 'Partner Generated')
+            WHEN (o.sales_qualified_source = 'Partner Generated' OR o.sales_qualified_source = 'Partner Generated')
             THEN o.net_arr
             ELSE 0 END) AS last_12m_booked_channel_sourced_net_arr,  -- ttm_web_direct_sourced_net_arr
       SUM(CASE
@@ -341,7 +344,7 @@ WITH date_details AS (
             THEN o.booked_net_arr
             ELSE 0 END) AS fy_booked_web_direct_sourced_net_arr,
       SUM(CASE
-            WHEN (o.sales_qualified_source = 'Channel Generated' OR o.sales_qualified_source = 'Partner Generated')
+            WHEN (o.sales_qualified_source = 'Partner Generated' OR o.sales_qualified_source = 'Partner Generated')
             THEN o.booked_net_arr
             ELSE 0 END) AS fy_booked_channel_sourced_net_arr,
       SUM(CASE
@@ -457,7 +460,7 @@ WITH date_details AS (
             THEN h.net_arr
             ELSE 0 END)              AS pg_last_12m_web_direct_sourced_net_arr,
       SUM(CASE
-            WHEN (h.sales_qualified_source = 'Channel Generated' OR h.sales_qualified_source = 'Partner Generated')
+            WHEN (h.sales_qualified_source = 'Partner Generated' OR h.sales_qualified_source = 'Partner Generated')
             THEN h.net_arr
             ELSE 0 END)              AS pg_last_12m_channel_sourced_net_arr,
       SUM(CASE
@@ -474,7 +477,7 @@ WITH date_details AS (
             THEN h.calculated_deal_count
             ELSE 0 END)              AS pg_last_12m_web_direct_sourced_deal_count,
       SUM(CASE
-            WHEN (h.sales_qualified_source = 'Channel Generated' OR h.sales_qualified_source = 'Partner Generated')
+            WHEN (h.sales_qualified_source = 'Partner Generated' OR h.sales_qualified_source = 'Partner Generated')
             THEN h.calculated_deal_count
             ELSE 0 END)              AS pg_last_12m_channel_sourced_deal_count,
       SUM(CASE
@@ -508,7 +511,7 @@ WITH date_details AS (
             THEN h.net_arr
             ELSE 0 END) AS pg_ytd_web_direct_sourced_net_arr,
       SUM(CASE
-            WHEN (h.sales_qualified_source = 'Channel Generated' OR h.sales_qualified_source = 'Partner Generated')
+            WHEN (h.sales_qualified_source = 'Partner Generated' OR h.sales_qualified_source = 'Partner Generated')
             THEN h.net_arr
             ELSE 0 END) AS pg_ytd_channel_sourced_net_arr,
       SUM(CASE
@@ -642,7 +645,6 @@ WITH date_details AS (
     upa_owner.user_id                   AS upa_owner_id,
     upa_owner.title_category            AS upa_owner_title_category,
     trim(upa_owner.employee_number)     AS upa_owner_employee_number,
-    -- dim_account.forbes_2000_rank        AS account_forbes_rank,
     a.billing_country                   AS account_country,
     a.billing_postal_code               AS account_zip_code,
     mart_crm_account.account_billing_state AS account_state,
@@ -654,11 +656,15 @@ WITH date_details AS (
     upa_account.parent_crm_account_demographics_region              AS upa_ad_region,
     upa_account.parent_crm_account_demographics_area                AS upa_ad_area,
     
-    coalesce(upa_account.parent_crm_account_billing_country, REPLACE(REPLACE('Russian Federation','Russia'), 'Russia','Russian Federation'))              AS upa_ad_country,  
+    upa_account.parent_crm_account_billing_country                  AS upa_ad_country,  
     upa_account.parent_crm_account_demographics_upa_state           AS upa_ad_state,
     upa_account.parent_crm_account_demographics_upa_city            AS upa_ad_city,
     upa_account.parent_crm_account_demographics_upa_postal_code     AS upa_ad_zip_code,
-
+    
+    mart_crm_account.account_demographics_territory                 AS account_ad_territory,
+    upa_account.account_demographics_territory                      AS upa_ad_territory,
+    mart_crm_account.account_demographics_upa_state_code            AS upa_ad_state_code,
+    mart_crm_account.account_demographics_upa_state_name            AS upa_ad_state_name,
 
     
     -- substitute this by key segment
@@ -683,7 +689,8 @@ WITH date_details AS (
     coalesce(mart_crm_account.crm_account_zoom_info_number_of_developers, 0)    AS zi_developers,
     coalesce(mart_crm_account.zoom_info_company_revenue, 0)                     AS zi_revenue,
 
-    --
+
+    -- LAM Dev count calculated at the UPA level
     upa_account.parent_crm_account_lam_dev_count                       AS upa_lam_dev_count,
     mart_crm_account.public_sector_account_flag,
     mart_crm_account.pubsec_type,
@@ -692,6 +699,12 @@ WITH date_details AS (
     
     COALESCE(mart_crm_account.carr_account_family, 0)                       AS account_family_arr,
     LEAST(50000,GREATEST(coalesce(mart_crm_account.number_of_licenses_this_account,0),COALESCE(mart_crm_account.potential_users, mart_crm_account.decision_maker_count_linkedin, mart_crm_account.crm_account_zoom_info_number_of_developers, 0)))           AS calculated_developer_count,
+
+    -- Account score used to balance patches in maps
+    mart_crm_account.customer_score,
+
+
+    -- TODO: 20221208 They are not called TAMs anymore, this part needs to be refactored
     a.technical_account_manager_date,
     a.technical_account_manager                                             AS technical_account_manager_name,
     CASE
@@ -935,7 +948,7 @@ WITH date_details AS (
   FROM account_year_key AS ak
   INNER JOIN sfdc_accounts_xf AS a
     ON ak.account_id = a.account_id
-  LEFT JOIN dim_crm_account AS upa_account
+  LEFT JOIN mart_crm_account AS upa_account
     ON a.ultimate_parent_account_id = upa_account.dim_crm_account_id
   LEFT JOIN sfdc_accounts_xf AS upa
     ON a.ultimate_parent_account_id = upa.account_id
@@ -1108,7 +1121,6 @@ FROM selected_hierarchy_virtual_upa final
     
 
 -- identify accounts that belong to the same owner of a virtual upa within the hierarchy
--- after creating the virtual UPA hierarchy, some accounts might 
 ), final_virtual_upa AS (
     
 SELECT 
@@ -1269,26 +1281,21 @@ FROM selected_hierarchy_virtual_upa final
             THEN new_upa.virtual_upa_area
         ELSE acc.upa_user_area
     END                                     AS upa_user_area,
-    CASE 
-        WHEN new_upa.upa_id IS NOT NULL 
-            THEN new_upa.virtual_upa_country 
-        ELSE acc.upa_ad_country
-    END                                     AS upa_user_country,
-    CASE 
-        WHEN new_upa.upa_id IS NOT NULL 
-            THEN new_upa.virtual_upa_zip_code 
-        ELSE acc.upa_ad_zip_code
-    END                                     AS upa_user_zip_code,
     
     
     acc.lam_dev_count_bin_rank,
     acc.lam_dev_count_bin_name,
+
     -- Public Sector
     CASE
         WHEN MAX(acc.is_public_sector_flag) = 1
             THEN 'Public'
         ELSE 'Private'
     END                             AS sector_type,
+    
+    -- Customer score used in maps for account visualization
+    MAX(acc.customer_score) AS customer_score,
+    
     MAX(acc.is_public_sector_flag)      AS is_public_sector_flag,
     
     
@@ -1401,7 +1408,7 @@ FROM selected_hierarchy_virtual_upa final
     LEFT JOIN final_virtual_upa new_upa
         ON new_upa.account_id = acc.account_id
         AND new_upa.report_fiscal_year = acc.report_fiscal_year
-  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
 
 )
 , final AS (
@@ -1409,12 +1416,25 @@ FROM selected_hierarchy_virtual_upa final
   SELECT
       
     acc.*, 
-    upa.arr             AS upa_arr,
     
-    -- 2022-06-28 JK: account_family_arr - temp solution adding a column with upa_arr for all accounts within the same upa family
-    -- this will be updated with ARR bucket based solution later (e.g. 0-50k, 50k-100k, etc.)
-    -- upa.arr AS account_family_arr,
-
+    CASE 
+      WHEN upa.arr > 0 AND upa.arr < 5000
+        THEN '1. 0-5k ARR'
+      WHEN upa.arr >= 5000 AND upa.arr < 10000
+        THEN '2. 0-10k ARR'
+      WHEN upa.arr >= 10000 AND upa.arr < 50000
+        THEN '3. 10k-50k ARR'
+      WHEN upa.arr >= 50000 AND upa.arr < 100000
+        THEN '4. 50K-100k ARR'
+      WHEN upa.arr >= 100000 AND upa.arr < 500000
+        THEN '5. 100k-500k ARR'
+      WHEN upa.arr >= 500000 AND upa.arr < 1000000
+        THEN '6. 500k-1M ARR'     
+      WHEN upa.arr >= 500000 AND upa.arr < 1000000
+        THEN '7. >=1M ARR' 
+      ELSE 'n/a'
+    END    AS account_family_arr_bin_name,
+    
     COALESCE(upa.potential_users,0)                 AS upa_potential_users,
     COALESCE(upa.licenses,0)                        AS upa_licenses,
     COALESCE(upa.linkedin_developer,0)              AS upa_linkedin_developer,
@@ -1433,13 +1453,13 @@ FROM selected_hierarchy_virtual_upa final
     
     COALESCE(virtual.virtual_upa_id,acc.upa_id)                             AS virtual_upa_id,
     COALESCE(virtual.virtual_upa_name,acc.upa_name)                         AS virtual_upa_name,
-    COALESCE(virtual.virtual_upa_segment,acc.upa_user_segment)              AS virtual_upa_segment,
+    COALESCE(virtual.virtual_upa_segment,acc.upa_ad_segment)                AS virtual_upa_ad_segment,
     COALESCE(virtual.virtual_upa_geo,acc.upa_user_geo)                      AS virtual_upa_geo,
     COALESCE(virtual.virtual_upa_region,acc.upa_user_region)                AS virtual_upa_region,
     COALESCE(virtual.virtual_upa_area,acc.upa_user_area)                    AS virtual_upa_area,
-    COALESCE(virtual.virtual_upa_country,acc.upa_ad_country)                AS virtual_upa_country,
-    COALESCE(virtual.virtual_upa_state,acc.upa_ad_state)                    AS virtual_upa_state,
-    COALESCE(virtual.virtual_upa_zip_code,acc.upa_ad_zip_code)              AS virtual_upa_zip_code,
+    COALESCE(virtual.virtual_upa_country,acc.upa_ad_country)                AS virtual_upa_ad_country,
+    COALESCE(virtual.virtual_upa_state,acc.upa_ad_state)                    AS virtual_upa_ad_state,
+    COALESCE(virtual.virtual_upa_zip_code,acc.upa_ad_zip_code)              AS virtual_upa_ad_zip_code,
     COALESCE(virtual.virtual_upa_industry,acc.upa_industry)                 AS virtual_upa_industry,
     COALESCE(virtual.virtual_upa_owner_name,acc.upa_owner_name)             AS virtual_upa_owner_name,
     COALESCE(virtual.virtual_upa_owner_title_category,acc.upa_owner_title_category)   AS virtual_upa_owner_title_category,

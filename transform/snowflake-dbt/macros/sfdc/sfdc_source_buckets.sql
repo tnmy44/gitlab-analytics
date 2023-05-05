@@ -13,7 +13,7 @@
         THEN 'Marketing/Inbound'
       WHEN {{ lead_source }} in ('Advertisement', 'Conference', 'Field Event', 'Owned Event')
         THEN 'Marketing/Outbound'
-      WHEN {{ lead_source }} in ('Clearbit', 'Datanyze', 'Leadware', 'LinkedIn', 'Prospecting - LeadIQ', 'Prospecting - General', 'Prospecting', 'SDR Generated')
+      WHEN {{ lead_source }} in ('Clearbit', 'Datanyze','GovWin IQ', 'Leadware', 'LinkedIn', 'Prospecting - LeadIQ', 'Prospecting - General', 'Prospecting', 'SDR Generated')
         THEN 'Prospecting'
       WHEN {{ lead_source }} in ('Employee Referral', 'External Referral', 'Partner', 'Word of mouth')
         THEN 'Referral'
@@ -28,7 +28,7 @@
         THEN 'core'
       WHEN {{ lead_source }} in ('Consultancy Request','Contact Request','Content','Demo','Drift','Education','EE Version Check','Email Request','Email Subscription','Enterprise Trial','Gated Content - eBook','Gated Content - General','Gated Content - Report','Gated Content - Video','Gated Content - Whitepaper','GitLab.com','MovingtoGitLab','Newsletter','OSS','Request - Community','Request - Contact','Request - Professional Services','Request - Public Sector','Security Newsletter','Startup Application','Web','Web Chat','White Paper')
         THEN 'inbound'
-      WHEN {{ lead_source }} in ('AE Generated', 'Clearbit','Datanyze','DiscoverOrg','Gemnasium','GitLab Hosted','Gitorious','gmail','Leadware','LinkedIn','Live Event','Prospecting','Prospecting - General','Prospecting - LeadIQ','SDR Generated','seamless.ai','Zoominfo')
+      WHEN {{ lead_source }} in ('AE Generated', 'Clearbit','Datanyze','DiscoverOrg','Gemnasium','GitLab Hosted','Gitorious','gmail','GovWin IQ','Leadware','LinkedIn','Live Event','Prospecting','Prospecting - General','Prospecting - LeadIQ','SDR Generated','seamless.ai','Zoominfo')
         THEN 'outbound'
       WHEN {{ lead_source }} in ('Advertisement', 'Conference', 'Executive Roundtable', 'Field Event', 'Owned Event','Promotion','Virtual Sponsorship')
         THEN 'paid demand gen'

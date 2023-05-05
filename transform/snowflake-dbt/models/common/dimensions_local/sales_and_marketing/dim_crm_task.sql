@@ -82,7 +82,34 @@ WITH prep_crm_task AS (
     prep_crm_task.zoom_app_use_personal_zoom_meeting_id,
     prep_crm_task.zoom_app_join_before_host,
     prep_crm_task.zoom_app_make_it_zoom_meeting,
-    prep_crm_task.chorus_call_id
+    prep_crm_task.chorus_call_id,
+
+    -- Flags
+    prep_crm_task.is_reminder_task,
+    prep_crm_task.is_completed_task,
+    prep_crm_task.is_gainsight_integration_user_task,
+    prep_crm_task.is_demand_gen_task,
+    prep_crm_task.is_demo_task,
+    prep_crm_task.is_workshop_task,
+    prep_crm_task.is_meeting_task,
+    prep_crm_task.is_email_task,
+    prep_crm_task.is_incoming_email_task,
+    prep_crm_task.is_outgoing_email_task,
+    prep_crm_task.is_high_priority_email_task,
+    prep_crm_task.is_low_priority_email_task,
+    prep_crm_task.is_normal_priority_email_task,
+    prep_crm_task.is_call_task,
+    prep_crm_task.is_call_longer_1min_task,
+    prep_crm_task.is_high_priority_call_task,
+    prep_crm_task.is_low_priority_call_task,
+    prep_crm_task.is_normal_priority_call_task,
+    prep_crm_task.is_not_answered_call_task,
+    prep_crm_task.is_answered_meaningless_call_task,
+    prep_crm_task.is_answered_meaningfull_call_task,
+    prep_crm_task.is_opportunity_initiation_email_task,
+    prep_crm_task.is_opportunity_followup_email_task,
+    prep_crm_task.is_opportunity_initiation_call_task,
+    prep_crm_task.is_opportunity_followup_call_task
 
     FROM prep_crm_task
 
@@ -94,5 +121,5 @@ WITH prep_crm_task AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-12-05",
-    updated_date="2022-12-05"
+    updated_date="2023-03-13"
 ) }}

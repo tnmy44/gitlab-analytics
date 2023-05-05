@@ -37,3 +37,10 @@ models:
           - not_null
       - name: forecast_value
       - name: is_updated
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - fiscal_quarter
+            - week_start_date 
+            - crm_user_id
+            - field_name

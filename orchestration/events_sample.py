@@ -18,10 +18,17 @@ def main(engine: Engine) -> None:
     CREATE OR REPLACE
     TABLE raw.snowplow.gitlab_events_sample
     COPY grants AS
-    SELECT *
+    WITH raw AS (
+    SELECT * EXCLUDE (geo_zipcode, geo_latitude, geo_longitude, user_ipaddress)
     FROM raw.snowplow.gitlab_events
     WHERE uploaded_at::DATE > dateadd(day, -7, current_date)::DATE
-    LIMIT 5000000
+    LIMIT 5000000)
+    SELECT *,
+    NULL AS geo_zipcode,
+    NULL AS geo_latitude,
+    NULL AS geo_longitude,
+    NULL AS user_ipaddress
+    FROM raw
     """
 
     gitlab_grant_query = """
@@ -31,7 +38,6 @@ def main(engine: Engine) -> None:
     query_list = [gitlab_create_query, gitlab_grant_query]
 
     for query in query_list:
-
         try:
             logging.info("Executing Query: {}".format(query))
             connection = engine.connect()

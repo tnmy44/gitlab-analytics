@@ -292,7 +292,6 @@ for source_name, config in config_dict.items():
         )
 
         with extract_dag:
-
             # Actual PGP extract
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
@@ -327,8 +326,8 @@ for source_name, config in config_dict.items():
                         "TASK_INSTANCE": "{{ task_instance_key_str }}",
                         "LAST_LOADED": get_last_loaded(config["dag_name"]),
                     },
-                    affinity=get_affinity(False),
-                    tolerations=get_toleration(False),
+                    affinity=get_affinity("production"),
+                    tolerations=get_toleration("production"),
                     arguments=[incremental_cmd],
                     do_xcom_push=True,
                 )
@@ -343,7 +342,6 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
@@ -372,8 +370,8 @@ for source_name, config in config_dict.items():
                             **config["env_vars"],
                             "TASK_INSTANCE": "{{ task_instance_key_str }}",
                         },
-                        affinity=get_affinity(False),
-                        tolerations=get_toleration(False),
+                        affinity=get_affinity("production"),
+                        tolerations=get_toleration("production"),
                         arguments=[sync_cmd],
                         do_xcom_push=True,
                     )
@@ -425,8 +423,8 @@ for source_name, config in config_dict.items():
                             "task_id": task_identifier,
                         },
                         arguments=[scd_cmd],
-                        affinity=get_affinity(True),
-                        tolerations=get_toleration(True),
+                        affinity=get_affinity("scd"),
+                        tolerations=get_toleration("scd"),
                         do_xcom_push=True,
                     )
         globals()[f"{config['dag_name']}_db_sync"] = sync_dag

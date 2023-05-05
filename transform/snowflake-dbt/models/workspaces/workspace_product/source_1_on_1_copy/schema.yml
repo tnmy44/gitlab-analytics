@@ -1,6 +1,10 @@
 version: 2
 
 models:
+
+  - name: customers_db_reconciliations
+    description: Workspace model of the source data (deduplicated).
+
   - name: gitlab_dotcom_dast_profiles
     description: Workspace model of the source data (deduplicated).
 
@@ -15,7 +19,10 @@ models:
 
   - name: gitlab_dotcom_pages_domains
     description: Workspace model of the source data (deduplicated).
-
+    
+  - name: gitlab_dotcom_project_ci_cd_settings
+    description: Workspace model of the source data (deduplicated).
+    
   - name: gitlab_dotcom_project_features
     description: Workspace model of the source data (deduplicated).
 

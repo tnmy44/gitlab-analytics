@@ -7,7 +7,9 @@ This macro is a CASE WHEN statement that applies formatting to the sales hierarc
 {% enddocs %}
 
 {% docs sales_qualified_source_cleaning %}
-This macro applies correct mapping to the sales_qualified_source field. This is mapping BDR Generated sales qualified source to SDR Generated.
+This macro applies correct mapping to the sales_qualified_source field.
+* BDR -> SDR
+* Channel Generated -> Partner Generated
 {% enddocs %}
 
 {% docs sales_segment_cleaning %}
@@ -36,4 +38,22 @@ This macro stores all of the shared logic between the live and snapshot crm user
 
 {% docs sales_funnel_text_slugify %}
 This macro is a removes spaces, special characters, and capital letters from text fields taken from a sheetload filled out by the Finance team to complete the sales funnel targets.
+{% enddocs %}
+
+{% docs sales_qualified_source_grouped %}
+This macro overwrites the sales qualified source to standardize on current business terminology and groups other sales qualifed sources into a common category.
+* BDR -> SDR
+* Channel Generated -> Partner Generated
+* LIKE ANY ('Web%', 'Missing%', 'Other') -> Web Direct Generated
+{% enddocs %}
+
+{% docs sqs_bucket_engagement %}
+This macro groups opportunities into partner generated or co-sell based on the sales qualified source.
+* If Partner Generated -> Partner Sourced
+* If not Partner Generated -> 'Co-sell'
+{% enddocs %}
+
+{% docs deal_path_cleaning %}
+This macro applies correct mapping to the deal_path field based on current business terminology.
+* If Channel -> Partner
 {% enddocs %}

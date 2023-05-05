@@ -39,12 +39,13 @@
 
 ), license_subscriptions AS (
 
-    SELECT DISTINCT
+    SELECT
       dim_date.first_day_of_month                                                 AS reporting_month,
       dim_license_id                                                              AS license_id,
       dim_license.license_md5                                                     AS license_md5,
       dim_license.license_sha256                                                  AS license_sha256,
       dim_license.company                                                         AS license_company_name,
+      dim_license.license_expire_date                                             AS license_expire_date,
       subscription_source.subscription_name_slugify                               AS original_subscription_name_slugify,
       dim_subscription.dim_subscription_id                                        AS dim_subscription_id,
       dim_subscription.subscription_start_date                                    AS subscription_start_date,
@@ -62,7 +63,7 @@
       dim_crm_accounts.parent_crm_account_owner_team                              AS parent_crm_account_owner_team,
       dim_crm_accounts.parent_crm_account_sales_territory                         AS parent_crm_account_sales_territory,
       dim_crm_accounts.technical_account_manager                                  AS technical_account_manager,
-      IFF(MAX(mrr) > 0, TRUE, FALSE)                                              AS is_paid_subscription,
+      MAX(mrr)                                                                    AS max_monthly_mrr,
       MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))  AS is_program_subscription,
       ARRAY_AGG(DISTINCT dim_product_detail.product_tier_name)
         WITHIN GROUP (ORDER BY dim_product_detail.product_tier_name ASC)          AS product_category_array,
@@ -90,7 +91,7 @@
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
     INNER JOIN dim_date
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=22)}}
+    {{ dbt_utils.group_by(n=23)}}
 
 
   ), latest_subscription AS (
@@ -161,7 +162,13 @@
         COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_owner_team     , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_owner_team     ) AS parent_crm_account_owner_team,
         COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_sales_territory, license_subscriptions_w_latest_subscription_sha256.parent_crm_account_sales_territory) AS parent_crm_account_sales_territory,
         COALESCE(license_subscriptions_w_latest_subscription_md5.technical_account_manager         , license_subscriptions_w_latest_subscription_sha256.technical_account_manager         ) AS technical_account_manager,
-        COALESCE(license_subscriptions_w_latest_subscription_md5.is_paid_subscription,license_subscriptions_w_latest_subscription_sha256.is_paid_subscription, FALSE)             AS is_paid_subscription,
+        CASE
+          WHEN license_subscriptions_w_latest_subscription_sha256.license_expire_date < dim_ping_instance.ping_created_at THEN FALSE
+          WHEN license_subscriptions_w_latest_subscription_md5.license_expire_date < dim_ping_instance.ping_created_at THEN FALSE
+          WHEN license_subscriptions_w_latest_subscription_sha256.max_monthly_mrr > 0 THEN TRUE
+          WHEN license_subscriptions_w_latest_subscription_md5.max_monthly_mrr > 0 THEN TRUE
+          ELSE FALSE
+        END                                                                                                                             AS is_paid_subscription,
         COALESCE(license_subscriptions_w_latest_subscription_md5.is_program_subscription,license_subscriptions_w_latest_subscription_sha256.is_program_subscription, FALSE)       AS is_program_subscription,
         dim_ping_instance.ping_delivery_type                                                                                            AS ping_delivery_type,
         dim_ping_instance.ping_edition                                                                                                  AS ping_edition,
@@ -292,9 +299,9 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@rbacovic",
+    updated_by="@mdrussell",
     created_date="2022-03-11",
-    updated_date="2022-12-22"
+    updated_date="2023-03-29"
 ) }}
 
 {% endmacro %}

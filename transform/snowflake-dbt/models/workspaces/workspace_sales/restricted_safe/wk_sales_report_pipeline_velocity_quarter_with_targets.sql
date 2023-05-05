@@ -55,7 +55,7 @@ WITH report_pipeline_velocity_quarter AS (
      base.close_fiscal_quarter_date,
      -------------------------
      -- keys
-     base.report_user_segment_geo_region_area_sqs_ot,
+     base.report_user_segment_geo_region_area_sqs_ot AS report_user_segment_geo_region_area_sqs_ot,
      -------------------------
 
      base.target_net_arr,
@@ -173,7 +173,8 @@ WITH report_pipeline_velocity_quarter AS (
   SELECT 
     agg.*,
 
-    agg_demo_keys.report_opportunity_user_segment,     
+    -- agg_demo_keys.report_opportunity_user_segment,
+    agg_demo_keys.report_opportunity_user_segment,
     agg_demo_keys.report_opportunity_user_geo,
     agg_demo_keys.report_opportunity_user_region,    
     agg_demo_keys.report_opportunity_user_area,  
@@ -182,7 +183,6 @@ WITH report_pipeline_velocity_quarter AS (
     agg_demo_keys.sales_team_vp_level,
     agg_demo_keys.sales_team_avp_rd_level,
     agg_demo_keys.sales_team_asm_level,
-    agg_demo_keys.deal_category,
     agg_demo_keys.deal_group,
     agg_demo_keys.sales_qualified_source,
     agg_demo_keys.sales_team_rd_asm_level,
@@ -208,6 +208,7 @@ WITH report_pipeline_velocity_quarter AS (
 
     agg_demo_keys.key_segment_geo_area,
 
+    -- agg_demo_keys.report_user_segment_geo_region_area
     agg_demo_keys.report_user_segment_geo_region_area
 
   FROM pipeline_velocity_with_targets_per_day agg

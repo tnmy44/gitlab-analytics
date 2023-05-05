@@ -1,0 +1,8 @@
+metric_backend,free,paid,internal
+HTTPs Git Data Transfer,0.33333,0.33333,0.33333
+Registry Data Transfer,0.33333,0.33333,0.33333
+API Data Transfer,0.33333,0.33333,0.33333
+Web Data Transfer,0.33333,0.33333,0.33333
+Pages Data Transfer,0.33333,0.33333,0.33333
+WebSockets Data Transfer,0.33333,0.33333,0.33333
+SSH Data Transfer,0.33333,0.33333,0.33333

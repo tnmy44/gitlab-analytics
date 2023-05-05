@@ -5,9 +5,8 @@
 WITH source AS (
     
     SELECT *
-    FROM {{ ref('dim_issue') }} 
-    WHERE ultimate_parent_namespace_id IN (6543, 9970)
-      AND ARRAY_CONTAINS('infradev'::VARIANT, labels)
+    FROM {{ ref('engineering_issues') }} 
+    WHERE ARRAY_CONTAINS('infradev'::VARIANT, labels)
 )
 
 SELECT *

@@ -2,9 +2,16 @@ version: 2
 
 models:
   - name: mart_crm_task
-    description: '{{ doc("mart_crm_task") }}'
+    description: "Record of all [Salesforce Tasks](https://help.salesforce.com/s/articleView?id=sf.tasks.htm&type=5) related to leads, contacts, opportunities, and accounts."
     columns:
       - name: dim_crm_task_sk
+        description: '{{ doc("dim_crm_task_sk") }}'
         tests:
           - not_null
           - unique
+      - name: full_comments
+        meta:
+           masking_policy: data_science_sensitive
+      - name: task_subject
+        meta:
+           masking_policy: data_science_sensitive

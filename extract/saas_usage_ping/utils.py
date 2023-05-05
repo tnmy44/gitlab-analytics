@@ -90,8 +90,6 @@ class Utils:
         "usage_activity_by_stage.configure.clusters_platforms_eks",
         "usage_activity_by_stage_monthly.configure.clusters_platforms_gke",
         "usage_activity_by_stage_monthly.configure.clusters_platforms_eks",
-        "usage_activity_by_stage.release.users_creating_deployment_approvals",
-        "usage_activity_by_stage_monthly.release.users_creating_deployment_approvals",
     )
 
     def __init__(self):

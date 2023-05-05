@@ -10,11 +10,10 @@ from gitlabdata.orchestration_utils import (
 
 
 if __name__ == "__main__":
-
     file_dict = dict(
         commit_stats="commitStats",
-        red_master_stats="redMasterStats",
-        development_team_members="developmentTeamMembers",
+        # red_master_stats="redMasterStats",
+        # development_team_members="developmentTeamMembers",
     )
 
     logging.basicConfig(stream=sys.stdout, level=20)
@@ -26,7 +25,6 @@ if __name__ == "__main__":
 
     for key, value in file_dict.items():
         logging.info(f"Downloading {value} to JSON file.")
-
         command = f"curl {base_url}{value} > {key}.json"
         print(command)
         p = subprocess.run(command, shell=True)

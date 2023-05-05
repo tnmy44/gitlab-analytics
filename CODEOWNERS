@@ -114,16 +114,13 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /transform/snowflake-dbt/models/sources/netsuite/           @jjstark @paul_armstrong @iweeks @chrissharp @michellecooper
 /transform/snowflake-dbt/models/legacy/netsuite/            @iweeks @chrissharp @michellecooper
 
-/transform/snowflake-dbt/models/sources/pmg                 @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks
-/transform/snowflake-dbt/models/legacy/pmg                  @michellecooper @jeanpeguero @iweeks
-
 /transform/snowflake-dbt/models/sources/qualtrics           @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks
 /transform/snowflake-dbt/models/legacy/qualtrics            @michellecooper @jeanpeguero @iweeks
 
 /transform/snowflake-dbt/models/sources/saas_usage_ping     @vedprakash @rbacovic @jjstark
 
-/transform/snowflake-dbt/models/sources/sfdc/               @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks
-/transform/snowflake-dbt/models/legacy/sfdc/                @michellecooper @jeanpeguero @iweeks
+/transform/snowflake-dbt/models/sources/sfdc/               @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks @chrissharp
+/transform/snowflake-dbt/models/legacy/sfdc/                @michellecooper @jeanpeguero @iweeks @chrissharp
 
 /transform/snowflake-dbt/models/sources/snowflake/          @jjstark @paul_armstrong @pempey @iweeks
 /transform/snowflake-dbt/models/legacy/snowflake/           @pempey @iweeks
@@ -143,15 +140,17 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 transform/snowflake-dbt/models/marts/pumps/                 @jjstark @paul_armstrong @dparker @Karuna16
 transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armstrong @dparker @Karuna16
 
-/transform/snowflake-dbt/models/workspaces/workspace_sales          @nfiguera @mvilain
+/transform/snowflake-dbt/models/workspaces/workspace_sales/          @nfiguera @mvilain
 
-/transform/snowflake-dbt/models/workspaces/workspace_finance        @statimatla @fkurniadi @james.shen @cmestel @cmachado1 @iweeks @michellecooper @jeanpeguero @vagrawalg
+/transform/snowflake-dbt/models/workspaces/workspace_finance/        @james.shen @cmestel @iweeks @michellecooper @jeanpeguero @vagrawalg
 
-/transform/snowflake-dbt/models/workspaces/workspace_engineering    @pempey @iweeks @snalamaru @meks @lmai1
+/transform/snowflake-dbt/models/workspaces/workspace_engineering/    @pempey @iweeks @meks @lmai1 @clem.lr 
 
-/transform/snowflake-dbt/models/workspaces/workspace_people         @pempey @iweeks @aperez349
+/transform/snowflake-dbt/models/workspaces/workspace_people/         @pempey @iweeks @aperez349
 
-/transform/snowflake-dbt/models/workspaces/workspace_customer_success @mdrussell @snalamaru @chrissharp
+/transform/snowflake-dbt/models/workspaces/workspace_customer_success/  @mdrussell @snalamaru @chrissharp
+
+/transform/snowflake-dbt/models/workspaces/workspace_product/           @cbraza @matthewpetersen @eneuberger @nraisinghani @mdrussell @snalamaru @jeanpeguero @dpeterson1 @nhervas
 
 # ======
 # dbt data file Overwrites
@@ -159,12 +158,11 @@ transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armst
 /transform/snowflake-dbt/data/cost_center_division_department_mapping.csv               @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/engineering_productivity_metrics_projects_to_include.csv  @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/excluded.csv                                              @iweeks @snalamaru @pempey
-/transform/snowflake-dbt/data/google_analytics_custom_dimension_indexes.csv             @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/handbook_file_classification_mapping.csv                  @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/historical_counts_maintainers_engineers.csv               @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/netsuite_expense_cost_category.csv                        @iweeks @snalamaru @pempey
-/transform/snowflake-dbt/data/projects_part_of_product.csv                              @clefelhocz1
-/transform/snowflake-dbt/data/projects_part_of_product_ops.csv                          @clefelhocz1
+/transform/snowflake-dbt/data/projects_part_of_product.csv                              @clefelhocz1 @timzallmann @cdu1 @wayne @sgoldstein @dsatcher @m_gill @jeromezng
+/transform/snowflake-dbt/data/projects_part_of_product_ops.csv                          @clefelhocz1 @timzallmann @cdu1 @wayne @sgoldstein @dsatcher @m_gill @jeromezng
 /transform/snowflake-dbt/data/raw_netsuite_currencies.csv                               @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/seeds.md                                                  @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/seeds.yml                                                 @iweeks @snalamaru @pempey

@@ -199,3 +199,9 @@ Source model for SFDC custom object representing a quote rate plan from Zuora.
 Source model for SFDC custom object representing a quote rate plan charge from Zuora.
 
 {% enddocs %}
+
+{% docs sfdc_customer_subscription_source %}
+
+Custom source table: This table contains customer subscription data.
+
+{% enddocs %}

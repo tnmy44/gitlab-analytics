@@ -107,6 +107,37 @@
     fct_crm_task.account_or_opportunity_count,
     fct_crm_task.lead_or_contact_count,
 
+    -- Flags
+    dim_crm_task.is_reminder_task,
+    dim_crm_task.is_completed_task,
+    dim_crm_task.is_gainsight_integration_user_task,
+    dim_crm_task.is_demand_gen_task,
+    dim_crm_task.is_demo_task,
+    dim_crm_task.is_workshop_task,
+    dim_crm_task.is_meeting_task,
+    dim_crm_task.is_email_task,
+    dim_crm_task.is_incoming_email_task,
+    dim_crm_task.is_outgoing_email_task,
+    dim_crm_task.is_high_priority_email_task,
+    dim_crm_task.is_low_priority_email_task,
+    dim_crm_task.is_normal_priority_email_task,
+    dim_crm_task.is_call_task,
+    dim_crm_task.is_call_longer_1min_task,
+    dim_crm_task.is_high_priority_call_task,
+    dim_crm_task.is_low_priority_call_task,
+    dim_crm_task.is_normal_priority_call_task,
+    dim_crm_task.is_not_answered_call_task,
+    dim_crm_task.is_answered_meaningless_call_task,
+    dim_crm_task.is_answered_meaningfull_call_task,
+    dim_crm_task.is_opportunity_initiation_email_task,
+    dim_crm_task.is_opportunity_followup_email_task,
+    dim_crm_task.is_opportunity_initiation_call_task,
+    dim_crm_task.is_opportunity_followup_call_task,
+    fct_crm_task.hours_waiting_before_task,
+    fct_crm_task.hours_waiting_before_email_task,
+    fct_crm_task.call_task_duration_in_seconds,
+    fct_crm_task.hours_waiting_before_call_task,
+
     -- Metadata
     fct_crm_task.task_created_by_id,
     fct_crm_task.task_created_date_id,
@@ -127,5 +158,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-12-05",
-    updated_date="2022-12-05"
+    updated_date="2023-03-13"
 ) }}

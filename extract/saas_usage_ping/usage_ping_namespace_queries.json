@@ -3442,5 +3442,35 @@
     "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id, COUNT(status_checks.id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_external_status_checks_dedupe_source AS status_checks LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = status_checks.project_id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id GROUP BY 1",
     "time_window_query": false,
     "level": "namespace"
+  },
+  {
+    "counter_name": "counts_monthly.snippets",
+    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id, COUNT(snippets.id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_snippets_dedupe_source AS snippets LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = snippets.project_id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE snippets.type IN ('PersonalSnippet', 'ProjectSnippet') AND snippets.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
+    "time_window_query": true,
+    "level": "namespace"
+  },
+  {
+    "counter_name": "usage_activity_by_stage_monthly.govern.merged_merge_requests_using_approval_rules_distinct",
+    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id, COUNT(merge_requests.id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_merge_requests_dedupe_source AS merge_requests INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_approval_merge_request_rules_dedupe_source AS approval_rules ON merge_requests.id = approval_rules.merge_request_id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = merge_requests.source_project_id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE merge_requests.state_id = 3 AND merge_requests.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
+    "time_window_query": true,
+    "level": "namespace"
+  },
+  {
+    "counter_name": "usage_activity_by_stage_monthly.manage.custom_compliance_frameworks",
+    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id, COUNT(frameworks.id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_compliance_management_frameworks_dedupe_source AS frameworks LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON frameworks.namespace_id = namespaces_xf.namespace_id WHERE frameworks.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
+    "time_window_query": true,
+    "level": "namespace"
+  },
+  {
+    "counter_name": "usage_activity_by_stage_monthly.govern.distinct_count_project_id_from_security_orchestration_policy_configurations",
+    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id, COUNT(DISTINCT policy_config.project_id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_security_orchestration_policy_configurations_dedupe_source AS policy_config LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = policy_config.project_id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE policy_config.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
+    "time_window_query": true,
+    "level": "namespace"
+  },
+  {
+    "counter_name": "usage_activity_by_stage_monthly.govern.user_merge_requests_for_projects_with_assigned_security_policy_project",
+    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id, COUNT(DISTINCT merge_requests.author_id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_merge_requests_dedupe_source AS merge_requests INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_security_orchestration_policy_configurations_dedupe_source AS policy_config ON merge_requests.target_project_id = policy_config.project_id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = merge_requests.target_project_id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE merge_requests.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
+    "time_window_query": true,
+    "level": "namespace"
   }
 ]

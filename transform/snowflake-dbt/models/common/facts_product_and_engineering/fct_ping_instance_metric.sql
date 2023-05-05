@@ -97,7 +97,8 @@
       main_edition                                        AS main_edition,
       metrics_path                                        AS metrics_path,
       metric_value                                        AS metric_value,
-      has_timed_out                                       AS has_timed_out
+      has_timed_out                                       AS has_timed_out,
+      ping_type                                           AS ping_type
     FROM add_country_info_to_usage_ping
     LEFT JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
@@ -151,7 +152,8 @@
       is_license_mapped_to_subscription                                                                           AS is_license_mapped_to_subscription,
       is_license_subscription_id_valid                                                                            AS is_license_subscription_id_valid,
       IFF(dim_license_id IS NULL, FALSE, TRUE)                                                                    AS is_service_ping_license_in_customerDot,
-      'VERSION_DB'                                                                                                AS data_source
+      'VERSION_DB'                                                                                                AS data_source,
+      ping_type                                                                                                   AS ping_type
   FROM joined_payload
 
 )

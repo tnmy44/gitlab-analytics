@@ -66,10 +66,6 @@ GAINSIGHT_BUCKET_NAME = Secret(
 )
 
 # Postgres
-PG_USERNAME = Secret("env", "PG_USERNAME", "airflow", "PG_USERNAME")
-PG_ADDRESS = Secret("env", "PG_ADDRESS", "airflow", "PG_ADDRESS")
-PG_PASSWORD = Secret("env", "PG_PASSWORD", "airflow", "PG_PASSWORD")
-PG_DATABASE = Secret("env", "PG_DATABASE", "airflow", "PG_DATABASE")
 PG_PORT = Secret("env", "PG_PORT", "airflow", "PG_PORT")
 
 # Customers DB
@@ -319,11 +315,17 @@ SNOWFLAKE_SALES_ANALYTICS_LOAD_ROLE = Secret(
 
 CLARI_API_KEY = Secret("env", "CLARI_API_KEY", "airflow", "CLARI_API_KEY")
 
-
 # Writing to GSheets from Jupyter notebooks
 GSHEETS_SERVICE_ACCOUNT_CREDENTIALS = Secret(
     "env",
     "GSHEETS_SERVICE_ACCOUNT_CREDENTIALS",
     "airflow",
     "GSHEETS_SERVICE_ACCOUNT_CREDENTIALS",
+)
+
+LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY = Secret(
+    "env",
+    "LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY",
+    "airflow",
+    "LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY",
 )

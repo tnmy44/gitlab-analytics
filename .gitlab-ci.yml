@@ -141,7 +141,7 @@ clone_stop:
 
 .python_critical_check: &python_critical_check
   stage: 🛑🐍 Python Critical
-  image: registry.gitlab.com/gitlab-data/data-image/ci-python-image:v1.0.26
+  image: registry.gitlab.com/gitlab-data/ci-python-image:v0.0.1
   before_script:
     - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
   tags:
@@ -155,7 +155,7 @@ clone_stop:
 
 .python_check: &python_check
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/data-image/ci-python-image:v1.0.26
+  image: registry.gitlab.com/gitlab-data/ci-python-image:v0.0.1
   before_script:
     - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
   tags:
@@ -244,7 +244,8 @@ clone_stop:
   <<: *yaml_validate
   script:
     - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < permissions/snowflake/roles.yml
-
+  allow_failure: false
+  
 .permifrost: &permifrost
   stage: 🐍 Python
   image: registry.gitlab.com/gitlab-data/permifrost:v0.13.1
@@ -266,6 +267,7 @@ clone_stop:
   script:
     - permifrost spec-test permissions/snowflake/roles.yml
   when: manual
+  allow_failure: false
 
 # ======
 # dbt docs to GitLab Pages
@@ -273,7 +275,7 @@ clone_stop:
 
 .pages_job_template: &pages_job_template
   stage: 📚 dbt Docs
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.23
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.1
   variables:
     SNOWFLAKE_ROLE: $SNOWFLAKE_TRANSFORM_ROLE
     SNOWFLAKE_WAREHOUSE: $SNOWFLAKE_TRANSFORM_WAREHOUSE

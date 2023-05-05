@@ -39,6 +39,12 @@
     prep_crm_task.account_or_opportunity_count,
     prep_crm_task.lead_or_contact_count,
 
+    -- Task durations
+    prep_crm_task.hours_waiting_before_task,
+    prep_crm_task.hours_waiting_before_email_task,
+    prep_crm_task.call_task_duration_in_seconds,
+    prep_crm_task.hours_waiting_before_call_task,
+
     -- Metadata
     prep_crm_task.task_created_by_id,
     {{ get_date_id('prep_crm_task.task_created_date') }}          AS task_created_date_id,
@@ -57,5 +63,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-12-05",
-    updated_date="2022-12-05"
+    updated_date="2023-02-15"
 ) }}

@@ -4,6 +4,12 @@ Creates a base view with generated keys for the alliance type shared dimension a
 
 {% enddocs %}
 
+{% docs prep_app_release %}
+
+Creates base view with generated keys for application releaes. 
+
+{% enddocs %}
+
 {% docs prep_audit_event_details_clean %}
 
 All GitLab audit event details, with pii replaced with hashes. Created by a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
@@ -54,9 +60,37 @@ This model assumes that only one priority is placed in a given description or no
 
 {% enddocs %}
 
+{% docs prep_ptp_scores_by_user %}
+
+Takes the scores from prep_ptpt_scores_by_user and prep_ptpf_scores_by_user, and return a single score per user.
+
+The rules for de duplication of scores are:
+
+1. If user only has PtP trial score then use that score
+1. If user only has PtP free score then use that score
+1. If user has both PtP trial score and free score:
+
+   a. If Trial PTP Score is 4 or 5 stars then use Trial PtP
+   
+   b. If Free PtP Score is 4 or 5 stars then use Free Ptp
+
+   c. Else use Trial PtP Score
+
+The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
+
+{% enddocs %}
+
 {% docs prep_ptpt_scores_by_user %}
 
 Takes the scores from ptpt_scores, transforms it to user / email address grain and uses the latest score date available.
+
+The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
+
+{% enddocs %}
+
+{% docs prep_ptpf_scores_by_user %}
+
+Takes the scores from ptpf_scores, transforms it to user / email address grain and uses the latest score date available. It only syncs contacts with a `score_group >= 4`.
 
 The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
 
@@ -81,21 +115,21 @@ Creates a base view with generated keys for the user and live crm sales hierarch
 
 {% enddocs %}
 
-{% docs prep_crm_user_hierarchy_live %}
+{% docs prep_crm_user_hierarchy %}
 
-Creates a base view with generated keys for the live crm user hierarchy shared dimensions and references in facts.
-
-{% enddocs %}
-
-{% docs prep_crm_user_hierarchy_stamped %}
-
-Creates a base view with generated keys for the stamped/historical crm user hierarchy shared dimensions and references in facts. This is built from the stamped fields in the opportunity object and will be used in sales funnel analyses.
+Creates a base view with generated keys for the CRM user hierarchy (live and historical) shared dimensions and references in facts. This is built from the stamped fields in the opportunity object, user roles, and, sales hierarchy areas used in target setting. It will be used in sales funnel analyses.
 
 {% enddocs %}
 
 {% docs prep_gitlab_dotcom_application_settings_monthly %}
 
 This model captures a historical record of GitLab's default application settings for CI minutes and storage at a monthly grain.
+
+{% enddocs %}
+
+{% docs prep_app_release_major_minor %}
+
+Creates base view with generated keys for application major and minor versions. 
 
 {% enddocs %}
 
@@ -593,5 +627,137 @@ Prep table to UNION all performance indicator yaml files and to build [`fct_perf
 This is modeled like a Type 2 Slowly Changing Dimension and therefore contains historical values from the PI files, starting on 2020-08-18 (when we started capturing this data). Instead of providing a snapshot for each day, this model captures a new record when changes occurred in the file, as noted by the `valid_from_date` and `valid_to_date`.
 
 All columns are pulled directly from the yaml files, with the exception of the following metadata columns: `performance_indicator_pk`, `_dbt_source_relation`, `unique_key`, `snapshot_date`, `date_first_added`, `valid_from_date`, `valid_to_date`.
+
+{% enddocs %}
+
+{% docs has_performance_timing_context %}
+
+A flag to indicate if the event has additional information in the context field related to `performance_timing`.
+
+{% enddocs %} 
+
+{% docs has_web_page_context %}
+
+A flag to indicate if the event has additional information in the context field related to `web_page`.
+
+{% enddocs %}
+
+{% docs has_ci_build_failed_context %}
+
+A flag to indicate if the event has additional information in the context field related to `ci_build_failed`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab).
+
+{% enddocs %}
+
+{% docs has_wiki_page_context %}
+
+A flag to indicate if the event has additional information in the context field related to `wiki_page`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
+
+{% enddocs %}
+
+{% docs has_gitlab_standard_context %}
+
+A flag to indicate if the event has additional information in the context field related to `gitlab_standard`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
+
+{% enddocs %}
+
+{% docs has_email_campaigns_context %}
+
+A flag to indicate if the event has additional information in the context field related to `email_campaigns`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
+
+{% enddocs %}
+
+{% docs has_gitlab_service_ping_context %}
+
+A flag to indicate if the event has additional information in the context field related to `gitlab_service_ping`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
+
+{% enddocs %}
+
+{% docs has_design_management_context %}
+
+A flag to indicate if the event has additional information in the context field related to `design_management`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
+
+{% enddocs %}
+
+{% docs has_customer_standard_context %}
+
+A flag to indicate if the event has additional information in the context field related to `customer_standard`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
+
+{% enddocs %}
+
+{% docs has_secure_scan_context %}
+
+A flag to indicate if the event has additional information in the context field related to `secure_scan`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
+
+{% enddocs %}
+
+{% docs has_gitlab_experiment_context  %}
+
+A flag to indicate if the event has additional information in the context field related to `gitlab_experiment`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
+
+{% enddocs %}
+
+{% docs has_subscription_auto_renew_context %}
+
+A flag to indicate if the event has additional information in the context field related to `subscription_auto_renew`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab)
+
+{% enddocs %}
+
+{% docs dim_behavior_contexts_sk %}
+
+A surrogate key for each distinct combination of context flags.  This is built as a conceptual [junk dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/junk-dimension/) and can be used to build a dimension table to limit the number of columns on a fct table.
+
+{% enddocs %}
+
+{% docs user_city %}
+
+The city associated with the user related to the event.
+
+{% enddocs %}
+
+{% docs user_country %}
+
+The country code associated with the user related to the event.
+
+{% enddocs %}
+
+{% docs user_region %}
+
+The region code associated with the user related to the event.
+
+{% enddocs %}
+
+{% docs user_region_name %}
+
+The region name associated with the user related to the event.
+
+{% enddocs %}
+
+{% docs user_timezone_name %}
+
+The name of the timezone associated with the user related to the event.
+
+{% enddocs %}
+
+{% docs dim_user_location_sk %}
+
+A surrogate key for the attributes of the user location.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
+
+{% enddocs %}
+
+{% docs prep_billing_account %}
+
+Prep model for merging the billing accounts data from both Zuora and CDot sources. This model will be used as a source model for creating `dim_billing_account` core business data object downstream.
+
+{% enddocs %}
+
+{% docs dim_billing_account_sk %}
+
+A surrogate key that uniquely identifes each row of the billing account table.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
+
+{% enddocs %}
+
+{% docs link_click_element_id %}
+
+The element id from the unstructured link click event
 
 {% enddocs %}

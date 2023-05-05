@@ -107,7 +107,7 @@ models:
             - unique
       
 
-    - name: wk_infradev_base
+    - name: issues_history
       description: >
         Table containing age metrics & related metadata for gitlab.com internal issues. Used for tracking internal work progress for things like Engineering Allocation & Corrective Actions
         These metrics are available for individual issues at daily level & can be aggregated up from there
@@ -124,8 +124,8 @@ models:
     - name: infradev_current_issue_users
       description: A model to generate a list of current assigned users on an issue. Not explicitly limited to the infradev team. 
 
-    - name: infradev_label_history
-      description: A model identify the valid historic range of specific labels that are explicitly related to the infradev team.
+    - name: labels_history
+      description: A model identify the valid historic range of specific labels.
 
     - name: infradev_namespace_path
       description: A model to concatenate the full namespace path, up to four levels deep.  Not explicitly limited to the infradev team.
@@ -150,5 +150,176 @@ models:
 
     - name: leading_organization_entry_dates
       description: The entry and exit dates of organizations that are admitted into our Leading Organization program
+
+    - name: internal_issues_enhanced
+      description: A model containing all issues. This model includes relevant and common flags that are used in engineering metrics.
+
+    - name: engineering_merge_requests
+      description: A model containing all MRs that affect our product. This model includes relevant and common flags that are used in engineering metrics.
+      columns: 
+        - name: merge_request_id
+          tests:
+            - not_null
+            - unique
+        - name: merge_request_iid
+          description: The ID appended to the merge request link
+        - name: author_id
+          description: The user_id that created the merge request
+        - name: is_created_by_bot
+          description: Boolean field that identifies whether the merge request was created by a bot
+        - name: assignee_id
+          description: The user_id that is assigned to the merge request
+        - name: project_id
+          description: The project_id related to the merge request
+        - name: target_project_id
+          description: The target_project_id related to the merge request
+        - name: merge_request_state
+          description: The merge_request_state related to the merge request
+        - name: created_at
+          description: When the merge request was created
+        - name: updated_at
+          description: When the merge request was updated
+        - name: merged_at
+          description: When the merge request was merged
+        - name: created_month
+          description: Which month the merge request was created
+        - name: merge_month
+          description: Which month the merge request was merged
+        - name: days_to_merge
+          description: Number of days it takes from when the merge request was created to merged
+        - name: merge_request_title
+          description: Title of merge request
+        - name: merge_request_description
+          description: Description of merge request
+        - name: milestone_id
+          description: The milestone_id related to the merge request
+        - name: milestone_title
+          description: The title of the related milestone_id
+        - name: milestone_description
+          description: The description of the related milestone_id
+        - name: namespace_id
+          description: The namespace_id related to the merge request
+        - name: labels
+          description: The labels on a merge request
+        - name: masked_label_title
+          description: String version of labels, separated by '|'
+        - name: is_community_contribution
+          description: Boolean field that identifies whether the merge request is a community contribution via labels
+        - name: is_security
+          description: Boolean field that identifies whether the merge request is related to security via labels
+        - name: priority_label
+          description: The value following a priority label ('priority::%'')
+        - name: severity_label
+          description: The value following a severity label ('severity::%'')
+        - name: group_label
+          description: The group that the merge request is related to. This is extracted from labels ('group::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: section_label
+          description: The section that the merge request is related to. This is extracted from labels ('section::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: stage_label
+          description: The stage that the merge request is related to. This is extracted from labels ('devops::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: type_label
+          description: The worktype type classification, defined as either a bug, maintenance, or feature.
+        - name: subtype_label
+          description: The worktype subtype classification that matches a type_label
+        - name: visibility_level
+          description: Indicate if the merge request lives in a private or public project
+        - name: full_group_path
+          description: The group path in the merge request URL
+        - name: url
+          description: Merge request URL
+
+    - name: engineering_issues
+      description: A model containing all issues that affect our product. This model includes relevant and common flags that are used in engineering metrics.
+      columns: 
+        - name: issue_id
+          tests:
+            - not_null
+            - unique
+        - name: issue_iid
+          description: The ID appended to the issue link
+        - name: author_id
+          description: The user_id that created the issue
+        - name: is_created_by_bot
+          description: Boolean field that identifies whether the issue was created by a bot
+        - name: project_id
+          description: The project_id related to the issue
+        - name: created_at
+          description: When the issue was created
+        - name: updated_at
+          description: When the issue was updated
+        - name: closed_at
+          description: When the issue was closed
+        - name: created_month
+          description: Which month the issue was created
+        - name: closed_month
+          description: Which month the issue was closed
+        - name: days_to_close
+          description: Number of days it takes from when the issue was created to closed
+        - name: issue_title
+          description: Title of issue
+        - name: issue_description
+          description: Description of issue
+        - name: milestone_id
+          description: The milestone_id related to the issue
+        - name: milestone_title
+          description: The title of the related milestone_id
+        - name: milestone_description
+          description: The description of the related milestone_id
+        - name: milestone_start_date
+          description: The start date of the milestone
+        - name: milestone_due_date
+          description: The due date of the milestone
+        - name: weight
+          description: The weight applied to the issue
+        - name: namespace_id
+          description: The namespace_id related to the issue
+        - name: labels
+          description: The labels on a issue
+        - name: masked_label_title
+          description: String version of labels, separated by '|'
+        - name: is_community_contribution
+          description: Boolean field that identifies whether the issue is a community contribution via labels
+        - name: is_security
+          description: Boolean field that identifies whether the issue is related to security via labels
+        - name: priority_label
+          description: The value following a priority label ('priority::%'')
+        - name: severity_label
+          description: The value following a severity label ('severity::%'')
+        - name: group_label
+          description: The group that the issue is related to. This is extracted from labels ('group::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: section_label
+          description: The section that the issue is related to. This is extracted from labels ('section::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: stage_label
+          description: The stage that the issue is related to. This is extracted from labels ('devops::%''), however, if a group is not in the latest yml file, it will be considered undefined.
+        - name: type_label
+          description: The worktype type classification, defined as either a bug, maintenance, or feature.
+        - name: subtype_label
+          description: The worktype subtype classification that matches a type_label
+        - name: workflow_label
+          description: The workflow label extracted from ('workflow::%') from issues
+        - name: visibility_level
+          description: Indicate if the issue lives in a private or public project
+        - name: full_group_path
+          description: The group path in the issue URL
+        - name: url
+          description: Issue URL
+
+    - name: merge_request_rate
+      description: A model containing merge request rate by department and group.
+      columns: 
+        - name: merge_month
+          description: Month the merge request was merged
+        - name: group_name
+          description: Group name
+        - name: department
+          description: Department name
+        - name: mrs
+          description: Count of merge requests
+        - name: employees
+          description: Count of employees
+        - name: mr_rate
+          description: Ratio of mrs to employees
+        - name: granularity_level
+          description: Department or group
     - name: internal_notes
       description: Table containing Gitlab.com notes from Epics, Issues and Merge Requests. It includes the namespace ID and the ultimate parent namespace ID.

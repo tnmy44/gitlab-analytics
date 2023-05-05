@@ -7,7 +7,7 @@ Please take notice of the new data source request [handbook page](https://about.
 To support the new data source triage process, try to complete the below checklist. If there is anything not sure or unknown, you can skip that point.
  
 * [ ] Prefix the issue name with 'New Data Source: ', e.g. 'New Data Source: NetSuite AP data'
-* [ ] Review the [current data available in the EDW](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) and confirm it concerns a new pipeline, or a change/extension of an existing pipeline:
+* [ ] Review the [current data available in the EDW](https://about.gitlab.com/handbook/business-technology/data-team/platform/#extract-and-load) and confirm it concerns a new pipeline, or a change/extension of an existing pipeline:
   - [ ] Complete new pipeline
   - [ ] Change/extension of an existing pipeline: `     `
 * [ ] Do any objects in this data source need to be snapshotted? If yes, please open separate issues to have the objects snapshotted.
@@ -24,7 +24,7 @@ To support the new data source triage process, try to complete the below checkli
  
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-standard.html#data-classification-levels#data-classification-levels))?
  - _`{data fields, columns, or objects}`_
-* [ ] Does this data have any agreed [SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#slos-service-level-objectives-by-data-source) attached to it? If not:
+* [ ] Does this data have any agreed [SLO](https://about.gitlab.com/handbook/business-technology/data-team/platform/#slos-service-level-objectives-by-data-source) attached to it? If not:
    * [ ] How often does the data need to be refreshed?
  
 ## People matrix

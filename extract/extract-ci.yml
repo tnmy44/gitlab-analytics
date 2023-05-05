@@ -67,8 +67,10 @@ qualtrics_sheetload:
 🛢gitlab_ops_pgp_test:
   <<: *extract_definition
   script:
+    - echo $MANIFEST_NAME
     - cd orchestration
-    - python ci_helpers.py use_proxy --instance_name ops-db-restore --command "python ../extract/postgres_pipeline/postgres_pipeline/main.py tap ../extract/postgres_pipeline/manifests/gitlab_ops_db_manifest.yaml --load_type test"
+    - python ci_helpers.py use_proxy --instance_name ops-db-restore --command "python ../extract/postgres_pipeline/postgres_pipeline/main.py tap ../extract/postgres_pipeline/manifests_decomposed/${MANIFEST_NAME}_db_manifest.yaml --load_type test"
   only:
     - merge_requests
+    - $MANIFEST_NAME
   when: manual

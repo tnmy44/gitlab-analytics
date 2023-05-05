@@ -96,10 +96,12 @@ WITH dim_billing_account AS (
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
       dim_crm_account.parent_crm_account_lam                                          AS parent_crm_account_lam,
       dim_crm_account.parent_crm_account_lam_dev_count                                AS parent_crm_account_lam_dev_count,
+      dim_crm_account.parent_crm_account_demographics_business_unit                   AS parent_crm_account_business_unit,
       dim_crm_account.parent_crm_account_demographics_sales_segment                   AS parent_crm_account_demographics_sales_segment,
       dim_crm_account.parent_crm_account_demographics_geo                             AS parent_crm_account_demographics_geo,
       dim_crm_account.parent_crm_account_demographics_region                          AS parent_crm_account_demographics_region,
       dim_crm_account.parent_crm_account_demographics_area                            AS parent_crm_account_demographics_area,
+      dim_crm_account.parent_crm_account_demographics_role_type                       AS parent_crm_account_demographics_role_type,
       dim_crm_account.parent_crm_account_demographics_territory                       AS parent_crm_account_demographics_territory,
       dim_crm_account.parent_crm_account_demographics_max_family_employee             AS parent_crm_account_demographics_max_family_employee,
       dim_crm_account.parent_crm_account_demographics_upa_country                     AS parent_crm_account_demographics_upa_country,
@@ -224,7 +226,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@michellecooper",
     created_date="2020-09-04",
-    updated_date="2022-08-21"
+    updated_date="2023-03-10"
 ) }}

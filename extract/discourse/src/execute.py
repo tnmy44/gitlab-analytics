@@ -24,7 +24,6 @@ def fixup_datetime_string_format(datetime_string: str) -> str:
 DISCOURSE_API_TOKEN = os.environ.get("DISCOURSE_API_TOKEN")
 
 if __name__ == "__main__":
-
     logging.basicConfig(stream=sys.stdout, level=20)
 
     parser = argparse.ArgumentParser()

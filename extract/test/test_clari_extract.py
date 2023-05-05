@@ -5,6 +5,7 @@ from datetime import datetime
 
 import pytest
 import requests
+import responses
 
 from extract.clari.src.clari import (
     _calc_fiscal_quarter,
@@ -136,27 +137,57 @@ def test_get_fiscal_quarter():
     assert res_q4 == actual_q4
 
 
+@responses.activate
 def test_make_request():
-    """Test requests"""
-    # Test that google request passes
-    request_type = "GET"
-    url = "https://www.google.com"
-    resp = make_request(request_type, url)
-    assert resp.status_code == 200
-
+    """
+    Test requests using mock 'responses' library.
+    Four checks:
+        1. invalid request_type throws correct error
+        2. 200 error returns valid response
+        3. 404 returns 404 error
+        4. 429 too many requests is handled correctly
+    """
+    url = "http://fake_url.com"
     # Test that an invalid request type throws an error
+    request_type = "nonexistent_request_type"
     error_str = "Invalid request type"
     with pytest.raises(ValueError) as exc:
-        request_type = "nonexistent_request_type"
         make_request(request_type, url)
     assert error_str in str(exc.value)
 
-    # Test HTTP error
     request_type = "GET"
+    # test 200 status
+    rsp1 = responses.Response(
+        method=request_type,
+        url=url,
+        status=200,
+    )
+    responses.add(rsp1)
+    resp1 = make_request(request_type, url)
+    assert resp1.status_code == 200
+
+    # Test HTTP error
+    rsp2 = responses.Response(
+        method=request_type,
+        url=url,
+        status=404,
+    )
+    responses.add(rsp2)
     with pytest.raises(requests.exceptions.HTTPError) as exc:
-        url = "https://www.google.com/invalid_url"
         make_request(request_type, url)
     error_str = "404 Client Error"
+    assert error_str in str(exc.value)
+
+    # Test 429 error
+    rsp3 = responses.Response(
+        method=request_type,
+        url=url,
+        status=429,
+    )
+    responses.add(rsp3)
+    with pytest.raises(requests.exceptions.HTTPError) as exc:
+        make_request(request_type, url, max_retry_count=1)
+    error_str = "429 Client Error"
     assert error_str in str(exc.value)
 
 

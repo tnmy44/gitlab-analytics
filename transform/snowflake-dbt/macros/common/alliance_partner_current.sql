@@ -7,8 +7,9 @@ CASE
     THEN 'Amazon Web Services'
   WHEN LOWER({{ fulfillment_partner_name }}) LIKE '%ibm (oem)%' OR LOWER({{ partner_account_name }}) LIKE '%ibm (oem)%'
     THEN 'IBM (OEM)'
-  WHEN NOT EQUAL_NULL({{ resale_partner_track }}, 'Technology') AND NOT EQUAL_NULL({{ partner_track }}, 'Technology') AND {{deal_path }} = 'Channel'
+  WHEN NOT EQUAL_NULL({{ resale_partner_track }}, 'Technology') AND NOT EQUAL_NULL({{ partner_track }}, 'Technology') AND {{deal_path }} = 'Partner'
     THEN 'Channel Partners'
+  ELSE 'Other Alliance Partners'
 END
 
 {%- endmacro -%}

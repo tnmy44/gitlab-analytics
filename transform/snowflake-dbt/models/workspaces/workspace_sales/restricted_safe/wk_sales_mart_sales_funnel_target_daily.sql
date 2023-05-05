@@ -60,9 +60,7 @@
 
           agg_demo_keys.key_segment_geo_region_area,
           agg_demo_keys.key_segment_geo_region_area_sqs,
-          agg_demo_keys.key_segment_geo_region_area_ot,
-
-          agg_demo_keys.report_user_segment_geo_region_area
+          agg_demo_keys.key_segment_geo_region_area_ot
 
     FROM mart_sales_funnel_target funnel_target
       INNER JOIN  date_details target_date

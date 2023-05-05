@@ -244,11 +244,9 @@ def chunk_and_upload(
     rows_uploaded = 0
 
     with tempfile.TemporaryFile() as tmpfile:
-
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
 
         for idx, chunk_df in enumerate(iter_csv):
-
             if backfill:
                 schema_types = transform_source_types_to_snowflake_types(
                     chunk_df, source_table, source_engine

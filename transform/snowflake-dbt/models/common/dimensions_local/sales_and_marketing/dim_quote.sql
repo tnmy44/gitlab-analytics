@@ -10,6 +10,7 @@ WITH quote AS (
       quote_name,
       quote_status,
       quote_entity,
+      subscription_action_type,
       is_primary_quote,
       quote_start_date
     FROM {{ ref('prep_quote') }}
@@ -21,5 +22,5 @@ WITH quote AS (
     created_by="@snalamaru",
     updated_by="@chrissharp",
     created_date="2021-01-07",
-    updated_date="2022-10-04"
+    updated_date="2023-03-15"
 ) }}

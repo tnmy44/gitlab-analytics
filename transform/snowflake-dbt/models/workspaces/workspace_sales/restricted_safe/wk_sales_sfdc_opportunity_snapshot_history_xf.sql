@@ -26,33 +26,35 @@ WITH date_details AS (
       deal_group,
       opportunity_owner_manager,
       is_edu_oss,
-      -- account_owner_team_stamped, 
 
-      -- Opportunity Owner Stamped fields
-      opportunity_owner_user_segment,
-      opportunity_owner_user_region,
-      opportunity_owner_user_area,
-      opportunity_owner_user_geo,
-
+      -------------------
       -------------------
       --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
       sales_team_rd_asm_level,
-      -------------------
-
       sales_team_cro_level,
       sales_team_vp_level,
       sales_team_avp_rd_level,
       sales_team_asm_level,
+      -------------------
+      -------------------
 
       -- this fields use the opportunity owner version for current FY and account fields for previous years
       report_opportunity_user_segment,
+      report_opportunity_raw_user_segment,
       report_opportunity_user_geo,
       report_opportunity_user_region,
       report_opportunity_user_area,
       report_user_segment_geo_region_area,
       report_user_segment_geo_region_area_sqs_ot,
 
-      -- NF 2022-02-17 new aggregated keys 
+      -- FY24 new fields
+      report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
+      report_opportunity_user_business_unit,
+      report_opportunity_user_sub_business_unit,
+      report_opportunity_user_division,
+      report_opportunity_user_asm,
+      
+      -- FY23 keys 
       key_sqs,
       key_ot,
 
@@ -73,7 +75,19 @@ WITH date_details AS (
       key_segment_geo_region_area_ot,
 
       key_segment_geo_area,
-      
+
+      -- FY24 keys
+      key_bu,
+      key_bu_ot,
+      key_bu_sqs,
+      key_bu_subbu,
+      key_bu_subbu_ot,
+      key_bu_subbu_sqs,
+      key_bu_subbu_division,
+      key_bu_subbu_division_ot,
+      key_bu_subbu_division_sqs,
+      key_bu_subbu_division_asm,
+
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
       -- I am adding this logic
@@ -187,7 +201,6 @@ WITH date_details AS (
 
       edm_snapshot_opty.dbt_updated_at                            AS _last_dbt_run,
       edm_snapshot_opty.is_deleted,
-      edm_snapshot_opty.last_activity_date,
 
       -- Channel Org. fields
       -- this fields should be changed to this historical version
@@ -217,7 +230,7 @@ WITH date_details AS (
       edm_snapshot_opty.stage_3_technical_evaluation_date,
       edm_snapshot_opty.stage_4_proposal_date,
       edm_snapshot_opty.stage_5_negotiating_date,
-      edm_snapshot_opty.stage_6_awaiting_signature_date_date      AS stage_6_awaiting_signature_date,
+      edm_snapshot_opty.stage_6_awaiting_signature_date_date AS stage_6_awaiting_signature_date,
       edm_snapshot_opty.stage_6_closed_won_date,
       edm_snapshot_opty.stage_6_closed_lost_date,
       
@@ -329,6 +342,18 @@ WITH date_details AS (
       edm_snapshot_opty.sales_accepted_fiscal_quarter_name,
       edm_snapshot_opty.sales_accepted_fiscal_quarter_date,
 
+      edm_snapshot_opty.last_activity_date,
+      edm_snapshot_opty.last_activity_fiscal_year,
+      edm_snapshot_opty.last_activity_fiscal_quarter_name,
+      edm_snapshot_opty.last_activity_fiscal_quarter_date,
+      edm_snapshot_opty.last_activity_month                      AS last_activity_date_month,
+
+      edm_snapshot_opty.sales_last_activity_date,
+      edm_snapshot_opty.sales_last_activity_fiscal_year,
+      edm_snapshot_opty.sales_last_activity_fiscal_quarter_name,
+      edm_snapshot_opty.sales_last_activity_fiscal_quarter_date,
+      edm_snapshot_opty.sales_last_activity_month                AS sales_last_activity_date_month,
+
       edm_snapshot_opty.lead_source,
       edm_snapshot_opty.net_new_source_categories,           
       edm_snapshot_opty.record_type_id,
@@ -392,18 +417,9 @@ WITH date_details AS (
     SELECT DISTINCT
       opp_snapshot.*,
       
-      -- using current opportunity perspective instead of historical
-      -- NF 2021-01-26: this might change to order type live 2.1    
-      -- NF 2022-01-28: Update to OT 2.3 will be stamped directly  
-      
       -- fields from sfdc_opportunity_xf 
       sfdc_opportunity_xf.order_type_stamped,     
       sfdc_opportunity_xf.is_duplicate_flag                               AS current_is_duplicate_flag,
-      
-      sfdc_opportunity_xf.opportunity_owner_user_segment,
-      sfdc_opportunity_xf.opportunity_owner_user_region,
-      sfdc_opportunity_xf.opportunity_owner_user_area,
-      sfdc_opportunity_xf.opportunity_owner_user_geo,
       
       sfdc_opportunity_xf.sales_team_rd_asm_level,
       sfdc_opportunity_xf.sales_team_cro_level,
@@ -416,8 +432,14 @@ WITH date_details AS (
       sfdc_opportunity_xf.report_opportunity_user_region,
       sfdc_opportunity_xf.report_opportunity_user_area,
       sfdc_opportunity_xf.report_user_segment_geo_region_area,
+
+      -- unadjusted version of the field
+      sfdc_opportunity_xf.report_opportunity_raw_user_segment,
       sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
-      
+
+      -- FY24 base key
+      sfdc_opportunity_xf.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
+
       sfdc_opportunity_xf.key_sqs,
       sfdc_opportunity_xf.key_ot,
       sfdc_opportunity_xf.key_segment,
@@ -439,7 +461,23 @@ WITH date_details AS (
       sfdc_opportunity_xf.deal_group,
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.is_edu_oss,
+
+      -- FY24 keys
+      sfdc_opportunity_xf.report_opportunity_user_business_unit,
+      sfdc_opportunity_xf.report_opportunity_user_sub_business_unit,
+      sfdc_opportunity_xf.report_opportunity_user_division,
+      sfdc_opportunity_xf.report_opportunity_user_asm,
       
+
+      sfdc_opportunity_xf.key_bu,
+      sfdc_opportunity_xf.key_bu_subbu,
+      sfdc_opportunity_xf.key_bu_subbu_ot,
+      sfdc_opportunity_xf.key_bu_subbu_sqs,
+      sfdc_opportunity_xf.key_bu_subbu_division,
+      sfdc_opportunity_xf.key_bu_subbu_division_ot,
+      sfdc_opportunity_xf.key_bu_subbu_division_sqs,
+      sfdc_opportunity_xf.key_bu_subbu_division_asm,
+
       -- fields calculated with both live and snapshot fields
       CASE 
         WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
@@ -779,7 +817,48 @@ WITH date_details AS (
         WHEN net_arr >= 1000000 
           THEN '8. (>1000k)'
         ELSE 'Other' 
-      END                                                           AS calculated_deal_size
+      END                                                           AS calculated_deal_size,
+
+    -- For some analysis it is important to order stages by rank
+    CASE
+            WHEN stage_name = '0-Pending Acceptance'
+                THEN 0
+            WHEN stage_name = '1-Discovery'
+                THEN 1
+             WHEN stage_name = '2-Scoping'
+                THEN 2
+            WHEN stage_name = '3-Technical Evaluation'
+                THEN 3
+            WHEN stage_name = '4-Proposal'
+                THEN 4
+            WHEN stage_name = '5-Negotiating'
+                THEN 5
+            WHEN stage_name = '6-Awaiting Signature'
+                THEN 6
+            WHEN stage_name = '7-Closing'
+                THEN 7
+            WHEN stage_name = 'Closed Won'
+                THEN 8
+            WHEN stage_name = '8-Closed Lost'
+                THEN 9
+            WHEN stage_name = '9-Unqualified'
+                THEN 10
+            WHEN stage_name = '10-Duplicate'
+                THEN 11
+            ELSE NULL
+    END                     AS stage_name_rank,
+    
+    CASE
+        WHEN stage_name IN ('0-Pending Acceptance')
+            THEN '0. Acceptance' 
+         WHEN stage_name IN ('1-Discovery','2-Scoping')
+            THEN '1. Early'
+         WHEN stage_name IN ('3-Technical Evaluation','4-Proposal')
+            THEN '2. Middle'
+         WHEN stage_name IN ('5-Negotiating','6-Awaiting Signature')
+            THEN '3. Late'
+        ELSE '4. Closed'
+    END                     AS pipeline_category
 
     FROM add_compound_metrics
 )

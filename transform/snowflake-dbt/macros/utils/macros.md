@@ -53,10 +53,6 @@ This macro **is specific** to pgp tables (gitlab_dotcom, version, license) and s
 {% enddocs %}
 
 
-{% docs generate_schema_name %}
-This is the GitLab overwrite for the dbt internal macro. See our [dbt guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#general) for more info on how this works.
-{% enddocs %}
-
 {% docs get_column_values_ordered %}
 This macro retrieves the column values for a references table and allows you to order the column values once fetched.
 {% enddocs %}
@@ -284,4 +280,21 @@ dbt run -s my_model --full-refresh
 dbt run -s my_model --full-refresh --vars '{"full_refresh_force": true}'
 → full refresh
 ```
+{% enddocs %}
+
+
+
+{% docs orphaned_db_table_check %}
+
+The operation will output, to the log file and terminal window, a list of database tables that do not match to model or source in the dbt code base.
+
+Example Usage:
+dbt run-operation orphaned_db_table_check
+dbt run-operation orphaned_db_table_check --args "{databases: ['raw']}"
+
+Arguments:
+  databases: The list of databases to retrieve the table names from
+
+Known exceptions and not yet implemented source tables were identified from observation.
+
 {% enddocs %}

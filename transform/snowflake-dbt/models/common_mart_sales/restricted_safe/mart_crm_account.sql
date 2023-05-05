@@ -63,11 +63,13 @@
       dim_crm_account.parent_crm_account_zoom_info_parent_company_name,
       dim_crm_account.parent_crm_account_zoom_info_ultimate_parent_company_zi_id,
       dim_crm_account.parent_crm_account_zoom_info_ultimate_parent_company_name,
-      dim_crm_account.parent_crm_account_demographics_sales_segment,
+      dim_crm_account.parent_crm_account_demographics_business_unit,
       dim_crm_account.parent_crm_account_demographics_geo,
       dim_crm_account.parent_crm_account_demographics_region,
+      dim_crm_account.parent_crm_account_demographics_sales_segment,
       dim_crm_account.parent_crm_account_demographics_area,
       dim_crm_account.parent_crm_account_demographics_territory,
+      dim_crm_account.parent_crm_account_demographics_role_type,
       dim_crm_account.parent_crm_account_demographics_max_family_employee,
       dim_crm_account.parent_crm_account_demographics_upa_country,
       dim_crm_account.parent_crm_account_demographics_upa_state,
@@ -150,8 +152,18 @@
       dim_crm_account.forbes_2000_rank,
       dim_crm_account.parent_account_industry_hierarchy,
       dim_crm_account.sales_development_rep,
-	  dim_crm_account.admin_manual_source_number_of_employees,
+      dim_crm_account.admin_manual_source_number_of_employees,
       dim_crm_account.admin_manual_source_account_address,
+      dim_crm_account.eoa_sentiment,
+      dim_crm_account.gs_health_user_engagement,
+      dim_crm_account.gs_health_cd,
+      dim_crm_account.gs_health_devsecops,
+      dim_crm_account.gs_health_ci,
+      dim_crm_account.gs_health_scm,
+      dim_crm_account.risk_impact,
+      dim_crm_account.risk_reason,
+      dim_crm_account.last_timeline_at_risk_update,
+      dim_crm_account.last_at_risk_update_comments,
 
       --degenerative dimensions
       dim_crm_account.is_sdr_target_account,
@@ -188,6 +200,8 @@
       dim_crm_account.technical_account_manager_date,
       dim_crm_account.next_renewal_date,
       dim_crm_account.customer_since_date,
+      dim_crm_account.gs_first_value_date,
+      dim_crm_account.gs_last_csm_activity_date,
 
       --measures
       fct_crm_account.count_active_subscription_charges,
@@ -238,7 +252,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@lvinueza",
+    updated_by="@michellecooper",
     created_date="2022-08-10",
-    updated_date="2023-01-13"
+    updated_date="2023-03-29"
 ) }}

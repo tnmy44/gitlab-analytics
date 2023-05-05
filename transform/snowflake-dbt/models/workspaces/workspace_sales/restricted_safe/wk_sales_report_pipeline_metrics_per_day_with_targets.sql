@@ -230,7 +230,8 @@ WITH date_details AS (
 
         ----------------------------------------
 
-        agg_demo_keys.report_opportunity_user_segment,     
+       -- agg_demo_keys.report_opportunity_user_segment,
+        agg_demo_keys.report_opportunity_user_segment,
         agg_demo_keys.report_opportunity_user_geo,
         agg_demo_keys.report_opportunity_user_region,    
         agg_demo_keys.report_opportunity_user_area,  
@@ -239,7 +240,6 @@ WITH date_details AS (
         agg_demo_keys.sales_team_vp_level,
         agg_demo_keys.sales_team_avp_rd_level,
         agg_demo_keys.sales_team_asm_level,
-        agg_demo_keys.deal_category,
         agg_demo_keys.deal_group,
         agg_demo_keys.sales_qualified_source,
         agg_demo_keys.sales_team_rd_asm_level,
@@ -264,8 +264,6 @@ WITH date_details AS (
         agg_demo_keys.key_segment_geo_region_area_ot,
 
         agg_demo_keys.key_segment_geo_area,
-
-        agg_demo_keys.report_user_segment_geo_region_area,
         ----------------------------------------
 
         -- report quarter plus 1 / 2 date fields

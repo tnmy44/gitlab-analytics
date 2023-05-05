@@ -87,7 +87,7 @@ def generate_dbt_command(vars_dict):
     dbt_generate_command = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_4XL" &&
-        dbt run --profiles-dir profile --target prod --models +snowplow --full-refresh --vars '{json_dict}'; ret=$?;
+        dbt run --profiles-dir profile --target prod --models +snowplow --full-refresh --vars '{json_dict}' ; ret=$?;
         montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
@@ -108,7 +108,7 @@ dummy_operator = DummyOperator(task_id="start", dag=dag)
 
 dbt_snowplow_combined_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run --profiles-dir profile --target prod --models legacy.snowplow.combined; ret=$?;
+        dbt run --profiles-dir profile --target prod --models legacy.snowplow.combined ; ret=$?;
         montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """

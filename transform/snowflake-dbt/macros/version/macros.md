@@ -1,9 +1,3 @@
-{% docs default_usage_ping_information %}
-This macro contains default usage ping information, such as dim_usage_ping_id, license information, or other statistics that help us to identify if the usage ping is valuable. 
-
-This macro is used to support data models that the sales team is requesting these metrics in. 
-{% enddocs %}
-
 {% docs sales_wave_2_3_metrics %}
 This macro contains the [list of metrics that the Sales CS team requested on FY21-Q1](https://docs.google.com/spreadsheets/d/1ZR7duYmjQ8x86iAJ1dCix88GTtPlOyNwiMgeG_85NiA/edit?ts=5fea3398#gid=0). 
 
