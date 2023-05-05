@@ -117,3 +117,9 @@ This tables creates an [alterntive mapping](https://about.gitlab.com/handbook/ma
 This View contains the list of projects that are under ultimate parent namespace ids that are internal to gitlab. This mapping should be used to filter entities such as Issues and Merge requests when only internal GitLab data is needed.
 
 {% enddocs %}
+
+{% docs map_epic_internal %}
+
+This View contains the list of epics that are under ultimate parent namespace IDs and the namespace IDs that are internal to gitlab. This mapping should be used to filter epics when only internal GitLab data is needed.
+
+{% enddocs %}
