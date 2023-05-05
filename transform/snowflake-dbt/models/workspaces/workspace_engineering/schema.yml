@@ -150,3 +150,5 @@ models:
 
     - name: leading_organization_entry_dates
       description: The entry and exit dates of organizations that are admitted into our Leading Organization program
+    - name: internal_notes
+      description: Table containing Gitlab.com notes from Epics, Issues and Merge Requests. It includes the namespace ID and the ultimate parent namespace ID.
