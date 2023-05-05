@@ -323,7 +323,7 @@ WITH edm_opty AS (
     edm_opty.pipeline_created_fiscal_quarter_name,
     edm_opty.pipeline_created_fiscal_quarter_date,
     edm_opty.pipeline_created_fiscal_year,
-    edm_opty.net_arr_created_month                                       AS pipeline_created_date_month,
+    edm_opty.arr_created_month                                           AS pipeline_created_date_month,
 
     edm_opty.stage_1_discovery_date                                      AS stage_1_date,
     edm_opty.stage_1_discovery_month                                     AS stage_1_date_month,
