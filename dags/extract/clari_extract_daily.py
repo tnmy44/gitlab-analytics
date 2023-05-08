@@ -70,7 +70,7 @@ clari_task = KubernetesPodOperator(
     ],
     env_vars={
         **pod_env_vars,
-        "execution_date": "{{ execution_date }}",  # run yest's quarter
+        "logical_date": "{{ logical_date }}",  # run yest's quarter
         "task_schedule": TASK_SCHEDULE,
     },
     affinity=get_affinity("production"),

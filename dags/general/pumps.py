@@ -53,8 +53,8 @@ with open(f"{airflow_home}/analytics/pump/pumps.yml", "r") as file:
     pumps = stream["pumps"]
 
 
-execution_date = "{{ execution_date }}"
-next_execution_date = "{{ next_execution_date }}"
+logical_date = "{{ logical_date }}"
+next_logical_date = "{{ next_execution_date }}"
 
 # Loop through pumps to create tasks
 
@@ -68,8 +68,8 @@ for pump_model in pumps:
         --model={pump_model["model"]} \
         --sensitive={pump_model["sensitive"]} \
         --timestamp={pump_model["timestamp_column"]} \
-        --inc_start={execution_date} \
-        --inc_end={next_execution_date} \
+        --inc_start={logical_date} \
+        --inc_end={next_logical_date} \
         --stage={pump_model["stage"]} \
         --single={pump_model["single"]}
         """

@@ -77,7 +77,7 @@ for e in events:
         ],
         env_vars={
             **pod_env_vars,
-            "START_TIME": "{{ execution_date }}",
+            "START_TIME": "{{ logical_date }}",
             "END_TIME": "{{ next_execution_date }}",
         },
         affinity=get_affinity("production"),

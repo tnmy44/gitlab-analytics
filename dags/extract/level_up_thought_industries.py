@@ -84,9 +84,9 @@ for endpoint_class in endpoint_classes:
         ],
         env_vars={
             **pod_env_vars,
-            # remove time from execution_date, and convert to epoch timestamp
+            # remove time from logical_date, and convert to epoch timestamp
             "EPOCH_START_STR": (
-                "{{ execution_date.replace(hour=0, minute=0, second=0, microsecond=0)"
+                "{{ logical_date.replace(hour=0, minute=0, second=0, microsecond=0)"
                 ".int_timestamp }}"
             ),
             "EPOCH_END_STR": (
