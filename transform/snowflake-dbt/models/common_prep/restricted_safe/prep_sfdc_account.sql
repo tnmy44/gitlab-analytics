@@ -14,8 +14,7 @@ WITH sfdc_account AS (
     SELECT
       sfdc_account.account_id                                                                                        AS dim_crm_account_id,
       sfdc_account.ultimate_parent_account_id                                                                        AS ultimate_parent_account_id,
-      {{ sales_segment_cleaning('sfdc_account.account_sales_segment') }} 
-                                                                                                                     AS ultimate_parent_sales_segment_name,
+      sfdc_account.account_sales_segment                                                                             AS ultimate_parent_sales_segment_name,
       sfdc_account.parent_account_industry_hierarchy                                                                 AS ultimate_parent_industry,
       sfdc_account.account_territory                                                                    AS ultimate_parent_territory,
       CASE 

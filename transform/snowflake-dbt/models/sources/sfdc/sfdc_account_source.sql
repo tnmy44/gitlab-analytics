@@ -93,7 +93,7 @@ renamed AS (
     account_address_manual_source_admin__c AS admin_manual_source_account_address,
 
        -- account demographics fields
-    account_demographics_sales_segment__c AS account_sales_segment,
+    {{sales_segment_cleaning('account_demographics_sales_segment__c')}} AS account_sales_segment,
     account_demographics_geo__c AS account_geo,
     account_demographics_region__c AS account_region,
     account_demographics_area__c AS account_area,

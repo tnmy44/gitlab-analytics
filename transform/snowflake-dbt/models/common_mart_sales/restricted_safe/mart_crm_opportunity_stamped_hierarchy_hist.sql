@@ -122,6 +122,8 @@
       dim_crm_account.parent_crm_account_upa_city,
       dim_crm_account.parent_crm_account_upa_street,
       dim_crm_account.parent_crm_account_upa_postal_code,
+      dim_crm_account.parent_crm_account_business_unit,
+      dim_crm_account.parent_crm_account_role_type,
       dim_crm_account.crm_account_employee_count,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,

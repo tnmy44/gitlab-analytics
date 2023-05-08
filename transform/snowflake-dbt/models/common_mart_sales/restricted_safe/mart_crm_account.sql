@@ -59,7 +59,6 @@
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
       dim_crm_account.crm_account_owner_user_segment,
-      dim_crm_account.crm_account_employees,
       dim_crm_account.crm_account_billing_country,
       dim_crm_account.crm_account_billing_country_code,
       dim_crm_account.crm_account_type,

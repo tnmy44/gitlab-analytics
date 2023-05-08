@@ -47,7 +47,6 @@ WITH final AS (
       prep_crm_account.crm_account_gtm_strategy,
       prep_crm_account.crm_account_focus_account,
       prep_crm_account.crm_account_owner_user_segment,
-      prep_crm_account.crm_account_employees,
       prep_crm_account.crm_account_billing_country,
       prep_crm_account.crm_account_billing_country_code,
       prep_crm_account.crm_account_type,

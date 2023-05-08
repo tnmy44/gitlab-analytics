@@ -705,18 +705,11 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       sfdc_accounts_xf.account_owner_user_area,
       -- account_owner_subarea_stamped
 
-      sfdc_accounts_xf.account_demographics_sales_segment   AS account_demographics_segment,
-      sfdc_accounts_xf.account_demographics_geo             AS account_demographics_geo,
-      sfdc_accounts_xf.account_demographics_region          AS account_demographics_region,
-      sfdc_accounts_xf.account_demographics_area            AS account_demographics_area,
-      sfdc_accounts_xf.account_demographics_territory       AS account_demographics_territory,
-      -- account_demographics_subarea_stamped
-
-      upa.account_demographics_sales_segment                AS upa_demographics_segment,
-      upa.account_demographics_geo                          AS upa_demographics_geo,
-      upa.account_demographics_region                       AS upa_demographics_region,
-      upa.account_demographics_area                         AS upa_demographics_area,
-      upa.account_demographics_territory                    AS upa_demographics_territory,
+      sfdc_accounts_xf.parent_crm_account_sales_segment,
+      sfdc_accounts_xf.parent_crm_account_geo,
+      sfdc_accounts_xf.parent_crm_account_region,
+      sfdc_accounts_xf.parent_crm_account_area,
+      sfdc_accounts_xf.parent_crm_account_sales_territory,
 
       -----------------------------------------------
 
@@ -828,8 +821,6 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
     CROSS JOIN today
     INNER JOIN sfdc_accounts_xf
       ON sfdc_accounts_xf.account_id = sfdc_opportunity_xf.account_id
-    INNER JOIN sfdc_accounts_xf upa
-      ON sfdc_accounts_xf.ultimate_parent_account_id = upa.account_id
     LEFT JOIN churn_metrics 
       ON churn_metrics.opportunity_id = sfdc_opportunity_xf.opportunity_id
     

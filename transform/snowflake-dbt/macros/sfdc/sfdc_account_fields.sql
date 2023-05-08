@@ -169,8 +169,7 @@ WITH map_merged_crm_account AS (
 
       --descriptive attributes
       sfdc_account.account_name                                           AS crm_account_name,
-      {{ sales_segment_cleaning('sfdc_account.account_sales_segment') }} 
-                                                                          AS parent_crm_account_sales_segment,
+      sfdc_account.account_sales_segment                                  AS parent_crm_account_sales_segment,
       sfdc_account.account_geo                                            AS parent_crm_account_geo,
       sfdc_account.account_region                                         AS parent_crm_account_region,
       sfdc_account.account_area                                           AS parent_crm_account_area,
@@ -190,7 +189,6 @@ WITH map_merged_crm_account AS (
         WHEN LOWER(sfdc_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
         ELSE 'Non - Focus Account'
       END                                                                 AS crm_account_focus_account,
-      sfdc_account.account_employee_count                                 AS crm_account_employees,
       sfdc_account.billing_country                                        AS crm_account_billing_country,
       sfdc_account.billing_country_code                                   AS crm_account_billing_country_code,
       sfdc_account.account_type                                           AS crm_account_type,

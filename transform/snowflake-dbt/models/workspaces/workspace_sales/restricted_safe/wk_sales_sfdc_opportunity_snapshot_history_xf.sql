@@ -401,11 +401,11 @@ WITH date_details AS (
       edm_snapshot_opty.account_owner_user_geo,
       edm_snapshot_opty.account_owner_user_region,
       edm_snapshot_opty.account_owner_user_area,
-      edm_snapshot_opty.parent_crm_account_sales_segment AS account_demographics_segment,
-      edm_snapshot_opty.parent_crm_account_geo AS account_demographics_geo,
-      edm_snapshot_opty.parent_crm_account_region AS account_demographics_region,
-      edm_snapshot_opty.parent_crm_account_area AS account_demographics_area,
-      edm_snapshot_opty.parent_crm_account_sales_territory AS account_demographics_territory
+      edm_snapshot_opty.parent_crm_account_sales_segment,
+      edm_snapshot_opty.parent_crm_account_geo,
+      edm_snapshot_opty.parent_crm_account_region,
+      edm_snapshot_opty.parent_crm_account_area,
+      edm_snapshot_opty.parent_crm_account_sales_territory
       
 
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
@@ -513,12 +513,6 @@ WITH date_details AS (
       ------------------------------------------------------------------------------------------------------
 
       opportunity_owner.name                                     AS opportunity_owner,
-    
-      upa.account_sales_segment                     AS upa_demographics_segment,
-      upa.account_geo                               AS upa_demographics_geo,
-      upa.account_region                            AS upa_demographics_region,
-      upa.account_area                              AS upa_demographics_area,
-      upa.account_territory                         AS upa_demographics_territory,
 
       opportunity_owner.is_rep_flag
 
@@ -528,8 +522,6 @@ WITH date_details AS (
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_opportunity_xf.account_id = sfdc_accounts_xf.account_id 
-    LEFT JOIN sfdc_accounts_xf AS upa
-      ON upa.account_id = sfdc_accounts_xf.ultimate_parent_account_id
     LEFT JOIN sfdc_users_xf AS account_owner
       ON account_owner.user_id = sfdc_accounts_xf.owner_id
     LEFT JOIN sfdc_users_xf AS opportunity_owner

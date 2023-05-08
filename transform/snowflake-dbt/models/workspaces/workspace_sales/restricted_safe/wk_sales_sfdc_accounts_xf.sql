@@ -116,18 +116,18 @@ SELECT
     mart.zoominfo_account_phone,
     mart.admin_manual_source_number_of_employees,
     mart.admin_manual_source_account_address,
-    mart.parent_crm_account_sales_segment       AS account_demographics_sales_segment,
-    mart.parent_crm_account_geo                 AS account_demographics_geo,
-    mart.parent_crm_account_region              AS account_demographics_region,
-    mart.parent_crm_account_area                AS account_demographics_area,
-    mart.parent_crm_account_sales_territory     AS account_demographics_territory,
-    mart.crm_account_employee_count             AS account_demographics_employee_count,
-    mart.parent_crm_account_max_family_employee AS account_demographics_max_family_employee,
-    mart.parent_crm_account_upa_country         AS account_demographics_upa_country,
-    mart.parent_crm_account_upa_state           AS account_demographics_upa_state,
-    mart.parent_crm_account_upa_city            AS account_demographics_upa_city,
-    mart.parent_crm_account_upa_street          AS account_demographics_upa_street,
-    mart.parent_crm_account_upa_postal_code     AS account_demographics_upa_postal_code,
+    mart.parent_crm_account_sales_segment,
+    mart.parent_crm_account_geo,
+    mart.parent_crm_account_region,
+    mart.parent_crm_account_area,
+    mart.parent_crm_account_sales_territory,
+    mart.crm_account_employee_count,
+    mart.parent_crm_account_max_family_employee,
+    mart.parent_crm_account_upa_country,
+    mart.parent_crm_account_upa_state,
+    mart.parent_crm_account_upa_city,
+    mart.parent_crm_account_upa_street,
+    mart.parent_crm_account_upa_postal_code,
     mart.health_number,
     mart.health_score_color,
     mart.count_active_subscription_charges,
@@ -212,15 +212,7 @@ SELECT
     mart.is_zi_hashicorp_present                                    AS zi_hashicorp_presence_flag,
     mart.is_zi_aws_cloud_trail_present                              AS zi_aws_cloud_trail_presence_flag,
     mart.is_zi_circle_ci_present                                    AS zi_circle_ci_presence_flag,
-    mart.is_zi_bit_bucket_present                                   AS zi_bit_bucket_presence_flag,
-
- 
-
-    parent_account.parent_crm_account_sales_segment                 AS upa_segment,
-    parent_account.parent_crm_account_geo                           AS upa_geo,
-    parent_account.parent_crm_account_region                        AS upa_region,
-    parent_account.parent_crm_account_area                          AS upa_area,
-    parent_account.parent_crm_account_sales_territory               AS upa_territory
+    mart.is_zi_bit_bucket_present                                   AS zi_bit_bucket_presence_flag
 
 
 FROM mart_crm_account AS mart

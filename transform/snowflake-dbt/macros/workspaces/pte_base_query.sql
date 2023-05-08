@@ -28,6 +28,8 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(parent_crm_account_region) AS parent_crm_account_region
         , MAX(parent_crm_account_area) AS parent_crm_account_area
         , MAX(CASE WHEN parent_crm_account_sales_territory !='Territory Not Found' THEN parent_crm_account_sales_territory END) AS parent_crm_account_sales_territory
+        , MAX(crm_account_employees) AS crm_account_employees
+        , MAX(parent_crm_account_max_family_employee) AS parent_crm_account_max_family_employee
         , MAX(CASE WHEN product_tier_name LIKE '%Ultimate%' THEN 1 ELSE 0 END) AS is_ultimate_product_tier
         , MAX(CASE WHEN product_tier_name LIKE '%Premium%' THEN 1 ELSE 0 END) AS is_premium_product_tier
         , MAX(CASE WHEN product_tier_name LIKE '%Starter%' or product_tier_name LIKE '%Bronze%' THEN 1 ELSE 0 END) AS is_starter_bronze_product_tier
