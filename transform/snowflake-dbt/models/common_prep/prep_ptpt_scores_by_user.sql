@@ -50,6 +50,7 @@
 
     SELECT
       COALESCE(users.notification_email, users.email) AS email_address,
+      ptpt_scores_last_2.insights,
       ptpt_scores_last_2.score_group,
       ptpt_scores_last_2.score_date
     FROM prep_namespace
@@ -68,6 +69,7 @@ SELECT
   namespace_creator_ptpt_score.score_group,
   namespace_creator_ptpt_score.insights,
   namespace_creator_ptpt_score.score_date,
+  namespace_creator_ptpt_score_last_2.insights          AS past_insights,
   namespace_creator_ptpt_score_last_2.score_group       AS past_score_group,
   namespace_creator_ptpt_score_last_2.score_date::DATE  AS past_score_date
 FROM namespace_creator_ptpt_score

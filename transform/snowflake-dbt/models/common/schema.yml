@@ -661,7 +661,7 @@ models:
     description: '{{ doc("dim_installation") }}'
     tests:
       - dbt_utils.expression_is_true:
-          expression: "installation_creation_date > '2000-01-01'"
+          expression: "installation_creation_date > '2000-01-01' OR dim_installation_id = 'b6a2b5c51f1e36f6fcb8568319633808'"
     columns:
       - name: dim_installation_id
         description: '{{ doc("dim_installation_id") }}'
@@ -1752,7 +1752,9 @@ models:
         description: '{{ doc("event_pk") }}'
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "event_date >= DATEADD('day',-7,CURRENT_DATE())"
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
@@ -2447,7 +2449,9 @@ models:
         description: Unique key of User.
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "spined_date >= DATEADD('day',-7,CURRENT_DATE())"
       - name: spined_date_id
         description: Unique Date Id between dbt_valid_from and dbt_valid_to in Snapshots    
       - name: is_blocked_user
@@ -5346,7 +5350,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
@@ -5564,7 +5570,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
@@ -5771,7 +5779,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'

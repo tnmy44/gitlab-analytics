@@ -18,6 +18,8 @@
   ('services', 'gitlab_dotcom_integrations_source'),
   ('project', 'prep_project'),
   ('ptpt_scores_by_user', 'prep_ptpt_scores_by_user'),
+  ('ptpf_scores_by_user', 'prep_ptpf_scores_by_user'),
+  ('ptp_scores_by_user', 'prep_ptp_scores_by_user'),
   ('namespace_details', 'gitlab_dotcom_namespace_details_source')
 ]) }}
 
@@ -814,6 +816,34 @@
       ptpt_scores_by_user.past_score_group        AS ptpt_past_score_group,
       ptpt_scores_by_user.past_score_date         AS ptpt_past_score_date,
 
+      -- Propensity to purchase Free fields
+      IFF(ptpf_scores_by_user.namespace_id IS NOT NULL, TRUE, FALSE)
+                                                  AS is_ptpf_contact,
+      -- IFF(is_ptpf_contact = TRUE OR (is_ptpf_contact = FALSE AND marketing_contact.is_ptpf_contact_marketo = TRUE
+      --   ), TRUE, FALSE)
+      --                                             AS is_ptpt_contact_change, field to be added later
+      ptpf_scores_by_user.namespace_id            AS ptpf_namespace_id,
+      ptpf_scores_by_user.score_group             AS ptpf_score_group,
+      ptpf_scores_by_user.score_date              AS ptpf_score_date,
+      ptpf_scores_by_user.past_score_group        AS ptpf_past_score_group,
+      ptpf_scores_by_user.past_score_date         AS ptpf_past_score_date,
+
+      -- Propensity to purchase fields
+      IFF(ptp_scores_by_user.namespace_id IS NOT NULL, TRUE, FALSE)
+                                                  AS is_ptp_contact,
+      -- IFF(is_ptp_contact = TRUE OR (is_ptp_contact = FALSE AND marketing_contact.is_ptp_contact_marketo = TRUE
+      --   ), TRUE, FALSE)
+      --                                             AS is_ptp_contact_change, field to be added later
+      ptp_scores_by_user.namespace_id             AS ptp_namespace_id,
+      ptp_scores_by_user.score_group              AS ptp_score_group,
+      ptp_scores_by_user.score_date               AS ptp_score_date,
+      ptp_scores_by_user.insights                 AS ptp_insights,
+      ptp_scores_by_user.past_insights            AS ptp_past_insights,
+      ptp_scores_by_user.past_score_group         AS ptp_past_score_group,
+      ptp_scores_by_user.past_score_date          AS ptp_past_score_date,
+      ptp_scores_by_user.days_since_trial_start   AS ptp_days_since_trial_start,
+      ptp_scores_by_user.ptp_source               AS ptp_source,
+
       -- Namespace notification dates
       namespace_notifications.user_limit_namespace_id,
       namespace_notifications.user_limit_notification_at,
@@ -871,6 +901,10 @@
       ON users_role_by_email.email = marketing_contact.email_address
     LEFT JOIN ptpt_scores_by_user
       ON ptpt_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
+    LEFT JOIN ptpf_scores_by_user
+      ON ptpf_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
+    LEFT JOIN ptp_scores_by_user
+      ON ptp_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN namespace_notifications
       ON namespace_notifications.email_address = marketing_contact.email_address
 )
@@ -964,5 +998,5 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2023-01-27"
+    updated_date="2023-04-24"
 ) }}

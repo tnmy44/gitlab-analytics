@@ -7,8 +7,8 @@ WITH source AS (
 renamed AS (
 
     SELECT
-      id                                      AS ticket_id,
-      created_at                              AS ticket_created_at,
+      id                                           AS ticket_id,
+      created_at                                   AS ticket_created_at,
       --ids
       organization_id,
       assignee_id,
@@ -18,17 +18,17 @@ renamed AS (
       submitter_id,
 
       --fields
-      status                                  AS ticket_status,
-      lower(priority)                         AS ticket_priority,
-      md5(subject)                            AS ticket_subject,
-      md5(recipient)                          AS ticket_recipient,
-      url                                     AS ticket_url,
-      tags                                    AS ticket_tags,
+      status                                       AS ticket_status,
+      lower(priority)                              AS ticket_priority,
+      md5(subject)                                 AS ticket_subject,
+      md5(recipient)                               AS ticket_recipient,
+      url                                          AS ticket_url,
+      tags                                         AS ticket_tags,
 
-      via['channel']::VARCHAR                 AS submission_channel,
+      COALESCE(via['channel']::VARCHAR,'Unknown')  AS submission_channel,
 
       --dates
-      updated_at::DATE                        AS date_updated
+      updated_at::DATE                             AS date_updated
 
     FROM source
 

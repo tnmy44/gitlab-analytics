@@ -20,12 +20,12 @@ team_data AS (
     IFF(
       source.is_deleted AND source.team_inactivated_date IS NULL,
       source.uploaded_at,
-      source.team_inactivated_date)      AS team_inactivated_date,
+      source.team_inactivated_date)                     AS team_inactivated_date,
     source.is_deleted,
-    DATE_TRUNC('day', source.valid_from) AS valid_from,
+    DATE_TRUNC('day', source.valid_from)                AS valid_from,
     COALESCE(DATE_TRUNC('day', source.valid_to),
       {{ var('tomorrow') }}
-    )                                    AS valid_to
+    )                                                   AS valid_to
   FROM source
 
 ),
@@ -150,6 +150,7 @@ team_hierarchy AS (
 final AS (
 
   SELECT
+    {{ dbt_utils.surrogate_key(['team_data.team_id']) }}        AS dim_team_sk,
     team_data.team_id,
     team_data.team_superior_team_id,
     team_hierarchy.hierarchy_level_1,
@@ -202,5 +203,5 @@ final AS (
     created_by="@lisvinueza",
     updated_by="@lisvinueza",
     created_date="2023-01-17",
-    updated_date="2023-04-03",
+    updated_date="2023-04-13",
  	) }}
