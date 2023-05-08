@@ -38,34 +38,26 @@
     SELECT 
     {%- for col in columns %}
       {% if col.name|lower == primary_key %}
-      '-1' AS {{ col.name|lower }}
+      MD5('-1') AS {{ col.name|lower }}
       -- if the column is part of a relationship test, set it to -1 so this test does not fail
       {% elif col.name|lower in referential_integrity_columns|lower %}
-      '-1' AS {{ col.name|lower }}
+      MD5('-1') AS {{ col.name|lower }}
       -- if the column is part of a not null test, set it to 0 so this test does not fail
       {% elif col.name|lower in not_null_test_columns|lower %}
       '0' AS {{ col.name|lower }}
       -- if the column contains "_ID" this indicates it is an id so assign it "-1"
       {% elif '_ID' in col.name|string %}
-      '-1' AS {{ col.name|lower }}
+      MD5('-1') AS {{ col.name|lower }}
       {% elif col.name|string == 'IS_DELETED' %}
       '0' AS {{ col.name|lower }}
       -- boolean
       {% elif col.data_type == 'BOOLEAN' %}
       NULL AS {{ col.name|lower }}
       -- strings
-      {% elif col.data_type == 'VARCHAR' %}
-      'Unknown' AS {{ col.name|lower }}
-      {% elif col.data_type == 'TEXT' %}
-      'Unknown' AS {{ col.name|lower }}
-      {% elif col.data_type == 'CHAR' %}
-      'Unknown' AS {{ col.name|lower }}
-      {% elif col.data_type == 'CHARACTER' %}
-      'Unknown' AS {{ col.name|lower }}
-      {% elif col.data_type.startswith('character varying') %}
-      'Unknown' AS {{ col.name|lower }}
-      {% elif col.data_type == 'STRING' %}
-      'Unknown' AS {{ col.name|lower }}
+      {% elif (col.data_type.startswith('character varying') and col.string_size() >= ('Missing '+ col.name)|length) %}
+      'Missing ' || '{{ col.name|lower }}' AS {{ col.name|lower }}
+      {% elif (col.data_type.startswith('character varying') and col.string_size() < ('Missing '+ col.name)|length) %}
+      'Missing' AS {{ col.name|lower }}
       -- dates
       {% elif col.data_type == 'DATE' %}
       '9999-01-01' AS {{ col.name|lower }}
@@ -80,23 +72,7 @@
       {% elif col.data_type == 'TIMESTAMP_LTZ' %}
       '9999-01-01 00:00:00.000 +0000' AS {{ col.name|lower }}
       -- numeric
-      {% elif col.data_type == 'FLOAT' %}
-      NULL AS {{ col.name|lower }}
-      {% elif col.data_type == 'NUMBER' %}
-      NULL AS {{ col.name|lower }}
       {% elif col.data_type.startswith('NUMBER') %}
-      NULL AS {{ col.name|lower }}
-      {% elif col.data_type == 'NUMERIC' %}
-      NULL AS {{ col.name|lower }}
-      {% elif col.data_type == 'DECIMAL' %}
-      NULL AS {{ col.name|lower }}
-      {% elif col.data_type == 'INT' %}
-      NULL AS {{ col.name|lower }}
-      {% elif col.data_type == 'INTEGER' %}
-      NULL AS {{ col.name|lower }}
-      {% elif col.data_type == 'TINYINT' %}
-      NULL AS {{ col.name|lower }}
-      {% elif col.data_type == 'BIGINT' %}
       NULL AS {{ col.name|lower }}
       -- catch all for everything else
       {% else %}
