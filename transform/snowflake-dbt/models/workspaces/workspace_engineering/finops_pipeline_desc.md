@@ -1,4 +1,4 @@
-{% docs finops_pipeline_desc %}
+{% docs finops_pipeline_desc_infra %}
 
 **rpt_gcp_billing_infra_mapping_day**
 
@@ -23,6 +23,10 @@
     net_cost: float - Net cost after credits applied
     usage_standard_unit: varchar - Standard unit of usage
     usage_amount_in_standard_unit: float - Usage amount in standard units
+
+{% enddocs %}
+
+{% docs finops_pipeline_desc_pl_day %}
 
 **rpt_gcp_billing_pl_day**
 
@@ -49,6 +53,10 @@
     usage_amount_in_standard_unit: float - Usage amount in standard units
     from_mapping: varchar - Source of mapping
 
+{% enddocs %}
+
+{% docs finops_pipeline_desc_ba_pl_daily %}
+
 **build_artifacts_pl_daily**
 
     Mission: Map daily build artifacts usage to Profit & Loss categories.
@@ -62,6 +70,10 @@
     finance_pl: varchar - Profit & Loss category
     build_artifacts_gb: float - Build artifacts size in GB
     percent_build_artifacts_size: float - Percentage of build artifacts size
+
+{% enddocs %}
+
+{% docs finops_pipeline_desc_runners_pl_daily %}
 
 **ci_runners_pl_daily**
 
@@ -77,6 +89,10 @@
     pl: varchar - Profit & Loss category
     total_ci_minutes: number - Total CI minutes used
     pct_ci_minutes: number - Percentage of CI minutes used
+
+{% enddocs %}
+
+{% docs finops_pipeline_desc_combined %}
 
 **combined_pl_mappings**
 
@@ -96,6 +112,10 @@
     pl_percent: float - Percentage of Profit & Loss category
     from_mapping: varchar - Source of mapping
 
+{% enddocs %}
+
+{% docs finops_pipeline_desc_container_registry_pl %}
+
 **container_registry_pl_daily**
 
     Mission: Map daily container registry usage to Profit & Loss categories.
@@ -110,6 +130,10 @@
     container_registry_gb: float - Container registry size in GB
     percent_container_registry_size: float - Percentage of container registry size
 
+{% enddocs %}
+
+{% docs finops_pipeline_desc_haproxy_backend_pl %}
+
 **haproxy_backend_pl**
 
     Mission: Maps each HAproxy backend to a specific P&L split
@@ -122,6 +146,10 @@
     METRIC_BACKEND: VARCHAR
     TYPE: VARCHAR
     ALLOCATION: FLOAT
+
+{% enddocs %}
+
+{% docs finops_pipeline_desc_haproxy_backend_ratio %}
 
 **haproxy_backend_ratio_daily**
 
@@ -136,6 +164,10 @@
     backend_category: varchar - Backend category identifier
     usage_ratio: float - Usage ratio for the backend
 
+{% enddocs %}
+
+{% docs finops_pipeline_desc_infralabel_pl %}
+
 **infralabel_pl**
 
     Mission: Map infrastructure labels to Profit & Loss categories.
@@ -149,6 +181,10 @@
     type: varchar - Type of allocation
     allocation: float - Allocation value
 
+{% enddocs %}
+
+{% docs finops_pipeline_desc_namespace_pl %}
+
 **namespace_pl_daily**
 
     Mission: Maintain a daily history of active namespaces and their associated Profit & Loss categories.
@@ -161,6 +197,10 @@
     dim_namespace_id: number - Namespace identifier
     dim_plan_id: number - Plan identifier
     finance_pl: varchar - Profit & Loss category
+    
+{% enddocs %}
+
+{% docs finops_pipeline_desc_projects_pl %}
 
 **projects_pl**
 
@@ -174,6 +214,10 @@
     project_id: varchar - Project identifier
     type: varchar - Type of allocation
     allocation: number - Allocation value
+
+{% enddocs %}
+
+{% docs finops_pipeline_desc_repo_storage_pl_daily %}
 
 **repo_storage_pl_daily**
 
@@ -189,6 +233,10 @@
     repo_size_gb: float - Repository size in GB
     percent_repo_size_gb: float - Percentage of repository size
 
+{% enddocs %}
+
+{% docs finops_pipeline_desc_sandbox_projects %}
+
 **sandbox_projects_pl**
 
     Mission: Map sandbox projects to specific Profit & Loss categories.
@@ -200,6 +248,10 @@
 
     gcp_project_id: varchar - GCP project identifier
     classification: varchar - Classification category
+
+{% enddocs %}
+
+{% docs finops_pipeline_desc_single_sku_pl %}
 
 **single_sku_pl**
 

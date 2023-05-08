@@ -323,46 +323,46 @@ models:
           description: Department or group
   
     - name: rpt_gcp_billing_infra_mapping_day
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_infra") }}'
 
     - name: rpt_gcp_billing_pl_day
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_pl_day") }}'
 
     - name: build_artifacts_pl_daily
-      description: '{{ doc("finops-pipelined-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_ba_pl_daily") }}'
 
     - name: ci_runners_pl_daily
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_runners_pl_daily") }}'
 
     - name: combined_pl_mapping
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_combined") }}'
 
     - name: container_registry_pl_daily
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_container_registry_pl") }}'
 
     - name: haproxy_backend_pl
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_haproxy_backend_pl") }}'
 
     - name: haproxy_backend_ratio_daily
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_haproxy_backend_ratio") }}'
 
     - name: infralabel_pl
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_infralabel_pl") }}'
 
     - name: namespace_pl_daily
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_namespace_pl") }}'
 
     - name: projects_pl
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_projects_pl") }}'
 
     - name: repo_storage_pl_daily
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_repo_storage_pl_daily") }}'
 
     - name: sandbox_projects_pl
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_sandbox_projects") }}'
 
     - name: single_sku_pl
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc_single_sku_pl") }}'
 
     - name: rpt_gcp_billing_skus_day
-      description: '{{ doc("finops-pipeline-desc") }}'
+      description: '{{ doc("finops_pipeline_desc") }}'
