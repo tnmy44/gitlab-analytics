@@ -197,7 +197,7 @@
     dim_namespace_id: number - Namespace identifier
     dim_plan_id: number - Plan identifier
     finance_pl: varchar - Profit & Loss category
-    
+
 {% enddocs %}
 
 {% docs finops_pipeline_desc_projects_pl %}
@@ -254,6 +254,24 @@
 {% docs finops_pipeline_desc_single_sku_pl %}
 
 **single_sku_pl**
+
+    Mission: Map specific SKUs or Service-SKU combinations to Profit & Loss categories.
+    Objective: Enable accurate allocation and reporting of specific costs by pl_category.
+    Granularity: N/A (mapping)
+    Inputs: gcp_billing_single_sku_pl_mapping (csv seed)
+    Accuracy rating: Very High
+    Completeness rating: Very High
+
+    service_description: varchar - Service description
+    sku_description: varchar - SKU description
+    type: varchar - Type of allocation
+    allocation: number - Allocation value
+
+{% enddocs %}
+
+{% docs finops_pipeline_desc_skus_day %}
+
+**rpt_gcp_billing_skus_day**
 
     Mission: Map specific SKUs or Service-SKU combinations to Profit & Loss categories.
     Objective: Enable accurate allocation and reporting of specific costs by pl_category.
