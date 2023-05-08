@@ -165,9 +165,9 @@ CASE
     OR bizible_ad_campaign_name LIKE '%Fuzzing%'))-- Added by AO demand gen issue 2262
     THEN 'DevSecOps Use Case'
   WHEN (bizible_touchpoint_type = 'Web Form'
-    AND (BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=autosd%'
-    OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=autosd%'
-    OR bizible_referrer_page_RAW LIKE '%utm_campaign=autosd%'))
+    AND (bizible_form_url_raw LIKE '%utm_campaign=autosd%'
+    OR bizible_landing_page_raw LIKE '%utm_campaign=autosd%'
+    OR bizible_referrer_page_raw LIKE '%utm_campaign=autosd%'))
     OR bizible_ad_campaign_name = 'autosd'
     OR bizible_ad_campaign_name ILIKE '%AutomatedSoftwareDelivery%' -- added by AO MS & P issue 896
     OR (camp.campaign_parent_id = '7014M000001dn8MQAQ' AND bizible_ad_campaign_name LIKE '%autosd%') --- Added by AO MS&P issue 825
@@ -203,27 +203,27 @@ CASE
     THEN 'GitOps Use Case'
   WHEN  (bizible_touchpoint_type = 'Web Form' 
     AND (bizible_ad_campaign_name LIKE '%evergreen%'
-    OR BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=evergreen%'
-    OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=evergreen%'
-    OR bizible_referrer_page_RAW LIKE '%utm_campaign=evergreen%'))
+    OR bizible_form_url_raw LIKE '%utm_campaign=evergreen%'
+    OR bizible_referrer_page_raw LIKE '%utm_campaign=evergreen%'
+    OR bizible_referrer_page_raw LIKE '%utm_campaign=evergreen%'))
     OR (camp.campaign_parent_id = '7014M000001dn8MQAQ'
     AND bizible_ad_campaign_name ILIKE '%_Evergreen%')
    THEN 'Evergreen'
   WHEN (bizible_touchpoint_type = 'Web Form' 
     AND (bizible_ad_campaign_name LIKE 'brand%'
    OR bizible_ad_campaign_name LIKE 'Brand%'
-    OR BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=brand%'
-    OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=brand%'
-    OR bizible_referrer_page_RAW LIKE '%utm_campaign=brand%'))
+    OR bizible_form_url_raw LIKE '%utm_campaign=brand%'
+    OR bizible_landing_page_raw LIKE '%utm_campaign=brand%'
+    OR bizible_referrer_page_raw LIKE '%utm_campaign=brand%'))
     OR (camp.campaign_parent_id = '7014M000001dn8MQAQ'
     AND bizible_ad_campaign_name ILIKE '%_Brand%')
    THEN 'Brand'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-04-27 MSandP: 316
     AND (bizible_ad_campaign_name LIKE 'simplifydevops%'
    OR bizible_ad_campaign_name LIKE 'Simplifydevops%'
-    OR BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=simplifydevops%'
-    OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=simplifydevops%'
-    OR bizible_referrer_page_RAW LIKE '%utm_campaign=simplifydevops%'))
+    OR bizible_form_url_raw LIKE '%utm_campaign=simplifydevops%'
+    OR bizible_landing_page_raw LIKE '%utm_campaign=simplifydevops%'
+    OR bizible_referrer_page_raw LIKE '%utm_campaign=simplifydevops%'))
     OR (camp.campaign_parent_id = '7014M000001dn6zQAA')
    THEN 'Simplify DevOps'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 332
@@ -233,18 +233,18 @@ CASE
     OR bizible_ad_campaign_name LIKE '%premtoultimatesp%'))
     THEN 'Premium to Ultimate'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
-    AND ( BIZIBLE_FORM_URL_RAW LIKE '%webcast-gitops-multicloudapp%'
-    OR BIZIBLE_LANDING_PAGE_RAW LIKE '%webcast-gitops-multicloudapp%'
-    OR bizible_referrer_page_RAW LIKE '%webcast-gitops-multicloudapp%'))
+    AND ( bizible_form_url_raw LIKE '%webcast-gitops-multicloudapp%'
+    OR bizible_landing_page_raw LIKE '%webcast-gitops-multicloudapp%'
+    OR bizible_referrer_page_raw LIKE '%webcast-gitops-multicloudapp%'))
     OR (camp.campaign_parent_id LIKE '%7014M000001dpmf%')
    THEN 'GitOps GTM webcast'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
-    AND ( BIZIBLE_FORM_URL_RAW LIKE '%devopsgtm%'
-    OR BIZIBLE_LANDING_PAGE_RAW LIKE '%devopsgtm%'
-    OR BIZIBLE_LANDING_PAGE_RAW LIKE '%events-amer-enterprise%'---Added by AO MSandP issue:811
-    OR BIZIBLE_LANDING_PAGE_RAW LIKE '%events-pd-emea%'----Added by AO MSandP issue:811
-    OR BIZIBLE_LANDING_PAGE_RAW LIKE '%events-pd-technical-apac%'---Added by AO MSandP issue:811
-    OR bizible_referrer_page_RAW LIKE '%devopsgtm%'))
+    AND ( bizible_form_url_raw LIKE '%devopsgtm%'
+    OR bizible_landing_page_raw LIKE '%devopsgtm%'
+    OR bizible_landing_page_raw LIKE '%events-amer-enterprise%'---Added by AO MSandP issue:811
+    OR bizible_landing_page_raw LIKE '%events-pd-emea%'----Added by AO MSandP issue:811
+    OR bizible_landing_page_raw LIKE '%events-pd-technical-apac%'---Added by AO MSandP issue:811
+    OR bizible_referrer_page_raw LIKE '%devopsgtm%'))
     OR camp.campaign_parent_id LIKE '%7014M000001dpT9%'
     OR camp.campaign_id LIKE '%7018X000001lmtN%' -- Added by AO MSandP issue 880
       -- OR camp.campaign_parent_id LIKE '%7014M000001dn8M%')
@@ -292,8 +292,8 @@ CASE
       )))
       THEN 'PubSec Nurture'
   WHEN (bizible_touchpoint_type = 'Web Form' -- MSandP 657
-     AND (BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=cdusecase%'
-    OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=cdusecase%'
+     AND (bizible_form_url_raw LIKE '%utm_campaign=cdusecase%'
+    OR bizible_landing_page_raw LIKE '%utm_campaign=cdusecase%'
     OR bizible_referrer_page_RAW LIKE '%utm_campaign=cdusecase%'))
     OR (camp.campaign_parent_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name LIKE '%CD_%') --- Added by AO demand gen issue 2262
    THEN 'CD Use Case'
