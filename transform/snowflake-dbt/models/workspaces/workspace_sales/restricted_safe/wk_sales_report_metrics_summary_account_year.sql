@@ -83,12 +83,12 @@ WITH date_details AS (
   ), mart_crm_account AS (
 
     SELECT acc.*,
-        raw.has_tam__c                        AS has_tam_flag,
-        raw.public_sector_account__c          AS public_sector_account_flag,
-        raw.pubsec_type__c                    AS pubsec_type,
-        raw.lam_tier__c                       AS potential_lam_arr,
-        raw.billingstatecode                  AS account_billing_state,
-        raw.customer_score__c                 AS customer_score,
+        raw.has_tam__c                              AS has_tam_flag,
+        raw.public_sector_account__c                AS public_sector_account_flag,
+        raw.pubsec_type__c                          AS pubsec_type,
+        raw.lam_tier__c                             AS potential_lam_arr,
+        raw.billingstatecode                        AS account_billing_state,
+        raw.customer_score__c                       AS customer_score,
         raw.account_demographics_territory__c       AS account_demographics_territory,
         raw.account_demographics_upa_state__c       AS account_demographics_upa_state_code,
         raw.account_demographics_upa_state_name__c  AS account_demographics_upa_state_name
@@ -651,20 +651,15 @@ WITH date_details AS (
 
     
     -- Account demographics fields
-    upa_account.parent_crm_account_sales_segment                    AS upa_ad_segment,
-    upa_account.parent_crm_account_demographics_geo                 AS upa_ad_geo,
-    upa_account.parent_crm_account_demographics_region              AS upa_ad_region,
-    upa_account.parent_crm_account_demographics_area                AS upa_ad_area,
-    
-    upa_account.crm_account_billing_country                         AS upa_ad_country,  
-    upa_account.parent_crm_account_demographics_upa_state           AS upa_ad_state,
-    upa_account.parent_crm_account_demographics_upa_city            AS upa_ad_city,
-    upa_account.parent_crm_account_demographics_upa_postal_code     AS upa_ad_zip_code,
-    
-    mart_crm_account.account_demographics_territory                 AS account_ad_territory,
-    upa_account.account_demographics_territory                      AS upa_ad_territory,
-    mart_crm_account.account_demographics_upa_state_code            AS upa_ad_state_code,
-    mart_crm_account.account_demographics_upa_state_name            AS upa_ad_state_name,
+    mart_crm_account.parent_crm_account_sales_segment                    AS parent_crm_account_sales_segment,
+    mart_crm_account.parent_crm_account_geo                              AS parent_crm_account_geo,
+    mart_crm_account.parent_crm_account_region                           AS parent_crm_account_region,
+    mart_crm_account.parent_crm_account_area                             AS parent_crm_account_area,
+    mart_crm_account.crm_account_billing_country                         AS crm_account_billing_country,  
+    mart_crm_account.parent_crm_account_upa_state                        AS parent_crm_account_upa_state,
+    mart_crm_account.parent_crm_account_upa_city                         AS parent_crm_account_upa_city,
+    mart_crm_account.parent_crm_account_upa_postal_code                  AS parent_crm_account_upa_postal_code,
+    mart_crm_account.parent_crm_account_sales_territory                  AS parent_crm_account_sales_territory,
 
     
     -- substitute this by key segment
@@ -695,7 +690,7 @@ WITH date_details AS (
     mart_crm_account.public_sector_account_flag,
     mart_crm_account.pubsec_type,
     mart_crm_account.potential_lam_arr,
-    coalesce(mart_crm_account.crm_account_demographics_employee_count, 0)   AS employees,
+    coalesce(mart_crm_account.crm_account_employee_count, 0)   AS employees,
     
     COALESCE(mart_crm_account.carr_account_family, 0)                       AS account_family_arr,
     LEAST(50000,GREATEST(coalesce(mart_crm_account.number_of_licenses_this_account,0),COALESCE(mart_crm_account.potential_users, mart_crm_account.decision_maker_count_linkedin, mart_crm_account.crm_account_zoom_info_number_of_developers, 0)))           AS calculated_developer_count,
@@ -948,8 +943,6 @@ WITH date_details AS (
   FROM account_year_key AS ak
   INNER JOIN sfdc_accounts_xf AS a
     ON ak.account_id = a.account_id
-  LEFT JOIN mart_crm_account AS upa_account
-    ON a.ultimate_parent_account_id = upa_account.dim_crm_account_id
   LEFT JOIN sfdc_accounts_xf AS upa
     ON a.ultimate_parent_account_id = upa.account_id
   LEFT JOIN dim_crm_account AS dim_account

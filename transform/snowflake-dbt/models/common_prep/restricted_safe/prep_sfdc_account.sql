@@ -46,5 +46,5 @@ WITH sfdc_account AS (
     created_by="@paul_armstrong",
     updated_by="@lisvinueza",
     created_date="2020-10-30",
-    updated_date="2023-04-11"
+    updated_date="2023-05-08"
 ) }}

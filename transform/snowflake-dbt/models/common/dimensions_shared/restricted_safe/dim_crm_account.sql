@@ -180,7 +180,7 @@ WITH final AS (
     created_by="@msendal",
     updated_by="@lisvinueza",
     created_date="2020-06-01",
-    updated_date="2023-04-11"
+    updated_date="2023-05-08"
 ) }}
 
 

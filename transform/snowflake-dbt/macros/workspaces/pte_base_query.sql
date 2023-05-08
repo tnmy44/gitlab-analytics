@@ -30,6 +30,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(CASE WHEN parent_crm_account_sales_territory !='Territory Not Found' THEN parent_crm_account_sales_territory END) AS parent_crm_account_sales_territory
         , MAX(crm_account_employees) AS crm_account_employees
         , MAX(parent_crm_account_max_family_employee) AS parent_crm_account_max_family_employee
+        , MAX(crm_account_employee_count_band) AS crm_account_employee_count_band
         , MAX(CASE WHEN product_tier_name LIKE '%Ultimate%' THEN 1 ELSE 0 END) AS is_ultimate_product_tier
         , MAX(CASE WHEN product_tier_name LIKE '%Premium%' THEN 1 ELSE 0 END) AS is_premium_product_tier
         , MAX(CASE WHEN product_tier_name LIKE '%Starter%' or product_tier_name LIKE '%Bronze%' THEN 1 ELSE 0 END) AS is_starter_bronze_product_tier
@@ -79,6 +80,7 @@ WITH mart_arr_snapshot_bottom_up AS (
 
     SELECT dim_crm_account_id
         , COUNT(dim_subscription_id) AS num_of_subs_prev
+        , MAX(crm_account_employee_count) AS crm_account_employee_count_prev
         , SUM(mrr) AS sum_mrr_prev
         , SUM(arr) AS sum_arr_prev
         , SUM(quantity) AS license_count_prev
@@ -365,6 +367,8 @@ SELECT
            WHEN p1.parent_crm_account_region IS NULL THEN 'Unknown'
            ELSE p1.parent_crm_account_region END AS parent_account_region
     , COALESCE(p1.parent_crm_account_area, 'Unknown') AS parent_account_area
+    , p1.crm_account_employee_count AS parent_account_employees_cnt
+    , p1.crm_account_employee_count_band AS parent_account_employee_count_band
     , p1.is_ultimate_product_tier AS is_ultimate_product_tier_flag
     , p1.is_premium_product_tier AS is_premium_product_tier_flag
     , p1.is_starter_bronze_product_tier AS is_starter_bronze_product_tier_flag

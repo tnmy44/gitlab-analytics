@@ -189,6 +189,7 @@ WITH map_merged_crm_account AS (
         WHEN LOWER(sfdc_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
         ELSE 'Non - Focus Account'
       END                                                                 AS crm_account_focus_account,
+      sfdc_account.account_owner_user_segment                             AS crm_account_owner_user_segment,
       sfdc_account.billing_country                                        AS crm_account_billing_country,
       sfdc_account.billing_country_code                                   AS crm_account_billing_country_code,
       sfdc_account.account_type                                           AS crm_account_type,
@@ -201,7 +202,6 @@ WITH map_merged_crm_account AS (
          WHEN sfdc_account.account_max_family_employee <= 1500 AND sfdc_account.account_max_family_employee > 1000  THEN 'Employees > 1K'
          ELSE 'Employees < 1K'
       END                                                                 AS crm_account_employee_count_band,
-      sfdc_account.account_owner_user_segment                             AS crm_account_owner_user_segment,
       sfdc_account.partner_vat_tax_id,
       sfdc_account.account_manager,
       sfdc_account.business_development_rep,

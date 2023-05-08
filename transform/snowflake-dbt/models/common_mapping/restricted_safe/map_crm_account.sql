@@ -59,5 +59,5 @@ WITH account_prep AS (
     created_by="@snalamaru",
     updated_by="@lisvinueza",
     created_date="2020-11-23",
-    updated_date="2023-04-11"
+    updated_date="2023-05-08"
 ) }}

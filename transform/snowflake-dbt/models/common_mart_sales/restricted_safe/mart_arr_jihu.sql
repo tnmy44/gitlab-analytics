@@ -85,6 +85,8 @@ WITH dim_billing_account AS (
       dim_crm_account.parent_crm_account_upa_city                                     AS parent_crm_account_upa_city,
       dim_crm_account.parent_crm_account_upa_street                                   AS parent_crm_account_upa_street,
       dim_crm_account.parent_crm_account_upa_postal_code                              AS parent_crm_account_upa_postal_code,
+      dim_crm_account.parent_crm_account_role_type                                    AS parent_crm_account_role_type,
+      dim_crm_account.parent_crm_account_business_unit                                AS parent_crm_account_business_unit,
       dim_crm_account.crm_account_employee_count                                      AS crm_account_employee_count,
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
@@ -202,5 +204,5 @@ WITH dim_billing_account AS (
     created_by="@iweeks",
     updated_by="@lisvinueza",
     created_date="2021-12-30",
-    updated_date="2023-04-11"
+    updated_date="2023-05-08"
 ) }}

@@ -171,7 +171,7 @@ WITH dim_crm_account AS (
         'type_of_arr_change.product_tier_name']) }}
                                                                     AS primary_key,
       type_of_arr_change.arr_month,
-      dim_crm_account.parent_crm_account_name AS parent_crm_account_name,
+      dim_crm_account.parent_crm_account_name,
       type_of_arr_change.dim_parent_crm_account_id,
       type_of_arr_change.product_tier_name,
       type_of_arr_change.product_delivery_type,
@@ -208,6 +208,9 @@ WITH dim_crm_account AS (
       AND type_of_arr_change.product_tier_name = annual_price_per_seat_change.product_tier_name
      LEFT JOIN dim_crm_account
       ON dim_crm_account.dim_crm_account_id = type_of_arr_change.dim_parent_crm_account_id
+    /*The snapshotted data includes parent names that werecalculated with a logic we no longer use .
+    Join dim_crm_account to get the most recent parent_crm_account_name from the live models in order to avoid having
+   different parent_crm_account_names from the snapshotted data. */ 
 
 )
 

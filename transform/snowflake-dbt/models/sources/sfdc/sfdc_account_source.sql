@@ -92,7 +92,9 @@ renamed AS (
     number_of_employees_manual_source_admin__c AS admin_manual_source_number_of_employees,
     account_address_manual_source_admin__c AS admin_manual_source_account_address,
 
-       -- account demographics fields
+    -- account demographics fields
+
+    -- Add sales_segment_cleaning macro to avoid duplication in downstream models
     {{sales_segment_cleaning('account_demographics_sales_segment__c')}} AS account_sales_segment,
     account_demographics_geo__c AS account_geo,
     account_demographics_region__c AS account_region,

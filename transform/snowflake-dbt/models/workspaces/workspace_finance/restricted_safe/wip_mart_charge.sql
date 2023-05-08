@@ -87,7 +87,6 @@ WITH dim_amendment AS (
       dim_crm_account.parent_crm_account_name                                         AS parent_crm_account_name,
       dim_crm_account.parent_crm_account_sales_segment                                AS parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_geo                                          AS parent_crm_account_geo,
-      dim_crm_account.parent_crm_account_area                                         AS parent_crm_account_area,
       dim_crm_account.parent_crm_account_region                                       AS parent_crm_account_region,
       dim_crm_account.parent_crm_account_area                                         AS parent_crm_account_area,
       dim_crm_account.parent_crm_account_industry                                     AS parent_crm_account_industry,
@@ -172,5 +171,5 @@ WITH dim_amendment AS (
     created_by="@iweeks",
     updated_by="@lisvinueza",
     created_date="2021-05-10",
-    updated_date="2023-04-11"
+    updated_date="2023-05-08"
 ) }}

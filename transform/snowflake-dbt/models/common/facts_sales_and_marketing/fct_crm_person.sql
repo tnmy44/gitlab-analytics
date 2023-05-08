@@ -168,7 +168,7 @@ WITH account_dims_mapping AS (
       account_dims_mapping.dim_account_location_region_id,                                                     -- dim_account_location_region_id
       account_dims_mapping.dim_parent_sales_segment_id,                                                        -- dim_parent_sales_segment_id
       account_dims_mapping.dim_parent_sales_territory_id,                                                      -- dim_parent_sales_territory_id
-      account_dims_mapping.dim_parent_industry_id,                                                             -- dim_parent_location_region_id
+      account_dims_mapping.dim_parent_industry_id,                                                             -- dim_parent_industry_id
       {{ get_keyed_nulls('bizible_marketing_channel_path.dim_bizible_marketing_channel_path_id') }}            AS dim_bizible_marketing_channel_path_id,
 
      -- important person dates
@@ -307,5 +307,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@lisvinueza",
     created_date="2020-12-01",
-    updated_date="2023-04-13"
+    updated_date="2023-05-08"
 ) }}

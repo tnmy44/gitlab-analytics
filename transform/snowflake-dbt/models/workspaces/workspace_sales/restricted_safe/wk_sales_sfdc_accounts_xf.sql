@@ -9,17 +9,6 @@ WITH mart_crm_account AS (
 SELECT *
 FROM {{ref('wk_sales_sfdc_users_xf')}}
 
-), parent_account AS (
-    SELECT
-        dim_crm_account_id,
-        dim_crm_user_id,
-        parent_crm_account_sales_segment,
-        parent_crm_account_geo,
-        parent_crm_account_region,
-        parent_crm_account_area,
-        parent_crm_account_sales_territory
-    FROM {{ref('mart_crm_account')}}
-
 ), sfdc_record_type AS (
     -- using source in prep temporarily
     SELECT *
@@ -31,15 +20,11 @@ SELECT
     mart.crm_account_name                                    AS account_name,
     mart.master_record_id,
     mart.dim_crm_user_id                                     AS owner_id,
-
-    -----------------------
-
-    account_owner.business_unit                 AS account_owner_user_business_unit,
-    account_owner.sub_business_unit             AS account_owner_user_sub_business_unit,
-    account_owner.division                      AS account_owner_user_division,
-    account_owner.asm                           AS account_owner_user_asm,
-
-    account_owner.adjusted_user_segment         AS account_owner_user_segment,
+    account_owner.business_unit                              AS account_owner_user_business_unit,
+    account_owner.sub_business_unit                          AS account_owner_user_sub_business_unit,
+    account_owner.division                                   AS account_owner_user_division,
+    account_owner.asm                                        AS account_owner_user_asm,
+    account_owner.adjusted_user_segment                      AS account_owner_user_segment,
 
     -- NF: Add the logic for hybrid users
     -- If hybrid user we leverage the account demographics data
@@ -47,9 +32,9 @@ SELECT
         WHEN account_owner.is_hybrid_flag = 1
         THEN mart.parent_crm_account_sales_segment  
         ELSE account_owner.user_segment  
-    END                                         AS account_owner_raw_user_segment,
-    mart.crm_account_owner_geo                  AS account_owner_user_geo,
-    mart.crm_account_owner_region               AS account_owner_user_region,
+    END                                                      AS account_owner_raw_user_segment,
+    mart.crm_account_owner_geo                               AS account_owner_user_geo,
+    mart.crm_account_owner_region                            AS account_owner_user_region,
     
     -- NF: Add the logic for hybrid users
     -- If hybrid user we leverage the account demographics data
@@ -57,19 +42,19 @@ SELECT
         WHEN account_owner.is_hybrid_flag = 1
         THEN mart.parent_crm_account_area  
         ELSE account_owner.user_area  
-       END                                      AS account_owner_user_area,
+       END                                                   AS account_owner_user_area,
 
-    account_owner.role_type                     AS account_owner_user_role_type,
+    account_owner.role_type                                  AS account_owner_user_role_type,
 
-    parent_account_owner.business_unit          AS parent_account_owner_user_business_unit,
-    parent_account_owner.sub_business_unit      AS parent_account_owner_user_sub_business_unit,
-    parent_account_owner.division               AS parent_account_owner_user_division,
-    parent_account_owner.asm                    AS parent_account_owner_user_asm,
+    parent_account_owner.business_unit                       AS parent_account_owner_user_business_unit,
+    parent_account_owner.sub_business_unit                   AS parent_account_owner_user_sub_business_unit,
+    parent_account_owner.division                            AS parent_account_owner_user_division,
+    parent_account_owner.asm                                 AS parent_account_owner_user_asm,
 
-    parent_account_owner.role_type              AS parent_account_owner_user_role_type,
+    parent_account_owner.role_type                           AS parent_account_owner_user_role_type,
 
     ------------------------
-    mart.dim_crm_person_primary_contact_id      AS primary_contact_id,
+    mart.dim_crm_person_primary_contact_id                   AS primary_contact_id,
     mart.record_type_id,
     mart.partner_vat_tax_id,
     mart.gitlab_com_user,
@@ -128,6 +113,8 @@ SELECT
     mart.parent_crm_account_upa_city,
     mart.parent_crm_account_upa_street,
     mart.parent_crm_account_upa_postal_code,
+    mart.parent_crm_account_upa_postal_code,
+    mart.parent_crm_account_business_unit,
     mart.health_number,
     mart.health_score_color,
     mart.count_active_subscription_charges,
@@ -216,13 +203,11 @@ SELECT
 
 
 FROM mart_crm_account AS mart
-LEFT JOIN parent_account
-    ON mart.dim_parent_crm_account_id = parent_account.dim_crm_account_id
 LEFT JOIN sfdc_record_type
     ON mart.record_type_id = sfdc_record_type.record_type_id
 LEFT JOIN account_owner 
     ON account_owner.user_id = mart.dim_crm_user_id
 LEFT JOIN account_owner parent_account_owner
-    ON parent_account_owner.user_id = parent_account.dim_crm_user_id
+    ON parent_account_owner.user_id = mart.dim_crm_user_id
 
 WHERE mart.is_deleted = FALSE

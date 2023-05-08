@@ -244,5 +244,5 @@ WITH dim_billing_account AS (
     created_by="@iweeks",
     updated_by="@lisvinueza",
     created_date="2021-07-29",
-    updated_date="2023-04-11"
+    updated_date="2023-05-08"
 ) }}

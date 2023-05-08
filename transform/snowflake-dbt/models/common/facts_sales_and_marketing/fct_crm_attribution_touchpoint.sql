@@ -102,5 +102,5 @@ WITH bizible_attribution_touchpoints AS (
     created_by="@mcooperDD",
     updated_by="@lisvinueza",
     created_date="2021-01-21",
-    updated_date="2023-04-11"
+    updated_date="2023-05-08"
 ) }}

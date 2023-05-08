@@ -345,5 +345,5 @@ WITH sfdc_lead AS (
     created_by="@rmistry",
     updated_by="@lisvinueza",
     created_date="2021-01-19",
-    updated_date="2023-04-11"
+    updated_date="2023-05-08"
 ) }}

@@ -229,7 +229,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="manual_charges",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@lisvinueza",
     created_date="2021-10-28",
-    updated_date="2022-11-28",
+    updated_date="2023-05-08",
 ) }}

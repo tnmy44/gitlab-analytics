@@ -137,6 +137,8 @@ WITH sfdc_users_xf AS (
        parent_crm_account_upa_city,
        parent_crm_account_upa_street,
        parent_crm_account_upa_postal_code,
+       parent_crm_account_business_unit,
+       parent_crm_account_role_type,
        crm_account_employee_count,
        crm_account_gtm_strategy,
        crm_account_focus_account,

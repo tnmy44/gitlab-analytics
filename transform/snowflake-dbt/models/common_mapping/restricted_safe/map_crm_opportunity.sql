@@ -78,7 +78,7 @@ WITH crm_account_dimensions AS (
 {{ dbt_audit(
     cte_ref="opportunities_with_keys",
     created_by="@snalamaru",
-    updated_by="@iweeks",
+    updated_by="@lisvinueza",
     created_date="2020-12-17",
-    updated_date="2021-04-22"
+    updated_date="2023-05-08"
 ) }}
