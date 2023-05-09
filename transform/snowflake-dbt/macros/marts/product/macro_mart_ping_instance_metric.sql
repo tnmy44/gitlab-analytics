@@ -9,7 +9,6 @@
     ('dim_product_detail', 'dim_product_detail'),
     ('fct_charge', 'fct_charge'),
     ('dim_license', 'dim_license'),
-    ('dim_hosts', 'dim_hosts'),
     ('dim_location', 'dim_location_country'),
     ('dim_ping_metric', 'dim_ping_metric')
     ])
@@ -200,10 +199,6 @@
         ON fct_ping_instance_metric.dim_ping_date_id = dim_date.date_id
       LEFT JOIN dim_ping_instance
         ON fct_ping_instance_metric.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
-      LEFT JOIN dim_hosts
-        ON dim_ping_instance.dim_host_id = dim_hosts.host_id
-          AND dim_ping_instance.ip_address_hash = dim_hosts.source_ip_hash
-          AND dim_ping_instance.dim_instance_id = dim_hosts.instance_id
       LEFT JOIN license_subscriptions_w_latest_subscription_md5
         ON dim_ping_instance.license_md5 = license_subscriptions_w_latest_subscription_md5.license_md5
        AND dim_date.first_day_of_month = license_subscriptions_w_latest_subscription_md5.reporting_month
@@ -299,9 +294,9 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@mdrussell",
+    updated_by="@michellecooper",
     created_date="2022-03-11",
-    updated_date="2023-03-29"
+    updated_date="2023-05-09"
 ) }}
 
 {% endmacro %}
