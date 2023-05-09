@@ -130,7 +130,6 @@ WITH sfdc_users_xf AS (
        parent_crm_account_region,
        parent_crm_account_area,
        parent_crm_account_sales_territory,
-       parent_crm_account_sales_segment,
        parent_crm_account_max_family_employee,
        parent_crm_account_upa_country,
        parent_crm_account_upa_state,

@@ -113,7 +113,6 @@ SELECT
     mart.parent_crm_account_upa_city,
     mart.parent_crm_account_upa_street,
     mart.parent_crm_account_upa_postal_code,
-    mart.parent_crm_account_upa_postal_code,
     mart.parent_crm_account_business_unit,
     mart.health_number,
     mart.health_score_color,
