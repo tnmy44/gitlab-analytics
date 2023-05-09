@@ -62,7 +62,7 @@ notebooks = get_sales_analytics_notebooks(frequency="quarterly")
 start = DummyOperator(task_id="Start", dag=dag)
 
 for notebook, task_name in notebooks.items():
-    
+
     absolute_path = pathlib.Path(SALES_ANALYTICS_NOTEBOOKS_PATH) / notebook
     notebook_parent = absolute_path.parent.as_posix()
     notebook_filename = absolute_path.name
