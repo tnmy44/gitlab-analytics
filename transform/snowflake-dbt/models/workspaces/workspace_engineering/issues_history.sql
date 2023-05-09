@@ -29,7 +29,9 @@ SELECT
   issues.issue_id,
   issues.issue_iid,
   issues.project_id,
+  issues.project_path,
   issues.namespace_id,
+  issues.ultimate_parent_id,
   issues.labels,
   issues.masked_label_title,
   issues.issue_title,
@@ -74,6 +76,7 @@ SELECT
 FROM issues 
 INNER JOIN dates 
   ON COALESCE(date_trunc('day',issues.created_at),dates.date_actual) <= dates.date_actual 
+  AND COALESCE(date_trunc('day',issues.closed_at),dates.date_actual) >= dates.min_date_actual
 LEFT JOIN assigend_users
   ON issues.issue_id = assigend_users.dim_issue_id
 LEFT JOIN label_groups as severity

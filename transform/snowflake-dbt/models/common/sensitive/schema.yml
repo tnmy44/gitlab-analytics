@@ -432,3 +432,41 @@ models:
         tests:
           - accepted_values:
               values: ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+      - name: dim_team_sk
+        tests:
+          - not_null
+      - name: team_id
+        tests:
+          - not_null
+      - name: team_superior_team_id
+      - name: hierarchy_level_1
+      - name: hierarchy_level_2
+      - name: hierarchy_level_3
+      - name: hierarchy_level_4
+      - name: hierarchy_level_5
+      - name: hierarchy_level_6
+      - name: hierarchy_level_7
+      - name: hierarchy_level_8
+      - name: hierarchy_level_9
+      - name: hierarchy_level_1_name
+      - name: hierarchy_level_2_name
+      - name: hierarchy_level_3_name
+      - name: hierarchy_level_4_name
+      - name: hierarchy_level_5_name
+      - name: hierarchy_level_6_name
+      - name: hierarchy_level_7_name
+      - name: hierarchy_level_8_name
+      - name: hierarchy_level_9_name
+      - name: hierarchy_levels_array
+      - name: team_hierarchy_level
+      - name: is_team_inactivated
+      - name: team_name
+      - name: team_manager_name
+      - name: team_manager_name_id
+      - name: team_inactivated_date
+      - name: team_members_count
+      - name: is_team_manager_inherited
+      - name: is_team_active
+      - name: valid_from
+      - name: valid_to
+      - name: is_current

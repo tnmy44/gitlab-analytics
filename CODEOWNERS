@@ -161,8 +161,8 @@ transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armst
 /transform/snowflake-dbt/data/handbook_file_classification_mapping.csv                  @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/historical_counts_maintainers_engineers.csv               @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/netsuite_expense_cost_category.csv                        @iweeks @snalamaru @pempey
-/transform/snowflake-dbt/data/projects_part_of_product.csv                              @clefelhocz1
-/transform/snowflake-dbt/data/projects_part_of_product_ops.csv                          @clefelhocz1
+/transform/snowflake-dbt/data/projects_part_of_product.csv                              @clefelhocz1 @timzallmann @cdu1 @wayne @sgoldstein @dsatcher @m_gill @jeromezng
+/transform/snowflake-dbt/data/projects_part_of_product_ops.csv                          @clefelhocz1 @timzallmann @cdu1 @wayne @sgoldstein @dsatcher @m_gill @jeromezng
 /transform/snowflake-dbt/data/raw_netsuite_currencies.csv                               @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/seeds.md                                                  @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/seeds.yml                                                 @iweeks @snalamaru @pempey
