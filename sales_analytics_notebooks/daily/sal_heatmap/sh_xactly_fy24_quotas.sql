@@ -65,8 +65,7 @@ xc_position_part AS (
 
 sfdc_users AS (
 
-    SELECT
-        *
+    SELECT *
     FROM prod.workspace_sales.sfdc_users_xf
     WHERE
         employee_number IS NOT NULL
@@ -183,14 +182,14 @@ final AS (
         LOWER(sfdc_users.asm)                                                                             AS asm,
 
         CASE
-                    WHEN LOWER(sfdc_users.title) LIKE '%strategic account%' AND DATEADD(MONTH, 9, pivoted_quotas.start_date) <= '2022-08-15'
-                        THEN 'Ramped'
-                    WHEN LOWER(sfdc_users.title) LIKE '%account executive%mid market%' AND DATEADD(MONTH, 4, pivoted_quotas.start_date) <= '2022-06-15'
-                        THEN 'Ramped'
-                    WHEN LOWER(sfdc_users.title) LIKE '%smb account executive%' AND DATEADD(MONTH, 3, pivoted_quotas.start_date) <= '2022-05-15'
-                        THEN 'Ramped'
-                    ELSE 'Ramping'
-        END  AS ramp_status
+            WHEN LOWER(sfdc_users.title) LIKE '%strategic account%' AND DATEADD(MONTH, 9, pivoted_quotas.start_date) <= '2022-08-15'
+                THEN 'Ramped'
+            WHEN LOWER(sfdc_users.title) LIKE '%account executive%mid market%' AND DATEADD(MONTH, 4, pivoted_quotas.start_date) <= '2022-06-15'
+                THEN 'Ramped'
+            WHEN LOWER(sfdc_users.title) LIKE '%smb account executive%' AND DATEADD(MONTH, 3, pivoted_quotas.start_date) <= '2022-05-15'
+                THEN 'Ramped'
+            ELSE 'Ramping'
+        END                                                                                               AS ramp_status
 
     FROM pivoted_quotas
     INNER JOIN sfdc_users
