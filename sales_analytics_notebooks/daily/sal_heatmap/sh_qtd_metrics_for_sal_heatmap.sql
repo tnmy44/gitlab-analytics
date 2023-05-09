@@ -334,7 +334,7 @@ final AS (
         ----------------------------------------------------------------------
         ----------------------------------------------------------------------
         -- keys
-        user.key_sal_heatmap  AS key_owner_name,
+        user.key_sal_heatmap                                                            AS key_owner_name,
         user.employee_number,
         user.key_bu_subbu,
         user.user_role_type,
