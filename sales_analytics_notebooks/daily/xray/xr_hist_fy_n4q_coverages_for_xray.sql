@@ -8,7 +8,7 @@ SELECT
     n4q_open_3plus_net_arr_coverage,
     last_updated_at
 FROM prod.workspace_sales.rsa_source_coverage_fy_n4q_fitted_curves
-WHERE 
+WHERE
     (close_day_of_fiscal_year_normalised > (
         SELECT DISTINCT day_of_fiscal_year_normalised
         FROM prod.workspace_sales.date_details
@@ -19,7 +19,7 @@ WHERE
         FROM prod.workspace_sales.date_details
         WHERE date_actual = CURRENT_DATE
     ) + 5)
-OR
+    OR
     (close_day_of_fiscal_year_normalised > (
         SELECT DISTINCT day_of_fiscal_quarter_normalised
         FROM prod.workspace_sales.date_details
