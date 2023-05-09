@@ -651,15 +651,15 @@ WITH date_details AS (
 
     
     -- Account demographics fields
-    mart_crm_account.parent_crm_account_sales_segment                    AS parent_crm_account_sales_segment,
-    mart_crm_account.parent_crm_account_geo                              AS parent_crm_account_geo,
-    mart_crm_account.parent_crm_account_region                           AS parent_crm_account_region,
-    mart_crm_account.parent_crm_account_area                             AS parent_crm_account_area,
-    mart_crm_account.crm_account_billing_country                         AS crm_account_billing_country,  
-    mart_crm_account.parent_crm_account_upa_state                        AS parent_crm_account_upa_state,
-    mart_crm_account.parent_crm_account_upa_city                         AS parent_crm_account_upa_city,
-    mart_crm_account.parent_crm_account_upa_postal_code                  AS parent_crm_account_upa_postal_code,
-    mart_crm_account.parent_crm_account_sales_territory                  AS parent_crm_account_sales_territory,
+    upa_account.parent_crm_account_sales_segment                    AS parent_crm_account_sales_segment,
+    upa_account.parent_crm_account_geo                              AS parent_crm_account_geo,
+    upa_account.parent_crm_account_region                           AS parent_crm_account_region,
+    upa_account.parent_crm_account_area                             AS parent_crm_account_area,
+    upa_account.crm_account_billing_country                         AS crm_account_billing_country,  
+    upa_account.parent_crm_account_upa_state                        AS parent_crm_account_upa_state,
+    upa_account.parent_crm_account_upa_city                         AS parent_crm_account_upa_city,
+    upa_account.parent_crm_account_upa_postal_code                  AS parent_crm_account_upa_postal_code,
+    upa_account.parent_crm_account_sales_territory                  AS parent_crm_account_sales_territory,
 
     
     -- substitute this by key segment
@@ -943,6 +943,8 @@ WITH date_details AS (
   FROM account_year_key AS ak
   INNER JOIN sfdc_accounts_xf AS a
     ON ak.account_id = a.account_id
+  LEFT JOIN mart_crm_account AS upa_account
+    ON a.ultimate_parent_account_id = upa_account.dim_crm_account_id
   LEFT JOIN sfdc_accounts_xf AS upa
     ON a.ultimate_parent_account_id = upa.account_id
   LEFT JOIN dim_crm_account AS dim_account
@@ -997,19 +999,19 @@ SELECT
     upa_id,
     upa_name,
     upa_user_geo,
-    account_id              AS virtual_upa_id,
-    account_name            AS virtual_upa_name,
-    upa_ad_segment          AS virtual_upa_segment,
-    account_user_geo        AS virtual_upa_geo,
-    account_user_region     AS virtual_upa_region,
-    account_user_area       AS virtual_upa_area,
-    account_country         AS virtual_upa_country,
-    account_zip_code        AS virtual_upa_zip_code,
-    account_industry        AS virtual_upa_industry,
-    account_state           AS virtual_upa_state,
-    account_owner_name      AS virtual_upa_owner_name,
-    account_owner_title_category AS virtual_upa_owner_title_category,
-    account_owner_id        AS virtual_upa_owner_id,
+    account_id                                AS virtual_upa_id,
+    account_name                              AS virtual_upa_name,
+    parent_crm_account_sales_segment          AS virtual_upa_segment,
+    parent_crm_account_geo                    AS virtual_upa_geo,
+    parent_crm_account_region                 AS virtual_upa_region,
+    parent_crm_account_area                   AS virtual_upa_area,
+    crm_account_billing_country               AS virtual_upa_country,
+    parent_crm_account_upa_postal_code        AS virtual_upa_zip_code,
+    account_industry                          AS virtual_upa_industry,
+    parent_crm_account_upa_state              AS virtual_upa_state,
+    account_owner_name                        AS virtual_upa_owner_name,
+    account_owner_title_category              AS virtual_upa_owner_title_category,
+    account_owner_id                          AS virtual_upa_owner_id,
     account_id,
     account_name,
     account_owner_name,
@@ -1218,39 +1220,39 @@ FROM selected_hierarchy_virtual_upa final
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_segment
-        ELSE acc.upa_ad_segment
+        ELSE acc.parent_crm_account_sales_segment
     END                                     AS upa_ad_segment,
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_geo
-        ELSE acc.upa_ad_geo
+        ELSE acc.parent_crm_account_geo
     END                                     AS upa_ad_geo,
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_region 
-        ELSE acc.upa_ad_region
+        ELSE acc.parent_crm_account_region
     END                                     AS upa_ad_region,
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_area
-        ELSE acc.upa_ad_area
+        ELSE acc.parent_crm_account_area
     END                                     AS upa_ad_area,
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_country 
-        ELSE acc.upa_ad_country
+        ELSE acc.crm_account_billing_country
     END                                     AS upa_ad_country,
 
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_state 
-        ELSE acc.upa_ad_state
+        ELSE acc.parent_crm_account_upa_state
     END                                     AS upa_ad_state,
 
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_zip_code 
-        ELSE acc.upa_ad_zip_code
+        ELSE acc.parent_crm_account_upa_postal_code
     END                                     AS upa_ad_zip_code,
 
     -- Account User Owner fields
@@ -1446,13 +1448,13 @@ FROM selected_hierarchy_virtual_upa final
     
     COALESCE(virtual.virtual_upa_id,acc.upa_id)                             AS virtual_upa_id,
     COALESCE(virtual.virtual_upa_name,acc.upa_name)                         AS virtual_upa_name,
-    COALESCE(virtual.virtual_upa_segment,acc.upa_ad_segment)                AS virtual_upa_ad_segment,
+    COALESCE(virtual.virtual_upa_segment,acc.parent_crm_account_sales_segment)                AS virtual_upa_ad_segment,
     COALESCE(virtual.virtual_upa_geo,acc.upa_user_geo)                      AS virtual_upa_geo,
     COALESCE(virtual.virtual_upa_region,acc.upa_user_region)                AS virtual_upa_region,
     COALESCE(virtual.virtual_upa_area,acc.upa_user_area)                    AS virtual_upa_area,
-    COALESCE(virtual.virtual_upa_country,acc.upa_ad_country)                AS virtual_upa_ad_country,
-    COALESCE(virtual.virtual_upa_state,acc.upa_ad_state)                    AS virtual_upa_ad_state,
-    COALESCE(virtual.virtual_upa_zip_code,acc.upa_ad_zip_code)              AS virtual_upa_ad_zip_code,
+    COALESCE(virtual.virtual_upa_country,acc.crm_account_billing_country)   AS virtual_upa_ad_country,
+    COALESCE(virtual.virtual_upa_state,acc.parent_crm_account_upa_state)    AS virtual_upa_ad_state,
+    COALESCE(virtual.virtual_upa_zip_code,acc.parent_crm_account_upa_postal_code) AS virtual_upa_ad_zip_code,
     COALESCE(virtual.virtual_upa_industry,acc.upa_industry)                 AS virtual_upa_industry,
     COALESCE(virtual.virtual_upa_owner_name,acc.upa_owner_name)             AS virtual_upa_owner_name,
     COALESCE(virtual.virtual_upa_owner_title_category,acc.upa_owner_title_category)   AS virtual_upa_owner_title_category,
