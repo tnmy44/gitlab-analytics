@@ -5,12 +5,48 @@ WITH internal_issues AS (
 
 ),
 
-namespaces AS (
+cte_ns_explode AS ( 
 
-  SELECT *
-  FROM {{ ref('dim_namespace') }}
+  	SELECT namespace_id,
+           ultimate_parent_id,
+           upstream_lineage,
+           s.value AS lineage_namespace,
+           s.index AS rn
+   FROM {{ ref('gitlab_dotcom_namespace_lineage_scd') }} AS a,
+        LATERAL FLATTEN (a.upstream_lineage,OUTER=>TRUE) AS s
+   WHERE is_current 
 
-), product_categories_yml_base AS (
+   ),cte_ns_get_path AS (
+
+  	SELECT a.namespace_id,
+           a.ultimate_parent_id,
+           a.upstream_lineage,
+           lineage_namespace,
+           rn,
+           b.namespace_path
+   FROM cte_ns_explode AS a
+   LEFT JOIN {{ ref('dim_namespace') }} AS b ON a.lineage_namespace = b.dim_namespace_id 
+
+   ),cte_ns_restructure AS (
+   
+   SELECT namespace_id,
+           ultimate_parent_id,
+           upstream_lineage,
+           array_agg(namespace_path) WITHIN GROUP (ORDER BY rn) AS regroup
+   FROM cte_ns_get_path
+   GROUP BY namespace_id,
+            ultimate_parent_id,
+            upstream_lineage 
+
+    ), namespaces AS (
+
+   SELECT namespace_id,
+           ultimate_parent_id,
+           upstream_lineage,
+           array_to_string(regroup,'/') AS full_group_path
+   FROM cte_ns_restructure 
+
+   ), product_categories_yml_base AS (
 
     SELECT
         DISTINCT LOWER(group_name) AS group_name,
@@ -77,7 +113,8 @@ final AS (
     milestones.start_date                                                                                                                                                                                                                                                                              AS milestone_start_date,
     milestones.due_date                                                                                                                                                                                                                                                                                AS milestone_due_date,
     internal_issues.weight                                                                                                                                                                                                                                                                             AS weight,
-    COALESCE(ns_4.dim_namespace_id,ns_3.dim_namespace_id,ns_2.dim_namespace_id,ns_1.dim_namespace_id,ns.dim_namespace_id) AS namespace_id,
+    internal_issues.namespace_id                                                 AS namespace_id,
+    internal_issues.ultimate_parent_id                                           AS ultimate_parent_id,
     internal_issues.labels                                                                                                                                                                                                                                                                             AS labels,
     ARRAY_TO_STRING(internal_issues.labels, '|')                                                                                                                                                                                                                                                       AS masked_label_title,
     ARRAY_CONTAINS('community contribution'::VARIANT, internal_issues.labels)                                                                                                                                                                                                                          AS is_community_contribution,
@@ -116,16 +153,8 @@ final AS (
     IFF(ARRAY_CONTAINS('fedramp::vulnerability'::VARIANT, internal_issues.labels), TRUE, FALSE)                             AS fedramp_vulnerability,
     projects.visibility_level                                                                                                                                                                                                                                                                          AS visibility_level,
     projects.project_path                                                                                                                                                                                                                                                                              AS project_path,
-    CASE
-      WHEN ns_4.dim_namespace_id IS NOT NULL
-        THEN ns_4.namespace_path || '/' || ns_3.namespace_path || '/' || ns_2.namespace_path || '/' || ns_1.namespace_path || '/' || ns.namespace_path
-      WHEN ns_3.dim_namespace_id IS NOT NULL
-        THEN ns_3.namespace_path || '/' || ns_2.namespace_path || '/' || ns_1.namespace_path || '/' || ns.namespace_path
-      WHEN ns_2.dim_namespace_id IS NOT NULL
-        THEN ns_2.namespace_path || '/' || ns_1.namespace_path || '/' || ns.namespace_path
-      WHEN ns_1.dim_namespace_id IS NOT NULL
-        THEN ns_1.namespace_path || '/' || ns.namespace_path
-      ELSE ns.namespace_path END                                                                                                                                                                                                                                                                       AS full_group_path,
+    ns.full_group_path                                                    AS full_group_path,
+
     CASE
       WHEN projects.visibility_level = 'public'
         THEN '[' || REPLACE(REPLACE(LEFT(internal_issues.issue_title, 64), '[', ''), ']', '') || '](https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/issues/' || internal_issues.issue_iid || ')'
@@ -138,15 +167,7 @@ final AS (
   LEFT JOIN bot_users AS bots
     ON bots.dim_user_id = internal_issues.author_id
   LEFT JOIN namespaces AS ns
-    ON ns.dim_namespace_id = projects.dim_namespace_id
-  LEFT JOIN namespaces ns_1
-    ON ns_1.dim_namespace_id = ns.parent_id AND ns.namespace_is_ultimate_parent = FALSE
-  LEFT JOIN namespaces ns_2
-    ON ns_2.dim_namespace_id = ns_1.parent_id AND ns_1.namespace_is_ultimate_parent = FALSE
-  LEFT JOIN namespaces ns_3
-    ON ns_3.dim_namespace_id = ns_2.parent_id AND ns_2.namespace_is_ultimate_parent = FALSE
-  LEFT JOIN namespaces ns_4
-    ON ns_4.dim_namespace_id = ns_3.parent_id AND ns_3.namespace_is_ultimate_parent = FALSE
+    ON ns.namespace_id = projects.dim_namespace_id
   LEFT JOIN milestones
     ON milestones.milestone_id = internal_issues.milestone_id
 )

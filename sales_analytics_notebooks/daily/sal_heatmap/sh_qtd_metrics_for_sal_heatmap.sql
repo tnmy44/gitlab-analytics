@@ -20,16 +20,16 @@ dim_users AS (
 
     SELECT
         user.*,
-        user.role_type                                                                                        AS user_role_type,
-        LOWER(user.business_unit) || '_' || LOWER(user.sub_business_unit)                                     AS user_segment_region
+        user.role_type                                                    AS user_role_type,
+        LOWER(user.business_unit) || '_' || LOWER(user.sub_business_unit) AS user_segment_region
     FROM prod.workspace_sales.sfdc_users_xf AS user
     WHERE
-        is_active = 1
+        user.is_active = 1
         AND (
-            LOWER(title) LIKE '%strategic account%'
-            OR LOWER(title) LIKE '%account executive%'
-            OR LOWER(title) LIKE '%country manager%'
-            OR LOWER(title) LIKE '%public sector channel manager%'
+            LOWER(user.title) LIKE '%strategic account%'
+            OR LOWER(user.title) LIKE '%account executive%'
+            OR LOWER(user.title) LIKE '%country manager%'
+            OR LOWER(user.title) LIKE '%public sector channel manager%'
         )
 
 ),
@@ -334,7 +334,7 @@ final AS (
         ----------------------------------------------------------------------
         ----------------------------------------------------------------------
         -- keys
-        user.key_sal_heatmap  AS key_owner_name,
+        user.key_sal_heatmap                                                            AS key_owner_name,
         user.employee_number,
         user.key_bu_subbu,
         user.user_role_type,
