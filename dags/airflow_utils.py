@@ -262,9 +262,6 @@ def slack_succeeded_task(context):
     return slack_alert.execute(context=None)
 
 
-# Set the resources for the task pods
-pod_resources = {"request_memory": "1Gi", "request_cpu": "500m"}
-
 # GitLab default settings for all DAGs
 gitlab_defaults = dict(
     get_logs=True,
@@ -272,7 +269,6 @@ gitlab_defaults = dict(
     in_cluster=not os.environ["IN_CLUSTER"] == "False",
     is_delete_operator_pod=True,
     namespace=os.environ["NAMESPACE"],
-    resources=pod_resources,
     cmds=["/bin/bash", "-c"],
 )
 
