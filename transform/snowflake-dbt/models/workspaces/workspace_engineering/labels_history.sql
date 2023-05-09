@@ -8,6 +8,12 @@ WITH labels AS (
     SELECT *
     FROM {{ ref('gitlab_dotcom_label_links_source') }} 
 
+),
+
+workflow_labels AS (
+
+  SELECT * FROM {{ ref('engineering_analytics_workflow_labels') }}
+
 ), label_type AS (
 
     SELECT
@@ -17,6 +23,7 @@ WITH labels AS (
         WHEN LOWER(label_title) IN ('severity::1', 'severity::2', 'severity::3', 'severity::4') THEN 'severity'
         WHEN LOWER(label_title) LIKE 'team%' THEN 'team'
         WHEN LOWER(label_title) LIKE 'group%' THEN 'team'
+        WHEN REPLACE(REGEXP_SUBSTR(LOWER(label_title), '\\bworkflow::*([^,]*)'), 'workflow::', '') IN (SELECT workflow_label FROM workflow_labels) THEN 'workflow'
         ELSE 'other'
       END AS label_type
     FROM labels

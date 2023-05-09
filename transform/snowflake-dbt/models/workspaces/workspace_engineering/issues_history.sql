@@ -22,7 +22,11 @@
       AND date_actual < CURRENT_DATE()
 )
 
-, final AS (
+, workflow_labels AS (
+
+  SELECT * FROM {{ ref('engineering_analytics_workflow_labels') }}
+
+), final AS (
 SELECT 
   {{ dbt_utils.surrogate_key(['dates.date_actual','issues.issue_id']) }} AS daily_issue_id,
   dates.date_actual,
@@ -53,6 +57,10 @@ SELECT
   team.label_added_at as team_label_added_at,
   team.label_valid_to as team_label_valid_to,
   team.label_title AS team_label,
+  wf.label_added_at as workflow_label_added_at,
+  wf.label_valid_to as workflow_label_valid_to,
+  wf.label_title AS workflow_label,
+  wfl.cycle,
   IFF(dates.date_actual > date_trunc('day',issues.closed_at), NULL,
       DATEDIFF('day', issues.created_at, dates.date_actual))               AS issue_open_age_in_days,
   DATEDIFF('day', severity.label_added_at, dates.date_actual) AS severity_label_age_in_days,
@@ -65,14 +73,13 @@ SELECT
   issues.subtype_label,
   issues.is_infradev,
   issues.fedramp_vulnerability,
-  issues.workflow_label,
   issues.is_community_contribution,
   issues.is_security,
   issues.is_corrective_action,
   issues.is_part_of_product,
   MAX(dates.date_actual) OVER () AS last_updated_at,
   ROW_NUMBER() OVER (PARTITION BY daily_issue_id 
-  ORDER BY LEAST(COALESCE(severity_label_valid_to, CURRENT_DATE),COALESCE(team_label_valid_to,CURRENT_DATE))) AS rn
+  ORDER BY LEAST(COALESCE(severity_label_valid_to, CURRENT_DATE),COALESCE(team_label_valid_to,CURRENT_DATE)),COALESCE(workflow_label_valid_to,CURRENT_DATE)) AS rn
 FROM issues 
 INNER JOIN dates 
   ON COALESCE(date_trunc('day',issues.created_at),dates.date_actual) <= dates.date_actual 
@@ -86,7 +93,13 @@ LEFT JOIN label_groups as severity
 LEFT JOIN label_groups as team
   ON team.label_type='team'
   AND issues.issue_id = team.dim_issue_id
-  AND dates.date_actual BETWEEN DATE_TRUNC('day', team.label_valid_from) AND DATE_TRUNC('day', team.label_valid_to))
+  AND dates.date_actual BETWEEN DATE_TRUNC('day', team.label_valid_from) AND DATE_TRUNC('day', team.label_valid_to)
+LEFT JOIN label_groups as wf
+  ON wf.label_type='workflow'
+  AND issues.issue_id = wf.dim_issue_id
+  AND dates.date_actual BETWEEN DATE_TRUNC('day', wf.label_valid_from) AND DATE_TRUNC('day', wf.label_valid_to)
+LEFT JOIN workflow_labels as wfl
+  ON REPLACE(wf.label_title, 'workflow::', '') = wfl.workflow_label) 
 
   SELECT * EXCLUDE rn
   FROM final
