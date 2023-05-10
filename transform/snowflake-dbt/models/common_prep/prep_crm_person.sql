@@ -101,6 +101,7 @@ WITH biz_person AS (
       NULL                                          AS matched_account_sdr_assigned,
       NULL                                          AS matched_account_type,
       NULL                                          AS matched_account_gtm_strategy,
+      NULL                                          AS matched_account_bdr_prospecting_status,
       is_first_order_initial_mql,
       is_first_order_mql,
       is_first_order_person,
