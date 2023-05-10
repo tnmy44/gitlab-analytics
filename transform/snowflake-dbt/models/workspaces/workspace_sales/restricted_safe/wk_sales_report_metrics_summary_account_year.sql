@@ -659,7 +659,7 @@ WITH date_details AS (
     upa_account.parent_crm_account_upa_state                        AS parent_crm_account_upa_state,
     upa_account.parent_crm_account_upa_city                         AS parent_crm_account_upa_city,
     upa_account.parent_crm_account_upa_postal_code                  AS parent_crm_account_upa_postal_code,
-    upa_account.parent_crm_account_sales_territory                  AS parent_crm_account_sales_territory,
+    upa_account.parent_crm_account_territory                        AS parent_crm_account_territory,
 
     
     -- substitute this by key segment

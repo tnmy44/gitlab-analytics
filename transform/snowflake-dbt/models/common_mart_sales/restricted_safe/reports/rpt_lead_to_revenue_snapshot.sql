@@ -108,7 +108,7 @@
       opp.crm_opp_owner_region_stamped,
       opp.crm_opp_owner_area_stamped,
       opp.parent_crm_account_upa_country,
-      opp.parent_crm_account_sales_territory
+      opp.parent_crm_account_territory
     FROM person_base
     INNER JOIN dim_crm_person
       ON person_base.dim_crm_person_id=dim_crm_person.dim_crm_person_id
@@ -164,7 +164,7 @@
     cohort_base.crm_opp_owner_region_stamped,
     cohort_base.crm_opp_owner_area_stamped,
     cohort_base.parent_crm_account_upa_country,
-    cohort_base.parent_crm_account_sales_territory,
+    cohort_base.parent_crm_account_territory,
     CASE
       WHEN rpt_sfdc_bizible_tp_opp_linear_blended.dim_crm_touchpoint_id IS NOT null THEN cohort_base.dim_crm_opportunity_id
       ELSE null

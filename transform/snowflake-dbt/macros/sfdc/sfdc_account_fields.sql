@@ -173,7 +173,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.account_geo                                            AS parent_crm_account_geo,
       sfdc_account.account_region                                         AS parent_crm_account_region,
       sfdc_account.account_area                                           AS parent_crm_account_area,
-      sfdc_account.account_territory                                      AS parent_crm_account_sales_territory,
+      sfdc_account.account_territory                                      AS parent_crm_account_territory,
       sfdc_account.account_business_unit                                  AS parent_crm_account_business_unit,
       sfdc_account.account_role_type                                      AS parent_crm_account_role_type,
       sfdc_account.account_max_family_employee                            AS parent_crm_account_max_family_employee,

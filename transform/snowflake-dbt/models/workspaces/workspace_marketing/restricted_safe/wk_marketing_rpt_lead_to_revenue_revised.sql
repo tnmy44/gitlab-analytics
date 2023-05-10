@@ -174,7 +174,7 @@
       opp.crm_opp_owner_area_stamped,
       opp.crm_opp_owner_geo_stamped,
       opp.parent_crm_account_upa_country,
-      opp.parent_crm_account_sales_territory,
+      opp.parent_crm_account_territory,
     
     -- Touchpoint Data
       'Attribution Touchpoint' AS touchpoint_type,
@@ -400,7 +400,7 @@
       crm_opp_owner_area_stamped,
       crm_opp_owner_geo_stamped,
       parent_crm_account_upa_country,
-      parent_crm_account_sales_territory,
+      parent_crm_account_territory,
   
   --Touchpoint Data
       person_base_with_tp.bizible_touchpoint_date AS btp_bizible_touchpoint_date,

@@ -71,7 +71,7 @@ license_subscriptions AS (
     dim_crm_accounts.parent_crm_account_name                                                      AS parent_crm_account_name,
     dim_crm_accounts.parent_crm_account_sales_segment                                             AS parent_crm_account_sales_segment,
     dim_crm_accounts.parent_crm_account_industry                                                  AS parent_crm_account_industry,
-    dim_crm_accounts.parent_crm_account_sales_territory                                           AS parent_crm_account_sales_territory,
+    dim_crm_accounts.parent_crm_account_territory                                                 AS parent_crm_account_territory,
     dim_crm_accounts.technical_account_manager                                                    AS technical_account_manager,
     MAX(fct_charge.mrr)                                                                           AS max_monthly_mrr,
     MAX(IFF(dim_product_detail.product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))
@@ -136,7 +136,7 @@ joined AS (
     COALESCE(sha256.parent_crm_account_name, md5.parent_crm_account_name)                       AS parent_crm_account_name,
     COALESCE(sha256.parent_crm_account_sales_segment, md5.parent_crm_account_sales_segment)     AS parent_crm_account_sales_segment,
     COALESCE(sha256.parent_crm_account_industry, md5.parent_crm_account_industry)               AS parent_crm_account_industry,
-    COALESCE(sha256.parent_crm_account_sales_territory, md5.parent_crm_account_sales_territory) AS parent_crm_account_sales_territory,
+    COALESCE(sha256.parent_crm_account_territory, md5.parent_crm_account_territory)             AS parent_crm_account_territory,
     COALESCE(sha256.technical_account_manager, md5.technical_account_manager)                   AS technical_account_manager,
     CASE
       WHEN sha256.license_expire_date < dim_ping_instance.ping_created_at THEN FALSE
@@ -262,7 +262,7 @@ sorted AS (
     parent_crm_account_name,
     parent_crm_account_sales_segment,
     parent_crm_account_industry,
-    parent_crm_account_sales_territory,
+    parent_crm_account_territory,
     technical_account_manager,
 
     ping_created_at,

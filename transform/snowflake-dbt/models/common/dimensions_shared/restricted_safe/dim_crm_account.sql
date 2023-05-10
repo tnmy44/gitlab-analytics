@@ -32,7 +32,7 @@ WITH final AS (
       prep_crm_account.parent_crm_account_geo,
       prep_crm_account.parent_crm_account_region,
       prep_crm_account.parent_crm_account_area,
-      prep_crm_account.parent_crm_account_sales_territory,
+      prep_crm_account.parent_crm_account_territory,
       prep_crm_account.parent_crm_account_role_type,
       prep_crm_account.parent_crm_account_max_family_employee,
       prep_crm_account.parent_crm_account_upa_country,

@@ -89,7 +89,7 @@ WITH dim_billing_account AS (
       dim_crm_account.parent_crm_account_region                                       AS parent_crm_account_region,
       dim_crm_account.parent_crm_account_area                                         AS parent_crm_account_area,
       dim_crm_account.parent_crm_account_role_type                                    AS parent_crm_account_role_type,
-      dim_crm_account.parent_crm_account_sales_territory                              AS parent_crm_account_sales_territory,
+      dim_crm_account.parent_crm_account_territory                                    AS parent_crm_account_territory,
       dim_crm_account.parent_crm_account_max_family_employee                          AS parent_crm_account_max_family_employee,
       dim_crm_account.parent_crm_account_upa_country                                  AS parent_crm_account_upa_country,
       dim_crm_account.parent_crm_account_upa_state                                    AS parent_crm_account_upa_state,

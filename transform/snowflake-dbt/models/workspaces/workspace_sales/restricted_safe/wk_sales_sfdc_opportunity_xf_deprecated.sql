@@ -709,7 +709,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       sfdc_accounts_xf.parent_crm_account_geo,
       sfdc_accounts_xf.parent_crm_account_region,
       sfdc_accounts_xf.parent_crm_account_area,
-      sfdc_accounts_xf.parent_crm_account_sales_territory,
+      sfdc_accounts_xf.parent_crm_account_territory,
 
       -----------------------------------------------
 

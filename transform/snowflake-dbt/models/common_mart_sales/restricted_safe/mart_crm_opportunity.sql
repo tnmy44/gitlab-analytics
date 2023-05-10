@@ -117,7 +117,7 @@
       dim_crm_account.parent_crm_account_name,
       dim_crm_account.parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_geo,
-      dim_crm_account.parent_crm_account_sales_territory,
+      dim_crm_account.parent_crm_account_territory,
       dim_crm_account.parent_crm_account_region,
       dim_crm_account.parent_crm_account_area,
       dim_crm_account.parent_crm_account_business_unit,

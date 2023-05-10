@@ -105,7 +105,7 @@ SELECT
     mart.parent_crm_account_geo,
     mart.parent_crm_account_region,
     mart.parent_crm_account_area,
-    mart.parent_crm_account_sales_territory,
+    mart.parent_crm_account_territory,
     mart.crm_account_employee_count,
     mart.parent_crm_account_max_family_employee,
     mart.parent_crm_account_upa_country,

@@ -264,7 +264,7 @@ WITH edm_opty AS (
     edm_opty.parent_crm_account_geo,
     edm_opty.parent_crm_account_region,
     edm_opty.parent_crm_account_area,
-    edm_opty.parent_crm_account_sales_territory,
+    edm_opty.parent_crm_account_territory,
 
     edm_opty.sales_qualified_source_name               AS sales_qualified_source,
     edm_opty.stage_category,

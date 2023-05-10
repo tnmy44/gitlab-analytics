@@ -27,7 +27,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(parent_crm_account_industry) AS parent_crm_account_industry
         , MAX(parent_crm_account_region) AS parent_crm_account_region
         , MAX(parent_crm_account_area) AS parent_crm_account_area
-        , MAX(CASE WHEN parent_crm_account_sales_territory !='Territory Not Found' THEN parent_crm_account_sales_territory END) AS parent_crm_account_sales_territory
+        , MAX(CASE WHEN parent_crm_account_territory !='Territory Not Found' THEN parent_crm_account_territory END) AS parent_crm_account_territory
         , MAX(crm_account_employees) AS crm_account_employees
         , MAX(parent_crm_account_max_family_employee) AS parent_crm_account_max_family_employee
         , MAX(crm_account_employee_count_band) AS crm_account_employee_count_band
@@ -361,7 +361,7 @@ SELECT
     , p1.cancelled_subs AS cancelled_subs_cnt
     , COALESCE(p1.parent_crm_account_sales_segment, 'Unknown') AS account_sales_segment
     , COALESCE(p1.parent_crm_account_industry, 'Unknown') AS account_industry
-    , COALESCE(p1.parent_crm_account_sales_territory, 'Unknown') AS account_sales_territory
+    , COALESCE(p1.parent_crm_account_territory, 'Unknown') AS account_sales_territory
     , CASE WHEN p1.parent_crm_account_region = 'AMER' OR p1.parent_crm_account_region LIKE 'AMER%' OR p1.parent_crm_account_region LIKE 'US%' THEN 'AMER'
            WHEN p1.parent_crm_account_region = 'EMEA' OR p1.parent_crm_account_region LIKE 'Germany%' THEN 'EMEA'
            WHEN p1.parent_crm_account_region IS NULL THEN 'Unknown'

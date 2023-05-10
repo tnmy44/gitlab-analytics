@@ -59,7 +59,7 @@
       dim_crm_accounts.parent_crm_account_name                                    AS parent_crm_account_name,
       dim_crm_accounts.parent_crm_account_sales_segment                           AS parent_crm_account_sales_segment,
       dim_crm_accounts.parent_crm_account_industry                                AS parent_crm_account_industry,
-      dim_crm_accounts.parent_crm_account_sales_territory                         AS parent_crm_account_sales_territory,
+      dim_crm_accounts.parent_crm_account_territory                         AS parent_crm_account_territory,
       dim_crm_accounts.technical_account_manager                                  AS technical_account_manager,
       MAX(mrr)                                                                    AS max_monthly_mrr,
       MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))  AS is_program_subscription,
@@ -157,7 +157,7 @@
         COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_name           , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_name           ) AS parent_crm_account_name,
         COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_sales_segment  , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_sales_segment  ) AS parent_crm_account_sales_segment,
         COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_industry       , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_industry       ) AS parent_crm_account_industry,
-        COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_sales_territory, license_subscriptions_w_latest_subscription_sha256.parent_crm_account_sales_territory) AS parent_crm_account_sales_territory,
+        COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_territory      , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_territory) AS parent_crm_account_territory,
         COALESCE(license_subscriptions_w_latest_subscription_md5.technical_account_manager         , license_subscriptions_w_latest_subscription_sha256.technical_account_manager         ) AS technical_account_manager,
         CASE
           WHEN license_subscriptions_w_latest_subscription_sha256.license_expire_date < dim_ping_instance.ping_created_at THEN FALSE
@@ -276,7 +276,7 @@
       parent_crm_account_name,
       parent_crm_account_sales_segment,
       parent_crm_account_industry,
-      parent_crm_account_sales_territory,
+      parent_crm_account_territory,
       technical_account_manager,
 
       ping_created_at,

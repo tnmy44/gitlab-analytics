@@ -170,7 +170,7 @@
       dim_crm_account.parent_crm_account_name,
       dim_crm_account.parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_industry,
-      dim_crm_account.parent_crm_account_sales_territory,
+      dim_crm_account.parent_crm_account_territory,
       dim_crm_account.parent_crm_account_region,
       dim_crm_account.parent_crm_account_area,
       dim_crm_account.crm_account_owner_user_segment,

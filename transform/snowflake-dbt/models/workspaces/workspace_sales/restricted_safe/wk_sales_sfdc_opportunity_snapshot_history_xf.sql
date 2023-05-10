@@ -405,7 +405,7 @@ WITH date_details AS (
       edm_snapshot_opty.parent_crm_account_geo,
       edm_snapshot_opty.parent_crm_account_region,
       edm_snapshot_opty.parent_crm_account_area,
-      edm_snapshot_opty.parent_crm_account_sales_territory
+      edm_snapshot_opty.parent_crm_account_territory
       
 
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty

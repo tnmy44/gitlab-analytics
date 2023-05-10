@@ -852,7 +852,7 @@ WITH date_details AS (
       sfdc_accounts_xf.parent_crm_account_geo,
       sfdc_accounts_xf.parent_crm_account_region,
       sfdc_accounts_xf.parent_crm_account_area,
-      sfdc_accounts_xf.parent_crm_account_sales_territory,
+      sfdc_accounts_xf.parent_crm_account_territory,
       opportunity_owner.is_rep_flag  
 
     FROM sfdc_opportunity_snapshot_history opp_snapshot
