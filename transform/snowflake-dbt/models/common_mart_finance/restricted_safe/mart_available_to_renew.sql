@@ -7,7 +7,8 @@
 {% set renewal_fiscal_years = dbt_utils.get_column_values(
         table=ref('prep_renewal_fiscal_years'),
         column='fiscal_year',
-        order_by='fiscal_year' )%}
+        order_by='fiscal_year desc',
+        max_records=11 )%}
 
 {{ simple_cte([
     ('dim_date','dim_date'),

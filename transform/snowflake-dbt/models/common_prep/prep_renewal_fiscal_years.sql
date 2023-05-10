@@ -18,8 +18,6 @@
     WHERE subscription_status IN ('Active', 'Cancelled')
       AND charge_type = 'Recurring'
       AND mrr != 0
-    ORDER BY 1 DESC
-    LIMIT 11
 
 )
 
