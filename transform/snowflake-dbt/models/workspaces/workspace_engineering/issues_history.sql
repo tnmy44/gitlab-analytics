@@ -59,7 +59,7 @@ SELECT
   team.label_title AS team_label,
   wf.label_added_at as workflow_label_added_at,
   wf.label_valid_to as workflow_label_valid_to,
-  wf.label_title AS workflow_label,
+  wf.workflow AS workflow_label,
   wfl.cycle,
   IFF(dates.date_actual > date_trunc('day',issues.closed_at), NULL,
       DATEDIFF('day', issues.created_at, dates.date_actual))               AS issue_open_age_in_days,
@@ -99,7 +99,7 @@ LEFT JOIN label_groups as wf
   AND issues.issue_id = wf.dim_issue_id
   AND dates.date_actual BETWEEN DATE_TRUNC('day', wf.label_valid_from) AND DATE_TRUNC('day', wf.label_valid_to)
 LEFT JOIN workflow_labels as wfl
-  ON REPLACE(wf.label_title, 'workflow::', '') = wfl.workflow_label) 
+  ON wf.workflow = wfl.workflow_label) 
 
   SELECT * EXCLUDE rn
   FROM final
