@@ -223,6 +223,8 @@
       fct_crm_opportunity.close_date                                       AS opportunity_close_date,
       fct_crm_opportunity.created_date                                     AS opportunity_created_date,
       dim_crm_opportunity.is_won,
+      fct_crm_opportunity.is_net_arr_pipeline_created,
+      fct_crm_opportunity.is_net_arr_closed_deal,
       fct_crm_opportunity.is_closed,
       fct_crm_opportunity.days_in_sao,
       fct_crm_opportunity.iacv,
@@ -315,7 +317,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2022-12-12"
+    updated_date="2023-05-10"
 ) }}
