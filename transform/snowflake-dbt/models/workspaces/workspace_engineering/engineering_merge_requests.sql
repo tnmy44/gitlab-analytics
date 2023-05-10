@@ -37,7 +37,12 @@ WITH internal_merge_requests AS (
     FROM {{ ref('dim_user') }}
     WHERE email_domain LIKE '%noreply.gitlab.com'
 
-), engineering_merge_requests AS (
+), milestones AS (
+
+  SELECT *
+  FROM {{ ref('gitlab_dotcom_milestones') }}
+
+),engineering_merge_requests AS (
 
   SELECT
     internal_merge_requests.merge_request_id                                                                                    AS merge_request_id,
@@ -126,6 +131,8 @@ WITH internal_merge_requests AS (
     ON ns_3.dim_namespace_id = ns_2.parent_id and ns_2.namespace_is_ultimate_parent = FALSE
   LEFT JOIN namespaces ns_4 
     ON ns_4.dim_namespace_id = ns_3.parent_id and ns_3.namespace_is_ultimate_parent = FALSE
+  LEFT JOIN milestones
+    ON milestones.milestone_id = internal_merge_requests.milestone_id
   WHERE is_part_of_product = TRUE
 )
 
