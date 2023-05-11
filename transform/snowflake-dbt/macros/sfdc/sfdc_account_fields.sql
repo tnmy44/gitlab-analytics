@@ -364,6 +364,8 @@ WITH map_merged_crm_account AS (
       sfdc_account.risk_reason,
       sfdc_account.last_timeline_at_risk_update,
       sfdc_account.last_at_risk_update_comments,
+      sfdc_account.bdr_prospecting_status,
+
 
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,
