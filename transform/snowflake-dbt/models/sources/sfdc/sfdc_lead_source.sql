@@ -80,7 +80,7 @@ renamed AS (
     matched_account_owner_role__c AS matched_account_owner_role,
     matched_account_sdr_assigned__c AS matched_account_sdr_assigned,
     matched_account_gtm_strategy__c AS matched_account_gtm_strategy,
-    matched_account_bdr_prospecting_status__c as matched_account_bdr_prospecting_status,
+    matched_account_bdr_prospecting_status__c AS matched_account_bdr_prospecting_status,
     engagio__matched_account_type__c AS matched_account_type,
     engagio__matched_account_owner_name__c AS matched_account_account_owner_name,
     mql_date__c AS marketo_qualified_lead_date,
