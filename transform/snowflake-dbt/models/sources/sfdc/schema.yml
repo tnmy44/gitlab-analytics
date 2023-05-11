@@ -133,6 +133,10 @@ models:
         description: The state or province of the company matched by the Zoom Info enrichment process.
       - name: zoominfo_company_country
         description: The country of the company matched by the Zoom Info enrichment process.
+      - name: is_high_priority
+        description: Indicates whether the record is of high priority to contact by sales. 
+      - name: high_priority_datetime
+        description: Indicates when the high_priority status was assigned to the lead record.
   - name: sfdc_contact_history_source
     description: Source model for SFDC Contacts History
     columns:
@@ -220,6 +224,10 @@ models:
         description: The industry of the company matched by the Zoom Info enrichment process.
       - name: matched_account_bdr_prospecting_status
         description: Indicates whether the account of the lead record is actively being prospected by a BDR.
+      - name: is_high_priority
+        description: Indicates whether the record is of high priority to contact by sales. 
+      - name: high_priority_datetime
+        description: Indicates when the high_priority status was assigned to the lead record.
   - name: sfdc_lead_history_source
     description: Source model for SFDC Leads History
     columns:
