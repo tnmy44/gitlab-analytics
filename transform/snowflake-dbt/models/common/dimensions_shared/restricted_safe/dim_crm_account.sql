@@ -222,7 +222,7 @@ WITH final AS (
     created_by="@msendal",
     updated_by="@michellecooper",
     created_date="2020-06-01",
-    updated_date="2023-04-14"
+    updated_date="2023-05-11"
 ) }}
 
 
