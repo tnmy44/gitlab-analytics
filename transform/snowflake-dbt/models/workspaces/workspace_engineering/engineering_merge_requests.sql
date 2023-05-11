@@ -104,7 +104,7 @@ WITH internal_merge_requests AS (
             THEN ns_1.namespace_path || '/' || ns.namespace_path
         ELSE  ns.namespace_path END                                                                                             AS full_group_path,
     CASE
-        WHEN projects.visibility_level = 'public'
+        WHEN projects.visibility_level = 'public' AND internal_merge_requests.issue_is_confidential = FALSE
             THEN '[' || REPLACE(REPLACE(LEFT(internal_merge_requests.merge_request_title,64),'[',''),']','') ||'](https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/merge_requests/' || internal_merge_requests.merge_request_iid || ')'
         ELSE 'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/merge_requests/' || internal_merge_requests.merge_request_iid 
         END                                                                                                                     AS url
