@@ -102,176 +102,176 @@
   
     SELECT DISTINCT
     --IDs
-      COALESCE(mart_crm_attribution_touchpoint.dim_crm_person_id,mart_crm_touchpoint.dim_crm_person_id) AS dim_crm_person_id,
-      COALESCE(mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,mart_crm_touchpoint.dim_crm_touchpoint_id) AS dim_crm_touchpoint_id, 
+      COALESCE(mart_crm_attribution_touchpoint_base.dim_crm_person_id,mart_crm_touchpoint_base.dim_crm_person_id) AS dim_crm_person_id,
+      COALESCE(mart_crm_attribution_touchpoint_base.dim_crm_touchpoint_id,mart_crm_touchpoint_base.dim_crm_touchpoint_id) AS dim_crm_touchpoint_id, 
   
     --TP Data
       person_touchpoint,
       attribution_touchpoint,
-      COALESCE(mart_crm_attribution_touchpoint.bizible_touchpoint_date,mart_crm_touchpoint.bizible_touchpoint_date) AS bizible_touchpoint_date, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_touchpoint_position,mart_crm_touchpoint.bizible_touchpoint_position) AS bizible_touchpoint_position, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_touchpoint_source,mart_crm_touchpoint.bizible_touchpoint_source) AS bizible_touchpoint_source, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_touchpoint_type,mart_crm_touchpoint.bizible_touchpoint_type) AS bizible_touchpoint_type, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_ad_campaign_name,mart_crm_touchpoint.bizible_ad_campaign_name) AS bizible_ad_campaign_name, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_form_url,mart_crm_touchpoint.bizible_form_url) AS bizible_form_url, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_landing_page,mart_crm_touchpoint.bizible_landing_page) AS bizible_landing_page, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_form_url_raw,mart_crm_touchpoint.bizible_form_url_raw) AS bizible_form_url_raw, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_landing_page_raw,mart_crm_touchpoint.bizible_landing_page_raw) AS bizible_landing_page_raw, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_marketing_channel,mart_crm_touchpoint.bizible_marketing_channel) AS bizible_marketing_channel, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_marketing_channel_path,mart_crm_touchpoint.bizible_marketing_channel_path) AS bizible_marketing_channel_path, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_medium,mart_crm_touchpoint.bizible_medium) AS bizible_medium, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_referrer_page,mart_crm_touchpoint.bizible_referrer_page) AS bizible_referrer_page, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_referrer_page_raw,mart_crm_touchpoint.bizible_referrer_page_raw) AS bizible_referrer_page_raw, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,mart_crm_touchpoint.bizible_integrated_campaign_grouping) AS bizible_integrated_campaign_grouping, 
-      COALESCE(mart_crm_attribution_touchpoint.touchpoint_segment,mart_crm_touchpoint.touchpoint_segment) AS touchpoint_segment, 
-      COALESCE(mart_crm_attribution_touchpoint.gtm_motion,mart_crm_touchpoint.gtm_motion) AS gtm_motion, 
-      COALESCE(mart_crm_attribution_touchpoint.pipe_name,mart_crm_touchpoint.pipe_name) AS pipe_name, 
-      COALESCE(mart_crm_attribution_touchpoint.is_dg_influenced,mart_crm_touchpoint.is_dg_influenced) AS is_dg_influenced, 
-      COALESCE(mart_crm_attribution_touchpoint.is_dg_sourced,mart_crm_touchpoint.is_dg_sourced) AS is_dg_sourced, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_count_first_touch,mart_crm_touchpoint.bizible_count_first_touch) AS bizible_count_first_touch, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_count_lead_creation_touch,mart_crm_touchpoint.bizible_count_lead_creation_touch) AS bizible_count_lead_creation_touch, 
-      COALESCE(mart_crm_attribution_touchpoint.bizible_count_u_shaped,mart_crm_touchpoint.bizible_count_u_shaped) AS bizible_count_u_shaped, 
-      COALESCE(mart_crm_attribution_touchpoint.is_fmm_influenced,mart_crm_touchpoint.is_fmm_influenced) AS is_fmm_influenced, 
-      COALESCE(mart_crm_attribution_touchpoint.is_fmm_sourced,mart_crm_touchpoint.is_fmm_sourced) AS is_fmm_sourced,
-      mart_crm_touchpoint.bizible_count_lead_creation_touch AS new_lead_created_sum,
-      mart_crm_touchpoint.count_true_inquiry AS count_true_inquiry,
-      mart_crm_touchpoint.count_inquiry AS inquiry_sum, 
-      mart_crm_touchpoint.pre_mql_weight AS mql_sum,
-      mart_crm_touchpoint.count_accepted AS accepted_sum,
-      mart_crm_touchpoint.count_net_new_mql AS new_mql_sum,
-      mart_crm_touchpoint.count_net_new_accepted AS new_accepted_sum,
-      mart_crm_attribution_touchpoint.is_sao,
-      mart_crm_attribution_touchpoint.is_won,
-      SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) AS first_opp_created,
-      SUM(mart_crm_attribution_touchpoint.bizible_count_u_shaped) AS u_shaped_opp_created,
-      SUM(mart_crm_attribution_touchpoint.bizible_count_w_shaped) AS w_shaped_opp_created,
-      SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) AS full_shaped_opp_created,
-      SUM(mart_crm_attribution_touchpoint.bizible_count_custom_model) AS custom_opp_created,
-      SUM(mart_crm_attribution_touchpoint.l_weight) AS linear_opp_created,
-      SUM(mart_crm_attribution_touchpoint.first_net_arr) AS first_net_arr,
-      SUM(mart_crm_attribution_touchpoint.u_net_arr) AS u_net_arr,
-      SUM(mart_crm_attribution_touchpoint.w_net_arr) AS w_net_arr,
-      SUM(mart_crm_attribution_touchpoint.full_net_arr) AS full_net_arr,
-      SUM(mart_crm_attribution_touchpoint.custom_net_arr) AS custom_net_arr,
-      SUM(mart_crm_attribution_touchpoint.linear_net_arr) AS linear_net_arr,
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_touchpoint_date,mart_crm_touchpoint_base.bizible_touchpoint_date) AS bizible_touchpoint_date, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_touchpoint_position,mart_crm_touchpoint_base.bizible_touchpoint_position) AS bizible_touchpoint_position, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_touchpoint_source,mart_crm_touchpoint_base.bizible_touchpoint_source) AS bizible_touchpoint_source, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_touchpoint_type,mart_crm_touchpoint_base.bizible_touchpoint_type) AS bizible_touchpoint_type, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_ad_campaign_name,mart_crm_touchpoint_base.bizible_ad_campaign_name) AS bizible_ad_campaign_name, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_form_url,mart_crm_touchpoint_base.bizible_form_url) AS bizible_form_url, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_landing_page,mart_crm_touchpoint_base.bizible_landing_page) AS bizible_landing_page, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_form_url_raw,mart_crm_touchpoint_base.bizible_form_url_raw) AS bizible_form_url_raw, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_landing_page_raw,mart_crm_touchpoint_base.bizible_landing_page_raw) AS bizible_landing_page_raw, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_marketing_channel,mart_crm_touchpoint_base.bizible_marketing_channel) AS bizible_marketing_channel, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_marketing_channel_path,mart_crm_touchpoint_base.bizible_marketing_channel_path) AS bizible_marketing_channel_path, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_medium,mart_crm_touchpoint_base.bizible_medium) AS bizible_medium, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_referrer_page,mart_crm_touchpoint_base.bizible_referrer_page) AS bizible_referrer_page, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_referrer_page_raw,mart_crm_touchpoint_base.bizible_referrer_page_raw) AS bizible_referrer_page_raw, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_integrated_campaign_grouping,mart_crm_touchpoint_base.bizible_integrated_campaign_grouping) AS bizible_integrated_campaign_grouping, 
+      COALESCE(mart_crm_attribution_touchpoint_base.touchpoint_segment,mart_crm_touchpoint_base.touchpoint_segment) AS touchpoint_segment, 
+      COALESCE(mart_crm_attribution_touchpoint_base.gtm_motion,mart_crm_touchpoint_base.gtm_motion) AS gtm_motion, 
+      COALESCE(mart_crm_attribution_touchpoint_base.pipe_name,mart_crm_touchpoint_base.pipe_name) AS pipe_name, 
+      COALESCE(mart_crm_attribution_touchpoint_base.is_dg_influenced,mart_crm_touchpoint_base.is_dg_influenced) AS is_dg_influenced, 
+      COALESCE(mart_crm_attribution_touchpoint_base.is_dg_sourced,mart_crm_touchpoint_base.is_dg_sourced) AS is_dg_sourced, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_count_first_touch,mart_crm_touchpoint_base.bizible_count_first_touch) AS bizible_count_first_touch, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_count_lead_creation_touch,mart_crm_touchpoint_base.bizible_count_lead_creation_touch) AS bizible_count_lead_creation_touch, 
+      COALESCE(mart_crm_attribution_touchpoint_base.bizible_count_u_shaped,mart_crm_touchpoint_base.bizible_count_u_shaped) AS bizible_count_u_shaped, 
+      COALESCE(mart_crm_attribution_touchpoint_base.is_fmm_influenced,mart_crm_touchpoint_base.is_fmm_influenced) AS is_fmm_influenced, 
+      COALESCE(mart_crm_attribution_touchpoint_base.is_fmm_sourced,mart_crm_touchpoint_base.is_fmm_sourced) AS is_fmm_sourced,
+      mart_crm_touchpoint_base.bizible_count_lead_creation_touch AS new_lead_created_sum,
+      mart_crm_touchpoint_base.count_true_inquiry AS count_true_inquiry,
+      mart_crm_touchpoint_base.count_inquiry AS inquiry_sum, 
+      mart_crm_touchpoint_base.pre_mql_weight AS mql_sum,
+      mart_crm_touchpoint_base.count_accepted AS accepted_sum,
+      mart_crm_touchpoint_base.count_net_new_mql AS new_mql_sum,
+      mart_crm_touchpoint_base.count_net_new_accepted AS new_accepted_sum,
+      mart_crm_attribution_touchpoint_base.is_sao,
+      mart_crm_attribution_touchpoint_base.is_won,
+      SUM(mart_crm_attribution_touchpoint_base.bizible_count_first_touch) AS first_opp_created,
+      SUM(mart_crm_attribution_touchpoint_base.bizible_count_u_shaped) AS u_shaped_opp_created,
+      SUM(mart_crm_attribution_touchpoint_base.bizible_count_w_shaped) AS w_shaped_opp_created,
+      SUM(mart_crm_attribution_touchpoint_base.bizible_count_first_touch) AS full_shaped_opp_created,
+      SUM(mart_crm_attribution_touchpoint_base.bizible_count_custom_model) AS custom_opp_created,
+      SUM(mart_crm_attribution_touchpoint_base.l_weight) AS linear_opp_created,
+      SUM(mart_crm_attribution_touchpoint_base.first_net_arr) AS first_net_arr,
+      SUM(mart_crm_attribution_touchpoint_base.u_net_arr) AS u_net_arr,
+      SUM(mart_crm_attribution_touchpoint_base.w_net_arr) AS w_net_arr,
+      SUM(mart_crm_attribution_touchpoint_base.full_net_arr) AS full_net_arr,
+      SUM(mart_crm_attribution_touchpoint_base.custom_net_arr) AS custom_net_arr,
+      SUM(mart_crm_attribution_touchpoint_base.linear_net_arr) AS linear_net_arr,
       CASE
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.bizible_count_first_touch) 
         ELSE 0 
       END AS first_sao,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.bizible_count_u_shaped) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.bizible_count_u_shaped) 
         ELSE 0 
       END AS u_shaped_sao,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.bizible_count_w_shaped) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.bizible_count_w_shaped) 
         ELSE 0 
       END AS w_shaped_sao,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.bizible_count_first_touch) 
         ELSE 0 
       END AS full_shaped_sao,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.bizible_count_custom_model) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.bizible_count_custom_model) 
         ELSE 0 
       END AS custom_sao,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.l_weight) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.l_weight) 
         ELSE 0 
       END AS linear_sao,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.u_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.u_net_arr) 
         ELSE 0 
       END AS pipeline_first_net_arr,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.u_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.u_net_arr) 
         ELSE 0 
         END AS pipeline_u_net_arr,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.w_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.w_net_arr) 
         ELSE 0 
       END AS pipeline_w_net_arr,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.full_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.full_net_arr) 
         ELSE 0 
       END AS pipeline_full_net_arr,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.custom_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.custom_net_arr) 
         ELSE 0 
       END AS pipeline_custom_net_arr,
       CASE 
         WHEN is_sao = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.linear_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.linear_net_arr) 
         ELSE 0 
       END AS pipeline_linear_net_arr,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.bizible_count_first_touch) 
         ELSE 0 
       END AS won_first,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.bizible_count_u_shaped) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.bizible_count_u_shaped) 
         ELSE 0 
       END AS won_u,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.bizible_count_w_shaped) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.bizible_count_w_shaped) 
         ELSE 0 
       END AS won_w,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.bizible_count_first_touch) 
         ELSE 0 
       END AS won_full,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.bizible_count_custom_model) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.bizible_count_custom_model) 
         ELSE 0 
       END AS won_custom,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.l_weight) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.l_weight) 
         ELSE 0 
       END AS won_linear,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.first_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.first_net_arr) 
         ELSE 0 
       END AS won_first_net_arr,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.u_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.u_net_arr) 
         ELSE 0 
       END AS won_u_net_arr,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.w_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.w_net_arr) 
         ELSE 0 
       END AS won_w_net_arr,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.full_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.full_net_arr) 
         ELSE 0 
       END AS won_full_net_arr,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.custom_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.custom_net_arr) 
         ELSE 0 
       END AS won_custom_net_arr,
       CASE 
         WHEN is_won = TRUE
-          THEN SUM(mart_crm_attribution_touchpoint.linear_net_arr) 
+          THEN SUM(mart_crm_attribution_touchpoint_base.linear_net_arr) 
         ELSE 0 
       END AS won_linear_net_arr
     FROM mart_crm_touchpoint_base
