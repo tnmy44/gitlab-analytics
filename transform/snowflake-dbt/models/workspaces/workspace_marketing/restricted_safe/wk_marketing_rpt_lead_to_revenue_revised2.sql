@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi"],
+    tags=["mnpi_exception"],
     materialized="table"
 ) }}
 
