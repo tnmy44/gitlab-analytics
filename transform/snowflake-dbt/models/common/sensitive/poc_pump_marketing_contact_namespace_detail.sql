@@ -7,6 +7,7 @@
     ('gitlab_dotcom_members_source','gitlab_dotcom_members_source'),
     ('dim_namespace', 'dim_namespace'),
     ('ptpt_scores', 'ptpt_scores'),
+    ('ptpf_scores', 'ptpf_scores'),
     ('customers_db_trial_histories_source', 'customers_db_trial_histories_source'),
     ('gitlab_dotcom_namespace_details_source', 'gitlab_dotcom_namespace_details_source'),
     ('gitlab_dotcom_users_source', 'gitlab_dotcom_users_source'),
@@ -32,6 +33,19 @@
       FIRST_VALUE(score_date) OVER(ORDER BY score_date DESC)  AS last_score_date,
       NTH_VALUE(score_date, 2) OVER(ORDER BY score_date DESC) AS second_last_score_date
     FROM ptpt_score_dates
+    LIMIT 1
+
+), ptpf_score_dates AS (
+    
+    SELECT DISTINCT score_date
+    FROM ptpf_scores
+  
+), ptpf_last_dates AS (
+  
+    SELECT
+      FIRST_VALUE(score_date) OVER(ORDER BY score_date DESC)  AS last_score_date,
+      NTH_VALUE(score_date, 2) OVER(ORDER BY score_date DESC) AS second_last_score_date
+    FROM ptpf_score_dates
     LIMIT 1
 
 ), namespace_user_mapping AS (
@@ -292,10 +306,22 @@
     services_by_namespace.nbr_integrations_installed,
     services_by_namespace.integrations_installed,
 
-    last_ptpt_scores.score_date                                                 AS ptpt_score_date,
-    last_ptpt_scores.score_group                                                AS ptpt_score_group,
-    last_ptpt_scores.insights                                                   AS ptpt_score_insights,
-    second_last_ptpt_scores.score_group                                         AS ptpt_previous_score_group,
+    
+    CASE
+      WHEN last_ptpt_scores.score_group >= 4 OR last_ptpf_scores.score_group IS NULL
+        THEN 'Trial'
+      WHEN last_ptpf_scores.score_group >= 4 OR last_ptpt_scores.score_group IS NULL
+        THEN 'Free'
+      ELSE 'Trial'
+    END                                                                         AS ptp_source,
+    IFF(ptp_source = 'Trial', last_ptpt_scores.score_date, last_ptpf_scores.score_date)
+                                                                                AS ptp_score_date,
+    IFF(ptp_source = 'Trial', last_ptpt_scores.score_group, last_ptpf_scores.score_group)
+                                                                                AS ptp_score_group,
+    IFF(ptp_source = 'Trial', last_ptpt_scores.insights, last_ptpf_scores.insights)
+                                                                                AS ptp_insights,
+    IFF(ptp_source = 'Trial', second_last_ptpt_scores.score_group, second_last_ptpf_scores.score_group)
+                                                                                AS ptp_previous_score_group,
 
     gitlab_dotcom_namespace_details_source.dashboard_notification_at            AS user_limit_notification_at,
     gitlab_dotcom_namespace_details_source.dashboard_enforcement_at             AS user_limit_enforcement_at,
@@ -313,6 +339,13 @@
   LEFT JOIN ptpt_scores AS second_last_ptpt_scores
     ON second_last_ptpt_scores.namespace_id = namespace_user_mapping.namespace_id
     AND second_last_ptpt_scores.score_date = ptpt_last_dates.second_last_score_date
+  LEFT JOIN ptpf_last_dates
+  LEFT JOIN ptpf_scores AS last_ptpf_scores
+    ON last_ptpf_scores.namespace_id = namespace_user_mapping.namespace_id
+    AND last_ptpf_scores.score_date = ptpf_last_dates.last_score_date
+  LEFT JOIN ptpf_scores AS second_last_ptpf_scores
+    ON second_last_ptpf_scores.namespace_id = namespace_user_mapping.namespace_id
+    AND second_last_ptpf_scores.score_date = ptpf_last_dates.second_last_score_date
   LEFT JOIN customers_db_trial_histories_source
     ON customers_db_trial_histories_source.gl_namespace_id = namespace_user_mapping.namespace_id
   LEFT JOIN gitlab_dotcom_namespace_details_source
