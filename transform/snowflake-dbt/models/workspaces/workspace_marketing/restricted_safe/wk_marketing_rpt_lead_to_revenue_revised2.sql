@@ -1,8 +1,8 @@
 {{ config(
-    tags=["mnpi"]
+    tags=["mnpi"],
+    materialized="table"
 ) }}
 
-{{ config(materialized='table') }}
 
 {{ simple_cte([
     ('person_base','mart_crm_person'),
