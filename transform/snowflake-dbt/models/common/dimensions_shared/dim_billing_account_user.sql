@@ -1,9 +1,3 @@
-{{ config({
-        "tags": ["mnpi_exception"],
-        "alias": "dim_billing_account_user"
-    })
-}}
-
 {{ simple_cte([
     ('prep_billing_account_user','prep_billing_account_user')
 ]) }}
@@ -12,9 +6,6 @@
 
     SELECT 
       zuora_user_id         AS dim_billing_account_user_id,
-      email,
-      first_name,
-      last_name,
       user_name,
       is_integration_user
     FROM prep_billing_account_user
