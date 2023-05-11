@@ -47,6 +47,8 @@ WITH crm_person AS (
       bizible_touchpoint_date,
       sequence_step_type,
       is_actively_being_sequenced,
+      is_high_priority,
+      high_priority_datetime,
       prospect_share_status,
       partner_prospect_status,
       partner_prospect_owner_name,
@@ -114,5 +116,5 @@ WITH crm_person AS (
     created_by="@jjstark",
     updated_by="@dmicovic",
     created_date="2020-09-10",
-    updated_date="2023-05-10"
+    updated_date="2023-05-11"
 ) }}
