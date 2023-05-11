@@ -4644,6 +4644,13 @@ roles:
                     - rrendon_prep.*.*
                     - rrendon_prod.*.*
 
+    - rtaira:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - rwoo:
         member_of:
             - dbt_analytics
@@ -4737,6 +4744,7 @@ roles:
             - analytics_engineer_core
             - analyst_engineering
             - analyst_growth
+            - customers_db
             - restricted_safe
             - zuora_api_sandbox_stitch
         warehouses:
@@ -5478,6 +5486,11 @@ users:
         can_login: yes
         member_of:
             - rrendon
+
+    - rtaira:
+        can_login: yes
+        member_of:
+            - rtaira
 
     - rwoo:
         can_login: yes

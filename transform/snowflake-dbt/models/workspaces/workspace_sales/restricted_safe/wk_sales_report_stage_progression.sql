@@ -1,4 +1,4 @@
-{{ config(alias='report_opportunity_stage_progression') }}
+{{ config(alias='report_stage_progression') }}
 
 WITH stage_dates AS (
 
@@ -14,27 +14,16 @@ WITH stage_dates AS (
 
 ), opportunity AS (
 
-    SELECT  *,
-            CASE
-                WHEN stage_name IN ('0-Pending Acceptance')
-                    THEN '0. Acceptance'
-                WHEN stage_name IN ('1-Discovery','2-Scoping')
-                    THEN '1. Early'
-                WHEN stage_name IN ('3-Technical Evaluation','4-Proposal')
-                    THEN '2. Middle'
-                WHEN stage_name IN ('5-Negotiating','6-Awaiting Signature')
-                    THEN '3. Late'
-                ELSE '4. Closed'
-            END                 AS cycle_time_category
+    SELECT  *
     FROM {{ref('wk_sales_sfdc_opportunity_xf')}}
     --FROM prod.restricted_safe_workspace_sales.sfdc_opportunity_xf
 
 ), progression AS (
 
     SELECT opportunity_id,
-            0                       AS stage_rank,
-            0                       AS cycle_time_category_rank,
-           '0. Acceptance'          AS cycle_time_category,
+            0                       AS stage_name_rank,
+            0                       AS pipeline_category_rank,
+           '0. Acceptance'          AS pipeline_category,
            '0-Pending Acceptance'   AS stage_name,
            stage_0_date             AS stage_date,
            NULL                     AS days_in_previous_stage,
@@ -42,9 +31,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            1                       AS stage_rank,
-            1                       AS cycle_time_category_rank,
-           '1. Early'               AS cycle_time_category,
+            1                       AS stage_name_rank,
+            1                       AS pipeline_category_rank,
+           '1. Early'               AS pipeline_category,
            '1-Discovery'            AS stage_name,
            stage_1_date             AS stage_date,
            days_in_stage_0          AS days_in_previous_stage,
@@ -52,9 +41,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            2                       AS stage_rank,
-            1                       AS cycle_time_category_rank,
-           '1. Early'               AS cycle_time_category,
+            2                       AS stage_name_rank,
+            1                       AS pipeline_category_rank,
+           '1. Early'               AS pipeline_category,
            '2-Scoping'              AS stage_name,
            stage_2_date             AS stage_date,
            days_in_stage_1          AS days_in_previous_stage,
@@ -62,9 +51,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            3                       AS stage_rank,
-            2                       AS cycle_time_category_rank,
-           '2. Middle'              AS cycle_time_category,
+            3                       AS stage_name_rank,
+            2                       AS pipeline_category_rank,
+           '2. Middle'              AS pipeline_category,
            '3-Technical Evaluation' AS stage_name,
            stage_3_date             AS stage_date,
            days_in_stage_2          AS days_in_previous_stage,
@@ -72,9 +61,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            4                       AS stage_rank,
-            2                       AS cycle_time_category_rank,
-           '2. Middle'              AS cycle_time_category,
+            4                       AS stage_name_rank,
+            2                       AS pipeline_category_rank,
+           '2. Middle'              AS pipeline_category,
            '4-Proposal'             AS stage_name,
            stage_4_date             AS stage_date,
            days_in_stage_3          AS days_in_previous_stage,
@@ -82,9 +71,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            5                       AS stage_rank,
-            3                       AS cycle_time_category_rank,
-           '3. Late'                AS cycle_time_category,
+            5                       AS stage_name_rank,
+            3                       AS pipeline_category_rank,
+           '3. Late'                AS pipeline_category,
            '5-Negotiating'          AS stage_name,
            stage_5_date             AS stage_date,
            days_in_stage_4          AS days_in_previous_stage,
@@ -92,9 +81,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            6                       AS stage_rank,
-            3                       AS cycle_time_category_rank,
-           '3. Late'                AS cycle_time_category,
+            6                       AS stage_name_rank,
+            3                       AS pipeline_category_rank,
+           '3. Late'                AS pipeline_category,
            '6-Awaiting Signature'   AS stage_name,
            stage_6_date             AS stage_date,
            days_in_stage_5          AS days_in_previous_stage,
@@ -102,9 +91,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            7                       AS stage_rank,
-            3                       AS cycle_time_category_rank,
-           '3. Late'                AS cycle_time_category,
+            7                       AS stage_name_rank,
+            3                       AS pipeline_category_rank,
+           '3. Late'                AS pipeline_category,
            '7-Closing'              AS stage_name,
            stage_7_date             AS stage_date,
            days_in_stage_6          AS days_in_previous_stage,
@@ -112,9 +101,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            8                       AS stage_rank,
-            4                       AS cycle_time_category_rank,
-           '4. Closed'              AS cycle_time_category,
+            8                       AS stage_name_rank,
+            4                       AS pipeline_category_rank,
+           '4. Closed'              AS pipeline_category,
            'Closed Won'             AS stage_name,
            stage_8_won_date         AS stage_date,
            days_in_stage_7          AS days_in_previous_stage,
@@ -122,9 +111,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            9                       AS stage_rank,
-            4                       AS cycle_time_category_rank,
-           '4. Closed'              AS cycle_time_category,
+            9                       AS stage_name_rank,
+            4                       AS pipeline_category_rank,
+           '4. Closed'              AS pipeline_category,
            '8-Closed Lost'          AS stage_name,
            stage_8_lost_date        AS stage_date,
            COALESCE(
@@ -141,9 +130,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            10                      AS stage_rank,
-            4                       AS cycle_time_category_rank,
-           '4. Closed'              AS cycle_time_category,
+            10                      AS stage_name_rank,
+            4                       AS pipeline_category_rank,
+           '4. Closed'              AS pipeline_category,
            '9-Unqualified'          AS stage_name,
            stage_9_date             AS stage_date,
            COALESCE(
@@ -160,9 +149,9 @@ WITH stage_dates AS (
     FROM stage_dates
     UNION
     SELECT opportunity_id,
-            11                      AS stage_rank,
-            4                       AS cycle_time_category_rank,
-           '4. Closed'              AS cycle_time_category,
+            11                      AS stage_name_rank,
+            4                       AS pipeline_category_rank,
+           '4. Closed'              AS pipeline_category,
            '10-Duplicate'           AS stage_name,
            stage_10_date            AS stage_date,
            COALESCE(
@@ -194,11 +183,11 @@ WITH stage_dates AS (
            -- there will be other lines in the model, so we use the stage rank
            -- and the LEAD function to get the next one and retrieve the value.
             CASE
-                WHEN prog.cycle_time_category != 'Closed'
+                WHEN prog.pipeline_category != 'Closed'
                     THEN
                         COALESCE(
                         LEAD(prog.days_in_previous_stage,1)
-                            OVER ( PARTITION BY prog.opportunity_id ORDER BY prog.stage_rank),
+                            OVER ( PARTITION BY prog.opportunity_id ORDER BY prog.stage_name_rank),
                                 DATEDIFF(day, prog.stage_date,CURRENT_DATE)
                             )
                 ELSE NULL
@@ -216,14 +205,21 @@ WITH stage_dates AS (
             opp.key_bu,
             opp.key_bu_subbu,
             -- other categorization fields
-            opp.net_arr             AS current_net_arr,
-            opp.booked_net_arr      AS current_booked_net_arr,
-            opp.stage_name          AS current_stage_name,
-            opp.cycle_time_category AS current_cycle_time_category,
+            opp.net_arr                     AS current_net_arr,
+            opp.booked_net_arr              AS current_booked_net_arr,
+            opp.stage_name                  AS current_stage_name,
+            opp.pipeline_category         AS current_pipeline_category,
     
-            opp.close_fiscal_quarter_name AS current_close_fiscal_quarter_name,
-            opp.close_fiscal_year         AS current_close_fiscal_year,
+            opp.close_fiscal_quarter_name   AS current_close_fiscal_quarter_name,
+            opp.close_fiscal_year           AS current_close_fiscal_year,
     
+            -- status flags
+            opp.is_open                     AS current_is_open_flag,
+            opp.is_closed                   AS current_is_closed_flag,
+            opp.is_lost                     AS current_is_lost_flag,
+            opp.is_won                      AS current_is_won_flag,
+            opp.is_renewal                  AS current_is_renewal_flag,
+
             CASE
                 WHEN prog.stage_name = opp.stage_name
                     THEN 1
@@ -232,17 +228,60 @@ WITH stage_dates AS (
 
             -- cycle time categories might span multiple stages
             CASE
-                WHEN prog.cycle_time_category = opp.cycle_time_category
+                WHEN prog.pipeline_category = opp.pipeline_category
                     THEN 1
                 ELSE 0
-            END                                     AS is_current_cycle_time_category_flag,
+            END                                     AS is_current_pipeline_category_flag,
 
-            -- status flags
-            opp.is_open,
-            opp.is_closed,
-            opp.is_lost,
-            opp.is_won,
-            opp.is_renewal
+        -- check if the reported stage is an open stage
+        -- these flags might help when running closed / open or unqualified specific cycle time
+        -- analyses
+        
+        CASE
+            WHEN
+                prog.stage_name IN (
+                    '4-Proposal',
+                    '5-Negotiating',
+                    '3-Technical Evaluation',
+                    '0-Pending Acceptance',
+                    '1-Discovery',
+                    '2-Scoping',
+                    '6-Awaiting Signature',
+                    '7-Closing'
+                )
+                THEN 1
+            ELSE 0
+        END AS stage_is_open_flag,
+
+        CASE
+            WHEN
+                prog.stage_name IN (
+                    'Closed Won',
+                    '8-Closed Lost'
+                )
+                THEN 1
+            ELSE 0
+        END AS stage_is_closed_flag,
+        
+        CASE
+            WHEN
+                prog.stage_name IN (
+                    '8-Closed Lost'
+                )
+                THEN 1
+            ELSE 0
+        END AS stage_is_lost_flag,
+
+        CASE
+            WHEN
+                prog.stage_name IN (
+                    '10-Duplicate',
+                    '9-Unqualified'
+                )
+                THEN 1
+            ELSE 0
+        END AS stage_is_duplicated_unqualified_flag
+
     FROM progression prog
         INNER JOIN date_details report
             ON report.date_actual = prog.stage_date

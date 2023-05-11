@@ -169,6 +169,7 @@
       opp.new_logo_count,
       opp.net_arr,
       opp.is_net_arr_closed_deal,
+      opp.is_net_arr_pipeline_created,
       opp.crm_opp_owner_sales_segment_stamped,
       opp.crm_opp_owner_region_stamped,
       opp.crm_opp_owner_area_stamped,
@@ -351,7 +352,7 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=56)}}
+    {{dbt_utils.group_by(n=57)}}
     
 ), cohort_base_combined AS (
   
@@ -395,6 +396,7 @@
       new_logo_count,
       net_arr,
       is_net_arr_closed_deal,
+      is_net_arr_pipeline_created,
       crm_opp_owner_sales_segment_stamped,
       crm_opp_owner_region_stamped,
       crm_opp_owner_area_stamped,
@@ -588,5 +590,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-02-15",
-    updated_date="2023-04-12",
+    updated_date="2023-05-08",
   ) }}
