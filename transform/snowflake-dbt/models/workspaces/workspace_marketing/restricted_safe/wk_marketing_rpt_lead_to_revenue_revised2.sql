@@ -11,8 +11,8 @@
     ('mart_crm_touchpoint', 'mart_crm_touchpoint'),
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('dim_crm_account', 'dim_crm_account'),
-    ('sfdc_bizible_touchpoint'),('sfdc_bizible_touchpoint'),
-    ('sfdc_bizible_attribution_touchpoint_xf'),('sfdc_bizible_attribution_touchpoint_xf'),
+    ('sfdc_bizible_touchpoint','sfdc_bizible_touchpoint'),
+    ('sfdc_bizible_attribution_touchpoint_xf','sfdc_bizible_attribution_touchpoint_xf'),
     ('dim_date','dim_date')
 ]) }}
 
