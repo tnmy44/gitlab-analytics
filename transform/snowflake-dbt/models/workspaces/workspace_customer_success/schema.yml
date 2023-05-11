@@ -38,6 +38,28 @@ models:
           - unique
           - not_null
 
+  - name: mart_product_usage_health_score
+    columns:
+      - name: snapshot_month
+        tests:
+          - not_null
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+      - name: delivery_type
+        tests:
+          - not_null
+      - name: primary_key
+        tests:
+          - unique
+          - not_null
+
   - name: wk_pump_gainsight_metrics_monthly_paid
     tests:
       - dbt_utils.unique_combination_of_columns:

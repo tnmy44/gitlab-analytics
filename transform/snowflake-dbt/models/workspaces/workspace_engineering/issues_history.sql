@@ -4,7 +4,7 @@
 
 , issues AS (
   SELECT *
-  FROM {{ ref('engineering_issues') }} 
+  FROM {{ ref('internal_issues_enhanced') }} 
 )
 
 , label_groups AS (
@@ -29,14 +29,20 @@ SELECT
   issues.issue_id,
   issues.issue_iid,
   issues.project_id,
+  issues.project_path,
   issues.namespace_id,
+  issues.ultimate_parent_id,
   issues.labels,
+  issues.masked_label_title,
   issues.issue_title,
   issues.full_group_path,
   issues.url,
   issues.milestone_id,
   issues.milestone_title,
-  IFF(dates.date_actual > issues.closed_at, 'closed', 'opened')        AS issue_state,
+  issues.milestone_description,
+  issues.milestone_start_date,
+  issues.milestone_due_date,
+  IFF(dates.date_actual >= date_trunc('day',issues.closed_at), 'closed', 'opened')        AS issue_state,
   issues.created_at                                                        AS issue_created_at,
   issues.closed_at                                                       AS issue_closed_at,
   issues.priority_label,
@@ -47,7 +53,7 @@ SELECT
   team.label_added_at as team_label_added_at,
   team.label_valid_to as team_label_valid_to,
   team.label_title AS team_label,
-  IFF(dates.date_actual > issues.closed_at, NULL,
+  IFF(dates.date_actual > date_trunc('day',issues.closed_at), NULL,
       DATEDIFF('day', issues.created_at, dates.date_actual))               AS issue_open_age_in_days,
   DATEDIFF('day', severity.label_added_at, dates.date_actual) AS severity_label_age_in_days,
   assigend_users.assigned_usernames,
@@ -57,14 +63,20 @@ SELECT
   issues.stage_label,
   issues.type_label,
   issues.subtype_label,
-  IFF(ARRAY_CONTAINS('infradev'::VARIANT, issues.labels), TRUE, FALSE) AS is_infradev,
-  IFF(ARRAY_CONTAINS('fedramp::vulnerability'::VARIANT, issues.labels), TRUE, FALSE) as fedramp_vulnerability,
+  issues.is_infradev,
+  issues.fedramp_vulnerability,
   issues.workflow_label,
+  issues.is_community_contribution,
+  issues.is_security,
+  issues.is_corrective_action,
+  issues.is_part_of_product,
+  MAX(dates.date_actual) OVER () AS last_updated_at,
   ROW_NUMBER() OVER (PARTITION BY daily_issue_id 
   ORDER BY LEAST(COALESCE(severity_label_valid_to, CURRENT_DATE),COALESCE(team_label_valid_to,CURRENT_DATE))) AS rn
 FROM issues 
 INNER JOIN dates 
-  ON COALESCE(issues.created_at,dates.date_actual) <= dates.date_actual 
+  ON COALESCE(date_trunc('day',issues.created_at),dates.date_actual) <= dates.date_actual 
+  AND COALESCE(date_trunc('day',issues.closed_at),dates.date_actual) >= dates.min_date_actual
 LEFT JOIN assigend_users
   ON issues.issue_id = assigend_users.dim_issue_id
 LEFT JOIN label_groups as severity
@@ -76,38 +88,6 @@ LEFT JOIN label_groups as team
   AND issues.issue_id = team.dim_issue_id
   AND dates.date_actual BETWEEN DATE_TRUNC('day', team.label_valid_from) AND DATE_TRUNC('day', team.label_valid_to))
 
-  SELECT daily_issue_id,
-       date_actual,
-       issue_id,
-       issue_iid,
-       project_id,
-       namespace_id,
-       labels,
-       issue_title,
-       full_group_path,
-       url,
-       milestone_id,
-       milestone_title,
-       issue_state,
-       issue_created_at,
-       issue_closed_at,
-       priority_label,
-       severity,
-       severity_label_added_at,
-       assigned_team,
-       team_label_added_at,
-       team_label,
-       issue_open_age_in_days,
-       severity_label_age_in_days,
-       assigned_usernames,
-       is_issue_unassigned,
-       group_label,
-       section_label,
-       stage_label,
-       type_label,
-       subtype_label,
-       is_infradev,
-       fedramp_vulnerability,
-       workflow_label
+  SELECT * EXCLUDE rn
   FROM final
   WHERE rn=1

@@ -83,12 +83,15 @@ WITH date_details AS (
   ), mart_crm_account AS (
 
     SELECT acc.*,
-        raw.has_tam__c                AS has_tam_flag,
-        raw.public_sector_account__c  AS public_sector_account_flag,
-        raw.pubsec_type__c            AS pubsec_type,
-        raw.lam_tier__c               AS potential_lam_arr,
-        raw.billingstatecode          AS account_billing_state,
-        raw.customer_score__c          AS customer_score
+        raw.has_tam__c                        AS has_tam_flag,
+        raw.public_sector_account__c          AS public_sector_account_flag,
+        raw.pubsec_type__c                    AS pubsec_type,
+        raw.lam_tier__c                       AS potential_lam_arr,
+        raw.billingstatecode                  AS account_billing_state,
+        raw.customer_score__c                 AS customer_score,
+        raw.account_demographics_territory__c       AS account_demographics_territory,
+        raw.account_demographics_upa_state__c       AS account_demographics_upa_state_code,
+        raw.account_demographics_upa_state_name__c  AS account_demographics_upa_state_name
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_account acc
     FROM {{ref('mart_crm_account')}} acc
     LEFT JOIN raw_account raw
@@ -657,7 +660,11 @@ WITH date_details AS (
     upa_account.parent_crm_account_demographics_upa_state           AS upa_ad_state,
     upa_account.parent_crm_account_demographics_upa_city            AS upa_ad_city,
     upa_account.parent_crm_account_demographics_upa_postal_code     AS upa_ad_zip_code,
-
+    
+    mart_crm_account.account_demographics_territory                 AS account_ad_territory,
+    upa_account.account_demographics_territory                      AS upa_ad_territory,
+    mart_crm_account.account_demographics_upa_state_code            AS upa_ad_state_code,
+    mart_crm_account.account_demographics_upa_state_name            AS upa_ad_state_name,
 
     
     -- substitute this by key segment
@@ -681,6 +688,7 @@ WITH date_details AS (
     coalesce(mart_crm_account.decision_maker_count_linkedin, 0)                 AS linkedin_developer,
     coalesce(mart_crm_account.crm_account_zoom_info_number_of_developers, 0)    AS zi_developers,
     coalesce(mart_crm_account.zoom_info_company_revenue, 0)                     AS zi_revenue,
+
 
     -- LAM Dev count calculated at the UPA level
     upa_account.parent_crm_account_lam_dev_count                       AS upa_lam_dev_count,
@@ -940,7 +948,7 @@ WITH date_details AS (
   FROM account_year_key AS ak
   INNER JOIN sfdc_accounts_xf AS a
     ON ak.account_id = a.account_id
-  LEFT JOIN dim_crm_account AS upa_account
+  LEFT JOIN mart_crm_account AS upa_account
     ON a.ultimate_parent_account_id = upa_account.dim_crm_account_id
   LEFT JOIN sfdc_accounts_xf AS upa
     ON a.ultimate_parent_account_id = upa.account_id

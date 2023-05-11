@@ -23,6 +23,11 @@ databases:
         shared: yes
 
 # User / Testing
+    - abright_prod:
+        shared: no
+    - abright_prep:
+        shared: no
+ 
     - bi_tool_eval:
         shared: no
 
@@ -2132,12 +2137,15 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.prometheus
+                    - prep.prometheus
             tables:
                 read:
                     - raw.prometheus.*
+                    - prep.prometheus.*
     
     - pumps_sensitive:
         warehouses:
@@ -2280,6 +2288,21 @@ roles:
             tables:
                 read:
                     - raw.snapshots.*
+
+    - snowflake:
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.snowflake
+                    - prep.snowflake
+            tables:
+                read:
+                    - raw.snowflake.*
+                    - prep.snowflake.*
 
     - snowflake_db:
         privileges:
@@ -2687,6 +2710,58 @@ roles:
             - transforming_l
             - transforming_xl
 
+    - abright:
+        member_of:
+            - adaptive
+            - analyst_core
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - data_science_readonly
+            - data_team_analyst
+            - data_manager
+            - marketo
+            - orgadmin
+            - restricted_safe
+            - salesforce_sandbox
+            - xactly
+            - bi_tool_eval_db
+
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - abright_prep
+                - abright_prod
+            schemas:
+                - abright_prep.*
+                - abright_prod.*
+            tables:
+                - abright_prep.*.*
+                - abright_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - abright_prep
+                    - abright_prod
+                write:
+                    - abright_prep
+                    - abright_prod
+            schemas:
+                read:
+                    - abright_prep.*
+                    - abright_prod.*
+                write:
+                    - abright_prep.*
+                    - abright_prod.*
+            tables:
+                read:
+                    - abright_prep.*.*
+                    - abright_prod.*.*
+                write:
+                    - abright_prep.*.*
+                    - abright_prod.*.*
+
     - akramer:
         member_of:
             - reporter
@@ -2800,6 +2875,7 @@ roles:
     - cleroux:
         member_of:
             - analyst_engineering
+            - prometheus
             - restricted_safe
         warehouses:
             - dev_xs
@@ -2851,9 +2927,11 @@ roles:
             - coupa
             - restricted_safe
             - bi_tool_eval_read
+            - marketo
             - salesforce
             - zuora_api_sandbox_stitch            
             - zuora_stitch_rest_api
+            - zuora
         warehouses:
             - dev_xs
             - dev_m
@@ -4209,6 +4287,7 @@ roles:
         member_of:
             - adaptive
             - analyst_finance
+            - coupa
             - customers_db
             - data_team_analyst
             - data_manager
@@ -4356,6 +4435,7 @@ roles:
             - bamboohr
             - bi_tool_eval_db
             - prometheus
+            - snowflake
             - workday
             - zengrc
         warehouses:
@@ -4564,6 +4644,13 @@ roles:
                     - rrendon_prep.*.*
                     - rrendon_prod.*.*
 
+    - rtaira:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - rwoo:
         member_of:
             - dbt_analytics
@@ -4657,6 +4744,7 @@ roles:
             - analytics_engineer_core
             - analyst_engineering
             - analyst_growth
+            - customers_db
             - restricted_safe
             - zuora_api_sandbox_stitch
         warehouses:
@@ -4986,6 +5074,13 @@ users:
             - data_science_loader
             - sales_analytics
             - reporter
+
+    - abright:
+        can_login: yes
+        member_of:
+            - abright
+            - accountadmin
+            - securityadmin
 
     - akramer:
         can_login: yes
@@ -5391,6 +5486,11 @@ users:
         can_login: yes
         member_of:
             - rrendon
+
+    - rtaira:
+        can_login: yes
+        member_of:
+            - rtaira
 
     - rwoo:
         can_login: yes

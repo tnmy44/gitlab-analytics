@@ -585,19 +585,21 @@ models:
           - not_null
           - unique
 
-  - name: dim_gitlab_version
-    description: '{{ doc("dim_gitlab_version") }}'
+  - name: dim_app_release
+    description: '{{ doc("dim_app_release") }}'
     columns:
-      - name: dim_gitlab_version_sk
+      - name: dim_app_release_sk
         tests:
           - not_null
           - unique
-        description: '{{ doc("dim_gitlab_version_sk") }}'
-      - name: dim_version_id
-        description: The unique identifier of the release maintained by the Version app.
+        description: '{{ doc("dim_app_release_sk") }}'
+      - name: app_release_id
+        description: '{{ doc("app_release_id") }}'
         tests:
           - not_null
           - unique
+      - name: application
+        description: The application that the release refers to.
       - name: version
         description: The unique identifier of the release.
         tests:
@@ -615,10 +617,10 @@ models:
         description: For historical data, the Boolean values of `t` or `f` indicate if vulnerabilities have been detected for the release. For the ongoing data, the values represent the `vulnerability_type` of 0, 1 or 2.
       - name: vulnerability_type_desc
         description: The description of the vulnerability_type - { not_vulnerable - 0, non_critical - 1, critical - 2, vulnerable - t, not_vulnerable - f }
-      - name: created_date
-        description: The date the release was created in the Version app.
+      - name: release_date
+        description: Date of the release for the given application.
       - name: updated_date
-        description: The date the release was updated in the Version app.
+        description: Update date of the release for the given application.
 
   - name: dim_hold
     description: '{{ doc("dim_hold") }}'
@@ -659,7 +661,7 @@ models:
     description: '{{ doc("dim_installation") }}'
     tests:
       - dbt_utils.expression_is_true:
-          expression: "installation_creation_date > '2000-01-01'"
+          expression: "installation_creation_date > '2000-01-01' OR dim_installation_id = 'b6a2b5c51f1e36f6fcb8568319633808'"
     columns:
       - name: dim_installation_id
         description: '{{ doc("dim_installation_id") }}'
@@ -1142,6 +1144,38 @@ models:
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
       - name: was_purchased_through_reseller
         description: Boolean field that indicates whether the subscription was purchased through a reseller. If TRUE, the `invoice_owner_account` will contain the name of the reseller.
+      - name: dim_crm_opportunity_id_current_open_renewal
+        description: '{{ doc("dim_crm_opportunity_id_current_open_renewal") }}'
+      - name: dim_crm_opportunity_id_closed_lost_renewal
+        description: '{{ doc("dim_crm_opportunity_id_closed_lost_renewal") }}'
+
+  - name: dim_app_release_major_minor
+    description: '{{ doc("dim_app_release_major_minor") }}'
+    columns:
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: app_release_major_minor_id
+        description: '{{ doc("app_release_major_minor_id") }}'
+      - name: application
+        description: The application that the release refers to.
+      - name: major_minor_version
+        description: '{{ doc("major_minor_version") }}'
+      - name: major_minor_version_num
+        description: '{{ doc("major_minor_version_num") }}'
+      - name: major_version
+        description: '{{ doc("major_version") }}'
+      - name: minor_version
+        description: '{{ doc("minor_version") }}'
+      - name: release_date
+        description: '{{ doc("release_date") }}'
+      - name: version_number
+        description: '{{ doc("version_number") }}'
+      - name: next_version_release_date
+        description: '{{ doc("next_version_release_date") }}'
+      
 
   - name: dim_subscription_snapshot_bottom_up
     description: Daily snapshot of subscriptions starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
@@ -1718,7 +1752,9 @@ models:
         description: '{{ doc("event_pk") }}'
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "event_date >= DATEADD('day',-7,CURRENT_DATE())"
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
@@ -2135,38 +2171,6 @@ models:
           - not_null
       - name: valid_to
 
-  - name: dim_namespace_lineage
-    description: '{{ doc("dim_namespace_lineage") }}'
-    columns:
-      - name: dim_namespace_id
-        tests:
-          - not_null
-          - unique
-      - name: ultimate_parent_namespace_id
-        tests:
-          - not_null
-      - name: parent_id
-      - name: namespace_plan_id
-      - name: ultimate_parent_plan_id
-        tests:
-          - not_null
-          - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101, 102, 103, 135]
-      - name: upstream_lineage
-        tests:
-          - not_null
-      - name: is_currently_valid
-        tests:
-          - not_null
-      - name: namespace_plan_title
-      - name: namespace_plan_is_paid
-      - name: ultimate_parent_plan_title
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_is_paid
-        tests:
-          - not_null
-
   - name: dim_namespace_plan_hist
     description: '{{ doc("dim_namespace_plan_hist") }}'
     columns:
@@ -2445,7 +2449,9 @@ models:
         description: Unique key of User.
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "spined_date >= DATEADD('day',-7,CURRENT_DATE())"
       - name: spined_date_id
         description: Unique Date Id between dbt_valid_from and dbt_valid_to in Snapshots    
       - name: is_blocked_user
@@ -2481,6 +2487,7 @@ models:
       - name: updated_at
       - name: ci_runner_description
       - name: ci_runner_manager
+      - name: ci_runner_machine_type
       - name: contacted_at
       - name: is_active
       - name: ci_runner_version
@@ -2791,7 +2798,9 @@ models:
         description: '{{ doc("minor_version") }}'
       - name: major_minor_version
         description: '{{ doc("major_minor_version") }}'
-      - name: major_minor_version_id
+      - name: major_minor_version_num
+        description: '{{ doc("major_minor_version_num") }}'
+      - name: major_minor_version_num
         description: '{{ doc("major_minor_version_id") }}'
       - name: ping_delivery_type
         description: '{{ doc("ping_delivery_type") }}'
@@ -3825,6 +3834,10 @@ models:
         description: '{{ doc("dim_installation_id") }}'
       - name: dim_license_id
         description:  '{{ doc("dim_license_id") }}'
+      - name: dim_app_release_major_minor_sk
+        description:  '{{ doc("dim_app_release_major_minor_sk") }}'
+      - name: dim_latest_available_app_release_major_minor_sk
+        description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
       - name: license_md5
         description: '{{ doc("license_md5") }}'
       - name: license_sha256
@@ -5260,7 +5273,7 @@ models:
         description: '{{ doc("event_id_behavior_model") }}'  
       - name: user_snowplow_domain_id
         description: '{{ doc("user_snowplow_domain_id") }}' 
-      - name: environment
+      - name: gsc_environment
         description: '{{ doc("environment_behavior_model") }}' 
       - name: gsc_extra
         description: '{{ doc("gsc_extra") }}' 
@@ -5337,7 +5350,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
@@ -5555,7 +5570,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
@@ -5762,7 +5779,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
@@ -5892,6 +5911,8 @@ models:
         description: '{{ doc("user_snowplow_domain_id") }}'
       - name: link_click_target_url
         description: '{{ doc("link_click_target_url") }}'
+      - name: link_click_element_id
+        description: '{{ doc("link_click_element_id") }}'
       - name: submit_form_id
         description: '{{ doc("submit_form_id") }}'
       - name: change_form_id

@@ -41,7 +41,7 @@ renamed AS (
     leadsource AS lead_source,
     lead_from__c AS lead_from,
     lead_source_type__c AS lead_source_type,
-    lead_conversion_approval_status__c AS lead_conversiona_approval_status,
+    lead_conversion_approval_status__c AS lead_conversion_approval_status,
     street AS street,
     city AS city,
     state AS state,
@@ -118,6 +118,7 @@ renamed AS (
     true_initial_mql_date__c AS true_initial_mql_date,
     true_mql_date__c AS true_mql_date,
     last_transfer_date_time__c AS last_transfer_date_time,
+    initial_mql_date__c AS initial_marketo_mql_date_time,
 	time_from_last_transfer_to_sequence__c AS time_from_last_transfer_to_sequence,
 	time_from_mql_to_last_transfer__c AS time_from_mql_to_last_transfer,
 
@@ -131,15 +132,16 @@ renamed AS (
     leandata_territory__c AS tsp_territory,
 
     -- account demographics fields
-    account_demographics_sales_segment__c AS account_demographics_sales_segment,
+    account_demographics_sales_segment_2__c AS account_demographics_sales_segment,
+    account_demographics_sales_segment__c AS account_demographics_sales_segment_deprecated,
     CASE
-      WHEN account_demographics_sales_segment__c IN ('Large', 'PubSec') THEN 'Large'
-      ELSE account_demographics_sales_segment__c
+      WHEN account_demographics_sales_segment_2__c IN ('Large', 'PubSec') THEN 'Large'
+      ELSE account_demographics_sales_segment_2__c
     END AS account_demographics_sales_segment_grouped,
     account_demographics_geo__c AS account_demographics_geo,
     account_demographics_region__c AS account_demographics_region,
     account_demographics_area__c AS account_demographics_area,
-    {{ sales_segment_region_grouped('account_demographics_sales_segment__c', 'account_demographics_geo__c', 'account_demographics_region__c') }}
+    {{ sales_segment_region_grouped('account_demographics_sales_segment_2__c', 'account_demographics_geo__c', 'account_demographics_region__c') }}
     AS account_demographics_segment_region_grouped,
     account_demographics_territory__c AS account_demographics_territory,
     account_demographics_employee_count__c AS account_demographics_employee_count,

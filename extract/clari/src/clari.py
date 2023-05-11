@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from logging import info, basicConfig, getLogger, error
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from dateutil import parser as date_parser
 
 import requests
@@ -31,6 +31,7 @@ from gitlabdata.orchestration_utils import (
 
 config_dict = os.environ.copy()
 HEADERS = {"apikey": config_dict.get("CLARI_API_KEY")}
+TIMEOUT = 60
 BASE_URL = "https://api.clari.com/v4"
 FORECAST_ID = "net_arr"
 
@@ -99,25 +100,21 @@ def get_fiscal_quarter() -> str:
 def make_request(
     request_type: str,
     url: str,
-    headers: Optional[Dict[Any, Any]] = None,
-    params: Optional[Dict[Any, Any]] = None,
-    json_body: Optional[Dict[Any, Any]] = None,
-    timeout: int = 60,
     current_retry_count: int = 0,
     max_retry_count: int = 3,
+    **kwargs,
 ) -> requests.models.Response:
     """Generic function that handles making GET and POST requests"""
+    additional_backoff = 20
     if current_retry_count >= max_retry_count:
-        raise Exception(f"Too many retries when calling the {url}")
+        raise requests.exceptions.HTTPError(
+            f"Manually raising 429 Client Error: Too many retries when calling the {url}."
+        )
     try:
         if request_type == "GET":
-            response = requests.get(
-                url, headers=headers, params=params, timeout=timeout
-            )
+            response = requests.get(url, **kwargs)
         elif request_type == "POST":
-            response = requests.post(
-                url, headers=headers, json=json_body, timeout=timeout
-            )
+            response = requests.post(url, **kwargs)
         else:
             raise ValueError("Invalid request type")
 
@@ -125,19 +122,18 @@ def make_request(
         return response
     except requests.exceptions.RequestException:
         if response.status_code == 429:
-            retry_after = int(response.headers["Retry-After"])
-            time.sleep(retry_after)
-            current_retry_count += 1
+            # if no retry-after exists, wait default time
+            retry_after = int(response.headers.get("Retry-After", additional_backoff))
+            info(f"\nToo many requests... Sleeping for {retry_after} seconds")
+            # add some buffer to sleep
+            time.sleep(retry_after + (additional_backoff * current_retry_count))
             # Make the request again
             return make_request(
                 request_type=request_type,
                 url=url,
-                headers=headers,
-                params=params,
-                json_body=json_body,
-                timeout=timeout,
-                current_retry_count=current_retry_count,
+                current_retry_count=current_retry_count + 1,
                 max_retry_count=max_retry_count,
+                **kwargs,
             )
         error(f"request exception for url {url}, see below")
         raise
@@ -152,7 +148,9 @@ def get_forecast(fiscal_quarter: str) -> Dict[Any, Any]:
     """
     params = {"timePeriod": fiscal_quarter}
     forecast_url = f"{BASE_URL}/forecast/{FORECAST_ID}"
-    response = make_request("GET", forecast_url, HEADERS, params=params)
+    response = make_request(
+        "GET", forecast_url, headers=HEADERS, params=params, timeout=TIMEOUT
+    )
     info("Successful response from GET forecast API (latest week only)")
     return response.json()
 
@@ -164,14 +162,16 @@ def start_export_report(fiscal_quarter: str) -> str:
     export_forecast_url = f"{BASE_URL}/export/forecast/{FORECAST_ID}"
 
     json_body = {"timePeriod": fiscal_quarter, "includeHistorical": True}
-    response = make_request("POST", export_forecast_url, HEADERS, json_body=json_body)
+    response = make_request(
+        "POST", export_forecast_url, headers=HEADERS, json=json_body, timeout=TIMEOUT
+    )
     return response.json()["jobId"]
 
 
 def get_job_status(job_id: str) -> Dict[Any, Any]:
     """Returns the status of the job with the specified ID."""
     job_status_url = f"{BASE_URL}/export/jobs/{job_id}"
-    response = make_request("GET", job_status_url, HEADERS)
+    response = make_request("GET", job_status_url, headers=HEADERS, timeout=TIMEOUT)
     info(f'\njobStatus response:\n {response.json()["job"]}')
     return response.json()["job"]
 
@@ -215,7 +215,7 @@ def poll_job_status(
 def get_report_results(job_id: str) -> Dict[Any, Any]:
     """Get the report results as a json/dict object"""
     results_url = f"{BASE_URL}/export/jobs/{job_id}/results"
-    response = make_request("GET", results_url, HEADERS)
+    response = make_request("GET", results_url, headers=HEADERS, timeout=TIMEOUT)
     info("Successfully obtained report data")
     return response.json()
 

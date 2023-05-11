@@ -198,10 +198,6 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
 
-      edcast:
-        +schema: edcast
-        +tags: ["people", "edcast"]
-
       facebook_ads:
         +schema: facebook_ads
 
@@ -345,6 +341,10 @@ models:
       zuora_central_sandbox:
         +schema: zuora_central_sandbox
         +tags: [ "zuora_central_sandbox", "mnpi" ]
+
+      zuora_api_sandbox:
+        +schema: zuora_api_sandbox
+        +tags: [ "zuora_api_sandbox", "mnpi" ]
 
       zuora_revenue:
         +schema: zuora_revenue
@@ -619,7 +619,7 @@ models:
 
       workspace_people:
         +schema: workspace_people
-        +tags: ["people", "edcast"]
+        +tags: ["people"]
 
     # ------------------
     # Marts

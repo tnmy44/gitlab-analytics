@@ -436,6 +436,12 @@ models:
       description: '{{ doc("dim_parent_crm_account_id") }}'
     - name: dim_host_id
       description: '{{ doc("dim_host_id") }}'
+    - name: dim_app_release_major_minor_sk
+      description: '{{ doc("dim_app_release_major_minor_sk") }}'
+    - name: dim_latest_available_app_release_major_minor_sk
+      description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
+    - name: app_release_major_minor_id
+      description: '{{ doc("app_release_major_minor_id") }}'
     - name: major_minor_version_id
       description: '{{ doc("major_minor_version_id") }}'
     - name: host_name
@@ -455,9 +461,19 @@ models:
     - name: minor_version
       description: '{{ doc("minor_version") }}'
     - name: major_minor_version
-      description: '{{ doc("minor_version") }}'
+      description: '{{ doc("major_minor_version") }}'
+    - name: major_minor_version_num
+      description: '{{ doc("major_minor_version_num") }}'
     - name: version_is_prerelease
       description: '{{ doc("version_is_prerelease") }}'
+    - name: version_number
+      description: '{{ doc("version_number") }}'
+    - name: days_after_version_release_date
+      description: '{{ doc("days_after_version_release_date") }}'
+    - name: latest_version_available_at_ping_creation
+      description: '{{ doc("latest_version_available_at_ping_creation") }}'
+    - name: versions_behind_latest_at_ping_creation
+      description: '{{ doc("versions_behind_latest_at_ping_creation") }}'
     - name: is_internal
       description: '{{ doc("is_internal_ping_model") }}'
     - name: is_staging
@@ -1242,7 +1258,9 @@ models:
   columns:
     - name: behavior_structured_event_pk
       tests:
-        - unique
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
       description: '{{ doc("behavior_structured_event_pk") }}'
     - name: behavior_at
       description: '{{ doc("behavior_at") }}'

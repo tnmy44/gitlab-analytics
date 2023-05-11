@@ -6,6 +6,12 @@ WITH report_metrics_summary_account_year AS (
     --FROM  prod.workspace_sales.report_metrics_summary_account_year
     FROM {{ ref('wk_sales_report_metrics_summary_account_year') }}
 
+), raw_account AS (
+  
+    SELECT *
+    FROM {{ source('salesforce', 'account') }}
+    --FROM raw.salesforce_stitch.account 
+
 ), upa_virtual_cte AS (
 
 SELECT 
@@ -417,7 +423,20 @@ FROM selected_hierarchy_virtual_upa final
         AND new_upa.report_fiscal_year = acc.report_fiscal_year
   GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
 
+), final AS (
+
+    SELECT  
+            upa.*,
+            raw.account_demographics_territory__c       AS upa_ad_territory,
+            raw.account_demographics_upa_state__c       AS upa_ad_state_code,
+            raw.account_demographics_upa_state_name__c  AS upa_ad_state_name
+
+    FROM consolidated_upa upa
+        LEFT JOIN raw_account raw
+        ON upa.upa_id = raw.id
+
 )
 
 SELECT *
-FROM consolidated_upa
+FROM final
+
