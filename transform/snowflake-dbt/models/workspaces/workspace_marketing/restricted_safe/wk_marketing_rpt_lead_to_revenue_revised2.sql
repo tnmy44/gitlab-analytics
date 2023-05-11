@@ -3,7 +3,6 @@
     materialized="table"
 ) }}
 
-
 {{ simple_cte([
     ('person_base','mart_crm_person'),
     ('dim_crm_person','dim_crm_person'),
@@ -20,7 +19,7 @@
 
   SELECT 
     mart_crm_touchpoint.*,
-    COALESCE(mart_crm_touchpoint.dim_crm_person_id,'null')||'-'||COALESCE(mart_crm_touchpoint.dim_campaign_id,'null')||'-'||COALESCE(mart_crm_touchpoint.sfdc_record_id,'null')||'-'||TO_CHAR(sfdc_bizible_touchpoint.bizible_touchpoint_date) AS tp_unique_id,
+    COALESCE(mart_crm_touchpoint.dim_crm_person_id,'null')||'-'||COALESCE(mart_crm_touchpoint.dim_campaign_id,'null')||'-'||COALESCE(mart_crm_touchpoint.sfdc_record_id,'null')||'-'||TO_CHAR(sfdc_bizible_touchpoint.bizible_touchpoint_date) AS tp_unique_id
   FROM mart_crm_touchpoint
   LEFT JOIN sfdc_bizible_touchpoint
     ON mart_crm_touchpoint.dim_crm_touchpoint_id=sfdc_bizible_touchpoint.touchpoint_id
@@ -29,7 +28,7 @@
   
   SELECT 
     mart_crm_attribution_touchpoint.*,
-    COALESCE(mart_crm_attribution_touchpoint.dim_crm_person_id,'null')||'-'||COALESCE(mart_crm_attribution_touchpoint.dim_campaign_id,'null')||'-'||COALESCE(mart_crm_attribution_touchpoint.sfdc_record_id,'null')||'-'||TO_CHAR(sfdc_bizible_attribution_touchpoint_xf.bizible_touchpoint_date) AS tp_unique_id,
+    COALESCE(mart_crm_attribution_touchpoint.dim_crm_person_id,'null')||'-'||COALESCE(mart_crm_attribution_touchpoint.dim_campaign_id,'null')||'-'||COALESCE(mart_crm_attribution_touchpoint.sfdc_record_id,'null')||'-'||TO_CHAR(sfdc_bizible_attribution_touchpoint_xf.bizible_touchpoint_date) AS tp_unique_id
   FROM mart_crm_attribution_touchpoint
   LEFT JOIN sfdc_bizible_attribution_touchpoint_xf
     ON mart_crm_attribution_touchpoint.dim_crm_touchpoint_id=sfdc_bizible_attribution_touchpoint_xf.touchpoint_id
