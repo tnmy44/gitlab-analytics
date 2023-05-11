@@ -116,12 +116,13 @@
         WHEN dim_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
         OR dim_subscription.subscription_sales_type = 'Sales-Assisted'
           THEN 'Sales-Assisted'
-        WHEN dim_billing_account_user.user_name IN (
+        WHEN dim_order.order_description != 'AutoRenew by CustomersDot'
+        AND dim_billing_account_user.user_name IN (
             'svc_zuora_fulfillment_int@gitlab.com',
             'ruben_APIproduction@gitlab.com') 
           THEN 'Customer Portal'
-        ELSE 'Unknown'    
-      END                                                                             AS renewal_type,
+        ELSE NULL
+      END                                                                             AS subscription_renewal_type,
 
       --Cohort Information
       dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
