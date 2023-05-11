@@ -270,9 +270,9 @@
           THEN SUM(mart_crm_attribution_touchpoint.linear_net_arr) 
         ELSE 0 
       END AS won_linear_net_arr
-    FROM mart_crm_touchpoint
-    LEFT JOIN mart_crm_attribution_touchpoint
-      ON mart_crm_touchpoint.tp_unique_id=mart_crm_attribution_touchpoint.tp_unique_id 
+    FROM mart_crm_touchpoint_base
+    LEFT JOIN mart_crm_attribution_touchpoint_base
+      ON mart_crm_touchpoint_base.tp_unique_id=mart_crm_attribution_touchpoint_base.tp_unique_id 
     {{dbt_utils.group_by(n=36)}}
   
 ), person_opp_base AS (
