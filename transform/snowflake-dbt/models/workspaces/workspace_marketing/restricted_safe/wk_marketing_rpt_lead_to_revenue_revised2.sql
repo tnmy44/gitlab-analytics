@@ -19,6 +19,7 @@
 
   SELECT 
     mart_crm_touchpoint.*,
+    TRUE AS person_touchpoint,
     COALESCE(mart_crm_touchpoint.dim_crm_person_id,'null')||'-'||COALESCE(mart_crm_touchpoint.dim_campaign_id,'null')||'-'||COALESCE(mart_crm_touchpoint.sfdc_record_id,'null')||'-'||TO_CHAR(sfdc_bizible_touchpoint.bizible_touchpoint_date) AS tp_unique_id
   FROM mart_crm_touchpoint
   LEFT JOIN sfdc_bizible_touchpoint
@@ -28,6 +29,7 @@
   
   SELECT 
     mart_crm_attribution_touchpoint.*,
+    TRUE AS attribution_touchpoint,
     COALESCE(mart_crm_attribution_touchpoint.dim_crm_person_id,'null')||'-'||COALESCE(mart_crm_attribution_touchpoint.dim_campaign_id,'null')||'-'||COALESCE(mart_crm_attribution_touchpoint.sfdc_record_id,'null')||'-'||TO_CHAR(sfdc_bizible_attribution_touchpoint_xf.bizible_touchpoint_date) AS tp_unique_id
   FROM mart_crm_attribution_touchpoint
   LEFT JOIN sfdc_bizible_attribution_touchpoint_xf
@@ -104,6 +106,8 @@
       COALESCE(mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,mart_crm_touchpoint.dim_crm_touchpoint_id) AS dim_crm_touchpoint_id, 
   
     --TP Data
+      person_touchpoint,
+      attribution_touchpoint,
       COALESCE(mart_crm_attribution_touchpoint.bizible_touchpoint_date,mart_crm_touchpoint.bizible_touchpoint_date) AS bizible_touchpoint_date, 
       COALESCE(mart_crm_attribution_touchpoint.bizible_touchpoint_position,mart_crm_touchpoint.bizible_touchpoint_position) AS bizible_touchpoint_position, 
       COALESCE(mart_crm_attribution_touchpoint.bizible_touchpoint_source,mart_crm_touchpoint.bizible_touchpoint_source) AS bizible_touchpoint_source, 
@@ -273,7 +277,7 @@
     FROM mart_crm_touchpoint_base
     LEFT JOIN mart_crm_attribution_touchpoint_base
       ON mart_crm_touchpoint_base.tp_unique_id=mart_crm_attribution_touchpoint_base.tp_unique_id 
-    {{dbt_utils.group_by(n=36)}}
+    {{dbt_utils.group_by(n=38)}}
   
 ), person_opp_base AS (
 
@@ -387,6 +391,8 @@
        
   
     --TP Data
+      person_touchpoint,
+      attribution_touchpoint,
       bizible_touchpoint_date, 
       bizible_touchpoint_position, 
       bizible_touchpoint_source, 
