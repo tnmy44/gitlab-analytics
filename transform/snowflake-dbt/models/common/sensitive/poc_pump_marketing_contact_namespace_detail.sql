@@ -308,11 +308,15 @@
 
     
     CASE
-      WHEN last_ptpt_scores.score_group >= 4 OR last_ptpf_scores.score_group IS NULL
+      WHEN last_ptpt_scores.score_group >= 4
         THEN 'Trial'
-      WHEN last_ptpf_scores.score_group >= 4 OR last_ptpt_scores.score_group IS NULL
+      WHEN last_ptpf_scores.score_group >= 4
         THEN 'Free'
-      ELSE 'Trial'
+      WHEN last_ptpt_scores.score_group IS NOT NULL
+        THEN 'Trial'
+      WHEN last_ptpf_scores.score_group IS NOT NULL
+        THEN 'Free'
+      ELSE NULL
     END                                                                         AS ptp_source,
     IFF(ptp_source = 'Trial', last_ptpt_scores.score_date, last_ptpf_scores.score_date)
                                                                                 AS ptp_score_date,
