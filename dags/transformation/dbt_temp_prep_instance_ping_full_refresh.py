@@ -84,7 +84,7 @@ dag = DAG(
     "dbt_temp_prep_instance_ping_full_refresh",
     description="This DAG runs weekly on TBA to full refresh data for prep_ping_instance downstream models - incremental only",
     default_args=default_args,
-    schedule_interval="0 22 * * WED",
+    schedule_interval="0 20 * * THU",
 )
 
 dbt_prep_ping_instance_full_refresh_cmd = f"""
