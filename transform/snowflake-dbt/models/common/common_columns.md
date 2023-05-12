@@ -4,7 +4,7 @@ The unique identifier of an event. This is a generated primary key and will not 
 
 {% enddocs %}
 
-{% docs dim_active_product_tier_id %}
+{% docs dim_latest_product_tier_id %}
 
 The unique identifier of the ultimate parent namespace's latest product tier, easily joined to `dim_product_tier`
 
