@@ -1,5 +1,6 @@
 {{ config(
-     materialized = "table",
+     materialized = "incremental",
+     unique_key = "monthly_stage_usage_by_subscription_pk",
      tags=["mnpi_exception"]
 ) }}
 
@@ -8,6 +9,13 @@ WITH usage_ping AS (
         *,
         DATE_TRUNC('MONTH', ping_created_at) AS ping_created_at_month
     FROM {{ ref('prep_ping_instance') }}
+
+    {% if is_incremental() %}
+    
+    WHERE ping_created_at_month >= (SELECT DATEADD('month', -1, MAX(snapshot_month)) FROM {{this}}) --  Give a month buffer in case of late arriving pings 
+    
+  {% endif %}
+
 ),
 
 license_subscription_mapping AS (
@@ -140,6 +148,7 @@ flattened_metrics AS (
 )
 
 SELECT
+    {{ dbt_utils.surrogate_key(["dim_subscription.dim_subscription_id_original", "flattened_metrics.snapshot_month"]) }} AS monthly_stage_usage_by_subscription_pk,
     dim_subscription.dim_subscription_id_original,
     flattened_metrics.snapshot_month,
 
