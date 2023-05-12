@@ -273,11 +273,6 @@ WITH edm_opty AS (
     upa.account_demographics_territory                AS upa_demographics_territory,
 
     edm_opty.sales_qualified_source_name              AS sales_qualified_source,
-    edm_opty.net_arr_created_date,
-    edm_opty.net_arr_created_fiscal_quarter_name,
-    edm_opty.net_arr_created_fiscal_quarter_date,
-    edm_opty.net_arr_created_fiscal_year,
-    edm_opty.net_arr_created_month                    AS net_arr_created_date_month,
     edm_opty.stage_category,
     edm_opty.calculated_partner_track,
     edm_opty.deal_path_engagement,
@@ -323,6 +318,12 @@ WITH edm_opty AS (
     edm_opty.sales_qualified_fiscal_quarter_date,
     edm_opty.sales_qualified_fiscal_year,
     edm_opty.sales_qualified_month                                       AS sales_qualified_date_month,
+
+    edm_opty.net_arr_created_date,
+    edm_opty.net_arr_created_fiscal_quarter_name,
+    edm_opty.net_arr_created_fiscal_quarter_date,
+    edm_opty.net_arr_created_fiscal_year,
+    edm_opty.net_arr_created_month                                       AS net_arr_created_date_month,
 
     edm_opty.pipeline_created_date,
     edm_opty.pipeline_created_fiscal_quarter_name,
