@@ -273,6 +273,11 @@ WITH edm_opty AS (
     upa.account_demographics_territory                AS upa_demographics_territory,
 
     edm_opty.sales_qualified_source_name              AS sales_qualified_source,
+    edm_opty.net_arr_created_date,
+    edm_opty.net_arr_created_fiscal_quarter_name,
+    edm_opty.net_arr_created_fiscal_quarter_date,
+    edm_opty.net_arr_created_fiscal_year,
+    edm_opty.net_arr_created_month                    AS net_arr_created_date_month,
     edm_opty.stage_category,
     edm_opty.calculated_partner_track,
     edm_opty.deal_path_engagement,
@@ -323,7 +328,7 @@ WITH edm_opty AS (
     edm_opty.pipeline_created_fiscal_quarter_name,
     edm_opty.pipeline_created_fiscal_quarter_date,
     edm_opty.pipeline_created_fiscal_year,
-    edm_opty.arr_created_month                                           AS pipeline_created_date_month,
+    edm_opty.net_arr_created_month                                       AS pipeline_created_date_month,
 
     edm_opty.stage_1_discovery_date                                      AS stage_1_date,
     edm_opty.stage_1_discovery_month                                     AS stage_1_date_month,
@@ -451,11 +456,11 @@ WITH edm_opty AS (
     --     Logic is different for open deals so we can evaluate their current cycle time.
     CASE
         WHEN edm_opty.is_renewal = 1 AND is_closed = 1
-            THEN DATEDIFF(day, edm_opty.arr_created_date, edm_opty.close_date)
+            THEN DATEDIFF(day, edm_opty.net_arr_created_date, edm_opty.close_date)
         WHEN edm_opty.is_renewal = 0 AND is_closed = 1
             THEN DATEDIFF(day, edm_opty.created_date, edm_opty.close_date)
          WHEN edm_opty.is_renewal = 1 AND is_open = 1
-            THEN DATEDIFF(day, edm_opty.arr_created_date, CURRENT_DATE)
+            THEN DATEDIFF(day, edm_opty.net_arr_created_date, CURRENT_DATE)
         WHEN edm_opty.is_renewal = 0 AND is_open = 1
             THEN DATEDIFF(day, edm_opty.created_date, CURRENT_DATE)
     END                                                           AS cycle_time_in_days,

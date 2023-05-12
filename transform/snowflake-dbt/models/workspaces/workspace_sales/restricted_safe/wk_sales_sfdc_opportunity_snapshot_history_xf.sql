@@ -230,7 +230,7 @@ WITH date_details AS (
       edm_snapshot_opty.stage_3_technical_evaluation_date,
       edm_snapshot_opty.stage_4_proposal_date,
       edm_snapshot_opty.stage_5_negotiating_date,
-      edm_snapshot_opty.stage_6_awaiting_signature_date,
+      edm_snapshot_opty.stage_6_awaiting_signature_date_date AS stage_6_awaiting_signature_date,
       edm_snapshot_opty.stage_6_closed_won_date,
       edm_snapshot_opty.stage_6_closed_lost_date,
       
@@ -324,6 +324,12 @@ WITH date_details AS (
       edm_snapshot_opty.created_fiscal_year,
       edm_snapshot_opty.created_fiscal_quarter_name,
       edm_snapshot_opty.created_fiscal_quarter_date,
+
+      edm_snapshot_opty.net_arr_created_date,
+      edm_snapshot_opty.net_arr_created_month                   AS net_arr_created_date_month,
+      edm_snapshot_opty.net_arr_created_fiscal_year,
+      edm_snapshot_opty.net_arr_created_fiscal_quarter_name,
+      edm_snapshot_opty.net_arr_created_fiscal_quarter_date,
 
       edm_snapshot_opty.pipeline_created_date,
       edm_snapshot_opty.pipeline_created_month                  AS pipeline_created_date_month,
