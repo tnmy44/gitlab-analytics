@@ -318,6 +318,7 @@
       mart_crm_opportunity_stamped_hierarchy_hist.new_logo_count,
       mart_crm_opportunity_stamped_hierarchy_hist.net_arr,
       mart_crm_opportunity_stamped_hierarchy_hist.is_net_arr_closed_deal,
+      mart_crm_opportunity_stamped_hierarchy_hist.is_net_arr_pipeline_created,
       mart_crm_opportunity_stamped_hierarchy_hist.crm_opp_owner_sales_segment_stamped,
       mart_crm_opportunity_stamped_hierarchy_hist.crm_opp_owner_region_stamped,
       mart_crm_opportunity_stamped_hierarchy_hist.crm_opp_owner_area_stamped,
@@ -382,6 +383,7 @@
       new_logo_count,
       net_arr,
       is_net_arr_closed_deal,
+      is_net_arr_pipeline_created,
       crm_opp_owner_sales_segment_stamped,
       crm_opp_owner_region_stamped,
       crm_opp_owner_area_stamped,
@@ -536,5 +538,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-05-11",
-    updated_date="2023-05-11",
+    updated_date="2023-05-13",
   ) }}
