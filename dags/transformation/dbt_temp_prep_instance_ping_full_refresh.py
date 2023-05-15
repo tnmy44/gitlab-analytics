@@ -42,8 +42,6 @@ from kube_secrets import (
 env = os.environ.copy()
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
-# This value is set based on the commit hash setter task in dbt_snapshot
-pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_hash }}" """
 
 secrets_list = [
     GIT_DATA_TESTS_PRIVATE_KEY,
@@ -90,11 +88,9 @@ dag = DAG(
 )
 
 dbt_prep_ping_instance_full_refresh_cmd = f"""
-    {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
-    dbt run --profiles-dir profile --target prod --full-refresh
-    --models prep_ping_instance prep_ping_instance_flattened dim_installation dim_ping_instance fct_ping_instance fct_ping_instance_metric fct_ping_instance_metric_rolling_13_months fct_ping_instance_free_user_metrics wk_usage_ping_geo_node_usage; ret=$?;
+    dbt run --profiles-dir profile --target prod --full-refresh --models prep_ping_instance prep_ping_instance_flattened dim_installation dim_ping_instance fct_ping_instance fct_ping_instance_metric fct_ping_instance_metric_rolling_13_months fct_ping_instance_free_user_metrics wk_usage_ping_geo_node_usage; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
