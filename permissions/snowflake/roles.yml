@@ -3279,11 +3279,8 @@ roles:
             - transforming_xl
 
     - gweaver:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - hkacmarski:
         member_of:
@@ -5212,9 +5209,8 @@ users:
             - grafana
 
     - gweaver:
-        can_login: yes
-        member_of:
-            - gweaver
+        can_login: no
+        member_of: []
 
     - hightouch_user:
         can_login: yes
