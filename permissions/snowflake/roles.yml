@@ -3363,11 +3363,8 @@ roles:
             - dev_xs
 
     - jbudreski:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - jcaine:
         member_of:
@@ -5238,9 +5235,8 @@ users:
             - jahye
 
     - jbudreski:
-        can_login: yes
-        member_of:
-            - jbudreski
+        can_login: no
+        member_of: []
 
     - jcaine:
         can_login: yes
