@@ -66,6 +66,23 @@
 
     UNION ALL
 
+    SELECT DISTINCT
+      dim_marketing_contact_id,
+      gitlab_users.notification_email                             AS email_address,
+      gitlab_users.user_id                                        AS user_id,
+      NULL                                                        AS customer_db_customer_id,
+      gitlab_members.source_id                                    AS namespace_id,
+      NULL                                                        AS zuora_billing_account_id,
+      'Group Namespace Maintainer'                                AS marketing_contact_role
+    FROM gitlab_members
+    INNER JOIN gitlab_users
+      ON gitlab_users.user_id = gitlab_members.user_id
+    LEFT JOIN dim_marketing_contact
+      ON dim_marketing_contact.email_address = gitlab_users.notification_email
+    WHERE gitlab_members.member_source_type = 'Namespace'
+      AND gitlab_members.access_level = 40
+
+
     SELECT
       dim_marketing_contact_id,
       customer_db_source.customer_email                           AS email_address,
