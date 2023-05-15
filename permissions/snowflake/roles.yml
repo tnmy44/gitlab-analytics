@@ -4995,12 +4995,8 @@ roles:
             - dev_xs
 
     - webrahim:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
 # ==========================================
 # Users
@@ -5533,9 +5529,8 @@ users:
             - warias
 
     - webrahim:
-        can_login: yes
-        member_of:
-            - webrahim
+        can_login: no
+        member_of: []
 
     - workato:
         can_login: yes
