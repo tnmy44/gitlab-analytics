@@ -1,5 +1,6 @@
 {{ config(
-     materialized = "table",
+     materialized = "incremental",
+     unique_key = "monthly_stage_usage_by_subscription_pk",
      tags=["mnpi_exception"]
 ) }}
 
@@ -8,6 +9,13 @@ WITH usage_ping AS (
         *,
         DATE_TRUNC('MONTH', ping_created_at) AS ping_created_at_month
     FROM {{ ref('prep_ping_instance') }}
+
+    {% if is_incremental() %}
+    
+    WHERE ping_created_at_month >= (SELECT DATEADD('month', -1, MAX(snapshot_month)) FROM {{this}}) --  Give a month buffer in case of late arriving pings 
+    
+  {% endif %}
+
 ),
 
 license_subscription_mapping AS (
@@ -38,6 +46,12 @@ usage_ping_metrics AS (
     SELECT
         *
     FROM {{ ref('dim_ping_metric') }}
+),
+
+dim_subscription AS (
+    SELECT
+        *
+    FROM {{ ref('dim_subscription') }}
 ),
 
 sm_last_monthly_ping_per_account AS (
@@ -134,7 +148,8 @@ flattened_metrics AS (
 )
 
 SELECT
-    flattened_metrics.dim_crm_account_id,
+    {{ dbt_utils.surrogate_key(["dim_subscription.dim_subscription_id_original", "flattened_metrics.snapshot_month"]) }} AS monthly_stage_usage_by_subscription_pk,
+    dim_subscription.dim_subscription_id_original,
     flattened_metrics.snapshot_month,
 
     -- NUMBER OF FEATURES USED BY PRODUCT STAGE
@@ -579,7 +594,7 @@ SELECT
         END
     ) AS tier_ultimate_28days_features,
 
-    -- NUMBER OF TIMES FEATURES ARE USED BY STAGE
+    -- NUMBER OF TIMES FEAURES ARE USED BY STAGE
     COALESCE(
         SUM(
             CASE
@@ -852,7 +867,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_plan_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -861,7 +876,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_create_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -870,7 +885,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_verify_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -879,7 +894,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_package_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -888,7 +903,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_release_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -897,7 +912,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_configure_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -906,7 +921,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_monitor_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -915,7 +930,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_manage_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -924,7 +939,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_secure_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -933,7 +948,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_growth_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -942,7 +957,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_enablement_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -951,7 +966,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_govern_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -960,7 +975,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_fulfillment_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -969,7 +984,7 @@ SELECT
         ELSE
             ROW_NUMBER() OVER (
                 PARTITION BY
-                    flattened_metrics.dim_crm_account_id,
+                    dim_subscription.dim_subscription_id_original,
                     CASE WHEN stage_analytics_28days_features > 0 THEN 1 END
                 ORDER BY flattened_metrics.snapshot_month
             )
@@ -979,8 +994,11 @@ FROM flattened_metrics
 LEFT JOIN
     usage_ping_metrics ON
         flattened_metrics.metrics_path = usage_ping_metrics.metrics_path
+LEFT JOIN
+    dim_subscription ON
+        dim_subscription.dim_subscription_id = flattened_metrics.dim_subscription_id
 WHERE usage_ping_metrics.metrics_status = 'active'
-      AND flattened_metrics.dim_crm_account_id IS NOT NULL
+      AND dim_subscription.dim_subscription_id_original IS NOT NULL
 GROUP BY
-    flattened_metrics.dim_crm_account_id,
+    dim_subscription.dim_subscription_id_original,
     flattened_metrics.snapshot_month
