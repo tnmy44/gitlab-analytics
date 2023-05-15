@@ -18,7 +18,9 @@
     SELECT
       -- touchpoint info
       dim_crm_touchpoint.dim_crm_touchpoint_id,
+      {{ dbt_utils.surrogate_key(['fct_crm_touchpoint.dim_crm_person_id','dim_campaign.dim_campaign_id','dim_crm_touchpoint.bizible_touchpoint_date_time']) }} AS touchpoint_person_campaign_date_id,
       dim_crm_touchpoint.bizible_touchpoint_date,
+      dim_crm_touchpoint.bizible_touchpoint_date_time,
       dim_crm_touchpoint.bizible_touchpoint_month,
       dim_crm_touchpoint.bizible_touchpoint_position,
       dim_crm_touchpoint.bizible_touchpoint_source,
@@ -329,7 +331,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2021-02-18",
-    updated_date="2022-12-12"
+    updated_date="2023-05-15"
 ) }}
