@@ -1,6 +1,7 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "behavior_structured_event_pk"
+    "unique_key": "behavior_structured_event_pk",
+    cluster_by=['behavior_date']
     })
 }}
 
