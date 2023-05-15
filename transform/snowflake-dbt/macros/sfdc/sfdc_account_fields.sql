@@ -10,6 +10,11 @@ WITH map_merged_crm_account AS (
     SELECT *
     FROM {{ ref('prep_crm_person') }}
 
+), sfdc_user_roles_source AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_user_roles_source') }}
+
 ), crm_user AS (
 
     SELECT * 
@@ -71,6 +76,13 @@ WITH map_merged_crm_account AS (
            AND snapshot_dates.date_actual < COALESCE(sfdc_account_snapshots_source.dbt_valid_to, '9999-12-31'::TIMESTAMP)
     {%- endif %}
     WHERE account_id IS NOT NULL
+    {%- if model_type == 'snapshot' %}
+      {% if is_incremental() %}
+
+      AND snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+
+      {% endif %}
+    {% endif %}
 
 ), sfdc_users AS (
 
@@ -162,7 +174,7 @@ WITH map_merged_crm_account AS (
           THEN TRUE
         ELSE FALSE
       END                                                                                                      AS is_current
-    FROM {{ ref('pte_scores_source') }}    
+    FROM {{ ref('pte_scores_source') }}
     {{ dbt_utils.group_by(n=4)}}
     ORDER BY valid_from, valid_to
 
@@ -181,7 +193,7 @@ WITH map_merged_crm_account AS (
           THEN TRUE
         ELSE FALSE
       END                                                                                                      AS is_current
-    FROM {{ ref('ptc_scores_source') }}    
+    FROM {{ ref('ptc_scores_source') }}
     {{ dbt_utils.group_by(n=4)}}
     ORDER BY valid_from, valid_to
 
@@ -214,6 +226,15 @@ WITH map_merged_crm_account AS (
       account_owner.name                                                  AS account_owner,
       proposed_account_owner.name                                         AS proposed_crm_account_owner,
       technical_account_manager.name                                      AS technical_account_manager,
+
+      -- account owner fields
+      account_owner.user_segment                                          AS crm_account_owner_sales_segment,
+      account_owner.user_geo                                              AS crm_account_owner_geo,
+      account_owner.user_region                                           AS crm_account_owner_region,
+      account_owner.user_area                                             AS crm_account_owner_area,
+      account_owner.user_segment_geo_region_area                          AS crm_account_owner_sales_segment_geo_region_area,
+      account_owner.title                                                 AS crm_account_owner_title,
+      sfdc_user_roles_source.name                                         AS crm_account_owner_role,
 
       ----ultimate parent crm account info
       ultimate_parent_account.account_name                                AS parent_crm_account_name,
@@ -601,8 +622,10 @@ WITH map_merged_crm_account AS (
     LEFT JOIN crm_user
       ON sfdc_account.owner_id = crm_user.dim_crm_user_id
         AND sfdc_account.snapshot_id = crm_user.snapshot_id
-    
     {%- endif %}
+     LEFT JOIN sfdc_user_roles_source
+      ON account_owner.user_role_id = sfdc_user_roles_source.id
+
 
 )
 

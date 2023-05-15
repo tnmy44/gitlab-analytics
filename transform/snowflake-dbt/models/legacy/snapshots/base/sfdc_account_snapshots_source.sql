@@ -1,7 +1,18 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "dbt_scd_id"
+    })
+}}
+
 WITH source AS (
 
   SELECT *
   FROM {{ source('snapshots', 'sfdc_account_snapshots') }}
+  {% if is_incremental() %}
+
+  WHERE dbt_updated_at >= (SELECT MAX(dbt_updated_at) FROM {{this}})
+
+  {% endif %}
 
 ),
 

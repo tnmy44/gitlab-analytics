@@ -4822,7 +4822,7 @@ models:
         tests:
           - not_null
           - unique
-        tags: [ "tdf", "common", "sales_funnel" ]
+        tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
 
   - name: fct_invoice
     description: '{{ doc("fct_invoice") }}'

@@ -6,12 +6,27 @@
     })
 }}
 
-{{ sfdc_account_fields('snapshot') }}
+WITH final AS (
+
+    SELECT 
+      {{ dbt_utils.star(
+           from=ref('prep_crm_account_daily_snapshot'), 
+           except=['CREATED_BY','UPDATED_BY','MODEL_CREATED_DATE','MODEL_UPDATED_DATE','DBT_UPDATED_AT','DBT_CREATED_AT']
+           ) 
+      }}
+    FROM {{ ref('prep_crm_account_daily_snapshot') }}
+    {% if is_incremental() %}
+
+    WHERE snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+
+    {% endif %}
+
+)
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@iweeks",
+    updated_by="@michellecooper",
     created_date="2022-01-25",
-    updated_date="2022-08-31"
+    updated_date="2022-03-27"
 ) }}
