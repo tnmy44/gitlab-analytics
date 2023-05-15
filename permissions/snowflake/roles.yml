@@ -4599,10 +4599,8 @@ roles:
             - dev_xs
 
     - rwoo:
-        member_of:
-            - dbt_analytics
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - schaturvedi:
         member_of:
@@ -5427,9 +5425,8 @@ users:
             - rtaira
 
     - rwoo:
-        can_login: yes
-        member_of:
-            - rwoo
+        can_login: no
+        member_of: []
 
     - schaturvedi:
         can_login: yes
