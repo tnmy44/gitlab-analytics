@@ -7,7 +7,7 @@ models:
         - name: dim_crm_touchpoint_id
           tests:
               - not_null
-        - name: unique_tp_id
+        - name: touchpoint_person_campaign_date_id
           description: A concatenation of fields from the mart that can be used to join attribution and person touchpoints together. 
         - name: bizible_touchpoint_date_time
           description: The date/time of the bizible touchpoint interaction. 
@@ -57,7 +57,7 @@ models:
         - name: dim_crm_touchpoint_id
           tests:
               - not_null
-        - name: unique_tp_id
+        - name: touchpoint_person_campaign_date_id
           description: A concatenation of fields from the mart that can be used to join attribution and person touchpoints together. 
         - name: bizible_touchpoint_date_time
           description: The date/time of the bizible touchpoint interaction. 
