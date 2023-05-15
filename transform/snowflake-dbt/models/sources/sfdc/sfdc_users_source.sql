@@ -31,9 +31,6 @@ WITH source AS (
       user_business_unit__c                                             AS user_business_unit,
       user_segment_geo_region_area__c                                   AS user_segment_geo_region_area,
       timezonesidkey                                                    AS user_timezone,
-      startday                                                          AS user_start_of_day_hour,
-      endday                                                            AS user_end_of_day_hour,
-      CASE 
         WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
         ELSE user_segment
       END                                                               AS user_segment_grouped,
