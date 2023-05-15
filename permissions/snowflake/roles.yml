@@ -54,11 +54,6 @@ databases:
     - csharp_prep:
         shared: no
 
-    - david_prod:
-        shared: no
-    - david_prep:
-        shared: no
-
     - ddeng_prod:
         shared: no
     - ddeng_prep:
@@ -2964,46 +2959,9 @@ roles:
                     - csharp_prod.*.*
 
     - david:
-        member_of:
-            - data_team_analyst
-            - analyst_sales
-            - restricted_safe
-        warehouses:
-            - dev_xs
-            - dev_m
-        owns:
-            databases:
-                - david_prep
-                - david_prod
-            schemas:
-                - david_prep.*
-                - david_prod.*
-            tables:
-                - david_prep.*.*
-                - david_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - david_prep
-                    - david_prod
-                write:
-                    - david_prep
-                    - david_prod
-            schemas:
-                read:
-                    - david_prep.*
-                    - david_prod.*
-                write:
-                    - david_prep.*
-                    - david_prod.*
-            tables:
-                read:
-                    - david_prep.*.*
-                    - david_prod.*.*
-                write:
-                    - david_prep.*.*
-                    - david_prod.*.*
-
+        member_of: []
+        warehouses: []
+  
     - dcharukulvanich:
         member_of:
             - reporter
@@ -5133,9 +5091,8 @@ users:
             - csharp
 
     - david:
-        can_login: yes
-        member_of:
-            - david
+        can_login: no
+        member_of: []
 
     - dcharukulvanich:
         can_login: yes
