@@ -3959,11 +3959,8 @@ roles:
             - dev_xs
 
     - mnohr:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - mpetersen:
         member_of:
@@ -5305,9 +5302,8 @@ users:
             - mfleisher
 
     - mnohr:
-        can_login: yes
-        member_of:
-            - mnohr
+        can_login: no
+        member_of: []
 
     - mpetersen:
         can_login: yes
