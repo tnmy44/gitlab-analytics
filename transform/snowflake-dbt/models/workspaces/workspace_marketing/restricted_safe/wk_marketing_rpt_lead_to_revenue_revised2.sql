@@ -41,6 +41,7 @@
       dim_parent_crm_account_id,
       dim_crm_account_id
     FROM dim_crm_account
+
 ), first_order_opps AS ( -- pulls only FO CW Opps and their UPA/Account ID
 
     SELECT
@@ -102,37 +103,39 @@
   
     SELECT DISTINCT
     --IDs
-      COALESCE(mart_crm_attribution_touchpoint_base.dim_crm_person_id,mart_crm_touchpoint_base.dim_crm_person_id) AS dim_crm_person_id,
-      COALESCE(mart_crm_attribution_touchpoint_base.dim_crm_touchpoint_id,mart_crm_touchpoint_base.dim_crm_touchpoint_id) AS dim_crm_touchpoint_id, 
+      mart_crm_touchpoint_base.dim_crm_person_id,
+      mart_crm_touchpoint_base.tp_unique_id,
+      mart_crm_attribution_touchpoint_base.dim_crm_touchpoint_id AS dim_crm_batp_touchpoint_id,
+      mart_crm_touchpoint_base.dim_crm_touchpoint_id AS dim_crm_btp_touchpoint_id,
   
     --TP Data
       person_touchpoint,
       attribution_touchpoint,
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_touchpoint_date,mart_crm_touchpoint_base.bizible_touchpoint_date) AS bizible_touchpoint_date, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_touchpoint_position,mart_crm_touchpoint_base.bizible_touchpoint_position) AS bizible_touchpoint_position, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_touchpoint_source,mart_crm_touchpoint_base.bizible_touchpoint_source) AS bizible_touchpoint_source, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_touchpoint_type,mart_crm_touchpoint_base.bizible_touchpoint_type) AS bizible_touchpoint_type, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_ad_campaign_name,mart_crm_touchpoint_base.bizible_ad_campaign_name) AS bizible_ad_campaign_name, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_form_url,mart_crm_touchpoint_base.bizible_form_url) AS bizible_form_url, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_landing_page,mart_crm_touchpoint_base.bizible_landing_page) AS bizible_landing_page, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_form_url_raw,mart_crm_touchpoint_base.bizible_form_url_raw) AS bizible_form_url_raw, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_landing_page_raw,mart_crm_touchpoint_base.bizible_landing_page_raw) AS bizible_landing_page_raw, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_marketing_channel,mart_crm_touchpoint_base.bizible_marketing_channel) AS bizible_marketing_channel, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_marketing_channel_path,mart_crm_touchpoint_base.bizible_marketing_channel_path) AS bizible_marketing_channel_path, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_medium,mart_crm_touchpoint_base.bizible_medium) AS bizible_medium, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_referrer_page,mart_crm_touchpoint_base.bizible_referrer_page) AS bizible_referrer_page, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_referrer_page_raw,mart_crm_touchpoint_base.bizible_referrer_page_raw) AS bizible_referrer_page_raw, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_integrated_campaign_grouping,mart_crm_touchpoint_base.bizible_integrated_campaign_grouping) AS bizible_integrated_campaign_grouping, 
-      COALESCE(mart_crm_attribution_touchpoint_base.touchpoint_segment,mart_crm_touchpoint_base.touchpoint_segment) AS touchpoint_segment, 
-      COALESCE(mart_crm_attribution_touchpoint_base.gtm_motion,mart_crm_touchpoint_base.gtm_motion) AS gtm_motion, 
-      COALESCE(mart_crm_attribution_touchpoint_base.pipe_name,mart_crm_touchpoint_base.pipe_name) AS pipe_name, 
-      COALESCE(mart_crm_attribution_touchpoint_base.is_dg_influenced,mart_crm_touchpoint_base.is_dg_influenced) AS is_dg_influenced, 
-      COALESCE(mart_crm_attribution_touchpoint_base.is_dg_sourced,mart_crm_touchpoint_base.is_dg_sourced) AS is_dg_sourced, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_count_first_touch,mart_crm_touchpoint_base.bizible_count_first_touch) AS bizible_count_first_touch, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_count_lead_creation_touch,mart_crm_touchpoint_base.bizible_count_lead_creation_touch) AS bizible_count_lead_creation_touch, 
-      COALESCE(mart_crm_attribution_touchpoint_base.bizible_count_u_shaped,mart_crm_touchpoint_base.bizible_count_u_shaped) AS bizible_count_u_shaped, 
-      COALESCE(mart_crm_attribution_touchpoint_base.is_fmm_influenced,mart_crm_touchpoint_base.is_fmm_influenced) AS is_fmm_influenced, 
-      COALESCE(mart_crm_attribution_touchpoint_base.is_fmm_sourced,mart_crm_touchpoint_base.is_fmm_sourced) AS is_fmm_sourced,
+      mart_crm_touchpoint_base.bizible_touchpoint_date, 
+      mart_crm_touchpoint_base.bizible_touchpoint_position, 
+      mart_crm_touchpoint_base.bizible_touchpoint_source, 
+      mart_crm_touchpoint_base.bizible_touchpoint_type, 
+      mart_crm_touchpoint_base.bizible_ad_campaign_name, 
+      mart_crm_touchpoint_base.bizible_form_url, 
+      mart_crm_touchpoint_base.bizible_landing_page, 
+      mart_crm_touchpoint_base.bizible_form_url_raw, 
+      mart_crm_touchpoint_base.bizible_landing_page_raw, 
+      mart_crm_touchpoint_base.bizible_marketing_channel, 
+      mart_crm_touchpoint_base.bizible_marketing_channel_path, 
+      mart_crm_touchpoint_base.bizible_medium, 
+      mart_crm_touchpoint_base.bizible_referrer_page, 
+      mart_crm_touchpoint_base.bizible_referrer_page_raw, 
+      mart_crm_touchpoint_base.bizible_integrated_campaign_grouping, 
+      mart_crm_touchpoint_base.touchpoint_segment, 
+      mart_crm_touchpoint_base.gtm_motion, 
+      mart_crm_touchpoint_base.pipe_name, 
+      mart_crm_touchpoint_base.is_dg_influenced, 
+      mart_crm_touchpoint_base.is_dg_sourced, 
+      mart_crm_touchpoint_base.bizible_count_first_touch, 
+      mart_crm_touchpoint_base.bizible_count_lead_creation_touch, 
+      mart_crm_touchpoint_base.bizible_count_u_shaped, 
+      mart_crm_touchpoint_base.is_fmm_influenced, 
+      mart_crm_touchpoint_base.is_fmm_sourced,
       mart_crm_touchpoint_base.bizible_count_lead_creation_touch AS new_lead_created_sum,
       mart_crm_touchpoint_base.count_true_inquiry AS count_true_inquiry,
       mart_crm_touchpoint_base.count_inquiry AS inquiry_sum, 
@@ -277,14 +280,14 @@
     FROM mart_crm_touchpoint_base
     LEFT JOIN mart_crm_attribution_touchpoint_base
       ON mart_crm_touchpoint_base.tp_unique_id=mart_crm_attribution_touchpoint_base.tp_unique_id 
-    {{dbt_utils.group_by(n=38)}}
+    {{dbt_utils.group_by(n=40)}}
   
 ), person_opp_base AS (
 
     SELECT DISTINCT
    --IDs
       person_base_2.dim_crm_person_id,
-      person_base_2.dim_crm_account_id,
+      upa_base.dim_crm_account_id,
       person_base_2.sfdc_record_id,
       mart_crm_opportunity_stamped_hierarchy_hist.dim_crm_opportunity_id,
   
@@ -325,15 +328,11 @@
       mart_crm_opportunity_stamped_hierarchy_hist.crm_opp_owner_geo_stamped,
       mart_crm_opportunity_stamped_hierarchy_hist.parent_crm_account_demographics_upa_country,
       mart_crm_opportunity_stamped_hierarchy_hist.parent_crm_account_demographics_territory
-    FROM person_base person_base_2
+    FROM upa_base
+    FULL OUTER JOIN person_base person_base_2
+      ON upa_base.dim_crm_account_id=person_base_2.dim_crm_account_id
     FULL OUTER JOIN mart_crm_opportunity_stamped_hierarchy_hist
-      ON person_base_2.dim_crm_account_id=mart_crm_opportunity_stamped_hierarchy_hist.dim_crm_account_id
-    INNER JOIN dim_crm_person
-      ON person_base_2.dim_crm_person_id = dim_crm_person.dim_crm_person_id
-    LEFT JOIN upa_base
-      ON person_base_2.dim_crm_account_id = upa_base.dim_crm_account_id
-    LEFT JOIN dim_crm_account
-      ON person_base_2.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+      ON upa_base.dim_crm_account_id=mart_crm_opportunity_stamped_hierarchy_hist.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     LEFT JOIN person_order_type_final
@@ -347,6 +346,8 @@
       dim_crm_account_id,
       sfdc_record_id,
       dim_crm_touchpoint_id, 
+      dim_crm_batp_touchpoint_id,
+      dim_crm_btp_touchpoint_id,
       dim_crm_opportunity_id,
       CASE
           WHEN tp_base.dim_crm_touchpoint_id IS NOT null THEN person_opp_base.dim_crm_opportunity_id
@@ -538,5 +539,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-05-11",
-    updated_date="2023-05-13",
+    updated_date="2023-05-15",
   ) }}
