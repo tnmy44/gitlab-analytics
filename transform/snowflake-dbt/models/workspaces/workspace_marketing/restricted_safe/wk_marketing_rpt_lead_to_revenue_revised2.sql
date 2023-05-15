@@ -345,12 +345,12 @@
       person_opp_base.dim_crm_person_id,
       dim_crm_account_id,
       sfdc_record_id,
-      dim_crm_touchpoint_id, 
+      tp_unique_id, 
       dim_crm_batp_touchpoint_id,
       dim_crm_btp_touchpoint_id,
       dim_crm_opportunity_id,
       CASE
-          WHEN tp_base.dim_crm_touchpoint_id IS NOT null THEN person_opp_base.dim_crm_opportunity_id
+          WHEN tp_base.dim_crm_batp_touchpoint_id IS NOT null THEN person_opp_base.dim_crm_opportunity_id
           ELSE null
       END AS influenced_opportunity_id,
   
