@@ -2815,11 +2815,8 @@ roles:
             - dev_xs
 
     - bnguyen:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - bvandre:
         member_of:
@@ -5111,9 +5108,8 @@ users:
             - bmandavia
 
     - bnguyen:
-        can_login: yes
-        member_of:
-            - bnguyen
+        can_login: no
+        member_of: []
             
     - bvandre:
         can_login: yes
