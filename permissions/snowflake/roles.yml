@@ -2830,12 +2830,8 @@ roles:
             - dev_xs   
 
     - caitlin:
-        member_of:
-            - analyst_core
-            - data_team_analyst
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - cbraza:
         member_of:
@@ -5125,9 +5121,8 @@ users:
             - bvandre
 
     - caitlin:
-        can_login: yes
-        member_of:
-            - caitlin
+        can_login: no
+        member_of: []
 
     - cbraza:
         can_login: yes
