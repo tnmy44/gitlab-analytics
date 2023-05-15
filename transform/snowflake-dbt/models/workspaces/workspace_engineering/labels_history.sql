@@ -8,6 +8,12 @@ WITH labels AS (
     SELECT *
     FROM {{ ref('gitlab_dotcom_label_links_source') }} 
 
+),
+
+workflow_labels AS (
+
+  SELECT * FROM {{ ref('engineering_analytics_workflow_labels') }}
+
 ), label_type AS (
 
     SELECT
@@ -17,6 +23,7 @@ WITH labels AS (
         WHEN LOWER(label_title) IN ('severity::1', 'severity::2', 'severity::3', 'severity::4') THEN 'severity'
         WHEN LOWER(label_title) LIKE 'team%' THEN 'team'
         WHEN LOWER(label_title) LIKE 'group%' THEN 'team'
+        WHEN REPLACE(REGEXP_SUBSTR(LOWER(label_title), '\\bworkflow::*([^,]*)'), 'workflow::', '') IN (SELECT workflow_label FROM workflow_labels) THEN 'workflow'
         ELSE 'other'
       END AS label_type
     FROM labels
@@ -29,6 +36,7 @@ WITH labels AS (
       label_type.label_type,
       IFF(label_type.label_type='severity','S' || RIGHT(label_title, 1),NULL) AS severity,
       IFF(label_type.label_type='team',SPLIT(label_title, '::')[ARRAY_SIZE(SPLIT(label_title, '::')) - 1]::VARCHAR, NULL) AS assigned_team,
+      IFF(label_type.label_type='workflow', REPLACE(LOWER(label_title),'workflow::',''), NULL) AS workflow,
       label_links.label_link_created_at                                                                                   AS label_added_at,
       label_links.label_link_created_at                                                                                   AS label_valid_from,
       LEAD(label_links.label_link_created_at, 1, CURRENT_DATE())
