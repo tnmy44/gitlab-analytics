@@ -4980,11 +4980,8 @@ roles:
                     - tnguyen_prod.*.*
 
     - tscott:
-        member_of:
-            - data_team_analyst
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - vagrawal:
         member_of:
@@ -5574,9 +5571,8 @@ users:
             - tnguyen
 
     - tscott:
-        can_login: yes 
-        member_of:
-            - tscott
+        can_login: no 
+        member_of: []
 
     - vagrawal:
         can_login: yes
