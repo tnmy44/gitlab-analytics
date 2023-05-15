@@ -2818,12 +2818,8 @@ roles:
         warehouses: []
 
     - bvandre:
-        member_of:
-            - analyst_core
-            - data_team_analyst
-            - restricted_safe
-        warehouses:
-            - dev_xs   
+        member_of: []
+        warehouses: []  
 
     - caitlin:
         member_of: []
@@ -5060,9 +5056,8 @@ users:
         member_of: []
             
     - bvandre:
-        can_login: yes
-        member_of:
-            - bvandre
+        can_login: no
+        member_of: []
 
     - caitlin:
         can_login: no
