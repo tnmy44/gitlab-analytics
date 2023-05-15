@@ -7,7 +7,8 @@
 WITH filtered_snowplow_events AS (
 
   SELECT
- {{ dbt_utils.star(from=ref('fct_event_namespace_monthly'), except=["EVENT_LABEL","CREATED_BY", "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }},
+ {{ dbt_utils.star(from=ref('mart_behavior_structured_event'), except=["EVENT_LABEL","CREATED_BY", "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
+ ,
     CASE 
     WHEN 
     event_label LIKE 'group_dropdown_frequent_items_list_item_%'
