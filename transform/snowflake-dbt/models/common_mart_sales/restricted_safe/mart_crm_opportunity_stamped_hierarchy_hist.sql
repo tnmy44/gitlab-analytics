@@ -196,58 +196,109 @@
                                                                                                                         AS crm_account_user_sales_segment_region_grouped,
 
       -- crm opp owner/account owner fields stamped at SAO date
-      -- If the fiscal year of the SAO date is lower than the current fiscal year, use the sales hierarchy from the account owner
-      -- If not, use the stamped hierarchy
+      -- If the opportunity's SAO date is in a prior fiscal year, use the sales hierarchy from the account owner, unless the current account owner is a hybrid user, in which case
+      -- use the account's sales hierarchy (account demographics fields)
+      -- If the opportunity's SAO date in this fiscal year or is set a future fiscal year, use the stamped hierarchy
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
       dim_crm_opportunity.sao_crm_account_owner_stamped_name,
-      IFF(dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year,
-        crm_account_user_sales_segment, dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped)
-                                                                                         AS sao_crm_opp_owner_sales_segment_stamped,
-      IFF(dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year,
-        crm_account_user_sales_segment_grouped, dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped)
-                                                                                         AS sao_crm_opp_owner_sales_segment_stamped_grouped,
-      IFF(dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year,
-        crm_account_user_geo, dim_crm_opportunity.sao_crm_opp_owner_geo_stamped)
-                                                                                         AS sao_crm_opp_owner_geo_stamped,
-      IFF(dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year,
-        crm_account_user_region, dim_crm_opportunity.sao_crm_opp_owner_region_stamped)
-                                                                                         AS sao_crm_opp_owner_region_stamped,
-      IFF(dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year,
-        crm_account_user_area, dim_crm_opportunity.sao_crm_opp_owner_area_stamped)
-                                                                                         AS sao_crm_opp_owner_area_stamped,
-      IFF(dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year,
-        crm_account_user_sales_segment_region_grouped, dim_crm_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped)
-                                                                                         AS sao_crm_opp_owner_segment_region_stamped_grouped,
+       CASE
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_sales_segment
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(IFF(dim_crm_account.parent_crm_account_demographics_sales_segment = 'Unknown', 'SMB', dim_crm_account.parent_crm_account_demographics_sales_segment))
+        ELSE dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped
+      END                                                                                 AS sao_crm_opp_owner_sales_segment_stamped,
+      CASE
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_sales_segment_grouped
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_sales_segment_grouped)
+        ELSE dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped
+      END                                                                                 AS sao_crm_opp_owner_sales_segment_stamped_grouped,
+      CASE
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_geo
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_geo)
+        ELSE dim_crm_opportunity.sao_crm_opp_owner_geo_stamped
+      END                                                                                 AS sao_crm_opp_owner_geo_stamped,
+      CASE
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_region
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_region)
+        ELSE dim_crm_opportunity.sao_crm_opp_owner_region_stamped
+      END                                                                                 AS sao_crm_opp_owner_region_stamped,
+      CASE
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_area
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_area)
+        ELSE dim_crm_opportunity.sao_crm_opp_owner_area_stamped
+      END                                                                                 AS sao_crm_opp_owner_area_stamped,
+      CASE
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_sales_segment_region_grouped
+        WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_segment_region_stamped_grouped)
+        ELSE dim_crm_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped
+      END                                                                                 AS sao_crm_opp_owner_segment_region_stamped_grouped,
 
-      -- crm opp owner/account owner stamped fields stamped at close date
-      -- If the fiscal year of close date is lower than the current fiscal year, use the sales hierarchy from the account owner
-      -- If not, use the stamped hierarchy
+      -- crm opp owner/account owner test stamped fields stamped at close date
+      -- If the opportunity closed in a prior fiscal year, use the sales hierarchy from the account owner, unless the current account owner is a hybrid user, in which case
+      -- use the account's sales hierarchy (account demographics fields)
+      -- If the opportunity closed in this fiscal year or is set to close in a future fiscal year, use the stamped hierarchy
       dim_crm_opportunity.crm_opp_owner_stamped_name,
       dim_crm_opportunity.crm_account_owner_stamped_name,
-
-      IFF(dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year,
-        crm_account_user_sales_segment, dim_crm_user_hierarchy.crm_user_sales_segment)
-                                                                                         AS crm_opp_owner_sales_segment_stamped,
-      IFF(dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year,
-        crm_account_user_sales_segment_grouped, dim_crm_user_hierarchy.crm_user_sales_segment_grouped)
-                                                                                         AS crm_opp_owner_sales_segment_stamped_grouped,
-      IFF(dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year,
-        crm_account_user_geo, dim_crm_user_hierarchy.crm_user_geo)
-                                                                                         AS crm_opp_owner_geo_stamped,
-      IFF(dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year,
-        crm_account_user_region, dim_crm_user_hierarchy.crm_user_region)
-                                                                                         AS crm_opp_owner_region_stamped,
-      IFF(dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year,
-        crm_account_user_area, dim_crm_user_hierarchy.crm_user_area)
-                                                                                         AS crm_opp_owner_area_stamped,
-      IFF(dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year,
-        crm_account_user_business_unit, dim_crm_user_hierarchy.crm_user_business_unit)
-                                                                                         AS crm_opp_owner_business_unit_stamped,
-      IFF(dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year,
-        crm_account_user_sales_segment_region_grouped,
-          {{ sales_segment_region_grouped('dim_crm_user_hierarchy.crm_user_sales_segment',
-        'dim_crm_user_hierarchy.crm_user_geo', 'dim_crm_user_hierarchy.crm_user_region') }} )
-                                                                                         AS crm_opp_owner_sales_segment_region_stamped_grouped,
+      CASE
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_sales_segment
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(IFF(dim_crm_account.parent_crm_account_demographics_sales_segment = 'Unknown', 'SMB', dim_crm_account.parent_crm_account_demographics_sales_segment))
+        ELSE dim_crm_user_hierarchy.crm_user_sales_segment
+      END                                                                                 AS crm_opp_owner_sales_segment_stamped,
+      CASE
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_sales_segment_grouped
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_sales_segment_grouped)
+        ELSE dim_crm_user_hierarchy.crm_user_sales_segment_grouped
+      END                                                                                 AS crm_opp_owner_sales_segment_stamped_grouped,
+      CASE
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_geo
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_geo)
+        ELSE dim_crm_user_hierarchy.crm_user_geo
+      END                                                                                 AS crm_opp_owner_geo_stamped,
+      CASE
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_region
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_region)
+        ELSE dim_crm_user_hierarchy.crm_user_region
+      END                                                                                 AS crm_opp_owner_region_stamped,
+      CASE
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_area
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_area)
+        ELSE dim_crm_user_hierarchy.crm_user_area
+      END                                                                                 AS crm_opp_owner_area_stamped,
+      CASE
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_business_unit
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_business_unit)
+        ELSE dim_crm_user_hierarchy.crm_user_business_unit
+      END                                                                                 AS crm_opp_owner_business_unit_stamped,
+      CASE
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
+          THEN crm_account_user_sales_segment_region_grouped
+        WHEN dim_date_close_date.fiscal_year < dim_date_close_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 1
+          THEN UPPER(dim_crm_account.parent_crm_account_demographics_segment_region_stamped_grouped)
+        ELSE dim_crm_user_hierarchy.crm_user_sales_segment_region_grouped
+      END                                                                                 AS crm_opp_owner_sales_segment_region_stamped_grouped,
 
       -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
       dim_crm_opportunity.opportunity_owner_user_segment,
@@ -603,5 +654,5 @@
     created_by="@jeanpeguero",
     updated_by="@michellecooper",
     created_date="2022-02-28",
-    updated_date="2023-04-06"
+    updated_date="2023-05-11"
   ) }}

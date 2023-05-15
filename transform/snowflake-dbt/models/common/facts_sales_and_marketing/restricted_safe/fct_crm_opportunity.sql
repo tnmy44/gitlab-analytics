@@ -152,6 +152,8 @@
       sfdc_opportunity.is_eligible_age_analysis,
       sfdc_opportunity.is_eligible_churn_contraction,
       sfdc_opportunity.is_booked_net_arr,
+      sales_rep.is_hybrid_user AS is_hybrid_opp_owner_opp,
+      sales_rep_account.is_hybrid_user AS is_hybrid_account_owner_opp,
 
       sfdc_opportunity.primary_solution_architect,
       sfdc_opportunity.product_details,
@@ -264,5 +266,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2023-03-16"
+    updated_date="2023-05-11"
 ) }}

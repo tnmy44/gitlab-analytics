@@ -28,6 +28,8 @@ WITH final AS (
       ----ultimate parent crm account info
       prep_crm_account.parent_crm_account_name,
       prep_crm_account.parent_crm_account_sales_segment,
+      prep_crm_account.parent_crm_account_demographics_sales_segment_grouped,
+      prep_crm_account.parent_crm_account_demographics_segment_region_stamped_grouped,
       prep_crm_account.parent_crm_account_billing_country,
       prep_crm_account.parent_crm_account_billing_country_code,
       prep_crm_account.parent_crm_account_industry,
@@ -220,7 +222,7 @@ WITH final AS (
     created_by="@msendal",
     updated_by="@michellecooper",
     created_date="2020-06-01",
-    updated_date="2023-03-29"
+    updated_date="2023-05-11"
 ) }}
 
 
