@@ -4867,14 +4867,8 @@ roles:
                     - testing_db.*.*
 
     - tliu:
-        member_of:
-            - data_team_analyst
-            - analyst_core  
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
-
+        member_of: []
+        warehouses: []
     - tnguyen:
         member_of:
          - data_team_analyst
@@ -5486,9 +5480,8 @@ users:
             - target_snowflake
 
     - tliu:
-        can_login: yes
-        member_of:
-            - tliu
+        can_login: no
+        member_of: []
 
     - tnguyen:
         can_login: yes
