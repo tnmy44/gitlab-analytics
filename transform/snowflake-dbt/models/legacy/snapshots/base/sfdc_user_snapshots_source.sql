@@ -10,7 +10,7 @@ WITH source AS (
     FROM {{ source('snapshots', 'sfdc_user_snapshots') }}
     {% if is_incremental() %}
 
-    WHERE dbt_updated_at >= (SELECT MAX(dbt_updated_at) FROM {{this}})
+    WHERE dbt_updated_at > (SELECT MAX(dbt_updated_at) FROM {{this}})
 
     {% endif %}
 
