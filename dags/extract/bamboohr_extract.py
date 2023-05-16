@@ -38,13 +38,13 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=12),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2019, 1, 1),
+    "start_date": datetime(2023, 5, 10),
     "dagrun_timeout": timedelta(hours=6),
 }
 
 # Create the DAG
 dag = DAG(
-    "bamboohr_extract", default_args=default_args, schedule_interval="0 */2 * * *"
+    "bamboohr_extract", default_args=default_args, schedule_interval="0 */2 * * *", concurrency=1
 )
 
 # BambooHR Extract
