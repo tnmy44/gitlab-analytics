@@ -5,8 +5,8 @@ from datetime import date, timedelta
 from typing import List, Dict
 
 from airflow.models import Variable
-from airflow.operators.slack_operator import SlackAPIPostOperator
-from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
+from airflow.providers.slack.operators.slack import SlackAPIPostOperator
+from airflow.providers.slack.operators.slack_webhook import SlackWebhookOperator
 
 
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
