@@ -1,5 +1,6 @@
 {{ config(
         tags=['product']
+        )
 }}
 
 WITH filtered_snowplow_events AS (
