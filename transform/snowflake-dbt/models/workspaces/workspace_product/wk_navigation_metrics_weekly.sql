@@ -17,7 +17,7 @@ WITH alls AS (
     FROM
         {{ ref('mart_behavior_structured_event') }} AS p
     WHERE
-        page_view_month < DATE_TRUNC(MONTH, CURRENT_DATE())
+        event_week < DATE_TRUNC(MONTH, CURRENT_DATE())
         AND
         p.behavior_at > '2022-06-01'
         AND
@@ -27,7 +27,7 @@ WITH alls AS (
 
             AND
             -- goal is to add entire new months only. 
-            page_view_month > (SELECT MAX(page_view_month) FROM {{ this }})
+            event_week > (SELECT MAX(event_week) FROM {{ this }})
 
         {% endif %}
 
@@ -53,12 +53,12 @@ news AS (
         AND
         mr.app_id IN ('gitlab', 'gitlab_customers')
         AND
-        page_view_month < DATE_TRUNC(MONTH, CURRENT_DATE())
+        event_week < DATE_TRUNC(MONTH, CURRENT_DATE())
         {% if is_incremental() %}
 
             AND
             -- goal is to add entire new months only. 
-            page_view_month > (SELECT MAX(event_week) FROM {{ this }})
+            event_week > (SELECT MAX(event_week) FROM {{ this }})
 
         {% endif %}
     GROUP BY
