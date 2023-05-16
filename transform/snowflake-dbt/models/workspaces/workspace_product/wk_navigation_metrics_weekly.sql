@@ -17,7 +17,7 @@ WITH alls AS (
     FROM
         {{ ref('mart_behavior_structured_event') }} AS p
     WHERE
-        event_week < DATE_TRUNC(MONTH, CURRENT_DATE())
+        event_week < DATE_TRUNC(WEEK, CURRENT_DATE())
         AND
         p.behavior_at > '2022-06-01'
         AND
