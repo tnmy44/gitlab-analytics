@@ -84,7 +84,7 @@ default_args = {
 # Create the DAG
 dag = DAG(
     "dbt_temp_prep_instance_ping_full_refresh",
-    description="This DAG runs weekly on TBA to full refresh data for prep_ping_instance downstream models - incremental only",
+    description="This DAG runs weekly at 20:00 UTC on Tuesday to full refresh data for incremental models in the prep_ping_instance+ lineage. By running only the incremental models, we save costs by not full refreshing the regular tables. They will be rerun in the scheduled dbt run on Wednesday morning.",
     default_args=default_args,
     schedule_interval="0 20 * * TUE",
 )
