@@ -1,12 +1,11 @@
 {{ config(
-        tags=['product'],
-        cluster_by = ['behavior_date'])
+        tags=['product']
 }}
 
 WITH filtered_snowplow_events AS (
 
   SELECT
-      CASE 
+    CASE 
     WHEN 
     event_label LIKE 'group_dropdown_frequent_items_list_item_%'
     THEN 'group_dropdown_frequent_items_list_item'
