@@ -1,3 +1,6 @@
+{{ config(materialized='table') }}
+
+
 {{ simple_cte([
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('wk_sales_sfdc_opportunity_snapshot_history_xf','wk_sales_sfdc_opportunity_snapshot_history_xf'),
@@ -217,5 +220,5 @@
     created_by="@rkohnke",
     updated_by="@dmicovic",
     created_date="2023-04-11",
-    updated_date="2023-05-09",
+    updated_date="2023-05-16",
   ) }}
