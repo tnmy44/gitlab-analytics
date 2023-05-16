@@ -1,6 +1,8 @@
-{{ config(
-        tags=['product']
-        )
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "behavior_structured_event_pk",
+    tags=["product"]
+    })
 }}
 
 WITH filtered_snowplow_events AS (
@@ -96,5 +98,5 @@ WITH filtered_snowplow_events AS (
     created_by="@mdrussell",
     updated_by="@mpetersen",
     created_date="2022-10-11",
-    updated_date="2023-02-09"
+    updated_date="2023-05-16"
 ) }}
