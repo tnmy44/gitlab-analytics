@@ -10,7 +10,7 @@ WITH final AS (
   WHERE is_live = 0
   {% if is_incremental() %}
   
-    AND snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+    AND snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
 
   {% endif %}
 

@@ -565,7 +565,7 @@ final AS (
       AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
   {% if is_incremental() %}
   
-  WHERE fct_crm_opportunity.snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+  WHERE fct_crm_opportunity.snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
 
   {% endif %}
 

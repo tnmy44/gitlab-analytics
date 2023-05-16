@@ -79,7 +79,7 @@ WITH map_merged_crm_account AS (
     {%- if model_type == 'snapshot' %}
       {% if is_incremental() %}
 
-      AND snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+      AND snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
 
       {% endif %}
     {% endif %}
