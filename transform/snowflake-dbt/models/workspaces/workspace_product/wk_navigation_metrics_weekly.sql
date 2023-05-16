@@ -26,7 +26,7 @@ WITH alls AS (
         {% if is_incremental() %}
 
             AND
-            -- goal is to add entire new months only. 
+            -- goal is to add entire new weeks only. 
             event_week > (SELECT MAX(event_week) FROM {{ this }})
 
         {% endif %}
@@ -57,7 +57,7 @@ news AS (
         {% if is_incremental() %}
 
             AND
-            -- goal is to add entire new months only. 
+            -- goal is to add entire new weeks only. 
             event_week > (SELECT MAX(event_week) FROM {{ this }})
 
         {% endif %}
