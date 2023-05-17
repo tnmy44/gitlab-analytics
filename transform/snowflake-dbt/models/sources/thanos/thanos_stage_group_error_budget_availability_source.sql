@@ -14,11 +14,12 @@ WITH source AS (
         pq_1.value['status']:: VARCHAR                                  AS status_type,
         pq_1.this['message']:: VARCHAR                                  AS message_type,
         pq_1.this['status_code']:: NUMBER                               AS status_code,
-        pq_1.this['success']:: BOOLEAN                                  AS is_success
+        pq_1.this['success']:: BOOLEAN                                  AS is_success,
+        SPLIT_PART(pq_0.source_file_name, '/', -1)                      AS source_file_name
     FROM
-        source pq ,
-        lateral flatten(input => pq.jsontext['stage_group_error_budget_availability']) pq_1,
-        lateral flatten(input => pq.jsontext['stage_group_error_budget_availability']['body']['data']['result'],outer => true) pq_2
+        source pq_0 ,
+        lateral flatten(input => pq_0.jsontext['stage_group_error_budget_availability']) pq_1,
+        lateral flatten(input => pq_0.jsontext['stage_group_error_budget_availability']['body']['data']['result'],outer => true) pq_2
     WHERE result_type IS NOT NULL AND status_type IS NOT NULL
 
 ) 
