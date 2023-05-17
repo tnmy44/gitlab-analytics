@@ -20,7 +20,7 @@ from gitlabdata.orchestration_utils import (
 
 config_dict = env.copy()
 
-api_key = env.get("MAILGUN_API_KEY", "")
+api_key = "key-4c3fa3289be4a1249b965921679b755f"
 domains = ["mg.gitlab.com"]
 
 
@@ -84,6 +84,10 @@ def extract_logs(
                     error("SSL error received, waiting 30 seconds before retrying")
                     time.sleep(30)
                     response = requests.get(page_token, auth=("api", api_key))
+                
+                if response.status_code != 200 :
+                    error(f"Error getting logs, response {response.status_code} received")
+                    break
                 try:
                     data = response.json()
                 except json.decoder.JSONDecodeError:
@@ -120,7 +124,9 @@ def extract_logs(
                 response = get_logs(
                     domain, event, formatted_start_date, formatted_end_date
                 )
-
+                if response.status_code != 200 :
+                    error(f"Error getting logs, response {response.status_code} received")
+                    break
                 try:
                     data = response.json()
                 except json.decoder.JSONDecodeError:
