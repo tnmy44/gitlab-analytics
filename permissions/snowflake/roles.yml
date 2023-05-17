@@ -3379,6 +3379,7 @@ roles:
          - data_team_analyst
          - restricted_safe
          - bi_tool_eval_read
+         - marketo
          - zuora
         warehouses:
             - dev_xs
