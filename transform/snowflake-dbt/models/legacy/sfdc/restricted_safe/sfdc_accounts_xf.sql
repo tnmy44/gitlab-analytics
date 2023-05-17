@@ -121,7 +121,6 @@ WITH sfdc_account AS (
     --account_owner.user_segment            AS account_owner_user_segment, -- coming directly from source table
     -- JK: 2022-11-16 changing the source back to the user object to align with EDM 
     account_owner.user_segment            AS account_owner_user_segment,
-    
     account_owner.user_geo                AS account_owner_user_geo, 
     account_owner.user_region             AS account_owner_user_region,
     account_owner.user_area               AS account_owner_user_area,

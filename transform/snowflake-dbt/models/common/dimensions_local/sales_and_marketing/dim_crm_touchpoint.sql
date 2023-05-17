@@ -47,6 +47,7 @@ WITH campaign_details AS (
       touchpoint_id                 AS dim_crm_touchpoint_id,
       -- touchpoint info
       bizible_touchpoint_date::DATE AS bizible_touchpoint_date,
+      bizible_touchpoint_date AS bizible_touchpoint_date_time,
       DATE_TRUNC('month', bizible_touchpoint_date) AS bizible_touchpoint_month,
       bizible_touchpoint_position,
       bizible_touchpoint_source,
@@ -80,6 +81,7 @@ WITH campaign_details AS (
       touchpoint_id                 AS dim_crm_touchpoint_id,
       -- touchpoint info
       bizible_touchpoint_date::DATE AS bizible_touchpoint_date,
+      bizible_touchpoint_date AS bizible_touchpoint_date_time,
       DATE_TRUNC('month', bizible_touchpoint_date) AS bizible_touchpoint_month,
       bizible_touchpoint_position,
       bizible_touchpoint_source,
@@ -115,6 +117,7 @@ WITH campaign_details AS (
     SELECT
       combined_touchpoints.dim_crm_touchpoint_id,
       combined_touchpoints.bizible_touchpoint_date,
+      combined_touchpoints.bizible_touchpoint_date_time,
       combined_touchpoints.bizible_touchpoint_month,
       combined_touchpoints.bizible_touchpoint_position,
       combined_touchpoints.bizible_touchpoint_source,
@@ -193,5 +196,5 @@ WITH campaign_details AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-01-21",
-    updated_date="2022-12-01"
+    updated_date="2023-05-10"
 ) }}

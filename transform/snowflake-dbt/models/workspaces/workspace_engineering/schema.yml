@@ -118,6 +118,34 @@ models:
             - not_null
             - unique
 
+    - name: issue_note_cross_reference
+      description: A model that extracts cross-references to merge requests, other issues, and epics from issue notes. This model is filtered to only include issue notes with cross-references 
+      columns: 
+        - name: note_id
+          tests:
+            - not_null
+            - unique
+        - name: note_created_at
+          description: The created date of the note containing the cross-reference
+        - name: note_updated_at
+          description: The updated date of the note containing the cross-reference
+        - name: note_author_id
+          description: The author id of the note containing the cross-reference
+        - name: note_issue_id
+          description: The issue id that contains the note entry
+        - name: referenced_merge_request_id_array
+          description: An array containing all internal merge request ids cross-referenced in the note entry
+        - name: referenced_issue_id_array
+          description: An array containing all internal issue ids cross-reference in the note entry
+        - name: referenced_epic_id_array
+          description: An array containing all internal epic ids cross-reference in the note entry
+        - name: is_merge_request_reference
+          description: A boolean field to indentify a note entry with a merge request cross-reference
+        - name: is_issue_reference
+          description: A boolean field to indentify a note entry with an issue cross-reference
+        - name: is_epic_reference
+          description: A boolean field to indentify a note entry with an epic cross-reference
+
     - name: infradev_issues_base
       description: A model to limit GitLab.com issues to only thous relevant to infradev engineering team.    
 
@@ -321,3 +349,63 @@ models:
           description: Ratio of mrs to employees
         - name: granularity_level
           description: Department or group
+  
+    - name: rpt_gcp_billing_infra_mapping_day
+      description: '{{ doc("finops_pipeline_desc_infra") }}'
+
+    - name: rpt_gcp_billing_pl_day
+      description: '{{ doc("finops_pipeline_desc_pl_day") }}'
+
+    - name: build_artifacts_pl_daily
+      description: '{{ doc("finops_pipeline_desc_ba_pl_daily") }}'
+
+    - name: ci_runners_pl_daily
+      description: '{{ doc("finops_pipeline_desc_runners_pl_daily") }}'
+
+    - name: combined_pl_mapping
+      description: '{{ doc("finops_pipeline_desc_combined") }}'
+
+    - name: container_registry_pl_daily
+      description: '{{ doc("finops_pipeline_desc_container_registry_pl") }}'
+
+    - name: haproxy_backend_pl
+      description: '{{ doc("finops_pipeline_desc_haproxy_backend_pl") }}'
+
+    - name: haproxy_backend_ratio_daily
+      description: '{{ doc("finops_pipeline_desc_haproxy_backend_ratio") }}'
+
+    - name: infralabel_pl
+      description: '{{ doc("finops_pipeline_desc_infralabel_pl") }}'
+
+    - name: namespace_pl_daily
+      description: '{{ doc("finops_pipeline_desc_namespace_pl") }}'
+
+    - name: projects_pl
+      description: '{{ doc("finops_pipeline_desc_projects_pl") }}'
+
+    - name: repo_storage_pl_daily
+      description: '{{ doc("finops_pipeline_desc_repo_storage_pl_daily") }}'
+
+    - name: sandbox_projects_pl
+      description: '{{ doc("finops_pipeline_desc_sandbox_projects") }}'
+
+    - name: single_sku_pl
+      description: '{{ doc("finops_pipeline_desc_single_sku_pl") }}'
+
+    - name: rpt_gcp_billing_skus_day
+      description: '{{ doc("finops_pipeline_desc_skus_day") }}'
+
+    - name: internal_notes
+      description: Table containing Gitlab.com notes from Epics, Issues and Merge Requests. It includes the namespace ID and the ultimate parent namespace ID.
+      columns:
+        - name: note_id
+          tests:
+            - not_null
+            - unique
+        - name: created_at
+          tests:
+            - not_null
+        - name: updated_at
+          tests:
+            - not_null
+

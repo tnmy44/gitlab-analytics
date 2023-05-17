@@ -27,7 +27,8 @@ WITH source AS (
       resolved_by_id::NUMBER                               AS resolved_by_id,
       discussion_id::VARCHAR                                AS discussion_id,
       cached_markdown_version::NUMBER                      AS cached_markdown_version,
-      resolved_by_push::BOOLEAN                             AS resolved_by_push
+      resolved_by_push::BOOLEAN                             AS resolved_by_push,
+      note_html::VARCHAR                                    AS note_html
     FROM source
 
 )

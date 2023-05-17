@@ -156,9 +156,9 @@ final AS (
     ns.full_group_path                                                    AS full_group_path,
 
     CASE
-      WHEN projects.visibility_level = 'public'
-        THEN '[' || REPLACE(REPLACE(LEFT(internal_issues.issue_title, 64), '[', ''), ']', '') || '](https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/issues/' || internal_issues.issue_iid || ')'
-      ELSE 'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/issues/' || internal_issues.issue_iid
+      WHEN projects.visibility_level = 'public' AND internal_issues.issue_is_confidential = FALSE
+        THEN '[' || REPLACE(REPLACE(LEFT(internal_issues.issue_title, 64), '[', ''), ']', '') || '](https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/issues/' || internal_issues.issue_iid || ')'
+      ELSE 'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/issues/' || internal_issues.issue_iid
     END                                                                                                                                                                                                                                                                                                AS url,
     internal_issues.is_part_of_product
   FROM internal_issues

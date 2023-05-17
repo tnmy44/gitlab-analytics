@@ -133,13 +133,28 @@ Example: You might be looking at the count of opportunities before and after, if
   - [ ] Run the Monte Carlo permissions script (documented in the [Handbook](https://about.gitlab.com/handbook/business-technology/data-team/platform/monte-carlo/#note-on-dwh-permissions) and located in MC's official docs) with the corresponding database name as a parameter, for the permissions on this schema to be granted to the `data_observability` role
 </details>
 
-#### Snapshot model
+#### Snapshot Model
 <details>
 <summary><i>Click to toggle Snapshot model</i></summary>
 
 - [ ] Is this MR creating or renaming a snapshot model?
 - [ ] Does it concern Gitlab.com data?
   - [ ] Make sure its captured into the selection criteria of the [GDPR deletion](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/warehouse/gdpr_delete_gitlab_dotcom.sql) macro for GitLab.com data.
+</details>
+
+#### Salesforce Models
+
+<details>
+<summary><i>Click to toggle Salesforce Models</i></summary>
+
+- [ ] Does this MR add, remove, or update logic in `sfdc_account_source`?
+  - [ ] Mirror the changes in `sfdc_account_snapshots_source`.
+- [ ] Does this MR add, remove, or update logic in `sfdc_opportunity_source`?
+  - [ ] Mirror the changes in `sfdc_opportunity_snapshots_source`.
+- [ ] Does this MR add, remove, or update logic in `sfdc_users_source`?
+  - [ ] Mirror the changes in `sfdc_user_snapshots_source`.
+- [ ] Does this MR add, remove, or update logic in `sfdc_account_fields`, `sfdc_user_fields`, or `prep_crm_opportunity`?
+  - [ ]If the MR updates these models, a `dbt run --full-refresh` will be needed after merging the MR. Please, add it to the Reviewer Checklist to warn them that this step is required.
 </details>
 
 ## All MRs Checklist

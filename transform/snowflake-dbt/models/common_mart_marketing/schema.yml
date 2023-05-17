@@ -7,6 +7,10 @@ models:
         - name: dim_crm_touchpoint_id
           tests:
               - not_null
+        - name: touchpoint_person_campaign_date_id
+          description: A concatenation of fields from the mart that can be used to join attribution and person touchpoints together. 
+        - name: bizible_touchpoint_date_time
+          description: The date/time of the bizible touchpoint interaction. 
         - name: sdr_sales_segment
           description: Sales segment of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: sdr_region
@@ -53,6 +57,10 @@ models:
         - name: dim_crm_touchpoint_id
           tests:
               - not_null
+        - name: touchpoint_person_campaign_date_id
+          description: A concatenation of fields from the mart that can be used to join attribution and person touchpoints together. 
+        - name: bizible_touchpoint_date_time
+          description: The date/time of the bizible touchpoint interaction. 
         - name: sdr_sales_segment
           description: Sales segment of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: sdr_region

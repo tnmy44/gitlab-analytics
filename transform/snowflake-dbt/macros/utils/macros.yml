@@ -102,4 +102,6 @@ macros:
     description: '{{ doc("only_force_full_refresh") }}'
   - name: orphaned_db_table_check
     description: '{{ doc("orphaned_db_table_check") }}'
+  - name: missing_member_column
+    description: ' {{ doc("missing_member_column") }} '
 

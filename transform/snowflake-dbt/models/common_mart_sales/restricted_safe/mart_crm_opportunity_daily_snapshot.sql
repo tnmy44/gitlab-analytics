@@ -1,3 +1,8 @@
+{{ config(
+    materialized="incremental",
+    unique_key="crm_opportunity_snapshot_id"
+) }}
+
 {{ simple_cte([
     ('fct_crm_opportunity','fct_crm_opportunity_daily_snapshot'),
     ('dim_crm_account','dim_crm_account_daily_snapshot'),
@@ -375,7 +380,8 @@ final AS (
     stage_5_negotiating_date.first_day_of_fiscal_quarter            AS stage_5_negotiating_fiscal_quarter_date,
     stage_5_negotiating_date.fiscal_quarter_name_fy                 AS stage_5_negotiating_fiscal_quarter_name,
     stage_5_negotiating_date.fiscal_year                            AS stage_5_negotiating_fiscal_year,
-    stage_6_awaiting_signature_date.date_actual                     AS stage_6_awaiting_signature_date_date,
+    stage_6_awaiting_signature_date.date_actual                     AS stage_6_awaiting_signature_date,
+    stage_6_awaiting_signature_date.date_actual                     AS stage_6_awaiting_signature_date_date, -- added to maintain workspace model temporarily 
     stage_6_awaiting_signature_date.first_day_of_month              AS stage_6_awaiting_signature_date_month,
     stage_6_awaiting_signature_date.first_day_of_fiscal_quarter     AS stage_6_awaiting_signature_date_fiscal_quarter_date,
     stage_6_awaiting_signature_date.fiscal_quarter_name_fy          AS stage_6_awaiting_signature_date_fiscal_quarter_name,
@@ -489,6 +495,8 @@ final AS (
     fct_crm_opportunity.vsa_start_date_net_arr,
     fct_crm_opportunity.won_arr_basis_for_clari,
     fct_crm_opportunity.arr_basis_for_clari,
+    fct_crm_opportunity.net_incremental_acv,
+    fct_crm_opportunity.incremental_acv,
     fct_crm_opportunity.forecasted_churn_for_clari,
     fct_crm_opportunity.override_arr_basis_clari
 
@@ -546,6 +554,11 @@ final AS (
   LEFT JOIN dim_crm_account AS fulfillment_partner
     ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
       AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
+  {% if is_incremental() %}
+  
+  WHERE fct_crm_opportunity.snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
+
+  {% endif %}
 
 
 )

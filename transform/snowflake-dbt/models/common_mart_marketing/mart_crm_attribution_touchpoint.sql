@@ -21,7 +21,9 @@
     SELECT
       -- touchpoint info
       dim_crm_touchpoint.dim_crm_touchpoint_id,
+      {{ dbt_utils.surrogate_key(['fct_crm_attribution_touchpoint.dim_crm_person_id','dim_campaign.dim_campaign_id','dim_crm_touchpoint.bizible_touchpoint_date_time']) }} AS touchpoint_person_campaign_date_id,
       dim_crm_touchpoint.bizible_touchpoint_date,
+      dim_crm_touchpoint.bizible_touchpoint_date_time,
       dim_crm_touchpoint.bizible_touchpoint_month,
       dim_crm_touchpoint.bizible_touchpoint_position,
       dim_crm_touchpoint.bizible_touchpoint_source,
@@ -211,6 +213,8 @@
       fct_crm_opportunity.close_date                                       AS opportunity_close_date,
       fct_crm_opportunity.created_date                                     AS opportunity_created_date,
       dim_crm_opportunity.is_won,
+      fct_crm_opportunity.is_net_arr_pipeline_created,
+      fct_crm_opportunity.is_net_arr_closed_deal,
       fct_crm_opportunity.is_closed,
       fct_crm_opportunity.days_in_sao,
       fct_crm_opportunity.iacv,

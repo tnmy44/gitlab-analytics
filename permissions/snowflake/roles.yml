@@ -53,7 +53,7 @@ databases:
         shared: no
     - csharp_prep:
         shared: no
-
+        
     - david_prod:
         shared: no
     - david_prep:
@@ -2815,27 +2815,16 @@ roles:
             - dev_xs
 
     - bnguyen:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - bvandre:
-        member_of:
-            - analyst_core
-            - data_team_analyst
-            - restricted_safe
-        warehouses:
-            - dev_xs   
+        member_of: []
+        warehouses: []  
 
     - caitlin:
-        member_of:
-            - analyst_core
-            - data_team_analyst
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - cbraza:
         member_of:
@@ -2971,46 +2960,9 @@ roles:
                     - csharp_prod.*.*
 
     - david:
-        member_of:
-            - data_team_analyst
-            - analyst_sales
-            - restricted_safe
-        warehouses:
-            - dev_xs
-            - dev_m
-        owns:
-            databases:
-                - david_prep
-                - david_prod
-            schemas:
-                - david_prep.*
-                - david_prod.*
-            tables:
-                - david_prep.*.*
-                - david_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - david_prep
-                    - david_prod
-                write:
-                    - david_prep
-                    - david_prod
-            schemas:
-                read:
-                    - david_prep.*
-                    - david_prod.*
-                write:
-                    - david_prep.*
-                    - david_prod.*
-            tables:
-                read:
-                    - david_prep.*.*
-                    - david_prod.*.*
-                write:
-                    - david_prep.*.*
-                    - david_prod.*.*
-
+        member_of: []
+        warehouses: []
+  
     - dcharukulvanich:
         member_of:
             - reporter
@@ -3286,11 +3238,8 @@ roles:
             - transforming_xl
 
     - gweaver:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - hkacmarski:
         member_of:
@@ -3373,11 +3322,8 @@ roles:
             - dev_xs
 
     - jbudreski:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - jcaine:
         member_of:
@@ -3433,6 +3379,7 @@ roles:
          - data_team_analyst
          - restricted_safe
          - bi_tool_eval_read
+         - marketo
          - zuora
         warehouses:
             - dev_xs
@@ -4014,11 +3961,8 @@ roles:
             - dev_xs
 
     - mnohr:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - mpetersen:
         member_of:
@@ -4186,10 +4130,8 @@ roles:
             - dev_xs
 
     - ncregan:
-        member_of:
-            - google_search_console
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - nfiguera:
         member_of:
@@ -4644,11 +4586,16 @@ roles:
                     - rrendon_prep.*.*
                     - rrendon_prod.*.*
 
-    - rwoo:
+    - rtaira:
         member_of:
-            - dbt_analytics
+            - reporter
+            - restricted_safe
         warehouses:
             - dev_xs
+
+    - rwoo:
+        member_of: []
+        warehouses: []
 
     - schaturvedi:
         member_of:
@@ -4922,14 +4869,8 @@ roles:
                     - testing_db.*.*
 
     - tliu:
-        member_of:
-            - data_team_analyst
-            - analyst_core  
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
-
+        member_of: []
+        warehouses: []
     - tnguyen:
         member_of:
          - data_team_analyst
@@ -4973,11 +4914,8 @@ roles:
                     - tnguyen_prod.*.*
 
     - tscott:
-        member_of:
-            - data_team_analyst
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - vagrawal:
         member_of:
@@ -5044,12 +4982,8 @@ roles:
             - dev_xs
 
     - webrahim:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
 # ==========================================
 # Users
@@ -5111,19 +5045,16 @@ users:
             - bmandavia
 
     - bnguyen:
-        can_login: yes
-        member_of:
-            - bnguyen
+        can_login: no
+        member_of: []
             
     - bvandre:
-        can_login: yes
-        member_of:
-            - bvandre
+        can_login: no
+        member_of: []
 
     - caitlin:
-        can_login: yes
-        member_of:
-            - caitlin
+        can_login: no
+        member_of: []
 
     - cbraza:
         can_login: yes
@@ -5146,9 +5077,8 @@ users:
             - csharp
 
     - david:
-        can_login: yes
-        member_of:
-            - david
+        can_login: no
+        member_of: []
 
     - dcharukulvanich:
         can_login: yes
@@ -5219,9 +5149,8 @@ users:
             - grafana
 
     - gweaver:
-        can_login: yes
-        member_of:
-            - gweaver
+        can_login: no
+        member_of: []
 
     - hightouch_user:
         can_login: yes
@@ -5249,9 +5178,8 @@ users:
             - jahye
 
     - jbudreski:
-        can_login: yes
-        member_of:
-            - jbudreski
+        can_login: no
+        member_of: []
 
     - jcaine:
         can_login: yes
@@ -5370,9 +5298,8 @@ users:
             - mfleisher
 
     - mnohr:
-        can_login: yes
-        member_of:
-            - mnohr
+        can_login: no
+        member_of: []
 
     - mpetersen:
         can_login: yes
@@ -5400,9 +5327,8 @@ users:
             - nbelokolodov
 
     - ncregan:
-        can_login: yes
-        member_of:
-            - ncregan
+        can_login: no
+        member_of: []
 
     - nfiguera:
         can_login: yes
@@ -5480,10 +5406,14 @@ users:
         member_of:
             - rrendon
 
-    - rwoo:
+    - rtaira:
         can_login: yes
         member_of:
-            - rwoo
+            - rtaira
+
+    - rwoo:
+        can_login: no
+        member_of: []
 
     - schaturvedi:
         can_login: yes
@@ -5552,9 +5482,8 @@ users:
             - target_snowflake
 
     - tliu:
-        can_login: yes
-        member_of:
-            - tliu
+        can_login: no
+        member_of: []
 
     - tnguyen:
         can_login: yes
@@ -5562,9 +5491,8 @@ users:
             - tnguyen
 
     - tscott:
-        can_login: yes 
-        member_of:
-            - tscott
+        can_login: no 
+        member_of: []
 
     - vagrawal:
         can_login: yes
@@ -5584,9 +5512,8 @@ users:
             - warias
 
     - webrahim:
-        can_login: yes
-        member_of:
-            - webrahim
+        can_login: no
+        member_of: []
 
     - workato:
         can_login: yes

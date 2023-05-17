@@ -1,7 +1,18 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "dbt_scd_id"
+    })
+}}
+
 WITH source AS (
 
     SELECT *
     FROM {{ source('snapshots', 'sfdc_user_snapshots') }}
+    {% if is_incremental() %}
+
+    WHERE dbt_updated_at > (SELECT MAX(dbt_updated_at) FROM {{this}})
+
+    {% endif %}
 
 ), renamed AS(
 
@@ -36,6 +47,7 @@ WITH source AS (
       END                                                               AS user_segment_grouped,
       {{ sales_segment_region_grouped('user_segment', 'user_geo', 'user_region') }}
                                                                         AS user_segment_region_grouped,
+      hybrid__c                                                         AS is_hybrid_user,
 
       --metadata
       createdbyid                                                       AS created_by_id,

@@ -1,5 +1,6 @@
 {{ config({
-    "alias": "dim_crm_account"
+    "alias": "dim_crm_account",
+    "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_account_id', not_null_test_cols = ['is_reseller']) }}"
 }) }}
 
 WITH final AS (
@@ -27,6 +28,10 @@ WITH final AS (
       ----ultimate parent crm account info
       prep_crm_account.parent_crm_account_name,
       prep_crm_account.parent_crm_account_sales_segment,
+      prep_crm_account.parent_crm_account_demographics_sales_segment_grouped,
+      prep_crm_account.parent_crm_account_demographics_segment_region_stamped_grouped,
+      prep_crm_account.parent_crm_account_billing_country,
+      prep_crm_account.parent_crm_account_billing_country_code,
       prep_crm_account.parent_crm_account_industry,
       prep_crm_account.parent_crm_account_business_unit,
       prep_crm_account.parent_crm_account_geo,
@@ -180,7 +185,7 @@ WITH final AS (
     created_by="@msendal",
     updated_by="@lisvinueza",
     created_date="2020-06-01",
-    updated_date="2023-05-08"
+    updated_date="2023-05-11"
 ) }}
 
 

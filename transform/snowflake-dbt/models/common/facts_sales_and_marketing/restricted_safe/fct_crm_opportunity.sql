@@ -14,12 +14,18 @@
     ('dr_partner_engagement', 'prep_dr_partner_engagement'),
     ('alliance_type', 'prep_alliance_type_scd'),
     ('channel_type', 'prep_channel_type'),
-    ('sfdc_opportunity', 'prep_crm_opportunity'),
+    ('prep_crm_opportunity', 'prep_crm_opportunity'),
     ('prep_crm_user_hierarchy', 'prep_crm_user_hierarchy')
 
 ]) }}
 
-, final_opportunities AS (
+, sfdc_opportunity AS (
+
+    SELECT *
+    FROM prep_crm_opportunity
+    WHERE is_live = 1
+
+), final_opportunities AS (
 
     SELECT
 
@@ -150,6 +156,8 @@
       sfdc_opportunity.is_eligible_age_analysis,
       sfdc_opportunity.is_eligible_churn_contraction,
       sfdc_opportunity.is_booked_net_arr,
+      sales_rep.is_hybrid_user AS is_hybrid_opp_owner_opp,
+      sales_rep_account.is_hybrid_user AS is_hybrid_account_owner_opp,
 
       sfdc_opportunity.primary_solution_architect,
       sfdc_opportunity.product_details,
@@ -186,6 +194,7 @@
       sfdc_opportunity.segment_order_type_iacv_to_net_arr_ratio,
       sfdc_opportunity.calculated_from_ratio_net_arr,
       sfdc_opportunity.net_arr,
+      sfdc_opportunity.raw_net_arr,
       sfdc_opportunity.created_and_won_same_quarter_net_arr,
       sfdc_opportunity.new_logo_count,
       sfdc_opportunity.amount,
@@ -262,5 +271,5 @@
     created_by="@mcooperDD",
     updated_by="@lisvinueza",
     created_date="2020-11-30",
-    updated_date="2023-05-08"
+    updated_date="2023-05-11"
 ) }}
