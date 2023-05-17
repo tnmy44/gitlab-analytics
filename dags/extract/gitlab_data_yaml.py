@@ -25,6 +25,9 @@ from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
+affinity = {'nodeAffinity': {'requiredDuringSchedulingIgnoredDuringExecution': {'nodeSelectorTerms': [{'matchExpressions': [{
+    'key': 'test', 'operator': 'In', 'values': ['true']}]}]}}}
+tolerations = [{'key': 'test', 'operator': 'Equal', 'value': 'true', 'effect': 'NoSchedule'}]
 
 # Default arguments for the DAG
 default_args = {
@@ -36,7 +39,7 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=12),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2019, 1, 1),
+    "start_date": datetime(2023, 5, 15),
     "dagrun_timeout": timedelta(hours=2),
 }
 
