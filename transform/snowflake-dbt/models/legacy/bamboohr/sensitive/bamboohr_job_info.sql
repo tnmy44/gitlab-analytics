@@ -17,7 +17,6 @@ bamboohr_employment_status AS (
       DATEADD(day,1,valid_from_date) AS valid_to_date ---adding a day to capture termination date
     FROM {{ ref('bamboohr_employment_status_xf') }}  
     WHERE employment_status = 'Terminated'
-    QUALIFY LAG(valid_from_date) OVER(PARTITION BY employee_id ORDER BY valid_from_date DESC, employment_status DESC) != valid_to_date
 
 ),
 
@@ -77,7 +76,7 @@ joined AS (
       ON sheetload_job_roles.job_title = cleaned.job_title
     LEFT JOIN bamboohr_employment_status
       ON bamboohr_employment_status.employee_id = cleaned.employee_id 
-      AND bamboohr_employment_status.valid_to_date BETWEEN cleaned.effective_date AND COALESCE(cleaned.effective_end_date, {{max_date_in_bamboo_analyses()}})
+      AND bamboohr_employment_status.valid_from_date BETWEEN cleaned.effective_date AND COALESCE(cleaned.effective_end_date, {{max_date_in_bamboo_analyses()}})
 
 )
 
