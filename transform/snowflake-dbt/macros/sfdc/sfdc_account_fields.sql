@@ -83,7 +83,12 @@ WITH map_merged_crm_account AS (
 
       {% endif %}
       
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY snapshot_id, account_id ORDER BY dbt_valid_from DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (
+        PARTITION BY 
+          snapshot_id, 
+          account_id 
+        ORDER BY dbt_valid_from DESC
+        ) = 1
 
     {% endif %}
 
