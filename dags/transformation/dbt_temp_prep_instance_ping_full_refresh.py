@@ -101,8 +101,8 @@ dbt_prep_ping_instance_full_refresh_cmd = f"""
 dbt_full_refresh = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="dbt-full-refresh",
-    name="dbt-full-refresh",
+    task_id="dbt-prep-instance-ping-full-refresh",
+    name="dbt-prep-instance-ping-full-refresh",
     secrets=secrets_list,
     env_vars=pod_env_vars,
     arguments=[dbt_prep_ping_instance_full_refresh_cmd],
