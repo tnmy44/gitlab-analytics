@@ -163,11 +163,11 @@ models:
       - name: is_individual_namespace_owner
         description: Flags if personal namespace owner
       - name: is_group_maintainer_of_saas_paid_tier
-        description: Flags if group maintainer of SaaS paid tier
+        description: Flags if group maintainer of a SaaS paid tier namespace
       - name: is_group_maintainer_of_saas_free_tier
-        description: Flags if group maintainer of SaaS free tier
+        description: Flags if group maintainer of a SaaS free tier namespace
       - name: is_group_maintainer_of_saas
-        description: Flags if group maintainer of SaaS
+        description: Flags if group maintainer of a SaaS namespace
       - name: is_customer_db_owner
         description: Flags if customer db owner
       - name: is_zuora_billing_contact
