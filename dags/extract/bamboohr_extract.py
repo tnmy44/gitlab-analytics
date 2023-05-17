@@ -23,6 +23,10 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
 )
 
+affinity = {'nodeAffinity': {'requiredDuringSchedulingIgnoredDuringExecution': {'nodeSelectorTerms': [{'matchExpressions': [{
+    'key': 'test', 'operator': 'In', 'values': ['true']}]}]}}}
+tolerations = [{'key': 'test', 'operator': 'Equal', 'value': 'true', 'effect': 'NoSchedule'}]
+
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 pod_env_vars = gitlab_pod_env_vars
@@ -69,8 +73,8 @@ bamboohr_extract = KubernetesPodOperator(
         SNOWFLAKE_LOAD_PASSWORD,
     ],
     env_vars=pod_env_vars,
-    affinity=get_affinity("production"),
-    tolerations=get_toleration("production"),
+    affinity=affinity,
+    tolerations=tolerations,
     arguments=[bamboohr_extract_cmd],
     do_xcom_push=True,
     dag=dag,
