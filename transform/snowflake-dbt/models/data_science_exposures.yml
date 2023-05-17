@@ -68,7 +68,7 @@ exposures:
       - ref('gitlab_dotcom_user_details')
       - ref('gitlab_dotcom_users_xf')
       - ref('gitlab_dotcom_memberships')
-      - ref('gitlab_dotcom_usage_events')
+      - ref('gitlab_dotcom_usage_data_events')
       - ref('gitlab_dotcom_users_source')
       - ref('snowplow_structured_events')
       - ref('snowplow_gitlab_events_experiment_contexts')
