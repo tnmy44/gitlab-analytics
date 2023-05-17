@@ -16,7 +16,8 @@ bamboohr_employment_status AS (
       valid_from_date,
       DATEADD(day,1,valid_from_date) AS valid_to_date ---adding a day to capture termination date
     FROM {{ ref('bamboohr_employment_status_xf') }}  
-    WHERE employment_status = 'Terminated' AND next_employment_status IS NULL
+    WHERE employment_status = 'Terminated'
+    QUALIFY LAG(valid_from_date) OVER(PARTITION BY employee_id ORDER BY valid_from_date DESC, employment_status DESC) != valid_to_date
 
 ),
 
