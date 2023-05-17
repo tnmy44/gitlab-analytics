@@ -58,23 +58,65 @@ class Adaptive:
         data = self._export(method, additional_body)
         return data
 
-    def _iterate_versions_helper(self, root_version, valid_versions):
-        # convert dict to [], i.e for "@name": "409A Versions",
-        if type(root_version) == dict:
-            root_version = [root_version]
+    def _iterate_versions(self, versions, version_reports):
+        """
+        Versions is a json structure of nested list of dictionaries
+        that represents a folder structure of versions.
 
-        for version_d in root_version:
+        This function loops through this nested data structure, and returns
+        the name of each version.
+        """
+        if type(versions) == dict:
+            versions = [versions]
+
+        for version_d in versions:
             if version_d["@type"] == "VERSION_FOLDER" and version_d.get("version"):
-                self._iterate_versions_helper(version_d["version"], valid_versions)
+                self._iterate_versions(
+                    version_d["version"],
+                    version_reports,
+                )
             else:
-                valid_versions.append(version_d["@name"])
+                version_reports.append(version_d["@name"])
 
-    def iterate_versions(self, versions):
-        root_version = versions["version"]
-        valid_versions = []
+    def _filter_for_subfolder(self, versions, folder_criteria):
+        """
+        @versions: a nested list of dictionaries, representing a file struct
+        @folder_criteria: which sub-folder to filter for
 
-        self._iterate_versions_helper(root_version, valid_versions)
-        return valid_versions
+        Filters for just the sub-folder from versions
+        returning a piece of the original nested json
+        """
+        if folder_criteria is None:
+            return versions
+
+        if type(versions) == dict:
+            versions = [versions]
+
+        for version_d in versions:
+            if version_d["@type"] == "VERSION_FOLDER" and version_d.get("version"):
+                foldername = version_d["@name"]
+                versions = version_d["version"]
+                if foldername == folder_criteria:
+                    return versions
+                res = self._filter_for_subfolder(versions, folder_criteria)
+                if res: # only return if match was found
+                    return res
+
+    def get_valid_versions(self, versions, folder_criteria):
+        """
+        @versions: a nested list of dictionaries, representing a file struct
+        @folder_criteria: which sub-folder to filter for
+
+        First filters for the json that represents the sub-folder.
+        From that filtered json, extract all the version names
+        """
+
+        root_versions = versions["version"]
+        filtered_versions = self._filter_for_subfolder(root_versions, folder_criteria)
+
+        version_reports = []
+        self._iterate_versions(filtered_versions, version_reports)
+        return version_reports
 
     def exported_data_to_df(self, exported_data):
         exported_data.lstrip("![CDATA[").rstrip("]]")
@@ -82,25 +124,30 @@ class Adaptive:
         df = pd.read_csv(exported_data_io)
         return df
 
-    def process_versions(self):
+    def process_versions(self, folder_criteria):
         """
         For each version, export the data
         Then upload the data to Snowflake
         """
         versions = self.export_versions()
-        valid_versions = self.iterate_versions(versions)
+        valid_versions = self.get_valid_versions(versions, folder_criteria)
+        print(f'\nvalid_versions: {valid_versions}')
+        return valid_versions
         for valid_version in valid_versions:
+            print(f'\nprocessing version: {valid_version}')
             exported_data = adaptive.export_data(valid_version)
             dataframe = self.exported_data_to_df(exported_data)
             dataframe_uploader_adaptive(dataframe, valid_version)
+            print(f'\nfinished processing: {valid_version}')
 
 
 if __name__ == "__main__":
     adaptive = Adaptive()
-    export_all = False
+    export_all = True
 
     if export_all:
-        adaptive.process_versions()
+        folder_criteria = "FY24 Versions"
+        adaptive.process_versions(folder_criteria)
 
     else:
         version = "FY24 Plan (Board)"  # legit yearly forecast
