@@ -85,9 +85,6 @@ def extract_logs(
                     time.sleep(30)
                     response = requests.get(page_token, auth=("api", api_key))
                 
-                if response.status_code != 200 :
-                    error(f"Error getting logs, response {response.status_code} received")
-                    break
                 try:
                     data = response.json()
                 except json.decoder.JSONDecodeError:
@@ -124,6 +121,7 @@ def extract_logs(
                 response = get_logs(
                     domain, event, formatted_start_date, formatted_end_date
                 )
+                # See if we get a correct response initially
                 if response.status_code != 200 :
                     error(f"Error getting logs, response {response.status_code} received")
                     break
