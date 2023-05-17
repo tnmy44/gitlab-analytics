@@ -1,7 +1,7 @@
 {%- set test_db = "15383-UPDATE-TO-DBT-V1-2_" -%}
 {%- set test_prod = test_db + "PROD" -%}
 {%- set test_prep = test_db + "PREP" -%}
-
+{#
 -- PROD.common.dim_date
 {% set table_db = "PROD" %}
 {% set table_schema = "common" %}
@@ -468,3 +468,4 @@
     exclude_columns=["dbt_updated_at","dbt_created_at"]
 ) }}
 ;
+#}
