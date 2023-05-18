@@ -81,6 +81,7 @@
       dim_crm_account.dim_parent_crm_account_id,
       dim_crm_person.sfdc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
+      mart_crm_touchpoint.dim_campaign_id,
   
   --Person Data
       person_base.email_hash,
@@ -155,6 +156,7 @@
       opp.dim_crm_account_id,
       dim_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
+      mart_crm_attribution_touchpoint.dim_campaign_id,
     
     --Opp Data
       opp.order_type AS opp_order_type,
@@ -357,7 +359,7 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=62)}}
+    {{dbt_utils.group_by(n=63)}}
     
 ), cohort_base_combined AS (
   
@@ -370,6 +372,7 @@
       person_base_with_tp.dim_crm_touchpoint_id AS dim_crm_btp_touchpoint_id,
       opp_base_with_batp.dim_crm_touchpoint_id AS dim_crm_batp_touchpoint_id,
       dim_crm_opportunity_id,
+      COALESCE (person_base_with_tp.dim_campaign_id,opp_base_with_batp.dim_campaign_id) AS dim_campaign_id, 
   
   --Person Data
       email_hash,
@@ -566,5 +569,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-02-15",
-    updated_date="2023-05-17",
+    updated_date="2023-05-18",
   ) }}
