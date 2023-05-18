@@ -104,8 +104,7 @@
       person_order_type_final.person_order_type,
       map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
-      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
-      map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
+      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom,map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
       map_alternative_lead_demographics.geo_custom,
       UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
 
@@ -409,7 +408,6 @@
       person_order_type,
       employee_count_segment_custom,
       employee_bucket_segment_custom,
-      employee_count_segment_custom, 
       inferred_employee_segment,
       geo_custom,
       inferred_geo,
