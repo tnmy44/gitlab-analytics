@@ -57,7 +57,7 @@
    fct_campaign.sub_region                                      AS sfdc_campaign_sub_region,
 
 
-   crm_person_status,
+   status AS crm_person_status,
 
    --UTMs not captured by the Bizible
    PARSE_URL(bizible_form_url_raw):parameters:utm_content       AS bizible_form_page_utm_content,
