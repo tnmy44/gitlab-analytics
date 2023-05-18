@@ -38,7 +38,7 @@
    wk_marketing_rpt_lead_to_revenue_revised.accepted_date,
    wk_marketing_rpt_lead_to_revenue_revised.bizible_landing_page,
    wk_marketing_rpt_lead_to_revenue_revised.bizible_form_url,
-   wk_marketing_rpt_lead_to_revenue_revised.touchpoint_type,
+   wk_marketing_rpt_lead_to_revenue_revised.bizible_touchpoint_type AS touchpoint_type,
 
    wk_marketing_rpt_lead_to_revenue_revised.custom_sao,
    wk_marketing_rpt_lead_to_revenue_revised.won_custom_net_arr,
