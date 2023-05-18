@@ -7,6 +7,7 @@ employee_name AS (
   SELECT * 
   FROM {{ ref('blended_directory_source') }}
   QUALIFY ROW_NUMBER() OVER(PARTITION BY employee_id ORDER BY uploaded_at DESC) = 1
+  AND ROW_NUMBER() OVER(PARTITION BY full_name ORDER BY uploaded_at DESC) = 1
 ),
 
 bamboohr_employment_status AS (
@@ -65,7 +66,7 @@ joined AS (
       cleaned.job_title,
       cleaned.reports_to_id,
       cleaned.effective_date,
-      COALESCE(bamboohr_employment_status.valid_to_date, cleaned.effective_end_date) as effective_end_date,
+      COALESCE(bamboohr_employment_status.valid_from_date, cleaned.effective_end_date) as effective_end_date,
       cleaned.department,
       cleaned.division,
       cleaned.entity,
