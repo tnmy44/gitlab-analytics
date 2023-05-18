@@ -2095,3 +2095,9 @@ The title of the plan as given by GitLab.com
 A flag to indicate if the plan is a paid plan or not.
 
 {% enddocs %}
+
+{% docs has_code_suggestions_enabled % }
+
+Boolean flag set to True if the namespace has code suggestions enabled. This appears as `code_suggestions` in the gitlab.com db `namespace_settings` table.
+
+{% enddocs %}
