@@ -95,7 +95,7 @@ models:
       - name: dbt_updated_at
       - name: dbt_created_at
   
-  name: wk_rpt_namespace_onboarding
+   - name: wk_rpt_namespace_onboarding
     description: '{{ doc("wk_rpt_namespace_onboarding") }}'
     columns:
       - name: ultimate_parent_namespace_id
