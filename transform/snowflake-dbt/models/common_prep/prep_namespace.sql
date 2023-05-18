@@ -1,5 +1,5 @@
 {{ config(
-    tags=["product"]
+    tags=["product", "mnpi_exception"]
 ) }}
 
 {{ simple_cte([
@@ -180,7 +180,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@jpeguero",
+    updated_by="@cbraza",
     created_date="2021-01-14",
-    updated_date="2022-02-22"
+    updated_date="2023-05-18"
 ) }}
