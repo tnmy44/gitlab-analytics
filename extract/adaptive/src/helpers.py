@@ -60,6 +60,7 @@ def make_request(
 
 
 def __dataframe_uploader_adaptive(dataframe, table):
+    """ Upload dataframe to snowflake using loader role """
     loader_engine = snowflake_engine_factory(config_dict, "LOADER")
     dataframe_uploader(dataframe, loader_engine, table, SCHEMA)
 
@@ -79,21 +80,26 @@ def __query_results_generator(query: str, engine: Engine) -> pd.DataFrame:
 
 
 def read_processed_versions_table():
+    """ Read from processed_versions table to see if
+    a version has been processed yet
+    """
     table_name = "processed_versions"
     loader_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     query = f"""
     select * from raw.{SCHEMA}.{table_name}
     """
-    df = __query_results_generator(query, loader_engine)
-    return df
+    dataframe = __query_results_generator(query, loader_engine)
+    return dataframe
 
 
 def upload_exported_data(dataframe, table):
+    """ Upload an Adaptive export to Snowflake """
     __dataframe_uploader_adaptive(dataframe, table)
 
 
 def upload_processed_version(version):
+    """ Upload the name of the processed version to Snowflake """
     table_name = "processed_versions"
     data = {"processed_versions": [version], "processed_at": datetime.now()}
     dataframe = pd.DataFrame(data)

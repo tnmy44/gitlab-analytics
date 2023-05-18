@@ -17,6 +17,7 @@ class Adaptive:
         pass
 
     def _base_xml(self, method, additional_body):
+        """ Every endpoint needs to be called with this base xml argument """
         username = config_dict["ADAPTIVE_USERNAME"]
         password = config_dict["ADAPTIVE_PASSWORD"]
         caller_name = "Data"
@@ -32,6 +33,7 @@ class Adaptive:
         return xml_string
 
     def _export(self, method, additional_body):
+        """ Generic function to export data from any Adaptive endpoint """
         url = "https://api.adaptiveinsights.com/api/v29"
         headers = {"Content-Type": "application/xml"}
         xml_string = self._base_xml(method, additional_body)
@@ -42,6 +44,7 @@ class Adaptive:
         return export_output
 
     def export_versions(self):
+        """ Call exportVersions endpoint to get list of versions """
         method = "exportVersions"
         additional_body = ""
         versions_output = self._export(method, additional_body)
@@ -49,6 +52,7 @@ class Adaptive:
         return versions
 
     def export_data(self, version_name):
+        """ Call exportData endpoint to the data associated with a version """
         method = "exportData"
 
         additional_body = (
@@ -119,12 +123,21 @@ class Adaptive:
         return version_reports
 
     def exported_data_to_df(self, exported_data):
+        """
+        exported_data is a json that contains a csv delimited data
+        as one of its values.
+
+        Take the csv delimited data and convert to pandas dataframe
+        """
         exported_data.lstrip("![CDATA[").rstrip("]]")
         exported_data_io = StringIO(exported_data)
         df = pd.read_csv(exported_data_io)
         return df
 
     def is_already_processed(self, version):
+        """
+        Check if the version is already processed by checking the processed table
+        """
         df = read_processed_versions_table()
         if version in df['processed_versions']:
             return True
@@ -134,6 +147,7 @@ class Adaptive:
         """
         For each version, export the data
         Then upload the data to Snowflake
+        Lastly, add verison to processed table so it's not processed again
         """
         versions = self.export_versions()
         valid_versions = self.get_valid_versions(versions, folder_criteria)
@@ -154,14 +168,16 @@ if __name__ == "__main__":
     adaptive = Adaptive()
     export_all = True
 
+    # export all versions in a folder (including subfolders)
     if export_all:
         folder_criteria = "FY24 Versions"
         adaptive.process_versions(folder_criteria)
 
+    # export a specific version
     else:
         version = "FY24 Plan (Board)"  # legit yearly forecast
         version = "Live forecast snapshot 1A"  # test
 
         exported_data = adaptive.export_data(version)
         dataframe = adaptive.exported_data_to_df(exported_data)
-        dataframe_uploader_adaptive(dataframe, version)
+        upload_exported_data(dataframe, version)
