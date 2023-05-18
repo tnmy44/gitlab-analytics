@@ -184,6 +184,13 @@
 
     {% endif %}
 
+    QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY 
+        snapshot_dates.date_id, 
+        sfdc_opportunity_snapshots_source.opportunity_id 
+    ORDER BY sfdc_opportunity_snapshots_source.dbt_valid_from DESC
+    ) = 1
+
 ), sfdc_opportunity_live AS (
 
     SELECT
