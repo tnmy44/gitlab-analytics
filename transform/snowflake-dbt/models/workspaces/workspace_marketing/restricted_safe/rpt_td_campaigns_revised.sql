@@ -46,8 +46,8 @@
    wk_marketing_rpt_lead_to_revenue_revised.won_custom,
 
 
-   rpt_lead_to_revenue.person_order_type,
-   rpt_lead_to_revenue.opp_order_type,
+   wk_marketing_rpt_lead_to_revenue_revised.person_order_type,
+   wk_marketing_rpt_lead_to_revenue_revised.opp_order_type,
    
    dim_campaign.budget_holder,
    dim_campaign.type                                            AS sfdc_campaign_type,
