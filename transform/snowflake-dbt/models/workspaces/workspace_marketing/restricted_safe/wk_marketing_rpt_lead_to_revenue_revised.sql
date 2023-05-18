@@ -4,6 +4,7 @@
     ('person_base','mart_crm_person'),
     ('dim_crm_person','dim_crm_person'),
     ('mart_crm_opportunity_stamped_hierarchy_hist', 'mart_crm_opportunity_stamped_hierarchy_hist'), 
+    ('map_alternative_lead_demographics','map_alternative_lead_demographics'),
     ('mart_crm_touchpoint', 'mart_crm_touchpoint'),
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('dim_crm_account', 'dim_crm_account'),
@@ -88,6 +89,7 @@
       person_base.email_domain_type,
       person_base.true_inquiry_date,
       person_base.mql_date_first_pt,
+      person_base.accepted_date,
       person_base.status,
       person_base.lead_source,
       person_base.is_inquiry,
@@ -100,6 +102,13 @@
       person_base.account_demographics_territory,
       dim_crm_account.is_first_order_available,
       person_order_type_final.person_order_type,
+      map_alternative_lead_demographics.employee_count_segment_custom,
+      map_alternative_lead_demographics.employee_bucket_segment_custom,
+      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
+      map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
+      map_alternative_lead_demographics.geo_custom,
+      UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
+
   
   --Touchpoint Data
       'Person Touchpoint' AS touchpoint_type,
@@ -149,6 +158,9 @@
       ON person_base.email_hash = person_order_type_final.email_hash
     LEFT JOIN mart_crm_touchpoint
       ON mart_crm_touchpoint.email_hash = person_base.email_hash
+    LEFT JOIN map_alternative_lead_demographics
+      ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
+
   
   ), opp_base_with_batp AS (
     
@@ -382,6 +394,7 @@
       email_domain_type,
       true_inquiry_date,
       mql_date_first_pt,
+      accepted_date,
       status,
       lead_source,
       is_inquiry,
@@ -394,6 +407,12 @@
       person_base_with_tp.account_demographics_territory,
       is_first_order_available,
       person_order_type,
+      employee_count_segment_custom,
+      mployee_bucket_segment_custom,
+      employee_count_segment_custom, 
+      inferred_employee_segment,
+      geo_custom,
+      inferred_geo,
   
   --Opp Data
       opp_order_type,
