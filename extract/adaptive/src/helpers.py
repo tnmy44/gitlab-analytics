@@ -28,7 +28,8 @@ def make_request(
     additional_backoff = 20
     if current_retry_count >= max_retry_count:
         raise requests.exceptions.HTTPError(
-            f"Manually raising 429 Client Error: Too many retries when calling the {url}."
+            f"Manually raising 429 Client Error: \
+            Too many retries when calling the {url}."
         )
     try:
         if request_type == "GET":

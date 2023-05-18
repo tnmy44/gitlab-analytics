@@ -2,8 +2,7 @@ import os
 import pandas as pd
 import xmltodict
 
-from logging import info, error
-from datetime import datetime
+from logging import info
 from io import StringIO
 from typing import Any, Dict, Union, List, Optional
 
@@ -163,17 +162,17 @@ class Adaptive:
         """
         versions = self.export_versions()
         valid_versions = self.get_valid_versions(versions, folder_criteria)
-        print(f"\nvalid_versions: {valid_versions}")
+        info(f"\nvalid_versions: {valid_versions}")
         return valid_versions
         for valid_version in valid_versions:
             if self.is_already_processed(valid_version):
                 continue
-            print(f"\nprocessing version: {valid_version}")
+            info(f"\nprocessing version: {valid_version}")
             exported_data = adaptive.export_data(valid_version)
             dataframe = self.exported_data_to_df(exported_data)
             upload_exported_data(dataframe, valid_version)
             upload_processed_version(valid_version)
-            print(f"\nfinished processing: {valid_version}")
+            info(f"\nfinished processing: {valid_version}")
 
 
 if __name__ == "__main__":
