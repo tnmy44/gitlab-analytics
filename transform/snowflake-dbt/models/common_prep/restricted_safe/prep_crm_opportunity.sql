@@ -184,6 +184,13 @@
 
     {% endif %}
 
+    QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY 
+        snapshot_dates.date_id, 
+        sfdc_opportunity_snapshots_source.opportunity_id 
+    ORDER BY sfdc_opportunity_snapshots_source.dbt_valid_from DESC
+    ) = 1
+
 ), sfdc_opportunity_live AS (
 
     SELECT
@@ -203,8 +210,8 @@
       sfdc_opportunity_source.sales_accepted_date::DATE                                                     AS sales_accepted_date,
       sfdc_opportunity_source.close_date::DATE                                                              AS close_date,
       sfdc_opportunity_source.net_arr                                                                       AS raw_net_arr,
-      {{ dbt_utils.surrogate_key(['sfdc_opportunity_source.opportunity_id','snapshot_dates.date_id'])}}     AS crm_opportunity_snapshot_id,
-      snapshot_dates.date_id                                                                                AS snapshot_id,
+      {{ dbt_utils.surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                 AS crm_opportunity_snapshot_id,
+      '99991231'                                                                                            AS snapshot_id,
       snapshot_dates.date_actual                                                                            AS snapshot_date,
       snapshot_dates.first_day_of_month                                                                     AS snapshot_month,
       snapshot_dates.fiscal_year                                                                            AS snapshot_fiscal_year,
@@ -279,11 +286,6 @@
       ON account_owner.user_role_id = sfdc_user_roles_source.id
     WHERE sfdc_opportunity_source.account_id IS NOT NULL
       AND sfdc_opportunity_source.is_deleted = FALSE
-    {% if is_incremental() %}
-
-       AND snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
-
-    {% endif %}
 
 ), sfdc_opportunity AS (
 

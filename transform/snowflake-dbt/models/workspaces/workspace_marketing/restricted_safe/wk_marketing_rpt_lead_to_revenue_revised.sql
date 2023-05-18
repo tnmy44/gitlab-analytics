@@ -170,6 +170,11 @@
       opp.net_arr,
       opp.is_net_arr_closed_deal,
       opp.is_net_arr_pipeline_created,
+      opp.account_demographics_segment AS account_demographics_sales_segment,
+      opp.account_demographics_region,
+      opp.account_demographics_geo,
+      opp.account_demographics_area,
+      opp.account_demographics_territory,
       opp.crm_opp_owner_sales_segment_stamped,
       opp.crm_opp_owner_region_stamped,
       opp.crm_opp_owner_area_stamped,
@@ -352,7 +357,7 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=57)}}
+    {{dbt_utils.group_by(n=62)}}
     
 ), cohort_base_combined AS (
   
@@ -374,12 +379,12 @@
       status,
       lead_source,
       is_mql,
-      account_demographics_sales_segment,
-      account_demographics_region,
-      account_demographics_geo,
-      account_demographics_area,
-      account_demographics_upa_country,
-      account_demographics_territory,
+      person_base_with_tp.account_demographics_sales_segment,
+      person_base_with_tp.account_demographics_region,
+      person_base_with_tp.account_demographics_geo,
+      person_base_with_tp.account_demographics_area,
+      person_base_with_tp.account_demographics_upa_country,
+      person_base_with_tp.account_demographics_territory,
       is_first_order_available,
       person_order_type,
   
@@ -397,6 +402,11 @@
       net_arr,
       is_net_arr_closed_deal,
       is_net_arr_pipeline_created,
+      opp_base_with_batp.account_demographics_sales_segment AS opp_account_demographics_sales_segment,
+      opp_base_with_batp.account_demographics_region AS opp_account_demographics_region,
+      opp_base_with_batp.account_demographics_geo AS opp_account_demographics_geo,
+      opp_base_with_batp.account_demographics_territory AS opp_account_demographics_territory,
+      opp_base_with_batp.account_demographics_area AS opp_account_demographics_area,
       crm_opp_owner_sales_segment_stamped,
       crm_opp_owner_region_stamped,
       crm_opp_owner_area_stamped,
@@ -556,5 +566,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-02-15",
-    updated_date="2023-05-16",
+    updated_date="2023-05-17",
   ) }}
