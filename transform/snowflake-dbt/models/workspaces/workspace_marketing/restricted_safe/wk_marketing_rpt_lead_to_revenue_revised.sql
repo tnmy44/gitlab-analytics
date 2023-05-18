@@ -90,6 +90,7 @@
       person_base.mql_date_first_pt,
       person_base.status,
       person_base.lead_source,
+      person_base.is_inquiry,
       person_base.is_mql,
       person_base.account_demographics_sales_segment,
       person_base.account_demographics_region,
@@ -117,6 +118,7 @@
       mart_crm_touchpoint.bizible_referrer_page,
       mart_crm_touchpoint.bizible_referrer_page_raw,
       mart_crm_touchpoint.bizible_integrated_campaign_grouping,
+      mart_crm_touchpoint.campaign_rep_role_name,
       mart_crm_touchpoint.touchpoint_segment,
       mart_crm_touchpoint.gtm_motion,
       mart_crm_touchpoint.pipe_name,
@@ -202,6 +204,7 @@
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.touchpoint_segment,
+      mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.gtm_motion,
       mart_crm_attribution_touchpoint.pipe_name,
       mart_crm_attribution_touchpoint.is_dg_influenced,
@@ -359,7 +362,7 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=63)}}
+    {{dbt_utils.group_by(n=64)}}
     
 ), cohort_base_combined AS (
   
@@ -381,6 +384,7 @@
       mql_date_first_pt,
       status,
       lead_source,
+      is_inquiry,
       is_mql,
       person_base_with_tp.account_demographics_sales_segment,
       person_base_with_tp.account_demographics_region,
@@ -443,6 +447,7 @@
       COALESCE(person_base_with_tp.bizible_count_u_shaped,opp_base_with_batp.bizible_count_u_shaped) AS bizible_count_u_shaped, 
       COALESCE(person_base_with_tp.is_fmm_influenced,opp_base_with_batp.is_fmm_influenced) AS is_fmm_influenced, 
       COALESCE(person_base_with_tp.is_fmm_sourced,opp_base_with_batp.is_fmm_sourced) AS is_fmm_sourced,
+      COALESCE(person_base_with_tp.campaign_rep_role_name,opp_base_with_batp.campaign_rep_role_name) AS campaign_rep_role_name,
       new_lead_created_sum,
       count_true_inquiry,
       inquiry_sum, 

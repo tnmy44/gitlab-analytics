@@ -3,7 +3,7 @@
 {{ simple_cte([
     ('wk_marketing_rpt_lead_to_revenue_revised','wk_marketing_rpt_lead_to_revenue_revised'),
     ('dim_campaign','dim_campaign'),
-    ('fct_campaign', 'fct_campaign'), 
+    ('fct_campaign','fct_campaign'), 
     ('dim_date','dim_date')
 ]) }}
 
@@ -21,7 +21,7 @@
    wk_marketing_rpt_lead_to_revenue_revised.is_inquiry,
    wk_marketing_rpt_lead_to_revenue_revised.is_sao,
    wk_marketing_rpt_lead_to_revenue_revised.is_mql,
-   wk_marketing_rpt_lead_to_revenue_revised.is_closed_won,
+   wk_marketing_rpt_lead_to_revenue_revised.is_won AS is_closed_won,
 
    wk_marketing_rpt_lead_to_revenue_revised.sales_accepted_date,
    wk_marketing_rpt_lead_to_revenue_revised.bizible_touchpoint_date,   
