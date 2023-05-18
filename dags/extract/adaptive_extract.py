@@ -22,7 +22,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
     ADAPTIVE_USERNAME,
-    ADAPTIVE_PASSWORD
+    ADAPTIVE_PASSWORD,
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
@@ -30,7 +30,6 @@ from kubernetes_helpers import get_affinity, get_toleration
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
-TASK_SCHEDULE = "daily"
 
 # Define the default arguments for the DAG
 default_args = {
@@ -44,7 +43,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    f"adaptive_extract_{TASK_SCHEDULE}",
+    "adaptive_extract",
     default_args=default_args,
     schedule_interval="0 8 * * *",
     start_date=datetime(2022, 12, 26),
@@ -59,8 +58,8 @@ adaptive_extract_command = (
 adaptive_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id=f"adaptive-extract-{TASK_SCHEDULE}",
-    name=f"adaptive-extract-{TASK_SCHEDULE}",
+    task_id="adaptive-extract",
+    name="adaptive-extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
