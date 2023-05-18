@@ -1,5 +1,5 @@
 {{ config(
-    tags=["product", "mnpi_exception"]
+    tags=["product"]
 ) }}
 
 {{ simple_cte([
