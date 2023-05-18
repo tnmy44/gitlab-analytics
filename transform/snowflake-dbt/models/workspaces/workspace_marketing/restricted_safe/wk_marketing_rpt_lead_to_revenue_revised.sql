@@ -408,7 +408,7 @@
       is_first_order_available,
       person_order_type,
       employee_count_segment_custom,
-      mployee_bucket_segment_custom,
+      employee_bucket_segment_custom,
       employee_count_segment_custom, 
       inferred_employee_segment,
       geo_custom,
