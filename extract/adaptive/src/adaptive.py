@@ -6,7 +6,7 @@ from logging import info, error
 from datetime import datetime
 from io import StringIO
 
-from helpers import make_request, dataframe_uploader_adaptive
+from helpers import make_request, upload_exported_data, read_processed_versions_table, upload_processed_version
 
 
 config_dict = os.environ.copy()
@@ -124,6 +124,12 @@ class Adaptive:
         df = pd.read_csv(exported_data_io)
         return df
 
+    def is_already_processed(self, version):
+        df = read_processed_versions_table()
+        if version in df['processed_versions']:
+            return True
+        return False
+
     def process_versions(self, folder_criteria):
         """
         For each version, export the data
@@ -134,10 +140,13 @@ class Adaptive:
         print(f'\nvalid_versions: {valid_versions}')
         return valid_versions
         for valid_version in valid_versions:
+            if self.is_already_processed(valid_version):
+                continue
             print(f'\nprocessing version: {valid_version}')
             exported_data = adaptive.export_data(valid_version)
             dataframe = self.exported_data_to_df(exported_data)
-            dataframe_uploader_adaptive(dataframe, valid_version)
+            upload_exported_data(dataframe, valid_version)
+            upload_processed_version(valid_version)
             print(f'\nfinished processing: {valid_version}')
 
 

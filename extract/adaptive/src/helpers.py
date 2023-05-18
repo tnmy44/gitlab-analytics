@@ -1,13 +1,19 @@
 import os
 import time
+import logging
+import sys
+from datetime import datetime
 from logging import info, error
 import requests
+import pandas as pd
+from sqlalchemy.engine.base import Engine
 from gitlabdata.orchestration_utils import (
     dataframe_uploader,
     snowflake_engine_factory,
 )
 
 config_dict = os.environ.copy()
+SCHEMA = "adaptive_custom"
 
 
 def make_request(
@@ -53,7 +59,42 @@ def make_request(
         raise
 
 
-def dataframe_uploader_adaptive(dataframe, table):
+def __dataframe_uploader_adaptive(dataframe, table):
     loader_engine = snowflake_engine_factory(config_dict, "LOADER")
-    schema = 'adaptive_custom'
-    dataframe_uploader(dataframe, loader_engine, table, schema)
+    dataframe_uploader(dataframe, loader_engine, table, SCHEMA)
+
+
+def __query_results_generator(query: str, engine: Engine) -> pd.DataFrame:
+    """
+    Use pandas to run a sql query and load it into a dataframe.
+    Yield it back in chunks for scalability.
+    """
+
+    try:
+        query_df_iterator = pd.read_sql(sql=query, con=engine)
+    except Exception as e:
+        logging.exception(e)
+        sys.exit(1)
+    return query_df_iterator
+
+
+def read_processed_versions_table():
+    table_name = "processed_versions"
+    loader_engine = snowflake_engine_factory(config_dict, "LOADER")
+
+    query = f"""
+    select * from raw.{SCHEMA}.{table_name}
+    """
+    df = __query_results_generator(query, loader_engine)
+    return df
+
+
+def upload_exported_data(dataframe, table):
+    __dataframe_uploader_adaptive(dataframe, table)
+
+
+def upload_processed_version(version):
+    table_name = "processed_versions"
+    data = {"processed_versions": [version], "processed_at": datetime.now()}
+    dataframe = pd.DataFrame(data)
+    __dataframe_uploader_adaptive(dataframe, table_name)
