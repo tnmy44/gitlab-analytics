@@ -297,7 +297,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       COALESCE(total_stages_adopted, 0)                                     AS total_stages_adopted, --stages per ultimate namespace up to current
       billable_members.billable_member_count                                AS current_billable_member_count,
       storage.storage_gib                                                   AS current_month_storage_gib,
-	  first_last_activity.min_event_date                                    AS first_activity_date,
+	    first_last_activity.min_event_date                                    AS first_activity_date,
       first_last_activity.max_event_date                                    AS latest_activity_date
     FROM namespaces 
     LEFT JOIN trials
