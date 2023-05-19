@@ -120,7 +120,7 @@ def extract_logs(
                 response = get_logs(
                     domain, event, formatted_start_date, formatted_end_date
                 )
-                
+
                 try:
                     data = response.json()
                 except json.decoder.JSONDecodeError:
@@ -142,6 +142,7 @@ def extract_logs(
 
     return all_results
 
+
 def check_response(domains, event, start_date, end_date):
     """
     Checks if the API response is as expected.
@@ -156,13 +157,15 @@ def check_response(domains, event, start_date, end_date):
     formatted_end_date = utils.format_datetime(end_date)
 
     for domain in domains:
-        check_response = get_logs(domain , event, formatted_start_date, formatted_end_date)
-        info(f'Repsonse Status {check_response.status_code}')
+        check_response = get_logs(
+            domain, event, formatted_start_date, formatted_end_date
+        )
+        info(f"Repsonse Status {check_response.status_code}")
         if check_response.status_code != 200:
-            error(
-                f"Error getting logs, response {check_response.status_code} received"
+            error(f"Error getting logs, response {check_response.status_code} received")
+            return (
+                True  # If the value returned is true then there was API response error
             )
-            return True # If the value returned is true then there was API response error
     return False
 
 
@@ -194,7 +197,7 @@ def load_event_logs(event: str, full_refresh: bool = False):
         sys.exit(1)
 
     else:
-        info('Extracting logs')
+        info("Extracting logs")
 
         results = extract_logs(event, start_date, end_date)
 
