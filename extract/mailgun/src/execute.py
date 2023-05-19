@@ -191,7 +191,8 @@ def load_event_logs(event: str, full_refresh: bool = False):
     is_bad_request = check_response(domains, event, start_date, end_date)
 
     if is_bad_request == True:
-        info('Bad API request')
+        error('Bad API request')
+        sys.exit(1)
 
     else:
         info('Extracting logs')
