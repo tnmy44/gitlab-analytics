@@ -162,7 +162,6 @@ def check_response(domains, event, start_date, end_date):
                 f"Error getting logs, response {check_response.status_code} received"
             )
             return True # If the value returned is true then there was API response error
-    
     return False
         
 
@@ -191,7 +190,7 @@ def load_event_logs(event: str, full_refresh: bool = False):
     is_bad_request = check_response(domains, event, start_date, end_date)
 
     if is_bad_request == True:
-        error('Bad API request')
+        info('Bad API request')
 
     else:
         info('Extracting logs')
