@@ -94,8 +94,14 @@ def read_processed_versions_table() -> pd.DataFrame:
     return dataframe
 
 
+def fix_table_name(table: str) -> str:
+    """ conform the table name to match Snowflake convention """
+    return table.replace(" ", "_")
+
+
 def upload_exported_data(dataframe: pd.DataFrame, table: str):
     """Upload an Adaptive export to Snowflake"""
+    table = fix_table_name(table)
     __dataframe_uploader_adaptive(dataframe, table)
 
 
