@@ -1,3 +1,6 @@
+{{ config(materialized='table') }}
+
+
 {{ simple_cte([
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('wk_sales_sfdc_opportunity_snapshot_history_xf','wk_sales_sfdc_opportunity_snapshot_history_xf'),
@@ -68,7 +71,7 @@
   SELECT DISTINCT
     touchpoint_id AS dim_crm_touchpoint_id,
     opportunity_id AS dim_crm_opportunity_id,
-    dbt_valid_from AS touchpoint_weight_snapshot_date,
+    dbt_valid_from::Date AS touchpoint_weight_snapshot_date,
     bizible_touchpoint_date,
     bizible_count_first_touch,
     bizible_count_lead_creation_touch,
@@ -215,7 +218,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2023-04-11",
-    updated_date="2023-05-09",
+    updated_date="2023-05-18",
   ) }}

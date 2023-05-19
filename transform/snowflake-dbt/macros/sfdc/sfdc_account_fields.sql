@@ -79,9 +79,17 @@ WITH map_merged_crm_account AS (
     {%- if model_type == 'snapshot' %}
       {% if is_incremental() %}
 
-      AND snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+      AND snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
 
       {% endif %}
+      
+    QUALIFY ROW_NUMBER() OVER (
+        PARTITION BY 
+          snapshot_id, 
+          account_id 
+        ORDER BY dbt_valid_from DESC
+        ) = 1
+
     {% endif %}
 
 ), sfdc_users AS (

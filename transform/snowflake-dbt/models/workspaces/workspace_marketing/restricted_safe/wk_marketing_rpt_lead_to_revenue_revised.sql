@@ -170,6 +170,11 @@
       opp.net_arr,
       opp.is_net_arr_closed_deal,
       opp.is_net_arr_pipeline_created,
+      opp.account_demographics_segment AS account_demographics_sales_segment,
+      opp.account_demographics_region,
+      opp.account_demographics_geo,
+      opp.account_demographics_area,
+      opp.account_demographics_territory,
       opp.crm_opp_owner_sales_segment_stamped,
       opp.crm_opp_owner_region_stamped,
       opp.crm_opp_owner_area_stamped,
@@ -228,122 +233,122 @@
       SUM(mart_crm_attribution_touchpoint.custom_net_arr) AS custom_net_arr,
       SUM(mart_crm_attribution_touchpoint.linear_net_arr) AS linear_net_arr,
       CASE
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) 
         ELSE 0 
       END AS first_sao,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.bizible_count_u_shaped) 
         ELSE 0 
       END AS u_shaped_sao,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.bizible_count_w_shaped) 
         ELSE 0 
       END AS w_shaped_sao,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) 
         ELSE 0 
       END AS full_shaped_sao,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.bizible_count_custom_model) 
         ELSE 0 
       END AS custom_sao,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.l_weight) 
         ELSE 0 
       END AS linear_sao,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.u_net_arr) 
         ELSE 0 
       END AS pipeline_first_net_arr,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.u_net_arr) 
         ELSE 0 
         END AS pipeline_u_net_arr,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.w_net_arr) 
         ELSE 0 
       END AS pipeline_w_net_arr,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.full_net_arr) 
         ELSE 0 
       END AS pipeline_full_net_arr,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.custom_net_arr) 
         ELSE 0 
       END AS pipeline_custom_net_arr,
       CASE 
-        WHEN opp.is_sao = TRUE
+        WHEN opp.is_net_arr_pipeline_created = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.linear_net_arr) 
         ELSE 0 
       END AS pipeline_linear_net_arr,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) 
         ELSE 0 
       END AS won_first,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.bizible_count_u_shaped) 
         ELSE 0 
       END AS won_u,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.bizible_count_w_shaped) 
         ELSE 0 
       END AS won_w,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) 
         ELSE 0 
       END AS won_full,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.bizible_count_custom_model) 
         ELSE 0 
       END AS won_custom,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.l_weight) 
         ELSE 0 
       END AS won_linear,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.first_net_arr) 
         ELSE 0 
       END AS won_first_net_arr,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.u_net_arr) 
         ELSE 0 
       END AS won_u_net_arr,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.w_net_arr) 
         ELSE 0 
       END AS won_w_net_arr,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.full_net_arr) 
         ELSE 0 
       END AS won_full_net_arr,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.custom_net_arr) 
         ELSE 0 
       END AS won_custom_net_arr,
       CASE 
-        WHEN opp.is_won = TRUE
+        WHEN opp.is_net_arr_closed_deal = TRUE
           THEN SUM(mart_crm_attribution_touchpoint.linear_net_arr) 
         ELSE 0 
       END AS won_linear_net_arr
@@ -352,7 +357,7 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=57)}}
+    {{dbt_utils.group_by(n=62)}}
     
 ), cohort_base_combined AS (
   
@@ -361,7 +366,7 @@
       dim_crm_person_id,
       person_base_with_tp.dim_crm_account_id,
       sfdc_record_id,
---       COALESCE (person_base_with_tp.dim_crm_touchpoint_id,opp_base_with_batp.dim_crm_touchpoint_id) AS dim_crm_touchpoint_id, 
+      COALESCE (person_base_with_tp.dim_crm_touchpoint_id,opp_base_with_batp.dim_crm_touchpoint_id) AS dim_crm_touchpoint_id, 
       person_base_with_tp.dim_crm_touchpoint_id AS dim_crm_btp_touchpoint_id,
       opp_base_with_batp.dim_crm_touchpoint_id AS dim_crm_batp_touchpoint_id,
       dim_crm_opportunity_id,
@@ -374,12 +379,12 @@
       status,
       lead_source,
       is_mql,
-      account_demographics_sales_segment,
-      account_demographics_region,
-      account_demographics_geo,
-      account_demographics_area,
-      account_demographics_upa_country,
-      account_demographics_territory,
+      person_base_with_tp.account_demographics_sales_segment,
+      person_base_with_tp.account_demographics_region,
+      person_base_with_tp.account_demographics_geo,
+      person_base_with_tp.account_demographics_area,
+      person_base_with_tp.account_demographics_upa_country,
+      person_base_with_tp.account_demographics_territory,
       is_first_order_available,
       person_order_type,
   
@@ -397,6 +402,11 @@
       net_arr,
       is_net_arr_closed_deal,
       is_net_arr_pipeline_created,
+      opp_base_with_batp.account_demographics_sales_segment AS opp_account_demographics_sales_segment,
+      opp_base_with_batp.account_demographics_region AS opp_account_demographics_region,
+      opp_base_with_batp.account_demographics_geo AS opp_account_demographics_geo,
+      opp_base_with_batp.account_demographics_territory AS opp_account_demographics_territory,
+      opp_base_with_batp.account_demographics_area AS opp_account_demographics_area,
       crm_opp_owner_sales_segment_stamped,
       crm_opp_owner_region_stamped,
       crm_opp_owner_area_stamped,
@@ -405,56 +415,31 @@
       parent_crm_account_demographics_territory,
   
   --Touchpoint Data
-      person_base_with_tp.bizible_touchpoint_date AS btp_bizible_touchpoint_date,
-      opp_base_with_batp.bizible_touchpoint_date AS batp_bizible_touchpoint_date,
-      person_base_with_tp.bizible_touchpoint_position AS btp_bizibletouchpoint_position,
-      opp_base_with_batp.bizible_touchpoint_position AS batp_bizible_touchpoint_position,
-      person_base_with_tp.bizible_touchpoint_source AS btp_bizible_touchpoint_source,
-      opp_base_with_batp.bizible_touchpoint_source AS batp_bizible_touchpoint_source,
-      person_base_with_tp.bizible_touchpoint_type AS btp_bizible_touchpoint_type,
-      opp_base_with_batp.bizible_touchpoint_type AS batp_bizible_touchpoint_type,
-      person_base_with_tp.bizible_ad_campaign_name AS btp_bizible_ad_campaign_name,
-      opp_base_with_batp.bizible_ad_campaign_name AS batp_bizible_ad_campaign_name,
-      person_base_with_tp.bizible_form_url AS btp_bizible_form_url,
-      opp_base_with_batp.bizible_form_url AS batp_bizible_form_url,
-      person_base_with_tp.bizible_landing_page AS btp_bizible_landing_page,
-      opp_base_with_batp.bizible_landing_page AS batp_bizible_landing_page,
-      person_base_with_tp.bizible_form_url_raw AS btp_bizible_form_url_raw,
-      opp_base_with_batp.bizible_form_url_raw AS batp_bizible_form_url_raw,
-      person_base_with_tp.bizible_landing_page_raw AS btp_bizible_landing_page_raw,
-      opp_base_with_batp.bizible_landing_page_raw AS batp_bizible_landing_page_raw,
-      person_base_with_tp.bizible_marketing_channel AS btp_bizible_marketing_channel,
-      opp_base_with_batp.bizible_marketing_channel AS batp_bizible_marketing_channel,
-      person_base_with_tp.bizible_marketing_channel_path AS btp_bizible_marketing_channel_path,
-      opp_base_with_batp.bizible_marketing_channel_path AS batp_bizible_marketing_channel_path,
-      person_base_with_tp.bizible_medium AS btp_bizible_medium,
-      opp_base_with_batp.bizible_medium AS batp_bizible_medium,
-      person_base_with_tp.bizible_referrer_page AS btp_bizible_referrer_page,
-      opp_base_with_batp.bizible_referrer_page AS batp_bizible_referrer_page,
-      person_base_with_tp.bizible_referrer_page_raw AS btp_bizible_referrer_page_raw,
-      opp_base_with_batp.bizible_referrer_page_raw AS batp_bizible_referrer_page_raw,
-      person_base_with_tp.bizible_integrated_campaign_grouping AS btp_bizible_integrated_campaign_grouping,
-      opp_base_with_batp.bizible_integrated_campaign_grouping AS batp_bizible_integrated_campaign_grouping,
-      person_base_with_tp.touchpoint_segment AS btp_bizible_touchpoint_segment,
-      opp_base_with_batp.touchpoint_segment AS batp_bizible_touchpoint_segment,
-      person_base_with_tp.gtm_motion AS btp_bizible_gtm_motion,
-      opp_base_with_batp.gtm_motion AS batp_bizible_gtm_motion,
-      person_base_with_tp.pipe_name AS btp_bizible_pipe_name,
-      opp_base_with_batp.pipe_name AS batp_bizible_pipe_name,
-      person_base_with_tp.is_dg_influenced AS btp_is_dg_influenced,
-      opp_base_with_batp.is_dg_influenced AS batp_is_dg_influenced,
-      person_base_with_tp.is_dg_sourced AS btp_is_dg_sourced,
-      opp_base_with_batp.is_dg_sourced AS batp_is_dg_sourced,
-      person_base_with_tp.bizible_count_first_touch AS btp_bizible_count_first_touch,
-      opp_base_with_batp.bizible_count_first_touch AS batp_bizible_count_first_touch,
-      person_base_with_tp.bizible_count_lead_creation_touch AS btp_bizible_count_lead_creation_touch,
-      opp_base_with_batp.bizible_count_lead_creation_touch AS batp_bizible_count_lead_creation_touch,
-      person_base_with_tp.bizible_count_u_shaped AS btp_bizible_count_u_shaped,
-      opp_base_with_batp.bizible_count_u_shaped AS batp_bizible_count_u_shaped,
-      person_base_with_tp.is_fmm_influenced AS btp_is_fmm_influenced,
-      opp_base_with_batp.is_fmm_influenced AS batp_is_fmm_influenced,
-      person_base_with_tp.is_fmm_sourced AS btp_is_fmm_sourced,
-      opp_base_with_batp.is_fmm_sourced AS batp_is_fmm_sourced,
+      COALESCE(person_base_with_tp.bizible_touchpoint_date,opp_base_with_batp.bizible_touchpoint_date) AS bizible_touchpoint_date, 
+      COALESCE(person_base_with_tp.bizible_touchpoint_position,opp_base_with_batp.bizible_touchpoint_position) AS bizible_touchpoint_position, 
+      COALESCE(person_base_with_tp.bizible_touchpoint_source,opp_base_with_batp.bizible_touchpoint_source) AS bizible_touchpoint_source, 
+      COALESCE(person_base_with_tp.bizible_touchpoint_type,opp_base_with_batp.bizible_touchpoint_type) AS bizible_touchpoint_type, 
+      COALESCE(person_base_with_tp.bizible_ad_campaign_name,opp_base_with_batp.bizible_ad_campaign_name) AS bizible_ad_campaign_name, 
+      COALESCE(person_base_with_tp.bizible_form_url,opp_base_with_batp.bizible_form_url) AS bizible_form_url, 
+      COALESCE(person_base_with_tp.bizible_landing_page,opp_base_with_batp.bizible_landing_page) AS bizible_landing_page, 
+      COALESCE(person_base_with_tp.bizible_form_url_raw,opp_base_with_batp.bizible_form_url_raw) AS bizible_form_url_raw, 
+      COALESCE(person_base_with_tp.bizible_landing_page_raw,opp_base_with_batp.bizible_landing_page_raw) AS bizible_landing_page_raw, 
+      COALESCE(person_base_with_tp.bizible_marketing_channel,opp_base_with_batp.bizible_marketing_channel) AS bizible_marketing_channel, 
+      COALESCE(person_base_with_tp.bizible_marketing_channel_path,opp_base_with_batp.bizible_marketing_channel_path) AS bizible_marketing_channel_path, 
+      COALESCE(person_base_with_tp.bizible_medium,opp_base_with_batp.bizible_medium) AS bizible_medium, 
+      COALESCE(person_base_with_tp.bizible_referrer_page,opp_base_with_batp.bizible_referrer_page) AS bizible_referrer_page, 
+      COALESCE(person_base_with_tp.bizible_referrer_page_raw,opp_base_with_batp.bizible_referrer_page_raw) AS bizible_referrer_page_raw, 
+      COALESCE(person_base_with_tp.bizible_integrated_campaign_grouping,opp_base_with_batp.bizible_integrated_campaign_grouping) AS bizible_integrated_campaign_grouping, 
+      COALESCE(person_base_with_tp.touchpoint_segment,opp_base_with_batp.touchpoint_segment) AS touchpoint_segment, 
+      COALESCE(person_base_with_tp.gtm_motion,opp_base_with_batp.gtm_motion) AS gtm_motion, 
+      COALESCE(person_base_with_tp.pipe_name,opp_base_with_batp.pipe_name) AS pipe_name, 
+      COALESCE(person_base_with_tp.is_dg_influenced,opp_base_with_batp.is_dg_influenced) AS is_dg_influenced, 
+      COALESCE(person_base_with_tp.is_dg_sourced,opp_base_with_batp.is_dg_sourced) AS is_dg_sourced, 
+      COALESCE(person_base_with_tp.bizible_count_first_touch,opp_base_with_batp.bizible_count_first_touch) AS bizible_count_first_touch, 
+      COALESCE(person_base_with_tp.bizible_count_lead_creation_touch,opp_base_with_batp.bizible_count_lead_creation_touch) AS bizible_count_lead_creation_touch, 
+      COALESCE(person_base_with_tp.bizible_count_u_shaped,opp_base_with_batp.bizible_count_u_shaped) AS bizible_count_u_shaped, 
+      COALESCE(person_base_with_tp.is_fmm_influenced,opp_base_with_batp.is_fmm_influenced) AS is_fmm_influenced, 
+      COALESCE(person_base_with_tp.is_fmm_sourced,opp_base_with_batp.is_fmm_sourced) AS is_fmm_sourced,
       new_lead_created_sum,
       count_true_inquiry,
       inquiry_sum, 
@@ -549,19 +534,12 @@
     closed_date.first_day_of_week               AS closed_date_range_week,
     closed_date.date_id                         AS closed_date_range_id,
 
-    --batp_date fields
-    batp_date.fiscal_year                     AS batp_date_range_year,
-    batp_date.fiscal_quarter_name_fy          AS batp_date_range_quarter,
-    DATE_TRUNC(month, batp_date.date_actual)  AS batp_date_range_month,
-    batp_date.first_day_of_week               AS batp_date_range_week,
-    batp_date.date_id                         AS batp_date_range_id,
-  
-    --btp_date fields
-    btp_date.fiscal_year                     AS btp_date_range_year,
-    btp_date.fiscal_quarter_name_fy          AS btp_date_range_quarter,
-    DATE_TRUNC(month, btp_date.date_actual)  AS btp_date_range_month,
-    btp_date.first_day_of_week               AS btp_date_range_week,
-    btp_date.date_id                         AS btp_date_range_id
+    --touchpoint_date fields
+    touchpoint_date.fiscal_year                     AS touchpoint_date_range_year,
+    touchpoint_date.fiscal_quarter_name_fy          AS touchpoint_date_range_quarter,
+    DATE_TRUNC(month, touchpoint_date.date_actual)  AS touchpoint_date_range_month,
+    touchpoint_date.first_day_of_week               AS touchpoint_date_range_week,
+    touchpoint_date.date_id                         AS touchpoint_date_range_id
   FROM cohort_base_combined
   LEFT JOIN dim_date AS inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
@@ -573,10 +551,8 @@
     ON cohort_base_combined.sales_accepted_date = sao_date.date_day
   LEFT JOIN dim_date AS closed_date
     ON cohort_base_combined.close_date = closed_date.date_day
-  LEFT JOIN dim_date AS btp_date
-    ON cohort_base_combined.btp_bizible_touchpoint_date = btp_date.date_day
-  LEFT JOIN dim_date AS batp_date
-    ON cohort_base_combined.batp_bizible_touchpoint_date = batp_date.date_day
+  LEFT JOIN dim_date AS touchpoint_date
+    ON cohort_base_combined.bizible_touchpoint_date = touchpoint_date.date_day
 
 ), final AS (
 
@@ -590,5 +566,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-02-15",
-    updated_date="2023-05-08",
+    updated_date="2023-05-17",
   ) }}

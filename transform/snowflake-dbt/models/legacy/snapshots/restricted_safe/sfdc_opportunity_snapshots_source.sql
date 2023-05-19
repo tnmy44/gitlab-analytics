@@ -27,7 +27,8 @@ WITH source AS (
     FROM {{ source('snapshots', 'sfdc_opportunity_snapshots') }}  AS opportunity
     {% if is_incremental() %}
 
-    WHERE dbt_updated_at >= (SELECT MAX(dbt_updated_at) FROM {{this}})
+    WHERE dbt_updated_at > (SELECT MAX(dbt_updated_at) FROM {{this}})
+    OR dbt_scd_id in (SELECT dbt_scd_id FROM {{ this }} WHERE dbt_valid_to IS NULL)
 
     {% endif %}
 
