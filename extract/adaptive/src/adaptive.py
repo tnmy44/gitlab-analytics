@@ -182,7 +182,7 @@ class Adaptive:
         """
         versions = self.export_versions()
         valid_versions = self.get_valid_versions(versions, folder_criteria)
-        info(f"\nvalid_versions: {valid_versions}")
+        info(f"\nversions to process (if not already processed):\n {valid_versions}")
         for valid_version in valid_versions:
             if self.is_version_already_processed(valid_version):
                 continue

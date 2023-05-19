@@ -89,7 +89,7 @@ def read_processed_versions_table() -> pd.DataFrame:
     loader_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     query = f"""
-    select * from raw.{SCHEMA}.{table_name}
+    select * from {SCHEMA}.{table_name}
     """
     dataframe = __query_results_generator(query, loader_engine)
     return dataframe
