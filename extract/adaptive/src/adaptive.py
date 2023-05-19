@@ -1,4 +1,6 @@
+import sys
 import os
+import requests
 import pandas as pd
 import xmltodict
 
@@ -37,6 +39,21 @@ class Adaptive:
 
         return xml_string
 
+    def handle_response(self, response: requests.models.Response) -> Union[dict, str]:
+        """API returns a xml string, check the xml string for success"""
+        parsed_dict = xmltodict.parse(response.text)
+        success = parsed_dict["response"]["@success"]
+        print(f"\nIs successful response: {success}")
+
+        if success == "false":
+            error_message = parsed_dict["response"]["messages"]["message"]["#text"]
+            info(f"\nAborting... error_message: {error_message}")
+            sys.exit()
+
+        else:
+            export_output = parsed_dict["response"]["output"]
+        return export_output
+
     def _export(self, method: str, additional_body: str) -> Union[dict, str]:
         """Generic function to export data from any Adaptive endpoint"""
         url = "https://api.adaptiveinsights.com/api/v29"
@@ -44,8 +61,8 @@ class Adaptive:
         xml_string = self._base_xml(method, additional_body)
 
         response = make_request("POST", url, headers=headers, data=xml_string)
-        parsed_dict = xmltodict.parse(response.text)
-        export_output = parsed_dict["response"].get("output")
+
+        export_output = self.handle_response(response)
         return export_output
 
     def export_versions(self) -> Dict[Any, Any]:
@@ -143,6 +160,7 @@ class Adaptive:
         exported_data.lstrip("![CDATA[").rstrip("]]")
         exported_data_io = StringIO(exported_data)
         dataframe = pd.read_csv(exported_data_io)
+        info(f"\ndataframe.head(): {dataframe.head()}")
         return dataframe
 
     def is_version_already_processed(self, version: str) -> bool:

@@ -3,6 +3,7 @@ import time
 import logging
 import sys
 from datetime import datetime
+from typing import Union
 from logging import info, error
 import requests
 import pandas as pd
@@ -95,7 +96,7 @@ def read_processed_versions_table() -> pd.DataFrame:
 
 
 def fix_table_name(table: str) -> str:
-    """ conform the table name to match Snowflake convention """
+    """conform the table name to match Snowflake convention"""
     return table.replace(" ", "_")
 
 
