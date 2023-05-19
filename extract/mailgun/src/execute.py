@@ -84,7 +84,6 @@ def extract_logs(
                     error("SSL error received, waiting 30 seconds before retrying")
                     time.sleep(30)
                     response = requests.get(page_token, auth=("api", api_key))
-
                 try:
                     data = response.json()
                 except json.decoder.JSONDecodeError:
@@ -121,12 +120,7 @@ def extract_logs(
                 response = get_logs(
                     domain, event, formatted_start_date, formatted_end_date
                 )
-                # See if we get a correct response in the first call
-                # if response.status_code != 200:
-                #     error(
-                #         f"Error getting logs, response {response.status_code} received"
-                #     )
-                #     break
+                
                 try:
                     data = response.json()
                 except json.decoder.JSONDecodeError:
@@ -192,7 +186,7 @@ def load_event_logs(event: str, full_refresh: bool = False):
 
     info(
         f"Running from {start_date.strftime('%Y-%m-%dT%H:%M:%S%z')} to {end_date.strftime('%Y-%m-%dT%H:%M:%S%z')}"
-    )       
+    )
 
     is_bad_request = check_response(domains, event, start_date, end_date)
 
