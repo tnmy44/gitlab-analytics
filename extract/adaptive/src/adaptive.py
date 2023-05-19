@@ -69,6 +69,7 @@ class Adaptive:
         """Call exportVersions endpoint to get list of versions"""
         method = "exportVersions"
         additional_body = ""
+        info('Calling export_version endpoint...')
         versions_output = self._export(method, additional_body)
         if isinstance(versions_output, dict):
             versions = versions_output["versions"]
@@ -82,6 +83,7 @@ class Adaptive:
             f'<version name="{version_name}" isDefault="false"/>'
             + '<format useInternalCodes="true" includeUnmappedItems="false"/>'
         )
+        info('Calling export_data endpoint...')
         data = self._export(method, additional_body)
         return str(data)  # coercing str -> str to remove mypy error
 
@@ -200,7 +202,7 @@ def main():
     """
     adaptive = Adaptive()
 
-    export_all = False
+    export_all = True
     # export all versions in a folder (including subfolders)
     if export_all:
         folder_criteria = "FY24 Versions"
