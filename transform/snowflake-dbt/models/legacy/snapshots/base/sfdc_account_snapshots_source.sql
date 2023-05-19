@@ -6,14 +6,21 @@
 
 WITH source AS (
 
-  SELECT *
-  FROM {{ source('snapshots', 'sfdc_account_snapshots') }}
-  {% if is_incremental() %}
+    SELECT *
+    FROM {{ source('snapshots', 'sfdc_account_snapshots') }}
+    {% if is_incremental() %}
 
-  WHERE dbt_updated_at > (SELECT MAX(dbt_updated_at) FROM {{this}})
-  OR dbt_scd_id in (SELECT dbt_scd_id FROM {{ this }} WHERE dbt_valid_to IS NULL)
+    WHERE dbt_updated_at > (SELECT MAX(dbt_updated_at) FROM {{this}})
+    OR dbt_scd_id in (SELECT dbt_scd_id FROM {{ this }} WHERE dbt_valid_to IS NULL)
 
-  {% endif %}
+    {% endif %}
+
+    QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY 
+      dbt_valid_from::DATE, 
+      id 
+    ORDER BY dbt_valid_from DESC
+    ) = 1
 
 ),
 
