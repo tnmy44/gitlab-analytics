@@ -69,7 +69,7 @@ class Adaptive:
         """Call exportVersions endpoint to get list of versions"""
         method = "exportVersions"
         additional_body = ""
-        info('Calling export_version endpoint...')
+        info("Calling export_version endpoint...")
         versions_output = self._export(method, additional_body)
         if isinstance(versions_output, dict):
             versions = versions_output["versions"]
@@ -83,7 +83,7 @@ class Adaptive:
             f'<version name="{version_name}" isDefault="false"/>'
             + '<format useInternalCodes="true" includeUnmappedItems="false"/>'
         )
-        info('Calling export_data endpoint...')
+        info("Calling export_data endpoint...")
         data = self._export(method, additional_body)
         return str(data)  # coercing str -> str to remove mypy error
 
@@ -183,7 +183,6 @@ class Adaptive:
         versions = self.export_versions()
         valid_versions = self.get_valid_versions(versions, folder_criteria)
         info(f"\nvalid_versions: {valid_versions}")
-        return valid_versions
         for valid_version in valid_versions:
             if self.is_version_already_processed(valid_version):
                 continue
