@@ -61,10 +61,14 @@ def make_request(
         raise
 
 
-def __dataframe_uploader_adaptive(dataframe: pd.DataFrame, table: str):
+def __dataframe_uploader_adaptive(
+    dataframe: pd.DataFrame, table: str, add_uploaded_at: bool = True
+):
     """Upload dataframe to snowflake using loader role"""
     loader_engine = snowflake_engine_factory(config_dict, "LOADER")
-    dataframe_uploader(dataframe, loader_engine, table, SCHEMA)
+    dataframe_uploader(
+        dataframe, loader_engine, table, SCHEMA, add_uploaded_at=add_uploaded_at
+    )
 
 
 def __query_results_generator(query: str, engine: Engine) -> pd.DataFrame:
@@ -85,30 +89,30 @@ def read_processed_versions_table() -> pd.DataFrame:
     """Read from processed_versions table to see if
     a version has been processed yet
     """
-    table_name = "processed_versions"
+    table = "processed_versions"
     loader_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     query = f"""
-    select * from {SCHEMA}.{table_name}
+    select * from {SCHEMA}.{table}
     """
     dataframe = __query_results_generator(query, loader_engine)
     return dataframe
 
 
-def fix_table_name(table: str) -> str:
+def fix_table(table: str) -> str:
     """conform the table name to match Snowflake convention"""
     return table.replace(" ", "_")
 
 
 def upload_exported_data(dataframe: pd.DataFrame, table: str):
     """Upload an Adaptive export to Snowflake"""
-    table = fix_table_name(table)
+    table = fix_table(table)
     __dataframe_uploader_adaptive(dataframe, table)
 
 
 def upload_processed_version(version: str):
     """Upload the name of the processed version to Snowflake"""
-    table_name = "processed_versions"
+    table = "processed_versions"
     data = {"version": [version], "processed_at": datetime.utcnow()}
     dataframe = pd.DataFrame(data)
-    __dataframe_uploader_adaptive(dataframe, table_name)
+    __dataframe_uploader_adaptive(dataframe, table, add_uploaded_at=False)

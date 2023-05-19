@@ -205,7 +205,8 @@ def main():
     # export all versions in a folder (including subfolders)
     if export_all:
         folder_criteria = "FY24 Versions"
-        folder_criteria = "409A Versions"
+        folder_criteria = "FY22 PLAN Versions" # 4 versions
+        folder_criteria = "409A Versions" # 1 version
         adaptive.process_versions(folder_criteria)
 
     # export a specific version
