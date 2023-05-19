@@ -102,6 +102,6 @@ def upload_exported_data(dataframe: pd.DataFrame, table: str):
 def upload_processed_version(version: str):
     """Upload the name of the processed version to Snowflake"""
     table_name = "processed_versions"
-    data = {"processed_versions": [version], "processed_at": datetime.now()}
+    data = {"version": [version], "processed_at": datetime.utcnow()}
     dataframe = pd.DataFrame(data)
     __dataframe_uploader_adaptive(dataframe, table_name)

@@ -145,7 +145,7 @@ class Adaptive:
         dataframe = pd.read_csv(exported_data_io)
         return dataframe
 
-    def is_already_processed(self, version: str) -> bool:
+    def is_version_already_processed(self, version: str) -> bool:
         """
         Check if the version is already processed by checking the processed table
         """
@@ -165,23 +165,28 @@ class Adaptive:
         info(f"\nvalid_versions: {valid_versions}")
         return valid_versions
         for valid_version in valid_versions:
-            if self.is_already_processed(valid_version):
+            if self.is_version_already_processed(valid_version):
                 continue
             info(f"\nprocessing version: {valid_version}")
-            exported_data = adaptive.export_data(valid_version)
+            exported_data = self.export_data(valid_version)
             dataframe = self.exported_data_to_df(exported_data)
             upload_exported_data(dataframe, valid_version)
             upload_processed_version(valid_version)
             info(f"\nfinished processing: {valid_version}")
 
 
-if __name__ == "__main__":
+def main():
+    """
+    Main function to run the export.
+    Either export one version, or export all unprocessed versions
+    """
     adaptive = Adaptive()
-    export_all = True
 
+    export_all = False
     # export all versions in a folder (including subfolders)
     if export_all:
         folder_criteria = "FY24 Versions"
+        folder_criteria = "409A Versions"
         adaptive.process_versions(folder_criteria)
 
     # export a specific version
@@ -192,3 +197,7 @@ if __name__ == "__main__":
         exported_data = adaptive.export_data(version)
         dataframe = adaptive.exported_data_to_df(exported_data)
         upload_exported_data(dataframe, version)
+
+
+if __name__ == "__main__":
+    main()
