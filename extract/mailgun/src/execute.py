@@ -122,11 +122,11 @@ def extract_logs(
                     domain, event, formatted_start_date, formatted_end_date
                 )
                 # See if we get a correct response in the first call
-                if response.status_code != 200:
-                    error(
-                        f"Error getting logs, response {response.status_code} received"
-                    )
-                    break
+                # if response.status_code != 200:
+                #     error(
+                #         f"Error getting logs, response {response.status_code} received"
+                #     )
+                #     break
                 try:
                     data = response.json()
                 except json.decoder.JSONDecodeError:
@@ -148,6 +148,29 @@ def extract_logs(
 
     return all_results
 
+def check_response(domains, event, start_date, end_date):
+    """
+    Checks if the API response is as expected.
+    :param start_date:
+    :param end_date:
+    :param event:
+    :param domain:
+    :return:
+    """
+
+    formatted_start_date = utils.format_datetime(start_date)
+    formatted_end_date = utils.format_datetime(end_date)
+
+    for domain in domains:
+        check_response = get_logs(domain , event, formatted_start_date, formatted_end_date)
+        if check_response.status_code != 200:
+            error(
+                f"Error getting logs, response {check_response.status_code} received"
+            )
+            return True # If the value returned is true then there was API response error
+    
+    return False
+        
 
 def load_event_logs(event: str, full_refresh: bool = False):
     """
@@ -169,28 +192,36 @@ def load_event_logs(event: str, full_refresh: bool = False):
 
     info(
         f"Running from {start_date.strftime('%Y-%m-%dT%H:%M:%S%z')} to {end_date.strftime('%Y-%m-%dT%H:%M:%S%z')}"
-    )
+    )       
 
-    results = extract_logs(event, start_date, end_date)
+    is_bad_request = check_response(domains, event, start_date, end_date)
 
-    info(f"Results length: {len(results)}")
+    if is_bad_request == True:
+        error('Bad API request')
 
-    # Stay under snowflakes max column size.
-    file_count = 0
-    for group in chunker(results, 5000):
-        file_count = file_count + 1
-        file_name = f"{event}_{file_count}.json"
+    else:
+        info('Extracting logs')
 
-        with open(file_name, "w", encoding="utf-8") as outfile:
-            json.dump(group, outfile)
+        results = extract_logs(event, start_date, end_date)
 
-        snowflake_stage_load_copy_remove(
-            file_name,
-            f"mailgun.mailgun_load_{event}",
-            "mailgun.mailgun_events",
-            snowflake_engine,
-            on_error="ABORT_STATEMENT",
-        )
+        info(f"Results length: {len(results)}")
+
+        # Stay under snowflakes max column size.
+        file_count = 0
+        for group in chunker(results, 5000):
+            file_count = file_count + 1
+            file_name = f"{event}_{file_count}.json"
+
+            with open(file_name, "w", encoding="utf-8") as outfile:
+                json.dump(group, outfile)
+
+            snowflake_stage_load_copy_remove(
+                file_name,
+                f"mailgun.mailgun_load_{event}",
+                "mailgun.mailgun_events",
+                snowflake_engine,
+                on_error="ABORT_STATEMENT",
+            )
 
 
 if __name__ == "__main__":
