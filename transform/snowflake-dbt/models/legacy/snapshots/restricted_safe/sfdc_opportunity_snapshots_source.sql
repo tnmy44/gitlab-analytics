@@ -1,7 +1,5 @@
 {{ config(
-    tags=["mnpi"],
-    materialized="incremental",
-    unique_key="dbt_scd_id"
+    tags=["mnpi"]
 ) }}
 
 /*
@@ -25,12 +23,6 @@ WITH source AS (
       END                                                                                   AS calculation_days_in_stage_date,
       DATEDIFF(days,calculation_days_in_stage_date::DATE,CURRENT_DATE::DATE) + 1            AS days_in_stage
     FROM {{ source('snapshots', 'sfdc_opportunity_snapshots') }}  AS opportunity
-    {% if is_incremental() %}
-
-    WHERE dbt_updated_at > (SELECT MAX(dbt_updated_at) FROM {{this}})
-    OR dbt_scd_id in (SELECT dbt_scd_id FROM {{ this }} WHERE dbt_valid_to IS NULL)
-
-    {% endif %}
 
     QUALIFY ROW_NUMBER() OVER (
     PARTITION BY 
