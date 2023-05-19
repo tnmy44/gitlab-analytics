@@ -4,7 +4,7 @@ import requests
 import pandas as pd
 import xmltodict
 
-from logging import info
+from logging import info, basicConfig, getLogger
 from io import StringIO
 from typing import Any, Dict, Union, List, Optional
 
@@ -43,7 +43,7 @@ class Adaptive:
         """API returns a xml string, check the xml string for success"""
         parsed_dict = xmltodict.parse(response.text)
         success = parsed_dict["response"]["@success"]
-        print(f"\nIs successful response: {success}")
+        info(f"\nIs successful response: {success}")
 
         if success == "false":
             error_message = parsed_dict["response"]["messages"]["message"]["#text"]
@@ -205,8 +205,8 @@ def main():
     # export all versions in a folder (including subfolders)
     if export_all:
         folder_criteria = "FY24 Versions"
-        folder_criteria = "FY22 PLAN Versions" # 4 versions
-        folder_criteria = "409A Versions" # 1 version
+        folder_criteria = "409A Versions"  # 1 version
+        folder_criteria = "FY22 PLAN Versions"  # 4 versions
         adaptive.process_versions(folder_criteria)
 
     # export a specific version
@@ -220,4 +220,8 @@ def main():
 
 
 if __name__ == "__main__":
+    basicConfig(stream=sys.stdout, level=20)
+    getLogger("snowflake.connector.cursor").disabled = True
     main()
+    info("Complete.")
+

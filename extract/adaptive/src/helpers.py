@@ -101,7 +101,7 @@ def read_processed_versions_table() -> pd.DataFrame:
 
 def fix_table(table: str) -> str:
     """conform the table name to match Snowflake convention"""
-    return table.replace(" ", "_")
+    return table.replace(" ", "_").upper()
 
 
 def upload_exported_data(dataframe: pd.DataFrame, table: str):
