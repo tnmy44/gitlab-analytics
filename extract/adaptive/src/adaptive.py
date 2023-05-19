@@ -170,7 +170,7 @@ class Adaptive:
         Check if the version is already processed by checking the processed table
         """
         dataframe = read_processed_versions_table()
-        if version in dataframe["processed_versions"]:
+        if version in dataframe["version"]:
             return True
         return False
 
