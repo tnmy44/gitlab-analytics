@@ -14,6 +14,13 @@ WITH source AS (
 
     {% endif %}
 
+    QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY 
+        dbt_valid_from::DATE, 
+        id 
+    ORDER BY dbt_valid_from DESC
+    ) = 1
+
 ), renamed AS(
 
     SELECT
