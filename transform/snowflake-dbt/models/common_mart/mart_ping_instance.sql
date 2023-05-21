@@ -278,5 +278,5 @@ sorted AS (
     created_by="@icooper-acp",
     updated_by="@lisvinueza",
     created_date="2022-03-11",
-    updated_date="2023-04-20"
+    updated_date="2023-05-21"
 ) }}

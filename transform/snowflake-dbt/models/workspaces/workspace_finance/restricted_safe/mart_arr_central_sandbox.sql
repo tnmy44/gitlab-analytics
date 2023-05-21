@@ -184,5 +184,5 @@ WITH dim_billing_account_central_sandbox AS (
     created_by="@michellecooper",
     updated_by="@lisvinueza",
     created_date="2022-03-31",
-    updated_date="2023-05-08"
+    updated_date="2023-05-21"
 ) }}

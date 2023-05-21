@@ -116,5 +116,5 @@ WITH crm_account AS (
     created_by="@mcooperDD",
     updated_by="@lisvinueza",
     created_date="2021-01-12",
-    updated_date="2022-04-28"
+    updated_date="2023-05-21"
 ) }}

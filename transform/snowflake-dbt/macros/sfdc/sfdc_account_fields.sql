@@ -215,12 +215,12 @@ WITH map_merged_crm_account AS (
       sfdc_account.parent_account_industry_hierarchy                      AS parent_crm_account_industry,
       sfdc_account.gtm_strategy                                           AS crm_account_gtm_strategy,
       CASE 
-        WHEN sfdc_account.account_demographics_sales_segment IN ('Large', 'PubSec') THEN 'Large'
-        WHEN sfdc_account.account_demographics_sales_segment = 'Unknown' THEN 'SMB'
-        ELSE sfdc_account.account_demographics_sales_segment
-      END                                                                 AS parent_crm_account_demographics_sales_segment_grouped,
-      {{ sales_segment_region_grouped('sfdc_account.account_demographics_sales_segment',
-        'sfdc_account.account_demographics_geo', 'sfdc_account.account_demographics_region') }} AS parent_crm_account_demographics_segment_region_stamped_grouped,
+        WHEN sfdc_account.account_sales_segment IN ('Large', 'PubSec') THEN 'Large'
+        WHEN sfdc_account.account_sales_segment = 'Unknown' THEN 'SMB'
+        ELSE sfdc_account.account_sales_segment
+      END                                                                 AS parent_crm_account_sales_segment_grouped,
+      {{ sales_segment_region_grouped('sfdc_account.account_sales_segment',
+        'sfdc_account.account_geo', 'sfdc_account.account_region') }} AS parent_crm_account_segment_region_stamped_grouped,
       CASE
         WHEN LOWER(sfdc_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
         ELSE 'Non - Focus Account'

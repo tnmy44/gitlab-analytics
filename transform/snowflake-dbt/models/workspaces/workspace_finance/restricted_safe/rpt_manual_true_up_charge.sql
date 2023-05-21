@@ -231,5 +231,5 @@ WITH map_merged_crm_account AS (
     created_by="@michellecooper",
     updated_by="@lisvinueza",
     created_date="2021-10-28",
-    updated_date="2023-05-08",
+    updated_date="2023-05-21",
 ) }}

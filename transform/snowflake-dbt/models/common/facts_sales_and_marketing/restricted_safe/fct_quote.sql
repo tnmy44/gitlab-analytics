@@ -69,5 +69,5 @@ cte_ref="final_quotes",
 created_by="@mcooperDD",
 updated_by="@lisvinueza",
 created_date="2021-01-11",
-updated_date="2023-05-08"
+updated_date="2023-05-21"
 ) }}

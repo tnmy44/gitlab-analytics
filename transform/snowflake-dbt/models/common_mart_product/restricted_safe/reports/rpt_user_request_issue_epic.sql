@@ -188,5 +188,5 @@ WITH mart_user_request AS (
     created_by="@jpeguero",
     updated_by="@lisvinueza",
     created_date="2021-12-15",
-    updated_date="2023-05-08",
+    updated_date="2023-05-21",
   ) }}
