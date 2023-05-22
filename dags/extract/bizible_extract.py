@@ -61,7 +61,9 @@ def extract_manifest(file_path):
     return manifest_dict
 
 
-manifest = extract_manifest(f"{REPO_BASE_PATH}/extract/bizible/manifests/el_bizible_tables.yaml")
+manifest = extract_manifest(
+    f"{REPO_BASE_PATH}/extract/bizible/manifests/el_bizible_tables.yaml"
+)
 tables = manifest.get("tables")
 
 for table_name in tables:
