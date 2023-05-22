@@ -23,9 +23,22 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
 )
 
-affinity = {'nodeAffinity': {'requiredDuringSchedulingIgnoredDuringExecution': {'nodeSelectorTerms': [{'matchExpressions': [{
-    'key': 'test', 'operator': 'In', 'values': ['true']}]}]}}}
-tolerations = [{'key': 'test', 'operator': 'Equal', 'value': 'true', 'effect': 'NoSchedule'}]
+affinity = {
+    "nodeAffinity": {
+        "requiredDuringSchedulingIgnoredDuringExecution": {
+            "nodeSelectorTerms": [
+                {
+                    "matchExpressions": [
+                        {"key": "test", "operator": "In", "values": ["true"]}
+                    ]
+                }
+            ]
+        }
+    }
+}
+tolerations = [
+    {"key": "test", "operator": "Equal", "value": "true", "effect": "NoSchedule"}
+]
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -48,7 +61,10 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "bamboohr_extract", default_args=default_args, schedule_interval="0 */2 * * *", concurrency=1
+    "bamboohr_extract",
+    default_args=default_args,
+    schedule_interval="0 */2 * * *",
+    concurrency=1,
 )
 
 # BambooHR Extract
