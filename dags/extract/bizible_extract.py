@@ -61,7 +61,7 @@ def extract_manifest(file_path):
 
 
 manifest = extract_manifest(
-    "analytics/extract/bizible/manifests/el_bizible_tables.yaml"
+    "./../../bizible/manifests/el_bizible_tables.yaml"
 )
 tables = manifest.get("tables")
 
