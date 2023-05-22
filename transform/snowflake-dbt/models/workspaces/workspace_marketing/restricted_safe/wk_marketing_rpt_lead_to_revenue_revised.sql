@@ -170,7 +170,7 @@
       opp.net_arr,
       opp.is_net_arr_closed_deal,
       opp.is_net_arr_pipeline_created,
-      opp.parent_crm_account_sales_segment AS account_demographics_sales_segment,
+      opp.parent_crm_account_sales_segment,
       opp.parent_crm_account_region,
       opp.parent_crm_account_geo,
       opp.parent_crm_account_area,
@@ -180,7 +180,6 @@
       opp.crm_opp_owner_area_stamped,
       opp.crm_opp_owner_geo_stamped,
       opp.parent_crm_account_upa_country,
-      opp.parent_crm_account_territory,
     
     -- Touchpoint Data
       'Attribution Touchpoint' AS touchpoint_type,
@@ -357,7 +356,7 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=62)}}
+    {{dbt_utils.group_by(n=61)}}
     
 ), cohort_base_combined AS (
   
@@ -402,11 +401,11 @@
       net_arr,
       is_net_arr_closed_deal,
       is_net_arr_pipeline_created,
-      opp_base_with_batp.account_demographics_sales_segment AS opp_account_demographics_sales_segment,
-      opp_base_with_batp.account_demographics_region AS opp_account_demographics_region,
-      opp_base_with_batp.account_demographics_geo AS opp_account_demographics_geo,
-      opp_base_with_batp.account_demographics_territory AS opp_account_demographics_territory,
-      opp_base_with_batp.account_demographics_area AS opp_account_demographics_area,
+      opp_base_with_batp.parent_crm_account_sales_segment AS opp_account_demographics_sales_segment,
+      opp_base_with_batp.parent_crm_account_region AS opp_account_demographics_region,
+      opp_base_with_batp.parent_crm_account_geo AS opp_account_demographics_geo,
+      opp_base_with_batp.parent_crm_account_territory AS opp_account_demographics_territory,
+      opp_base_with_batp.parent_crm_account_area AS opp_account_demographics_area,
       crm_opp_owner_sales_segment_stamped,
       crm_opp_owner_region_stamped,
       crm_opp_owner_area_stamped,
