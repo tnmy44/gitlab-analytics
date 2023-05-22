@@ -20,7 +20,7 @@ fct_event_valid AS (
     lineage are built from this derived fact. This CTE pulls in ALL of the columns from the fct_event as a base data set. It uses the dbt_utils.star function 
     to select all columns except the meta data table related columns from the fct_event. The CTE also filters out imported projects and events with 
     data quality issues by filtering out negative days since user creation at event date. It keeps events with a NULL days since user creation to capture events
-    that do not have a user. fct_event_valid also filters out events from blocked users with a join back to dim_user. The table also filters to a rolling 24 months of data 
+    that do not have a user. fct_event_valid also filters out events from blocked users with a join back to dim_user. The table also filters to a rolling 36 months of data 
     for performance optimization.
     */
 
@@ -40,7 +40,7 @@ fct_event_valid AS (
       ON fct_event.event_name = xmau_metrics.common_events_to_include
     LEFT JOIN dim_user
       ON fct_event.dim_user_sk = dim_user.dim_user_sk
-    WHERE DATE_TRUNC(MONTH,fct_event.event_created_at::DATE) >= DATEADD(MONTH, -24, DATE_TRUNC(MONTH,CURRENT_DATE)) 
+    WHERE event_created_at >= DATEADD(MONTH, -36, DATE_TRUNC(MONTH,CURRENT_DATE)) 
       AND (fct_event.days_since_user_creation_at_event_date >= 0
            OR fct_event.days_since_user_creation_at_event_date IS NULL)
       AND (dim_user.is_blocked_user = FALSE 
@@ -183,7 +183,7 @@ gitlab_dotcom_fact AS (
 {{ dbt_audit(
     cte_ref="gitlab_dotcom_fact",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@cbraza",
     created_date="2022-04-09",
-    updated_date="2022-06-20"
+    updated_date="2023-03-01"
 ) }}

@@ -47,3 +47,18 @@ sources:
 
       - name: supervisory_organization
         description: '{{ doc("supervisory_organization") }}'
+
+      - name: performance_growth_potential
+        description: '{{ doc("performance_growth_potential") }}'
+
+      - name: all_workers
+        description: '{{ doc("all_workers") }}'
+      
+      - name: staffing_history_approved
+        description: '{{ doc("staffing_history_approved") }}'
+
+      - name: gitlab_usernames
+        description: '{{ doc("gitlab_usernames") }}'
+
+      - name: assess_talent
+        description: '{{ doc("assess_talent") }}'

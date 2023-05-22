@@ -75,6 +75,7 @@ WITH sfdc_opportunity_snapshots AS (
       is_downgrade_opportunity__c    AS is_downgrade,
       swing_deal__c                  AS is_swing_deal,
       is_edu_oss_opportunity__c      AS is_edu_oss,
+      isclosed                       AS is_closed,
       net_iacv__c                    AS net_incremental_acv,
       nrv__c                         AS nrv,
       campaignid                     AS primary_campaign_source_id,
@@ -88,7 +89,7 @@ WITH sfdc_opportunity_snapshots AS (
       renewal_acv__c                 AS renewal_acv,
       renewal_amount__c              AS renewal_amount,
       sql_source__c                  AS sales_qualified_source,
-      IFF(sales_qualified_source = 'Channel Generated', 'Partner Sourced', 'Co-sell')
+      IFF(sales_qualified_source = 'Partner Generated', 'Partner Sourced', 'Co-sell')
                                      AS sqs_bucket_engagement,
       solutions_to_be_replaced__c    AS solutions_to_be_replaced,
       amount                         AS total_contract_value,

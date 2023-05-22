@@ -39,12 +39,12 @@ gitlab-org/gitlab-development-kit,74823, @kwiebers
 gitlab-org/gitlab-docs,1794617
 gitlab-org/gitlab-elasticsearch-indexer,2953390, @changzhengliu
 gitlab-org/ruby/gems/gitlab-experiment,21250701
-gitlab-org/gitlab-exporter,1507906
+gitlab-org/gitlab-exporter,1507906, @pjphillips
 gitlab-org/gitlab-foss,13083
 gitlab-org/gitlab-gollum-lib,6043225
 gitlab-org/gitlab-markup,1777822
 gitlab-org/gitlab-mattermost,387896
-gitlab-org/gitlab-metrics-exporter,34770409
+gitlab-org/gitlab-metrics-exporter,34770409, @pjphillips
 gitlab-org/gitlab-omnibus-builder,145205
 gitlab-org/gitlab-pages,734943
 gitlab-org/gitlab-pages-proto,5981322
@@ -79,20 +79,20 @@ gitlab-org/prometheus-client-mmap,3362933
 gitlab-org/prometheus-storage-migrator,4949400
 gitlab-org/protect/general,26076251
 gitlab-org/release-tools,430285
-gitlab-org/security-products/analyzers/bundler-audit,9358979
+gitlab-org/security-products/analyzers/bundler-audit,9358979,@gonzoyumo
 gitlab-org/security-products/analyzers/eslint,10476326, @amarpatel
 gitlab-org/security-products/analyzers/find-sec-bugs-groovy,7795571
 gitlab-org/security-products/analyzers/find-sec-bugs-sbt,6487905
 gitlab-org/security-products/analyzers/gemnasium,9450192, @gonzoyumo
-gitlab-org/security-products/analyzers/gemnasium-maven,9450197
-gitlab-org/security-products/analyzers/gemnasium-python,9450195
+gitlab-org/security-products/analyzers/gemnasium-maven,9450197,@gonzoyumo
+gitlab-org/security-products/analyzers/gemnasium-python,9450195,@gonzoyumo
 gitlab-org/security-products/analyzers/gosec,7660893, @amarpatel
 gitlab-org/security-products/analyzers/kics,30656896, @amarpatel
 gitlab-org/security-products/analyzers/klar,13922331
 gitlab-org/security-products/analyzers/nodejs-scan,7145793, @amarpatel
 gitlab-org/security-products/analyzers/phpcs-security-audit,6392811, @amarpatel
 gitlab-org/security-products/analyzers/pmd-apex,13017938, @amarpatel
-gitlab-org/security-products/analyzers/retire.js,9396716
+gitlab-org/security-products/analyzers/retire.js,9396716,@gonzoyumo
 gitlab-org/security-products/analyzers/secrets,10861561
 gitlab-org/security-products/analyzers/sobelow,11625232, @amarpatel
 gitlab-org/security-products/analyzers/spotbugs,11139665, @amarpatel
@@ -106,26 +106,32 @@ gitlab-org/security-products/dast,9762266
 gitlab-org/security-products/dast-runner-validation,26751150
 gitlab-org/security-products/dast-cwe-checks,27060148
 gitlab-org/security-products/analyzers/browserker,21351796
-gitlab-org/security-products/dependency-scanning,5779760
+gitlab-org/security-products/dependency-scanning,5779760,@gonzoyumo
 gitlab-org/security-products/gemnasium-db,12006272
-gitlab-org/security-products/gemnasium/api,5777179
-gitlab-org/security-products/gemnasium/croncli,5777819
-gitlab-org/security-products/gemnasium/gcp-config,5772881
-gitlab-org/security-products/gemnasium/logcli,5777853
-gitlab-org/security-products/gemnasium/maven-index-reader,5777939
-gitlab-org/security-products/gemnasium/migrations,5777918
-gitlab-org/security-products/gemnasium/nsqcli,5777952
-gitlab-org/security-products/gemnasium/package-syncer,5777954
-gitlab-org/security-products/gemnasium/pgcli,5777976
-gitlab-org/security-products/gemnasium/registry-syncer,5778037
-gitlab-org/security-products/gemnasium/registry-tracker,5778044
-gitlab-org/security-products/gemnasium/resolver,5778056
-gitlab-org/security-products/gemnasium/schema,5778074
-gitlab-org/security-products/gemnasium/secrets,5778093
-gitlab-org/security-products/gemnasium/semver,5778095
-gitlab-org/security-products/gemnasium/web,5828233
+gitlab-org/security-products/gemnasium/api,5777179,@gonzoyumo
+gitlab-org/security-products/gemnasium/croncli,5777819,@gonzoyumo
+gitlab-org/security-products/gemnasium/gcp-config,5772881,@gonzoyumo
+gitlab-org/security-products/gemnasium/logcli,5777853,@gonzoyumo
+gitlab-org/security-products/gemnasium/maven-index-reader,5777939,@gonzoyumo
+gitlab-org/security-products/gemnasium/migrations,5777918,@gonzoyumo
+gitlab-org/security-products/gemnasium/nsqcli,5777952,@gonzoyumo
+gitlab-org/security-products/gemnasium/package-syncer,5777954,@gonzoyumo
+gitlab-org/security-products/gemnasium/pgcli,5777976,@gonzoyumo
+gitlab-org/security-products/gemnasium/registry-syncer,5778037,@gonzoyumo
+gitlab-org/security-products/gemnasium/registry-tracker,5778044,@gonzoyumo
+gitlab-org/security-products/gemnasium/resolver,5778056,@gonzoyumo
+gitlab-org/security-products/gemnasium/schema,5778074,@gonzoyumo
+gitlab-org/security-products/gemnasium/secrets,5778093,@gonzoyumo
+gitlab-org/security-products/gemnasium/semver,5778095,@gonzoyumo
+gitlab-org/security-products/gemnasium/web,5828233,@gonzoyumo
 gitlab-org/security-products/gitlab-cyclonedx-property-taxonomy,37734140
-gitlab-org/security-products/license-management,6130122
+gitlab-org/security-products/license-management,6130122,@gonzoyumo
+gitlab-org/security-products/license-db/license-exporter,39298809,@gonzoyumo
+gitlab-org/security-products/license-db/license-feeder,40857363,@gonzoyumo
+gitlab-org/security-products/license-db/license-interfacer,39622674,@gonzoyumo
+gitlab-org/security-products/license-db/license-processor,39229232,@gonzoyumo
+gitlab-org/security-products/license-db/deployment,39233486,@gonzoyumo
+gitlab-org/security-products/license-db/schema,39193358,@gonzoyumo
 gitlab-org/security-products/sast,5373222
 gitlab-org/serverless/runtimes/nodejs,11373038
 gitlab-org/serverless/runtimes/ruby,11533294
@@ -137,11 +143,11 @@ gitlab-org/security-products/analyzers/common,6126012
 gitlab-org/security-products/analyzers/find-sec-bugs,5606894
 gitlab-org/security-products/analyzers/find-sec-bugs-gradle,6280478
 gitlab-org/security-products/analyzers/flawfinder,6237085, @amarpatel
-gitlab-org/security-products/analyzers/gemnasium-maven-plugin,13150952
+gitlab-org/security-products/analyzers/gemnasium-maven-plugin,13150952,@gonzoyumo
 gitlab-org/security-products/analyzers/go-ast-scanner,5971589
 gitlab-org/security-products/analyzers/security-code-scan,6535935, @amarpatel
 gitlab-org/security-products/analyzers/api-fuzzing,19617580
-gitlab-org/security-products/analyzers/api-fuzzing-src,5964710, @sethgitlab
+gitlab-org/security-products/analyzers/api-fuzzing-src,5964710, @twoodham
 gitlab-org/security-products/demos/api-fuzzing/graphql-api-fuzzing-example,24298348
 gitlab-org/security-products/demos/api-fuzzing/postman-api-fuzzing-example,22111360
 gitlab-org/security-products/tests/api-fuzzing-e2e/openapi-v2-tls,25538517
@@ -166,11 +172,11 @@ gitlab-org/security-products/tests/api-fuzzing-e2e/e2e-image,23069956
 gitlab-org/security-products/tests/api-fuzzing-e2e/har-remote-target,23069693
 gitlab-org/security-products/protocol-fuzzer-ce,24111720
 gitlab-org/security-products/protocol-fuzzer-ee,24112430
-gitlab-org/security-products/analyzers/gitlab-cov-fuzz,19413101, @sethgitlab
-gitlab-org/security-products/analyzers/gitlab-cov-fuzz-src,19413012, @sethgitlab
+gitlab-org/security-products/analyzers/gitlab-cov-fuzz,19413101, @twoodham
+gitlab-org/security-products/analyzers/gitlab-cov-fuzz-src,19413012, @twoodham
 gitlab-org/security-products/analyzers/fuzzers/javafuzz,19871573
 gitlab-org/security-products/analyzers/fuzzers/pythonfuzz,19904939
-gitlab-org/security-products/analyzers/fuzzers/jsfuzz,19871264, @sethgitlab
+gitlab-org/security-products/analyzers/fuzzers/jsfuzz,19871264, @twoodham
 gitlab-org/security-products/demos/coverage-fuzzing/afl-fuzzing-example,24225194
 gitlab-org/security-products/demos/coverage-fuzzing/pythonfuzz-fuzzing-example,23465101
 gitlab-org/security-products/demos/coverage-fuzzing/jsfuzz-fuzzing-example,23365123
@@ -291,4 +297,10 @@ gitlab-org/modelops/applied-ml/review-recommender/extracteur,31202357
 gitlab-org/modelops/applied-ml/review-recommender/etl,31202862
 gitlab-org/modelops/applied-ml/review-recommender/recommender-ci,31203942
 gitlab-org/modelops/anti-abuse/pipeline-validation-service,24631368
-https://gitlab.com/gitlab-org/gitlab-web-ide,35104827, @oregand
+gitlab-org/gitlab-web-ide,35104827,@oregand
+gitlab-org/remote-development/devfile-gem,43473862,@oregand
+gitlab-org/gitlab-web-ide-vscode-fork,37966217,@oregand
+gitlab-org/remote-development/gitlab-workspaces-proxy,43788427,@oregand
+gitlab-org/cluster-integration/gitlab-agent-ci-image,29138380
+gitlab-org/charts/gitlab-agent,34907799
+gitlab-org/terraform-provider-gitlab,40916776

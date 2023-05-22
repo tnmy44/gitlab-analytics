@@ -100,8 +100,8 @@ def generate_dbt_command(vars_dict):
     dbt_generate_command = f""" 
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_4XL" &&
-        dbt --debug --log-format json run --profiles-dir profile --target {target} --models {snowplow_model_to_full_refresh} --full-refresh --vars '{json_dict}'; ret=$?;
-        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --logs logs/dbt.log --project-name gitlab-analysis;
+        dbt run --profiles-dir profile --target {target} --models {snowplow_model_to_full_refresh} --full-refresh --vars '{json_dict}' ; ret=$?;
+        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 

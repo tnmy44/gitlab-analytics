@@ -66,10 +66,6 @@ gitlab_dotcom_projects_snapshots:
   INCLUDED: true
   TABLE_LIST_BACKUP:
   - GITLAB_DOTCOM_PROJECTS_SNAPSHOTS
-license_db_licenses_snapshots:
-  INCLUDED: true
-  TABLE_LIST_BACKUP:
-  - LICENSE_DB_LICENSES_SNAPSHOTS
 mart_arr_snapshot:
   INCLUDED: true
   TABLE_LIST_BACKUP:

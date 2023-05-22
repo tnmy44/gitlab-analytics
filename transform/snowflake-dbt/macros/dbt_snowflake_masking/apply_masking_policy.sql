@@ -17,7 +17,10 @@ SELECT
   t.table_catalog,
   t.table_schema,
   t.table_name,
-  t.table_type,
+  CASE t.table_type
+    WHEN 'BASE TABLE' THEN 'TABLE'
+    ELSE t.table_type
+  END AS table_type,
   c.column_name,
   c.data_type
 FROM "{{ database }}".information_schema.tables t

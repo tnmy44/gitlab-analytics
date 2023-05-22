@@ -24,3 +24,68 @@ tables:
         , UpdatedById
         , UpdatedDate
       FROM orderactionrateplan
+  ramp:
+    query: |-
+      SELECT
+        Id
+        ,OrderId
+        ,Name
+        ,Description
+        ,GrossTcb
+        ,DiscountTcv
+        ,NetTcb
+        ,MetricsProcessingStatus
+        ,GrossTcv
+        ,Number
+        ,NetTcv
+        ,SubscriptionNumbers
+        ,ChargeNumbers
+        ,DiscountTcb 
+        ,CreatedById
+        ,CreatedDate
+        ,UpdatedById
+        ,UpdatedDate
+      FROM Ramp
+  rampinterval:
+    query: |-
+      SELECT
+        Id
+        ,Rampid
+        ,StartDate
+        ,EndDate
+        ,Name
+        ,Description
+        ,GrossTcb
+        ,DiscountTcv
+        ,NetTcb
+        ,GrossTcv
+        ,NetTcv
+        ,DiscountTcb
+        ,CreatedById
+        ,CreatedDate
+        ,UpdatedById
+        ,UpdatedDate
+      FROM RampInterval
+  rampintervalmetrics:
+    query: |-
+      SELECT
+        Id
+        ,ChargeNumber
+        ,ProductRatePlanChargeId
+        ,StartDate
+        ,EndDate
+        ,Quantity
+        ,GrossTcb
+        ,NetTcb
+        ,DiscountTcb
+        ,GrossTcv
+        ,NetTcv
+        ,DiscountTcv
+        ,RampIntervalId
+        ,RatePlanChargeId
+        ,SubscriptionNumber
+        ,CreatedById
+        ,CreatedDate
+        ,UpdatedById
+        ,UpdatedDate
+      FROM rampintervalmetrics

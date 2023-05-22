@@ -41,7 +41,7 @@ WITH sfdc_opportunity_xf AS (
           WHEN is_pipeline_created_flag = 1
             THEN 'Pipe Gen'
           ELSE 'Existing Pipe'
-        END AS pipeline_category,
+        END AS pipeline_delta_type,
 
       -- Based on deal stage of the deal at the snapshot time
       'Open' AS deal_status,
@@ -70,7 +70,7 @@ WITH sfdc_opportunity_xf AS (
       opportunity_id,
       owner_id,
       is_pipeline_created_flag,
-      pipeline_category,
+      pipeline_delta_type,
       deal_status,
       deal_status_group,
       pipeline_motion,
@@ -112,7 +112,7 @@ WITH sfdc_opportunity_xf AS (
         WHEN is_pipeline_created_flag = 1
             THEN 'Pipe Gen'
         ELSE 'Existing Pipe'
-      END AS pipeline_category,
+      END AS pipeline_delta_type,
 
       CASE
         WHEN oppty.is_won = 1
@@ -154,7 +154,7 @@ WITH sfdc_opportunity_xf AS (
       report_day_of_fiscal_quarter_normalised,
       report_fiscal_year,
       is_pipeline_created_flag,
-      pipeline_category,
+      pipeline_delta_type,
       deal_status,
       deal_status_group,
       pipeline_motion,
@@ -176,7 +176,7 @@ WITH sfdc_opportunity_xf AS (
       report_day_of_fiscal_quarter_normalised,
       report_fiscal_year,
       is_pipeline_created_flag,
-      pipeline_category,
+      pipeline_delta_type,
       deal_status,
       deal_status_group,
       pipeline_motion,

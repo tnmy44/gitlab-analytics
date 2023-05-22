@@ -16,12 +16,14 @@
       namespaces.namespace_name,
       free_user_metrics.uuid,
       free_user_metrics.hostname,
+      free_user_metrics.dim_installation_id,
       free_user_metrics.delivery_type,
       free_user_metrics.cleaned_version,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       crm_account_name,
       parent_crm_account_name,
       free_user_metrics.ping_date,
+      free_user_metrics.installation_creation_date,
       -- Wave 2 & 3
       free_user_metrics.umau_28_days_user,
       free_user_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -151,7 +153,6 @@
       free_user_metrics.successful_deployments_28_days_user,
       -- Wave 5.3
       free_user_metrics.geo_enabled,
-      free_user_metrics.geo_nodes_all_time_event,
       free_user_metrics.auto_devops_pipelines_28_days_user,
       free_user_metrics.active_instance_runners_all_time_event,
       free_user_metrics.active_group_runners_all_time_event,
@@ -190,6 +191,17 @@
       free_user_metrics.external_status_checks_all_time_event,
       free_user_metrics.paid_license_search_28_days_user,
       free_user_metrics.last_activity_28_days_user,
+      -- Wave 7
+      free_user_metrics.snippets_28_days_event,
+      free_user_metrics.single_file_editor_28_days_user,
+      free_user_metrics.merge_requests_created_28_days_event,
+      free_user_metrics.merge_requests_created_28_days_user,
+      free_user_metrics.merge_requests_approval_rules_28_days_event,
+      free_user_metrics.custom_compliance_frameworks_28_days_event,
+      free_user_metrics.projects_security_policy_28_days_event,
+      free_user_metrics.merge_requests_security_policy_28_days_user,
+      free_user_metrics.pipelines_implicit_auto_devops_28_days_event,
+      free_user_metrics.pipeline_schedules_28_days_user,
       -- Data Quality Flag
       free_user_metrics.is_latest_data
     FROM free_user_metrics
@@ -208,12 +220,14 @@
         'dim_namespace_id',
         'uuid',
         'hostname',
+        'dim_installation_id',
         'delivery_type',
         'cleaned_version',
         'dim_crm_account_id',
         'crm_account_name',
         'parent_crm_account_name',
         'ping_date',
+        'installation_creation_date',
         'umau_28_days_user',
         'action_monthly_active_users_project_repo_28_days_user',
         'merge_requests_28_days_user',
@@ -337,7 +351,6 @@
         'failed_deployments_28_days_user',
         'successful_deployments_28_days_user',
         'geo_enabled',
-        'geo_nodes_all_time_event',
         'auto_devops_pipelines_28_days_user',
         'active_instance_runners_all_time_event',
         'active_group_runners_all_time_event',
@@ -374,6 +387,16 @@
         'external_status_checks_all_time_event',
         'paid_license_search_28_days_user',
         'last_activity_28_days_user',
+        'snippets_28_days_event',
+        'single_file_editor_28_days_user',
+        'merge_requests_created_28_days_event',
+        'merge_requests_created_28_days_user',
+        'merge_requests_approval_rules_28_days_event',
+        'custom_compliance_frameworks_28_days_event',
+        'projects_security_policy_28_days_event',
+        'merge_requests_security_policy_28_days_user',
+        'pipelines_implicit_auto_devops_28_days_event',
+        'pipeline_schedules_28_days_user',
         'is_latest_data'
     ]
 ) }}
@@ -381,7 +404,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@snalamaru",
+    updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2023-01-24"
+    updated_date="2023-04-05"
 ) }}

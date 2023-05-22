@@ -103,7 +103,6 @@ class ZuoraRevProAPI:
         return report_list_to_download
 
     def get_report_list_key(self, zuora_requested_report_list) -> list:
-
         """Extract list of report name to iterate from the manifest file for which extraction needs to be done"""
         report_list_key = list(zuora_requested_report_list["report_list"].keys())
         self.logger.info(
@@ -113,7 +112,6 @@ class ZuoraRevProAPI:
 
     @staticmethod
     def get_report_list_dict(zuora_report_list_to_download, report: str) -> Dict:
-
         """Read manifest file for all required values"""
         report_list_dict = {}
         report_list_dict["category"] = zuora_report_list_to_download["report_list"][
@@ -139,7 +137,6 @@ class ZuoraRevProAPI:
 
     @staticmethod
     def get_csv_filename(file_name: str) -> str:
-
         """If the filename has exstention other than csv rename it csv"""
         split_file_name = file_name.split(".", 1)
         if split_file_name[1] != "csv":
@@ -165,7 +162,6 @@ class ZuoraRevProAPI:
     def zuora_download_file(
         self, file_name: str, output_file_name, report_date_formatted: str
     ) -> None:
-
         """This function get the file size and download the file."""
         csv_file_name = self.get_csv_filename(file_name)
         filename_without_csv = self.get_filename_without_csv(file_name)

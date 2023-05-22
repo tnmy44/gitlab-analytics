@@ -5,9 +5,10 @@ models:
     description: '{{ doc("mart_user_request") }}'
     columns:
       - name: primary_key
-        description: "Primary key of mart_user_request. It is at the grain of the user request
-        (combination of the issue_id or epic_id depending on where the request was done) and
-        the links in those requests (combination of opp_id, account_id and zendesk ticket_id)"
+        description: >-
+          Primary key of mart_user_request. It is at the grain of the user request
+          (combination of the issue_id or epic_id depending on where the request was done) and
+          the links in those requests (combination of opp_id, account_id and zendesk ticket_id)
         tests:
           - not_null
           - unique
@@ -36,3 +37,9 @@ models:
         description: For the CRM Account, sum of all ARR lost when the customer left GitLab.
       - name: lost_arr
         description: Sum of crm_account_lost_opp_arr and crm_account_lost_customer_arr
+      - name: theme_labels
+        description: Non-scoped theme:* labels in the issue or epic user request. Since there can be multiple for a single issue/epic, this field is an array.
+      - name: primary_solution_architect_id
+        description: The primary solution architecht user id associated with the SFDC opportunity, whenever there is an opportunity linked to the user request.
+      - name: primary_solution_architect_user_name
+        description: The primary solution architecht user name associated with the SFDC opportunity, whenever there is an opportunity linked to the user request.

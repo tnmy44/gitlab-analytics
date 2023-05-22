@@ -130,12 +130,7 @@ The grain of this table is `DIM_CRM_USER_SNAPSHOT_ID` which is a combination of 
 
 {% enddocs %}
 
-{% docs dim_crm_user_hierarchy_live %}
-Dimension table representing the current state of the sales hierarchy, including the user segment, geo, region, and area as it is in the crm user object.
-
-{% enddocs %}
-
-{% docs dim_crm_user_hierarchy_stamped %}
+{% docs dim_crm_user_hierarchy %}
 Dimension table representing the sales hierarchy at the time of a closed opportunity, including the user segment. These fields are stamped on the opportunity object on the close date and are used in sales funnel analyses.
 
 {% enddocs %}
@@ -361,15 +356,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_licenses %}
-Dimensional table representing generated licenses and associated metadata.
-
-The grain of the table is a license_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs dim_gitlab_dotcom_gitlab_emails %}
 Dimensional table representing the best email address for GitLab employees from the GitLab.com data source
 
@@ -400,12 +386,23 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_gitlab_versions %}
-Dimensional table representing released versions of GitLab.
+{% docs dim_app_release_major_minor %}
+Dimensional table representing released versions (major and minor) of GitLab. Here `app` stands for application. 
 
-The grain of the table is a version_id.
+The grain of the table is a major_minor_version.
 
 Additional information can be found on the [GitLab Releases](https://about.gitlab.com/releases/categories/releases/) page.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_app_release %}
+Dimensional table representing released versions of an application (app). Currently, it only holds releases from GitLab.
+
+The grain of the table is the major, minor and patch version together with the application that these represent.
+
+Additional information specific to the GitLab Releases can be found in the following [page](https://about.gitlab.com/releases/categories/releases/).
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
@@ -502,7 +499,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- Rolling 24 months of data
+- Rolling 36 months of data
 
 **Business Logic in this Model:**
 - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
@@ -553,7 +550,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
+- Rolling 24 months of data
 - Exclude events not associated with a user (ex: 'milestones')
 
 **Business Logic in this Model:**
@@ -561,33 +558,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
 - `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
-
-**Other Comments:**
-- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
-
-{% enddocs %}
-
-{% docs fct_event_instance_daily %}
-
-**Description:** GitLab.com usage event data for valid events, grouped by date and event name
-- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  
-
-**Data Grain:**
-- event_date
-- event_name
-
-**Filters Applied to Model:**
-- `Inherited` - Include valid events for standard analysis and reporting:
-  - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
-    - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
-  - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
-
-**Business Logic in this Model:**
-- `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
-- `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
-- Not all events have a user associated with them (ex: 'milestones'), and not all events have a namespace associated with them (ex: 'users_created'). Therefore it is expected that `user_count = 0` or `ultimate_parent_namespace_count = 0` for these events.
 
 **Other Comments:**
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
@@ -609,7 +579,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
+- Rolling 24 months of data
 - Exclude events not associated with a namespace (ex: 'users_created')
 
 **Business Logic in this Model:**
@@ -654,16 +624,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% docs fct_waterfall_summary %}
 
 A derived model using the revenue contract schedule to spread the recognized revenue across from the revenue start date to the revenue end date as defined by the revenue contract performance obligation's schedule.
-
-{% enddocs %}
-
-{% docs dim_usage_pings %}
-Dimension that contains demographic data from usage ping data, including additional breaks out for product_tier, if it is from an internal instance, and replaces the ip_address hash with a location_id instead.
-
-[Core represents both CE and EE](https://about.gitlab.com/handbook/marketing/product-marketing/tiers/#history-of-ce-and-ee-distributions).
-
-Get started by exploring the [Product Geolocation Analysis](https://about.gitlab.com/handbook/business-ops/data-team/data-catalog/product-geolocation/) handbook page.
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
 
@@ -764,14 +724,6 @@ The grain of this table is one row per namespace per valid_to/valid_from combina
 
 {% enddocs %}
 
-{% docs dim_namespace_lineage %}
-
-Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.
-
-The grain of this table is one row per namespace. The Primary Key is `dim_namespace_id`.
-
-{% enddocs %}
-
 {% docs dim_namespace_plan_hist %}
 
 Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions.
@@ -837,19 +789,6 @@ Easy joins available with:
 * dim_project through `dim_project_id`
 * dim_namespace through `dim_namespace_id` and `ultimate_parent_namespace_id`
 * dim_date through `ci_pipeline_creation_dim_date_id`
-{% enddocs %}
-
-{% docs dim_action %}
-
-Dimensional table representing actions recorded by the Events API. [More info about actions tracked here](https://docs.gitlab.com/ee/api/events.html)
-
-The grain of the table is the `dim_action_id`. This table is easily joinable with:
-
-- `dim_plan` through `dim_plan_id`
-- `dim_user` through `dim_user_id`
-- `dim_project` through `dim_project_id`
-- `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
-
 {% enddocs %}
 
 {% docs dim_issue %}
@@ -1039,12 +978,6 @@ The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
 
 {% enddocs %}
 
-{% docs dim_usage_ping_metric %}
-
-This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). In addition to all metrics currently in the Service Ping, it also contains metrics that have been removed.
-
-{% enddocs %}
-
 {% docs dim_ping_instance %}
 
 **Description:** Atomic level instance Service Ping data including installation settings and metadata, along with JSON payloads with usage metrics
@@ -1071,7 +1004,7 @@ This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitl
   - (OR) hostname IN ('staging.gitlab.com','dr.gitlab.com')
 - `is_trial` = `IFF(ping_created_at < license_trial_ends_on, TRUE, FALSE)`
 - `major_minor_version` = `major_version || '.' || minor_version`
-- `major_minor_version_id` = `major_version * 100 + minor_version` (helpful for sorting or filtering versions)
+- `app_release_major_minor_id` = `major_version * 100 + minor_version` (helpful for sorting or filtering versions)
 - `version_is_prerelease` = `IFF(version ILIKE '%-pre', TRUE, FALSE)`
 - `cleaned_edition` = `IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, ping_edition, 'EE Free')`
 
@@ -1100,7 +1033,7 @@ Some other enhancements in this model include : addition of a surrogate key, exc
 
 {% docs dim_ping_metric_daily_snapshot %}
 
-This slowly changing dimension type 2 model allows for historic reporting of the  `dim_usage_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `snapshot_id` has been included to be used in the join.
+This slowly changing dimension type 2 model allows for historic reporting of the  `dim_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `snapshot_id` has been included to be used in the join.
 
 For this reason `metrics_path` is not unique.
 
@@ -1587,7 +1520,12 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 - This model only includes Structured events (when `event=struct` from `dim_behavior_event` )
 
 **Tips for use:**
-- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on `event_action`, `event_category`, etc.
+- There is a cluster key on `behavior_at::DATE`. Using `behavior_at` in a WHERE clause or INNER JOIN will improve query performance.
+- Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
+- Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
 {% enddocs %}
 
@@ -1634,6 +1572,8 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
 **Tips for use:**
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
 - Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
+- Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
+- Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
 {% enddocs %}
 
@@ -1675,7 +1615,7 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
   - Exclude events where the event created date < the user created date (`days_since_user_creation_at_event_date >= 0`)
     - These are usually events from projects that were created before the GitLab.com user and then imported after the user is created 
   - Exclude events from blocked users (based on the current user state)
-- `Inherited` - Rolling 24 months of data
+- `Inherited` - Rolling 36 months of data
 
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_month`) is determined by the plan for the last event on a given month
@@ -1706,6 +1646,7 @@ This model only includes structured events implemented for experiments. Experime
 - Unlike the previous legacy version, you do _not_ need to join this model back to the fact. It includes all columns on the fact, in addition to experiment-specific columns (ex. `experiment_name`, etc).
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS details 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser details
 
@@ -1727,6 +1668,7 @@ This model excludes assignment events (`event_action = 'assignment'`)
 
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
@@ -1749,6 +1691,7 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
 
@@ -1771,7 +1714,38 @@ This ID is generated using event_id from [prep_snowplow_unnested_events_all](htt
 
 - Join this model to `dim_behavior_event` using `dim_behavior_event_sk` in order to filter the fact on event_action, event_category, etc.
 - Join this model to `dim_behavior_website_page` using `dim_behavior_website_page_sk` in order to pull in information about the page URL
+- Join this model to `dim_behavior_website_page` using `dim_behavior_referrer_page_sk` in order to pull in information about the referring URL
 - Join this model to `dim_behavior_operating_system` using `dim_behavior_operating_system_sk` in order to pull in information about the user OS 
 - Join this model to `dim_behavior_browser` using `dim_behavior_browser_sk` in  order to pull in information about the user browser 
+
+{% enddocs %}
+
+{% docs fct_delta_arr_subscription_lineage_product_monthly %}
+
+Delta ARR is a measure of changes to ARR compared to the prior month. The [ARR Analysis Framework](https://internal-handbook.gitlab.io/handbook/sales/annual-recurring-revenue-arr/#arr-analysis-framework) handbook page provides more details on the analysis.
+
+The model uses the subscription_lineage grain to calculate the Delta ARR. This is a fundamental change from previous Delta ARR models at the subscription grain. When looking at the subscription grain, debook-book scenarios are not captured. Therefore, it is necessary to analyze the subscription_lineage grain for accurate product level Delta ARR changes. This model provides a method to analyze the 6 subscription linkage scenarios provided in this [Linking Subscriptions for Data Retention](https://docs.google.com/spreadsheets/d/1SYFy0Xqau1dbOm2YXmp0NvWDEkL_vIcWaFhKzwcocCM/edit#gid=0) file.
+
+The model ERD can be found [HERE](https://lucid.app/lucidchart/invitations/accept/inv_07d25d39-3076-408f-b768-67d1895ea064). 
+
+Model Validation:
+
+The model ties out 100% to mart_arr with the below 3 exceptions:
+
+1. The model removes subscriptions with data quality problems in the subscription_name_slugify field that is used for the subscription lineage. These were 5 subscriptions at the time of model creation and they do not have a material impact on the model insights.
+
+1. The model removes Storage product charges. The model is intended to focus on the paid plan tiers only.
+
+1. At the time of model creation, there were 23 subscriptions that were part of lineages where subscriptions in the lineage roll up to different Salesforce ultimate parent accounts. All of the ARR for these subscriptions is in the model; however, the model rolls up the ARR for these subscriptions to the ultimate parent account of the oldest subscription in the lineage. This results in these 23 parent accounts not tieing out 100% to mart_arr.
+
+Model Caveat:
+
+1. It should be that a subscription only has 1 paid tier plan attached to it. However, there are a small minority of subscriptions that have more than 1 product. Therefore, it is necessary to put the product tiers into an array in the model for completeness. In virtually all cases, it is 2 product tiers on the subscription with many of them having old Bronze/Starter plans in addition to Premium plans.
+
+{% enddocs %}
+
+{% docs dim_team_member %}
+
+This table contains team members work and personal information. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. The table includes information regarding current team members, new hires who have records created in Workday before their start date and team members who were terminated in 2021 onwards. Team members who were terminated before 2021 are not captured in this model at this time. The grain of this table is one row per employee_id per valid_to/valid_from combination.
 
 {% enddocs %}

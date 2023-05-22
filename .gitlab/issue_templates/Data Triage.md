@@ -17,16 +17,7 @@ All tasks below should be checked off at the end of Triage day.
 * [ ] Review each slack message request in the **#data** channel 
     - [ ] Reply to slack threads by pointing GitLab team member to the appropriate handbook page or visualization.
     - [ ] Direct GitLab team member to the channel description, which has the link to the Data team project, if the request requires more than 5 minutes of investigative effort from a Data team member.
-    - [ ] Ping [Triage Group](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#enterprise-data-program-triage-instructions) who may know more about the topic. (Slack Aliases for the Triage Groups are still under construction)
- * [ ] Review each slack message in the **#data-triage** channel, which will inform the triager of what issues have been opened in the data team project that day.  Because this channel can sometimes be difficult to keep track of, you **should** also look at [issues with the ~"Needs Triage" label](https://gitlab.com/gitlab-data/analytics/-/issues?label_name%5B%5D=Needs+Triage&scope=all&state=opened), as this label is added every hour to issues that may have been missed.
-    - [ ] For each issue opened by a non-Data Team member, label the issue by: 
-        - [ ] Adding the `Workflow::start (triage)` and `Triage` label
-        - [ ] Adding additional [labels](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling)
-        - [ ] Assigning the issue based on:
-            - [ ] the [CODEOWNERS file](https://gitlab.com/gitlab-data/analytics/blob/master/CODEOWNERS) for specific dbt model failures 
-            - [ ] the [functional DRIs](https://about.gitlab.com/handbook/business-ops/data-team/organization/#team-organization)
-            - [ ] OR to the  Manager, Data if you aren't sure. 
-* [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
+    - [ ] Ping [Triage Group](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#enterprise-data-program-triage-instructions) who may know more about the topic. You can also ping the Slack Alias for the relevant Triage Group.
 
 ### Friends and family days
 * [ ] As we currently have a no-merge Friday rule if there is an upcoming family and friends day during your triage week which affects this please ensure this message (or similar) is shared #data channel by Tuesday at the latest: 
@@ -58,9 +49,9 @@ The focus area for the Analytics Engineer are the `DBT` models including the app
     * [ ] [Opening an incident issue](https://gitlab.com/gitlab-data/analytics/-/issues/new?issuable_template=incident&issue[issue_type]=incident) when the failure requires [immediate action](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#incidents) in order to avoid or rememdy a data outage.
         * [ ] Link to all resulting incidents/issues and MRs in Slack
 
-*Occaisionally you we encounter connection errors, in which case [re-running the Airflow task](https://airflow.apache.org/docs/apache-airflow/1.10.15/dag-run.html#re-run-tasks) may be more appropriate than creating an issue. If the connection error persists then create an issue and escalate to the triage Data Engineer.*
+*Occasionally you we encounter connection errors, in which case [re-running the Airflow task](https://airflow.apache.org/docs/apache-airflow/1.10.15/dag-run.html#re-run-tasks) may be more appropriate than creating an issue. If the connection error persists then create an issue and escalate to the triage Data Engineer.*
 
-* [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** so that it is clear for the next triager what time to check for issues from.
+* [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** and **#data-triage** so that it is clear for the next triager what time to check for issues from.
 
 ### Prepare for Next Milestone 
 * [ ] Groom Issues for Next Milestone: for issues that have missing or poor requirements, add comments in the issue asking questions to the Business DRI. 
@@ -102,6 +93,7 @@ Completed with x errors and x warnings:
 
 </details>
 
+
 ## Data Engineer tasks
 
 The focus area for the Data Engineer are the Data Pipelines and Data Infrastructure. 
@@ -110,9 +102,8 @@ The focus area for the Data Engineer are the Data Pipelines and Data Infrastruct
     * [ ] Updating the [Monte Carlo](https://getmontecarlo.com/monitors) status via Slack according to the defined action
     * [ ] [Creating an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20DE) for each failure or relevant alert.
     * [ ] [Opening an incident issue](https://gitlab.com/gitlab-data/analytics/-/issues/new?issuable_template=incident&issue[issue_type]=incident) when the failure requires [immediate action](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#incidents) in order to avoid or rememdy a data outage.
-        * [ ] Link to all resulting incidents/issues and MRs in Slack
-* [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) breach by posting a message to the `#data` Slack channel using the appropriate Data Notification Template
-* [ ] [Investigate](https://gitlab.com/gitlab-org/gitlab/-/merge_requests?scope=all&state=all&label_name[]=Data%20Warehouse%3A%3AImpact%20Check&draft=no&approved_by_usernames[]=Any) all relevant merge requests to the gitlab.com database schema, create an issue for each MR in the analytics project that impacts the GitLab.com extraction. Link each issue created to this issue. A detailed explanation of how to act if there is some impact is described on the page [#gitlabcom-db-structure-changes](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#gitlabcom-db-structure-changes)
+       * [ ] Notify Data Customers of any [data refresh SLO](https://about.gitlab.com/handbook/business-technology/data-team/platform/#extract-and-load) breach by posting a message to the `#data` Slack channel using the appropriate Data Notification Template
+* [ ] Investigate the `Data Warehouse::Impact Check` [MR list](https://gitlab.com/groups/gitlab-org/-/merge_requests?scope=all&state=all&label_name[]=Data%20Warehouse%3A%3AImpact%20Check&draft=no&approved_by_usernames[]=Any) for any schema changes to the gitlab/customers database. More detail in the [handbook](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#gitlabcom-databases-structure-changes).
 * [ ] Check for any unresolved [incidents](https://getmontecarlo.com/incidents?include-normalized=false&types=freshness_anomaly%2Cvolume_anomaly%2Cdimension_anomaly%2Cfield_metrics_anomaly%2CDBT_ERRORS%2Cfreshness_sli_rule_breach%2Cvolume_sli_rule_breach%2Csql_rule_breach) (incidents with `No Status`) in Monte Carlo. **All such incidents should either be given the appropriate resolution status or have an open issue on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859)**.
 
 In addition to these tasks, the Data Engineer on triage should be focused on resolving these issues, including the backlog found on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859) as well as updating the [runbooks](https://gitlab.com/gitlab-data/runbooks) project where relevant.

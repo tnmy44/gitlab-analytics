@@ -5,7 +5,6 @@ from pandas import json_normalize
 
 
 def check_safe_models(file):
-
     with open(file) as json_file:
         first_char = json_file.read(1)
         if not first_char:

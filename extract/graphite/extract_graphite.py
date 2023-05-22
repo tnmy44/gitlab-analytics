@@ -40,7 +40,6 @@ def get_lcp_targets():
 
 
 if __name__ == "__main__":
-
     config_dict = env.copy()
 
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")

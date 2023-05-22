@@ -89,6 +89,23 @@ SELECT
 
   marketo_lead_id,
 
+    --Ptpf fields
+  is_ptpf_contact,
+  ptpf_namespace_id,
+  ptpf_score_group,
+  ptpf_score_date,
+  ptpf_past_score_group,
+
+    --Ptp fields
+  is_ptp_contact,
+  ptp_namespace_id,
+  ptp_score_group,
+  ptp_insights,
+  ptp_past_insights,
+  ptp_score_date,
+  ptp_past_score_group,
+  ptp_days_since_trial_start,
+
   -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
   last_changed
 

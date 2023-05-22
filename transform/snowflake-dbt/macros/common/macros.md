@@ -34,3 +34,9 @@ This macro maps channel path to the marketing channel name.
 This macro is used to create a monthly metric value for all-time service ping metrics. It does this by partitioning on the dim_installation_id and metrics path, ordering the partition by ping created at timestamp, and fetching the prior month all-time metric value using a LAG function. The macro then subtracts the 2 numbers to get a monthly metric value.
 
 {% enddocs %}
+
+{% docs partner_category %}
+
+Creates a partner category from Sales Qualified Source and Resale Partner Name to be used in Sales Funnel reporting.
+
+{% enddocs %}

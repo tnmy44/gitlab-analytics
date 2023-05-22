@@ -22,3 +22,13 @@ Closes
 #### Red data
 
 * [ ] Confirm no [red data](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/new-data-source/#red-data) is loaded into Snowflake or the data is masked.
+
+#### Check downstream impact
+
+Determine if there is downstream impact. I.e. additional changes to downstream models or the need for a manual full refresh in dbt. 
+
+- [ ] Downstream impact has been determined and;
+   - [ ] changes to the manifest do not have downstream impact.
+   - [ ] changes to the manifest have downstream impact and
+      - [ ] is handled in this MR.
+      - [ ] new MR and or issue is opened.

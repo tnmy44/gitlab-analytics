@@ -32,6 +32,7 @@ WITH source AS (
       source.task_subject,
       source.task_date,
       source.task_created_date,
+      FIRST_VALUE(source.task_created_date) OVER (PARTITION BY source.related_opportunity_id ORDER BY source.task_created_date ASC) AS first_opportunity_task_created_date,
       source.task_created_by_id,
       source.task_status,
       source.task_subtype,
@@ -110,7 +111,206 @@ WITH source AS (
       -- metadata
       source.last_modified_id,
       source.last_modified_date,
-      source.systemmodstamp
+      source.systemmodstamp,
+
+      -- flags
+      IFF(
+        source.task_subject LIKE '%Reminder%',
+          1,
+        0
+        )                                                                                               AS is_reminder_task,
+      IFF(
+        source.task_status = 'Completed', 
+          1,
+        0
+        )                                                                                               AS is_completed_task,
+      IFF(
+        source.owner_id != '0054M000004M9pdQAC', 
+          1,
+        0
+        )                                                                                               AS is_gainsight_integration_user_task,
+      IFF(
+        source.task_type ='Demand Gen' 
+          OR LOWER(source.task_subject) LIKE '%demand gen%'
+            OR LOWER(source.full_comments) LIKE '%demand gen%',
+          1,
+        0
+        )                                                                                               AS is_demand_gen_task,
+       IFF(
+        source.task_type ='Demo' 
+          OR LOWER(source.task_subject) LIKE '%demo%'
+            OR LOWER(source.full_comments) LIKE '%demo%',
+           1,
+        0
+        )                                                                                                AS is_demo_task,
+       IFF(
+        source.task_type ='Workshop' 
+          OR LOWER(source.task_subject) LIKE '%workshop%'
+            OR LOWER(source.full_comments) LIKE '%workshop%',
+          1,
+        0
+        )                                                                                                AS is_workshop_task,
+      IFF(
+        source.task_type LIKE '%meeting%' 
+          OR LOWER(source.task_subject) LIKE '%meeting%'
+            OR LOWER(source.full_comments) LIKE '%meeting%',
+          1,
+        0
+        )                                                                                               AS is_meeting_task,
+      IFF(
+        (
+        source.task_type='Email' 
+          AND LOWER(source.task_subject) LIKE '%[email] [out]%'
+          )
+            OR (
+                source.task_type ='Other' 
+                  AND LOWER(source.task_subject) LIKE '%email sent%'
+                  ),
+          1,
+        0
+        )                                                                                               AS is_email_task,
+      IFF(
+        source.task_subject LIKE '%[In]%', 
+          1,
+         0
+         )                                                                                              AS is_incoming_email_task,
+      IFF(
+        source.task_subject LIKE '%[Out]%', 
+          1,
+         0
+         )                                                                                              AS is_outgoing_email_task,
+      IFF(
+        is_email_task = 1
+          AND LOWER(source.task_priority) ='high',
+          1,
+        0
+        )                                                                                               AS is_high_priority_email_task,
+      IFF(
+        is_email_task = 1
+          AND LOWER(source.task_priority) ='low',
+            1,
+          0
+          )                                                                                             AS is_low_priority_email_task,
+       IFF(
+        is_email_task = 1
+          AND LOWER(source.task_priority) ='normal',
+            1,
+          0
+          )                                                                                             AS is_normal_priority_email_task,
+        IFF(
+          source.task_type='Call' 
+            OR source.task_subtype ='Call', 
+            1,
+          0
+          )                                                                                             AS is_call_task,
+        IFF(
+          is_call_task = 1
+            AND source.call_duration_in_seconds >= 60,
+            1,
+          0
+          )                                                                                             AS is_call_longer_1min_task,
+        IFF(
+          is_call_task = 1
+            AND lower(source.task_priority) ='high',
+            1,
+          0
+          )                                                                                             AS is_high_priority_call_task,
+        IFF(
+          is_call_task = 1
+            AND lower(source.task_priority) ='low',
+            1,
+          0
+          )                                                                                             AS is_low_priority_call_task,
+        IFF(
+          is_call_task = 1
+            AND lower(source.task_priority) ='normal',
+            1,
+          0
+          )                                                                                             AS is_normal_priority_call_task,
+        IFF(
+          is_call_task = 1
+            AND (
+                 source.call_disposition IN (
+                                            'Not Answered','Correct Contact: Not Answered/Other','Call - No Answer','No Number Found','Busy',
+                                            'Bad Number','Automated Switchboard','Incorrect Contact: Left Message','Not Answered (legacy)',
+                                            'Incorrect Contact: Not Answered/Other','Main Company Line - Can''t Transfer Line','',' '
+                                            )
+                  OR source.call_disposition IS NULL
+                  ),
+            1,
+          0
+          )                                                                                             AS is_not_answered_call_task,
+        IFF(
+          is_call_task = 1
+            AND source.call_disposition IN (
+                                            'CC: Answered: Info Gathered: Not Opp yet',
+                                            'CC: Answered: Not Interested','Incorrect Contact: Answered','CC: Answered: Personal Use'
+                                            ),
+            1,
+          0
+          )                                                                                             AS is_answered_meaningless_call_task,
+        IFF(
+          is_call_task = 1
+            AND source.call_disposition IN (
+                                            'CC:Answered: Info Gathered: Potential Opp',
+                                            'Correct Contact: Answered','CC: Answered: Asked for Call Back','Correct Contact: IQM Set',
+                                            'Correct Contact: Discovery Call Set','CC: Answered: Using Competition','Incorrect Contact: Answered: Gave Referral',
+                                            'Correct Contact: Answered (Do not use)','Answered (legacy)'
+                                            ),
+            1,
+          0
+          )                                                                                             AS is_answered_meaningfull_call_task,
+        IFF(
+          is_email_task = 1
+            AND source.task_created_date = first_opportunity_task_created_date,
+            1,
+          0
+          )                                                                                             AS is_opportunity_initiation_email_task,
+        IFF(
+          is_email_task = 1
+            AND source.task_created_date != first_opportunity_task_created_date,
+              1,
+            0
+            )                                                                                           AS is_opportunity_followup_email_task,
+        IFF(
+          is_call_task = 1
+            AND  source.task_created_date = first_opportunity_task_created_date,
+            1,
+          0
+          )                                                                                             AS is_opportunity_initiation_call_task,
+        IFF(
+          is_call_task = 1
+            AND  source.task_created_date != first_opportunity_task_created_date,
+            1,
+          0
+          )                                                                                             AS is_opportunity_followup_call_task,
+
+      -- Calculated averaged and percents
+       DATEDIFF(hour, source.task_date, source.task_created_date)                                       AS hours_waiting_before_task,
+       ROUND(
+        IFF(
+            is_email_task = 1,
+              hours_waiting_before_task,
+            NULL
+            ),
+          1)                                                                                            AS hours_waiting_before_email_task,
+       ROUND(
+         IFF(
+           is_call_task = 1,
+             source.call_duration_in_seconds,
+           NULL
+           ),
+        0
+        )                                                                                              AS call_task_duration_in_seconds,
+       ROUND(
+         IFF(
+           is_call_task = 1,
+             hours_waiting_before_task,
+           NULL
+           ),
+        1)                                                                                              AS hours_waiting_before_call_task
+
+
 
     FROM source
 )

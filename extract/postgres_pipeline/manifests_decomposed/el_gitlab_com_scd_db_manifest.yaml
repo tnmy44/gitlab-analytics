@@ -98,6 +98,7 @@ tables:
       , jid
       , created_at
       , updated_at
+      , has_failures
       FROM bulk_import_entities
   board_labels:
     dbt_source_model: true
@@ -268,7 +269,6 @@ tables:
       , seats
       , trial
       , seats_in_use
-      , max_seats_used
       , seats_owed
       , trial_extension_type
       FROM gitlab_subscriptions
@@ -421,6 +421,7 @@ tables:
       , CASE WHEN expires_at > '2262-01-01' THEN '2262-01-01' ELSE expires_at END AS expires_at
       , ldap
       , override
+      , member_role_id
       FROM members     
   merge_request_reviewers:
     advanced_metadata: true
@@ -542,6 +543,29 @@ tables:
       SELECT id
       , name
       FROM programming_languages
+  project_ci_cd_settings:
+    export_schema: "gitlab_com"
+    export_table: project_ci_cd_settings
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , group_runners_enabled
+      , merge_pipelines_enabled
+      , default_git_depth
+      , forward_deployment_enabled
+      , merge_trains_enabled
+      , auto_rollback_enabled
+      , keep_latest_artifact
+      , restrict_user_defined_variables
+      , job_token_scope_enabled
+      , runner_token_expiration_interval
+      , separated_caches
+      , opt_in_jwt
+      , allow_fork_pipelines_to_run_in_parent_project
+      , inbound_job_token_scope_enabled
+      FROM project_ci_cd_settings
   project_compliance_framework_settings:
     export_schema: "gitlab_com"
     export_table: project_compliance_framework_settings
@@ -795,6 +819,8 @@ tables:
       , job_title
       , NULL AS other_role
       , registration_objective
+      , provisioned_by_group_id
+      , provisioned_by_group_at
       FROM user_details
   users_security_dashboard_projects:
     dbt_source_model: true

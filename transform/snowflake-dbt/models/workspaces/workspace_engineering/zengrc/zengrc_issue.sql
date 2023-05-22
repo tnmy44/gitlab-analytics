@@ -6,6 +6,7 @@ WITH source AS (
 )
 
 SELECT
+  dim_issue_id,
   issue_id,
   issue_code,
   issue_created_at,

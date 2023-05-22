@@ -83,11 +83,11 @@ WITH account_dims_mapping AS (
 
     SELECT
 
-      {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)','true_mql_date::timestamp']) }} AS mql_event_id,
+      {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)','marketo_qualified_lead_datetime::timestamp']) }} AS mql_event_id,
 
-      true_mql_date::timestamp                                                                                            AS mql_event_timestamp,
-      true_initial_mql_date::timestamp                                                                                    AS initial_mql_event_timestamp,
-      marketo_qualified_lead_date::timestamp                                                                              AS legacy_mql_event_timestamp,
+      marketo_qualified_lead_datetime::timestamp                                                                          AS mql_event_timestamp,
+      initial_marketo_mql_date_time::timestamp                                                                            AS initial_mql_event_timestamp,
+      true_mql_date::timestamp                                                                                            AS legacy_mql_event_timestamp,
       lead_id                                                                                                             AS sfdc_record_id,
       'lead'                                                                                                              AS sfdc_record,
       {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)']) }}                                          AS crm_person_id,
@@ -97,19 +97,16 @@ WITH account_dims_mapping AS (
       person_score                                                                                                        AS person_score
 
     FROM sfdc_leads
-    WHERE true_mql_date IS NOT NULL
+    WHERE marketo_qualified_lead_datetime IS NOT NULL
 
 ), marketing_qualified_contacts AS(
 
     SELECT
 
-      {{ dbt_utils.surrogate_key(['contact_id','true_mql_date::timestamp']) }}                                            AS mql_event_id,
-      
-      true_mql_date::timestamp                                                                                                        AS mql_event_timestamp,
-      true_initial_mql_date::timestamp                                                                                                AS initial_mql_event_timestamp,
-
-marketo_qualified_lead_date::timestamp
-                   AS legacy_mql_event_timestamp,
+      {{ dbt_utils.surrogate_key(['contact_id','marketo_qualified_lead_datetime::timestamp']) }}                          AS mql_event_id,
+      marketo_qualified_lead_datetime::timestamp                                                                          AS mql_event_timestamp,
+      initial_marketo_mql_date_time::timestamp                                                                            AS initial_mql_event_timestamp,
+      true_mql_date::timestamp                                                                                            AS legacy_mql_event_timestamp,
       contact_id                                                                                                          AS sfdc_record_id,
       'contact'                                                                                                           AS sfdc_record,
       {{ dbt_utils.surrogate_key(['contact_id']) }}                                                                       AS crm_person_id,
@@ -119,7 +116,7 @@ marketo_qualified_lead_date::timestamp
       person_score                                                                                                        AS person_score
 
     FROM sfdc_contacts
-    WHERE true_mql_date IS NOT NULL
+    WHERE marketo_qualified_lead_datetime IS NOT NULL
     HAVING mql_event_id NOT IN (
                          SELECT mql_event_id
                          FROM marketing_qualified_leads
@@ -172,8 +169,6 @@ marketo_qualified_lead_date::timestamp
       account_dims_mapping.dim_parent_sales_segment_id,                                                        -- dim_parent_sales_segment_id
       account_dims_mapping.dim_parent_sales_territory_id,                                                      -- dim_parent_sales_territory_id
       account_dims_mapping.dim_parent_industry_id,                                                             -- dim_parent_industry_id
-      account_dims_mapping.dim_parent_location_country_id,                                                     -- dim_parent_location_country_id
-      account_dims_mapping.dim_parent_location_region_id,                                                      -- dim_parent_location_region_id
       {{ get_keyed_nulls('bizible_marketing_channel_path.dim_bizible_marketing_channel_path_id') }}            AS dim_bizible_marketing_channel_path_id,
 
      -- important person dates
@@ -310,7 +305,7 @@ marketo_qualified_lead_date::timestamp
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@lisvinueza",
     created_date="2020-12-01",
-    updated_date="2022-10-18"
+    updated_date="2023-05-21"
 ) }}

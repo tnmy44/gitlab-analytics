@@ -15,7 +15,8 @@
     ('charges', 'mart_charge'),
     ('dates', 'dim_date'),
     ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace'),
-    ('redis_metrics', 'wk_rpt_user_based_metric_counts_namespace_monthly')
+    ('redis_metrics_28d_user', 'wk_rpt_user_based_metric_counts_namespace_monthly'),
+    ('redis_metrics_all_time_event', 'wk_rpt_event_based_metric_counts_namespace_all_time')
 ]) }}
 
 
@@ -66,33 +67,75 @@
     FROM aggregated_metrics 
     WHERE event_action = 'action_active_users_project_repo'
   
+), p_terraform_state_api_unique_users AS (	
+  	
+    SELECT	
+      *	
+    FROM aggregated_metrics 	
+    WHERE event_action = 'p_terraform_state_api_unique_users'	
+   	
 ), user_packages AS (
 
     SELECT
       *
-    FROM redis_metrics
+    FROM redis_metrics_28d_user
     WHERE metrics_path = 'redis_hll_counters.user_packages.user_packages_total_unique_counts_monthly'
 
 ), project_repo AS (
 
     SELECT
       *
-    FROM redis_metrics
+    FROM redis_metrics_28d_user
     WHERE metrics_path = 'usage_activity_by_stage_monthly.create.action_monthly_active_users_project_repo'
 
 ), analytics_valuestream AS (
 
     SELECT
       *
-    FROM redis_metrics
+    FROM redis_metrics_28d_user
     WHERE metrics_path = 'redis_hll_counters.analytics.g_analytics_valuestream_monthly'
 
 ), ci_templates AS (
 
     SELECT
       *
-    FROM redis_metrics
+    FROM redis_metrics_28d_user
     WHERE metrics_path = 'redis_hll_counters.ci_templates.ci_templates_total_unique_counts_monthly'
+
+), packages_pushed AS (
+
+    SELECT
+      *
+    FROM redis_metrics_all_time_event
+    WHERE metrics_path = 'counts.package_events_i_package_push_package_by_deploy_token'
+
+), packages_pulled AS (
+
+    SELECT
+      *
+    FROM redis_metrics_all_time_event
+    WHERE metrics_path = 'counts.package_events_i_package_pull_package_by_guest'
+
+), single_file_edit AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'redis_hll_counters.ide_edit.g_edit_by_sfe_monthly'
+
+), mrs_created AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'redis_hll_counters.code_review.i_code_review_user_create_mr_monthly'
+
+), pipelines_devops AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'redis_hll_counters.ci_templates.p_ci_templates_implicit_auto_devops_monthly'
 
 ), sm_paid_user_metrics AS (
 
@@ -101,8 +144,10 @@
       monthly_sm_metrics.dim_subscription_id,
       NULL                                                                         AS dim_namespace_id,
       NULL                                                                         AS namespace_name,
+      NULL                                                                         AS namespace_creation_date,
       monthly_sm_metrics.dim_instance_id                                           AS uuid,
       monthly_sm_metrics.hostname,
+      monthly_sm_metrics.dim_installation_id,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}             AS dim_billing_account_id,
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                 AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
@@ -117,11 +162,13 @@
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_ping_instance_id                                      AS dim_usage_ping_id,
       monthly_sm_metrics.instance_type,
+      monthly_sm_metrics.included_in_health_measures_str,
       monthly_sm_metrics.cleaned_version,
       location_country.country_name,
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
       'Self-Managed'                                                               AS delivery_type,
+      monthly_sm_metrics.installation_creation_date,
       -- Wave 1
       DIV0(
         monthly_sm_metrics.billable_user_count, 
@@ -268,7 +315,6 @@
       monthly_sm_metrics.successful_deployments_28_days_user,
       -- Wave 5.3
       monthly_sm_metrics.geo_enabled,
-      monthly_sm_metrics.geo_nodes_all_time_event,
       monthly_sm_metrics.auto_devops_pipelines_28_days_user,
       monthly_sm_metrics.active_instance_runners_all_time_event,
       monthly_sm_metrics.active_group_runners_all_time_event,
@@ -307,6 +353,17 @@
       monthly_sm_metrics.external_status_checks_all_time_event,
       monthly_sm_metrics.paid_license_search_28_days_user,
       monthly_sm_metrics.last_activity_28_days_user,
+      -- Wave 7
+      monthly_sm_metrics.snippets_28_days_event,
+      monthly_sm_metrics.single_file_editor_28_days_user,
+      monthly_sm_metrics.merge_requests_created_28_days_event,
+      monthly_sm_metrics.merge_requests_created_28_days_user,
+      monthly_sm_metrics.merge_requests_approval_rules_28_days_event,
+      monthly_sm_metrics.custom_compliance_frameworks_28_days_event,
+      monthly_sm_metrics.projects_security_policy_28_days_event,
+      monthly_sm_metrics.merge_requests_security_policy_28_days_user,
+      monthly_sm_metrics.pipelines_implicit_auto_devops_28_days_event,
+      monthly_sm_metrics.pipeline_schedules_28_days_user,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -329,8 +386,10 @@
       monthly_saas_metrics.dim_subscription_id,
       monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
       namespaces.namespace_name,
+      namespaces.created_at                                                         AS namespace_creation_date,
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
+      NULL                                                                          AS dim_installation_id,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
@@ -345,11 +404,13 @@
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
       monthly_saas_metrics.instance_type                                            AS instance_type,
+      monthly_saas_metrics.included_in_health_measures_str                          AS included_in_health_measures_str,
       NULL                                                                          AS cleaned_version,
       NULL                                                                          AS country_name,
       NULL                                                                          AS iso_2_country_code,
       NULL                                                                          AS iso_3_country_code,
       'SaaS'                                                                        AS delivery_type,
+      NULL                                                                          AS installation_creation_date,
       -- Wave 1
       DIV0(
         monthly_saas_metrics.billable_user_count, 
@@ -430,7 +491,7 @@
       monthly_saas_metrics.analytics_28_days_user,
       monthly_saas_metrics.issues_edit_28_days_user,
       COALESCE(user_packages.distinct_users_whole_month, 0) AS user_packages_28_days_user,
-      monthly_saas_metrics.terraform_state_api_28_days_user,
+      COALESCE(p_terraform_state_api_unique_users.distinct_users, 0) AS terraform_state_api_28_days_user,
       monthly_saas_metrics.incident_management_28_days_user,
       -- Wave 3.2
       monthly_saas_metrics.auto_devops_enabled,
@@ -496,7 +557,6 @@
       monthly_saas_metrics.successful_deployments_28_days_user,
       -- Wave 5.3
       monthly_saas_metrics.geo_enabled,
-      monthly_saas_metrics.geo_nodes_all_time_event,
       monthly_saas_metrics.auto_devops_pipelines_28_days_user,
       monthly_saas_metrics.active_instance_runners_all_time_event,
       monthly_saas_metrics.active_group_runners_all_time_event,
@@ -519,8 +579,8 @@
       monthly_saas_metrics.sast_scans_all_time_event,
       monthly_saas_metrics.sast_scans_28_days_event,
       -- Wave 6.1
-      monthly_saas_metrics.packages_pushed_registry_all_time_event,
-      monthly_saas_metrics.packages_pulled_registry_all_time_event,
+      COALESCE(packages_pushed.monthly_value, 0) AS packages_pushed_registry_all_time_event,
+      COALESCE(packages_pulled.monthly_value, 0) AS packages_pulled_registry_all_time_event,
       monthly_saas_metrics.compliance_dashboard_view_28_days_user,
       monthly_saas_metrics.audit_screen_view_28_days_user,
       monthly_saas_metrics.instance_audit_screen_view_28_days_user,
@@ -535,6 +595,17 @@
       monthly_saas_metrics.external_status_checks_all_time_event,
       monthly_saas_metrics.paid_license_search_28_days_user,
       monthly_saas_metrics.last_activity_28_days_user,
+      -- Wave 7
+      monthly_saas_metrics.snippets_28_days_event,
+      COALESCE(single_file_edit.distinct_users_whole_month, 0) AS single_file_editor_28_days_user,
+      monthly_saas_metrics.merge_requests_created_28_days_event,
+      COALESCE(mrs_created.distinct_users_whole_month, 0) AS merge_requests_created_28_days_user,
+      monthly_saas_metrics.merge_requests_approval_rules_28_days_event,
+      monthly_saas_metrics.custom_compliance_frameworks_28_days_event,
+      monthly_saas_metrics.projects_security_policy_28_days_event,
+      monthly_saas_metrics.merge_requests_security_policy_28_days_user,
+      COALESCE(pipelines_devops.distinct_users_whole_month, 0) AS pipelines_implicit_auto_devops_28_days_event,
+      monthly_saas_metrics.pipeline_schedules_28_days_user,
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -552,6 +623,9 @@
     LEFT JOIN action_active_users_project_repo_users
       ON action_active_users_project_repo_users.date_month = monthly_saas_metrics.snapshot_month 
       AND action_active_users_project_repo_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN p_terraform_state_api_unique_users	
+      ON p_terraform_state_api_unique_users.date_month = monthly_saas_metrics.snapshot_month 	
+      AND p_terraform_state_api_unique_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
     LEFT JOIN user_packages
       ON user_packages.date_month = monthly_saas_metrics.snapshot_month
       AND user_packages.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
@@ -564,6 +638,21 @@
     LEFT JOIN ci_templates
       ON ci_templates.date_month = monthly_saas_metrics.snapshot_month
       AND ci_templates.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN packages_pushed
+      ON packages_pushed.month = monthly_saas_metrics.snapshot_month
+      AND packages_pushed.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN packages_pulled
+      ON packages_pulled.month = monthly_saas_metrics.snapshot_month
+      AND packages_pulled.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN single_file_edit
+      ON single_file_edit.date_month = monthly_saas_metrics.snapshot_month
+      AND single_file_edit.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN mrs_created
+      ON mrs_created.date_month = monthly_saas_metrics.snapshot_month
+      AND mrs_created.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN pipelines_devops
+      ON pipelines_devops.date_month = monthly_saas_metrics.snapshot_month
+      AND pipelines_devops.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -597,5 +686,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-09-09",
-    updated_date="2022-10-27"
+    updated_date="2023-04-14"
 ) }}

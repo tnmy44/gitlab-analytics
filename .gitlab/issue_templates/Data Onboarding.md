@@ -18,7 +18,7 @@ Welcome to the GitLab Data Program -- we're excited to have you! The goal of thi
 - [ ] Read (skim) through this full issue, just so you have a sense of what's coming.
 - [ ] Create a new issue in the Analytics project (this project). As you proceed and things are unclear, document it in the issue. Don't worry about organizing it; just brain dump it into the issue! This will help us iterate on the onboarding process. Please tag your manager and the Director of the team.
 - [ ] Read the following pages of the handbook in their entirety. Bookmark them as you should soon be making MR's to improve our documentation!
-   - [ ] [Data Team](https://about.gitlab.com/handbook/business-ops/data-team/)
+   - [ ] [Data Team](https://about.gitlab.com/handbook/business-technology/data-team/)
    - [ ] [Data Direction page](https://about.gitlab.com/handbook/business-technology/data-team/direction/) to get a sense of what our short and longer-term roadmap.
    - [ ] [Data Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/)
 - [ ] Watch @rbacovic [talk at Data Science Conference](https://www.youtube.com/watch?v=x74Koq-cNqM&list=PLQyyxph2CGupNGhGLZ1ofCxqJe_RzM7ME&index=5) that gives a phenomenal overview of how the team works.
@@ -182,11 +182,11 @@ _**THE SCRIPT SHOULD ONLY BE RUN ON YOUR GITLAB-ISSUED LAPTOP.** If you run this
 
 **Note:** If the `gl_open` command does not work inspect your `~/.zshrc` file to make sure it has the command `source make_life_easier.zsh`.
 - [ ] Configure VSCode (via the VSCode UI) with the [VSCode setup](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243?) section of Claire's post and [adding the tip](https://discourse.getdbt.com/t/how-we-set-up-our-computers-for-working-on-dbt-projects/243/10?u=tmurphy) from tmurphy later in the thread. It will add improved syntax highlighting and searching capabilities.
-- [ ] Configure VSCode (via the VSCode UI) so that all tabs are converted to 4 spaces. This will minimize messy looking diffs and provide consistency across the team.
+- [ ] Configure VSCode (via the VSCode UI) so that all tabs are converted to 2 spaces. This will minimize messy looking diffs and provide consistency across the team.
     - VSCode
         - `Editor: Detect Indentation` is deselected
         - `Editor: Insert Spaces` is selected
-        - `Editor: Tab Size` is set to 4 spaces per tab
+        - `Editor: Tab Size` is set to 2 spaces per tab
 
 ### Command Line Interface
 
@@ -411,6 +411,7 @@ There are many data sets brought into the Enterprise Data Warehouse, the followi
 - [ ] Watch [Overview of Growth Data at GitLab](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
 - [ ] Review the [Data Guide for Growth](https://about.gitlab.com/handbook/product/product-analysis/growth-data-guide/) for an overview of commonly used query snippets used by the Growth sub-group.
 - [ ] Explore the [Product Analysis handbook page](https://about.gitlab.com/handbook/product/product-analysis/) for a high level overview of how the Product Analysis team works. This page contains a number of links that should help with starting to understand how the Data team approaches Product specific data questions.
+- [ ] Read the [runbook on how to add new source tables in the gitlab-product/SaaS/postgres pipeline](https://gitlab.com/gitlab-data/runbooks/-/blob/main/Gitlab_dotcom/postgres_new_source_table_.md), to understand how we add new source tables and/or modify existing ones.
 
 #### Service Ping Deep Dive
 
@@ -571,7 +572,4 @@ Suggested bookmarks: none of these are required, but bookmarking these links wil
 - [Data Team GitLab Activity](https://gitlab.com/groups/gitlab-data/-/activity)
 - [Data Kitchen Data Ops Cookbook](https://drive.google.com/file/d/14KyYdFB-DOeD0y2rNyb2SqjXKygo10lg/view?usp=sharing) 
 - [Data Engineering Cookbook](https://drive.google.com/file/d/1Tm3GiV3P6c5S3mhfF9bm7VaKCtio-9hm/view?usp=sharing) 
-- [Ways of working (WoW) template](https://docs.google.com/document/d/1r_bn6tZjIbZ84o0QqMfSueBHQjR0MRWCGPnQoH6w45c/edit) - it allows you to establish expectations regarding your work, more details can be found [here](https://gitlab.com/gitlab-data/analytics/-/issues/9741). Recommended to use on 1:1 calls with your manager and team members you may work with. 
-        
-
-
+- [Ways of working (WoW) template](https://docs.google.com/document/d/1r_bn6tZjIbZ84o0QqMfSueBHQjR0MRWCGPnQoH6w45c/edit) - it allows you to establish expectations regarding your work, more details can be found [here](https://gitlab.com/gitlab-data/analytics/-/issues/9741). Recommended to use on 1:1 calls with your manager and team members you may work with.

@@ -30,6 +30,7 @@ WITH mart_user_request AS (
         product_stage,
         issue_epic_type,
         issue_status,
+        theme_labels,
         epic_status,
         parent_epic_path,
         parent_epic_title,
@@ -41,7 +42,6 @@ WITH mart_user_request AS (
         crm_account_health_score_color,
         parent_crm_account_sales_segment,
         technical_account_manager,
-        crm_account_owner_team,
         strategic_account_leader,
         customer_reach,
         crm_account_arr,
@@ -99,6 +99,7 @@ WITH mart_user_request AS (
         product_stage,
         issue_epic_type,
         issue_status,
+        theme_labels,
         epic_status,
         parent_epic_path,
         parent_epic_title,
@@ -116,8 +117,6 @@ WITH mart_user_request AS (
                                                                                              AS crm_account_parent_sales_segment_array,
         ARRAY_AGG(DISTINCT technical_account_manager) WITHIN GROUP (ORDER BY technical_account_manager)
                                                                                              AS crm_account_tam_array,
-        ARRAY_AGG(DISTINCT crm_account_owner_team) WITHIN GROUP (ORDER BY crm_account_owner_team)
-                                                                                             AS crm_account_owner_team_array,
         ARRAY_AGG(DISTINCT strategic_account_leader) WITHIN GROUP (ORDER BY strategic_account_leader)
                                                                                              AS crm_account_strategic_account_leader_array,
 
@@ -148,7 +147,7 @@ WITH mart_user_request AS (
             weighted_priority_score::TEXT)                                                   AS weighted_priority_score_input
 
     FROM issue_account_summary
-{{ dbt_utils.group_by(n=27)}}
+{{ dbt_utils.group_by(n=28)}}
 
 ), prep_issue_opp_zendesk_links AS (
 
@@ -187,7 +186,7 @@ WITH mart_user_request AS (
 {{ dbt_audit(
     cte_ref="issue_summary",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@lisvinueza",
     created_date="2021-12-15",
-    updated_date="2022-01-05",
+    updated_date="2023-05-21",
   ) }}

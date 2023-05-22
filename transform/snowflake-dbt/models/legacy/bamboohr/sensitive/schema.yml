@@ -103,16 +103,22 @@ models:
       - name: age_cohort
         description: As based on current data.  
       - name: gender
+      - name: gender_identity
       - name: nationality
       - name: region
+        description: Identifies the region of the employees country of residence as it is entered in Workday. 
       - name: region_modified
-        description: Identifies if employee is in NORAM, LATAM, EMEA, or JAPAC region
+        description: Identifies if employee is in NORAM, LATAM, EMEA, or JAPAC region based on their country of residence. US and Canada are NORAM, while Mexico is LATAM. All others stay the same.
       - name: gender_region
+      - name: ethnicity_region
       - name: greenhouse_candidate_id
         description: Captures the id associated to the employee in Greenhouse (our recruiting platform). This will only be applicable in Greenhouse starting 2019-12-13, and will help identify which candidates were hired.
         tests: 
             - unique   
-      - name: urg_group  
+      - name: urg_group
+        description: Identifies if the Team Member identifies their identity as one of an underrepresented group or not. Any ethnicity given that is not White, Asian or Did Not Identify is TRUE for urg_group.
+      - name: urg_region
+        description: Same definition as urg_group, but this separates US based Team Members from Non-US based Team Members
 
   - name: bamboohr_separations
     description: Provides a report of all separated team members. 
@@ -173,15 +179,5 @@ models:
       - name: termination_reason
       - name: initiated_at
       
-  - name: dim_team
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - team_id
-            - valid_from
-    columns:
-      - name: team_hierarchy_level
-        tests:
-          - accepted_values:
-              values: ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+
 

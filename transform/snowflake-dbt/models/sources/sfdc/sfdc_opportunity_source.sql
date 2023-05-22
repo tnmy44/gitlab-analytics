@@ -65,7 +65,7 @@ WITH source AS (
         {{  sfdc_source_buckets('leadsource') }}
         stagename                                       AS stage_name,
         revenue_type__c                                 AS order_type,
-        deal_path__c                                    AS deal_path,
+        {{ deal_path_cleaning('deal_path__c') }}        AS deal_path,
 
         -- opportunity information
         acv_2__c                                        AS acv,
@@ -98,14 +98,8 @@ WITH source AS (
         renewal_amount__c                               AS renewal_amount,
         {{ sales_qualified_source_cleaning('sql_source__c') }}
                                                         AS sales_qualified_source,
-        CASE
-          WHEN sales_qualified_source = 'BDR Generated' THEN 'SDR Generated'
-          WHEN sales_qualified_source = 'Partner Generated' THEN 'Channel Generated'
-          WHEN sales_qualified_source LIKE ANY ('Web%', 'Missing%', 'Other') OR sales_qualified_source IS NULL THEN 'Web Direct Generated'
-          ELSE sales_qualified_source
-        END                                             AS sales_qualified_source_grouped,
-        IFF(sales_qualified_source = 'Channel Generated', 'Partner Sourced', 'Co-sell')
-                                                        AS sqs_bucket_engagement,
+        {{ sales_qualified_source_grouped('sales_qualified_source') }}  AS sales_qualified_source_grouped,
+        {{ sqs_bucket_engagement('sales_qualified_source') }}           AS sqs_bucket_engagement,
         sdr_pipeline_contribution__c                    AS sdr_pipeline_contribution,
         solutions_to_be_replaced__c                     AS solutions_to_be_replaced,
         x3_technical_evaluation_date__c
@@ -162,6 +156,7 @@ WITH source AS (
                user_area_stamped
               )                                         AS user_segment_geo_region_area_stamped,
         stamped_opp_owner_user_role_type__c             AS crm_opp_owner_user_role_type_stamped,
+        stamped_opp_owner_user_business_unit__c         AS user_business_unit_stamped,
         stamped_opportunity_owner__c                    AS crm_opp_owner_stamped_name,
         stamped_account_owner__c                        AS crm_account_owner_stamped_name,
         sao_opportunity_owner__c                        AS sao_crm_opp_owner_stamped_name,
@@ -281,10 +276,28 @@ WITH source AS (
 
         -- flag to identify eligible booking deals, excluding jihu - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
         fp_a_master_bookings_flag__c::BOOLEAN           AS fpa_master_bookings_flag,
-
         downgrade_reason__c                             AS downgrade_reason,
         ssp_id__c                                       AS ssp_id,
         gaclientid__c                                   AS ga_client_id,
+
+        -- vsa data - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/customer-success-operations/-/issues/2399
+        vsa_readout__c                                  AS vsa_readout,
+        vsa_start_date_net_arr__c                       AS vsa_start_date_net_arr,
+        vsa_start_date__c                               AS vsa_start_date,
+        vsa_url__c                                      AS vsa_url,
+        vsa_status__c                                   AS vsa_status,
+        vsa_end_date__c                                 AS vsa_end_date,
+
+        -- original issue: https://gitlab.com/gitlab-com/sales-team/field-operations/customer-success-operations/-/issues/2464
+        military_invasion_comments__c                   AS military_invasion_comments,
+        pre_military_invasion_arr__c                    AS pre_military_invasion_arr,
+        military_invasion_risk_scale__c                 AS military_invasion_risk_scale,
+        downgrade_details__c                            AS downgrade_details,
+        won_arr_basis_for_clari__c                      AS won_arr_basis_for_clari,
+        arr_basis_for_clari__c                          AS arr_basis_for_clari,
+        forecasted_churn_for_clari__c                   AS forecasted_churn_for_clari,
+        override_arr_basis_clari__c                     AS override_arr_basis_clari,
+        
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',

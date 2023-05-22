@@ -130,9 +130,9 @@ The name of the [product group](https://gitlab.com/gitlab-com/www-gitlab-com/blo
 
 {% enddocs %}
 
-{% docs product_category_ping_metric %}
+{% docs instrumentation_class_ping_metric %}
 
-The name of the [product category](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/categories.yml) (ex. audit_events, integrations, continuous_delivery, etc)
+The name of the [instrumentation class](https://docs.gitlab.com/ee/development/service_ping/metrics_instrumentation.html#nomenclature) (ex. DatabaseMetric, RedisMetric, RedisHLLMetric, etc)
 
 {% enddocs %}
 
@@ -463,13 +463,77 @@ The concatenation of major and minor version, easily joined to `dim_gitlab_relea
 
 {% docs major_minor_version_id %}
 
-The id of the major minor version, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_id` is 1306. This id is intended to facilitate easy filtering on versions
+The id of the major minor version, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_id` is 1306. This id is intended to facilitate easy filtering on versions. To be replaced with `major_minor_version_num`.
+
+{% enddocs %}
+
+{% docs major_minor_version_num %}
+
+The numeric variation of `major_minor_version`, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_num` is 1306. This id is intended to facilitate easy ordering on versions.
+
+{% enddocs %}
+
+{% docs app_release_major_minor_id %}
+
+The natural key of dim_app_release_major_minor. This natural key is defined as the concatenation of the `application` and the major minor version. For example, for the GitLab version 13.6.2, the `app_release_major_minor_id` is `GiLab-13.06`.
+
+{% enddocs %}
+
+{% docs dim_app_release_major_minor_sk %}
+
+Surrogate key of dim_app_release_major_minor. Currently identified by hashing the major_minor_version field combined with the application field.
+
+{% enddocs %}
+
+{% docs dim_latest_available_app_release_major_minor_sk %}
+
+The latest avaiable dim_app_release_major_minor_sk at the moment the ping is sent.
 
 {% enddocs %}
 
 {% docs version_is_prerelease %}
 
 Boolean flag which is set to True if the version is a pre-release Version of the GitLab App. See more details [here](https://docs.gitlab.com/ee/policy/maintenance.html). This is defined as `IFF(version ILIKE '%-pre', TRUE, FALSE)`.
+
+{% enddocs %}
+
+{% docs release_date %}
+
+Release date of the GitLab version.
+
+{% enddocs %}
+
+{% docs version_number %}
+
+The sequential number of the major_minor_version.
+
+{% enddocs %}
+
+{% docs next_version_release_date %}
+
+Release date of the next GitLab version.
+
+{% enddocs %}
+
+{% docs days_after_version_release_date %}
+
+The number of days between the date the ping was sent and the release date of the version associated with the ping. When `version_is_prerelease = TRUE`, then this field is less than 0.
+
+There are some cases when `version_is_prerelease = FALSE` and the field is still lower than 0. These cases where manually set to zero in the data model.
+
+{% enddocs %}
+
+{% docs latest_version_available_at_ping_creation %}
+
+The most recent version that is available at the time the ping is created. 
+
+{% enddocs %}
+
+{% docs versions_behind_latest_at_ping_creation %}
+
+The number of versions by which the ping-associated version lags behind. When `version_is_prerelease = TRUE`, then this field is less than 0.
+
+There are some cases when `version_is_prerelease = FALSE` and the field is still lower than 0. These cases where manually set to zero in the data model.
 
 {% enddocs %}
 
@@ -599,6 +663,18 @@ The name of the ultimate parent account coming from SFDC
 {% docs parent_crm_account_industry %}
 
 The industry of the ultimate parent account from SFDC
+
+{% enddocs %}
+
+{% docs parent_crm_account_owner_team %}
+
+The owner team of the ultimate parent account from SFDC
+
+{% enddocs %}
+
+{% docs parent_crm_account_territory %}
+
+The sales territory of the ultimate parent account from SFDC
 
 {% enddocs %}
 
@@ -1631,6 +1707,25 @@ The form node name on a `focus_form` event. This appears as `ff_nodename` in the
 
 {% enddocs %}
 
+
+{% docs namespace_type %}
+
+The type of namespace: Group, User, or Project.
+
+{% enddocs %}
+
+{% docs visibility_level %}
+
+The visibility setting for the namespace or project: public, private, or internal. More information about namespace and project visibility [here](https://docs.gitlab.com/ee/user/public_access.html)
+
+{% enddocs %}
+
+{% docs page_url_fragment %}
+
+Fragment aka anchor. Ex. For gitlab.com/projects/new#blank_project, the page_url_fragment is `blank_project`
+
+{% enddocs %}
+
 {% docs experiment_name %}
 
 The name of the experiment as per implementation. More details on [Experimentation Design](https://about.gitlab.com/handbook/product/product-analysis/experimentation/#event-requirements)
@@ -1705,5 +1800,286 @@ Customer [health score for CI use case adoption](https://about.gitlab.com/handbo
 
 {% enddocs %}
 
+{% docs dim_oldest_subscription_in_cohort_id %}
 
+Zuora subscriptions can have lineages of linked subscriptions. This field provides the dimension key for the oldest subscription in a lineage. This key can be used to group a subscription lineage together for analysis.
 
+{% enddocs %}
+
+{% docs product_tier_name  %}
+
+A GitLab offering that provides a set of features at a particular price point such as Free, Premium, or Ultimate. This field also includes the delivery type such as SaaS or Self-Managed.
+
+{% enddocs %}
+
+{% docs previous_month_product_tier_name  %}
+
+This is the previous month's product tier. A GitLab offering that provides a set of features at a particular price point such as Free, Premium, or Ultimate. This field also includes the delivery type such as SaaS or Self-Managed.
+
+{% enddocs %}
+
+{% docs product_delivery_type %}
+
+This is the delivery type of GitLab to include either SaaS or Self-Managed.
+
+{% enddocs %}
+
+{% docs previous_month_product_delivery_type %}
+
+This is the previous month delivery type. Includes either SaaS or Self-Managed.
+
+{% enddocs %}
+
+{% docs product_ranking %}
+
+This is a field used for analysis and ranks the product tiers. Ultimate is 3, Premium is 2, and Bronze/Starter is 1.
+
+{% enddocs %}
+
+{% docs previous_month_product_ranking %}
+
+This is the previous month product ranking. Ultimate is 3, Premium is 2, and Bronze/Starter is 1.
+
+{% enddocs %}
+
+{% docs type_of_arr_change %}
+
+Types of Delta ARR:
+
+new - ARR for the customer’s first paying month/quarter
+expansion - ARR increased from previous month/quarter
+contraction - ARR decreased from previous month/quarter
+churn - ARR decreased all the way to zero for a customer who was paying in the previous month/quarter
+no impact - ARR remained the same from previous month/quarter
+
+{% enddocs %}
+
+{% docs beg_arr %}
+
+The ARR at the beginning of an arr_month.
+
+{% enddocs %}
+
+{% docs beg_quantity %}
+
+The number of licensed users at the beginning of an arr_month.
+
+{% enddocs %}
+
+{% docs seat_change_arr %}
+
+A change in ARR due to the quantity of seats purchased.
+
+{% enddocs %}
+
+{% docs seat_change_quantity %}
+
+A change in the quantity of seats purchased.
+
+{% enddocs %}
+
+{% docs price_change_arr %}
+
+The price changes represents discounts provided to the customer. 
+
+{% enddocs %}
+
+{% docs tier_change_arr %}
+
+Change in ARR due to an upward or downward change in the product purchased (i.e., from Premium up to Ultimate).
+
+{% enddocs %}
+
+{% docs end_arr %}
+
+The ARR at the end of the arr_month. 
+
+{% enddocs %}
+
+{% docs end_quantity %}
+
+The number of licensed users at the end of the arr_month.
+
+{% enddocs %}
+
+{% docs annual_price_per_seat_change %}
+
+Change in the price per seat paid in the arr_month.
+
+{% enddocs %}
+
+{% docs namespace_is_ultimate_parent %}
+
+Boolean flag which is set to True if the namespace is the ultimate parent.
+
+{% enddocs %}
+
+{% docs subscription_action_type %}
+
+The action to be carried out on the subscription. For example, 'Amend Subscription' or 'Renew Subscription'
+
+{% enddocs %}
+
+{% docs dim_app_release_sk %}
+
+Unique identifier of an application (app) release. Identifies the combination of major, minor and patch version of a release from an specific application.
+
+{% enddocs %}
+
+{% docs app_release_id %}
+
+The unique identifier of the release of an application.
+
+{% enddocs %}
+
+{% docs vsa_readout %}
+
+The sentiment from the Value Stream Assessment readout meeting.
+
+{% enddocs %}
+
+{% docs vsa_start_date_net_arr %}
+
+The stamped Opportunity Net ARR when Value Stream Assessment start date is populated and is after the opportunity created date. Otherwise, will stamp $0.
+
+{% enddocs %}
+
+{% docs vsa_start_date %}
+
+Date of the Value Stream Assessment kickoff call with the prospect/customer.
+
+{% enddocs %}
+
+{% docs vsa_url %}
+
+The URL to the Value Stream Assesment readout presentation.
+
+{% enddocs %}
+
+{% docs vsa_status %}
+
+The status of the Value Stream Assessment.
+
+{% enddocs %}
+
+{% docs vsa_end_date %}
+
+The date the Value Stream Assessment readout is presented to the prospect/customer.
+
+{% enddocs %}
+
+{% docs installation_creation_date %}
+
+Based off of the [`installation_creation_date`](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/license/20230228110448_installation_creation_date.yml) 
+Service Ping metric. For installations where the root user (id = 1) is not deleted, it returns the root user creation date. For installations where the root user 
+is deleted, it returns the earliest available user creation date.
+
+{% enddocs %}
+
+{% docs last_at_risk_update_comments %}
+
+The most recent Account-level At-Risk Update timeline activity in Gainsight, synced to Salesforce.
+
+{% enddocs %}
+
+{% docs pre_military_invasion_arr %}
+
+The original amount prior to impact of military invasion(s).
+
+{% enddocs %}
+
+{% docs won_arr_basis_for_clari %}
+
+This will be used for forecasting, and depending on the Renewal Forecast field would calculate the Won ARR Basis portion for a given opp. For example, reduce ARR Basis being booked if Net ARR is negative in contractions.
+
+{% enddocs %}
+
+{% docs arr_basis_for_clari %}
+
+This is the ARR Basis of the opportunity, except for contract resets where we are taking it from the subscription. In some cases where we have more than 1 credit opp, we would require a manual override of this value in order to capture the ARR Basis for all the subscriptions being consolidated.
+
+{% enddocs %}
+
+{% docs forecasted_churn_for_clari %}
+
+This field forecasts churn before the opportunity is closed as lost or won if it is contraction.
+
+{% enddocs %}
+
+{% docs override_arr_basis_clari %}
+
+Field that allows for manual overrides in the event when the reset is a consolidation of more than 1 subscription.  This field allows us to manually override the ARR Basis (for Clari) value since we would need to take into account all of the subscriptions consolidated.
+
+{% enddocs %}
+
+{% docs military_invasion_comments %}
+
+Field where rep can add in more details as to why and how ARR was impacted by military invasions.
+
+{% enddocs %}
+
+{% docs military_invasion_risk_scale %}
+
+This field is for tracking the risk of this deal being impacted by military invasions.  Definitions can be found in the Internal Sales HB under "Sales Forecasting.
+
+{% enddocs %}
+
+{% docs downgrade_details %}
+
+Field where rep can add in more details as to why the customer has downgraded.
+
+{% enddocs %}
+
+{% docs dim_crm_opportunity_id_current_open_renewal %}
+
+The current open renewal opportunity mapped to a subscription.
+
+{% enddocs %}
+
+{% docs dim_crm_opportunity_id_closed_lost_renewal %}
+
+The closed lost renewal opportunity, where applicable, mapped mapped to a subscription.
+
+{% enddocs %}
+
+{% docs dim_plan_sk %}
+
+The surrogate key for joining to the `dim_plan` table
+
+{% enddocs %}
+
+{% docs dim_plan_id %}
+
+The id of the plan as given by GitLab.com
+
+{% enddocs %}
+
+{% docs plan_id_modified %}
+
+Modified plan id to conform legacy gold and silver plan ids to ultimate and premium plan ids.
+
+{% enddocs %}
+
+{% docs plan_name %}
+
+The name of the plan as given by GitLab.com
+
+{% enddocs %}
+
+{% docs plan_name_modified %}
+
+Modified plan name to conform legacy gold and silver plan names to ultimate and premium plan names.
+
+{% enddocs %}
+
+{% docs plan_title %}
+
+The title of the plan as given by GitLab.com
+
+{% enddocs %}
+
+{% docs is_plan_paid %}
+
+A flag to indicate if the plan is a paid plan or not.
+
+{% enddocs %}

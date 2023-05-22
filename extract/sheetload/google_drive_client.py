@@ -137,7 +137,6 @@ class GoogleDriveClient:
 
         while True:
             if page_token:
-
                 results = (
                     self.service.files()
                     .list(
@@ -150,7 +149,6 @@ class GoogleDriveClient:
                 )
 
             else:
-
                 results = (
                     self.service.files()
                     .list(

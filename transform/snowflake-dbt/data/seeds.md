@@ -81,3 +81,9 @@ https://docs.gitlab.com/ee/api/access_requests.html
 A manual list of top level namespace paths and ids that should be considered internal to GitLab.  There is, at this time, no system of record for this information.
 
 {% enddocs %}
+
+{% docs net_iacv_to_net_arr_ratio %}
+
+Prior to using Net Annual Recurring Revneue (ARR) as for financial reporting, GitLab calculated Net Incremental Annual Contract Value (IACV). This CSV maps the ratio between the two metrics by order type and user segment so older opportunities with IACV can be adjusted to show ARR.
+
+{% enddocs %}

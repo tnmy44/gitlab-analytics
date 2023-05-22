@@ -450,6 +450,8 @@ models:
     - name: billable_user_count
     - name: license_utilization
     - name: max_historical_user_count
+    - name: included_in_health_measures_str
+      description: '{{ doc("included_in_health_measures_str") }}'
     - name: umau_28_days_user
       description: '{{ doc("umau_28_days_user_desc") }}'
     - name: action_monthly_active_users_project_repo_28_days_user
@@ -770,10 +772,6 @@ models:
         - dbt_utils.at_least_one
     - name: geo_enabled
       description: '{{ doc("geo_enabled_desc") }}'
-      tests:
-        - dbt_utils.at_least_one
-    - name: geo_nodes_all_time_event
-      description: '{{ doc("geo_nodes_all_time_event_desc") }}'
       tests:
         - dbt_utils.at_least_one
     - name: auto_devops_pipelines_28_days_user
@@ -838,6 +836,8 @@ models:
     - name: billable_user_count
     - name: license_utilization
     - name: max_historical_user_count
+    - name: included_in_health_measures_str
+      description: '{{ doc("included_in_health_measures_str") }}'
     - name: umau_28_days_user
       description: '{{ doc("umau_28_days_user_desc") }}'
     - name: action_monthly_active_users_project_repo_28_days_user
@@ -1160,10 +1160,6 @@ models:
       description: '{{ doc("geo_enabled_desc") }}'
       tests:
         - dbt_utils.at_least_one
-    - name: geo_nodes_all_time_event
-      description: '{{ doc("geo_nodes_all_time_event_desc") }}'
-      tests:
-        - dbt_utils.at_least_one
     - name: auto_devops_pipelines_28_days_user
       description: '{{ doc("auto_devops_pipelines_28_days_user_desc") }}'
       tests:
@@ -1194,6 +1190,10 @@ models:
       description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
     - name: is_latest_data
       description: Flags the row with the most recently received data from Usage Ping
+    - name: installation_creation_date
+      description: '{{ doc("installation_creation_date") }}'
+    - name: dim_installation_id
+      description: '{{ doc("dim_installation_id") }}'
 
 - name: rpt_event_xmau_metric_monthly_snapshot_model
   description: Simpler incremental version of the rpt_event_xmau_metric_monthly snapshot model

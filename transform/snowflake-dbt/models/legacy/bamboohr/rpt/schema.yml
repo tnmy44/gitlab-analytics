@@ -37,7 +37,7 @@ models:
       description: This identifies the breakout of the data. 
       tests:
         - accepted_values:
-                values: ['all_attributes_breakout', 'kpi_breakout','eeoc_breakout','division_breakout','department_breakout']
+                values: ['all_attributes_breakout', 'kpi_breakout','eeoc_breakout','division_breakout','department_breakout', 'division_group_breakout']
     - name: department
     - name: division
     - name: eeoc_field_name

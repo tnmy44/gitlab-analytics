@@ -74,7 +74,6 @@ def extract_logs(
     formatted_end_date = utils.format_datetime(end_date)
 
     for domain in domains:
-
         while True:
             if page_token:
                 try:

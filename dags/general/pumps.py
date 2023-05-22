@@ -59,7 +59,6 @@ next_execution_date = "{{ next_execution_date }}"
 # Loop through pumps to create tasks
 
 for pump_model in pumps:
-
     task_identifier = pump_model["model"].replace("_", "-")
 
     run_pumps_command = f"""
@@ -88,8 +87,8 @@ for pump_model in pumps:
             SNOWFLAKE_LOAD_WAREHOUSE,
         ],
         env_vars=pod_env_vars,
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity("production"),
+        tolerations=get_toleration("production"),
         arguments=[run_pumps_command],
         dag=dag,
     )

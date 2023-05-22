@@ -198,7 +198,6 @@ def end_to_end_process(
             and get_file_size(file_to_measure=file_name_source_original)
             >= COLUMN_LIMIT_SIZE_SNOWFLAKE_MB
         ):
-
             raw_json = load_json_file(source_file=file_name_source_original)
             reduced_json = reduce_manifest_file(raw_json=raw_json)
             save_json_file(
@@ -288,5 +287,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-
     main()

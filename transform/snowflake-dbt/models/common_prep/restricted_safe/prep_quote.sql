@@ -13,7 +13,8 @@ WITH sfdc_zqu_quote_source AS (
       zqu__status                                   AS quote_status,
       zqu__primary                                  AS is_primary_quote,
       quote_entity,
-      zqu__start_date                               AS quote_start_date
+      zqu__start_date                               AS quote_start_date,
+      zqu__subscriptiontype                         AS subscription_action_type
     FROM sfdc_zqu_quote_source
 
 )
@@ -23,5 +24,5 @@ WITH sfdc_zqu_quote_source AS (
     created_by="@snalamaru",
     updated_by="@chrissharp",
     created_date="2021-01-07",
-    updated_date="2022-10-04"
+    updated_date="2023-03-15"
 ) }}

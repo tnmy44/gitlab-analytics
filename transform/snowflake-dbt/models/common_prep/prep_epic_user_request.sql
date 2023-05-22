@@ -5,7 +5,7 @@
 {{ simple_cte([
     ('epic', 'gitlab_dotcom_epics_source'),
     ('map_namespace_internal', 'map_namespace_internal'),
-    ('map_namespace_lineage', 'map_namespace_lineage'),
+    ('prep_namespace', 'prep_namespace'),
     ('zendesk_ticket', 'zendesk_tickets_source'),
     ('zendesk_organization', 'zendesk_organizations_source'),
     ('sfdc_opportunity_source', 'sfdc_opportunity_source')
@@ -23,12 +23,12 @@
 ), epic_extended AS (
 
     SELECT
-      map_namespace_lineage.dim_namespace_ultimate_parent_id,
+      prep_namespace.ultimate_parent_namespace_id AS dim_namespace_ultimate_parent_id,
       epic.*
     FROM epic
-    INNER JOIN map_namespace_lineage
-      ON epic.group_id = map_namespace_lineage.dim_namespace_id
-    WHERE map_namespace_lineage.dim_namespace_ultimate_parent_id = 9970 -- Gitlab-org group namespace id
+    INNER JOIN prep_namespace
+      ON epic.group_id = prep_namespace.dim_namespace_id
+    WHERE prep_namespace.ultimate_parent_namespace_id = 9970 -- Gitlab-org group namespace id
 
 ),  gitlab_epic_description_parsing AS (
 
@@ -269,5 +269,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2022-01-10"
+    updated_date="2023-03-14"
 ) }}

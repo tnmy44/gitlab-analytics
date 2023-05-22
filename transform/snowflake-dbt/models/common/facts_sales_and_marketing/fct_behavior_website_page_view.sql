@@ -1,6 +1,7 @@
 {{ config(
         materialized = "incremental",
         unique_key = "fct_behavior_website_page_view_sk",
+        on_schema_change='sync_all_columns',
         tags=['product']
 ) }}
 
@@ -73,7 +74,7 @@
       page_views_w_clean_url.user_snowplow_domain_id,
 
       -- GitLab Standard Context
-      page_views_w_clean_url.gsc_environment                                        AS environment,
+      page_views_w_clean_url.gsc_environment,
       page_views_w_clean_url.gsc_extra,
       page_views_w_clean_url.gsc_google_analytics_client_id,
       page_views_w_clean_url.gsc_plan,
