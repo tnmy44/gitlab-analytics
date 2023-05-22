@@ -6,7 +6,7 @@
     ('mart_crm_opportunity_stamped_hierarchy_hist', 'mart_crm_opportunity_stamped_hierarchy_hist'), 
     ('mart_crm_touchpoint', 'mart_crm_touchpoint'),
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
-    ('dim_crm_account', 'dim_crm_account'),
+    ('mart_crm_account', 'mart_crm_account'),
     ('dim_date','dim_date')
 ]) }}
 , upa_base AS ( --pulls every account and it's UPA
@@ -14,7 +14,7 @@
     SELECT 
       dim_parent_crm_account_id,
       dim_crm_account_id
-    FROM dim_crm_account
+    FROM mart_crm_account
 ), first_order_opps AS ( -- pulls only FO CW Opps and their UPA/Account ID
 
     SELECT
@@ -78,7 +78,7 @@
   --IDs
       person_base.dim_crm_person_id,
       person_base.dim_crm_account_id,
-      dim_crm_account.dim_parent_crm_account_id,
+      mart_crm_account.dim_parent_crm_account_id,
       dim_crm_person.sfdc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
   
@@ -96,8 +96,12 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
-      dim_crm_account.is_first_order_available,
+      mart_crm_account.is_first_order_available,
       person_order_type_final.person_order_type,
+
+      --Account Data
+      mart_crm_account.parent_crm_account_lam,
+      mart_crm_account.parent_crm_account_lam_dev_count,
   
   --Touchpoint Data
       'Person Touchpoint' AS touchpoint_type,
@@ -116,6 +120,14 @@
       mart_crm_touchpoint.bizible_referrer_page,
       mart_crm_touchpoint.bizible_referrer_page_raw,
       mart_crm_touchpoint.bizible_integrated_campaign_grouping,
+      mart_crm_touchpoint.bizible_form_page_utm_content,
+      mart_crm_touchpoint.bizible_form_page_utm_budget,
+      mart_crm_touchpoint.bizible_form_page_utm_allptnr,
+      mart_crm_touchpoint.bizible_form_page_utm_partnerid,
+      mart_crm_touchpoint.bizible_landing_page_utm_content,
+      mart_crm_touchpoint.bizible_landing_page_utm_budget,
+      mart_crm_touchpoint.bizible_landing_page_utm_allptnr,
+      mart_crm_touchpoint.bizible_landing_page_utm_partnerid,
       mart_crm_touchpoint.touchpoint_segment,
       mart_crm_touchpoint.gtm_motion,
       mart_crm_touchpoint.pipe_name,
@@ -138,8 +150,8 @@
       ON person_base.dim_crm_person_id = dim_crm_person.dim_crm_person_id
     LEFT JOIN upa_base
     ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
-    LEFT JOIN dim_crm_account
-    ON person_base.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+    LEFT JOIN mart_crm_account
+    ON person_base.dim_crm_account_id = mart_crm_account.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     LEFT JOIN person_order_type_final
@@ -153,7 +165,7 @@
     --IDs
       opp.dim_crm_opportunity_id,
       opp.dim_crm_account_id,
-      dim_crm_account.dim_parent_crm_account_id,
+      mart_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
     
     --Opp Data
@@ -181,6 +193,10 @@
       opp.crm_opp_owner_geo_stamped,
       opp.parent_crm_account_demographics_upa_country,
       opp.parent_crm_account_demographics_territory,
+
+      --Account Data
+      mart_crm_account.parent_crm_account_lam,
+      mart_crm_account.parent_crm_account_lam_dev_count,
     
     -- Touchpoint Data
       'Attribution Touchpoint' AS touchpoint_type,
@@ -198,6 +214,14 @@
       mart_crm_attribution_touchpoint.bizible_medium,
       mart_crm_attribution_touchpoint.bizible_referrer_page,
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
+      mart_crm_attribution_touchpoint.bizible_form_page_utm_content,
+      mart_crm_attribution_touchpoint.bizible_form_page_utm_budget,
+      mart_crm_attribution_touchpoint.bizible_form_page_utm_allptnr,
+      mart_crm_attribution_touchpoint.bizible_form_page_utm_partnerid,
+      mart_crm_attribution_touchpoint.bizible_landing_page_utm_content,
+      mart_crm_attribution_touchpoint.bizible_landing_page_utm_budget,
+      mart_crm_attribution_touchpoint.bizible_landing_page_utm_allptnr,
+      mart_crm_attribution_touchpoint.bizible_landing_page_utm_partnerid,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.gtm_motion,
@@ -355,9 +379,9 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
-    LEFT JOIN dim_crm_account
-      ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=62)}}
+    LEFT JOIN mart_crm_account
+      ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
+    {{dbt_utils.group_by(n=72)}}
     
 ), cohort_base_combined AS (
   
@@ -413,6 +437,10 @@
       crm_opp_owner_geo_stamped,
       parent_crm_account_demographics_upa_country,
       parent_crm_account_demographics_territory,
+
+  --Account Data
+      -- parent_crm_account_lam,
+      -- parent_crm_account_lam_dev_count,
   
   --Touchpoint Data
       COALESCE(person_base_with_tp.bizible_touchpoint_date,opp_base_with_batp.bizible_touchpoint_date) AS bizible_touchpoint_date, 
@@ -440,6 +468,14 @@
       COALESCE(person_base_with_tp.bizible_count_u_shaped,opp_base_with_batp.bizible_count_u_shaped) AS bizible_count_u_shaped, 
       COALESCE(person_base_with_tp.is_fmm_influenced,opp_base_with_batp.is_fmm_influenced) AS is_fmm_influenced, 
       COALESCE(person_base_with_tp.is_fmm_sourced,opp_base_with_batp.is_fmm_sourced) AS is_fmm_sourced,
+      COALESCE(person_base_with_tp.bizible_form_page_utm_content,opp_base_with_batp.bizible_form_page_utm_content) AS bizible_form_page_utm_content, 
+      COALESCE(person_base_with_tp.bizible_form_page_utm_budget,opp_base_with_batp.bizible_form_page_utm_budget) AS bizible_form_page_utm_budget, 
+      COALESCE(person_base_with_tp.bizible_form_page_utm_allptnr,opp_base_with_batp.bizible_form_page_utm_allptnr) AS bizible_form_page_utm_allptnr, 
+      COALESCE(person_base_with_tp.bizible_form_page_utm_partnerid,opp_base_with_batp.bizible_form_page_utm_partnerid) AS bizible_form_page_utm_partnerid, 
+      COALESCE(person_base_with_tp.bizible_landing_page_utm_content,opp_base_with_batp.bizible_landing_page_utm_content) AS bizible_landing_page_utm_content, 
+      COALESCE(person_base_with_tp.bizible_landing_page_utm_budget,opp_base_with_batp.bizible_landing_page_utm_budget) AS bizible_landing_page_utm_budget, 
+      COALESCE(person_base_with_tp.bizible_landing_page_utm_allptnr,opp_base_with_batp.bizible_landing_page_utm_allptnr) AS bizible_landing_page_utm_allptnr, 
+      COALESCE(person_base_with_tp.bizible_landing_page_utm_partnerid,opp_base_with_batp.bizible_landing_page_utm_partnerid) AS bizible_landing_page_utm_partnerid, 
       new_lead_created_sum,
       count_true_inquiry,
       inquiry_sum, 
@@ -566,5 +602,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-02-15",
-    updated_date="2023-05-17",
+    updated_date="2023-05-22",
   ) }}

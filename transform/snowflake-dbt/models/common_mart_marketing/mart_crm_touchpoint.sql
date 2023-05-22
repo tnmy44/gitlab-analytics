@@ -38,6 +38,14 @@
       dim_crm_touchpoint.bizible_medium,
       dim_crm_touchpoint.bizible_referrer_page,
       dim_crm_touchpoint.bizible_referrer_page_raw,
+      dim_crm_touchpoint.bizible_form_page_utm_content,
+      dim_crm_touchpoint.bizible_form_page_utm_budget,
+      dim_crm_touchpoint.bizible_form_page_utm_allptnr,
+      dim_crm_touchpoint.bizible_form_page_utm_partnerid,
+      dim_crm_touchpoint.bizible_landing_page_utm_content,
+      dim_crm_touchpoint.bizible_landing_page_utm_budget,
+      dim_crm_touchpoint.bizible_landing_page_utm_allptnr,
+      dim_crm_touchpoint.bizible_landing_page_utm_partnerid,
       dim_crm_touchpoint.bizible_salesforce_campaign,
       dim_crm_touchpoint.bizible_integrated_campaign_grouping,
       dim_crm_touchpoint.touchpoint_segment,
@@ -333,5 +341,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-02-18",
-    updated_date="2023-05-15"
+    updated_date="2023-05-22"
 ) }}
