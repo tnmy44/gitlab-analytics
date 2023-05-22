@@ -9,6 +9,7 @@ from airflow_utils import (
     clone_repo_cmd,
     gitlab_defaults,
     slack_failed_task,
+    REPO_BASE_PATH,
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
@@ -42,9 +43,7 @@ default_args = {
 # Create the DAG
 dag = DAG("data_pumps", default_args=default_args, schedule_interval="0 5 * * *")
 
-airflow_home = env["AIRFLOW_HOME"]
-
-with open(f"{airflow_home}/analytics/pump/pumps.yml", "r") as file:
+with open(f"{REPO_BASE_PATH}/analytics/pump/pumps.yml", "r") as file:
     try:
         stream = safe_load(file)
     except YAMLError as exc:

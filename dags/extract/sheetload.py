@@ -13,6 +13,7 @@ from airflow_utils import (
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
+    REPO_BASE_PATH,
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
@@ -56,9 +57,7 @@ default_args = {
     "dagrun_timeout": timedelta(hours=2),
 }
 
-airflow_home = env["AIRFLOW_HOME"]
-
-with open(f"{airflow_home}/analytics/extract/sheetload/sheets.yml", "r") as file:
+with open(f"{REPO_BASE_PATH}/extract/sheetload/sheets.yml", "r") as file:
     try:
         stream = safe_load(file)
     except YAMLError as exc:

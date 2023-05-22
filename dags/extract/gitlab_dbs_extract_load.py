@@ -14,6 +14,7 @@ from airflow_utils import (
     gitlab_defaults,
     slack_failed_task,
     gitlab_pod_env_vars,
+    REPO_BASE_PATH,
 )
 
 from kubernetes_helpers import get_affinity, get_toleration

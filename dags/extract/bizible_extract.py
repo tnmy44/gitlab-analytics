@@ -11,6 +11,7 @@ from airflow_utils import (
     gitlab_defaults,
     slack_failed_task,
     gitlab_pod_env_vars,
+    REPO_BASE_PATH,
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
@@ -61,7 +62,7 @@ def extract_manifest(file_path):
 
 
 manifest = extract_manifest(
-    "/opt/airflow/dags/repo/extract/bizible/manifests/el_bizible_tables.yaml"
+    f"{REPO_BASE_PATH}/extract/bizible/manifests/el_bizible_tables.yaml"
 )
 tables = manifest.get("tables")
 

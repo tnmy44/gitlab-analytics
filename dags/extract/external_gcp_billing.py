@@ -12,6 +12,7 @@ from airflow_utils import (
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
+    REPO_BASE_PATH,
 )
 
 from kube_secrets import (
@@ -86,9 +87,6 @@ dag = DAG(
     concurrency=1,
 )
 
-
-airflow_home = env["AIRFLOW_HOME"]
-
 external_table_run_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt run-operation stage_external_sources \
@@ -108,7 +106,7 @@ dbt_external_table_run = KubernetesPodOperator(
 )
 
 with open(
-    f"{airflow_home}/analytics/extract/gcs_external/src/gcp_billing/gcs_external.yml",
+    f"{REPO_BASE_PATH}/extract/gcs_external/src/gcp_billing/gcs_external.yml",
     "r",
 ) as yaml_file:
     try:

@@ -18,6 +18,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    REPO_BASE_PATH,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -39,9 +40,8 @@ default_args = {
     "dagrun_timeout": timedelta(hours=2),
 }
 
-airflow_home = env["AIRFLOW_HOME"]
 
-with open(f"{airflow_home}/analytics/extract/sheetload/drives.yml", "r") as file:
+with open(f"{REPO_BASE_PATH}/extract/sheetload/drives.yml", "r") as file:
     try:
         stream = safe_load(file)
     except YAMLError as exc:

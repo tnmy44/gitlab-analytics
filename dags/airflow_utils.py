@@ -8,6 +8,10 @@ from airflow.models import Variable
 from airflow.providers.slack.operators.slack import SlackAPIPostOperator
 from airflow.providers.slack.operators.slack_webhook import SlackWebhookOperator
 
+if os.environ["IN_CLUSTER"] == 'False':
+    REPO_BASE_PATH = f"{os.environ['AIRFLOW_HOME']}/analytics"
+else:
+    REPO_BASE_PATH = f"{os.environ['AIRFLOW_HOME']}/dags/repo"
 
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
@@ -16,7 +20,7 @@ DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.1"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
 
-SALES_ANALYTICS_NOTEBOOKS_PATH = "/opt/airflow/dags/repo/sales_analytics_notebooks"
+SALES_ANALYTICS_NOTEBOOKS_PATH = f"{REPO_BASE_PATH}/sales_analytics_notebooks"
 
 
 def get_sales_analytics_notebooks(frequency: str) -> Dict:
@@ -260,6 +264,7 @@ def slack_succeeded_task(context):
         username="Airflow",
     )
     return slack_alert.execute(context=None)
+
 
 
 # GitLab default settings for all DAGs

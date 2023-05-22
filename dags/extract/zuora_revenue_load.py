@@ -9,6 +9,7 @@ from airflow_utils import (
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
+    REPO_BASE_PATH,
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
@@ -44,12 +45,11 @@ default_args = {
     "dagrun_timeout": timedelta(hours=6),
 }
 
-airflow_home = env["AIRFLOW_HOME"]
 task_name = "zuora-revenue"
 
 # Get all the table name for which tasks for loading needs to be created
 with open(
-    f"{airflow_home}/analytics/extract/zuora_revenue/zuora_revenue_table_name.yml", "r"
+    f"{REPO_BASE_PATH}/extract/zuora_revenue/zuora_revenue_table_name.yml", "r"
 ) as file:
     try:
         stream = safe_load(file)
