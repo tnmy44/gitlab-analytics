@@ -684,7 +684,7 @@ The owner team of the ultimate parent account from SFDC
 
 {% enddocs %}
 
-{% docs parent_crm_account_sales_territory %}
+{% docs parent_crm_account_territory %}
 
 The sales territory of the ultimate parent account from SFDC
 

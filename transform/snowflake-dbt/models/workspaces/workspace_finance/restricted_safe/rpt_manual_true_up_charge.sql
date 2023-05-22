@@ -9,13 +9,6 @@ WITH map_merged_crm_account AS (
     FROM {{ ref('sfdc_account_source') }}
     WHERE account_id IS NOT NULL
 
-), ultimate_parent_account AS (
-
-    SELECT
-      account_id
-    FROM sfdc_account
-    WHERE account_id = ultimate_parent_account_id
-
 ), zuora_account AS (
 
     SELECT *
@@ -230,15 +223,13 @@ WITH map_merged_crm_account AS (
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN sfdc_account
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
-    LEFT JOIN ultimate_parent_account
-      ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
 
 )
 
 {{ dbt_audit(
     cte_ref="manual_charges",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@lisvinueza",
     created_date="2021-10-28",
-    updated_date="2022-11-28",
+    updated_date="2023-05-21",
 ) }}

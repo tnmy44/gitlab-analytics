@@ -41,8 +41,6 @@ WITH crm_account AS (
       crm_account.dim_parent_sales_segment_id,
       crm_account.dim_parent_sales_territory_id,
       crm_account.dim_parent_industry_id,
-      crm_account.dim_parent_location_country_id,
-      crm_account.dim_parent_location_region_id,
       crm_account.dim_account_sales_segment_id,
       crm_account.dim_account_sales_territory_id,
       crm_account.dim_account_industry_id,
@@ -69,7 +67,7 @@ WITH crm_account AS (
 {{ dbt_audit(
 cte_ref="final_quotes",
 created_by="@mcooperDD",
-updated_by="@chrissharp",
+updated_by="@lisvinueza",
 created_date="2021-01-11",
-updated_date="2022-10-03"
+updated_date="2023-05-21"
 ) }}

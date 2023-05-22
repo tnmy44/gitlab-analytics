@@ -58,11 +58,9 @@
       dim_crm_accounts.crm_account_name                                           AS crm_account_name,
       dim_crm_accounts.dim_parent_crm_account_id                                  AS dim_parent_crm_account_id,
       dim_crm_accounts.parent_crm_account_name                                    AS parent_crm_account_name,
-      dim_crm_accounts.parent_crm_account_billing_country                         AS parent_crm_account_billing_country,
       dim_crm_accounts.parent_crm_account_sales_segment                           AS parent_crm_account_sales_segment,
       dim_crm_accounts.parent_crm_account_industry                                AS parent_crm_account_industry,
-      dim_crm_accounts.parent_crm_account_owner_team                              AS parent_crm_account_owner_team,
-      dim_crm_accounts.parent_crm_account_sales_territory                         AS parent_crm_account_sales_territory,
+      dim_crm_accounts.parent_crm_account_territory                         AS parent_crm_account_territory,
       dim_crm_accounts.technical_account_manager                                  AS technical_account_manager,
       IFF(MAX(fct_charge.mrr) > 0, TRUE, FALSE)                                   AS is_paid_subscription,
       MAX(IFF(dim_product_detail.product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE)) 
@@ -93,7 +91,7 @@
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
     INNER JOIN dim_date
       ON fct_charge.effective_start_month <= dim_date.date_day AND fct_charge.effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=22)}}
+    {{ dbt_utils.group_by(n=20)}}
 
 
   ), latest_subscription AS (
@@ -148,11 +146,9 @@
         COALESCE(license_sha256.crm_account_name, license_md5.crm_account_name)                                                         AS crm_account_name,
         COALESCE(license_sha256.dim_parent_crm_account_id, license_md5.dim_parent_crm_account_id)                                       AS dim_parent_crm_account_id,
         COALESCE(license_sha256.parent_crm_account_name, license_md5.parent_crm_account_name)                                           AS parent_crm_account_name,
-        COALESCE(license_sha256.parent_crm_account_billing_country, license_md5.parent_crm_account_billing_country)                     AS parent_crm_account_billing_country,
         COALESCE(license_sha256.parent_crm_account_sales_segment, license_md5.parent_crm_account_sales_segment)                         AS parent_crm_account_sales_segment,
         COALESCE(license_sha256.parent_crm_account_industry, license_md5.parent_crm_account_industry)                                   AS parent_crm_account_industry,
-        COALESCE(license_sha256.parent_crm_account_owner_team, license_md5.parent_crm_account_owner_team)                               AS parent_crm_account_owner_team,
-        COALESCE(license_sha256.parent_crm_account_sales_territory, license_md5.parent_crm_account_sales_territory)                     AS parent_crm_account_sales_territory,
+        COALESCE(license_sha256.parent_crm_account_territory, license_md5.parent_crm_account_territory)                                 AS parent_crm_account_territory,
         COALESCE(license_sha256.technical_account_manager, license_md5.technical_account_manager)                                       AS technical_account_manager,
         COALESCE(license_sha256.is_paid_subscription, license_md5.is_paid_subscription, FALSE)                                          AS is_paid_subscription,
         COALESCE(license_sha256.is_program_subscription, license_md5.is_program_subscription, FALSE)                                    AS is_program_subscription,
@@ -262,11 +258,9 @@
       -- account metadata
       crm_account_name,
       parent_crm_account_name,
-      parent_crm_account_billing_country,
       parent_crm_account_sales_segment,
       parent_crm_account_industry,
-      parent_crm_account_owner_team,
-      parent_crm_account_sales_territory,
+      parent_crm_account_territory,
       technical_account_manager,
 
       ping_created_at,
@@ -283,7 +277,7 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@jpeguero",
+    updated_by="@lisvinueza",
     created_date="2022-03-11",
-    updated_date="2022-02-01"
+    updated_date="2022-04-26"
 ) }}

@@ -33,8 +33,6 @@ WITH account_dimensions AS (
       account_dimensions.dim_parent_sales_segment_id,
       account_dimensions.dim_parent_sales_territory_id,
       account_dimensions.dim_parent_industry_id,
-      account_dimensions.dim_parent_location_country_id,
-      account_dimensions.dim_parent_location_region_id,
       account_dimensions.dim_account_sales_segment_id,
       account_dimensions.dim_account_sales_territory_id,
       account_dimensions.dim_account_industry_id,
@@ -58,7 +56,7 @@ WITH account_dimensions AS (
 {{ dbt_audit(
     cte_ref="final_touchpoint",
     created_by="@mcooperDD",
-    updated_by="@michellecooper",
+    updated_by="@lisvinueza",
     created_date="2021-01-21",
-    updated_date="2021-11-29"
+    updated_date="2023-05-21"
 ) }}
