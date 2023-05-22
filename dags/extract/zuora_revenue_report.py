@@ -45,7 +45,9 @@ default_args = {
 
 task_name = "zuora-revenue-report"
 
-full_path = f"{REPO_BASE_PATH}/extract/zuora_revenue_report/src/zuora_report_api_list.yml"
+full_path = (
+    f"{REPO_BASE_PATH}/extract/zuora_revenue_report/src/zuora_report_api_list.yml"
+)
 
 
 def get_yaml_file(path: str) -> dict:
