@@ -126,6 +126,7 @@ WITH date_details AS (
     FROM date_details
     WHERE fiscal_year >= 2022
         AND month_actual = month(CURRENT_DATE)
+        AND first_day_of_month <= CURRENT_DATE
 
   ), account_year_key AS (
 
