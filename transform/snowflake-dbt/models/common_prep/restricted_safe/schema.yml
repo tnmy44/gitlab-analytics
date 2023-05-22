@@ -366,3 +366,6 @@ models:
       - name: dim_crm_user_hierarchy_sk
         tests:
           - not_null
+
+  - name: prep_renewal_fiscal_years
+    description: This model is used in mart_available_to_renew to calculate which years are to be processed.
