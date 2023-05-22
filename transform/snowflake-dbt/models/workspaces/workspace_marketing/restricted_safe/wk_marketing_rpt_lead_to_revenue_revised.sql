@@ -4,6 +4,7 @@
     ('person_base','mart_crm_person'),
     ('dim_crm_person','dim_crm_person'),
     ('mart_crm_opportunity_stamped_hierarchy_hist', 'mart_crm_opportunity_stamped_hierarchy_hist'), 
+    ('map_alternative_lead_demographics','map_alternative_lead_demographics'),
     ('mart_crm_touchpoint', 'mart_crm_touchpoint'),
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('dim_crm_account', 'dim_crm_account'),
@@ -81,14 +82,17 @@
       dim_crm_account.dim_parent_crm_account_id,
       dim_crm_person.sfdc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
+      mart_crm_touchpoint.dim_campaign_id,
   
   --Person Data
       person_base.email_hash,
       person_base.email_domain_type,
       person_base.true_inquiry_date,
       person_base.mql_date_first_pt,
+      person_base.accepted_date,
       person_base.status,
       person_base.lead_source,
+      person_base.is_inquiry,
       person_base.is_mql,
       person_base.account_demographics_sales_segment,
       person_base.account_demographics_region,
@@ -98,6 +102,12 @@
       person_base.account_demographics_territory,
       dim_crm_account.is_first_order_available,
       person_order_type_final.person_order_type,
+      map_alternative_lead_demographics.employee_count_segment_custom,
+      map_alternative_lead_demographics.employee_bucket_segment_custom,
+      COALESCE(map_alternative_lead_demographics.employee_count_segment_custom,map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
+      map_alternative_lead_demographics.geo_custom,
+      UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
+
   
   --Touchpoint Data
       'Person Touchpoint' AS touchpoint_type,
@@ -116,6 +126,7 @@
       mart_crm_touchpoint.bizible_referrer_page,
       mart_crm_touchpoint.bizible_referrer_page_raw,
       mart_crm_touchpoint.bizible_integrated_campaign_grouping,
+      mart_crm_touchpoint.campaign_rep_role_name,
       mart_crm_touchpoint.touchpoint_segment,
       mart_crm_touchpoint.gtm_motion,
       mart_crm_touchpoint.pipe_name,
@@ -146,6 +157,9 @@
       ON person_base.email_hash = person_order_type_final.email_hash
     LEFT JOIN mart_crm_touchpoint
       ON mart_crm_touchpoint.email_hash = person_base.email_hash
+    LEFT JOIN map_alternative_lead_demographics
+      ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
+
   
   ), opp_base_with_batp AS (
     
@@ -155,6 +169,7 @@
       opp.dim_crm_account_id,
       dim_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
+      mart_crm_attribution_touchpoint.dim_campaign_id,
     
     --Opp Data
       opp.order_type AS opp_order_type,
@@ -200,6 +215,7 @@
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.touchpoint_segment,
+      mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.gtm_motion,
       mart_crm_attribution_touchpoint.pipe_name,
       mart_crm_attribution_touchpoint.is_dg_influenced,
@@ -357,7 +373,7 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=62)}}
+    {{dbt_utils.group_by(n=64)}}
     
 ), cohort_base_combined AS (
   
@@ -370,14 +386,17 @@
       person_base_with_tp.dim_crm_touchpoint_id AS dim_crm_btp_touchpoint_id,
       opp_base_with_batp.dim_crm_touchpoint_id AS dim_crm_batp_touchpoint_id,
       dim_crm_opportunity_id,
+      COALESCE (person_base_with_tp.dim_campaign_id,opp_base_with_batp.dim_campaign_id) AS dim_campaign_id, 
   
   --Person Data
       email_hash,
       email_domain_type,
       true_inquiry_date,
       mql_date_first_pt,
+      accepted_date,
       status,
       lead_source,
+      is_inquiry,
       is_mql,
       person_base_with_tp.account_demographics_sales_segment,
       person_base_with_tp.account_demographics_region,
@@ -387,6 +406,11 @@
       person_base_with_tp.account_demographics_territory,
       is_first_order_available,
       person_order_type,
+      employee_count_segment_custom,
+      employee_bucket_segment_custom,
+      inferred_employee_segment,
+      geo_custom,
+      inferred_geo,
   
   --Opp Data
       opp_order_type,
@@ -440,6 +464,7 @@
       COALESCE(person_base_with_tp.bizible_count_u_shaped,opp_base_with_batp.bizible_count_u_shaped) AS bizible_count_u_shaped, 
       COALESCE(person_base_with_tp.is_fmm_influenced,opp_base_with_batp.is_fmm_influenced) AS is_fmm_influenced, 
       COALESCE(person_base_with_tp.is_fmm_sourced,opp_base_with_batp.is_fmm_sourced) AS is_fmm_sourced,
+      COALESCE(person_base_with_tp.campaign_rep_role_name,opp_base_with_batp.campaign_rep_role_name) AS campaign_rep_role_name,
       new_lead_created_sum,
       count_true_inquiry,
       inquiry_sum, 
@@ -566,5 +591,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-02-15",
-    updated_date="2023-05-17",
+    updated_date="2023-05-18",
   ) }}
