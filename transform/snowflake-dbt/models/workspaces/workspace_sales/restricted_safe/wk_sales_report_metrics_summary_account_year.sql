@@ -124,7 +124,7 @@ WITH date_details AS (
     SELECT DISTINCT fiscal_year             AS report_fiscal_year,
                     first_day_of_month      AS report_month_date
     FROM date_details
-    WHERE fiscal_year IN (2023,2022)
+    WHERE fiscal_year > 2022
         AND month_actual = month(CURRENT_DATE)
 
   ), account_year_key AS (
