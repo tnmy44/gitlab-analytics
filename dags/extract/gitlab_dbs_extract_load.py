@@ -294,7 +294,7 @@ for source_name, config in config_dict.items():
 
         with extract_dag:
             # Actual PGP extract
-            file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
 
@@ -343,7 +343,7 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-            file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             for table in table_list:
@@ -392,7 +392,7 @@ for source_name, config in config_dict.items():
 
         with sync_dag:
             # PGP Extract
-            file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             for table in table_list:
