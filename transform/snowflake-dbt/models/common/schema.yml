@@ -2244,7 +2244,7 @@ models:
       - name: current_project_count
         description: The number of projects that are presently associated with the namespace.
       - name: has_code_suggestions_enabled
-        description: '{{ doc("has_code_suggestions_enabled") }}'
+        description: '{{ doc("namespace_has_code_suggestions_enabled") }}'
 
   - name: dim_order_hist
     description: '{{ doc("dim_order_hist") }}'
