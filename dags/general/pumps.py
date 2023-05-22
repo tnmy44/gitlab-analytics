@@ -43,7 +43,7 @@ default_args = {
 # Create the DAG
 dag = DAG("data_pumps", default_args=default_args, schedule_interval="0 5 * * *")
 
-with open(f"{REPO_BASE_PATH}/analytics/pump/pumps.yml", "r") as file:
+with open(f"{REPO_BASE_PATH}/pump/pumps.yml", "r") as file:
     try:
         stream = safe_load(file)
     except YAMLError as exc:

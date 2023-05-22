@@ -14,6 +14,7 @@ from airflow_utils import (
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
+    REPO_BASE_PATH,
 )
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
@@ -104,7 +105,7 @@ def load_manifest_file(file_name: str) -> dict:
         return yaml.load(yaml_file, Loader=yaml.FullLoader)
 
 
-config_dict = load_manifest_file("analytics/dags/general/backup_manifest.yaml")
+config_dict = load_manifest_file(f"{REPO_BASE_PATH}/dags/general/backup_manifest.yaml")
 
 for task_name, task_details in config_dict.items():
     generate_task(
