@@ -66,7 +66,6 @@ WITH campaign_details AS (
       PARSE_URL(bizible_form_url_raw):parameters:utm_budget        AS bizible_form_page_utm_budget,
       PARSE_URL(bizible_form_url_raw):parameters:utm_allptnr       AS bizible_form_page_utm_allptnr,
       PARSE_URL(bizible_form_url_raw):parameters:utm_partnerid     AS bizible_form_page_utm_partnerid,
-
       PARSE_URL(bizible_landing_page_raw):parameters:utm_content   AS bizible_landing_page_utm_content,
       PARSE_URL(bizible_landing_page_raw):parameters:utm_budget    AS bizible_landing_page_utm_budget,
       PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr   AS bizible_landing_page_utm_allptnr,
@@ -106,6 +105,17 @@ WITH campaign_details AS (
       bizible_form_url_raw,
       bizible_landing_page,
       bizible_landing_page_raw,
+
+    --UTMs not captured by the Bizible
+      PARSE_URL(bizible_form_url_raw):parameters:utm_content       AS bizible_form_page_utm_content,
+      PARSE_URL(bizible_form_url_raw):parameters:utm_budget        AS bizible_form_page_utm_budget,
+      PARSE_URL(bizible_form_url_raw):parameters:utm_allptnr       AS bizible_form_page_utm_allptnr,
+      PARSE_URL(bizible_form_url_raw):parameters:utm_partnerid     AS bizible_form_page_utm_partnerid,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_content   AS bizible_landing_page_utm_content,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_budget    AS bizible_landing_page_utm_budget,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr   AS bizible_landing_page_utm_allptnr,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_partnerid AS bizible_landing_page_utm_partnerid,
+
       bizible_marketing_channel,
       CASE
         WHEN dim_parent_campaign_id = '7014M000001dn8MQAQ' THEN 'Paid Social.LinkedIn Lead Gen'
@@ -142,6 +152,14 @@ WITH campaign_details AS (
       combined_touchpoints.bizible_form_url_raw,
       combined_touchpoints.bizible_landing_page,
       combined_touchpoints.bizible_landing_page_raw,
+      bizible_form_page_utm_content,
+      bizible_form_page_utm_budget,
+      bizible_form_page_utm_allptnr,
+      bizible_form_page_utm_partnerid,
+      bizible_landing_page_utm_content,
+      bizible_landing_page_utm_budget,
+      bizible_landing_page_utm_allptnr,
+      bizible_landing_page_utm_partnerid,
       combined_touchpoints.bizible_marketing_channel,
       combined_touchpoints.bizible_marketing_channel_path,
       combined_touchpoints.bizible_medium,
