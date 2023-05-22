@@ -41,7 +41,7 @@ default_args = {
     "dagrun_timeout": timedelta(hours=6),
 }
 
-full_path = f"{REPO_BASE_PATH}/analytics/extract/gitlab_deduplication/manifest_deduplication/t_gitlab_com_deduplication_table_manifest.yaml"
+full_path = f"{REPO_BASE_PATH}/extract/gitlab_deduplication/manifest_deduplication/t_gitlab_com_deduplication_table_manifest.yaml"
 task_name = "t_deduplication"
 
 
