@@ -61,7 +61,7 @@ def extract_manifest(file_path):
 
 
 manifest = extract_manifest(
-    "./../../bizible/manifests/el_bizible_tables.yaml"
+    "/opt/airflow/dags/repo/extract/bizible/manifests/el_bizible_tables.yaml"
 )
 tables = manifest.get("tables")
 
