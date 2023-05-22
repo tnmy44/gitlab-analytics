@@ -854,7 +854,9 @@ The date the license expires
 
 {% docs license_add_ons %}
 
-The add-ons associated with the license
+The add-ons associated with the license. In [the handbook](https://about.gitlab.com/handbook/support/license-and-renewals/#common-terminology), the term "add-on" is defined as
+
+> An optional extra that can be purchased to increase the limits of what is available in GitLab. Common examples of this are a Seat add-on where additional seats are purchased during the subscription term, or an additional Storage or Units of Compute purchase (on SaaS only). 
 
 {% enddocs %}
 
