@@ -372,7 +372,7 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=61)}}
+    {{dbt_utils.group_by(n=63)}}
     
 ), cohort_base_combined AS (
   
