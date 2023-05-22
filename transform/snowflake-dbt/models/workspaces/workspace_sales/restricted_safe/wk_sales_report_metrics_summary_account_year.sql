@@ -121,12 +121,13 @@ WITH date_details AS (
 
   ), report_dates AS (
 
-    SELECT DISTINCT fiscal_year             AS report_fiscal_year,
-                    first_day_of_month      AS report_month_date
-    FROM date_details
-    WHERE fiscal_year >= 2022
-        AND month_actual = month(CURRENT_DATE)
-        AND first_day_of_month <= CURRENT_DATE
+    SELECT DISTINCT fiscal_year         AS report_fiscal_year,
+                    first_day_of_month  AS report_month_date
+    FROM prod.workspace_sales.date_details
+    CROSS JOIN (SELECT current_date AS today_date)
+    WHERE fiscal_year > 2021
+        AND month_actual = MONTH(today_date)
+        AND date_actual < today_date
 
   ), account_year_key AS (
 
