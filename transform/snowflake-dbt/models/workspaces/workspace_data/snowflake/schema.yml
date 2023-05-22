@@ -4,6 +4,10 @@ models:
     - name: snowflake_queries
       description: A table that can be used for reporting on query activity.
       columns:
+        - name: query_id
+          tests:
+            - unique
+            - not_null
         - name: dbt_metadata
           description: The metadata string added to the end of the query by the `query_comment` option in dbt.
         - name: dbt_version
@@ -42,3 +46,10 @@ models:
           description: The schema where the model is materialized
         - name: relation_identifier
           description: The table name of the model
+
+    - name: snowflake_query_spend_attribution
+      description: This model attributes the warehouse spend to the queries that execute within the warehouse spend window.
+      columns: 
+        - name: attribution_id
+          tests:
+            - unique

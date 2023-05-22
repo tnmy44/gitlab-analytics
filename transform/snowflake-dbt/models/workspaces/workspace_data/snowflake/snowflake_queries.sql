@@ -13,47 +13,72 @@ WITH source AS (
   {% if is_incremental() %}
 
   -- this filter will only be applied on an incremental run
-  WHERE end_time > (SELECT MAX(end_time) FROM {{ this }})
+  WHERE query_end_at > (SELECT MAX(query_end_at) FROM {{ this }})
 
   {% endif %}
 
 ),
 
+query_metering AS (
+  
+  SELECT *
+  FROM {{ ref('snowflake_query_metering') }}
+),
+
+user_map AS (
+  SELECT *
+  FROM {{ ref('map_team_member_snowflake_user') }}
+),
+
+team_members AS (
+  SELECT *
+  FROM {{ ref('employee_directory_analysis') }}
+),
+
+user_types AS (
+  SELECT *
+  FROM {{ ref('snowflake_non_team_member_user_type_source') }}
+),
+
 expanded AS (
 
   SELECT
-    database_name,
-    database_id,
-    query_id,
-    query_type,
-    query_text,
-    query_tag,
-    execution_status,
-    schema_name,
-    schema_id,
-    user_name,
-    role_name,
-    warehouse_name,
-    warehouse_id,
-    warehouse_size,
-    warehouse_type,
-    cluster_number,
-    start_time,
-    end_time,
-    compilation_time,
-    execution_time,
-    total_elapsed_time,
-    queued_provisioning_time,
-    queued_repair_time,
-    queued_overload_time,
-    transaction_blocked_time,
-    rows_produced,
-    bytes_written,
-    bytes_spilled_to_remote_storage,
-    bytes_spilled_to_local_storage,
-    credits_used_cloud_services,
-    percentage_scanned_from_cache,
-    try_parse_json(regexp_substr(query_text, '\{\"app\".*\}')) AS dbt_metadata,
+    source.database_name,
+    source.database_id,
+    source.query_id,
+    source.query_type,
+    source.query_text,
+    source.query_tag,
+    source.execution_status,
+    source.schema_name,
+    source.schema_id,
+    source.user_name,
+    source.role_name,
+    source.warehouse_name,
+    source.warehouse_id,
+    source.warehouse_size,
+    source.warehouse_type,
+    source.cluster_number,
+    source.query_start_at,
+    source.query_end_at,
+    source.compilation_time,
+    source.execution_time,
+    source.total_elapsed_time,
+    source.queued_provisioning_time,
+    source.queued_repair_time,
+    source.queued_overload_time,
+    source.transaction_blocked_time,
+    source.rows_produced,
+    source.bytes_written,
+    source.bytes_spilled_to_remote_storage,
+    source.bytes_spilled_to_local_storage,
+    source.credits_used_cloud_services,
+    source.percentage_scanned_from_cache,
+    query_metering.total_attributed_credits,
+    IFF(team_members.employee_id IS NULL, user_types.user_type, 'Team Member') AS user_type,
+    IFF(user_types.user_type IS NULL, team_members.division, user_types.division) AS division,
+    IFF(user_types.user_type IS NULL, team_members.department, user_types.department) AS department,
+    try_parse_json(regexp_substr(source.query_text, '\{\"app\".*\}')) AS dbt_metadata,
     dbt_metadata['dbt_version']::VARCHAR AS dbt_version,
     dbt_metadata['profile_name']::VARCHAR AS dbt_profile_name,
     dbt_metadata['target_name']::VARCHAR AS dbt_target_name,
@@ -73,6 +98,15 @@ expanded AS (
     dbt_metadata['relation']['schema']::VARCHAR AS relation_schema,
     dbt_metadata['relation']['identifier']::VARCHAR AS relation_identifier
   FROM source
+  LEFT JOIN query_metering
+    ON source.query_id = query_metering.query_id
+  LEFT JOIN user_types
+    ON user_types.user_name = source.user_name
+  LEFT JOIN user_map
+    ON source.user_name = user_map.snowflake_user_name
+  LEFT JOIN team_members
+    ON user_map.employee_id = team_members.employee_id
+    AND DATE_TRUNC('day',source.query_start_at) = team_members.date_actual
 
 )
 

@@ -36,8 +36,8 @@ renamed AS (
     execution_status::VARCHAR AS execution_status,
     error_code::VARCHAR AS error_code,
     error_message::VARCHAR AS error_message,
-    start_time::TIMESTAMP AS start_time,
-    end_time::TIMESTAMP AS end_time,
+    start_time::TIMESTAMP AS query_start_at,
+    end_time::TIMESTAMP AS query_end_at,
     total_elapsed_time::NUMBER AS total_elapsed_time,
     bytes_scanned::NUMBER AS bytes_scanned,
     percentage_scanned_from_cache::NUMBER AS percentage_scanned_from_cache,
@@ -86,7 +86,7 @@ renamed AS (
   {% if is_incremental() %}
 
     -- this filter will only be applied on an incremental run
-    WHERE end_time > (SELECT MAX(end_time) FROM {{ this }})
+    WHERE query_end_at > (SELECT MAX(end_time) FROM {{ this }})
 
   {% endif %}
 
