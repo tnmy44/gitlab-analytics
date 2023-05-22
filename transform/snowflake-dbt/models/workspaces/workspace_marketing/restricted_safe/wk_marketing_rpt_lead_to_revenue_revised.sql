@@ -185,17 +185,16 @@
       opp.net_arr,
       opp.is_net_arr_closed_deal,
       opp.is_net_arr_pipeline_created,
-      opp.account_demographics_segment AS account_demographics_sales_segment,
-      opp.account_demographics_region,
-      opp.account_demographics_geo,
-      opp.account_demographics_area,
-      opp.account_demographics_territory,
+      opp.parent_crm_account_sales_segment,
+      opp.parent_crm_account_region,
+      opp.parent_crm_account_geo,
+      opp.parent_crm_account_area,
+      opp.parent_crm_account_territory,
       opp.crm_opp_owner_sales_segment_stamped,
       opp.crm_opp_owner_region_stamped,
       opp.crm_opp_owner_area_stamped,
       opp.crm_opp_owner_geo_stamped,
-      opp.parent_crm_account_demographics_upa_country,
-      opp.parent_crm_account_demographics_territory,
+      opp.parent_crm_account_upa_country,
     
     -- Touchpoint Data
       'Attribution Touchpoint' AS touchpoint_type,
@@ -373,7 +372,7 @@
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=64)}}
+    {{dbt_utils.group_by(n=63)}}
     
 ), cohort_base_combined AS (
   
@@ -426,17 +425,17 @@
       net_arr,
       is_net_arr_closed_deal,
       is_net_arr_pipeline_created,
-      opp_base_with_batp.account_demographics_sales_segment AS opp_account_demographics_sales_segment,
-      opp_base_with_batp.account_demographics_region AS opp_account_demographics_region,
-      opp_base_with_batp.account_demographics_geo AS opp_account_demographics_geo,
-      opp_base_with_batp.account_demographics_territory AS opp_account_demographics_territory,
-      opp_base_with_batp.account_demographics_area AS opp_account_demographics_area,
+      opp_base_with_batp.parent_crm_account_sales_segment AS opp_account_demographics_sales_segment,
+      opp_base_with_batp.parent_crm_account_region AS opp_account_demographics_region,
+      opp_base_with_batp.parent_crm_account_geo AS opp_account_demographics_geo,
+      opp_base_with_batp.parent_crm_account_territory AS opp_account_demographics_territory,
+      opp_base_with_batp.parent_crm_account_area AS opp_account_demographics_area,
       crm_opp_owner_sales_segment_stamped,
       crm_opp_owner_region_stamped,
       crm_opp_owner_area_stamped,
       crm_opp_owner_geo_stamped,
-      parent_crm_account_demographics_upa_country,
-      parent_crm_account_demographics_territory,
+      parent_crm_account_upa_country,
+      parent_crm_account_territory,
   
   --Touchpoint Data
       COALESCE(person_base_with_tp.bizible_touchpoint_date,opp_base_with_batp.bizible_touchpoint_date) AS bizible_touchpoint_date, 
@@ -589,7 +588,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@lisvinueza",
     created_date="2023-02-15",
-    updated_date="2023-05-18",
+    updated_date="2023-05-21",
   ) }}

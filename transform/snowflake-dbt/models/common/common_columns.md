@@ -684,7 +684,7 @@ The owner team of the ultimate parent account from SFDC
 
 {% enddocs %}
 
-{% docs parent_crm_account_sales_territory %}
+{% docs parent_crm_account_territory %}
 
 The sales territory of the ultimate parent account from SFDC
 
@@ -2093,5 +2093,11 @@ The title of the plan as given by GitLab.com
 {% docs is_plan_paid %}
 
 A flag to indicate if the plan is a paid plan or not.
+
+{% enddocs %}
+
+{% docs namespace_has_code_suggestions_enabled % }
+
+Boolean flag set to True if the namespace has code suggestions enabled. This appears as `code_suggestions` in the gitlab.com db `namespace_settings` table.
 
 {% enddocs %}

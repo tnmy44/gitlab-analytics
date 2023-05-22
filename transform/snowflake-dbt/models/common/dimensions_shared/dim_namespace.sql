@@ -47,7 +47,8 @@
       gitlab_plan_is_paid,
       dim_product_tier_id,
       namespace_member_count                    AS current_member_count,
-      namespace_project_count                   AS current_project_count
+      namespace_project_count                   AS current_project_count,
+      has_code_suggestions_enabled
     FROM prep_namespace
     WHERE is_currently_valid = TRUE
 
@@ -56,7 +57,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@cbraza",
     created_date="2020-12-29",
-    updated_date="2022-02-22"
+    updated_date="2023-05-18"
 ) }}

@@ -326,8 +326,8 @@
       mart_crm_opportunity_stamped_hierarchy_hist.crm_opp_owner_region_stamped,
       mart_crm_opportunity_stamped_hierarchy_hist.crm_opp_owner_area_stamped,
       mart_crm_opportunity_stamped_hierarchy_hist.crm_opp_owner_geo_stamped,
-      mart_crm_opportunity_stamped_hierarchy_hist.parent_crm_account_demographics_upa_country,
-      mart_crm_opportunity_stamped_hierarchy_hist.parent_crm_account_demographics_territory
+      mart_crm_opportunity_stamped_hierarchy_hist.parent_crm_account_upa_country,
+      mart_crm_opportunity_stamped_hierarchy_hist.parent_crm_account_territory
     FROM upa_base
     FULL OUTER JOIN person_base person_base_2
       ON upa_base.dim_crm_account_id=person_base_2.dim_crm_account_id
@@ -389,8 +389,8 @@
       crm_opp_owner_region_stamped,
       crm_opp_owner_area_stamped,
       crm_opp_owner_geo_stamped,
-      parent_crm_account_demographics_upa_country,
-      parent_crm_account_demographics_territory,
+      parent_crm_account_upa_country,
+      parent_crm_account_territory,
        
   
     --TP Data

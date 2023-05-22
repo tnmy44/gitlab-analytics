@@ -33,8 +33,6 @@ WITH crm_account_dimensions AS (
       crm_account_dimensions.dim_parent_sales_segment_id,
       crm_account_dimensions.dim_parent_sales_territory_id,
       crm_account_dimensions.dim_parent_industry_id,
-      crm_account_dimensions.dim_parent_location_country_id,
-      crm_account_dimensions.dim_parent_location_region_id,
       crm_account_dimensions.dim_account_sales_segment_id,
       crm_account_dimensions.dim_account_sales_territory_id,
       crm_account_dimensions.dim_account_industry_id,
@@ -82,7 +80,7 @@ WITH crm_account_dimensions AS (
 {{ dbt_audit(
     cte_ref="final_invoice",
     created_by="@mcooperDD",
-    updated_by="@paul_armstrong",
+    updated_by="@lisvinueza",
     created_date="2021-01-20",
-    updated_date="2021-04-26"
+    updated_date="2023-05-21"
 ) }}

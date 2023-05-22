@@ -144,6 +144,7 @@
       namespace_lineage.max_seats_used                                                AS gitlab_plan_max_seats_used,
       IFNULL(members.member_count, 0)                                                 AS namespace_member_count,
       IFNULL(projects.project_count, 0)                                               AS namespace_project_count,
+      namespace_settings.code_suggestions                                             AS has_code_suggestions_enabled,
       IFNULL(namespaces.is_current AND namespace_lineage.is_current, FALSE)           AS is_currently_valid
     FROM namespaces
     LEFT JOIN namespace_lineage
@@ -179,7 +180,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@jpeguero",
+    updated_by="@cbraza",
     created_date="2021-01-14",
-    updated_date="2022-02-22"
+    updated_date="2023-05-18"
 ) }}
