@@ -11,6 +11,10 @@ models:
       - name: account_name
         tests:
           - not_null
+      - name: sales_segment
+        description: Deprecated, please use division_sales_segment or tsp_max_hierarchy_sales_segment instead.
+      - name: tsp_test_sales_segment
+        description: Deprecated, please use tsp_max_hierarchy_sales_segment instead.
       - name: account_segment
         description: Deprecated, please use division_sales_segment instead.
       - name: ultimate_parent_sales_segment
@@ -132,8 +136,12 @@ models:
         description: Sales segment of the specific account.
       - name: ultimate_parent_sales_segment
         description: Sales segment of the parent of the account hierarchy.
+      - name: sales_segment
+        description: Deprecated, please use division_sales_segment or tsp_max_hierarchy_sales_segment instead.
       - name: parent_segment
         description: Deprecated, please use ultimate_parent_sales_segment instead.
+      - name: segment
+        description: Deprecated, please use division_sales_segment or tsp_max_hierarchy_sales_segment instead.
       - name: order_type_live
         description: The most current state of the order type formula in SFDC.
       - name: dr_partner_deal_type
