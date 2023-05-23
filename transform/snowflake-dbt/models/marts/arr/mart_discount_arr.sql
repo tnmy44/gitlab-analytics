@@ -78,11 +78,13 @@ WITH dim_date AS (
       dim_crm_opportunity.opportunity_name                              AS opportunity_name,
       dim_crm_account_invoice.dim_parent_crm_account_id                 AS dim_parent_crm_account_id_invoice,
       dim_crm_account_invoice.parent_crm_account_name                   AS parent_crm_account_name_invoice,
+      dim_crm_account_invoice.parent_crm_account_upa_country            AS parent_crm_account_upa_country_invoice,
       dim_crm_account_invoice.dim_crm_account_id                        AS dim_crm_account_id_invoice,
       dim_crm_account_invoice.crm_account_name                          AS crm_account_name_invoice,
       dim_crm_account_invoice.parent_crm_account_sales_segment          AS parent_crm_account_sales_segment_invoice,
       dim_crm_account_subscription.dim_parent_crm_account_id            AS dim_parent_crm_account_id_subscription,
       dim_crm_account_subscription.parent_crm_account_name              AS parent_crm_account_name_subscription,
+      dim_crm_account_subscription.parent_crm_account_upa_country       AS parent_crm_account_upa_country_subscription,
       dim_crm_account_subscription.dim_crm_account_id                   AS dim_crm_account_id_subscription,
       dim_crm_account_subscription.crm_account_name                     AS crm_account_name_subscription,
        dim_crm_account_subscription.parent_crm_account_sales_segment    AS parent_crm_account_sales_segment_subscription,
@@ -160,5 +162,5 @@ WITH dim_date AS (
     created_by="@iweeks",
     updated_by="@lisvinueza",
     created_date="2020-10-21",
-    updated_date="2023-05-21",
+    updated_date="2023-05-22"
 ) }}

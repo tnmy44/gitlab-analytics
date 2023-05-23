@@ -73,6 +73,7 @@ WITH dim_billing_account AS (
       dim_crm_account.crm_account_name                                                AS crm_account_name,
       dim_crm_account.dim_parent_crm_account_id                                       AS dim_parent_crm_account_id,
       dim_crm_account.parent_crm_account_name                                         AS parent_crm_account_name,
+      dim_crm_account.parent_crm_account_upa_country                                  AS parent_crm_account_upa_country,
       dim_crm_account.parent_crm_account_sales_segment                                AS parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_territory                                    AS parent_crm_account_territory,
       dim_crm_account.parent_crm_account_region                                       AS parent_crm_account_region,
@@ -204,5 +205,5 @@ WITH dim_billing_account AS (
     created_by="@iweeks",
     updated_by="@lisvinueza",
     created_date="2021-12-30",
-    updated_date="2023-05-21"
+    updated_date="2023-05-22"
 ) }}

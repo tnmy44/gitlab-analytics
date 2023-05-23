@@ -76,6 +76,7 @@ WITH dim_billing_account AS (
       dim_crm_account.crm_account_name                                                AS crm_account_name,
       dim_crm_account.dim_parent_crm_account_id                                       AS dim_parent_crm_account_id,
       dim_crm_account.parent_crm_account_name                                         AS parent_crm_account_name,
+      dim_crm_account.parent_crm_account_upa_country                                  AS parent_crm_account_upa_country,
       dim_crm_account.parent_crm_account_sales_segment                                AS parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_industry                                     AS parent_crm_account_industry,
       dim_crm_account.crm_account_employee_count_band                                 AS crm_account_employee_count_band,
@@ -215,5 +216,5 @@ WITH dim_billing_account AS (
     created_by="@msendal",
     updated_by="@lisvinueza",
     created_date="2020-09-04",
-    updated_date="2023-05-21"
+    updated_date="2023-05-22"
 ) }}
