@@ -81,7 +81,6 @@ WITH dim_billing_account AS (
       dim_crm_account.parent_crm_account_industry                                     AS parent_crm_account_industry,
       dim_crm_account.crm_account_employee_count_band                                 AS crm_account_employee_count_band,
       dim_crm_account.parent_crm_account_max_family_employee                          AS parent_crm_account_max_family_employee,
-      dim_crm_account.parent_crm_account_upa_country                                  AS parent_crm_account_upa_country,
       dim_crm_account.parent_crm_account_upa_state                                    AS parent_crm_account_upa_state,
       dim_crm_account.parent_crm_account_upa_city                                     AS parent_crm_account_upa_city,
       dim_crm_account.parent_crm_account_upa_street                                   AS parent_crm_account_upa_street,
