@@ -48,7 +48,6 @@ models:
       - name: ultimate_parent_billing_country
         description: billing country of parent account
       - name: record_type_id
-      - name: federal_account
       - name: gitlab_com_user
       - name: is_jihu_account
       - name: account_owner
@@ -177,22 +176,6 @@ models:
           - not_null
       - name: dim_parent_crm_account_id
         description: Ulimate parent CRM Account ID provided by Salesforce
-      - name: account_tsp_region_clean
-        description: Sales region, temp cleaning column for account
-      - name: parent_tsp_region_clean
-        description: Sales region, temp cleaning column for parent
-      - name: account_tsp_sub_region_clean
-        description: Sales sub region, temp cleaning column for account
-      - name: parent_tsp_sub_region_clean
-        description: Sales sub region, temp cleaning column for parent
-      - name: account_tsp_area_clean
-        description: Sales area, temp cleaning column for account
-      - name: parent_tsp_area_clean
-        description: Sales area, temp cleaning column for parent
-      - name: account_tsp_territory_clean
-        description: Sales territory, temp cleaning column for account
-      - name: parent_tsp_territory_clean
-        description: Sales territory, temp cleaning column for parent
       - name: account_df_industry_clean
         description: Industry, temp cleaning column for account
       - name: parent_df_industry_clean

@@ -660,18 +660,6 @@ The name of the ultimate parent account coming from SFDC
 
 {% enddocs %}
 
-{% docs parent_crm_account_billing_country %}
-
-The billing country of the ultimate parent account coming from SFDC
-
-{% enddocs %}
-
-{% docs parent_crm_account_sales_segment %}
-
-The sales segment of the ultimate parent account from SFDC. Sales Segments are explained [here](https://about.gitlab.com/handbook/sales/field-operations/gtm-resources/#segmentation)
-
-{% enddocs %}
-
 {% docs parent_crm_account_industry %}
 
 The industry of the ultimate parent account from SFDC
@@ -854,7 +842,9 @@ The date the license expires
 
 {% docs license_add_ons %}
 
-The add-ons associated with the license
+The add-ons associated with the license. In [the handbook](https://about.gitlab.com/handbook/support/license-and-renewals/#common-terminology), the term "add-on" is defined as
+
+> An optional extra that can be purchased to increase the limits of what is available in GitLab. Common examples of this are a Seat add-on where additional seats are purchased during the subscription term, or an additional Storage or Units of Compute purchase (on SaaS only). 
 
 {% enddocs %}
 
