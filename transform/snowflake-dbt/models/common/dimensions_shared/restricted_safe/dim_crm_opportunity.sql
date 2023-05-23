@@ -6,6 +6,7 @@ WITH prep_crm_opportunity AS (
 
     SELECT *
     FROM {{ref('prep_crm_opportunity')}}
+    WHERE is_live = 1
 
 ), layered AS (
 

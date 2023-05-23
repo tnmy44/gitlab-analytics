@@ -263,7 +263,7 @@ source_company_accounts AS (
       crm_account.parent_crm_account_name)) AS list_of_parent_accounts
   FROM crm_account
   LEFT JOIN company
-    ON crm_account.crm_account_zoom_info_dozisf_zi_id = company.company_id
+    ON crm_account.crm_account_zoom_info_dozisf_zi_id::VARCHAR = company.company_id::VARCHAR
   GROUP BY 1
 
 ),

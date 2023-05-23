@@ -103,6 +103,7 @@
       prep_crm_opportunity.user_business_unit_stamped                AS user_business_unit,
       prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk    AS dim_crm_user_hierarchy_sk
     FROM prep_crm_opportunity
+    WHERE is_live = 1
   
 ), unioned AS (
 /*

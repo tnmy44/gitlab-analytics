@@ -55,8 +55,6 @@ WITH crm_account_dimensions AS (
       crm_account_dimensions.dim_parent_sales_segment_id,
       crm_account_dimensions.dim_parent_sales_territory_id,
       crm_account_dimensions.dim_parent_industry_id,
-      crm_account_dimensions.dim_parent_location_country_id,
-      crm_account_dimensions.dim_parent_location_region_id,
       {{ get_keyed_nulls('crm_account_dimensions.dim_account_sales_segment_id,sales_segment.dim_sales_segment_id') }}  AS dim_account_sales_segment_id,
       crm_account_dimensions.dim_account_sales_territory_id,
       crm_account_dimensions.dim_account_industry_id,
@@ -80,7 +78,7 @@ WITH crm_account_dimensions AS (
 {{ dbt_audit(
     cte_ref="opportunities_with_keys",
     created_by="@snalamaru",
-    updated_by="@iweeks",
+    updated_by="@lisvinueza",
     created_date="2020-12-17",
-    updated_date="2021-04-22"
+    updated_date="2023-05-21"
 ) }}

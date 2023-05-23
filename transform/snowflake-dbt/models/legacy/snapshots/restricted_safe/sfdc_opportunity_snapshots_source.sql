@@ -24,9 +24,16 @@ WITH source AS (
       DATEDIFF(days,calculation_days_in_stage_date::DATE,CURRENT_DATE::DATE) + 1            AS days_in_stage
     FROM {{ source('snapshots', 'sfdc_opportunity_snapshots') }}  AS opportunity
 
+    QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY 
+        dbt_valid_from::DATE, 
+        id 
+    ORDER BY dbt_valid_from DESC
+    ) = 1
+
 ), renamed AS (
 
-SELECT
+     SELECT
         -- keys
         accountid                                                                           AS account_id,
         id                                                                                  AS opportunity_id,

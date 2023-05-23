@@ -1,12 +1,12 @@
-    
+
 WITH source AS (
 
   SELECT *
   FROM {{ ref('gitlab_dotcom_namespace_settings_dedupe_source') }}
-  
+
 ), renamed AS (
 
-    SELECT 
+    SELECT
       created_at::TIMESTAMP                               AS created_at,
       updated_at::TIMESTAMP                               AS updated_at,
       namespace_id::NUMBER                                AS namespace_id,
@@ -20,7 +20,9 @@ WITH source AS (
       prevent_sharing_groups_outside_hierarchy::BOOLEAN   AS prevent_sharing_groups_outside_hierarchy,
       new_user_signups_cap::NUMBER                        AS new_signups_cap,
       setup_for_company::BOOLEAN                          AS is_setup_for_company,
-      jobs_to_be_done::NUMBER                             AS jobs_to_be_done
+      jobs_to_be_done::NUMBER                             AS jobs_to_be_done,
+      experiment_features_enabled::BOOLEAN                AS experiment_features_enabled,
+      third_party_ai_features_enabled::BOOLEAN            AS third_party_ai_features_enabled
     FROM source
 
 )
