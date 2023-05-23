@@ -7,7 +7,9 @@ This macro is a CASE WHEN statement that applies formatting to the sales hierarc
 {% enddocs %}
 
 {% docs sales_qualified_source_cleaning %}
-This macro applies correct mapping to the sales_qualified_source field. This is mapping BDR Generated sales qualified source to SDR Generated.
+This macro applies correct mapping to the sales_qualified_source field.
+* BDR -> SDR
+* Channel Generated -> Partner Generated
 {% enddocs %}
 
 {% docs sales_segment_cleaning %}
@@ -22,10 +24,6 @@ This macro stores all of the shared logic between the live and snapshot crm acco
 This macro buckets a unit into a deal size (Small, Medium, Big, or Jumbo) based on an inputted value.
 {% enddocs %}
 
-{% docs sfdc_opportunity_fields%}
-This macro stores all of the shared logic between the live and snapshot crm opportunity models. It takes two values for the model_type variable ('snapshot', 'live') to create either the snapshot or live view of a model from the `source` models. Whenever a new field is added to the live `_source` model, it will need to be added to the `_snapshots_source` model as well to maintain continuity between the live and snapshot models.
-{% enddocs %}
-
 {% docs sfdc_source_buckets %}
 This macro is a CASE WHEN statement that groups the lead sources into new marketing-defined buckets. @rkohnke is the DRI on any changes made to this macro.
 {% enddocs %}
@@ -36,4 +34,22 @@ This macro stores all of the shared logic between the live and snapshot crm user
 
 {% docs sales_funnel_text_slugify %}
 This macro is a removes spaces, special characters, and capital letters from text fields taken from a sheetload filled out by the Finance team to complete the sales funnel targets.
+{% enddocs %}
+
+{% docs sales_qualified_source_grouped %}
+This macro overwrites the sales qualified source to standardize on current business terminology and groups other sales qualifed sources into a common category.
+* BDR -> SDR
+* Channel Generated -> Partner Generated
+* LIKE ANY ('Web%', 'Missing%', 'Other') -> Web Direct Generated
+{% enddocs %}
+
+{% docs sqs_bucket_engagement %}
+This macro groups opportunities into partner generated or co-sell based on the sales qualified source.
+* If Partner Generated -> Partner Sourced
+* If not Partner Generated -> 'Co-sell'
+{% enddocs %}
+
+{% docs deal_path_cleaning %}
+This macro applies correct mapping to the deal_path field based on current business terminology.
+* If Channel -> Partner
 {% enddocs %}

@@ -101,7 +101,18 @@ WITH all_events AS (
       ev.os_name,
       ev.os_family,
       ev.os_manufacturer,
-      replace(ev.os_timezone, '%2F', '/') AS os_timezone,
+      -- Bug identified in https://gitlab.com/gitlab-data/analytics/-/issues/16142
+      replace(
+        CASE
+          WHEN ev.os_timezone = 'Asia/Calcutt' THEN 'Asia/Calcutta'
+          WHEN ev.os_timezone = 'Asia/Rangoo' THEN 'Asia/Rangoon'
+          WHEN ev.os_timezone = 'America/Buenos_Airesnos_Aires' THEN 'America/Buenos_Aires'
+          WHEN ev.os_timezone = 'Asia/SaigonMinh' THEN 'Asia/Ho_Chi_Minh'
+          WHEN ev.os_timezone = 'Etc/Unknown' THEN NULL
+          WHEN ev.os_timezone = 'America/A' THEN NULL
+          ELSE ev.os_timezone
+        END
+        , '%2F', '/') AS os_timezone,
 
       ev.name_tracker, -- included to filter on
       ev.dvce_created_tstamp -- included to sort on

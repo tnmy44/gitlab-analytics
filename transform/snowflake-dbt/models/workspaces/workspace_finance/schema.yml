@@ -484,10 +484,6 @@ models:
               severity: warn
       - name: dim_crm_account_id
         description: join key for dim_crm_account
-        tests:
-          - relationships:
-              to: ref('dim_crm_account')
-              field: dim_crm_account_id
       - name: dim_subscription_id
         description: The identifier of subscription in dim_subscription table
         tests:
@@ -947,10 +943,6 @@ models:
               severity: warn
       - name: dim_crm_account_id
         description: join key for dim_crm_account
-        tests:
-          - relationships:
-              to: ref('dim_crm_account')
-              field: dim_crm_account_id
       - name: dim_subscription_id
         description: The identifier of subscription in dim_subscription table
         tests:
@@ -1126,6 +1118,22 @@ models:
         description: Rate of exchange between the transaction and base currency
       - name: effective_date
         description: When the exchange rate was effective
+  - name: netsuite_consolidated_currency_exchange_rates
+    description: Consolidated exchange rate between a transaction currency and base currency on a given accounting period provided by Netsuite.
+    columns:
+      - name: accounting_period_name
+        description: The name of the accounting period. In Mmm YYYY format
+      - name: accounting_period_end_date
+        description: The end date of the accounting period.
+      - name: base_currency
+        description: The three letter ISO code of the source currency
+      - name: transaction_currency
+        description: The three letter ISO code of the transaction currency
+      - name: consolidated_exchange_rate
+        description: The exchange rate from source to transaction currency
+      - name: reciprocal_exchange_rate
+        description: The exchange rate from transaction to source currency. Calculated as `1 / consolidated_exchange_rate`
+      
   - name: driveload_booking_to_billing_monthly_reconciliation
     description: Output of Finance's analysis determining timing differences between bookings and billings
   - name: rpt_arr_no_manual_adjustment_for_sfdc_reconciliation
@@ -1160,139 +1168,42 @@ models:
       - name: product_tier_name 
         tests:
           - not_null
-  - name: rpt_gcp_billing_skus_day
-    description: gcp billing data aggregated per day and mapped with SKU mapping (https://docs.google.com/spreadsheets/d/1Fx7Ah2wphM3GoAkPDFBT-89tia3Mgd4BrfWxAj9B-5Q/edit#gid=1350489934)
+
+  - name: wk_dim_billing_account
+    description: '{{ doc("dim_billing_account") }}'
     columns:
-      - name: day
-        description: date
+      - name: dim_billing_account_sk
         tests:
           - not_null
-      - name: gcp_project_id
-        description: gcp project name
-      - name: gcp_service_description
-        description: gcp service full name
-      - name: gcp_sku_description
-        description: gcp sku full name
-      - name: finance_sku_type
-        description: implements high-level sku buckets (Compute. Storage, etc...)
-      - name: finance_sku_subtype
-        description: implements sku sub-buckets
-      - name: usage_unit
-        description: usage unit (seconds, bytes-seconds, etc...)
-      - name: pricing_unit
-        description: usage unit in pricing unit (seconds, bytes-seconds, etc...)
-      - name: usage_amount
-        description: usage amount in usage_unit
-      - name: usage_in_pricing_units
-        description: usage amount in pricing unit (seconds, bytes-seconds, etc...)
-      - name: cost_before_credits
-        description: cost before credits
-      - name: net_cost
-        description: gcp net cost for gitlab
-  - name: rpt_gcp_billing_service_mapping_day
-    description: GCP Billing Service mapping https://gitlab.com/gitlab-org/quality/engineering-analytics/finops-analysis/-/issues/12
-    columns:
-      - name: day
-        description: date
-      - name: gcp_project_id
-        description: GCP project id - the project id the resource is running in
-      - name: gcp_service_description
-        description: cloud service used by the resource
-      - name: gcp_sku_description
-        description: gcp service sub-category
-      - name: gitlab_service
-        description: gitlab service mapping
-      - name: usage_unit
-        description: usage amount in usage_unit
-      - name: pricing_unit
-        description: pricing unit
-      - name: usage_amount
-        description: usage amount in usage_unit
-      - name: usage_amount_in_pricing_units
-        description: usage amount in pricing unit
-      - name: cost_before_credits
-        description: cost before credits
-      - name: net_cost
-        description: net cost paid by GitLab
-  - name: rpt_gcp_billing_pl_mapping_day
-    description: GCP Billing P&L mapping 
-    columns:
-      - name: day
-        description: date
-      - name: gcp_project_id
-        description: GCP project id - the project id the resource is running in
-      - name: gcp_service_description
-        description: cloud service used by the resource
-      - name: gcp_sku_description
-        description: gcp service sub-category
-      - name: gitlab_service
-        description: gitlab service mapping
-      - name: finance_pl
-        description: Finance P&L mapping
-      - name: usage_unit
-        description: usage unit
-      - name: pricing_unit
-        description: Finance P&L mapping
-      - name: usage_amount
-        description: Finance P&L mapping
-      - name: usage_amount_in_pricing_units
-        description: Finance P&L mapping
-      - name: cost_before_credits
-        description: Finance P&L mapping
-      - name: net_cost
-        description: net cost paid by GitLab
-  - name: rpt_gcp_billing_infra_mapping_day
-    description: GCP Billing Infra mapping - from infra labels gl_product_category
-    columns:
-      - name: day
-        description: date
-      - name: gcp_project_id
-        description: GCP project id - the project id the resource is running in
-      - name: gcp_service_description
-        description: cloud service used by the resource
-      - name: gcp_sku_description
-        description: gcp service sub-category
-      - name: infra_label
-        description: gitlab service mapping
-      - name: finance_pl
-        description: finance pl classification  
-      - name: usage_unit
-        description: usage unit (bytes, bytes-seconds, etc)
-      - name: pricing_unit
-        description: pricing unit 
-      - name: usage_amount
-        description: gitlab service mapping
-      - name: usage_amount_in_pricing_units
-        description: gitlab service mapping
-      - name: cost_before_credits
-        description: gitlab service mapping
-      - name: net_cost
-        description: net cost paid by GitLab
-  - name: rpt_gcp_billing_pl_mapping_infra_day
-    description: GCP Billing Infra mapping - from infra labels gl_product_category
-    columns:
-      - name: day
-        description: date
-      - name: gcp_project_id
-        description: GCP project id - the project id the resource is running in
-      - name: gcp_service_description
-        description: cloud service used by the resource
-      - name: gcp_sku_description
-        description: gcp service sub-category
-      - name: infra_label
-        description: gitlab service mapping
-      - name: finance_pl
-        description: Finance P&L mapping
-      - name: usage_unit
-        description: usage unit
-      - name: pricing_unit
-        description: pricing unit
-      - name: usage_amount
-        description: usage amount in usage unit
-      - name: usage_amount_in_pricing_units
-        description: usage amount in pricing unit
-      - name: cost_before_credits
-        description: cost before applying credits
-      - name: net_cost
-        description: net cost paid by GitLab
+          - unique
+      - name: dim_billing_account_id
+        description: The unique identifier of the Zuora account associated with a given Subscription ID
+        tests:
+          - not_null
+          - unique
+      - name: dim_crm_account_id
+        description: The customer account ID for the account
+      - name: billing_account_number
+        description: A unique Zuora account number
+      - name: billing_account_name
+        description: The name of the Zuora account
+      - name: account_status
+        description: The status of the account in the system. Can be draft, active, cancelled.
+      - name: parent_id
+        description: The identifier of the parent customer account      
+      - name: sfdc_account_code
+        description: The code for the account
+      - name: sfdc_entity
+      - name: account_currency
+        description: A currency as defined in Billing Settings in the Zuora UI
+      - name: sold_to_country
+        description: The country of the sold to contact
+      - name: ssp_channel
+      - name: po_required
+      - name: auto_pay
+      - name: is_deleted
+        description: The flag indicating if account has been deleted
+      - name: batch
+      - name: record_data_source
+        description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources
 

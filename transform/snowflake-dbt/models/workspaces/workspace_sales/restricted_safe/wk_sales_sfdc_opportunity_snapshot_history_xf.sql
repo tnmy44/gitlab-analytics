@@ -48,6 +48,7 @@ WITH date_details AS (
       report_user_segment_geo_region_area_sqs_ot,
 
       -- FY24 new fields
+      report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
       report_opportunity_user_business_unit,
       report_opportunity_user_sub_business_unit,
       report_opportunity_user_division,
@@ -77,8 +78,14 @@ WITH date_details AS (
 
       -- FY24 keys
       key_bu,
+      key_bu_ot,
+      key_bu_sqs,
       key_bu_subbu,
+      key_bu_subbu_ot,
+      key_bu_subbu_sqs,
       key_bu_subbu_division,
+      key_bu_subbu_division_ot,
+      key_bu_subbu_division_sqs,
       key_bu_subbu_division_asm,
 
       -------------------------------------
@@ -394,11 +401,11 @@ WITH date_details AS (
       edm_snapshot_opty.account_owner_user_geo,
       edm_snapshot_opty.account_owner_user_region,
       edm_snapshot_opty.account_owner_user_area,
-      edm_snapshot_opty.account_demographics_segment,
-      edm_snapshot_opty.account_demographics_geo,
-      edm_snapshot_opty.account_demographics_region,
-      edm_snapshot_opty.account_demographics_area,
-      edm_snapshot_opty.account_demographics_territory
+      edm_snapshot_opty.parent_crm_account_sales_segment,
+      edm_snapshot_opty.parent_crm_account_geo,
+      edm_snapshot_opty.parent_crm_account_region,
+      edm_snapshot_opty.parent_crm_account_area,
+      edm_snapshot_opty.parent_crm_account_territory
       
 
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
@@ -429,6 +436,9 @@ WITH date_details AS (
       -- unadjusted version of the field
       sfdc_opportunity_xf.report_opportunity_raw_user_segment,
       sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
+
+      -- FY24 base key
+      sfdc_opportunity_xf.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
 
       sfdc_opportunity_xf.key_sqs,
       sfdc_opportunity_xf.key_ot,
@@ -461,7 +471,11 @@ WITH date_details AS (
 
       sfdc_opportunity_xf.key_bu,
       sfdc_opportunity_xf.key_bu_subbu,
+      sfdc_opportunity_xf.key_bu_subbu_ot,
+      sfdc_opportunity_xf.key_bu_subbu_sqs,
       sfdc_opportunity_xf.key_bu_subbu_division,
+      sfdc_opportunity_xf.key_bu_subbu_division_ot,
+      sfdc_opportunity_xf.key_bu_subbu_division_sqs,
       sfdc_opportunity_xf.key_bu_subbu_division_asm,
 
       -- fields calculated with both live and snapshot fields
@@ -499,12 +513,6 @@ WITH date_details AS (
       ------------------------------------------------------------------------------------------------------
 
       opportunity_owner.name                                     AS opportunity_owner,
-    
-      upa.account_demographics_sales_segment                     AS upa_demographics_segment,
-      upa.account_demographics_geo                               AS upa_demographics_geo,
-      upa.account_demographics_region                            AS upa_demographics_region,
-      upa.account_demographics_area                              AS upa_demographics_area,
-      upa.account_demographics_territory                         AS upa_demographics_territory,
 
       opportunity_owner.is_rep_flag
 
@@ -514,8 +522,6 @@ WITH date_details AS (
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_opportunity_xf.account_id = sfdc_accounts_xf.account_id 
-    LEFT JOIN sfdc_accounts_xf AS upa
-      ON upa.account_id = sfdc_accounts_xf.ultimate_parent_account_id
     LEFT JOIN sfdc_users_xf AS account_owner
       ON account_owner.user_id = sfdc_accounts_xf.owner_id
     LEFT JOIN sfdc_users_xf AS opportunity_owner
@@ -803,7 +809,48 @@ WITH date_details AS (
         WHEN net_arr >= 1000000 
           THEN '8. (>1000k)'
         ELSE 'Other' 
-      END                                                           AS calculated_deal_size
+      END                                                           AS calculated_deal_size,
+
+    -- For some analysis it is important to order stages by rank
+    CASE
+            WHEN stage_name = '0-Pending Acceptance'
+                THEN 0
+            WHEN stage_name = '1-Discovery'
+                THEN 1
+             WHEN stage_name = '2-Scoping'
+                THEN 2
+            WHEN stage_name = '3-Technical Evaluation'
+                THEN 3
+            WHEN stage_name = '4-Proposal'
+                THEN 4
+            WHEN stage_name = '5-Negotiating'
+                THEN 5
+            WHEN stage_name = '6-Awaiting Signature'
+                THEN 6
+            WHEN stage_name = '7-Closing'
+                THEN 7
+            WHEN stage_name = 'Closed Won'
+                THEN 8
+            WHEN stage_name = '8-Closed Lost'
+                THEN 9
+            WHEN stage_name = '9-Unqualified'
+                THEN 10
+            WHEN stage_name = '10-Duplicate'
+                THEN 11
+            ELSE NULL
+    END                     AS stage_name_rank,
+    
+    CASE
+        WHEN stage_name IN ('0-Pending Acceptance')
+            THEN '0. Acceptance' 
+         WHEN stage_name IN ('1-Discovery','2-Scoping')
+            THEN '1. Early'
+         WHEN stage_name IN ('3-Technical Evaluation','4-Proposal')
+            THEN '2. Middle'
+         WHEN stage_name IN ('5-Negotiating','6-Awaiting Signature')
+            THEN '3. Late'
+        ELSE '4. Closed'
+    END                     AS pipeline_category
 
     FROM add_compound_metrics
 )

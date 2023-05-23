@@ -66,8 +66,8 @@ rspec_profiler_extract = KubernetesPodOperator(
         SNOWFLAKE_LOAD_PASSWORD,
     ],
     env_vars=pod_env_vars,
-    affinity=get_affinity(False),
-    tolerations=get_toleration(False),
+    affinity=get_affinity("production"),
+    tolerations=get_toleration("production"),
     arguments=[rspec_profiler_extract_cmd],
     dag=dag,
 )

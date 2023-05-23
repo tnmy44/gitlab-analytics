@@ -72,7 +72,6 @@ def get_and_write_distributions(survey_ids: List[str]) -> List[Dict[Any, Any]]:
         current_distributions = get_distributions(client, survey_id)
         all_distributions = all_distributions + current_distributions
         if current_distributions:
-
             for chunk in chunk_list(current_distributions, 100):
                 with open("distributions.json", "w") as out_file:
                     json.dump(chunk, out_file)

@@ -286,14 +286,14 @@ WITH date_details AS (
           THEN 'Direct'
         WHEN sfdc_opportunity_snapshot_history.deal_path = 'Web Direct'
           THEN 'Web Direct' 
-        WHEN (sfdc_opportunity_snapshot_history.deal_path = 'Channel' 
+        WHEN (sfdc_opportunity_snapshot_history.deal_path = 'Partner' 
               OR sfdc_opportunity_snapshot_history.deal_path = 'Partner') 
-            AND (sfdc_opportunity_snapshot_history.sales_qualified_source = 'Channel Generated'
+            AND (sfdc_opportunity_snapshot_history.sales_qualified_source = 'Partner Generated'
                 OR sfdc_opportunity_snapshot_history.sales_qualified_source = 'Partner Generated') 
           THEN 'Partner Sourced'
-        WHEN (sfdc_opportunity_snapshot_history.deal_path = 'Channel' 
+        WHEN (sfdc_opportunity_snapshot_history.deal_path = 'Partner' 
               OR sfdc_opportunity_snapshot_history.deal_path = 'Partner') 
-            AND (sfdc_opportunity_snapshot_history.sales_qualified_source != 'Channel Generated'
+            AND (sfdc_opportunity_snapshot_history.sales_qualified_source != 'Partner Generated'
                 AND sfdc_opportunity_snapshot_history.sales_qualified_source != 'Partner Generated') 
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
@@ -841,34 +841,18 @@ WITH date_details AS (
 
       -- account driven fields
       sfdc_accounts_xf.account_name,
-      --sfdc_accounts_xf.tsp_region,
-      --sfdc_accounts_xf.tsp_sub_region,
-      --sfdc_accounts_xf.ultimate_parent_sales_segment,
-      --sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
       sfdc_accounts_xf.ultimate_parent_account_id,
-      upa.account_name                        AS ultimate_parent_account_name,
-      --sfdc_accounts_xf.ultimate_parent_id,
+      sfdc_accounts_xf.ultimate_parent_account_name,
       sfdc_accounts_xf.is_jihu_account,
-
       sfdc_accounts_xf.account_owner_user_segment,
       sfdc_accounts_xf.account_owner_user_geo, 
       sfdc_accounts_xf.account_owner_user_region,
       sfdc_accounts_xf.account_owner_user_area,
-      -- account_owner_subarea_stamped
-
-      sfdc_accounts_xf.account_demographics_sales_segment AS account_demographics_segment,
-      sfdc_accounts_xf.account_demographics_geo,
-      sfdc_accounts_xf.account_demographics_region,
-      sfdc_accounts_xf.account_demographics_area,
-      sfdc_accounts_xf.account_demographics_territory,
-      -- account_demographics_subarea_stamped        
-
-      upa.account_demographics_sales_segment    AS upa_demographics_segment,
-      upa.account_demographics_geo              AS upa_demographics_geo,
-      upa.account_demographics_region           AS upa_demographics_region,
-      upa.account_demographics_area             AS upa_demographics_area,
-      upa.account_demographics_territory        AS upa_demographics_territory,
-
+      sfdc_accounts_xf.parent_crm_account_sales_segment,
+      sfdc_accounts_xf.parent_crm_account_geo,
+      sfdc_accounts_xf.parent_crm_account_region,
+      sfdc_accounts_xf.parent_crm_account_area,
+      sfdc_accounts_xf.parent_crm_account_territory,
       opportunity_owner.is_rep_flag  
 
     FROM sfdc_opportunity_snapshot_history opp_snapshot
@@ -876,8 +860,6 @@ WITH date_details AS (
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_opportunity_xf.account_id = sfdc_accounts_xf.account_id 
-    LEFT JOIN sfdc_accounts_xf upa
-      ON upa.account_id = sfdc_accounts_xf.ultimate_parent_account_id
     LEFT JOIN sfdc_users_xf account_owner
       ON account_owner.user_id = sfdc_accounts_xf.owner_id
     LEFT JOIN sfdc_users_xf opportunity_owner

@@ -106,9 +106,9 @@ data-image:
 update-containers:
 	@echo "Pulling latest containers for airflow-image, analyst-image, data-image and dbt-image..."
 	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/analyst-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/analyst-image:latest
 	@docker pull registry.gitlab.com/gitlab-data/data-image/data-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/dbt-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/dbt-image:latest
 
 ########################################################################################################################
 # DBT

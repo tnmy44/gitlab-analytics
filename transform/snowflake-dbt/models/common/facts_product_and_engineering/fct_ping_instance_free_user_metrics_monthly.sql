@@ -34,10 +34,12 @@
       NULL                                                                                      AS dim_namespace_id,
       sm_free_users.uuid,                                                            
       sm_free_users.host_name                                                                   AS hostname,
+      sm_free_users.dim_installation_id,
       'Self-Managed'                                                                            AS delivery_type,
       sm_free_users.cleaned_version,
       sm_free_users.dim_crm_account_id,
       sm_free_users.ping_created_date                                                           AS ping_date,
+      sm_free_users.installation_creation_date,
       sm_free_users.umau_28_days_user,
       sm_free_users.action_monthly_active_users_project_repo_28_days_user,
       sm_free_users.merge_requests_28_days_user,
@@ -166,7 +168,6 @@
       sm_free_users.successful_deployments_28_days_user, 
       -- Wave 5.3
       sm_free_users.geo_enabled,
-      sm_free_users.geo_nodes_all_time_event,
       sm_free_users.auto_devops_pipelines_28_days_user,
       sm_free_users.active_instance_runners_all_time_event,
       sm_free_users.active_group_runners_all_time_event,
@@ -205,6 +206,17 @@
       sm_free_users.external_status_checks_all_time_event,
       sm_free_users.paid_license_search_28_days_user,
       sm_free_users.last_activity_28_days_user,
+      -- Wave 7
+      sm_free_users.snippets_28_days_event,
+      sm_free_users.single_file_editor_28_days_user,
+      sm_free_users.merge_requests_created_28_days_event,
+      sm_free_users.merge_requests_created_28_days_user,
+      sm_free_users.merge_requests_approval_rules_28_days_event,
+      sm_free_users.custom_compliance_frameworks_28_days_event,
+      sm_free_users.projects_security_policy_28_days_event,
+      sm_free_users.merge_requests_security_policy_28_days_user,
+      sm_free_users.pipelines_implicit_auto_devops_28_days_event,
+      sm_free_users.pipeline_schedules_28_days_user,
       -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY sm_free_users.uuid, sm_free_users.host_name
                              ORDER BY sm_free_users.ping_created_at DESC
@@ -230,10 +242,12 @@
       dim_namespace_id,
       NULL                                                                                      AS uuid,
       NULL                                                                                      AS hostname,
+      NULL                                                                                      AS dim_installation_id,
       'SaaS'                                                                                    AS delivery_type,
       NULL                                                                                      AS cleaned_version,
       dim_crm_account_id,
       ping_date::DATE                                                                           AS ping_date,
+      NULL                                                                                      AS installation_creation_date,
       -- Wave 2 & 3
       "usage_activity_by_stage_monthly.manage.events"                                           AS umau_28_days_user,
       "usage_activity_by_stage_monthly.create.action_monthly_active_users_project_repo"         AS action_monthly_active_users_project_repo_28_days_user,
@@ -363,7 +377,6 @@
       "usage_activity_by_stage_monthly.release.successful_deployments"                          AS successful_deployments_28_days_user,
       -- Wave 5.3
       "geo_enabled"                                                                             AS geo_enabled,
-      "counts.geo_nodes"                                                                        AS geo_nodes_all_time_event,
       "usage_activity_by_stage_monthly.verify.ci_pipeline_config_auto_devops"                   AS auto_devops_pipelines_28_days_user,
       "counts.ci_runners_instance_type_active"                                                  AS active_instance_runners_all_time_event,
       "counts.ci_runners_group_type_active"                                                     AS active_group_runners_all_time_event,
@@ -402,6 +415,17 @@
       "counts.external_status_checks"                                                           AS external_status_checks_all_time_event,
       "redis_hll_counters.search.i_search_paid_monthly"                                         AS paid_license_search_28_days_user,
       "redis_hll_counters.manage.unique_active_users_monthly"                                   AS last_activity_28_days_user,
+      -- Wave 7
+      "counts_monthly.snippets"                                                                                             AS snippets_28_days_event,
+      "redis_hll_counters.ide_edit.g_edit_by_sfe_monthly"                                                                   AS single_file_editor_28_days_user,
+      "redis_hll_counters.code_review.i_code_review_create_mr_monthly"                                                      AS merge_requests_created_28_days_event,
+      "redis_hll_counters.code_review.i_code_review_user_create_mr_monthly"                                                 AS merge_requests_created_28_days_user,
+      "usage_activity_by_stage_monthly.govern.merged_merge_requests_using_approval_rules_distinct"                          AS merge_requests_approval_rules_28_days_event,
+      "usage_activity_by_stage_monthly.manage.custom_compliance_frameworks"                                                 AS custom_compliance_frameworks_28_days_event,
+      "usage_activity_by_stage_monthly.govern.distinct_count_project_id_from_security_orchestration_policy_configurations"  AS projects_security_policy_28_days_event,
+      "usage_activity_by_stage_monthly.govern.user_merge_requests_for_projects_with_assigned_security_policy_project"       AS merge_requests_security_policy_28_days_user,
+      "redis_hll_counters.ci_templates.p_ci_templates_implicit_auto_devops_monthly"                                         AS pipelines_implicit_auto_devops_28_days_event,
+      "usage_activity_by_stage_monthly.verify.ci_pipeline_schedules"                                                        AS pipeline_schedules_28_days_user,
       -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY reporting_month DESC) = 1,
           TRUE, FALSE)                                                                          AS is_latest_data
@@ -422,7 +446,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
-    created_date="2023-01-20",
-    updated_date="2023-01-20"
+    updated_by="@mdrussell",
+    created_date="2021-06-08",
+    updated_date="2023-04-05"
 ) }}

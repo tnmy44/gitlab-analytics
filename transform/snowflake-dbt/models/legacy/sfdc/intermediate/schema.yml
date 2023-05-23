@@ -204,3 +204,17 @@ models:
           tests:
               - not_null
               - unique
+
+  - name: sfdc_task
+    description: Base model for SFDC tasks
+    columns:
+      - name: task_id
+        tests:
+          - unique
+          - not_null
+      - name: full_comments
+        meta:
+           masking_policy: data_science_sensitive
+      - name: task_subject
+        meta:
+           masking_policy: data_science_sensitive

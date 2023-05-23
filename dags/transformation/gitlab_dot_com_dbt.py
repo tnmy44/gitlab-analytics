@@ -113,8 +113,8 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
     snapshot_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-        dbt --debug --log-format json snapshot --profiles-dir profile --target prod --select path:snapshots/{dbt_module_name}; ret=$?;
-        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --logs logs/dbt.log --project-name gitlab-analysis;
+        dbt snapshot --profiles-dir profile --target prod --select path:snapshots/{dbt_module_name} ; ret=$?;
+        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
     """
     snapshot_task = KubernetesPodOperator(
@@ -126,16 +126,16 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
         secrets=dbt_secrets,
         env_vars=gitlab_pod_env_vars,
         arguments=[snapshot_cmd],
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity("production"),
+        tolerations=get_toleration("production"),
     )
 
     # Run de dupe / rename /scd model
     model_run_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-        dbt --debug --log-format json run --profiles-dir profile --target prod --models +sources.{dbt_module_name}; ret=$?;
-        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --logs logs/dbt.log --project-name gitlab-analysis;
+        dbt run --profiles-dir profile --target prod --models +sources.{dbt_module_name} ; ret=$?;
+        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
     """
     dedupe_dbt_model_task = KubernetesPodOperator(
@@ -147,15 +147,15 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
         secrets=dbt_secrets,
         env_vars=gitlab_pod_env_vars,
         arguments=[model_run_cmd],
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity("production"),
+        tolerations=get_toleration("production"),
     )
 
     # Test all source models
     model_test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt --debug --log-format json test --profiles-dir profile --target prod --models +sources.{dbt_module_name} {run_command_test_exclude}; ret=$?;
-        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --logs logs/dbt.log --project-name gitlab-analysis;
+        dbt test --profiles-dir profile --target prod --models +sources.{dbt_module_name} {run_command_test_exclude} ; ret=$?;
+        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
     """
     source_schema_model_test = KubernetesPodOperator(
@@ -167,8 +167,8 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
         secrets=dbt_secrets,
         env_vars=gitlab_pod_env_vars,
         arguments=[model_test_cmd],
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity("production"),
+        tolerations=get_toleration("production"),
     )
 
     return snapshot_task, dedupe_dbt_model_task, source_schema_model_test

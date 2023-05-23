@@ -5,7 +5,7 @@
 }}
 
 
-{% set fields_to_mask = ['note'] %}
+{% set fields_to_mask = ['note','note_html'] %}
 
 -- depends_on: {{ ref('internal_gitlab_namespaces') }}
 

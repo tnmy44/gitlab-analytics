@@ -51,14 +51,6 @@ Then in our mapping table we would have:
 
 {% enddocs %}
 
-{% docs map_namespace_lineage %}
-
-Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.
-
-The grain of this table is one row per namespace. The Primary Key is `dim_namespace_id`.
-
-{% enddocs %}
-
 {% docs map_product_tier %}
 
  Table for mapping Zuora Product Rate Plans to Product Tier, Delivery Type, and Ranking.
@@ -115,5 +107,11 @@ This tables creates an [alterntive mapping](https://about.gitlab.com/handbook/ma
 {% docs map_project_internal %}
 
 This View contains the list of projects that are under ultimate parent namespace ids that are internal to gitlab. This mapping should be used to filter entities such as Issues and Merge requests when only internal GitLab data is needed.
+
+{% enddocs %}
+
+{% docs map_epic_internal %}
+
+This View contains the list of epics that are under ultimate parent namespace IDs and the namespace IDs that are internal to gitlab. This mapping should be used to filter epics when only internal GitLab data is needed.
 
 {% enddocs %}

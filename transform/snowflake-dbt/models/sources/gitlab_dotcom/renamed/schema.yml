@@ -1207,6 +1207,7 @@ models:
       - name: namespace_path
         description: '{{ doc("visibility_documentation") }}'
       - name: namespace_type
+        description: '{{ doc("namespace_type") }}'
         tests:
           - not_null
           - accepted_values:
@@ -1361,6 +1362,16 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
+
+  - name: gitlab_dotcom_project_ci_cd_settings_source
+    description: Base model for Gitlab.com auto devops
+    columns:
+      - name: project_ci_cd_settings_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+  
   - name: gitlab_dotcom_project_features_source
     description: Base model for Gitlab.com project features
     columns:

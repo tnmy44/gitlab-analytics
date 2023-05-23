@@ -21,7 +21,8 @@ ptc_scores AS (
     crm_account_id,
     ptc_score,
     ptc_stars,
-    ptc_insights
+    ptc_insights,
+    ptc_downtier_likely
   FROM {{ ref('model_mart_crm_account_id') }}
   WHERE latest_ptc_score = TRUE
 
@@ -32,6 +33,7 @@ SELECT
   pte_stars AS pte_score_value__c,
   pte_insights AS pte_insights__c,
   pte_uptier_likely AS pte_likely_to_uptier__c,
+  ptc_downtier_likely AS ptc_downtier_likely__c,
   ptc_stars AS ptc_score_value__c,
   ptc_insights AS ptc_insights__c,
   pte_score * 100 AS pte_percent__c,

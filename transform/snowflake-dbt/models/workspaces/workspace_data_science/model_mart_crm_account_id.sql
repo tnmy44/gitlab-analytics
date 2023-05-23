@@ -43,6 +43,7 @@
       STDDEV(score) OVER (PARTITION BY score_date ORDER BY score_date ) AS stdev_ptc_score,
       (ptc_score - avg_ptc_score) / stdev_ptc_score AS ptc_distance,
       insights,
+      downtier_likely,
       renewal_date
     FROM ptc_scores   
 
@@ -68,6 +69,7 @@ SELECT
     ELSE ptc_score_group 
   END AS ptc_stars,
   b.insights AS ptc_insights,
+  b.downtier_likely AS ptc_downtier_likely,
   b.renewal_date::DATE AS renewal_date,
   IFF(pte_score_date = c.score_date, TRUE, FALSE) AS latest_pte_score,
   IFF(ptc_score_date = d.score_date, TRUE, FALSE) AS latest_ptc_score

@@ -11,19 +11,21 @@ team_data AS (
     source.team_id,
     source.team_superior_team_id,
     source.team_hierarchy_level,
-    source.team_inactivated,
+    source.is_team_inactivated,
     source.team_name,
     source.team_manager_name,
     source.team_manager_name_id,
+    source.team_members_count,
+    source.is_team_manager_inherited,
     IFF(
       source.is_deleted AND source.team_inactivated_date IS NULL,
       source.uploaded_at,
-      source.team_inactivated_date)      AS team_inactivated_date,
+      source.team_inactivated_date)                     AS team_inactivated_date,
     source.is_deleted,
-    DATE_TRUNC('day', source.valid_from) AS valid_from,
+    DATE_TRUNC('day', source.valid_from)                AS valid_from,
     COALESCE(DATE_TRUNC('day', source.valid_to),
       {{ var('tomorrow') }}
-    )                                    AS valid_to
+    )                                                   AS valid_to
   FROM source
 
 ),
@@ -65,6 +67,7 @@ recursive_hierarchy AS (
     root.team_id               AS team_id,
     root.team_name             AS team_name,
     root.team_superior_team_id AS team_superior_team_id,
+    root.superior_id_group     AS superior_id_group,
     root.valid_from            AS valid_from,
     root.valid_to              AS valid_to,
     TO_ARRAY(root.valid_from)  AS valid_from_list,
@@ -80,6 +83,7 @@ recursive_hierarchy AS (
     iter.team_id                                                     AS team_id,
     iter.team_name                                                   AS team_name,
     iter.team_superior_team_id                                       AS team_superior_team_id,
+    iter.superior_id_group     										 AS superior_id_group,
     iter.valid_from                                                  AS valid_from,
     iter.valid_to                                                    AS valid_to,
     ARRAY_APPEND(anchor.valid_from_list, iter.valid_from)            AS valid_from_list,
@@ -128,13 +132,17 @@ team_hierarchy AS (
     COALESCE(recursive_hierarchy.upstream_organization_names[7]::VARCHAR, '--') AS hierarchy_level_8_name,
     COALESCE(recursive_hierarchy.upstream_organization_names[8]::VARCHAR, '--') AS hierarchy_level_9_name,
     recursive_hierarchy.upstream_organizations                                  AS hierarchy_levels_array,
+    /*
+      Add the superior_id_group (one of the keys used to group the 
+      hierarchy changes in team_superior_change) to make the grouping unique
+    */
+    recursive_hierarchy.superior_id_group 										AS superior_id_group,
     MAX(from_list.value::TIMESTAMP)                                             AS hierarchy_valid_from,
     MIN(to_list.value::TIMESTAMP)                                               AS hierarchy_valid_to
-
   FROM recursive_hierarchy
   INNER JOIN LATERAL FLATTEN(INPUT => recursive_hierarchy.valid_from_list) AS from_list
   INNER JOIN LATERAL FLATTEN(INPUT => recursive_hierarchy.valid_to_list) AS to_list
-  {{ dbt_utils.group_by(n=21) }}
+  {{ dbt_utils.group_by(n=22) }}
   HAVING hierarchy_valid_to > hierarchy_valid_from
 
 ),
@@ -142,6 +150,7 @@ team_hierarchy AS (
 final AS (
 
   SELECT
+    {{ dbt_utils.surrogate_key(['team_data.team_id']) }}        AS dim_team_sk,
     team_data.team_id,
     team_data.team_superior_team_id,
     team_hierarchy.hierarchy_level_1,
@@ -164,15 +173,17 @@ final AS (
     team_hierarchy.hierarchy_level_9_name,
     team_hierarchy.hierarchy_levels_array,
     team_data.team_hierarchy_level                                      AS team_hierarchy_level,
-    team_data.team_inactivated,
+    team_data.is_team_inactivated,
     team_data.team_name,
     team_data.team_manager_name,
     team_data.team_manager_name_id,
     team_data.team_inactivated_date,
+    team_data.team_members_count,
+    team_data.is_team_manager_inherited,
     IFF(team_data.team_inactivated_date IS NULL, TRUE, FALSE)           AS is_team_active,
     GREATEST(team_hierarchy.hierarchy_valid_from, team_data.valid_from) AS valid_from,
     LEAST(team_hierarchy.hierarchy_valid_to, team_data.valid_to)        AS valid_to,
-    IFF(DATE(valid_to) = {{ var('tomorrow') }}, TRUE, FALSE)  AS is_current
+    IFF(DATE(valid_to) = {{ var('tomorrow') }}, TRUE, FALSE)            AS is_current
   FROM team_data
   LEFT JOIN team_hierarchy
     ON team_hierarchy.team_id = team_data.team_id
@@ -192,5 +203,5 @@ final AS (
     created_by="@lisvinueza",
     updated_by="@lisvinueza",
     created_date="2023-01-17",
-    updated_date="2023-01-17",
+    updated_date="2023-04-13",
  	) }}

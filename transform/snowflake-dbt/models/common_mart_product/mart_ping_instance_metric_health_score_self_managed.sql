@@ -43,6 +43,7 @@
     fct_ping_instance_metric_with_license.dim_installation_id                                  AS dim_installation_id,
     fct_ping_instance_metric_with_license.dim_subscription_license_id                          AS dim_subscription_license_id,
     fct_ping_instance.license_user_count                                                       AS license_user_count,
+    fct_ping_instance.installation_creation_date                                               AS installation_creation_date,
     fct_ping_instance.license_billable_users                                                   AS license_billable_users,
     fct_ping_instance.historical_max_user_count                                                AS historical_max_user_count,
     fct_ping_instance.instance_user_count                                                      AS instance_user_count,
@@ -87,6 +88,7 @@
       dim_installation_id,
       dim_subscription_license_id,
       license_user_count,
+      installation_creation_date,
       license_billable_users,
       historical_max_user_count,
       instance_user_count,
@@ -98,14 +100,14 @@
       {{ ping_instance_wave_metrics() }}
 
     FROM final
-    {{ dbt_utils.group_by(n=26)}}
+    {{ dbt_utils.group_by(n=27)}}
 
 )
 
 {{ dbt_audit(
     cte_ref="pivoted",
     created_by="@mdrussell",
-    updated_by="@rbacovic",
+    updated_by="@mrussell",
     created_date="2022-10-12",
-    updated_date="2022-12-01"
+    updated_date="2023-04-04"
 ) }}

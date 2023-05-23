@@ -225,6 +225,49 @@ A custom report built in Workday for the creation of the Supervisory Organizatio
 
 {% enddocs %}
 
+
+{% docs performance_growth_potential %}
+
+A custom report built in Workday for the creation of the dim_team_member model. The data is extracted using Fivetran and loaded into Snowflake, with a sync frequency of 12 hours. The grain of the table is one row per Workday ID, which is the unique ID for the business process. GitLab started using Workday for Talent Assessment in FY23, and all team members who were part of the talent assessment process in FY23 should have both performance and growth potential rating. Historical data from BambooHR might have null values. Workday only captures history from mid-April 2022 onwards. 
+
+[This sheet](https://docs.google.com/spreadsheets/d/1-RvIjlca6b4T0XmKRdZToP2x5gLRQJ1RDj7H1vWYknc/edit) contains the links to the reports in Workday production (access restricted, Laura Janssen is the owner)
+
+{% enddocs %}
+
+{% docs assess_talent %}
+
+A custom report built in Workday for the creation of the dim_team_member model. The data is extracted using Fivetran and loaded into Snowflake, with a sync frequency of 12 hours. The grain of the table is one row per Workday ID, which is the unique ID for the business process. This table contains information regarding the status of [key talent](https://about.gitlab.com/handbook/people-group/talent-assessment/#key-talent) at GitLab, including the effective date and the employee id. 
+
+[This sheet](https://docs.google.com/spreadsheets/d/1-RvIjlca6b4T0XmKRdZToP2x5gLRQJ1RDj7H1vWYknc/edit) contains the links to the reports in Workday production (access restricted, Laura Janssen is the owner)
+
+{% enddocs %}
+
+{% docs all_workers %}
+
+A custom report built in Workday for the creation of the dim_team_member model. The data is extracted using Fivetran and loaded into Snowflake, with a sync frequency of 12 hours. The grain of the table is one row per team member. This table contains sensitive data, including the most recent inputs for ethnicity, date of birth and gender per team member. The history of sensitive fields (such as gender and ethnicity) shouldn't be captured and only the most recent fields should be stored in the data warehouse. This table contains records for all active employees & any employee that terminated in 2021. Anyone who terminated before 2021 isn't captured in this table.
+
+[This sheet](https://docs.google.com/spreadsheets/d/1-RvIjlca6b4T0XmKRdZToP2x5gLRQJ1RDj7H1vWYknc/edit) contains the links to the reports in Workday production (access restricted, Laura Janssen is the owner)
+
+{% enddocs %}
+
+{% docs gitlab_usernames %}
+
+A custom report built in Workday for the creation of the dim_team_member model. The data is extracted using Fivetran and loaded into Snowflake, with a sync frequency of 12 hours. The grain of the table is one row per Workday ID, which is the unique ID for the business process. This table contains the gitlab_username, along with the effective_date and employee_id. 
+
+[This sheet](https://docs.google.com/spreadsheets/d/1-RvIjlca6b4T0XmKRdZToP2x5gLRQJ1RDj7H1vWYknc/edit) contains the links to the reports in Workday production (access restricted, Laura Janssen is the owner)
+
+{% enddocs %}
+
+{% docs staffing_history_approved %}
+
+A custom report built in Workday for the creation of the dim_team_member model. The data is extracted using Fivetran and loaded into Snowflake, with a sync frequency of 12 hours. The grain of the table is one row per Workday ID, which is the unique ID for the business process. This table contains data regarding the location of the team member (Country and region) as well their start and termination dates and the business process associated with the change in their worker profile. This table (and Workday) only captures history from mid-April 2022 onwards. 
+
+[This sheet](https://docs.google.com/spreadsheets/d/1-RvIjlca6b4T0XmKRdZToP2x5gLRQJ1RDj7H1vWYknc/edit) contains the links to the reports in Workday production (access restricted, Laura Janssen is the owner).
+
+{% enddocs %}
+
+
+
 ## Columns
 
 {% docs workday_employee_id %}

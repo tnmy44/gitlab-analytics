@@ -242,7 +242,7 @@ we can delete this connection and use the mart table directly.
       sfdc_opportunity_xf.platform_partner,
 
       CASE
-        WHEN (sfdc_opportunity_xf.deal_path = 'Channel' OR sfdc_opportunity_xf.deal_path = 'Partner') 
+        WHEN (sfdc_opportunity_xf.deal_path = 'Partner' OR sfdc_opportunity_xf.deal_path = 'Partner') 
           THEN REPLACE(COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track, resale_account.partner_track,'Open'),'select','Select')
         ELSE 'Direct' 
       END                                                                                           AS calculated_partner_track,
@@ -263,12 +263,12 @@ we can delete this connection and use the mart table directly.
           THEN 'Direct'
         WHEN sfdc_opportunity_xf.deal_path = 'Web Direct'
           THEN 'Web Direct' 
-        WHEN (sfdc_opportunity_xf.deal_path = 'Channel' OR sfdc_opportunity_xf.deal_path = 'Partner') 
-            AND (sfdc_opportunity_xf.sales_qualified_source = 'Channel Generated' 
+        WHEN (sfdc_opportunity_xf.deal_path = 'Partner' OR sfdc_opportunity_xf.deal_path = 'Partner') 
+            AND (sfdc_opportunity_xf.sales_qualified_source = 'Partner Generated' 
                 OR  sfdc_opportunity_xf.sales_qualified_source = 'Partner Generated') 
           THEN 'Partner Sourced'
-        WHEN (sfdc_opportunity_xf.deal_path = 'Channel' OR sfdc_opportunity_xf.deal_path = 'Partner') 
-            AND (sfdc_opportunity_xf.sales_qualified_source != 'Channel Generated' 
+        WHEN (sfdc_opportunity_xf.deal_path = 'Partner' OR sfdc_opportunity_xf.deal_path = 'Partner') 
+            AND (sfdc_opportunity_xf.sales_qualified_source != 'Partner Generated' 
                 AND sfdc_opportunity_xf.sales_qualified_source != 'Partner Generated') 
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
@@ -705,18 +705,12 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       sfdc_accounts_xf.account_owner_user_area,
       -- account_owner_subarea_stamped
 
-      sfdc_accounts_xf.account_demographics_sales_segment   AS account_demographics_segment,
-      sfdc_accounts_xf.account_demographics_geo,
-      sfdc_accounts_xf.account_demographics_region,
-      sfdc_accounts_xf.account_demographics_area,
-      sfdc_accounts_xf.account_demographics_territory,
-      -- account_demographics_subarea_stamped
+      sfdc_accounts_xf.parent_crm_account_sales_segment,
+      sfdc_accounts_xf.parent_crm_account_geo,
+      sfdc_accounts_xf.parent_crm_account_region,
+      sfdc_accounts_xf.parent_crm_account_area,
+      sfdc_accounts_xf.parent_crm_account_territory,
 
-      upa.account_demographics_sales_segment    AS upa_demographics_segment,
-      upa.account_demographics_geo              AS upa_demographics_geo,
-      upa.account_demographics_region           AS upa_demographics_region,
-      upa.account_demographics_area             AS upa_demographics_area,
-      upa.account_demographics_territory        AS upa_demographics_territory,
       -----------------------------------------------
 
       CASE
@@ -827,8 +821,6 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
     CROSS JOIN today
     INNER JOIN sfdc_accounts_xf
       ON sfdc_accounts_xf.account_id = sfdc_opportunity_xf.account_id
-    INNER JOIN sfdc_accounts_xf upa
-      ON sfdc_accounts_xf.ultimate_parent_account_id = upa.account_id
     LEFT JOIN churn_metrics 
       ON churn_metrics.opportunity_id = sfdc_opportunity_xf.opportunity_id
     

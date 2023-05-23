@@ -1,3 +1,8 @@
+{{ config(
+    materialized="incremental",
+    unique_key="crm_opportunity_snapshot_id"
+) }}
+
 {{ simple_cte([
     ('fct_crm_opportunity','fct_crm_opportunity_daily_snapshot'),
     ('dim_crm_account','dim_crm_account_daily_snapshot'),
@@ -32,6 +37,7 @@ final AS (
     fct_crm_opportunity.risk_type,
     fct_crm_opportunity.risk_reasons,
     fct_crm_opportunity.downgrade_reason,
+    fct_crm_opportunity.downgrade_details,
     fct_crm_opportunity.sales_type,
     fct_crm_opportunity.deal_path AS deal_path_name,
     fct_crm_opportunity.order_type,
@@ -67,6 +73,13 @@ final AS (
     fct_crm_opportunity.invoice_number,
     fct_crm_opportunity.primary_campaign_source_id,
     fct_crm_opportunity.ga_client_id,
+    fct_crm_opportunity.military_invasion_comments,
+    fct_crm_opportunity.military_invasion_risk_scale,
+    fct_crm_opportunity.vsa_readout,
+    fct_crm_opportunity.vsa_start_date,
+    fct_crm_opportunity.vsa_end_date,
+    fct_crm_opportunity.vsa_url,
+    fct_crm_opportunity.vsa_status,
     fct_crm_opportunity.opportunity_term,
     fct_crm_opportunity.record_type_id,
     fct_crm_opportunity.opportunity_owner_manager,
@@ -134,27 +147,20 @@ final AS (
     -- account fields
     dim_crm_account.crm_account_name,
     dim_crm_account.parent_crm_account_name,
-    dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
-    dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
-    dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
-    dim_crm_account.parent_crm_account_demographics_area AS account_demographics_area,
-    dim_crm_account.parent_crm_account_demographics_territory AS account_demographics_territory,
-    dim_crm_account.parent_crm_account_gtm_strategy,
-    dim_crm_account.parent_crm_account_focus_account,
+    dim_crm_account.parent_crm_account_business_unit,
     dim_crm_account.parent_crm_account_sales_segment,
-    dim_crm_account.parent_crm_account_zi_technologies,
-    dim_crm_account.parent_crm_account_demographics_sales_segment,
-    dim_crm_account.parent_crm_account_demographics_geo,
-    dim_crm_account.parent_crm_account_demographics_region,
-    dim_crm_account.parent_crm_account_demographics_area,
-    dim_crm_account.parent_crm_account_demographics_territory,
-    dim_crm_account.parent_crm_account_demographics_max_family_employee,
-    dim_crm_account.parent_crm_account_demographics_upa_country,
-    dim_crm_account.parent_crm_account_demographics_upa_state,
-    dim_crm_account.parent_crm_account_demographics_upa_city,
-    dim_crm_account.parent_crm_account_demographics_upa_street,
-    dim_crm_account.parent_crm_account_demographics_upa_postal_code,
-    dim_crm_account.crm_account_demographics_employee_count,
+    dim_crm_account.parent_crm_account_geo,
+    dim_crm_account.parent_crm_account_region,
+    dim_crm_account.parent_crm_account_area,
+    dim_crm_account.parent_crm_account_territory,
+    dim_crm_account.parent_crm_account_role_type,
+    dim_crm_account.parent_crm_account_max_family_employee,
+    dim_crm_account.parent_crm_account_upa_country,
+    dim_crm_account.parent_crm_account_upa_state,
+    dim_crm_account.parent_crm_account_upa_city,
+    dim_crm_account.parent_crm_account_upa_street,
+    dim_crm_account.parent_crm_account_upa_postal_code,
+    dim_crm_account.crm_account_employee_count,
     dim_crm_account.crm_account_gtm_strategy,
     dim_crm_account.crm_account_focus_account,
     dim_crm_account.crm_account_zi_technologies,
@@ -179,6 +185,7 @@ final AS (
     fct_crm_opportunity.user_geo_stamped AS crm_opp_owner_geo_stamped,
     fct_crm_opportunity.user_region_stamped AS crm_opp_owner_region_stamped,
     fct_crm_opportunity.user_area_stamped AS crm_opp_owner_area_stamped,
+    fct_crm_opportunity.user_business_unit_stamped AS crm_opp_owner_business_unit_stamped,
     {{ sales_segment_region_grouped('fct_crm_opportunity.user_segment_stamped',
         'fct_crm_opportunity.user_geo_stamped', 'fct_crm_opportunity.user_region_stamped') }}
     AS crm_opp_owner_sales_segment_region_stamped_grouped,
@@ -191,6 +198,7 @@ final AS (
     opp_owner_live.crm_user_geo,
     opp_owner_live.crm_user_region,
     opp_owner_live.crm_user_area,
+    opp_owner_live.crm_user_business_unit,
     {{ sales_segment_region_grouped('opp_owner_live.crm_user_sales_segment',
         'opp_owner_live.crm_user_geo', 'opp_owner_live.crm_user_region') }}
     AS crm_user_sales_segment_region_grouped,
@@ -372,7 +380,8 @@ final AS (
     stage_5_negotiating_date.first_day_of_fiscal_quarter            AS stage_5_negotiating_fiscal_quarter_date,
     stage_5_negotiating_date.fiscal_quarter_name_fy                 AS stage_5_negotiating_fiscal_quarter_name,
     stage_5_negotiating_date.fiscal_year                            AS stage_5_negotiating_fiscal_year,
-    stage_6_awaiting_signature_date.date_actual                     AS stage_6_awaiting_signature_date_date,
+    stage_6_awaiting_signature_date.date_actual                     AS stage_6_awaiting_signature_date,
+    stage_6_awaiting_signature_date.date_actual                     AS stage_6_awaiting_signature_date_date, -- added to maintain workspace model temporarily 
     stage_6_awaiting_signature_date.first_day_of_month              AS stage_6_awaiting_signature_date_month,
     stage_6_awaiting_signature_date.first_day_of_fiscal_quarter     AS stage_6_awaiting_signature_date_fiscal_quarter_date,
     stage_6_awaiting_signature_date.fiscal_quarter_name_fy          AS stage_6_awaiting_signature_date_fiscal_quarter_name,
@@ -481,7 +490,15 @@ final AS (
     fct_crm_opportunity.total_contract_value,
     fct_crm_opportunity.created_in_snapshot_quarter_net_arr,
     fct_crm_opportunity.created_in_snapshot_quarter_deal_count,
-    fct_crm_opportunity.days_in_stage
+    fct_crm_opportunity.days_in_stage,
+    fct_crm_opportunity.pre_military_invasion_arr,
+    fct_crm_opportunity.vsa_start_date_net_arr,
+    fct_crm_opportunity.won_arr_basis_for_clari,
+    fct_crm_opportunity.arr_basis_for_clari,
+    fct_crm_opportunity.net_incremental_acv,
+    fct_crm_opportunity.incremental_acv,
+    fct_crm_opportunity.forecasted_churn_for_clari,
+    fct_crm_opportunity.override_arr_basis_clari
 
   FROM fct_crm_opportunity
   LEFT JOIN dim_crm_account
@@ -537,6 +554,11 @@ final AS (
   LEFT JOIN dim_crm_account AS fulfillment_partner
     ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
       AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
+  {% if is_incremental() %}
+  
+  WHERE fct_crm_opportunity.snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
+
+  {% endif %}
 
 
 )
@@ -544,7 +566,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@lisvinueza",
     created_date="2022-05-05",
-    updated_date="2023-02-02"
+    updated_date="2023-05-21"
   ) }}

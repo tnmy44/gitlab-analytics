@@ -3,8 +3,8 @@
   CASE {{column_1}}
     WHEN  'BDR Generated'
       THEN 'SDR Generated'
-    WHEN 'Partner Generated'
-      THEN 'Channel Generated'
+    WHEN 'Channel Generated'
+      THEN 'Partner Generated'
     ELSE {{column_1}}
   END
 

@@ -56,26 +56,6 @@ models:
       - name: dim_crm_account_id
       - name: ultimate_parent_account_id
 
-  - name: map_namespace_lineage
-    description: '{{ doc("map_namespace_lineage") }}'
-    columns:
-      - name: dim_namespace_id
-        tests:
-          - not_null
-          - unique
-      - name: dim_namespace_ultimate_parent_id
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_id
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_title
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_is_paid
-        tests:
-          - not_null
-
   - name: map_product_tier
     description: '{{ doc("map_product_tier") }}'
     columns:
@@ -198,7 +178,6 @@ models:
             - dim_namespace_id
             - date_month
 
-
   - name: map_alternative_lead_demographics
     description: '{{ doc("map_alternative_lead_demographics") }}'
     columns:
@@ -210,8 +189,6 @@ models:
         description: A case statement assigning segment based on the `employee_bucket` dim_crm_person. Pubsec is always taken from Lean Data Matched Account Sales Segement
       - name: geo_custom
         description: A case statement assigning geo according the [FY23 Territories Mapping File - SSoT](https://docs.google.com/spreadsheets/d/1gElhORjqraKDMQnWzApPelyP_vVa24tAOA85vb5f3Uc/edit#gid=1236326957) using `first_country` from dim_crm_person
-
-     
 
   - name: map_project_internal
     description: '{{ doc("map_project_internal") }}'
@@ -226,5 +203,17 @@ models:
       - name: parent_namespace_id
         description: The namespace id that the project is directly related to.
       - name: project_namespace_id
-        description: The namespace_id for that represents the project
+        description: The namespace_id that represents the project
+
+  - name: map_epic_internal
+    description: '{{ doc("map_epic_internal") }}'
+    columns:
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}' 
+      - name: namespace_id
+        description: The namespace id that the epic is directly related to.
+        tests: 
+          - not_null
+      - name: epic_id
+        description: The namespace_id that represents the epic
 

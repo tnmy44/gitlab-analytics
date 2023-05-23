@@ -1,6 +1,7 @@
 """ This file contains common operators/functions to be used across multiple DAGs """
 import os
 import urllib.parse
+import pathlib
 from datetime import date, timedelta
 from typing import List, Dict
 
@@ -11,28 +12,29 @@ from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperato
 
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
-DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.31"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.24"
+DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.27"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.1"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
-ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v1.0.25"
+ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
 
 SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
 
 
 def get_sales_analytics_notebooks(frequency: str) -> Dict:
-
     notebooks = []
     fileNames = []
 
-    path = f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/"
+    path = pathlib.Path(f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/")
 
-    for file in os.listdir(path):
-        filename = os.fsdecode(file)
-        if filename.endswith(".ipynb"):
-            notebooks.append(filename)
-            fileNames.append(os.path.splitext(filename)[0])
-        else:
-            continue
+    for file in path.rglob("*.ipynb"):
+
+        relative_path = file.relative_to(SALES_ANALYTICS_NOTEBOOKS_PATH)
+        notebooks.append(relative_path.as_posix())
+        expanded_name = (
+            str(relative_path.parent).replace("/", "_") + "_" + relative_path.stem
+        )
+        fileNames.append(expanded_name)
+
     return dict(zip(notebooks, fileNames))
 
 
@@ -55,6 +57,7 @@ data_science_pipelines_dag = [
     "ds_propensity_to_contract",
     "ds_propensity_to_purchase_trial",
     "ds_namespace_segmentation",
+    "ds_propensity_to_purchase_free",
 ]
 
 sales_analytics_pipelines_dag = [
@@ -66,7 +69,6 @@ sales_analytics_pipelines_dag = [
 
 
 def split_date_parts(day: date, partition: str) -> Dict:
-
     if partition == "month":
         split_dict = {
             "year": day.strftime("%Y"),

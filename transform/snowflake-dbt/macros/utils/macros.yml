@@ -31,8 +31,6 @@ macros:
         description: Manually input ISO date of when model was updated
   - name: distinct_source
     description: '{{ doc("distinct_source") }}'
-  - name: generate_schema_name
-    description: '{{ doc("generate_schema_name") }}'
   - name: get_column_values_ordered
     description: '{{ doc("get_column_values_ordered") }}'
   - name: get_date_id
@@ -102,4 +100,8 @@ macros:
     description: '{{ doc("rolling_window_delete") }}'
   - name: only_force_full_refresh
     description: '{{ doc("only_force_full_refresh") }}'
+  - name: orphaned_db_table_check
+    description: '{{ doc("orphaned_db_table_check") }}'
+  - name: missing_member_column
+    description: ' {{ doc("missing_member_column") }} '
 

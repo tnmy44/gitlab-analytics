@@ -67,12 +67,15 @@
       {{ get_date_id('ping_instance_wave_sm.ping_created_at') }}                                         AS ping_created_date_id,
       ping_instance_wave_sm.dim_instance_id,
       instance_type_ordering.instance_type,
+      instance_type_ordering.included_in_health_measures_str,
       ping_instance_wave_sm.hostname,
       ping_instance_wave_sm.dim_license_id,
+      ping_instance_wave_sm.dim_installation_id,
       ping_instance_wave_sm.license_sha256,
       ping_instance_wave_sm.license_md5,
       ping_instance_wave_sm.cleaned_version,
       ping_instance_wave_sm.dim_location_country_id,
+      ping_instance_wave_sm.installation_creation_date,
       -- Wave 1
       DIV0(
           ping_instance_wave_sm.license_billable_users,
@@ -211,7 +214,6 @@
       ping_instance_wave_sm.successful_deployments_28_days_user,
       -- Wave 5.3
       ping_instance_wave_sm.geo_enabled,
-      ping_instance_wave_sm.geo_nodes_all_time_event,
       ping_instance_wave_sm.auto_devops_pipelines_28_days_user,
       ping_instance_wave_sm.active_instance_runners_all_time_event,
       ping_instance_wave_sm.active_group_runners_all_time_event,
@@ -250,6 +252,17 @@
       ping_instance_wave_sm.external_status_checks_all_time_event,
       ping_instance_wave_sm.paid_license_search_28_days_user,
       ping_instance_wave_sm.last_activity_28_days_user,
+      -- Wave 7
+      ping_instance_wave_sm.snippets_28_days_event,
+      ping_instance_wave_sm.single_file_editor_28_days_user,
+      ping_instance_wave_sm.merge_requests_created_28_days_event,
+      ping_instance_wave_sm.merge_requests_created_28_days_user,
+      ping_instance_wave_sm.merge_requests_approval_rules_28_days_event,
+      ping_instance_wave_sm.custom_compliance_frameworks_28_days_event,
+      ping_instance_wave_sm.projects_security_policy_28_days_event,
+      ping_instance_wave_sm.merge_requests_security_policy_28_days_user,
+      ping_instance_wave_sm.pipelines_implicit_auto_devops_28_days_event,
+      ping_instance_wave_sm.pipeline_schedules_28_days_user,
       -- Data Quality Flags
       IFF(ping_instance_wave_sm.instance_user_count != seat_link.active_user_count,
           ping_instance_wave_sm.instance_user_count, NULL)                                               AS instance_user_count_not_aligned,
@@ -301,5 +314,5 @@
     created_by="@snalamaru",
     updated_by="@jpeguero",
     created_date="2022-07-21",
-    updated_date="2023-02-01"
+    updated_date="2023-04-04"
 ) }}

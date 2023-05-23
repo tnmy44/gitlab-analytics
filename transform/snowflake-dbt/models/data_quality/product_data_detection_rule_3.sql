@@ -153,6 +153,7 @@
       self_managed_amendments.*,
       dim_license.dim_license_id,
       dim_license.license_md5,
+      dim_license.license_sha256,
       dim_license.dim_environment_id,
       dim_license.environment,
       dim_license.license_plan,
@@ -217,6 +218,7 @@
 
       licenses_with_subscriptions.dim_license_id,
       licenses_with_subscriptions.license_md5,
+      licenses_with_subscriptions.license_sha256,
       licenses_with_subscriptions.dim_environment_id,
       licenses_with_subscriptions.environment,
       licenses_with_subscriptions.license_plan,

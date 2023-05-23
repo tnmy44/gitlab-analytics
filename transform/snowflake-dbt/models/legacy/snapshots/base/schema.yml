@@ -124,23 +124,6 @@ models:
         tests:
           - not_null
       - name: valid_to
- 
-
-  - name: license_db_licenses_snapshots_base
-    description: This is the base model for snapshots from the licenses table from the license database.
-    columns:
-      - name: license_snapshot_id
-        description: Auto-generated primary key when building the snapshot with dbt.
-        tests:
-          - not_null
-          - unique
-      - name: license_id
-        tests:
-          - not_null
-      - name: valid_from
-        tests:
-          - not_null
-      - name: valid_to
 
   - name: sfdc_account_snapshots_source
     description: This is the source model for snapshots of the salesforce account table for cleaning and renaming.
@@ -190,6 +173,37 @@ models:
           - not_null
       - name: valid_from
           - not_null
+  
+  - name: sfdc_contact_snapshots_source
+    description: This is the source model for snapshots of the salesforce contact table.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - contact_id
+            - dbt_valid_from
+    columns:
+      - name: contact_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
+  - name: sfdc_lead_snapshots_source
+    description: This is the source model for snapshots of the salesforce lead table.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - lead_id
+            - dbt_valid_from
+    columns:
+      - name: lead_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
   - name: sfdc_user_snapshots_source
     description: This is the source model for snapshots of the salesforce user table for cleaning and renaming.
     columns:

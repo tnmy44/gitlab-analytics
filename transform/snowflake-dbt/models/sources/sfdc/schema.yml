@@ -255,6 +255,19 @@ models:
         description: Map field from Lead object during conversion. Lead Field Name = [Partners] Deal Registration Type
       - name: dr_partner_engagement
         description: This field Identified the engagement of the partner who registered the deal
+      - name: vsa_readout
+        description: '{{ doc("vsa_readout") }}'
+      - name: vsa_start_date_net_arr
+        description: '{{ doc("vsa_start_date_net_arr") }}'
+      - name: vsa_start_date
+        description: '{{ doc("vsa_start_date") }}'
+      - name: vsa_url
+        description: '{{ doc("vsa_url") }}'
+      - name: vsa_status
+        description: '{{ doc("vsa_status") }}'
+      - name: vsa_end_date
+        description: '{{ doc("vsa_end_date") }}'
+
   - name: sfdc_opportunity_history_source
     description: Source model for SFDC Opportunity History
     columns:
@@ -409,6 +422,30 @@ models:
     description: Source model for SFDC custom object representing a quote rate plan charge from Zuora
     columns:
       - name: zqu_quote_rate_plan_charge_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+
+  - name: sfdc_task_source
+    description: Source model for SFDC Tasks
+    columns:
+      - name: task_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+      - name: full_comments
+        meta:
+           masking_policy: data_science_sensitive
+      - name: task_subject
+        meta:
+           masking_policy: data_science_sensitive
+           
+  - name: sfdc_customer_subscription_source
+    description: Source model for SFDC custom object customer customer_subscription
+    columns:
+      - name: customer_subscription_id
         tags: ["tdf", "sfdc"]
         tests:
           - not_null

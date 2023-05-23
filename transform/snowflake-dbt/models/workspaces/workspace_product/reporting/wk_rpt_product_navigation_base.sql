@@ -1,16 +1,13 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "event_id"
+    "unique_key": "behavior_structured_event_pk",
+    "tags": ["product","mnpi_exception"]
     })
 }}
 
 WITH filtered_snowplow_events AS (
 
   SELECT
-    derived_tstamp,
-    gsc_pseudonymized_user_id,
-    event_category,
-    event_action,
     CASE 
     WHEN 
     event_label LIKE 'group_dropdown_frequent_items_list_item_%'
@@ -26,16 +23,12 @@ WITH filtered_snowplow_events AS (
     THEN 'project_dropdown_frequent_items_list_item'
     ELSE event_label 
     END AS event_label,
-    event_property,
-    gsc_plan,
-    device_type,
-    event_id,
-    app_id,
-    gsc_namespace_id,
-    session_id
-  FROM {{ ref('snowplow_structured_events_all') }}
+     {{ dbt_utils.star(from=ref('mart_behavior_structured_event'), except=["EVENT_LABEL","CREATED_BY", "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
+  FROM {{ ref('mart_behavior_structured_event') }}
   WHERE 
-  derived_tstamp >= '2021-10-01'
+  behavior_at >= '2021-10-01'
+  AND
+  app_id IN ('gitlab', 'gitlab_customers')
   AND
   (
       (
@@ -95,7 +88,7 @@ WITH filtered_snowplow_events AS (
     )  
     {% if is_incremental() %}
 
-    AND  derived_tstamp > (SELECT MAX(derived_tstamp) FROM {{ this }})
+    AND  behavior_at > (SELECT MAX(behavior_at) FROM {{ this }})
 
   {% endif %}
 )
@@ -105,5 +98,5 @@ WITH filtered_snowplow_events AS (
     created_by="@mdrussell",
     updated_by="@mpetersen",
     created_date="2022-10-11",
-    updated_date="2023-02-09"
+    updated_date="2023-05-16"
 ) }}

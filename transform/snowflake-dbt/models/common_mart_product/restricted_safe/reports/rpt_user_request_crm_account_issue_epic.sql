@@ -31,6 +31,7 @@ WITH mart_user_request AS (
         product_stage,
         issue_epic_type,
         issue_status,
+        theme_labels,
         epic_status,
         parent_epic_path,
         parent_epic_title,
@@ -42,7 +43,6 @@ WITH mart_user_request AS (
         crm_account_health_score_color,
         parent_crm_account_sales_segment,
         technical_account_manager,
-        crm_account_owner_team,
         strategic_account_leader,
         customer_reach,
         crm_account_arr,
@@ -83,7 +83,7 @@ WITH mart_user_request AS (
 {{ dbt_audit(
     cte_ref="issue_account_summary",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@lisvinueza",
     created_date="2021-12-15",
-    updated_date="2022-01-05",
+    updated_date="2023-05-21",
   ) }}

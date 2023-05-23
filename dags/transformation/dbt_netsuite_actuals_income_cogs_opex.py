@@ -82,8 +82,8 @@ dag = DAG(
 
 dbt_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt --debug --log-format json run --profiles-dir profile --target prod --models +netsuite_actuals_income_cogs_opex {number_of_dbt_threads_argument(4)}; ret=$?;
-    montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --logs logs/dbt.log --project-name gitlab-analysis;
+    dbt run --profiles-dir profile --target prod --models +netsuite_actuals_income_cogs_opex {number_of_dbt_threads_argument(4)} ; ret=$?;
+    montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 

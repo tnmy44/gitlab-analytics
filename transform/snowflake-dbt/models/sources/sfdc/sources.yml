@@ -44,6 +44,9 @@ sources:
       - name: contact_history
         identifier: contacthistory
         description: '{{ doc("sfdc_contacthistory_source")}}'
+      - name: customer_subscription
+        identifier: customer_subscription__c
+        description: '{{ doc("sfdc_customer_subscription_source")}}'
       - name: event
         description: '{{ doc("sfdc_event_source") }}'
       - name: executive_business_review

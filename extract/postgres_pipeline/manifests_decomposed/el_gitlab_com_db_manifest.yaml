@@ -872,6 +872,22 @@ tables:
       FROM lists
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  member_roles:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'member_roles'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , namespace_id
+      , created_at
+      , updated_at
+      , base_access_level
+      , read_code
+      FROM member_roles
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   merge_request_blocks:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1030,6 +1046,43 @@ tables:
       FROM milestones
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  ml_candidates:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'ml_candidates'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , experiment_id
+      , user_id
+      , start_time
+      , end_time
+      , status
+      , name
+      FROM ml_candidates
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  ml_experiments:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'ml_experiments'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , iid
+      , project_id
+      , user_id
+      , name
+      , deleted_on
+      FROM ml_experiments
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   namespace_details:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1128,6 +1181,9 @@ tables:
       , new_user_signups_cap
       , setup_for_company
       , jobs_to_be_done
+      , experiment_features_enabled
+      , third_party_ai_features_enabled
+      , code_suggestions
       FROM namespace_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1955,7 +2011,7 @@ tables:
       , first_day_of_week
       , timezone
       , time_display_relative
-      , time_format_in_24h
+      , NULL AS time_format_in_24h
       , projects_sort
       , show_whitespace_in_diffs
       , sourcegraph_enabled
@@ -1967,6 +2023,7 @@ tables:
       , id
       , gitpod_enabled
       , use_legacy_web_ide
+      , use_new_navigation
       FROM user_preferences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2112,6 +2169,19 @@ tables:
       , type
       , integration_id
       FROM web_hooks
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  work_item_progresses:
+    export_schema: 'gitlab_com'
+    export_table: work_item_progresses
+    export_table_primary_key: issue_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT created_at
+      , updated_at
+      , issue_id
+      , progress
+      FROM work_item_progresses
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   zoom_meetings:
