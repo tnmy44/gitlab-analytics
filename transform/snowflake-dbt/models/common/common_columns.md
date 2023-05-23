@@ -666,6 +666,18 @@ The industry of the ultimate parent account from SFDC
 
 {% enddocs %}
 
+{% docs parent_crm_account_owner_team %}
+
+The owner team of the ultimate parent account from SFDC
+
+{% enddocs %}
+
+{% docs parent_crm_account_territory %}
+
+The sales territory of the ultimate parent account from SFDC
+
+{% enddocs %}
+
 {% docs technical_account_manager %}
 
 The name of the technical account manager of the CRM account

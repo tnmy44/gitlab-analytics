@@ -378,8 +378,14 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
+    - name: parent_crm_account_sales_segment
+      description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
       description: '{{ doc("parent_crm_account_industry") }}'
+    - name: parent_crm_account_owner_team
+      description: '{{ doc("parent_crm_account_owner_team") }}'
+    - name: parent_crm_account_territory
+      description: '{{ doc("parent_crm_account_territory") }}'
     - name: technical_account_manager
       description: '{{ doc("technical_account_manager") }}'
     - name: ping_created_at
@@ -500,6 +506,8 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
+    - name: parent_crm_account_sales_segment
+      description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
       description: '{{ doc("parent_crm_account_industry") }}'
     - name: parent_crm_account_owner_team
@@ -623,6 +631,8 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
+    - name: parent_crm_account_sales_segment
+      description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
       description: '{{ doc("parent_crm_account_industry") }}'
     - name: parent_crm_account_owner_team
@@ -742,6 +752,8 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
+    - name: parent_crm_account_sales_segment
+      description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
       description: '{{ doc("parent_crm_account_industry") }}'
     - name: parent_crm_account_owner_team
@@ -865,6 +877,8 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
+    - name: parent_crm_account_sales_segment
+      description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
       description: '{{ doc("parent_crm_account_industry") }}'
     - name: parent_crm_account_owner_team
@@ -988,6 +1002,8 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
+    - name: parent_crm_account_sales_segment
+      description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
       description: '{{ doc("parent_crm_account_industry") }}'
     - name: parent_crm_account_owner_team
@@ -1111,6 +1127,8 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
+    - name: parent_crm_account_sales_segment
+      description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
       description: '{{ doc("parent_crm_account_industry") }}'
     - name: parent_crm_account_owner_team

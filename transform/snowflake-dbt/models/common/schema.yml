@@ -4286,135 +4286,17 @@ models:
       - name: dim_crm_user_id
       - name: merged_to_account_id
         description: For deleted accounts, this is the SFDC account they were merged into
-      - name: record_type_id
-      - name: master_record_id
-      - name: dim_crm_person_primary_contact_id
-      - name: crm_account_owner
-      - name: proposed_crm_account_owner
-      - name: account_owner
-      - name: technical_account_manager
-      - name: owner_role
-      - name: user_role_type
-      - name: parent_crm_account_industry
-      - name: parent_crm_account_sales_segment
-      - name: parent_crm_account_geo
-      - name: parent_crm_account_region
-      - name: parent_crm_account_area
-      - name: parent_crm_account_territory
-      - name: parent_crm_account_max_family_employee
-      - name: parent_crm_account_upa_country
-      - name: parent_crm_account_upa_state
-      - name: parent_crm_account_upa_city
-      - name: parent_crm_account_upa_street
-      - name: parent_crm_account_upa_postal_code
       - name: crm_account_name
         description: Account name from SFDC
-      - name: crm_account_employee_count
-      - name: crm_account_gtm_strategy
-      - name: crm_account_focus_account
-      - name: crm_account_owner_user_segment
-      - name: crm_account_billing_country_code
-      - name: crm_account_type
-      - name: crm_account_industry
-      - name: crm_account_sub_industry
       - name: crm_account_employee_count_band
         description: Employee count band the account belongs to based on the account_max_family_employee. Bands include "> 2K", "> 1.5K", "> 1K".
-      - name: partner_vat_tax_id
-      - name: account_manager
-      - name: business_development_rep
-      - name: dedicated_service_engineer
-      - name: account_tier
-      - name: account_tier_notes
-      - name: license_utilization
-      - name: support_level
-      - name: named_account
-      - name: billing_postal_code
-      - name: partner_type
-      - name: partner_status
-      - name: gitlab_customer_success_project
-      - name: demandbase_account_list
-      - name: demandbase_intent
-      - name: demandbase_page_views
-      - name: demandbase_score
-      - name: demandbase_sessions
-      - name: demandbase_trending_offsite_intent
-      - name: demandbase_trending_onsite_engagement
-      - name: is_locally_managed_account
-      - name: is_strategic_account
-      - name: partner_track
-      - name: partners_partner_type
-      - name: gitlab_partner_program
-      - name: zoom_info_company_name
-      - name: zoom_info_company_revenue
-      - name: zoom_info_company_employee_count
-      - name: zoom_info_company_industry
-      - name: zoom_info_company_city
-      - name: zoom_info_company_state_province
-      - name: zoom_info_company_country
-      - name: account_phone
-      - name: zoominfo_account_phone
-      - name: abm_tier
-      - name: health_number
-      - name: health_score_color
-      - name: partner_account_iban_number
-      - name: gitlab_com_user
-      - name: crm_account_zi_technologies
-      - name: crm_account_zoom_info_website
-      - name: crm_account_zoom_info_company_other_domains
-      - name: crm_account_zoom_info_dozisf_zi_id
-      - name: crm_account_zoom_info_parent_company_zi_id
-      - name: crm_account_zoom_info_parent_company_name
-      - name: crm_account_zoom_info_ultimate_parent_company_zi_id
-      - name: crm_account_zoom_info_ultimate_parent_company_name
-      - name: forbes_2000_rank
-      - name: sales_development_rep
-      - name: admin_manual_source_number_of_employees
-      - name: admin_manual_source_account_address
-      - name: parent_crm_account_lam
-      - name: parent_crm_account_lam_dev_count
-      - name: carr_account_family
-      - name: carr_this_account
-      - name: is_sdr_target_account
-      - name: is_key_account
       - name: is_reseller
         description: Identify whether a crm_account is a reseller.
         tests:
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
-      - name: is_jihu_account
-      - name: is_first_order_available
-      - name: is_zi_jenkins_present
-      - name: is_zi_svn_present
-      - name: is_zi_tortoise_svn_present
-      - name: is_zi_gcp_present
-      - name: is_zi_atlassian_present
-      - name: is_zi_github_present
-      - name: is_zi_github_enterprise_present
-      - name: is_zi_aws_present
-      - name: is_zi_kubernetes_present
-      - name: is_zi_apache_subversion_present
-      - name: is_zi_apache_subversion_svn_present
-      - name: is_zi_hashicorp_present
-      - name: is_zi_aws_cloud_trail_present
-      - name: is_zi_circle_ci_present
-      - name: is_zi_bit_bucket_present
-      - name: is_excluded_from_zoom_info_enrich
       - name: crm_account_created_date
         description: The date on which the CRM account was created in SFDC
-      - name: abm_tier_1_date
-      - name: abm_tier_2_date
-      - name: abm_tier_3_date
-      - name: gtm_acceleration_date
-      - name: gtm_account_based_date
-      - name: gtm_account_centric_date
-      - name: partners_signed_contract_date
-      - name: technical_account_manager_date
-      - name: customer_since_date
-      - name: next_renewal_date
-      - name: created_by_name
-      - name: last_modified_by_name
-      - name: last_modified_date
-      - name: last_activity_date
       - name: is_deleted
         description: Flag indicating if account has been deleted
       - name: pte_score
@@ -4423,8 +4305,6 @@ models:
       - name: pte_score_group
       - name: ptc_score
         description: Propensity to contract and churn scores from ptc_scores_source
-      - name: ptc_decile
-      - name: ptc_score_group
       - name: gs_health_user_engagement
         description: ' {{ doc("gs_health_user_engagement") }} '
       - name: gs_health_cd
@@ -4443,75 +4323,45 @@ models:
         description: ' {{ doc("gs_last_csm_activity_date") }} '
       - name: last_at_risk_update_comments
         description: ' {{ doc("last_at_risk_update_comments") }} '
-
-  - name: dim_crm_account_daily_snapshot
-    description: '{{ doc("dim_crm_account_daily_snapshot") }}'
-    columns:
-      - name: crm_account_snapshot_id
-        description: Unique identifier of a crm account in the daily snapshot models
-        tests:
-          - unique
-          - not_null
-      - name: snapshot_id
-      - name: snapshot_date
-      - name: dim_crm_account_id
-        description: Account ID from SFDC identifing the customer
-      - name: dim_parent_crm_account_id
-        description: Ultimate parent account 18 character Salesforce ID
-      - name: dim_crm_user_id
-      - name: merged_to_account_id
-        description: For deleted accounts, this is the SFDC account they were merged into
-      - name: record_type_id
-      - name: crm_account_owner_id
-      - name: proposed_crm_account_owner_id
-      - name: technical_account_manager_id
-      - name: master_record_id
-      - name: dim_crm_person_primary_contact_id
+      - name: abm_tier
+      - name: abm_tier_1_date
+      - name: abm_tier_2_date
+      - name: abm_tier_3_date
+      - name: account_manager
       - name: account_owner
-      - name: proposed_crm_account_owner
-      - name: technical_account_manager
-      - name: parent_crm_account_name
-      - name: parent_crm_account_sales_segment
-      - name: parent_crm_account_industry
-      - name: parent_crm_account_territory
-      - name: parent_crm_account_zoom_info_total_funding
-      - name: crm_account_name
-        description: Account name from SFDC
-      - name: parent_crm_account_sales_segment
-      - name: parent_crm_account_geo
-      - name: parent_crm_account_region
-      - name: parent_crm_account_area
-      - name: parent_crm_account_territory
-      - name: parent_crm_account_max_family_employee
-      - name: parent_crm_account_upa_country
-      - name: parent_crm_account_upa_state
-      - name: parent_crm_account_upa_city
-      - name: parent_crm_account_upa_street
-      - name: parent_crm_account_upa_postal_code
-      - name: crm_account_employee_count
-      - name: crm_account_gtm_strategy
-      - name: crm_account_focus_account
-      - name: crm_account_owner_user_segment
+      - name: account_phone
+      - name: account_tier
+      - name: account_tier_notes
+      - name: admin_manual_source_account_address
+      - name: admin_manual_source_number_of_employees
+      - name: billing_postal_code
+      - name: business_development_rep
+      - name: carr_account_family
+      - name: carr_this_account
+      - name: created_by
+      - name: created_by_name
       - name: crm_account_billing_country
       - name: crm_account_billing_country_code
-      - name: crm_account_type
+      - name: crm_account_employee_count
+      - name: crm_account_focus_account
+      - name: crm_account_gtm_strategy
       - name: crm_account_industry
-      - name: crm_account_sub_industry
       - name: crm_account_owner
-      - name: crm_account_employee_count_band
-        description: Employee count band the account belongs to based on the account_max_family_employee. Bands include "> 2K", "> 1.5K", "> 1K".
-      - name: partner_vat_tax_id
-      - name: account_manager
-      - name: business_development_rep
+      - name: crm_account_owner_user_segment
+      - name: crm_account_sub_industry
+      - name: crm_account_type
+      - name: crm_account_zi_technologies
+      - name: crm_account_zoom_info_company_other_domains
+      - name: crm_account_zoom_info_dozisf_zi_id
+      - name: crm_account_zoom_info_parent_company_name
+      - name: crm_account_zoom_info_parent_company_zi_id
+      - name: crm_account_zoom_info_ultimate_parent_company_name
+      - name: crm_account_zoom_info_ultimate_parent_company_zi_id
+      - name: crm_account_zoom_info_website
+      - name: customer_since_date
+      - name: dbt_created_at
+      - name: dbt_updated_at
       - name: dedicated_service_engineer
-      - name: account_tier
-      - name: license_utilization
-      - name: support_level
-      - name: named_account
-      - name: billing_postal_code
-      - name: partner_type
-      - name: partner_status
-      - name: gitlab_customer_success_project
       - name: demandbase_account_list
       - name: demandbase_intent
       - name: demandbase_page_views
@@ -4519,127 +4369,332 @@ models:
       - name: demandbase_sessions
       - name: demandbase_trending_offsite_intent
       - name: demandbase_trending_onsite_engagement
-      - name: is_locally_managed_account
-      - name: is_strategic_account
-      - name: partner_track
-      - name: partners_partner_type
+      - name: dim_crm_person_primary_contact_id
+      - name: forbes_2000_rank
+      - name: gitlab_com_user
+      - name: gitlab_customer_success_project
       - name: gitlab_partner_program
-      - name: zoom_info_company_name
-      - name: zoom_info_company_revenue
-      - name: zoom_info_company_employee_count
-      - name: zoom_info_company_industry
-      - name: zoom_info_company_city
-      - name: zoom_info_company_state_province
-      - name: zoom_info_company_country
-      - name: account_phone
-      - name: zoominfo_account_phone
-      - name: abm_tier
+      - name: gtm_acceleration_date
+      - name: gtm_account_based_date
+      - name: gtm_account_centric_date
       - name: health_number
       - name: health_score_color
-      - name: partner_account_iban_number
-      - name: gitlab_com_user
-      - name: crm_account_zi_technologies
-      - name: crm_account_zoom_info_website
-      - name: crm_account_zoom_info_company_other_domains
-      - name: crm_account_zoom_info_dozisf_zi_id
-      - name: crm_account_zoom_info_parent_company_zi_id
-      - name: crm_account_zoom_info_parent_company_name
-      - name: crm_account_zoom_info_ultimate_parent_company_zi_id
-      - name: crm_account_zoom_info_ultimate_parent_company_name
-      - name: crm_account_zoom_info_number_of_developers
-      - name: crm_account_zoom_info_total_funding
-      - name: forbes_2000_rank
-      - name: sales_development_rep
-      - name: admin_manual_source_number_of_employees
-      - name: admin_manual_source_account_address
-      - name: is_sdr_target_account
-      - name: is_reseller
-        description: Identify whether a crm_account is a reseller.
-      - name: is_jihu_account
+      - name: is_excluded_from_zoom_info_enrich
       - name: is_first_order_available
+      - name: is_jihu_account
       - name: is_key_account
-      - name: is_zi_jenkins_present
-      - name: is_zi_svn_present
-      - name: is_zi_tortoise_svn_present
-      - name: is_zi_gcp_present
-      - name: is_zi_atlassian_present
-      - name: is_zi_github_present
-      - name: is_zi_github_enterprise_present
-      - name: is_zi_aws_present
-      - name: is_zi_kubernetes_present
+      - name: is_locally_managed_account
+      - name: is_sdr_target_account
+      - name: is_strategic_account
       - name: is_zi_apache_subversion_present
       - name: is_zi_apache_subversion_svn_present
-      - name: is_zi_hashicorp_present
+      - name: is_zi_atlassian_present
       - name: is_zi_aws_cloud_trail_present
-      - name: is_zi_circle_ci_present
+      - name: is_zi_aws_present
       - name: is_zi_bit_bucket_present
-      - name: is_excluded_from_zoom_info_enrich
-      - name: crm_account_created_date_id
-      - name: crm_account_created_date
-        description: The date on which the CRM account was created in SFDC
-      - name: abm_tier_1_date_id
-      - name: abm_tier_1_date
-      - name: abm_tier_2_date_id
-      - name: abm_tier_2_date
-      - name: abm_tier_3_date_id
-      - name: abm_tier_3_date
-      - name: gtm_acceleration_date_id
-      - name: gtm_acceleration_date
-      - name: gtm_account_based_date_id
-      - name: gtm_account_based_date
-      - name: gtm_account_centric_date_id
-      - name: gtm_account_centric_date
-      - name: partners_signed_contract_date_id
-      - name: partners_signed_contract_date
-      - name: technical_account_manager_date_id
-      - name: technical_account_manager_date
-      - name: customer_since_date_id
-      - name: customer_since_date
-      - name: next_renewal_date_id
+      - name: is_zi_circle_ci_present
+      - name: is_zi_gcp_present
+      - name: is_zi_github_enterprise_present
+      - name: is_zi_github_present
+      - name: is_zi_hashicorp_present
+      - name: is_zi_jenkins_present
+      - name: is_zi_kubernetes_present
+      - name: is_zi_svn_present
+      - name: is_zi_tortoise_svn_present
+      - name: last_activity_date
+      - name: last_modified_by_name
+      - name: last_modified_date
+      - name: last_timeline_at_risk_update
+      - name: license_utilization
+      - name: master_record_id
+      - name: model_created_date
+      - name: model_updated_date
+      - name: named_account
       - name: next_renewal_date
-      - name: count_active_subscription_charges
-      - name: count_active_subscriptions
-      - name: count_billing_accounts
-      - name: count_licensed_users
-      - name: count_of_new_business_won_opportunities
-      - name: count_open_renewal_opportunities
-      - name: count_opportunities
-      - name: count_products_purchased
-      - name: count_won_opportunities
-      - name: count_concurrent_ee_subscriptions
-      - name: count_ce_instances
-      - name: count_active_ce_users
-      - name: count_open_opportunities
-      - name: count_using_ce
-      - name: potential_arr_lam
-      - name: carr_this_account
-      - name: carr_account_family
-      - name: potential_users
-      - name: number_of_licenses_this_account
-      - name: decision_maker_count_linkedin
-      - name: number_of_employees
-      - name: user_role_type
       - name: owner_role
+      - name: parent_crm_account_area
+      - name: parent_crm_account_business_unit
+      - name: parent_crm_account_geo
+      - name: parent_crm_account_industry
       - name: parent_crm_account_lam
       - name: parent_crm_account_lam_dev_count
+      - name: parent_crm_account_max_family_employee
+      - name: parent_crm_account_name
+      - name: parent_crm_account_region
+      - name: parent_crm_account_role_type
+      - name: parent_crm_account_sales_segment
+      - name: parent_crm_account_sales_segment_grouped
+      - name: parent_crm_account_segment_region_stamped_grouped
+      - name: parent_crm_account_territory
+      - name: parent_crm_account_upa_city
+      - name: parent_crm_account_upa_country
+      - name: parent_crm_account_upa_postal_code
+      - name: parent_crm_account_upa_state
+      - name: parent_crm_account_upa_street
+      - name: partner_account_iban_number
+      - name: partner_status
+      - name: partner_track
+      - name: partner_type
+      - name: partner_vat_tax_id
+      - name: partners_partner_type
+      - name: partners_signed_contract_date
+      - name: proposed_crm_account_owner
+      - name: ptc_decile
+      - name: ptc_score_group
+      - name: record_type_id
+      - name: risk_impact
+      - name: risk_reason
+      - name: sales_development_rep
+      - name: support_level
+      - name: technical_account_manager
+      - name: technical_account_manager_date
+      - name: updated_by
+      - name: user_role_type
+      - name: zoom_info_company_city
+      - name: zoom_info_company_country
+      - name: zoom_info_company_employee_count
+      - name: zoom_info_company_industry
+      - name: zoom_info_company_name
+      - name: zoom_info_company_revenue
+      - name: zoom_info_company_state_province
+      - name: zoominfo_account_phone
+
+  - name: dim_crm_account_daily_snapshot
+    description: '{{ doc("dim_crm_account_daily_snapshot") }}'
+    columns:
+      - name: dim_crm_account_id
+        description: Account ID from SFDC identifing the customer
+        tests:
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_parent_crm_account_id
+        description: Ultimate parent account 18 character Salesforce ID 
+      - name: dim_crm_user_id
+      - name: merged_to_account_id
+        description: For deleted accounts, this is the SFDC account they were merged into
+      - name: crm_account_name
+        description: Account name from SFDC
+      - name: crm_account_employee_count_band
+        description: Employee count band the account belongs to based on the account_max_family_employee. Bands include "> 2K", "> 1.5K", "> 1K".
+      - name: is_reseller
+        description: Identify whether a crm_account is a reseller.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: crm_account_created_date
+        description: The date on which the CRM account was created in SFDC
+      - name: is_deleted
+        description: Flag indicating if account has been deleted
       - name: pte_score
         description: Propensity to expand scores from pte_scores_source
       - name: pte_decile
       - name: pte_score_group
       - name: ptc_score
         description: Propensity to contract and churn scores from ptc_scores_source
-      - name: ptc_decile
-      - name: ptc_score_group
+      - name: gs_health_user_engagement
+        description: ' {{ doc("gs_health_user_engagement") }} '
+      - name: gs_health_cd
+        description: ' {{ doc("gs_health_cd") }} '
+      - name: gs_health_devsecops
+        description: ' {{ doc("gs_health_devsecops") }} '
+      - name: gs_health_ci
+        description: ' {{ doc("gs_health_ci") }} '
+      - name: gs_health_scm
+        description: ' {{ doc("gs_health_scm") }} '
+      - name: eoa_sentiment
+        description: ' {{ doc("eoa_sentiment") }} '
+      - name: gs_first_value_date
+        description: ' {{ doc("gs_first_value_date") }} '
+      - name: gs_last_csm_activity_date
+        description: ' {{ doc("gs_last_csm_activity_date") }} '
+      - name: last_at_risk_update_comments
+        description: ' {{ doc("last_at_risk_update_comments") }} '
+      - name: abm_tier
+      - name: abm_tier_1_date
+      - name: abm_tier_1_date_id
+      - name: abm_tier_2_date
+      - name: abm_tier_2_date_id
+      - name: abm_tier_3_date
+      - name: abm_tier_3_date_id
+      - name: account_manager
+      - name: account_owner
+      - name: account_phone
+      - name: account_tier
+      - name: account_tier_notes
+      - name: admin_manual_source_account_address
+      - name: admin_manual_source_number_of_employees
+      - name: billing_postal_code
+      - name: business_development_rep
+      - name: carr_account_family
+      - name: carr_this_account
+      - name: count_active_ce_users
+      - name: count_active_subscription_charges
+      - name: count_active_subscriptions
+      - name: count_billing_accounts
+      - name: count_ce_instances
+      - name: count_concurrent_ee_subscriptions
+      - name: count_licensed_users
+      - name: count_of_new_business_won_opportunities
+      - name: count_open_opportunities
+      - name: count_open_renewal_opportunities
+      - name: count_opportunities
+      - name: count_products_purchased
+      - name: count_using_ce
+      - name: count_won_opportunities
+      - name: created_by
       - name: created_by_id
       - name: created_by_name
+      - name: crm_account_billing_country
+      - name: crm_account_billing_country_code
+      - name: crm_account_created_date_id
+      - name: crm_account_employee_count
+      - name: crm_account_focus_account
+      - name: crm_account_gtm_strategy
+      - name: crm_account_industry
+      - name: crm_account_owner
+      - name: crm_account_owner_area
+      - name: crm_account_owner_geo
+      - name: crm_account_owner_id
+      - name: crm_account_owner_region
+      - name: crm_account_owner_role
+      - name: crm_account_owner_sales_segment
+      - name: crm_account_owner_sales_segment_geo_region_area
+      - name: crm_account_owner_title
+      - name: crm_account_owner_user_segment
+      - name: crm_account_snapshot_id
+      - name: crm_account_sub_industry
+      - name: crm_account_type
+      - name: crm_account_zi_technologies
+      - name: crm_account_zoom_info_company_other_domains
+      - name: crm_account_zoom_info_dozisf_zi_id
+      - name: crm_account_zoom_info_number_of_developers
+      - name: crm_account_zoom_info_parent_company_name
+      - name: crm_account_zoom_info_parent_company_zi_id
+      - name: crm_account_zoom_info_total_funding
+      - name: crm_account_zoom_info_ultimate_parent_company_name
+      - name: crm_account_zoom_info_ultimate_parent_company_zi_id
+      - name: crm_account_zoom_info_website
+      - name: customer_since_date
+      - name: customer_since_date_id
+      - name: dbt_created_at
+      - name: dbt_updated_at
+      - name: decision_maker_count_linkedin
+      - name: dedicated_service_engineer
+      - name: demandbase_account_list
+      - name: demandbase_intent
+      - name: demandbase_page_views
+      - name: demandbase_score
+      - name: demandbase_sessions
+      - name: demandbase_trending_offsite_intent
+      - name: demandbase_trending_onsite_engagement
+      - name: dim_crm_person_primary_contact_id
+      - name: forbes_2000_rank
+      - name: gitlab_com_user
+      - name: gitlab_customer_success_project
+      - name: gitlab_partner_program
+      - name: gs_first_value_date_id
+      - name: gs_last_csm_activity_date_id
+      - name: gtm_acceleration_date
+      - name: gtm_acceleration_date_id
+      - name: gtm_account_based_date
+      - name: gtm_account_based_date_id
+      - name: gtm_account_centric_date
+      - name: gtm_account_centric_date_id
+      - name: health_number
+      - name: health_score_color
+      - name: is_excluded_from_zoom_info_enrich
+      - name: is_first_order_available
+      - name: is_jihu_account
+      - name: is_key_account
+      - name: is_locally_managed_account
+      - name: is_sdr_target_account
+      - name: is_strategic_account
+      - name: is_zi_apache_subversion_present
+      - name: is_zi_apache_subversion_svn_present
+      - name: is_zi_atlassian_present
+      - name: is_zi_aws_cloud_trail_present
+      - name: is_zi_aws_present
+      - name: is_zi_bit_bucket_present
+      - name: is_zi_circle_ci_present
+      - name: is_zi_gcp_present
+      - name: is_zi_github_enterprise_present
+      - name: is_zi_github_present
+      - name: is_zi_hashicorp_present
+      - name: is_zi_jenkins_present
+      - name: is_zi_kubernetes_present
+      - name: is_zi_svn_present
+      - name: is_zi_tortoise_svn_present
+      - name: last_activity_date
+      - name: last_activity_date_id
       - name: last_modified_by_id
       - name: last_modified_by_name
-      - name: last_modified_date_id
       - name: last_modified_date
-      - name: last_activity_date_id
-      - name: last_activity_date
-      - name: is_deleted
-        description: Flag indicating if account has been deleted
+      - name: last_modified_date_id
+      - name: last_timeline_at_risk_update
+      - name: license_utilization
+      - name: master_record_id
+      - name: model_created_date
+      - name: model_updated_date
+      - name: named_account
+      - name: next_renewal_date
+      - name: next_renewal_date_id
+      - name: number_of_employees
+      - name: number_of_licenses_this_account
+      - name: owner_role
+      - name: parent_account_industry_hierarchy
+      - name: parent_crm_account_area
+      - name: parent_crm_account_business_unit
+      - name: parent_crm_account_geo
+      - name: parent_crm_account_industry
+      - name: parent_crm_account_lam
+      - name: parent_crm_account_lam_dev_count
+      - name: parent_crm_account_max_family_employee
+      - name: parent_crm_account_name
+      - name: parent_crm_account_region
+      - name: parent_crm_account_role_type
+      - name: parent_crm_account_sales_segment
+      - name: parent_crm_account_sales_segment_grouped
+      - name: parent_crm_account_segment_region_stamped_grouped
+      - name: parent_crm_account_territory
+      - name: parent_crm_account_upa_city
+      - name: parent_crm_account_upa_country
+      - name: parent_crm_account_upa_postal_code
+      - name: parent_crm_account_upa_state
+      - name: parent_crm_account_upa_street
+      - name: partner_account_iban_number
+      - name: partner_status
+      - name: partner_track
+      - name: partner_type
+      - name: partner_vat_tax_id
+      - name: partners_partner_type
+      - name: partners_signed_contract_date
+      - name: partners_signed_contract_date_id
+      - name: potential_users
+      - name: proposed_crm_account_owner
+      - name: proposed_crm_account_owner_id
+      - name: ptc_decile
+      - name: ptc_score_group
+      - name: record_type_id
+      - name: risk_impact
+      - name: risk_reason
+      - name: sales_development_rep
+      - name: snapshot_date
+      - name: snapshot_id
+      - name: support_level
+      - name: technical_account_manager
+      - name: technical_account_manager_date
+      - name: technical_account_manager_date_id
+      - name: technical_account_manager_id
+      - name: updated_by
+      - name: user_role_type
+      - name: zoom_info_company_city
+      - name: zoom_info_company_country
+      - name: zoom_info_company_employee_count
+      - name: zoom_info_company_industry
+      - name: zoom_info_company_name
+      - name: zoom_info_company_revenue
+      - name: zoom_info_company_state_province
+      - name: zoominfo_account_phone
 
   - name: dim_crm_opportunity
     description: '{{ doc("dim_crm_opportunity") }}'
