@@ -82,6 +82,7 @@
     WHERE gitlab_members.member_source_type = 'Namespace'
       AND gitlab_members.access_level = 40
 
+    UNION ALL
 
     SELECT
       dim_marketing_contact_id,
