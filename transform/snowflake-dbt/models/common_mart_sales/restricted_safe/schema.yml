@@ -198,7 +198,7 @@ models:
         description: ' {{ doc("last_at_risk_update_comments") }} '
 
   - name: mart_crm_opportunity
-    description: This model is depercated, use [mart_crm_opportunity_stamped_hierarchy_hist](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.mart_crm_opportunity_stamped_hierarchy_hist) instead. Model with single pane of glass sales and marketing metrics. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
+    description: This model is deprecated, use [mart_crm_opportunity_stamped_hierarchy_hist](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.mart_crm_opportunity_stamped_hierarchy_hist) instead. Model with single pane of glass sales and marketing metrics. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
     columns:
       - name: dim_crm_opportunity_id
         tests:
