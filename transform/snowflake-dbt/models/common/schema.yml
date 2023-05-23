@@ -4462,10 +4462,13 @@ models:
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
     columns:
-      - name: dim_crm_account_id
-        description: Account ID from SFDC identifing the customer
+      - name: crm_account_snapshot_id
+        description: Unique identifier of a crm account in the daily snapshot models
         tests:
           - unique
+          - not_null
+      - name: dim_crm_account_id
+        description: Account ID from SFDC identifing the customer
         tags: ["tdf", "common", "sales_funnel"]
       - name: dim_parent_crm_account_id
         description: Ultimate parent account 18 character Salesforce ID 
@@ -4478,8 +4481,6 @@ models:
         description: Employee count band the account belongs to based on the account_max_family_employee. Bands include "> 2K", "> 1.5K", "> 1K".
       - name: is_reseller
         description: Identify whether a crm_account is a reseller.
-        tests:
-          - not_null
         tags: ["tdf", "common", "sales_funnel"]
       - name: crm_account_created_date
         description: The date on which the CRM account was created in SFDC
@@ -4561,7 +4562,6 @@ models:
       - name: crm_account_owner_sales_segment_geo_region_area
       - name: crm_account_owner_title
       - name: crm_account_owner_user_segment
-      - name: crm_account_snapshot_id
       - name: crm_account_sub_industry
       - name: crm_account_type
       - name: crm_account_zi_technologies
