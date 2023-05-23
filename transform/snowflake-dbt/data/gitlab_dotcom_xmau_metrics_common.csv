@@ -33,7 +33,7 @@ package_creation,package,FALSE,package,FALSE,ops,FALSE
 project_auto_devops,deploy,FALSE,environments,FALSE,ops,FALSE
 projects_prometheus_active,monitor,FALSE,monitor,FALSE,ops,FALSE
 push_action,create,FALSE,source_code,FALSE,dev,FALSE
-release_creation,deploy,TRUE,environments,TRUE,ops,FALSE
+release_creation,deploy,FALSE,environments,FALSE,ops,FALSE
 requirement_creation,plan,FALSE,certify,TRUE,dev,FALSE
 sast_build_run,secure,TRUE,static_analysis,TRUE,sec,FALSE
 secret_detection_build_run,secure,TRUE,static_analysis,FALSE,sec,FALSE
