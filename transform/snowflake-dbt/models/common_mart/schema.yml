@@ -504,7 +504,7 @@ models:
       description: '{{ doc("is_program_subscription") }}'
     - name: crm_account_name
       description: '{{ doc("crm_account_name") }}'
-- name: parent_crm_account_name
+    - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
@@ -629,7 +629,7 @@ models:
       description: '{{ doc("is_program_subscription") }}'
     - name: crm_account_name
       description: '{{ doc("crm_account_name") }}'
-- name: parent_crm_account_name
+    - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
@@ -750,7 +750,7 @@ models:
       description: '{{ doc("is_program_subscription") }}'
     - name: crm_account_name
       description: '{{ doc("crm_account_name") }}'
-- name: parent_crm_account_name
+    - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
@@ -875,7 +875,7 @@ models:
       description: '{{ doc("is_program_subscription") }}'
     - name: crm_account_name
       description: '{{ doc("crm_account_name") }}'
-- name: parent_crm_account_name
+    - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
@@ -1000,7 +1000,7 @@ models:
       description: '{{ doc("is_program_subscription") }}'
     - name: crm_account_name
       description: '{{ doc("crm_account_name") }}'
-- name: parent_crm_account_name
+    - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
@@ -1125,7 +1125,7 @@ models:
       description: '{{ doc("is_program_subscription") }}'
     - name: crm_account_name
       description: '{{ doc("crm_account_name") }}'
-- name: parent_crm_account_name
+    - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
