@@ -147,29 +147,20 @@ final AS (
     -- account fields
     dim_crm_account.crm_account_name,
     dim_crm_account.parent_crm_account_name,
-    dim_crm_account.parent_crm_account_demographics_business_unit AS account_demographics_business_unit,
-    dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
-    dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
-    dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
-    dim_crm_account.parent_crm_account_demographics_area AS account_demographics_area,
-    dim_crm_account.parent_crm_account_demographics_territory AS account_demographics_territory,
-    dim_crm_account.parent_crm_account_demographics_role_type AS account_demographics_role_type,
-    dim_crm_account.parent_crm_account_gtm_strategy,
-    dim_crm_account.parent_crm_account_focus_account,
+    dim_crm_account.parent_crm_account_business_unit,
     dim_crm_account.parent_crm_account_sales_segment,
-    dim_crm_account.parent_crm_account_zi_technologies,
-    dim_crm_account.parent_crm_account_demographics_sales_segment,
-    dim_crm_account.parent_crm_account_demographics_geo,
-    dim_crm_account.parent_crm_account_demographics_region,
-    dim_crm_account.parent_crm_account_demographics_area,
-    dim_crm_account.parent_crm_account_demographics_territory,
-    dim_crm_account.parent_crm_account_demographics_max_family_employee,
-    dim_crm_account.parent_crm_account_demographics_upa_country,
-    dim_crm_account.parent_crm_account_demographics_upa_state,
-    dim_crm_account.parent_crm_account_demographics_upa_city,
-    dim_crm_account.parent_crm_account_demographics_upa_street,
-    dim_crm_account.parent_crm_account_demographics_upa_postal_code,
-    dim_crm_account.crm_account_demographics_employee_count,
+    dim_crm_account.parent_crm_account_geo,
+    dim_crm_account.parent_crm_account_region,
+    dim_crm_account.parent_crm_account_area,
+    dim_crm_account.parent_crm_account_territory,
+    dim_crm_account.parent_crm_account_role_type,
+    dim_crm_account.parent_crm_account_max_family_employee,
+    dim_crm_account.parent_crm_account_upa_country,
+    dim_crm_account.parent_crm_account_upa_state,
+    dim_crm_account.parent_crm_account_upa_city,
+    dim_crm_account.parent_crm_account_upa_street,
+    dim_crm_account.parent_crm_account_upa_postal_code,
+    dim_crm_account.crm_account_employee_count,
     dim_crm_account.crm_account_gtm_strategy,
     dim_crm_account.crm_account_focus_account,
     dim_crm_account.crm_account_zi_technologies,
@@ -565,7 +556,7 @@ final AS (
       AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
   {% if is_incremental() %}
   
-  WHERE fct_crm_opportunity.snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+  WHERE fct_crm_opportunity.snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
 
   {% endif %}
 
@@ -575,7 +566,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@lisvinueza",
     created_date="2022-05-05",
-    updated_date="2023-04-14"
+    updated_date="2023-05-21"
   ) }}

@@ -1,3 +1,6 @@
+{{ config(materialized='table') }}
+
+
 {{ simple_cte([
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('wk_sales_sfdc_opportunity_snapshot_history_xf','wk_sales_sfdc_opportunity_snapshot_history_xf'),
@@ -15,10 +18,10 @@
     wk_sales_sfdc_opportunity_snapshot_history_xf.sales_type,
     wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_order_type_stamped AS order_type,
     wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_sales_qualified_source AS sales_qualified_source_name,
-    wk_sales_sfdc_opportunity_snapshot_history_xf.account_demographics_segment,
-    wk_sales_sfdc_opportunity_snapshot_history_xf.account_demographics_geo,
-    wk_sales_sfdc_opportunity_snapshot_history_xf.account_demographics_region,
-    wk_sales_sfdc_opportunity_snapshot_history_xf.account_demographics_area,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.parent_crm_account_sales_segment,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.parent_crm_account_geo,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.parent_crm_account_region,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.parent_crm_account_area,
     wk_sales_sfdc_opportunity_snapshot_history_xf.created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf.sales_accepted_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf.pipeline_created_date,
@@ -68,7 +71,7 @@
   SELECT DISTINCT
     touchpoint_id AS dim_crm_touchpoint_id,
     opportunity_id AS dim_crm_opportunity_id,
-    dbt_valid_from AS touchpoint_weight_snapshot_date,
+    dbt_valid_from::Date AS touchpoint_weight_snapshot_date,
     bizible_touchpoint_date,
     bizible_count_first_touch,
     bizible_count_lead_creation_touch,
@@ -105,10 +108,10 @@
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.abm_tier,
     mart_crm_attribution_touchpoint.budget_holder,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_qualified_source_name,
-    wk_sales_sfdc_opportunity_snapshot_history_xf_base.account_demographics_segment,
-    wk_sales_sfdc_opportunity_snapshot_history_xf_base.account_demographics_geo,
-    wk_sales_sfdc_opportunity_snapshot_history_xf_base.account_demographics_region,
-    wk_sales_sfdc_opportunity_snapshot_history_xf_base.account_demographics_area,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.parent_crm_account_sales_segment,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.parent_crm_account_geo,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.parent_crm_account_region,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.parent_crm_account_area,
 
   --Sales Territory Fields
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.crm_opp_owner_sales_segment_stamped,
@@ -170,10 +173,10 @@
     abm_tier,
     budget_holder,
     sales_qualified_source_name,
-    account_demographics_segment,
-    account_demographics_geo,
-    account_demographics_region,
-    account_demographics_area,
+    parent_crm_account_sales_segment,
+    parent_crm_account_geo,
+    parent_crm_account_region,
+    parent_crm_account_area,
 
   -- Sales Territory Fields
     crm_opp_owner_sales_segment_stamped,
@@ -215,7 +218,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2023-04-11",
-    updated_date="2023-05-09",
+    updated_date="2023-05-18",
   ) }}

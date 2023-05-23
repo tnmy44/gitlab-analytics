@@ -3325,6 +3325,13 @@ roles:
         member_of: []
         warehouses: []
 
+    - jburrows:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - jcaine:
         member_of:
             - analyst_sales
@@ -3379,6 +3386,7 @@ roles:
          - data_team_analyst
          - restricted_safe
          - bi_tool_eval_read
+         - marketo
          - zuora
         warehouses:
             - dev_xs
@@ -5179,6 +5187,11 @@ users:
     - jbudreski:
         can_login: no
         member_of: []
+
+    - jburrows:
+        can_login: yes
+        member_of:
+            - jburrows     
 
     - jcaine:
         can_login: yes

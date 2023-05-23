@@ -257,39 +257,33 @@ WITH edm_opty AS (
     edm_opty.dim_parent_crm_account_id                 AS ultimate_parent_account_id,
     edm_opty.is_jihu_account,
 
-    account_owner.name                                  AS account_owner_name,
-    account_owner.user_id                               AS account_owner_id,                                       
+    account_owner.name                                 AS account_owner_name,
+    account_owner.user_id                              AS account_owner_id,                                               
 
-    edm_opty.account_demographics_segment,
-    edm_opty.account_demographics_geo,
-    edm_opty.account_demographics_region,
-    edm_opty.account_demographics_area,
-    edm_opty.account_demographics_territory,
+    edm_opty.parent_crm_account_sales_segment,
+    edm_opty.parent_crm_account_geo,
+    edm_opty.parent_crm_account_region,
+    edm_opty.parent_crm_account_area,
+    edm_opty.parent_crm_account_territory,
 
-    upa.account_demographics_sales_segment            AS upa_demographics_segment,
-    upa.account_demographics_geo                      AS upa_demographics_geo,
-    upa.account_demographics_region                   AS upa_demographics_region,
-    upa.account_demographics_area                     AS upa_demographics_area,
-    upa.account_demographics_territory                AS upa_demographics_territory,
-
-    edm_opty.sales_qualified_source_name              AS sales_qualified_source,
+    edm_opty.sales_qualified_source_name               AS sales_qualified_source,
     edm_opty.stage_category,
     edm_opty.calculated_partner_track,
     edm_opty.deal_path_engagement,
     edm_opty.is_refund,
-    edm_opty.is_credit                                AS is_credit_flag,
-    edm_opty.is_contract_reset                        AS is_contract_reset_flag,
+    edm_opty.is_credit                                 AS is_credit_flag,
+    edm_opty.is_contract_reset                         AS is_contract_reset_flag,
     edm_opty.is_net_arr_pipeline_created,
-    CAST(edm_opty.is_won AS INTEGER)                  AS is_won,
+    CAST(edm_opty.is_won AS INTEGER)                   AS is_won,
     edm_opty.is_lost,
     edm_opty.is_open,
-    edm_opty.is_duplicate                             AS is_duplicate_flag,    
+    edm_opty.is_duplicate                              AS is_duplicate_flag,    
     CASE edm_opty.is_closed 
       WHEN TRUE THEN 1 
       ELSE 0 
-    END                                               AS is_closed,
-    edm_opty.is_closed                                AS stage_is_closed,
-    edm_opty.is_active                                AS stage_is_active,
+    END                                                AS is_closed,
+    edm_opty.is_closed                                 AS stage_is_closed,
+    edm_opty.is_active                                 AS stage_is_active,
     edm_opty.is_renewal,
 
 
@@ -533,8 +527,6 @@ WITH edm_opty AS (
       ON account.account_id = edm_opty.dim_crm_account_id
     INNER JOIN sfdc_users_xf AS account_owner
       ON account_owner.user_id = account.owner_id
-    INNER JOIN sfdc_accounts_xf AS upa
-      ON upa.account_id = edm_opty.dim_parent_crm_account_id
     INNER JOIN date_details AS created_date_detail
       ON created_date_detail.date_actual = edm_opty.created_date::DATE
     INNER JOIN sfdc_users_xf AS opportunity_owner

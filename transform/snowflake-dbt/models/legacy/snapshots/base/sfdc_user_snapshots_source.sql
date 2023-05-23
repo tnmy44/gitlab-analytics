@@ -1,18 +1,14 @@
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "dbt_scd_id"
-    })
-}}
-
 WITH source AS (
 
     SELECT *
     FROM {{ source('snapshots', 'sfdc_user_snapshots') }}
-    {% if is_incremental() %}
 
-    WHERE dbt_updated_at >= (SELECT MAX(dbt_updated_at) FROM {{this}})
-
-    {% endif %}
+    QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY 
+        dbt_valid_from::DATE, 
+        id 
+    ORDER BY dbt_valid_from DESC
+    ) = 1
 
 ), renamed AS(
 
