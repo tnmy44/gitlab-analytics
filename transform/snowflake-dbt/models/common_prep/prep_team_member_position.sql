@@ -11,7 +11,7 @@ WITH staffing_history AS (
     effective_date                                                                               AS valid_from,
     LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
-  WHERE business_process_type = 'Transfer Employee Inbound' OR business_process_type = 'Promote Employee Inbound' OR business_process_type = 'Change Job'
+  WHERE business_process_type != 'Termination'
 
 ),
 
