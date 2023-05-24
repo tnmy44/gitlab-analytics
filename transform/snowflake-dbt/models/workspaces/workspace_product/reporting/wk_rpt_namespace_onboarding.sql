@@ -221,10 +221,10 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
   FROM namespaces
   INNER JOIN dim_user -- including all users with a membership to the ultimate parent regardless of creator status
     ON namespaces.creator_id = dim_user.dim_user_id
-  LEFT JOIN dim_marketing_contact_no_pii -- Join on PQL information from PQL information
-    on namespaces.creator_id = dim_marketing_contact_no_pii.gitlab_dotcom_user_id
-  LEFT JOIN dim_crm_person -- Get is_first_order_person
-    on dim_marketing_contact_no_pii.sfdc_record_id = dim_crm_person.sfdc_record_id
+  LEFT JOIN dim_marketing_contact_no_pii -- Join on PQL information from PQL information 
+    ON namespaces.creator_id = dim_marketing_contact_no_pii.gitlab_dotcom_user_id 
+  LEFT JOIN dim_crm_person -- Get is_first_order_person 
+    ON dim_marketing_contact_no_pii.sfdc_record_id = dim_crm_person.sfdc_record_id
 
 
 ), billable_members AS ( --billable members calculated to match user limit calculations
