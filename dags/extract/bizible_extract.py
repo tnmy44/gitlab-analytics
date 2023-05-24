@@ -13,6 +13,7 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     REPO_BASE_PATH,
 )
+
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
@@ -42,7 +43,7 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=12),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2019, 1, 1),
+    "start_date": datetime(2023, 5, 20),
     "dagrun_timeout": timedelta(hours=6),
 }
 
@@ -52,6 +53,7 @@ dag = DAG(
     default_args=default_args,
     concurrency=2,
     schedule_interval="25 */12 * * *",
+    catchup=False
 )
 
 
