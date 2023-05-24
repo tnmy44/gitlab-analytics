@@ -14,7 +14,8 @@
 	('mart_event_namespace_daily', 'mart_event_namespace_daily'),
     ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
 	('mart_event_valid', 'mart_event_valid'),
-	('fct_usage_storage', 'fct_usage_storage')
+	('fct_usage_storage', 'fct_usage_storage'),
+    ('dim_marketing_contact_no_pii', 'dim_marketing_contact_no_pii')
     ])
 }},
 
@@ -212,11 +213,18 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
 
   SELECT DISTINCT
     namespaces.ultimate_parent_namespace_id,
+    dim_marketing_contact.sfdc_record_id,
     role                                                                  AS namespace_creator_role,
-    jobs_to_be_done                                                       AS namespace_creator_jtbd
+    jobs_to_be_done                                                       AS namespace_creator_jtbd,
+    is_first_order_person
   FROM namespaces
   INNER JOIN dim_user -- including all users with a membership to the ultimate parent regardless of creator status
     ON namespaces.creator_id = dim_user.dim_user_id
+  LEFT JOIN dim_marketing_contact_no_pii -- Join on PQL information from PQL information
+    on namespaces.creator_id = dim_marketing_contact_no_pii.gitlab_dotcom_user_id
+  LEFT JOIN dim_crm_person -- Get is_first_order_person
+    on dim_marketing_contact_no_pii.dim_marketing_contact_id = dim_crm_person.dim_marketing_contact_id
+
 
 ), billable_members AS ( --billable members calculated to match user limit calculations
     
@@ -248,6 +256,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
 	  DATE_TRUNC('month', namespaces.namespace_created_date)            AS namespace_created_month,
       DATE_TRUNC('week', namespaces.namespace_created_date)             AS namespace_created_week,
       namespaces.creator_id,
+      creator_attributes.sfdc_record_id, -- Joined from dim_crm_person through dim_marketing_contact
       namespaces.namespace_type, -- Not limited to Group namespaces to facilitate broader analyses if needed 
       namespaces.setup_for_company, -- User preferences field
       namespaces.visibility_level,
@@ -278,6 +287,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
                                                                            AS has_team_activation,
       creator_attributes.namespace_creator_role,
       creator_attributes.namespace_creator_jtbd,
+      creator_attributes.is_first_order_person, -- SFDC is_first_order from the lead / contact record
       days_since_namespace_creation_at_first_plan_event_date,
       days_since_namespace_creation_at_first_secure_event_date,
       days_since_namespace_creation_at_first_create_event_date,
@@ -329,7 +339,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
 {{ dbt_audit(
     cte_ref="base",
     created_by="@eneuberger",
-    updated_by="@eneuberger",
+    updated_by="@degan",
     created_date="2023-02-14",
-    updated_date="2023-05-18"
+    updated_date="2023-05-24"
 ) }}
