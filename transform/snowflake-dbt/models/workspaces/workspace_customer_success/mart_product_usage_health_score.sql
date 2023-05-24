@@ -246,7 +246,7 @@ qualify row_number() OVER (PARTITION BY paid_user_metrics.snapshot_month, instan
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@jngCES",
-    updated_by="@jngCES",
+    updated_by="@bbutterfield",
     created_date="2023-03-30",
-    updated_date="2023-04-05"
+    updated_date="2023-05-24"
 ) }}
