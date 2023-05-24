@@ -442,8 +442,8 @@
       parent_crm_account_demographics_territory,
 
   --Account Data
-      -- parent_crm_account_lam,
-      -- parent_crm_account_lam_dev_count,
+      COALESCE(person_base_with_tp.parent_crm_account_lam,opp_base_with_batp.parent_crm_account_lam) AS parent_crm_account_lam,
+      COALESCE(person_base_with_tp.parent_crm_account_lam_dev_count,opp_base_with_batp.parent_crm_account_lam_dev_count) AS parent_crm_account_lam_dev_count,
   
   --Touchpoint Data
       COALESCE(person_base_with_tp.bizible_touchpoint_date,opp_base_with_batp.bizible_touchpoint_date) AS bizible_touchpoint_date, 
@@ -605,5 +605,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-02-15",
-    updated_date="2023-05-22",
+    updated_date="2023-05-24",
   ) }}
