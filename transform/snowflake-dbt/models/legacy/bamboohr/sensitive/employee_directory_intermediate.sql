@@ -247,7 +247,7 @@ enriched AS (
   LEFT JOIN employee_directory
     ON employee_directory.hire_date::DATE <= date_details.date_actual
       AND COALESCE(
-        employee_directory.first_inactive_date::DATE, {{ max_date_in_bamboo_analyses() }}
+        employee_directory.termination_date::DATE, {{ max_date_in_bamboo_analyses() }}
       ) >= date_details.date_actual
       -- active employees that have been rehired will have a termination date less than 
       -- the rehire date and they need to be included while excluding those terminated after

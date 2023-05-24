@@ -52,8 +52,6 @@ WITH bizible_attribution_touchpoints AS (
       opportunity_dimensions.dim_parent_sales_segment_id,
       opportunity_dimensions.dim_parent_sales_territory_id,
       opportunity_dimensions.dim_parent_industry_id,
-      opportunity_dimensions.dim_parent_location_country_id,
-      opportunity_dimensions.dim_parent_location_region_id,
       opportunity_dimensions.dim_account_sales_segment_id,
       opportunity_dimensions.dim_account_sales_territory_id,
       opportunity_dimensions.dim_account_industry_id,
@@ -102,7 +100,7 @@ WITH bizible_attribution_touchpoints AS (
 {{ dbt_audit(
     cte_ref="final_attribution_touchpoint",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@lisvinueza",
     created_date="2021-01-21",
-    updated_date="2022-11-29"
+    updated_date="2023-05-21"
 ) }}

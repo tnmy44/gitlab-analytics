@@ -1183,6 +1183,7 @@ tables:
       , jobs_to_be_done
       , experiment_features_enabled
       , third_party_ai_features_enabled
+      , code_suggestions
       FROM namespace_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2010,7 +2011,7 @@ tables:
       , first_day_of_week
       , timezone
       , time_display_relative
-      , time_format_in_24h
+      , NULL AS time_format_in_24h
       , projects_sort
       , show_whitespace_in_diffs
       , sourcegraph_enabled
