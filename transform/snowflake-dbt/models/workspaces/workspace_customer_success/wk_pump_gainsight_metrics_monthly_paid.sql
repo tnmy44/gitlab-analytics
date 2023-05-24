@@ -137,6 +137,20 @@
     FROM redis_metrics_28d_user
     WHERE metrics_path = 'redis_hll_counters.ci_templates.p_ci_templates_implicit_auto_devops_monthly'
 
+), ide_edit AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'usage_activity_by_stage_monthly.create.action_monthly_active_users_ide_edit'
+
+), user_approve_mr AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'redis_hll_counters.ci_templates.redis_hll_counters.code_review.i_code_review_user_approve_mr_monthly'
+
 ), sm_paid_user_metrics AS (
 
     SELECT
@@ -513,7 +527,7 @@
       monthly_saas_metrics.projects_jira_dvcs_server_active_28_days_user,
       monthly_saas_metrics.merge_requests_with_required_code_owners_28_days_user,
       COALESCE(analytics_valuestream.distinct_users_whole_month, 0) AS analytics_value_stream_28_days_event,
-      monthly_saas_metrics.code_review_user_approve_mr_28_days_user,
+      COALESCE(user_approve_mr.distinct_users_whole_month, 0) AS code_review_user_approve_mr_28_days_user,
       monthly_saas_metrics.epics_usage_28_days_user,
       COALESCE(ci_templates.distinct_users_whole_month, 0) AS ci_templates_usage_28_days_event,
       monthly_saas_metrics.project_management_issue_milestone_changed_28_days_user,
@@ -544,7 +558,7 @@
       monthly_saas_metrics.analytics_devops_adoption_all_time_user,
       monthly_saas_metrics.projects_imported_all_time_event,
       monthly_saas_metrics.preferences_security_dashboard_28_days_user,
-      monthly_saas_metrics.web_ide_edit_28_days_user,
+      COALESCE(ide_edit.distinct_users_whole_month, 0) AS web_ide_edit_28_days_user,
       monthly_saas_metrics.auto_devops_pipelines_all_time_event,
       monthly_saas_metrics.projects_prometheus_active_all_time_event,
       monthly_saas_metrics.prometheus_enabled,
@@ -653,6 +667,12 @@
     LEFT JOIN pipelines_devops
       ON pipelines_devops.date_month = monthly_saas_metrics.snapshot_month
       AND pipelines_devops.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN ide_edit
+      ON ide_edit.date_month = monthly_saas_metrics.snapshot_month
+      AND ide_edit.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN user_approve_mr
+      ON user_approve_mr.date_month = monthly_saas_metrics.snapshot_month
+      AND user_approve_mr.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -686,5 +706,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-09-09",
-    updated_date="2023-04-14"
+    updated_date="2023-05-24"
 ) }}
