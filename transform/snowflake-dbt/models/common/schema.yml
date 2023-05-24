@@ -2243,6 +2243,8 @@ models:
         description: Do not use this count, it is incorrect. Use [gitlab_dotcom_memberships](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.gitlab_dotcom_memberships) for member counts.
       - name: current_project_count
         description: The number of projects that are presently associated with the namespace.
+      - name: has_code_suggestions_enabled
+        description: '{{ doc("namespace_has_code_suggestions_enabled") }}'
 
   - name: dim_order_hist
     description: '{{ doc("dim_order_hist") }}'
