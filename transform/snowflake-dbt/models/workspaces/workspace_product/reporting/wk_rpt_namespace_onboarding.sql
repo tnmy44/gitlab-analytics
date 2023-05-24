@@ -15,7 +15,8 @@
     ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
 	('mart_event_valid', 'mart_event_valid'),
 	('fct_usage_storage', 'fct_usage_storage'),
-    ('dim_marketing_contact_no_pii', 'dim_marketing_contact_no_pii')
+    ('dim_marketing_contact_no_pii', 'dim_marketing_contact_no_pii'),
+    ('dim_crm_person', 'dim_crm_person')
     ])
 }},
 
@@ -213,7 +214,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
 
   SELECT DISTINCT
     namespaces.ultimate_parent_namespace_id,
-    dim_marketing_contact.sfdc_record_id,
+    dim_marketing_contact_no_pii.sfdc_record_id,
     role                                                                  AS namespace_creator_role,
     jobs_to_be_done                                                       AS namespace_creator_jtbd,
     is_first_order_person
@@ -223,7 +224,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
   LEFT JOIN dim_marketing_contact_no_pii -- Join on PQL information from PQL information
     on namespaces.creator_id = dim_marketing_contact_no_pii.gitlab_dotcom_user_id
   LEFT JOIN dim_crm_person -- Get is_first_order_person
-    on dim_marketing_contact_no_pii.dim_marketing_contact_id = dim_crm_person.dim_marketing_contact_id
+    on dim_marketing_contact_no_pii.sfdc_record_id = dim_crm_person.sfdc_record_id
 
 
 ), billable_members AS ( --billable members calculated to match user limit calculations
