@@ -4,17 +4,11 @@
   })
 }}
 
-{% set renewal_fiscal_years= ['2019',
-                              '2020',
-                              '2021',
-                              '2022',
-                              '2023',
-                              '2024',
-                              '2025',
-                              '2026',
-                              '2027',
-                              '2028',
-                              '2029'] %}
+{% set renewal_fiscal_years = dbt_utils.get_column_values(
+        table=ref('prep_renewal_fiscal_years'),
+        where="fiscal_year >= 2019",
+        column='fiscal_year',
+        order_by='fiscal_year' )%}
 
 {{ simple_cte([
     ('dim_date','dim_date'),

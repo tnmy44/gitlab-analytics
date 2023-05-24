@@ -4384,6 +4384,7 @@ roles:
             - bamboohr
             - bi_tool_eval_db
             - prometheus
+            - restricted_safe
             - snowflake
             - workday
             - zengrc

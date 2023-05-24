@@ -49,11 +49,11 @@ news AS (
         {{ ref('wk_rpt_product_navigation_base') }} AS mr
     WHERE
         mr.behavior_at
-        > DATEADD(DAY, 1, LAST_DAY(DATEADD(MONTH, -19, CURRENT_DATE())))
+        > DATEADD(DAY, 1, LAST_DAY(DATEADD(WEEK, -19, CURRENT_DATE())))
         AND
         mr.app_id IN ('gitlab', 'gitlab_customers')
         AND
-        event_week < DATE_TRUNC(MONTH, CURRENT_DATE())
+        event_week < DATE_TRUNC(WEEK, CURRENT_DATE())
         {% if is_incremental() %}
 
             AND
