@@ -11,14 +11,14 @@ WITH source AS (
   FROM {{ ref('snowflake_query_spend_attribution') }}
   {% if is_incremental() %}
 
-  WHERE query_end_at > (SELECT MAX(query_end_at) FROM {{ this }})
+    WHERE query_end_at > (SELECT MAX(query_end_at) FROM {{ this }})
 
   {% endif %}
 ),
 
 query_aggregation AS (
 
-  SELECT 
+  SELECT
     query_id,
     query_start_at,
     query_end_at,
