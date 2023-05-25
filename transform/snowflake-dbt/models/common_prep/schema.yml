@@ -1932,4 +1932,46 @@ models:
       - name: batch
       - name: record_data_source
         description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources.
-
+  
+  - name: prep_team_member_position
+    description: '{{ doc("prep_team_member_position") }}'
+    tests: 
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - employee_id
+            - position_valid_from
+    columns:
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+        tests:
+            - not_null
+      - name: employee_id
+        description: Unique ID of the team member.
+        tests:
+            - not_null
+      - name: job_code
+        description: The code of the team member's job position.
+      - name: job_specialty_single
+        description: The team member's job specialty.
+      - name: job_specialty_multi
+        description: The team member's job specialty (multi-select).
+      - name: position
+        description: The team member's job profile name.
+      - name: job_family
+        description: The team member's job family.
+      - name: management_level
+        description: The team member's management level.
+      - name: job_grade
+        description: The team member's job grade.
+      - name: entity
+        description: The team member's entity.
+        meta:
+          masking_policy: analyst_people
+      - name: is_position_active
+        description: Whether the team member's job position is active.
+      - name: is_current
+        description: Whether the team member's job position is the most current as of the date the query is run.
+      - name: position_valid_from
+        description: The date from which the team member's job position is valid
+      - name: position_valid_to
+        description: The date to which the team member's job position is valid

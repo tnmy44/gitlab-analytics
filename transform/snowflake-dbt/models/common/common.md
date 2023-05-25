@@ -1749,3 +1749,11 @@ Model Caveat:
 This table contains team members work and personal information. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. The table includes information regarding current team members, new hires who have records created in Workday before their start date and team members who were terminated in 2021 onwards. Team members who were terminated before 2021 are not captured in this model at this time. The grain of this table is one row per employee_id per valid_to/valid_from combination.
 
 {% enddocs %}
+
+{% docs fct_team_member_position %}
+
+This table contains team members' job history, including any changes in their job profile. The table joins the staffing_history_approved_source and job_profiles_source.
+
+Only team members who have had a job change, promotion, or hire event are included in the final table. We have also included a filter for edge cases so that whenever a job code for a team member changes, it is captured. 
+
+{% enddocs %}
