@@ -25,6 +25,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , COUNT(dim_subscription_id) AS num_of_subs
         , MAX(parent_crm_account_sales_segment) AS parent_crm_account_sales_segment
         , MAX(parent_crm_account_industry) AS parent_crm_account_industry
+        , MAX(parent_crm_account_upa_country) AS parent_crm_account_upa_country
         , MAX(parent_crm_account_region) AS parent_crm_account_region
         , MAX(parent_crm_account_area) AS parent_crm_account_area
         , MAX(CASE WHEN parent_crm_account_territory !='Territory Not Found' THEN parent_crm_account_territory END) AS parent_crm_account_territory
@@ -361,6 +362,7 @@ SELECT
     , p1.cancelled_subs AS cancelled_subs_cnt
     , COALESCE(p1.parent_crm_account_sales_segment, 'Unknown') AS account_sales_segment
     , COALESCE(p1.parent_crm_account_industry, 'Unknown') AS account_industry
+    , COALESCE(p1.parent_crm_account_upa_country, 'Unknown') AS account_country
     , COALESCE(p1.parent_crm_account_territory, 'Unknown') AS account_sales_territory
     , CASE WHEN p1.parent_crm_account_region = 'AMER' OR p1.parent_crm_account_region LIKE 'AMER%' OR p1.parent_crm_account_region LIKE 'US%' THEN 'AMER'
            WHEN p1.parent_crm_account_region = 'EMEA' OR p1.parent_crm_account_region LIKE 'Germany%' THEN 'EMEA'

@@ -48,7 +48,6 @@ models:
       - name: ultimate_parent_billing_country
         description: billing country of parent account
       - name: record_type_id
-      - name: federal_account
       - name: gitlab_com_user
       - name: is_jihu_account
       - name: account_owner
@@ -171,56 +170,23 @@ models:
   - name: prep_sfdc_account
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
+      - name: dim_account_industry_name_source
+        description: Dim industry name final source column
+      - name: dim_account_location_country_name_source
+        description: Dim location country name final source column
       - name: dim_crm_account_id
         description: CRM Account ID provided by Salesforce
         tests:
           - not_null
       - name: dim_parent_crm_account_id
         description: Ulimate parent CRM Account ID provided by Salesforce
-      - name: account_tsp_region_clean
-        description: Sales region, temp cleaning column for account
-      - name: parent_tsp_region_clean
-        description: Sales region, temp cleaning column for parent
-      - name: account_tsp_sub_region_clean
-        description: Sales sub region, temp cleaning column for account
-      - name: parent_tsp_sub_region_clean
-        description: Sales sub region, temp cleaning column for parent
-      - name: account_tsp_area_clean
-        description: Sales area, temp cleaning column for account
-      - name: parent_tsp_area_clean
-        description: Sales area, temp cleaning column for parent
-      - name: account_tsp_territory_clean
-        description: Sales territory, temp cleaning column for account
-      - name: parent_tsp_territory_clean
-        description: Sales territory, temp cleaning column for parent
-      - name: account_df_industry_clean
-        description: Industry, temp cleaning column for account
-      - name: parent_df_industry_clean
-        description: Industry, temp cleaning column for parent
-      - name: account_sales_segment_clean
-        description: Dim sales segment name final source column
-      - name: parent_sales_segment_clean
-        description: Dim sales segment name final source column
-      - name: account_billing_country_clean
-        description: Dim location country name final source column
-      - name: parent_billing_country_clean
-        description: Dim location country name final source column
-      - name: dim_account_sales_territory_name_source
-        description: Dim sales territory name final source column
-      - name: dim_parent_sales_territory_name_source
-        description: Dim sales territory name final source column
-      - name: dim_account_industry_name_source
-        description: Dim industry name final source column
       - name: dim_parent_industry_name_source
         description: Dim industry name final source column
-      - name: dim_account_sales_segment_name_source
-        description: Dim sales segment name final source column
+      - name: dim_parent_sales_segment_grouped_source
       - name: dim_parent_sales_segment_name_source
         description: Dim sales segment name final source column
-      - name: dim_account_location_country_name_source
-        description: Dim location country name final source column
-      - name: dim_parent_location_country_name_source
-        description: Dim location country name final source column
+      - name: dim_parent_sales_territory_name_source
+        description: Dim sales territory name final source column
 
   - name: prep_subscription_opportunity_mapping
     description: '{{ doc("prep_subscription_opportunity_mapping") }}'
