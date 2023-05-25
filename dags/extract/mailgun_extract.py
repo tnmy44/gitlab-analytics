@@ -22,23 +22,6 @@ from kube_secrets import (
 
 from kubernetes_helpers import get_affinity, get_toleration
 
-affinity = {
-    "nodeAffinity": {
-        "requiredDuringSchedulingIgnoredDuringExecution": {
-            "nodeSelectorTerms": [
-                {
-                    "matchExpressions": [
-                        {"key": "test", "operator": "In", "values": ["true"]}
-                    ]
-                }
-            ]
-        }
-    }
-}
-tolerations = [
-    {"key": "test", "operator": "Equal", "value": "true", "effect": "NoSchedule"}
-]
-
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
@@ -97,8 +80,8 @@ for e in events:
             "START_TIME": "{{ logical_date }}",
             "END_TIME": "{{ next_execution_date }}",
         },
-        affinity=affinity,
-        tolerations=tolerations,
+        affinity=get_affinity("test"),
+        tolerations=get_toleration("test"),
         arguments=[mailgun_extract_command],
         dag=dag,
     )
