@@ -12,7 +12,7 @@ models:
   - name: snowflake_query_history_source
     description: Source layer for all query history.  Column documentation can be found at https://docs.snowflake.com/en/sql-reference/account-usage/query_history.html#columns
   - name: snowflake_non_team_member_user_type_source
-    description: A table build from a seed file to map a division, department, and user type to all snowflake users that are not team members.
+    description: A table built from a seed file to map a division, department, and user type to all snowflake users that are not team members.
     columns:
       - name: user_name
         description: The snowflake user name.  Used to relate to query activity
@@ -20,13 +20,13 @@ models:
           - unique
           - not_null
       - name: user_type
-        description: A categorization use to group the snowflake users.  Primarily to differentiate between team members and application role types.
+        description: A categorization used to group the snowflake users, primarily to differentiate between team members and application role types.
       - name: division
         description: The cost center division
       - name: department
         description: The cost center department
   - name: snowflake_warehouse_metering_history_source
-    description: A table derived from the account warehouse_metering_history_source view in snowflake. https://docs.snowflake.com/en/sql-reference/functions/warehouse_metering_history 
+    description: A table derived from the account [warehouse_metering_history_source view](https://docs.snowflake.com/en/sql-reference/functions/warehouse_metering_history) in Snowflake.
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -53,7 +53,7 @@ models:
         description: '{{ doc("credits_used_cloud_services") }}'
 
   - name: snowflake_contract_rates_source
-    description: A table built from a seed file to recorded the negotiated rate of snowflake credits.
+    description: A table built from a seed file to record the negotiated rate of snowflake credits.
     columns:
       - name: contract_rate_effective_date
         description: The date the rate became effective
