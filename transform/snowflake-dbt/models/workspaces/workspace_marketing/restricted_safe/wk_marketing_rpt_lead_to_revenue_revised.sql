@@ -163,9 +163,9 @@
     INNER JOIN dim_crm_person
       ON person_base.dim_crm_person_id = dim_crm_person.dim_crm_person_id
     LEFT JOIN upa_base
-    ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
-    LEFT JOIN mart_crm_account
-    ON person_base.dim_crm_account_id = mart_crm_account.dim_crm_account_id
+      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
+    FULL JOIN mart_crm_account
+      ON person_base.dim_crm_account_id = mart_crm_account.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps
       ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     LEFT JOIN person_order_type_final
@@ -397,7 +397,7 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
-    LEFT JOIN mart_crm_account
+    FULL JOIN mart_crm_account
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     {{dbt_utils.group_by(n=72)}}
     
@@ -628,5 +628,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-02-15",
-    updated_date="2023-05-24",
+    updated_date="2023-05-25",
   ) }}
