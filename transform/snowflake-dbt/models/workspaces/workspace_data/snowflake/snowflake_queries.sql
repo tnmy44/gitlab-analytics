@@ -43,7 +43,7 @@ user_types AS (
 credit_rates AS (
   SELECT 
     contract_rate_effective_date AS contract_rate_effective_start_date,
-    DATEADD(day, -1, LEAD(contract_rate_effective_date, 1, '2059-01-01') 
+    DATEADD(day, -1, LEAD(contract_rate_effective_date, 1, {{ var('tomorrow') }}) 
       OVER ( ORDER BY contract_rate_effective_date ASC )) AS contract_rate_effective_end_date,
     contract_rate
   FROM {{ ref('snowflake_contract_rates_source') }}
