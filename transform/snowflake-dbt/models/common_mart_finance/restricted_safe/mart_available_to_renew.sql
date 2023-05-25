@@ -4,17 +4,11 @@
   })
 }}
 
-{% set renewal_fiscal_years= ['2019',
-                              '2020',
-                              '2021',
-                              '2022',
-                              '2023',
-                              '2024',
-                              '2025',
-                              '2026',
-                              '2027',
-                              '2028',
-                              '2029'] %}
+{% set renewal_fiscal_years = dbt_utils.get_column_values(
+        table=ref('prep_renewal_fiscal_years'),
+        where="fiscal_year >= 2019",
+        column='fiscal_year',
+        order_by='fiscal_year' )%}
 
 {{ simple_cte([
     ('dim_date','dim_date'),
@@ -198,18 +192,11 @@
       dim_crm_account.crm_account_name                                                AS crm_account_name,
       dim_crm_account.dim_parent_crm_account_id                                       AS dim_parent_crm_account_id,
       dim_crm_account.parent_crm_account_name                                         AS parent_crm_account_name,
-      dim_crm_account.parent_crm_account_billing_country                              AS parent_crm_account_billing_country,
       dim_crm_account.parent_crm_account_sales_segment                                AS parent_crm_account_sales_segment,
+      dim_crm_account.parent_crm_account_territory                              AS parent_crm_account_territory,
+      dim_crm_account.parent_crm_account_region                                       AS parent_crm_account_region,
+      dim_crm_account.parent_crm_account_area                                         AS parent_crm_account_area,
       dim_crm_account.parent_crm_account_industry                                     AS parent_crm_account_industry,
-      dim_crm_account.parent_crm_account_owner_team                                   AS parent_crm_account_owner_team,
-      dim_crm_account.parent_crm_account_sales_territory                              AS parent_crm_account_sales_territory,
-      dim_crm_account.parent_crm_account_tsp_region                                   AS parent_crm_account_tsp_region,
-      dim_crm_account.parent_crm_account_tsp_sub_region                               AS parent_crm_account_tsp_sub_region,
-      dim_crm_account.parent_crm_account_tsp_area                                     AS parent_crm_account_tsp_area,
-      dim_crm_account.crm_account_tsp_region                                          AS crm_account_tsp_region,
-      dim_crm_account.crm_account_tsp_sub_region                                      AS crm_account_tsp_sub_region,
-      dim_crm_account.crm_account_tsp_area                                            AS crm_account_tsp_area,
-      dim_crm_account.health_score                                                    AS health_score,
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
@@ -974,7 +961,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@michellecooper",
-    updated_by="@iweeks",
+    updated_by="@lisvinueza",
     created_date="2021-12-06",
-    updated_date="2023-04-24"
+    updated_date="2023-05-21"
 ) }}

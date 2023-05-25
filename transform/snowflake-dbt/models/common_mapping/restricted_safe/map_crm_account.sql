@@ -31,8 +31,6 @@ WITH account_prep AS (
       {{ get_keyed_nulls ('sales_segment_ultimate_parent.dim_sales_segment_id') }}                  AS dim_parent_sales_segment_id,
       {{ get_keyed_nulls ('sales_territory_ultimate_parent.dim_sales_territory_id') }}              AS dim_parent_sales_territory_id,
       {{ get_keyed_nulls ('industry_ultimate_parent.dim_industry_id') }}                            AS dim_parent_industry_id,
-      {{ get_keyed_nulls ('location_country_ultimate_parent.dim_location_country_id::varchar') }}   AS dim_parent_location_country_id,
-      {{ get_keyed_nulls ('location_country_ultimate_parent.dim_location_region_id') }}             AS dim_parent_location_region_id,
       {{ get_keyed_nulls ('sales_segment.dim_sales_segment_id') }}                                  AS dim_account_sales_segment_id,
       {{ get_keyed_nulls ('sales_territory.dim_sales_territory_id') }}                              AS dim_account_sales_territory_id,
       {{ get_keyed_nulls ('industry.dim_industry_id') }}                                            AS dim_account_industry_id,
@@ -45,12 +43,10 @@ WITH account_prep AS (
       ON account_prep.dim_parent_sales_territory_name_source = sales_territory_ultimate_parent.sales_territory_name
     LEFT JOIN industry AS industry_ultimate_parent
       ON account_prep.dim_parent_industry_name_source = industry_ultimate_parent.industry_name
-    LEFT JOIN location_country AS location_country_ultimate_parent
-      ON account_prep.dim_parent_location_country_name_source = location_country_ultimate_parent.country_name
     LEFT JOIN sales_segment
-      ON account_prep.dim_account_sales_segment_name_source = sales_segment.sales_segment_name
+      ON account_prep.dim_parent_sales_segment_name_source = sales_segment.sales_segment_name
     LEFT JOIN sales_territory
-      ON account_prep.dim_account_sales_territory_name_source = sales_territory.sales_territory_name
+      ON account_prep.dim_parent_sales_territory_name_source = sales_territory.sales_territory_name
     LEFT JOIN industry
       ON account_prep.dim_account_industry_name_source = industry.industry_name
     LEFT JOIN location_country
@@ -61,7 +57,7 @@ WITH account_prep AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@pmcooperDD",
+    updated_by="@lisvinueza",
     created_date="2020-11-23",
-    updated_date="2021-03-04"
+    updated_date="2023-05-21"
 ) }}

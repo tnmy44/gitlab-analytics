@@ -54,6 +54,7 @@ staffing_history AS (
     effective_date AS valid_from,
     LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
+  WHERE business_process_type = 'Hire' OR business_process_type = 'Termination' OR business_process_type = 'Contract Contingent Worker'
 
 ),
 

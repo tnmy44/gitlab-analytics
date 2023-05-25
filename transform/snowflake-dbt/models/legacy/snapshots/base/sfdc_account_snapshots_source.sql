@@ -32,11 +32,11 @@ renamed AS (
     primary_contact_id__c AS primary_contact_id,
     recordtypeid AS record_type_id,
     ultimate_parent_account_id__c AS ultimate_parent_id,
+    ultimate_parent_account_text__c AS ultimate_parent_account_name,
     partner_vat_tax_id__c AS partner_vat_tax_id,
 
 
     -- key people GL side
-    federal_account__c AS federal_account,
     gitlab_com_user__c AS gitlab_com_user,
     account_manager__c AS account_manager,
     account_owner_calc__c AS account_owner,
@@ -72,13 +72,11 @@ renamed AS (
     sdr_target_account__c::BOOLEAN AS is_sdr_target_account,
     lam_tier__c AS lam,
     lam_dev_count__c AS lam_dev_count,
-    potential_arr_lam__c AS potential_arr_lam,
     jihu_account__c::BOOLEAN AS is_jihu_account,
     partners_signed_contract_date__c AS partners_signed_contract_date,
     partner_account_iban_number__c AS partner_account_iban_number,
     partners_partner_type__c AS partner_type,
     partners_partner_status__c AS partner_status,
-    fy22_new_logo_target_list__c::BOOLEAN AS fy22_new_logo_target_list,
     first_order_available__c::BOOLEAN AS is_first_order_available,
     REPLACE(
       zi_technologies__c,
@@ -97,39 +95,25 @@ renamed AS (
     number_of_employees_manual_source_admin__c AS admin_manual_source_number_of_employees,
     account_address_manual_source_admin__c AS admin_manual_source_account_address,
 
-    -- territory success planning fields
-    atam_approved_next_owner__c AS tsp_approved_next_owner,
-    atam_next_owner_role__c AS tsp_next_owner_role,
-    account_demographics_employee_count__c AS tsp_account_employees,
-    account_demographic_max_family_employees__c AS tsp_max_family_employees,
-    account_demographics_region__c AS tsp_region,
-    TRIM(SPLIT_PART(atam_sub_region__c, '-', 1)) AS tsp_sub_region,
-    account_demographics_area__c AS tsp_area,
-    account_demographics_territory__c AS tsp_territory,
-    atam_address_country__c AS tsp_address_country,
-    atam_address_state__c AS tsp_address_state,
-    atam_address_city__c AS tsp_address_city,
-    atam_address_street__c AS tsp_address_street,
-    atam_address_postal_code__c AS tsp_address_postal_code,
-
     -- account demographics fields
-    account_demographics_sales_segment__c AS account_demographics_sales_segment,
-    account_demographics_geo__c AS account_demographics_geo,
-    account_demographics_region__c AS account_demographics_region,
-    account_demographics_area__c AS account_demographics_area,
-    account_demographics_territory__c AS account_demographics_territory,
-    account_demographics_business_unit__c AS account_demographics_business_unit,
-    account_demographics_role_type__c AS account_demographics_role_type,
-    account_demographics_employee_count__c AS account_demographics_employee_count,
-    account_demographic_max_family_employees__c AS account_demographics_max_family_employee,
-    account_demographics_upa_country__c AS account_demographics_upa_country,
-    account_demographics_upa_state__c AS account_demographics_upa_state,
-    account_demographics_upa_city__c AS account_demographics_upa_city,
-    account_demographics_upa_street__c AS account_demographics_upa_street,
-    account_demographics_upa_postal_code__c AS account_demographics_upa_postal_code,
+
+    -- Add sales_segment_cleaning macro to avoid duplication in downstream models
+    {{sales_segment_cleaning('account_demographics_sales_segment__c')}} AS account_sales_segment,
+    account_demographics_geo__c AS account_geo,
+    account_demographics_region__c AS account_region,
+    account_demographics_area__c AS account_area,
+    account_demographics_territory__c AS account_territory,
+    account_demographics_business_unit__c AS account_business_unit,
+    account_demographics_role_type__c AS account_role_type,
+    account_demographics_employee_count__c AS account_employee_count,
+    account_demographic_max_family_employees__c AS account_max_family_employee,
+    account_demographics_upa_country__c AS account_upa_country,
+    account_demographics_upa_state__c AS account_upa_state,
+    account_demographics_upa_city__c AS account_upa_city,
+    account_demographics_upa_street__c AS account_upa_street,
+    account_demographics_upa_postal_code__c AS account_upa_postal_code,
 
     -- present state info
-    health__c AS health_score,
     gs_health_score__c AS health_number,
     gs_health_score_color__c AS health_score_color,
 
@@ -171,12 +155,10 @@ renamed AS (
     -- sales segment fields
     account_demographics_sales_segment__c AS ultimate_parent_sales_segment,
     sales_segmentation_new__c AS division_sales_segment,
-    account_demographics_sales_segment__c AS tsp_max_hierarchy_sales_segment,
     account_owner_user_segment__c AS account_owner_user_segment,
     -- ************************************
     -- sales segmentation deprecated fields - 2020-09-03
     -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
-    jb_test_sales_segment__c AS tsp_test_sales_segment,
     ultimate_parent_sales_segment_employees__c AS sales_segment,
     sales_segmentation_new__c AS account_segment,
 
