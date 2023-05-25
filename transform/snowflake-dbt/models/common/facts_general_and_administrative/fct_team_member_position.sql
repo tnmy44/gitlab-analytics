@@ -1,17 +1,21 @@
 WITH final AS (
 
   SELECT 
+    {{ dbt_utils.surrogate_key(['employee_id', 'role_valid_from']) }}  AS team_member_position_pk,
     prep_team_member_position.dim_team_member_sk,
+    prep_team_member_position.employee_id,
     prep_team_member_position.job_code,
     prep_team_member_position.job_specialty_single,
     prep_team_member_position.job_specialty_multi,
-    prep_team_member_position.job_profile,
+    prep_team_member_position.role,
     prep_team_member_position.job_family,
     prep_team_member_position.management_level,
     prep_team_member_position.job_grade,
-    prep_team_member_position.is_job_profile_active,
-    prep_team_member_position.valid_from,
-    prep_team_member_position.valid_to
+    prep_team_member_position.entity,
+    prep_team_member_position.is_role_active,
+    prep_team_member_position.is_current,
+    prep_team_member_position.role_valid_from,
+    prep_team_member_position.role_valid_to
   FROM {{ ref('prep_team_member_position') }}
 
 )

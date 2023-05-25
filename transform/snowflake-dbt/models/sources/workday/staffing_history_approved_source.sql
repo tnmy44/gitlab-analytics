@@ -25,8 +25,6 @@ renamed AS (
     d.value['ENTITY_PROPOSED']::VARCHAR                 AS entity_current,
     d.value['JOB_CODE_CURRENT']::VARCHAR                AS job_code_past,
     d.value['JOB_CODE_PROPOSED']::VARCHAR               AS job_code_current,
-    d.value['JOB_PROFILE_CURRENT']::VARCHAR             AS job_profile_past,
-    d.value['JOB_PROFILE_PROPOSED']::VARCHAR            AS job_profile_current,
     d.value['JOB_SPECIALTY_MULTI_CURRENT']::VARCHAR     AS job_specialty_multi_past,
     d.value['JOB_SPECIALTY_MULTI_PROPOSED']::VARCHAR    AS job_specialty_multi_current,
     d.value['JOB_SPECIALTY_SINGLE_CURRENT']::VARCHAR    AS job_specialty_single_past,
