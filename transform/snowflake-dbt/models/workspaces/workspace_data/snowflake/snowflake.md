@@ -1,22 +1,3 @@
-
-
-warehouse_id
-
-
-
-
-
-spend_start_at
-spend_end_at
-credits_used_total
-
-
-
-
-
-
-
-
 {% docs attribution_id %}
 A unique ID for the attribution comprises of the query id and the warehouse_metering_start_at.
 {% enddocs %}

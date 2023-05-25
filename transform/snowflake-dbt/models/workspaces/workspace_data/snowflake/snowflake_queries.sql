@@ -84,7 +84,7 @@ expanded AS (
     source.credits_used_cloud_services,
     source.percentage_scanned_from_cache,
     query_metering.total_attributed_credits,
-    ROUND(credit_rates.contract_rate * query_metering.total_attributed_credits, 2)   AS dollars_spent,
+    ROUND(credit_rates.contract_rate * query_metering.total_attributed_credits, 2)    AS dollars_spent,
     IFF(team_members.employee_id IS NULL, user_types.user_type, 'Team Member')        AS user_type,
     IFF(user_types.user_type IS NULL, team_members.division, user_types.division)     AS division,
     IFF(user_types.user_type IS NULL, team_members.department, user_types.department) AS department,

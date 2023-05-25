@@ -24,7 +24,9 @@ warehouse_spend AS (
 
 attribution AS (
   SELECT
-    {{ dbt_utils.surrogate_key(['query_history.query_id','warehouse_spend.warehouse_metering_start_at']) }}   AS attribution_id,
+    {{ dbt_utils.surrogate_key([
+      'query_history.query_id',
+      'warehouse_spend.warehouse_metering_start_at']) }}                                     AS attribution_id,
     query_history.query_id,
     query_history.warehouse_id,
     query_history.query_start_at,
