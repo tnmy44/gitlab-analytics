@@ -105,19 +105,16 @@
       person_base.account_demographics_territory,
       mart_crm_account.is_first_order_available,
       person_order_type_final.person_order_type,
-<<<<<<< HEAD
 
       --Account Data
       mart_crm_account.parent_crm_account_lam,
       mart_crm_account.parent_crm_account_lam_dev_count,
-=======
       map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
       COALESCE(map_alternative_lead_demographics.employee_count_segment_custom,map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
       map_alternative_lead_demographics.geo_custom,
       UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
 
->>>>>>> master
   
   --Touchpoint Data
       'Person Touchpoint' AS touchpoint_type,
@@ -136,7 +133,6 @@
       mart_crm_touchpoint.bizible_referrer_page,
       mart_crm_touchpoint.bizible_referrer_page_raw,
       mart_crm_touchpoint.bizible_integrated_campaign_grouping,
-<<<<<<< HEAD
       mart_crm_touchpoint.bizible_form_page_utm_content,
       mart_crm_touchpoint.bizible_form_page_utm_budget,
       mart_crm_touchpoint.bizible_form_page_utm_allptnr,
@@ -145,9 +141,7 @@
       mart_crm_touchpoint.bizible_landing_page_utm_budget,
       mart_crm_touchpoint.bizible_landing_page_utm_allptnr,
       mart_crm_touchpoint.bizible_landing_page_utm_partnerid,
-=======
       mart_crm_touchpoint.campaign_rep_role_name,
->>>>>>> master
       mart_crm_touchpoint.touchpoint_segment,
       mart_crm_touchpoint.gtm_motion,
       mart_crm_touchpoint.pipe_name,
@@ -215,16 +209,11 @@
       opp.crm_opp_owner_region_stamped,
       opp.crm_opp_owner_area_stamped,
       opp.crm_opp_owner_geo_stamped,
-<<<<<<< HEAD
-      opp.parent_crm_account_demographics_upa_country,
-      opp.parent_crm_account_demographics_territory,
 
       --Account Data
       mart_crm_account.parent_crm_account_lam,
       mart_crm_account.parent_crm_account_lam_dev_count,
-=======
       opp.parent_crm_account_upa_country,
->>>>>>> master
     
     -- Touchpoint Data
       'Attribution Touchpoint' AS touchpoint_type,
@@ -408,15 +397,9 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
-<<<<<<< HEAD
     LEFT JOIN mart_crm_account
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     {{dbt_utils.group_by(n=72)}}
-=======
-    LEFT JOIN dim_crm_account
-      ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=63)}}
->>>>>>> master
     
 ), cohort_base_combined AS (
   
@@ -478,17 +461,12 @@
       crm_opp_owner_region_stamped,
       crm_opp_owner_area_stamped,
       crm_opp_owner_geo_stamped,
-<<<<<<< HEAD
-      parent_crm_account_demographics_upa_country,
-      parent_crm_account_demographics_territory,
 
   --Account Data
       COALESCE(person_base_with_tp.parent_crm_account_lam,opp_base_with_batp.parent_crm_account_lam) AS parent_crm_account_lam,
       COALESCE(person_base_with_tp.parent_crm_account_lam_dev_count,opp_base_with_batp.parent_crm_account_lam_dev_count) AS parent_crm_account_lam_dev_count,
-=======
       parent_crm_account_upa_country,
       parent_crm_account_territory,
->>>>>>> master
   
   --Touchpoint Data
       COALESCE(person_base_with_tp.bizible_touchpoint_date,opp_base_with_batp.bizible_touchpoint_date) AS bizible_touchpoint_date, 
