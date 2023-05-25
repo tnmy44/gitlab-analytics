@@ -113,7 +113,6 @@ WITH biz_person AS (
       sequence_status,
       is_actively_being_sequenced,
       is_high_priority,
-      high_priority_datetime,
       prospect_share_status,
       partner_prospect_status,
       partner_prospect_id,
