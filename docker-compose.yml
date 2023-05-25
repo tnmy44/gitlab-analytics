@@ -12,6 +12,7 @@ services:
           AIRFLOW__CORE__DAGS_FOLDER: /usr/local/airflow/analytics/dags/
           NAMESPACE: testing
           IN_CLUSTER: "False"
+          IN_CLOUD: "False"
           GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
           GIT_BRANCH: ${GIT_BRANCH}
           AIRFLOW__WEBSERVER__SECRET_KEY: 83a1e32380af3a62d159ca9461aa3e30436b4978c8dd66f907a02528b662
@@ -44,6 +45,7 @@ services:
           AIRFLOW__CORE__DAGS_FOLDER: /usr/local/airflow/analytics/dags/
           NAMESPACE: testing
           IN_CLUSTER: "False"
+          IN_CLOUD: "False"
           GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
           GIT_BRANCH: ${GIT_BRANCH}
           AIRFLOW__WEBSERVER__SECRET_KEY: 83a1e32380af3a62d159ca9461aa3e30436b4978c8dd66f907a02528b662

@@ -8,7 +8,7 @@ from airflow.models import Variable
 from airflow.providers.slack.operators.slack import SlackAPIPostOperator
 from airflow.providers.slack.operators.slack_webhook import SlackWebhookOperator
 
-if os.environ["IN_CLUSTER"] == "False":
+if os.environ["IN_CLOUD"] == "False":
     REPO_BASE_PATH = f"{os.environ['AIRFLOW_HOME']}/analytics"
 else:
     REPO_BASE_PATH = f"{os.environ['AIRFLOW_HOME']}/dags/repo"
