@@ -562,7 +562,6 @@ tables:
       , job_token_scope_enabled
       , runner_token_expiration_interval
       , separated_caches
-      , NULL AS opt_in_jwt
       , allow_fork_pipelines_to_run_in_parent_project
       , inbound_job_token_scope_enabled
       FROM project_ci_cd_settings
