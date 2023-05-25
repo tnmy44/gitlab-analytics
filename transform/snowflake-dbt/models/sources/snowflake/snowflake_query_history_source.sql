@@ -11,6 +11,12 @@ WITH source AS (
 
   SELECT *
   FROM {{ source('snowflake_account_usage','query_history') }}
+  {% if is_incremental() %}
+
+    -- this filter will only be applied on an incremental run
+    WHERE end_time > (SELECT MAX(query_end_at) FROM {{ this }})
+
+  {% endif %}
 
 ),
 
@@ -83,12 +89,6 @@ renamed AS (
     AS query_acceleration_upper_limit_scale_factor
 
   FROM source
-  {% if is_incremental() %}
-
-    -- this filter will only be applied on an incremental run
-    WHERE query_end_at > (SELECT MAX(end_time) FROM {{ this }})
-
-  {% endif %}
 
 )
 
