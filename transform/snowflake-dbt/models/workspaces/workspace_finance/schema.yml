@@ -112,6 +112,8 @@ models:
         description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
       - name: product_tier_name_short
         description: Pulls the product tier from `product_tier_name` with the delivery type removed
+      - name: product_deployment_type
+        description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: effective_start_date
         description: The date when the product becomes available and can be subscribed to
       - name: effective_end_date
@@ -148,6 +150,8 @@ models:
         description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
       - name: product_tier_name_short
         description: Pulls the product tier from `product_tier_name` with the delivery type removed
+      - name: product_deployment_type
+        description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: effective_start_date
         description: The date when the product becomes available and can be subscribed to
       - name: effective_end_date
@@ -167,6 +171,8 @@ models:
               severity: warn
       - name: product_delivery_type
         description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_deployment_type
+        description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
       - name: product_tier
@@ -201,6 +207,8 @@ models:
         description: Pulls the product tier from `product_tier_name` with the delivery type removed
       - name: product_delivery_type
         description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_deployment_type
+        description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
   - name: dim_billing_account_api_sandbox
