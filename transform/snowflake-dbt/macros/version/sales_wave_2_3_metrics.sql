@@ -184,7 +184,7 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['govern']['distinct_count_project_id_from_security_orchestration_policy_configurations']") }}   AS projects_security_policy_28_days_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['govern']['user_merge_requests_for_projects_with_assigned_security_policy_project']") }}        AS merge_requests_security_policy_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['ci_templates']['p_ci_templates_implicit_auto_devops_monthly']") }}                                          AS pipelines_implicit_auto_devops_28_days_event,
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['verify']['ci_pipeline_schedules']") }}                                                         AS pipeline_schedules_28_days_user
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['verify']['ci_pipeline_schedules']") }}                                                         AS pipeline_schedules_28_days_user,
 
     -- 8 metrics
     {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['ci_internal_pipelines']") }}                                            AS internal_pipelines_28_days_event,
