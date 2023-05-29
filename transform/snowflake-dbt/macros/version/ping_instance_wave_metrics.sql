@@ -185,7 +185,7 @@ MAX(CASE WHEN metrics_path = 'redis_hll_counters.ci_templates.p_ci_templates_imp
 MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.verify.ci_pipeline_schedules' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS pipeline_schedules_28_days_user,
 
 -- 8 metrics
-MAX(CASE WHEN metrics_path = 'counts_monthly.ci_internal_pipelines' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS internal_pipelines_28_days_event,
+MAX(CASE WHEN metrics_path = 'counts_monthly.ci_internal_pipelines' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS ci_internal_pipelines_28_days_event,
 
 ---SMAU metrics
 MAX(CASE WHEN metrics_path = 'redis_hll_counters.terraform.p_terraform_state_api_unique_users_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS terraform_state_api_28_days_user,
