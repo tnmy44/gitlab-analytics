@@ -149,7 +149,7 @@
     SELECT
       *
     FROM redis_metrics_28d_user
-    WHERE metrics_path = 'redis_hll_counters.ci_templates.redis_hll_counters.code_review.i_code_review_user_approve_mr_monthly'
+    WHERE metrics_path = 'redis_hll_counters.code_review.i_code_review_user_approve_mr_monthly'
 
 ), sm_paid_user_metrics AS (
 
