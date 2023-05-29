@@ -187,8 +187,6 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['verify']['ci_pipeline_schedules']") }}                                                         AS pipeline_schedules_28_days_user,
 
     -- 8 metrics
-    {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['ci_internal_pipelines']") }}                                            AS internal_pipelines_28_days_event,
-    {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['code_review']['i_code_review_user_approve_mr_monthly']") }}         AS mr_approve_28_days_user,
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['create']['action_monthly_active_users_ide_edit']") }}  AS edit_file_any_editor_28_days_user
+    {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['ci_internal_pipelines']") }}    AS ci_internal_pipelines_28_days_event
 
 {%- endmacro -%}

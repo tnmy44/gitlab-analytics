@@ -170,5 +170,3 @@ wave,metric_name
 7,redis_hll_counters.ci_templates.p_ci_templates_implicit_auto_devops_monthly
 7,usage_activity_by_stage_monthly.verify.ci_pipeline_schedules
 8,counts_monthly.ci_internal_pipelines
-8,redis_hll_counters.code_review.i_code_review_user_approve_mr_monthly
-8,usage_activity_by_stage_monthly.create.action_monthly_active_users_ide_edit

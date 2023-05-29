@@ -186,8 +186,6 @@ MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.verify.ci_pipeline
 
 -- 8 metrics
 MAX(CASE WHEN metrics_path = 'counts_monthly.ci_internal_pipelines' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS internal_pipelines_28_days_event,
-MAX(CASE WHEN metrics_path = 'redis_hll_counters.code_review.i_code_review_user_approve_mr_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS mr_approve_28_days_user,
-MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.create.action_monthly_active_users_ide_edit' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS edit_file_any_editor_28_days_user,
 
 ---SMAU metrics
 MAX(CASE WHEN metrics_path = 'redis_hll_counters.terraform.p_terraform_state_api_unique_users_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS terraform_state_api_28_days_user,
