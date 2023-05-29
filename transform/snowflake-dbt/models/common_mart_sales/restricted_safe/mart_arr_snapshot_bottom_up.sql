@@ -46,6 +46,7 @@ WITH dim_billing_account AS (
       dim_product_detail_id,
       dim_billing_account_id,
       dim_crm_account_id,
+      dim_charge_id,
       SUM(mrr)                                                                      AS mrr,
       SUM(arr)                                                                      AS arr,
       SUM(quantity)                                                                 AS quantity,
@@ -63,7 +64,7 @@ WITH dim_billing_account AS (
 
     {% endif %}
 
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=9) }}
 
 ), joined AS (
 
@@ -167,6 +168,7 @@ WITH dim_billing_account AS (
       dim_product_detail.is_arpu                                                            AS is_arpu,
 
       --charge information
+      fct_mrr_snapshot_bottom_up.dim_charge_id                                              AS dim_charge_id,
       fct_mrr_snapshot_bottom_up.unit_of_measure                                            AS unit_of_measure,
       fct_mrr_snapshot_bottom_up.mrr                                                        AS mrr,
       fct_mrr_snapshot_bottom_up.arr                                                        AS arr,
@@ -243,7 +245,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@lisvinueza",
+    updated_by="@chrissharp",
     created_date="2021-07-29",
-    updated_date="2023-05-22"
+    updated_date="2023-05-29"
 ) }}
