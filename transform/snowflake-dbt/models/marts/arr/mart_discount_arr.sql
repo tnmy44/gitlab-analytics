@@ -78,18 +78,16 @@ WITH dim_date AS (
       dim_crm_opportunity.opportunity_name                              AS opportunity_name,
       dim_crm_account_invoice.dim_parent_crm_account_id                 AS dim_parent_crm_account_id_invoice,
       dim_crm_account_invoice.parent_crm_account_name                   AS parent_crm_account_name_invoice,
-      dim_crm_account_invoice.parent_crm_account_billing_country        AS parent_crm_account_billing_country_invoice,
-      dim_crm_account_invoice.parent_crm_account_sales_segment          AS parent_crm_account_sales_segment_invoice,
+      dim_crm_account_invoice.parent_crm_account_upa_country            AS parent_crm_account_upa_country_invoice,
       dim_crm_account_invoice.dim_crm_account_id                        AS dim_crm_account_id_invoice,
       dim_crm_account_invoice.crm_account_name                          AS crm_account_name_invoice,
-      dim_crm_account_invoice.crm_account_owner_team                    AS crm_account_owner_team_invoice,
+      dim_crm_account_invoice.parent_crm_account_sales_segment          AS parent_crm_account_sales_segment_invoice,
       dim_crm_account_subscription.dim_parent_crm_account_id            AS dim_parent_crm_account_id_subscription,
       dim_crm_account_subscription.parent_crm_account_name              AS parent_crm_account_name_subscription,
-      dim_crm_account_subscription.parent_crm_account_billing_country   AS parent_crm_account_billing_country_subscription,
-      dim_crm_account_subscription.parent_crm_account_sales_segment     AS parent_crm_account_sales_segment_subscription,
+      dim_crm_account_subscription.parent_crm_account_upa_country       AS parent_crm_account_upa_country_subscription,
       dim_crm_account_subscription.dim_crm_account_id                   AS dim_crm_account_id_subscription,
       dim_crm_account_subscription.crm_account_name                     AS crm_account_name_subscription,
-      dim_crm_account_subscription.crm_account_owner_team               AS crm_account_owner_team_subscription,
+       dim_crm_account_subscription.parent_crm_account_sales_segment    AS parent_crm_account_sales_segment_subscription,
       dim_subscription.subscription_name                                AS subscription_name,
       IFF(dim_subscription.zuora_renewal_subscription_name != '', TRUE, FALSE)
                                                                         AS is_myb,
@@ -141,7 +139,7 @@ WITH dim_date AS (
     LEFT JOIN dim_crm_opportunity 
       ON dim_subscription.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
     WHERE dim_crm_account_subscription.is_jihu_account != 'TRUE'
-    {{ dbt_utils.group_by(n=42) }}
+    {{ dbt_utils.group_by(n=40) }}
     ORDER BY 3 DESC
 
 ), final AS (
@@ -164,5 +162,5 @@ WITH dim_date AS (
     created_by="@iweeks",
     updated_by="@lisvinueza",
     created_date="2020-10-21",
-    updated_date="2022-08-31",
+    updated_date="2023-05-22"
 ) }}

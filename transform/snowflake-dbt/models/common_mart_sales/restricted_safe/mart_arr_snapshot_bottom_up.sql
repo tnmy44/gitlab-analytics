@@ -46,6 +46,7 @@ WITH dim_billing_account AS (
       dim_product_detail_id,
       dim_billing_account_id,
       dim_crm_account_id,
+      dim_charge_id,
       SUM(mrr)                                                                      AS mrr,
       SUM(arr)                                                                      AS arr,
       SUM(quantity)                                                                 AS quantity,
@@ -63,7 +64,7 @@ WITH dim_billing_account AS (
 
     {% endif %}
 
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=9) }}
 
 ), joined AS (
 
@@ -99,21 +100,15 @@ WITH dim_billing_account AS (
       dim_crm_account.crm_account_name                                                      AS crm_account_name,
       dim_crm_account.dim_parent_crm_account_id                                             AS dim_parent_crm_account_id,
       dim_crm_account.parent_crm_account_name                                               AS parent_crm_account_name,
-      dim_crm_account.parent_crm_account_billing_country                                    AS parent_crm_account_billing_country,
+      dim_crm_account.parent_crm_account_upa_country                                        AS parent_crm_account_upa_country,
       dim_crm_account.parent_crm_account_sales_segment                                      AS parent_crm_account_sales_segment,
+      dim_crm_account.parent_crm_account_territory                                          AS parent_crm_account_territory,
+      dim_crm_account.crm_account_employee_count                                            AS crm_account_employee_count,
+      dim_crm_account.crm_account_employee_count_band                                       AS crm_account_employee_count_band,
+      dim_crm_account.parent_crm_account_region                                             AS parent_crm_account_region,
+      dim_crm_account.parent_crm_account_area                                               AS parent_crm_account_area,
       dim_crm_account.parent_crm_account_industry                                           AS parent_crm_account_industry,
-      dim_crm_account.parent_crm_account_owner_team                                         AS parent_crm_account_owner_team,
-      dim_crm_account.parent_crm_account_sales_territory                                    AS parent_crm_account_sales_territory,
-      dim_crm_account.parent_crm_account_tsp_region                                         AS parent_crm_account_tsp_region,
-      dim_crm_account.parent_crm_account_tsp_sub_region                                     AS parent_crm_account_tsp_sub_region,
-      dim_crm_account.parent_crm_account_tsp_area                                           AS parent_crm_account_tsp_area,
-      dim_crm_account.parent_crm_account_tsp_account_employees                              AS parent_crm_account_tsp_account_employees,
-      dim_crm_account.parent_crm_account_tsp_max_family_employees                           AS parent_crm_account_tsp_max_family_employees,
-      dim_crm_account.parent_crm_account_employee_count_band                                AS parent_crm_account_employee_count_band,
-      dim_crm_account.crm_account_tsp_region                                                AS crm_account_tsp_region,
-      dim_crm_account.crm_account_tsp_sub_region                                            AS crm_account_tsp_sub_region,
-      dim_crm_account.crm_account_tsp_area                                                  AS crm_account_tsp_area,
-      dim_crm_account.health_score                                                          AS health_score,
+      dim_crm_account.parent_crm_account_max_family_employee                                AS parent_crm_account_max_family_employee,
       dim_crm_account.health_score_color                                                    AS health_score_color,
       dim_crm_account.health_number                                                         AS health_number,
       dim_crm_account.is_jihu_account                                                       AS is_jihu_account,
@@ -173,6 +168,7 @@ WITH dim_billing_account AS (
       dim_product_detail.is_arpu                                                            AS is_arpu,
 
       --charge information
+      fct_mrr_snapshot_bottom_up.dim_charge_id                                              AS dim_charge_id,
       fct_mrr_snapshot_bottom_up.unit_of_measure                                            AS unit_of_measure,
       fct_mrr_snapshot_bottom_up.mrr                                                        AS mrr,
       fct_mrr_snapshot_bottom_up.arr                                                        AS arr,
@@ -249,7 +245,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@chrissharp",
     created_date="2021-07-29",
-    updated_date="2022-08-17"
+    updated_date="2023-05-29"
 ) }}

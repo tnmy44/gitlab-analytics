@@ -43,7 +43,6 @@ WITH mart_user_request AS (
         crm_account_health_score_color,
         parent_crm_account_sales_segment,
         technical_account_manager,
-        crm_account_owner_team,
         strategic_account_leader,
         customer_reach,
         crm_account_arr,
@@ -77,14 +76,14 @@ WITH mart_user_request AS (
         account_weighted_priority_score::TEXT)                                  AS account_weighted_priority_score_input
 
     FROM mart_user_request
-    {{ dbt_utils.group_by(n=46) }}
+    {{ dbt_utils.group_by(n=45) }}
 
 )
 
 {{ dbt_audit(
     cte_ref="issue_account_summary",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@lisvinueza",
     created_date="2021-12-15",
-    updated_date="2023-02-15",
+    updated_date="2023-05-21",
   ) }}

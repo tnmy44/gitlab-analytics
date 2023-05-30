@@ -579,7 +579,7 @@ SELECT
         END
     ) AS tier_ultimate_28days_features,
 
-    -- NUMBER OF TIMES FEAURES ARE USED BY STAGE
+    -- NUMBER OF TIMES FEATURES ARE USED BY STAGE
     COALESCE(
         SUM(
             CASE

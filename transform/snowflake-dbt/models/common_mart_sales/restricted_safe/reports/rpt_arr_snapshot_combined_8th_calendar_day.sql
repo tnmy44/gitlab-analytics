@@ -100,7 +100,7 @@
       END                                                                                       AS parent_crm_account_sales_segment,
       mart_arr_snapshot_model.parent_crm_account_industry,
       mart_arr_snapshot_model.parent_crm_account_owner_team,
-      mart_arr_snapshot_model.parent_crm_account_sales_territory,
+      mart_arr_snapshot_model.parent_crm_account_sales_territory                                      AS parent_crm_account_sales_territory,
       mart_arr_snapshot_model.subscription_name,
       mart_arr_snapshot_model.subscription_status,
       mart_arr_snapshot_model.subscription_sales_type,

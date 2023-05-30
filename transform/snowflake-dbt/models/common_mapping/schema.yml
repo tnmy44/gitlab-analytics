@@ -74,6 +74,8 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: product_delivery_type
         description: "How product is delivered to customer; SaaS or Self-Managed (or Other)"
+      - name: product_deployment_type
+        description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_ranking
         description: "Numeric product pricing tier, independent of delivery type"
       - name: product_tier

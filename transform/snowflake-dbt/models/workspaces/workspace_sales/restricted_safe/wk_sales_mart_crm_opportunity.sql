@@ -44,7 +44,8 @@ WITH sfdc_users_xf AS (
 
 ), edm_opty AS (
 
-    SELECT  dim_crm_opportunity_id,
+    SELECT  
+       dim_crm_opportunity_id,
        dim_parent_crm_account_id,
        dim_crm_user_id,
        duplicate_opportunity_id,
@@ -124,32 +125,24 @@ WITH sfdc_users_xf AS (
        record_type_name,
        crm_account_name,
        parent_crm_account_name,
-       account_demographics_segment,
-       account_demographics_geo,
-       account_demographics_region,
-       account_demographics_area,
-       account_demographics_territory,
-       parent_crm_account_gtm_strategy,
-       parent_crm_account_focus_account,
        parent_crm_account_sales_segment,
-       parent_crm_account_zi_technologies,
-       parent_crm_account_demographics_sales_segment,
-       parent_crm_account_demographics_geo,
-       parent_crm_account_demographics_region,
-       parent_crm_account_demographics_area,
-       parent_crm_account_demographics_territory,
-       parent_crm_account_demographics_max_family_employee,
-       parent_crm_account_demographics_upa_country,
-       parent_crm_account_demographics_upa_state,
-       parent_crm_account_demographics_upa_city,
-       parent_crm_account_demographics_upa_street,
-       parent_crm_account_demographics_upa_postal_code,
-       crm_account_demographics_employee_count,
+       parent_crm_account_geo,
+       parent_crm_account_region,
+       parent_crm_account_area,
+       parent_crm_account_territory,
+       parent_crm_account_max_family_employee,
+       parent_crm_account_upa_country,
+       parent_crm_account_upa_state,
+       parent_crm_account_upa_city,
+       parent_crm_account_upa_street,
+       parent_crm_account_upa_postal_code,
+       parent_crm_account_business_unit,
+       parent_crm_account_role_type,
+       crm_account_employee_count,
        crm_account_gtm_strategy,
        crm_account_focus_account,
        crm_account_zi_technologies,
        is_jihu_account,
-       fy22_new_logo_target_list,
        admin_manual_source_number_of_employees,
        admin_manual_source_account_address,
        is_won,
@@ -495,11 +488,11 @@ WITH sfdc_users_xf AS (
     account_owner.user_area                  AS account_owner_user_area,
 
     -- NF: 20230223 FY24 GTM fields, precalculated in the user object
-    account_owner.business_unit         AS account_owner_user_business_unit,
-    account_owner.sub_business_unit     AS account_owner_user_sub_business_unit,
-    account_owner.division              AS account_owner_user_division,
-    account_owner.asm                   AS account_owner_user_asm,
-    account_owner.role_type             AS account_owner_user_role_type,
+    account_owner.business_unit              AS account_owner_user_business_unit,
+    account_owner.sub_business_unit          AS account_owner_user_sub_business_unit,
+    account_owner.division                   AS account_owner_user_division,
+    account_owner.asm                        AS account_owner_user_asm,
+    account_owner.role_type                  AS account_owner_user_role_type,
 
     -- NF: 20230223 FY24 GTM fields, precalculated in the user object
     opportunity_owner.business_unit         AS opportunity_owner_user_business_unit,
@@ -525,7 +518,7 @@ WITH sfdc_users_xf AS (
     -- NF: unadjusted version of segment used to create the FY24 GTM key
     CASE 
         WHEN account_owner.is_hybrid_flag = 1
-          THEN account.account_demographics_sales_segment
+          THEN account.parent_crm_account_sales_segment
         WHEN edm_opty.close_date < today.current_fiscal_year_date
           THEN account_owner.user_segment
         ELSE opportunity_owner.user_segment
@@ -543,7 +536,7 @@ WITH sfdc_users_xf AS (
     END                                                       AS report_opportunity_user_region,
     CASE
         WHEN account_owner.is_hybrid_flag = 1 
-            THEN account.account_demographics_area
+            THEN account.parent_crm_account_area
         WHEN edm_opty.close_date < today.current_fiscal_year_date
           THEN account_owner.user_area
         ELSE opportunity_owner.user_area

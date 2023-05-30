@@ -19,25 +19,13 @@ WITH sfdc_account AS (
     SELECT *
     FROM {{ ref('sfdc_account_deal_size_segmentation') }}
 
-), parent_account AS (
-
-    SELECT *
-    FROM {{ ref('sfdc_account') }}
-
 ), joined AS (
+
 
     SELECT
       sfdc_account.*,
       tam_user.name                                                                   AS technical_account_manager,
-      parent_account.account_name                                                     AS ultimate_parent_account_name, 
-
-      -- ************************************
-      -- sales segmentation deprecated fields - 2020-09-03
-      -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
-      -- issue: https://gitlab.com/gitlab-data/analytics/-/issues/5709
-      sfdc_account.ultimate_parent_sales_segment                                        AS ultimate_parent_account_segment,
-      -- ************************************
-      
+      sfdc_account.ultimate_parent_sales_segment                                      AS ultimate_parent_account_segment,
       sfdc_record_type.record_type_name,
       sfdc_record_type.business_process_id,
       sfdc_record_type.record_type_label,
@@ -133,20 +121,17 @@ WITH sfdc_account AS (
     --account_owner.user_segment            AS account_owner_user_segment, -- coming directly from source table
     -- JK: 2022-11-16 changing the source back to the user object to align with EDM 
     account_owner.user_segment            AS account_owner_user_segment,
-    
     account_owner.user_geo                AS account_owner_user_geo, 
     account_owner.user_region             AS account_owner_user_region,
     account_owner.user_area               AS account_owner_user_area,
 
-    parent_account.account_demographics_sales_segment    AS upa_demographics_segment,
-    parent_account.account_demographics_geo              AS upa_demographics_geo,
-    parent_account.account_demographics_region           AS upa_demographics_region,
-    parent_account.account_demographics_area             AS upa_demographics_area,
-    parent_account.account_demographics_territory        AS upa_demographics_territory
+    sfdc_account.account_sales_segment    AS parent_crm_account_sales_segment,
+    sfdc_account.account_geo              AS parent_crm_account_geo,
+    sfdc_account.account_region           AS parent_crm_account_region,
+    sfdc_account.account_area             AS parent_crm_account_area,
+    sfdc_account.account_territory        AS parent_crm_account_territory
 
     FROM sfdc_account
-    LEFT JOIN parent_account
-      ON sfdc_account.ultimate_parent_account_id = parent_account.account_id
     LEFT JOIN sfdc_users tam_user
       ON sfdc_account.technical_account_manager_id = tam_user.user_id
     LEFT JOIN sfdc_users account_owner
