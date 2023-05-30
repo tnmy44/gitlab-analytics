@@ -132,6 +132,7 @@
       --Charge Information
       dim_charge.rate_plan_name                                                       AS rate_plan_name,
       dim_charge.rate_plan_charge_name                                                AS rate_plan_charge_name,
+      dim_charge.rate_plan_charge_description                                         AS rate_plan_charge_description,
       dim_charge.charge_type                                                          AS charge_type,
       dim_charge.is_paid_in_full                                                      AS is_paid_in_full,
       dim_charge.is_last_segment                                                      AS is_last_segment,
@@ -962,7 +963,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@michellecooper",
-    updated_by="@lisvinueza",
+    updated_by="@nmcavinue",
     created_date="2021-12-06",
-    updated_date="2023-05-22"
+    updated_date="2023-05-30"
 ) }}

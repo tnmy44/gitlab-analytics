@@ -4278,6 +4278,9 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "arr"]
+      - name: rate_plan_charge_description
+        description: Description for a rate plan charge in Zuora. This can be used to identify orders that received transition pricing in FY24. Note, the description field will not show a transition pricing tag for sales-assisted orders. 
+        tags: ["tdf", "common", "arr"]
 
   - name: dim_crm_account
     description: '{{ doc("dim_crm_account") }}'
