@@ -18,7 +18,7 @@ sources:
     tables:
       - name: entity_data_external
         external:
-          location: '@"16399-LOAD-TEST-PARQUET-FILES-INTO-INTERNAL-SNOWFLAKE-STAGE_RAW".omamori.omamori_load_parquet/entity_data'
+          location: '@"16424-try-using-external-table-for-test-omamori-parquet-files-2".omamori.omamori_load_parquet/entity_data'
           file_format: "( type = parquet )"
           auto_refresh: false
           partitions:
