@@ -1753,6 +1753,6 @@ This table contains team members work and personal information. Sensitive column
 
 {% docs fct_team_member_status %}
 
-This table contains provides the termination reason, type, exit impact and employment_status. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. This table contains all history of this data with no date restrictions. The grain of this table is one row per employee_id,  employment_status and status_effective_date combination.
+This table contains the termination reason, type, exit impact and employment_status. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. This table contains only past terminations. Future terminations are not included at this time. We will evaluate the possibility of making future terminations available to people with the analyst_people role in a future iteration. The grain of this table is one row per employee_id, employment_status and status_effective_date combination.
 
 {% enddocs %}

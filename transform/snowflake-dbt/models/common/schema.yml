@@ -7176,7 +7176,7 @@ models:
         meta:
           masking_policy: analyst_people
       - name: status_effective_date
-        description: Employment Status (active, terminated). Other statuses will be added in the future (ie. Long term leave) 
+        description: Effective date of employment status
         tests:
           - not_null
       
