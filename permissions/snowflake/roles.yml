@@ -878,6 +878,8 @@ roles:
           warehouses:
               - dev_xs
               - dev_l
+          member_of:
+              - analyst_sales_sensitive
           privileges:
               databases:
                   read:
