@@ -3,27 +3,27 @@
     materialized="table"
 ) }}
 
-WITH person_touchpoint AS (
+WITH attribution_touchpoint AS (
 
   SELECT DISTINCT 
-  dim_crm_touchpoint_id,
-  bizible_ad_campaign_name,
-  bizible_marketing_channel,
-  bizible_marketing_channel_path,
-  bizible_medium,
-  type,
-  bizible_touchpoint_type,
-  LOWER(bizible_form_url) AS bizible_form_url,
-  REPLACE(bizible_form_url,'.html','') AS bizible_form_url_clean,
-  pathfactory_content_type
-  FROM {{ ref('mart_crm_touchpoint') }}
+    dim_crm_touchpoint_id,
+    bizible_ad_campaign_name,
+    bizible_marketing_channel,
+    bizible_marketing_channel_path,
+    bizible_medium,
+    type,
+    bizible_touchpoint_type,
+    LOWER(bizible_form_url) AS bizible_form_url,
+    REPLACE(bizible_form_url,'.html','') AS bizible_form_url_clean,
+    pathfactory_content_type
+  FROM {{ ref('mart_crm_attribution_touchpoint') }}
   LEFT JOIN {{ ref('sheetload_bizible_to_pathfactory_mapping') }}  ON bizible_form_url_clean=bizible_url
 ),
 
 base AS (
 
   SELECT 
-  person_touchpoint.*,
+  attribution_touchpoint.*,
 
   CASE   
   WHEN 
@@ -172,7 +172,7 @@ base AS (
   ELSE 'Other'
   END AS touchpoint_offer_type_grouped
 
-  FROM person_touchpoint
+  FROM attribution_touchpoint
 
 ), final AS (
 
@@ -190,5 +190,5 @@ base AS (
     created_by="@dmicovic",
     updated_by="@rkohnke",
     created_date="2023-05-15",
-    updated_date="2023-05-24",
+    updated_date="2023-05-30",
   ) }}
