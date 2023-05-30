@@ -147,6 +147,28 @@ models:
         description: The country of the company matched by the Zoom Info enrichment process.
       - name: is_excluded_from_zoom_info_enrich
         description: A flag to indicate if the account should be included in the Zoom Info enrichment process.
+      - name: zoom_info_website
+      - name: zoom_info_company_other_domains
+      - name: zoom_info_dozisf_zi_id
+      - name: zoom_info_parent_company_zi_id
+      - name: zoom_info_parent_company_name
+      - name: zoom_info_ultimate_parent_company_zi_id
+      - name: zoom_info_ultimate_parent_company_name
+      - name: zoom_info_number_of_developers
+      - name: zoom_info_total_funding
+      - name: is_key_account
+      - name: gs_first_value_date
+      - name: gs_last_csm_activity_date
+      - name: eoa_sentiment
+      - name: gs_health_user_engagement
+      - name: gs_health_cd
+      - name: gs_health_devsecops
+      - name: gs_health_ci
+      - name: gs_health_scm
+      - name: risk_impact
+      - name: risk_reason
+      - name: last_timeline_at_risk_update
+      - name: last_at_risk_update_comments
       - name: bdr_prospecting_status
         description: Indicates whether the account is actively being prospected by a BDR.
 
