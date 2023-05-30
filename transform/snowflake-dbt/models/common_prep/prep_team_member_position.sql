@@ -2,6 +2,7 @@ WITH staffing_history AS (
 
   SELECT 
     employee_id                                                                                                     AS employee_id,
+    team_id_current                                                                                                 AS team_id,
     business_process_type                                                                                           AS business_process_type,
     TRIM(SPLIT_PART(SUPORG_CURRENT, '(', 0))                                                                        AS suporg,
     job_code_current                                                                                                AS job_code,
@@ -42,7 +43,12 @@ job_profiles AS (
 final AS (
 
   SELECT 
+
+    -- Surrogate keys
     {{ dbt_utils.surrogate_key(['staffing_history.employee_id'])}}                                     AS dim_team_member_sk,
+    {{ dbt_utils.surrogate_key(['staffing_history.team_id'])}}                                         AS dim_team_sk,
+
+    -- Team member position attributes
     staffing_history.employee_id                                                                       AS employee_id,
     job_profiles.job_code                                                                              AS job_code,
     staffing_history.job_specialty_single                                                              AS job_specialty_single,
@@ -53,6 +59,8 @@ final AS (
     job_profiles.job_grade                                                                             AS job_grade,
     staffing_history.entity                                                                            AS entity,
     job_profiles.is_position_active                                                                    AS is_position_active,
+
+    -- Add is_current flag for most current team member record
     IFF(staffing_history.position_valid_to = {{var('tomorrow')}}, TRUE, FALSE)                         AS is_current,
     staffing_history.position_valid_from                                                               AS position_valid_from,
     staffing_history.position_valid_to                                                                 AS position_valid_to
