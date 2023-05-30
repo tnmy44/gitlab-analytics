@@ -14,7 +14,7 @@ final AS (
   SELECT
 
     -- Primary key
-    {{ dbt_utils.surrogate_key(['team_member_status.employee_id', 'team_member_status.employment_status', 'team_member_status.status_effective_date'])}}       
+    {{ dbt_utils.surrogate_key(['team_member_status.employee_id', 'team_member_status.employment_status', 'team_member_status.effective_date'])}}       
                                                                                                                AS team_member_status_pk,
     -- Surrogate key                                                                                                     
     {{ dbt_utils.surrogate_key(['team_member_status.employee_id'])}}                                           AS dim_team_member_sk,
