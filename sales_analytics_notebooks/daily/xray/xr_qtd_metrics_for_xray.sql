@@ -489,11 +489,38 @@ pipe_gen_yoy AS (
 
 ),
 
+pipe_gen_total AS (
+
+    SELECT
+        opp_snapshot.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
+        SUM(opp_snapshot.net_arr) AS minus_1_year_total_pipe_gen_net_arr
+    FROM sfdc_opportunity_snapshot_history_xf AS opp_snapshot
+    CROSS JOIN today
+    WHERE
+        opp_snapshot.snapshot_fiscal_quarter_date = opp_snapshot.pipeline_created_fiscal_quarter_date
+        AND opp_snapshot.is_eligible_created_pipeline_flag = 1
+        AND opp_snapshot.snapshot_fiscal_quarter_date = DATEADD(MONTH, -12, today.current_fiscal_quarter_date)
+        AND opp_snapshot.snapshot_day_of_fiscal_quarter_normalised = 90
+        AND opp_snapshot.is_edu_oss = 0
+        AND opp_snapshot.is_deleted = 0
+        AND opp_snapshot.is_excluded_flag = 0
+        AND LOWER(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
+    GROUP BY 1
+
+),
+
 report_opportunity_metrics_qtd AS (
 
     SELECT
         agg.*,
         pipe_gen_yoy.minus_1_year_pipe_gen_net_arr,
+        pipe_gen_total.minus_1_year_total_pipe_gen_net_arr,
+
+        CASE
+            WHEN pipe_gen_total.minus_1_year_total_pipe_gen_net_arr > 0
+                THEN COALESCE(ROUND(pipe_gen_yoy.minus_1_year_pipe_gen_net_arr / pipe_gen_total.minus_1_year_total_pipe_gen_net_arr,2),0)
+            ELSE 0
+        END AS minus_1_year_pipe_gen_pacing,
 
         -- standard reporting keys
         COALESCE(agg_demo_keys.key_sqs, 'other')                         AS key_sqs,
@@ -542,7 +569,8 @@ report_opportunity_metrics_qtd AS (
         ON agg.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = pipe_gen_yoy.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
     LEFT JOIN agg_demo_keys
         ON agg.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
-
+    LEFT JOIN pipe_gen_total
+        ON agg.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = pipe_gen_total.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
 )
 
 SELECT *

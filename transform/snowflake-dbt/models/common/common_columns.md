@@ -660,12 +660,6 @@ The name of the ultimate parent account coming from SFDC
 
 {% enddocs %}
 
-{% docs parent_crm_account_billing_country %}
-
-The billing country of the ultimate parent account coming from SFDC
-
-{% enddocs %}
-
 {% docs parent_crm_account_sales_segment %}
 
 The sales segment of the ultimate parent account from SFDC. Sales Segments are explained [here](https://about.gitlab.com/handbook/sales/field-operations/gtm-resources/#segmentation)
@@ -2095,5 +2089,11 @@ The title of the plan as given by GitLab.com
 {% docs is_plan_paid %}
 
 A flag to indicate if the plan is a paid plan or not.
+
+{% enddocs %}
+
+{% docs namespace_has_code_suggestions_enabled %}
+
+Boolean flag set to True if the namespace has code suggestions enabled. This appears as `code_suggestions` in the gitlab.com db `namespace_settings` table.
 
 {% enddocs %}

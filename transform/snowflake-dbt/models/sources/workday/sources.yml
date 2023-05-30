@@ -62,3 +62,9 @@ sources:
 
       - name: assess_talent
         description: '{{ doc("assess_talent") }}'
+
+      - name: job_profiles
+        description: '{{ doc("job_profiles") }}'
+
+      - name: cost_centers
+        description: '{{ doc("cost_centers") }}'
