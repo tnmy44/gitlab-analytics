@@ -42,6 +42,3 @@ models:
         description:  number of days between the project creation and event date
       - name: project_is_imported
         description: TRUE if the project was imported
-      - name: stage_name
-        description: This field is _not_ the SSOT for the event-to-stage mapping. Please use [`map_gitlab_dotcom_xmau_metrics`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.map_gitlab_dotcom_xmau_metrics) 
-        for the mapping of event to stage.
