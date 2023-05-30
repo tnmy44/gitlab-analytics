@@ -115,23 +115,26 @@
       -- order info
       fct_charge.dim_order_id                                                         AS dim_order_id,
       dim_order.order_description                                                     AS order_description,
-      dim_order_action.dim_order_id                     as dim_order_action_dim_order_id,
       dim_order_action.dim_order_action_id,
       CASE
         WHEN dim_order_action.dim_order_action_id IS NOT NULL
+        OR dim_amendment_subscription.amendment_type = 'Renewal'
           AND (dim_order.order_description = 'AutoRenew by CustomersDot'
           OR dim_amendment_subscription.amendment_name = 'AutoRenew by CustomersDot')
             THEN 'Auto-Renewal'
         WHEN dim_order_action.dim_order_action_id IS NOT NULL
+        OR dim_amendment_subscription.amendment_type = 'Renewal'
           AND (dim_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
           OR dim_subscription.subscription_sales_type = 'Sales-Assisted')
             THEN 'Sales-Assisted'
         WHEN dim_order_action.dim_order_action_id IS NOT NULL
+        OR dim_amendment_subscription.amendment_type = 'Renewal'
           AND (dim_order.order_description NOT IN 
             ('AutoRenew by CustomersDot', 'Automated seat reconciliation')
+            OR dim_order.order_description IS NULL)
           AND dim_billing_account_user.user_name IN (
             'svc_zuora_fulfillment_int@gitlab.com',
-            'ruben_APIproduction@gitlab.com'))
+            'ruben_APIproduction@gitlab.com')
             THEN 'Customer Portal'
         ELSE NULL
       END                                                                             AS subscription_renewal_type,
@@ -167,7 +170,7 @@
       dim_subscription.dim_amendment_id_subscription,
       fct_charge.dim_amendment_id_charge,
       dim_amendment_subscription.effective_date                                       AS subscription_amendment_effective_date,
-        dim_order_action.order_action_type,
+      dim_order_action.order_action_type,
       CASE
         WHEN dim_charge.subscription_version = 1
           THEN 'NewSubscription'
