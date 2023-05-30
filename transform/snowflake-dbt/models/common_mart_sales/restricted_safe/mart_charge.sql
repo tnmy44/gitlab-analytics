@@ -111,18 +111,18 @@
       dim_order.order_description                                                     AS order_description,
       dim_order_action.dim_order_action_id,
       CASE
-        WHEN dim_order_action.dim_order_action_id IS NOT NULL
-        OR dim_amendment_subscription.amendment_type = 'Renewal'
+        WHEN (dim_order_action.dim_order_action_id IS NOT NULL
+        OR dim_amendment_subscription.amendment_type = 'Renewal')
           AND (dim_order.order_description = 'AutoRenew by CustomersDot'
           OR dim_amendment_subscription.amendment_name = 'AutoRenew by CustomersDot')
             THEN 'Auto-Renewal'
-        WHEN dim_order_action.dim_order_action_id IS NOT NULL
-        OR dim_amendment_subscription.amendment_type = 'Renewal'
+        WHEN (dim_order_action.dim_order_action_id IS NOT NULL
+        OR dim_amendment_subscription.amendment_type = 'Renewal')
           AND (dim_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
           OR dim_subscription.subscription_sales_type = 'Sales-Assisted')
             THEN 'Sales-Assisted'
-        WHEN dim_order_action.dim_order_action_id IS NOT NULL
-        OR dim_amendment_subscription.amendment_type = 'Renewal'
+        WHEN (dim_order_action.dim_order_action_id IS NOT NULL
+        OR dim_amendment_subscription.amendment_type = 'Renewal')
           AND (dim_order.order_description NOT IN 
             ('AutoRenew by CustomersDot', 'Automated seat reconciliation')
             OR dim_order.order_description IS NULL)
