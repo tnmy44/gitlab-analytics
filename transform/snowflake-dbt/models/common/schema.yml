@@ -1695,6 +1695,10 @@ models:
         description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
+    - name: ci_internal_pipelines_28_days_event
+      description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+      tests:
+        - dbt_utils.at_least_one
       - name: is_missing_paid_seats
         description: Flags if there are currently active users, but no seats have been paid for
       - name: is_data_in_subscription_month
@@ -3787,7 +3791,11 @@ models:
       - name: pipeline_schedules_28_days_user
         description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one    
+          - dbt_utils.at_least_one
+    - name: ci_internal_pipelines_28_days_event
+      description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+      tests:
+        - dbt_utils.at_least_one
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
