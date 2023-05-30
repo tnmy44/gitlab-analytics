@@ -6,12 +6,11 @@
 }}
 
 WITH max_uploaded_at_source as (
-  SELECT MAX(t.uploaded_at) uploaded_at FROM {{ this }} AS t
+  SELECT MAX(t.uploaded_at) last_uploaded_at FROM {{ this }} AS t
 ),
 source AS (
   SELECT
     PARSE_JSON(value) AS value,
-    to_date(split_part(metadata$filename, '/', 3),'YYYYMMDD') AS date_part,
     -- obtain 'uploaded_at' from the parquet filename, i.e:
     -- 'entity_data/20230502/20230502T000025-entity_data-from-19700101T000000-until-20230426T193740.parquet'
     TO_TIMESTAMP(
@@ -32,9 +31,9 @@ source AS (
 
   {% if is_incremental() %}
     -- Filter only for records from new files based off uploaded_at
-    -- but first filter on the parititioned column to speed up query
-    WHERE date_part >= (SELECT uploaded_at::DATE FROM max_uploaded_at_source)
-    AND uploaded_at > (SELECT uploaded_at FROM max_uploaded_at_source)
+    -- but first filter on the parititioned column (date_part) to speed up query
+    WHERE date_part >= (SELECT last_uploaded_at::DATE FROM max_uploaded_at_source)
+    AND uploaded_at > (SELECT last_uploaded_at FROM max_uploaded_at_source)
   {% endif %}
 ),
 
