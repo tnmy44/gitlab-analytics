@@ -35,6 +35,8 @@ renamed AS (
     d.value['MANAGER_PROPOSED']::VARCHAR                AS manager_current,
     d.value['SUPORG_CURRENT']::VARCHAR                  AS suporg_past,
     d.value['SUPORG_PROPOSED']::VARCHAR                 AS suporg_current,
+    d.value['TEAM_ID_PROPOSED']::VARCHAR                AS team_id_past,
+    d.value['TEAM_ID_CURRENT']::VARCHAR                 AS team_id_current,
     d.value['DATE_TIME_INITIATED']::DATE                AS date_time_initiated,
     d.value['EFFECTIVE_DATE']::DATE                     AS effective_date
   FROM source
