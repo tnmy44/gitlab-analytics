@@ -5,7 +5,7 @@ models:
   description: '{{ doc("rpt_event_xmau_metric_monthly") }}'
   columns:
     - name: xmau_metric_monthly_id
-      description: The unique composite ID of a monthly xMAU metric in the rpt_xmau_metric_monthly model consisting of event_calendar_month, user_group, section_name, stage_name, and group_name
+      description: The unique composite ID of a monthly xMAU metric in the rpt_xmau_metric_monthly model consisting of event_calendar_month, user_group, and event_name_array
       tests:
         - not_null
         - unique
