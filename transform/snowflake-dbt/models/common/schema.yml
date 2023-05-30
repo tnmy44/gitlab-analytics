@@ -1767,8 +1767,8 @@ models:
         description: '{{ doc("dim_project_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -1897,8 +1897,8 @@ models:
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -1968,8 +1968,8 @@ models:
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -6974,8 +6974,8 @@ models:
           - unique
       - name: dim_ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id

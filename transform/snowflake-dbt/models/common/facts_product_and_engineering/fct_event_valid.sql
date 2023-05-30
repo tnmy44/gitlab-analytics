@@ -68,7 +68,7 @@ dim_namespace_w_bdg AS (
 
   SELECT
     dim_namespace.dim_namespace_id,
-    dim_namespace.dim_product_tier_id AS dim_active_product_tier_id,
+    dim_namespace.dim_product_tier_id AS dim_latest_product_tier_id,
     deduped_namespace_bdg.dim_latest_subscription_id,
     deduped_namespace_bdg.order_id,
     deduped_namespace_bdg.dim_crm_account_id,
@@ -119,7 +119,7 @@ fct_event_w_flags AS (
     fct_event_valid.days_since_namespace_creation_at_event_date,
     fct_event_valid.days_since_project_creation_at_event_date,
     fct_event_valid.data_source,
-    dim_namespace_w_bdg.dim_active_product_tier_id,
+    dim_namespace_w_bdg.dim_latest_product_tier_id,
     dim_namespace_w_bdg.dim_latest_subscription_id,
     dim_namespace_w_bdg.order_id,
     dim_namespace_w_bdg.dim_crm_account_id,
@@ -148,7 +148,7 @@ gitlab_dotcom_fact AS (
     dim_project_id,
     dim_user_sk,
     dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be updated to user_id in a future MR.
-    dim_active_product_tier_id,
+    dim_latest_product_tier_id,
     dim_latest_subscription_id,
     dim_crm_account_id,
     dim_billing_account_id,
@@ -183,7 +183,7 @@ gitlab_dotcom_fact AS (
 {{ dbt_audit(
     cte_ref="gitlab_dotcom_fact",
     created_by="@iweeks",
-    updated_by="@cbraza",
+    updated_by="@michellecooper",
     created_date="2022-04-09",
-    updated_date="2023-03-01"
+    updated_date="2023-05-12"
 ) }}
