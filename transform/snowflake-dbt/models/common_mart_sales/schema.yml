@@ -11,10 +11,8 @@ models:
           - unique
       - name: full_comments
         meta:
-           masking_policy: 
-           - analyst_sales_sensitive
+           masking_policy: analyst_sales_sensitive
       - name: task_subject
         meta:
-           masking_policy: 
-           - analyst_sales_sensitive
+           masking_policy: analyst_sales_sensitive
 
