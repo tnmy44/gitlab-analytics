@@ -15,11 +15,11 @@ final AS (
     {{ dbt_utils.surrogate_key(['team_member_status.employee_id', 'team_member_status.employment_status', 'team_member_status.status_effective_date'])}}       
                                                                                                                AS team_member_status_pk,
     {{ dbt_utils.surrogate_key(['team_member_status.employee_id'])}}                                           AS dim_team_member_sk,
-    team_member_status.employee_id,
-    team_member_status.employment_status,
-    team_member_status.termination_reason,
-    team_member_status.termination_type,
-    team_member_status.exit_impact,
+    team_member_status.employee_id                                                                             AS employee_id,
+    team_member_status.employment_status                                                                       AS employment_status,
+    team_member_status.termination_reason                                                                      AS termination_reason,
+    team_member_status.termination_type                                                                        AS termination_type,
+    team_member_status.exit_impact                                                                             AS exit_impact,
     team_member_status.effective_date                                                                          AS status_effective_date
   FROM team_member_status
 
