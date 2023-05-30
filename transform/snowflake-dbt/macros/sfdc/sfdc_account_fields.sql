@@ -366,7 +366,6 @@ WITH map_merged_crm_account AS (
       sfdc_account.last_at_risk_update_comments,
       sfdc_account.bdr_prospecting_status,
 
-
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,
       IFF(sfdc_record_type.record_type_label = 'Partner'
