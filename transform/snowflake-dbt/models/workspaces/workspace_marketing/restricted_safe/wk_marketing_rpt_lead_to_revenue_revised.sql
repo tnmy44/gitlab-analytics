@@ -119,7 +119,6 @@
   
   --Touchpoint Data
       'Person Touchpoint' AS touchpoint_type,
-      mart_crm_touchpoint.campaign_rep_role_name,
       mart_crm_touchpoint.bizible_touchpoint_date,
       mart_crm_touchpoint.bizible_touchpoint_position,
       mart_crm_touchpoint.bizible_touchpoint_source,
@@ -219,7 +218,6 @@
     
     -- Touchpoint Data
       'Attribution Touchpoint' AS touchpoint_type,
-      mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.bizible_touchpoint_date,
       mart_crm_attribution_touchpoint.bizible_touchpoint_position,
       mart_crm_attribution_touchpoint.bizible_touchpoint_source,
@@ -404,7 +402,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=73)}}
+    {{dbt_utils.group_by(n=72)}}
     
 ), cohort_base_combined AS (
   
@@ -475,7 +473,6 @@
   
   --Touchpoint Data
       COALESCE(person_base_with_tp.bizible_touchpoint_date,opp_base_with_batp.bizible_touchpoint_date) AS bizible_touchpoint_date, 
-      COALESCE(person_base_with_tp.campaign_rep_role_name,opp_base_with_batp.campaign_rep_role_name) AS campaign_rep_role_name, 
       COALESCE(person_base_with_tp.bizible_touchpoint_position,opp_base_with_batp.bizible_touchpoint_position) AS bizible_touchpoint_position, 
       COALESCE(person_base_with_tp.bizible_touchpoint_source,opp_base_with_batp.bizible_touchpoint_source) AS bizible_touchpoint_source, 
       COALESCE(person_base_with_tp.bizible_touchpoint_type,opp_base_with_batp.bizible_touchpoint_type) AS bizible_touchpoint_type, 
@@ -508,6 +505,7 @@
       COALESCE(person_base_with_tp.bizible_landing_page_utm_budget,opp_base_with_batp.bizible_landing_page_utm_budget) AS bizible_landing_page_utm_budget, 
       COALESCE(person_base_with_tp.bizible_landing_page_utm_allptnr,opp_base_with_batp.bizible_landing_page_utm_allptnr) AS bizible_landing_page_utm_allptnr, 
       COALESCE(person_base_with_tp.bizible_landing_page_utm_partnerid,opp_base_with_batp.bizible_landing_page_utm_partnerid) AS bizible_landing_page_utm_partnerid, 
+      COALESCE(person_base_with_tp.campaign_rep_role_name,opp_base_with_batp.campaign_rep_role_name) AS campaign_rep_role_name, 
       new_lead_created_sum,
       count_true_inquiry,
       inquiry_sum, 
