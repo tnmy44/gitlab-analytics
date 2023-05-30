@@ -12,9 +12,14 @@ WITH team_member_status AS (
 final AS (
 
   SELECT
+
+    -- Primary key
     {{ dbt_utils.surrogate_key(['team_member_status.employee_id', 'team_member_status.employment_status', 'team_member_status.status_effective_date'])}}       
                                                                                                                AS team_member_status_pk,
+    -- Surrogate key                                                                                                     
     {{ dbt_utils.surrogate_key(['team_member_status.employee_id'])}}                                           AS dim_team_member_sk,
+
+    -- Team member status attributes
     team_member_status.employee_id                                                                             AS employee_id,
     team_member_status.employment_status                                                                       AS employment_status,
     team_member_status.termination_reason                                                                      AS termination_reason,
