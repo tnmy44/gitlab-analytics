@@ -314,7 +314,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@mdrussell",
     created_date="2022-07-21",
-    updated_date="2023-04-04"
+    updated_date="2023-05-30"
 ) }}
