@@ -288,7 +288,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
                                                                            AS has_team_activation,
       creator_attributes.namespace_creator_role,
       creator_attributes.namespace_creator_jtbd,
-      creator_attributes.is_first_order_person, -- SFDC is_first_order from the lead / contact record
+      creator_attributes.is_first_order_person AS namespace_creator_is_first_order_person, -- SFDC is_first_order from the lead / contact record
       days_since_namespace_creation_at_first_plan_event_date,
       days_since_namespace_creation_at_first_secure_event_date,
       days_since_namespace_creation_at_first_create_event_date,

@@ -132,8 +132,8 @@ models:
       - name: has_team_activation
       - name: namespace_creator_role 
       - name: namespace_creator_jtbd
-      - name: is_first_order_person
-        description: Is First Order field from the lead and contact model in SFDC joined from dim_crm_person through dim_marketing_contact. This join is ultimately is created by matching email addresses.
+      - name: namespace_creator_is_first_order_person
+        description: Functional analytics team owner is Marketing Analytics. Is First Order field from the lead and contact model in SFDC joined from dim_crm_person through dim_marketing_contact. This join is ultimately is created by matching email addresses.
       - name: days_since_namespace_creation_at_first_plan_event_date
       - name: days_since_namespace_creation_at_first_secure_event_date
       - name: days_since_namespace_creation_at_first_create_event_date 
