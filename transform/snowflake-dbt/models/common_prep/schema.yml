@@ -1988,7 +1988,9 @@ models:
       - name: confirmed_at
         description: Date when customer confirmed their account.
       - name: confirmation_sent_at
-        description: Date used to expire the confirmation links  - name: prep_team_member_position
+        description: Date used to expire the confirmation links  
+        
+  - name: prep_team_member_position
     description: '{{ doc("prep_team_member_position") }}'
     tests:
       - dbt_utils.unique_combination_of_columns:
