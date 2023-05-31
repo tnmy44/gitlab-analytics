@@ -19,7 +19,7 @@ There are 3 relevant data structures:
     - SQL queries - stored in Snowflake which are translated from `Postgres` to Snowflake sql language
     - Namespace.json (self controlled [json file](https://gitlab.com/gitlab-data/analytics/-/blob/master/extract/saas_usage_ping/usage_ping_namespace_queries.json ) with queries on namespace level) - 
 - Redis ping: data from the `Redis` instance, obtained from an API endpoint
-- The output of the 'SQL' and 'Redis' data-structures are combined. This is the only data persisted into Snowflake.
+- Combined: The output of the 'SQL' and 'Redis' data-structures are combined. This is the only data persisted into Snowflake.
 
 The below sub-sections cover each of the three data-structures in more detail.
 
