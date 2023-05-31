@@ -226,6 +226,7 @@ models:
     description: '{{ doc("dim_billing_account") }}'
     columns:
       - name: dim_billing_account_sk
+        description: '{{ doc("dim_billing_account_sk") }}'
         tests:
           - not_null
           - unique
