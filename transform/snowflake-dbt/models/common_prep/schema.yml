@@ -1975,7 +1975,7 @@ models:
         description: The size of the company the user works for
       - name: sfdc_account_id
         description: Salesforce/CRM account ID associated with the user account
-      - name: customer_is_billable
+      - name: user_is_billable
         description: An indicator field with `True` or `false`, where `false means a purchase through a reseller.
       - name: confirmed_at
         description: Date when customer confirmed their account.
