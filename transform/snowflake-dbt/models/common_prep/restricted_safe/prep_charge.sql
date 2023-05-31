@@ -296,6 +296,7 @@
       active_zuora_subscription.subscription_status                                         AS subscription_status,
       'manual true up allocation'                                                           AS rate_plan_name,
       'manual true up allocation'                                                           AS rate_plan_charge_name,
+      'manual true up allocation'                                                           AS rate_plan_charge_description,
       'TRUE'                                                                                AS is_last_segment,
       NULL                                                                                  AS discount_level,
       'Recurring'                                                                           AS charge_type,
