@@ -46,7 +46,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     FROM sfdc_opportunity_snapshot_history_xf        
     WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
       AND stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
-      AND snapshot_day_of_fiscal_quarter_normalised <= 5
+      AND snapshot_day_of_fiscal_quarter_normalised <= 1
       -- exclude web direct purchases
       AND is_web_portal_purchase = 0
     GROUP BY 1,2
@@ -103,7 +103,9 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
           AND starting.snapshot_fiscal_quarter_date = starting_list.snapshot_fiscal_quarter_date
           AND starting.snapshot_day_of_fiscal_quarter_normalised = starting_list.max_snapshot_day_of_fiscal_quarter_normalised
     WHERE starting.snapshot_fiscal_quarter_date = starting.close_fiscal_quarter_date -- closing in the same quarter of the snapshot
-      AND starting_list.max_snapshot_day_of_fiscal_quarter_normalised = 5 -- exclude deals that were before day 5, unless they were at day 5
+      -- exclude deals that were before day 1, unless they were at day 1
+      -- some deals might have moved into the quarter and moved out before day 1. 
+      AND starting_list.max_snapshot_day_of_fiscal_quarter_normalised = 1 
 
 ), pipeline_type_quarter_created AS (
 
