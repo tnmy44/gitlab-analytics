@@ -579,6 +579,21 @@ tables:
       FROM grafana_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  gpg_signatures:
+    export_schema: "gitlab_com"
+    export_table: gpg_signatures
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , project_id
+      , gpg_key_id
+      , verification_status
+      FROM gpg_signatures
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   identities:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1866,6 +1881,21 @@ tables:
       , description_html
       , state_enum
       FROM sprints
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  ssh_signatures:
+    export_schema: "gitlab_com"
+    export_table: ssh_signatures
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , project_id
+      , verification_status
+      , user_id
+      FROM ssh_signatures
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   status_page_published_incidents:
