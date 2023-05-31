@@ -109,6 +109,7 @@ models:
       - name: namespace_created_week
       - name: creator_id
       - name: sfdc_record_id
+        description: Functional analytics team owner is Marketing Analytics. 
       - name: namespace_type
       - name: setup_for_company
       - name: visibility_level
