@@ -32,4 +32,4 @@ seeds:
   - name: internal_gitlab_namespaces
     description: '{{ doc("internal_gitlab_namespaces") }}'
   - name: gcp_billing_ai_mapping
-    description: '{{ doc("internal_gitlab_namespaces") }}'
+    description: CSV containing the resource names for AI resources in unreview-poc project
