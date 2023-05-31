@@ -6794,7 +6794,8 @@ models:
       - dbt_utils.unique_combination_of_columns:
             combination_of_columns:
               - employee_id
-              - position_valid_from
+              - position_effective_date
+              - position_date_initiated
     columns:
       - name: dim_team_member_sk
         description: A unique ID for each team member.
@@ -6830,7 +6831,7 @@ models:
         description: Whether the team member's job position is active.
       - name: is_current
         description: Whether the team member's job position is the most current as of the date the query is run.
-      - name: position_valid_from
-        description: The date from which the team member's job position is valid
-      - name: position_valid_to
-        description: The date to which the team member's job position is valid
+      - name: position_date_initiated
+        description: The date when the team member's position update was requested 
+      - name: position_effective_date
+        description: The date when the team member's position update becomes effective
