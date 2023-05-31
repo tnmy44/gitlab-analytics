@@ -47,6 +47,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     WHERE snapshot_fiscal_quarter_date = close_fiscal_quarter_date -- closing in the same quarter of the snapshot
       AND stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
       AND snapshot_fiscal_quarter_date = snapshot_date
+      AND pipeline_created_fiscal_quarter_date != snapshot_fiscal_quarter_date
       -- exclude web direct purchases
       AND is_web_portal_purchase = 0
     GROUP BY 1,2
