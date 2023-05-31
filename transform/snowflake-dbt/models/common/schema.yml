@@ -7087,6 +7087,7 @@ models:
         description: '{{ doc("end_quantity") }}'
       - name: annual_price_per_seat_change
         description: '{{ doc("annual_price_per_seat_change") }}'
+
   - name: dim_team_member
     description: '{{ doc("dim_team_member") }}'
     tests:
@@ -7152,3 +7153,38 @@ models:
         description: Masked. Team member performance rating
         meta:
           masking_policy: analyst_people
+
+  - name: fct_team_member_status
+    description: '{{ doc("fct_team_member_status") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - employment_status
+              - status_effective_date
+    columns:
+      - name: employee_id
+        description: Workday Employee Identification 
+        tests:
+          - not_null
+      - name: employment_status
+        description: Employment Status (active, terminated). Other statuses will be added in the future (ie. Long term leave) 
+        tests:
+          - not_null
+      - name: termination_reason
+        description: Categorical variable that indicates the reason why a team member has been terminated
+        meta:
+          masking_policy: analyst_people
+      - name: termination_type
+        description: Categorical variable that indicates whether the termination was voluntary or involuntary.
+        meta:
+          masking_policy: analyst_people
+      - name: exit_impact
+        description: Whether the team member's departure has a significant negative impact on the company, its customers, its projects or the team.
+        meta:
+          masking_policy: analyst_people
+      - name: status_effective_date
+        description: Effective date of employment status
+        tests:
+          - not_null
+      

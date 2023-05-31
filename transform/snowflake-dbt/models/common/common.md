@@ -1749,3 +1749,10 @@ Model Caveat:
 This table contains team members work and personal information. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. The table includes information regarding current team members, new hires who have records created in Workday before their start date and team members who were terminated in 2021 onwards. Team members who were terminated before 2021 are not captured in this model at this time. The grain of this table is one row per employee_id per valid_to/valid_from combination.
 
 {% enddocs %}
+
+
+{% docs fct_team_member_status %}
+
+This table contains the termination reason, type, exit impact and employment_status. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. This table contains only past terminations. Future terminations are not included at this time. We will evaluate the possibility of making future terminations available to people with the analyst_people role in a future iteration. The grain of this table is one row per employee_id, employment_status and status_effective_date combination.
+
+{% enddocs %}
