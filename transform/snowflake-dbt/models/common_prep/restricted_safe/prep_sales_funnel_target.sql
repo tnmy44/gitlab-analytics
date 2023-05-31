@@ -1,3 +1,7 @@
+{{ config(
+  enabled=false
+) }}
+
 {{ simple_cte([
       ('dim_date', 'dim_date'),
       ('sheetload_sales_funnel_targets_matrix_source', 'sheetload_sales_funnel_targets_matrix_source')
