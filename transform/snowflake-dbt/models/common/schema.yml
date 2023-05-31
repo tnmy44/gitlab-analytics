@@ -397,7 +397,23 @@ models:
         description: Flag indicating a touchpoint is influenced by Demand Gen based on its segment being Demand Gen.
       - name: is_dg_sourced
         description: Flag indicating a touchpoint is sourced from Demand Gen based on its segment being Demand Gen as well as its position being first touch.
-
+      - name: bizible_form_page_utm_content
+        description: The `utm_content` parameter of the `bizible_form_url`
+      - name: bizible_form_page_utm_budget
+        description: The `utm_budget` parameter of the `bizible_form_url`
+      - name: bizible_form_page_utm_allptnr
+        description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_form_url`
+      - name: bizible_form_page_utm_partnerid
+        description: The `utm_partnerid` parameter of the `bizible_form_url`
+      - name: bizible_landing_page_utm_content
+        description: The `utm_content` parameter of the `bizible_landing_page`
+      - name: bizible_landing_page_utm_budget
+        description: The `utm_budget` parameter of the `bizible_landing_page`
+      - name: bizible_landing_page_utm_allptnr
+        description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_landing_page`
+      - name: bizible_landing_page_utm_partnerid
+        description: The `utm_partnerid` parameter of the `bizible_landing_page`
+        
   - name: dim_date
     description: '{{ doc("dim_date") }}'
     columns:
@@ -1241,26 +1257,6 @@ models:
               config:
                 where: bizible_created_date <= DATEADD('day', -2, CURRENT_DATE)::DATE
         tags: ["tdf", "common"]
-
-  - name: dim_crm_touchpoint
-    description: '{{ doc("dim_crm_touchpoint") }}'
-    columns: 
-      - name: bizible_form_page_utm_content
-        description: The `utm_content` parameter of the `bizible_form_url`
-      - name: bizible_form_page_utm_budget
-        description: The `utm_budget` parameter of the `bizible_form_url`
-      - name: bizible_form_page_utm_allptnr
-        description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_form_url`
-      - name: bizible_form_page_utm_partnerid
-        description: The `utm_partnerid` parameter of the `bizible_form_url`
-      - name: bizible_landing_page_utm_content
-        description: The `utm_content` parameter of the `bizible_landing_page`
-      - name: bizible_landing_page_utm_budget
-        description: The `utm_budget` parameter of the `bizible_landing_page`
-      - name: bizible_landing_page_utm_allptnr
-        description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_landing_page`
-      - name: bizible_landing_page_utm_partnerid
-        description: The `utm_partnerid` parameter of the `bizible_landing_page`
         
   - name: fct_crm_person
     description: '{{ doc("fct_crm_person") }}'
