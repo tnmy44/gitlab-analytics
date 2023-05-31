@@ -7160,9 +7160,15 @@ models:
       - dbt_utils.unique_combination_of_columns:
             combination_of_columns:
               - employee_id
+              - team_id
               - position_effective_date
-              - position_date_initiated
+              - position_date_time_initiated
     columns:
+      - name: team_member_position_pk
+        description: Primary key for the table
+        tests:
+          - not_null
+          - unique
       - name: dim_team_member_sk
         description: A unique ID for each team member.
         tests:
@@ -7197,7 +7203,7 @@ models:
         description: Whether the team member's job position is active.
       - name: is_current
         description: Whether the team member's job position is the most current as of the date the query is run.
-      - name: position_date_initiated
+      - name: position_date_time_initiated
         description: The date when the team member's position update was requested 
       - name: position_effective_date
         description: The date when the team member's position update becomes effective

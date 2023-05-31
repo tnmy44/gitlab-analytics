@@ -9,7 +9,7 @@ WITH staffing_history AS (
     job_specialty_single_current                                                                                    AS job_specialty_single,
     job_specialty_multi_current                                                                                     AS job_specialty_multi,
     entity_current                                                                                                  AS entity,
-    date_time_initiated                                                                                             AS position_date_initiated,
+    date_time_initiated                                                                                             AS position_date_time_initiated,
     effective_date                                                                                                  AS position_effective_date,
     ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date DESC, date_time_initiated DESC)             AS row_number
   FROM {{ref('staffing_history_approved_source')}}
@@ -21,8 +21,8 @@ WITH staffing_history AS (
     OR job_code_past != job_code_current
     OR job_specialty_single_past != job_specialty_single_current
     OR job_specialty_multi_past != job_specialty_multi_current
-    
-         
+    OR team_id_past != team_id_current
+
 
 ),
 
@@ -59,8 +59,8 @@ final AS (
     job_profiles.job_grade                                                                             AS job_grade,
     staffing_history.entity                                                                            AS entity,
     job_profiles.is_position_active                                                                    AS is_position_active,
-    staffing_history.position_date_initiated                                                           AS position_date_initiated,
     staffing_history.position_effective_date                                                           AS position_effective_date,
+    staffing_history.position_date_time_initiated                                                      AS position_date_time_initiated,
 
     -- Add is_current flag for most current team member record
     IFF(staffing_history.row_number = 1, TRUE, FALSE)                                                  AS is_current
