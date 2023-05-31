@@ -1945,6 +1945,10 @@ models:
         description: A unique ID for each team member.
         tests:
             - not_null
+      - name: dim_team_sk
+        description: A unique ID for each team.
+        tests:
+          - not_null
       - name: employee_id
         description: Unique ID of the team member.
         tests:
