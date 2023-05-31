@@ -60,7 +60,7 @@
       billing_account_updated_at,
       'Y' as exists_in_cdot
     FROM {{ref('customers_db_billing_accounts_source')}}
-    --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
+    --Exclude Batch20(test records) from CDot by using Zuora test account IDs.
     WHERE zuora_account_id NOT IN 
       (SELECT DISTINCT 
         account_id 
