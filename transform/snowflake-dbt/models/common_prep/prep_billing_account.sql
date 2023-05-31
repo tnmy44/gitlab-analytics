@@ -60,6 +60,12 @@
       billing_account_updated_at,
       'Y' as exists_in_cdot
     FROM {{ref('customers_db_billing_accounts_source')}}
+    --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
+    WHERE zuora_account_id NOT IN 
+      (SELECT DISTINCT 
+        account_id 
+       FROM {{ref('zuora_account_source')}}
+       WHERE LOWER(batch) = 'batch20')
 
 ), final AS (
 
@@ -105,5 +111,5 @@
     created_by="@snalamaru",
     updated_by="@snalamaru",
     created_date="2023-04-24",
-    updated_date="2023-04-24"
+    updated_date="2023-05-31"
 ) }}
