@@ -58,9 +58,10 @@
       dim_crm_accounts.crm_account_name                                           AS crm_account_name,
       dim_crm_accounts.dim_parent_crm_account_id                                  AS dim_parent_crm_account_id,
       dim_crm_accounts.parent_crm_account_name                                    AS parent_crm_account_name,
+      dim_crm_accounts.parent_crm_account_upa_country                             AS parent_crm_account_upa_country,
       dim_crm_accounts.parent_crm_account_sales_segment                           AS parent_crm_account_sales_segment,
       dim_crm_accounts.parent_crm_account_industry                                AS parent_crm_account_industry,
-      dim_crm_accounts.parent_crm_account_territory                         AS parent_crm_account_territory,
+      dim_crm_accounts.parent_crm_account_territory                               AS parent_crm_account_territory,
       dim_crm_accounts.technical_account_manager                                  AS technical_account_manager,
       IFF(MAX(fct_charge.mrr) > 0, TRUE, FALSE)                                   AS is_paid_subscription,
       MAX(IFF(dim_product_detail.product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE)) 
@@ -91,7 +92,7 @@
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
     INNER JOIN dim_date
       ON fct_charge.effective_start_month <= dim_date.date_day AND fct_charge.effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=20)}}
+    {{ dbt_utils.group_by(n=21)}}
 
 
   ), latest_subscription AS (
@@ -146,6 +147,7 @@
         COALESCE(license_sha256.crm_account_name, license_md5.crm_account_name)                                                         AS crm_account_name,
         COALESCE(license_sha256.dim_parent_crm_account_id, license_md5.dim_parent_crm_account_id)                                       AS dim_parent_crm_account_id,
         COALESCE(license_sha256.parent_crm_account_name, license_md5.parent_crm_account_name)                                           AS parent_crm_account_name,
+        COALESCE(license_sha256.parent_crm_account_upa_country, license_md5.parent_crm_account_upa_country)                             AS parent_crm_account_upa_country,
         COALESCE(license_sha256.parent_crm_account_sales_segment, license_md5.parent_crm_account_sales_segment)                         AS parent_crm_account_sales_segment,
         COALESCE(license_sha256.parent_crm_account_industry, license_md5.parent_crm_account_industry)                                   AS parent_crm_account_industry,
         COALESCE(license_sha256.parent_crm_account_territory, license_md5.parent_crm_account_territory)                                 AS parent_crm_account_territory,
@@ -258,6 +260,7 @@
       -- account metadata
       crm_account_name,
       parent_crm_account_name,
+      parent_crm_account_upa_country,
       parent_crm_account_sales_segment,
       parent_crm_account_industry,
       parent_crm_account_territory,
@@ -279,5 +282,5 @@
     created_by="@icooper-acp",
     updated_by="@lisvinueza",
     created_date="2022-03-11",
-    updated_date="2022-04-26"
+    updated_date="2023-05-22"
 ) }}

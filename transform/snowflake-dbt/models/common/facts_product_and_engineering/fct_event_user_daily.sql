@@ -21,7 +21,7 @@ fct_event_user_daily AS (
                                                   AS event_user_daily_pk,
     
     --Foreign Keys                                               
-    dim_active_product_tier_id,
+    dim_latest_product_tier_id,
     dim_latest_subscription_id,
     dim_crm_account_id,
     dim_billing_account_id,
@@ -59,7 +59,7 @@ fct_event_user_daily AS (
 {{ dbt_audit(
     cte_ref="fct_event_user_daily",
     created_by="@iweeks",
-    updated_by="@cbraza",
+    updated_by="@michellecooper",
     created_date="2022-04-09",
-    updated_date="2023-03-01"
+    updated_date="2023-05-12"
 ) }}

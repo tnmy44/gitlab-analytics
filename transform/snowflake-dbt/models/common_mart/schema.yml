@@ -17,8 +17,8 @@ models:
       description: '{{ doc("dim_project_id_event_model") }}'
     - name: dim_user_id
       description: '{{ doc("dim_user_id") }}'
-    - name: dim_active_product_tier_id
-      description: '{{ doc("dim_active_product_tier_id") }}'
+    - name: dim_latest_product_tier_id
+      description: '{{ doc("dim_latest_product_tier_id") }}'
     - name: dim_latest_subscription_id
       description: '{{ doc("dim_latest_subscription_id") }}'
     - name: dim_crm_account_id
@@ -116,8 +116,8 @@ models:
       description: '{{ doc("dim_event_date_id") }}'
     - name: dim_ultimate_parent_namespace_id
       description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
-    - name: dim_active_product_tier_id
-      description: '{{ doc("dim_active_product_tier_id") }}'
+    - name: dim_latest_product_tier_id
+      description: '{{ doc("dim_latest_product_tier_id") }}'
     - name: dim_latest_subscription_id
       description: '{{ doc("dim_latest_subscription_id") }}'
     - name: dim_crm_account_id
@@ -205,8 +205,8 @@ models:
       description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
     - name: dim_user_id
       description: '{{ doc("dim_user_id") }}'
-    - name: dim_active_product_tier_id
-      description: '{{ doc("dim_active_product_tier_id") }}'
+    - name: dim_latest_product_tier_id
+      description: '{{ doc("dim_latest_product_tier_id") }}'
     - name: dim_latest_subscription_id
       description: '{{ doc("dim_latest_subscription_id") }}'
     - name: dim_crm_account_id
@@ -378,8 +378,7 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
-    - name: parent_crm_account_billing_country
-      description: '{{ doc("parent_crm_account_billing_country") }}'
+    - name: parent_crm_account_upa_country
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
@@ -508,8 +507,7 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
-    - name: parent_crm_account_billing_country
-      description: '{{ doc("parent_crm_account_billing_country") }}'
+    - name: parent_crm_account_upa_country
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
@@ -635,8 +633,7 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
-    - name: parent_crm_account_billing_country
-      description: '{{ doc("parent_crm_account_billing_country") }}'
+    - name: parent_crm_account_upa_country
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
@@ -758,8 +755,7 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
-    - name: parent_crm_account_billing_country
-      description: '{{ doc("parent_crm_account_billing_country") }}'
+    - name: parent_crm_account_upa_country
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
@@ -885,8 +881,7 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
-    - name: parent_crm_account_billing_country
-      description: '{{ doc("parent_crm_account_billing_country") }}'
+    - name: parent_crm_account_upa_country
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
@@ -1012,8 +1007,7 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
-    - name: parent_crm_account_billing_country
-      description: '{{ doc("parent_crm_account_billing_country") }}'
+    - name: parent_crm_account_upa_country
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
@@ -1139,8 +1133,7 @@ models:
       description: '{{ doc("crm_account_name") }}'
     - name: parent_crm_account_name
       description: '{{ doc("parent_crm_account_name") }}'
-    - name: parent_crm_account_billing_country
-      description: '{{ doc("parent_crm_account_billing_country") }}'
+    - name: parent_crm_account_upa_country
     - name: parent_crm_account_sales_segment
       description: '{{ doc("parent_crm_account_sales_segment") }}'
     - name: parent_crm_account_industry
@@ -1180,8 +1173,8 @@ models:
         - unique
     - name: dim_ultimate_parent_namespace_id
       description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
-    - name: dim_active_product_tier_id
-      description: '{{ doc("dim_active_product_tier_id") }}'
+    - name: dim_latest_product_tier_id
+      description: '{{ doc("dim_latest_product_tier_id") }}'
     - name: dim_latest_subscription_id
       description: '{{ doc("dim_latest_subscription_id") }}'
     - name: dim_crm_account_id

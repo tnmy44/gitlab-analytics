@@ -4,7 +4,7 @@ The unique identifier of an event. This is a generated primary key and will not 
 
 {% enddocs %}
 
-{% docs dim_active_product_tier_id %}
+{% docs dim_latest_product_tier_id %}
 
 The unique identifier of the ultimate parent namespace's latest product tier, easily joined to `dim_product_tier`
 
@@ -657,12 +657,6 @@ The name of the crm account coming from SFDC
 {% docs parent_crm_account_name %}
 
 The name of the ultimate parent account coming from SFDC
-
-{% enddocs %}
-
-{% docs parent_crm_account_billing_country %}
-
-The billing country of the ultimate parent account coming from SFDC
 
 {% enddocs %}
 

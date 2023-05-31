@@ -116,8 +116,27 @@ WITH zuora_product AS (
                                         , 'Trueup'
                                         )
           THEN 'Others'
+        WHEN product_tier_historical = 'Not Applicable'
+          THEN 'Not Applicable'
         ELSE NULL
       END                                                           AS product_delivery_type,
+      CASE
+        WHEN LOWER(product_tier_historical) LIKE '%self-managed%'
+          THEN 'Self-Managed'
+        WHEN LOWER(product_tier_historical) LIKE 'dedicated - ultimate%'
+          THEN 'Dedicated'
+        WHEN LOWER(product_tier_historical) LIKE ANY ('%saas%', 'storage', 'standard', 'basic', 'plus', 'githost', 'saas - other')
+          THEN 'GitLab.com'
+        WHEN product_tier_historical IN (
+                                          'Other'
+                                        , 'Support'
+                                        , 'Trueup'
+                                        )
+          THEN 'Others'
+        WHEN product_tier_historical = 'Not Applicable'
+          THEN 'Not Applicable'
+        ELSE NULL
+      END                                                           AS product_deployment_type,
       CASE
         WHEN product_tier_historical IN (
                                           'SaaS - Gold'
@@ -155,7 +174,7 @@ WITH zuora_product AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@jpeguero",
     created_date="2020-12-14",
-    updated_date="2022-12-05"
+    updated_date="2023-05-25"
 ) }}

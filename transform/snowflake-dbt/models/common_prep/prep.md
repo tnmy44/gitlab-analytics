@@ -772,3 +772,15 @@ Only team members who have had a job change, promotion, or hire event are includ
 
 
 {% enddocs %}
+
+{% docs prep_user_trial %}
+
+Prep table to store information about our users, trial users are also included. The data is sourced from an underlying tap-postgres customers table from customers.gitlab.com.
+
+{% enddocs %}
+
+{% docs dim_user_sk %}
+
+A surrogate key that uniquely identifes each row of the User table.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
+
+{% enddocs %}

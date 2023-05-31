@@ -94,7 +94,7 @@ models:
       - name: namespace_id
         description: Gitlab.com namespace id associated to the user_id. 
       - name: marketing_contact_role
-        description: Role of the marketing contact. A marketing contact can have many roles. Could be 'Personal Namespace Owner', Group Namespace Owner', 'Group Namespace Member', 'Customer DB Owner', 'Zuora Billing Contact'
+        description: Role of the marketing contact. A marketing contact can have many roles. Could be 'Personal Namespace Owner', Group Namespace Owner', 'Group Namespace Member', 'Group Namespace Maintainer', 'Customer DB Owner', 'Zuora Billing Contact'
      
   - name: bdg_marketing_contact_order
     description: '{{ doc("bdg_marketing_contact_order") }}'
@@ -160,8 +160,14 @@ models:
         description: Flags if group namespace owner
       - name: is_group_namespace_member
         description: Flags if group namespace member
-      - name: is_personal_namespace_owner
+      - name: is_individual_namespace_owner
         description: Flags if personal namespace owner
+      - name: is_group_maintainer_of_saas_paid_tier
+        description: Flags if group maintainer of a SaaS paid tier namespace
+      - name: is_group_maintainer_of_saas_free_tier
+        description: Flags if group maintainer of a SaaS free tier namespace
+      - name: is_group_maintainer_of_saas
+        description: Flags if group maintainer of a SaaS namespace
       - name: is_customer_db_owner
         description: Flags if customer db owner
       - name: is_zuora_billing_contact
