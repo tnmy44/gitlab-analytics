@@ -27,6 +27,7 @@ team_member_position AS (
     LEAD(position_valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY position_valid_from) AS position_valid_to,
     position_date_time_initiated
   FROM team_member_position_dup
+  WHERE position_valid_from <= CURRENT_DATE()
   
 ),
 
@@ -82,10 +83,6 @@ final AS (
           WHEN team_member_status.status_valid_from >= team_member_position.position_valid_from AND team_member_status.status_valid_from < team_member_position.position_valid_to THEN TRUE
           ELSE FALSE
         END) = TRUE
-)
-
-SELECT *
-FROM final
 )
 
 SELECT *
