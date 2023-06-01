@@ -198,10 +198,7 @@ SELECT
     mart.is_zi_hashicorp_present                                    AS zi_hashicorp_presence_flag,
     mart.is_zi_aws_cloud_trail_present                              AS zi_aws_cloud_trail_presence_flag,
     mart.is_zi_circle_ci_present                                    AS zi_circle_ci_presence_flag,
-    mart.is_zi_bit_bucket_present                                   AS zi_bit_bucket_presence_flag,
-
-    -- LAM
-    mart.lam_dev_count
+    mart.is_zi_bit_bucket_present                                   AS zi_bit_bucket_presence_flag
 
 
 FROM mart_crm_account AS mart
