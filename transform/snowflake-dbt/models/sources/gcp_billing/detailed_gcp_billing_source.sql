@@ -11,7 +11,7 @@ source AS (
 
   SELECT
     OBJECT_DELETE(PARSE_JSON(value), 'gcs_export_time') AS value,
-    distinct(TO_TIMESTAMP(value['gcs_export_time']::INT, 6)) AS gcs_export_time
+    TO_TIMESTAMP(value['gcs_export_time']::INT, 6) AS gcs_export_time
   FROM {{ source('gcp_billing','detail_gcp_billing') }}
   {% if is_incremental() %}
 
