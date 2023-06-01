@@ -496,7 +496,7 @@
       fct_crm_opportunity.won_arr_basis_for_clari,
       fct_crm_opportunity.arr_basis_for_clari,
       fct_crm_opportunity.forecasted_churn_for_clari,
-      fct_crm_opportunity.override_arr_basis_clari,
+      fct_crm_opportunity.override_arr_basis_clari
       
 
     FROM fct_crm_opportunity
