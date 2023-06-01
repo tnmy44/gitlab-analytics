@@ -1750,6 +1750,15 @@ This table contains team members work and personal information. Sensitive column
 
 {% enddocs %}
 
+{% docs fct_team_member_position %}
+
+This table contains team members' job history, including any changes in their job profile or team. The table joins the staffing_history_approved_source and job_profiles_source. The grain of this table is one row per employee_id, team_id, effective_date and date_time_initiated combination. 
+
+The reason why the date and time when the change was initiated was added to the grain is because there are changes that are scheduled to take effect on the same date. In order to make sure that we capture the most up-to-date change and ensure the records are unique, we need to add take this timestamp into account.
+
+{% enddocs %}
+
+
 
 {% docs fct_team_member_status %}
 

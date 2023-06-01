@@ -7087,7 +7087,7 @@ models:
         description: '{{ doc("end_quantity") }}'
       - name: annual_price_per_seat_change
         description: '{{ doc("annual_price_per_seat_change") }}'
-
+ 
   - name: dim_team_member
     description: '{{ doc("dim_team_member") }}'
     tests:
@@ -7188,3 +7188,57 @@ models:
         tests:
           - not_null
       
+
+  - name: fct_team_member_position
+    description: '{{ doc("fct_team_member_position") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - team_id
+              - position_effective_date
+              - position_date_time_initiated
+    columns:
+      - name: team_member_position_pk
+        description: Primary key for the table
+        tests:
+          - not_null
+          - unique
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+        tests:
+          - not_null
+      - name: dim_team_sk
+        description: A unique ID for each team.
+        tests:
+          - not_null
+      - name: employee_id
+        description: Unique ID of the team member.
+        tests:
+          - not_null
+      - name: job_code
+        description: The code of the team member's job position.
+      - name: job_specialty_single
+        description: The team member's job specialty.
+      - name: job_specialty_multi
+        description: The team member's job specialty (multi-select).
+      - name: position
+        description: The team member's job profile name.
+      - name: job_family
+        description: The team member's job family.
+      - name: management_level
+        description: The team member's management level.
+      - name: job_grade
+        description: The team member's job grade.
+      - name: entity
+        description: The team member's entity.
+        meta:
+          masking_policy: analyst_people
+      - name: is_position_active
+        description: Whether the team member's job position is active.
+      - name: is_current
+        description: Whether the team member's job position is the most current as of the date the query is run.
+      - name: position_date_time_initiated
+        description: The date when the team member's position update was requested 
+      - name: position_effective_date
+        description: The date when the team member's position update becomes effective

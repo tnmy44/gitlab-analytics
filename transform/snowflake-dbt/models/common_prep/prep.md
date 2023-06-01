@@ -774,5 +774,16 @@ A surrogate key that uniquely identifes each row of the User table.  This is bui
 
 {% enddocs %}
 
+{% docs prep_team_member_position %}
+
+This table contains team members' job history, including any changes in their job profile.
+
+The table joins the staffing_history_approved_source and job_profiles_source.
+
+Only team members who have had a job change, promotion, or hire event are included in the final table. We have also included a filter for edge cases so that whenever a job code for a team member changes, it is captured. 
+
+
+{% enddocs %}
+
 
 

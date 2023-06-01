@@ -47,8 +47,8 @@ staffing_history AS (
     hire_date,
     termination_date,
     LAST_VALUE(hire_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_hire_date,
-    current_country AS country,
-    current_region AS region,
+    country_curent AS country,
+    region_current AS region,
     IFF(termination_date IS NULL, TRUE, FALSE) AS is_current_team_member,
     IFF(COUNT(hire_date) OVER (PARTITION BY employee_id ORDER BY effective_date ASC ROWS UNBOUNDED PRECEDING) > 1, TRUE, FALSE) AS is_rehire, -- team member is a rehire if they have more than 1 hire_date event
     effective_date AS valid_from,
