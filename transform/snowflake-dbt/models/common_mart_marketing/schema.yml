@@ -127,6 +127,8 @@ models:
           description: A dbt generated hash of the lead/contact email address from Salesforce.
         - name: email_domain_type
           description: The bucketed type of domain of the lead/contact email from Salesforce. 
+        - name: source_buckets
+          description: The bucketed lead source of the lead/contact from Salesforce. 
         - name: true_inquiry_date
           description: The SoT field for Inquiry date on a lead/contact, taken from the Inquiry DateTime field in Salesforce.
         - name: mql_date_first_pt
@@ -213,6 +215,14 @@ models:
           description: The Area of the Parent Account of the Opportunity, taking into account historical changes in Salesforce. 
         - name: crm_opp_owner_geo_stamped
           description: The Geo of the Parent Account of the Opportunity, taking into account historical changes in Salesforce. 
+        - name: crm_account_name
+          description: The name of the Salesforce Account. 
+        - name: parent_crm_account_name
+          description: The name of the Salesforce Parent Account. 
+        - name: parent_crm_account_lam
+          description: The LAM of the ultimate parent account in Salesforce. 
+        - name: parent_crm_account_lam_dev_count
+          description: The LAM developer count of the ultimate parent account in Salesforce. 
         - name: parent_crm_account_upa_country
           description: The Country of the Parent Account of the Opportunity in Salesforce. 
         - name: parent_crm_account_territory
@@ -227,6 +237,10 @@ models:
           description: The Touchpoint Type of the Bizible Touchpoint in Salesforce. 
         - name: bizible_ad_campaign_name
           description: The Touchpoint Ad Campaign Name of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_ad_group_name
+          description: The bucketed bizible ad name, from Salesforce. 
+        - name: bizible_salesforce_campaign
+          description: The Salesforce Campaign name, related to the bizible touchpoint, from Salesforce. 
         - name: bizible_form_url
           description: The Touchpoint Form URL of the Bizible Touchpoint in Salesforce. 
         - name: bizible_landing_page

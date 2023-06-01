@@ -91,6 +91,7 @@
   --Person Data
       person_base.email_hash,
       person_base.email_domain_type,
+      person_base.source_buckets,
       person_base.true_inquiry_date,
       person_base.mql_date_first_pt,
       person_base.accepted_date,
@@ -108,6 +109,8 @@
       person_order_type_final.person_order_type,
 
       --Account Data
+      mart_crm_account.crm_account_name,
+      mart_crm_account.parent_crm_account_name,
       mart_crm_account.parent_crm_account_lam,
       mart_crm_account.parent_crm_account_lam_dev_count,
       map_alternative_lead_demographics.employee_count_segment_custom,
@@ -125,6 +128,8 @@
       mart_crm_touchpoint.bizible_touchpoint_source,
       mart_crm_touchpoint.bizible_touchpoint_type,
       mart_crm_touchpoint.bizible_ad_campaign_name,
+      mart_crm_touchpoint.bizible_ad_group_name,
+      mart_crm_touchpoint.bizible_salesforce_campaign,
       mart_crm_touchpoint.bizible_form_url,
       mart_crm_touchpoint.bizible_landing_page,
       mart_crm_touchpoint.bizible_form_url_raw,
@@ -190,6 +195,7 @@
     
     --Opp Data
       opp.order_type AS opp_order_type,
+      opp.sdr_or_bdr,
       opp.sales_qualified_source_name,
       opp.deal_path_name,
       opp.sales_type,
@@ -213,6 +219,8 @@
       opp.crm_opp_owner_geo_stamped,
 
       --Account Data
+      mart_crm_account.crm_account_name,
+      mart_crm_account.parent_crm_account_name,
       mart_crm_account.parent_crm_account_lam,
       mart_crm_account.parent_crm_account_lam_dev_count,
       opp.parent_crm_account_upa_country,
@@ -225,6 +233,8 @@
       mart_crm_attribution_touchpoint.bizible_touchpoint_source,
       mart_crm_attribution_touchpoint.bizible_touchpoint_type,
       mart_crm_attribution_touchpoint.bizible_ad_campaign_name,
+      mart_crm_attribution_touchpoint.bizible_ad_group_name,
+      mart_crm_attribution_touchpoint.bizible_salesforce_campaign,
       mart_crm_attribution_touchpoint.bizible_form_url,
       mart_crm_attribution_touchpoint.bizible_landing_page,
       mart_crm_attribution_touchpoint.bizible_form_url_raw,
@@ -404,7 +414,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=73)}}
+    {{dbt_utils.group_by(n=78)}}
     
 ), cohort_base_combined AS (
   
@@ -422,6 +432,7 @@
   --Person Data
       email_hash,
       email_domain_type,
+      source_buckets,
       true_inquiry_date,
       mql_date_first_pt,
       accepted_date,
@@ -445,6 +456,7 @@
   
   --Opp Data
       opp_order_type,
+      sdr_or_bdr,
       sales_qualified_source_name,
       deal_path_name,
       sales_type,
@@ -468,6 +480,8 @@
       crm_opp_owner_geo_stamped,
 
   --Account Data
+      COALESCE(person_base_with_tp.crm_account_name,opp_base_with_batp.crm_account_name) AS crm_account_name,
+      COALESCE(person_base_with_tp.parent_crm_account_name,opp_base_with_batp.parent_crm_account_name) AS parent_crm_account_name,
       COALESCE(person_base_with_tp.parent_crm_account_lam,opp_base_with_batp.parent_crm_account_lam) AS parent_crm_account_lam,
       COALESCE(person_base_with_tp.parent_crm_account_lam_dev_count,opp_base_with_batp.parent_crm_account_lam_dev_count) AS parent_crm_account_lam_dev_count,
       parent_crm_account_upa_country,
@@ -480,6 +494,8 @@
       COALESCE(person_base_with_tp.bizible_touchpoint_source,opp_base_with_batp.bizible_touchpoint_source) AS bizible_touchpoint_source, 
       COALESCE(person_base_with_tp.bizible_touchpoint_type,opp_base_with_batp.bizible_touchpoint_type) AS bizible_touchpoint_type, 
       COALESCE(person_base_with_tp.bizible_ad_campaign_name,opp_base_with_batp.bizible_ad_campaign_name) AS bizible_ad_campaign_name, 
+      COALESCE(person_base_with_tp.bizible_ad_group_name,opp_base_with_batp.bizible_ad_group_name) AS bizible_ad_group_name, 
+      COALESCE(person_base_with_tp.bizible_salesforce_campaign,opp_base_with_batp.bizible_salesforce_campaign) AS bizible_salesforce_campaign, 
       COALESCE(person_base_with_tp.bizible_form_url,opp_base_with_batp.bizible_form_url) AS bizible_form_url, 
       COALESCE(person_base_with_tp.bizible_landing_page,opp_base_with_batp.bizible_landing_page) AS bizible_landing_page, 
       COALESCE(person_base_with_tp.bizible_form_url_raw,opp_base_with_batp.bizible_form_url_raw) AS bizible_form_url_raw, 
@@ -634,5 +650,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-05-30",
+    updated_date="2023-06-01",
   ) }}
