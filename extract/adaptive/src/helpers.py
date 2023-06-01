@@ -3,7 +3,6 @@ import time
 import logging
 import sys
 from datetime import datetime
-from typing import Union
 from logging import info, error
 import requests
 import pandas as pd
@@ -112,7 +111,7 @@ def upload_processed_version(version: str):
     __dataframe_uploader_adaptive(dataframe, table, add_uploaded_at=False)
 
 
-def __wide_to_long(dataframe):
+def __wide_to_long(dataframe: pd.DataFrame) -> pd.DataFrame:
     """
     Convert month_year columns, i.e 07/2023 into rows
     More info here: https://gitlab.com/gitlab-data/analytics/-/issues/16548#note_1414963180

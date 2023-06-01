@@ -4,7 +4,7 @@ import requests
 import pandas as pd
 import xmltodict
 
-from logging import info, basicConfig, getLogger
+from logging import info, error, basicConfig, getLogger
 from io import StringIO
 from typing import Any, Dict, Union, List, Optional
 
@@ -189,8 +189,14 @@ class Adaptive:
                 continue
             info(f"\nprocessing version: {valid_version}")
             exported_data = self.export_data(valid_version)
-            dataframe = self.exported_data_to_df(exported_data)
-            dataframe = edit_dataframe(dataframe, valid_version)
+            try:
+                dataframe = self.exported_data_to_df(exported_data)
+                dataframe = edit_dataframe(dataframe, valid_version)
+            # ValueError thrown if the columns are not formatted mo/year
+            except ValueError as e:
+                error(f"\nError processing {valid_version}:\n{e}")
+                continue
+
             upload_exported_data(dataframe, valid_version)
             upload_processed_version(valid_version)
             info(f"\nfinished processing: {valid_version}")
