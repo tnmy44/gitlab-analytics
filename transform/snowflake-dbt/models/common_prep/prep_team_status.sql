@@ -45,33 +45,6 @@ team_member_status AS (
 
 ),
 
-unioned AS (
-
-  SELECT 
-    dim_team_member_sk,
-    position_valid_from AS valid_from
-  FROM team_member_position
-
-  UNION
-
-  SELECT 
-    dim_team_member_sk,
-    status_valid_from
-  FROM team_member_status
-
-),
-
-date_range AS (
-
-  SELECT 
-    dim_team_member_sk,
-    valid_from,
-    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY dim_team_member_sk ORDER BY valid_from) AS valid_to,
-    IFF(valid_to = {{var('tomorrow')}}, TRUE, FALSE) AS is_current
-  FROM unioned
-  
-),
-
 final AS (
 
   SELECT 
@@ -88,32 +61,31 @@ final AS (
     team_member_position.job_grade,
     team_member_position.entity,
     team_member_position.is_position_active,
-    team_member_status.employment_status,
-    team_member_status.termination_reason,
-    team_member_status.termination_type,
-    team_member_status.exit_impact,
-    date_range.valid_from,
-    date_range.valid_to,
-    date_range.is_current
-  FROM team_member_position AS team_member_position
-  INNER JOIN date_range
-    ON date_range.dim_team_member_sk = team_member_position.dim_team_member_sk 
-    AND (
-      CASE
-        WHEN date_range.valid_from >= team_member_position.position_valid_from AND date_range.valid_from < team_member_position.position_valid_from THEN TRUE
-        WHEN date_range.valid_to > team_member_position.position_valid_from AND date_range.valid_to <= team_member_position.position_valid_from THEN TRUE
-        WHEN team_member_position.position_valid_from >= date_range.valid_from AND team_member_position.position_valid_from < date_range.valid_to THEN TRUE
-        ELSE FALSE
-      END) = TRUE
+    LAST_VALUE(employment_status IGNORE NULLS) OVER (PARTITION BY team_member_position.dim_team_member_sk ORDER BY team_member_status.status_valid_from ROWS UNBOUNDED PRECEDING) 
+                                                                                              AS employment_status,
+    LAST_VALUE(termination_reason) OVER (PARTITION BY team_member_position.dim_team_member_sk ORDER BY team_member_status.status_valid_from ROWS UNBOUNDED PRECEDING)     
+                                                                                              AS termination_reason,
+    LAST_VALUE(termination_type) OVER (PARTITION BY team_member_position.dim_team_member_sk ORDER BY team_member_status.status_valid_from ROWS UNBOUNDED PRECEDING) 
+                                                                                              AS termination_type,
+    LAST_VALUE(exit_impact) OVER (PARTITION BY team_member_position.dim_team_member_sk ORDER BY team_member_status.status_valid_from ROWS UNBOUNDED PRECEDING) 
+                                                                                              AS exit_impact,
+    GREATEST(team_member_status.status_valid_from, team_member_position.position_valid_from)  AS valid_from,
+    LEAST(team_member_status.status_valid_to, team_member_position.position_valid_to)         AS valid_to,
+    IFF(valid_to = DATEADD('day',1,CURRENT_DATE()), TRUE, FALSE) AS is_current
+  FROM team_member_position 
   LEFT JOIN team_member_status 
     ON team_member_position.dim_team_member_sk = team_member_status.dim_team_member_sk
     AND (
-      CASE
-        WHEN date_range.valid_from >= team_member_status.status_valid_from AND date_range.valid_from < team_member_status.status_valid_from THEN TRUE
-        WHEN date_range.valid_to > team_member_status.status_valid_from AND date_range.valid_to <= team_member_status.status_valid_from THEN TRUE
-        WHEN team_member_status.status_valid_from >= date_range.valid_from AND team_member_status.status_valid_from < date_range.valid_to THEN TRUE
-        ELSE FALSE
-      END) = TRUE
+        CASE
+          WHEN team_member_position.position_valid_from >= team_member_status.status_valid_from AND team_member_position.position_valid_from < team_member_status.status_valid_to THEN TRUE
+          WHEN team_member_position.position_valid_to > team_member_status.status_valid_from AND team_member_position.position_valid_to <= team_member_status.status_valid_to THEN TRUE
+          WHEN team_member_status.status_valid_from >= team_member_position.position_valid_from AND team_member_status.status_valid_from < team_member_position.position_valid_to THEN TRUE
+          ELSE FALSE
+        END) = TRUE
+)
+
+SELECT *
+FROM final
 )
 
 SELECT *
