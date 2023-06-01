@@ -1,13 +1,12 @@
 {% docs rpt_event_xmau_metric_monthly %}
 
-**Description:** GitLab.com (SaaS) xMAU metrics by month and user group (total, free, paid), sourced from the gitlab.com db replica. This model is used for xMAU/PI reporting and is the source for paid SaaS xMAU in the `[td_xmau]` snippet.
+**Description:** GitLab.com xMAU metrics by month and user group (total, free, paid), sourced from the gitlab.com db replica. 
+This model is used for xMAU/PI reporting and is the source for paid GitLab.com xMAU in the `[td_xmau]` snippet.
 
 **Data Grain:**
 - event_calendar_month
 - user_group
-- section_name
-- stage_name
-- group_name
+- event_name_array
 
 **Filters Applied to Model:**
 - Include events that occurred on the last 28 days of the calendar month
@@ -23,8 +22,8 @@
 **Business Logic in this Model:** 
 - The Last Plan Id of the Month for the Namespace is used for the `user_group` attribution
 - Usage is aggregated by xMAU metric instead of `event_name`. Metrics spanning multiple events are aggregated and deduped for ease of reporting. See `event_name_array` for all events included in the metric.
-- `group_name` will be NULL if the metric spans events associated with multiple groups. (This is necessary for the metrics to aggregate properly)
-- `stage_name IS NULL` for UMAU events
+- `group_name` is NULL if the metric spans events associated with multiple groups. (This is necessary for the metrics to aggregate properly)
+- `stage_name` is NULL for UMAU events
 - Aggregated Counts are based on the Event Date being within the Last Day of the Month and 27 days prior to the Last Day of the Month (total 28 days)
   - Events that are 29,30 or 31 days prior to the Last Day of the Month will Not be included in these totals
   - This is intended to match the installation-level Service Ping metrics by getting a 28-day count

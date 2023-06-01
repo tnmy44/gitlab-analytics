@@ -33,3 +33,5 @@ seeds:
     description: '{{ doc("internal_gitlab_namespaces") }}'
   - name: gcp_billing_ai_mapping
     description: CSV containing the resource names for AI resources in unreview-poc project
+  - name: snowflake_non_team_member_user_types
+    description: A categorization of non GitLab team member snowflake users

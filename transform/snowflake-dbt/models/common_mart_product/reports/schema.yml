@@ -5,7 +5,7 @@ models:
   description: '{{ doc("rpt_event_xmau_metric_monthly") }}'
   columns:
     - name: xmau_metric_monthly_id
-      description: The unique composite ID of a monthly xMAU metric in the rpt_xmau_metric_monthly model consisting of event_calendar_month, user_group, section_name, stage_name, and group_name
+      description: The unique composite ID of a monthly xMAU metric in the rpt_xmau_metric_monthly model consisting of event_calendar_month, user_group, and event_name_array
       tests:
         - not_null
         - unique
@@ -798,6 +798,10 @@ models:
       description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
       tests:
         - dbt_utils.at_least_one
+    - name: ci_internal_pipelines_28_days_event
+      description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+      tests:
+        - dbt_utils.at_least_one
     - name: is_missing_paid_seats
       description: Flags if there are currently active users, but no seats have been paid for
     - name: is_data_in_subscription_month
@@ -1182,6 +1186,10 @@ models:
         - dbt_utils.at_least_one
     - name: gitaly_servers_all_time_event
       description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
+      tests:
+        - dbt_utils.at_least_one
+    - name: ci_internal_pipelines_28_days_event
+      description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
       tests:
         - dbt_utils.at_least_one
     - name: is_missing_paid_seats

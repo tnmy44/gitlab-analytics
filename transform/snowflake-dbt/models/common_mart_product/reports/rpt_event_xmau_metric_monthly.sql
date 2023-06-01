@@ -235,7 +235,7 @@ results_wo_pk AS (
 results AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['event_calendar_month', 'user_group', 'section_name', 'stage_name', 'group_name']) }} AS xmau_metric_monthly_id,
+    {{ dbt_utils.surrogate_key(['event_calendar_month', 'user_group', 'event_name_array']) }} AS xmau_metric_monthly_id,
     results_wo_pk.*
   FROM results_wo_pk
   WHERE event_calendar_month < DATE_TRUNC('month', CURRENT_DATE)
@@ -245,7 +245,7 @@ results AS (
 {{ dbt_audit(
     cte_ref="results",
     created_by="@icooper_acp",
-    updated_by="@iweeks",
+    updated_by="@cbraza",
     created_date="2022-02-23",
-    updated_date="2022-09-19"
+    updated_date="2023-05-24"
 ) }}

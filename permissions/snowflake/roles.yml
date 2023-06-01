@@ -574,6 +574,10 @@ roles:
             - zuora
             - zuora_central_sandbox
 
+    - analyst_sales_sensitive:
+        warehouses:
+            - dev_xs
+
     - analytics_engineer_core:
         warehouses:
             - dev_xs
@@ -874,6 +878,8 @@ roles:
           warehouses:
               - dev_xs
               - dev_l
+          member_of:
+              - analyst_sales_sensitive
           privileges:
               databases:
                   read:
@@ -3962,6 +3968,7 @@ roles:
             - analyst_finance
             - customers_db
             - analyst_marketing
+            - analyst_sales_sensitive
             - data_team_analyst
             - restricted_safe
         warehouses:
@@ -4653,6 +4660,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
+            - analyst_sales_sensitive
             - data_team_analyst
             - restricted_safe
         warehouses:
