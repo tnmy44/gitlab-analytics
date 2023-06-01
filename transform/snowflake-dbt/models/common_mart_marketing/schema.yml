@@ -15,6 +15,22 @@ models:
           description: Sales segment of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: sdr_region
           description: Region of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
+        - name: bizible_form_page_utm_content
+          description: The `utm_content` parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_budget
+          description: The `utm_budget` parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_allptnr
+          description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_partnerid
+          description: The `utm_partnerid` parameter of the `bizible_form_url`
+        - name: bizible_landing_page_utm_content
+          description: The `utm_content` parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_budget
+          description: The `utm_budget` parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_allptnr
+          description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_partnerid
+          description: The `utm_partnerid` parameter of the `bizible_landing_page`
         - name: is_dg_influenced
           description: Flag indicating a touchpoint is influenced by Demand Gen based on its segment being Demand Gen.
         - name: is_dg_sourced
@@ -65,6 +81,22 @@ models:
           description: Sales segment of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: sdr_region
           description: Region of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
+        - name: bizible_form_page_utm_content
+          description: The `utm_content` parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_budget
+          description: The `utm_budget` parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_allptnr
+          description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_partnerid
+          description: The `utm_partnerid` parameter of the `bizible_form_url`
+        - name: bizible_landing_page_utm_content
+          description: The `utm_content` parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_budget
+          description: The `utm_budget` parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_allptnr
+          description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_partnerid
+          description: The `utm_partnerid` parameter of the `bizible_landing_page`
         - name: is_dg_influenced
           description: Flag indicating a touchpoint is influenced by Demand Gen based on its segment being Demand Gen.
         - name: is_dg_sourced

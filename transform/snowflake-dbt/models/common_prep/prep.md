@@ -761,3 +761,29 @@ A surrogate key that uniquely identifes each row of the billing account table.  
 The element id from the unstructured link click event
 
 {% enddocs %}
+
+{% docs prep_user_trial %}
+
+Prep table to store information about our users, trial users are also included. The data is sourced from an underlying tap-postgres customers table from customers.gitlab.com.
+
+{% enddocs %}
+
+{% docs dim_user_sk %}
+
+A surrogate key that uniquely identifes each row of the User table.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
+
+{% enddocs %}
+
+{% docs prep_team_member_position %}
+
+This table contains team members' job history, including any changes in their job profile.
+
+The table joins the staffing_history_approved_source and job_profiles_source.
+
+Only team members who have had a job change, promotion, or hire event are included in the final table. We have also included a filter for edge cases so that whenever a job code for a team member changes, it is captured. 
+
+
+{% enddocs %}
+
+
+

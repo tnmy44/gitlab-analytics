@@ -378,6 +378,8 @@
       monthly_sm_metrics.merge_requests_security_policy_28_days_user,
       monthly_sm_metrics.pipelines_implicit_auto_devops_28_days_event,
       monthly_sm_metrics.pipeline_schedules_28_days_user,
+      -- Wave 8
+      monthly_sm_metrics.ci_internal_pipelines_28_days_event,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -620,6 +622,8 @@
       monthly_saas_metrics.merge_requests_security_policy_28_days_user,
       COALESCE(pipelines_devops.distinct_users_whole_month, 0) AS pipelines_implicit_auto_devops_28_days_event,
       monthly_saas_metrics.pipeline_schedules_28_days_user,
+      -- Wave 8
+      monthly_saas_metrics.ci_internal_pipelines_28_days_event,
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -707,5 +711,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2023-05-24"
+    updated_date="2023-05-30"
 ) }}

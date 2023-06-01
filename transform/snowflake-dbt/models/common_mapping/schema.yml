@@ -219,3 +219,12 @@ models:
       - name: epic_id
         description: The namespace_id that represents the epic
 
+  - name: map_team_member_snowflake_user
+    description: A table to map current and former team members to there employee id
+    columns:
+      - name: employee_id
+        tests:
+          - unique
+      - name: snowflake_user_name
+        description: '{{ doc("snowflake_user_name") }}' 
+

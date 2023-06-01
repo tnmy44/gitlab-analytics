@@ -110,7 +110,7 @@
 
 ), final AS (
 
-  SELECT
+  SELECT DISTINCT
     l2r.*,
     tpd.fiscal_year                     AS date_range_year,
     tpd.fiscal_quarter_name_fy          AS date_range_quarter,

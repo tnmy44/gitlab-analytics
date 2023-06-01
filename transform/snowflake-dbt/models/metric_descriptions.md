@@ -378,3 +378,7 @@ Projects with package registry enabled. [link](https://gitlab.com/gitlab-org/git
 {% docs pipeline_schedules_28_days_user_desc %}
  Distinct users creating pipeline schedules in a month. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216175552_ci_pipeline_schedules.yml)
 {% enddocs %}
+
+{% docs ci_internal_pipelines_28_days_event_desc %}
+ Total monthly (28D) pipelines in Gitlab repositories for all project and project types [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20230217215050_ci_internal_pipelines.yml)
+{% enddocs %}

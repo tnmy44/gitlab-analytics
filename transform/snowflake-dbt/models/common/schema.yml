@@ -397,7 +397,23 @@ models:
         description: Flag indicating a touchpoint is influenced by Demand Gen based on its segment being Demand Gen.
       - name: is_dg_sourced
         description: Flag indicating a touchpoint is sourced from Demand Gen based on its segment being Demand Gen as well as its position being first touch.
-
+      - name: bizible_form_page_utm_content
+        description: The `utm_content` parameter of the `bizible_form_url`
+      - name: bizible_form_page_utm_budget
+        description: The `utm_budget` parameter of the `bizible_form_url`
+      - name: bizible_form_page_utm_allptnr
+        description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_form_url`
+      - name: bizible_form_page_utm_partnerid
+        description: The `utm_partnerid` parameter of the `bizible_form_url`
+      - name: bizible_landing_page_utm_content
+        description: The `utm_content` parameter of the `bizible_landing_page`
+      - name: bizible_landing_page_utm_budget
+        description: The `utm_budget` parameter of the `bizible_landing_page`
+      - name: bizible_landing_page_utm_allptnr
+        description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_landing_page`
+      - name: bizible_landing_page_utm_partnerid
+        description: The `utm_partnerid` parameter of the `bizible_landing_page`
+        
   - name: dim_date
     description: '{{ doc("dim_date") }}'
     columns:
@@ -1245,7 +1261,7 @@ models:
               config:
                 where: bizible_created_date <= DATEADD('day', -2, CURRENT_DATE)::DATE
         tags: ["tdf", "common"]
-
+        
   - name: fct_crm_person
     description: '{{ doc("fct_crm_person") }}'
     columns:
@@ -1695,6 +1711,10 @@ models:
         description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: ci_internal_pipelines_28_days_event
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_missing_paid_seats
         description: Flags if there are currently active users, but no seats have been paid for
       - name: is_data_in_subscription_month
@@ -1767,8 +1787,8 @@ models:
         description: '{{ doc("dim_project_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -1897,8 +1917,8 @@ models:
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -1968,8 +1988,8 @@ models:
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -3787,7 +3807,11 @@ models:
       - name: pipeline_schedules_28_days_user
         description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one    
+          - dbt_utils.at_least_one
+      - name: ci_internal_pipelines_28_days_event
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
@@ -6974,8 +6998,8 @@ models:
           - unique
       - name: dim_ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -7079,6 +7103,7 @@ models:
         description: '{{ doc("end_quantity") }}'
       - name: annual_price_per_seat_change
         description: '{{ doc("annual_price_per_seat_change") }}'
+ 
   - name: dim_team_member
     description: '{{ doc("dim_team_member") }}'
     tests:
@@ -7144,3 +7169,92 @@ models:
         description: Masked. Team member performance rating
         meta:
           masking_policy: analyst_people
+
+  - name: fct_team_member_status
+    description: '{{ doc("fct_team_member_status") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - employment_status
+              - status_effective_date
+    columns:
+      - name: employee_id
+        description: Workday Employee Identification 
+        tests:
+          - not_null
+      - name: employment_status
+        description: Employment Status (active, terminated). Other statuses will be added in the future (ie. Long term leave) 
+        tests:
+          - not_null
+      - name: termination_reason
+        description: Categorical variable that indicates the reason why a team member has been terminated
+        meta:
+          masking_policy: analyst_people
+      - name: termination_type
+        description: Categorical variable that indicates whether the termination was voluntary or involuntary.
+        meta:
+          masking_policy: analyst_people
+      - name: exit_impact
+        description: Whether the team member's departure has a significant negative impact on the company, its customers, its projects or the team.
+        meta:
+          masking_policy: analyst_people
+      - name: status_effective_date
+        description: Effective date of employment status
+        tests:
+          - not_null
+      
+
+  - name: fct_team_member_position
+    description: '{{ doc("fct_team_member_position") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - team_id
+              - position_effective_date
+              - position_date_time_initiated
+    columns:
+      - name: team_member_position_pk
+        description: Primary key for the table
+        tests:
+          - not_null
+          - unique
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+        tests:
+          - not_null
+      - name: dim_team_sk
+        description: A unique ID for each team.
+        tests:
+          - not_null
+      - name: employee_id
+        description: Unique ID of the team member.
+        tests:
+          - not_null
+      - name: job_code
+        description: The code of the team member's job position.
+      - name: job_specialty_single
+        description: The team member's job specialty.
+      - name: job_specialty_multi
+        description: The team member's job specialty (multi-select).
+      - name: position
+        description: The team member's job profile name.
+      - name: job_family
+        description: The team member's job family.
+      - name: management_level
+        description: The team member's management level.
+      - name: job_grade
+        description: The team member's job grade.
+      - name: entity
+        description: The team member's entity.
+        meta:
+          masking_policy: analyst_people
+      - name: is_position_active
+        description: Whether the team member's job position is active.
+      - name: is_current
+        description: Whether the team member's job position is the most current as of the date the query is run.
+      - name: position_date_time_initiated
+        description: The date when the team member's position update was requested 
+      - name: position_effective_date
+        description: The date when the team member's position update becomes effective

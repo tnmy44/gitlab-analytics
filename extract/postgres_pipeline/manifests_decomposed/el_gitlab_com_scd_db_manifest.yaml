@@ -744,6 +744,19 @@ tables:
 #      FROM resource_state_events
 #      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
 #        AND '{EXECUTION_DATE}'::timestamp
+  reviews:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'reviews'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , author_id
+      , merge_request_id
+      , project_id
+      , created_at
+      FROM reviews
   saml_providers:
     dbt_source_model: true
     export_schema: 'gitlab_com'

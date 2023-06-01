@@ -115,3 +115,8 @@ This View contains the list of projects that are under ultimate parent namespace
 This View contains the list of epics that are under ultimate parent namespace IDs and the namespace IDs that are internal to gitlab. This mapping should be used to filter epics when only internal GitLab data is needed.
 
 {% enddocs %}
+
+
+{% docs snowflake_user_name %}
+The user name of the snowflake user.  This is different than the user email and is used connect to query activity.
+{% enddocs %}

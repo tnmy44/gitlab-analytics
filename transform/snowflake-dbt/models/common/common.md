@@ -504,7 +504,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 **Business Logic in this Model:**
 - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
 - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - Not all events have a user associated with them (ex: 'milestones'), and not all events have a namespace associated with them (ex: 'users_created'). Therefore it is expected that `dim_user_sk` or `dim_ultimate_parent_namespace_id` will be NULL for these events
 - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
@@ -556,7 +556,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
 **Other Comments:**
@@ -585,7 +585,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
 **Other Comments:**
@@ -1620,7 +1620,7 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_month`) is determined by the plan for the last event on a given month
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
 **Other Comments:**
@@ -1747,5 +1747,21 @@ Model Caveat:
 {% docs dim_team_member %}
 
 This table contains team members work and personal information. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. The table includes information regarding current team members, new hires who have records created in Workday before their start date and team members who were terminated in 2021 onwards. Team members who were terminated before 2021 are not captured in this model at this time. The grain of this table is one row per employee_id per valid_to/valid_from combination.
+
+{% enddocs %}
+
+{% docs fct_team_member_position %}
+
+This table contains team members' job history, including any changes in their job profile or team. The table joins the staffing_history_approved_source and job_profiles_source. The grain of this table is one row per employee_id, team_id, effective_date and date_time_initiated combination. 
+
+The reason why the date and time when the change was initiated was added to the grain is because there are changes that are scheduled to take effect on the same date. In order to make sure that we capture the most up-to-date change and ensure the records are unique, we need to add take this timestamp into account.
+
+{% enddocs %}
+
+
+
+{% docs fct_team_member_status %}
+
+This table contains the termination reason, type, exit impact and employment_status. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. This table contains only past terminations. Future terminations are not included at this time. We will evaluate the possibility of making future terminations available to people with the analyst_people role in a future iteration. The grain of this table is one row per employee_id, employment_status and status_effective_date combination.
 
 {% enddocs %}
