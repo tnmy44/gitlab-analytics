@@ -27,7 +27,7 @@ cleaned AS (
     jobtitle_speciality,
     job_role_modified,
     is_hire_date,
-    is_termination_date,
+    IFF(date_actual > CURRENT_DATE, 'false', is_termination_date) AS is_termination_date,
     hire_date,
     cost_center,
     layers,
