@@ -19,12 +19,13 @@ models:
     - name: division
     - name: job_title_speciality
     - name: job_role_modified
-      description: Introduces values of ['Senior Leadership', 'Manager', 'Individual Contributor'] for roles. There is no accepted values test since this field was not religiously populated prior to 2020-02.
+      description: Introduces values of ['Director+', 'Manager', 'Individual Contributor'] for roles. There is no accepted values test since this field was not religiously populated prior to 2020-02.
     - name: location_factor
     - name: is_hire_date
       tests:
       - not_null
     - name: is_termination_date
+      description: Shows as true if it is a team members last work day. This field defaults to false for all team members if date_actual is after the current date.
       tests:
       - not_null
     - name: layers
