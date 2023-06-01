@@ -13,6 +13,7 @@ from helpers import (
     upload_exported_data,
     read_processed_versions_table,
     upload_processed_version,
+    wide_to_long,
 )
 
 
@@ -189,19 +190,19 @@ class Adaptive:
             info(f"\nprocessing version: {valid_version}")
             exported_data = self.export_data(valid_version)
             dataframe = self.exported_data_to_df(exported_data)
-            upload_exported_data(dataframe, valid_version)
+            long_dataframe = wide_to_long(dataframe)
+            upload_exported_data(long_dataframe, valid_version)
             upload_processed_version(valid_version)
             info(f"\nfinished processing: {valid_version}")
 
 
-def main():
+def main(export_all=True):
     """
     Main function to run the export.
     Either export one version, or export all unprocessed versions
     """
     adaptive = Adaptive()
 
-    export_all = True
     # export all versions in a folder (including subfolders)
     if export_all:
         folder_criteria = "FY24 Versions"
@@ -216,7 +217,8 @@ def main():
 
         exported_data = adaptive.export_data(version)
         dataframe = adaptive.exported_data_to_df(exported_data)
-        upload_exported_data(dataframe, version)
+        long_dataframe = wide_to_long(dataframe)
+        upload_exported_data(long_dataframe, version)
 
 
 if __name__ == "__main__":
@@ -224,4 +226,3 @@ if __name__ == "__main__":
     getLogger("snowflake.connector.cursor").disabled = True
     main()
     info("Complete.")
-
