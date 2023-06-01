@@ -164,6 +164,7 @@ WITH edm_opty AS (
     edm_opty.forecast_category_name,
     edm_opty.invoice_number,
     edm_opty.professional_services_value,
+    edm_opty.is_ps_opp,
     edm_opty.reason_for_loss,
     edm_opty.reason_for_loss_details,
     edm_opty.downgrade_reason,
@@ -380,6 +381,7 @@ WITH edm_opty AS (
     edm_opty.deal_category,
     edm_opty.deal_group,
     edm_opty.calculated_deal_count                                   AS calculated_deal_count,
+    edm_opty.lam_dev_count,
 
     ----------------------------------------------------------------
     -- NF 2022-01-28 This is probably TO BE DEPRECATED too, need to align with Channel ops
@@ -519,7 +521,16 @@ WITH edm_opty AS (
     edm_opty.is_deleted,
     opportunity_owner.is_rep_flag,
     edm_opty.pushed_count,
-    edm_opty.intented_product_tier
+    edm_opty.intented_product_tier,
+    edm_opty.parent_opportunity,
+
+    -- demographics fields
+    edm_opty.parent_crm_account_upa_country,
+    edm_opty.parent_crm_account_upa_state,
+    edm_opty.parent_crm_account_upa_city,
+    edm_opty.parent_crm_account_upa_street,
+    edm_opty.parent_crm_account_upa_postal_code,
+    edm_opty.parent_crm_account_business_unit
     
     FROM edm_opty
     -- Date helpers
