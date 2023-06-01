@@ -71,6 +71,8 @@
       dim_crm_opportunity.vsa_end_date,
       dim_crm_opportunity.vsa_url,
       dim_crm_opportunity.vsa_status,
+      dim_crm_opportunity.intended_product_tier,
+      dim_crm_opportunity.parent_opportunity,
       dim_crm_opportunity.deployment_preference,
       dim_crm_opportunity.net_new_source_categories,
       dim_crm_opportunity.invoice_number,
@@ -494,7 +496,8 @@
       fct_crm_opportunity.won_arr_basis_for_clari,
       fct_crm_opportunity.arr_basis_for_clari,
       fct_crm_opportunity.forecasted_churn_for_clari,
-      fct_crm_opportunity.override_arr_basis_clari
+      fct_crm_opportunity.override_arr_basis_clari,
+      
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity

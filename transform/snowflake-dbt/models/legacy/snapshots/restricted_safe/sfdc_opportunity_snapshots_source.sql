@@ -304,6 +304,10 @@ WITH source AS (
         forecasted_churn_for_clari__c                   AS forecasted_churn_for_clari,
         override_arr_basis_clari__c                     AS override_arr_basis_clari,
 
+        -- ps fields - original issue: https://gitlab.com/gitlab-com/sales-team/field-operations/customer-success-operations/-/issues/2723
+        intended_product_tier__c                        AS intended_product_tier,
+        parent_opportunity__c                           AS parent_opportunity,
+
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
                  CURRENT_TIMESTAMP()))                                                      AS _last_dbt_run,

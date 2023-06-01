@@ -218,6 +218,10 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.military_invasion_comments,
       prep_crm_opportunity.military_invasion_risk_scale,
 
+      -- PS related
+      prep_crm_opportunity.intended_product_tier,
+      prep_crm_opportunity.parent_opportunity,
+
       prep_crm_opportunity.downgrade_details,
 
 
