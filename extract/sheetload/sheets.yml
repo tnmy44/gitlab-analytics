@@ -241,7 +241,7 @@ sheets:
       - sales_funnel_targets_dates
       - sales_funnel_targets_kpi_values
       - sales_funnel_targets_opportunity
-      - sales_funnel_targets_matrix
+      # - sales_funnel_targets_matrix - Paused by https://gitlab.com/gitlab-data/analytics/-/merge_requests/8338
   - name: sales_training_completion_dates
     owner: '@paul_armstrong'
     tabs:
