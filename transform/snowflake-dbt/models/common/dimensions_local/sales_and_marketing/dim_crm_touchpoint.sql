@@ -62,15 +62,14 @@ WITH campaign_details AS (
       bizible_landing_page_raw,
 
       --UTMs not captured by the Bizible
-      PARSE_URL(bizible_form_url_raw):parameters:utm_content       AS bizible_form_page_utm_content,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_budget        AS bizible_form_page_utm_budget,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_allptnr       AS bizible_form_page_utm_allptnr,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_partnerid     AS bizible_form_page_utm_partnerid,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_content   AS bizible_landing_page_utm_content,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_budget    AS bizible_landing_page_utm_budget,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr   AS bizible_landing_page_utm_allptnr,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_partnerid AS bizible_landing_page_utm_partnerid,
-
+      PARSE_URL(bizible_form_url_raw)['parameters']['utm_content']::VARCHAR       AS bizible_form_page_utm_content,
+      PARSE_URL(bizible_form_url_raw)['parameters']['utm_budget']::VARCHAR        AS bizible_form_page_utm_budget,
+      PARSE_URL(bizible_form_url_raw)['parameters']['utm_allptnr']::VARCHAR       AS bizible_form_page_utm_allptnr,
+      PARSE_URL(bizible_form_url_raw)['parameters']['utm_partnerid']::VARCHAR     AS bizible_form_page_utm_partnerid,
+      PARSE_URL(bizible_landing_page_raw)['parameters']['utm_content']::VARCHAR   AS bizible_landing_page_utm_content,
+      PARSE_URL(bizible_landing_page_raw)['parameters']['utm_budget']::VARCHAR    AS bizible_landing_page_utm_budget,
+      PARSE_URL(bizible_landing_page_raw)['parameters']['utm_allptnr']::VARCHAR   AS bizible_landing_page_utm_allptnr,
+      PARSE_URL(bizible_landing_page_raw)['parameters']['utm_partnerid']::VARCHAR AS bizible_landing_page_utm_partnerid,
       bizible_marketing_channel,
       bizible_marketing_channel_path,
       bizible_medium,
@@ -107,14 +106,14 @@ WITH campaign_details AS (
       bizible_landing_page_raw,
 
     --UTMs not captured by the Bizible
-      PARSE_URL(bizible_form_url_raw):parameters:utm_content       AS bizible_form_page_utm_content,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_budget        AS bizible_form_page_utm_budget,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_allptnr       AS bizible_form_page_utm_allptnr,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_partnerid     AS bizible_form_page_utm_partnerid,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_content   AS bizible_landing_page_utm_content,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_budget    AS bizible_landing_page_utm_budget,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr   AS bizible_landing_page_utm_allptnr,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_partnerid AS bizible_landing_page_utm_partnerid,
+      PARSE_URL(bizible_form_url_raw)['parameters']['utm_content']::VARCHAR       AS bizible_form_page_utm_content,
+      PARSE_URL(bizible_form_url_raw)['parameters']['utm_budget']::VARCHAR        AS bizible_form_page_utm_budget,
+      PARSE_URL(bizible_form_url_raw)['parameters']['utm_allptnr']::VARCHAR       AS bizible_form_page_utm_allptnr,
+      PARSE_URL(bizible_form_url_raw)['parameters']['utm_partnerid']::VARCHAR     AS bizible_form_page_utm_partnerid,
+      PARSE_URL(bizible_landing_page_raw)['parameters']['utm_content']::VARCHAR   AS bizible_landing_page_utm_content,
+      PARSE_URL(bizible_landing_page_raw)['parameters']['utm_budget']::VARCHAR    AS bizible_landing_page_utm_budget,
+      PARSE_URL(bizible_landing_page_raw)['parameters']['utm_allptnr']::VARCHAR   AS bizible_landing_page_utm_allptnr,
+      PARSE_URL(bizible_landing_page_raw)['parameters']['utm_partnerid']::VARCHAR AS bizible_landing_page_utm_partnerid,
 
       bizible_marketing_channel,
       CASE
@@ -226,5 +225,5 @@ WITH campaign_details AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-01-21",
-    updated_date="2023-05-22"
+    updated_date="2023-06-01"
 ) }}
