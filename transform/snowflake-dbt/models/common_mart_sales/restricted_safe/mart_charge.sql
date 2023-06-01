@@ -114,7 +114,8 @@
         WHEN (dim_order_action.dim_order_action_id IS NOT NULL
         OR dim_amendment_subscription.amendment_type = 'Renewal')
           AND (dim_order.order_description = 'AutoRenew by CustomersDot'
-          OR dim_amendment_subscription.amendment_name = 'AutoRenew by CustomersDot')
+          OR dim_amendment_subscription.amendment_name = 'AutoRenew by CustomersDot'
+          OR dim_amendment_subscription.amendment_type = 'Composite')
             THEN 'Auto-Renewal'
         WHEN (dim_order_action.dim_order_action_id IS NOT NULL
         OR dim_amendment_subscription.amendment_type = 'Renewal')
@@ -214,7 +215,7 @@
       ON fct_charge.dim_order_id = dim_order.dim_order_id
     LEFT JOIN dim_order_action
       ON fct_charge.dim_order_id = dim_order_action.dim_order_id
-      AND LOWER(dim_order_action.order_action_type) LIKE '%subscription'
+      AND dim_order_action.order_action_type IN ('RenewSubscription', 'CancelSubscription')
     LEFT JOIN dim_billing_account_user
       ON fct_charge.subscription_created_by_id = dim_billing_account_user.dim_billing_account_user_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
