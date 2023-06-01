@@ -13,7 +13,7 @@ from helpers import (
     upload_exported_data,
     read_processed_versions_table,
     upload_processed_version,
-    wide_to_long,
+    edit_dataframe,
 )
 
 
@@ -190,8 +190,8 @@ class Adaptive:
             info(f"\nprocessing version: {valid_version}")
             exported_data = self.export_data(valid_version)
             dataframe = self.exported_data_to_df(exported_data)
-            long_dataframe = wide_to_long(dataframe)
-            upload_exported_data(long_dataframe, valid_version)
+            dataframe = edit_dataframe(dataframe, valid_version)
+            upload_exported_data(dataframe, valid_version)
             upload_processed_version(valid_version)
             info(f"\nfinished processing: {valid_version}")
 
@@ -217,8 +217,8 @@ def main(export_all=True):
 
         exported_data = adaptive.export_data(version)
         dataframe = adaptive.exported_data_to_df(exported_data)
-        long_dataframe = wide_to_long(dataframe)
-        upload_exported_data(long_dataframe, version)
+        dataframe = edit_dataframe(dataframe, version)
+        upload_exported_data(dataframe, version)
 
 
 if __name__ == "__main__":

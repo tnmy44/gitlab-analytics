@@ -99,14 +99,8 @@ def read_processed_versions_table() -> pd.DataFrame:
     return dataframe
 
 
-def fix_table(table: str) -> str:
-    """conform the table name to match Snowflake convention"""
-    return table.replace(" ", "_").upper()
-
-
 def upload_exported_data(dataframe: pd.DataFrame, table: str):
     """Upload an Adaptive export to Snowflake"""
-    table = fix_table(table)
     __dataframe_uploader_adaptive(dataframe, table)
 
 
@@ -118,18 +112,29 @@ def upload_processed_version(version: str):
     __dataframe_uploader_adaptive(dataframe, table, add_uploaded_at=False)
 
 
-def wide_to_long(dataframe):
+def __wide_to_long(dataframe):
     """
     Convert month_year columns, i.e 07/2023 into rows
     More info here: https://gitlab.com/gitlab-data/analytics/-/issues/16548#note_1414963180
     """
-    default_cols = ["Account Name", 'Account Code', 'Level Name']
-    df_melted = pd.melt(dataframe, id_vars=default_cols, var_name="month_year", value_name="Value").reset_index()
+    default_cols = ["Account Name", "Account Code", "Level Name"]
+    df_melted = pd.melt(
+        dataframe, id_vars=default_cols, var_name="month_year", value_name="Value"
+    ).reset_index()
 
-    df_melted[['Month', 'Year']] = df_melted['month_year'].str.split('/', expand=True).astype(int)
+    df_melted[["Month", "Year"]] = (
+        df_melted["month_year"].str.split("/", expand=True).astype(int)
+    )
 
     # month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     # df_melted["Month"] = df_melted["Month"].apply(lambda x: month_names[x - 1])
-    final_cols = default_cols + ['Year', 'Month', 'Value']
+    final_cols = default_cols + ["Year", "Month", "Value"]
     df_melted = df_melted[final_cols]
     return df_melted
+
+
+def edit_dataframe(dataframe: pd.DataFrame, version: str) -> pd.DataFrame:
+    """Transform the dataframe slightly to make it easier to process downstream"""
+    dataframe = __wide_to_long(dataframe)
+    dataframe["Version"] = version
+    return dataframe
