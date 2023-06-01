@@ -83,6 +83,29 @@ class Adaptive:
         additional_body = (
             f'<version name="{version_name}" isDefault="false"/>'
             + '<format useInternalCodes="true" includeUnmappedItems="false"/>'
+            + '<filters>'
+            + '<accounts>'
+             + '<account code="RPO" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="cRPO" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Bookings_Model_New.Plan_Churn" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="new_logos" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Customers_100k" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="HeadcountExpenseFcst" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Calculated_Billings" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Calculated_Billings_1" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Bookings_Model_New.All_ARR" isAssumption="false" includeDescendants="false"/>'
+             # net_arr
+             + '<account code="Bookings_Model_New.BM_Other_Pct_Net_ARR_Bookings_Metric" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Bookings_Model_New.BM_PS_Attach_Rate_Metric" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Bookings_Model_New.BM_Net_ARR_SaaS_Premium_Other" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Bookings_Model_New.BM_Net_ARR_SaaS_Ultimate" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Bookings_Model_New.BM_Net_ARR_Self_Managed_Ultimate" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Bookings_Model_New.BM_Net_ARR_Self_Managed_Premium_Other" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="Bookings_Model_New.BM_True_ups_pct_Net_ARR_Bookings_Metric" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="total_revenue" isAssumption="false" includeDescendants="false"/>'
+             + '<account code="TotalRevenue" isAssumption="false" includeDescendants="false"/>'
+            + '</accounts>'
+         + '</filters>'
         )
         info("Calling export_data endpoint...")
         data = self._export(method, additional_body)
@@ -183,7 +206,7 @@ class Adaptive:
         """
         versions = self.export_versions()
         valid_versions = self.get_valid_versions(versions, folder_criteria)
-        info(f"\nversions to process (if not already processed):\n {valid_versions}")
+        info(f"\nversions to process (if not processed in previous runs):\n {valid_versions}")
         for valid_version in valid_versions:
             if self.is_version_already_processed(valid_version):
                 continue
@@ -197,12 +220,12 @@ class Adaptive:
                 error(f"\nError processing {valid_version}:\n{e}")
                 continue
 
-            upload_exported_data(dataframe, valid_version)
+            upload_exported_data(dataframe)
             upload_processed_version(valid_version)
             info(f"\nfinished processing: {valid_version}")
 
 
-def main(export_all=True):
+def main(export_all=False):
     """
     Main function to run the export.
     Either export one version, or export all unprocessed versions
@@ -220,11 +243,12 @@ def main(export_all=True):
     else:
         version = "FY24 Plan (Board)"  # legit yearly forecast
         version = "Live forecast snapshot 1A"  # test
+        version = "Forecast (Live)"  # test
 
         exported_data = adaptive.export_data(version)
         dataframe = adaptive.exported_data_to_df(exported_data)
         dataframe = edit_dataframe(dataframe, version)
-        upload_exported_data(dataframe, version)
+        upload_exported_data(dataframe)
 
 
 if __name__ == "__main__":
