@@ -201,7 +201,7 @@ SELECT
     mart.is_zi_bit_bucket_present                                   AS zi_bit_bucket_presence_flag,
 
     -- LAM
-    mart.lam_dev_count,
+    mart.lam_dev_count
 
 
 FROM mart_crm_account AS mart
