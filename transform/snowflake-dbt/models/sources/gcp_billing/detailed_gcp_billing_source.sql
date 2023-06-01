@@ -1,5 +1,5 @@
 {{ config(
-    materialized='table',
+    materialized='incremental',
     unique_key='primary_key',
     on_schema_change='append_new_columns',
     full_refresh=only_force_full_refresh() 
@@ -10,9 +10,9 @@ WITH
 source AS (
 
   SELECT
-    OBJECT_DELETE(PARSE_JSON(value), 'gcs_export_time') AS value,
-    TO_TIMESTAMP(value['gcs_export_time']::INT, 6) AS gcs_export_time
-  FROM {{ source('gcp_billing','summary_gcp_billing') }}
+    {# OBJECT_DELETE(PARSE_JSON(value), 'gcs_export_time') AS value, #}
+    distinct(TO_TIMESTAMP(value['gcs_export_time']::INT, 6)) AS gcs_export_time
+  FROM {{ source('gcp_billing','detail_gcp_billing') }}
   {% if is_incremental() %}
 
   WHERE gcs_export_time > (SELECT MAX(uploaded_at) FROM {{ this }})
@@ -29,7 +29,7 @@ grouped AS (
     count(*) AS occurrence_multiplier
   FROM source
   GROUP BY 1,2
-  LIMIT 100
+
 ),
 
 renamed AS (
