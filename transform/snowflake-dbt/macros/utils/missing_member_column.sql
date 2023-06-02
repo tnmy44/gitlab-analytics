@@ -46,7 +46,7 @@
       {% elif col.name|lower in not_null_test_columns|lower %}
       '0' AS {{ col.name|lower }}
       -- if the column contains "_ID" this indicates it is an id so assign it "-1"
-      {% elif '_ID' in col.name|string %}
+      {% elif ('_ID' in col.name|string and col.data_type.startswith('character varying')) %}
       MD5('-1') AS {{ col.name|lower }}
       {% elif col.name|string == 'IS_DELETED' %}
       '0' AS {{ col.name|lower }}
