@@ -1,27 +1,27 @@
 WITH final AS (
 
   SELECT 
-    team_status.dim_team_member_sk,
-    team_status.dim_team_sk,
-    team_status.employee_id,
-    team_status.team_id,
-    team_status.job_code,
-    team_status.position,
-    team_status.job_family,
-    team_status.job_specialty_single,
-    team_status.job_specialty_multi,
-    team_status.management_level,
-    team_status.job_grade,
-    team_status.entity,
-    team_status.is_position_active,
-    team_status.employment_status,
-    team_status.termination_reason,
-    team_status.termination_type,
-    team_status.exit_impact,
-    team_status.valid_from,
-    team_status.valid_to,
-    team_status.is_current
-  FROM FROM {{ref('prep_team_status')}}
+    prep_team_status.dim_team_member_sk,
+    prep_team_status.dim_team_sk,
+    prep_team_status.employee_id,
+    prep_team_status.team_id,
+    prep_team_status.job_code,
+    prep_team_status.position,
+    prep_team_status.job_family,
+    prep_team_status.job_specialty_single,
+    prep_team_status.job_specialty_multi,
+    prep_team_status.management_level,
+    prep_team_status.job_grade,
+    prep_team_status.entity,
+    prep_team_status.is_position_active,
+    prep_team_status.employment_status,
+    prep_team_status.termination_reason,
+    prep_team_status.termination_type,
+    prep_team_status.exit_impact,
+    prep_team_status.valid_from,
+    prep_team_status.valid_to,
+    prep_team_status.is_current
+  FROM {{ref('prep_team_status')}} 
    
 )
 
