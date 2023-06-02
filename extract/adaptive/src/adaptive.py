@@ -207,6 +207,10 @@ class Adaptive:
             4. Upload the dataframe
             5. Record processed version (so not to process it again)
         """
+        if self.is_version_already_processed(version):
+            info(f"\nAlready processed, skipping version: {version}")
+            return
+
         info(f"\nprocessing version: {version}")
         exported_data = self.export_data(version)
         try:
@@ -223,6 +227,7 @@ class Adaptive:
 
     def process_versions(self, folder_criteria: str):
         """
+        folder_criteria is the top level folder to extract all versions from
         For each version, export the data
         Then upload the data to Snowflake
         Lastly, add verison to processed table so it's not processed again
@@ -233,8 +238,6 @@ class Adaptive:
             f"\nversions to process (if not processed in previous runs):\n {valid_versions}"
         )
         for valid_version in valid_versions:
-            if self.is_version_already_processed(valid_version):
-                continue
             self.process_version(valid_version)
 
 
