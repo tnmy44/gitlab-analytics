@@ -1938,4 +1938,103 @@ models:
       - name: batch
       - name: record_data_source
         description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources.
+  
+  - name: prep_user_trial
+    description: '{{ doc("prep_user_trial") }}'
+    columns:
+      - name: dim_user_sk
+        description: '{{ doc("dim_user_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: dim_user_id
+        description: The unique User ID in GitLab.com
+      - name: user_first_name
+        description: Masked. The first name of the User as entered by the user during registration
+      - name: user_last_name
+        description: Masked. The last name of the User as entered by the user during registration
+      - name: user_email
+        description: Masked. The email address of the user, usually a business email address
+      - name: user_created_at  
+      - name: user_updated_at
+      - name: sign_in_count
+        description: Tracks the number of times a user logged in.
+      - name: current_sign_in_at
+        description: Last time current user was active.
+      - name: last_sign_in_at
+        description: Last time the user logged in.
+      - name: user_provider
+        description: OAuth provider. Used for GL.com authentication.
+      - name: user_provider_user_id
+        description:  The User ID provided by the User to log in to  GitLab.com.
+      - name: zuora_account_id
+        description: A unique Zuora account number associated with the User
+      - name: country
+        description: User Country selected during registration
+      - name: state
+        description: A state that is part of the given country selected during registration 
+      - name: city
+        description: The city the user provided during the registration
+      - name: vat_code
+        description: Tax identification number. Used mostly in Europe.
+      - name: company
+        description: The company name as entered by the User
+      - name: company_size
+        description: The size of the company the user works for
+      - name: sfdc_account_id
+        description: Salesforce/CRM account ID associated with the user account
+      - name: user_is_billable
+        description: An indicator field with `True` or `false`, where `false means a purchase through a reseller.
+      - name: confirmed_at
+        description: Date when customer confirmed their account.
+      - name: confirmation_sent_at
+        description: Date used to expire the confirmation links  
 
+  - name: prep_team_member_position
+    description: '{{ doc("prep_team_member_position") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - team_id
+              - position_effective_date
+              - position_date_time_initiated
+    columns:
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+        tests:
+          - not_null
+      - name: dim_team_sk
+        description: A unique ID for each team.
+        tests:
+          - not_null
+      - name: employee_id
+        description: Unique ID of the team member.
+        tests:
+          - not_null
+      - name: job_code
+        description: The code of the team member's job position.
+      - name: job_specialty_single
+        description: The team member's job specialty.
+      - name: job_specialty_multi
+        description: The team member's job specialty (multi-select).
+      - name: position
+        description: The team member's job profile name.
+      - name: job_family
+        description: The team member's job family.
+      - name: management_level
+        description: The team member's management level.
+      - name: job_grade
+        description: The team member's job grade.
+      - name: entity
+        description: The team member's entity.
+        meta:
+          masking_policy: analyst_people
+      - name: is_position_active
+        description: Whether the team member's job position is active.
+      - name: is_current
+        description: Whether the team member's job position is the most current as of the date the query is run.
+      - name: position_date_time_initiated
+        description: The date when the team member's position update was requested 
+      - name: position_effective_date
+        description: The date when the team member's position update becomes effective
