@@ -1,5 +1,7 @@
 {{ config(materialized='table') }}
 
+
+
 {{ simple_cte([
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('wk_sales_sfdc_opportunity_snapshot_history_xf','wk_sales_sfdc_opportunity_snapshot_history_xf'),
@@ -117,8 +119,10 @@
     CASE
         WHEN wk_sales_sfdc_opportunity_snapshot_history_xf.sales_accepted_date IS NOT NULL
           AND wk_sales_sfdc_opportunity_snapshot_history_xf.is_edu_oss = 0
-@@ -36,8 +126,7 @@
-@@ -36,8 +126,7 @@
+          AND wk_sales_sfdc_opportunity_snapshot_history_xf.stage_name != '10-Duplicate'
+            THEN TRUE
+        ELSE FALSE
+      END AS is_sao,
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_won,
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_web_portal_purchase,
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_edu_oss,
@@ -126,8 +130,11 @@
     COALESCE(
         wk_sales_sfdc_opportunity_snapshot_history_xf.is_eligible_created_pipeline_flag,
         CASE
-@@ -49,176 +138,252 @@
-@@ -49,176 +138,252 @@
+         WHEN wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
+           AND wk_sales_sfdc_opportunity_snapshot_history_xf.is_edu_oss = 0
+           AND wk_sales_sfdc_opportunity_snapshot_history_xf.net_arr_created_date IS NOT NULL --
+           AND wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')
+           AND wk_sales_sfdc_opportunity_snapshot_history_xf.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
            AND (wk_sales_sfdc_opportunity_snapshot_history_xf.net_arr > 0
              OR wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_opportunity_category = 'Credit')
            AND wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_sales_qualified_source  != 'Web Direct Generated'
@@ -372,7 +379,6 @@ combined_models AS (
     FROM
     missing_net_arr_base
 )
-
 
 {{ dbt_audit(
     cte_ref="final",
