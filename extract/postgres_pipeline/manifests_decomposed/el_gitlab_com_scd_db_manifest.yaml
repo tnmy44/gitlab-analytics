@@ -111,6 +111,20 @@ tables:
       , board_id
       , label_id
       FROM board_labels
+  ci_job_token_project_scope_links:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'ci_job_token_project_scope_links'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , source_project_id
+      , target_project_id
+      , added_by_id
+      , created_at
+      , direction
+      FROM ci_job_token_project_scope_links
   cluster_groups:
     dbt_source_model: true
     export_schema: 'gitlab_com'
