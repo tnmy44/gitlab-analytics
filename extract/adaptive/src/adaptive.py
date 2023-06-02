@@ -79,31 +79,42 @@ class Adaptive:
     def export_data(self, version_name: str) -> str:
         """Call exportData endpoint to the data associated with a version"""
         method = "exportData"
+        account_codes = [
+            "RPO",
+            "cRPO",
+            "Bookings_Model_New.Plan_Churn",
+            "new_logos",
+            "Customers_100k",
+            "HeadcountExpenseFcst",
+            "Calculated_Billings",
+            "Calculated_Billings_1",
+            "Bookings_Model_New.All_ARR",
+            "Bookings_Model_New.BM_Other_Pct_Net_ARR_Bookings_Metric",
+            "Bookings_Model_New.BM_PS_Attach_Rate_Metric",
+            "Bookings_Model_New.BM_Net_ARR_SaaS_Premium_Other",
+            "Bookings_Model_New.BM_Net_ARR_SaaS_Ultimate",
+            "Bookings_Model_New.BM_Net_ARR_Self_Managed_Ultimate",
+            "Bookings_Model_New.BM_Net_ARR_Self_Managed_Premium_Other",
+            "Bookings_Model_New.BM_True_ups_pct_Net_ARR_Bookings_Metric",
+            "total_revenue",
+            "TotalRevenue",
+        ]
+
+        account_codes_xml = "".join(
+            [
+                '<account code="{}" isAssumption="false" includeDescendants="false"/>'.format(
+                    code
+                )
+                for code in account_codes
+            ]
+        )
 
         additional_body = (
             f'<version name="{version_name}" isDefault="false"/>'
             + '<format useInternalCodes="true" includeUnmappedItems="false"/>'
             + "<filters>"
             + "<accounts>"
-            + '<account code="RPO" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="cRPO" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Bookings_Model_New.Plan_Churn" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="new_logos" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Customers_100k" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="HeadcountExpenseFcst" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Calculated_Billings" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Calculated_Billings_1" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Bookings_Model_New.All_ARR" isAssumption="false" includeDescendants="false"/>'
-            # net_arr
-            + '<account code="Bookings_Model_New.BM_Other_Pct_Net_ARR_Bookings_Metric" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Bookings_Model_New.BM_PS_Attach_Rate_Metric" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Bookings_Model_New.BM_Net_ARR_SaaS_Premium_Other" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Bookings_Model_New.BM_Net_ARR_SaaS_Ultimate" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Bookings_Model_New.BM_Net_ARR_Self_Managed_Ultimate" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Bookings_Model_New.BM_Net_ARR_Self_Managed_Premium_Other" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="Bookings_Model_New.BM_True_ups_pct_Net_ARR_Bookings_Metric" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="total_revenue" isAssumption="false" includeDescendants="false"/>'
-            + '<account code="TotalRevenue" isAssumption="false" includeDescendants="false"/>'
+            + account_codes_xml
             + "</accounts>"
             + "</filters>"
         )
