@@ -40,6 +40,8 @@ models:
             - unique
         - name: uploaded_at
           description: '{{ doc("version_raw_usage_data_source_uploaded_at") }}'
+          tests:
+            - not_null
 
     - name: version_usage_data_source
       description: Primary data source for usage ping https://docs.gitlab.com/ee/development/telemetry/usage_ping.html.
@@ -57,6 +59,8 @@ models:
             sensitive: true
         - name: uploaded_at
           description: '{{ doc("version_raw_usage_data_source_uploaded_at") }}'
+          tests:
+            - not_null
 
     - name: version_version_checks_source
       description: Version check data from self-managed instances.

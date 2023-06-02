@@ -1360,6 +1360,8 @@ models:
         description: '{{ doc("ping_created_at") }}'
       - name: uploaded_at
         description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
       - name: original_edition
         description: '{{ doc("original_edition") }}'
       - name: id
