@@ -108,7 +108,7 @@
       mart_crm_account.is_first_order_available,
       person_order_type_final.person_order_type,
 
-      --Account Data
+  --Account Data
       mart_crm_account.crm_account_name,
       mart_crm_account.parent_crm_account_name,
       mart_crm_account.parent_crm_account_lam,
@@ -122,7 +122,6 @@
   
   --Touchpoint Data
       'Person Touchpoint' AS touchpoint_type,
-      mart_crm_touchpoint.campaign_rep_role_name,
       mart_crm_touchpoint.bizible_touchpoint_date,
       mart_crm_touchpoint.bizible_touchpoint_position,
       mart_crm_touchpoint.bizible_touchpoint_source,
@@ -227,7 +226,6 @@
     
     -- Touchpoint Data
       'Attribution Touchpoint' AS touchpoint_type,
-      mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.bizible_touchpoint_date,
       mart_crm_attribution_touchpoint.bizible_touchpoint_position,
       mart_crm_attribution_touchpoint.bizible_touchpoint_source,
@@ -414,7 +412,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=78)}}
+    {{dbt_utils.group_by(n=77)}}
     
 ), cohort_base_combined AS (
   
@@ -650,5 +648,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-06-01",
+    updated_date="2023-06-02",
   ) }}
