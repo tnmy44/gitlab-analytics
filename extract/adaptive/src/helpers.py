@@ -102,6 +102,7 @@ def upload_exported_data(dataframe: pd.DataFrame):
     """Upload an Adaptive export to Snowflake"""
     table = "reporting"
     __dataframe_uploader_adaptive(dataframe, table)
+    print("\nuploaded exported data to 'reporting' Snowflake table")
 
 
 def upload_processed_version(version: str):
@@ -110,6 +111,7 @@ def upload_processed_version(version: str):
     data = {"version": [version], "processed_at": datetime.utcnow()}
     dataframe = pd.DataFrame(data)
     __dataframe_uploader_adaptive(dataframe, table, add_uploaded_at=False)
+    print(f"\nuploaded version to 'processed_versions' Snowflake table: {version}")
 
 
 def __wide_to_long(dataframe: pd.DataFrame) -> pd.DataFrame:
