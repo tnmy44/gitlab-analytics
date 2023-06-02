@@ -100,7 +100,7 @@ def read_processed_versions_table() -> pd.DataFrame:
 
 def upload_exported_data(dataframe: pd.DataFrame):
     """Upload an Adaptive export to Snowflake"""
-    table = 'reporting'
+    table = "reporting"
     __dataframe_uploader_adaptive(dataframe, table)
 
 
