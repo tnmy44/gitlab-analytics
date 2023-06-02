@@ -210,7 +210,6 @@ WITH sfdc_users_xf AS (
        crm_account_user_region,
        crm_account_user_area,
        crm_account_user_sales_segment_region_grouped,
-       lam_dev_count,
 
         /*
        -- NF: 20230222 Removed to allow them to be adjusted by USER SFDC modification
@@ -709,7 +708,8 @@ WITH sfdc_users_xf AS (
     -- NF: These should be moved eventually to the MART table
     opty_source.pushed_count,
     opty_source.intented_product_tier,
-    opty_source.parent_opportunity
+    opty_source.parent_opportunity,
+    account.lam_dev_count
 
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
     FROM edm_opty
