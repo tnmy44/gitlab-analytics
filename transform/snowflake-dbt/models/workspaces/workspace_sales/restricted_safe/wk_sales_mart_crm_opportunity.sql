@@ -22,7 +22,8 @@ WITH sfdc_users_xf AS (
 ), sfdc_opportunity_source AS (
 
     SELECT source.*,
-        raw.intended_product_tier__c AS intented_product_tier
+        raw.intended_product_tier__c AS intented_product_tier,
+        raw.parent_opportunity__c   AS parent_opportunity
 
     FROM {{ref('sfdc_opportunity_source')}} source
         LEFT JOIN sfdc_opportunity_raw raw
@@ -209,6 +210,7 @@ WITH sfdc_users_xf AS (
        crm_account_user_region,
        crm_account_user_area,
        crm_account_user_sales_segment_region_grouped,
+
         /*
        -- NF: 20230222 Removed to allow them to be adjusted by USER SFDC modification
        opportunity_owner_user_segment,
@@ -705,7 +707,9 @@ WITH sfdc_users_xf AS (
     --- SOURCE fields
     -- NF: These should be moved eventually to the MART table
     opty_source.pushed_count,
-    opty_source.intented_product_tier
+    opty_source.intented_product_tier,
+    opty_source.parent_opportunity,
+    account.lam_dev_count
 
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
     FROM edm_opty
