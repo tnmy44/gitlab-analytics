@@ -1771,7 +1771,7 @@ This table contains the termination reason, type, exit impact and employment_sta
 
 This table is a derived fact from fct_team_member_status and fct_team_member_position. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake.
 
-This table only contains one change in the team member's position per effective date, as opposed to the fct_team_member_position table which contains all changes to a team member's position profile, regardless of whether they became effective or not.
+This table only contains one change in the team member's position per effective date, as opposed to the fct_team_member_position table which contains all changes to a team member's position profile, regardless of whether they became effective or not. This table doesn't include future hires, only people working at GitLab as of today's date.
 
 The grain of this table is one row per employee_id and valid_from combination
 
