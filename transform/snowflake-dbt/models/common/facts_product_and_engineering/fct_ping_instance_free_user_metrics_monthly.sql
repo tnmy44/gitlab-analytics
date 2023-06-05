@@ -426,6 +426,8 @@
       "usage_activity_by_stage_monthly.govern.user_merge_requests_for_projects_with_assigned_security_policy_project"       AS merge_requests_security_policy_28_days_user,
       "redis_hll_counters.ci_templates.p_ci_templates_implicit_auto_devops_monthly"                                         AS pipelines_implicit_auto_devops_28_days_event,
       "usage_activity_by_stage_monthly.verify.ci_pipeline_schedules"                                                        AS pipeline_schedules_28_days_user,
+      -- Wave 8
+      "counts_monthly.ci_internal_pipelines"    AS ci_internal_pipelines_28_days_event,
       -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY reporting_month DESC) = 1,
           TRUE, FALSE)                                                                          AS is_latest_data
@@ -448,5 +450,5 @@
     created_by="@snalamaru",
     updated_by="@mdrussell",
     created_date="2021-06-08",
-    updated_date="2023-04-05"
+    updated_date="2023-06-05"
 ) }}
