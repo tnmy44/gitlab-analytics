@@ -103,14 +103,24 @@ models:
       - name: age_cohort
         description: As based on current data.  
       - name: gender
+        meta:
+          masking_policy: analyst_people
       - name: gender_identity
+        meta:
+          masking_policy: analyst_people
       - name: nationality
+        meta:
+          masking_policy: analyst_people
       - name: region
         description: Identifies the region of the employees country of residence as it is entered in Workday. 
       - name: region_modified
         description: Identifies if employee is in NORAM, LATAM, EMEA, or JAPAC region based on their country of residence. US and Canada are NORAM, while Mexico is LATAM. All others stay the same.
       - name: gender_region
+        meta:
+          masking_policy: analyst_people
       - name: ethnicity_region
+        meta:
+          masking_policy: analyst_people
       - name: greenhouse_candidate_id
         description: Captures the id associated to the employee in Greenhouse (our recruiting platform). This will only be applicable in Greenhouse starting 2019-12-13, and will help identify which candidates were hired.
         tests: 
@@ -122,6 +132,11 @@ models:
 
   - name: bamboohr_separations
     description: Provides a report of all separated team members. 
+    columns:
+      - name: termination_type
+        meta:
+          masking_policy: analyst_people
+
 
   - name: employee_directory
     description: Provides most recent record for all GitLab employees (active and separated).
@@ -137,6 +152,9 @@ models:
       - name: first_name
       - name: last_name
       - name: full_name
+      - name: country
+        meta:
+          masking_policy: analyst_people
       - name: work_email
       - name: hire_date
       - name: rehire_date
@@ -177,7 +195,39 @@ models:
       - name: effective_date
       - name: employment_status
       - name: termination_reason
+        meta:
+          masking_policy: analyst_people
       - name: initiated_at
+
+  - name: bamboohr_promotions_xf
+    columns:
+      - name: variable_pay
+        meta:
+          masking_policy: analyst_people
+      - name: new_compensation_value_usd
+        meta:
+          masking_policy: analyst_people
+      - name: prior_compensation_value_usd
+        meta:
+          masking_policy: analyst_people
+      - name: change_in_comp_usd
+        meta:
+          masking_policy: analyst_people
+      - name: ote_usd
+        meta:
+          masking_policy: analyst_people
+      - name: prior_ote_usd
+        meta:
+          masking_policy: analyst_people
+      - name: ote_change
+        meta:
+          masking_policy: analyst_people
+      - name: total_change_in_comp
+        meta:
+          masking_policy: analyst_people
+      - name: percent_change_in_comp
+        meta:
+          masking_policy: analyst_people
       
 
 
