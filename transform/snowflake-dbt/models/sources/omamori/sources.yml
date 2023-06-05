@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: omamori
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: omamori
+    loader: Airflow
+    loaded_at_field: uploaded_at
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 5, period: hour}
+      error_after: {count: 10, period: hour}
+    tables:
+      - name: entity_data_external
+        external:
+          location: '@"{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}".omamori.omamori_load_parquet/entity_data'
+          file_format: "( type = parquet )"
+          auto_refresh: false
+          partitions:
+            - name: date_part
+              data_type: date
+              expression: to_date(split_part(metadata$filename, '/', 2),'YYYYMMDD')
+                #- name: mitigation_plan_entity_data_external
+                #- name: mitigation_plans_external
+                #- name: rule_evaluation_matches_external
+                #- name: rule_evaluations_external
+                #- name: tags_external
+                #- name: users_external
