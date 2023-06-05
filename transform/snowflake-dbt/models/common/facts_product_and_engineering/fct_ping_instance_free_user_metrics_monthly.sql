@@ -218,7 +218,7 @@
       sm_free_users.pipelines_implicit_auto_devops_28_days_event,
       sm_free_users.pipeline_schedules_28_days_user,
       -- Wave 8
-      sm_free_users.ci_internal_pipelines_28_days_event
+      sm_free_users.ci_internal_pipelines_28_days_event,
       -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY sm_free_users.uuid, sm_free_users.host_name
                              ORDER BY sm_free_users.ping_created_at DESC
