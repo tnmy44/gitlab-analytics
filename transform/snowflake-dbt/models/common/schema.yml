@@ -6994,6 +6994,10 @@ models:
         description: '{{ doc("last_activity_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: ci_internal_pipelines_28_days_event
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
       - name: installation_creation_date
