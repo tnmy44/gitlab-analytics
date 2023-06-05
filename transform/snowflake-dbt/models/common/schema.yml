@@ -3011,6 +3011,8 @@ models:
         description: '{{ doc("license_sha256") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'
       - name: ping_created_date
         description: '{{ doc("ping_created_date") }}'
       - name: umau_value
@@ -3133,6 +3135,8 @@ models:
         description: '{{ doc("license_sha256") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'
       - name: ping_created_date
         description: '{{ doc("ping_created_date") }}'
       - name: umau_value
@@ -3844,6 +3848,8 @@ models:
         description: '{{ doc("dim_ping_instance_id") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'
       - name: dim_product_tier_id
         description: '{{ doc("dim_product_tier_id_ping_model") }}'
       - name: dim_subscription_id
@@ -6331,6 +6337,10 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
       - name: ping_created_date_28_days_earlier
         description: The timestamp at which the ping was created_at minus 28 days for the monthly metric time period
       - name: ping_created_date_year

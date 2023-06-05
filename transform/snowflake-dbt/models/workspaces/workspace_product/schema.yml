@@ -165,3 +165,9 @@ models:
 
   - name: wk_rpt_product_navigation_base
     description: Workspace table for tracking Navigation events for easier and faster querying to Sisense.
+
+  - name: wk_usage_ping_geo_node_usage
+    description: Workspace table for Service ping geo node usage
+    columns:
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'

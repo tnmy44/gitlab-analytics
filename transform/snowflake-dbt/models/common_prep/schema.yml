@@ -1514,6 +1514,8 @@ models:
         description:  '{{ doc("dim_installation_id") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'
       - name: ip_address_hash
         description: '{{ doc("ip_address_hash_ping_model") }}'
       - name: license_md5

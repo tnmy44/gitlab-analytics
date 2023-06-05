@@ -10,7 +10,7 @@ WITH prep_usage_data_flattened AS (
     SELECT * FROM {{ ref('prep_ping_instance_flattened')}}
     {% if is_incremental() %}
 
-      WHERE ping_created_at > (SELECT MAX(ping_created_at) FROM {{this}})
+      WHERE uploaded_at > (SELECT MAX(uploaded_at) FROM {{this}})
 
     {% endif %}
 
@@ -40,6 +40,7 @@ SELECT
   flattened.original_edition AS edition,
   flattened.dim_host_id AS host_id,
   flattened.ping_created_at,
+  flattened.uploaded_at,
   prep_ping_instance.version,
   REGEXP_REPLACE(NULLIF(prep_ping_instance.version, ''), '[^0-9.]+') AS cleaned_version,
   SPLIT_PART(cleaned_version, '.', 1)::NUMBER AS major_version,
