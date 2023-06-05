@@ -228,6 +228,19 @@ models:
       - name: percent_change_in_comp
         meta:
           masking_policy: analyst_people
+
+  - name: bamboohr_employment_status_xf
+      description: Provides the termination reason to allow the People Analytics team to accurately report on termination data
+      columns:
+        - name: employee_id
+          tests: 
+            - not_null
+        - name: termination_type 
+          meta:
+            masking_policy: analyst_people
+        - name: next_employment_status
+          meta:
+            masking_policy: analyst_people
       
 
 
