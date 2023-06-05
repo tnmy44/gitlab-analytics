@@ -38,7 +38,7 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=12),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2019, 1, 1),
+    "start_date": datetime(2023, 6, 4),
     "dagrun_timeout": timedelta(hours=6),
 }
 
@@ -75,8 +75,8 @@ qualtrics_operator = KubernetesPodOperator(
             "QUALTRICS_DATA_CENTER": "eu",
         },
     },
-    affinity=get_affinity("production"),
-    tolerations=get_toleration("production"),
+    affinity=get_affinity("test"),
+    tolerations=get_toleration("test"),
     arguments=[qualtrics_extract_command],
     dag=dag,
 )
