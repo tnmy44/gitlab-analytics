@@ -307,6 +307,8 @@ sources:
         freshness: null
       - name: push_rules
         identifier: gitlab_db_push_rules
+      - name: remote_development_agent_configs
+        identifier: gitlab_db_remote_development_agent_configs
       - name: releases
         identifier: gitlab_db_releases
       - name: repository_languages
@@ -477,6 +479,8 @@ sources:
         identifier: gitlab_db_users_ops_dashboard_projects
       - name: web_hooks
         identifier: gitlab_db_web_hooks
+      - name: workspaces
+        identifier: gitlab_db_workspaces
       - name: zoom_meetings
         identifier: gitlab_db_zoom_meetings
         freshness:
