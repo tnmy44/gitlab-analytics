@@ -53,8 +53,10 @@
       upa_base.dim_parent_crm_account_id,
       mart_crm_opportunity_stamped_hierarchy_hist.dim_crm_opportunity_id,
       CASE 
-         WHEN is_first_order_available = False AND mart_crm_opportunity_stamped_hierarchy_hist.order_type = '1. New - First Order' THEN '3. Growth'
-         WHEN is_first_order_available = False AND mart_crm_opportunity_stamped_hierarchy_hist.order_type != '1. New - First Order' THEN mart_crm_opportunity_stamped_hierarchy_hist.order_type
+         WHEN is_first_order_available = False AND mart_crm_opportunity_stamped_hierarchy_hist.order_type = '1. New - First Order' 
+          THEN '3. Growth'
+         WHEN is_first_order_available = False AND mart_crm_opportunity_stamped_hierarchy_hist.order_type != '1. New - First Order' 
+          THEN mart_crm_opportunity_stamped_hierarchy_hist.order_type
       ELSE '1. New - First Order'
       END AS person_order_type,
       ROW_NUMBER() OVER( PARTITION BY email_hash ORDER BY person_order_type) AS person_order_type_number
@@ -270,7 +272,8 @@
       mart_crm_attribution_touchpoint.is_fmm_influenced,
       mart_crm_attribution_touchpoint.is_fmm_sourced,
       CASE
-          WHEN mart_crm_attribution_touchpoint.dim_crm_touchpoint_id IS NOT null THEN opp.dim_crm_opportunity_id
+          WHEN mart_crm_attribution_touchpoint.dim_crm_touchpoint_id IS NOT null 
+            THEN opp.dim_crm_opportunity_id
           ELSE null
       END AS influenced_opportunity_id,
       SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) AS first_opp_created,
