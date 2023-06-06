@@ -29,15 +29,7 @@ tables:
     import_db: CUSTOMERS_DB
     import_query: |-
       SELECT id
-      , first_name
-      , last_name
       , work_email
-      , address1
-      , address2
-      , city
-      , state
-      , postal_code
-      , country
       , created_at
       , updated_at
       , zuora_contact_id
