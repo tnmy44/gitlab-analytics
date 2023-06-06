@@ -8,7 +8,7 @@ from logging import info, error, basicConfig, getLogger
 from io import StringIO
 from typing import Any, Dict, Union, List, Optional
 
-from helpers import (
+from adaptive_helpers import (
     make_request,
     upload_exported_data,
     read_processed_versions_table,
@@ -194,7 +194,7 @@ class Adaptive:
         exported_data is a string that partially contains csv delimited data
         Take the csv delimited data and convert to pandas dataframe
         """
-        exported_data.lstrip("![CDATA[").rstrip("]]")
+        # exported_data.lstrip("![CDATA[").rstrip("]]")
         exported_data_io = StringIO(exported_data)
         dataframe = pd.read_csv(exported_data_io)
         info(f"\ndataframe.head(): {dataframe.head()}")
