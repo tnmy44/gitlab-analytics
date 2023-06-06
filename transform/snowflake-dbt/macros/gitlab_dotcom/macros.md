@@ -64,11 +64,18 @@ For example, user_role=0 maps to the 'Software Developer' role.
 {% enddocs %}
 
 {% docs dedupe_source %}
-This macro speed up data deduplication for the PREP.GITLAB_DOTCOM layer. This is a follow-up on RAW.TAP_POSGRES schema data.
+This macro speed up data deduplication for the `PREP.GITLAB_DOTCOM` layer. This is a follow-up on `RAW.TAP_POSTGRES` schema data.
 For instance, calling the macro with the command:
-```sqldedupe_source(source_table='workspaces)```
-will be translated as:```sqlSELECT *
+```sql
+{{ dedupe_source(source_table='workspaces') }}
+```
+will be translated as:
+```sqlSELECT *
+
 FROM RAW.tap_postgres.gitlab_db_workspaces
 
-QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1```and this is handly as the files for data deduplication as smaller and unified.
+QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+```
+and this is handly as the files for data deduplication as smaller and unified.
+
 {% enddocs %}
