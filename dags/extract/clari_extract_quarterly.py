@@ -71,7 +71,7 @@ clari_task_previous_quarter = KubernetesPodOperator(
     ],
     env_vars={
         **pod_env_vars,
-        "execution_date": "{{ logical_date }}",  # Run previous quarter
+        "logical_date": "{{ logical_date }}",  # Run previous quarter
         "task_schedule": TASK_SCHEDULE,
     },
     affinity=get_affinity(False),
