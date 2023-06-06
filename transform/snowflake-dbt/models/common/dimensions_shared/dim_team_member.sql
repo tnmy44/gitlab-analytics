@@ -16,6 +16,7 @@ WITH final AS (
       prep_team_member.performance_rating,
       prep_team_member.country,
       prep_team_member.region,
+      prep_team_member.team_id,
       prep_team_member.hire_date,
       prep_team_member.termination_date,
       prep_team_member.is_current_team_member,
@@ -25,7 +26,7 @@ WITH final AS (
       prep_team_member.is_current
     FROM {{ ref('prep_team_member') }}
 
-    UNION ALL
+UNION ALL
     
     SELECT
       MD5('-1')                                                       AS dim_team_member_sk,
@@ -43,6 +44,7 @@ WITH final AS (
       'Missing performance_rating'                                    AS performance_rating,
       'Missing country'                                               AS country,
       'Missing region'                                                AS region,
+      'Missing team_id'                                               AS team_id,
       '9999-12-31 00:00:00.000 +0000'                                 AS hire_date,
       '9999-12-31 00:00:00.000 +0000'                                 AS termination_date,
       NULL                                                            AS is_current_team_member,
