@@ -21,7 +21,6 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    SNOWFLAKE_STATIC_DATABASE,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -38,7 +37,7 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=12),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2023, 6, 4),
+    "start_date": datetime(2023, 6, 6),
     "dagrun_timeout": timedelta(hours=6),
 }
 
@@ -67,7 +66,6 @@ qualtrics_operator = KubernetesPodOperator(
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_STATIC_DATABASE,
     ],
     env_vars={
         **pod_env_vars,
