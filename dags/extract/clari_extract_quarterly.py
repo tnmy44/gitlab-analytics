@@ -96,7 +96,7 @@ clari_task_new_quarter = KubernetesPodOperator(
     env_vars={
         **pod_env_vars,
         # Run today's quarter
-        "execution_date": "{{ next_execution_date }}",
+        "logical_date": "{{ next_execution_date }}",
         "task_schedule": TASK_SCHEDULE,
     },
     affinity=get_affinity("test"),
