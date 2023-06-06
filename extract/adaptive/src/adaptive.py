@@ -116,8 +116,14 @@ class Adaptive:
             + "<accounts>"
             + account_codes_xml
             + "</accounts>"
+            + "<levels>"
+            + '<level name="Master Corporate" isRollup="true" includeDescendants="false"/>'
+            + "</levels>"
+            # + '<timeSpan start="02/2023" end="01/2024"/>'
             + "</filters>"
+            + '<rules includeRollupAccounts="true" includeRollupLevels="true"> </rules>'
         )
+
         info("Calling export_data endpoint...")
         data = self._export(method, additional_body)
         return str(data)  # coercing str -> str to remove mypy error
