@@ -187,6 +187,8 @@ sources:
         identifier: gitlab_db_gitlab_subscription_histories
       - name: gitlab_subscriptions
         identifier: gitlab_db_gitlab_subscriptions
+      - name: gpg_signatures
+        identifier: gitlab_db_gpg_signatures
       - name: group_group_links
         identifier: gitlab_db_group_group_links
       - name: identities
@@ -338,6 +340,8 @@ sources:
         identifier: gitlab_db_shards
       - name: sprints
         identifier: gitlab_db_sprints
+      - name: ssh_signatures
+        identifier: gitlab_db_ssh_signatures
       - name: subscriptions
         identifier: gitlab_db_subscriptions
       - name: system_note_metadata
