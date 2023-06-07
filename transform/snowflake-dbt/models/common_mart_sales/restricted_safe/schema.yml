@@ -198,6 +198,8 @@ models:
         description: ' {{ doc("gs_last_csm_activity_date") }} '
       - name: last_at_risk_update_comments
         description: ' {{ doc("last_at_risk_update_comments") }} '
+      - name: bdr_prospecting_status
+        description: Indicates whether the account is actively being prospected by a BDR.
 
   - name: mart_crm_opportunity
     description: Model with single pane of glass sales and marketing metrics. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
