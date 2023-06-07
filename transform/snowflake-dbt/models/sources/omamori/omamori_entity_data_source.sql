@@ -36,11 +36,11 @@ WITH source AS (
 
 renamed AS (
   SELECT
-    json_value['id']::VARCHAR          AS id,
-    json_value['entity_id']::VARCHAR   AS entity_id,
+    json_value['id']::INT          AS id,
+    json_value['entity_id']::INT   AS entity_id,
     json_value['entity_type']::VARCHAR AS entity_type,
-    json_value['created_at']::VARCHAR  AS created_at,
-    json_value['updated_at']::VARCHAR  AS updated_at,
+    json_value['created_at']::INT  AS created_at,
+    json_value['updated_at']::INT  AS updated_at,
     uploaded_at
   FROM source
 ),
