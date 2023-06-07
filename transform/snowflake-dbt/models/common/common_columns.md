@@ -2104,7 +2104,7 @@ The intended product tier looking to be purchased for this opportunity.
 
 {% enddocs %}
 
-{% docs parent_opportunity %}
+{% docs parent_opportunity_id %}
 
 The Salesforce opportunity ID for the parent opportunity of this opportunity.
 

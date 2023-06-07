@@ -300,7 +300,7 @@ WITH source AS (
 
         -- ps fields - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/customer-success-operations/-/issues/2723
         intended_product_tier__c                        AS intended_product_tier,
-        parent_opportunity__c                           AS parent_opportunity,
+        parent_opportunity__c                           AS parent_opportunity_id,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',

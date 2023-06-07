@@ -72,7 +72,7 @@
       dim_crm_opportunity.vsa_url,
       dim_crm_opportunity.vsa_status,
       dim_crm_opportunity.intended_product_tier,
-      dim_crm_opportunity.parent_opportunity,
+      dim_crm_opportunity.parent_opportunity_id,
       dim_crm_opportunity.deployment_preference,
       dim_crm_opportunity.net_new_source_categories,
       dim_crm_opportunity.invoice_number,

@@ -220,7 +220,7 @@ WITH prep_crm_opportunity AS (
 
       -- PS related
       prep_crm_opportunity.intended_product_tier,
-      prep_crm_opportunity.parent_opportunity,
+      prep_crm_opportunity.parent_opportunity_id,
 
       prep_crm_opportunity.downgrade_details,
 
