@@ -70,7 +70,8 @@ For instance, calling the macro with the command:
 {{ dedupe_source(source_table='workspaces') }}
 ```
 will be translated as:
-```sqlSELECT *
+```sql
+SELECT *
 
 FROM RAW.tap_postgres.gitlab_db_workspaces
 
