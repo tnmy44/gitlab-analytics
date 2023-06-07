@@ -408,5 +408,6 @@ models:
         - name: updated_at
           tests:
             - not_null
+
     - name: wk_omamori_entity_data
       description: entity_data from the GitLab Omamori application
