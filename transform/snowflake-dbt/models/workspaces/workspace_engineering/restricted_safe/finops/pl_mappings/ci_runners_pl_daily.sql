@@ -89,15 +89,11 @@ SELECT
 
   CASE
     WHEN runner_type = 'Self-Managed Runners' AND ci_runner_manager = 'private-runner-mgr' THEN '6 - private internal runners'
-    WHEN runner_type = 'Self-Managed Runners' AND ci_runner_manager = 'private-runner-mgr' THEN '6 - private internal runners'
     WHEN runner_type = 'Self-Managed Runners' AND is_paid_by_gitlab = TRUE THEN '6 - private internal runners'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'shared-gitlab-org-runner-mgr' THEN '1 - shared gitlab org runners'
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'shared-gitlab-org-runner-mgr' THEN '1 - shared gitlab org runners'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'linux-runner-mgr' THEN '2 - shared saas runners - small'
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'linux-runner-mgr' THEN '2 - shared saas runners - small'
-
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'green-_.saas-linux-medium-amd64' THEN '3 - shared saas runners - medium'
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'blue-_.saas-linux-medium-amd64' THEN '3 - shared saas runners - medium'
 
