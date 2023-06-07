@@ -1753,6 +1753,8 @@ models:
     description: Base model for Gitlab.com ssh_signatures
     columns:
       - name: ssh_signatures_id
+        description: Unique identifier for ssh_signatures
+        tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
           - unique
