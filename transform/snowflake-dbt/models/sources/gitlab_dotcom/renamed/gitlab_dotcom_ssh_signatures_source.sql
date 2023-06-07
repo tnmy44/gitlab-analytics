@@ -9,7 +9,7 @@ WITH source AS (
       id::NUMBER                  AS ssh_signatures_id,
       created_at::TIMESTAMP       AS created_at,
       updated_at::TIMESTAMP       AS updated_at,
-      project_id::NUMBER	        AS project_id,
+      project_id::NUMBER          AS project_id,
       verification_status::NUMBER AS verification_status,
       user_id::NUMBER             AS user_id
     FROM source
