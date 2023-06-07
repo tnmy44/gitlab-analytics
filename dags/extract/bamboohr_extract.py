@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.models import Variable
 from kubernetes_helpers import get_affinity, get_toleration
 from airflow_utils import (
     DATA_IMAGE,
@@ -22,23 +21,6 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
 )
-
-affinity = {
-    "nodeAffinity": {
-        "requiredDuringSchedulingIgnoredDuringExecution": {
-            "nodeSelectorTerms": [
-                {
-                    "matchExpressions": [
-                        {"key": "test", "operator": "In", "values": ["true"]}
-                    ]
-                }
-            ]
-        }
-    }
-}
-tolerations = [
-    {"key": "test", "operator": "Equal", "value": "true", "effect": "NoSchedule"}
-]
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -89,8 +71,8 @@ bamboohr_extract = KubernetesPodOperator(
         SNOWFLAKE_LOAD_PASSWORD,
     ],
     env_vars=pod_env_vars,
-    affinity=affinity,
-    tolerations=tolerations,
+    affinity=get_affinity("production"),
+    tolerations=get_toleration("production"),
     arguments=[bamboohr_extract_cmd],
     do_xcom_push=True,
     dag=dag,
