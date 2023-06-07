@@ -6,8 +6,9 @@
 }}
 
 WITH max_uploaded_at_source as (
-  SELECT MAX(t.uploaded_at) last_uploaded_at FROM {{ this }} AS t
+  SELECT coalesce(max(uploaded_at), '1970-01-01')::timestamp AS last_uploaded_at FROM {{ this }} AS t
 ),
+
 source AS (
   SELECT
     PARSE_JSON(value) AS value,
@@ -38,15 +39,16 @@ source AS (
 ),
 
 renamed AS (
+  select
   value['id']::varchar AS id,
   value['entity_id']::varchar AS entity_id,
   value['entity_type']::varchar AS entity_type,
   value['created_at']::varchar AS created_at,
   value['updated_at']::varchar AS updated_at,
   uploaded_at
-
   from source
-)
+),
+
 dedupped AS (
   SELECT * FROM renamed
   QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
