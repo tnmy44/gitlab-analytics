@@ -15,6 +15,6 @@ models:
       - name: updated_at
         tests:
           - not_null
-      - name: uploaded_at
+      - name: uploaded_at_gcs
         tests:
           - not_null
