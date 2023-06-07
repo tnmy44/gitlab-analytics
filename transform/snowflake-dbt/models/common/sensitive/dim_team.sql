@@ -37,9 +37,9 @@ team_superior_groups AS (
     team_id,
     team_name,
     team_superior_team_id,
-    COALESCE(team_superior_team_id, '')                                                                         AS no_null_superior,
-    LAG(no_null_superior, 1, '') OVER (PARTITION BY team_id ORDER BY valid_from)                                AS lag_superior_id,
-    CONDITIONAL_TRUE_EVENT(no_null_superior != lag_superior_id) OVER (PARTITION BY team_id ORDER BY valid_from) AS superior_id_group,
+    COALESCE(team_superior_team_id, '')                                                                                   AS no_null_superior,
+    LAG(no_null_superior, 1, '') OVER (PARTITION BY team_id ORDER BY team_data_valid_from)                                AS lag_superior_id,
+    CONDITIONAL_TRUE_EVENT(no_null_superior != lag_superior_id) OVER (PARTITION BY team_id ORDER BY team_data_valid_from) AS superior_id_group,
     team_data_valid_from,
     team_data_valid_to
   FROM team_data
