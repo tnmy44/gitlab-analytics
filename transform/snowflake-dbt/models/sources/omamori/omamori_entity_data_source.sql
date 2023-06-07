@@ -5,11 +5,7 @@
     )
 }}
 
-WITH max_uploaded_at_source AS (
-  SELECT COALESCE(MAX(uploaded_at), '1970-01-01')::TIMESTAMP AS last_uploaded_at FROM {{ this }}
-),
-
-source AS (
+WITH source AS (
   SELECT
     PARSE_JSON(value) AS json_value,
     -- obtain 'uploaded_at' from the parquet filename, i.e:
@@ -33,8 +29,8 @@ source AS (
   {% if is_incremental() %}
     -- Filter only for records from new files based off uploaded_at
     -- but first filter on the parititioned column (date_part) to speed up query
-    WHERE date_part >= (SELECT last_uploaded_at::DATE FROM max_uploaded_at_source)
-      AND uploaded_at > (SELECT last_uploaded_at FROM max_uploaded_at_source)
+    WHERE date_part >= (SELECT MAX(uploaded_at)::DATE AS last_uploaded_at FROM {{ this }})
+      AND uploaded_at > (SELECT MAX(uploaded_at) AS last_uploaded_at FROM {{ this }})
   {% endif %}
 ),
 
