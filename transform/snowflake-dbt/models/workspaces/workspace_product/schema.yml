@@ -175,3 +175,5 @@ models:
     columns:
       - name: uploaded_at
         description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
