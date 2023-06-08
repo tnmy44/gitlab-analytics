@@ -1,5 +1,5 @@
 """
-Test clari extract
+Test Adaptive extract
 """
 import pytest
 import pandas as pd
@@ -8,8 +8,8 @@ from unittest.mock import Mock
 from extract.adaptive.src.adaptive import (
     Adaptive,
 )
-from extract.adaptive.src.adaptive_helpers import (
-    edit_dataframe
+from extract.adaptive.src.adaptive_helpers import edit_dataframe
+
 
 @pytest.fixture(scope="session")
 def adaptive_obj():
@@ -128,12 +128,29 @@ def test_exported_data_to_df(adaptive_obj):
     "Total Headcount Expense","HeadcountExpenseFcst","1",0.0,0.0,1155.67,0.0,0.0,454.03,0.0,0.0,578.06,0.0,-1.5508313441000325,3985.9383838265994,5990.27,6772.25,7500.49,8871.54,8683.21,9338.62,10536.28,11960.38,15958.38,15067.58,250084.3358183593,14474.1162154893,19624.702011278303,22462.726901573995,21858.508889540797,22226.2256212693,21314.352907802004,24093.6826698202,18712.531866558496,27799.2360394795,27837.236619098796,27914.143601739295,892871.2549109808,27794.838822527694,35159.248242351205,42388.39336342229,74837.531391191,67143.36,63248.46,107903.27,79699.96,78029.18,173520.08,78029.18,104099.51,396102.95,189017.43,197491.46,403074.79,401217.1,392163.35,765949.87,442568.96,335469.36,441338.87,418416.08,437092.52,571399.54,371233.89,585033.08,432106.8394921232,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
     """
     dataframe = adaptive_obj.exported_data_to_df(exported_data_test)
-    assert 'Account Code' in dataframe.columns
+    assert "Account Code" in dataframe.columns
+
 
 def test_edit_dataframe():
-    version = 'some_version1'
-    data = {'Account Name': ['some_account'], 'Account Code': ['some_account_code'], 'Level Name': ['some_level_name'], '06/2023': ['some_value'], '07/2023': ['some_value']}
+    """ Check that the edited dataframe has the correct num of cols """
+    version = "some_version1"
+    data = {
+        "Account Name": ["some_account"],
+        "Account Code": ["some_account_code"],
+        "Level Name": ["some_level_name"],
+        "06/2023": ["some_value"],
+        "07/2023": ["some_value"],
+    }
     dataframe = pd.DataFrame(data)
     edited_dataframe = edit_dataframe(dataframe, version)
-    expected_final_cols = ['Account Name', 'Account Code', 'Level Name', 'Year', 'Month', 'Value']
-    assert list(edit_dataframe.columns) == expected_final_cols
+    expected_final_cols = [
+        "Account Name",
+        "Account Code",
+        "Level Name",
+        "Year",
+        "Month",
+        "Value",
+        "Version",
+    ]
+
+    assert set(edited_dataframe.columns) == set(expected_final_cols)
