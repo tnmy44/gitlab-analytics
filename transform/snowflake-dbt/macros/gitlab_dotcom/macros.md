@@ -77,6 +77,6 @@ FROM RAW.tap_postgres.gitlab_db_workspaces
 
 QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
 ```
-and this is handly as the files for data deduplication as smaller and unified.
+and this is handy as the files for data deduplication as smaller and unified.
 
 {% enddocs %}
