@@ -108,6 +108,8 @@ models:
       - name: namespace_created_month
       - name: namespace_created_week
       - name: creator_id
+      - name: sfdc_record_id
+        description: Functional analytics team owner is Marketing Analytics. Is the SFDC ID of namespace creator. This could be either a lead or contact in SFDC. Joined from dim_crm_person 
       - name: namespace_type
       - name: setup_for_company
       - name: visibility_level
@@ -131,6 +133,8 @@ models:
       - name: has_team_activation
       - name: namespace_creator_role 
       - name: namespace_creator_jtbd
+      - name: namespace_creator_is_first_order_person
+        description: Functional analytics team owner is Marketing Analytics. Is First Order field from the lead and contact model in SFDC joined from dim_crm_person through dim_marketing_contact. When this value is true, the creator of the namespace is a first order person in SFDC right now. This join is ultimately is created by matching email addresses.
       - name: days_since_namespace_creation_at_first_plan_event_date
       - name: days_since_namespace_creation_at_first_secure_event_date
       - name: days_since_namespace_creation_at_first_create_event_date 

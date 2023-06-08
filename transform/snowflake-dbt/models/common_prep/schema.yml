@@ -2040,3 +2040,69 @@ models:
         description: The date when the team member's position update was requested 
       - name: position_effective_date
         description: The date when the team member's position update becomes effective
+
+  - name: prep_team_status
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - dim_team_member_sk
+              - valid_from
+    columns:
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+        tests:
+          - not_null
+      - name: dim_team_sk
+        description: A unique ID for each team.
+        tests:
+          - not_null
+      - name: employee_id
+        description: Unique ID of the team member.
+        tests:
+          - not_null
+      - name: team_id
+        description: Unique ID of the team.
+      - name: job_code
+        description: The code of the team member's job position.
+      - name: job_specialty_single
+        description: The team member's job specialty.
+      - name: job_specialty_multi
+        description: The team member's job specialty (multi-select).
+      - name: position
+        description: The team member's job profile name.
+      - name: job_family
+        description: The team member's job family.
+      - name: management_level
+        description: The team member's management level.
+      - name: job_grade
+        description: The team member's job grade.
+      - name: entity
+        description: The team member's entity.
+        meta:
+          masking_policy: analyst_people
+      - name: is_position_active
+        description: Whether the team member's job position is active.
+      - name: employment_status
+        description: Employment Status (active, terminated). Other statuses will be added in the future (ie. Long term leave) 
+        tests:
+          - not_null
+      - name: termination_reason
+        description: Categorical variable that indicates the reason why a team member has been terminated
+        meta:
+          masking_policy: analyst_people
+      - name: termination_type
+        description: Categorical variable that indicates whether the termination was voluntary or involuntary.
+        meta:
+          masking_policy: analyst_people
+      - name: exit_impact
+        description: Whether the team member's departure has a significant negative impact on the company, its customers, its projects or the team.
+        meta:
+          masking_policy: analyst_people
+      - name: is_current
+        description: Whether the team status is the most current as of the date the query is run.
+      - name: valid_from
+        tests: 
+          - not_null
+      - name: valid_to
+        tests: 
+          - not_null

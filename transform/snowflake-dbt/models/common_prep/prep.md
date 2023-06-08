@@ -763,7 +763,7 @@ Prep model for merging the billing accounts data from both Zuora and CDot source
 
 {% docs dim_billing_account_sk %}
 
-A surrogate key that uniquely identifes each row of the billing account table.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
+A surrogate key that uniquely identifes each row of the billing account table.  It is currently formed by hashing the billing account IDs from Zuora that uniquely identify a Zuora account associated with a given Subscription ID. This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
 
 {% enddocs %}
 

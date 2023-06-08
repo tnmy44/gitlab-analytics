@@ -1611,6 +1611,19 @@ tables:
       FROM releases
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  remote_development_agent_configs:
+    export_schema: "gitlab_com"
+    export_table: remote_development_agent_configs
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , cluster_agent_id
+      , created_at
+      , updated_at
+      FROM remote_development_agent_configs
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   remote_mirrors:
     export_schema: "gitlab_com"
     export_table: remote_mirrors
@@ -2212,6 +2225,18 @@ tables:
       , issue_id
       , progress
       FROM work_item_progresses
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  workspaces:
+    export_schema: 'gitlab_com'
+    export_table: workspaces
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      FROM workspaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   zoom_meetings:

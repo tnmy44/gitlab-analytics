@@ -20,6 +20,21 @@ tables:
       , created_at
       , updated_at
       FROM billing_accounts
+  billing_account_contacts:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'billing_account_contacts'
+    export_table_primary_key: id
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT id
+      , work_email
+      , created_at
+      , updated_at
+      , zuora_contact_id
+      , zuora_account_id
+      FROM billing_account_contacts
   billing_account_memberships:
     advanced_metadata: true
     export_db: EXPORT_DB

@@ -126,6 +126,7 @@
       dim_crm_account.risk_reason,
       dim_crm_account.last_timeline_at_risk_update,
       dim_crm_account.last_at_risk_update_comments,
+      dim_crm_account.bdr_prospecting_status,
 
       --degenerative dimensions
       dim_crm_account.is_sdr_target_account,

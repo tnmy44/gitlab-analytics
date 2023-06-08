@@ -187,6 +187,8 @@ sources:
         identifier: gitlab_db_gitlab_subscription_histories
       - name: gitlab_subscriptions
         identifier: gitlab_db_gitlab_subscriptions
+      - name: gpg_signatures
+        identifier: gitlab_db_gpg_signatures
       - name: group_group_links
         identifier: gitlab_db_group_group_links
       - name: identities
@@ -307,6 +309,8 @@ sources:
         freshness: null
       - name: push_rules
         identifier: gitlab_db_push_rules
+      - name: remote_development_agent_configs
+        identifier: gitlab_db_remote_development_agent_configs
       - name: releases
         identifier: gitlab_db_releases
       - name: repository_languages
@@ -336,6 +340,8 @@ sources:
         identifier: gitlab_db_shards
       - name: sprints
         identifier: gitlab_db_sprints
+      - name: ssh_signatures
+        identifier: gitlab_db_ssh_signatures
       - name: subscriptions
         identifier: gitlab_db_subscriptions
       - name: system_note_metadata
@@ -477,6 +483,8 @@ sources:
         identifier: gitlab_db_users_ops_dashboard_projects
       - name: web_hooks
         identifier: gitlab_db_web_hooks
+      - name: workspaces
+        identifier: gitlab_db_workspaces
       - name: zoom_meetings
         identifier: gitlab_db_zoom_meetings
         freshness:
