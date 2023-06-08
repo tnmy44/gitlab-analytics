@@ -67,7 +67,7 @@ tables:
       , end_event_label_id
       , hidden
       , custom
-      , name
+      , NULL AS name
       , group_value_stream_id
       FROM analytics_cycle_analytics_group_stages
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
