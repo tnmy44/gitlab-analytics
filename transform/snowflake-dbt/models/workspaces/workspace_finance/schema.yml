@@ -1207,9 +1207,9 @@ models:
         description: The status of the account in the system. Can be draft, active, cancelled.
       - name: parent_id
         description: The identifier of the parent customer account      
-      - name: sfdc_account_code
+      - name: crm_account_code
         description: The code for the account
-      - name: sfdc_entity
+      - name: crm_entity
       - name: account_currency
         description: A currency as defined in Billing Settings in the Zuora UI
       - name: sold_to_country

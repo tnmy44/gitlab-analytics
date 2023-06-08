@@ -436,6 +436,10 @@ models:
     common_mart_marketing:
       +materialized: table
       +schema: common_mart_marketing
+      restricted_safe:
+        +schema: restricted_safe_common_mart_marketing
+        +tags: ["safe"]
+        secure: true
 
     # ------------------
     # Legacy (formerly Staging)

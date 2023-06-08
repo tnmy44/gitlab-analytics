@@ -202,6 +202,8 @@
       free_user_metrics.merge_requests_security_policy_28_days_user,
       free_user_metrics.pipelines_implicit_auto_devops_28_days_event,
       free_user_metrics.pipeline_schedules_28_days_user,
+      -- Wave 8
+      free_user_metrics.ci_internal_pipelines_28_days_event,
       -- Data Quality Flag
       free_user_metrics.is_latest_data
     FROM free_user_metrics
@@ -397,6 +399,7 @@
         'merge_requests_security_policy_28_days_user',
         'pipelines_implicit_auto_devops_28_days_event',
         'pipeline_schedules_28_days_user',
+        'ci_internal_pipelines_28_days_event',
         'is_latest_data'
     ]
 ) }}
@@ -406,5 +409,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2023-04-05"
+    updated_date="2023-06-05"
 ) }}

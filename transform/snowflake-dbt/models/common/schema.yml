@@ -225,30 +225,43 @@ models:
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:
+      - name: dim_billing_account_sk
+        description: '{{ doc("dim_billing_account_sk") }}'
+        tests:
+          - not_null
+          - unique
       - name: dim_billing_account_id
-        description: Unique id of the Zuora account
+        description: The unique identifier of the Zuora account associated with a given Subscription ID
         tests:
           - not_null
           - unique
       - name: dim_crm_account_id
-        description: CRM account ID for the account
-      - name: account_number
+        description: The customer account ID for the account
+      - name: billing_account_number
         description: A unique Zuora account number
-      - name: account_name
-        description: Zuora account name
+      - name: billing_account_name
+        description: The name of the Zuora account
       - name: account_status
-        description: Status of the account in the system. Can be draft, active, cancelled.
+        description: The status of the account in the system. Can be draft, active, cancelled.
       - name: parent_id
-        description: Identifier of the parent customer account
-      - name: sfdc_account_code
+        description: The identifier of the parent customer account      
+      - name: crm_account_code
+        description: The code for the sfdc account
+      - name: crm_entity
       - name: account_currency
         description: A currency as defined in Billing Settings in the Zuora UI
       - name: sold_to_country
         description: The country of the sold to contact
+      - name: ssp_channel
+      - name: po_required
+      - name: auto_pay
       - name: is_deleted
-        description: flag indicating if account has been deleted
-      - name: is_excluded
-        description: Field used to exclude test accounts from downstream models
+        description: The flag indicating if account has been deleted
+      - name: batch
+      - name: record_data_source
+        description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources
+
+
 
   - name: dim_billing_account_snapshot_bottom_up
     description: Daily snapshot of billing accounts starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
@@ -6985,6 +6998,10 @@ models:
         description: '{{ doc("last_activity_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: ci_internal_pipelines_28_days_event
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
       - name: installation_creation_date
@@ -7262,3 +7279,71 @@ models:
         description: The date when the team member's position update was requested 
       - name: position_effective_date
         description: The date when the team member's position update becomes effective
+
+  - name: fct_team_status
+    description: '{{ doc("fct_team_status") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - dim_team_member_sk
+              - valid_from
+    columns:
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+        tests:
+          - not_null
+      - name: dim_team_sk
+        description: A unique ID for each team.
+        tests:
+          - not_null
+      - name: employee_id
+        description: Unique ID of the team member.
+        tests:
+          - not_null
+      - name: team_id
+        description: Unique ID of the team.
+      - name: job_code
+        description: The code of the team member's job position.
+      - name: job_specialty_single
+        description: The team member's job specialty.
+      - name: job_specialty_multi
+        description: The team member's job specialty (multi-select).
+      - name: position
+        description: The team member's job profile name.
+      - name: job_family
+        description: The team member's job family.
+      - name: management_level
+        description: The team member's management level.
+      - name: job_grade
+        description: The team member's job grade.
+      - name: entity
+        description: The team member's entity.
+        meta:
+          masking_policy: analyst_people
+      - name: is_position_active
+        description: Whether the team member's job position is active.
+      - name: employment_status
+        description: Employment Status (active, terminated). Other statuses will be added in the future (ie. Long term leave) 
+        tests:
+          - not_null
+      - name: termination_reason
+        description: Categorical variable that indicates the reason why a team member has been terminated
+        meta:
+          masking_policy: analyst_people
+      - name: termination_type
+        description: Categorical variable that indicates whether the termination was voluntary or involuntary.
+        meta:
+          masking_policy: analyst_people
+      - name: exit_impact
+        description: Whether the team member's departure has a significant negative impact on the company, its customers, its projects or the team.
+        meta:
+          masking_policy: analyst_people
+      - name: is_current
+        description: Whether the team status is the most current as of the date the query is run.
+      - name: valid_from
+        tests: 
+          - not_null
+      - name: valid_to
+        tests: 
+          - not_null
+

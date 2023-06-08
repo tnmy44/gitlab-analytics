@@ -1,6 +1,8 @@
 WITH team_member_status AS (
 
-  SELECT *
+  SELECT 
+    *,
+    ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date DESC)                                  AS row_number
   FROM {{ref('workday_employment_status_source')}}
   WHERE effective_date <= CURRENT_DATE() 
   /* Ensure future terms are not included in this table.
@@ -25,7 +27,10 @@ final AS (
     team_member_status.termination_reason                                                                      AS termination_reason,
     team_member_status.termination_type                                                                        AS termination_type,
     team_member_status.exit_impact                                                                             AS exit_impact,
-    team_member_status.effective_date                                                                          AS status_effective_date
+    team_member_status.effective_date                                                                          AS status_effective_date,
+
+    -- Add is_current flag for most current team member record, especially in case of rehires
+    IFF(team_member_status.row_number = 1, TRUE, FALSE)                                                        AS is_current
   FROM team_member_status
 
 )

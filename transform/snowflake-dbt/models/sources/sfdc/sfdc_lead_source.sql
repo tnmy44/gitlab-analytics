@@ -80,6 +80,7 @@ renamed AS (
     matched_account_owner_role__c AS matched_account_owner_role,
     matched_account_sdr_assigned__c AS matched_account_sdr_assigned,
     matched_account_gtm_strategy__c AS matched_account_gtm_strategy,
+    matched_account_bdr_prospecting_status__c AS matched_account_bdr_prospecting_status,
     engagio__matched_account_type__c AS matched_account_type,
     engagio__matched_account_owner_name__c AS matched_account_account_owner_name,
     mql_date__c AS marketo_qualified_lead_date,
@@ -119,8 +120,9 @@ renamed AS (
     true_mql_date__c AS true_mql_date,
     last_transfer_date_time__c AS last_transfer_date_time,
     initial_mql_date__c AS initial_marketo_mql_date_time,
-	time_from_last_transfer_to_sequence__c AS time_from_last_transfer_to_sequence,
-	time_from_mql_to_last_transfer__c AS time_from_mql_to_last_transfer,
+	  time_from_last_transfer_to_sequence__c AS time_from_last_transfer_to_sequence,
+	  time_from_mql_to_last_transfer__c AS time_from_mql_to_last_transfer,
+    high_priority__c AS is_high_priority,
 
 
     {{ sfdc_source_buckets('leadsource') }}
