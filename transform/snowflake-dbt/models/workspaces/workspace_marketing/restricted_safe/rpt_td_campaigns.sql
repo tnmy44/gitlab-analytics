@@ -28,7 +28,7 @@ WITH l2r AS (
    rpt_lead_to_revenue.accepted_date,
    rpt_lead_to_revenue.bizible_landing_page,
    rpt_lead_to_revenue.bizible_form_url,
-   rpt_lead_to_revenue.touchpoint_type,
+   rpt_lead_to_revenue.bizible_touchpoint_type,
 
    rpt_lead_to_revenue.custom_sao,
    rpt_lead_to_revenue.won_custom_net_arr,
