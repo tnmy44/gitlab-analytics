@@ -3026,6 +3026,8 @@ models:
         description: '{{ doc("ping_created_at") }}'
       - name: uploaded_at
         description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
       - name: ping_created_date
         description: '{{ doc("ping_created_date") }}'
       - name: umau_value
@@ -3150,6 +3152,8 @@ models:
         description: '{{ doc("ping_created_at") }}'
       - name: uploaded_at
         description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
       - name: ping_created_date
         description: '{{ doc("ping_created_date") }}'
       - name: umau_value
@@ -3179,7 +3183,7 @@ models:
       - name: dim_ping_instance_id
         tests:
           - not_null
-        description: The unqiue id of a service ping instance in the dim_ping_instance model.
+        description: The unique id of a service ping instance in the dim_ping_instance model.
       - name: dim_instance_id
         description: The unique uuid of an instance from the dim_instances model.
       - name: ping_created_at
@@ -3863,6 +3867,8 @@ models:
         description: '{{ doc("ping_created_at") }}'
       - name: uploaded_at
         description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
       - name: dim_product_tier_id
         description: '{{ doc("dim_product_tier_id_ping_model") }}'
       - name: dim_subscription_id
