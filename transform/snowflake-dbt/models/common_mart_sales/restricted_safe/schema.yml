@@ -241,8 +241,8 @@ models:
         description: '{{ doc("downgrade_details") }}'
       - name: intended_product_tier
         description: '{{ doc("intended_product_tier") }}'
-      - name: parent_opportunity
-        description: '{{ doc("parent_opportunity") }}'
+      - name: parent_opportunity_id
+        description: '{{ doc("parent_opportunity_id") }}'
 
   - name: mart_crm_opportunity_daily_snapshot
     description: Model with single pane of glass sales and marketing metrics, snapshotted daily.
