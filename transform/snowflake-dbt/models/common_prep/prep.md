@@ -387,7 +387,7 @@ A recreation of `prep_usage_ping_subscription_mapped_wave_2_3_metrics` for _SaaS
 {% enddocs %}
 
 
-{% docs uploaded_at %}
+{% docs prep_ping_instance_flattened_uploaded_at %}
 
 Column `uploaded_at` (`TIMESTAMP` data type) represent the moment WHEN the record is ingested into Snowflake. 
 The main motivation for introducing this column is for a few reasons:

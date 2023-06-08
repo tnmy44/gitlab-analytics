@@ -383,7 +383,7 @@ Projects with package registry enabled. [link](https://gitlab.com/gitlab-org/git
  Total monthly (28D) pipelines in Gitlab repositories for all project and project types [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20230217215050_ci_internal_pipelines.yml)
 {% enddocs %}
 
-{% docs uploaded_at %}
+{% docs wk_usage_ping_geo_node_usage_uploaded_at %}
 
 Column `uploaded_at` (`TIMESTAMP` data type) represent the moment WHEN the record is ingested into Snowflake. 
 The main motivation for introducing this column is for a few reasons:
