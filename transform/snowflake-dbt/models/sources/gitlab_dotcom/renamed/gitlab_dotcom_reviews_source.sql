@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_gpg_signatures_dedupe_source') }}
+    FROM {{ ref('gitlab_dotcom_reviews_dedupe_source') }}
 
 ), parsed_columns AS (
 
