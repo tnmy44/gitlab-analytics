@@ -268,9 +268,7 @@
     LEFT JOIN dim_date AS worked_date_pt
       ON fct_crm_person.worked_date_pt_id = worked_date_pt.date_id
     LEFT JOIN dim_crm_user 
-      ON fct_crm_person.dim_crm_user_id = dim_crm_user.dim_crm_user_id
-    LEFT JOIN fct_crm_task 
-      ON fct_crm_person.dim_crm_person_id = fct_crm_task.dim_crm_person_id
+      ON fct_crm_person.dim_crm_user_id = dim_crm_user.dim_crm_user_idd
 
 )
 
