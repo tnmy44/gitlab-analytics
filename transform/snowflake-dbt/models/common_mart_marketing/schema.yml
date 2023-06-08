@@ -127,19 +127,19 @@ models:
         - name: bdr_prospecting_status
           description: Indicates whether the account is actively being prospected by a BDR.
         - name: inferred_mql_date_first
-          description: 
+          description: The SFDC Salesforce MQL Date - first occurrence in date format.
         - name: inferred_mql_datetime_first_pt
-          description: 
+          description: The SFDC Salesforce MQL Date - first occurrence in datetime format, Pacific Timezone. 
         - name: inferred_mql_datetime_first
-          description: 
+          description: The SFDC Salesforce MQL Date - first occurrence in datetime format.
         - name: inferred_mql_date_latest
-          description: 
+          description: The SFDC Salesforce MQL Date - last occurrence in date format.
         - name: inferred_mql_datetime_latest_pt
-          description: 
+          description: The SFDC Salesforce MQL Date - last occurrence in datetime format, Pacific Timezone. 
         - name: inferred_mql_datetime_latest
-          description: 
-        - name: 
-          description: 
+          description: The SFDC Salesforce MQL Date - last occurrence in datetime format.
+        - name: is_bdr_sdr_worked_inferred_mql
+          description: Custom flag that indicates if a lead/contact skipped the MQL Status and was worked by a SDR/BDR afterwards. 
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
