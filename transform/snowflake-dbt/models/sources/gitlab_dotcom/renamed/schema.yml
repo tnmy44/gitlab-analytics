@@ -807,6 +807,22 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_gpg_signatures_source
+    description: Base model for Gitlab.com ssh_signatures
+    columns:
+      - name: gpg_signatures_id
+        description: Unique identifier for gpg_signatures
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_identities_source
     description: Base model for GitLab.com identities (3rd party login providers).
     columns:
@@ -1730,6 +1746,22 @@ models:
         tests:
           - not_null
       - name: sprint_iid
+        tests:
+          - not_null
+
+  - name: gitlab_dotcom_ssh_signatures_source
+    description: Base model for Gitlab.com ssh_signatures
+    columns:
+      - name: ssh_signatures_id
+        description: Unique identifier for ssh_signatures
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
         tests:
           - not_null
 
