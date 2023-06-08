@@ -11,7 +11,7 @@ WITH l2r AS (
    rpt_lead_to_revenue.is_inquiry,
    rpt_lead_to_revenue.is_sao,
    rpt_lead_to_revenue.is_mql,
-   rpt_lead_to_revenue.is_closed_won,
+   rpt_lead_to_revenue.is_won,
 
    rpt_lead_to_revenue.sales_accepted_date,
    rpt_lead_to_revenue.bizible_touchpoint_date,   
