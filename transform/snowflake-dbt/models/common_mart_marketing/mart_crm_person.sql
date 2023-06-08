@@ -8,6 +8,7 @@
     ('dim_sales_segment','dim_sales_segment'),
     ('fct_crm_person','fct_crm_person'),
     ('dim_date','dim_date'),
+    ('fct_crm_task','fct_crm_task'),
     ('dim_crm_user', 'dim_crm_user')
 ]) }}
 
@@ -51,6 +52,12 @@
                                                AS legacy_mql_month_latest,
       legacy_mql_date_latest_pt.first_day_of_month
                                                AS legacy_mql_month_latest_pt,
+      fct_crm_person.inferred_mql_date_first,
+      fct_crm_person.inferred_mql_datetime_first_pt,
+      fct_crm_person.inferred_mql_datetime_first,
+      fct_crm_person.inferred_mql_date_latest,
+      fct_crm_person.inferred_mql_datetime_latest_pt,
+      fct_crm_person.inferred_mql_datetime_latest,
       created_date.date_day                    AS created_date,
       created_date_pt.date_day                 AS created_date_pt,
       created_date.first_day_of_month          AS created_month,
@@ -184,6 +191,11 @@
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
         ELSE FALSE
       END                                                        AS is_lead_source_trial,
+      CASE
+        WHEN (fct_crm_task.task_owner_role LIKE '%BDR%' OR fct_crm_task.task_owner_role LIKE '%SDR%') AND fct_crm_person.inferred_mql_date_first IS NOT null AND fct_crm_task.task_completed_date >= fct_crm_person.inferred_mql_date_first AND (fct_crm_person.inferred_mql_date_first >= fct_crm_person.mql_datetime_first OR fct_crm_person.mql_datetime_first IS null)
+          THEN TRUE
+        ELSE FALSE
+      END AS is_bdr_sdr_worked_inferred_mql,
       dim_crm_person.person_first_country
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
@@ -262,13 +274,15 @@
       ON fct_crm_person.worked_date_pt_id = worked_date_pt.date_id
     LEFT JOIN dim_crm_user 
       ON fct_crm_person.dim_crm_user_id = dim_crm_user.dim_crm_user_id
+    LEFT JOIN fct_crm_task 
+      ON fct_crm_person.dim_crm_person_id = fct_crm_task.dim_crm_person_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-05-10",
+    updated_date="2023-06-08",
   ) }}  
