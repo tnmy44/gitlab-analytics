@@ -163,7 +163,7 @@
 {{ dbt_audit(
     cte_ref="flattened_high_level",
     created_by="@icooper-acp",
-    updated_by="@rbacovci",
+    updated_by="@rbacovic",
     created_date="2022-03-08",
     updated_date="2023-06-05"
 ) }}
