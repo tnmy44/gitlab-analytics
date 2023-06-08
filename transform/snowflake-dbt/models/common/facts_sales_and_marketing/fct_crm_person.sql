@@ -30,7 +30,8 @@ WITH account_dims_mapping AS (
       last_transfer_date_time,
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
-      zoominfo_contact_id
+      zoominfo_contact_id,
+      is_bdr_sdr_worked_inferred_mql
       
 
     FROM {{ref('prep_crm_person')}}
@@ -274,6 +275,7 @@ WITH account_dims_mapping AS (
         WHEN true_inquiry_date IS NOT NULL THEN 1
         ELSE 0
       END                                                                                                                 AS is_inquiry,
+      is_bdr_sdr_worked_inferred_mql,
 
 
      -- information fields
@@ -320,7 +322,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@lisvinueza",
+    updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2023-05-21"
+    updated_date="2023-06-08"
 ) }}

@@ -8,7 +8,6 @@
     ('dim_sales_segment','dim_sales_segment'),
     ('fct_crm_person','fct_crm_person'),
     ('dim_date','dim_date'),
-    ('fct_crm_task','fct_crm_task'),
     ('dim_crm_user', 'dim_crm_user')
 ]) }}
 
@@ -191,11 +190,7 @@
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
         ELSE FALSE
       END                                                        AS is_lead_source_trial,
-      CASE
-        WHEN (fct_crm_task.task_owner_role LIKE '%BDR%' OR fct_crm_task.task_owner_role LIKE '%SDR%') AND fct_crm_person.inferred_mql_date_first IS NOT null AND fct_crm_task.task_completed_date >= fct_crm_person.inferred_mql_date_first AND (fct_crm_person.inferred_mql_date_first >= fct_crm_person.mql_datetime_first OR fct_crm_person.mql_datetime_first IS null)
-          THEN TRUE
-        ELSE FALSE
-      END AS is_bdr_sdr_worked_inferred_mql,
+      fct_crm_person.is_bdr_sdr_worked_inferred_mql,
       dim_crm_person.person_first_country
     FROM fct_crm_person
     LEFT JOIN dim_crm_person

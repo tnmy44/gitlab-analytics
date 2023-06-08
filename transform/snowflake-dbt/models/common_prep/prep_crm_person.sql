@@ -11,6 +11,16 @@ WITH biz_person AS (
     WHERE bizible_touchpoint_position LIKE '%FT%'
      AND is_deleted = 'FALSE'
 
+), crm_tasks AS (
+
+    SELECT 
+      task_id,
+      sfdc_record_id,
+      task_completed_date,
+      task_owner_role
+    FROM {{ref('prep_crm_task')}}
+    WHERE is_deleted = 'FALSE'
+
 ), biz_person_with_touchpoints AS (
 
     SELECT
@@ -163,7 +173,12 @@ WITH biz_person AS (
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
       NULL                                           AS zoominfo_company_employee_count,
-      zoominfo_contact_id
+      zoominfo_contact_id,
+      CASE
+        WHEN (crm_tasks.task_owner_role LIKE '%BDR%' OR crm_tasks.task_owner_role LIKE '%SDR%') AND sfdc_contacts.mql_datetime_inferred IS NOT null AND fct_crm_task.task_completed_date >= sfdc_contacts.mql_datetime_inferred AND (sfdc_contacts.mql_datetime_inferred >= sfdc_contacts.marketo_qualified_lead_datetime OR sfdc_contacts.marketo_qualified_lead_datetime IS null)
+          THEN TRUE
+        ELSE FALSE
+      END AS is_bdr_sdr_worked_inferred_mql
 
 
     FROM sfdc_contacts
@@ -173,6 +188,8 @@ WITH biz_person AS (
       ON was_converted_lead.contact_id = sfdc_contacts.contact_id
     LEFT JOIN marketo_persons
       ON sfdc_contacts.contact_id = marketo_persons.sfdc_contact_id and sfdc_type = 'Contact'
+    LEFT JOIN crm_tasks
+      ON sfdc_contacts.contact_id=crm_tasks.sfdc_record_id
 
     UNION
 
@@ -282,13 +299,20 @@ WITH biz_person AS (
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
       zoominfo_company_employee_count,
-      NULL AS zoominfo_contact_id
+      NULL AS zoominfo_contact_id,
+      CASE
+        WHEN (crm_tasks.task_owner_role LIKE '%BDR%' OR crm_tasks.task_owner_role LIKE '%SDR%') AND sfdc_leads.mql_datetime_inferred IS NOT null AND fct_crm_task.task_completed_date >= sfdc_leads.mql_datetime_inferred AND (sfdc_leads.mql_datetime_inferred >= sfdc_leads.marketo_qualified_lead_datetime OR sfdc_leads.marketo_qualified_lead_datetime IS null)
+          THEN TRUE
+        ELSE FALSE
+      END AS is_bdr_sdr_worked_inferred_mql
 
     FROM sfdc_leads
     LEFT JOIN biz_person_with_touchpoints
       ON sfdc_leads.lead_id = biz_person_with_touchpoints.bizible_lead_id
     LEFT JOIN marketo_persons
       ON sfdc_leads.lead_id = marketo_persons.sfdc_lead_id and sfdc_type = 'Lead'
+    LEFT JOIN crm_tasks
+      ON sfdc_leads.lead_id=crm_tasks.sfdc_record_id
     WHERE is_converted = 'FALSE'
 
 ), duplicates AS (
@@ -314,7 +338,7 @@ WITH biz_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-05-30"
+    updated_date="2023-06-08"
 ) }}
