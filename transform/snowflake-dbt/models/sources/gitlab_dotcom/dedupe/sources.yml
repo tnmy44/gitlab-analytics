@@ -325,6 +325,8 @@ sources:
         identifier: gitlab_db_resource_milestone_events
       - name: resource_weight_events
         identifier: gitlab_db_resource_weight_events
+      - name: reviews
+        identifier: gitlab_db_reviews
       - name: routes
         identifier: gitlab_db_routes
       - name: saml_group_links
