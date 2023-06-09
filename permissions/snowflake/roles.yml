@@ -2981,6 +2981,7 @@ roles:
     - ddeng:
         member_of:
             - analyst_engineering
+            - prometheus
             - restricted_safe
         warehouses:
             - dev_xs
