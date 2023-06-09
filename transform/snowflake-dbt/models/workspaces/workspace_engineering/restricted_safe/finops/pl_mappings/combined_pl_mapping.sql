@@ -278,6 +278,42 @@ runner_saas_medium_ext AS (
 
 ),
 
+runner_saas_medium_gpu AS (
+
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    NULL                               AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    '8 - shared saas runners gpu - medium' AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 8'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '8 - shared saas runners gpu - medium'
+
+),
+
+runner_saas_medium_ext_gpu AS (
+
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    'gitlab-r-saas-l-m-amd64-gpu-%'              AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    NULL                               AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 8'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '8 - shared saas runners gpu - medium'
+
+),
+
 runner_saas_large AS (
 
   SELECT DISTINCT
@@ -311,6 +347,42 @@ runner_saas_large_ext AS (
     'ci_runner_pl_daily - 4'           AS from_mapping
   FROM {{ ref ('ci_runners_pl_daily') }}
   WHERE mapping = '4 - shared saas runners - large'
+
+),
+
+runner_saas_large_gpu AS (
+
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    NULL                               AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    '9 - shared saas runners gpu - large'  AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 9'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '9 - shared saas runners gpu - large'
+
+),
+
+runner_saas_large_ext_gpu AS (
+
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    'gitlab-r-saas-l-l-amd64-gpu-%'              AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    NULL                               AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 9'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '9 - shared saas runners gpu - large'
 
 ),
 
@@ -411,10 +483,22 @@ cte_append AS (SELECT *
   FROM runner_saas_medium_ext
   UNION ALL
   SELECT *
+  FROM runner_saas_medium_gpu
+  UNION ALL
+  SELECT *
+  FROM runner_saas_medium_ext_gpu
+  UNION ALL
+  SELECT *
   FROM runner_saas_large
   UNION ALL
   SELECT *
   FROM runner_saas_large_ext
+  UNION ALL
+  SELECT *
+  FROM runner_saas_large_gpu
+  UNION ALL
+  SELECT *
+  FROM runner_saas_large_ext_gpu
   UNION ALL
   SELECT *
   FROM haproxy_isp

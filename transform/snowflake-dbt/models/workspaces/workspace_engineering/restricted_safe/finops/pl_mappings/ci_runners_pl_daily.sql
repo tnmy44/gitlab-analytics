@@ -89,21 +89,17 @@ SELECT
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'linux-runner-mgr' THEN '2 - shared saas runners - small'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'green-_.saas-linux-medium-amd64' THEN '3 - shared saas runners - medium'
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'blue-_.saas-linux-medium-amd64' THEN '3 - shared saas runners - medium'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-medium-amd64' THEN '3 - shared saas runners - medium'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'green-_.saas-linux-large-amd64' THEN '4 - shared saas runners - large'
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'blue-_.saas-linux-large-amd64' THEN '4 - shared saas runners - large'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-large-amd64' THEN '4 - shared saas runners - large'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'macos shared runners' THEN '5 - shared saas macos runners'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'windows-runner-mgr' THEN '7 - shared saas windows runners'
     
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'green-_.saas-linux-medium-amd64-gpu' THEN '8 - shared saas runners gpu - medium'
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'blue-_.saas-linux-medium-amd64-gpu' THEN '8 - shared saas runners gpu - medium'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-medium-amd64-gpu' THEN '8 - shared saas runners gpu - medium'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'green-_.saas-linux-large-amd64-gpu' THEN '9 - shared saas runners gpu - large'
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'blue-_.saas-linux-large-amd64-gpu' THEN '9 - shared saas runners gpu - large'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-large-amd64-gpu' THEN '9 - shared saas runners gpu - large'
 
   END                                                                                   AS mapping,
   pl,
