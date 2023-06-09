@@ -44,7 +44,6 @@
       instance_pings.dim_host_id,
       instance_pings.dim_installation_id,
       instance_pings.ping_created_at,
-      instance_pings.uploaded_at,
       instance_pings.ping_created_date_28_days_earlier,
       instance_pings.ping_created_date_year,
       instance_pings.ping_created_date_month,
@@ -89,7 +88,6 @@
     -- usage ping meta data 
     core_instance_pings.dim_ping_instance_id, 
     core_instance_pings.ping_created_at,
-    core_instance_pings.uploaded_at,
     core_instance_pings.ping_created_date_28_days_earlier,
     core_instance_pings.ping_created_date_year,
     core_instance_pings.ping_created_date_month,
@@ -144,5 +142,5 @@
     created_by="@snalamaru",
     updated_by="@rbacovic",
     created_date="2023-01-20",
-    updated_date="2023-06-05"
+    updated_date="2023-06-09"
 ) }}
