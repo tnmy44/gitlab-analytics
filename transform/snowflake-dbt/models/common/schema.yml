@@ -6356,10 +6356,6 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
-      - name: uploaded_at
-        description: '{{ doc("uploaded_at") }}'
-        tests:
-          - not_null
       - name: ping_created_date_28_days_earlier
         description: The timestamp at which the ping was created_at minus 28 days for the monthly metric time period
       - name: ping_created_date_year
