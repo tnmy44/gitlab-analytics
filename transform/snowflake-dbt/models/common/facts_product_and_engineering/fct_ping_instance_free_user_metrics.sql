@@ -2,9 +2,6 @@
     tags=["mnpi_exception","product"]
 ) }}
 
-{{config({
-    "unique_key": "dim_ping_instance_id"
-})}}
 
 {{ simple_cte([
     ('instance_pings', 'dim_ping_instance'),
