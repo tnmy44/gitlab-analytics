@@ -25,26 +25,9 @@ from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
-affinity = {
-    "nodeAffinity": {
-        "requiredDuringSchedulingIgnoredDuringExecution": {
-            "nodeSelectorTerms": [
-                {
-                    "matchExpressions": [
-                        {"key": "test", "operator": "In", "values": ["true"]}
-                    ]
-                }
-            ]
-        }
-    }
-}
-tolerations = [
-    {"key": "test", "operator": "Equal", "value": "true", "effect": "NoSchedule"}
-]
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -62,6 +45,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 */8 * * *",
     concurrency=1,
+    catchup= False,
 )
 
 # YAML Extract
