@@ -29,7 +29,7 @@ def sheet_loader(
     sheet_file: str,
     table_name: str = None,
     schema: str = "sheetload",
-    database: str = "RAW",
+    database: str = "AIRFLOW_UPGRADE_V3_RAW",
     gapi_keyfile: str = None,
     conn_dict: Dict[str, str] = None,
 ) -> None:
@@ -67,8 +67,7 @@ def sheet_loader(
             if (table_name is None or tab == table_name)
         ]
 
-    if database != "RAW":
-        info("Running here")
+    if database != "AIRFLOW_UPGRADE_V3_RAW":
         engine = snowflake_engine_factory(conn_dict or env, "ANALYTICS_LOADER", schema)
         database = env["SNOWFLAKE_PROD_DATABASE"]
         # Trys to create the schema its about to write to
@@ -78,7 +77,6 @@ def sheet_loader(
         query_executor(engine, schema_check)
 
     else:
-        info("Running not here")
         engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
 
     info(engine)
