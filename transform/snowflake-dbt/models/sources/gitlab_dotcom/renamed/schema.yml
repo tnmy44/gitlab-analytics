@@ -231,8 +231,8 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_job_artifacts_source
-    description: Base model for Gitlab.com ci_job_artifacts
+  - name: gitlab_dotcom_ci_job_token_project_scope_links_source
+    description: Base model for Gitlab.com gitlab_dotcom_ci_job_token_project_scope_links
     columns:
       - name: ci_job_token_project_scope_link_id
         tags: ["tdf","gitlab_dotcom"]
