@@ -12,12 +12,12 @@ renamed AS (
       created_at::TIMESTAMP                                  AS control_created_at,
       description::VARCHAR                                   AS control_description,
       id::NUMBER                                             AS control_id,
-      mapped__objectives::VARIANT                            AS mapped_objectives,
+      mapped:objectives::VARIANT                             AS mapped_objectives,
       status::VARCHAR                                        AS control_status,
       title::VARCHAR                                         AS control_title,
       type::VARCHAR                                          AS zengrc_object_type,
       updated_at::TIMESTAMP                                  AS control_updated_at,
-      __loaded_at::TIMESTAMP                                 AS control_loaded_at,
+      _sdc_extracted_at::TIMESTAMP                           AS control_loaded_at,
       PARSE_JSON(custom_attributes)['187']['value']::VARCHAR AS application_used,
       PARSE_JSON(custom_attributes)['106']['value']::VARCHAR AS average_control_effectiveness_rating,
       PARSE_JSON(custom_attributes)['107']['value']::VARCHAR AS control_deployment,
@@ -49,7 +49,6 @@ renamed AS (
       PARSE_JSON(custom_attributes)['195']['value']::VARCHAR AS spreadsheet_review_parameters,
       PARSE_JSON(custom_attributes)['176']['value']::VARCHAR AS sub_process
 
-      
     FROM source
 
 )
