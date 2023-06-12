@@ -68,7 +68,17 @@
           THEN TRUE
         ELSE FALSE
       END                                                                                                                                         AS is_saas_dedicated,
-        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)                                          AS raw_usage_data_payload,
+      CASE
+        WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
+        WHEN is_saas_dedicated = TRUE THEN 'SaaS'
+        ELSE 'Self-Managed'
+      END                                                                                                                                         AS ping_delivery_type,
+      CASE
+        WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'GitLab.com'
+        WHEN is_saas_dedicated = TRUE THEN 'Dedicated'
+        ELSE 'Self-Managed'
+      END                                                                                                                                         AS ping_deployment_type,
+      COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)                                            AS raw_usage_data_payload,
       IFF(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7', 'SaaS - Manual', 'Self-Managed') AS ping_type --GitLab SaaS pings here are manual, everything else is SM
     FROM usage_data
     LEFT JOIN raw_usage_data
