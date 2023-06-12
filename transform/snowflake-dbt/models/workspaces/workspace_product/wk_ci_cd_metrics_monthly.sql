@@ -38,7 +38,7 @@ WITH umau_base AS (
     *
   FROM umau_base
     PIVOT(SUM(monthly_metric_value) FOR pivot_metric IN ('umau', 'verify_smau', 'package_smau', 'deploy_smau'))
-      AS p (dim_installation_id, delivery_type, reporting_month, edition, product_tier, major_version, minor_version, major_minor_version, umau, verify_smau, package_smau, monitor_smau, deploy_smau)
+      AS p (dim_installation_id, delivery_type, reporting_month, edition, product_tier, major_version, minor_version, major_minor_version, umau, verify_smau, package_smau, deploy_smau)
  )
 
 SELECT 
