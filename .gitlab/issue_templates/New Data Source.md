@@ -21,7 +21,6 @@ To support the new data source triage process, try to complete the below checkli
 * [ ] Who will be using this data, and where (dashboards, snowflake UI, etc.)?
   - `      `
  
- 
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-standard.html#data-classification-levels#data-classification-levels))?
  - _`{data fields, columns, or objects}`_
 * [ ] Does this data have any agreed [SLO](https://about.gitlab.com/handbook/business-technology/data-team/platform/#slos-service-level-objectives-by-data-source) attached to it? If not:
@@ -60,7 +59,8 @@ use contact the Data Engineer assigned below for confirmation.
  
 **Triage**
 * [ ] Determine the extraction solution via decision [diagram](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/new-data-source/#extraction-solution):
-* [ ] Estimate the [issue points](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#issue-pointing), based on the current information
+* [ ] Estimate the [issue points](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#issue-pointing), based on the current information* 
+* [ ] This new data source is lised in the [tech_stack.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/tech_stack.yml) and does not have `data_classification: Red`
  
 **Admin**
  * [ ] Create issue for creation of extract process (not needed if using Stitch/FiveTran)
