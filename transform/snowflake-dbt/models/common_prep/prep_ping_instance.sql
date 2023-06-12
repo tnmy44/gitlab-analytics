@@ -60,6 +60,14 @@
         WHEN original_edition = 'EEP'                                    THEN 'Premium'
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                                                                             AS product_tier,
+      CASE
+        WHEN ping_created_at <= '2023-06-15' AND hostname ANY LIKE ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
+                                                                    '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
+          THEN TRUE
+        WHEN ping_created_at > '2023-06-15'  AND raw_usage_data_payload['gitlab_dedicated']::BOOLEAN = TRUE
+          THEN TRUE
+        ELSE FALSE
+      END                                                                                                                                         AS is_saas_dedicated,
         COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)                                          AS raw_usage_data_payload,
       IFF(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7', 'SaaS - Manual', 'Self-Managed') AS ping_type --GitLab SaaS pings here are manual, everything else is SM
     FROM usage_data
@@ -145,6 +153,7 @@
         WHEN edition = 'EEU'                  THEN 'Ultimate'
         ELSE NULL 
       END AS product_tier,
+      FALSE AS is_saas_dedicated,
       raw_usage_data_payload,
       ping_type
     FROM automated_instance_service_ping
@@ -163,7 +172,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-03-17",
-    updated_date="2023-02-21"
+    updated_date="2023-06-12"
 ) }}
