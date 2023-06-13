@@ -2097,3 +2097,15 @@ A flag to indicate if the plan is a paid plan or not.
 Boolean flag set to True if the namespace has code suggestions enabled. This appears as `code_suggestions` in the gitlab.com db `namespace_settings` table.
 
 {% enddocs %}
+
+{% docs intended_product_tier %}
+
+The intended product tier looking to be purchased for this opportunity.
+
+{% enddocs %}
+
+{% docs parent_opportunity_id %}
+
+The Salesforce opportunity ID for the parent opportunity of this opportunity.
+
+{% enddocs %}
