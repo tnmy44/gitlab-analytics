@@ -66,7 +66,7 @@ tables:
       , created_at
       , updated_at
       , file_store
-      , name
+      , NULL AS name
       FROM ci_secure_files
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -264,7 +264,7 @@ tables:
     import_query: |-
       SELECT id
       , trigger_id
-      , variables
+      , NULL AS variables
       , created_at
       , updated_at
       , commit_id
@@ -283,7 +283,7 @@ tables:
       , updated_at
       , project_id
       , owner_id
-      , description
+      , NULL AS description
       FROM ci_triggers
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
