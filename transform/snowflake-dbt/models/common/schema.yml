@@ -7220,7 +7220,6 @@ models:
         description: Effective date of employment status
         tests:
           - not_null
-      
 
   - name: fct_team_member_position
     description: '{{ doc("fct_team_member_position") }}'
