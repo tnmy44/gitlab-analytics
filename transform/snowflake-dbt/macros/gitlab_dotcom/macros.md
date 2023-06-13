@@ -66,9 +66,13 @@ For example, user_role=0 maps to the 'Software Developer' role.
 {% docs dedupe_source %}
 This macro speed up data deduplication for the `PREP.GITLAB_DOTCOM` layer. This is a follow-up on `RAW.TAP_POSTGRES` schema data.
 For instance, calling the macro with the command:
+
+{% raw %}
 ```sql
-dedupe_source(source_table='workspaces')
+{{ dedupe_source(source_table='workspaces') }}
 ```
+{% endraw %}
+
 will be translated as:
 ```sql
 SELECT *
