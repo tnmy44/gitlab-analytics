@@ -24,18 +24,3 @@ macros:
     description: '{{ doc("transform_clusters_applications") }}'
   - name: user_role_mapping
     description: '{{ doc("user_role_mapping") }}'
-  - name: dedupe_source
-    description: '{{ doc("dedupe_source") }}'
-    arguments:
-      - name: source_table
-        type: string
-        description: Name of the source table (from schema.yml file).
-      - name: source_schema
-        type: string
-        description: Name of the source table (from schema.yml file). Default value is GITLAB_DOTCOM.
-      - name: condition_column
-        type: string
-        description: Name of the column for data deduplication. Default value is UPDATED_AT.
-      - name: unique_key
-        type: string
-        description: Unique column (pseudo primary key). Default value is ID.
