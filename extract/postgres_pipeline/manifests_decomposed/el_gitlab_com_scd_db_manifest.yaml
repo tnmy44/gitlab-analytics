@@ -91,11 +91,11 @@ tables:
       , namespace_id
       , project_id
       , source_type
-      , source_full_path
-      , destination_name
-      , destination_namespace
+      , NULL AS source_full_path
+      , NULL AS destination_name
+      , NULL AS destination_namespace
       , status
-      , jid
+      , NULL AS jid
       , created_at
       , updated_at
       , has_failures
