@@ -7,7 +7,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('ae_credits') }}
+    FROM {{ ref('rsa_ae_credits_source') }}
 
 )
 SELECT *
