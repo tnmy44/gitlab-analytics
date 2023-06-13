@@ -62,3 +62,21 @@ This macro maps "role" values (integers) from the user table into their respecti
 For example, user_role=0 maps to the 'Software Developer' role.
 
 {% enddocs %}
+
+{% docs dedupe_source %}
+This macro speed up data deduplication for the `PREP.GITLAB_DOTCOM` layer. This is a follow-up on `RAW.TAP_POSTGRES` schema data.
+For instance, calling the macro with the command:
+```sql
+{{ dedupe_source(source_table='workspaces') }}
+```
+will be translated as:
+```sql
+SELECT *
+
+FROM RAW.tap_postgres.gitlab_db_workspaces
+
+QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+```
+and this is handy as the files for data deduplication as smaller and unified.
+
+{% enddocs %}
