@@ -12,7 +12,7 @@ renamed AS (
       created_at::TIMESTAMP                                  AS control_created_at,
       description::VARCHAR                                   AS control_description,
       id::NUMBER                                             AS control_id,
-      mapped:objectives::VARIANT                             AS mapped_objectives,
+      mapped['objectives']::VARIANT                          AS mapped_objectives,
       status::VARCHAR                                        AS control_status,
       title::VARCHAR                                         AS control_title,
       type::VARCHAR                                          AS zengrc_object_type,
