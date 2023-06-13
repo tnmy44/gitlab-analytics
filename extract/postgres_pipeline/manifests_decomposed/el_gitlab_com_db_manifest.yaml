@@ -19,16 +19,16 @@ tables:
       , ended_at
       , events
       , iid
-      , severity
+      , NULL AS severity
       , status
       , issue_id
       , project_id
-      , title
+      , NULL AS title
       , NULL AS description
-      , service
-      , monitoring_tool
-      , hosts
-      , payload
+      , NULL AS service
+      , NULL AS monitoring_tool
+      , NULL AS hosts
+      , NULL AS payload
       FROM alert_management_alerts
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -43,10 +43,10 @@ tables:
       , updated_at
       , project_id
       , active
-      , endpoint_identifier
-      , name
-      , payload_example
-      , payload_attribute_mapping
+      , NULL AS endpoint_identifier
+      , NULL AS name
+      , NULL AS payload_example
+      , NULL AS payload_attribute_mapping
       FROM alert_management_http_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -106,7 +106,7 @@ tables:
       , updated_at
       , merge_request_id
       , approvals_required
-      , name
+      , NULL AS name
       , rule_type
       , report_type
       , section
@@ -187,9 +187,9 @@ tables:
       , created_at
       , user_id
       , result
-      , ip_address
+      , NULL AS ip_address
       , provider
-      , user_name
+      , NULL AS user_name
       FROM authentication_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
