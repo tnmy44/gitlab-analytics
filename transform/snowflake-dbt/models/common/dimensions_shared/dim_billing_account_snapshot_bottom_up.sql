@@ -5,7 +5,7 @@
 {{ simple_cte([
     ('map_merged_crm_account','map_merged_crm_account'),
     ('zuora_contact','zuora_contact_source'),
-    ('customers_db_customers_snapshots')
+    ('customers_snapshot', 'customers_db_customers_snapshots')
 ]) }}
 
 , snapshot_dates AS (
@@ -42,7 +42,7 @@
       zuora_account_spined.status                                  AS account_status,
       zuora_account_spined.parent_id,
       zuora_account_spined.sfdc_account_code                       AS crm_account_code,
-      zuora_account_spined.sfdc_entity,                            AS crm_entity,
+      zuora_account_spined.sfdc_entity                             AS crm_entity,
       zuora_account_spined.currency                                AS account_currency,
       zuora_contact.country                                        AS sold_to_country,
       zuora_account_spined.ssp_channel,
@@ -51,7 +51,7 @@
       zuora_billing_account.default_payment_method_type,
       zuora_account_spined.is_deleted,
       zuora_account_spined.batch,
-       'Y'                                                         AS exists_in_zuora
+      'Y'                                                          AS exists_in_zuora
     FROM zuora_account_spined
     LEFT JOIN zuora_contact
       ON COALESCE(zuora_account_spined.sold_to_contact_id, zuora_account_spined.bill_to_contact_id) = zuora_contact.contact_id
@@ -67,13 +67,13 @@
       sfdc_account_id,
       billing_account_created_at,
       billing_account_updated_at,
-      'Y' as exists_in_cdot
-    FROM customers_db_customers_snapshots
+      'Y' AS exists_in_cdot
+    FROM customers_snapshot
     --Exclude Batch20(test records) from CDot by using Zuora test account IDs.
     WHERE zuora_account_id NOT IN 
       (SELECT DISTINCT 
         account_id 
-       FROM {{ref('customers_db_customers_snapshots')}}
+       FROM customers_snapshot
        WHERE LOWER(batch) = 'batch20')
 
 ), cdot_billing_account_spined AS (
@@ -87,11 +87,12 @@
       AND snapshot_dates.date_actual < {{ coalesce_to_infinity('cdot_billing_account_snapshot.dbt_to') }}
 
 
+
 ), final AS (
 
     SELECT
        --surrogate key
-      {{ dbt_utils.surrogate_key(['COALESCE(joined.snapshot_id, cdot_billing_account_spined.snapshot_id)', 'COALESCE(joined.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)'])}}   AS billing_account_snapshot_id,
+      {{ dbt_utils.surrogate_key(['COALESCE(joined.snapshot_id, cdot_billing_account_spined.snapshot_id)', 'COALESCE(joined.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)'])}} AS billing_account_snapshot_id,
 
       COALESCE(joined.snapshot_id, cdot_billing_account_spined.snapshot_id)                                                                                                                              AS snapshot_id,
       {{ dbt_utils.surrogate_key(['COALESCE(joined.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)']) }}                                                                           AS dim_billing_account_sk,
