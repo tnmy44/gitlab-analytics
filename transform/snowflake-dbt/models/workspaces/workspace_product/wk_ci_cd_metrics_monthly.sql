@@ -29,7 +29,7 @@ WITH umau_base AS (
           AND is_smau = TRUE
             THEN 'deploy_smau'
        END AS pivot_metric
-    FROM prod.common_mart.mart_ping_instance_metric_monthly
+    FROM {{ ref('mart_ping_instance_metric_monthly') }}
     WHERE pivot_metric IS NOT NULL
     
 ), pivot_base AS (
@@ -50,7 +50,7 @@ SELECT
   major_version,
   minor_version,
   ZEROIFNULL(umau) AS umau,
-  ZEROIFNULL(verify_smau + package_smau + monitor_smau + deploy_smau) AS cmau,
+  ZEROIFNULL(verify_smau + package_smau + deploy_smau) AS cmau,
   ZEROIFNULL(verify_smau) AS verify_smau,
   ZEROIFNULL(package_smau) AS package_smau,
   ZEROIFNULL(deploy_smau) AS deploy_smau
