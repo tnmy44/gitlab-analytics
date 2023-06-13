@@ -133,10 +133,10 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , description
+      , NULL AS description
       , ref
-      , cron
-      , cron_timezone
+      , NULL AS cron
+      , NULL AS cron_timezone
       , next_run_at
       , project_id
       , owner_id
@@ -220,15 +220,15 @@ tables:
       , description
       , contacted_at
       , active
-      , name
+      , NULL AS name
       , version
       , revision
       , platform
-      , architecture
+      , NULL AS architecture
       , run_untagged
       , locked
       , access_level
-      , ip_address
+      , NULL AS ip_address
       , maximum_timeout
       , runner_type
       , public_projects_minutes_cost_factor
