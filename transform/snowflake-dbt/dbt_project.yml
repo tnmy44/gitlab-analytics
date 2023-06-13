@@ -264,6 +264,10 @@ models:
           +schema: sensitive
           secure: true
 
+      omamori:
+        +materialized: table
+        +schema: omamori
+
       pto:
         +materialized: table
         +schema: gitlab_pto
