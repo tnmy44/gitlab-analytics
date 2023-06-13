@@ -527,7 +527,7 @@ WITH edm_opty AS (
     CASE
         WHEN edm_opty.parent_opportunity IS NULL
             THEN edm_opty.dim_crm_opportunity_id
-        ELSE edm_opty.parent_opportunity,
+        ELSE edm_opty.parent_opportunity
     END  AS parent_opportunity,
 
     -- demographics fields
