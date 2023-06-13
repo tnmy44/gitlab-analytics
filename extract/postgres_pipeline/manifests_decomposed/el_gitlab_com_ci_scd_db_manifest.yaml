@@ -15,7 +15,7 @@ tables:
       SELECT build_id
       , chunk_index
       , data_store
-      , raw_data
+      , NULL AS raw_data
       FROM ci_build_trace_chunks
   ci_builds_runner_session:
     export_schema: 'gitlab_com'
