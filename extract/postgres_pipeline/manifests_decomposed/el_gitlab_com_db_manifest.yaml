@@ -1008,7 +1008,7 @@ tables:
       , target_project_id
       , updated_by_id
       , NULL AS merge_error
-      , NULL as merge_params
+      , NULL AS merge_params
       , merge_when_pipeline_succeeds
       , merge_user_id
       , approvals_before_merge
@@ -2061,7 +2061,7 @@ tables:
       , setup_for_company
       , render_whitespace_in_code
       , tab_width
-      , NULL as experience_level
+      , NULL AS experience_level
       , view_diffs_file_by_file
       , id
       , gitpod_enabled
