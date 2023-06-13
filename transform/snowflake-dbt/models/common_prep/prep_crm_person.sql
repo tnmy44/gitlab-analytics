@@ -175,7 +175,12 @@ WITH biz_person AS (
       NULL                                           AS zoominfo_company_employee_count,
       zoominfo_contact_id,
       CASE
-        WHEN (crm_tasks.task_owner_role LIKE '%BDR%' OR crm_tasks.task_owner_role LIKE '%SDR%') AND sfdc_contacts.mql_datetime_inferred IS NOT null AND crm_tasks.task_completed_date >= sfdc_contacts.mql_datetime_inferred AND (sfdc_contacts.mql_datetime_inferred >= sfdc_contacts.marketo_qualified_lead_datetime OR sfdc_contacts.marketo_qualified_lead_datetime IS null)
+        WHEN (crm_tasks.task_owner_role LIKE '%BDR%' 
+            OR crm_tasks.task_owner_role LIKE '%SDR%') 
+            AND sfdc_contacts.mql_datetime_inferred IS NOT null 
+            AND crm_tasks.task_completed_date >= sfdc_contacts.mql_datetime_inferred 
+            AND (sfdc_contacts.mql_datetime_inferred >= sfdc_contacts.marketo_qualified_lead_datetime 
+            OR sfdc_contacts.marketo_qualified_lead_datetime IS null)
           THEN TRUE
         ELSE FALSE
       END AS is_bdr_sdr_worked_inferred_mql
@@ -301,7 +306,12 @@ WITH biz_person AS (
       zoominfo_company_employee_count,
       NULL AS zoominfo_contact_id,
       CASE
-        WHEN (crm_tasks.task_owner_role LIKE '%BDR%' OR crm_tasks.task_owner_role LIKE '%SDR%') AND sfdc_leads.mql_datetime_inferred IS NOT null AND crm_tasks.task_completed_date >= sfdc_leads.mql_datetime_inferred AND (sfdc_leads.mql_datetime_inferred >= sfdc_leads.marketo_qualified_lead_datetime OR sfdc_leads.marketo_qualified_lead_datetime IS null)
+        WHEN (crm_tasks.task_owner_role LIKE '%BDR%' 
+            OR crm_tasks.task_owner_role LIKE '%SDR%') 
+            AND sfdc_leads.mql_datetime_inferred IS NOT null 
+            AND crm_tasks.task_completed_date >= sfdc_leads.mql_datetime_inferred 
+            AND (sfdc_leads.mql_datetime_inferred >= sfdc_leads.marketo_qualified_lead_datetime 
+            OR sfdc_leads.marketo_qualified_lead_datetime IS null)
           THEN TRUE
         ELSE FALSE
       END AS is_bdr_sdr_worked_inferred_mql
@@ -340,5 +350,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-06-08"
+    updated_date="2023-06-13"
 ) }}
