@@ -12,7 +12,7 @@ To support the new data source triage process, try to complete the below checkli
   - [ ] Change/extension of an existing pipeline: `     `
 * [ ] Do any objects in this data source need to be snapshotted? If yes, please open separate issues to have the objects snapshotted.
 * [ ] Does it contain MNPI data?
-* [ ] Does it contain PII data?
+* [ ] Does it contain Personal Data?
 * [ ] Severity in case of an incident
   - [ ] Critical - S1
   - [ ] High - S2
