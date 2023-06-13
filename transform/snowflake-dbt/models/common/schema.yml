@@ -4922,6 +4922,10 @@ models:
         description: '{{ doc("military_invasion_risk_scale") }}'
       - name: downgrade_details
         description: '{{ doc("downgrade_details") }}'
+      - name: intended_product_tier
+        description: '{{ doc("intended_product_tier") }}'
+      - name: parent_opportunity_id
+        description: '{{ doc("parent_opportunity_id") }}'
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'

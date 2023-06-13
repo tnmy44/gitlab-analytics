@@ -38,6 +38,7 @@ gitlab-org/gitlab-compose-kit,4534254
 gitlab-org/gitlab-development-kit,74823, @kwiebers
 gitlab-org/gitlab-docs,1794617
 gitlab-org/gitlab-elasticsearch-indexer,2953390, @changzhengliu
+gitlab-org/gitlab-zoekt-indexer,46649240, @changzhengliu
 gitlab-org/ruby/gems/gitlab-experiment,21250701
 gitlab-org/gitlab-exporter,1507906, @pjphillips
 gitlab-org/gitlab-foss,13083

@@ -2981,6 +2981,7 @@ roles:
     - ddeng:
         member_of:
             - analyst_engineering
+            - prometheus
             - restricted_safe
         warehouses:
             - dev_xs
@@ -3818,6 +3819,7 @@ roles:
             - restricted_safe
             - salesforce_sandbox
             - workday 
+            - zengrc
         warehouses:
             - dev_xs
         owns:
