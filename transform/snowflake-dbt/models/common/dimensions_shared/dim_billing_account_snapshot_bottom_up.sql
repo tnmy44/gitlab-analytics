@@ -5,7 +5,7 @@
 {{ simple_cte([
     ('map_merged_crm_account','map_merged_crm_account'),
     ('zuora_contact','zuora_contact_source'),
-    ('customers_snapshot', 'customers_db_customers_snapshots')
+    ('customers_snapshot', 'customers_db_customers_snapshots_base')
 ]) }}
 
 , snapshot_dates AS (
@@ -31,7 +31,7 @@
       ON snapshot_dates.date_actual >= zuora_account.dbt_valid_from
       AND snapshot_dates.date_actual < {{ coalesce_to_infinity('zuora_account.dbt_valid_to') }}
 
-), joined AS (
+), zuora AS (
 
     SELECT
       zuora_account_spined.snapshot_id,
@@ -47,8 +47,6 @@
       zuora_contact.country                                        AS sold_to_country,
       zuora_account_spined.ssp_channel,
       zuora_account_spined.po_required,
-      zuora_billing_account.auto_pay,
-      zuora_billing_account.default_payment_method_type,
       zuora_account_spined.is_deleted,
       zuora_account_spined.batch,
       'Y'                                                          AS exists_in_zuora
@@ -88,11 +86,12 @@
 
 
 
-), final AS (
+), joined AS (
 
     SELECT
-       --surrogate key
-      {{ dbt_utils.surrogate_key(['COALESCE(joined.snapshot_id, cdot_billing_account_spined.snapshot_id)', 'COALESCE(joined.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)'])}} AS billing_account_snapshot_id,
+       --surrogate keys
+      {{ dbt_utils.surrogate_key(['zuora.snapshot_id', 'zuora.dim_billing_account_id']) }}                                                                                                               AS zuora_billing_account_snapshot_id,
+      {{ dbt_utils.surrogate_key(['cdot_billing_account_spined.snapshot_id', 'cdot_billing_account_spined.zuora_account_id']) }}                                                                         AS cdot_billing_account_snapshot_id,
 
       COALESCE(joined.snapshot_id, cdot_billing_account_spined.snapshot_id)                                                                                                                              AS snapshot_id,
       {{ dbt_utils.surrogate_key(['COALESCE(joined.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)']) }}                                                                           AS dim_billing_account_sk,
@@ -104,8 +103,47 @@
       COALESCE(joined.dim_crm_account_id, cdot_billing_account_spined.sfdc_account_id)                                                                                                                   AS dim_crm_account_id,
 
       --other relevant attributes
+      zuora.billing_account_number,
+      COALESCE(zuora.billing_account_name, cdot_billing_account_spined.zuora_account_name)                                                                                                              AS billing_account_name,
+      zuora.account_status,
+      zuora.parent_id,
+      zuora.crm_account_code,
+      zuora.crm_entity,
+      zuora.account_currency,
+      zuora.sold_to_country,
+      zuora.ssp_channel,
+      zuora.po_required,
+      zuora.is_deleted,
+      zuora.batch,
+      CASE 
+            WHEN exists_in_zuora = 'Y' and exists_in_cdot = 'Y' THEN 'exists in CDot & Zuora'
+            WHEN exists_in_zuora = 'Y' and exists_in_cdot IS NULL THEN 'exists only in Zuora'
+            WHEN exists_in_zuora IS NULL and exists_in_cdot = 'Y' THEN 'exists only in CDot'
+            ELSE NULL 
+      END                                                                                                                                                                                               AS record_data_source
+    FROM zuora
+    FULL JOIN cdot_billing_account_spined
+      ON zuora.dim_billing_account_id = cdot_billing_account_spined.zuora_account_id
+
+), final AS  (
+
+    SELECT
+
+       --surrogate key
+      COALESCE(joined.zuora_billing_account_snapshot_id, joined.cdot_billing_account_snapshot_id)                                                                                                       AS billing_account_snapshot_id,
+      
+      joined.snapshot_id,
+      joined.dim_billing_account_sk,
+
+      --natural key
+      joined.dim_billing_account_id,
+
+      --foreign key
+      joined.dim_crm_account_id,
+
+      --other relevant attributes
       joined.billing_account_number,
-      COALESCE(joined.billing_account_name, cdot_billing_account_spined.zuora_account_name)                                                                                                              AS billing_account_name,
+      joined.billing_account_name,
       joined.account_status,
       joined.parent_id,
       joined.crm_account_code,
@@ -114,20 +152,11 @@
       joined.sold_to_country,
       joined.ssp_channel,
       joined.po_required,
-      joined.auto_pay,
-      joined.default_payment_method_type,
       joined.is_deleted,
       joined.batch,
-      CASE 
-            WHEN exists_in_zuora = 'Y' and exists_in_cdot = 'Y' THEN 'exists in CDot & Zuora'
-            WHEN exists_in_zuora = 'Y' and exists_in_cdot IS NULL THEN 'exists only in Zuora'
-            WHEN exists_in_zuora IS NULL and exists_in_cdot = 'Y' THEN 'exists only in CDot'
-            ELSE NULL 
-      END 
-    FROM joined
-    FULL JOIN cdot_billing_account_spined
-      ON joined.dim_billing_account_id = cdot_billing_account_spined.zuora_account_id
+      joined.record_data_source
 
+    FROM joined
 )
 
 {{ dbt_audit(
