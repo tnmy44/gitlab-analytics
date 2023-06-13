@@ -18,4 +18,3 @@ QUALIFY ROW_NUMBER() OVER (PARTITION BY {{ unique_key }} ORDER BY {{ condition_c
 
 
 {%- endmacro -%}
-
