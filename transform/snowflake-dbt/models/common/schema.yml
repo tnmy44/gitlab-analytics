@@ -7343,3 +7343,11 @@ models:
         tests: 
           - not_null
 
+  - name: dim_billing_account_user
+    description: '{{ doc("dim_billing_account_user") }}'
+    columns:
+      - name: dim_billing_account_user_id
+        description: Zuora user id 
+        tests:
+          - not_null
+          - unique
