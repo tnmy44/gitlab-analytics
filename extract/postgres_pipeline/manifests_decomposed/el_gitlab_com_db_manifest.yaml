@@ -24,7 +24,7 @@ tables:
       , issue_id
       , project_id
       , title
-      , description
+      , NULL AS description
       , service
       , monitoring_tool
       , hosts
