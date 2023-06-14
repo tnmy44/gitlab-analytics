@@ -2653,6 +2653,20 @@ roles:
                     - raw.zuora_api_sandbox_stitch.*
                     - prep.zuora_api_sandbox.*
 
+    - zuora_order:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - prep.zuora_order
+            tables:
+                read:
+                    - prep.zuora_order.*
+
     - zuora_stitch_rest_api:
         warehouses:
             - dev_xs
