@@ -4706,6 +4706,11 @@ roles:
             - customers_db
             - restricted_safe
             - zuora_api_sandbox_stitch
+            - zuora_stitch_rest_api
+            - zuora
+            - zuora_central_sandbox
+            - zuora_query_api
+            - zuora_revenue
         warehouses:
             - dev_xs
             - dev_m
