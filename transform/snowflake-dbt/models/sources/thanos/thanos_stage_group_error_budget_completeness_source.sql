@@ -34,8 +34,8 @@ parsed AS (
     SPLIT_PART(pq_0.source_file_name, '/', -1)                  AS source_file_name
   FROM
     source pq_0,
-    LATERAL FLATTEN(input => source.jsontext['stage_group_error_budget_teams_over_budget_availability']) pq_1,
-    LATERAL FLATTEN(input => source.jsontext['stage_group_error_budget_teams_over_budget_availability']['body']['data']['result'], outer => TRUE) pq_2
+    LATERAL FLATTEN(input => pq_0.jsontext['stage_group_error_budget_teams_over_budget_availability']) pq_1,
+    LATERAL FLATTEN(input => pq_0.jsontext['stage_group_error_budget_teams_over_budget_availability']['body']['data']['result'], outer => TRUE) pq_2
   WHERE result_type IS NOT NULL AND status_type IS NOT NULL
 )
 
