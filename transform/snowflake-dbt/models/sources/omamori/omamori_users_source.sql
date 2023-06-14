@@ -38,14 +38,14 @@ renamed AS (
   SELECT
 
 
-  json_value['id']::int AS id,
-  json_value['username']::varchar AS username,
-  json_value['name']::varchar AS name,
-  json_value['role']::varchar AS role,
-  json_value['service_user']::boolean AS service_user,
+    json_value['id']::INT                                          AS id,
+    json_value['username']::VARCHAR                                AS username,
+    json_value['name']::VARCHAR                                    AS full_name,
+    json_value['role']::VARCHAR                                    AS user_role,
+    json_value['service_user']::BOOLEAN                            AS service_user,
 
-  (json_value['created_at'] / 1000000)::number(36,3)::timestamp      AS created_at,
-  (json_value['updated_at'] / 1000000)::number(36,3)::timestamp      AS updated_at,
+    (json_value['created_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS created_at,
+    (json_value['updated_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS updated_at,
     uploaded_at_gcs
   FROM source
 ),

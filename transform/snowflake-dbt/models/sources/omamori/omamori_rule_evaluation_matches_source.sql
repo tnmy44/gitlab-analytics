@@ -36,14 +36,11 @@ WITH source AS (
 
 renamed AS (
   SELECT
-  json_value['id']::int AS id,
-  json_value['entity_datum_id']::int AS entity_datum_id,
-  json_value['rule_evaluation_id']::int AS rule_evaluation_id,
-  (json_value['created_at'] / 1000000)::number(36,3)::timestamp      AS created_at,
-  (json_value['updated_at'] / 1000000)::number(36,3)::timestamp      AS updated_at,
-  json_value['id']::int AS id,
-
-
+    json_value['id']::INT                                          AS id,
+    json_value['entity_datum_id']::INT                             AS entity_datum_id,
+    json_value['rule_evaluation_id']::INT                          AS rule_evaluation_id,
+    (json_value['created_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS created_at,
+    (json_value['updated_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS updated_at,
     uploaded_at_gcs
   FROM source
 ),

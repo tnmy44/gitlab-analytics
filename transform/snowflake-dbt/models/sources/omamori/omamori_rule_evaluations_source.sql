@@ -36,16 +36,14 @@ WITH source AS (
 
 renamed AS (
   SELECT
-  json_value['id']::int AS id,
-  json_value['rule ']::varchar AS rule ,
-  json_value['result ']::varchar AS result ,
-  json_value['elapsed_ms']::int AS elapsed_ms,
-  json_value['throttled_count']::int AS throttled_count,
-  json_value['duplicates_removed_count']::int AS duplicates_removed_count,
-  (json_value['created_at'] / 1000000)::number(36,3)::timestamp      AS created_at,
-  (json_value['updated_at'] / 1000000)::number(36,3)::timestamp      AS updated_at,
-
-
+    json_value['id']::INT                                          AS id,
+    json_value['rule']::VARCHAR                                   AS rule,
+    json_value['result']::VARCHAR                                 AS outcome,
+    json_value['elapsed_ms']::INT                                  AS elapsed_ms,
+    json_value['throttled_count']::INT                             AS throttled_count,
+    json_value['duplicates_removed_count']::INT                    AS duplicates_removed_count,
+    (json_value['created_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS created_at,
+    (json_value['updated_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS updated_at,
     uploaded_at_gcs
   FROM source
 ),

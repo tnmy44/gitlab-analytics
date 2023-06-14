@@ -134,7 +134,7 @@ models:
           - unique
           - not_null
       - name: rule
-      - name: result
+      - name: outcome
       - name: elapsed_ms
       - name: throttled_count
       - name: duplicates_removed
@@ -156,7 +156,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: name
+      - name: tag_name
       - name: created_at
         tests:
           - not_null
@@ -176,8 +176,8 @@ models:
           - unique
           - not_null
       - name: username
-      - name: name
-      - name: role
+      - name: full_name
+      - name: user_role
       - name: service_user
       - name: created_at
         tests:

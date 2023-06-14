@@ -33,14 +33,15 @@ WITH source AS (
       AND uploaded_at_gcs > (SELECT COALESCE(MAX(uploaded_at_gcs), '1970-01-01') AS last_uploaded_at_gcs FROM {{ this }})
   {% endif %}
 ),
+
 renamed AS (
   SELECT
-    json_value['id']::INT              AS id,
-    json_value['status']::VARCHAR       AS status,
-    json_value['entity_datum_id']::INT AS entity_dataum_id,
+    json_value['id']::INT                                          AS id,
+    json_value['status']::VARCHAR                                  AS status,
+    json_value['entity_datum_id']::INT                             AS entity_dataum_id,
     -- convert epoch microseconds to Snowflake timestamp
-    (json_value['created_at'] / 1000000)::number(36,3)::timestamp      AS created_at,
-    (json_value['updated_at'] / 1000000)::number(36,3)::timestamp      AS updated_at,
+    (json_value['created_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS created_at,
+    (json_value['updated_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS updated_at,
     uploaded_at_gcs
   FROM source
 ),
