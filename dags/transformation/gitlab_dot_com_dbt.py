@@ -98,7 +98,6 @@ config_dict = {
 
 # DAG argument for scheduling the DAG
 dbt_dag_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -183,6 +182,7 @@ for source_name, config in config_dict.items():
         default_args=dbt_dag_args,
         schedule_interval=config["dbt_schedule_interval"],
         description=config["description"],
+        catchup=False,
     )
 
     with dbt_transform_dag:
