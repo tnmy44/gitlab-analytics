@@ -80,6 +80,8 @@ final AS (
     fct_crm_opportunity.vsa_end_date,
     fct_crm_opportunity.vsa_url,
     fct_crm_opportunity.vsa_status,
+    fct_crm_opportunity.intended_product_tier,
+    fct_crm_opportunity.parent_opportunity_id,
     fct_crm_opportunity.opportunity_term,
     fct_crm_opportunity.record_type_id,
     fct_crm_opportunity.opportunity_owner_manager,
