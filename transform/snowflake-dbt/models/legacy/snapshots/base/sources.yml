@@ -70,3 +70,4 @@ sources:
       - name: rpt_ping_metric_totals_w_estimates_monthly_snapshot
       - name: rpt_event_xmau_metric_monthly_snapshot
       - name: dim_user_snapshot
+      - name: customers_db_billing_accounts_snapshots

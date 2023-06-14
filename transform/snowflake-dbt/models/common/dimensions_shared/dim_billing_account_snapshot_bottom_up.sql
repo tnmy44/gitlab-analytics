@@ -5,7 +5,8 @@
 {{ simple_cte([
     ('map_merged_crm_account','map_merged_crm_account'),
     ('zuora_contact','zuora_contact_source'),
-    ('customers_snapshot', 'customers_db_customers_snapshots_base')
+    ('zuora_account_snapshot','zuora_account_snapshots_source'),
+    ('customers_billing_account_snapshot', 'customers_db_billing_accounts_snapshots_base')
 ]) }}
 
 , snapshot_dates AS (
@@ -17,7 +18,7 @@
 ), zuora_account AS (
 
     SELECT *
-    FROM {{ ref('zuora_account_snapshots_source') }}
+    FROM zuora_account_snapshot
     WHERE is_deleted = FALSE
       AND LOWER(live_batch) != 'batch20'
 
@@ -65,13 +66,15 @@
       sfdc_account_id,
       billing_account_created_at,
       billing_account_updated_at,
+      valid_from,
+      valid_to,
       'Y' AS exists_in_cdot
-    FROM customers_snapshot
+    FROM customers_billing_account_snapshot
     --Exclude Batch20(test records) from CDot by using Zuora test account IDs.
     WHERE zuora_account_id NOT IN 
       (SELECT DISTINCT 
-        account_id 
-       FROM customers_snapshot
+         account_id 
+       FROM zuora_account_snapshot
        WHERE LOWER(batch) = 'batch20')
 
 ), cdot_billing_account_spined AS (
@@ -81,8 +84,8 @@
       cdot_billing_account_snapshot.*
     FROM cdot_billing_account_snapshot
     INNER JOIN snapshot_dates
-      ON snapshot_dates.date_actual >= cdot_billing_account_snapshot.dbt_valid_from
-      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('cdot_billing_account_snapshot.dbt_to') }}
+      ON snapshot_dates.date_actual >= cdot_billing_account_snapshot.valid_from
+      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('cdot_billing_account_snapshot.valid_to') }}
 
 
 
@@ -93,14 +96,14 @@
       {{ dbt_utils.surrogate_key(['zuora.snapshot_id', 'zuora.dim_billing_account_id']) }}                                                                                                               AS zuora_billing_account_snapshot_id,
       {{ dbt_utils.surrogate_key(['cdot_billing_account_spined.snapshot_id', 'cdot_billing_account_spined.zuora_account_id']) }}                                                                         AS cdot_billing_account_snapshot_id,
 
-      COALESCE(joined.snapshot_id, cdot_billing_account_spined.snapshot_id)                                                                                                                              AS snapshot_id,
-      {{ dbt_utils.surrogate_key(['COALESCE(joined.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)']) }}                                                                           AS dim_billing_account_sk,
+      COALESCE(zuora.snapshot_id, cdot_billing_account_spined.snapshot_id)                                                                                                                              AS snapshot_id,
+      {{ dbt_utils.surrogate_key(['COALESCE(zuora.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)']) }}                                                                           AS dim_billing_account_sk,
 
       --natural key
-      COALESCE(joined.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)                                                                                                              AS dim_billing_account_id,
+      COALESCE(zuora.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)                                                                                                              AS dim_billing_account_id,
 
       --foreign key
-      COALESCE(joined.dim_crm_account_id, cdot_billing_account_spined.sfdc_account_id)                                                                                                                   AS dim_crm_account_id,
+      COALESCE(zuora.dim_crm_account_id, cdot_billing_account_spined.sfdc_account_id)                                                                                                                   AS dim_crm_account_id,
 
       --other relevant attributes
       zuora.billing_account_number,
