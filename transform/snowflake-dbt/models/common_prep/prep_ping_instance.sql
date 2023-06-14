@@ -61,10 +61,10 @@
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                                                                             AS product_tier,
       CASE
-        WHEN ping_created_at <= '2023-06-15' AND hostname ANY LIKE ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
+        WHEN ping_created_at <= '2023-06-01' AND hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
                                                                     '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
           THEN TRUE
-        WHEN ping_created_at > '2023-06-15'  AND raw_usage_data_payload['gitlab_dedicated']::BOOLEAN = TRUE
+        WHEN ping_created_at > '2023-06-01'  AND COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated']::BOOLEAN = TRUE
           THEN TRUE
         ELSE FALSE
       END                                                                                                                                         AS is_saas_dedicated,
@@ -164,6 +164,8 @@
         ELSE NULL 
       END AS product_tier,
       FALSE AS is_saas_dedicated,
+      'SaaS' AS ping_delivery_type,
+      'GitLab.com' AS ping_deployment_type,
       raw_usage_data_payload,
       ping_type
     FROM automated_instance_service_ping
