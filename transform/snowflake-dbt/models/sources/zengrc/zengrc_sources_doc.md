@@ -32,3 +32,15 @@ Objects used to request evidence as part of an assessment. The request object is
 {% docs zengrc_risks_desc %}
 Objects used to track risks to the organization. Risks are identified dangers that could potentially harm the organization if not addressed. By mapping relevant controls to identified risks, an organization can identify controls that have been put in place to minimize risk. This is commonly known as a Risk and Control Matrix (RCM).  [Source Documentation](https://reciprocitylabs.atlassian.net/wiki/spaces/ZenGRCOnboardingGuide/pages/42139682/ZenGRC+Definitions)
 {% enddocs %}
+
+{% docs zengrc_programs_desc %}
+
+Programs are typically standardized, industry-wide compliance guidelines issued by large authoritative sources. In ZenGRC, a program contains all objects related to one authoritative source. It can be a regulatory framework (NIST 800-53, PCI, etc.) or a custom program to manage a compliance initiative (Enterprise Risk Management, Vendor Management, etc.). It serves as a “container” for other compliance objects, and can also be mapped to other objects (including non-compliance objects) to indicate a requirement for regulatory compliance. [Source Documentation](https://reciprocitylabs.atlassian.net/wiki/spaces/ZenGRCOnboardingGuide/pages/42139682/ZenGRC+Definitions)
+
+{% enddocs %}
+
+{% docs zengrc_vendors_desc %}
+
+An entity that provides products or services to the organization. To use the Vendor Risk Management module, vendor objects must be created. Can be used to manage vendor compliance to specific controls and/or objectives (requirements). Can also be set as an audit target by mapping relevant controls. [Source Documentation](https://reciprocitylabs.atlassian.net/wiki/spaces/ZenGRCOnboardingGuide/pages/42139682/ZenGRC+Definitions)
+
+{% enddocs %}
