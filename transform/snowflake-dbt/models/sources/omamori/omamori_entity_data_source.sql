@@ -39,8 +39,9 @@ renamed AS (
     json_value['id']::INT              AS id,
     json_value['entity_id']::INT       AS entity_id,
     json_value['entity_type']::VARCHAR AS entity_type,
-    json_value['created_at']::INT      AS created_at,
-    json_value['updated_at']::INT      AS updated_at,
+    -- convert epoch microseconds to Snowflake timestamp
+    (json_value['created_at'] / 1000000)::number(36,3)::timestamp      AS created_at,
+    (json_value['updated_at'] / 1000000)::number(36,3)::timestamp      AS updated_at,
     uploaded_at_gcs
   FROM source
 ),
