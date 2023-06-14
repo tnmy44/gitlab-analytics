@@ -231,6 +231,19 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_ci_job_token_project_scope_links_source
+    description: Base model for Gitlab.com gitlab_dotcom_ci_job_token_project_scope_links
+    columns:
+      - name: ci_job_token_project_scope_link_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_ci_pipeline_schedule_variables_source
     description: Base model for Gitlab.com ci_pipeline_schedule_variables
     columns:
