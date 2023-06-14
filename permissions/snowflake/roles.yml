@@ -2644,6 +2644,7 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.zuora_api_sandbox_stitch
