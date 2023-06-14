@@ -2659,7 +2659,7 @@ roles:
         privileges:
             databases:
                 read:
-                    - raw
+                    - prep
             schemas:
                 read:
                     - prep.zuora_order
