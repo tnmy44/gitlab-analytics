@@ -1,6 +1,7 @@
 {{ config({
-    "materialized": "table",
-    "unique_key": "installation_reporting_month_pk",
+    materialized: "table",
+    unique_key: "installation_reporting_month_pk",
+    tags =["product"]
     })
 }}
 
