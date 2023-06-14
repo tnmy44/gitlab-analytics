@@ -49,7 +49,7 @@
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                         AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                         AS minor_version,
       major_version || '.' || minor_version                                                               AS major_minor_version,
-      map_ip_location.dim_location_country_id                                                             AS dim_location_country_id,
+      map_ip_location.dim_location_country_id                                                             AS dim_location_country_id
 
     FROM source
     LEFT JOIN map_ip_location
