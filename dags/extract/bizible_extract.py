@@ -35,7 +35,6 @@ pod_env_vars = gitlab_pod_env_vars
 logging.info(pod_env_vars)
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",

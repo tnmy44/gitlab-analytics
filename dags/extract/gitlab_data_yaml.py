@@ -45,7 +45,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 */8 * * *",
     concurrency=1,
-    catchup= False,
+    catchup=False,
 )
 
 # YAML Extract

@@ -52,7 +52,6 @@ secrets = [
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -65,7 +64,7 @@ default_args = {
 # Create the DAG
 #  DAG will be triggered at 06:59am UTC which is 23:59 PM PST
 dag = DAG(
-    "snowflake_table_clones", default_args=default_args, schedule_interval="0 7 * * *"
+    "snowflake_table_clones", default_args=default_args, schedule_interval="0 7 * * *", catchup=False,
 )
 
 clone_table_config = [

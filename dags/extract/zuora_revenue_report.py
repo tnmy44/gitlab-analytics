@@ -75,6 +75,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 5 * * *",
     concurrency=1,
+    catchup=False,
 )
 
 start = DummyOperator(task_id="Start", dag=dag)

@@ -27,7 +27,6 @@ GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 default_args = {
-    "catchup": True,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -43,6 +42,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 */12 * * *",
     concurrency=2,
+    catchup=True,
 )
 
 events = [

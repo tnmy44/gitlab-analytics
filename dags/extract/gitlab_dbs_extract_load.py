@@ -245,7 +245,6 @@ def extract_table_list_from_manifest(manifest_contents):
 
 # Sync DAG
 incremental_backfill_dag_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -256,7 +255,6 @@ incremental_backfill_dag_args = {
 }
 
 scd_dag_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -268,7 +266,6 @@ scd_dag_args = {
 
 # Extract DAG
 extract_dag_args = {
-    "catchup": True,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -290,6 +287,7 @@ for source_name, config in config_dict.items():
             default_args=extract_dag_args,
             schedule_interval=config["extract_schedule_interval"],
             description=config["description"],
+            catchup=True,
         )
 
         with extract_dag:
@@ -337,6 +335,7 @@ for source_name, config in config_dict.items():
         incremental_backfill_dag = DAG(
             f"{config['dag_name']}_db_incremental_backfill",
             default_args=incremental_backfill_dag_args,
+            catchup=False,
             schedule_interval=config["incremental_backfill_interval"],
             concurrency=1,
             description=config["description_incremental"],
@@ -387,6 +386,7 @@ for source_name, config in config_dict.items():
             default_args=scd_dag_args,
             schedule_interval=config["extract_schedule_interval"],
             concurrency=6,
+            catchup=False,
             description=config["description"],
         )
 

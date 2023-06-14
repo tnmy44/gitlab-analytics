@@ -32,7 +32,6 @@ pod_env_vars = {
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -51,7 +50,7 @@ container_cmd = f"""
 """
 
 # Create the DAG
-dag = DAG("handbook_mrs", default_args=default_args, schedule_interval="0 2 * * *")
+dag = DAG("handbook_mrs", default_args=default_args, schedule_interval="0 2 * * *", catchup=False)
 
 # Task 1
 part_of_product_mrs_run = KubernetesPodOperator(

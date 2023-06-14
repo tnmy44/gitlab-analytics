@@ -29,7 +29,6 @@ env = os.environ.copy()
 pod_env_vars = {"CI_PROJECT_DIR": "/analytics"}
 
 default_args = {
-    "catchup": True,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -45,6 +44,7 @@ dag = DAG(
     "qualtrics_survey_extract",
     default_args=default_args,
     schedule_interval="0 */12 * * *",
+    catchup=True,
 )
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments

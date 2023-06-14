@@ -29,7 +29,6 @@ pod_env_vars = gitlab_pod_env_vars
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -48,6 +47,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 3 * * *",
     concurrency=2,
+    catchup=False,
 )
 
 

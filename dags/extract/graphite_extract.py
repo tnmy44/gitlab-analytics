@@ -27,7 +27,6 @@ from kubernetes_helpers import get_affinity, get_toleration
 env = os.environ.copy()
 
 default_args = {
-    "catchup": True,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -39,7 +38,7 @@ default_args = {
     "start_date": datetime(2020, 1, 1),
 }
 
-dag = DAG("lcp_extract", default_args=default_args, schedule_interval="0 23 * * *")
+dag = DAG("lcp_extract", default_args=default_args, schedule_interval="0 23 * * *", catchup=True)
 
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
