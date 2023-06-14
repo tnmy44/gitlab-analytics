@@ -32,7 +32,7 @@
       ON snapshot_dates.date_actual >= zuora_account.dbt_valid_from
       AND snapshot_dates.date_actual < {{ coalesce_to_infinity('zuora_account.dbt_valid_to') }}
 
-), zuora AS (
+), zuora_account_joined AS (
 
     SELECT
       zuora_account_spined.snapshot_id,
@@ -67,8 +67,7 @@
       billing_account_created_at,
       billing_account_updated_at,
       valid_from,
-      valid_to,
-      'Y' AS exists_in_cdot
+      valid_to
     FROM customers_billing_account_snapshot
     --Exclude Batch20(test records) from CDot by using Zuora test account IDs.
     WHERE zuora_account_id NOT IN 
@@ -87,66 +86,90 @@
       ON snapshot_dates.date_actual >= cdot_billing_account_snapshot.valid_from
       AND snapshot_dates.date_actual < {{ coalesce_to_infinity('cdot_billing_account_snapshot.valid_to') }}
 
+), cdot_billing_account_joined AS (
 
+    SELECT
+      snapshot_id,
+      billing_account_id,
+      map_merged_crm_account.dim_crm_account_id  AS dim_crm_account_id,
+      zuora_account_id,
+      zuora_account_name,
+      cdot_billing_account_spined.sfdc_account_id,
+      billing_account_created_at,
+      billing_account_updated_at,
+      valid_from,
+      valid_to,
+      'Y' AS exists_in_cdot
+    FROM cdot_billing_account_spined
+        LEFT JOIN map_merged_crm_account
+      ON cdot_billing_account_spined.sfdc_account_id = map_merged_crm_account.sfdc_account_id
 
 ), joined AS (
 
-    SELECT
-       --surrogate keys
-      {{ dbt_utils.surrogate_key(['zuora.snapshot_id', 'zuora.dim_billing_account_id']) }}                                                                                                               AS zuora_billing_account_snapshot_id,
-      {{ dbt_utils.surrogate_key(['cdot_billing_account_spined.snapshot_id', 'cdot_billing_account_spined.zuora_account_id']) }}                                                                         AS cdot_billing_account_snapshot_id,
+    SELECT 
+        DISTINCT
 
-      COALESCE(zuora.snapshot_id, cdot_billing_account_spined.snapshot_id)                                                                                                                              AS snapshot_id,
-      {{ dbt_utils.surrogate_key(['COALESCE(zuora.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)']) }}                                                                           AS dim_billing_account_sk,
+       --surrogate keys from zuora & cdot
+      {{ dbt_utils.surrogate_key(['zuora_account_joined.snapshot_id', 'zuora_account_joined.dim_billing_account_id']) }}                                                            AS zuora_billing_account_snapshot_id,
+      {{ dbt_utils.surrogate_key(['cdot_billing_account_joined.snapshot_id', 'cdot_billing_account_joined.zuora_account_id']) }}                                                    AS cdot_billing_account_snapshot_id,
+                                                                                           
+      --snapshot keys from zuora & cdot
+      zuora_account_joined.snapshot_id                                                                                                                                              AS zuora_snapshot_id, 
+      cdot_billing_account_joined.snapshot_id                                                                                                                                       AS cdot_snapshot_id,                                                                                                             
+     
+      --natural keys from zuora & cdot
+      zuora_account_joined.dim_billing_account_id, 
+      cdot_billing_account_joined.zuora_account_id,                                                                                              
 
-      --natural key
-      COALESCE(zuora.dim_billing_account_id, cdot_billing_account_spined.zuora_account_id)                                                                                                              AS dim_billing_account_id,
-
-      --foreign key
-      COALESCE(zuora.dim_crm_account_id, cdot_billing_account_spined.sfdc_account_id)                                                                                                                   AS dim_crm_account_id,
+      --foreign keys from zuora & cdot
+      zuora_account_joined.dim_crm_account_id                                                                                                                                       AS zuora_dim_crm_account_id, 
+      cdot_billing_account_joined.dim_crm_account_id                                                                                                                                AS cdot_dim_crm_account_id,                                                                                               
 
       --other relevant attributes
-      zuora.billing_account_number,
-      COALESCE(zuora.billing_account_name, cdot_billing_account_spined.zuora_account_name)                                                                                                              AS billing_account_name,
-      zuora.account_status,
-      zuora.parent_id,
-      zuora.crm_account_code,
-      zuora.crm_entity,
-      zuora.account_currency,
-      zuora.sold_to_country,
-      zuora.ssp_channel,
-      zuora.po_required,
-      zuora.is_deleted,
-      zuora.batch,
+      zuora_account_joined.billing_account_number,
+      zuora_account_joined.billing_account_name, 
+      cdot_billing_account_joined.zuora_account_name,                                                                                             
+      zuora_account_joined.account_status,
+      zuora_account_joined.parent_id,
+      zuora_account_joined.crm_account_code,
+      zuora_account_joined.crm_entity,
+      zuora_account_joined.account_currency,
+      zuora_account_joined.sold_to_country,
+      zuora_account_joined.ssp_channel,
+      zuora_account_joined.po_required,
+      zuora_account_joined.is_deleted,
+      zuora_account_joined.batch,
       CASE 
             WHEN exists_in_zuora = 'Y' and exists_in_cdot = 'Y' THEN 'exists in CDot & Zuora'
             WHEN exists_in_zuora = 'Y' and exists_in_cdot IS NULL THEN 'exists only in Zuora'
             WHEN exists_in_zuora IS NULL and exists_in_cdot = 'Y' THEN 'exists only in CDot'
             ELSE NULL 
-      END                                                                                                                                                                                               AS record_data_source
-    FROM zuora
-    FULL JOIN cdot_billing_account_spined
-      ON zuora.dim_billing_account_id = cdot_billing_account_spined.zuora_account_id
+      END                                                                                                                                                                          AS record_data_source
+    FROM zuora_account_joined
+     FULL JOIN cdot_billing_account_joined
+       ON zuora_account_joined.dim_billing_account_id = cdot_billing_account_joined.zuora_account_id
+       AND zuora_account_joined.snapshot_id = cdot_billing_account_joined.snapshot_id
 
-), final AS  (
+), final1 AS  (
 
-    SELECT
+    SELECT 
+      DISTINCT
 
        --surrogate key
-      COALESCE(joined.zuora_billing_account_snapshot_id, joined.cdot_billing_account_snapshot_id)                                                                                                       AS billing_account_snapshot_id,
+      COALESCE(joined.zuora_billing_account_snapshot_id, joined.cdot_billing_account_snapshot_id)                                                                                  AS billing_account_snapshot_id,
       
-      joined.snapshot_id,
-      joined.dim_billing_account_sk,
+      COALESCE(joined.zuora_snapshot_id, joined.cdot_snapshot_id)                                                                                                                  AS snapshot_id,
+      COALESCE(joined.dim_billing_account_id, joined.zuora_account_id)                                                                                                             AS dim_billing_account_sk,
 
       --natural key
-      joined.dim_billing_account_id,
+      COALESCE(joined.dim_billing_account_id, joined.zuora_account_id)                                                                                                             AS dim_billing_account_id,
 
       --foreign key
-      joined.dim_crm_account_id,
+      COALESCE(joined.zuora_dim_crm_account_id, joined.cdot_dim_crm_account_id)                                                                                                    AS dim_crm_account_id,
 
       --other relevant attributes
       joined.billing_account_number,
-      joined.billing_account_name,
+      COALESCE(joined.billing_account_name, joined.zuora_account_name)                                                                                                             AS billing_account_name,
       joined.account_status,
       joined.parent_id,
       joined.crm_account_code,
@@ -160,6 +183,41 @@
       joined.record_data_source
 
     FROM joined
+
+), final AS (
+
+    SELECT 
+      DISTINCT
+
+       --surrogate key
+      {{ dbt_utils.surrogate_key(['final1.snapshot_id', 'final1.billing_account_snapshot_id']) }}                                                                                  AS billing_account_snapshot_id,
+      
+      final1.snapshot_id,
+      {{ dbt_utils.surrogate_key(['final1.dim_billing_account_sk']) }}                                                                                                             AS dim_billing_account_sk,
+
+      --natural key
+      final1.dim_billing_account_id,
+
+      --foreign key
+      final1.dim_crm_account_id,
+
+      --other relevant attributes
+      final1.billing_account_number,
+      final1.billing_account_name,
+      final1.account_status,
+      final1.parent_id,
+      final1.crm_account_code,
+      final1.crm_entity,
+      final1.account_currency,
+      final1.sold_to_country,
+      final1.ssp_channel,
+      final1.po_required,
+      final1.is_deleted,
+      final1.batch,
+      final1.record_data_source
+
+    FROM final1
+
 )
 
 {{ dbt_audit(
