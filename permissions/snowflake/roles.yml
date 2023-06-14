@@ -2644,12 +2644,29 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.zuora_api_sandbox_stitch
+                    - prep.zuora_api_sandbox
             tables:
                 read:
                     - raw.zuora_api_sandbox_stitch.*
+                    - prep.zuora_api_sandbox.*
+
+    - zuora_order:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.zuora_order
+            tables:
+                read:
+                    - prep.zuora_order.*
 
     - zuora_stitch_rest_api:
         warehouses:
@@ -4705,7 +4722,13 @@ roles:
             - analyst_growth
             - customers_db
             - restricted_safe
+            - zuora
             - zuora_api_sandbox_stitch
+            - zuora_central_sandbox
+            - zuora_order
+            - zuora_query_api
+            - zuora_revenue
+            - zuora_stitch_rest_api
         warehouses:
             - dev_xs
             - dev_m
