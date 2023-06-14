@@ -1,6 +1,6 @@
 {{ config({
     "materialized": "table",
-    "unique_key": "dim_installation_id",
+    "unique_key": "installation_reporting_month_pk",
     })
 }}
 
@@ -42,6 +42,7 @@ WITH umau_base AS (
  )
 
 SELECT 
+  {{ dbt_utils.surrogate_key(['dim_installation_id', 'reporting_month']) }} AS installation_reporting_month_pk,
   dim_installation_id,
   delivery_type,
   reporting_month,
