@@ -696,6 +696,16 @@ The timestamp when the ping was created
 
 {% enddocs %}
 
+{% docs uploaded_at %}
+
+Column `uploaded_at` (`TIMESTAMP` data type) represent the moment WHEN the record is ingested into Snowflake. 
+The main motivation for introducing this column is for a few reasons:
+1. Be able to track back the exact date and time of data ingesting _(this information wasn't known to us)_
+1. Improving incremental load using `uploaded_at` column 
+1. Support "late_arriving" ping automatically, without the need to full-refresh a full lineage
+
+{% enddocs %}
+
 {% docs ping_created_date_month %}
 
 The first day of the calendar month when the ping was created (YYYY-MM-01)
