@@ -196,7 +196,7 @@ WITH biz_person AS (
     LEFT JOIN crm_tasks
       ON sfdc_contacts.contact_id=crm_tasks.sfdc_record_id
 
-    UNION
+    UNION ALL
 
     SELECT
       --id
@@ -350,5 +350,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-06-13"
+    updated_date="2023-06-14"
 ) }}
