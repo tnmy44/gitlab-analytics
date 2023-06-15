@@ -6,7 +6,6 @@
     ('dim_date', 'dim_date'),
     ('dim_billing_account', 'dim_billing_account'),
     ('dim_crm_accounts', 'dim_crm_account'),
-    ('dim_product_detail', 'dim_product_detail'),
     ('fct_charge', 'fct_charge'),
     ('dim_license', 'dim_license'),
     ('dim_location', 'dim_location_country'),
