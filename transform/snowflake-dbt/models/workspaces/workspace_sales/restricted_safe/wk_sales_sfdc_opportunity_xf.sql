@@ -625,7 +625,7 @@ WITH edm_opty AS (
       churn_metrics.churn_contraction_type_calc,
 
       --services total amount
-      service_opportunities.total_professional_services_value,
+      COALESCE(service_opportunities.total_professional_services_value,0) AS total_professional_services_value,
       service_opportunities.count_service_opportunities
 
     FROM sfdc_opportunity_xf
