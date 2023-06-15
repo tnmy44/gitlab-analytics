@@ -608,7 +608,22 @@ WITH edm_opty AS (
             ELSE parent_opportunity
             END  AS opportunity_id,
         COUNT(opportunity_id)               AS count_service_opportunities,
-        SUM(professional_services_value)    AS total_professional_services_value
+        SUM(professional_services_value)    AS total_professional_services_value,
+        SUM(CASE
+                WHEN is_won = 1
+                    THEN professional_services_value
+                ELSE 0
+            END)                            AS total_book_professional_services_value,
+       SUM(CASE
+                WHEN is_lost = 1
+                    THEN professional_services_value
+                ELSE 0
+            END)                            AS total_lost_professional_services_value,
+       SUM(CASE
+                WHEN is_open = 1
+                    THEN professional_services_value
+                ELSE 0
+            END)                            AS total_open_professional_services_value
     FROM sfdc_opportunity_xf
     WHERE professional_services_value <> 0
     GROUP BY 1
@@ -616,17 +631,20 @@ WITH edm_opty AS (
 ), oppty_final AS (
 
     SELECT
-      sfdc_opportunity_xf.*,
+        sfdc_opportunity_xf.*,
 
-      -- Customer Success related fields
-      -- DRI Michael Armtz
-      churn_metrics.reason_for_loss_staged,
-      -- churn_metrics.reason_for_loss_calc, -- part of edm opp mart
-      churn_metrics.churn_contraction_type_calc,
+        -- Customer Success related fields
+        -- DRI Michael Armtz
+        churn_metrics.reason_for_loss_staged,
+        -- churn_metrics.reason_for_loss_calc, -- part of edm opp mart
+        churn_metrics.churn_contraction_type_calc,
 
-      --services total amount
-      COALESCE(service_opportunities.total_professional_services_value,0) AS total_professional_services_value,
-      service_opportunities.count_service_opportunities
+        --services total amount
+        COALESCE(service_opportunities.total_professional_services_value,0) AS total_professional_services_value,
+      
+        COALESCE(service_opportunities.total_book_professional_services_value,0) AS total_book_professional_services_value,
+        COALESCE(service_opportunities.total_lost_professional_services_value,0) AS total_lost_professional_services_value,
+        COALESCE(service_opportunities.total_open_professional_services_value,0) AS total_open_professional_services_value
 
     FROM sfdc_opportunity_xf
     CROSS JOIN today
