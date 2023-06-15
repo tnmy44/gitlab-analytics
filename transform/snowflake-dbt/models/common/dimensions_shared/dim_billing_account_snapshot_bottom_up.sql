@@ -78,7 +78,7 @@
 
 ), cdot_billing_account_spined AS (
 
-    SELECT
+    SELECT DISTINCT 
       snapshot_dates.date_id AS snapshot_id,
       cdot_billing_account_snapshot.*
     FROM cdot_billing_account_snapshot
@@ -88,7 +88,7 @@
 
 ), cdot_billing_account_joined AS (
 
-    SELECT
+    SELECT DISTINCT
       snapshot_id,
       billing_account_id,
       map_merged_crm_account.dim_crm_account_id  AS dim_crm_account_id,
@@ -110,20 +110,20 @@
         DISTINCT
 
        --surrogate keys from zuora & cdot
-      {{ dbt_utils.surrogate_key(['zuora_account_joined.snapshot_id', 'zuora_account_joined.dim_billing_account_id']) }}                                                            AS zuora_billing_account_snapshot_id,
-      {{ dbt_utils.surrogate_key(['cdot_billing_account_joined.snapshot_id', 'cdot_billing_account_joined.zuora_account_id']) }}                                                    AS cdot_billing_account_snapshot_id,
+      {{ dbt_utils.surrogate_key(['zuora_account_joined.snapshot_id', 'zuora_account_joined.dim_billing_account_id']) }}                                                                    AS zuora_billing_account_snapshot_id,
+      {{ dbt_utils.surrogate_key(['cdot_billing_account_joined.snapshot_id', 'cdot_billing_account_joined.zuora_account_id']) }}                                                            AS cdot_billing_account_snapshot_id,
                                                                                            
       --snapshot keys from zuora & cdot
-      zuora_account_joined.snapshot_id                                                                                                                                              AS zuora_snapshot_id, 
-      cdot_billing_account_joined.snapshot_id                                                                                                                                       AS cdot_snapshot_id,                                                                                                             
+      zuora_account_joined.snapshot_id                                                                                                                                                      AS zuora_snapshot_id, 
+      cdot_billing_account_joined.snapshot_id                                                                                                                                               AS cdot_snapshot_id,                                                                                                             
      
       --natural keys from zuora & cdot
       zuora_account_joined.dim_billing_account_id, 
       cdot_billing_account_joined.zuora_account_id,                                                                                              
 
       --foreign keys from zuora & cdot
-      zuora_account_joined.dim_crm_account_id                                                                                                                                       AS zuora_dim_crm_account_id, 
-      cdot_billing_account_joined.dim_crm_account_id                                                                                                                                AS cdot_dim_crm_account_id,                                                                                               
+      zuora_account_joined.dim_crm_account_id                                                                                                                                               AS zuora_dim_crm_account_id, 
+      cdot_billing_account_joined.dim_crm_account_id                                                                                                                                        AS cdot_dim_crm_account_id,                                                                                               
 
       --other relevant attributes
       zuora_account_joined.billing_account_number,
@@ -140,11 +140,11 @@
       zuora_account_joined.is_deleted,
       zuora_account_joined.batch,
       CASE 
-            WHEN exists_in_zuora = 'Y' and exists_in_cdot = 'Y' THEN 'exists in CDot & Zuora'
-            WHEN exists_in_zuora = 'Y' and exists_in_cdot IS NULL THEN 'exists only in Zuora'
-            WHEN exists_in_zuora IS NULL and exists_in_cdot = 'Y' THEN 'exists only in CDot'
-            ELSE NULL 
-      END                                                                                                                                                                          AS record_data_source
+        WHEN exists_in_zuora = 'Y' and exists_in_cdot = 'Y' THEN 'exists in CDot & Zuora'
+        WHEN exists_in_zuora = 'Y' and exists_in_cdot IS NULL THEN 'exists only in Zuora'
+        WHEN exists_in_zuora IS NULL and exists_in_cdot = 'Y' THEN 'exists only in CDot'
+      ELSE NULL 
+      END                                                                                                                                                                                   AS record_data_source
     FROM zuora_account_joined
      FULL JOIN cdot_billing_account_joined
        ON zuora_account_joined.dim_billing_account_id = cdot_billing_account_joined.zuora_account_id
@@ -156,20 +156,23 @@
       DISTINCT
 
        --surrogate key
-      COALESCE(joined.zuora_billing_account_snapshot_id, joined.cdot_billing_account_snapshot_id)                                                                                  AS billing_account_snapshot_id,
+      CASE 
+        WHEN joined.zuora_snapshot_id IS NOT NULL and record_data_source = 'exists only in Zuora' THEN joined.zuora_billing_account_snapshot_id 
+        WHEN joined.cdot_snapshot_id IS NOT NULL and record_data_source = 'exists only in CDot' THEN joined.cdot_billing_account_snapshot_id
+        WHEN joined.zuora_snapshot_id IS NOT NULL AND joined.cdot_snapshot_id IS NOT NULL and  record_data_source = 'exists in CDot & Zuora' THEN joined.zuora_billing_account_snapshot_id 
+      END                                                                                                                                                                                   AS billing_account_snapshot_id,                                                                                
       
-      COALESCE(joined.zuora_snapshot_id, joined.cdot_snapshot_id)                                                                                                                  AS snapshot_id,
-      COALESCE(joined.dim_billing_account_id, joined.zuora_account_id)                                                                                                             AS dim_billing_account_sk,
+      COALESCE(joined.zuora_snapshot_id, joined.cdot_snapshot_id)                                                                                                                           AS snapshot_id,
 
       --natural key
-      COALESCE(joined.dim_billing_account_id, joined.zuora_account_id)                                                                                                             AS dim_billing_account_id,
+      COALESCE(joined.dim_billing_account_id, joined.zuora_account_id)                                                                                                                      AS dim_billing_account_id,
 
       --foreign key
-      COALESCE(joined.zuora_dim_crm_account_id, joined.cdot_dim_crm_account_id)                                                                                                    AS dim_crm_account_id,
+      COALESCE(joined.zuora_dim_crm_account_id, joined.cdot_dim_crm_account_id)                                                                                                             AS dim_crm_account_id,
 
       --other relevant attributes
       joined.billing_account_number,
-      COALESCE(joined.billing_account_name, joined.zuora_account_name)                                                                                                             AS billing_account_name,
+      COALESCE(joined.billing_account_name, joined.zuora_account_name)                                                                                                                      AS billing_account_name,
       joined.account_status,
       joined.parent_id,
       joined.crm_account_code,
@@ -190,10 +193,8 @@
       DISTINCT
 
        --surrogate key
-      {{ dbt_utils.surrogate_key(['final1.snapshot_id', 'final1.billing_account_snapshot_id']) }}                                                                                  AS billing_account_snapshot_id,
-      
+      {{ dbt_utils.surrogate_key(['final1.snapshot_id', 'final1.billing_account_snapshot_id']) }}                                                                                         AS billing_account_snapshot_id,
       final1.snapshot_id,
-      {{ dbt_utils.surrogate_key(['final1.dim_billing_account_sk']) }}                                                                                                             AS dim_billing_account_sk,
 
       --natural key
       final1.dim_billing_account_id,

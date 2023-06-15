@@ -274,11 +274,6 @@ models:
         tags: ["tdf", "arr_snapshots"]
       - name: snapshot_id
         description: Unique Date Id between dbt_valid_from and dbt_valid_to in Snapshots  
-      - name: dim_billing_account_sk
-        description: '{{ doc("dim_billing_account_sk") }}'
-        tests:
-          - not_null
-          - unique
       - name: dim_billing_account_id
         description: The id of the Zuora account the subscription is associated with the customer   
       - name: dim_crm_account_id
