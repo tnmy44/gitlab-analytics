@@ -40,8 +40,8 @@ renamed AS (
     json_value['status']::VARCHAR                                  AS status,
     json_value['entity_datum_id']::INT                             AS entity_datum_id,
     -- convert epoch microseconds to Snowflake timestamp
-    (json_value['created_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS created_at,
-    (json_value['updated_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS updated_at,
+    (json_value['created_at']::NUMBER(36, 3) / 1000000)::TIMESTAMP AS created_at,
+    (json_value['updated_at']::NUMBER(36, 3) / 1000000)::TIMESTAMP AS updated_at,
     uploaded_at_gcs
   FROM source
 ),

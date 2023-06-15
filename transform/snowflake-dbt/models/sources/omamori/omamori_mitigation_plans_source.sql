@@ -44,13 +44,13 @@ renamed AS (
     json_value['category']::VARCHAR                                 AS category,
     json_value['last_applied_mitigation_plan_template_id']::INT     AS last_applied_mitigation_plan_template_id,
     json_value['from_rule_evaluation_id']::INT                      AS from_rule_evaluation_id,
-    (json_value['created_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP  AS created_at,
+    (json_value['created_at']::NUMBER(36, 3) / 1000000)::TIMESTAMP  AS created_at,
     json_value['created_by_id']::INT                                AS created_by_id,
-    (json_value['reviewed_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS reviwed_at,
+    (json_value['reviewed_at']::NUMBER(36, 3) / 1000000)::TIMESTAMP AS reviwed_at,
     json_value['reviewed_by_id']::INT                               AS reviewed_by_id,
-    (json_value['executed_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS executed_at,
+    (json_value['executed_at']::NUMBER(36, 3) / 1000000)::TIMESTAMP AS executed_at,
     json_value['executed_by_id']::INT                               AS executed_by_id,
-    (json_value['updated_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP  AS updated_at,
+    (json_value['updated_at']::NUMBER(36, 3) / 1000000)::TIMESTAMP  AS updated_at,
     uploaded_at_gcs
   FROM source
 ),

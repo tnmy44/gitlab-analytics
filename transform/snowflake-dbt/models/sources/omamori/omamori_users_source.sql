@@ -44,8 +44,8 @@ renamed AS (
     json_value['role']::VARCHAR                                    AS user_role,
     json_value['service_user']::BOOLEAN                            AS service_user,
 
-    (json_value['created_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS created_at,
-    (json_value['updated_at'] / 1000000)::NUMBER(36, 3)::TIMESTAMP AS updated_at,
+    (json_value['created_at']::NUMBER(36, 3) / 1000000)::TIMESTAMP AS created_at,
+    (json_value['updated_at']::NUMBER(36, 3) / 1000000)::TIMESTAMP AS updated_at,
     uploaded_at_gcs
   FROM source
 ),
