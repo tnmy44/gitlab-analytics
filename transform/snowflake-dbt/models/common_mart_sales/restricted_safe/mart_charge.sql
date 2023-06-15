@@ -15,7 +15,7 @@
     ('dim_order', 'dim_order'),
     ('dim_order_action', 'dim_order_action'),
     ('fct_charge','fct_charge'),
-    ('dim_billing_account_user', 'dim_billing_account_user')
+    ('prep_billing_account_user', 'prep_billing_account_user')
 ]) }}
 
 , mart_charge AS (
@@ -117,7 +117,7 @@
             THEN 'Auto-Renewal'
         WHEN (dim_order_action.dim_order_action_id IS NOT NULL
         OR dim_amendment_subscription.amendment_type = 'Renewal')
-          AND (dim_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
+          AND (prep_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
           OR dim_subscription.subscription_sales_type = 'Sales-Assisted')
             THEN 'Sales-Assisted'
         WHEN (dim_order_action.dim_order_action_id IS NOT NULL
@@ -125,7 +125,7 @@
           AND (dim_order.order_description NOT IN 
             ('AutoRenew by CustomersDot', 'Automated seat reconciliation')
             OR dim_order.order_description IS NULL)
-          AND dim_billing_account_user.user_name IN (
+          AND prep_billing_account_user.user_name IN (
             'svc_zuora_fulfillment_int@gitlab.com',
             'ruben_APIproduction@gitlab.com')
             THEN 'Customer Portal'
@@ -212,8 +212,8 @@
     LEFT JOIN dim_order_action
       ON fct_charge.dim_order_id = dim_order_action.dim_order_id
       AND dim_order_action.order_action_type IN ('RenewSubscription', 'CancelSubscription')
-    LEFT JOIN dim_billing_account_user
-      ON fct_charge.subscription_created_by_id = dim_billing_account_user.dim_billing_account_user_id
+    LEFT JOIN prep_billing_account_user
+      ON fct_charge.subscription_created_by_id = prep_billing_account_user.zuora_user_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,

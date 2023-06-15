@@ -1773,9 +1773,3 @@ This table only contains one change in the team member's position per effective 
 The grain of this table is one row per employee_id and valid_from combination
 
 {% enddocs %}
-
-{% docs dim_billing_account_user %}
-
-This model contains Zuora users. It can be used to identify integration service accounts which can provide information about how an order or subscription was created.
-
-{% enddocs %}
