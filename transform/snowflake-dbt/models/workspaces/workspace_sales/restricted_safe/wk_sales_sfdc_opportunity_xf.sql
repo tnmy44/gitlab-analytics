@@ -524,12 +524,34 @@ WITH edm_opty AS (
     edm_opty.intented_product_tier,
     edm_opty.parent_opportunity,
 
+    -- Calculated fields
+    CASE
+        WHEN LOWER(edm_opty.product_category) LIKE '%premium%'
+            THEN 'Premium'
+        WHEN LOWER(edm_opty.product_category) LIKE '%ultimate%'
+            THEN 'Ultimate'
+        WHEN LOWER(edm_opty.intented_product_tier) LIKE '%premium%'
+            THEN 'Premium'
+        WHEN LOWER(edm_opty.intented_product_tier) LIKE '%ultimate%'
+            THEN 'Ultimate'
+        ELSE 'Other'
+    END AS  product_category_tier,
+
+    CASE
+        WHEN lower(edm_opty.product_category) LIKE '%saas%'
+                THEN 'SaaS'
+        WHEN lower(edm_opty.product_category) LIKE '%self-managed%'
+                THEN 'Self-Managed'
+        ELSE 'Other'
+    END AS  product_category_deployment,
+
     -- demographics fields
     edm_opty.parent_crm_account_upa_country,
     edm_opty.parent_crm_account_upa_state,
     edm_opty.parent_crm_account_upa_city,
     edm_opty.parent_crm_account_upa_street,
     edm_opty.parent_crm_account_upa_postal_code,
+    account.parent_crm_account_upa_country_name,
     edm_opty.parent_crm_account_business_unit
     
     FROM edm_opty
