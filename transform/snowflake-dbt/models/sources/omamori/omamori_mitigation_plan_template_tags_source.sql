@@ -28,7 +28,7 @@ WITH source AS (
 
   {% if is_incremental() %}
     -- Filter only for records from new files based off uploaded_at_gcs
-    -- but first filter on the parititioned column (date_part) to speed up query
+    -- but first filter on the partitioned column (date_part) to speed up query
     WHERE date_part >= (SELECT COALESCE(MAX(uploaded_at_gcs)::DATE, '1970-01-01') AS last_uploaded_at_gcs FROM {{ this }})
       AND uploaded_at_gcs > (SELECT COALESCE(MAX(uploaded_at_gcs), '1970-01-01') AS last_uploaded_at_gcs FROM {{ this }})
   {% endif %}
