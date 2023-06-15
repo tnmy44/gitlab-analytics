@@ -7,8 +7,8 @@ installation_agg AS (
     dim_installation_id,
     MIN(metric_value::TIMESTAMP) AS installation_creation_date
   FROM {{ ref('prep_ping_instance_flattened') }}
-  WHERE ping_created_at > '2023-03-15' --filtering out records that came before GitLab v15.10, when metric was released. Filter in place for full refresh runs.
-    AND metrics_path = 'installation_creation_date'
+  WHERE ping_created_at > '2023-05-15' --filtering out records that came before GitLab v15.10, when metric was released. Filter in place for full refresh runs.
+    AND metrics_path = 'installation_creation_date_approximation'
     AND metric_value != 0 -- 0, when cast to timestamp, returns 1970-01-01
   {{ dbt_utils.group_by(n = 1) }}
 ),
@@ -45,5 +45,5 @@ joined AS (
     created_by="@mpeychet_",
     updated_by="@mdrussell",
     created_date="2021-05-20",
-    updated_date="2023-04-03"
+    updated_date="2023-06-15"
 ) }}
