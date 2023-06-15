@@ -21,7 +21,7 @@ WITH filtered_snowplow_events AS (
         event_label LIKE 'projects_dropdown_frequent_items_list_item_%'
         THEN 'project_dropdown_frequent_items_list_item'
       ELSE event_label
-    END AS event_label
+    END AS event_label,
 {{ dbt_utils.star(from=ref('mart_behavior_structured_event'), except=["EVENT_LABEL","CREATED_BY", "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
   FROM {{ ref('mart_behavior_structured_event') }}
   WHERE behavior_at >= '2021-10-01'
