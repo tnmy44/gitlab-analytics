@@ -6,7 +6,13 @@
 }}
 
 
-SELECT *
+SELECT
+    id,
+    created_at,
+    updated_at,
+    project_id,
+    created_by_user_id,
+    _uploaded_at
 FROM {{ source('gitlab_dotcom', 'cluster_agents') }}
 {% if is_incremental() %}
 

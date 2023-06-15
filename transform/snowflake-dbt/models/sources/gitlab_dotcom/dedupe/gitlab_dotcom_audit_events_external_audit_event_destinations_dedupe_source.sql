@@ -6,7 +6,12 @@
 }}
 
 
-SELECT *
+SELECT 
+    id,
+    namespace_id,
+    created_at,
+    updated_at,
+    _uploaded_at
 FROM {{ source('gitlab_dotcom', 'audit_events_external_audit_event_destinations') }}
 {% if is_incremental() %}
 
