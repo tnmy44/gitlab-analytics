@@ -4593,6 +4593,12 @@ roles:
                     - rkohnke_prep.*.*
                     - rkohnke_prod.*.*
 
+    - rnealon:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - rrendon:
         member_of:
             - analyst_engineering
@@ -5447,6 +5453,11 @@ users:
         can_login: yes
         member_of:
             - rkohnke
+
+    - rnealon:
+        can_login: yes
+        member_of:
+            - rnealon
 
     - rrendon:
         can_login: yes
