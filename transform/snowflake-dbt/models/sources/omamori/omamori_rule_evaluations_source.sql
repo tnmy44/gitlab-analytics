@@ -37,8 +37,8 @@ WITH source AS (
 renamed AS (
   SELECT
     json_value['id']::INT                                          AS id,
-    json_value['rule']::VARCHAR                                   AS rule,
-    json_value['result']::VARCHAR                                 AS outcome,
+    json_value['rule']::VARCHAR                                    AS rule,
+    json_value['result']::VARCHAR                                  AS outcome,
     json_value['elapsed_ms']::INT                                  AS elapsed_ms,
     json_value['throttled_count']::INT                             AS throttled_count,
     json_value['duplicates_removed_count']::INT                    AS duplicates_removed_count,
