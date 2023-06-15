@@ -79,9 +79,9 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "t_omamori",
+    "t_omamori_external",
     default_args=default_args,
-    schedule_interval="0 * * * *",  # hourly
+    schedule_interval="15 * * * *",  # hourly
     start_date=datetime(2023, 5, 6),
     catchup=False,
     max_active_runs=1,
@@ -104,4 +104,50 @@ dbt_external_table_run = KubernetesPodOperator(
     arguments=[external_table_run_cmd],
     dag=dag,
 )
-dbt_external_table_run
+
+# RUN all omomari source models
+model_transform_task_name = f"{DBT_MODULE_NAME}-transform"
+# Run de dupe / rename /scd model
+model_run_cmd = f"""
+    {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
+    dbt run --profiles-dir profile --target prod --models sources.{DBT_MODULE_NAME}+ ; ret=$?;
+    montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+transform_task = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id=model_transform_task_name,
+    name=model_transform_task_name,
+    secrets=dbt_secrets,
+    env_vars=gitlab_pod_env_vars,
+    arguments=[model_run_cmd],
+    affinity=get_affinity("production"),
+    tolerations=get_toleration("production"),
+    dag=dag,
+)
+
+# TEST all omomari source models
+model_test_task_name = f"{DBT_MODULE_NAME}-dbt-tests"
+model_test_cmd = f"""
+    {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
+    dbt test --profiles-dir profile --target prod --models sources.{DBT_MODULE_NAME}+ {run_command_test_exclude} ; ret=$?;
+    montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
+"""
+model_test_task = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id=model_test_task_name,
+    name=model_test_task_name,
+    secrets=dbt_secrets,
+    env_vars=gitlab_pod_env_vars,
+    arguments=[model_test_cmd],
+    affinity=get_affinity("production"),
+    tolerations=get_toleration("production"),
+    dag=dag,
+)
+
+dbt_external_table_run >> transform_task >> model_test_task

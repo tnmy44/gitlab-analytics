@@ -15,7 +15,7 @@ WITH source AS (
     SELECT 
       data_by_row.value['id']::NUMBER                       AS target_earnings_update_id,
       data_by_row.value['employeeId']::NUMBER               AS employee_id,
-      data_by_row.value['customDate']::DATE                 AS effective_date,
+      TRY_TO_DATE(data_by_row.value['customDate']::VARCHAR) AS effective_date,
       data_by_row.value['customAnnualAmountLocal']::VARCHAR AS annual_amount_local,
       data_by_row.value['customAnnualAmountUSD']::VARCHAR   AS annual_amount_usd,
       data_by_row.value['customOTELocal']::VARCHAR          AS ote_local,

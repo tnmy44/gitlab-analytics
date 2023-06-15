@@ -522,7 +522,13 @@ WITH edm_opty AS (
     opportunity_owner.is_rep_flag,
     edm_opty.pushed_count,
     edm_opty.intented_product_tier,
-    edm_opty.parent_opportunity,
+
+    -- to simplify reporting, we adjust parent opportunity to default to the opportunity id when null
+    CASE
+        WHEN edm_opty.parent_opportunity IS NULL
+            THEN edm_opty.dim_crm_opportunity_id
+        ELSE edm_opty.parent_opportunity
+    END  AS parent_opportunity,
 
     -- Calculated fields
     CASE
@@ -593,6 +599,20 @@ WITH edm_opty AS (
         AND (o.is_won = 1
             OR (is_renewal = 1 AND is_lost = 1))
 
+), service_opportunities AS (
+
+    SELECT
+        CASE
+            WHEN parent_opportunity IS NULL
+                THEN opportunity_id
+            ELSE parent_opportunity
+            END  AS opportunity_id,
+        COUNT(opportunity_id)               AS count_service_opportunities,
+        SUM(professional_services_value)    AS total_professional_services_value
+    FROM sfdc_opportunity_xf
+    WHERE professional_services_value <> 0
+    GROUP BY 1
+
 ), oppty_final AS (
 
     SELECT
@@ -602,12 +622,18 @@ WITH edm_opty AS (
       -- DRI Michael Armtz
       churn_metrics.reason_for_loss_staged,
       -- churn_metrics.reason_for_loss_calc, -- part of edm opp mart
-      churn_metrics.churn_contraction_type_calc
+      churn_metrics.churn_contraction_type_calc,
+
+      --services total amount
+      service_opportunities.total_professional_services_value,
+      service_opportunities.count_service_opportunities
 
     FROM sfdc_opportunity_xf
     CROSS JOIN today
     LEFT JOIN churn_metrics
       ON churn_metrics.opportunity_id = sfdc_opportunity_xf.opportunity_id
+    LEFT JOIN service_opportunities 
+      ON service_opportunities.opportunity_id = sfdc_opportunity_xf.opportunity_id
 
 ), add_calculated_net_arr_to_opty_final AS (
 
