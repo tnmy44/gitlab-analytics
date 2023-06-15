@@ -15,7 +15,7 @@ tables:
       SELECT build_id
       , chunk_index
       , data_store
-      , raw_data
+      , NULL AS raw_data
       FROM ci_build_trace_chunks
   ci_builds_runner_session:
     export_schema: 'gitlab_com'
@@ -62,7 +62,7 @@ tables:
     import_query: |-
       SELECT pipeline_id
       , chat_name_id
-      , response_url
+      , NULL AS response_url
       FROM ci_pipeline_chat_data
   ci_project_monthly_usages:
     dbt_source_model: true
@@ -99,10 +99,10 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , key
+      , NULL AS key
       , project_id
       , protected
-      , environment_scope
+      , NULL AS environment_scope
       , masked
       , variable_type
       FROM ci_variables
