@@ -1,8 +1,3 @@
-{{ config({
-        "tags": ["mnpi_exception"]
-    })
-}}
-
 {{ simple_cte([
     ('prep_billing_account_user','prep_billing_account_user')
 ]) }}
