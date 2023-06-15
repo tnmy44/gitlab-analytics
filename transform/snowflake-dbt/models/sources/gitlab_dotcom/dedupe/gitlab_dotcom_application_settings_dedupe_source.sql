@@ -6,10 +6,14 @@
 
 SELECT
     id,
+    default_projects_limit,
+    signup_enabled,
     created_at,
     updated_at,
-    project_id,
-    created_by_user_id,
+    shared_runners_enabled,
+    usage_ping_enabled,
+    shared_runners_minutes,
+    repository_size_limit,
     _uploaded_at
 
 FROM {{ source('gitlab_dotcom', 'application_settings') }}
