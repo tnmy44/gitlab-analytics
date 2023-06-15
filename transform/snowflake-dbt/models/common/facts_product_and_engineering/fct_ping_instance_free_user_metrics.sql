@@ -2,10 +2,6 @@
     tags=["mnpi_exception","product"]
 ) }}
 
-{{config({
-    "materialized": "incremental",
-    "unique_key": "dim_ping_instance_id"
-})}}
 
 {{ simple_cte([
     ('instance_pings', 'dim_ping_instance'),
@@ -141,7 +137,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@snalamaru",
-    updated_by="@mdrussell",
+    updated_by="@rbacovic",
     created_date="2023-01-20",
-    updated_date="2023-04-04"
+    updated_date="2023-06-09"
 ) }}

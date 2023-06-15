@@ -54,6 +54,22 @@ tables:
       FROM ci_builds
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  ci_editor_ai_conversation_messages:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: ci_editor_ai_conversation_messages
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , user_id
+      , project_id
+      , created_at
+      , updated_at
+      , role
+      FROM ci_editor_ai_conversation_messages
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_secure_files:
     dbt_source_model: true
     export_schema: 'gitlab_com'

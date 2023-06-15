@@ -22,7 +22,7 @@
     FROM {{ ref('version_usage_data_source') }} as usage
 
   {% if is_incremental() %}
-          WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+          WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
   {% endif %}
 
 ), usage_data AS (
@@ -32,9 +32,10 @@
       host_id                                                                                                                 AS dim_host_id,
       uuid                                                                                                                    AS dim_instance_id,
       ping_created_at                                                                                                         AS ping_created_at,
+      uploaded_at                                                                                                             AS uploaded_at,
       source_ip_hash                                                                                                          AS ip_address_hash,
       edition                                                                                                                 AS original_edition,
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }}
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP','UPLOADED_AT']) }}
     FROM source
     WHERE uuid IS NOT NULL
       AND version NOT LIKE ('%VERSION%')
@@ -47,9 +48,10 @@
       usage_data.dim_instance_id                                                                                                                  AS dim_instance_id,
       {{ dbt_utils.surrogate_key(['dim_host_id', 'dim_instance_id'])}}                                                                            AS dim_installation_id,
       ping_created_at                                                                                                                             AS ping_created_at,
+      usage_data.uploaded_at                                                                                                                      AS uploaded_at,
       ip_address_hash                                                                                                                             AS ip_address_hash,
       original_edition                                                                                                                            AS original_edition,
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP','UPLOADED_AT']) }},
       IFF(original_edition = 'CE', 'CE', 'EE')                                                                                                    AS main_edition,
       CASE
         WHEN original_edition = 'CE'                                     THEN 'Core'
@@ -83,19 +85,20 @@
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
-    WHERE usage_data.ping_created_at <= (SELECT MAX(created_at) FROM raw_usage_data)
+    WHERE usage_data.ping_created_at  < (SELECT MAX(created_at) FROM raw_usage_data)
       AND NOT(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7' AND ping_created_at >= '2023-02-19') --excluding GitLab SaaS pings from 2023-02-19 and after
 
 ), automated_service_ping AS (
 
     SELECT
-      id AS dim_ping_instance_id,
-      host_id AS dim_host_id,
-      uuid AS dim_instance_id,
+      id                                                AS dim_ping_instance_id,
+      host_id                                           AS dim_host_id,
+      uuid                                              AS dim_instance_id,
       {{ dbt_utils.surrogate_key(['host_id', 'uuid'])}} AS dim_installation_id,
-      created_at AS ping_created_at,
-      NULL AS ip_address_hash,
-      edition AS original_edition,
+      created_at                                        AS ping_created_at,
+      created_at                                        AS uploaded_at,
+      NULL                                              AS ip_address_hash,
+      edition                                           AS original_edition,
       id,
       version,
       instance_user_count,
@@ -161,7 +164,7 @@
         WHEN edition = 'EES'                  THEN 'Starter'
         WHEN edition = 'EEP'                  THEN 'Premium'
         WHEN edition = 'EEU'                  THEN 'Ultimate'
-        ELSE NULL 
+        ELSE NULL
       END AS product_tier,
       FALSE AS is_saas_dedicated,
       'SaaS' AS ping_delivery_type,

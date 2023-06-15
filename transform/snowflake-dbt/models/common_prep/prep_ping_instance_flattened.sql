@@ -11,7 +11,7 @@ WITH source AS (
         *
     FROM {{ ref('prep_ping_instance')}} as usage
     {% if is_incremental() %}
-          WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+          WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
     {% endif %}
 
 ) , flattened_high_level as (
@@ -22,6 +22,7 @@ WITH source AS (
         dim_instance_id                                                                         AS dim_instance_id,
         dim_installation_id                                                                     AS dim_installation_id,
         ping_created_at                                                                         AS ping_created_at,
+        uploaded_at                                                                             AS uploaded_at,
         ip_address_hash                                                                         AS ip_address_hash,
         license_md5                                                                             AS license_md5,
         license_sha256                                                                          AS license_sha256,
@@ -47,7 +48,7 @@ WITH source AS (
   {{ dbt_audit(
       cte_ref="flattened_high_level",
       created_by="@icooper-acp",
-      updated_by="@rbacovic",
+      updated_by="@jpeguero",
       created_date="2022-03-17",
       updated_date="2023-06-12"
   ) }}
