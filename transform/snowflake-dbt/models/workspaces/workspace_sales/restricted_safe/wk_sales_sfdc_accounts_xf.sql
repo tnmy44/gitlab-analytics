@@ -1,8 +1,18 @@
 {{ config(alias='sfdc_accounts_xf') }}
 
-WITH mart_crm_account AS (
-    SELECT *
-    FROM {{ref('mart_crm_account')}}
+WITH raw_account AS (
+
+  SELECT id,
+    account_demographics_upa_country_name__c AS account_upa_country_name
+  FROM {{ source('salesforce', 'account') }}
+
+), mart_crm_account AS (
+
+    SELECT mart_account.*,
+        raw_account.account_upa_country_name AS parent_crm_account_upa_country_name
+    FROM {{ref('mart_crm_account')}} mart_account
+    LEFT JOIN raw_account
+        ON raw_account.id = mart_account.dim_crm_account_id
 
 ), account_owner AS (
 
@@ -198,7 +208,10 @@ SELECT
     mart.is_zi_hashicorp_present                                    AS zi_hashicorp_presence_flag,
     mart.is_zi_aws_cloud_trail_present                              AS zi_aws_cloud_trail_presence_flag,
     mart.is_zi_circle_ci_present                                    AS zi_circle_ci_presence_flag,
-    mart.is_zi_bit_bucket_present                                   AS zi_bit_bucket_presence_flag
+    mart.is_zi_bit_bucket_present                                   AS zi_bit_bucket_presence_flag,
+
+    -- fields from RAW table
+    mart.parent_crm_account_upa_country_name
 
 
 FROM mart_crm_account AS mart
