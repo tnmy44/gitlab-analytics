@@ -13,7 +13,10 @@
     ('dim_license', 'dim_license'),
     ('dim_hosts', 'dim_hosts'),
     ('dim_location', 'dim_location_country'),
-    ('dim_ping_metric', 'dim_ping_metric')
+    ('dim_ping_metric', 'dim_ping_metric'),
+    ('fct_ping_instance', 'fct_ping_instance'),
+    ('dim_app_release_major_minor', 'dim_app_release_major_minor')
+
     ])
 
 }}
@@ -119,6 +122,9 @@
         fct_ping_instance_metric.dim_license_id                                                                                         AS dim_license_id,
         fct_ping_instance_metric.dim_installation_id                                                                                    AS dim_installation_id,
         fct_ping_instance_metric.dim_ping_instance_id                                                                                   AS dim_ping_instance_id,
+        fct_ping_instance_metric.dim_app_release_major_minor_sk                                                                         AS dim_app_release_major_minor_sk,
+        fct_ping_instance_metric.dim_latest_available_app_release_major_minor_sk                                                        AS dim_latest_available_app_release_major_minor_sk,
+        dim_app_release_major_minor.app_release_major_minor_id                                                                          AS app_release_major_minor_id,
         fct_ping_instance_metric.metrics_path                                                                                           AS metrics_path,
         fct_ping_instance_metric.metric_value                                                                                           AS metric_value,
         fct_ping_instance_metric.monthly_metric_value                                                                                   AS monthly_metric_value,
@@ -161,8 +167,17 @@
         dim_ping_instance.major_version                                                                                                 AS major_version,
         dim_ping_instance.minor_version                                                                                                 AS minor_version,
         dim_ping_instance.major_minor_version                                                                                           AS major_minor_version,
+        dim_app_release_major_minor.major_minor_version_num                                                                             AS major_minor_version_num,
         dim_ping_instance.major_minor_version_id                                                                                        AS major_minor_version_id,
         dim_ping_instance.version_is_prerelease                                                                                         AS version_is_prerelease,
+        dim_app_release_major_minor.version_number                                                                                      AS version_number,
+        dim_app_release_major_minor.release_date                                                                                        AS release_date,
+        IFF(DATEDIFF('days', dim_app_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at) < 0 AND version_is_prerelease = FALSE,
+          0, DATEDIFF('days', dim_app_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at)) 
+                                                                                                                                        AS days_after_version_release_date,
+        latest_version.major_minor_version                                                                                              AS latest_version_available_at_ping_creation,
+        IFF(latest_version.version_number - dim_app_release_major_minor.version_number < 0 AND version_is_prerelease = FALSE,
+          0, latest_version.version_number - dim_app_release_major_minor.version_number)                                                AS versions_behind_latest_at_ping_creation,
         dim_ping_instance.is_internal                                                                                                   AS is_internal,
         dim_ping_instance.is_staging                                                                                                    AS is_staging,
         dim_ping_instance.instance_user_count                                                                                           AS instance_user_count,
@@ -209,6 +224,9 @@
       monthly_metric_value,
       has_timed_out,
       dim_ping_instance_id,
+      dim_app_release_major_minor_sk,
+      dim_latest_available_app_release_major_minor_sk,
+      app_release_major_minor_id,
 
       --Foreign Key
       dim_instance_id,
@@ -228,7 +246,13 @@
       major_version,
       minor_version,
       major_minor_version,
+      major_minor_version_num,
       version_is_prerelease,
+      version_number,
+      release_date,
+      days_after_version_release_date,
+      latest_version_available_at_ping_creation,
+      versions_behind_latest_at_ping_creation,
       is_internal,
       is_staging,
       is_trial,
@@ -280,7 +304,7 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@lisvinueza",
+    updated_by="@michellecooper",
     created_date="2022-03-11",
-    updated_date="2023-05-22"
+    updated_date="2023-06-16"
 ) }}

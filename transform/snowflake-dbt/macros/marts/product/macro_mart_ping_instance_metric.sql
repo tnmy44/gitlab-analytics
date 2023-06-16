@@ -10,7 +10,8 @@
     ('fct_charge', 'fct_charge'),
     ('dim_license', 'dim_license'),
     ('dim_location', 'dim_location_country'),
-    ('dim_ping_metric', 'dim_ping_metric')
+    ('dim_ping_metric', 'dim_ping_metric'),
+    ('dim_app_release_major_minor', 'dim_app_release_major_minor')
     ])
 
 }}
@@ -128,6 +129,9 @@
         fct_ping_instance_metric.dim_license_id                                                                                         AS dim_license_id,
         fct_ping_instance_metric.dim_installation_id                                                                                    AS dim_installation_id,
         fct_ping_instance_metric.dim_ping_instance_id                                                                                   AS dim_ping_instance_id,
+        fct_ping_instance_metric.dim_app_release_major_minor_sk                                                                         AS dim_app_release_major_minor_sk,
+        fct_ping_instance_metric.dim_latest_available_app_release_major_minor_sk                                                        AS dim_latest_available_app_release_major_minor_sk,
+        dim_app_release_major_minor.app_release_major_minor_id                                                                          AS app_release_major_minor_id,
         fct_ping_instance_metric.metrics_path                                                                                           AS metrics_path,
         fct_ping_instance_metric.metric_value                                                                                           AS metric_value,
         fct_ping_instance_metric.has_timed_out                                                                                          AS has_timed_out,
@@ -175,8 +179,17 @@
         dim_ping_instance.major_version                                                                                                 AS major_version,
         dim_ping_instance.minor_version                                                                                                 AS minor_version,
         dim_ping_instance.major_minor_version                                                                                           AS major_minor_version,
+        dim_app_release_major_minor.major_minor_version_num                                                                             AS major_minor_version_num,
         dim_ping_instance.major_minor_version_id                                                                                        AS major_minor_version_id,
         dim_ping_instance.version_is_prerelease                                                                                         AS version_is_prerelease,
+        dim_app_release_major_minor.version_number                                                                                      AS version_number,
+        dim_app_release_major_minor.release_date                                                                                        AS release_date,
+        IFF(DATEDIFF('days', dim_app_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at) < 0 AND dim_ping_instance.version_is_prerelease = FALSE,
+           0, DATEDIFF('days', dim_app_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at)) 
+                                                                                                                                        AS days_after_version_release_date,
+        latest_version.major_minor_version                                                                                              AS latest_version_available_at_ping_creation,
+        IFF(latest_version.version_number - dim_app_release_major_minor.version_number < 0 AND dim_ping_instance.version_is_prerelease = FALSE,
+           0, latest_version.version_number - dim_app_release_major_minor.version_number)                                               AS versions_behind_latest_at_ping_creation,
         dim_ping_instance.is_internal                                                                                                   AS is_internal,
         dim_ping_instance.is_staging                                                                                                    AS is_staging,
         dim_ping_instance.instance_user_count                                                                                           AS instance_user_count,
@@ -206,6 +219,10 @@
        AND dim_date.first_day_of_month = license_subscriptions_w_latest_subscription_sha256.reporting_month
       LEFT JOIN dim_location
         ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
+      LEFT JOIN dim_app_release_major_minor
+        ON fct_ping_instance_metric.dim_app_release_major_minor_sk = dim_app_release_major_minor.dim_app_release_major_minor_sk
+      LEFT JOIN dim_app_release_major_minor AS latest_version
+         ON fct_ping_instance_metric.dim_latest_available_app_release_major_minor_sk = latest_version.dim_app_release_major_minor_sk
       WHERE ping_delivery_type = 'Self-Managed'
         OR (ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
 
@@ -216,6 +233,9 @@
       -- Primary Key
       {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'metrics_path']) }} AS ping_instance_metric_id,
       dim_ping_date_id,
+      dim_app_release_major_minor_sk,
+      dim_latest_available_app_release_major_minor_sk,
+      app_release_major_minor_id,
       metrics_path,
       metric_value,
       has_timed_out,
@@ -239,7 +259,13 @@
       major_version,
       minor_version,
       major_minor_version,
+      major_minor_version_num,
       version_is_prerelease,
+      version_number,
+      release_date,
+      days_after_version_release_date,
+      latest_version_available_at_ping_creation,
+      versions_behind_latest_at_ping_creation,
       is_internal,
       is_staging,
       is_trial,
@@ -294,7 +320,7 @@
     created_by="@icooper-acp",
     updated_by="@michellecooper",
     created_date="2022-03-11",
-    updated_date="2023-05-23"
+    updated_date="2023-06-16"
 ) }}
 
 {% endmacro %}
