@@ -4627,6 +4627,13 @@ roles:
                     - rrendon_prep.*.*
                     - rrendon_prod.*.*
 
+    - rrosu:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - dev_xs
+
     - rtaira:
         member_of:
             - reporter
@@ -5463,6 +5470,11 @@ users:
         can_login: yes
         member_of:
             - rrendon
+
+    - rrosu:
+        can_login: yes
+        member_of:
+            - rrosu
 
     - rtaira:
         can_login: yes
