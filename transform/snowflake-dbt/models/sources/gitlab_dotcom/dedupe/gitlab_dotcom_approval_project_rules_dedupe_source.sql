@@ -6,15 +6,7 @@
 }}
 
 
-SELECT
-    id,
-    created_at,
-    updated_at,
-    project_id,
-    approvals_required,
-    rule_type,
-    report_type,
-    _uploaded_at
+SELECT *
 FROM {{ source('gitlab_dotcom', 'approval_project_rules') }}
 {% if is_incremental() %}
 

@@ -67,7 +67,6 @@ tables:
       , end_event_label_id
       , hidden
       , custom
-      , NULL AS name
       , group_value_stream_id
       FROM analytics_cycle_analytics_group_stages
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -87,7 +86,6 @@ tables:
       , created_at
       , updated_at
       , shared_runners_enabled
-      , NULL AS shared_runners_text
       , usage_ping_enabled
       , shared_runners_minutes
       , repository_size_limit
@@ -125,7 +123,6 @@ tables:
       , updated_at
       , project_id
       , approvals_required
-      , NULL AS name
       , rule_type
       , report_type
       FROM approval_project_rules
@@ -171,7 +168,6 @@ tables:
     import_query: |-
       SELECT id
       , namespace_id
-      , NULL AS destination_url
       , created_at
       , updated_at
       FROM audit_events_external_audit_event_destinations
@@ -277,7 +273,6 @@ tables:
       , created_at
       , updated_at
       , project_id
-      , NULL AS name
       , created_by_user_id
       FROM cluster_agents
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
