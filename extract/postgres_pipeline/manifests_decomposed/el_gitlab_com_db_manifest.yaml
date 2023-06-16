@@ -1077,6 +1077,11 @@ tables:
       , end_time
       , status
       , NULL AS name
+      , package_id
+      , eid
+      , project_id
+      , internal_id
+      , ci_build_id
       FROM ml_candidates
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
