@@ -64,6 +64,7 @@ use contact the Data Engineer assigned below for confirmation.
     - [ ] BT/Data VP-level
     - [ ] Security (Security Risk Management Officer)
     - [ ] Privacy (Lead Legal Counsel - Privacy)
+    - [ ] Not applicable - this data source is already extraded and it concerns extending the current pipeline
  
 **Admin**
  * [ ] Create issue for creation of extract process (not needed if using Stitch/FiveTran)
