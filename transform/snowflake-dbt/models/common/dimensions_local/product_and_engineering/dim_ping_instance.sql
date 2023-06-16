@@ -177,7 +177,7 @@ final AS (
       fct_w_month_flag.ping_delivery_type                                                                         AS ping_delivery_type,
       fct_w_month_flag.ping_deployment_type                                                                       AS ping_deployment_type,
       CASE
-        WHEN ping_delivery_type = 'SaaS'                                          THEN TRUE
+        WHEN fct_w_month_flag.ping_deployment_type = 'GitLab.com'                 THEN TRUE
         WHEN fct_w_month_flag.installation_type = 'gitlab-development-kit'        THEN TRUE
         WHEN fct_w_month_flag.hostname = 'gitlab.com'                             THEN TRUE
         WHEN fct_w_month_flag.hostname ILIKE '%.gitlab.com'                       THEN TRUE
@@ -211,5 +211,5 @@ final AS (
     created_by="@icooper-acp",
     updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2023-04-14"
+    updated_date="2023-06-16"
 ) }}

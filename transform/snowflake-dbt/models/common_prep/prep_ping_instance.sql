@@ -72,7 +72,8 @@
       END                                                                                                                                         AS is_saas_dedicated,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
-        WHEN is_saas_dedicated = TRUE THEN 'SaaS'
+        WHEN is_saas_dedicated = TRUE THEN 'Self-Managed' -- Will be change to SaaS once all downstream models that filter delivery_type = Self-Managed are changed to 
+                                                          -- ping_deploymen_type in ('Dedicated', 'Self-managed') to avoid Dedicated data to stop flowing
         ELSE 'Self-Managed'
       END                                                                                                                                         AS ping_delivery_type,
       CASE
