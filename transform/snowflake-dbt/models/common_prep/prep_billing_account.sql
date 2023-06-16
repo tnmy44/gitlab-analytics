@@ -69,7 +69,8 @@
       (SELECT DISTINCT 
         account_id 
        FROM {{ref('zuora_account_source')}}
-       WHERE LOWER(batch) = 'batch20')
+       WHERE LOWER(batch) = 'batch20'
+       OR is_deleted = TRUE)
 
 ), final AS (
 
