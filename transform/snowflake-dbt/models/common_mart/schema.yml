@@ -1258,7 +1258,7 @@ models:
     - name: behavior_at
       description: '{{ doc("behavior_at") }}'
     - name: behavior_date
-      description: '{{ doc("behavior_at") }}'
+      description: '{{ doc("behavior_date") }}'
     - name: dim_namespace_id
       description: '{{ doc("dim_namespace_id_behavior_model") }}'
     - name: dim_project_id
