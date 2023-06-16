@@ -35,3 +35,14 @@ Contains the bulk of the query which is used to estimate a customers likely to e
 
 Created with parameters to specify the model run type, the options being "training" or "scoring". The only difference in the output based on this parameter is in the end dates used to create the data set. 
 {% enddocs %}
+
+{% docs omamori_incremental_source %}
+The SQL code is almost the same for each Omamori table, this macro allows us to make it more DRY.
+
+The macro can be called with the command:
+
+```sql
+{{ omamori_incremental_source('entity_data_external') }}
+```
+
+{% enddocs %}
