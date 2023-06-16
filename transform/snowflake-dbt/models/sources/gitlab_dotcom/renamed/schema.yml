@@ -689,9 +689,6 @@ models:
       - name: confirmation_sent_at
       - name: created_at
       - name: email_address
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
       - name: email_confirmed_at
       - name: gitlab_email_id
       - name: user_id
