@@ -9,8 +9,10 @@ renamed AS (
 
     SELECT
       code::VARCHAR                                          AS program_code, 
-      custom_attributes::VARIANT                             AS custom_attributes,
+      title::VARCHAR                                         AS program_title,
+      type::VARCHAR                                          AS program_type,
       description::VARCHAR                                   AS program_description,
+      custom_attributes::VARIANT                             AS custom_attributes,
       editors::VARIANT                                       AS program_editors,
       id::NUMBER                                             AS program_id, 
       managers::VARIANT                                      AS program_managers,
@@ -28,8 +30,6 @@ renamed AS (
       secondary_contact::VARIANT                             AS program_secondary_contact,
       status::VARCHAR                                        AS program_status,
       tags::VARCHAR                                          AS program_tags,
-      title::VARCHAR                                         AS program_title,
-      type::VARCHAR                                          AS program_type,
       url::VARCHAR                                           AS program_url,
       effective_date::DATE                                   AS program_effective_date,
       created_at::TIMESTAMP                                  AS program_created_at,

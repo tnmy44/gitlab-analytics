@@ -9,9 +9,9 @@ renamed AS (
 
     SELECT
       code::VARCHAR                                          AS vendor_code, 
-      created_at::TIMESTAMP                                  AS vendor_created_at,    
+      title::VARCHAR                                         AS vendor_title,
+      type::VARCHAR                                          AS vendor_type,   
       description::VARCHAR                                   AS vendor_description,
-      end_date::DATE                                         AS vendor_stop_date,
       id::NUMBER                                             AS vendor_id, 
       notes::VARCHAR                                         AS vendor_notes,
       reference_url::VARCHAR                                 AS vendor_reference_url,
@@ -19,8 +19,6 @@ renamed AS (
       secondary_contact::VARIANT                             AS vendor_secondary_contact,
       status::VARCHAR                                        AS vendor_status,
       tags::VARCHAR                                          AS vendor_tags,
-      title::VARCHAR                                         AS vendor_title,
-      type::VARCHAR                                          AS vendor_type,
       url::VARCHAR                                           AS vendor_url,
       mapped['data_assets']::VARIANT                         AS mapped_data_assets,
       mapped['facilities']::VARIANT                          AS mapped_facilities,
@@ -36,7 +34,9 @@ renamed AS (
       PARSE_JSON(custom_attributes)['269']['value']::VARCHAR AS third_party_residual_risk,      
       PARSE_JSON(custom_attributes)['76']['value']::VARCHAR  AS third_party_inherent_risk,  
       start_date::DATE                                       AS vendor_start_date,
+      created_at::TIMESTAMP                                  AS vendor_created_at, 
       updated_at::TIMESTAMP                                  AS vendor_updated_at,
+      end_date::DATE                                         AS vendor_stop_date,
       _sdc_extracted_at::TIMESTAMP                           AS vendor_loaded_at
     FROM source
 
