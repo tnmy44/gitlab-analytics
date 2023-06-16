@@ -233,6 +233,19 @@ specify_dbt_parameters:
     - INPUT=$(dbt --quiet ls --models $DBT_MODELS --output json --output-keys "database schema name depends_on unique_id alias" --profiles-dir profile --target prod)
     - ../../orchestration/clone_dbt_models_select.py $INPUT
 
+🔆⚡️generate_dbt_docs:
+  <<: *snowflake_dbt_jobs
+  variables:
+    LOGURU_COLORIZE: "true"
+  only:
+    changes:
+      - "/models/*.md"
+  script:
+    - *dbt_deps
+    - echo $BRANCH_NAME
+    - dbt docs generate $CI_PROFILE_TARGET || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
+
 # dbt tests
 .dbt_misc_jobs: &dbt_misc_jobs
   <<: *snowflake_dbt_jobs
