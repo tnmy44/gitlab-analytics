@@ -1,5 +1,4 @@
-
-{{ null_or_missing('hello', 'hello_world') }}
+{{ omamori_incremental_source('entity_data_external') }}
 
 renamed AS (
   SELECT

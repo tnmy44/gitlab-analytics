@@ -1,4 +1,4 @@
-{% macro omamori_incremental_source(source_table, source_schema='omamori', condition_column='uploaded_at_gcs', unique_key='id') %}
+{%- macro omamori_incremental_source(source_table, source_schema='omamori', condition_column='uploaded_at_gcs', unique_key='id') -%}
 
 {% set source_table_name = source_table %}
 {% set source_schema_name = source_schema %}
@@ -36,4 +36,4 @@ WITH source AS (
       AND uploaded_at_gcs > (SELECT COALESCE(MAX({{ condition_column }}), '1970-01-01') AS last_uploaded_at_gcs FROM {{ this }})
   {% endif %}
 ),
-{% endmacro %}
+{%- endmacro -%}

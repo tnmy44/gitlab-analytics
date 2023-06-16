@@ -41,8 +41,10 @@ The SQL code is almost the same for each Omamori table, this macro allows us to 
 
 The macro can be called with the command:
 
+{% raw %}
 ```sql
 {{ omamori_incremental_source('entity_data_external') }}
 ```
+{% endraw %}
 
 {% enddocs %}
