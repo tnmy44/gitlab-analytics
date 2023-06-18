@@ -2180,6 +2180,7 @@ roles:
                     - prod.restricted_safe_common
                     - prod.restricted_safe_common_mapping
                     - prod.restricted_safe_common_mart_finance
+                    - prod.restricted_safe_common_mart_marketing
                     - prod.restricted_safe_common_mart_sales
                     - prod.restricted_safe_legacy
                     - prod.restricted_safe_common_prep
@@ -2196,6 +2197,7 @@ roles:
                     - prod.restricted_safe_common.*
                     - prod.restricted_safe_common_mapping.*
                     - prod.restricted_safe_common_mart_finance.*
+                    - prod.restricted_safe_common_mart_marketing.*
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.restricted_safe_legacy.*
                     - prod.restricted_safe_common_prep.*
