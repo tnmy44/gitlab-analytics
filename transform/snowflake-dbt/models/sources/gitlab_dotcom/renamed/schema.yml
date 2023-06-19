@@ -231,6 +231,19 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_ci_job_token_project_scope_links_source
+    description: Base model for Gitlab.com gitlab_dotcom_ci_job_token_project_scope_links
+    columns:
+      - name: ci_job_token_project_scope_link_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_ci_pipeline_schedule_variables_source
     description: Base model for Gitlab.com ci_pipeline_schedule_variables
     columns:
@@ -804,6 +817,22 @@ models:
       - name: gitlab_subscription_id
         description: The namespace associated with the gitlab_subscription.
         tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
+  - name: gitlab_dotcom_gpg_signatures_source
+    description: Base model for Gitlab.com ssh_signatures
+    columns:
+      - name: gpg_signatures_id
+        description: Unique identifier for gpg_signatures
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
         tests:
           - not_null
 
@@ -1651,6 +1680,19 @@ models:
           - not_null
           - unique
 
+  - name: gitlab_dotcom_reviews_source
+    description: Base model for Gitlab.com reviews
+    columns:
+      - name: reviews_id
+        description: Unique identifier for gpg_signatures
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_routes_source
     description: Base model for Gitlab.com paths for namespaces and projects which can be used to link to the actual URLs.
     columns:
@@ -1730,6 +1772,22 @@ models:
         tests:
           - not_null
       - name: sprint_iid
+        tests:
+          - not_null
+
+  - name: gitlab_dotcom_ssh_signatures_source
+    description: Base model for Gitlab.com ssh_signatures
+    columns:
+      - name: ssh_signatures_id
+        description: Unique identifier for ssh_signatures
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
         tests:
           - not_null
 

@@ -38,7 +38,7 @@
       prep_ping_instance.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value
     FROM prep_ping_instance
       {% if is_incremental() %}
-                  WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+                  WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
       {% endif %}
 
 ), add_country_info_to_usage_ping AS (
@@ -65,6 +65,7 @@
       prep_app_release_major_minor.dim_app_release_major_minor_sk                        AS dim_app_release_major_minor_sk,
       latest_version.dim_app_release_major_minor_sk                                      AS dim_latest_available_app_release_major_minor_sk,
       add_country_info_to_usage_ping.ping_created_at                                     AS ping_created_at,
+      add_country_info_to_usage_ping.uploaded_at                                         AS uploaded_at,
       add_country_info_to_usage_ping.hostname                                            AS hostname,
       add_country_info_to_usage_ping.license_sha256                                      AS license_sha256,
       add_country_info_to_usage_ping.license_md5                                         AS license_md5,
@@ -102,6 +103,7 @@
       {{ dbt_utils.surrogate_key(['prep_usage_ping_cte.dim_ping_instance_id']) }}                         AS ping_instance_id,
       prep_usage_ping_cte.dim_ping_instance_id                                                            AS dim_ping_instance_id,
       prep_usage_ping_cte.ping_created_at                                                                 AS ping_created_at,
+      prep_usage_ping_cte.uploaded_at                                                                     AS uploaded_at,
       prep_usage_ping_cte.dim_product_tier_id                                                             AS dim_product_tier_id,
       COALESCE(sha256.dim_subscription_id, md5.dim_subscription_id)                                       AS dim_subscription_id,
       prep_usage_ping_cte.license_subscription_id                                                         AS license_subscription_id,
@@ -141,6 +143,7 @@
       prep_usage_ping_and_license.ping_instance_id                                                           AS ping_instance_id,
       prep_usage_ping_and_license.dim_ping_instance_id                                                       AS dim_ping_instance_id,
       prep_usage_ping_and_license.ping_created_at                                                            AS ping_created_at,
+      prep_usage_ping_and_license.uploaded_at                                                                AS uploaded_at,
       prep_usage_ping_and_license.dim_product_tier_id                                                        AS dim_product_tier_id,
       COALESCE(prep_usage_ping_and_license.license_subscription_id, prep_subscription.dim_subscription_id)   AS dim_subscription_id,
       prep_subscription.dim_crm_account_id                                                                   AS dim_crm_account_id,
@@ -180,7 +183,7 @@
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@jpeguero",
+    updated_by="@rbacovic",
     created_date="2022-03-08",
-    updated_date="2023-04-20"
+    updated_date="2023-06-05"
 ) }}

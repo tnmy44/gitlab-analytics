@@ -159,13 +159,13 @@ selectors:
             value: snapshots/sfdc
           - method: path
             value: snapshots/gitlab_dotcom
+
   - name: six_hourly_salesforce_opportunity
     description: "Non-incremental Salesforce opportunity models"
     definition:
       union:
-        - intersection:
-            - '@source:salesforce'
-            - 'tag:six_hourly'
+        - method: tag
+          value: six_hourly
 
   - name: debugging
     description: This is a selector used for testing and debugging what it in the other selectors

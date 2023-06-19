@@ -9,7 +9,6 @@
     ('dim_product_detail', 'dim_product_detail'),
     ('fct_charge', 'fct_charge'),
     ('dim_license', 'dim_license'),
-    ('dim_hosts', 'dim_hosts'),
     ('dim_location', 'dim_location_country'),
     ('dim_ping_metric', 'dim_ping_metric')
     ])
@@ -57,11 +56,10 @@
       dim_crm_accounts.crm_account_name                                           AS crm_account_name,
       dim_crm_accounts.dim_parent_crm_account_id                                  AS dim_parent_crm_account_id,
       dim_crm_accounts.parent_crm_account_name                                    AS parent_crm_account_name,
-      dim_crm_accounts.parent_crm_account_billing_country                         AS parent_crm_account_billing_country,
+      dim_crm_accounts.parent_crm_account_upa_country                             AS parent_crm_account_upa_country,
       dim_crm_accounts.parent_crm_account_sales_segment                           AS parent_crm_account_sales_segment,
       dim_crm_accounts.parent_crm_account_industry                                AS parent_crm_account_industry,
-      dim_crm_accounts.parent_crm_account_owner_team                              AS parent_crm_account_owner_team,
-      dim_crm_accounts.parent_crm_account_sales_territory                         AS parent_crm_account_sales_territory,
+      dim_crm_accounts.parent_crm_account_territory                               AS parent_crm_account_territory,
       dim_crm_accounts.technical_account_manager                                  AS technical_account_manager,
       MAX(mrr)                                                                    AS max_monthly_mrr,
       MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))  AS is_program_subscription,
@@ -91,7 +89,8 @@
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
     INNER JOIN dim_date
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=23)}}
+    {{ dbt_utils.group_by(n=22)}}
+
 
 
   ), latest_subscription AS (
@@ -156,11 +155,10 @@
         COALESCE(license_subscriptions_w_latest_subscription_md5.crm_account_name                  , license_subscriptions_w_latest_subscription_sha256.crm_account_name                  ) AS crm_account_name,
         COALESCE(license_subscriptions_w_latest_subscription_md5.dim_parent_crm_account_id         , license_subscriptions_w_latest_subscription_sha256.dim_parent_crm_account_id         ) AS dim_parent_crm_account_id,
         COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_name           , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_name           ) AS parent_crm_account_name,
-        COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_billing_country, license_subscriptions_w_latest_subscription_sha256.parent_crm_account_billing_country) AS parent_crm_account_billing_country,
+        COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_upa_country    , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_upa_country    ) AS parent_crm_account_upa_country,
         COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_sales_segment  , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_sales_segment  ) AS parent_crm_account_sales_segment,
         COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_industry       , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_industry       ) AS parent_crm_account_industry,
-        COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_owner_team     , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_owner_team     ) AS parent_crm_account_owner_team,
-        COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_sales_territory, license_subscriptions_w_latest_subscription_sha256.parent_crm_account_sales_territory) AS parent_crm_account_sales_territory,
+        COALESCE(license_subscriptions_w_latest_subscription_md5.parent_crm_account_territory      , license_subscriptions_w_latest_subscription_sha256.parent_crm_account_territory      ) AS parent_crm_account_territory,
         COALESCE(license_subscriptions_w_latest_subscription_md5.technical_account_manager         , license_subscriptions_w_latest_subscription_sha256.technical_account_manager         ) AS technical_account_manager,
         CASE
           WHEN license_subscriptions_w_latest_subscription_sha256.license_expire_date < dim_ping_instance.ping_created_at THEN FALSE
@@ -200,10 +198,6 @@
         ON fct_ping_instance_metric.dim_ping_date_id = dim_date.date_id
       LEFT JOIN dim_ping_instance
         ON fct_ping_instance_metric.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
-      LEFT JOIN dim_hosts
-        ON dim_ping_instance.dim_host_id = dim_hosts.host_id
-          AND dim_ping_instance.ip_address_hash = dim_hosts.source_ip_hash
-          AND dim_ping_instance.dim_instance_id = dim_hosts.instance_id
       LEFT JOIN license_subscriptions_w_latest_subscription_md5
         ON dim_ping_instance.license_md5 = license_subscriptions_w_latest_subscription_md5.license_md5
        AND dim_date.first_day_of_month = license_subscriptions_w_latest_subscription_md5.reporting_month
@@ -277,11 +271,10 @@
       -- account metadata
       crm_account_name,
       parent_crm_account_name,
-      parent_crm_account_billing_country,
+      parent_crm_account_upa_country,
       parent_crm_account_sales_segment,
       parent_crm_account_industry,
-      parent_crm_account_owner_team,
-      parent_crm_account_sales_territory,
+      parent_crm_account_territory,
       technical_account_manager,
 
       ping_created_at,
@@ -299,9 +292,9 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@mdrussell",
+    updated_by="@michellecooper",
     created_date="2022-03-11",
-    updated_date="2023-03-29"
+    updated_date="2023-05-23"
 ) }}
 
 {% endmacro %}

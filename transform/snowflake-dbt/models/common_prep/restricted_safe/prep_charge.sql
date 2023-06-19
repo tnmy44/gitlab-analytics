@@ -13,14 +13,7 @@
     SELECT *
     FROM {{ ref('sfdc_account_source') }}
     WHERE account_id IS NOT NULL
-
-), ultimate_parent_account AS (
-
-    SELECT
-      account_id
-    FROM sfdc_account
-    WHERE account_id = ultimate_parent_account_id
-
+    
 ), zuora_account AS (
 
     SELECT *
@@ -160,7 +153,7 @@
       zuora_rate_plan.subscription_id                                   AS dim_subscription_id,
       zuora_rate_plan_charge.account_id                                 AS dim_billing_account_id,
       map_merged_crm_account.dim_crm_account_id                         AS dim_crm_account_id,
-      ultimate_parent_account.account_id                                AS dim_parent_crm_account_id,
+      sfdc_account.ultimate_parent_account_id                           AS dim_parent_crm_account_id,
       charge_to_order.order_id                                          AS dim_order_id,
       {{ get_date_id('zuora_rate_plan_charge.effective_start_date') }}  AS effective_start_date_id,
       {{ get_date_id('zuora_rate_plan_charge.effective_end_date') }}    AS effective_end_date_id,
@@ -257,8 +250,6 @@
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN sfdc_account
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
-    LEFT JOIN ultimate_parent_account
-      ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
     LEFT JOIN charge_to_order
       ON zuora_rate_plan_charge.rate_plan_charge_id = charge_to_order.rate_plan_charge_id
 
@@ -357,8 +348,6 @@
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN sfdc_account
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
-    LEFT JOIN ultimate_parent_account
-      ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
 
 
 ), combined_charges AS (
@@ -397,7 +386,7 @@
 {{ dbt_audit(
     cte_ref="arr_analysis_framework",
     created_by="@iweeks",
-    updated_by="@chrissharp",
+    updated_by="@lisvinueza",
     created_date="2021-04-28",
-    updated_date="2023-02-10"
+    updated_date="2023-05-21"
 ) }}

@@ -67,6 +67,8 @@ sources:
         identifier: gitlab_db_ci_group_variables
       - name: ci_job_artifacts
         identifier: gitlab_db_ci_job_artifacts
+      - name: ci_job_token_project_scope_links
+        identifier: gitlab_db_ci_job_token_project_scope_links
       - name: ci_namespace_monthly_usages
         identifier: gitlab_db_ci_namespace_monthly_usages
       - name: ci_pipeline_chat_data
@@ -187,6 +189,8 @@ sources:
         identifier: gitlab_db_gitlab_subscription_histories
       - name: gitlab_subscriptions
         identifier: gitlab_db_gitlab_subscriptions
+      - name: gpg_signatures
+        identifier: gitlab_db_gpg_signatures
       - name: group_group_links
         identifier: gitlab_db_group_group_links
       - name: identities
@@ -307,6 +311,8 @@ sources:
         freshness: null
       - name: push_rules
         identifier: gitlab_db_push_rules
+      - name: remote_development_agent_configs
+        identifier: gitlab_db_remote_development_agent_configs
       - name: releases
         identifier: gitlab_db_releases
       - name: repository_languages
@@ -321,6 +327,8 @@ sources:
         identifier: gitlab_db_resource_milestone_events
       - name: resource_weight_events
         identifier: gitlab_db_resource_weight_events
+      - name: reviews
+        identifier: gitlab_db_reviews
       - name: routes
         identifier: gitlab_db_routes
       - name: saml_group_links
@@ -336,6 +344,8 @@ sources:
         identifier: gitlab_db_shards
       - name: sprints
         identifier: gitlab_db_sprints
+      - name: ssh_signatures
+        identifier: gitlab_db_ssh_signatures
       - name: subscriptions
         identifier: gitlab_db_subscriptions
       - name: system_note_metadata
@@ -477,6 +487,8 @@ sources:
         identifier: gitlab_db_users_ops_dashboard_projects
       - name: web_hooks
         identifier: gitlab_db_web_hooks
+      - name: workspaces
+        identifier: gitlab_db_workspaces
       - name: zoom_meetings
         identifier: gitlab_db_zoom_meetings
         freshness:

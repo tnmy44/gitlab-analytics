@@ -22,7 +22,6 @@ renamed AS (
     job_token_scope_enabled::BOOLEAN                       AS job_token_scope_enabled,
     runner_token_expiration_interval::NUMBER               AS runner_token_expiration_interval,
     separated_caches::BOOLEAN                              AS separated_caches,
-    opt_in_jwt::BOOLEAN                                    AS opt_in_jwt,
     allow_fork_pipelines_to_run_in_parent_project::BOOLEAN AS allow_fork_pipelines_to_run_in_parent_project,
     inbound_job_token_scope_enabled::BOOLEAN               AS inbound_job_token_scope_enabled
 

@@ -24,9 +24,16 @@ WITH source AS (
       DATEDIFF(days,calculation_days_in_stage_date::DATE,CURRENT_DATE::DATE) + 1            AS days_in_stage
     FROM {{ source('snapshots', 'sfdc_opportunity_snapshots') }}  AS opportunity
 
+    QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY 
+        dbt_valid_from::DATE, 
+        id 
+    ORDER BY dbt_valid_from DESC
+    ) = 1
+
 ), renamed AS (
 
-SELECT
+     SELECT
         -- keys
         accountid                                                                           AS account_id,
         id                                                                                  AS opportunity_id,
@@ -296,6 +303,10 @@ SELECT
         arr_basis_for_clari__c                          AS arr_basis_for_clari,
         forecasted_churn_for_clari__c                   AS forecasted_churn_for_clari,
         override_arr_basis_clari__c                     AS override_arr_basis_clari,
+
+        -- ps fields - original issue: https://gitlab.com/gitlab-com/sales-team/field-operations/customer-success-operations/-/issues/2723
+        intended_product_tier__c                        AS intended_product_tier,
+        parent_opportunity__c                           AS parent_opportunity_id,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',

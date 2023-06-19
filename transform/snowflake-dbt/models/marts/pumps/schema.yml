@@ -587,6 +587,10 @@ models:
         description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: ci_internal_pipelines_28_days_event
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
       - name: primary_key
@@ -1159,6 +1163,10 @@ models:
         description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: ci_internal_pipelines_28_days_event
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
       - name: primary_key
@@ -1179,3 +1187,26 @@ models:
 
   - name: mart_product_usage_paid_user_metrics_monthly_report_view
     description: '{{ doc("mart_product_usage_paid_user_metrics_monthly_report_view") }}'
+  
+  - name: pump_use_case_adoption_scoring
+    description: Calculates product usage health scores per snapshot_month and installation_id (Self-Managed)/namespace_id (SaaS)
+    columns:
+      - name: snapshot_month
+        tests:
+          - not_null
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+      - name: delivery_type
+        tests:
+          - not_null
+      - name: primary_key
+        tests:
+          - unique
+          - not_null

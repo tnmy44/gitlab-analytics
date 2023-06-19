@@ -154,6 +154,7 @@
                                                                 'Personal Namespace Owner'
                                                                 , 'Group Namespace Owner'
                                                                 , 'Group Namespace Member'
+                                                                , 'Group Namespace Maintainer'
                                                               ) 
           THEN saas_namespace.product_tier_name_namespace
         WHEN marketing_contact_role.marketing_contact_role IN (

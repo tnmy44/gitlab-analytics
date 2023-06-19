@@ -91,11 +91,11 @@ tables:
       , namespace_id
       , project_id
       , source_type
-      , source_full_path
-      , destination_name
-      , destination_namespace
+      , NULL AS source_full_path
+      , NULL AS destination_name
+      , NULL AS destination_namespace
       , status
-      , jid
+      , NULL AS jid
       , created_at
       , updated_at
       , has_failures
@@ -132,8 +132,8 @@ tables:
     import_query: |-
       SELECT cluster_id
       , enabled
-      , encrypted_alert_manager_token
-      , encrypted_alert_manager_token_iv
+      , NULL AS encrypted_alert_manager_token
+      , NULL AS encrypted_alert_manager_token_iv
       , health_status
       , created_at
       , updated_at
@@ -159,7 +159,7 @@ tables:
       SELECT id
       , project_id
       , issue_id
-      , filename
+      , NULL AS filename
       FROM design_management_designs
   design_management_designs_versions:
     dbt_source_model: true
@@ -299,8 +299,8 @@ tables:
       , created_at
       , updated_at
       , status
-      , jid
-      , last_error
+      , NULL AS jid
+      , NULL AS last_error
       , user_id
       FROM group_import_states
   issuable_severities:
@@ -347,10 +347,10 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , client_key
-      , encrypted_shared_secret
-      , encrypted_shared_secret_iv
-      , base_url
+      , NULL AS client_key
+      , NULL AS encrypted_shared_secret
+      , NULL AS encrypted_shared_secret_iv
+      , NULL AS base_url
       , instance_url
       FROM jira_connect_installations
   keys:
@@ -394,7 +394,7 @@ tables:
       , project_id
       , user_id
       , created_at
-      , path
+      , NULL AS path
       FROM lfs_file_locks
   members:
     advanced_metadata: true
@@ -414,7 +414,7 @@ tables:
       , type
       , created_at
       , created_by_id
-      , invite_email
+      , NULL AS invite_email
       , invite_accepted_at
       , invite_token
       , requested_at
@@ -474,7 +474,7 @@ tables:
       , expires_in
       , revoked_at
       , created_at
-      , scopes
+      , NULL AS scopes
       FROM oauth_access_tokens
   pages_domains:
     dbt_source_model: true 
@@ -502,7 +502,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , path
+      , NULL AS path
       , project_id
       , user_id
       , created_at
@@ -529,8 +529,8 @@ tables:
     import_query: |-
       SELECT id
       , shard_id
-      , disk_path
-      , state
+      , NULL AS disk_path
+      , NULL AS state
       , source_project_id
       FROM pool_repositories
   programming_languages:
@@ -560,9 +560,8 @@ tables:
       , keep_latest_artifact
       , restrict_user_defined_variables
       , job_token_scope_enabled
-      , runner_token_expiration_interval
+      , NULL AS runner_token_expiration_interval
       , separated_caches
-      , opt_in_jwt
       , allow_fork_pipelines_to_run_in_parent_project
       , inbound_job_token_scope_enabled
       FROM project_ci_cd_settings
@@ -583,9 +582,9 @@ tables:
     import_query: |-
       SELECT project_id
       , enabled
-      , api_url
-      , project_name
-      , organization_name
+      , NULL AS api_url
+      , NULL AS project_name
+      , NULL AS organization_name
       FROM project_error_tracking_settings
   project_feature_usages:
     export_schema: "gitlab_com"
@@ -632,7 +631,7 @@ tables:
       SELECT project_id
       , create_issue
       , send_email
-      , issue_template_key
+      , NULL AS issue_template_key
       , pagerduty_active
       , auto_close_incident
       , sla_timer
@@ -660,7 +659,7 @@ tables:
     import_query: |-
       SELECT id
       , shard_id
-      , disk_path
+      , NULL AS disk_path
       , project_id
       FROM project_repositories
   project_repository_storage_moves:
@@ -674,8 +673,8 @@ tables:
       , updated_at
       , project_id
       , state
-      , source_storage_name
-      , destination_storage_name
+      , NULL AS source_storage_name
+      , NULL AS destination_storage_name
       FROM project_repository_storage_moves
   project_statistics:
     dbt_snapshots: true
@@ -745,6 +744,19 @@ tables:
 #      FROM resource_state_events
 #      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
 #        AND '{EXECUTION_DATE}'::timestamp
+  reviews:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'reviews'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , author_id
+      , merge_request_id
+      , project_id
+      , created_at
+      FROM reviews
   saml_providers:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -755,7 +767,7 @@ tables:
       SELECT id
       , group_id
       , enabled
-      , certificate_fingerprint
+      , NULL AS certificate_fingerprint
       , sso_url
       , enforced_sso
       , enforced_group_managed_accounts
@@ -779,7 +791,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , name
+      , NULL AS name
       FROM shards
   suggestions:
     export_schema: "gitlab_com"
@@ -792,8 +804,8 @@ tables:
       , relative_order
       , applied
       , commit_id
-      , from_content
-      , to_content
+      , NULL AS from_content
+      , NULL AS to_content
       , lines_above
       , lines_below
       , outdated
@@ -817,7 +829,6 @@ tables:
     import_query: |-
       SELECT user_id
       , job_title
-      , NULL AS other_role
       , registration_objective
       , provisioned_by_group_id
       , provisioned_by_group_at

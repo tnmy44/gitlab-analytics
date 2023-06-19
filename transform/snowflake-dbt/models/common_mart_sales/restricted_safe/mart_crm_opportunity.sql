@@ -71,6 +71,8 @@
       dim_crm_opportunity.vsa_end_date,
       dim_crm_opportunity.vsa_url,
       dim_crm_opportunity.vsa_status,
+      dim_crm_opportunity.intended_product_tier,
+      dim_crm_opportunity.parent_opportunity_id,
       dim_crm_opportunity.deployment_preference,
       dim_crm_opportunity.net_new_source_categories,
       dim_crm_opportunity.invoice_number,
@@ -115,34 +117,24 @@
        -- Account fields
       dim_crm_account.crm_account_name,
       dim_crm_account.parent_crm_account_name,
-      dim_crm_account.parent_crm_account_demographics_business_unit AS account_demographics_business_unit,
-      dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
-      dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
-      dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
-      dim_crm_account.parent_crm_account_demographics_area AS account_demographics_area,
-      dim_crm_account.parent_crm_account_demographics_territory AS account_demographics_territory,
-      dim_crm_account.parent_crm_account_demographics_role_type AS account_demographics_role_type,
-      dim_crm_account.parent_crm_account_gtm_strategy,
-      dim_crm_account.parent_crm_account_focus_account,
       dim_crm_account.parent_crm_account_sales_segment,
-      dim_crm_account.parent_crm_account_zi_technologies,
-      dim_crm_account.parent_crm_account_demographics_sales_segment,
-      dim_crm_account.parent_crm_account_demographics_geo,
-      dim_crm_account.parent_crm_account_demographics_region,
-      dim_crm_account.parent_crm_account_demographics_area,
-      dim_crm_account.parent_crm_account_demographics_territory,
-      dim_crm_account.parent_crm_account_demographics_max_family_employee,
-      dim_crm_account.parent_crm_account_demographics_upa_country,
-      dim_crm_account.parent_crm_account_demographics_upa_state,
-      dim_crm_account.parent_crm_account_demographics_upa_city,
-      dim_crm_account.parent_crm_account_demographics_upa_street,
-      dim_crm_account.parent_crm_account_demographics_upa_postal_code,
-      dim_crm_account.crm_account_demographics_employee_count,
+      dim_crm_account.parent_crm_account_geo,
+      dim_crm_account.parent_crm_account_territory,
+      dim_crm_account.parent_crm_account_region,
+      dim_crm_account.parent_crm_account_area,
+      dim_crm_account.parent_crm_account_business_unit,
+      dim_crm_account.parent_crm_account_role_type,
+      dim_crm_account.parent_crm_account_max_family_employee,
+      dim_crm_account.parent_crm_account_upa_country,
+      dim_crm_account.parent_crm_account_upa_state,
+      dim_crm_account.parent_crm_account_upa_city,
+      dim_crm_account.parent_crm_account_upa_street,
+      dim_crm_account.parent_crm_account_upa_postal_code,
+      dim_crm_account.crm_account_employee_count,
       dim_crm_account.crm_account_gtm_strategy,
       dim_crm_account.crm_account_focus_account,
       dim_crm_account.crm_account_zi_technologies,
       dim_crm_account.is_jihu_account,
-      dim_crm_account.fy22_new_logo_target_list,
       dim_crm_account.admin_manual_source_number_of_employees,
       dim_crm_account.admin_manual_source_account_address,
       dim_crm_account.parent_crm_account_lam_dev_count,
@@ -474,6 +466,7 @@
       fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
       fct_crm_opportunity.calculated_from_ratio_net_arr,
       fct_crm_opportunity.net_arr,
+      fct_crm_opportunity.raw_net_arr,
       fct_crm_opportunity.created_and_won_same_quarter_net_arr,
       fct_crm_opportunity.new_logo_count,
       fct_crm_opportunity.amount,
@@ -504,6 +497,7 @@
       fct_crm_opportunity.arr_basis_for_clari,
       fct_crm_opportunity.forecasted_churn_for_clari,
       fct_crm_opportunity.override_arr_basis_clari
+      
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
@@ -578,9 +572,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jngces",
+    updated_by="@lisvinueza",
     created_date="2020-12-07",
-    updated_date="2023-04-06"
+    updated_date="2023-05-21"
   ) }}
 
 

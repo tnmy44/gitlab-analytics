@@ -64,7 +64,7 @@ Below checklist of activities would be run once for quarter to validate security
    WHERE has_password = 'true'
    AND disabled = 'false'
    AND deleted_on IS NULL
-   AND name NOT IN ('PERMISSION_BOT','FIVETRAN','GITLAB_CI','AIRFLOW','STITCH','SISENSE_RESTRICTED_SAFE','PERISCOPE','MELTANO','TARGET_SNOWFLAKE','GRAFANA','SECURITYBOTSNOWFLAKEAPI', 'GAINSIGHT','MELTANO_DEV','BI_TOOL_EVAL','TABLEAU_RESTRICTED_SAFE','DATA_OBS_USER_1','TABLEAU');
+   AND name NOT IN ('PERMISSION_BOT','FIVETRAN','GITLAB_CI','AIRFLOW','STITCH','SISENSE_RESTRICTED_SAFE','PERISCOPE','MELTANO','TARGET_SNOWFLAKE','GRAFANA','SECURITYBOTSNOWFLAKEAPI', 'GAINSIGHT','MELTANO_DEV','BI_TOOL_EVAL','TABLEAU_RESTRICTED_SAFE','DATA_OBS_USER_1','TABLEAU', 'HIGHTOUCH_USER');
 
  
     ```
@@ -77,6 +77,16 @@ Below checklist of activities would be run once for quarter to validate security
     dbt run-operation orphaned_db_table_check
     ```
     * [ ] Using the list of output tables validate that the tables are no longer in use.
+    * [ ] Send out Slack notification in `#data`
+       * [ ] Slack notification
+          <details>
+          
+          ```
+          Hi Everyone.
+          As part of our quarterly [data health and security audit](https://about.gitlab.com/handbook/business-technology/data-team/data-management/#quarterly-data-health-and-security-audit) we check for orphaned tables in our Snowflake instance (`PREP` and `PROD` database). Orphaned tables are tables with no dbt model attached to it. To keep our Data Platform clean we will drop each quarter orphaned tables in order to keep our Data Platform in a healthy shape. Please review this<link to issue> list of tables that we will drop on `xxxx-xx-xx` and let us know if there are concerns and (some) tables need to be kept in Snowflake.
+          ```
+
+          
     * [ ] Drop tables that are no longer in use.
 
 ## SISENSE

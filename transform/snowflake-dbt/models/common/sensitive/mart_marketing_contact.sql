@@ -390,6 +390,29 @@
       END                                                                                        AS is_individual_namespace_owner,
       CASE 
         WHEN MAX(CASE 
+                  WHEN marketing_contact_order.marketing_contact_role IN (
+                                                                          'Group Namespace Maintainer'
+                                                                        )
+                  AND (marketing_contact_order.is_saas_ultimate_tier OR marketing_contact_order.is_saas_premium_tier OR marketing_contact_order.is_saas_bronze_tier)
+                    THEN 1
+                  ELSE 0
+                END) >= 1 THEN TRUE 
+        ELSE FALSE
+      END                                                                                        AS is_group_maintainer_of_saas_paid_tier,
+      CASE 
+        WHEN MAX(CASE 
+                  WHEN marketing_contact_order.marketing_contact_role IN (
+                                                                          'Group Namespace Maintainer'
+                                                                        )
+                  AND marketing_contact_order.is_saas_free_tier
+                    THEN 1
+                  ELSE 0
+                END) >= 1 THEN TRUE 
+        ELSE FALSE
+      END                                                                                        AS is_group_maintainer_of_saas_free_tier,
+      IFF(is_group_maintainer_of_saas_free_tier OR is_group_maintainer_of_saas_paid_tier, TRUE, FALSE) AS is_group_maintainer_of_saas,
+      CASE 
+        WHEN MAX(CASE 
                   WHEN marketing_contact_order.marketing_contact_role = 'Customer DB Owner' 
                     THEN 1 
                   ELSE 0 
@@ -753,7 +776,7 @@
       marketing_contact.country,
       marketing_contact.mobile_phone,
       marketing_contact.sfdc_parent_sales_segment,
-      marketing_contact.sfdc_parent_crm_account_tsp_region,
+      marketing_contact.sfdc_parent_crm_account_region,
       marketing_contact.marketo_lead_id,
       marketing_contact.is_marketo_lead,
       marketing_contact.is_marketo_email_hard_bounced,
