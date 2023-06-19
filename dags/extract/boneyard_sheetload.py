@@ -36,7 +36,6 @@ default_args = {
     "dagrun_timeout": timedelta(hours=2),
 }
 
-# Set the command for the container
 container_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     cd sheetload/ &&
