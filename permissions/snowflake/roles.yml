@@ -2736,6 +2736,13 @@ roles:
             - transforming_l
             - transforming_xl
 
+    - abhaskar:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - abright:
         member_of:
             - adaptive
@@ -5058,6 +5065,11 @@ users:
             - data_science_loader
             - sales_analytics
             - reporter
+
+    - abhaskar:
+        can_login: yes
+        member_of:
+            - abhaskar
 
     - abright:
         can_login: yes
