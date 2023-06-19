@@ -369,7 +369,15 @@
   FROM namespace_details
   GROUP BY 1
   
-), user_details_and_namespace_details AS (
+), user_trials AS (
+
+  SELECT
+    user_id,
+    MAX(trial_start_date) AS max_trial_start_date
+  FROM namespace_details
+  GROUP BY 1
+
+  ), user_details_and_namespace_details AS (
 
   SELECT
     dim_marketing_contact.dim_marketing_contact_id,
@@ -387,6 +395,7 @@
     dim_marketing_contact.gitlab_dotcom_last_login_date,
     dim_marketing_contact.gitlab_dotcom_email_opted_in,
     IFF(pqls_by_user.user_id IS NOT NULL, TRUE, FALSE) AS is_pql,
+    user_trials.max_trial_start_date,
     user_aggregated_namespace_details.namespaces_array
 
   FROM dim_marketing_contact
@@ -394,9 +403,14 @@
     ON dim_marketing_contact.gitlab_dotcom_user_id = user_aggregated_namespace_details.user_id
   LEFT JOIN pqls_by_user
     ON pqls_by_user.user_id = dim_marketing_contact.gitlab_dotcom_user_id
+  LEFT JOIN user_trials
+    ON user_trials.user_id = dim_marketing_contact.gitlab_dotcom_user_id
 
   WHERE dim_marketing_contact.gitlab_dotcom_user_id IS NOT NULL
-    AND dim_marketing_contact.gitlab_dotcom_created_date::DATE >= '2022-06-01'
+    AND (
+      dim_marketing_contact.gitlab_dotcom_created_date::DATE >= '2022-06-01'
+      OR user_trials.max_trial_start_date::DATE >= DATEADD('month', -3, CURRENT_DATE)
+    )
 
 )
 
@@ -417,6 +431,7 @@
       'gitlab_dotcom_last_login_date',
       'gitlab_dotcom_email_opted_in',
       'is_pql',
+      'max_trial_start_date',
       'namespaces_array'
       ]
 ) }}

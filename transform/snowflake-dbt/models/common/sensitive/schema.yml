@@ -424,6 +424,8 @@ models:
         tests: 
           - unique
           - not_null
+      - name: max_trial_start_date
+        description: The most recent trial start date across all the namespaces associated with the marketing_contact.
       - name: namespaces_array
         description: Ultimate parent namespaces that the marketing contact is directly related to.
 
