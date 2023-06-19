@@ -18,6 +18,7 @@ WITH source AS (
       hasresponded::boolean            AS campaign_member_has_responded,
       firstrespondeddate::date         AS campaign_member_response_date,
       mql_after_campaign__c::boolean   AS is_mql_after_campaign,
+      status                           AS campaign_member_status,
 
         --metadata
       createddate::date                AS campaign_member_created_date,
