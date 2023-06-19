@@ -60,7 +60,7 @@
 ), cdot_billing_account_snapshot AS (
 
     SELECT 
-      billing_account_id,
+      billing_account_id, 
       zuora_account_id,
       zuora_account_name,
       sfdc_account_id,
@@ -79,7 +79,7 @@
 
 ), cdot_billing_account_spined AS (
 
-    SELECT DISTINCT 
+    SELECT  
       snapshot_dates.date_id AS snapshot_id,
       cdot_billing_account_snapshot.*
     FROM cdot_billing_account_snapshot
@@ -89,7 +89,7 @@
 
 ), cdot_billing_account_joined AS (
 
-    SELECT DISTINCT
+    SELECT 
       snapshot_id,
       billing_account_id,
       map_merged_crm_account.dim_crm_account_id  AS dim_crm_account_id,
@@ -108,8 +108,7 @@
 ), joined AS (
 
     SELECT 
-        DISTINCT
-
+        
        --surrogate keys from zuora & cdot
       {{ dbt_utils.surrogate_key(['zuora_account_joined.snapshot_id', 'zuora_account_joined.dim_billing_account_id']) }}                                                                    AS zuora_billing_account_snapshot_id,
       {{ dbt_utils.surrogate_key(['cdot_billing_account_joined.snapshot_id', 'cdot_billing_account_joined.zuora_account_id']) }}                                                            AS cdot_billing_account_snapshot_id,
@@ -151,11 +150,9 @@
        ON zuora_account_joined.dim_billing_account_id = cdot_billing_account_joined.zuora_account_id
        AND zuora_account_joined.snapshot_id = cdot_billing_account_joined.snapshot_id
 
-), final1 AS  (
+), intermediary AS  (
 
-    SELECT 
-      DISTINCT
-
+    SELECT
        --surrogate key
       CASE 
         WHEN joined.zuora_snapshot_id IS NOT NULL and record_data_source = 'exists only in Zuora' THEN joined.zuora_billing_account_snapshot_id 
@@ -191,34 +188,33 @@
 ), final AS (
 
     SELECT 
-      DISTINCT
 
        --surrogate key
-      {{ dbt_utils.surrogate_key(['final1.snapshot_id', 'final1.billing_account_snapshot_id']) }}                                                                                         AS billing_account_snapshot_id,
-      final1.snapshot_id,
+      {{ dbt_utils.surrogate_key(['intermediary.snapshot_id', 'intermediary.billing_account_snapshot_id']) }}                                                                                         AS billing_account_snapshot_id,
+      intermediary.snapshot_id,
 
       --natural key
-      final1.dim_billing_account_id,
+      intermediary.dim_billing_account_id,
 
       --foreign key
-      final1.dim_crm_account_id,
+      intermediary.dim_crm_account_id,
 
       --other relevant attributes
-      final1.billing_account_number,
-      final1.billing_account_name,
-      final1.account_status,
-      final1.parent_id,
-      final1.crm_account_code,
-      final1.crm_entity,
-      final1.account_currency,
-      final1.sold_to_country,
-      final1.ssp_channel,
-      final1.po_required,
-      final1.is_deleted,
-      final1.batch,
-      final1.record_data_source
+      intermediary.billing_account_number,
+      intermediary.billing_account_name,
+      intermediary.account_status,
+      intermediary.parent_id,
+      intermediary.crm_account_code,
+      intermediary.crm_entity,
+      intermediary.account_currency,
+      intermediary.sold_to_country,
+      intermediary.ssp_channel,
+      intermediary.po_required,
+      intermediary.is_deleted,
+      intermediary.batch,
+      intermediary.record_data_source
 
-    FROM final1
+    FROM intermediary
 
 )
 
