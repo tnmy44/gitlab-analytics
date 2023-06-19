@@ -198,7 +198,7 @@
       sfdc_opportunity_source.account_id                                                                    AS dim_crm_account_id,
       sfdc_opportunity_source.opportunity_id                                                                AS dim_crm_opportunity_id,
       sfdc_opportunity_source.owner_id                                                                      AS dim_crm_user_id,
-      sfdc_opportunity_snapshots_source.parent_opportunity_id                                               AS dim_parent_crm_opportunity_id,
+      sfdc_opportunity_source.parent_opportunity_id                                                         AS dim_parent_crm_opportunity_id,
       sfdc_opportunity_source.order_type_stamped                                                            AS order_type,
       sfdc_opportunity_source.opportunity_term                                                              AS opportunity_term_base,
       {{ sales_qualified_source_cleaning('sfdc_opportunity_source.sales_qualified_source') }}               AS sales_qualified_source,
