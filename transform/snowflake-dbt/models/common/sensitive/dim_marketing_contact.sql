@@ -139,6 +139,7 @@ WITH sfdc_lead AS (
       is_pql_marketo,
       is_paid_tier_marketo,
       is_ptpt_contact_marketo,
+      is_ptp_contact_marketo,
       is_impacted_by_user_limit_marketo,
       is_currently_in_trial_marketo,
       trial_start_date_marketo,
@@ -272,6 +273,7 @@ WITH sfdc_lead AS (
       IFNULL(marketo_lead.is_pql_marketo, FALSE)                                                                         AS is_pql_marketo,
       IFNULL(marketo_lead.is_paid_tier_marketo, FALSE)                                                                   AS is_paid_tier_marketo,
       IFNULL(marketo_lead.is_ptpt_contact_marketo, FALSE)                                                                AS is_ptpt_contact_marketo,
+      IFNULL(marketo_lead.is_ptp_contact_marketo, FALSE)                                                                 AS is_ptp_contact_marketo,
       IFNULL(marketo_lead.is_impacted_by_user_limit_marketo, FALSE)                                                      AS is_impacted_by_user_limit_marketo,
       IFNULL(marketo_lead.is_currently_in_trial_marketo, FALSE)                                                          AS is_currently_in_trial_marketo,
       marketo_lead.trial_start_date_marketo                                                                              AS trial_start_date_marketo,
@@ -344,7 +346,7 @@ WITH sfdc_lead AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rmistry",
-    updated_by="@degan",
+    updated_by="@jpeguero",
     created_date="2021-01-19",
-    updated_date="2023-02-15"
+    updated_date="2023-06-19"
 ) }}
