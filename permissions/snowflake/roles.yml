@@ -574,6 +574,10 @@ roles:
             - zuora
             - zuora_central_sandbox
 
+    - analyst_sales_sensitive:
+        warehouses:
+            - dev_xs
+
     - analytics_engineer_core:
         warehouses:
             - dev_xs
@@ -874,6 +878,8 @@ roles:
           warehouses:
               - dev_xs
               - dev_l
+          member_of:
+              - analyst_sales_sensitive
           privileges:
               databases:
                   read:
@@ -1662,6 +1668,7 @@ roles:
                     - prod.restricted_safe_common_mart_product.mart_user_request
                     - prod.restricted_safe_common_mart_product.rpt_user_request_crm_account_issue_epic
                     - prod.restricted_safe_common_mart_product.rpt_user_request_issue_epic
+                    - prod.workspace_customer_success.mart_product_usage_health_score
                     - prod.workspace_customer_success.mart_product_usage_paid_user_metrics_monthly_workspace
                     - prod.pumps.pump_gainsight_metrics_monthly_paid
 
@@ -2173,6 +2180,7 @@ roles:
                     - prod.restricted_safe_common
                     - prod.restricted_safe_common_mapping
                     - prod.restricted_safe_common_mart_finance
+                    - prod.restricted_safe_common_mart_marketing
                     - prod.restricted_safe_common_mart_sales
                     - prod.restricted_safe_legacy
                     - prod.restricted_safe_common_prep
@@ -2189,6 +2197,7 @@ roles:
                     - prod.restricted_safe_common.*
                     - prod.restricted_safe_common_mapping.*
                     - prod.restricted_safe_common_mart_finance.*
+                    - prod.restricted_safe_common_mart_marketing.*
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.restricted_safe_legacy.*
                     - prod.restricted_safe_common_prep.*
@@ -2637,12 +2646,29 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.zuora_api_sandbox_stitch
+                    - prep.zuora_api_sandbox
             tables:
                 read:
                     - raw.zuora_api_sandbox_stitch.*
+                    - prep.zuora_api_sandbox.*
+
+    - zuora_order:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.zuora_order
+            tables:
+                read:
+                    - prep.zuora_order.*
 
     - zuora_stitch_rest_api:
         warehouses:
@@ -2709,6 +2735,13 @@ roles:
             - transforming_s
             - transforming_l
             - transforming_xl
+
+    - abhaskar:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
 
     - abright:
         member_of:
@@ -2974,6 +3007,7 @@ roles:
     - ddeng:
         member_of:
             - analyst_engineering
+            - prometheus
             - restricted_safe
         warehouses:
             - dev_xs
@@ -3811,6 +3845,7 @@ roles:
             - restricted_safe
             - salesforce_sandbox
             - workday 
+            - zengrc
         warehouses:
             - dev_xs
         owns:
@@ -3962,6 +3997,7 @@ roles:
             - analyst_finance
             - customers_db
             - analyst_marketing
+            - analyst_sales_sensitive
             - data_team_analyst
             - restricted_safe
         warehouses:
@@ -4566,6 +4602,12 @@ roles:
                     - rkohnke_prep.*.*
                     - rkohnke_prod.*.*
 
+    - rnealon:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - rrendon:
         member_of:
             - analyst_engineering
@@ -4593,6 +4635,13 @@ roles:
                 write:
                     - rrendon_prep.*.*
                     - rrendon_prod.*.*
+
+    - rrosu:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - dev_xs
 
     - rtaira:
         member_of:
@@ -4653,6 +4702,7 @@ roles:
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
+            - analyst_sales_sensitive
             - data_team_analyst
             - restricted_safe
         warehouses:
@@ -4694,7 +4744,13 @@ roles:
             - analyst_growth
             - customers_db
             - restricted_safe
+            - zuora
             - zuora_api_sandbox_stitch
+            - zuora_central_sandbox
+            - zuora_order
+            - zuora_query_api
+            - zuora_revenue
+            - zuora_stitch_rest_api
         warehouses:
             - dev_xs
             - dev_m
@@ -5009,6 +5065,11 @@ users:
             - data_science_loader
             - sales_analytics
             - reporter
+
+    - abhaskar:
+        can_login: yes
+        member_of:
+            - abhaskar
 
     - abright:
         can_login: yes
@@ -5414,10 +5475,20 @@ users:
         member_of:
             - rkohnke
 
+    - rnealon:
+        can_login: yes
+        member_of:
+            - rnealon
+
     - rrendon:
         can_login: yes
         member_of:
             - rrendon
+
+    - rrosu:
+        can_login: yes
+        member_of:
+            - rrosu
 
     - rtaira:
         can_login: yes

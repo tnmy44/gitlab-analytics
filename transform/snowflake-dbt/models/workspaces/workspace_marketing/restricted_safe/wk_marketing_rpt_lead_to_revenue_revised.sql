@@ -1,4 +1,7 @@
-{{ config(materialized='table') }}
+{{ config(
+    tags=["mnpi_exception"],
+    materialized="table"
+) }}
 
 {{ simple_cte([
     ('person_base','mart_crm_person'),
@@ -7,79 +10,16 @@
     ('map_alternative_lead_demographics','map_alternative_lead_demographics'),
     ('mart_crm_touchpoint', 'mart_crm_touchpoint'),
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
-    ('dim_crm_account', 'dim_crm_account'),
+    ('mart_crm_account', 'mart_crm_account'),
     ('dim_date','dim_date')
 ]) }}
-, upa_base AS ( --pulls every account and it's UPA
-  
-    SELECT 
-      dim_parent_crm_account_id,
-      dim_crm_account_id
-    FROM dim_crm_account
-), first_order_opps AS ( -- pulls only FO CW Opps and their UPA/Account ID
-
-    SELECT
-      dim_parent_crm_account_id,
-      dim_crm_account_id,
-      dim_crm_opportunity_id,
-      close_date,
-      is_sao,
-      sales_accepted_date
-    FROM mart_crm_opportunity_stamped_hierarchy_hist
-    WHERE is_won = true
-      AND order_type = '1. New - First Order'
-
-), accounts_with_first_order_opps AS ( -- shows only UPA/Account with a FO Available Opp on it
-
-    SELECT
-      upa_base.dim_parent_crm_account_id,
-      upa_base.dim_crm_account_id,
-      first_order_opps.dim_crm_opportunity_id,
-      FALSE AS is_first_order_available
-    FROM upa_base 
-    LEFT JOIN first_order_opps
-      ON upa_base.dim_crm_account_id=first_order_opps.dim_crm_account_id
-    WHERE dim_crm_opportunity_id IS NOT NULL
-
-), person_order_type_base AS (
-
-    SELECT DISTINCT
-      person_base.email_hash, 
-      person_base.dim_crm_account_id,
-      upa_base.dim_parent_crm_account_id,
-      mart_crm_opportunity_stamped_hierarchy_hist.dim_crm_opportunity_id,
-      CASE 
-         WHEN is_first_order_available = False AND mart_crm_opportunity_stamped_hierarchy_hist.order_type = '1. New - First Order' THEN '3. Growth'
-         WHEN is_first_order_available = False AND mart_crm_opportunity_stamped_hierarchy_hist.order_type != '1. New - First Order' THEN mart_crm_opportunity_stamped_hierarchy_hist.order_type
-      ELSE '1. New - First Order'
-      END AS person_order_type,
-      ROW_NUMBER() OVER( PARTITION BY email_hash ORDER BY person_order_type) AS person_order_type_number
-    FROM person_base
-    FULL JOIN upa_base
-      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
-    LEFT JOIN accounts_with_first_order_opps
-      ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    FULL JOIN mart_crm_opportunity_stamped_hierarchy_hist
-      ON upa_base.dim_parent_crm_account_id = mart_crm_opportunity_stamped_hierarchy_hist.dim_parent_crm_account_id
-
-), person_order_type_final AS (
-
-    SELECT DISTINCT
-      email_hash,
-      dim_crm_opportunity_id,
-      dim_parent_crm_account_id,
-      dim_crm_account_id,
-      person_order_type
-    FROM person_order_type_base
-    WHERE person_order_type_number=1
-
-), person_base_with_tp AS (
+, person_base_with_tp AS (
 
     SELECT DISTINCT
   --IDs
       person_base.dim_crm_person_id,
       person_base.dim_crm_account_id,
-      dim_crm_account.dim_parent_crm_account_id,
+      mart_crm_account.dim_parent_crm_account_id,
       dim_crm_person.sfdc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
       mart_crm_touchpoint.dim_campaign_id,
@@ -100,8 +40,16 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
-      dim_crm_account.is_first_order_available,
-      person_order_type_final.person_order_type,
+      mart_crm_account.is_first_order_available,
+      CASE
+        WHEN person_base.is_first_order_person = TRUE 
+          THEN '1. New - First Order'
+        ELSE ' 3. Growth'
+      END AS person_order_type,
+
+      --Account Data
+      mart_crm_account.parent_crm_account_lam,
+      mart_crm_account.parent_crm_account_lam_dev_count,
       map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
       COALESCE(map_alternative_lead_demographics.employee_count_segment_custom,map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
@@ -126,6 +74,14 @@
       mart_crm_touchpoint.bizible_referrer_page,
       mart_crm_touchpoint.bizible_referrer_page_raw,
       mart_crm_touchpoint.bizible_integrated_campaign_grouping,
+      mart_crm_touchpoint.bizible_form_page_utm_content,
+      mart_crm_touchpoint.bizible_form_page_utm_budget,
+      mart_crm_touchpoint.bizible_form_page_utm_allptnr,
+      mart_crm_touchpoint.bizible_form_page_utm_partnerid,
+      mart_crm_touchpoint.bizible_landing_page_utm_content,
+      mart_crm_touchpoint.bizible_landing_page_utm_budget,
+      mart_crm_touchpoint.bizible_landing_page_utm_allptnr,
+      mart_crm_touchpoint.bizible_landing_page_utm_partnerid,
       mart_crm_touchpoint.campaign_rep_role_name,
       mart_crm_touchpoint.touchpoint_segment,
       mart_crm_touchpoint.gtm_motion,
@@ -147,14 +103,8 @@
     FROM person_base
     INNER JOIN dim_crm_person
       ON person_base.dim_crm_person_id = dim_crm_person.dim_crm_person_id
-    LEFT JOIN upa_base
-    ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
-    LEFT JOIN dim_crm_account
-    ON person_base.dim_crm_account_id = dim_crm_account.dim_crm_account_id
-    LEFT JOIN accounts_with_first_order_opps
-      ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    LEFT JOIN person_order_type_final
-      ON person_base.email_hash = person_order_type_final.email_hash
+    FULL JOIN mart_crm_account
+      ON person_base.dim_crm_account_id = mart_crm_account.dim_crm_account_id
     LEFT JOIN mart_crm_touchpoint
       ON mart_crm_touchpoint.email_hash = person_base.email_hash
     LEFT JOIN map_alternative_lead_demographics
@@ -167,7 +117,7 @@
     --IDs
       opp.dim_crm_opportunity_id,
       opp.dim_crm_account_id,
-      dim_crm_account.dim_parent_crm_account_id,
+      mart_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
     
@@ -194,6 +144,10 @@
       opp.crm_opp_owner_region_stamped,
       opp.crm_opp_owner_area_stamped,
       opp.crm_opp_owner_geo_stamped,
+
+      --Account Data
+      mart_crm_account.parent_crm_account_lam,
+      mart_crm_account.parent_crm_account_lam_dev_count,
       opp.parent_crm_account_upa_country,
     
     -- Touchpoint Data
@@ -212,6 +166,14 @@
       mart_crm_attribution_touchpoint.bizible_medium,
       mart_crm_attribution_touchpoint.bizible_referrer_page,
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
+      mart_crm_attribution_touchpoint.bizible_form_page_utm_content,
+      mart_crm_attribution_touchpoint.bizible_form_page_utm_budget,
+      mart_crm_attribution_touchpoint.bizible_form_page_utm_allptnr,
+      mart_crm_attribution_touchpoint.bizible_form_page_utm_partnerid,
+      mart_crm_attribution_touchpoint.bizible_landing_page_utm_content,
+      mart_crm_attribution_touchpoint.bizible_landing_page_utm_budget,
+      mart_crm_attribution_touchpoint.bizible_landing_page_utm_allptnr,
+      mart_crm_attribution_touchpoint.bizible_landing_page_utm_partnerid,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.campaign_rep_role_name,
@@ -370,9 +332,11 @@
     FROM mart_crm_opportunity_stamped_hierarchy_hist opp
     LEFT JOIN mart_crm_attribution_touchpoint
       ON opp.dim_crm_opportunity_id=mart_crm_attribution_touchpoint.dim_crm_opportunity_id
-    LEFT JOIN dim_crm_account
-      ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    {{dbt_utils.group_by(n=63)}}
+    FULL JOIN mart_crm_account
+      ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
+    WHERE opp.created_date >= '2021-02-01'
+      OR opp.created_date IS NULL
+    {{dbt_utils.group_by(n=72)}}
     
 ), cohort_base_combined AS (
   
@@ -434,6 +398,10 @@
       crm_opp_owner_region_stamped,
       crm_opp_owner_area_stamped,
       crm_opp_owner_geo_stamped,
+
+  --Account Data
+      COALESCE(person_base_with_tp.parent_crm_account_lam,opp_base_with_batp.parent_crm_account_lam) AS parent_crm_account_lam,
+      COALESCE(person_base_with_tp.parent_crm_account_lam_dev_count,opp_base_with_batp.parent_crm_account_lam_dev_count) AS parent_crm_account_lam_dev_count,
       parent_crm_account_upa_country,
       parent_crm_account_territory,
   
@@ -463,7 +431,15 @@
       COALESCE(person_base_with_tp.bizible_count_u_shaped,opp_base_with_batp.bizible_count_u_shaped) AS bizible_count_u_shaped, 
       COALESCE(person_base_with_tp.is_fmm_influenced,opp_base_with_batp.is_fmm_influenced) AS is_fmm_influenced, 
       COALESCE(person_base_with_tp.is_fmm_sourced,opp_base_with_batp.is_fmm_sourced) AS is_fmm_sourced,
-      COALESCE(person_base_with_tp.campaign_rep_role_name,opp_base_with_batp.campaign_rep_role_name) AS campaign_rep_role_name,
+      COALESCE(person_base_with_tp.bizible_form_page_utm_content,opp_base_with_batp.bizible_form_page_utm_content) AS bizible_form_page_utm_content, 
+      COALESCE(person_base_with_tp.bizible_form_page_utm_budget,opp_base_with_batp.bizible_form_page_utm_budget) AS bizible_form_page_utm_budget, 
+      COALESCE(person_base_with_tp.bizible_form_page_utm_allptnr,opp_base_with_batp.bizible_form_page_utm_allptnr) AS bizible_form_page_utm_allptnr, 
+      COALESCE(person_base_with_tp.bizible_form_page_utm_partnerid,opp_base_with_batp.bizible_form_page_utm_partnerid) AS bizible_form_page_utm_partnerid, 
+      COALESCE(person_base_with_tp.bizible_landing_page_utm_content,opp_base_with_batp.bizible_landing_page_utm_content) AS bizible_landing_page_utm_content, 
+      COALESCE(person_base_with_tp.bizible_landing_page_utm_budget,opp_base_with_batp.bizible_landing_page_utm_budget) AS bizible_landing_page_utm_budget, 
+      COALESCE(person_base_with_tp.bizible_landing_page_utm_allptnr,opp_base_with_batp.bizible_landing_page_utm_allptnr) AS bizible_landing_page_utm_allptnr, 
+      COALESCE(person_base_with_tp.bizible_landing_page_utm_partnerid,opp_base_with_batp.bizible_landing_page_utm_partnerid) AS bizible_landing_page_utm_partnerid, 
+      COALESCE(person_base_with_tp.campaign_rep_role_name,opp_base_with_batp.campaign_rep_role_name) AS campaign_rep_role_name, 
       new_lead_created_sum,
       count_true_inquiry,
       inquiry_sum, 
@@ -588,7 +564,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@lisvinueza",
+    updated_by="@rkohnke",
     created_date="2023-02-15",
-    updated_date="2023-05-21",
+    updated_date="2023-06-13",
   ) }}

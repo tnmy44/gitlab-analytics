@@ -13,8 +13,6 @@ Closes
 
 * [ ] List
 
-* [ ] If tables are non-SCD add them to reconcile process.
-
 #### PGP Test CI job passed?
 
 * [ ] List

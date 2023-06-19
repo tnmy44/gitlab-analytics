@@ -4,7 +4,7 @@ The unique identifier of an event. This is a generated primary key and will not 
 
 {% enddocs %}
 
-{% docs dim_active_product_tier_id %}
+{% docs dim_latest_product_tier_id %}
 
 The unique identifier of the ultimate parent namespace's latest product tier, easily joined to `dim_product_tier`
 
@@ -2095,5 +2095,17 @@ A flag to indicate if the plan is a paid plan or not.
 {% docs namespace_has_code_suggestions_enabled %}
 
 Boolean flag set to True if the namespace has code suggestions enabled. This appears as `code_suggestions` in the gitlab.com db `namespace_settings` table.
+
+{% enddocs %}
+
+{% docs intended_product_tier %}
+
+The intended product tier looking to be purchased for this opportunity.
+
+{% enddocs %}
+
+{% docs parent_opportunity_id %}
+
+The Salesforce opportunity ID for the parent opportunity of this opportunity.
 
 {% enddocs %}

@@ -20,6 +20,7 @@ WITH base AS (
       product_tier_name                AS product_tier_name,
       product_tier_name_short          AS product_tier_name_short,
       product_delivery_type            AS product_delivery_type,
+      product_deployment_type          AS product_deployment_type,
       service_type                     AS service_type,
       is_reporter_license              AS is_reporter_license,
       effective_start_date             AS effective_start_date,
@@ -34,7 +35,7 @@ WITH base AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2022-03-31",
-    updated_date="2022-03-31"
+    updated_date="2023-05-26"
 ) }}

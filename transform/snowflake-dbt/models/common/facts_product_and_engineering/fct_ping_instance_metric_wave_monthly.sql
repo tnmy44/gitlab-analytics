@@ -263,6 +263,8 @@
       ping_instance_wave_sm.merge_requests_security_policy_28_days_user,
       ping_instance_wave_sm.pipelines_implicit_auto_devops_28_days_event,
       ping_instance_wave_sm.pipeline_schedules_28_days_user,
+      -- Wave 8
+      ping_instance_wave_sm.ci_internal_pipelines_28_days_event,
       -- Data Quality Flags
       IFF(ping_instance_wave_sm.instance_user_count != seat_link.active_user_count,
           ping_instance_wave_sm.instance_user_count, NULL)                                               AS instance_user_count_not_aligned,
@@ -312,7 +314,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@mdrussell",
     created_date="2022-07-21",
-    updated_date="2023-04-04"
+    updated_date="2023-05-30"
 ) }}

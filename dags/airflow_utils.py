@@ -27,7 +27,6 @@ def get_sales_analytics_notebooks(frequency: str) -> Dict:
     path = pathlib.Path(f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/")
 
     for file in path.rglob("*.ipynb"):
-
         relative_path = file.relative_to(SALES_ANALYTICS_NOTEBOOKS_PATH)
         notebooks.append(relative_path.as_posix())
         expanded_name = (

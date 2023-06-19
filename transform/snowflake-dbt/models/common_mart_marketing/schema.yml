@@ -15,6 +15,22 @@ models:
           description: Sales segment of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: sdr_region
           description: Region of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
+        - name: bizible_form_page_utm_content
+          description: The `utm_content` parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_budget
+          description: The `utm_budget` parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_allptnr
+          description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_partnerid
+          description: The `utm_partnerid` parameter of the `bizible_form_url`
+        - name: bizible_landing_page_utm_content
+          description: The `utm_content` parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_budget
+          description: The `utm_budget` parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_allptnr
+          description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_partnerid
+          description: The `utm_partnerid` parameter of the `bizible_landing_page`
         - name: is_dg_influenced
           description: Flag indicating a touchpoint is influenced by Demand Gen based on its segment being Demand Gen.
         - name: is_dg_sourced
@@ -65,6 +81,22 @@ models:
           description: Sales segment of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: sdr_region
           description: Region of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
+        - name: bizible_form_page_utm_content
+          description: The `utm_content` parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_budget
+          description: The `utm_budget` parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_allptnr
+          description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_form_url`
+        - name: bizible_form_page_utm_partnerid
+          description: The `utm_partnerid` parameter of the `bizible_form_url`
+        - name: bizible_landing_page_utm_content
+          description: The `utm_content` parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_budget
+          description: The `utm_budget` parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_allptnr
+          description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_landing_page`
+        - name: bizible_landing_page_utm_partnerid
+          description: The `utm_partnerid` parameter of the `bizible_landing_page`
         - name: is_dg_influenced
           description: Flag indicating a touchpoint is influenced by Demand Gen based on its segment being Demand Gen.
         - name: is_dg_sourced
@@ -92,6 +124,8 @@ models:
           description: Sales segment of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: sdr_region
           description: Region of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
+        - name: bdr_prospecting_status
+          description: Indicates whether the account is actively being prospected by a BDR.
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
@@ -103,3 +137,345 @@ models:
           tests:
               - not_null
               - unique
+
+    - name: rpt_lead_to_revenue
+      description: Maps a person (unconverted lead or a contact) to an opportunity through their associated Salesforce account and connects any of their related touchpoints.
+      columns:
+        - name: dim_crm_person_id
+          description: A dbt generated surrogate key combining the lead id and contact id.
+        - name: dim_crm_account_id
+          description: Unique identifier of a crm account from Salesforce.
+        - name: sfdc_record_id
+          description: The 18 digit Salesforce id for the contact or lead.
+        - name: dim_crm_touchpoint_id
+          description: Unique identifier of a bizible touchpoint from Salesforce.
+        - name: dim_crm_btp_touchpoint_id
+          description: Unique identifier of a bizible person touchpoint from Salesforce.
+        - name: dim_crm_batp_touchpoint_id
+          description: Unique identifier of a bizible attribution touchpoint from Salesforce.
+        - name: dim_crm_opportunity_id
+          description: Unique identifier of a crm opportunity from Salesforce.
+        - name: dim_campaign_id
+          description: Unique identifier of a crm campaign from Salesforce.
+        - name: email_hash
+          description: A dbt generated hash of the lead/contact email address from Salesforce.
+        - name: email_domain_type
+          description: The bucketed type of domain of the lead/contact email from Salesforce. 
+        - name: source_buckets
+          description: The bucketed lead source of the lead/contact from Salesforce. 
+        - name: true_inquiry_date
+          description: The SoT field for Inquiry date on a lead/contact, taken from the Inquiry DateTime field in Salesforce.
+        - name: mql_date_first_pt
+          description: The SoT field for MQL date on a lead/contact, taken from the Marketo MQL Date field in Salesforce.
+        - name: accepted_date
+          description: The SoT field for Accepted date on a lead/contact, taken from the Accepted DateTime field in Salesforce.
+        - name: status
+          description: The Lead Status field from the lead/contact in Salesforce. 
+        - name: lead_source
+          description: The Lead Source field from the lead/contact in Salesforce. 
+        - name: is_inquiry
+          description: A calculated flag to determine if a lead/contact is currently an inquiry. 
+        - name: is_mql
+          description: A calculated flag to determine if a lead/contact is currently an MQL. 
+        - name: account_demographics_sales_segment
+          description: The Sales Segment of the matched Ultimate Parent Account, from the lead/contact in Salesforce. 
+        - name: account_demographics_region
+          description: The Region of the matched Ultimate Parent Account, from the lead/contact in Salesforce. 
+        - name: account_demographics_geo
+          description: The Geo of the matched Ultimate Parent Account, from the lead/contact in Salesforce.
+        - name: account_demographics_area
+          description: The Area of the matched Ultimate Parent Account, from the lead/contact in Salesforce. 
+        - name: account_demographics_upa_country
+          description: The Country of the matched Ultimate Parent Account, from the lead/contact in Salesforce. 
+        - name: account_demographics_territory
+          description: The Territory of the matched Ultimate Parent Account, from the lead/contact in Salesforce. 
+        - name: is_first_order_available
+          description: A flag that shows whether or not the matched account hierarchy for the lead/contact is First Order Available, for their next Opportunity in Salesforce. 
+        - name: is_first_order_available
+          description: A flag that shows whether or not the matched account hierarchy for the lead/contact is First Order Available, for their next Opportunity in Salesforce. 
+        - name: person_order_type
+          description: The Order Type, applied to the Person (Lead/Contact), through custom logic that looks up Order Type from related opps.
+        - name: employee_count_segment_custom
+          description: A case statement assigning segment based on the employee count from the first in the order of; Account Demographics Employee Count, Zoominfo Company Employee Count, Cognism Employee Count. Pubsec is always taken from Lean Data Matched Account Sales Segement.
+        - name: employee_bucket_segment_custom
+          description: A case statement assigning segment based on the employee_bucket dim_crm_person. Pubsec is always taken from Lean Data Matched Account Sales Segement.
+        - name: inferred_employee_segment
+          description: A coalesce statement of the employee_count_segment_custom and employee_bucket_segment_custom.
+        - name: geo_custom
+          description: A case statement assigning geo according the [FY23 Territories Mapping File - SSoT](https://docs.google.com/spreadsheets/d/1gElhORjqraKDMQnWzApPelyP_vVa24tAOA85vb5f3Uc/edit#gid=1236326957) using first_country from dim_crm_person.
+        - name: inferred_geo
+          description: The Uppsercase version of geo_custom.
+        - name: opp_order_type
+          description: The Order Type from the opportunity object in Salesforce. 
+        - name: sales_qualified_source_name
+          description: The Sales Qualified Source field on the Opportunity object in Salesforce. 
+        - name: deal_path_name
+          description: The Deal Path field on the Opportunity object in Salesforce. 
+        - name: sales_type
+          description: The Type field on the Opportunity object in Salesforce. 
+        - name: sales_accepted_date
+          description: The SoT date for Sales Acceptance on the Opportunity object in Salesforce. 
+        - name: opp_created_date
+          description: The Create Date on the Opportunity object in Salesforce. 
+        - name: close_date
+          description: The Close Date on the Opportunity object in Salesforce. 
+        - name: is_won
+          description: The Is Won Opportunity flag on the Opportunity object in Salesforce. 
+        - name: is_sao
+          description: The Is SAO flag on the Opportunity object in Salesforce. 
+        - name: new_logo_count
+          description: The FO New Logo formula field on the Opportunity object in Salesforce. 
+        - name: net_arr
+          description: The SoT for Net ARR, the Net ARR field on the Opportunity object in Salesforce. 
+        - name: is_net_arr_closed_deal
+          description: A calculated field on the Opportunity object that looks at whether or not the Net ARR from the Closed deal is valid for summation. 
+        - name: is_net_arr_pipeline_created
+          description: A calculated field on the Opportunity object that looks at whether or not the Net ARR from the Opportunity is valid for summation. 
+        - name: opp_account_demographics_sales_segment
+          description: The Sales Segment of the matched Ultimate Parent Account, from the opportunity in Salesforce. 
+        - name: opp_account_demographics_region
+          description: The Region of the matched Ultimate Parent Account, from the opportunity in Salesforce. 
+        - name: opp_account_demographics_geo
+          description: The Geo of the matched Ultimate Parent Account, from the opportunity in Salesforce. 
+        - name: opp_account_demographics_territory
+          description: The Territory of the matched Ultimate Parent Account, from the opportunity in Salesforce. 
+        - name: opp_account_demographics_area
+          description: The Area of the matched Ultimate Parent Account, from the opportunity in Salesforce. 
+        - name: crm_opp_owner_sales_segment_stamped
+          description: The Sales Segment of the Parent Account of the Opportunity, taking into account historical changes in Salesforce. 
+        - name: crm_opp_owner_region_stamped
+          description: The Region of the Parent Account of the Opportunity, taking into account historical changes in Salesforce. 
+        - name: crm_opp_owner_area_stamped
+          description: The Area of the Parent Account of the Opportunity, taking into account historical changes in Salesforce. 
+        - name: crm_opp_owner_geo_stamped
+          description: The Geo of the Parent Account of the Opportunity, taking into account historical changes in Salesforce. 
+        - name: crm_account_name
+          description: The name of the Salesforce Account. 
+        - name: parent_crm_account_name
+          description: The name of the Salesforce Parent Account. 
+        - name: parent_crm_account_lam
+          description: The LAM of the ultimate parent account in Salesforce. 
+        - name: parent_crm_account_lam_dev_count
+          description: The LAM developer count of the ultimate parent account in Salesforce. 
+        - name: parent_crm_account_upa_country
+          description: The Country of the Parent Account of the Opportunity in Salesforce. 
+        - name: parent_crm_account_territory
+          description: The Territory of the Parent Account of the Opportunity in Salesforce. 
+        - name: bizible_touchpoint_date
+          description: The date of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_touchpoint_position
+          description: The Touchpoint Position of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_touchpoint_source
+          description: The Touchpoint Source of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_touchpoint_type
+          description: The Touchpoint Type of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_ad_campaign_name
+          description: The Touchpoint Ad Campaign Name of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_ad_group_name
+          description: The bucketed bizible ad name, from Salesforce. 
+        - name: bizible_salesforce_campaign
+          description: The Salesforce Campaign name, related to the bizible touchpoint, from Salesforce. 
+        - name: bizible_form_url
+          description: The Touchpoint Form URL of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_landing_page
+          description: The Touchpoint Landing Page URL of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_form_url_raw
+          description: The Touchpoint Full Form URL with UTMs of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_landing_page_raw
+          description: The Touchpoint Full Landing Page URL with UTMs of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_marketing_channel
+          description: The Touchpoint Marketing Channel of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_marketing_channel_path
+          description: The Touchpoint Marketing Channel Path of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_medium
+          description: The Touchpoint Medium of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_referrer_page
+          description: The Touchpoint Referrer Page of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_referrer_page_raw
+          description: The Touchpoint Full Referrer Page with UTMs of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_integrated_campaign_grouping
+          description: A custom grouping of campaigns for the Intergrated Campaign Marketing team, from the Bizible Touchpoint in Salesforce. 
+        - name: touchpoint_segment
+          description: The Touchpoint Segment of the Bizible Touchpoint in Salesforce. 
+        - name: gtm_motion
+          description: The GTM Motion of the Campaign related to the Bizible Touchpoint in Salesforce. 
+        - name: pipe_name
+          description: A custom grouping of Campaigns and Marketing Channel paths for Marketing, from the Bizbiel Touchpoint in Salesforce. 
+        - name: is_dg_influenced
+          description: Flag indicating a touchpoint is influenced by Demand Gen based on its segment being Demand Gen.
+        - name: is_dg_sourced
+          description: Flag indicating a touchpoint is sourced from Demand Gen based on its segment being Demand Gen as well as its position being first touch.
+        - name: bizible_count_first_touch
+          description: The sum of W-Shaped attribution weight, by Bizible Touchpoint, in Salesforce. 
+        - name: bizible_count_lead_creation_touch
+          description: The sum of Custom attribution weight, by Bizible Touchpoint, in Salesforce. 
+        - name: bizible_count_u_shaped
+          description: The weighted attribution of a given Bizible Touchpoint, from the U-Shaped model in Salesforce. 
+        - name: is_fmm_influenced
+          description: Flag indicating a touchpoint is influenced by Field Marketing based on its segment being Field Marketing.
+        - name: is_fmm_sourced
+          description: Flag indicating a touchpoint is sourced from Field Marketing based on its segment being Field Marketing as well as its position being first touch.
+        - name: campaign_rep_role_name
+          description: The Salesforce Campaign Owner's Name from Salesforce. 
+        - name: new_lead_created_sum
+          description: The sum of net new leads, by Bizible Touchpoint, in Salesforce. 
+        - name: count_true_inquiry
+          description: The sum of net new inquiries, by Bizible Touchpoint, in Salesforce. 
+        - name: inquiry_sum
+          description: The sum of inquiries, by Bizible Touchpoint, in Salesforce. 
+        - name: mql_sum
+          description: The sum of mqls, by Bizible Touchpoint, in Salesforce. 
+        - name: accepted_sum
+          description: The sum of accepted leads/contacts, by Bizible Touchpoint, in Salesforce. 
+        - name: new_mql_sum
+          description: The sum of net new mqls, by Bizible Touchpoint, in Salesforce. 
+        - name: new_accepted_sum
+          description: The sum of net new accepted leads/contacts, by Bizible Touchpoint, in Salesforce. 
+        - name: bizible_count_w_shaped
+          description: The sum of W-Shaped attribution weight, by Bizible Touchpoint, in Salesforce. 
+        - name: bizible_count_custom_model
+          description: The sum of Custom attribution weight, by Bizible Touchpoint, in Salesforce. 
+        - name: bizible_weight_custom_model
+          description: The weighted attribution of a given Bizible Touchpoint, from the Custom model in Salesforce. 
+        - name: bizible_weight_u_shaped
+          description: The weighted attribution of a given Bizible Touchpoint, from the U-Shaped model in Salesforce. 
+        - name: bizible_weight_w_shaped
+          description: The weighted attribution of a given Bizible Touchpoint, from the W-Shaped model in Salesforce. 
+        - name: bizible_weight_full_path
+          description: The weighted attribution of a given Bizible Touchpoint, from the Full Path model in Salesforce. 
+        - name: bizible_weight_first_touch
+          description: The weighted attribution of a given Bizible Touchpoint, from the First Touch model in Salesforce. 
+        - name: influenced_opportunity_id
+          description: The Salesforce Opportunity ID, where there is a related Bizible Touchpoint, in Salesforce. 
+        - name: first_opp_created
+          description: The sum of Opportunities created, by Bizible Touchpoint, where the Touchpoint is their First Touch, in Salesforce. 
+        - name: u_shaped_opp_created
+          description: The sum of Opportunities created, by Bizible Touchpoint, weighted according to the U-Shaped attribution model, in Salesforce. 
+        - name: w_shaped_opp_created
+          description: The sum of Opportunities created, by Bizible Touchpoint, weighted according to the W-Shaped attribution model, in Salesforce. 
+        - name: full_shaped_opp_created
+          description: The sum of Opportunities created, by Bizible Touchpoint, weighted according to the Full Path attribution model, in Salesforce. 
+        - name: custom_opp_created
+          description: The sum of Opportunities created, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: linear_opp_created
+          description: The sum of Opportunities created, by Bizible Touchpoint, weighted according to the Linear attribution model, in Salesforce. 
+        - name: first_net_arr
+          description: The sum of Net ARR, by Bizible Touchpoint, where the Touchpoint is their First Touch, in Salesforce. 
+        - name: u_net_arr
+          description: The sum of Net ARR, by Bizible Touchpoint, weighted according to the U-Shaped attribution model, in Salesforce. 
+        - name: w_net_arr
+          description: The sum of Net ARR, by Bizible Touchpoint, weighted according to the W-Shaped attribution model, in Salesforce. 
+        - name: full_net_arr
+          description: The sum of Net ARR, by Bizible Touchpoint, weighted according to the Full Path attribution model, in Salesforce. 
+        - name: custom_net_arr
+          description: The sum of Net ARR, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: linear_net_arr
+          description: The sum of Net ARR, by Bizible Touchpoint, weighted according to the Linear attribution model, in Salesforce. 
+        - name: first_sao
+          description: The sum of SAOs created, by Bizible Touchpoint, where the Touchpoint is their First Touch, in Salesforce. 
+        - name: u_shaped_sao
+          description: The sum of SAOs created, by Bizible Touchpoint, weighted according to the U-Shaped attribution model, in Salesforce. 
+        - name: w_shaped_sao
+          description: The sum of SAOs created, by Bizible Touchpoint, weighted according to the W-Shaped attribution model, in Salesforce. 
+        - name: full_shaped_sao
+          description: The sum of SAOs created, by Bizible Touchpoint, weighted according to the Full Path attribution model, in Salesforce. 
+        - name: custom_sao
+          description: The sum of SAOs created, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: linear_sao
+          description: The sum of SAOs created, by Bizible Touchpoint, weighted according to the Linear attribution model, in Salesforce. 
+        - name: pipeline_first_net_arr
+          description: The sum of Pipeline Net ARR, by Bizible Touchpoint, where the Touchpoint is their First Touch, in Salesforce. 
+        - name: pipeline_u_net_arr
+          description: The sum of Pipeline Net ARR, by Bizible Touchpoint, weighted according to the U-Shaped attribution model, in Salesforce. 
+        - name: pipeline_w_net_arr
+          description: The sum of Pipeline Net ARR, by Bizible Touchpoint, weighted according to the W-Shaped attribution model, in Salesforce. 
+        - name: pipeline_full_net_arr
+          description: The sum of Pipeline Net ARR, by Bizible Touchpoint, weighted according to the Full Path attribution model, in Salesforce. 
+        - name: pipeline_custom_net_arr
+          description: The sum of Pipeline Net ARR, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: pipeline_linear_net_arr
+          description: The sum of Pipeline Net ARR, by Bizible Touchpoint, weighted according to the Linear attribution model, in Salesforce. 
+        - name: won_first
+          description: The sum of Closed Won Opportunities closed, by Bizible Touchpoint, where the Touchpoint is their First Touch, in Salesforce. 
+        - name: won_u
+          description: The sum of Closed Won Opportunities closed, by Bizible Touchpoint, weighted according to the U-Shaped attribution model, in Salesforce. 
+        - name: won_w
+          description: The sum of Closed Won Opportunities closed, by Bizible Touchpoint, weighted according to the W-Shaped attribution model, in Salesforce. 
+        - name: won_full
+          description: The sum of Closed Won Opportunities closed, by Bizible Touchpoint, weighted according to the Full Path attribution model, in Salesforce. 
+        - name: won_custom
+          description: The sum of Closed Won Opportunities closed, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: won_linear
+          description: The sum of Closed Won Opportunities closed, by Bizible Touchpoint, weighted according to the Linear attribution model, in Salesforce. 
+        - name: won_first_net_arr
+          description: The sum of Won Net ARR, by Bizible Touchpoint, where the Touchpoint is their First Touch, in Salesforce. 
+        - name: won_u_net_arr
+          description: The sum of Won Net ARR, by Bizible Touchpoint, weighted according to the U-Shaped attribution model, in Salesforce. 
+        - name: won_w_net_arr
+          description: The sum of Won Net ARR, by Bizible Touchpoint, weighted according to the W-Shaped attribution model, in Salesforce. 
+        - name: won_full_net_arr
+          description: The sum of Won Net ARR, by Bizible Touchpoint, weighted according to the Full Path attribution model, in Salesforce. 
+        - name: won_custom_net_arr
+          description: The sum of Won Net ARR, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: won_linear_net_arr
+          description: The sum of Won Net ARR, by Bizible Touchpoint, weighted according to the Linear attribution model, in Salesforce. 
+        - name: inquiry_date_range_year
+          description: The dim_date date_range_year, when joined to the true_inquiry_date. 
+        - name: inquiry_date_range_quarter
+          description: The dim_date date_range_quarter, when joined to the true_inquiry_date. 
+        - name: inquiry_date_range_month
+          description: The dim_date date_range_month, when joined to the true_inquiry_date. 
+        - name: inquiry_date_range_week
+          description: The dim_date date_range_week, when joined to the true_inquiry_date. 
+        - name: inquiry_date_range_id
+          description: The dim_date date_range_id when joined to the true_inquiry_date. 
+        - name: mql_date_range_year
+          description: The dim_date date_range_year, when joined to the mql_date_first_pt. 
+        - name: mql_date_range_quarter
+          description: The dim_date date_range_quarter, when joined to the mql_date_first_pt. 
+        - name: mql_date_range_month
+          description: The dim_date date_range_month, when joined to the mql_date_first_pt. 
+        - name: mql_date_range_week
+          description: The dim_date date_range_week, when joined to the mql_date_first_pt. 
+        - name: mql_date_range_id
+          description: The dim_date date_range_id when joined to the mql_date_first_pt. 
+        - name: opportunity_created_date_range_year
+          description: The dim_date date_range_year, when joined to the opportunity's create_date. 
+        - name: opportunity_created_date_range_quarter
+          description: The dim_date date_range_quarter, when joined to the opportunity's create_date. 
+        - name: opportunity_created_date_range_month
+          description: The dim_date date_range_month, when joined to the opportunity's create_date. 
+        - name: opportunity_created_date_range_week
+          description: The dim_date date_range_week, when joined to the opportunity's create_date. 
+        - name: opportunity_created_date_range_id
+          description: The dim_date date_range_id when joined to the opportunity's create_date. 
+        - name: sao_date_range_year
+          description: The dim_date date_range_year, when joined to the sales_accepted_date. 
+        - name: sao_date_range_quarter
+          description: The dim_date date_range_quarter, when joined to the sales_accepted_date. 
+        - name: sao_date_range_month
+          description: The dim_date date_range_month, when joined to the sales_accepted_date. 
+        - name: sao_date_range_week
+          description: The dim_date date_range_week, when joined to the sales_accepted_date. 
+        - name: sao_date_range_id
+          description: The dim_date date_range_id when joined to the sales_accepted_date. 
+        - name: closed_date_range_year
+          description: The dim_date date_range_year, when joined to the opportunity's close_date. 
+        - name: closed_date_range_quarter
+          description: The dim_date date_range_quarter, when joined to the opportunity's close_date. 
+        - name: closed_date_range_month
+          description: The dim_date date_range_month, when joined to the opportunity's close_date. 
+        - name: closed_date_range_week
+          description: The dim_date date_range_week, when joined to the opportunity's close_date. 
+        - name: closed_date_range_id
+          description: The dim_date date_range_id when joined to the opportunity's close_date. 
+        - name: touchpoint_date_range_year
+          description: The dim_date date_range_year, when joined to the bizible_touchpoint_date. 
+        - name: touchpoint_date_range_quarter
+          description: The dim_date date_range_quarter, when joined to the bizible_touchpoint_date. 
+        - name: touchpoint_date_range_month
+          description: The dim_date date_range_month, when joined to the bizible_touchpoint_date. 
+        - name: touchpoint_date_range_week
+          description: The dim_date date_range_week, when joined to the bizible_touchpoint_date.           
+        - name: touchpoint_date_range_id
+          description: The dim_date date_range_id when joined to the bizible_touchpoint_date. 

@@ -101,6 +101,7 @@ WITH biz_person AS (
       NULL                                          AS matched_account_sdr_assigned,
       NULL                                          AS matched_account_type,
       NULL                                          AS matched_account_gtm_strategy,
+      NULL                                          AS matched_account_bdr_prospecting_status,
       is_first_order_initial_mql,
       is_first_order_mql,
       is_first_order_person,
@@ -111,6 +112,7 @@ WITH biz_person AS (
       sequence_task_due_date,
       sequence_status,
       is_actively_being_sequenced,
+      is_high_priority,
       prospect_share_status,
       partner_prospect_status,
       partner_prospect_id,
@@ -218,6 +220,7 @@ WITH biz_person AS (
       matched_account_sdr_assigned,
       matched_account_type,
       matched_account_gtm_strategy,
+      matched_account_bdr_prospecting_status,
       is_first_order_initial_mql,
       is_first_order_mql,
       is_first_order_person,
@@ -228,6 +231,7 @@ WITH biz_person AS (
       sequence_task_due_date,
       sequence_status,
       is_actively_being_sequenced,
+      is_high_priority,
       prospect_share_status,
       partner_prospect_status,
       partner_prospect_id,
@@ -310,7 +314,7 @@ WITH biz_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@dmicovic",
     created_date="2020-12-08",
-    updated_date="2022-12-12"
+    updated_date="2023-05-30"
 ) }}
