@@ -63,6 +63,8 @@ sources:
         identifier: gitlab_db_ci_builds
       - name: ci_builds_runner_session
         identifier: gitlab_db_ci_builds_runner_session
+      - name: ci_editor_ai_conversation_messages
+        identifier: gitlab_db_ci_editor_ai_conversation_messages
       - name: ci_group_variables
         identifier: gitlab_db_ci_group_variables
       - name: ci_job_artifacts
