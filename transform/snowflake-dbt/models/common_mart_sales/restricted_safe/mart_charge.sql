@@ -213,7 +213,7 @@
       ON fct_charge.dim_order_id = dim_order_action.dim_order_id
       AND dim_order_action.order_action_type IN ('RenewSubscription', 'CancelSubscription')
     LEFT JOIN prep_billing_account_user
-      ON fct_charge.subscription_created_by_id = prep_billing_account_user.zuora_user_id
+      ON fct_charge.subscription_created_by_user_id = prep_billing_account_user.zuora_user_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,
