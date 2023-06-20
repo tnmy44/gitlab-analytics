@@ -58,15 +58,9 @@ The unique identifier (and natural key) of the project, easily joined to `dim_pr
 
 {% enddocs %}
 
-{% docs dim_user_id_event_model %}
-
-The unique identifier of the user who generated the event, easily joined to `dim_user`. This will be NULL if the event is not tied to a specific user (ex. terraform_reports, etc)
-
-{% enddocs %}
-
 {% docs dim_user_id %}
 
-The unique identifier (and natural key) of the user, easily joined to `dim_user`
+The unique identifier of the user who generated the event, easily joined to `dim_user`. This will be NULL if the event is not tied to a specific user (ex. terraform_reports, etc)
 
 {% enddocs %}
 
@@ -1406,12 +1400,6 @@ Timestamp for the event recorded on the client device.
 {% docs behavior_at %}
 
 Timestamp for when the event actually happened. This appears as `derived_tstamp` in the raw Snowplow data.
-
-{% enddocs %}
-
-{% docs behavior_date %}
-
-The date when the event happened (YYYY-MM-DD)
 
 {% enddocs %}
 
