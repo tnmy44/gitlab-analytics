@@ -63,13 +63,19 @@
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                                                                             AS product_tier,
       CASE
-        WHEN ping_created_at <= '2023-06-01' AND hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
+        WHEN hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
                                                                     '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
-          THEN TRUE
-        WHEN ping_created_at > '2023-06-01'  AND COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated']::BOOLEAN = TRUE
           THEN TRUE
         ELSE FALSE
       END                                                                                                                                         AS is_saas_dedicated,
+      -- CASE
+      --   WHEN ping_created_at <= '2023-06-01' AND hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
+      --                                                               '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
+      --     THEN TRUE
+      --   WHEN ping_created_at > '2023-06-01'  AND COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated']::BOOLEAN = TRUE
+      --     THEN TRUE
+      --   ELSE FALSE
+      -- END                                                                                                                                         AS is_saas_dedicated,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
         WHEN is_saas_dedicated = TRUE THEN 'Self-Managed' -- Will be change to SaaS once all downstream models that filter delivery_type = Self-Managed are changed to 
