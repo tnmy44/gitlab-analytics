@@ -861,7 +861,12 @@
       ptp_scores_by_user.past_insights            AS ptp_past_insights,
       ptp_scores_by_user.past_score_group         AS ptp_past_score_group,
       ptp_scores_by_user.past_score_date          AS ptp_past_score_date,
-      ptp_scores_by_user.days_since_trial_start   AS ptp_days_since_trial_start,
+      CASE
+        WHEN ptp_scores_by_user.days_since_trial_start BETWEEN 0 AND 30 THEN '< 30 days'
+        WHEN ptp_scores_by_user.days_since_trial_start BETWEEN 30 AND 60 THEN '30 - 90 days'
+        WHEN ptp_scores_by_user.days_since_trial_start BETWEEN 60 AND 90 THEN '60 - 90 days'
+        WHEN ptp_scores_by_user.days_since_trial_start >= 90 THEN '90+ days'
+      END                                         AS ptp_days_since_trial_start,
       ptp_scores_by_user.ptp_source               AS ptp_source,
 
       -- Namespace notification dates
