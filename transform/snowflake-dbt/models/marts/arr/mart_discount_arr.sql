@@ -44,6 +44,7 @@ WITH dim_date AS (
 
     SELECT
       fct_invoice_item.charge_id                           AS dim_charge_id,
+      dim_charge.rate_plan_charge_description,
       fct_invoice_item.effective_start_month,
       fct_invoice_item.effective_end_month,
       dim_billing_account_id_subscription,
@@ -63,7 +64,7 @@ WITH dim_date AS (
     WHERE fct_invoice_item.effective_end_month > fct_invoice_item.effective_start_month OR fct_invoice_item.effective_end_month IS NULL
       --filter out 2 subscription_ids with known data quality issues when comparing invoiced subscriptions to the Zuora UI.
       AND dim_subscription_id NOT IN ('2c92a0ff5e1dcf14015e3c191d4f7689','2c92a00e6a3477b5016a46aaec2f08bc')
-    {{ dbt_utils.group_by(n=10) }}
+    {{ dbt_utils.group_by(n=11) }}
 
 ), combined AS (
 
@@ -160,7 +161,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@lisvinueza",
+    updated_by="@nmcavinue",
     created_date="2020-10-21",
-    updated_date="2023-05-22"
+    updated_date="2023-05-30"
 ) }}
