@@ -3779,6 +3779,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - lchilamakuru:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - lmai:
         member_of:
             - analyst_engineering
@@ -5325,6 +5331,11 @@ users:
         can_login: yes
         member_of:
             - kkarthikeyan
+
+    - lchilamakuru:
+        can_login: yes
+        member_of:
+            - lchilamakuru
 
     - lmai:
         can_login: yes
