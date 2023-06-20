@@ -1,13 +1,12 @@
-{{ omamori_incremental_source('entity_data_external') }}
+{{ omamori_incremental_source('mitigation_plan_template_tags_external') }}
 
 renamed AS (
   SELECT
     json_value['id']::INT                                          AS id,
-    json_value['entity_id']::INT                                   AS entity_id,
-    json_value['entity_type']::VARCHAR                             AS entity_type,
-    -- convert epoch microseconds to Snowflake timestamp
     (json_value['created_at']::NUMBER(36, 3) / 1000000)::TIMESTAMP AS created_at,
     (json_value['updated_at']::NUMBER(36, 3) / 1000000)::TIMESTAMP AS updated_at,
+    json_value['mitigation_plan_template_id']::INT                 AS mitigation_plan_template_id,
+    json_value['tag_id']::INT                                      AS tag_id,
     uploaded_at_gcs
   FROM source
 ),
