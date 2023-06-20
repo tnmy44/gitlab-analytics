@@ -35,12 +35,12 @@ reformat AS (
       employee_id,
       effective_date,
       variable_pay,
-      SPLIT_PART(annual_amount_local, ' ', 1) AS annual_amount_local,
-      SPLIT_PART(annual_amount_usd,' ', 1)   AS annual_amount_usd_value,
-      SPLIT_PART(ote_local,' ', 1) AS ote_local,
-      SPLIT_PART(ote_usd,' ', 1)             AS ote_usd,
-      SPLIT_PART(annual_amount_local, ' ', 2) AS annual_amount_local_currency_code,
-      SPLIT_PART(ote_local, ' ', 2) AS ote_local_currency_code,
+      NULLIF(SPLIT_PART(annual_amount_local, ' ', 1),'') AS annual_amount_local,
+      NULLIF(SPLIT_PART(annual_amount_usd,' ', 1),'')    AS annual_amount_usd_value,
+      NULLIF(SPLIT_PART(ote_local,' ', 1),'')            AS ote_local,
+      NULLIF(SPLIT_PART(ote_usd,' ', 1),'')              AS ote_usd,
+      SPLIT_PART(annual_amount_local, ' ', 2)            AS annual_amount_local_currency_code,
+      SPLIT_PART(ote_local, ' ', 2)                      AS ote_local_currency_code,
       ote_type,
       uploaded_at
     FROM renamed
