@@ -58,9 +58,15 @@ The unique identifier (and natural key) of the project, easily joined to `dim_pr
 
 {% enddocs %}
 
-{% docs dim_user_id %}
+{% docs dim_user_id_event_model %}
 
 The unique identifier of the user who generated the event, easily joined to `dim_user`. This will be NULL if the event is not tied to a specific user (ex. terraform_reports, etc)
+
+{% enddocs %}
+
+{% docs dim_user_id %}
+
+The unique identifier (and natural key) of the user, easily joined to `dim_user`
 
 {% enddocs %}
 
@@ -1403,6 +1409,12 @@ Timestamp for when the event actually happened. This appears as `derived_tstamp`
 
 {% enddocs %}
 
+{% docs behavior_date %}
+
+The date when the event happened (YYYY-MM-DD)
+
+{% enddocs %}
+
 {% docs tracker_version %}
 
 Information about the event tracker version. 
@@ -2095,5 +2107,17 @@ A flag to indicate if the plan is a paid plan or not.
 {% docs namespace_has_code_suggestions_enabled %}
 
 Boolean flag set to True if the namespace has code suggestions enabled. This appears as `code_suggestions` in the gitlab.com db `namespace_settings` table.
+
+{% enddocs %}
+
+{% docs intended_product_tier %}
+
+The intended product tier looking to be purchased for this opportunity.
+
+{% enddocs %}
+
+{% docs dim_parent_crm_opportunity_id %}
+
+The Salesforce opportunity ID for the parent opportunity of this opportunity.
 
 {% enddocs %}

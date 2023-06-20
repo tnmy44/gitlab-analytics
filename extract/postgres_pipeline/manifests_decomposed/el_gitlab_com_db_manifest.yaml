@@ -19,16 +19,16 @@ tables:
       , ended_at
       , events
       , iid
-      , severity
+      , NULL AS severity
       , status
       , issue_id
       , project_id
-      , title
-      , description
-      , service
-      , monitoring_tool
-      , hosts
-      , payload
+      , NULL AS title
+      , NULL AS description
+      , NULL AS service
+      , NULL AS monitoring_tool
+      , NULL AS hosts
+      , NULL AS payload
       FROM alert_management_alerts
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -43,10 +43,10 @@ tables:
       , updated_at
       , project_id
       , active
-      , endpoint_identifier
-      , name
-      , payload_example
-      , payload_attribute_mapping
+      , NULL AS endpoint_identifier
+      , NULL AS name
+      , NULL AS payload_example
+      , NULL AS payload_attribute_mapping
       FROM alert_management_http_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -67,7 +67,6 @@ tables:
       , end_event_label_id
       , hidden
       , custom
-      , name
       , group_value_stream_id
       FROM analytics_cycle_analytics_group_stages
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -87,7 +86,6 @@ tables:
       , created_at
       , updated_at
       , shared_runners_enabled
-      , shared_runners_text
       , usage_ping_enabled
       , shared_runners_minutes
       , repository_size_limit
@@ -106,7 +104,7 @@ tables:
       , updated_at
       , merge_request_id
       , approvals_required
-      , name
+      , NULL AS name
       , rule_type
       , report_type
       , section
@@ -125,7 +123,6 @@ tables:
       , updated_at
       , project_id
       , approvals_required
-      , name
       , rule_type
       , report_type
       FROM approval_project_rules
@@ -171,7 +168,6 @@ tables:
     import_query: |-
       SELECT id
       , namespace_id
-      , destination_url
       , created_at
       , updated_at
       FROM audit_events_external_audit_event_destinations
@@ -187,9 +183,9 @@ tables:
       , created_at
       , user_id
       , result
-      , ip_address
+      , NULL AS ip_address
       , provider
-      , user_name
+      , NULL AS user_name
       FROM authentication_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -277,7 +273,6 @@ tables:
       , created_at
       , updated_at
       , project_id
-      , name
       , created_by_user_id
       FROM cluster_agents
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -311,15 +306,15 @@ tables:
       , created_at
       , updated_at
       , enabled
-      , name
+      , NULL AS name
       , environment_scope
       , cluster_type
       , domain
       , managed
-      , namespace_per_environment
+      , NULL AS namespace_per_environment
       , management_project_id
       , cleanup_status
-      , cleanup_status_reason
+      , NULL AS cleanup_status_reason
       , helm_major_version
       FROM clusters
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -351,7 +346,7 @@ tables:
     import_query: |-
       SELECT id
       , project_id
-      , name
+      , NULL AS name
       , created_at
       , updated_at
       , status
@@ -366,7 +361,7 @@ tables:
       , migration_skipped_at
       , migration_retries_count
       , migration_skipped_reason
-      , migration_aborted_in_state
+      , NULL AS migration_aborted_in_state
       , last_cleanup_deleted_tags_count
       FROM container_repositories
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -430,7 +425,7 @@ tables:
       , created_at
       , updated_at
       , status
-      , comment
+      , NULL AS comment
       , approval_rule_id
       FROM deployment_approvals
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -448,7 +443,7 @@ tables:
       , environment_id
       , ref
       , tag
-      , sha
+      , NULL AS sha
       , user_id
       , deployable_id
       , deployable_type
@@ -470,7 +465,7 @@ tables:
     import_query: |-
       SELECT id
       , user_id
-      , email
+      , NULL AS email
       , created_at
       , updated_at
       , confirmed_at
@@ -491,10 +486,10 @@ tables:
       , name
       , created_at
       , updated_at
-      , external_url
+      , NULL AS external_url
       , environment_type
       , state
-      , slug
+      , NULL AS slug
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -525,7 +520,7 @@ tables:
       , parent_id
       , relative_position
       , start_date_sourcing_epic_id
-      , external_key
+      , NULL AS external_key
       , confidential
       FROM epics
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -559,8 +554,8 @@ tables:
       , project_id
       , created_at
       , updated_at
-      , external_url
-      , name
+      , NULL AS external_url
+      , NULL AS name
       FROM external_status_checks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -602,12 +597,12 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , extern_uid
+      , NULL AS extern_uid
       , provider
       , user_id
       , created_at
       , updated_at
-      , secondary_extern_uid
+      , NULL AS secondary_extern_uid
       , saml_provider_id
       FROM identities
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -755,8 +750,8 @@ tables:
       , failed_to_import_count
       , status
       , jid
-      , jira_project_key
-      , jira_project_name
+      , NULL AS jira_project_key
+      , NULL AS jira_project_name
       , scheduled_at
       , error_message
       FROM jira_imports
@@ -823,13 +818,13 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , cn
+      , NULL AS cn
       , group_access
       , group_id
       , created_at
       , updated_at
-      , provider
-      , filter
+      , NULL AS provider
+      , NULL AS filter
       FROM ldap_group_links
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -840,11 +835,11 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , oid
+      , NULL AS oid
       , size
       , created_at
       , updated_at
-      , file
+      , NULL AS file
       , file_store
       FROM lfs_objects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -861,7 +856,7 @@ tables:
       , project_id
       , created_at
       , updated_at
-      , repository_type
+      , NULL AS repository_type
       FROM lfs_objects_projects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -930,10 +925,10 @@ tables:
       , merge_request_id
       , created_at
       , updated_at
-      , base_commit_sha
+      , NULL AS base_commit_sha
       , real_size
-      , head_commit_sha
-      , start_commit_sha
+      , NULL AS head_commit_sha
+      , NULL AS start_commit_sha
       , commits_count
       FROM merge_request_diffs
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -981,7 +976,7 @@ tables:
       SELECT merge_request_id
       , created_at
       , updated_at
-      , suggested_reviewers
+      , NULL AS suggested_reviewers
       FROM merge_request_predictions
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -995,7 +990,7 @@ tables:
       SELECT id
       , iid
       , target_branch
-      , source_branch
+      , NULL AS source_branch
       , source_project_id
       , author_id
       , assignee_id
@@ -1007,8 +1002,8 @@ tables:
       , merge_status
       , target_project_id
       , updated_by_id
-      , merge_error
-      , NULL as merge_params
+      , NULL AS merge_error
+      , NULL AS merge_params
       , merge_when_pipeline_succeeds
       , merge_user_id
       , approvals_before_merge
@@ -1050,7 +1045,7 @@ tables:
       SELECT id
       , iid
       , title
-      , description
+      , NULL AS description
       , project_id
       , due_date
       , created_at
@@ -1076,7 +1071,12 @@ tables:
       , start_time
       , end_time
       , status
-      , name
+      , NULL AS name
+      , package_id
+      , eid
+      , project_id
+      , internal_id
+      , ci_build_id
       FROM ml_candidates
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1093,7 +1093,7 @@ tables:
       , iid
       , project_id
       , user_id
-      , name
+      , NULL AS name
       , deleted_on
       FROM ml_experiments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -1150,13 +1150,13 @@ tables:
       , created_at
       , updated_at
       , type
-      , avatar
+      , NULL AS avatar
       , membership_lock
       , share_with_group_lock
       , visibility_level
       , request_access_enabled
       , ldap_sync_status
-      , ldap_sync_error
+      , NULL AS ldap_sync_error
       , ldap_sync_last_update_at
       , ldap_sync_last_successful_update_at
       , ldap_sync_last_sync_at
@@ -1187,7 +1187,7 @@ tables:
       , namespace_id
       , prevent_forking_outside_group
       , allow_mfa_for_subgroups
-      , default_branch_name
+      , NULL AS default_branch_name
       , repository_read_only
       , delayed_project_removal
       , resource_access_token_creation_allowed
@@ -1217,12 +1217,12 @@ tables:
       , created_at
       , updated_at
       , project_id
-      , attachment
+      , NULL AS attachment
       , line_code
       , commit_id
       , noteable_id
       , system
-      , st_diff
+      , NULL AS st_diff
       , updated_by_id
       , type
       , position
@@ -1291,7 +1291,7 @@ tables:
       , active
       , created_at
       , updated_at
-      , name
+      , NULL AS name
       , description
       , iid
       , version
@@ -1308,8 +1308,8 @@ tables:
       , project_id
       , created_at
       , updated_at
-      , name
-      , version
+      , NULL AS name
+      , NULL AS version
       , package_type
       , creator_id
       FROM packages_packages
@@ -1382,13 +1382,13 @@ tables:
       , prevent_merge_without_jira_issue
       , cve_id_request_enabled
       , mr_default_target_self
-      , previous_default_branch
+      , NULL AS previous_default_branch
       , warn_about_potentially_unwanted_characters
-      , merge_commit_template 
+      , NULL AS merge_commit_template 
       , has_shimo
-      , squash_commit_template
+      , NULL AS squash_commit_template
       , legacy_open_source_license_available
-      , target_platforms
+      , NULL AS target_platforms
       , enforce_auth_checks_on_uploads 
       FROM project_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -1413,16 +1413,16 @@ tables:
       , import_url
       , visibility_level
       , archived
-      , avatar
-      , merge_requests_template
+      , NULL AS avatar
+      , NULL AS merge_requests_template
       , star_count
       , merge_requests_rebase_enabled
       , import_type
-      , import_source
+      , NULL AS import_source
       , approvals_before_merge
       , reset_approvals_on_push
       , merge_requests_ff_only_enabled
-      , issues_template
+      , NULL AS issues_template
       , mirror
       , mirror_user_id
       , shared_runners_enabled
@@ -1440,7 +1440,7 @@ tables:
       , repository_read_only
       , request_access_enabled
       , has_external_wiki
-      , ci_config_path
+      , NULL AS ci_config_path
       , lfs_enabled
       , only_allow_merge_if_all_discussions_are_resolved
       , repository_size_limit
@@ -1456,7 +1456,7 @@ tables:
       , only_mirror_protected_branches
       , pull_mirror_available_overridden
       , mirror_overwrites_diverged_branches
-      , external_authorization_classification_label
+      , NULL AS external_authorization_classification_label
       , project_namespace_id
       , NULL AS container_registry_enabled
       FROM projects
@@ -1558,7 +1558,7 @@ tables:
       , project_id
       , created_at
       , updated_at
-      , name
+      , NULL AS name
       , group_id
       , required_approval_count
       FROM protected_environments
@@ -1602,12 +1602,12 @@ tables:
     import_query: |-
       SELECT id
       , tag
-      , description
+      , NULL AS description
       , project_id
       , created_at
       , updated_at
       , author_id
-      , sha
+      , NULL AS sha
       FROM releases
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1632,17 +1632,17 @@ tables:
     import_query: |-
       SELECT id
       , project_id
-      , url
+      , NULL AS url
       , enabled
       , update_status
       , last_update_at
       , last_successful_update_at
-      , last_error
+      , NULL AS last_error
       , created_at
       , updated_at
       , last_update_started_at
       , only_protected_branches
-      , remote_name
+      , NULL AS remote_name
       , error_notification_sent
       , keep_divergent_refs
       FROM remote_mirrors
@@ -1683,7 +1683,7 @@ tables:
       , created_at
       , cached_markdown_version
       , reference
-      , reference_html
+      , NULL AS reference_html
       FROM resource_label_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1761,7 +1761,7 @@ tables:
       , group_id
       , created_at
       , updated_at
-      , saml_group_name
+      , NULL AS saml_group_name
       FROM saml_group_links
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1843,8 +1843,8 @@ tables:
       SELECT id
       , integration_id
       , team_id
-      , team_name
-      , alias
+      , NULL AS team_name
+      , NULL AS alias
       , user_id
       , created_at
       , updated_at
@@ -1860,13 +1860,13 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , title
-      , content
+      , NULL AS title
+      , NULL AS content
       , author_id
       , project_id
       , created_at
       , updated_at
-      , file_name
+      , NULL AS file_name
       , type
       , visibility_level
       FROM snippets
@@ -1889,9 +1889,9 @@ tables:
       , iid
       , cached_markdown_version
       , title
-      , title_html
+      , NULL AS title_html
       , description
-      , description_html
+      , NULL AS description_html
       , state_enum
       FROM sprints
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -2005,15 +2005,15 @@ tables:
     import_query: |-
       SELECT id
       , size
-      , path
-      , checksum
+      , NULL AS path
+      , NULL AS checksum
       , model_id
       , model_type
       , uploader
       , created_at
       , store
-      , mount_point
-      , secret
+      , NULL AS mount_point
+      , NULL AS secret
       FROM uploads
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2052,7 +2052,7 @@ tables:
       , merge_requests_sort
       , roadmaps_sort
       , first_day_of_week
-      , timezone
+      , NULL AS timezone
       , time_display_relative
       , NULL AS time_format_in_24h
       , projects_sort
@@ -2061,7 +2061,7 @@ tables:
       , setup_for_company
       , render_whitespace_in_code
       , tab_width
-      , NULL as experience_level
+      , NULL AS experience_level
       , view_diffs_file_by_file
       , id
       , gitpod_enabled
@@ -2084,8 +2084,8 @@ tables:
       , sign_in_count
       , current_sign_in_at
       , last_sign_in_at
-      , current_sign_in_ip
-      , last_sign_in_ip
+      , NULL AS current_sign_in_ip
+      , NULL AS last_sign_in_ip
       , created_at
       , updated_at
       , name
@@ -2100,7 +2100,7 @@ tables:
       , password_expires_at
       , created_by_id
       , last_credential_check_at
-      , avatar
+      , NULL AS avatar
       , confirmed_at
       , confirmation_sent_at
       , unconfirmed_email
@@ -2115,7 +2115,7 @@ tables:
       , consumed_timestep
       , layout
       , hide_project_limit
-      , note
+      , NULL AS note
       , otp_grace_period_started_at
       , external
       , auditor
@@ -2191,10 +2191,10 @@ tables:
       , project_id
       , scanner_id
       , primary_identifier_id
-      , uuid
+      , NULL AS uuid
       , name
       , metadata_version
-      , raw_metadata
+      , NULL AS raw_metadata
       , vulnerability_id
       FROM vulnerability_occurrences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -2223,7 +2223,7 @@ tables:
       SELECT created_at
       , updated_at
       , issue_id
-      , progress
+      , NULL AS progress
       FROM work_item_progresses
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2251,7 +2251,7 @@ tables:
       , created_at
       , updated_at
       , issue_status
-      , url
+      , NULL AS url
       FROM zoom_meetings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

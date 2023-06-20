@@ -40,3 +40,18 @@ macros:
       - name: model_run_type
         type: string
         description: Either 'training' or 'scoring' based on the desired output.
+  - name: omamori_incremental_source
+    description: '{{ doc("omamori_incremental_source") }}'
+    arguments:
+      - name: source_table
+        type: string
+        description: Name of the source table (from schema.yml file).
+      - name: source_schema
+        type: string
+        description: Name of the source table (from schema.yml file). Default value is GITLAB_DOTCOM.
+      - name: condition_column
+        type: string
+        description: Name of the column for data deduplication. Default value is UPDATED_AT_GCS.
+      - name: unique_key
+        type: string
+        description: Unique column (pseudo primary key). Default value is ID.

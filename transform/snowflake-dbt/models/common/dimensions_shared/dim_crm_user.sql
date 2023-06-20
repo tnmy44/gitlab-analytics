@@ -1,3 +1,8 @@
+-- depends_on: {{ ref('prep_crm_user') }}
+{{ config(
+    tags=["six_hourly"]
+) }}
+
 WITH final AS (
 
     SELECT 
@@ -13,7 +18,7 @@ WITH final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@michellecooper",
+    updated_by="@chrissharp",
     created_date="2020-11-20",
-    updated_date="2022-01-25"
+    updated_date="2023-05-04"
 ) }}

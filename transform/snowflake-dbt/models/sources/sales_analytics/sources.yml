@@ -15,3 +15,6 @@ sources:
     tables:
       - name: xray_curves_qtd_fitted
       - name: xray_curves_fy_n4q_fitted
+      - name: ae_credits
+      - name: ae_quotas
+      - name: ae_quotas_unpivoted
