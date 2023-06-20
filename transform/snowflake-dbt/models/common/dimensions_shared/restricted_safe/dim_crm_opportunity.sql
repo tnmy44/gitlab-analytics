@@ -16,6 +16,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.dim_crm_opportunity_id,
       prep_crm_opportunity.opportunity_name,
       prep_crm_opportunity.dim_crm_user_id,
+      prep_crm_opportunity.dim_parent_crm_opportunity_id,
 
       -- logistical information
       prep_crm_opportunity.generated_source,
@@ -220,10 +221,8 @@ WITH prep_crm_opportunity AS (
 
       -- PS related
       prep_crm_opportunity.intended_product_tier,
-      prep_crm_opportunity.parent_opportunity_id,
 
       prep_crm_opportunity.downgrade_details,
-
 
       -- metadata
       prep_crm_opportunity._last_dbt_run

@@ -91,6 +91,7 @@
       sfdc_opportunity_snapshots_source.account_id                                                                  AS dim_crm_account_id,
       sfdc_opportunity_snapshots_source.opportunity_id                                                              AS dim_crm_opportunity_id,
       sfdc_opportunity_snapshots_source.owner_id                                                                    AS dim_crm_user_id,
+      sfdc_opportunity_snapshots_source.parent_opportunity_id                                                       AS dim_parent_crm_opportunity_id,
       sfdc_opportunity_snapshots_source.order_type_stamped                                                          AS order_type,
       sfdc_opportunity_snapshots_source.opportunity_term                                                            AS opportunity_term_base,
       {{ sales_qualified_source_cleaning('sfdc_opportunity_snapshots_source.sales_qualified_source') }}             AS sales_qualified_source,
@@ -158,7 +159,7 @@
       END                                                                                                         AS opportunity_owner_user_area,
       sfdc_account_snapshot.crm_account_owner_role                                                                AS opportunity_owner_role,
       sfdc_account_snapshot.crm_account_owner_title                                                               AS opportunity_owner_title,
-      {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED",
+      {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED",
                                                                                "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", 
                                                                                "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", 
                                                                                "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_snapshots_source")}},
@@ -197,6 +198,7 @@
       sfdc_opportunity_source.account_id                                                                    AS dim_crm_account_id,
       sfdc_opportunity_source.opportunity_id                                                                AS dim_crm_opportunity_id,
       sfdc_opportunity_source.owner_id                                                                      AS dim_crm_user_id,
+      sfdc_opportunity_source.parent_opportunity_id                                                         AS dim_parent_crm_opportunity_id,
       sfdc_opportunity_source.order_type_stamped                                                            AS order_type,
       sfdc_opportunity_source.opportunity_term                                                              AS opportunity_term_base,
       {{ sales_qualified_source_cleaning('sfdc_opportunity_source.sales_qualified_source') }}               AS sales_qualified_source,
@@ -264,7 +266,7 @@
       END                                                                                                   AS opportunity_owner_user_area,
       sfdc_user_roles_source.name                                                                           AS opportunity_owner_role,
       account_owner.title                                                                                   AS opportunity_owner_title,
-      {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", 
+      {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED", "IS_WON", 
                                                                      "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", 
                                                                      "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_source")}},
       NULL                                                                                                  AS dbt_scd_id,
@@ -1225,7 +1227,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@jngCES",
     created_date="2022-02-23",
-    updated_date="2023-04-07"
+    updated_date="2023-06-15"
 ) }}

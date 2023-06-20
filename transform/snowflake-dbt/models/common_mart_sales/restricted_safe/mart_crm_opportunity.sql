@@ -26,6 +26,7 @@
       --surrogate keys
       dim_crm_account.dim_parent_crm_account_id,
       fct_crm_opportunity.dim_crm_user_id,
+      dim_crm_opportunity.dim_parent_crm_opportunity_id,
       dim_crm_opportunity.duplicate_opportunity_id,
       fct_crm_opportunity.merged_crm_opportunity_id,
       fct_crm_opportunity.record_type_id,
@@ -72,7 +73,6 @@
       dim_crm_opportunity.vsa_url,
       dim_crm_opportunity.vsa_status,
       dim_crm_opportunity.intended_product_tier,
-      dim_crm_opportunity.parent_opportunity_id,
       dim_crm_opportunity.deployment_preference,
       dim_crm_opportunity.net_new_source_categories,
       dim_crm_opportunity.invoice_number,

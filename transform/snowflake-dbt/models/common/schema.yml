@@ -4968,8 +4968,8 @@ models:
         description: '{{ doc("downgrade_details") }}'
       - name: intended_product_tier
         description: '{{ doc("intended_product_tier") }}'
-      - name: parent_opportunity_id
-        description: '{{ doc("parent_opportunity_id") }}'
+      - name: dim_parent_crm_opportunity_id
+        description: '{{ doc("dim_parent_crm_opportunity_id") }}'
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
