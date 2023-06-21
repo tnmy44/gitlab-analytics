@@ -12,7 +12,12 @@ WITH source AS (
     FROM {{ ref('detailed_gcp_billing_source')}}
     {% if is_incremental() %}
 
-    WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
+    WHERE uploaded_at > (SELECT MAX({{ var('incremental_backfill_date', 'uploaded_at') }}) FROM {{ this }})
+      AND uploaded_at <= (SELECT DATEADD(MONTH, 1, MAX({{ var('incremental_backfill_date', 'uploaded_at') }})) FROM {{ this }})
+
+    {% else %}
+    -- This will cover the first creation of the table or a full refresh and requires that the table be backfilled
+    WHERE uploaded_at > DATEADD('day', -30 ,CURRENT_DATE())
 
     {% endif %}
 
