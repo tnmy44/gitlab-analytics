@@ -3,7 +3,8 @@
 ) }}
 
 {{ simple_cte([
-    ('rpt_lead_to_revenue','rpt_lead_to_revenue')
+    ('rpt_lead_to_revenue','rpt_lead_to_revenue'),
+    ('dim_date','dim_date')
 ]) }}
 
 , final AS ( 
@@ -47,8 +48,32 @@
 
     --Flags
         is_mql,
-        is_sao
+        is_sao,
+
+    --Inquiry Dates
+        inquiry_date.first_day_of_weekAS inquiry_date_range_week,
+        DATE_TRUNC(month, inquiry_date.date_actual) AS inquiry_date_range_month,
+        inquiry_date.fiscal_quarter_name_fy AS inquiry_date_range_quarter,
+        inquiry_date.fiscal_year AS inquiry_date_range_year,
+
+    --MQL Dates
+        mql_date.first_day_of_weekAS mql_date_range_week,
+        DATE_TRUNC(month, mql_date.date_actual) AS mql_date_range_month,
+        mql_date.fiscal_quarter_name_fy AS mql_date_range_quarter,
+        mql_date.fiscal_year AS mql_date_range_year,
+
+    --SAO Dates
+        sao_date.first_day_of_weekAS sao_date_range_week,
+        DATE_TRUNC(month, sao_date.date_actual) AS sao_date_range_month,
+        sao_date.fiscal_quarter_name_fy AS sao_date_range_quarter,
+        sao_date.fiscal_year AS sao_date_range_year
     FROM rpt_lead_to_revenue
+    LEFT JOIN dim_date inquiry_date 
+        ON rpt_lead_to_revenue.true_inquiry_date.dim_date.date_actual
+    LEFT JOIN dim_date mql_date 
+        ON rpt_lead_to_revenue.mql_date_first_pt.dim_date.date_actual
+    LEFT JOIN dim_date sao_date 
+        ON rpt_lead_to_revenue.sales_accepted_date.dim_date.date_actual
     WHERE (account_demographics_geo != 'JIHU'
      OR account_demographics_geo IS null) 
      AND (crm_opp_owner_geo_stamped != 'JIHU'
