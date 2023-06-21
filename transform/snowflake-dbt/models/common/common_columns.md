@@ -2109,3 +2109,10 @@ The intended product tier looking to be purchased for this opportunity.
 The Salesforce opportunity ID for the parent opportunity of this opportunity.
 
 {% enddocs %}
+
+
+{% docs dim_namespace_order_trial_sk %}
+
+The surrogate key of `prep_namespace_order_trial` model. Currently identified by hashing the namespace_id field that is being sourced from customers portal at gitlab.com.
+
+{% enddocs %}
