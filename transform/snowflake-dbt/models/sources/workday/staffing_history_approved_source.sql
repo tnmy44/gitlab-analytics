@@ -14,7 +14,7 @@ renamed AS (
     d.value['HIRE_DATE']::DATE                          AS hire_date,
     d.value['TERMINATION_DATE']::DATE                   AS termination_date,
     d.value['COUNTRY_CURRENT']::VARCHAR                 AS country_past,
-    d.value['COUNTRY_PROPOSED']::VARCHAR                AS country_curent,
+    d.value['COUNTRY_PROPOSED']::VARCHAR                AS country_current,
     d.value['REGION_CURRENT']::VARCHAR                  AS region_past,
     d.value['REGION_PROPOSED']::VARCHAR                 AS region_current,
     d.value['DEPARTMENT_CURRENT']::VARCHAR              AS department_past,
