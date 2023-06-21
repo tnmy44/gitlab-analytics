@@ -13,7 +13,6 @@ WITH source AS (
     user_id::NUMBER                                     AS user_id,
     DATEADD('ms', start_time, '1970-01-01')::TIMESTAMP  AS start_at,
     DATEADD('ms', end_time, '1970-01-01')::TIMESTAMP    AS end_at,
-    status::NUMBER                                      AS status
     status::NUMBER                                      AS status,
     package_id::NUMBER                                  AS package_id,
     eid::TEXT                                           AS ml_candidate_eid,
