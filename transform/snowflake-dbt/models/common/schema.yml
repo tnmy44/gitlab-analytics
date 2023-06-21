@@ -2896,6 +2896,12 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
 
   - name: dim_ping_metric
     description: ' {{ doc("dim_ping_metric") }} '

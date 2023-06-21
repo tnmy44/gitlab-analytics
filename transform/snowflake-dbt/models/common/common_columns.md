@@ -1120,6 +1120,12 @@ Boolean flag set to True if the ping is from a Dedicated implementation
 
 {% enddocs %}
 
+{% docs ping_deployment_type %}
+
+Indicates whether the ping comes from a GitLab.com, SaaS Dedicated or Self-Managed instance.
+
+{% enddocs %}
+
 {% docs raw_usage_data_payload %}
 
 Either the original payload value or a reconstructed value. See https://gitlab.com/gitlab-data/analytics/-/merge_requests/4064/diffs#bc1d7221ae33626053b22854f3ecbbfff3ffe633 for rationale.

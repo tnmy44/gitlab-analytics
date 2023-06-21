@@ -50,6 +50,7 @@
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                         AS minor_version,
       major_version || '.' || minor_version                                                               AS major_minor_version,
       map_ip_location.dim_location_country_id                                                             AS dim_location_country_id
+
     FROM source
     LEFT JOIN map_ip_location
       ON source.ip_address_hash = map_ip_location.ip_address_hash
@@ -83,8 +84,7 @@
     FROM add_country_info_to_usage_ping
     LEFT JOIN dim_product_tier
       ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
-      AND IFF( add_country_info_to_usage_ping.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
-      AND dim_product_tier.product_tier_name != 'Dedicated - Ultimate'
+      AND add_country_info_to_usage_ping.ping_deployment_type = dim_product_tier.product_deployment_type
     LEFT JOIN prep_app_release_major_minor
       ON prep_app_release_major_minor.major_minor_version = add_country_info_to_usage_ping.major_minor_version
       AND prep_app_release_major_minor.application = 'GitLab'
@@ -183,7 +183,7 @@
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@rbacovic",
+    updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2023-06-05"
+    updated_date="2023-06-12"
 ) }}

@@ -320,6 +320,8 @@ models:
       description: '{{ doc("host_name") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: ' {{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: ping_product_tier
@@ -449,6 +451,8 @@ models:
       description: '{{ doc("dim_location_country_id_ping_model") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: ping_product_tier
@@ -823,6 +827,8 @@ models:
       description: '{{ doc("host_name") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: ' {{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: ping_product_tier
@@ -949,6 +955,8 @@ models:
       description: '{{ doc("host_name") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: ' {{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: ping_product_tier
@@ -1075,6 +1083,8 @@ models:
       description: '{{ doc("host_name") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: ' {{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: ping_product_tier
