@@ -27,7 +27,7 @@ WITH trial_orders AS (
       order_start_date, 
       order_end_date, 
       order_created_at, 
-      Order_updated_at, 
+      order_updated_at, 
       order_source,
       NULL                                                 AS glm_content,
       NULL                                                 AS trial_entity,
