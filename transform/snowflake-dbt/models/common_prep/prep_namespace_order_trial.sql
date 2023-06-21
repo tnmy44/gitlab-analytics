@@ -21,25 +21,25 @@ WITH trial_orders AS (
 
   UNION
 
-    SELECT   
+  SELECT   
 
-      gitlab_namespace_id, 
-      order_start_date, 
-      order_end_date, 
-      order_created_at, 
-      order_updated_at, 
-      order_source,
-      NULL                                                 AS glm_content,
-      NULL                                                 AS trial_entity,
+    gitlab_namespace_id, 
+    order_start_date, 
+    order_end_date, 
+    order_created_at, 
+    order_updated_at, 
+    order_source,
+    NULL                                                 AS glm_content,
+    NULL                                                 AS trial_entity,
     'orders'                                               AS record_source 
 
     FROM {{ ref('customers_db_orders_source') }} 
 
     WHERE order_is_trial = True 
       AND gitlab_namespace_id IS NOT NULL
-      AND gitlab_namespace_id 
-        NOT IN 
-          (SELECT gl_namespace_id FROM PROD.legacy.customers_db_trial_histories)
+        AND gitlab_namespace_id 
+          NOT IN 
+            (SELECT gl_namespace_id FROM PROD.legacy.customers_db_trial_histories)
     QUALIFY ROW_NUMBER() OVER (PARTITION BY TRY_TO_NUMBER(gitlab_namespace_id) ORDER BY Order_updated_at DESC) = 1
 
 
