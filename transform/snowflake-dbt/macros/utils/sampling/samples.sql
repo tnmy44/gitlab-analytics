@@ -13,6 +13,12 @@ Example
   {% set samples_yml -%}
 
   samples:
+    - name: version_raw_usage_data_source
+      clause: "{{ sample_table(1) }}"
+    - name: instance_combined_metrics
+      clause: "{{ sample_table(1) }}"
+    - name: version_usage_data_source
+      clause: "{{ sample_table(1) }}"
 
 
   {%- endset %}

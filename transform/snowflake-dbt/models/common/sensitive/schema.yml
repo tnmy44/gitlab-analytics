@@ -353,9 +353,9 @@ models:
       - name: private_ultimate_parent_namespaces
         description: Array containing all the private ultimate parent namespaces the marketing contact is a member of.
       - name: is_paid_tier_change
-        description: This is a flag designed to keep Marketo in sync with the marketin database. If True, the marketing contact is_paid_tier flag is set to True OR the is_paid_tier flag is set to False and the is_paid_tier_marketo set to True (which means that it needs to be updated in Marketo)
+        description: This is a flag designed to keep Marketo in sync with the marketing database. If True, the marketing contact is_paid_tier flag is set to True OR the is_paid_tier flag is set to False and the is_paid_tier_marketo set to True (which means that it needs to be updated in Marketo)
       - name: is_pql_change
-        description: This is a flag designed to keep Marketo in sync with the marketin database. If True, the marketing contact is_pql flag is set to True OR the is_pql flag is set to False and the is_pql_marketo flag set to True (which means that it needs to be updated in Marketo)
+        description: This is a flag designed to keep Marketo in sync with the marketing database. If True, the marketing contact is_pql flag is set to True OR the is_pql flag is set to False and the is_pql_marketo flag set to True (which means that it needs to be updated in Marketo)
       - name: ptpt_namespace_id
         description: Namespace id which corresponds to the propensity to purchase Trial score. More information on the propensity to purchase project can be seen [HERE](https://docs.google.com/presentation/d/1EyS9Wq6F0qlQwt5sj7x8VnSSGD1vIy3AcSpMGddZdbk/edit#slide=id.g13222807856_0_0)
       - name: ptpt_score_group
@@ -402,6 +402,8 @@ models:
         description: The source of the score. Currently, only two values are possible, Free (PtPF model) or Trial (PtPT model)
       - name: is_ptp_contact
         description: Flag if marketing contact has a ptp score
+      - name: is_ptp_contact_change
+        description: This is a flag designed to keep Marketo in sync with the marketing database. If True, the marketing contact is_ptp_contact flag is set to True OR the is_ptp_contact flag is set to False and the is_ptp_contact_marketo flag set to True (which means that it needs to be updated in Marketo)
       - name: is_impacted_by_user_limit
         description: Flag that indicates if marketing contact is affected by namespace user limit campaign
       - name: user_limit_namespace_id
@@ -427,7 +429,7 @@ models:
       - name: max_trial_start_date
         description: The most recent trial start date across all the namespaces associated with the marketing_contact.
       - name: namespaces_array
-        description: Ultimate parent namespaces that the marketing contact is directly related to.
+        description: '{{ doc("namespaces_array") }}'
 
   - name: dim_team
     tests:
