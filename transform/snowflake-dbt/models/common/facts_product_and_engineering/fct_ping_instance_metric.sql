@@ -68,7 +68,7 @@
       REGEXP_REPLACE(NULLIF(prep_ping_instance.version, ''), '[^0-9.]+')    AS cleaned_version,
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                           AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                           AS minor_version,
-      major_version || '.' || minor_version                                 AS major_minor_version,
+      major_version || '.' || minor_version                                 AS major_minor_version
     FROM prep_ping_instance
       {% if is_incremental() %}
                   WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
