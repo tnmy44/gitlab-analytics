@@ -806,3 +806,8 @@ Only team members who have had a job change, promotion, or hire event are includ
 
 {% enddocs %}
 
+{% docs prep_namespace_order_trial %}
+
+This model contains data for all trial orders for each namespace from CDot trial histories and CDot orders that are being sourced from customers.gitlab.com.
+
+{% enddocs %}
