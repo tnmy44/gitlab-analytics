@@ -1,3 +1,8 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
+
 WITH trial_orders AS (
 
   SELECT 
