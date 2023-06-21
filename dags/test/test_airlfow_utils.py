@@ -26,7 +26,6 @@ def get_sales_analytics_notebooks(frequency: str) -> Dict:
 
     n = 0
     for file in path.rglob("*.ipynb"):
-
         print(n + 1)
         relative_path = file.relative_to(SALES_ANALYTICS_NOTEBOOKS_PATH)
         notebooks.append(relative_path.as_posix())
@@ -42,7 +41,6 @@ def test_cd_into_local_path():
     notebooks = get_sales_analytics_notebooks(frequency="daily")
     print(notebooks)
     for notebook, task_name in notebooks.items():
-
         if notebook is None:
             break
 

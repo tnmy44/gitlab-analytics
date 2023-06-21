@@ -32,3 +32,7 @@ sources:
         description: '{{ doc("zengrc_requests_desc") }}'
       - name: risks
         description: '{{ doc("zengrc_risks_desc") }}'
+      - name: programs
+        description: '{{ doc("zengrc_programs_desc") }}'
+      - name: vendors
+        description: '{{ doc("zengrc_vendors_desc") }}'
