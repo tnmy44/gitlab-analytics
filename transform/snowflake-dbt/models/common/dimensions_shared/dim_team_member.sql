@@ -25,7 +25,7 @@ WITH final AS (
       prep_team_member.is_current
     FROM {{ ref('prep_team_member') }}
 
-UNION ALL
+    UNION ALL
     
     SELECT
       MD5('-1')                                                       AS dim_team_member_sk,
