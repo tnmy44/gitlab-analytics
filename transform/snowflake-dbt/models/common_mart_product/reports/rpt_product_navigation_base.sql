@@ -8,11 +8,19 @@
 WITH filtered_snowplow_events AS (
 
   SELECT 
-    CASE event_label
-      WHEN LIKE 'group_dropdown_frequent_items_list_item_%' THEN 'group_dropdown_frequent_items_list_item'
-      WHEN LIKE 'groups_dropdown_frequent_items_list_item_%' THEN 'group_dropdown_frequent_items_list_item'
-      WHEN LIKE 'project_dropdown_frequent_items_list_item_%' THEN 'project_dropdown_frequent_items_list_item'
-      WHEN LIKE 'projects_dropdown_frequent_items_list_item_%' THEN 'project_dropdown_frequent_items_list_item'
+    CASE
+      WHEN
+        event_label LIKE 'group_dropdown_frequent_items_list_item_%'
+        THEN 'group_dropdown_frequent_items_list_item'
+      WHEN
+        event_label LIKE 'groups_dropdown_frequent_items_list_item_%'
+        THEN 'group_dropdown_frequent_items_list_item'
+      WHEN
+        event_label LIKE 'project_dropdown_frequent_items_list_item_%'
+        THEN 'project_dropdown_frequent_items_list_item'
+      WHEN
+        event_label LIKE 'projects_dropdown_frequent_items_list_item_%'
+        THEN 'project_dropdown_frequent_items_list_item'
       ELSE event_label
     END AS event_label,
 {{ dbt_utils.star(from=ref('mart_behavior_structured_event'), except=["EVENT_LABEL","CREATED_BY", "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
