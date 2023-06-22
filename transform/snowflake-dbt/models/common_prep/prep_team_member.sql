@@ -52,17 +52,17 @@ team_member_groups AS (
     team_id_current AS team_id,
     country_current AS country,
     region_current AS region,
-    COALESCE(region, '')                                                                                                  AS no_null_region,
-    LAG(no_null_region, 1, '') OVER (PARTITION BY employee_id ORDER BY effective_date)                                    AS lag_region,
-    CONDITIONAL_TRUE_EVENT(no_null_region != lag_region) OVER (PARTITION BY employee_id ORDER BY effective_date)              AS region_group,
-    COALESCE(country, '')                                                                                                 AS no_null_country,
-    LAG(no_null_country, 1, '') OVER (PARTITION BY employee_id ORDER BY effective_date)                                   AS lag_country,
-    CONDITIONAL_TRUE_EVENT(no_null_country != lag_country) OVER (PARTITION BY employee_id ORDER BY effective_date)            AS country_group,
-    COALESCE(team_id, '')                                                                                                 AS no_null_team_id,
-    LAG(no_null_team_id, 1, '') OVER (PARTITION BY employee_id ORDER BY effective_date)                                   AS lag_team_id,
-    CONDITIONAL_TRUE_EVENT(no_null_team_id != lag_team_id) OVER (PARTITION BY employee_id ORDER BY effective_date)            AS team_id_group,
-    effective_date                                                                                                            AS valid_from,
-    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from)                              AS valid_to
+    COALESCE(region, '')                                                                                                                       AS no_null_region,
+    LAG(no_null_region, 1, '') OVER (PARTITION BY employee_id ORDER BY date_time_initiated, effective_date)                                    AS lag_region,
+    CONDITIONAL_TRUE_EVENT(no_null_region != lag_region) OVER (PARTITION BY employee_id ORDER BY date_time_initiated, effective_date)          AS region_group,
+    COALESCE(country, '')                                                                                                                      AS no_null_country,
+    LAG(no_null_country, 1, '') OVER (PARTITION BY employee_id ORDER BY date_time_initiated, effective_date)                                   AS lag_country,
+    CONDITIONAL_TRUE_EVENT(no_null_country != lag_country) OVER (PARTITION BY employee_id ORDER BY date_time_initiated, effective_date)        AS country_group,
+    COALESCE(team_id, '')                                                                                                                      AS no_null_team_id,
+    LAG(no_null_team_id, 1, '') OVER (PARTITION BY employee_id ORDER BY date_time_initiated, effective_date)                                   AS lag_team_id,
+    CONDITIONAL_TRUE_EVENT(no_null_team_id != lag_team_id) OVER (PARTITION BY employee_id ORDER BY date_time_initiated, effective_date)        AS team_id_group,
+    effective_date                                                                                                                             AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from)                                               AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
 
 ),
@@ -84,7 +84,7 @@ team_member_changes AS (
     MIN(VALID_FROM) AS valid_from,
     MAX(valid_to) AS valid_to
   FROM team_member_groups
-  GROUP BY 1,2,3,4,5,6,7
+  {{ dbt_utils.group_by(n=7)}}
 
 ),
 
@@ -102,6 +102,7 @@ staffing_history AS (
     LAST_VALUE(hire_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_hire_date,
     IFF(termination_date IS NULL, TRUE, FALSE) AS is_current_team_member,
     IFF(COUNT(hire_date) OVER (PARTITION BY employee_id ORDER BY effective_date ASC ROWS UNBOUNDED PRECEDING) > 1, TRUE, FALSE) AS is_rehire, -- team member is a rehire if they have more than 1 hire_date event
+    date_time_initiated,
     effective_date AS valid_from,
     LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
@@ -126,6 +127,7 @@ history_combined AS (
     team_member_changes.region                                                  AS region,
     staffing_history.is_current_team_member                                     AS is_current_team_member,
     staffing_history.is_rehire                                                  AS is_rehire, 
+    staffing_history.date_time_initiated                                        AS date_time_initiated,
     GREATEST(team_member_changes.valid_from, staffing_history.valid_from)       AS valid_from,
     LEAST(team_member_changes.valid_to, staffing_history.valid_to)              AS valid_to
   FROM staffing_history
@@ -133,7 +135,6 @@ history_combined AS (
     ON team_member_changes.employee_id = staffing_history.employee_id 
       AND NOT (team_member_changes.valid_to <= staffing_history.valid_from
         OR team_member_changes.valid_from >= staffing_history.valid_to)
-
 
 ),
 
@@ -206,6 +207,7 @@ final AS (
     history_combined.termination_date                                                                       AS termination_date,
     history_combined.is_current_team_member                                                                 AS is_current_team_member,
     history_combined.is_rehire                                                                              AS is_rehire,
+    history_combined.date_time_initiated                                                                    AS date_time_initiated,
     date_range.valid_from                                                                                   AS valid_from,
     date_range.valid_to                                                                                     AS valid_to,
     date_range.is_current                                                                                   AS is_current
@@ -221,41 +223,21 @@ final AS (
 
     LEFT JOIN key_talent
       ON key_talent.employee_id = date_range.employee_id 
-        AND (
-          CASE
-            WHEN date_range.valid_from >= key_talent.valid_from AND date_range.valid_from < key_talent.valid_to THEN TRUE
-            WHEN date_range.valid_to > key_talent.valid_from AND date_range.valid_to <= key_talent.valid_to THEN TRUE
-            WHEN key_talent.valid_from >= date_range.valid_from AND key_talent.valid_from < date_range.valid_to THEN TRUE
-            ELSE FALSE
-          END) = TRUE
+        AND NOT (key_talent.valid_to <= date_range.valid_from
+          OR key_talent.valid_from >= date_range.valid_to)
     LEFT JOIN gitlab_usernames
       ON gitlab_usernames.employee_id = date_range.employee_id 
-        AND (
-          CASE
-            WHEN date_range.valid_from >= gitlab_usernames.valid_from AND date_range.valid_from < gitlab_usernames.valid_to THEN TRUE
-            WHEN date_range.valid_to > gitlab_usernames.valid_from AND date_range.valid_to <= gitlab_usernames.valid_to THEN TRUE
-            WHEN gitlab_usernames.valid_from >= date_range.valid_from AND gitlab_usernames.valid_from < date_range.valid_to THEN TRUE
-            ELSE FALSE
-          END) = TRUE
-        AND gitlab_usernames.valid_from != gitlab_usernames.valid_to
+        AND NOT (gitlab_usernames.valid_to <= date_range.valid_from
+          OR gitlab_usernames.valid_from >= date_range.valid_to)
+            AND gitlab_usernames.valid_from != gitlab_usernames.valid_to
     LEFT JOIN performance_growth_potential
       ON performance_growth_potential.employee_id = date_range.employee_id 
-        AND (
-          CASE
-            WHEN date_range.valid_from >= performance_growth_potential.valid_from AND date_range.valid_from < performance_growth_potential.valid_to THEN TRUE
-            WHEN date_range.valid_to > performance_growth_potential.valid_from AND date_range.valid_to <= performance_growth_potential.valid_to THEN TRUE
-            WHEN performance_growth_potential.valid_from >= date_range.valid_from AND performance_growth_potential.valid_from < date_range.valid_to THEN TRUE
-            ELSE FALSE
-          END) = TRUE
+        AND NOT (performance_growth_potential.valid_to <= date_range.valid_from
+          OR performance_growth_potential.valid_from >= date_range.valid_to)
     LEFT JOIN history_combined
       ON history_combined.employee_id = date_range.employee_id 
-        AND (
-          CASE
-            WHEN date_range.valid_from >= history_combined.valid_from AND date_range.valid_from < history_combined.valid_to THEN TRUE
-            WHEN date_range.valid_to > history_combined.valid_from AND date_range.valid_to <= history_combined.valid_to THEN TRUE
-            WHEN history_combined.valid_from >= date_range.valid_from AND history_combined.valid_from < date_range.valid_to THEN TRUE
-            ELSE FALSE
-          END) = TRUE
+        AND NOT (history_combined.valid_to <= date_range.valid_from
+          OR history_combined.valid_from >= date_range.valid_to)
 
 )
 

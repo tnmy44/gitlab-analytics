@@ -21,6 +21,7 @@ WITH final AS (
       prep_team_member.termination_date,
       prep_team_member.is_current_team_member,
       prep_team_member.is_rehire,
+      prep_team_member.date_time_initiated,
       prep_team_member.valid_from,
       prep_team_member.valid_to,
       prep_team_member.is_current
@@ -49,6 +50,7 @@ WITH final AS (
       '9999-12-31 00:00:00.000 +0000'                                 AS termination_date,
       NULL                                                            AS is_current_team_member,
       NULL                                                            AS is_rehire,
+      '9999-12-31 00:00:00.000 +0000'                                 AS date_time_initiated,
       '9999-12-31 00:00:00.000 +0000'                                 AS valid_from,
       '9999-12-31 00:00:00.000 +0000'                                 AS valid_to,
       NULL                                                            AS is_current
@@ -60,5 +62,5 @@ WITH final AS (
     created_by='@lisvinueza',
     updated_by='@lisvinueza',
     created_date='2023-03-27',
-    updated_date='2023-03-27'
+    updated_date='2023-06-22'
 ) }}

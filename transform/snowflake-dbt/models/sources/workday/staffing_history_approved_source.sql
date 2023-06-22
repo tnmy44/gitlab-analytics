@@ -46,3 +46,4 @@ renamed AS (
 
 SELECT *
 FROM renamed
+WHERE effective_date <= CURRENT_DATE()
