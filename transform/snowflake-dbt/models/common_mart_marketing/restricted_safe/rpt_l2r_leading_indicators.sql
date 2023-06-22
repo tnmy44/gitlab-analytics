@@ -69,11 +69,11 @@
         sao_date.fiscal_year AS sao_date_range_year
     FROM rpt_lead_to_revenue
     LEFT JOIN dim_date inquiry_date 
-        ON rpt_lead_to_revenue.true_inquiry_date.dim_date.date_actual
+        ON rpt_lead_to_revenue.true_inquiry_date=dim_date.date_actual
     LEFT JOIN dim_date mql_date 
-        ON rpt_lead_to_revenue.mql_date_first_pt.dim_date.date_actual
+        ON rpt_lead_to_revenue.mql_date_first_pt=dim_date.date_actual
     LEFT JOIN dim_date sao_date 
-        ON rpt_lead_to_revenue.sales_accepted_date.dim_date.date_actual
+        ON rpt_lead_to_revenue.sales_accepted_date=dim_date.date_actual
     WHERE (account_demographics_geo != 'JIHU'
      OR account_demographics_geo IS null) 
      AND (crm_opp_owner_geo_stamped != 'JIHU'
