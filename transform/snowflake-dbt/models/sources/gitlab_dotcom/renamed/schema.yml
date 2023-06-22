@@ -1587,10 +1587,6 @@ models:
         tests:
           - not_null
           - unique
-      - name: project_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_protected_branch_merge_access_levels_source
     description: A base model for Gitlab.com Gitlab.com protected_branch_merge_access_levels.
