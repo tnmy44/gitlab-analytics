@@ -1334,7 +1334,7 @@ models:
       description: '{{ doc("dbt_valid_to") }}'
 
 - name: rpt_product_navigation_base
-  description: Navigation events are tracked by the team and identified using the logic contained. This has gone through iterations wherein the logic expands on the query but the tracking has gotten simpler. The resulting where clause is to capture past events and current but as we continue forward the past could become distant enough to simplify the WHERE logic to the current nav_* based event tracking. The intention of this model is to enable reporting on the navigation use in conjuction with our new nav project in 2023.
+  description: '{{ doc("rpt_product_navigation_base") }}'
   columns:
     - name: behavior_structured_event_pk
       tests:
