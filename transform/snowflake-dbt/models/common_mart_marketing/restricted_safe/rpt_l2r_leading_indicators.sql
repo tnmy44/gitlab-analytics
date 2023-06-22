@@ -51,19 +51,19 @@
         is_sao,
 
     --Inquiry Dates
-        inquiry_date.first_day_of_weekAS inquiry_date_range_week,
+        inquiry_date.first_day_of_week AS inquiry_date_range_week,
         DATE_TRUNC(month, inquiry_date.date_actual) AS inquiry_date_range_month,
         inquiry_date.fiscal_quarter_name_fy AS inquiry_date_range_quarter,
         inquiry_date.fiscal_year AS inquiry_date_range_year,
 
     --MQL Dates
-        mql_date.first_day_of_weekAS mql_date_range_week,
+        mql_date.first_day_of_week AS mql_date_range_week,
         DATE_TRUNC(month, mql_date.date_actual) AS mql_date_range_month,
         mql_date.fiscal_quarter_name_fy AS mql_date_range_quarter,
         mql_date.fiscal_year AS mql_date_range_year,
 
     --SAO Dates
-        sao_date.first_day_of_weekAS sao_date_range_week,
+        sao_date.first_day_of_week AS sao_date_range_week,
         DATE_TRUNC(month, sao_date.date_actual) AS sao_date_range_month,
         sao_date.fiscal_quarter_name_fy AS sao_date_range_quarter,
         sao_date.fiscal_year AS sao_date_range_year
