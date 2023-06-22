@@ -29,6 +29,9 @@ WITH source AS (
         original_edition                                                                        AS original_edition,
         main_edition                                                                            AS main_edition,
         product_tier                                                                            AS product_tier,
+        is_saas_dedicated                                                                       AS is_saas_dedicated,
+        ping_delivery_type                                                                      AS ping_delivery_type,
+        ping_deployment_type                                                                    AS ping_deployment_type,
         TO_DATE(source.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
         (source.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
         source.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
@@ -45,7 +48,7 @@ WITH source AS (
   {{ dbt_audit(
       cte_ref="flattened_high_level",
       created_by="@icooper-acp",
-      updated_by="@rbacovic",
+      updated_by="@jpeguero",
       created_date="2022-03-17",
-      updated_date="2023-06-05"
+      updated_date="2023-06-12"
   ) }}

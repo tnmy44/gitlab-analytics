@@ -197,6 +197,23 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_ci_editor_ai_conversation_messages_source
+    description: Base model for Gitlab.com ci_editor_ai_conversation_messages
+    columns:
+      - name: ci_editor_ai_conversation_messages_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: updated_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_ci_group_variables_source
     description: Base model for Gitlab.com ci_group_variables
     columns:
@@ -689,9 +706,6 @@ models:
       - name: confirmation_sent_at
       - name: created_at
       - name: email_address
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
       - name: email_confirmed_at
       - name: gitlab_email_id
       - name: user_id

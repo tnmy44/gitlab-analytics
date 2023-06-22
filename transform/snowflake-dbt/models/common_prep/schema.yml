@@ -1498,6 +1498,12 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
 
 
   - name: prep_ping_instance_flattened
@@ -1552,6 +1558,12 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
 
@@ -2110,3 +2122,34 @@ models:
       - name: valid_to
         tests: 
           - not_null
+ 
+  - name: prep_namespace_order_trial
+    description: '{{ doc("prep_namespace_order_trial") }}'
+    columns:
+      - name: dim_namespace_order_trial_sk
+        description: '{{ doc("dim_namespace_order_trial_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: dim_namespace_id
+        description: The unique ID of the namespace related to the trial.
+      - name: order_start_date
+        description: The date when the trial period of the order begins
+      - name: order_end_date
+        description: The date when the trial period of the order ends
+      - name: order_created_at
+      - name: order_updated_at
+      - name: glm_source
+      - name: glm_content
+      - name: trial_entity
+        description: Can contain values of company or individial
+      - name: record_source
+        decsription: Identifies the source of the record - values include trial_histories or orders
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'

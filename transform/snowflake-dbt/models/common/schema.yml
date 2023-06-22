@@ -264,7 +264,7 @@ models:
 
 
   - name: dim_billing_account_snapshot_bottom_up
-    description: Daily snapshot of billing accounts starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
+    description: Daily snapshot of billing accounts starting from 2020-03-01. This is built from the bottom up using snapshotted source tables from Zuora and CDot.
     columns:
       - name: billing_account_snapshot_id
         description: Unique identifier of a billing account snapshot
@@ -272,6 +272,35 @@ models:
           - not_null
           - unique
         tags: ["tdf", "arr_snapshots"]
+      - name: snapshot_id
+        description: Unique Date Id between dbt_valid_from and dbt_valid_to in Snapshots  
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with the customer   
+      - name: dim_crm_account_id
+        description: The customer account ID for the account
+      - name: billing_account_number
+        description: A unique Zuora account number
+      - name: billing_account_name
+        description: The name of the Zuora account
+      - name: account_status
+        description: The status of the account in the system. Can be draft, active, cancelled.
+      - name: parent_id
+        description: The identifier of the parent customer account      
+      - name: crm_account_code
+        description: The code for the crm sfdc account
+      - name: crm_entity
+      - name: account_currency
+        description: A currency as defined in Billing Settings in the Zuora UI
+      - name: sold_to_country
+        description: The country of the sold to contact
+      - name: ssp_channel
+      - name: po_required
+      - name: is_deleted
+        description: The flag indicating if account has been deleted
+      - name: batch
+      - name: record_data_source
+        description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources.
+  
 
   - name: dim_campaign
     description: Dimension table representing each individual Campaign. Excludes deleted campaigns. Based completely off SFDC campaign data.
@@ -1117,7 +1146,7 @@ models:
       - name: dim_crm_account_id
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
-        description: The id of the Zuora account the subscription is associated with
+        description: The id of the Zuora account the subscription is associated with the customer
       - name: dim_billing_account_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
@@ -2867,6 +2896,12 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
 
   - name: dim_ping_metric
     description: ' {{ doc("dim_ping_metric") }} '
@@ -4327,6 +4362,9 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "arr"]
+      - name: rate_plan_charge_description
+        description: Description for a rate plan charge in Zuora. This can be used to identify orders that received transition pricing in FY24. Note, the description field will not show a transition pricing tag for sales-assisted orders. 
+        tags: ["tdf", "common", "arr"]
 
   - name: dim_crm_account
     description: '{{ doc("dim_crm_account") }}'
@@ -4936,8 +4974,8 @@ models:
         description: '{{ doc("downgrade_details") }}'
       - name: intended_product_tier
         description: '{{ doc("intended_product_tier") }}'
-      - name: parent_opportunity_id
-        description: '{{ doc("parent_opportunity_id") }}'
+      - name: dim_parent_crm_opportunity_id
+        description: '{{ doc("dim_parent_crm_opportunity_id") }}'
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
