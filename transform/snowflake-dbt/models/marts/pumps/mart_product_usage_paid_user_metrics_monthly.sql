@@ -181,7 +181,8 @@
       location_country.country_name,
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
-      'Self-Managed'                                                               AS delivery_type,
+      monthly_sm_metrics.ping_delivery_type                                        AS delivery_type,
+      monthly_sm_metrics.ping_deployment_type                                      AS deployment_type,
       monthly_sm_metrics.installation_creation_date,
       -- Wave 1
       DIV0(
@@ -426,6 +427,7 @@
       NULL                                                                          AS iso_2_country_code,
       NULL                                                                          AS iso_3_country_code,
       'SaaS'                                                                        AS delivery_type,
+      'GitLab.com'                                                                  AS deployment_type,
       NULL                                                                          AS installation_creation_date,
       -- Wave 1
       DIV0(
@@ -697,6 +699,7 @@
           'snapshot_month',
           'dim_subscription_id',
           'delivery_type',
+          'deployment_type',
           'uuid',
           'hostname',
           'dim_namespace_id'
@@ -709,7 +712,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2021-06-11",
-    updated_date="2023-06-05"
+    updated_date="2023-06-22"
 ) }}

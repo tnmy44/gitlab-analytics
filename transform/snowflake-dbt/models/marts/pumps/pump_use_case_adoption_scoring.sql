@@ -29,6 +29,7 @@ joined AS (
     paid_user_metrics.dim_subscription_id_original,
     paid_user_metrics.dim_subscription_id,
     paid_user_metrics.delivery_type,
+    paid_user_metrics.deployment_type,
     paid_user_metrics.instance_type,
     paid_user_metrics.included_in_health_measures_str,
     paid_user_metrics.uuid,
@@ -62,8 +63,8 @@ joined AS (
 
     -- user engagement metrics --
     paid_user_metrics.last_activity_28_days_user,
-    CASE WHEN paid_user_metrics.delivery_type = 'SaaS' THEN NULL
-      WHEN paid_user_metrics.delivery_type = 'Self-Managed' THEN DIV0(paid_user_metrics.last_activity_28_days_user, paid_user_metrics.billable_user_count) END  AS user_engagement,
+    CASE WHEN paid_user_metrics.deployment_type = 'GitLab.com' THEN NULL
+      WHEN paid_user_metrics.deployment_type IN ('Self-Managed', 'Dedicated') THEN DIV0(paid_user_metrics.last_activity_28_days_user, paid_user_metrics.billable_user_count) END  AS user_engagement,
     CASE WHEN user_engagement IS NULL THEN NULL
       WHEN user_engagement < .50 THEN 25
       WHEN user_engagement >= .50 AND user_engagement < .80 THEN 63
@@ -245,5 +246,5 @@ joined AS (
     created_by="@jngCES",
     updated_by="@jpeguero",
     created_date="2023-03-30",
-    updated_date="2023-06-08"
+    updated_date="2023-06-22"
 ) }}

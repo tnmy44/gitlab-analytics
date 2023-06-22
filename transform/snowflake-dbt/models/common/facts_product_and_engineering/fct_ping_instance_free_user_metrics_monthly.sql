@@ -35,7 +35,8 @@
       sm_free_users.uuid,                                                            
       sm_free_users.host_name                                                                   AS hostname,
       sm_free_users.dim_installation_id,
-      'Self-Managed'                                                                            AS delivery_type,
+      sm_free_users.ping_delivery_type                                                          AS delivery_type,
+      sm_free_users.ping_deployment_type                                                        AS deployment_type,
       sm_free_users.cleaned_version,
       sm_free_users.dim_crm_account_id,
       sm_free_users.ping_created_date                                                           AS ping_date,
@@ -246,6 +247,7 @@
       NULL                                                                                      AS hostname,
       NULL                                                                                      AS dim_installation_id,
       'SaaS'                                                                                    AS delivery_type,
+      'GitLab.com'                                                                              AS deployment_type,
       NULL                                                                                      AS cleaned_version,
       dim_crm_account_id,
       ping_date::DATE                                                                           AS ping_date,
@@ -450,7 +452,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@snalamaru",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2021-06-08",
-    updated_date="2023-06-05"
+    updated_date="2023-06-22"
 ) }}

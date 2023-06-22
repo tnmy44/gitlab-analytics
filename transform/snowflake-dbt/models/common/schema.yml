@@ -181,6 +181,9 @@ models:
       - name: subscription_status
       - name: product_rate_plan_charge_name
       - name: product_delivery_type
+        description: '{{ doc("product_delivery_type")}} '
+      - name: product_deployment_type
+        description: '{{ doc("product_deployment_type")}} '
 
   - name: dim_accounting_event
     description: '{{ doc("dim_accounting_event") }}'
@@ -3226,7 +3229,9 @@ models:
       - name: ping_created_date_month
         description: The month when the ping was created
       - name: ping_delivery_type
-        description: Indicated if the service ping comes from a SaaS or Self-Managed instance.
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
       - name: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_subscripton_id
@@ -3414,6 +3419,10 @@ models:
       - name: license_md5
         description: '{{ doc("license_md5") }}'
       - name: cleaned_version
+      - name: ping_delivery_type
+        description: ' {{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: ' {{ doc("ping_deployment_type") }}'
       - name: license_utilization
         description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
       - name: active_user_count
@@ -6413,6 +6422,9 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
       - name: instance_version
       - name: cleaned_version
       - name: version_is_prerelease
@@ -6575,7 +6587,9 @@ models:
       - name: uuid
       - name: hostname
       - name: delivery_type
-        description: Indicated if the product usage came from a SaaS or Self-Managed user.
+        description: '{{ doc("product_delivery_type") }}'
+      - name: deployment_type
+        description: '{{ doc("product_deployment_type") }}'
       - name: cleaned_version
         description: Version of GitLab running on the instance
       - name: dim_crm_account_id

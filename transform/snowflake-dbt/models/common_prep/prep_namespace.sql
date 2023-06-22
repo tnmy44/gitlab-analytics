@@ -173,7 +173,7 @@ joined AS (
   LEFT JOIN map_namespace_internal
     ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
   LEFT JOIN product_tiers saas_product_tiers
-    ON saas_product_tiers.product_delivery_type = 'SaaS'
+    ON saas_product_tiers.product_deployment_type = 'GitLab.com'
       AND namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(saas_product_tiers.product_tier_name_short != 'Trial: Ultimate',
         saas_product_tiers.product_tier_historical_short,
         'ultimate_trial'))
@@ -190,7 +190,7 @@ joined AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@cbraza",
+    updated_by="@jpeguero",
     created_date="2021-01-14",
-    updated_date="2023-05-18"
+    updated_date="2023-06-22"
 ) }}
