@@ -975,7 +975,7 @@ roles:
                       - prep.gitlab_dotcom.*
                       - prep.preparation.*
                       - prep.customers.*
-                      - pre.sfdc.*
+                      - prep.sfdc.*
                       - prod.common.*
                       - prod.legacy.*
                       - prod.common_mart_product.*
