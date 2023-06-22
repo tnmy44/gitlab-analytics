@@ -107,9 +107,9 @@
       has_timed_out                                                 AS has_timed_out,
       ping_type                                                     AS ping_type,
       cleaned_version,
-      major_version,
-      minor_version,
-      major_minor_version
+      add_country_info_to_usage_ping.major_version,
+      add_country_info_to_usage_ping.minor_version,
+      add_country_info_to_usage_ping.major_minor_version
     FROM add_country_info_to_usage_ping
     LEFT JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
@@ -179,5 +179,5 @@
     created_by="@icooper-acp",
     updated_by="@michellecooper",
     created_date="2022-03-08",
-    updated_date="2023-06-16"
+    updated_date="2023-06-22"
 ) }}
