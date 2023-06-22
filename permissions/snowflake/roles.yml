@@ -959,6 +959,7 @@ roles:
                       - prep.zendesk
                       - prep.preparation
                       - prep.customers
+                      - prep.sfdc
                       - raw.data_science
                       - raw.salesforce_stitch
                       - raw.snapshots
@@ -974,6 +975,7 @@ roles:
                       - prep.gitlab_dotcom.*
                       - prep.preparation.*
                       - prep.customers.*
+                      - pre.sfdc.*
                       - prod.common.*
                       - prod.legacy.*
                       - prod.common_mart_product.*
