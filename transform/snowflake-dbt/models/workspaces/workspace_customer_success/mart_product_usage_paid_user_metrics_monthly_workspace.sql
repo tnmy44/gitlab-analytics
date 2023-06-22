@@ -181,8 +181,8 @@
       location_country.country_name,
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
-      monthly_sm_metrics.delivery_type                                               AS delivery_type,
-      monthly_sm_metrics.deployment_type                                             AS deployment_type,
+      monthly_sm_metrics.ping_delivery_type                                          AS delivery_type,
+      monthly_sm_metrics.ping_deployment_type                                        AS deployment_type,
       monthly_sm_metrics.installation_creation_date,
       -- Wave 1
       DIV0(
