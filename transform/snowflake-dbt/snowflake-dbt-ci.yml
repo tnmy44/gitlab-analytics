@@ -259,6 +259,8 @@ specify_dbt_parameters:
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config # Adds gitlab.com as known host
   variables:
     LOGURU_COLORIZE: "true"
+  when: manual
+  allow_failure: false
   only:
     changes:
       - "transform/snowflake-dbt/**/*.{md,yml}"
@@ -274,8 +276,6 @@ specify_dbt_parameters:
     - cp -r target $CI_PROJECT_DIR/public/dbt/
   tags:
     - analytics
-  when: manual
-  allow_failure: true
   
 # dbt tests
 .dbt_misc_jobs: &dbt_misc_jobs
