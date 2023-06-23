@@ -201,7 +201,7 @@ final AS (
     COALESCE(performance_growth_potential.performance_rating, 'Unknown Rating')                             AS performance_rating,
     COALESCE(history_combined.country, 'Unknown Country')                                                   AS country,
     COALESCE(history_combined.region, 'Unknown Region')                                                     AS region,
-    history_combined.team_id                                                                                AS team_id,
+    COALESCE(history_combined.team_id, 'Unknown Team ID')                                                   AS team_id,
     history_combined.most_recent_hire_date                                                                  AS hire_date,
     history_combined.termination_date                                                                       AS termination_date,
     history_combined.is_current_team_member                                                                 AS is_current_team_member,
