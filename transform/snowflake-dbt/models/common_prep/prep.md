@@ -512,16 +512,6 @@ The main motivation for introducing this column is for a few reasons:
 
 {% enddocs %}
 
-{% docs uploaded_at %}
-
-Column `uploaded_at` (`TIMESTAMP` data type) represent the moment WHEN the record is ingested into Snowflake. 
-The main motivation for introducing this column is for a few reasons:
-1. Be able to track back the exact date and time of data ingesting _(this information wasn't known to us)_
-1. Improving incremental load using `uploaded_at` column 
-1. Support "late_arriving" ping automatically, without the need to full-refresh a full lineage
-
-{% enddocs %}
-
 {% docs prep_package %}
 
 Prep table for the dim table `dim_package` that is not yet created. It is also used in the `prep_event` table
