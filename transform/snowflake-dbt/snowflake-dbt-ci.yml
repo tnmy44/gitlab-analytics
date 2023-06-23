@@ -260,7 +260,7 @@ specify_dbt_parameters:
   variables:
     LOGURU_COLORIZE: "true"
   when: manual
-  allow_failure: false
+  allow_failure: true
   only:
     changes:
       - "transform/snowflake-dbt/**/*.{md,yml}"
