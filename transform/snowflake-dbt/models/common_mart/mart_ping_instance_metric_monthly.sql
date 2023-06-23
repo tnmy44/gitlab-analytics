@@ -195,7 +195,7 @@
           AND dim_date.first_day_of_month = license_sha256.reporting_month
       LEFT JOIN dim_location
         ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
-      WHERE dim_ping_instance.ping_deployment_type IN ('Self-Managed', 'SaaS')
+      WHERE dim_ping_instance.ping_deployment_type IN ('Self-Managed', 'Dedicated')
         OR (dim_ping_instance.ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
 
 ), sorted AS (
