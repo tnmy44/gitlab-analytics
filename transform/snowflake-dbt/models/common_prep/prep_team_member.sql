@@ -64,6 +64,7 @@ team_member_groups AS (
     effective_date                                                                                                                             AS valid_from,
     LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from)                                               AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY date_time_initiated DESC) = 1
 
 ),
 
@@ -102,7 +103,6 @@ staffing_history AS (
     LAST_VALUE(hire_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_hire_date,
     IFF(termination_date IS NULL, TRUE, FALSE) AS is_current_team_member,
     IFF(COUNT(hire_date) OVER (PARTITION BY employee_id ORDER BY effective_date ASC ROWS UNBOUNDED PRECEDING) > 1, TRUE, FALSE) AS is_rehire, -- team member is a rehire if they have more than 1 hire_date event
-    date_time_initiated,
     effective_date AS valid_from,
     LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
@@ -127,7 +127,6 @@ history_combined AS (
     team_member_changes.region                                                  AS region,
     staffing_history.is_current_team_member                                     AS is_current_team_member,
     staffing_history.is_rehire                                                  AS is_rehire, 
-    staffing_history.date_time_initiated                                        AS date_time_initiated,
     GREATEST(team_member_changes.valid_from, staffing_history.valid_from)       AS valid_from,
     LEAST(team_member_changes.valid_to, staffing_history.valid_to)              AS valid_to
   FROM staffing_history
@@ -207,7 +206,6 @@ final AS (
     history_combined.termination_date                                                                       AS termination_date,
     history_combined.is_current_team_member                                                                 AS is_current_team_member,
     history_combined.is_rehire                                                                              AS is_rehire,
-    history_combined.date_time_initiated                                                                    AS date_time_initiated,
     date_range.valid_from                                                                                   AS valid_from,
     date_range.valid_to                                                                                     AS valid_to,
     date_range.is_current                                                                                   AS is_current

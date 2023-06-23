@@ -7176,7 +7176,6 @@ models:
             combination_of_columns:
               - employee_id
               - valid_from
-              - date_time_initiated
     columns:
       - name: employee_id
         description: Workday Employee Identification 
