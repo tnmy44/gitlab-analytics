@@ -23,7 +23,7 @@ renamed AS (
     full_name::VARCHAR            AS full_name,
     reason_type::VARCHAR          AS reason_type,
     email_log_ide_7940_f::VARCHAR AS email_log_ide_7940_f,
-    _fivetran_synced::TIMESTAMP   AS _fivetran_synced,
+    _fivetran_synced::TIMESTAMP   AS _fivetran_synced
   FROM source
 )
 

@@ -9,6 +9,7 @@ renamed AS (
 
   FROM source
 )
+  SELECT
     _fivetran_id::VARCHAR        AS _fivetran_id,
     _fivetran_deleted::BOOLEAN   AS _fivetran_deleted,
     comment::VARCHAR             AS comment,

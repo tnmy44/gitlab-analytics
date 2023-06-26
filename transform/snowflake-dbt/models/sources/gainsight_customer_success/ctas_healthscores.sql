@@ -26,7 +26,7 @@ renamed AS (
     cta_type::VARCHAR                AS cta_type,
     cta_status_id::VARCHAR           AS cta_status_id,
     closed_date::TIMESTAMP           AS closed_date,
-    _fivetran_synced::TIMESTAMP      AS _fivetran_synced,
+    _fivetran_synced::TIMESTAMP      AS _fivetran_synced
   FROM source
 )
 

@@ -99,7 +99,7 @@ Data in all the fields are synced from SFDC.
 
 {% docs gainsight_opt_out_emails %}	 
 This object is used in Journey Orchestrator module. For example; stores information about opt-out emails.
-> **Note:** Gainsight recommends users to use Opt-Out Emails instead of Unsubscribed emails.
+**Note:** Gainsight recommends users to use Opt-Out Emails instead of Unsubscribed emails.
 {% enddocs %}
 
 {% docs gainsight_advanced_outreach_participants %}	 
