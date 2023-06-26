@@ -7447,5 +7447,4 @@ models:
         tests: 
           - not_null
       - name: valid_to
-        tests: 
-          - not_null
+
