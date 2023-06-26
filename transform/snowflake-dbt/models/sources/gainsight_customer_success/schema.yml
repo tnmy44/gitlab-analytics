@@ -1,0 +1,7 @@
+version: 2
+
+models:
+    - name:
+      description: '{{ doc("gainsight_instance_info") }}'
+      columns:
+        - name:

@@ -205,6 +205,11 @@ models:
         +materialized: table
         +schema: gainsight
 
+      gainsight_customer_success:
+        +materialized: table
+        +schema: gainsight_customer_success
+        +tags: ["gainsight"]
+
       gcp_billing:
         +materialized: table
         +schema: gcp_billing

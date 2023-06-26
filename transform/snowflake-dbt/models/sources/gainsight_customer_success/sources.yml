@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: gainsight_customer_success
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: gainsight_customer_success
+    loaded_at_field: _fivetran_synced
+    loader: fivetran
+    description: Gainsight Customer Success [Original Issue](https://gitlab.com/gitlab-data/analytics/-/issues/14426)
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+
+    tables:
+      - name:
