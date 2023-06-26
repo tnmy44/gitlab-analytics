@@ -18,4 +18,24 @@ sources:
       error_after: {count: 48, period: hour}
 
     tables:
-      - name:
+      - name: account_scorecard_history
+      - name: activity_attendee
+      - name: activity_comments
+      - name: activity_timeline
+      - name: ao_advanced_outreach_company
+      - name: call_to_action
+      - name: comments
+      - name: companies_and_ebrs
+      - name: companies_with_success_plan_details
+      - name: companies_with_success_plan_objectives
+      - name: company
+      - name: company_person
+      - name: cs_task
+      - name: csat_survey_response
+      - name: ctas_healthscores
+      - name: customer_health_scorecard_fact_1
+      - name: email_logs
+      - name: nps_survey_response
+      - name: success_plan
+      - name: user_sfdcgitlabproduction
+      - name: zoom_awebinar_a_acontacts_aand_aleads_a_alead_aaccount_aid_amatch
