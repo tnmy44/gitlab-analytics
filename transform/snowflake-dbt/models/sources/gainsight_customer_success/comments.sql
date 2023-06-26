@@ -6,10 +6,6 @@ WITH source AS (
 renamed AS (
 
   SELECT
-
-  FROM source
-)
-  SELECT
     _fivetran_id::VARCHAR        AS _fivetran_id,
     _fivetran_deleted::BOOLEAN   AS _fivetran_deleted,
     comment::VARCHAR             AS comment,
@@ -21,5 +17,8 @@ renamed AS (
     modified_date::TIMESTAMP     AS modified_date,
     comment_id::VARCHAR          AS comment_id,
     _fivetran_synced::TIMESTAMP  AS _fivetran_synced
+  FROM source
+)
+
 SELECT *
 FROM renamed
