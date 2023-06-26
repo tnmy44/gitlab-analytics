@@ -120,6 +120,18 @@ models:
       - name: ant_sentiment_c
       - name: context_name
       - name: _fivetran_synced
+  - name: advanced_outreach_cta
+    description: '{{ doc("gainsight_advanced_outreach_cta") }}'
+    columns:
+  - name: advanced_outreach_emails
+    description: '{{ doc("gainsight_advanced_outreach_emails") }}'
+    columns:
+  - name: advanced_outreach_participant_activity
+    description: '{{ doc("gainsight_advanced_outreach_participant_activity") }}'
+    columns:
+  - name: advanced_outreach_participants
+    description: '{{ doc("gainsight_advanced_outreach_participants") }}'
+    columns:
   - name: ao_advanced_outreach_company
     description: '{{ doc("gainsight_ao_advanced_outreach_company") }}'
     columns:
@@ -777,6 +789,9 @@ models:
       - name: user_role
       - name: language_id
       - name: _fivetran_synced
+  - name: opt_out_emails
+    description: '{{ doc("gainsight_opt_out_emails") }}'
+    columns:
   - name: success_plan
     description: '{{ doc("gainsight_success_plan") }}'
     columns:
@@ -847,27 +862,4 @@ models:
       - name: sfdc_user_id
       - name: modified_date
       - name: name
-      - name: _fivetran_synced
-  - name: zoom_awebinar_a_acontacts_aand_aleads_a_alead_aaccount_aid_amatch
-    description: '{{ doc("gainsight_zoom_awebinar_a_acontacts_aand_aleads_a_alead_aaccount_aid_amatch") }}'
-    columns:
-      - name: _fivetran_id
-      - name: _fivetran_deleted
-      - name: lead_full_name
-      - name: account_id
-      - name: start_time
-      - name: lead_email
-      - name: lead_account_name
-      - name: ptc_score_value
-      - name: contact_id
-      - name: lead_account_ptc_score_value
-      - name: company_name
-      - name: company_gsid
-      - name: contact_account_name
-      - name: lead_account_id
-      - name: subject_topic
-      - name: attended_live
-      - name: contact_email
-      - name: lead_id
-      - name: contact_full_name
       - name: _fivetran_synced

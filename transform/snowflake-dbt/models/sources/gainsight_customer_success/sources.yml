@@ -22,6 +22,10 @@ sources:
       - name: activity_attendee
       - name: activity_comments
       - name: activity_timeline
+      - name: advanced_outreach_cta
+      - name: advanced_outreach_emails
+      - name: advanced_outreach_participant_activity
+      - name: advanced_outreach_participants
       - name: ao_advanced_outreach_company
       - name: call_to_action
       - name: comments
@@ -36,6 +40,6 @@ sources:
       - name: customer_health_scorecard_fact_1
       - name: email_logs
       - name: nps_survey_response
+      - name: opt_out_emails
       - name: success_plan
       - name: user_sfdcgitlabproduction
-      - name: zoom_awebinar_a_acontacts_aand_aleads_a_alead_aaccount_aid_amatch
