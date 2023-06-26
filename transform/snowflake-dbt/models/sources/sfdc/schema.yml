@@ -225,6 +225,8 @@ models:
         tests:
           - not_null
           - unique
+      - name: campaign_member_status
+        description: Status of the campaign member response. 
   - name: sfdc_case_source
     description: Source model for SFDC Case
     columns:
