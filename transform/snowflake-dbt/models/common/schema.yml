@@ -7397,3 +7397,55 @@ models:
       - name: valid_to
         tests: 
           - not_null
+
+
+  - name: dim_order_namespace_trial_latest
+    description: '{{ doc("dim_order_namespace_trial_latest") }}'
+    columns:
+      - name: dim_order_namespace_trial_latest_sk
+        description: '{{ doc("dim_order_namespace_trial_latest_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: dim_order_snapshot_id
+        description: A unique ID for each Snapshotted Order.
+        tests:
+          - not_null
+          - unique
+      - name: dim_order_id
+        description: The unique ID of an Order.
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        description: The id of the namespace related to the subscription.
+      - name: dim_customer_id
+        description: The unique ID of a customer
+      - name: dim_product_rate_plan_id
+        description: The unique ID of a product rate plan
+      - name: dim_subscription_id
+        description: The unique identifier of a subscription
+      - name: subscription_name
+        description: The unique name of a subscription.
+      - name: subscription_name_slugify
+        description: The name of the subscription
+      - name: gitlab_namespace_name
+        description: The namespace related to the subscription.
+      - name: order_start_date
+        description: The start date of the Order
+      - name: order_end_date
+        description: The expiration date of the Order
+      - name: order_quantity
+      - name: order_created_at
+        description: The date when the Order was created
+      - name: order_updated_at
+        description: The date when the Order was updated
+      - name: amendment_type
+      - name: is_order_trial
+        description: Boolean flag to indicate if the Order started as a Trial or not
+      - name: last_extra_ci_minutes_sync_at
+      - name: valid_from
+        tests: 
+          - not_null
+      - name: valid_to
+        tests: 
+          - not_null
