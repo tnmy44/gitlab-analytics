@@ -106,6 +106,22 @@ models:
             - not_null
             - unique
       
+    - name: zengrc_programs
+      description: '{{ doc("zengrc_programs_desc") }}'
+      columns: 
+        - name: program_id
+          tests:
+            - not_null
+            - unique
+      
+    - name: zengrc_vendors
+      description: '{{ doc("zengrc_vendors_desc") }}'
+      columns: 
+        - name: vendor_id
+          tests:
+            - not_null
+            - unique
+      
 
     - name: issues_history
       description: >
