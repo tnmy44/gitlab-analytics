@@ -206,7 +206,6 @@ models:
         +schema: gainsight
 
       gainsight_customer_success:
-        +materialized: table
         +schema: gainsight_customer_success
         +tags: ["gainsight"]
 
