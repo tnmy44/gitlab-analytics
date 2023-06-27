@@ -33,7 +33,7 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=12),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2023, 6, 27),
+    "start_date": datetime(2023, 6, 26),
     "dagrun_timeout": timedelta(hours=6),
 }
 
