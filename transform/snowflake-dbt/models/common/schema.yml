@@ -7418,6 +7418,8 @@ models:
           - not_null
       - name: dim_namespace_id
         description: The id of the namespace related to the subscription.
+        tests: 
+          - unique        
       - name: dim_customer_id
         description: The unique ID of a customer
       - name: dim_product_rate_plan_id
