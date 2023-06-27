@@ -7,6 +7,7 @@ models:
         - name: id
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: user_deployments_utilization
         - name: customer_experience_gc
@@ -84,6 +85,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: last_modified_date
         - name: type_name
@@ -142,6 +144,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: account
         - name: action_type
@@ -163,6 +166,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: rejected_date
         - name: created_at
@@ -223,6 +227,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: previous_step_id
         - name: created_at
@@ -244,6 +249,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: source_type
         - name: created_at
@@ -338,6 +344,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: over_due_type
         - name: name
@@ -397,6 +404,9 @@ models:
       description: '{{ doc("gainsight_comments") }}'
       columns:
         - name: _fivetran_id
+          tests:
+            - not_null
+            - unique
         - name: _fivetran_deleted
         - name: comment
         - name: created_by_user_id
@@ -413,6 +423,9 @@ models:
       description: '{{ doc("gainsight_companies_and_ebrs") }}'
       columns:
         - name: _fivetran_id
+          tests:
+            - not_null
+            - unique
         - name: _fivetran_deleted
         - name: company_pubsec_type
         - name: company_csm_manager_name
@@ -454,6 +467,9 @@ models:
       description: '{{ doc("gainsight_companies_with_success_plan_details") }}'
       columns:
         - name: _fivetran_id
+          tests:
+            - not_null
+            - unique
         - name: _fivetran_deleted
         - name: status
         - name: company
@@ -478,6 +494,9 @@ models:
       description: '{{ doc("gainsight_companies_with_success_plan_objectives") }}'
       columns:
         - name: _fivetran_id
+          tests:
+            - not_null
+            - unique
         - name: _fivetran_deleted
         - name: stage_name
         - name: objective_category_name
@@ -683,6 +702,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: enablement_onboarding_programs_gc
         - name: status
         - name: onboarding_health_score_gc
@@ -779,6 +799,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: survey_name_new_gc
         - name: email_opt_out_gc
@@ -812,6 +833,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: is_important
         - name: description
@@ -864,6 +886,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: email
         - name: survey_id
@@ -921,6 +944,9 @@ models:
       description: '{{ doc("gainsight_customer_health_scorecard_fact_1") }}'
       columns:
         - name: id
+          tests:
+            - not_null
+            - unique
         - name: _fivetran_deleted
         - name: cur_score_id_gc
         - name: scorecard_id_gc
@@ -943,6 +969,10 @@ models:
       description: '{{ doc("gainsight_email_logs") }}'
       columns:
         - name: id
+        - name: id
+          tests:
+            - not_null
+            - unique
         - name: _fivetran_deleted
         - name: gs_user_id
         - name: clicked
@@ -997,6 +1027,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: survey_id
         - name: created_at
@@ -1031,6 +1062,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: category_id
         - name: page_id
@@ -1058,6 +1090,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: over_due_type
         - name: q_1_q_2_approved_gc
@@ -1120,6 +1153,7 @@ models:
         - name: gsid
           tests:
             - not_null
+            - unique
         - name: _fivetran_deleted
         - name: gs_user_gsid
         - name: email
