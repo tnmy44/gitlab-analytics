@@ -64,7 +64,7 @@
 
     --SAO Dates
         sao_date.first_day_of_week AS sao_date_range_week,
-        sao_date.first_day_of_monthAS sao_date_range_month,
+        sao_date.first_day_of_month AS sao_date_range_month,
         sao_date.fiscal_quarter_name_fy AS sao_date_range_quarter,
         sao_date.fiscal_year AS sao_date_range_year
     FROM rpt_lead_to_revenue
