@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH source AS (
   SELECT *
   FROM {{ source('gainsight_customer_success','companies_with_success_plan_objectives') }}
