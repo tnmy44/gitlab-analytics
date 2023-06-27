@@ -13,7 +13,7 @@ from qualtrics_client import QualtricsClient
 
 def extract_survey_information(qualtrics_client, survey_id, survey_table_name , snowflake_load_database):
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
-
+    print(f'loading into database: {snowflake_load_database}')
     questions_format_list = [
         question for question in qualtrics_client.get_questions(survey_id)
     ]
