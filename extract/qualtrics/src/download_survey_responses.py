@@ -13,7 +13,10 @@ from qualtrics_client import QualtricsClient
 
 def extract_survey_information(qualtrics_client, survey_id, survey_table_name , snowflake_load_database):
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
-    print(f'loading into database: {snowflake_load_database}')
+    
+    qualtrics_nps_load = f"{snowflake_load_database}.qualtrics.qualtrics_nps_load"
+    qualtrics_questions = f"{snowflake_load_database}.qualtrics.questions"
+
     questions_format_list = [
         question for question in qualtrics_client.get_questions(survey_id)
     ]
@@ -25,8 +28,8 @@ def extract_survey_information(qualtrics_client, survey_id, survey_table_name , 
 
         snowflake_stage_load_copy_remove(
             "questions.json",
-            f"{snowflake_load_database}.qualtrics.qualtrics_nps_load",
-            f"{snowflake_load_database}.qualtrics.questions",
+            qualtrics_nps_load,
+            qualtrics_questions,
             snowflake_engine,
         )
 
@@ -34,7 +37,7 @@ def extract_survey_information(qualtrics_client, survey_id, survey_table_name , 
     for local_file_name in local_file_names:
         snowflake_stage_load_copy_remove(
             local_file_name,
-            f"{snowflake_load_database}.qualtrics.qualtrics_nps_load",
+            qualtrics_questions,
             f"{snowflake_load_database}.qualtrics.{survey_table_name}",
             snowflake_engine,
         )
