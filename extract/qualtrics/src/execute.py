@@ -38,8 +38,8 @@ def get_and_write_surveys(qualtrics_client: QualtricsClient) -> List[str]:
             json.dump(surveys_to_write, out_file)
         snowflake_stage_load_copy_remove(
             "surveys.json",
-            "raw.qualtrics.qualtrics_load",
-            "raw.qualtrics.survey",
+            "AIRFLOW_UPGRADE_V3_RAW.qualtrics.qualtrics_load",
+            "AIRFLOW_UPGRADE_V3_RAW.qualtrics.survey",
             snowflake_engine,
         )
     return [survey["id"] for survey in surveys_to_write]
@@ -78,8 +78,8 @@ def get_and_write_distributions(survey_ids: List[str]) -> List[Dict[Any, Any]]:
 
                 snowflake_stage_load_copy_remove(
                     "distributions.json",
-                    "raw.qualtrics.qualtrics_load",
-                    "raw.qualtrics.distribution",
+                    "AIRFLOW_UPGRADE_V3_RAW.qualtrics.qualtrics_load",
+                    "AIRFLOW_UPGRADE_V3_RAW.qualtrics.distribution",
                     snowflake_engine,
                 )
     return all_distributions
@@ -100,8 +100,8 @@ def get_and_write_contacts(distributions: List[Dict[Any, Any]]) -> List[Dict[Any
 
         snowflake_stage_load_copy_remove(
             "contacts.json",
-            "raw.qualtrics.qualtrics_load",
-            "raw.qualtrics.contact",
+            "AIRFLOW_UPGRADE_V3_RAW.qualtrics.qualtrics_load",
+            "AIRFLOW_UPGRADE_V3_RAW.qualtrics.contact",
             snowflake_engine,
         )
     return contacts_to_write
