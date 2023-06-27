@@ -196,7 +196,7 @@ WITH biz_person AS (
     LEFT JOIN crm_tasks
       ON sfdc_contacts.contact_id=crm_tasks.sfdc_record_id
 
-    UNION ALL
+    UNION
 
     SELECT
       --id
@@ -325,23 +325,12 @@ WITH biz_person AS (
       ON sfdc_leads.lead_id=crm_tasks.sfdc_record_id
     WHERE is_converted = 'FALSE'
 
-), duplicates AS (
-
-    SELECT
-      dim_crm_person_id
-    FROM crm_person_final
-    GROUP BY 1
-    HAVING COUNT(*) > 1
-
 ), final AS (
 
     SELECT *
     FROM crm_person_final
-    WHERE dim_crm_person_id NOT IN (
-                                    SELECT *
-                                    FROM duplicates
-                                      )
-      AND sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
+    WHERE sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_crm_person_id ORDER BY sfdc_record_type DESC) = 1 
 
 )
 
@@ -350,5 +339,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-06-14"
+    updated_date="2023-06-13"
 ) }}
