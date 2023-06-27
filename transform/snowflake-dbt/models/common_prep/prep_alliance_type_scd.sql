@@ -75,7 +75,7 @@ WITH sfdc_opportunity_source AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2021-04-07",
-    updated_date="2022-07-18"
+    updated_date="2023-06-23"
 ) }}
