@@ -365,7 +365,7 @@ haproxy_inter AS (
 ),
 
 haproxy_cdn AS (
-
+  -- rationale: apply same split on CDN thana lready exisitng haproxy split
   WITH sku_list AS (SELECT 'Networking Cloud CDN Traffic Cache Egress to North America' AS sku
     UNION ALL
     SELECT 'Networking Cloud CDN Traffic Cache Egress to Europe'
