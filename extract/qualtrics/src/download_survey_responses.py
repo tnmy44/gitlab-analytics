@@ -11,11 +11,8 @@ from gitlabdata.orchestration_utils import (
 from qualtrics_client import QualtricsClient
 
 
-def extract_survey_information(qualtrics_client, survey_id, survey_table_name , snowflake_load_database):
+def extract_survey_information(qualtrics_client, survey_id, survey_table_name):
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
-    
-    qualtrics_nps_load = f"{snowflake_load_database}.qualtrics.qualtrics_nps_load"
-    qualtrics_questions = f"{snowflake_load_database}.qualtrics.questions"
 
     questions_format_list = [
         question for question in qualtrics_client.get_questions(survey_id)
@@ -28,8 +25,8 @@ def extract_survey_information(qualtrics_client, survey_id, survey_table_name , 
 
         snowflake_stage_load_copy_remove(
             "questions.json",
-            qualtrics_nps_load,
-            qualtrics_questions,
+            "AIRFLOW_UPGRADE_V3_RAW.qualtrics.qualtrics_nps_load",
+            "AIRFLOW_UPGRADE_V3_RAW.qualtrics.questions",
             snowflake_engine,
         )
 
@@ -37,8 +34,8 @@ def extract_survey_information(qualtrics_client, survey_id, survey_table_name , 
     for local_file_name in local_file_names:
         snowflake_stage_load_copy_remove(
             local_file_name,
-            qualtrics_questions,
-            f"{snowflake_load_database}.qualtrics.{survey_table_name}",
+            "AIRFLOW_UPGRADE_V3_RAW.qualtrics.qualtrics_nps_load",
+            f"AIRFLOW_UPGRADE_V3_RAW.qualtrics.{survey_table_name}",
             snowflake_engine,
         )
 
@@ -49,9 +46,9 @@ if __name__ == "__main__":
         config_dict["QUALTRICS_API_TOKEN"], config_dict["QUALTRICS_DATA_CENTER"]
     )
     survey_id = config_dict["QUALTRICS_NPS_ID"]
-    snowflake_load_database = config_dict["SNOWFLAKE_LOAD_DATABASE"]
-    extract_survey_information(client, survey_id, "nps_survey_responses", snowflake_load_database)
+
+    extract_survey_information(client, survey_id, "nps_survey_responses")
 
     survey_id = config_dict["QUALTRICS_POST_PURCHASE_ID"]
 
-    extract_survey_information(client, survey_id, "post_purchase_survey_responses", snowflake_load_database)
+    extract_survey_information(client, survey_id, "post_purchase_survey_responses")
