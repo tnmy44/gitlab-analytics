@@ -108,6 +108,8 @@ models:
         - name: gs_created_by_user_id
         - name: activity_id
         - name: user_email
+          meta:
+            sensitive: true
         - name: source
         - name: scorecard
         - name: notes
@@ -115,6 +117,8 @@ models:
         - name: ant_workshop_topic_c
         - name: ant_status_c
         - name: user_name
+          meta:
+            sensitive: true
         - name: author_id
         - name: scorecard_measure
         - name: external_id
@@ -190,6 +194,8 @@ models:
         - name: spam
         - name: modified_at
         - name: from_address
+          meta:
+            sensitive: true
         - name: spam_date
         - name: bounce
         - name: deleted
@@ -264,14 +270,20 @@ models:
         - name: survey_score
         - name: last_email_sent
         - name: recipient_email_address
+          meta:
+            sensitive: true
         - name: context_id
         - name: sfdc_contact_id
         - name: last_name
         - name: survey_page_open_count
         - name: gs_advanced_outreach_id
         - name: account_name
+          meta:
+            sensitive: true
         - name: advanced_outreach_id
         - name: sender_full_name
+          meta:
+            sensitive: true
         - name: failure_reasons
         - name: total_email_clicked
         - name: gs_source_id
@@ -284,12 +296,16 @@ models:
         - name: gs_manager_user_id
         - name: participant_source_name
         - name: first_name
+          meta:
+            sensitive: true
         - name: context_attribute_integer_3
         - name: context_attribute_integer_2
         - name: context_attribute_integer_1
         - name: survey_response_source
         - name: manager_user_id
         - name: full_name
+          meta:
+            sensitive: true
         - name: last_email_link_clicked
         - name: _fivetran_synced
           tests:
@@ -400,6 +416,8 @@ models:
         - name: _fivetran_deleted
         - name: company_pubsec_type
         - name: company_csm_manager_name
+          meta:
+            sensitive: true
         - name: cta_company_gsid
         - name: company_account_demographics_role_type
         - name: cta_company_name
@@ -416,9 +434,13 @@ models:
         - name: company_csm_prioritization
         - name: company_sales_segment
         - name: cta_owner_name
+          meta:
+            sensitive: true
         - name: cta_type_name
         - name: cta_status_name
         - name: cta_csm_name
+          meta:
+            sensitive: true
         - name: company_account_demographics_business_unit
         - name: cta_nr_of_days_past_ebr_closed_success
         - name: cta_name
@@ -446,6 +468,8 @@ models:
         - name: number_of_success_plans
         - name: account_arr
         - name: tam_name
+          meta:
+            sensitive: true
         - name: account_name
         - name: _fivetran_synced
           tests:
@@ -465,6 +489,8 @@ models:
         - name: company_gsid
         - name: company_gsidd_09_dce
         - name: tam_name
+          meta:
+            sensitive: true
         - name: is_open
         - name: _fivetran_synced
           tests:
@@ -845,6 +871,8 @@ models:
         - name: csatpercent
         - name: modified_by
         - name: name
+          meta:
+            sensitive: true
         - name: participant_id
         - name: modified_at
         - name: csatscore
@@ -930,6 +958,8 @@ models:
         - name: batch_id
         - name: triggered_on
         - name: email_address
+          meta:
+            sensitive: true
         - name: hard_bounced
         - name: marked_spam
         - name: person_id
@@ -971,6 +1001,8 @@ models:
         - name: survey_id
         - name: created_at
         - name: user_email
+          meta:
+            sensitive: true
         - name: modified_by
         - name: participant_id
         - name: true_nps
@@ -981,6 +1013,8 @@ models:
         - name: comment
         - name: responded_date
         - name: user_name
+          meta:
+            sensitive: true
         - name: created_by
         - name: company_id
         - name: sentiment
@@ -1004,6 +1038,8 @@ models:
         - name: entity_name
         - name: person_type
         - name: email_address
+          meta:
+            sensitive: true
         - name: reason
         - name: entity_id
         - name: entity_type
@@ -1087,11 +1123,17 @@ models:
         - name: _fivetran_deleted
         - name: gs_user_gsid
         - name: email
+          meta:
+            sensitive: true
         - name: created_date
         - name: sfdcuser_name
+          meta:
+            sensitive: true
         - name: sfdc_user_id
         - name: modified_date
         - name: name
+          meta:
+            sensitive: true
         - name: _fivetran_synced
           tests:
             - not_null

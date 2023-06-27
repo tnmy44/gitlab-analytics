@@ -10,7 +10,7 @@ WITH source AS (
 renamed AS (
 
   SELECT
-    id::NUMBER                  AS id,
+    id::VARCHAR                 AS id,
     _fivetran_deleted::BOOLEAN  AS _fivetran_deleted,
     gs_user_id::VARCHAR         AS gs_user_id,
     clicked::NUMBER             AS clicked,
