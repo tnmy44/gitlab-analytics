@@ -207,7 +207,7 @@ models:
 
       gainsight_customer_success:
         +schema: gainsight_customer_success
-        +tags: ["gainsight"]
+        +tags: ["gainsight", "mnpi"]
 
       gcp_billing:
         +materialized: table
