@@ -56,6 +56,9 @@ models:
       description: '{{ doc("gainsight_activity_attendee") }}'
       columns:
         - name: activity_id
+          tests:
+            - not_null
+            - unique
         - name: _fivetran_deleted
         - name: attendee_type
         - name: external_attendee_sfdc_id
@@ -69,6 +72,9 @@ models:
       description: '{{ doc("gainsight_activity_comments") }}'
       columns:
         - name: comment_id
+          tests:
+            - not_null
+            - unique
         - name: _fivetran_deleted
         - name: comment
         - name: created_by_user_id
@@ -320,6 +326,9 @@ models:
       description: '{{ doc("gainsight_ao_advanced_outreach_company") }}'
       columns:
         - name: _fivetran_id
+          tests:
+            - not_null
+            - unique
         - name: _fivetran_deleted
         - name: advanced_outreach_gsid
         - name: advanced_outreach_name
@@ -918,6 +927,9 @@ models:
       description: '{{ doc("gainsight_ctas_healthscores") }}'
       columns:
         - name: _fivetran_id
+          tests:
+            - not_null
+            - unique
         - name: _fivetran_deleted
         - name: stage_name
         - name: objective_category_name
@@ -968,7 +980,6 @@ models:
     - name: email_logs
       description: '{{ doc("gainsight_email_logs") }}'
       columns:
-        - name: id
         - name: id
           tests:
             - not_null
