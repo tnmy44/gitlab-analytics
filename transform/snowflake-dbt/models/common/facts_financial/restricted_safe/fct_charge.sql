@@ -17,6 +17,7 @@ WITH prep_charge AS (
       --Natural Key
       prep_charge.subscription_name,
       prep_charge.subscription_version,
+      prep_charge.subscription_created_by_id                                AS subscription_created_by_user_id,
       prep_charge.rate_plan_charge_number,
       prep_charge.rate_plan_charge_version,
       prep_charge.rate_plan_charge_segment,

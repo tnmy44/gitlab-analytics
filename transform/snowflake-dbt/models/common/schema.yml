@@ -5016,6 +5016,8 @@ models:
         description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
       - name: rate_plan_charge_version
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
+      - name: subscription_created_by_id
+        description: The id of the Zuora user who created the subscription.
 
   - name: fct_crm_account
     description: '{{ doc("fct_crm_account") }}'
@@ -7288,7 +7290,6 @@ models:
         description: Effective date of employment status
         tests:
           - not_null
-      
 
   - name: fct_team_member_position
     description: '{{ doc("fct_team_member_position") }}'
@@ -7410,4 +7411,3 @@ models:
       - name: valid_to
         tests: 
           - not_null
-

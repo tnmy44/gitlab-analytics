@@ -1760,14 +1760,11 @@ The reason why the date and time when the change was initiated was added to the 
 
 {% enddocs %}
 
-
-
 {% docs fct_team_member_status %}
 
 This table contains the termination reason, type, exit impact and employment_status. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. This table contains only past terminations. Future terminations are not included at this time. We will evaluate the possibility of making future terminations available to people with the analyst_people role in a future iteration. The grain of this table is one row per employee_id, employment_status and status_effective_date combination.
 
 {% enddocs %}
-
 
 {% docs fct_team_status %}
 
