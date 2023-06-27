@@ -25,8 +25,8 @@ def extract_survey_information(qualtrics_client, survey_id, survey_table_name):
 
         snowflake_stage_load_copy_remove(
             "questions.json",
-            "AIRFLOW_UPGRADE_V3_RAW.qualtrics.qualtrics_nps_load",
-            "AIRFLOW_UPGRADE_V3_RAW.qualtrics.questions",
+            "RAW.qualtrics.qualtrics_nps_load",
+            "RAW.qualtrics.questions",
             snowflake_engine,
         )
 
@@ -34,8 +34,8 @@ def extract_survey_information(qualtrics_client, survey_id, survey_table_name):
     for local_file_name in local_file_names:
         snowflake_stage_load_copy_remove(
             local_file_name,
-            "AIRFLOW_UPGRADE_V3_RAW.qualtrics.qualtrics_nps_load",
-            f"AIRFLOW_UPGRADE_V3_RAW.qualtrics.{survey_table_name}",
+            "RAW.qualtrics.qualtrics_nps_load",
+            f"RAW.qualtrics.{survey_table_name}",
             snowflake_engine,
         )
 
