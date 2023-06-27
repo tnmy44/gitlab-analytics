@@ -31,7 +31,7 @@ WITH trial_snapshot AS (
       --Other Attributes
       trial_snapshot.subscription_name,
       trial_snapshot.subscription_name_slugify,
-      gitlab_namespace_name,
+      trial_snapshot.gitlab_namespace_name,
       trial_snapshot.order_start_date,
       trial_snapshot.order_end_date,
       trial_snapshot.order_quantity,
