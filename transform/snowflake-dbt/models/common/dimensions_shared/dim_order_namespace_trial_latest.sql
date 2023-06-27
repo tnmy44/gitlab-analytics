@@ -38,7 +38,7 @@ WITH trial_snapshot AS (
       trial_snapshot.order_created_at,
       trial_snapshot.order_updated_at,
       trial_snapshot.amendment_type,
-      trial_snapshot. order_is_trial                                                      AS is_order_trial,
+      trial_snapshot.order_is_trial                                                      AS is_order_trial,
       trial_snapshot.last_extra_ci_minutes_sync_at,
       trial_snapshot.valid_from,
       trial_snapshot.valid_to
