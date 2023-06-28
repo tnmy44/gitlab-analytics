@@ -7407,7 +7407,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: dim_order_snapshot_id
+      - name: dim_trial_snapshot_id
         description: A unique ID for each Snapshotted Order.
         tests:
           - not_null

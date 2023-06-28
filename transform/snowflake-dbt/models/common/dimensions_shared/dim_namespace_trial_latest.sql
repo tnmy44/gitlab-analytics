@@ -19,7 +19,7 @@ WITH trial_snapshot AS (
       {{ dbt_utils.surrogate_key(['trial_snapshot.order_snapshot_id'])}}                  AS dim_namespace_trial_latest_sk,
 
       --Natural Key
-      trial_snapshot.order_snapshot_id                                                    AS dim_order_snapshot_id,
+      trial_snapshot.order_snapshot_id                                                    AS dim_trial_snapshot_id,
 
       --Foreign Keys
       trial_snapshot.order_id                                                             AS order_id,
