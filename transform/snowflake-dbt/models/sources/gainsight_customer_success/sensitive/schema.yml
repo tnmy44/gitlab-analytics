@@ -1,0 +1,12 @@
+version: 2
+
+models:
+    - name: activity_timeline_pii
+    - name: advanced_outreach_emails_pii
+    - name: advanced_outreach_participants_pii
+    - name: companies_and_ebrs_pii
+    - name: companies_with_success_plan_details_pii
+    - name: email_logs_pii
+    - name: nps_survey_response_pii
+    - name: opt_out_emails_pii
+    - name: user_sfdcgitlabproduction_pii

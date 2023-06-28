@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('account_scorecard_history') }}
+    FROM {{ ref('ao_advanced_outreach_company') }}
 
 )
 
