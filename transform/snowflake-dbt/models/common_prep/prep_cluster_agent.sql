@@ -20,7 +20,6 @@
       cluster_agents.created_by_user_id                           AS dim_user_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
       dim_date.date_id                                            AS created_date_id,
-      cluster_agents.cluster_agent_name,
       cluster_agents.created_at,
       cluster_agents.updated_at
     FROM cluster_agents

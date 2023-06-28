@@ -66,7 +66,7 @@
       prep_ping_instance.*
     FROM prep_ping_instance
       {% if is_incremental() %}
-                  WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+                  WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
       {% endif %}
 
 ), add_country_info_to_usage_ping AS (
@@ -87,6 +87,7 @@
       dim_installation_id                                 AS dim_installation_id,
       dim_product_tier.dim_product_tier_id                AS dim_product_tier_id,
       ping_created_at                                     AS ping_created_at,
+      uploaded_at                                         AS uploaded_at,
       license_md5                                         AS license_md5,
       license_sha256                                      AS license_sha256,
       dim_location_country_id                             AS dim_location_country_id,
@@ -102,9 +103,7 @@
     FROM add_country_info_to_usage_ping
     LEFT JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
-    AND IFF( add_country_info_to_usage_ping.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
-    AND dim_product_tier.product_tier_name != 'Dedicated - Ultimate'
-    --AND main_edition = 'EE'
+    AND add_country_info_to_usage_ping.ping_deployment_type = dim_product_tier.product_deployment_type
 
 ), joined_payload AS (
 
@@ -146,6 +145,7 @@
       license_md5                                                                                                 AS license_md5,
       license_sha256                                                                                              AS license_sha256,
       ping_created_at                                                                                             AS ping_created_at,
+      uploaded_at                                                                                                 AS uploaded_at,
       ping_created_at::DATE                                                                                       AS ping_created_date,
       umau_value                                                                                                  AS umau_value,
       license_subscription_id                                                                                     AS dim_subscription_license_id,
@@ -161,7 +161,7 @@
 {{ dbt_audit(
     cte_ref="flattened_high_level",
     created_by="@icooper-acp",
-    updated_by="@tpoole",
+    updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2023-01-20"
+    updated_date="2023-06-12"
 ) }}

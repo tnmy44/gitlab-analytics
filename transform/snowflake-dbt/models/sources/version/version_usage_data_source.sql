@@ -11,9 +11,9 @@ WITH source AS (
     SELECT *
     FROM {{ source('version', 'usage_data') }}
     {% if is_incremental() %}
-    WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+    WHERE _uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
     {% endif %}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1
 
 ), raw_usage_data_payload AS (
 
@@ -32,7 +32,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-        id::VARCHAR                                   AS id,
+        id::VARCHAR                                  AS id,
         source_ip::VARCHAR                           AS source_ip,
         version::VARCHAR                             AS version,
         active_user_count::NUMBER                    AS instance_user_count, -- See issue #4872.
@@ -96,7 +96,8 @@ WITH source AS (
         raw_usage_data_id::VARCHAR                   AS raw_usage_data_id,
         container_registry_vendor::VARCHAR           AS container_registry_vendor,
         container_registry_version::VARCHAR          AS container_registry_version,
-        raw_usage_data_payload_reconstructed
+        raw_usage_data_payload_reconstructed         AS raw_usage_data_payload_reconstructed,
+        _uploaded_at::TIMESTAMP                      AS uploaded_at
     FROM raw_usage_data_payload
 
 )

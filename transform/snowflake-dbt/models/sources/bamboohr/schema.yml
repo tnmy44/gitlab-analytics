@@ -25,6 +25,8 @@ models:
       - name: compensation_value
         tests:
           - not_null
+        meta:
+          masking_policy: analyst_people
       - name: compensation_currency
       - name: uploaded_at    
 
@@ -60,6 +62,7 @@ models:
       - name: bonus_type
         tests:
           - not_null
+
   - name: bamboohr_directory_source
     description: Base model for BambooHR Active Directory. Brings in directory data for each day.
     columns:
@@ -73,9 +76,17 @@ models:
     columns:
       - name: employee_id
       - name: full_name
+        meta:
+          masking_policy: analyst_people
       - name: home_phone
+        meta:
+          masking_policy: analyst_people
       - name: mobile_phone
+        meta:
+          masking_policy: analyst_people
       - name: work_phone
+        meta:
+          masking_policy: analyst_people
 
   - name: bamboohr_employment_status_source
     description: This model shows changes in employment status (active, terminated, on leave, etc). Updates are captured in log-style.
@@ -91,6 +102,9 @@ models:
         tests:
           - accepted_values:
               values: ['Termination (Involuntary)', 'Resignation (Voluntary)', 'Death']
+        meta:
+          masking_policy: analyst_people
+      - name: employment_status
             
   - name: bamboohr_id_employee_number_mapping_source
     description: This model is based off the custom report in bamboohr to capture additional bamboohr information. This captures a snapshot of custom fields in bamboohr everyday. Note - field names can be added at various times through this report depending on use case and it is important to understand when we started capturing these data points.
@@ -108,6 +122,28 @@ models:
         description: Began collecting this filed 2021-12-16  
       - name: jobtitle_speciality_single_select
         description: Started capturing on 2020-05-07
+      - name: nationality
+        meta:
+          masking_policy: analyst_people
+      - name: gender_dropdown
+        meta:
+          masking_policy: analyst_people
+      - name: locality
+        meta:
+          masking_policy: analyst_people
+      - name: age
+        meta:
+          masking_policy: analyst_people
+      - name: country
+        meta:
+          masking_policy: analyst_people
+      - name: ethnicity
+        meta:
+          masking_policy: analyst_people
+      - name: gender
+        meta:
+          masking_policy: analyst_people
+          
   - name: bamboohr_job_info_source
     description: This model shows the details (manager, department, and division) that an employee is in at a given point in time. This includes historical information.
     columns:
@@ -147,9 +183,21 @@ models:
           - not_null
       - name: effective_date
       - name: variable_pay
+        meta:
+          masking_policy: analyst_people
       - name: annual_amount_local
+        meta:
+          masking_policy: analyst_people
       - name: annual_amount_usd_value
+        meta:
+          masking_policy: analyst_people
       - name: ote_local
+        meta:
+          masking_policy: analyst_people
       - name: ote_usd
+        meta:
+          masking_policy: analyst_people
       - name: ote_type
+        meta:
+          masking_policy: analyst_people
  

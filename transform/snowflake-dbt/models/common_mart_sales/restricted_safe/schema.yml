@@ -172,6 +172,10 @@ models:
           - unique
       - name: was_purchased_through_reseller
         description: Boolean field that indicates whether the subscription was purchased through a reseller. If TRUE, the `invoice_owner_account` will contain the name of the reseller.
+      - name: subscription_renewal_type
+        description: Calculated field that indicates how a subscription renewal was made. Can be one of 'Auto-Renewal', 'Customer Portal', 'Sales-Assisted' or null when the charge is not related to a subscription renewal.
+      - name: dim_order_id
+        description: Unique identifier for an order. Can be used to join to dim_order.
 
   - name: mart_crm_account
     description: Model containing Salesforce crm accounts details for existing and historical customers.
@@ -198,6 +202,8 @@ models:
         description: ' {{ doc("gs_last_csm_activity_date") }} '
       - name: last_at_risk_update_comments
         description: ' {{ doc("last_at_risk_update_comments") }} '
+      - name: bdr_prospecting_status
+        description: Indicates whether the account is actively being prospected by a BDR.
 
   - name: mart_crm_opportunity
     description: Model with single pane of glass sales and marketing metrics. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
@@ -239,6 +245,10 @@ models:
         description: '{{ doc("military_invasion_risk_scale") }}'
       - name: downgrade_details
         description: '{{ doc("downgrade_details") }}'
+      - name: intended_product_tier
+        description: '{{ doc("intended_product_tier") }}'
+      - name: dim_parent_crm_opportunity_id
+        description: '{{ doc("dim_parent_crm_opportunity_id") }}'
 
   - name: mart_crm_opportunity_daily_snapshot
     description: Model with single pane of glass sales and marketing metrics, snapshotted daily.

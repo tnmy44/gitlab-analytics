@@ -13,7 +13,7 @@ from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperato
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.27"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.1"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.2"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
 
@@ -27,7 +27,6 @@ def get_sales_analytics_notebooks(frequency: str) -> Dict:
     path = pathlib.Path(f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/")
 
     for file in path.rglob("*.ipynb"):
-
         relative_path = file.relative_to(SALES_ANALYTICS_NOTEBOOKS_PATH)
         notebooks.append(relative_path.as_posix())
         expanded_name = (
