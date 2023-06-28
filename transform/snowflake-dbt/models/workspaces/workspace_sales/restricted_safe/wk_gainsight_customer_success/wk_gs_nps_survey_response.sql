@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi","gainsight"]
+) }}
+
 WITH source AS (
 
     SELECT

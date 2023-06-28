@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi","gainsight"]
+) }}
+
 WITH source AS (
 
   SELECT {{ nohash_sensitive_columns('activity_timeline','user_email') }}
