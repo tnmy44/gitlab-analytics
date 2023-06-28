@@ -7412,16 +7412,16 @@ models:
         tests:
           - not_null
           - unique
-      - name: dim_order_id
-        description: The unique ID of an Order.
+      - name: order_id
+        description: The unique ID of an Order. It can be used as a join key to join to CDot Orders only.
         tests:
           - not_null
       - name: dim_namespace_id
         description: The id of the namespace related to the subscription.
         tests: 
           - unique        
-      - name: dim_customer_id
-        description: The unique ID of a customer
+      - name: customer_id
+        description: The unique ID of a customer. It can be used as a Join key to join to CDot Customers only.
       - name: dim_product_rate_plan_id
         description: The unique ID of a product rate plan
       - name: dim_subscription_id

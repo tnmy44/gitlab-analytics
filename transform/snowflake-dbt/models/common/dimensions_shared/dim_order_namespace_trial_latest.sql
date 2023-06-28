@@ -22,9 +22,9 @@ WITH trial_snapshot AS (
       trial_snapshot.order_snapshot_id                                                    AS dim_order_snapshot_id,
 
       --Foreign Keys
-      trial_snapshot.order_id                                                             AS dim_order_id,
+      trial_snapshot.order_id                                                             AS order_id,
       trial_snapshot.gitlab_namespace_id                                                  AS dim_namespace_id,
-      trial_snapshot.customer_id                                                          AS dim_customer_id,
+      trial_snapshot.customer_id                                                          AS customer_id,
       trial_snapshot.product_rate_plan_id                                                 AS dim_product_rate_plan_id,
       trial_snapshot.subscription_id                                                      AS dim_subscription_id,
 
