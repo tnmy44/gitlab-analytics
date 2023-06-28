@@ -387,7 +387,7 @@ haproxy_cdn AS (
   SELECT
     haproxy_usage.date_day                                      AS date_day,
     'gitlab-production'                                         AS gcp_project_id,
-    'Compute Engine'                                            AS gcp_service_description,
+    'Networking'                                                AS gcp_service_description,
     sku_list.sku                                                AS gcp_sku_description, -- all CDN skus
     NULL                                                        AS infra_label,
     NULL                                                        AS env_label,
