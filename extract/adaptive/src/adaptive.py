@@ -259,16 +259,16 @@ def main(export_all=False):
 
     # export all versions in a folder (including subfolders)
     if export_all:
-        folder_criteria = "FY24 Versions"
-        folder_criteria = "409A Versions"  # 1 version
-        folder_criteria = "FY22 PLAN Versions"  # 4 versions
+        # folder_criteria = "FY24 Versions"
+        # folder_criteria = "409A Versions"  # 1 version
+        # folder_criteria = "FY22 PLAN Versions"  # 4 versions
         folder_criteria = "Shared with Data (Test)"
         adaptive.process_versions(folder_criteria)
 
     # export a specific version
     else:
-        version = "FY24 Plan (Board)"  # legit yearly forecast
-        version = "Live forecast snapshot 1A"  # test
+        # version = "FY24 Plan (Board)"  # legit yearly forecast
+        # version = "Live forecast snapshot 1A"  # test
         version = "Forecast (Live)"  # test
 
         adaptive.process_version(version)
