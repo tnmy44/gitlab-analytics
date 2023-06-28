@@ -2,7 +2,7 @@
 1. Set-up the necessary schemas/tables in the raw database in Snowflake:
     ```sql
     use <raw>.clari;
-    use role transformer;
+    use role loader;
     create schema adaptive_custom;
 
     create table processed_versions (
