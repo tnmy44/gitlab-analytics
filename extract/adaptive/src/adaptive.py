@@ -82,22 +82,13 @@ class Adaptive:
         account_codes = [
             "RPO",
             "cRPO",
-            "Bookings_Model_New.Plan_Churn",
+            "Revenue",
+            "Bookings_Model_New.Plan_Contraction_and_Churn",
             "new_logos",
-            "Customers_100k",
-            "HeadcountExpenseFcst",
-            "Calculated_Billings",
-            "Calculated_Billings_1",
-            "Bookings_Model_New.All_ARR",
-            "Bookings_Model_New.BM_Other_Pct_Net_ARR_Bookings_Metric",
-            "Bookings_Model_New.BM_PS_Attach_Rate_Metric",
-            "Bookings_Model_New.BM_Net_ARR_SaaS_Premium_Other",
-            "Bookings_Model_New.BM_Net_ARR_SaaS_Ultimate",
-            "Bookings_Model_New.BM_Net_ARR_Self_Managed_Ultimate",
-            "Bookings_Model_New.BM_Net_ARR_Self_Managed_Premium_Other",
-            "Bookings_Model_New.BM_True_ups_pct_Net_ARR_Bookings_Metric",
-            "total_revenue",
-            "TotalRevenue",
+            "Bookings_Model_New.BM_Net_ARR_Bookings",
+            "Bookings_Model_New.5K_Customer_Number",
+            "Bookings_Model_New.100K_Customer_Number",
+            "Headcount",
         ]
 
         account_codes_xml = "".join(
@@ -270,6 +261,7 @@ def main(export_all=False):
         folder_criteria = "FY24 Versions"
         folder_criteria = "409A Versions"  # 1 version
         folder_criteria = "FY22 PLAN Versions"  # 4 versions
+        folder_criteria = "Shared to Data - FY24 Plan"
         adaptive.process_versions(folder_criteria)
 
     # export a specific version
