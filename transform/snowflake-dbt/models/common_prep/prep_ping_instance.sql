@@ -62,7 +62,32 @@
         WHEN original_edition = 'EEP'                                    THEN 'Premium'
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                                                                             AS product_tier,
-        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)                                          AS raw_usage_data_payload,
+      CASE
+        WHEN hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
+                                                                    '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
+          THEN TRUE
+        ELSE FALSE
+      END                                                                                                                                         AS is_saas_dedicated,
+      -- CASE
+      --   WHEN ping_created_at <= '2023-06-01' AND hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
+      --                                                               '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
+      --     THEN TRUE
+      --   WHEN ping_created_at > '2023-06-01'  AND COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated']::BOOLEAN = TRUE
+      --     THEN TRUE
+      --   ELSE FALSE
+      -- END                                                                                                                                         AS is_saas_dedicated,
+      CASE
+        WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
+        WHEN is_saas_dedicated = TRUE THEN 'Self-Managed' -- Will be change to SaaS once all downstream models that filter delivery_type = Self-Managed are changed to 
+                                                          -- ping_deploymen_type in ('Dedicated', 'Self-managed') to avoid Dedicated data to stop flowing
+        ELSE 'Self-Managed'
+      END                                                                                                                                         AS ping_delivery_type,
+      CASE
+        WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'GitLab.com'
+        WHEN is_saas_dedicated = TRUE THEN 'Dedicated'
+        ELSE 'Self-Managed'
+      END                                                                                                                                         AS ping_deployment_type,
+      COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)                                            AS raw_usage_data_payload,
       IFF(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7', 'SaaS - Manual', 'Self-Managed') AS ping_type --GitLab SaaS pings here are manual, everything else is SM
     FROM usage_data
     LEFT JOIN raw_usage_data
@@ -148,6 +173,9 @@
         WHEN edition = 'EEU'                  THEN 'Ultimate'
         ELSE NULL
       END AS product_tier,
+      FALSE AS is_saas_dedicated,
+      'SaaS' AS ping_delivery_type,
+      'GitLab.com' AS ping_deployment_type,
       raw_usage_data_payload,
       ping_type
     FROM automated_instance_service_ping
@@ -166,7 +194,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@rbacovic",
+    updated_by="@jpeguero",
     created_date="2022-03-17",
-    updated_date="2023-06-01"
+    updated_date="2023-06-12"
 ) }}

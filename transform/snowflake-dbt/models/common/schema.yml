@@ -2896,6 +2896,12 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
 
   - name: dim_ping_metric
     description: ' {{ doc("dim_ping_metric") }} '
@@ -5001,6 +5007,8 @@ models:
         description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
       - name: rate_plan_charge_version
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
+      - name: subscription_created_by_id
+        description: The id of the Zuora user who created the subscription.
 
   - name: fct_crm_account
     description: '{{ doc("fct_crm_account") }}'
@@ -7192,6 +7200,8 @@ models:
         description: Team member gitlab username 
       - name: region
         description: Current/latest region the team member resides in
+      - name: team_id
+        description: Identification number of the team to which the particular team member belongs
       - name: hire_date
         description: Most recent hire date. Field is updated if a team member is re-hired after a termination
       - name: termination_date
@@ -7268,7 +7278,6 @@ models:
         description: Effective date of employment status
         tests:
           - not_null
-      
 
   - name: fct_team_member_position
     description: '{{ doc("fct_team_member_position") }}'
@@ -7390,4 +7399,3 @@ models:
       - name: valid_to
         tests: 
           - not_null
-

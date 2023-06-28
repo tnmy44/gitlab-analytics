@@ -89,7 +89,7 @@ SELECT
 
   marketo_lead_id,
 
-    --Ptpf fields
+  --Ptpf fields
   is_ptpf_contact,
   ptpf_namespace_id,
   ptpf_score_group,
@@ -105,6 +105,7 @@ SELECT
   ptp_score_date,
   ptp_past_score_group,
   ptp_days_since_trial_start,
+  ptp_source,
 
   -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
   last_changed
@@ -117,4 +118,5 @@ WHERE rlike(email_address, '^[A-Z0-9.+_%-]+@[A-Z0-9.-]+\\.[A-Z]+$','i')
     )
     OR is_ptpt_contact_change = TRUE
     OR is_impacted_by_user_limit_change = TRUE
+    OR is_ptp_contact_change = TRUE
   )

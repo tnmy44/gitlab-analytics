@@ -7,8 +7,7 @@
     ('dim_date', 'dim_date'),
     ('prep_ping_instance', 'prep_ping_instance'),
     ('prep_license','prep_license'),
-    ('prep_charge','prep_charge'),
-    ('prep_product_detail','prep_product_detail')
+    ('prep_charge','prep_charge')
     ])
 
 }},
@@ -97,22 +96,6 @@ fct_w_month_flag AS (
 
 ),
 
-dedicated_instance AS (
-
-  SELECT DISTINCT
-    prep_ping_instance.uuid
-  FROM prep_ping_instance
-  INNER JOIN prep_license
-    ON (prep_ping_instance.license_md5    = prep_license.license_md5 OR
-        prep_ping_instance.license_sha256 = prep_license.license_sha256)
-  INNER JOIN prep_charge
-    ON prep_license.dim_subscription_id = prep_charge.dim_subscription_id
-  INNER JOIN prep_product_detail
-    ON prep_charge.dim_product_detail_id = prep_product_detail.dim_product_detail_id
-  WHERE LOWER(prep_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%'
-
-),
-
 final AS (
 
     SELECT DISTINCT
@@ -190,16 +173,11 @@ final AS (
       fct_w_month_flag.major_minor_version                                                                        AS major_minor_version,
       fct_w_month_flag.major_minor_version_num                                                                    AS major_minor_version_num,
       fct_w_month_flag.major_minor_version_id                                                                     AS major_minor_version_id, -- legacy field - to be replaced with major_minor_version_ num
+      fct_w_month_flag.is_saas_dedicated                                                                          AS is_saas_dedicated,
+      fct_w_month_flag.ping_delivery_type                                                                         AS ping_delivery_type,
+      fct_w_month_flag.ping_deployment_type                                                                       AS ping_deployment_type,
       CASE
-        WHEN fct_w_month_flag.uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
-        ELSE 'Self-Managed'
-        END                                                                                                       AS ping_delivery_type,
-      CASE
-        WHEN EXISTS (SELECT 1 FROM dedicated_instance di
-                     WHERE fct_w_month_flag.uuid = di.uuid)     THEN TRUE
-        ELSE FALSE END                                                                                            AS is_saas_dedicated,
-      CASE
-        WHEN ping_delivery_type = 'SaaS'                                          THEN TRUE
+        WHEN fct_w_month_flag.ping_deployment_type = 'GitLab.com'                 THEN TRUE
         WHEN fct_w_month_flag.installation_type = 'gitlab-development-kit'        THEN TRUE
         WHEN fct_w_month_flag.hostname = 'gitlab.com'                             THEN TRUE
         WHEN fct_w_month_flag.hostname ILIKE '%.gitlab.com'                       THEN TRUE
@@ -233,5 +211,5 @@ final AS (
     created_by="@icooper-acp",
     updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2023-04-14"
+    updated_date="2023-06-16"
 ) }}
