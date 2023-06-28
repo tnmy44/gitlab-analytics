@@ -1774,7 +1774,7 @@ The grain of this table is one row per employee_id and valid_from combination
 
 {% enddocs %}
 
-{% docs dim_order_namespace_trial_latest %}
+{% docs dim_namespace_trial_latest %}
 
 This table summarizes all the trials Orders information for a specific namespace.
 

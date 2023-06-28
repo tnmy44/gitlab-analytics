@@ -2123,8 +2123,8 @@ The surrogate key of `prep_namespace_order_trial` model. Currently identified by
 
 {% enddocs %}
 
-{% docs dim_order_namespace_trial_latest_sk %}
+{% docs dim_namespace_trial_latest_sk %}
 
-The surrogate key of `dim_order_namespace_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
+The surrogate key of `dim_namespace_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
 
 {% enddocs %}
