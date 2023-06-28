@@ -197,6 +197,23 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_ci_editor_ai_conversation_messages_source
+    description: Base model for Gitlab.com ci_editor_ai_conversation_messages
+    columns:
+      - name: ci_editor_ai_conversation_messages_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: updated_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_ci_group_variables_source
     description: Base model for Gitlab.com ci_group_variables
     columns:
@@ -227,6 +244,19 @@ models:
         tests:
           - not_null
       - name: updated_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
+  - name: gitlab_dotcom_ci_job_token_project_scope_links_source
+    description: Base model for Gitlab.com gitlab_dotcom_ci_job_token_project_scope_links
+    columns:
+      - name: ci_job_token_project_scope_link_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
@@ -676,9 +706,6 @@ models:
       - name: confirmation_sent_at
       - name: created_at
       - name: email_address
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
       - name: email_confirmed_at
       - name: gitlab_email_id
       - name: user_id
@@ -1560,10 +1587,6 @@ models:
         tests:
           - not_null
           - unique
-      - name: project_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_protected_branch_merge_access_levels_source
     description: A base model for Gitlab.com Gitlab.com protected_branch_merge_access_levels.
@@ -1666,6 +1689,19 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: gitlab_dotcom_reviews_source
+    description: Base model for Gitlab.com reviews
+    columns:
+      - name: reviews_id
+        description: Unique identifier for gpg_signatures
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tests:
+          - not_null
 
   - name: gitlab_dotcom_routes_source
     description: Base model for Gitlab.com paths for namespaces and projects which can be used to link to the actual URLs.
@@ -1985,3 +2021,60 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: gitlab_dotcom_ml_candidates_source
+    description: Base model for Gitlab.com ml_candidates table.
+    columns:
+      - name: ml_candidate_id
+        description: Appears as `id` in the source data
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+        tests:
+          - not_null
+      - name: experiment_id
+        tests:
+          - not_null
+      - name: user_id
+      - name: start_at
+        description: Appears as `start_time` in the source data
+      - name: end_at
+        description: Appears as `end_time` in the source data
+      - name: status
+        tests:
+          - not_null
+      - name: package_id
+      - name: ml_candidate_eid
+        description: Appears as `eid` in the source data
+      - name: project_id
+      - name: ml_candidate_internal_id
+        description: Appears as `internal_id` in the source data
+      - name: ci_build_id
+
+  - name: gitlab_dotcom_ml_experiments_source
+    description: Base model for Gitlab.com ml_experiments table.
+    columns:
+      - name: ml_experiment_id
+        description: Appears as `id` in the source data
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tests:
+          - not_null
+      - name: updated_at
+        tests:
+          - not_null
+      - name: ml_experiment_iid
+        description: Appears as `iid` in the source data
+        tests:
+          - not_null
+      - name: project_id
+        tests:
+          - not_null
+      - name: user_id
+      - name: deleted_on

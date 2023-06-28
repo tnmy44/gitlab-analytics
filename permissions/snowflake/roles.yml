@@ -959,6 +959,7 @@ roles:
                       - prep.zendesk
                       - prep.preparation
                       - prep.customers
+                      - prep.sfdc
                       - raw.data_science
                       - raw.salesforce_stitch
                       - raw.snapshots
@@ -974,6 +975,7 @@ roles:
                       - prep.gitlab_dotcom.*
                       - prep.preparation.*
                       - prep.customers.*
+                      - prep.sfdc.*
                       - prod.common.*
                       - prod.legacy.*
                       - prod.common_mart_product.*
@@ -2180,6 +2182,7 @@ roles:
                     - prod.restricted_safe_common
                     - prod.restricted_safe_common_mapping
                     - prod.restricted_safe_common_mart_finance
+                    - prod.restricted_safe_common_mart_marketing
                     - prod.restricted_safe_common_mart_sales
                     - prod.restricted_safe_legacy
                     - prod.restricted_safe_common_prep
@@ -2196,6 +2199,7 @@ roles:
                     - prod.restricted_safe_common.*
                     - prod.restricted_safe_common_mapping.*
                     - prod.restricted_safe_common_mart_finance.*
+                    - prod.restricted_safe_common_mart_marketing.*
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.restricted_safe_legacy.*
                     - prod.restricted_safe_common_prep.*
@@ -2271,12 +2275,6 @@ roles:
                     - prep.sensitive.sheetload_ally_certificate_source
                     - prep.sensitive.sheetload_communication_certificate_source
                     - prep.sensitive.sheetload_compensation_certificate_source
-                    - prep.sensitive.sheetload_ic_collaboration_competency_source
-                    - prep.sensitive.sheetload_ic_dib_comptency_source
-                    - prep.sensitive.sheetload_ic_efficiency_competency_source
-                    - prep.sensitive.sheetload_ic_iteration_competency_source
-                    - prep.sensitive.sheetload_ic_results_competency_source
-                    - prep.sensitive.sheetload_ic_transparency_competency_source
                     - prep.sensitive.sheetload_osat_source
                     - prep.sensitive.sheetload_values_certificate_source
                     - prep.sheetload.*
@@ -2644,12 +2642,29 @@ roles:
             databases:
                 read:
                     - raw
+                    - prep
             schemas:
                 read:
                     - raw.zuora_api_sandbox_stitch
+                    - prep.zuora_api_sandbox
             tables:
                 read:
                     - raw.zuora_api_sandbox_stitch.*
+                    - prep.zuora_api_sandbox.*
+
+    - zuora_order:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.zuora_order
+            tables:
+                read:
+                    - prep.zuora_order.*
 
     - zuora_stitch_rest_api:
         warehouses:
@@ -2716,6 +2731,13 @@ roles:
             - transforming_s
             - transforming_l
             - transforming_xl
+
+    - abhaskar:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
 
     - abright:
         member_of:
@@ -2981,6 +3003,7 @@ roles:
     - ddeng:
         member_of:
             - analyst_engineering
+            - prometheus
             - restricted_safe
         warehouses:
             - dev_xs
@@ -3752,6 +3775,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - lchilamakuru:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - lmai:
         member_of:
             - analyst_engineering
@@ -3818,6 +3847,7 @@ roles:
             - restricted_safe
             - salesforce_sandbox
             - workday 
+            - zengrc
         warehouses:
             - dev_xs
         owns:
@@ -4574,6 +4604,12 @@ roles:
                     - rkohnke_prep.*.*
                     - rkohnke_prod.*.*
 
+    - rnealon:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - rrendon:
         member_of:
             - analyst_engineering
@@ -4601,6 +4637,13 @@ roles:
                 write:
                     - rrendon_prep.*.*
                     - rrendon_prod.*.*
+
+    - rrosu:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - dev_xs
 
     - rtaira:
         member_of:
@@ -4703,7 +4746,13 @@ roles:
             - analyst_growth
             - customers_db
             - restricted_safe
+            - zuora
             - zuora_api_sandbox_stitch
+            - zuora_central_sandbox
+            - zuora_order
+            - zuora_query_api
+            - zuora_revenue
+            - zuora_stitch_rest_api
         warehouses:
             - dev_xs
             - dev_m
@@ -5019,6 +5068,11 @@ users:
             - sales_analytics
             - reporter
 
+    - abhaskar:
+        can_login: yes
+        member_of:
+            - abhaskar
+
     - abright:
         can_login: yes
         member_of:
@@ -5274,6 +5328,11 @@ users:
         member_of:
             - kkarthikeyan
 
+    - lchilamakuru:
+        can_login: yes
+        member_of:
+            - lchilamakuru
+
     - lmai:
         can_login: yes
         member_of:
@@ -5423,10 +5482,20 @@ users:
         member_of:
             - rkohnke
 
+    - rnealon:
+        can_login: yes
+        member_of:
+            - rnealon
+
     - rrendon:
         can_login: yes
         member_of:
             - rrendon
+
+    - rrosu:
+        can_login: yes
+        member_of:
+            - rrosu
 
     - rtaira:
         can_login: yes

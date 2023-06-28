@@ -32,6 +32,7 @@ WITH prep_charge AS (
       --Information
       prep_charge.rate_plan_name,
       prep_charge.rate_plan_charge_name,
+      prep_charge.rate_plan_charge_description,
       prep_charge.is_last_segment,
       prep_charge.discount_level,
       prep_charge.charge_type,
@@ -48,7 +49,7 @@ WITH prep_charge AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@nmcavinue",
     created_date="2021-05-10",
-    updated_date="2021-05-10"
+    updated_date="2023-05-30"
 ) }}
