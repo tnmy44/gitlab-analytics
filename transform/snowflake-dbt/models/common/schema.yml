@@ -7399,11 +7399,11 @@ models:
           - not_null
 
 
-  - name: dim_namespace_trial_latest
-    description: '{{ doc("dim_namespace_trial_latest") }}'
+  - name: dim_trial_latest
+    description: '{{ doc("dim_trial_latest") }}'
     columns:
-      - name: dim_namespace_trial_latest_sk
-        description: '{{ doc("dim_namespace_trial_latest_sk") }}'
+      - name: dim_trial_latest_sk
+        description: '{{ doc("dim_trial_latest_sk") }}'
         tests:
           - not_null
           - unique
