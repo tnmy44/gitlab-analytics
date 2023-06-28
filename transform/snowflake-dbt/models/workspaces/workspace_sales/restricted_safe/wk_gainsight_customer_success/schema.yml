@@ -5,9 +5,6 @@ models:
       description: '{{ doc("wk_gainsight_account_scorecard_history") }}'
       columns:
         - name: id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: user_deployments_utilization
         - name: customer_experience_gc
@@ -50,15 +47,10 @@ models:
         - name: created_date
         - name: modified_by_id_gc
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_activity_attendee
       description: '{{ doc("wk_gainsight_activity_attendee") }}'
       columns:
         - name: activity_id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: attendee_type
         - name: external_attendee_sfdc_id
@@ -66,15 +58,10 @@ models:
         - name: external_attendee_gs_id
         - name: internal_attendee_gs_id
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_activity_comments
       description: '{{ doc("wk_gainsight_activity_comments") }}'
       columns:
         - name: comment_id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: comment
         - name: created_by_user_id
@@ -83,15 +70,11 @@ models:
         - name: modified_by_user_id
         - name: modified_date
         - name: _fivetran_synced
-          tests:
-            - not_null
+
     - name: wk_gs_activity_timeline
       description: '{{ doc("wk_gainsight_activity_timeline") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: last_modified_date
         - name: type_name
@@ -142,15 +125,10 @@ models:
         - name: ant_sentiment_c
         - name: context_name
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_advanced_outreach_cta
       description: '{{ doc("wk_gainsight_advanced_outreach_cta") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: account
         - name: action_type
@@ -164,15 +142,10 @@ models:
         - name: deleted
         - name: ctaid
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_advanced_outreach_emails
       description: '{{ doc("wk_gainsight_advanced_outreach_emails") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: rejected_date
         - name: created_at
@@ -225,15 +198,10 @@ models:
         - name: ip_address
         - name: address_type
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_advanced_outreach_participant_activity
       description: '{{ doc("wk_gainsight_advanced_outreach_participant_activity") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: previous_step_id
         - name: created_at
@@ -247,15 +215,10 @@ models:
         - name: gs_participant_id
         - name: gs_advanced_outreach_id
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_advanced_outreach_participants
       description: '{{ doc("wk_gainsight_advanced_outreach_participants") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: source_type
         - name: created_at
@@ -320,15 +283,10 @@ models:
             sensitive: true
         - name: last_email_link_clicked
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_ao_advanced_outreach_company
       description: '{{ doc("wk_gainsight_ao_advanced_outreach_company") }}'
       columns:
         - name: _fivetran_id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: advanced_outreach_gsid
         - name: advanced_outreach_name
@@ -345,15 +303,10 @@ models:
         - name: advanced_outreach_model_name
         - name: created_by
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_call_to_action
       description: '{{ doc("wk_gainsight_call_to_action") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: over_due_type
         - name: name
@@ -407,15 +360,10 @@ models:
         - name: percent_complete
         - name: closed_date
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_comments
       description: '{{ doc("wk_gainsight_comments") }}'
       columns:
         - name: _fivetran_id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: comment
         - name: created_by_user_id
@@ -426,15 +374,10 @@ models:
         - name: modified_date
         - name: comment_id
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_companies_and_ebrs
       description: '{{ doc("wk_gainsight_companies_and_ebrs") }}'
       columns:
         - name: _fivetran_id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: company_pubsec_type
         - name: company_csm_manager_name
@@ -470,15 +413,10 @@ models:
         - name: company_public_sector_account
         - name: cta_gsid
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_companies_with_success_plan_details
       description: '{{ doc("wk_gainsight_companies_with_success_plan_details") }}'
       columns:
         - name: _fivetran_id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: status
         - name: company
@@ -497,15 +435,10 @@ models:
             sensitive: true
         - name: account_name
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_companies_with_success_plan_objectives
       description: '{{ doc("wk_gainsight_companies_with_success_plan_objectives") }}'
       columns:
         - name: _fivetran_id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: stage_name
         - name: objective_category_name
@@ -521,8 +454,6 @@ models:
             sensitive: true
         - name: is_open
         - name: _fivetran_synced
-          tests:
-            - not_null
         - name: company_gsid_8_adecc
         - name: company_gside_6363_a
         - name: company_gsid_62_d_58_a
@@ -532,8 +463,6 @@ models:
       columns:
         - name: _fivetran_deleted
         - name: _fivetran_synced
-          tests:
-            - not_null
         - name: cp_metrics_gc
         - name: number_of_stage_adoption_success_plans_gc
         - name: risk_impact_gc
@@ -709,9 +638,6 @@ models:
         - name: account_rank_notes_gc
         - name: lam_gc
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: enablement_onboarding_programs_gc
         - name: status
         - name: onboarding_health_score_gc
@@ -806,9 +732,6 @@ models:
       description: '{{ doc("wk_gainsight_company_person") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: survey_name_new_gc
         - name: email_opt_out_gc
@@ -834,15 +757,10 @@ models:
         - name: sfdc_contact_id
         - name: mobile_phone_gc
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_cs_task
       description: '{{ doc("wk_gainsight_cs_task") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: is_important
         - name: description
@@ -887,15 +805,10 @@ models:
         - name: dyna_metadata
         - name: closed_date
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_csat_survey_response
       description: '{{ doc("wk_gainsight_csat_survey_response") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: email
         - name: survey_id
@@ -921,15 +834,10 @@ models:
         - name: user_answer_id
         - name: language_id
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_ctas_healthscores
       description: '{{ doc("wk_gainsight_ctas_healthscores") }}'
       columns:
         - name: _fivetran_id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: stage_name
         - name: objective_category_name
@@ -950,15 +858,10 @@ models:
         - name: cta_status_id
         - name: closed_date
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_customer_health_scorecard_fact_1
       description: '{{ doc("wk_gainsight_customer_health_scorecard_fact_1") }}'
       columns:
         - name: id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: cur_score_id_gc
         - name: scorecard_id_gc
@@ -975,15 +878,10 @@ models:
         - name: score_modified_at_gc
         - name: created_by_id_gc
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_email_logs
       description: '{{ doc("wk_gainsight_email_logs") }}'
       columns:
         - name: id
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: gs_user_id
         - name: clicked
@@ -1030,15 +928,10 @@ models:
         - name: event_message
         - name: address_type
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_nps_survey_response
       description: '{{ doc("wk_gainsight_nps_survey_response") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: survey_id
         - name: created_at
@@ -1065,15 +958,10 @@ models:
         - name: user_role
         - name: language_id
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_opt_out_emails
       description: '{{ doc("wk_gainsight_opt_out_emails") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: category_id
         - name: page_id
@@ -1093,15 +981,10 @@ models:
         - name: reason_type
         - name: email_log_ide_7940_f
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_success_plan
       description: '{{ doc("wk_gainsight_success_plan") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: over_due_type
         - name: q_1_q_2_approved_gc
@@ -1156,15 +1039,10 @@ models:
         - name: highlights_string_gc
         - name: closed_date
         - name: _fivetran_synced
-          tests:
-            - not_null
     - name: wk_gs_user_sfdcgitlabproduction
       description: '{{ doc("wk_gainsight_user_sfdcgitlabproduction") }}'
       columns:
         - name: gsid
-          tests:
-            - not_null
-            - unique
         - name: _fivetran_deleted
         - name: gs_user_gsid
         - name: email
@@ -1180,5 +1058,3 @@ models:
           meta:
             sensitive: true
         - name: _fivetran_synced
-          tests:
-            - not_null
