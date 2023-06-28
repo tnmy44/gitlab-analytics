@@ -2214,6 +2214,19 @@ tables:
       FROM web_hooks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  work_item_types:
+    export_schema: 'gitlab_com'
+    export_table: work_item_types
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id  
+      , base_type
+      , created_at
+      , updated_at
+      FROM work_item_types
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   work_item_progresses:
     export_schema: 'gitlab_com'
     export_table: work_item_progresses
