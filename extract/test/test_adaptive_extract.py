@@ -132,7 +132,7 @@ def test_exported_data_to_df(adaptive_obj):
 
 
 def test_edit_dataframe():
-    """ Check that the edited dataframe has the correct num of cols """
+    """Check that the edited dataframe has the correct num of cols"""
     version = "some_version1"
     data = {
         "Account Name": ["some_account"],

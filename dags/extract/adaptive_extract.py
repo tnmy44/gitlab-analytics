@@ -52,7 +52,8 @@ dag = DAG(
 )
 
 adaptive_extract_command = (
-    f"{clone_and_setup_extraction_cmd} && " f"python adaptive/src/adaptive.py"
+    f"{clone_and_setup_extraction_cmd} && "
+    "python adaptive/src/adaptive.py --export_all=True"
 )
 
 adaptive_task = KubernetesPodOperator(

@@ -1,5 +1,6 @@
 import sys
 import os
+import fire
 import requests
 import pandas as pd
 import xmltodict
@@ -276,5 +277,5 @@ def main(export_all=False):
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
     getLogger("snowflake.connector.cursor").disabled = True
-    main()
+    fire.Fire(main)
     info("Complete.")
