@@ -262,7 +262,7 @@ def main(export_all=False):
         folder_criteria = "FY24 Versions"
         folder_criteria = "409A Versions"  # 1 version
         folder_criteria = "FY22 PLAN Versions"  # 4 versions
-        folder_criteria = "Shared to Data - FY24 Plan"
+        folder_criteria = "Shared with Data (Test)"
         adaptive.process_versions(folder_criteria)
 
     # export a specific version
