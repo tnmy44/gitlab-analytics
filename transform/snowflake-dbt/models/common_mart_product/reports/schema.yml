@@ -142,6 +142,10 @@ models:
       description: '{{ doc("dim_installation_id") }}'
     - name: latest_subscription_id
       description: '{{ doc("latest_subscription_id") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: version_is_prerelease
@@ -174,11 +178,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_subscriptions_on_versions_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, and estimation_grain
+      description: The unique composite ID for the rpt_ping_subscriptions_on_versions_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, estimation_grain, ping_delivery_type and ping_deployment_type
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: stage_name
@@ -221,11 +229,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_subscriptions_reported_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, and estimation_grain
+      description: The unique composite ID for the rpt_ping_subscriptions_reported_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, estimation_grain, ping_delivery_type and ping_deployment_type
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: stage_name
@@ -268,11 +280,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_metric_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, and estimation_grain
+      description: The unique composite ID for the rpt_ping_metric_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, estimation_grain, ping_delivery_type and ping_deployment_type.
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: stage_name
@@ -315,13 +331,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_metric_totals_w_estimates_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, estimation_grain, ping_edition_product_tier, and ping_delivery_type
+      description: The unique composite ID for the rpt_ping_metric_totals_w_estimates_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, estimation_grain, ping_edition_product_tier, ping_delivery_type and ping_deployment_type
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: ping_product_tier
@@ -372,11 +390,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_subscriptions_reported_counts_monthly model consisting of ping_created_date_month, metrics_path, and ping_edition
+      description: The unique composite ID for the rpt_ping_subscriptions_reported_counts_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, ping_delivery_type and ping_deployment_type
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: total_subscription_count
@@ -399,11 +421,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_subscriptions_on_versions_counts_monthly model consisting of ping_created_date_month, metrics_path, and ping_edition
+      description: The unique composite ID for the rpt_ping_subscriptions_on_versions_counts_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, ping_delivery_type and ping_deployment_type
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: total_subscription_count
@@ -452,6 +478,10 @@ models:
     - name: max_historical_user_count
     - name: included_in_health_measures_str
       description: '{{ doc("included_in_health_measures_str") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: umau_28_days_user
       description: '{{ doc("umau_28_days_user_desc") }}'
     - name: action_monthly_active_users_project_repo_28_days_user
@@ -842,6 +872,10 @@ models:
     - name: max_historical_user_count
     - name: included_in_health_measures_str
       description: '{{ doc("included_in_health_measures_str") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: umau_28_days_user
       description: '{{ doc("umau_28_days_user_desc") }}'
     - name: action_monthly_active_users_project_repo_28_days_user

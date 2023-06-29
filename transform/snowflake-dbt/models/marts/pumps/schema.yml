@@ -659,6 +659,10 @@ models:
         description: Indicates if the product usage came from a SaaS or Self-Managed user.
         tests:
           - not_null
+      - name: deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
+        tests:
+          - not_null
       - name: umau_28_days_user
         description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
