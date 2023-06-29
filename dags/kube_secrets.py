@@ -329,3 +329,26 @@ LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY = Secret(
     "airflow",
     "LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY",
 )
+
+
+## OCI Usage Extraction
+
+OCI_FINGERPRINT = Secret(
+    "env", "OCI_FINGERPRINT", "airflow", "OCI_FINGERPRINT"
+)
+
+OCI_KEY_CONTENT = Secret(
+    "env", "OCI_KEY_CONTENT", "airflow", "OCI_KEY_CONTENT"
+)
+
+OCI_REGION = Secret(
+    "env", "OCI_REGION", "airflow", "OCI_REGION"
+)
+
+OCI_TENANCY = Secret(
+    "env", "OCI_TENANCY", "airflow", "OCI_TENANCY"
+)
+
+OCI_USER = Secret(
+    "env", "OCI_USER", "airflow", "OCI_USER"
+)
