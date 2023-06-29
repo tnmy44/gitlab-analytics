@@ -46,13 +46,26 @@ def load_data():
         )
         filename = o.name.replace("/", "_")
 
+        if "cost" in filename:
+            target_table ="oci_cost_report"
+        if "usage" in filename:
+            target_table ="oci_usage_report"
+
         with open(destintation_path + "/" + filename, "wb") as f:
             for chunk in object_details.data.raw.stream(
                 1024 * 1024, decode_content=False
             ):
                 f.write(chunk)
 
-        info("----> File " + o.name + " Downloaded")
+        snowflake_stage_load_copy_remove(
+            filename,
+            f"test.oci_report",
+            f"test.{target_table}",
+            snowflake_engine,
+            on_error="ABORT_STATEMENT",
+        )        
+
+        info(f"File {o.name} loaded to table {target_table}" )
 
 
 if __name__ == "__main__":
