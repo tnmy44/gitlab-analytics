@@ -60,7 +60,7 @@ def load_data():
                 f.write(chunk)
 
         snowflake_stage_load_copy_remove(
-            f"{destintation_path}/{filename},
+            f"{destintation_path}/{filename}",
             f"test.oci_report",
             f"test.{target_table}",
             snowflake_engine,
