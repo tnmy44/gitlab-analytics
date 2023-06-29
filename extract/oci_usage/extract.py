@@ -58,7 +58,7 @@ def load_data():
                 1024 * 1024, decode_content=False
             ):
                 f.write(chunk)
-        snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
+        snowflake_engine = snowflake_engine_factory(snowflake_config_dict, "LOADER")
         snowflake_stage_load_copy_remove(
             filename,
             f"test.oci_report",
