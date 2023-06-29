@@ -37,6 +37,8 @@ report_bucket_objects = oci.pagination.list_call_get_all_results(
     prefix=prefix_file,
 )
 
+config_dict = env.copy()
+snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
 def load_data():
     for o in report_bucket_objects.data.objects:
@@ -56,7 +58,7 @@ def load_data():
                 1024 * 1024, decode_content=False
             ):
                 f.write(chunk)
-
+        snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
         snowflake_stage_load_copy_remove(
             filename,
             f"test.oci_report",
