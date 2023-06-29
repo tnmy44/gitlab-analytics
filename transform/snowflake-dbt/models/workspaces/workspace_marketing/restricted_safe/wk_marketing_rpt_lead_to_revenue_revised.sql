@@ -556,7 +556,7 @@
 
 ), final AS (
 
-    SELECT DISTINCT *
+    SELECT *
     FROM intermediate
 
 )
@@ -566,5 +566,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-02-15",
-    updated_date="2023-06-13",
+    updated_date="2023-06-29",
   ) }}
