@@ -9,8 +9,10 @@ CASE
     THEN 'IBM (OEM)'
   WHEN NOT EQUAL_NULL({{ resale_partner_track }}, 'Technology') AND NOT EQUAL_NULL({{ partner_track }}, 'Technology') AND {{deal_path }} = 'Partner'
     THEN 'Channel Partners'
+  WHEN {{ close_date }} < '2022-02-01' AND ( {{ fulfillment_partner_name }} IS NOT NULL OR {{ partner_account_name }} IS NOT NULL )
+    THEN 'Non-Alliance Partners'
   WHEN {{ is_focus_partner }} = TRUE 
-    THEN 'Channel Focus Partner'
+    THEN 'Channel Focus Partners'
   ELSE 'Other Alliance Partners'
 END
 

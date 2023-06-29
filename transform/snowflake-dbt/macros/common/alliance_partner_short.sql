@@ -12,7 +12,8 @@ CASE
   WHEN {{ close_date }} < '2022-02-01' AND ( {{ fulfillment_partner_name }} IS NOT NULL OR {{ partner_account_name }} IS NOT NULL )
     THEN 'Non-Alliance'
   WHEN {{ is_focus_partner }} = TRUE 
-    THEN 'Channel Focus Partner'
+    THEN 'Channel Focus Partners'
+  ELSE 'Other Alliance Partners'
 END
 
 {%- endmacro -%}
