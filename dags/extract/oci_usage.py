@@ -64,6 +64,7 @@ oci_operator = KubernetesPodOperator(
         SNOWFLAKE_LOAD_PASSWORD,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_WAREHOUSE,
         OCI_FINGERPRINT,
         OCI_KEY_CONTENT,
