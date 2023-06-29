@@ -14,6 +14,7 @@ from airflow_utils import (
     gitlab_defaults,
     slack_failed_task,
     gitlab_pod_env_vars,
+    clone_and_setup_extraction_cmd
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
@@ -241,7 +242,6 @@ def extract_table_list_from_manifest(manifest_contents):
     """Extract table from the manifest file for which extraction needs to be done"""
     return manifest_contents["tables"].keys()
 
-
 # Sync DAG
 incremental_backfill_dag_args = {
     "catchup": False,
@@ -280,6 +280,7 @@ extract_dag_args = {
 }
 # Loop through each config_dict and generate a DAG
 for source_name, config in config_dict.items():
+
     if "scd" not in source_name:
         extract_dag_args["start_date"] = config["start_date"]
         incremental_backfill_dag_args["start_date"] = config["start_date"]
@@ -332,6 +333,30 @@ for source_name, config in config_dict.items():
                     do_xcom_push=True,
                 )
         globals()[f"{config['dag_name']}_db_extract"] = extract_dag
+
+        replica_snapshot_extract_cmd = (
+        f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py"
+        )
+
+        check_replica_snapshot= KubernetesPodOperator(
+            **gitlab_defaults,
+            image=DATA_IMAGE,
+            task_id=f"check_replica_snapshot",
+            name=f"check_replica_snapshot",
+            pool=get_task_pool(config["task_name"]),
+            secrets=standard_secrets + config["secrets"],
+            env_vars={
+                **gitlab_pod_env_vars,
+                **config["env_vars"],
+            },
+            affinity=get_affinity("production"),
+            tolerations=get_toleration("production"),
+            arguments=[replica_snapshot_extract_cmd],
+            do_xcom_push=True,
+            dag=extract_dag
+        )
+
+        check_replica_snapshot >> extract_dag
 
         incremental_backfill_dag = DAG(
             f"{config['dag_name']}_db_incremental_backfill",

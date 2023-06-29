@@ -12,7 +12,7 @@ from gitlabdata.orchestration_utils import (
     query_executor
 )
 
-def load_incremental(
+def check_snapshot_replica(
     source_engine: Engine
 ):
 
@@ -32,7 +32,7 @@ def load_incremental(
     logging.info(
         f"Timestamp value from replication_timestamp_value:{replication_timestamp_value}"
     )
-    
+
 
 def postgres_engine_factory(
     connection_dict: Dict[str, str], env: Dict[str, str]
@@ -56,6 +56,6 @@ def postgres_engine_factory(
         connect_args={"sslcompression": 0, "options": "-c statement_timeout=9000000"},
     )
     logging.info(engine)
-    load_incremental(engine)
+    check_snapshot_replica(engine)
 
     return engine
