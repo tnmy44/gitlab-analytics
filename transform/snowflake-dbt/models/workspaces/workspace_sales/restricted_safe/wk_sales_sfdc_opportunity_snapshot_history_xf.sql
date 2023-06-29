@@ -132,7 +132,7 @@ WITH date_details AS (
 
 ), fct_crm_snapshot_daily AS (
 
-    SELECT snapshot_id,
+    SELECT crm_opportunity_snapshot_id,
         dim_parent_crm_opportunity_id
     FROM  {{ref('fct_crm_opportunity_daily_snapshot')}}  
 
@@ -420,8 +420,8 @@ WITH date_details AS (
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
     INNER JOIN date_details AS close_date_detail
       ON edm_snapshot_opty.close_date::DATE = close_date_detail.date_actual
-    LEFT JOIN fct_crm_opportunity_daily_snapshot fact_snapshot_opty
-        ON fact_snapshot_opty.snapshot_id = edm_snapshot_opty.snapshot_id
+    LEFT JOIN fct_crm_snapshot_daily fact_snapshot_opty
+        ON fact_snapshot_opty.crm_opportunity_snapshot_id = edm_snapshot_opty.crm_opportunity_snapshot_id
 
 ), sfdc_opportunity_snapshot_history_xf AS (
 
