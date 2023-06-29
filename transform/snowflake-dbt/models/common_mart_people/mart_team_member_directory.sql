@@ -71,27 +71,44 @@ team_member AS (
 
 ),
 
+team_member_position AS (
+
+  SELECT 
+    dim_team_member_sk,
+    dim_team_sk,
+    employee_id,
+    team_id,
+    job_code,
+    position,
+    job_family,
+    job_specialty_single,
+    job_specialty_multi,
+    management_level,
+    job_grade,
+    entity,
+    position_date_time_initiated,
+    position_effective_date AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+  FROM {{ ref('fct_team_member_position') }}
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, position_effective_date ORDER BY position_date_time_initiated DESC) = 1
+
+),
+
 team AS (
 
   SELECT 
+    dim_team_sk,
     team_id,
-    team_superior_team_id,
-    hierarchy_level_1,
-    hierarchy_level_2,
-    hierarchy_level_3,
-    hierarchy_level_4,
-    hierarchy_level_5,
-    hierarchy_level_6,
-    hierarchy_level_7,
-    hierarchy_level_8,
-    hierarchy_level_9,
-    team_hierarchy_level,
     team_name,
     team_manager_name,
     team_manager_name_id,
-    team_inactivated_date,
-    team_members_count,
+    team_superior_team_id,
+    team_hierarchy_level,
+    hierarchy_level_3_name            AS division,
+    hierarchy_level_4_name            AS department,
+    hierarchy_levels_array,
     is_team_active,
+    team_inactivated_date,
     DATE(valid_from)                                                                                 AS valid_from,
     DATE(valid_to)                                                                                   AS valid_to
   FROM {{ ref('dim_team') }}
@@ -113,6 +130,14 @@ unioned_dates AS (
     team_id,
     valid_from
   FROM team_member
+  
+  UNION
+
+  SELECT 
+    employee_id, 
+    team_id,
+    valid_from
+  FROM team_member_position
 
   UNION
 
@@ -139,8 +164,16 @@ date_range AS (
 final AS (
 
   SELECT 
+
+    -- Surrogate keys
     team_member.dim_team_member_sk,
+    team.dim_team_sk,
+
+    --Natural keys
     team_member.employee_id,
+    team_member.team_id,
+
+    --Team member info
     team_member.nationality,
     team_member.ethnicity,
     team_member.first_name,
@@ -164,24 +197,25 @@ final AS (
     team_member.termination_date,
     team_member.is_current_team_member,
     team_member.is_rehire,
-    team_member.team_id,
-    team.team_superior_team_id,
-    team.hierarchy_level_1,
-    team.hierarchy_level_2,
-    team.hierarchy_level_3,
-    team.hierarchy_level_4,
-    team.hierarchy_level_5,
-    team.hierarchy_level_6,
-    team.hierarchy_level_7,
-    team.hierarchy_level_8,
-    team.hierarchy_level_9,
-    team.team_hierarchy_level,
     team.team_name,
-    team.team_manager_name,
     team.team_manager_name_id,
-    team.team_members_count,
+    team.team_manager_name,
+    team.team_superior_team_id,
+    team_superior.team_name                             AS team_superior_name,
+    team.division,
+    team.department,
+    team.team_hierarchy_level,
+    team.hierarchy_levels_array,
     team.is_team_active,
     team.team_inactivated_date,
+    team_member_position.job_code,
+    team_member_position.position,
+    team_member_position.job_family,
+    team_member_position.job_specialty_single,
+    team_member_position.job_specialty_multi,
+    team_member_position.management_level,
+    team_member_position.job_grade,
+    team_member_position.entity,
     date_range.valid_from,
     date_range.valid_to,
     date_range.is_current
@@ -198,6 +232,14 @@ final AS (
     ON team_member.team_id = team.team_id
       AND NOT (team.valid_to <= date_range.valid_from
           OR team.valid_from >= date_range.valid_to)
+  LEFT JOIN team AS team_superior
+    ON team.team_superior_team_id = team_superior.team_superior_team_id
+      AND NOT (team_superior.valid_to <= date_range.valid_from
+          OR team_superior.valid_from >= date_range.valid_to)
+  LEFT JOIN team_member_position
+    ON date_range.employee_id = team_member_position.employee_id 
+      AND NOT (team_member_position.valid_to <= date_range.valid_from
+          OR team_member_position.valid_from >= date_range.valid_to)
 
 )
 
