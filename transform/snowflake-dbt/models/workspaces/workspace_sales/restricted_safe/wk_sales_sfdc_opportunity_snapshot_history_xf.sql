@@ -130,6 +130,12 @@ WITH date_details AS (
     SELECT * 
     FROM {{ref('wk_sales_sfdc_users_xf')}}  
 
+), fct_crm_snapshot_daily AS (
+
+    SELECT snapshot_id,
+        dim_parent_crm_opportunity_id
+    FROM  {{ref('fct_crm_opportunity_daily_snapshot')}}  
+
 ), sfdc_opportunity_snapshot_history AS (
 
     SELECT 
@@ -406,7 +412,7 @@ WITH date_details AS (
       edm_snapshot_opty.parent_crm_account_region,
       edm_snapshot_opty.parent_crm_account_area,
       edm_snapshot_opty.parent_crm_account_territory,
-      edm_snapshot_opty.dim_parent_crm_opportunity_id AS parent_opportunity,
+      fact_snapshot_opty.dim_parent_crm_opportunity_id AS parent_opportunity,
       edm_snapshot_opty.intended_product_tier,
       edm_snapshot_opty.product_category
       
@@ -414,6 +420,8 @@ WITH date_details AS (
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
     INNER JOIN date_details AS close_date_detail
       ON edm_snapshot_opty.close_date::DATE = close_date_detail.date_actual
+    LEFT JOIN fct_crm_opportunity_daily_snapshot fact_snapshot_opty
+        ON fact_snapshot_opty.snapshot_id = edm_snapshot_opty.snapshot_id
 
 ), sfdc_opportunity_snapshot_history_xf AS (
 
