@@ -13,6 +13,10 @@ config = {
     "region": os.environ["OCI_REGION"],
 }
 
+from gitlabdata.orchestration_utils import (
+    snowflake_engine_factory,
+    snowflake_stage_load_copy_remove,
+)
 
 reporting_namespace = "bling"
 
@@ -24,7 +28,6 @@ if not os.path.exists(destintation_path):
     os.mkdir(destintation_path)
 
 # Get the list of reports
-# config = oci.config.from_file(oci.config.DEFAULT_LOCATION, oci.config.DEFAULT_PROFILE)
 reporting_bucket = config["tenancy"]
 object_storage = oci.object_storage.ObjectStorageClient(config)
 report_bucket_objects = oci.pagination.list_call_get_all_results(
@@ -41,7 +44,7 @@ def load_data():
         object_details = object_storage.get_object(
             reporting_namespace, reporting_bucket, o.name
         )
-        filename = o.name.replace("/", "_")
+        # filename = o.name.replace("/", "_")
 
         with open(destintation_path + "/" + filename, "wb") as f:
             for chunk in object_details.data.raw.stream(
