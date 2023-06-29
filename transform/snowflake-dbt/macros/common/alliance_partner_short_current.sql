@@ -12,7 +12,7 @@ CASE
   WHEN ( {{ fulfillment_partner_name }} IS NOT NULL OR {{ partner_account_name }} IS NOT NULL )
     THEN 'Non-Alliance'
   WHEN {{ is_focus_partner }} = TRUE 
-    THEN 'Channel Focus'
+    THEN 'Channel Focus Partner'
   ELSE 'Other Alliance'
 END
 
