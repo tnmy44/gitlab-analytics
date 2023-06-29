@@ -50,7 +50,7 @@ dag = DAG(
 
 container_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    python extract/oci_usage/extract.py
+    python oci_usage/extract.py
 """
 
 oci_operator = KubernetesPodOperator(
