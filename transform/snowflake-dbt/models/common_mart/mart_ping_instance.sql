@@ -10,7 +10,6 @@
     ('dim_date', 'dim_date'),
     ('dim_billing_account', 'dim_billing_account'),
     ('dim_crm_accounts', 'dim_crm_account'),
-    ('dim_product_detail', 'dim_product_detail'),
     ('fct_charge', 'fct_charge'),
     ('dim_license', 'dim_license'),
     ('dim_location', 'dim_location_country'),
@@ -19,9 +18,16 @@
     ('dim_app_release_major_minor', 'dim_app_release_major_minor')
     ])
 
-}},
+}}
 
-dim_subscription AS (
+, dim_product_detail AS (
+
+    SELECT *
+    FROM {{ ref('dim_product_detail') }}
+    WHERE product_deployment_type IN ('Self-Managed', 'Dedicated')
+      AND product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
+
+), dim_subscription AS (
 
   SELECT *
   FROM {{ ref('dim_subscription') }}
@@ -95,8 +101,6 @@ license_subscriptions AS (
       AND fct_charge.charge_type = 'Recurring'
   INNER JOIN dim_product_detail
     ON dim_product_detail.dim_product_detail_id = fct_charge.dim_product_detail_id
-      AND dim_product_detail.product_delivery_type = 'Self-Managed'
-      AND dim_product_detail.product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
   LEFT JOIN dim_billing_account
     ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
   LEFT JOIN dim_crm_accounts
@@ -149,6 +153,7 @@ joined AS (
     END                                                                                                     AS is_paid_subscription,
     COALESCE(sha256.is_program_subscription, md5.is_program_subscription, FALSE)                            AS is_program_subscription,
     dim_ping_instance.ping_delivery_type                                                                    AS ping_delivery_type,
+    dim_ping_instance.ping_deployment_type                                                                  AS ping_deployment_type,
     dim_ping_instance.ping_edition                                                                          AS ping_edition,
     dim_ping_instance.product_tier                                                                          AS ping_product_tier,
     dim_ping_instance.ping_edition || ' - ' || dim_ping_instance.product_tier                               AS ping_edition_product_tier,
@@ -196,7 +201,7 @@ joined AS (
     ON fct_ping_instance_metric.dim_app_release_major_minor_sk = dim_app_release_major_minor.dim_app_release_major_minor_sk
   LEFT JOIN dim_app_release_major_minor AS latest_version
     ON fct_ping_instance_metric.dim_latest_available_app_release_major_minor_sk = latest_version.dim_app_release_major_minor_sk
-  WHERE dim_ping_instance.ping_delivery_type = 'Self-Managed'
+  WHERE dim_ping_instance.ping_deployment_type IN ('Self-Managed', 'Dedicated')
     OR (dim_ping_instance.ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
 
 ),
@@ -225,6 +230,7 @@ sorted AS (
 
     --Service Ping metadata
     ping_delivery_type,
+    ping_deployment_type,
     ping_edition,
     ping_product_tier,
     ping_edition_product_tier,
@@ -279,7 +285,7 @@ sorted AS (
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@lisvinueza",
+    updated_by="@jpeguero",
     created_date="2022-03-11",
-    updated_date="2023-05-22"
+    updated_date="2023-06-14"
 ) }}

@@ -1758,14 +1758,11 @@ The reason why the date and time when the change was initiated was added to the 
 
 {% enddocs %}
 
-
-
 {% docs fct_team_member_status %}
 
 This table contains the termination reason, type, exit impact and employment_status. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. This table contains only past terminations. Future terminations are not included at this time. We will evaluate the possibility of making future terminations available to people with the analyst_people role in a future iteration. The grain of this table is one row per employee_id, employment_status and status_effective_date combination.
 
 {% enddocs %}
-
 
 {% docs fct_team_status %}
 
@@ -1774,5 +1771,19 @@ This table is a derived fact from fct_team_member_status and fct_team_member_pos
 This table only contains one change in the team member's position per effective date, as opposed to the fct_team_member_position table which contains all changes to a team member's position profile, regardless of whether they became effective or not. This table doesn't include future hires, only people working at GitLab as of today's date.
 
 The grain of this table is one row per employee_id and valid_from combination
+
+{% enddocs %}
+
+{% docs dim_trial_latest %}
+
+This table summarizes all the trials Orders information for a specific namespace.
+
+We utilize the `customers_db_orders_snapshots_base` model in order to isolate/filter out all the trials. 
+
+This model does the following:
+
+* It isolates the orders that are flagged with the column `is_trial = TRUE`
+* It deduplicates by taking the latest row created for a specific `gitlab_namespace_id`
+* We can join this model with `customers_db_customers` in the downstream models in order to get information about country, company_size of the User who started the trial
 
 {% enddocs %}

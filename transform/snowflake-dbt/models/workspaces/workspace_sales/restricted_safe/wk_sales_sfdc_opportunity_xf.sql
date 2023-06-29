@@ -530,12 +530,34 @@ WITH edm_opty AS (
         ELSE edm_opty.parent_opportunity
     END  AS parent_opportunity,
 
+    -- Calculated fields
+    CASE
+        WHEN LOWER(edm_opty.product_category) LIKE '%premium%'
+            THEN 'Premium'
+        WHEN LOWER(edm_opty.product_category) LIKE '%ultimate%'
+            THEN 'Ultimate'
+        WHEN LOWER(edm_opty.intented_product_tier) LIKE '%premium%'
+            THEN 'Premium'
+        WHEN LOWER(edm_opty.intented_product_tier) LIKE '%ultimate%'
+            THEN 'Ultimate'
+        ELSE 'Other'
+    END AS  product_category_tier,
+
+    CASE
+        WHEN lower(edm_opty.product_category) LIKE '%saas%'
+                THEN 'SaaS'
+        WHEN lower(edm_opty.product_category) LIKE '%self-managed%'
+                THEN 'Self-Managed'
+        ELSE 'Other'
+    END AS  product_category_deployment,
+
     -- demographics fields
     edm_opty.parent_crm_account_upa_country,
     edm_opty.parent_crm_account_upa_state,
     edm_opty.parent_crm_account_upa_city,
     edm_opty.parent_crm_account_upa_street,
     edm_opty.parent_crm_account_upa_postal_code,
+    account.parent_crm_account_upa_country_name,
     edm_opty.parent_crm_account_business_unit
     
     FROM edm_opty
@@ -586,7 +608,22 @@ WITH edm_opty AS (
             ELSE parent_opportunity
             END  AS opportunity_id,
         COUNT(opportunity_id)               AS count_service_opportunities,
-        SUM(professional_services_value)    AS total_professional_services_value
+        SUM(professional_services_value)    AS total_professional_services_value,
+        SUM(CASE
+                WHEN is_won = 1
+                    THEN professional_services_value
+                ELSE 0
+            END)                            AS total_book_professional_services_value,
+       SUM(CASE
+                WHEN is_lost = 1
+                    THEN professional_services_value
+                ELSE 0
+            END)                            AS total_lost_professional_services_value,
+       SUM(CASE
+                WHEN is_open = 1
+                    THEN professional_services_value
+                ELSE 0
+            END)                            AS total_open_professional_services_value
     FROM sfdc_opportunity_xf
     WHERE professional_services_value <> 0
     GROUP BY 1
@@ -594,17 +631,20 @@ WITH edm_opty AS (
 ), oppty_final AS (
 
     SELECT
-      sfdc_opportunity_xf.*,
+        sfdc_opportunity_xf.*,
 
-      -- Customer Success related fields
-      -- DRI Michael Armtz
-      churn_metrics.reason_for_loss_staged,
-      -- churn_metrics.reason_for_loss_calc, -- part of edm opp mart
-      churn_metrics.churn_contraction_type_calc,
+        -- Customer Success related fields
+        -- DRI Michael Armtz
+        churn_metrics.reason_for_loss_staged,
+        -- churn_metrics.reason_for_loss_calc, -- part of edm opp mart
+        churn_metrics.churn_contraction_type_calc,
 
-      --services total amount
-      service_opportunities.total_professional_services_value,
-      service_opportunities.count_service_opportunities
+        --services total amount
+        COALESCE(service_opportunities.total_professional_services_value,0) AS total_professional_services_value,
+      
+        COALESCE(service_opportunities.total_book_professional_services_value,0) AS total_book_professional_services_value,
+        COALESCE(service_opportunities.total_lost_professional_services_value,0) AS total_lost_professional_services_value,
+        COALESCE(service_opportunities.total_open_professional_services_value,0) AS total_open_professional_services_value
 
     FROM sfdc_opportunity_xf
     CROSS JOIN today

@@ -51,7 +51,7 @@ default_args = {
 dag = DAG(
     "sales_analytics_daily_notebooks",
     default_args=default_args,
-    schedule_interval="0 18 * * *",
+    schedule_interval="0 2 * * *",
     concurrency=1,
 )
 
@@ -61,7 +61,6 @@ notebooks = get_sales_analytics_notebooks(frequency="daily")
 start = DummyOperator(task_id="Start", dag=dag)
 
 for notebook, task_name in notebooks.items():
-
     absolute_path = pathlib.Path(SALES_ANALYTICS_NOTEBOOKS_PATH) / notebook
     notebook_parent = absolute_path.parent.as_posix()
     notebook_filename = absolute_path.name

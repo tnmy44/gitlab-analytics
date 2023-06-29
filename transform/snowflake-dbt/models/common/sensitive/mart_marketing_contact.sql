@@ -842,9 +842,6 @@
       -- Propensity to purchase Free fields
       IFF(ptpf_scores_by_user.namespace_id IS NOT NULL, TRUE, FALSE)
                                                   AS is_ptpf_contact,
-      -- IFF(is_ptpf_contact = TRUE OR (is_ptpf_contact = FALSE AND marketing_contact.is_ptpf_contact_marketo = TRUE
-      --   ), TRUE, FALSE)
-      --                                             AS is_ptpt_contact_change, field to be added later
       ptpf_scores_by_user.namespace_id            AS ptpf_namespace_id,
       ptpf_scores_by_user.score_group             AS ptpf_score_group,
       ptpf_scores_by_user.score_date              AS ptpf_score_date,
@@ -854,9 +851,9 @@
       -- Propensity to purchase fields
       IFF(ptp_scores_by_user.namespace_id IS NOT NULL, TRUE, FALSE)
                                                   AS is_ptp_contact,
-      -- IFF(is_ptp_contact = TRUE OR (is_ptp_contact = FALSE AND marketing_contact.is_ptp_contact_marketo = TRUE
-      --   ), TRUE, FALSE)
-      --                                             AS is_ptp_contact_change, field to be added later
+      IFF(is_ptp_contact = TRUE OR (is_ptp_contact = FALSE AND marketing_contact.is_ptp_contact_marketo = TRUE
+        ), TRUE, FALSE)
+                                                  AS is_ptp_contact_change,
       ptp_scores_by_user.namespace_id             AS ptp_namespace_id,
       ptp_scores_by_user.score_group              AS ptp_score_group,
       ptp_scores_by_user.score_date               AS ptp_score_date,
@@ -864,7 +861,12 @@
       ptp_scores_by_user.past_insights            AS ptp_past_insights,
       ptp_scores_by_user.past_score_group         AS ptp_past_score_group,
       ptp_scores_by_user.past_score_date          AS ptp_past_score_date,
-      ptp_scores_by_user.days_since_trial_start   AS ptp_days_since_trial_start,
+      CASE
+        WHEN ptp_scores_by_user.days_since_trial_start BETWEEN 0 AND 30 THEN '< 30 days'
+        WHEN ptp_scores_by_user.days_since_trial_start BETWEEN 30 AND 60 THEN '30 - 60 days'
+        WHEN ptp_scores_by_user.days_since_trial_start BETWEEN 60 AND 90 THEN '60 - 90 days'
+        WHEN ptp_scores_by_user.days_since_trial_start >= 90 THEN '90+ days'
+      END                                         AS ptp_days_since_trial_start,
       ptp_scores_by_user.ptp_source               AS ptp_source,
 
       -- Namespace notification dates
@@ -1012,7 +1014,17 @@
       'is_impacted_by_user_limit',
       'is_impacted_by_user_limit_change',
       'user_limit_namespace_id',
-      'marketo_lead_id'
+      'marketo_lead_id',
+      'is_ptp_contact',
+      'is_ptp_contact_change',
+      'ptp_namespace_id',
+      'ptp_score_group',
+      'ptp_score_date',
+      'ptp_insights',
+      'ptp_past_insights',
+      'ptp_past_score_group',
+      'ptp_days_since_trial_start',
+      'ptp_source'
       ]
 ) }}
 
@@ -1021,5 +1033,5 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2023-04-24"
+    updated_date="2023-06-19"
 ) }}

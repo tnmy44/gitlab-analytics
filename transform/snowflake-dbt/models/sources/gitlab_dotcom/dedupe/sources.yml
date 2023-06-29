@@ -63,6 +63,8 @@ sources:
         identifier: gitlab_db_ci_builds
       - name: ci_builds_runner_session
         identifier: gitlab_db_ci_builds_runner_session
+      - name: ci_editor_ai_conversation_messages
+        identifier: gitlab_db_ci_editor_ai_conversation_messages
       - name: ci_group_variables
         identifier: gitlab_db_ci_group_variables
       - name: ci_job_artifacts
@@ -487,6 +489,8 @@ sources:
         identifier: gitlab_db_users_ops_dashboard_projects
       - name: web_hooks
         identifier: gitlab_db_web_hooks
+      - name: work_item_types
+        identifier: gitlab_db_work_item_types
       - name: workspaces
         identifier: gitlab_db_workspaces
       - name: zoom_meetings

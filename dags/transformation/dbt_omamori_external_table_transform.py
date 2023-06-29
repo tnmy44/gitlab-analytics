@@ -110,7 +110,6 @@ model_transform_task_name = f"{DBT_MODULE_NAME}-transform"
 # Run de dupe / rename /scd model
 model_run_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt run --profiles-dir profile --target prod --models sources.{DBT_MODULE_NAME}+ ; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
@@ -132,7 +131,6 @@ transform_task = KubernetesPodOperator(
 model_test_task_name = f"{DBT_MODULE_NAME}-dbt-tests"
 model_test_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XS" &&
     dbt test --profiles-dir profile --target prod --models sources.{DBT_MODULE_NAME}+ {run_command_test_exclude} ; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret

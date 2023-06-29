@@ -68,7 +68,7 @@ config_dict = {
         "cloudsql_instance_name": None,
         "dag_name": "el_customers_scd",
         "env_vars": {"DAYS": "1"},
-        "extract_schedule_interval": "0 1 */1 * *",
+        "extract_schedule_interval": "45 5 * * *",
         "secrets": [
             CUSTOMERS_DB_USER,
             CUSTOMERS_DB_PASS,
