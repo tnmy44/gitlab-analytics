@@ -44,8 +44,7 @@ def load_data():
         object_details = object_storage.get_object(
             reporting_namespace, reporting_bucket, o.name
         )
-        # filename = o.name.replace("/", "_")
-        filename = o.name
+        filename = o.name.replace("/", "_")
 
         with open(destintation_path + "/" + filename, "wb") as f:
             for chunk in object_details.data.raw.stream(
