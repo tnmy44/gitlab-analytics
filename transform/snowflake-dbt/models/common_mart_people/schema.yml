@@ -1,0 +1,15 @@
+version: 2
+
+models:
+
+  - name: mart_team_member_directory
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - valid_from
+    columns:
+      - name: employee_id
+        description: Workday Employee Identification 
+        tests:
+          - not_null
