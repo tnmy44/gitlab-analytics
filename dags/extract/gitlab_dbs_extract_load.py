@@ -334,30 +334,6 @@ for source_name, config in config_dict.items():
                 )
         globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
-        replica_snapshot_extract_cmd = (
-        f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py"
-        )
-
-        check_replica_snapshot= KubernetesPodOperator(
-            **gitlab_defaults,
-            image=DATA_IMAGE,
-            task_id=f"check_replica_snapshot",
-            name=f"check_replica_snapshot",
-            pool=get_task_pool(config["task_name"]),
-            secrets=standard_secrets + config["secrets"],
-            env_vars={
-                **gitlab_pod_env_vars,
-                **config["env_vars"],
-            },
-            affinity=get_affinity("production"),
-            tolerations=get_toleration("production"),
-            arguments=[replica_snapshot_extract_cmd],
-            do_xcom_push=True,
-            dag=extract_dag
-        )
-
-        check_replica_snapshot >> extract_dag
-
         incremental_backfill_dag = DAG(
             f"{config['dag_name']}_db_incremental_backfill",
             default_args=incremental_backfill_dag_args,
