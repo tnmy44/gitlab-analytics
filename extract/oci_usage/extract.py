@@ -37,8 +37,8 @@ report_bucket_objects = oci.pagination.list_call_get_all_results(
     prefix=prefix_file,
 )
 
-config_dict = env.copy()
-snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
+snowflake_config_dict = os.environ.copy()
+snowflake_engine = snowflake_engine_factory(snowflake_config_dict, "LOADER")
 
 def load_data():
     for o in report_bucket_objects.data.objects:
