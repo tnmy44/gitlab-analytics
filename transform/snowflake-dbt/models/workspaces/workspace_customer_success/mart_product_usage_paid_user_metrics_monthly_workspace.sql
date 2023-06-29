@@ -194,7 +194,7 @@
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
       COALESCE(monthly_sm_metrics.ping_delivery_type, 'Self-Managed')              AS delivery_type, -- Hard codding to self-managed until next MR to update dedicated to saas. Issue -> https://gitlab.com/gitlab-data/analytics/-/issues/16966
-      COALESCE(monthly_sm_metrics.ping_deployment_type, subscription_with_deployment_type.product_deployment_type)
+      COALESCE(monthly_sm_metrics.ping_deployment_type, subscription_with_deployment_type.product_deployment_type, 'Self-Managed')
                                                                                    AS deployment_type,
       monthly_sm_metrics.installation_creation_date,
       -- Wave 1
