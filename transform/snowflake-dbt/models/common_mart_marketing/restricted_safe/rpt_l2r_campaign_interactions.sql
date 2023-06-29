@@ -8,7 +8,8 @@
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_crm_user','dim_crm_user'),
-    ('dim_date','dim_date')
+    ('dim_date','dim_date'),
+    ('dim_campaign', 'dim_campaign')
 ]) }}
 
 , upa_base AS ( 
@@ -1284,7 +1285,7 @@
     WHEN (lower(budget_holder) LIKE '%dmp%' 
             OR lower(utm_budget) LIKE '%dmp%')
             THEN 'Digital Marketing'
-    ELSE 'No Budget Holder' END AS intergrated_budget_holder
+    ELSE 'No Budget Holder' END AS intergrated_budget_holder,
 
 
      --inquiry_date fields
@@ -1329,6 +1330,8 @@
     bizible_date.first_day_of_week               AS bizible_date_range_week,
     bizible_date.date_id                         AS bizible_date_range_id
   FROM cohort_base_combined
+  LEFT JOIN dim_campaign
+    ON cohort_base_combined.dim_campaign_id = dim_campaign.dim_campaign_id
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
