@@ -336,7 +336,7 @@ runner_saas_large_ext AS (
 
   SELECT DISTINCT
     reporting_day                      AS date_day,
-    'gitlab-r-saas-l-l-%'              AS gcp_project_id,
+    'gitlab-r-saas-l-l-amd64-_'              AS gcp_project_id,
     NULL                               AS gcp_service_description,
     NULL                               AS gcp_sku_description,
     NULL                               AS infra_label,
