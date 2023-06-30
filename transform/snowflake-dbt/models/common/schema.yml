@@ -264,7 +264,7 @@ models:
 
 
   - name: dim_billing_account_snapshot_bottom_up
-    description: Daily snapshot of billing accounts starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
+    description: Daily snapshot of billing accounts starting from 2020-03-01. This is built from the bottom up using snapshotted source tables from Zuora and CDot.
     columns:
       - name: billing_account_snapshot_id
         description: Unique identifier of a billing account snapshot
@@ -272,6 +272,35 @@ models:
           - not_null
           - unique
         tags: ["tdf", "arr_snapshots"]
+      - name: snapshot_id
+        description: Unique Date Id between dbt_valid_from and dbt_valid_to in Snapshots  
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with the customer   
+      - name: dim_crm_account_id
+        description: The customer account ID for the account
+      - name: billing_account_number
+        description: A unique Zuora account number
+      - name: billing_account_name
+        description: The name of the Zuora account
+      - name: account_status
+        description: The status of the account in the system. Can be draft, active, cancelled.
+      - name: parent_id
+        description: The identifier of the parent customer account      
+      - name: crm_account_code
+        description: The code for the crm sfdc account
+      - name: crm_entity
+      - name: account_currency
+        description: A currency as defined in Billing Settings in the Zuora UI
+      - name: sold_to_country
+        description: The country of the sold to contact
+      - name: ssp_channel
+      - name: po_required
+      - name: is_deleted
+        description: The flag indicating if account has been deleted
+      - name: batch
+      - name: record_data_source
+        description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources.
+  
 
   - name: dim_campaign
     description: Dimension table representing each individual Campaign. Excludes deleted campaigns. Based completely off SFDC campaign data.
@@ -1117,7 +1146,7 @@ models:
       - name: dim_crm_account_id
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
-        description: The id of the Zuora account the subscription is associated with
+        description: The id of the Zuora account the subscription is associated with the customer
       - name: dim_billing_account_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
@@ -2867,6 +2896,12 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
 
   - name: dim_ping_metric
     description: ' {{ doc("dim_ping_metric") }} '
@@ -4327,6 +4362,9 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "arr"]
+      - name: rate_plan_charge_description
+        description: Description for a rate plan charge in Zuora. This can be used to identify orders that received transition pricing in FY24. Note, the description field will not show a transition pricing tag for sales-assisted orders. 
+        tags: ["tdf", "common", "arr"]
 
   - name: dim_crm_account
     description: '{{ doc("dim_crm_account") }}'
@@ -4936,8 +4974,8 @@ models:
         description: '{{ doc("downgrade_details") }}'
       - name: intended_product_tier
         description: '{{ doc("intended_product_tier") }}'
-      - name: parent_opportunity_id
-        description: '{{ doc("parent_opportunity_id") }}'
+      - name: dim_parent_crm_opportunity_id
+        description: '{{ doc("dim_parent_crm_opportunity_id") }}'
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
@@ -4969,6 +5007,8 @@ models:
         description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
       - name: rate_plan_charge_version
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
+      - name: subscription_created_by_id
+        description: The id of the Zuora user who created the subscription.
 
   - name: fct_crm_account
     description: '{{ doc("fct_crm_account") }}'
@@ -7160,6 +7200,8 @@ models:
         description: Team member gitlab username 
       - name: region
         description: Current/latest region the team member resides in
+      - name: team_id
+        description: Identification number of the team to which the particular team member belongs
       - name: hire_date
         description: Most recent hire date. Field is updated if a team member is re-hired after a termination
       - name: termination_date
@@ -7236,7 +7278,6 @@ models:
         description: Effective date of employment status
         tests:
           - not_null
-      
 
   - name: fct_team_member_position
     description: '{{ doc("fct_team_member_position") }}'
@@ -7358,4 +7399,56 @@ models:
       - name: valid_to
         tests: 
           - not_null
+
+
+  - name: dim_trial_latest
+    description: '{{ doc("dim_trial_latest") }}'
+    columns:
+      - name: dim_trial_latest_sk
+        description: '{{ doc("dim_trial_latest_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: dim_trial_snapshot_id
+        description: A unique ID for each Snapshotted Order.
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        description: The unique ID of an Order. It can be used as a join key to join to CDot Orders only.
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        description: The id of the namespace related to the subscription.
+        tests: 
+          - unique        
+      - name: customer_id
+        description: The unique ID of a customer. It can be used as a Join key to join to CDot Customers only.
+      - name: dim_product_rate_plan_id
+        description: The unique ID of a product rate plan
+      - name: dim_subscription_id
+        description: The unique identifier of a subscription
+      - name: subscription_name
+        description: The unique name of a subscription.
+      - name: subscription_name_slugify
+        description: The name of the subscription
+      - name: gitlab_namespace_name
+        description: The namespace related to the subscription.
+      - name: order_start_date
+        description: The start date of the Order
+      - name: order_end_date
+        description: The expiration date of the Order
+      - name: order_quantity
+      - name: order_created_at
+        description: The date when the Order was created
+      - name: order_updated_at
+        description: The date when the Order was updated
+      - name: amendment_type
+      - name: is_order_trial
+        description: Boolean flag to indicate if the Order started as a Trial or not
+      - name: last_extra_ci_minutes_sync_at
+      - name: valid_from
+        tests: 
+          - not_null
+      - name: valid_to
 

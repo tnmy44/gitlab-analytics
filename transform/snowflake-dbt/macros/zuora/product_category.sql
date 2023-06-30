@@ -80,6 +80,7 @@ CASE
                                       '#movingtogitlab'
                                     , 'Payment Gateway Test'
                                     , 'EdCast Settlement Revenue'
+                                    , 'GitLab Certification Exam'
                                     )
     THEN 'Other'
   WHEN TRIM({{product_column}}) IN (

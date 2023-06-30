@@ -7,6 +7,7 @@
     ('map_merged_crm_account','map_merged_crm_account'),
     ('zuora_contact','zuora_contact_source'),
     ('zuora_payment_method', 'zuora_payment_method_source'),
+    ('customers_billing_account','customers_db_billing_accounts_source')
 ]) }}
 
 , zuora_account AS (
@@ -53,19 +54,23 @@
 
     SELECT 
       billing_account_id,
+      map_merged_crm_account.dim_crm_account_id             AS dim_crm_account_id,
       zuora_account_id,
       zuora_account_name,
-      sfdc_account_id,
+      customers_billing_account.sfdc_account_id,
       billing_account_created_at,
       billing_account_updated_at,
       'Y' as exists_in_cdot
-    FROM {{ref('customers_db_billing_accounts_source')}}
+    FROM customers_billing_account
+    LEFT JOIN map_merged_crm_account
+      ON customers_billing_account.sfdc_account_id = map_merged_crm_account.sfdc_account_id
     --Exclude Batch20(test records) from CDot by using Zuora test account IDs.
     WHERE zuora_account_id NOT IN 
       (SELECT DISTINCT 
         account_id 
        FROM {{ref('zuora_account_source')}}
-       WHERE LOWER(batch) = 'batch20')
+       WHERE LOWER(batch) = 'batch20'
+       OR is_deleted = TRUE)
 
 ), final AS (
 
@@ -77,7 +82,7 @@
       COALESCE(zuora_billing_account.dim_billing_account_id, cdot_billing_account.zuora_account_id)                                     AS dim_billing_account_id,
 
       --foreign key
-      COALESCE(zuora_billing_account.dim_crm_account_id, cdot_billing_account.sfdc_account_id)                                          AS dim_crm_account_id,
+      COALESCE(zuora_billing_account.dim_crm_account_id, cdot_billing_account.dim_crm_account_id)                                       AS dim_crm_account_id,
 
       --other relevant attributes
       zuora_billing_account.billing_account_number,
@@ -111,5 +116,5 @@
     created_by="@snalamaru",
     updated_by="@snalamaru",
     created_date="2023-04-24",
-    updated_date="2023-05-31"
+    updated_date="2023-06-14"
 ) }}

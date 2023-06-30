@@ -959,6 +959,7 @@ roles:
                       - prep.zendesk
                       - prep.preparation
                       - prep.customers
+                      - prep.sfdc
                       - raw.data_science
                       - raw.salesforce_stitch
                       - raw.snapshots
@@ -974,6 +975,7 @@ roles:
                       - prep.gitlab_dotcom.*
                       - prep.preparation.*
                       - prep.customers.*
+                      - prep.sfdc.*
                       - prod.common.*
                       - prod.legacy.*
                       - prod.common_mart_product.*
@@ -2180,6 +2182,7 @@ roles:
                     - prod.restricted_safe_common
                     - prod.restricted_safe_common_mapping
                     - prod.restricted_safe_common_mart_finance
+                    - prod.restricted_safe_common_mart_marketing
                     - prod.restricted_safe_common_mart_sales
                     - prod.restricted_safe_legacy
                     - prod.restricted_safe_common_prep
@@ -2196,6 +2199,7 @@ roles:
                     - prod.restricted_safe_common.*
                     - prod.restricted_safe_common_mapping.*
                     - prod.restricted_safe_common_mart_finance.*
+                    - prod.restricted_safe_common_mart_marketing.*
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.restricted_safe_legacy.*
                     - prod.restricted_safe_common_prep.*
@@ -2271,12 +2275,6 @@ roles:
                     - prep.sensitive.sheetload_ally_certificate_source
                     - prep.sensitive.sheetload_communication_certificate_source
                     - prep.sensitive.sheetload_compensation_certificate_source
-                    - prep.sensitive.sheetload_ic_collaboration_competency_source
-                    - prep.sensitive.sheetload_ic_dib_comptency_source
-                    - prep.sensitive.sheetload_ic_efficiency_competency_source
-                    - prep.sensitive.sheetload_ic_iteration_competency_source
-                    - prep.sensitive.sheetload_ic_results_competency_source
-                    - prep.sensitive.sheetload_ic_transparency_competency_source
                     - prep.sensitive.sheetload_osat_source
                     - prep.sensitive.sheetload_values_certificate_source
                     - prep.sheetload.*
@@ -2733,6 +2731,13 @@ roles:
             - transforming_s
             - transforming_l
             - transforming_xl
+
+    - abhaskar:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
 
     - abright:
         member_of:
@@ -3767,6 +3772,12 @@ roles:
             - data_team_analyst
             - restricted_safe
             - zoominfo_inbound
+        warehouses:
+            - dev_xs
+
+    - lchilamakuru:
+        member_of:
+            - reporter
         warehouses:
             - dev_xs
 
@@ -5057,6 +5068,11 @@ users:
             - sales_analytics
             - reporter
 
+    - abhaskar:
+        can_login: yes
+        member_of:
+            - abhaskar
+
     - abright:
         can_login: yes
         member_of:
@@ -5311,6 +5327,11 @@ users:
         can_login: yes
         member_of:
             - kkarthikeyan
+
+    - lchilamakuru:
+        can_login: yes
+        member_of:
+            - lchilamakuru
 
     - lmai:
         can_login: yes

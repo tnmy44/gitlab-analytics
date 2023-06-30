@@ -192,6 +192,7 @@
       zuora_subscription.subscription_status                            AS subscription_status,
       zuora_rate_plan.rate_plan_name                                    AS rate_plan_name,
       zuora_rate_plan_charge.rate_plan_charge_name,
+      zuora_rate_plan_charge.description                                AS rate_plan_charge_description,
       zuora_rate_plan_charge.is_last_segment,
       zuora_rate_plan_charge.discount_level,
       zuora_rate_plan_charge.charge_type,
@@ -326,6 +327,7 @@
       active_zuora_subscription.subscription_status                                         AS subscription_status,
       'manual true up allocation'                                                           AS rate_plan_name,
       'manual true up allocation'                                                           AS rate_plan_charge_name,
+      'manual true up allocation'                                                           AS rate_plan_charge_description,
       'TRUE'                                                                                AS is_last_segment,
       NULL                                                                                  AS discount_level,
       'Recurring'                                                                           AS charge_type,
@@ -417,7 +419,7 @@
 {{ dbt_audit(
     cte_ref="arr_analysis_framework",
     created_by="@michellecooper",
-    updated_by="@chrissharp",
+    updated_by="@nmcavinue",
     created_date="2022-04-13",
-    updated_date="2023-03-15"
+    updated_date="2023-05-30"
 ) }}
