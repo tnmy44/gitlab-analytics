@@ -80,7 +80,7 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_date_month', 'metrics_path', 'ping_edition', 'estimation_grain', 'ping_edition_product_tier', 'ping_delivery_type', 'ping_deployment_type']) }}   AS ping_metric_totals_w_estimates_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_date_month', 'metrics_path', 'ping_edition', 'estimation_grain', 'ping_edition_product_tier', 'ping_deployment_type']) }}   AS ping_metric_totals_w_estimates_monthly_id,
     -- identifiers
     metrics_path                                                                                                                                                        AS metrics_path,
     ping_created_date_month                                                                                                                                             AS ping_created_date_month,

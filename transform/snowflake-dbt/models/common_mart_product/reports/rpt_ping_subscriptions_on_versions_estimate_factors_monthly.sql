@@ -36,7 +36,6 @@ arr_joined AS (
     ON mart_ping_instance_metric_monthly.latest_subscription_id = latest_subscriptions.latest_subscription_id
       AND mart_ping_instance_metric_monthly.ping_created_date_month = latest_subscriptions.ping_created_date_month
       AND mart_ping_instance_metric_monthly.ping_deployment_type = latest_subscriptions.ping_deployment_type
-      AND mart_ping_instance_metric_monthly.ping_delivery_type = latest_subscriptions.ping_delivery_type
   WHERE mart_ping_instance_metric_monthly.time_frame IN ('28d', 'all')
     AND mart_ping_instance_metric_monthly.ping_deployment_type IN ('Self-Managed', 'Dedicated')
   {{ dbt_utils.group_by(n=14) }}
@@ -94,13 +93,11 @@ joined_counts AS (
   INNER JOIN rpt_ping_subscriptions_on_versions_counts_monthly --model with subscriptions and seats on version
     ON reported_actuals.ping_created_date_month = rpt_ping_subscriptions_on_versions_counts_monthly.ping_created_date_month
     AND reported_actuals.metrics_path = rpt_ping_subscriptions_on_versions_counts_monthly.metrics_path
-    AND reported_actuals.ping_delivery_type = rpt_ping_subscriptions_on_versions_counts_monthly.ping_delivery_type
     AND reported_actuals.ping_deployment_type = rpt_ping_subscriptions_on_versions_counts_monthly.ping_deployment_type
   INNER JOIN rpt_ping_subscriptions_reported_counts_monthly --model with overall total subscriptions and seats
     ON reported_actuals.ping_created_date_month = rpt_ping_subscriptions_reported_counts_monthly.ping_created_date_month
       AND reported_actuals.metrics_path = rpt_ping_subscriptions_reported_counts_monthly.metrics_path
       AND rpt_ping_subscriptions_on_versions_counts_monthly.ping_edition = rpt_ping_subscriptions_reported_counts_monthly.ping_edition
-      AND reported_actuals.ping_delivery_type = rpt_ping_subscriptions_reported_counts_monthly.ping_delivery_type
       AND reported_actuals.ping_deployment_type = rpt_ping_subscriptions_reported_counts_monthly.ping_deployment_type
 
 ),
@@ -156,7 +153,7 @@ unioned_counts AS (
 final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_date_month', 'metrics_path', 'ping_edition','estimation_grain', 'ping_delivery_type', 'ping_deployment_type']) }} AS ping_subscriptions_on_versions_estimate_factors_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_date_month', 'metrics_path', 'ping_edition','estimation_grain', 'ping_deployment_type']) }} AS ping_subscriptions_on_versions_estimate_factors_monthly_id,
     *,
     {{ pct_w_counters('reporting_count', 'not_reporting_count') }}                                                AS percent_reporting
   FROM unioned_counts
