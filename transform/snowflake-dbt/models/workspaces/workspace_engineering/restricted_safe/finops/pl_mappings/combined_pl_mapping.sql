@@ -298,9 +298,15 @@ runner_saas_medium_gpu AS (
 
 runner_saas_medium_ext_gpu AS (
 
+      WITH project_list AS (SELECT 'gitlab-r-saas-l-m-amd64-gpu-%' AS project
+    UNION ALL
+    SELECT 'gl-r-saas-l-m-%'
+
+  )
+
   SELECT DISTINCT
     reporting_day                      AS date_day,
-    'gitlab-r-saas-l-m-amd64-gpu-%'              AS gcp_project_id,
+    project_list.project               AS gcp_project_id,
     NULL                               AS gcp_service_description,
     NULL                               AS gcp_sku_description,
     NULL                               AS infra_label,
@@ -310,6 +316,7 @@ runner_saas_medium_ext_gpu AS (
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 8'           AS from_mapping
   FROM {{ ref ('ci_runners_pl_daily') }}
+  CROSS JOIN project_list
   WHERE mapping = '8 - shared saas runners gpu - medium'
 
 ),
@@ -370,9 +377,16 @@ runner_saas_large_gpu AS (
 
 runner_saas_large_ext_gpu AS (
 
+  WITH project_list AS (SELECT 'gitlab-r-saas-l-l-amd64-gpu-%' AS project
+    UNION ALL
+    SELECT 'gl-r-saas-l-l-%'
+
+  )
+
+
   SELECT DISTINCT
     reporting_day                      AS date_day,
-    'gitlab-r-saas-l-l-amd64-gpu-%'              AS gcp_project_id,
+    project_list.project               AS gcp_project_id,
     NULL                               AS gcp_service_description,
     NULL                               AS gcp_sku_description,
     NULL                               AS infra_label,
@@ -382,6 +396,7 @@ runner_saas_large_ext_gpu AS (
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 9'           AS from_mapping
   FROM {{ ref ('ci_runners_pl_daily') }}
+  CROSS JOIN project_list
   WHERE mapping = '9 - shared saas runners gpu - large'
 
 ),
