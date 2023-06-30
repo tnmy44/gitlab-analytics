@@ -340,7 +340,7 @@
     
 ), cohort_base_combined AS (
   
-    SELECT
+    SELECT 
    --IDs
       dim_crm_person_id,
       person_base_with_tp.dim_crm_account_id,
@@ -497,7 +497,7 @@
 
 ), intermediate AS (
 
-  SELECT DISTINCT
+  SELECT
     cohort_base_combined.*,
     --inquiry_date fields
     inquiry_date.fiscal_year                     AS inquiry_date_range_year,
