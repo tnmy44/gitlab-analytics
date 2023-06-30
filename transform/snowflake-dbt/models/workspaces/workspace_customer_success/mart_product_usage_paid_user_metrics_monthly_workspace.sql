@@ -713,7 +713,6 @@
         [
           'snapshot_month',
           'dim_subscription_id',
-          'delivery_type',
           'deployment_type',
           'uuid',
           'hostname',
