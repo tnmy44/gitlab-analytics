@@ -207,7 +207,6 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - metrics_path
 - ping_edition
 - estimation_grain
-- ping_delievery_type
 - ping_deployment_type
 
 **Filters Applied to Model:**
@@ -278,7 +277,6 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - metrics_path
 - ping_edition
 - estimation_grain
-- ping_delivery_type
 - ping_deployment_type
 
 **Filters Applied to Model:**
@@ -313,7 +311,6 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - ping_edition
 - estimation_grain
 - ping_edition_product_tier
-- ping_delivery_type
 - ping_deployment_type
 
 **Filters Applied to Model:**
@@ -331,7 +328,7 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
   - `SaaS` looks at recorded SaaS/gitlab.com usage, there is no additional estimation logic
 - `percent_reporting` is defined as `reporting_count / (reporting_count + not_reporting_count)`
 - `reporting_count` and `not_reporting_count` are defined by the `estimation_grain` (either count of subscriptions or count of seats)
-- For a given month, metric, delivery, edition, and grain, `percent_reporting`, `reporting_count`, and `not_reporting_count` is the same across all tiers
+- For a given month, metric, deployment, edition, and grain, `percent_reporting`, `reporting_count`, and `not_reporting_count` is the same across all tiers
 
 **Tips for Use:**
 - The "official" estimation_grain is `metric/version check - subscription based estimation`
@@ -356,7 +353,6 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - ping_created_date_month
 - metrics_path
 - ping_edition
-- ping_delivery_type
 - ping_deployment_type
 
 **Filters Applied to Model:**
@@ -381,7 +377,6 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - ping_created_date_month
 - metrics_path
 - ping_edition
-- ping_delivery_type
 - ping_deployment_type
 
 **Filters Applied to Model:**
