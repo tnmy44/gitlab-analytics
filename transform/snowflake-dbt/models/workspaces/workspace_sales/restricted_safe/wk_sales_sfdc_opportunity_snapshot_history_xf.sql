@@ -88,6 +88,15 @@ WITH date_details AS (
       key_bu_subbu_division_sqs,
       key_bu_subbu_division_asm,
 
+
+      parent_crm_account_upa_country,
+      parent_crm_account_upa_state,
+      parent_crm_account_upa_city,
+      parent_crm_account_upa_street,
+      parent_crm_account_upa_postal_code,
+      parent_crm_account_upa_country_name,
+      parent_crm_account_business_unit,
+
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
       -- I am adding this logic
