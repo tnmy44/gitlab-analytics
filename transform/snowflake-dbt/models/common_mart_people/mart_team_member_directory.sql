@@ -17,9 +17,9 @@ WITH team_member_mapping AS (
       WHEN age IS NULL            THEN 'Unreported'
       WHEN age = -1               THEN 'Unreported'
       ELSE NULL 
-    END                                                                                              AS age_cohort,
-    DATE(valid_from)                                                                                 AS valid_from,
-    DATE(valid_to)                                                                                   AS valid_to
+    END                                                                                             AS age_cohort,
+    DATE(valid_from)                                                                                AS valid_from,
+    DATE(valid_to)                                                                                  AS valid_to
   FROM {{ ref('workday_employee_mapping_source') }} 
 
 ),
@@ -33,12 +33,16 @@ team_member AS (
     ethnicity,
     first_name,
     last_name,
-    first_name || ' ' || last_name                                                                   AS full_name,
+    first_name || ' ' || last_name                                                                  AS full_name,
     gender,
     work_email,
     date_of_birth,
     gitlab_username,
-    team_id,
+    /* 
+      team_id didn't exist in BHR, it was created after we moved to Workday
+      so we are limiting this join to after the Workday cutover date of '2022-06-16'
+    */
+    IFF(valid_from > '2022-06-16', team_id, NULL)                                                   AS team_id,
     country,
     region,
     CASE
@@ -78,6 +82,8 @@ team_member_position AS (
     dim_team_sk,
     employee_id,
     team_id,
+    manager,
+    suporg,
     job_code,
     position,
     job_family,
@@ -85,12 +91,11 @@ team_member_position AS (
     job_specialty_multi,
     management_level,
     job_grade,
+    department,
     entity,
-    position_date_time_initiated,
-    position_effective_date AS valid_from,
+    effective_date AS valid_from,
     LEAD(valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ ref('fct_team_member_position') }}
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, position_effective_date ORDER BY position_date_time_initiated DESC) = 1
 
 ),
 
@@ -99,16 +104,9 @@ team AS (
   SELECT 
     dim_team_sk,
     team_id,
-    team_name,
     team_manager_name,
-    team_manager_name_id,
-    team_superior_team_id,
-    team_hierarchy_level,
-    hierarchy_level_3_name            AS division,
-    hierarchy_level_4_name            AS department,
-    hierarchy_levels_array,
-    is_team_active,
-    team_inactivated_date,
+    hierarchy_level_3_name                                                                           AS division,
+    hierarchy_level_4_name                                                                           AS department,
     DATE(valid_from)                                                                                 AS valid_from,
     DATE(valid_to)                                                                                   AS valid_to
   FROM {{ ref('dim_team') }}
@@ -167,11 +165,10 @@ final AS (
 
     -- Surrogate keys
     team_member.dim_team_member_sk,
-    team.dim_team_sk,
+    {{ dbt_utils.surrogate_key(['team_member.team_id']) }}                                   AS dim_team_sk,
 
     --Natural keys
     team_member.employee_id,
-    team_member.team_id,
 
     --Team member info
     team_member.nationality,
@@ -197,17 +194,11 @@ final AS (
     team_member.termination_date,
     team_member.is_current_team_member,
     team_member.is_rehire,
-    team.team_name,
-    team.team_manager_name_id,
-    team.team_manager_name,
-    team.team_superior_team_id,
-    team_superior.team_name                             AS team_superior_name,
+    team_member.team_id,
+    COALESCE(team_member_position.manager, team.team_manager_name)        AS team_manager_name,
     team.division,
-    team.department,
-    team.team_hierarchy_level,
-    team.hierarchy_levels_array,
-    team.is_team_active,
-    team.team_inactivated_date,
+    COALESCE(team_member_position.department, team.department)            AS department,
+    team_member_position.suporg,
     team_member_position.job_code,
     team_member_position.position,
     team_member_position.job_family,
@@ -230,12 +221,8 @@ final AS (
           OR team_member_mapping.valid_from >= date_range.valid_to)
   LEFT JOIN team
     ON team_member.team_id = team.team_id
-      AND NOT (team.valid_to <= date_range.valid_from
+        AND NOT (team.valid_to <= date_range.valid_from
           OR team.valid_from >= date_range.valid_to)
-  LEFT JOIN team AS team_superior
-    ON team.team_superior_team_id = team_superior.team_superior_team_id
-      AND NOT (team_superior.valid_to <= date_range.valid_from
-          OR team_superior.valid_from >= date_range.valid_to)
   LEFT JOIN team_member_position
     ON date_range.employee_id = team_member_position.employee_id 
       AND NOT (team_member_position.valid_to <= date_range.valid_from
