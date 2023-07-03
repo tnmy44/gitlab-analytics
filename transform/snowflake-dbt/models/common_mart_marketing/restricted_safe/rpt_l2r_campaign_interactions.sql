@@ -12,145 +12,7 @@
     ('dim_campaign', 'dim_campaign')
 ]) }}
 
-, upa_base AS ( 
-    SELECT 
-      dim_parent_crm_account_id,
-      dim_crm_account_id
-    FROM dim_crm_account
-
-), first_order_opps AS ( 
-
-    SELECT
-      dim_parent_crm_account_id,
-      dim_crm_account_id,
-      dim_crm_opportunity_id,
-      close_date,
-      is_sao,
-      sales_accepted_date
-    FROM mart_crm_opportunity
-    WHERE is_won = true
-      AND order_type = '1. New - First Order'
-
-), accounts_with_first_order_opps AS ( 
-
-    SELECT
-      upa_base.dim_parent_crm_account_id,
-      upa_base.dim_crm_account_id,
-      first_order_opps.dim_crm_opportunity_id,
-      FALSE AS is_first_order_available
-    FROM upa_base 
-    LEFT JOIN first_order_opps
-      ON upa_base.dim_crm_account_id = first_order_opps.dim_crm_account_id
-    WHERE dim_crm_opportunity_id IS NOT NULL
-
-), person_order_type_base AS (
-
-    SELECT DISTINCT
-      person_base.email_hash, 
-      person_base.sfdc_record_id,
-      person_base.dim_crm_account_id,
-      upa_base.dim_parent_crm_account_id,
-      mart_crm_opportunity.dim_crm_opportunity_id,
-      mart_crm_opportunity.close_date,
-      mart_crm_opportunity.order_type,
-      CASE 
-        WHEN is_first_order_available = False AND mart_crm_opportunity.order_type = '1. New - First Order' 
-          THEN '3. Growth'
-        WHEN is_first_order_available = False AND mart_crm_opportunity.order_type != '1. New - First Order' 
-          THEN mart_crm_opportunity.order_type
-        ELSE '1. New - First Order'
-      END AS person_order_type,
-      ROW_NUMBER() OVER( PARTITION BY email_hash ORDER BY person_order_type) AS person_order_type_number
-    FROM person_base
-    FULL JOIN upa_base
-      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
-    LEFT JOIN accounts_with_first_order_opps
-      ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    FULL JOIN mart_crm_opportunity
-      ON upa_base.dim_parent_crm_account_id = mart_crm_opportunity.dim_parent_crm_account_id
-
-), person_order_type_final AS (
-
-    SELECT DISTINCT
-      email_hash,
-      sfdc_record_id,
-      dim_crm_opportunity_id,
-      dim_parent_crm_account_id,
-      dim_crm_account_id,
-      person_order_type
-    FROM person_order_type_base
-    WHERE person_order_type_number = 1
-
-), mql_order_type_base AS (
-
-    SELECT DISTINCT
-      person_base.sfdc_record_id,
-      person_base.email_hash, 
-      CASE 
-        WHEN mql_date_lastest_pt < mart_crm_opportunity.close_date 
-          THEN mart_crm_opportunity.order_type
-        WHEN mql_date_lastest_pt > mart_crm_opportunity.close_date 
-          THEN '3. Growth'
-        ELSE NULL
-      END AS mql_order_type_historical,
-      ROW_NUMBER() OVER( PARTITION BY person_base.email_hash ORDER BY mql_order_type_historical) AS mql_order_type_number
-    FROM person_base
-    FULL JOIN upa_base 
-      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
-    LEFT JOIN accounts_with_first_order_opps 
-      ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    FULL JOIN mart_crm_opportunity 
-      ON upa_base.dim_parent_crm_account_id = mart_crm_opportunity.dim_parent_crm_account_id
-    
-), mql_order_type_final AS (
-  
-  SELECT *
-  FROM mql_order_type_base
-  WHERE mql_order_type_number = 1
-    
-), inquiry_order_type_base AS (
-
-    SELECT DISTINCT
-      person_base.sfdc_record_id,
-      person_base.email_hash, 
-      CASE 
-         WHEN true_inquiry_date < mart_crm_opportunity.close_date THEN mart_crm_opportunity.order_type
-         WHEN true_inquiry_date > mart_crm_opportunity.close_date THEN '3. Growth'
-      ELSE NULL
-      END AS inquiry_order_type_historical,
-      ROW_NUMBER() OVER( PARTITION BY person_base.email_hash ORDER BY inquiry_order_type_historical) AS inquiry_order_type_number
-    FROM person_base
-    FULL JOIN upa_base 
-      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
-    LEFT JOIN accounts_with_first_order_opps 
-      ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    FULL JOIN mart_crm_opportunity 
-      ON upa_base.dim_parent_crm_account_id = mart_crm_opportunity.dim_parent_crm_account_id
-
-), inquiry_order_type_final AS (
-  
-  SELECT *
-  FROM inquiry_order_type_base
-  WHERE inquiry_order_type_number=1
-  
-), order_type_final AS (
-  
-  SELECT 
-    person_order_type_final.sfdc_record_id,
-    person_order_type_final.email_hash,
-    person_order_type_final.dim_crm_account_id,
-    person_order_type_final.dim_parent_crm_account_id,
-    person_order_type_final.dim_crm_opportunity_id,
-    person_order_type_final.person_order_type,
-    inquiry_order_type_final.inquiry_order_type_historical,
-    mql_order_type_final.mql_order_type_historical
-  FROM person_order_type_final
-  LEFT JOIN inquiry_order_type_final 
-    ON person_order_type_final.email_hash=inquiry_order_type_final.email_hash
-  LEFT JOIN mql_order_type_final 
-    ON person_order_type_final.email_hash=mql_order_type_final.email_hash
-
-), person_base_with_tp AS (
+, person_base_with_tp AS (
 
     SELECT DISTINCT
   --IDs
@@ -186,10 +48,7 @@
     person_base.account_demographics_area,
     person_base.account_demographics_upa_country,
     person_base.account_demographics_territory,
-    accounts_with_first_order_opps.is_first_order_available,
-    order_type_final.person_order_type,
-    order_type_final.inquiry_order_type_historical,
-    order_type_final.mql_order_type_historical,
+    dim_crm_account.is_first_order_available,
 	  person_base.sales_segment_name AS person_sales_segment_name,
     person_base.sales_segment_grouped AS person_sales_segment_grouped,
     person_base.person_score,
@@ -202,6 +61,12 @@
     map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
     map_alternative_lead_demographics.geo_custom,
     UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
+    CASE
+        WHEN person_base.is_first_order_person = TRUE 
+          THEN '1. New - First Order'
+        ELSE ' 3. Growth'
+      END AS person_order_type,
+
 
   --Person Dates
 		person_base.true_inquiry_date,
@@ -255,10 +120,6 @@
       ON person_base.dim_crm_person_id = dim_crm_person.dim_crm_person_id
     LEFT JOIN upa_base
     ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
-    LEFT JOIN accounts_with_first_order_opps
-      ON upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
-    LEFT JOIN order_type_final
-      ON person_base.email_hash = order_type_final.email_hash
     LEFT JOIN mart_crm_touchpoint
       ON mart_crm_touchpoint.email_hash = person_base.email_hash
     LEFT JOIN map_alternative_lead_demographics
@@ -385,10 +246,7 @@
     person_base.account_demographics_area,
     person_base.account_demographics_upa_country,
     person_base.account_demographics_territory,
-    accounts_with_first_order_opps.is_first_order_available,
-    order_type_final.person_order_type,
-    order_type_final.inquiry_order_type_historical,
-    order_type_final.mql_order_type_historical,
+    dim_crm_account.is_first_order_available,
 	  person_base.sales_segment_name AS person_sales_segment_name,
     person_base.sales_segment_grouped AS person_sales_segment_grouped,
     person_base.person_score,
@@ -401,6 +259,11 @@
     map_alternative_lead_demographics.employee_bucket_segment_custom) AS inferred_employee_segment,
     map_alternative_lead_demographics.geo_custom,
     UPPER(map_alternative_lead_demographics.geo_custom) AS inferred_geo,
+    CASE
+        WHEN person_base.is_first_order_person = TRUE 
+          THEN '1. New - First Order'
+        ELSE ' 3. Growth'
+      END AS person_order_type,
 
   --Person Dates
 		person_base.true_inquiry_date,
@@ -432,7 +295,7 @@
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.bizible_salesforce_campaign,
-	  mart_crm_attribution_touchpoint.campaign_rep_role_name,
+	    mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.gtm_motion,
       mart_crm_attribution_touchpoint.pipe_name,
@@ -483,15 +346,11 @@
       ON mart_crm_attribution_touchpoint.dim_crm_person_id = person_base.dim_crm_person_id
     LEFT JOIN map_alternative_lead_demographics
       ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
-    LEFT JOIN order_type_final
-      ON person_base.email_hash = order_type_final.email_hash
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-    LEFT JOIN accounts_with_first_order_opps
-      ON dim_crm_account.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
     LEFT JOIN dim_crm_user
       ON opp.dim_crm_user_id=dim_crm_user.dim_crm_user_id
-  {{dbt_utils.group_by(n=223)}}
+  {{dbt_utils.group_by(n=165)}}
     
 ), cohort_base_combined AS (
   
@@ -1001,7 +860,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-06-29",
+    updated_date="2023-07-03",
   ) }}
