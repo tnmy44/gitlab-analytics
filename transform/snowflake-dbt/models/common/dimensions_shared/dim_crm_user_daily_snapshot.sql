@@ -16,7 +16,8 @@ WITH final AS (
     FROM {{ ref('prep_crm_user_daily_snapshot') }}
     {% if is_incremental() %}
 
-    WHERE snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+    WHERE dbt_updated_at >= (SELECT MAX(dbt_updated_at) FROM {{this}})
+    -- WHERE snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
 
     {% endif %}
 
@@ -25,7 +26,7 @@ WITH final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@rkohnke",
     created_date="2022-01-20",
-    updated_date="2023-03-10"
+    updated_date="2023-07-03"
 ) }}
