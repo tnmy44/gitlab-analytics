@@ -16,6 +16,7 @@ WITH final AS (
     prep_team_member_position.management_level,
     prep_team_member_position.job_grade,
     prep_team_member_position.department,
+    prep_team_member_position.division,
     prep_team_member_position.entity,
     prep_team_member_position.is_position_active,
     prep_team_member_position.effective_date,

@@ -105,6 +105,7 @@ job_info AS (
     job_title         AS position,
     reports_to        AS manager,
     department, 
+    division,
     entity, 
     effective_date
   FROM {{ref('blended_job_info_source')}}
@@ -136,6 +137,7 @@ final AS (
     staffing_history.management_level                                                                                                                                  AS management_level,
     staffing_history.job_grade                                                                                                                                         AS job_grade,
     staffing_history.department                                                                                                                                        AS department,
+    NULL                                                                                                                                                               AS division,
     staffing_history.entity                                                                                                                                            AS entity,
     staffing_history.is_position_active                                                                                                                                AS is_position_active,
     staffing_history.position_effective_date                                                                                                                           AS effective_date,
@@ -166,6 +168,7 @@ final AS (
     NULL                                                                                                                                                               AS management_level,
     NULL                                                                                                                                                               AS job_grade,
     job_info.department                                                                                                                                                AS department,
+    job_info.division                                                                                                                                                  AS division,
     job_info.entity                                                                                                                                                    AS entity,
     NULL                                                                                                                                                               AS is_position_active,
     job_info.effective_date                                                                                                                                            AS effective_date,

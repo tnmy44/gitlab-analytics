@@ -21,6 +21,8 @@ WITH team_member_mapping AS (
     DATE(valid_from)                                                                                AS valid_from,
     DATE(valid_to)                                                                                  AS valid_to
   FROM {{ ref('workday_employee_mapping_source') }} 
+  --Remove multiple records for the same day
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, DATE(valid_from) ORDER BY DATE(valid_to) DESC) = 1
 
 ),
 
@@ -38,11 +40,7 @@ team_member AS (
     work_email,
     date_of_birth,
     gitlab_username,
-    /* 
-      team_id didn't exist in BHR, it was created after we moved to Workday
-      so we are limiting this join to after the Workday cutover date of '2022-06-16'
-    */
-    IFF(valid_from > '2022-06-16', team_id, NULL)                                                   AS team_id,
+    team_id,
     country,
     region,
     CASE
@@ -92,24 +90,12 @@ team_member_position AS (
     management_level,
     job_grade,
     department,
+    division,
     entity,
     effective_date AS valid_from,
     LEAD(valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ ref('fct_team_member_position') }}
 
-),
-
-team AS (
-
-  SELECT 
-    dim_team_sk,
-    team_id,
-    team_manager_name,
-    hierarchy_level_3_name                                                                           AS division,
-    hierarchy_level_4_name                                                                           AS department,
-    DATE(valid_from)                                                                                 AS valid_from,
-    DATE(valid_to)                                                                                   AS valid_to
-  FROM {{ ref('dim_team') }}
 
 ), 
 
@@ -136,14 +122,6 @@ unioned_dates AS (
     team_id,
     valid_from
   FROM team_member_position
-
-  UNION
-
-  SELECT 
-    NULL AS employee_id, 
-    team_id,
-    valid_from
-  FROM team
 
 ),
 
@@ -195,9 +173,10 @@ final AS (
     team_member.is_current_team_member,
     team_member.is_rehire,
     team_member.team_id,
-    COALESCE(team_member_position.manager, team.team_manager_name)        AS team_manager_name,
-    team.division,
-    COALESCE(team_member_position.department, team.department)            AS department,
+    team_member_position.manager                                          AS team_manager_name,
+    team_member_position.department                                       AS department,
+    LAST_VALUE(team_member_position.division IGNORE NULLS) OVER (PARTITION BY date_range.employee_id ORDER BY date_range.valid_from ROWS UNBOUNDED PRECEDING)           
+                                                                          AS division,
     team_member_position.suporg,
     team_member_position.job_code,
     team_member_position.position,
@@ -213,16 +192,13 @@ final AS (
   FROM team_member
   INNER JOIN date_range
     ON date_range.employee_id = team_member.employee_id 
-     AND NOT (team_member.valid_to <= date_range.valid_from
+      AND date_range.valid_from != date_range.valid_to
+        AND NOT (team_member.valid_to <= date_range.valid_from
           OR team_member.valid_from >= date_range.valid_to)
   LEFT JOIN team_member_mapping
     ON date_range.employee_id = team_member_mapping.employee_id 
       AND NOT (team_member_mapping.valid_to <= date_range.valid_from
           OR team_member_mapping.valid_from >= date_range.valid_to)
-  LEFT JOIN team
-    ON team_member.team_id = team.team_id
-        AND NOT (team.valid_to <= date_range.valid_from
-          OR team.valid_from >= date_range.valid_to)
   LEFT JOIN team_member_position
     ON date_range.employee_id = team_member_position.employee_id 
       AND NOT (team_member_position.valid_to <= date_range.valid_from
