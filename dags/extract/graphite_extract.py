@@ -35,7 +35,7 @@ default_args = {
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
     # Want to extract the last year
-    "start_date": datetime(2020, 1, 1),
+    "start_date": datetime(2023, 7, 2),
 }
 
 dag = DAG("lcp_extract", default_args=default_args, schedule_interval="0 23 * * *", catchup=True)
