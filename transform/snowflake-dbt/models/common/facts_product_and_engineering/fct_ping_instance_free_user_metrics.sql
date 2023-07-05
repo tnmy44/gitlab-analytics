@@ -62,6 +62,7 @@
       instance_pings.minor_version,
       instance_pings.major_minor_version,
       instance_pings.ping_delivery_type,
+      instance_pings.ping_deployment_type,
       instance_pings.is_internal,
       instance_pings.is_staging,
       instance_pings.instance_user_count,
@@ -93,7 +94,8 @@
 
     -- instance settings 
     core_instance_pings.dim_instance_id                                                                                AS uuid, 
-    core_instance_pings.ping_delivery_type, 
+    core_instance_pings.ping_delivery_type,
+    core_instance_pings.ping_deployment_type, 
     core_instance_pings.dim_installation_id,
     version                                                                                                            AS instance_version, 
     core_instance_pings.cleaned_version,
@@ -137,7 +139,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@snalamaru",
-    updated_by="@rbacovic",
+    updated_by="@jpeguero",
     created_date="2023-01-20",
-    updated_date="2023-06-09"
+    updated_date="2023-06-22"
 ) }}
