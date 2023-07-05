@@ -118,8 +118,6 @@
     FROM person_base
     INNER JOIN dim_crm_person
       ON person_base.dim_crm_person_id = dim_crm_person.dim_crm_person_id
-    LEFT JOIN upa_base
-    ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
     LEFT JOIN mart_crm_touchpoint
       ON mart_crm_touchpoint.email_hash = person_base.email_hash
     LEFT JOIN map_alternative_lead_demographics
@@ -862,5 +860,5 @@
     created_by="@michellecooper",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-07-03",
+    updated_date="2023-07-05",
   ) }}
