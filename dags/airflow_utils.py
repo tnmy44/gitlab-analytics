@@ -265,7 +265,7 @@ def slack_succeeded_task(context):
 
 
 # Set the resources for the task pods
-pod_resources = {"request_memory": "1Gi", "request_cpu": "750m"}
+pod_resources = {"request_memory": "1Gi", "request_cpu": "500m"}
 
 # GitLab default settings for all DAGs
 gitlab_defaults = dict(
