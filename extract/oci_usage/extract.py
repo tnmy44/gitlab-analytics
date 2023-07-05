@@ -1,7 +1,7 @@
 import oci
 import os
 import sys
-from logging import info, basicConfig, getLogger, error, logging
+import logging
 from fire import Fire
 from snowflake.sqlalchemy import URL as snowflake_URL
 from sqlalchemy import create_engine
@@ -89,7 +89,7 @@ def snowflake_csv_load_copy_remove(
 
 def load_data():
     for o in report_bucket_objects.data.objects:
-        info("Found file " + o.name)
+        logging.info("Found file " + o.name)
         object_details = object_storage.get_object(
             reporting_namespace, reporting_bucket, o.name
         )
@@ -114,11 +114,11 @@ def load_data():
             on_error="ABORT_STATEMENT",
         )        
 
-        info(f"File {o.name} loaded to table {target_table}" )
+        logging.info(f"File {o.name} loaded to table {target_table}" )
 
 
 if __name__ == "__main__":
-    basicConfig(stream=sys.stdout, level=20)
-    getLogger("snowflake.connector.cursor").disabled = True
+    logging.basicConfig(stream=sys.stdout, level=20)
+    logging.getLogger("snowflake.connector.cursor").disabled = True
     Fire(load_data)
-    info("Complete.")
+    logging.info("Complete.")
