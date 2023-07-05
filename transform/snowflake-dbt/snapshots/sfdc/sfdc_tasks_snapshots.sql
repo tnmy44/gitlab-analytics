@@ -1,4 +1,4 @@
-{% snapshot sfdc_lead_snapshots %}
+{% snapshot sfdc_tasks_snapshots %}
 
     {{
         config(
