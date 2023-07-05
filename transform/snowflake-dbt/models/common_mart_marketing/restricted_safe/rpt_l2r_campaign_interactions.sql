@@ -214,7 +214,7 @@
 	  opp.sales_qualified_source_grouped,
 	  opp.crm_account_gtm_strategy,
 	  opp.crm_account_focus_account,
-	  opp.fy22_new_logo_target_list,
+	  -- opp.fy22_new_logo_target_list,
 	  opp.crm_opp_owner_sales_segment_stamped_grouped,
 	  opp.crm_opp_owner_sales_segment_region_stamped_grouped,
 	  opp.lead_source AS opp_lead_source,
@@ -348,7 +348,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_user
       ON opp.dim_crm_user_id=dim_crm_user.dim_crm_user_id
-  {{dbt_utils.group_by(n=165)}}
+  {{dbt_utils.group_by(n=164)}}
     
 ), cohort_base_combined AS (
   
@@ -491,7 +491,7 @@
 	  null AS sales_qualified_source_grouped,
 	  null AS crm_account_gtm_strategy,
 	  null AS crm_account_focus_account,
-	  null AS fy22_new_logo_target_list,
+	  -- null AS fy22_new_logo_target_list,
 	  null AS crm_opp_owner_sales_segment_stamped_grouped,
 	  null AS crm_opp_owner_sales_segment_region_stamped_grouped,
 	  null AS opp_lead_source,
@@ -688,7 +688,7 @@
 	  sales_qualified_source_grouped,
 	  crm_account_gtm_strategy,
 	  crm_account_focus_account,
-	  fy22_new_logo_target_list,
+	  -- fy22_new_logo_target_list,
 	  crm_opp_owner_sales_segment_stamped_grouped,
 	  crm_opp_owner_sales_segment_region_stamped_grouped,
 	  opp_lead_source,
