@@ -2122,3 +2122,9 @@ The Salesforce opportunity ID for the parent opportunity of this opportunity.
 The surrogate key of `prep_namespace_order_trial` model. Currently identified by hashing the namespace_id field that is being sourced from customers portal at gitlab.com.
 
 {% enddocs %}
+
+{% docs dim_trial_latest_sk %}
+
+The surrogate key of `dim_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
+
+{% enddocs %}

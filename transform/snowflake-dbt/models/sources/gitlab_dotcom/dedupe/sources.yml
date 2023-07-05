@@ -489,6 +489,8 @@ sources:
         identifier: gitlab_db_users_ops_dashboard_projects
       - name: web_hooks
         identifier: gitlab_db_web_hooks
+      - name: work_item_types
+        identifier: gitlab_db_work_item_types
       - name: workspaces
         identifier: gitlab_db_workspaces
       - name: zoom_meetings

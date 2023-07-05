@@ -1773,3 +1773,17 @@ This table only contains one change in the team member's position per effective 
 The grain of this table is one row per employee_id and valid_from combination
 
 {% enddocs %}
+
+{% docs dim_trial_latest %}
+
+This table summarizes all the trials Orders information for a specific namespace.
+
+We utilize the `customers_db_orders_snapshots_base` model in order to isolate/filter out all the trials. 
+
+This model does the following:
+
+* It isolates the orders that are flagged with the column `is_trial = TRUE`
+* It deduplicates by taking the latest row created for a specific `gitlab_namespace_id`
+* We can join this model with `customers_db_customers` in the downstream models in order to get information about country, company_size of the User who started the trial
+
+{% enddocs %}
