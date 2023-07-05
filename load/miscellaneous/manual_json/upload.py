@@ -90,7 +90,7 @@ def snowflake_stage_load_copy_remove(
                     from (select $1, '{file_date} 01:01:01.000'::TIMESTAMP_NTZ as uploaded_at from @{stage})
                     file_format=(type='{type}'),
                     on_error='skip_file';"""
-    print(copy_query)
+    logging.info(copy_query)
     remove_query = f"remove @{stage} pattern='.*.{type}.gz'"
 
     logging.basicConfig(stream=sys.stdout, level=20)
