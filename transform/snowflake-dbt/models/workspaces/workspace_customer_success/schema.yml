@@ -7,7 +7,7 @@ models:
           combination_of_columns:
             - snapshot_month
             - dim_subscription_id
-            - delivery_type
+            - deployment_type
             - uuid
             - hostname
             - dim_namespace_id
@@ -33,6 +33,9 @@ models:
       - name: delivery_type
         tests:
           - not_null
+      - name: deployment_type
+        tests:
+          - not_null
       - name: primary_key
         tests:
           - unique
@@ -53,6 +56,9 @@ models:
         tests:
           - not_null
       - name: delivery_type
+        tests:
+          - not_null
+      - name: deployment_type
         tests:
           - not_null
       - name: primary_key
