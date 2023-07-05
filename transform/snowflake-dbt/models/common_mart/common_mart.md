@@ -289,7 +289,7 @@
 - License / Subscription Logic:
   - `latest_subscription_id` reflects the most recent available subscription_id `WHERE subscription_status IN ('Active','Cancelled')`. This is not necessarily the subscription_id at the time of ping generation
   - `is_program_subscription` = TRUE `WHERE product_rate_plan_name LIKE ('%edu%' or '%oss%')`
-  - `product_delivery_type = 'Self-Managed'`
+  - `ping_deployment_type IN ('Self-Managed', 'SaaS')`
   - `product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')`
   - `charge_type = 'Recurring'`
 - The installation's subscription information reflects the plan at time of ping generation

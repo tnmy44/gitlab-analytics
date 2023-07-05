@@ -1844,6 +1844,12 @@ This is the delivery type of GitLab to include either SaaS or Self-Managed.
 
 {% enddocs %}
 
+{% docs product_deployment_type %}
+
+This is the deployment type of GitLab to include either GitLab.com, Dedicated or Self-Managed.
+
+{% enddocs %}
+
 {% docs previous_month_product_delivery_type %}
 
 This is the previous month delivery type. Includes either SaaS or Self-Managed.

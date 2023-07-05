@@ -169,6 +169,7 @@ renamed AS (
     partner_track__c AS partner_track,
     partners_partner_type__c AS partners_partner_type,
     gitlab_partner_programs__c AS gitlab_partner_program,
+    focus_partner__c AS is_focus_partner,
 
     --*************************************
     -- Zoom Info Fields
