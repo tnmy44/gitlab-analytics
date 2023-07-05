@@ -569,11 +569,11 @@
 
       -- alliance type fields
 
-      {{ alliance_partner_current('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }} AS alliance_type_current,
-      {{ alliance_partner_short_current('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }} AS alliance_type_short_current,
+      {{ alliance_partner_current('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type_current,
+      {{ alliance_partner_short_current('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type_short_current,
 
-      {{ alliance_partner('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }} AS alliance_type,
-      {{ alliance_partner_short('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }} AS alliance_type_short,
+      {{ alliance_partner('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type,
+      {{ alliance_partner_short('sfdc_opportunity.fulfillment_partner_account_name', 'sfdc_opportunity.partner_account_account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path', 'sfdc_opportunity.is_focus_partner') }} AS alliance_type_short,
 
       sfdc_opportunity.fulfillment_partner_account_name AS resale_partner_name,
 
