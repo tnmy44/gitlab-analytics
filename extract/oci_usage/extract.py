@@ -1,8 +1,11 @@
 import oci
 import os
 import sys
-from logging import info, basicConfig, getLogger, error
+from logging import info, basicConfig, getLogger, error, logging
 from fire import Fire
+from snowflake.sqlalchemy import URL as snowflake_URL
+from sqlalchemy import create_engine
+from sqlalchemy.engine.base import Engine
 
 
 config = {
@@ -13,10 +16,7 @@ config = {
     "region": os.environ["OCI_REGION"],
 }
 
-from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
-    snowflake_stage_load_copy_remove,
-)
+from gitlabdata.orchestration_utils import snowflake_engine_factory
 
 reporting_namespace = "bling"
 
@@ -40,6 +40,53 @@ report_bucket_objects = oci.pagination.list_call_get_all_results(
 snowflake_config_dict = os.environ.copy()
 snowflake_engine = snowflake_engine_factory(snowflake_config_dict, "LOADER")
 
+def snowflake_csv_load_copy_remove(
+    file: str, stage: str, table_path: str, engine: Engine, type: str = "json"
+) -> None:
+    """
+    Upload file to stage, copy to table, remove file from stage on Snowflake
+    """
+    file_date = file.split(".")[0]
+    print(file_date)
+    put_query = f"put file://{file} @{stage} auto_compress=true;"
+
+    copy_query = f"""
+        copy into {table_path}
+        from @{stage}
+        """
+    print(copy_query)
+    remove_query = f"remove @{stage} pattern='.*.{type}.gz'"
+
+    logging.basicConfig(stream=sys.stdout, level=20)
+
+    try:
+        connection = engine.connect()
+
+        logging.info(f"Clearing {type} files from stage.")
+        remove = connection.execute(remove_query)
+        logging.info(remove)
+
+        logging.info("Writing to Snowflake.")
+        results = connection.execute(put_query)
+        logging.info(results)
+    finally:
+        connection.close()
+        engine.dispose()
+
+    try:
+        connection = engine.connect()
+
+        logging.info(f"Copying to Table {table_path}.")
+        copy_results = connection.execute(copy_query)
+        logging.info(copy_results)
+
+        logging.info(f"Removing {file} from stage.")
+        remove = connection.execute(remove_query)
+        logging.info(remove)
+    finally:
+        connection.close()
+        engine.dispose()
+
 def load_data():
     for o in report_bucket_objects.data.objects:
         info("Found file " + o.name)
@@ -59,7 +106,7 @@ def load_data():
             ):
                 f.write(chunk)
 
-        snowflake_stage_load_copy_remove(
+        snowflake_csv_load_copy_remove(
             f"{destintation_path}/{filename}",
             f"test.oci_report",
             f"test.{target_table}",
