@@ -250,28 +250,23 @@ class Adaptive:
             self.process_version(valid_version)
 
 
-def main(export_all=False):
+def main(version_criteria=None, folder_criteria=None):
     """
+     Args:
+         version_criteria: the version to process
+         folder_criteria: the folder to process (that contains all the versions)
+
     Main function to run the export.
     Either export one version, or export all unprocessed versions
     """
     adaptive = Adaptive()
 
+    if version_criteria:
+        adaptive.process_version(version_criteria)
+
     # export all versions in a folder (including subfolders)
-    if export_all:
-        # folder_criteria = "FY24 Versions"
-        # folder_criteria = "409A Versions"  # 1 version
-        # folder_criteria = "FY22 PLAN Versions"  # 4 versions
-        folder_criteria = "Shared with Data (Test)"
+    elif folder_criteria:
         adaptive.process_versions(folder_criteria)
-
-    # export a specific version
-    else:
-        # version = "FY24 Plan (Board)"  # legit yearly forecast
-        # version = "Live forecast snapshot 1A"  # test
-        version = "Forecast (Live)"  # test
-
-        adaptive.process_version(version)
 
 
 if __name__ == "__main__":
