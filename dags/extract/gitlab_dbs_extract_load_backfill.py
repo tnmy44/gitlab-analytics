@@ -337,7 +337,7 @@ for source_name, config in config_dict.items():
         ] = incremental_backfill_dag
 
         deletes_dag = DAG(
-            f"{config['dag_name']}_db_deletes_v3",
+            f"{config['dag_name']}_db_deletes_v4",
             default_args=incremental_backfill_dag_args,
             schedule_interval=config["delete_interval"],
             concurrency=1,
@@ -353,6 +353,7 @@ for source_name, config in config_dict.items():
                     "alert_management_http_integrations",
                     "container_expiration_policies",
                     "merge_request_metrics",
+                    "vulnerabilities",
                 ]
             elif config["dag_name"] == "el_gitlab_com_ci_new":
                 table_list = ["ci_runners", "ci_trigger_requests"]
