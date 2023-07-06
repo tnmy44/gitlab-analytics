@@ -17,7 +17,7 @@ models:
         description: A unique ID for each team
       - name: employee_id
         description: Workday Employee Identification 
-        tests: A unique ID for each team member from Workday
+        tests: 
           - not_null
       - name: nationality
         description: Team member's nationality
