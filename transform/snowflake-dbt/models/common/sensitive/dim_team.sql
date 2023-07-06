@@ -2,6 +2,7 @@ WITH source AS (
 
   SELECT *
   FROM {{ ref('workday_supervisory_organizations_source') }}
+  WHERE NOT is_deleted
 
 ),
 
