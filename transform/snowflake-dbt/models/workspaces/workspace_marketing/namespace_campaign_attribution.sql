@@ -15,7 +15,7 @@
 -- Think of this as an event log
 -- start with snowplow sessions, this will also be a part of the
 -- final event output log
-with snowplow_sessions as (
+snowplow_sessions as (
     select
         user_snowplow_crossdomain_id,
         session_start,
