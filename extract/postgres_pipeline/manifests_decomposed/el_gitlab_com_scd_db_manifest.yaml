@@ -435,8 +435,6 @@ tables:
       , merge_request_diff_id
       , relative_order
       , sha
-      , message
-      , trailers
       , commit_author_id
       , committer_id
   merge_request_diff_commit_users:
