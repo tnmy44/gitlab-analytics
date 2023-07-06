@@ -1,5 +1,3 @@
-<!-- Subject Template: Incident YYYY-MM-DD | [name of incident] -->
-
 ## Problem Statement 
 <!-- summarize the requested work -->
 
