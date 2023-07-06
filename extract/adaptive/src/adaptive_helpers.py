@@ -13,7 +13,7 @@ from gitlabdata.orchestration_utils import (
 )
 
 config_dict = os.environ.copy()
-SCHEMA = "adaptive_custom"
+ADAPTIVE_SCHEMA = "adaptive_custom"
 
 
 def make_request(
@@ -60,16 +60,6 @@ def make_request(
         raise
 
 
-def __dataframe_uploader_adaptive(
-    dataframe: pd.DataFrame, table: str, add_uploaded_at: bool = True
-):
-    """Upload dataframe to snowflake using loader role"""
-    loader_engine = snowflake_engine_factory(config_dict, "LOADER")
-    dataframe_uploader(
-        dataframe, loader_engine, table, SCHEMA, add_uploaded_at=add_uploaded_at
-    )
-
-
 def __query_results_generator(query: str, engine: Engine) -> pd.DataFrame:
     """
     Use pandas to run a sql query and load it into a dataframe.
@@ -92,7 +82,7 @@ def read_processed_versions_table() -> pd.DataFrame:
     loader_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     query = f"""
-    select * from {SCHEMA}.{table}
+    select * from {ADAPTIVE_SCHEMA}.{table}
     """
     dataframe = __query_results_generator(query, loader_engine)
     return dataframe
@@ -100,17 +90,30 @@ def read_processed_versions_table() -> pd.DataFrame:
 
 def upload_exported_data(dataframe: pd.DataFrame):
     """Upload an Adaptive export to Snowflake"""
-    table = "reporting"
-    __dataframe_uploader_adaptive(dataframe, table)
+    loader_engine = snowflake_engine_factory(config_dict, "LOADER")
+    dataframe_uploader(
+        dataframe,
+        loader_engine,
+        table_name="reporting",
+        schema=ADAPTIVE_SCHEMA,
+        add_uploaded_at=True,
+    )
     print("\nuploaded exported data to 'reporting' Snowflake table")
 
 
 def upload_processed_version(version: str):
     """Upload the name of the processed version to Snowflake"""
-    table = "processed_versions"
     data = {"version": [version], "processed_at": datetime.utcnow()}
     dataframe = pd.DataFrame(data)
-    __dataframe_uploader_adaptive(dataframe, table, add_uploaded_at=False)
+
+    loader_engine = snowflake_engine_factory(config_dict, "LOADER")
+    dataframe_uploader(
+        dataframe,
+        loader_engine,
+        table_name="processed_versions",
+        schema=ADAPTIVE_SCHEMA,
+        add_uploaded_at=False,
+    )
     print(f"\nuploaded version to 'processed_versions' Snowflake table: {version}")
 
 
@@ -128,8 +131,6 @@ def __wide_to_long(dataframe: pd.DataFrame) -> pd.DataFrame:
         df_melted["month_year"].str.split("/", expand=True).astype(int)
     )
 
-    # month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    # df_melted["Month"] = df_melted["Month"].apply(lambda x: month_names[x - 1])
     final_cols = default_cols + ["Year", "Month", "Value"]
     df_melted = df_melted[final_cols]
     return df_melted
