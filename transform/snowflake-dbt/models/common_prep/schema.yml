@@ -2017,17 +2017,14 @@ models:
             combination_of_columns:
               - employee_id
               - team_id
-              - position_effective_date
-              - position_date_time_initiated
+              - effective_date
     columns:
       - name: dim_team_member_sk
         description: A unique ID for each team member.
         tests:
           - not_null
       - name: dim_team_sk
-        description: A unique ID for each team.
-        tests:
-          - not_null
+        description: A unique ID for each team. This field didn't exist before the move to Workday
       - name: employee_id
         description: Unique ID of the team member.
         tests:
