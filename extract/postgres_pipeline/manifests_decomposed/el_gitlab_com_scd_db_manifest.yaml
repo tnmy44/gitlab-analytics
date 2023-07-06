@@ -437,6 +437,7 @@ tables:
       , sha
       , commit_author_id
       , committer_id
+      FROM merge_request_diff_commits
   merge_request_diff_commit_users:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -447,6 +448,7 @@ tables:
       SELECT id
       , name
       , email
+      FROM merge_request_diff_commit_users
   merge_request_reviewers:
     advanced_metadata: true
     dbt_snapshots: true
