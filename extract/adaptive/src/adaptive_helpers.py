@@ -2,7 +2,6 @@ import os
 import time
 import logging
 import sys
-import re
 from datetime import datetime
 from logging import info, error
 import requests
