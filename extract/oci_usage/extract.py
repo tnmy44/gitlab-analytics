@@ -40,6 +40,7 @@ report_bucket_objects = oci.pagination.list_call_get_all_results(
 snowflake_config_dict = os.environ.copy()
 snowflake_engine = snowflake_engine_factory(snowflake_config_dict, "LOADER")
 
+
 def load_data():
     for o in report_bucket_objects.data.objects:
         info("Found file " + o.name)
@@ -49,9 +50,9 @@ def load_data():
         filename = o.name.replace("/", "_")
 
         if "cost" in filename:
-            target_table ="oci_cost_report"
+            target_table = "oci_cost_report"
         if "usage" in filename:
-            target_table ="oci_usage_report"
+            target_table = "oci_usage_report"
 
         with open(destintation_path + "/" + filename, "wb") as f:
             for chunk in object_details.data.raw.stream(
@@ -66,9 +67,9 @@ def load_data():
             snowflake_engine,
             "csv",
             on_error="ABORT_STATEMENT",
-        )        
+        )
 
-        info(f"File {o.name} loaded to table {target_table}" )
+        info(f"File {o.name} loaded to table {target_table}")
 
 
 if __name__ == "__main__":
