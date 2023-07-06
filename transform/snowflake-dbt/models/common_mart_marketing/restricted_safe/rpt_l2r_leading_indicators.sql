@@ -92,9 +92,9 @@
         bizible_medium,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count
-    FROM rpt_lead_to_revenue
+    FROM rpt_lead_to_revenue_base
     LEFT JOIN date_base
-        ON rpt_lead_to_revenue.true_inquiry_date=date_base.date_day    
+        ON rpt_lead_to_revenue_base.true_inquiry_date=date_base.date_day    
     WHERE 1=1
     AND (account_demographics_geo != 'JIHU'
         OR account_demographics_geo IS null)
@@ -119,9 +119,9 @@
         bizible_medium,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count
-  FROM rpt_lead_to_revenue
+  FROM rpt_lead_to_revenue_base
   LEFT JOIN date_base
-    ON rpt_lead_to_revenue.mql_date_first_pt=date_base.date_day
+    ON rpt_lead_to_revenue_base.mql_date_first_pt=date_base.date_day
   WHERE 1=1 
    AND (account_demographics_geo != 'JIHU'
      OR account_demographics_geo IS null) 
@@ -158,9 +158,9 @@
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         bizible_medium
-    FROM rpt_lead_to_revenue
+    FROM rpt_lead_to_revenue_base
     LEFT JOIN date_base 
-        ON rpt_lead_to_revenue.sales_accepted_date=date_base.date_day
+        ON rpt_lead_to_revenue_base.sales_accepted_date=date_base.date_day
     WHERE 1=1
         AND sales_accepted_date <= CURRENT_DATE
         AND (crm_opp_owner_geo_stamped != 'JIHU'
