@@ -3,6 +3,7 @@ version: 2
 models:
 
   - name: mart_team_member_directory
+    description: '{{ doc("mart_team_member_directory") }}'
     tests:
       - dbt_utils.unique_combination_of_columns:
             combination_of_columns:
