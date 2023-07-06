@@ -7303,6 +7303,14 @@ models:
         description: Unique ID of the team member.
         tests:
           - not_null
+      - name: manager
+        description: The team member's manager name
+      - name: suporg
+        description: The team member's suporg
+      - name: department
+        description: The team member's department
+      - name: division
+        description: The team member's division
       - name: job_code
         description: The code of the team member's job position.
       - name: job_specialty_single
@@ -7325,8 +7333,6 @@ models:
         description: Whether the team member's job position is active.
       - name: is_current
         description: Whether the team member's job position is the most current as of the date the query is run.
-      - name: position_date_time_initiated
-        description: The date when the team member's position update was requested 
       - name: position_effective_date
         description: The date when the team member's position update becomes effective
 
