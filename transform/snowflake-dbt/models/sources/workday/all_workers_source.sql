@@ -2,6 +2,7 @@ WITH source AS (
 
   SELECT *
   FROM {{ source('workday','all_workers') }}
+  WHERE NOT _fivetran_deleted
 
 ),
 
