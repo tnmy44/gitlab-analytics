@@ -1,7 +1,7 @@
-## Problem Statement 
+# Problem Statement 
 <!-- summarize the requested work -->
 
-## Business Impact
+# Business Impact
 <!-- explain the value of this work - what is the expected impact to GitLab (revenue opportunity, cost/time savings opportunity) -->
 
 # Solution / Expected Outcome
