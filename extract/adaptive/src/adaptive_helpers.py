@@ -2,6 +2,7 @@ import os
 import time
 import logging
 import sys
+import re
 from datetime import datetime
 from logging import info, error
 import requests
@@ -140,4 +141,15 @@ def edit_dataframe(dataframe: pd.DataFrame, version: str) -> pd.DataFrame:
     """Transform the dataframe slightly to make it easier to process downstream"""
     dataframe = __wide_to_long(dataframe)
     dataframe["Version"] = version
+
+    new_col_mapping = {
+        "Account Name": "ACCOUNT_NAME",
+        "Account Code": "ACCOUNT_CODE",
+        "Level Name": "LEVEL_NAME",
+        "Year": "YEAR",
+        "Month": "MONTH",
+        "Value": "VALUE",
+        "Version": "VERSION",
+    }
+    dataframe.rename(columns=new_col_mapping, inplace=True)
     return dataframe
