@@ -86,6 +86,7 @@ class Adaptive:
             "Revenue",
             "Bookings_Model_New.Plan_Contraction_and_Churn",
             "new_logos",
+            "Bookings_Model_New.BM_Exit_ARR",
             "Bookings_Model_New.BM_Net_ARR_Bookings",
             "Bookings_Model_New.5K_Customer_Number",
             "Bookings_Model_New.100K_Customer_Number",
@@ -195,7 +196,7 @@ class Adaptive:
         # exported_data.lstrip("![CDATA[").rstrip("]]")
         exported_data_io = StringIO(exported_data)
         dataframe = pd.read_csv(exported_data_io)
-        info(f"\ndataframe.head(): {dataframe.head()}")
+        info(f"\nresponse dataframe.head(): {dataframe.head()}")
         return dataframe
 
     def is_version_already_processed(self, version: str) -> bool:
