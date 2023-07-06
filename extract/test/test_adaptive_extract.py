@@ -144,13 +144,13 @@ def test_edit_dataframe():
     dataframe = pd.DataFrame(data)
     edited_dataframe = edit_dataframe(dataframe, version)
     expected_final_cols = [
-        "Account Name",
-        "Account Code",
-        "Level Name",
-        "Year",
-        "Month",
-        "Value",
-        "Version",
+        "ACCOUNT_NAME",
+        "ACCOUNT_CODE",
+        "LEVEL_NAME",
+        "YEAR",
+        "MONTH",
+        "VALUE",
+        "VERSION",
     ]
 
     assert set(edited_dataframe.columns) == set(expected_final_cols)
