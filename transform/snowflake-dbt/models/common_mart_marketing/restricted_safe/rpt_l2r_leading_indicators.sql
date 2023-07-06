@@ -115,7 +115,7 @@
         lead_source,
         mql_sum,
         bizible_marketing_channel,
-        zible_marketing_channel_path,
+        bizible_marketing_channel_path,
         bizible_medium,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count
