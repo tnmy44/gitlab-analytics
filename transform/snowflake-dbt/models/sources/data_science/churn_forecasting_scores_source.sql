@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('data_science', 'churn_forecasting') }}
+    FROM {{ source('data_science', 'churn_forecasting_scores') }}
 
 ), intermediate AS (
 
