@@ -449,6 +449,10 @@ models:
         +tags: ["safe"]
         secure: true
 
+    common_mart_people:
+      +materialized: table
+      +schema: common_mart_people
+
     # ------------------
     # Legacy (formerly Staging)
     # ------------------
