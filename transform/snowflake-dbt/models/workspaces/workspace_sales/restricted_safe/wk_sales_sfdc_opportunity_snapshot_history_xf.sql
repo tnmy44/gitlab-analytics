@@ -88,6 +88,15 @@ WITH date_details AS (
       key_bu_subbu_division_sqs,
       key_bu_subbu_division_asm,
 
+
+      parent_crm_account_upa_country,
+      parent_crm_account_upa_state,
+      parent_crm_account_upa_city,
+      parent_crm_account_upa_street,
+      parent_crm_account_upa_postal_code,
+      parent_crm_account_upa_country_name,
+      parent_crm_account_business_unit,
+
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
       -- I am adding this logic
@@ -129,6 +138,12 @@ WITH date_details AS (
 
     SELECT * 
     FROM {{ref('wk_sales_sfdc_users_xf')}}  
+
+), fct_crm_snapshot_daily AS (
+
+    SELECT crm_opportunity_snapshot_id,
+        dim_parent_crm_opportunity_id
+    FROM  {{ref('fct_crm_opportunity_daily_snapshot')}}  
 
 ), sfdc_opportunity_snapshot_history AS (
 
@@ -405,12 +420,17 @@ WITH date_details AS (
       edm_snapshot_opty.parent_crm_account_geo,
       edm_snapshot_opty.parent_crm_account_region,
       edm_snapshot_opty.parent_crm_account_area,
-      edm_snapshot_opty.parent_crm_account_territory
+      edm_snapshot_opty.parent_crm_account_territory,
+      fact_snapshot_opty.dim_parent_crm_opportunity_id AS parent_opportunity,
+      edm_snapshot_opty.intended_product_tier,
+      edm_snapshot_opty.product_category
       
 
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
     INNER JOIN date_details AS close_date_detail
       ON edm_snapshot_opty.close_date::DATE = close_date_detail.date_actual
+    LEFT JOIN fct_crm_snapshot_daily fact_snapshot_opty
+        ON fact_snapshot_opty.crm_opportunity_snapshot_id = edm_snapshot_opty.crm_opportunity_snapshot_id
 
 ), sfdc_opportunity_snapshot_history_xf AS (
 
@@ -468,7 +488,6 @@ WITH date_details AS (
       sfdc_opportunity_xf.report_opportunity_user_division,
       sfdc_opportunity_xf.report_opportunity_user_asm,
       
-
       sfdc_opportunity_xf.key_bu,
       sfdc_opportunity_xf.key_bu_subbu,
       sfdc_opportunity_xf.key_bu_subbu_ot,
@@ -477,6 +496,14 @@ WITH date_details AS (
       sfdc_opportunity_xf.key_bu_subbu_division_ot,
       sfdc_opportunity_xf.key_bu_subbu_division_sqs,
       sfdc_opportunity_xf.key_bu_subbu_division_asm,
+
+      sfdc_opportunity_xf.parent_crm_account_upa_country,
+      sfdc_opportunity_xf.parent_crm_account_upa_state,
+      sfdc_opportunity_xf.parent_crm_account_upa_city,
+      sfdc_opportunity_xf.parent_crm_account_upa_street,
+      sfdc_opportunity_xf.parent_crm_account_upa_postal_code,
+      sfdc_opportunity_xf.parent_crm_account_upa_country_name,
+      sfdc_opportunity_xf.parent_crm_account_business_unit,
 
       -- fields calculated with both live and snapshot fields
       CASE 
@@ -850,7 +877,58 @@ WITH date_details AS (
          WHEN stage_name IN ('5-Negotiating','6-Awaiting Signature')
             THEN '3. Late'
         ELSE '4. Closed'
-    END                     AS pipeline_category
+    END                     AS pipeline_category,
+
+    -- NF: cycle time will consider if the opty is renewal and eligible to be considered 
+    -- using the is_eligible_cycle_time_analysis
+    CASE 
+        WHEN is_edu_oss = 0
+            AND is_deleted = 0
+            -- For stage age we exclude only ps/other
+            AND order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+            -- Only include deal types with meaningful journeys through the stages
+            AND opportunity_category IN ('Standard')
+            -- Web Purchase have a different dynamic and should not be included
+            AND is_web_portal_purchase = 0
+                THEN 1
+        ELSE 0
+    END                                                           AS is_eligible_cycle_time_analysis_flag,
+
+    -- NF: We consider net_arr_created date for renewals as they haver a very distinct motion than 
+    --      add on and First Orders
+    --     Logic is different for open deals so we can evaluate their current cycle time.
+    CASE
+        WHEN is_renewal = 1 AND is_closed = 1
+            THEN DATEDIFF(day, net_arr_created_date, close_date)
+        WHEN is_renewal = 0 AND is_closed = 1
+            THEN DATEDIFF(day, created_date, close_date)
+         WHEN is_renewal = 1 AND is_open = 1
+            THEN DATEDIFF(day, net_arr_created_date, snapshot_date)
+        WHEN is_renewal = 0 AND is_open = 1
+            THEN DATEDIFF(day, created_date, snapshot_date)
+    END                                                           AS cycle_time_in_days,
+
+    -- Calculated fields
+    CASE
+        WHEN LOWER(product_category) LIKE '%premium%'
+            THEN 'Premium'
+        WHEN LOWER(product_category) LIKE '%ultimate%'
+            THEN 'Ultimate'
+        WHEN LOWER(intented_product_tier) LIKE '%premium%'
+            THEN 'Premium'
+        WHEN LOWER(intented_product_tier) LIKE '%ultimate%'
+            THEN 'Ultimate'
+        ELSE 'Other'
+    END AS  product_category_tier,
+
+    CASE
+        WHEN lower(product_category) LIKE '%saas%'
+                THEN 'SaaS'
+        WHEN lower(product_category) LIKE '%self-managed%'
+                THEN 'Self-Managed'
+        ELSE 'Other'
+    END AS  product_category_deployment
+
 
     FROM add_compound_metrics
 )

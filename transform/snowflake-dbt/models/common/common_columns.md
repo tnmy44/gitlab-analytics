@@ -1838,6 +1838,12 @@ This is the delivery type of GitLab to include either SaaS or Self-Managed.
 
 {% enddocs %}
 
+{% docs product_deployment_type %}
+
+This is the deployment type of GitLab to include either GitLab.com, Dedicated or Self-Managed.
+
+{% enddocs %}
+
 {% docs previous_month_product_delivery_type %}
 
 This is the previous month delivery type. Includes either SaaS or Self-Managed.
@@ -2120,5 +2126,11 @@ The Salesforce opportunity ID for the parent opportunity of this opportunity.
 {% docs dim_namespace_order_trial_sk %}
 
 The surrogate key of `prep_namespace_order_trial` model. Currently identified by hashing the namespace_id field that is being sourced from customers portal at gitlab.com.
+
+{% enddocs %}
+
+{% docs dim_trial_latest_sk %}
+
+The surrogate key of `dim_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
 
 {% enddocs %}

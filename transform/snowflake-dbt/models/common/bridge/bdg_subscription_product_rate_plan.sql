@@ -27,7 +27,8 @@
       subscriptions.subscription_end_date,
       subscriptions.subscription_status,
       product_details.product_rate_plan_charge_name,    
-      product_details.product_delivery_type
+      product_details.product_delivery_type,
+      product_details.product_deployment_type
     FROM subscriptions
     LEFT JOIN rate_plans
       ON subscriptions.subscription_id = rate_plans.subscription_id
@@ -40,7 +41,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@jpeguero",
     created_date="2021-02-08",
-    updated_date="2021-07-23"
+    updated_date="2023-06-22"
 ) }}

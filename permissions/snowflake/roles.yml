@@ -1281,10 +1281,12 @@ roles:
             schemas:
                 read:
                     - prod.common
+                    - prod.pumps_sensitive
                     - prod.legacy
             tables:
                 read:
                     - prod.common.*
+                    - prod.pumps_sensitive.pump_disaster_relief_fund
                     - prod.legacy.*
                     - prep.sensitive.employee_directory
                     - prep.sensitive.employee_directory_intermediate

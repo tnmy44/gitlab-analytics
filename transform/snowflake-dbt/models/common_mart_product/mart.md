@@ -33,7 +33,7 @@ Only activity since 2020-01-01 is being processed due to the high volume of the 
 
 {% docs mart_ping_instance_metric_health_score_self_managed %}
 
-**Description:** Joins together facts and dimensions related to Self-Managed Service Pings, and does a simple aggregation to pivot out and standardize metric values. The data from this table will be used for customer product insights. Most notably, this data is pumped into Gainsight and aggregated into customer health scores for use by TAMs.
+**Description:** Joins together facts and dimensions related to Self-Managed and SaaS Dedicated Service Pings, and does a simple aggregation to pivot out and standardize metric values. The data from this table will be used for customer product insights. Most notably, this data is pumped into Gainsight and aggregated into customer health scores for use by TAMs.
 
 **Data Grain:**
 - Service Ping Payload
