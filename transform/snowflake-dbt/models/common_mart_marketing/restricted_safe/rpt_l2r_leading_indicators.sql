@@ -150,8 +150,6 @@
                 THEN dim_crm_opportunity_id 
             ELSE null 
         END AS saos,
-        sales_qualified_source_name,
-        opp_order_type,
         sales_accepted_date,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
