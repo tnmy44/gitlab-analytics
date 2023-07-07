@@ -11,51 +11,73 @@ from sqlalchemy import (
 from gitlabdata.orchestration_utils import (
     query_executor
 )
+from fire import Fire
 
 def check_snapshot_replica(
     source_engine: Engine
 ):
-
-    last_replication_check_query = "select pg_last_xact_replay_timestamp();"
-    replication_timestamp_query = (
-        "select last_replica_time from public.last_replication_timestamp"
-    )
-    pg_replication_timestamp = query_executor(
-        source_engine, last_replication_check_query
+    replica_validate_counter=0
+    current_date_check_query = "SELECT CURRENT_DATE;"
+    pg_date_timestamp = query_executor(
+        source_engine, current_date_check_query
     )[0][0]
-    replication_timestamp_value = query_executor(
-        source_engine, replication_timestamp_query
-    )[0][0]
-    logging.info(
-        f"Timestamp value from pg_last_xact_replay_timestamp:{pg_replication_timestamp}"
-    )
-    logging.info(
-        f"Timestamp value from replication_timestamp_value:{replication_timestamp_value}"
-    )
+    if current_date_check_query:
+        logging.info(
+            f"Timestamp value from Postgres:{pg_date_timestamp}"
+        )
+    else:
+        logging.error(
+            "No timestamp returned from replica, retrying in 5 minutes"
+        )
+        replica_validate_counter=replica_validate_counter + 1
+        time.sleep(300)
+        check_snapshot_replica(source_engine)
+        if replica_validate_counter == 2:
+            logging.error(
+            "No timestamp returned from replica, please validate if postgres replica snapshot was built correctly"
+            )
+            sys.exit(1)
 
 
-def postgres_engine_factory(
-    connection_dict: Dict[str, str], env: Dict[str, str]
-) -> Engine:
-    """
-    Create a postgres engine to be used by pandas.
-    """
+# def check_snapshot(
+#     connection_dict: Dict[str, str], env: Dict[str, str]
+# ) -> Engine:
+#     """
+#     Create a postgres engine to be used by pandas.
+#     """
 
+#     logging.info("Creating database engines...")
+#     env = os.environ.copy()
+#     # Set the Vars
+#     user = env[connection_dict["user"]]
+#     password = env[connection_dict["pass"]]
+#     host = env[connection_dict["host"]]
+#     database = env[connection_dict["database"]]
+#     port = env[connection_dict["port"]]
+
+#     # Inject the values to create the engine
+#     engine = create_engine(
+#         f"postgresql://{user}:{password}@{host}:{port}/{database}",
+#         connect_args={"sslcompression": 0, "options": "-c statement_timeout=9000000"},
+#     )
+#     logging.info(engine)
+#     check_snapshot_replica(engine)
+
+#     return engine
+
+
+if __name__ == "__main__":
+    config_dict = os.environ.copy()
+    database = config_dict.get("GITLAB_COM_CI_DB_NAME")
+    host = config_dict.get("GITLAB_COM_CI_DB_HOST")
+    password = config_dict.get("GITLAB_COM_CI_DB_PASS")
+    port = config_dict.get("GITLAB_COM_CI_DB_PORT")
+    user = config_dict.get("GITLAB_COM_CI_DB_USER")
     logging.info("Creating database engines...")
-    env = os.environ.copy()
-    # Set the Vars
-    user = env[connection_dict["user"]]
-    password = env[connection_dict["pass"]]
-    host = env[connection_dict["host"]]
-    database = env[connection_dict["database"]]
-    port = env[connection_dict["port"]]
-
-    # Inject the values to create the engine
     engine = create_engine(
         f"postgresql://{user}:{password}@{host}:{port}/{database}",
         connect_args={"sslcompression": 0, "options": "-c statement_timeout=9000000"},
     )
     logging.info(engine)
     check_snapshot_replica(engine)
-
-    return engine
+    logging.info("Complete")

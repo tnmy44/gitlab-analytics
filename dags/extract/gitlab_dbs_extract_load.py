@@ -291,12 +291,37 @@ for source_name, config in config_dict.items():
             schedule_interval=config["extract_schedule_interval"],
             description=config["description"],
         )
+        check_replica_snapshot_command = (
+        f"{clone_and_setup_extraction_cmd} && "f"python postgres_pipeline/postgres_pipeline/check_snapshot.py"
+        )
 
         with extract_dag:
             # Actual PGP extract
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
+
+            check_replica_snapshot = KubernetesPodOperator(
+                **gitlab_defaults,
+                image=DATA_IMAGE,
+                task_id=f"check_replica_snapshot",
+                name=f"check_replica_snapshot",
+                secrets=[
+                        GITLAB_COM_CI_DB_NAME,
+                        GITLAB_COM_CI_DB_HOST,
+                        GITLAB_COM_CI_DB_PASS,
+                        GITLAB_COM_CI_DB_PORT,
+                        GITLAB_COM_CI_DB_USER
+                        ],
+                env_vars={
+                    **gitlab_pod_env_vars,
+                    **config["env_vars"]
+                },
+                affinity=get_affinity("production"),
+                tolerations=get_toleration("production"),
+                arguments=[check_replica_snapshot_command],
+                dag=extract_dag,
+                )
 
             for table in table_list:
                 # tables that aren't incremental won't be processed by the incremental dag
@@ -307,7 +332,7 @@ for source_name, config in config_dict.items():
                 task_identifier = (
                     f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
                 )
-
+                is_incremental_dag = True
                 incremental_cmd = generate_cmd(
                     config["dag_name"],
                     f"--load_type incremental --load_only_table {table}",
@@ -332,6 +357,9 @@ for source_name, config in config_dict.items():
                     arguments=[incremental_cmd],
                     do_xcom_push=True,
                 )
+
+                if is_incremental_dag:
+                    check_replica_snapshot >> incremental_extract
         globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
         incremental_backfill_dag = DAG(
