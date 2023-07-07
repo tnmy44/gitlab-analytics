@@ -278,6 +278,19 @@ extract_dag_args = {
     "dagrun_timeout": timedelta(hours=6),
     "trigger_rule": "all_success",
 }
+check_replica_dag_args = {
+    "catchup": True,
+    "depends_on_past": False,
+    "on_failure_callback": slack_failed_task,
+    "owner": "airflow",
+    "retries": 2,
+    "retry_delay": timedelta(minutes=5),
+    "sla": timedelta(hours=8),
+    "sla_miss_callback": slack_failed_task,
+    "dagrun_timeout": timedelta(hours=6),
+    "trigger_rule": "all_success",
+}
+
 # Loop through each config_dict and generate a DAG
 for source_name, config in config_dict.items():
 
@@ -291,6 +304,14 @@ for source_name, config in config_dict.items():
             schedule_interval=config["extract_schedule_interval"],
             description=config["description"],
         )
+        
+        extract_check_snapshot_dag = DAG(
+            f"{config['dag_name']}_db_extract",
+            default_args=check_replica_dag_args,
+            schedule_interval=config["extract_schedule_interval"],
+            description=config["description"],
+        )
+        
         check_replica_snapshot_command = (
         f"{clone_and_setup_extraction_cmd} && "f"python postgres_pipeline/postgres_pipeline/check_snapshot.py"
         )
@@ -320,7 +341,7 @@ for source_name, config in config_dict.items():
                 affinity=get_affinity("production"),
                 tolerations=get_toleration("production"),
                 arguments=[check_replica_snapshot_command],
-                dag=extract_dag,
+                dag=extract_check_snapshot_dag,
                 )
 
             for table in table_list:

@@ -25,18 +25,6 @@ def check_snapshot_replica(
         logging.info(
             f"Timestamp value from Postgres:{pg_date_timestamp}"
         )
-    else:
-        logging.error(
-            "No timestamp returned from replica, retrying in 5 minutes"
-        )
-        replica_validate_counter=replica_validate_counter + 1
-        time.sleep(300)
-        check_snapshot_replica(source_engine)
-        if replica_validate_counter == 2:
-            logging.error(
-            "No timestamp returned from replica, please validate if postgres replica snapshot was built correctly"
-            )
-            sys.exit(1)
 
 
 # def check_snapshot(
