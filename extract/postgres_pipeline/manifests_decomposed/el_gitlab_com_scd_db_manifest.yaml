@@ -424,6 +424,7 @@ tables:
       , member_role_id
       FROM members
   merge_request_diff_commits:
+    advanced_metadata: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'merge_request_diff_commits'
@@ -439,6 +440,7 @@ tables:
       , committer_id
       FROM merge_request_diff_commits
   merge_request_diff_commit_users:
+    advanced_metadata: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'merge_request_diff_commit_users'
