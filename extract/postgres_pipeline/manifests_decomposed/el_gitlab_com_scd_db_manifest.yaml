@@ -213,12 +213,12 @@ tables:
       , relative_position
       FROM epic_issues
   fork_network_members:
-    dbt_source_model: true 
-    export_schema: 'gitlab_com' 
-    export_table: 'fork_network_members' 
-    export_table_primary_key: id 
-    import_db: GITLAB_DB 
-    import_query: |- 
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'fork_network_members'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
       SELECT id
       , fork_network_id
       , project_id
@@ -422,7 +422,35 @@ tables:
       , ldap
       , override
       , member_role_id
-      FROM members     
+      FROM members
+  merge_request_diff_commits:
+    advanced_metadata: true
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'merge_request_diff_commits'
+    export_table_primary_key: merge_request_diff_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT authored_date
+      , committed_date
+      , merge_request_diff_id
+      , relative_order
+      , sha
+      , commit_author_id
+      , committer_id
+      FROM merge_request_diff_commits
+  merge_request_diff_commit_users:
+    advanced_metadata: true
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'merge_request_diff_commit_users'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , name
+      , email
+      FROM merge_request_diff_commit_users
   merge_request_reviewers:
     advanced_metadata: true
     dbt_snapshots: true
@@ -477,17 +505,17 @@ tables:
       , NULL AS scopes
       FROM oauth_access_tokens
   pages_domains:
-    dbt_source_model: true 
-    export_schema: 'gitlab_com' 
-    export_table: 'pages_domains' 
-    export_table_primary_key: id 
-    import_db: GITLAB_DB 
-    import_query: |- 
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'pages_domains'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
       SELECT id
       , project_id
       , CAST(verified_at AS VARCHAR) AS verified_at
-      , CAST(enabled_until AS VARCHAR) AS enabled_until 
-      , CAST(remove_at AS VARCHAR) AS remove_at 
+      , CAST(enabled_until AS VARCHAR) AS enabled_until
+      , CAST(remove_at AS VARCHAR) AS remove_at
       , auto_ssl_enabled
       , wildcard
       , usage
@@ -819,7 +847,7 @@ tables:
     import_query: |-
       SELECT user_id
       , credit_card_validated_at
-      FROM user_credit_card_validations      
+      FROM user_credit_card_validations
   user_details:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -831,7 +859,7 @@ tables:
       , job_title
       , registration_objective
       , provisioned_by_group_id
-      , provisioned_by_group_at
+      , NULL AS provisioned_by_group_at
       FROM user_details
   users_security_dashboard_projects:
     dbt_source_model: true
