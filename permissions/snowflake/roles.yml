@@ -219,6 +219,11 @@ databases:
     - rrendon_prep:
         shared: no
 
+    - sbalasani_prod:
+        shared: no
+    - sbalasani_prep:
+        shared: no
+
     - schaturvedi_prod:
         shared: no
     - schaturvedi_prep:
@@ -4658,6 +4663,51 @@ roles:
         member_of: []
         warehouses: []
 
+    - sbalasani:
+        member_of:
+         - analytics_engineer_core
+         - analyst_engineering
+         - analyst_growth
+         - bi_tool_eval_read
+         - data_team_analyst
+         - marketo
+         - restricted_safe
+         - zuora
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - sbalasani_prep
+                - sbalasani_prod
+            schemas:
+                - sbalasani_prep.*
+                - sbalasani_prod.*
+            tables:
+                - sbalasani_prep.*.*
+                - sbalasani_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - sbalasani_prep
+                    - sbalasani_prod
+                write:
+                    - sbalasani_prep
+                    - sbalasani_prod
+            schemas:
+                read:
+                    - sbalasani_prep.*
+                    - sbalasani_prod.*
+                write:
+                    - sbalasani_prep.*
+                    - sbalasani_prod.*
+            tables:
+                read:
+                    - sbalasani_prep.*.*
+                    - sbalasani_prod.*.*
+                write:
+                    - sbalasani_prep.*.*
+                    - sbalasani_prod.*.*
+
     - schaturvedi:
         member_of:
             - engineer
@@ -5507,6 +5557,11 @@ users:
     - rwoo:
         can_login: no
         member_of: []
+
+    - sbalasani:
+        can_login: yes
+        member_of:
+            - sbalasani
 
     - schaturvedi:
         can_login: yes
