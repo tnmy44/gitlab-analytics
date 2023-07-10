@@ -4670,7 +4670,7 @@ roles:
          - analyst_growth
          - bi_tool_eval_read
          - data_team_analyst
- 	     - marketo
+         - marketo
          - restricted_safe
          - zuora
         warehouses:
