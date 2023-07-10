@@ -4699,7 +4699,7 @@ roles:
                     - sbalasani_prod.*
                 write:
                     - sbalasani_prep.*
-                    - sbalasaniprod.*
+                    - sbalasani_prod.*
             tables:
                 read:
                     - sbalasani_prep.*.*
