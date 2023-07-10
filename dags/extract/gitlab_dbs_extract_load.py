@@ -306,11 +306,12 @@ for source_name, config in config_dict.items():
                     f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
                 )
 
-                incremental_cmd = generate_cmd(
+                incremental_cmd = ""
+                """generate_cmd(
                     config["dag_name"],
                     f"--load_type incremental --load_only_table {table}",
                     config["cloudsql_instance_name"],
-                )
+                )"""
 
                 incremental_extract = KubernetesPodOperator(
                     **gitlab_defaults,
