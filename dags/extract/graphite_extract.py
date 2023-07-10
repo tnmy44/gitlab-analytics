@@ -8,6 +8,7 @@ from airflow_utils import (
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
+    gitlab_pod_env_vars,
 )
 
 from kube_secrets import (
@@ -15,7 +16,6 @@ from kube_secrets import (
     GRAPHITE_PASSWORD,
     GRAPHITE_USERNAME,
     SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
@@ -25,6 +25,8 @@ from kube_secrets import (
 from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
+GIT_BRANCH = env["GIT_BRANCH"]
+pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 default_args = {
     "depends_on_past": False,
@@ -56,15 +58,14 @@ lcp_operator = KubernetesPodOperator(
         GRAPHITE_PASSWORD,
         GRAPHITE_USERNAME,
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
     ],
-    env_vars={"START_DATE": "{{ ds_nodash }}"},
     affinity=get_affinity("production"),
     tolerations=get_toleration("production"),
     arguments=[extract_command],
+    env_vars=pod_env_vars,
     dag=dag,
 )
