@@ -206,6 +206,8 @@
         ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
       LEFT JOIN dim_app_release_major_minor
         ON fct_ping_instance_metric.dim_app_release_major_minor_sk = dim_app_release_major_minor.dim_app_release_major_minor_sk
+      LEFT JOIN dim_app_release_major_minor AS latest_version
+        ON fct_ping_instance_metric.dim_latest_available_app_release_major_minor_sk = latest_version.dim_app_release_major_minor_sk
       WHERE dim_ping_instance.ping_delivery_type = 'Self-Managed'
         OR (dim_ping_instance.ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
 
@@ -298,5 +300,5 @@
     created_by="@icooper-acp",
     updated_by="@michellecooper",
     created_date="2022-03-11",
-    updated_date="2023-06-16"
+    updated_date="2023-06-30"
 ) }}
