@@ -18,6 +18,6 @@ Namespace segmentation clusters created by ML algorithms.
 Propensity to purchase for free account scores, created by ML algorithms.
 {% enddocs %}
 
-{% docs churn_forecasting_source %}
+{% docs churn_forecasting_scores_source %}
 Propensity to churn on subscription/opportunity level.
 {% enddocs %}
