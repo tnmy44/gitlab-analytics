@@ -111,7 +111,7 @@ config_dict = {
             GITLAB_COM_CI_DB_PORT,
             GITLAB_COM_CI_DB_USER,
         ],
-        "start_date": datetime(2019, 5, 30),
+        "start_date": datetime(2023, 7, 5),
         "task_name": "gitlab-com",
         "description": "This DAG does Incremental extract & load of gitlab.com CI* database(Postgres) to snowflake",
         "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com CI* database(Postgres) to snowflake",

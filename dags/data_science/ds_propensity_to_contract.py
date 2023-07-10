@@ -24,6 +24,8 @@ from kube_secrets import (
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
@@ -31,13 +33,12 @@ pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
     "retries": 2,
     "retry_delay": timedelta(minutes=10),
-    "start_date": datetime(2022, 8, 9),
+    "start_date": datetime(2023, 6, 8),
     "dagrun_timeout": timedelta(hours=2),
 }
 
@@ -69,6 +70,7 @@ dag = DAG(
     "ds_propensity_to_contract",
     default_args=default_args,
     schedule_interval="0 4 9 * *",
+    catchup= False
 )
 
 # Task 1
@@ -91,6 +93,8 @@ KubernetesPodOperator(
         GITLAB_ANALYTICS_PRIVATE_TOKEN,
     ],
     env_vars=pod_env_vars,
+    affinity=get_affinity("production"),
+    tolerations=get_toleration("production"),
     arguments=[ptc_scoring_command],
     dag=dag,
 )

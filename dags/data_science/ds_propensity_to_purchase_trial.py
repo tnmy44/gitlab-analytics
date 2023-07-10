@@ -23,6 +23,7 @@ from kube_secrets import (
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -37,7 +38,7 @@ default_args = {
     "owner": "airflow",
     "retries": 2,
     "retry_delay": timedelta(minutes=10),
-    "start_date": datetime(2022, 8, 9),
+    "start_date": datetime(2023, 6, 24),
     "dagrun_timeout": timedelta(hours=2),
 }
 
@@ -92,6 +93,8 @@ KubernetesPodOperator(
         GITLAB_ANALYTICS_PRIVATE_TOKEN,
     ],
     env_vars=pod_env_vars,
+    affinity=get_affinity("production"),
+    tolerations=get_toleration("production"),
     arguments=[ptpt_scoring_command],
     dag=dag,
 )
