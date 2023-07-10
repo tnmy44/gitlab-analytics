@@ -733,7 +733,7 @@
     bizible_weight_first_touch,
     influenced_opportunity_id,
     custom_opp_created,
-    full_net_arr,
+    -- full_net_arr,
     custom_net_arr,
     custom_sao,
     pipeline_custom_net_arr,
