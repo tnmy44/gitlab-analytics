@@ -223,7 +223,7 @@
         bizible_medium,
         COUNT(DISTINCT saos) AS saos
     FROM sao_prep
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14
     
   ), final AS (
 
@@ -292,5 +292,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-06-21",
-    updated_date="2023-07-06",
+    updated_date="2023-07-10",
   ) }}
