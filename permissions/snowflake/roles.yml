@@ -2950,6 +2950,7 @@ roles:
             - analyst_engineering
             - analyst_growth
             - coupa
+            - customers_db
             - restricted_safe
             - bi_tool_eval_read
             - marketo
