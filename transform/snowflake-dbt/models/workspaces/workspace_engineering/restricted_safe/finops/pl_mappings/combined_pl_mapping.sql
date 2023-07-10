@@ -142,7 +142,7 @@ build_artifacts_pl_daily AS (
     snapshot_day                                          AS date_day,
     'gitlab-production'                                   AS gcp_project_id,
     'Cloud Storage'                                       AS gcp_service_description,
-    'Standard Storage US Multi-region'                    AS gcp_sku_description,
+    NULL                                                  AS gcp_sku_description,
     'build_artifacts'                                     AS infra_label,
     NULL                                                  AS env_label,
     NULL                                                  AS runner_label,
@@ -159,7 +159,7 @@ build_artifacts_pl_dev_daily AS (
     snapshot_day                       AS date_day,
     'gitlab-production'                AS gcp_project_id,
     'Cloud Storage'                    AS gcp_service_description,
-    'Standard Storage US Multi-region' AS gcp_sku_description,
+    NULL                               AS gcp_sku_description,
     'build_artifacts'                  AS infra_label,
     'dev'                              AS env_label,
     NULL                               AS runner_label,
@@ -332,7 +332,7 @@ haproxy_isp AS (
     haproxy_usage.date_day                                        AS date_day,
     'gitlab-production'                                           AS gcp_project_id,
     'Compute Engine'                                              AS gcp_service_description,
-    'Network Egress via Carrier Peering Network - Americas Based' AS gcp_sku_description,
+    'Network Egress via Carrier Peering Network - Americas Based' AS gcp_sku_description,  -- specific SKU mapping
     'shared'                                                      AS infra_label,
     NULL                                                          AS env_label,
     NULL                                                          AS runner_label,
@@ -347,12 +347,11 @@ haproxy_isp AS (
 
 haproxy_inter AS (
 
-
   SELECT
     haproxy_usage.date_day                                      AS date_day,
     'gitlab-production'                                         AS gcp_project_id,
     'Compute Engine'                                            AS gcp_service_description,
-    'Network Inter Zone Egress'                                 AS gcp_sku_description,
+    'Network Inter Zone Egress'                                 AS gcp_sku_description, -- specific SKU mapping
     'shared'                                                    AS infra_label,
     NULL                                                        AS env_label,
     NULL                                                        AS runner_label,
@@ -362,6 +361,44 @@ haproxy_inter AS (
   FROM haproxy_usage
   INNER JOIN haproxy_pl
     ON haproxy_usage.backend_category = haproxy_pl.metric_backend
+
+),
+
+haproxy_cdn AS (
+  -- rationale: apply same split on CDN thana lready exisitng haproxy split
+  WITH sku_list AS (SELECT 'Networking Cloud CDN Traffic Cache Egress to North America' AS sku
+    UNION ALL
+    SELECT 'Networking Cloud CDN Traffic Cache Egress to Europe'
+    UNION ALL
+    SELECT 'Cloud CDN Cache Fill from North America to Europe'
+    UNION ALL
+    SELECT 'Networking Cloud CDN Traffic Cache Egress to Asia'
+    UNION ALL
+    SELECT 'Networking Cloud CDN Traffic Cache Egress to Oceania'
+    UNION ALL
+    SELECT 'Networking Cloud Nat Data Processing'
+    UNION ALL
+    SELECT 'Networking Cloud CDN Traffic Cache Egress to Latin America'
+    UNION ALL
+    SELECT 'Cloud CDN Cache Fill from North America to Asia Pacific'
+
+  )
+
+  SELECT
+    haproxy_usage.date_day                                      AS date_day,
+    'gitlab-production'                                         AS gcp_project_id,
+    'Networking'                                                AS gcp_service_description,
+    sku_list.sku                                                AS gcp_sku_description, -- all CDN skus
+    NULL                                                        AS infra_label,
+    NULL                                                        AS env_label,
+    NULL                                                        AS runner_label,
+    haproxy_pl.type                                             AS pl_category,
+    haproxy_usage.percent_backend_ratio * haproxy_pl.allocation AS pl_percent,
+    CONCAT('haproxy-', haproxy_usage.backend_category)          AS from_mapping
+  FROM haproxy_usage
+  INNER JOIN haproxy_pl
+    ON haproxy_usage.backend_category = haproxy_pl.metric_backend
+  CROSS JOIN sku_list
 
 ),
 
@@ -421,6 +458,9 @@ cte_append AS (SELECT *
   UNION ALL
   SELECT *
   FROM haproxy_inter
+  UNION ALL
+  SELECT * 
+  FROM haproxy_cdn
 )
 
 SELECT

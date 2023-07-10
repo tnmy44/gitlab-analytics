@@ -92,6 +92,8 @@ gitlab-ci-private-1,0,0,1
 gitlab-ci-private-2,0,0,1
 gitlab-ci-private-3,0,0,1
 gitlab-ci-private-4,0,0,1
+gitlab-ci-private-5,0,0,1
+gitlab-ci-private-6,0,0,1
 cloud-natiove-182609,0,0,1
 glsec-spamcheck-dev,0,0,1
 gitlab-dr-testing,0,0,1
@@ -121,3 +123,6 @@ glsec-infrasec-live-0,0,0,1
 gitlab-teleport,0,0,1
 gitlab-eng-productivity,0,0,1
 gitlab-com-pkgs,0,0,1
+omnibus-build-runners,0,0,1
+runway-dev-527768b3,0,0,1
+cloud-native-182609,0,0,1
