@@ -88,6 +88,7 @@
       dim_crm_person.sfdc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
       mart_crm_touchpoint.dim_campaign_id,
+      person_base.dim_crm_user_id,
   
   --Person Data
       person_base.email_hash,
@@ -193,6 +194,7 @@
       mart_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
+      opp.dim_crm_user_id AS opp_dim_crm_user_id,
     
     --Opp Data
       opp.order_type AS opp_order_type,
@@ -429,6 +431,8 @@
       opp_base_with_batp.dim_crm_touchpoint_id AS dim_crm_batp_touchpoint_id,
       dim_crm_opportunity_id,
       COALESCE (person_base_with_tp.dim_campaign_id,opp_base_with_batp.dim_campaign_id) AS dim_campaign_id, 
+      dim_crm_user_id,
+      opp_dim_crm_user_id,
   
   --Person Data
       email_hash,
