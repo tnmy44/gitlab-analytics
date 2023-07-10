@@ -89,7 +89,7 @@ WITH merged_merge_requests AS (
         '' AS department,
         COUNT(DISTINCT bamboohr_engineering_division.employee_id) AS employees,
         COUNT(DISTINCT merged_merge_requests.merge_request_id) AS mrs,
-        ROUND(mrs / NULLIF(employees,0) - 3,2) AS mr_rate,
+        ROUND(mrs / NULLIF(employees,0),2) AS mr_rate,
         'group' as granularity_level
     FROM merged_merge_requests
     LEFT JOIN bamboohr_engineering_division ON merged_merge_requests.merge_month = date_trunc('month',bamboohr_engineering_division.date_actual) AND merged_merge_requests.group_label = bamboohr_engineering_division.job_title_speciality
@@ -104,7 +104,7 @@ WITH merged_merge_requests AS (
         bamboohr_engineering_division.department,
         COUNT(DISTINCT bamboohr_engineering_division.employee_id) AS employees,
         COUNT(DISTINCT merged_merge_requests.merge_request_id) AS mrs,
-        ROUND(mrs / NULLIF(employees,0),2) AS mr_rate,
+        ROUND(mrs / NULLIF(employees,0) - 3,2) AS mr_rate,
         'department' as granularity_level
     FROM merged_merge_requests
     LEFT JOIN bamboohr_engineering_division ON merged_merge_requests.merge_month = DATE_TRUNC('month',bamboohr_engineering_division.date_actual) AND bamboohr_engineering_division.department = 'Development'

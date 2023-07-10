@@ -87,7 +87,7 @@
         AND fct_charge.charge_type = 'Recurring'
     INNER JOIN dim_product_detail
       ON dim_product_detail.dim_product_detail_id = fct_charge.dim_product_detail_id
-      AND dim_product_detail.product_delivery_type = 'Self-Managed'
+      AND dim_product_detail.product_deployment_type IN ('Self-Managed', 'Dedicated')
       AND dim_product_detail.product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
     LEFT JOIN dim_billing_account
       ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
@@ -158,6 +158,7 @@
         COALESCE(license_sha256.is_paid_subscription, license_md5.is_paid_subscription, FALSE)                                          AS is_paid_subscription,
         COALESCE(license_sha256.is_program_subscription, license_md5.is_program_subscription, FALSE)                                    AS is_program_subscription,
         dim_ping_instance.ping_delivery_type                                                                                            AS ping_delivery_type,
+        dim_ping_instance.ping_deployment_type                                                                                          AS ping_deployment_type,
         dim_ping_instance.ping_edition                                                                                                  AS ping_edition,
         dim_ping_instance.product_tier                                                                                                  AS ping_product_tier,
         dim_ping_instance.ping_edition || ' - ' || dim_ping_instance.product_tier                                                       AS ping_edition_product_tier,
@@ -208,7 +209,7 @@
         ON fct_ping_instance_metric.dim_app_release_major_minor_sk = dim_app_release_major_minor.dim_app_release_major_minor_sk
       LEFT JOIN dim_app_release_major_minor AS latest_version
         ON fct_ping_instance_metric.dim_latest_available_app_release_major_minor_sk = latest_version.dim_app_release_major_minor_sk
-      WHERE dim_ping_instance.ping_delivery_type = 'Self-Managed'
+     WHERE dim_ping_instance.ping_deployment_type IN ('Self-Managed', 'Dedicated')
         OR (dim_ping_instance.ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
 
 ), sorted AS (
@@ -236,6 +237,7 @@
       host_name,
       -- metadata usage ping
       ping_delivery_type,
+      ping_deployment_type,
       ping_edition,
       ping_product_tier,
       ping_edition_product_tier,

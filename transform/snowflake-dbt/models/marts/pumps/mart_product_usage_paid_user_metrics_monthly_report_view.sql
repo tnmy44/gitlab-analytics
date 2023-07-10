@@ -16,7 +16,8 @@ WITH prep AS (
                   max(billable_user_count) AS billable_user_count,
                   max(max_historical_user_count) AS max_historical_user_count,
                   max(license_user_count) AS license_user_count,
-                  min(delivery_type) AS delivery_type
+                  min(delivery_type) AS delivery_type,
+                  min(deployment_type) AS deployment_type
   FROM {{ ref('mart_product_usage_paid_user_metrics_monthly') }}
   WHERE DATE_TRUNC('month', ping_created_at) = DATEADD('month', -1, DATE_TRUNC('month', CURRENT_DATE))
     AND ping_created_at IS NOT NULL
@@ -27,6 +28,7 @@ WITH prep AS (
 
 SELECT
   delivery_type,
+  deployment_type,
   dim_subscription_id_original,
   dim_subscription_id,
   subscription_status,

@@ -242,6 +242,7 @@ WITH source AS (
         vartopiadrs__dr_status1__c                                                          AS dr_status,
         distributor__c                                                                      AS distributor,
         influence_partner__c                                                                AS influence_partner,
+        focus_partner__c                                                                    AS is_focus_partner,
         fulfillment_partner__c                                                              AS fulfillment_partner,
         platform_partner__c                                                                 AS platform_partner,
         partner_track__c                                                                    AS partner_track,
