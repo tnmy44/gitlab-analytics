@@ -4663,7 +4663,7 @@ roles:
         member_of: []
         warehouses: []
 
-  - sbalasani:
+    - sbalasani:
         member_of:
          - analytics_engineer_core
          - analyst_engineering
