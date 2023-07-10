@@ -406,7 +406,7 @@
     inferred_employee_segment,
     geo_custom,
     inferred_geo,
-  
+
   --Person Dates
 		true_inquiry_date,
 		mql_date_lastest_pt,
@@ -489,7 +489,6 @@
 	  null AS sales_qualified_source_grouped,
 	  null AS crm_account_gtm_strategy,
 	  null AS crm_account_focus_account,
-	  -- null AS fy22_new_logo_target_list,
 	  null AS crm_opp_owner_sales_segment_stamped_grouped,
 	  null AS crm_opp_owner_sales_segment_region_stamped_grouped,
 	  null AS opp_lead_source,
@@ -677,12 +676,10 @@
 	  opportunity_deal_size,
 	  opp_net_new_source_categories,
 	  deal_path_engagement,
-	  -- forecast_category_name,
 	  opportunity_owner,
 	  sales_qualified_source_grouped,
 	  crm_account_gtm_strategy,
 	  crm_account_focus_account,
-	  -- fy22_new_logo_target_list,
 	  crm_opp_owner_sales_segment_stamped_grouped,
 	  crm_opp_owner_sales_segment_region_stamped_grouped,
 	  opp_lead_source,
@@ -717,6 +714,7 @@
     is_dg_influenced,
     is_dg_sourced,
     bizible_count_lead_creation_touch,
+    bizible_count_u_shaped,
     is_fmm_influenced,
     is_fmm_sourced,
     0 AS new_lead_created_sum,
