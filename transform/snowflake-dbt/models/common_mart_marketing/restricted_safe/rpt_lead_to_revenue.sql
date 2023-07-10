@@ -417,7 +417,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=77)}}
+    {{dbt_utils.group_by(n=78)}}
     
 ), cohort_base_combined AS (
   
