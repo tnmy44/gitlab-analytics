@@ -57,7 +57,7 @@ data_science_pipelines_dag = [
     "ds_propensity_to_purchase_trial",
     "ds_namespace_segmentation",
     "ds_propensity_to_purchase_free",
-    "ds_propensity_to_churn",
+    "ds_churn_forecasting",
 ]
 
 sales_analytics_pipelines_dag = [

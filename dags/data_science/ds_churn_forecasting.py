@@ -1,5 +1,5 @@
 """
-Propensity to Churn DAG
+Churn Forecasting DAG
 """
 
 
@@ -68,7 +68,7 @@ clone_data_science_ptc_repo_cmd = f"""
 # Create the DAG
 # Run on the 9th of every month
 dag = DAG(
-    "ds_propensity_to_churn",
+    "ds_churn_forecasting",
     default_args=default_args,
     schedule_interval="0 5 9 * *",
 )
@@ -82,8 +82,8 @@ ptc_scoring_command = f"""
 KubernetesPodOperator(
     **gitlab_defaults,
     image=ANALYST_IMAGE,
-    task_id="propensity-to-churn",
-    name="propensity-to-churn",
+    task_id="churn-forecasting",
+    name="churn-forecasting",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_PASSWORD,
