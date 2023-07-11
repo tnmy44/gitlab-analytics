@@ -303,7 +303,7 @@ snowplow_sessions as (
 )
 
 {{ dbt_audit(
-    cte_ref="last_touch_attribution_session_to_event",
+    cte_ref="build_final_event_log",
     created_by="@degan",
     updated_by="@degan",
     created_date="2023-06-30",
