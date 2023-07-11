@@ -925,17 +925,11 @@ tables:
       , merge_request_id
       , created_at
       , updated_at
-      , base_commit_sha
+      , NULL AS base_commit_sha
       , real_size
-      , head_commit_sha
-      , start_commit_sha
+      , NULL AS head_commit_sha
+      , NULL AS start_commit_sha
       , commits_count
-      , external_diff
-      , external_diff_store
-      , stored_externally
-      , files_count
-      , sorted
-      , diff_type
       FROM merge_request_diffs
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1390,12 +1384,12 @@ tables:
       , mr_default_target_self
       , NULL AS previous_default_branch
       , warn_about_potentially_unwanted_characters
-      , NULL AS merge_commit_template
+      , NULL AS merge_commit_template 
       , has_shimo
       , NULL AS squash_commit_template
       , legacy_open_source_license_available
       , NULL AS target_platforms
-      , enforce_auth_checks_on_uploads
+      , enforce_auth_checks_on_uploads 
       FROM project_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1512,7 +1506,7 @@ tables:
       , created_at
       , updated_at
       , user_id
-      , group_id
+      , group_id 
       FROM protected_branch_merge_access_levels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1530,7 +1524,7 @@ tables:
       , updated_at
       , user_id
       , group_id
-      , deploy_key_id
+      , deploy_key_id 
       FROM protected_branch_push_access_levels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2226,7 +2220,7 @@ tables:
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
-      SELECT id
+      SELECT id  
       , base_type
       , created_at
       , updated_at
