@@ -23,7 +23,7 @@ WITH source AS (
       data_by_row['churn_score']::NUMBER(38,4)                             AS churn_score,
       data_by_row['contraction_score']::NUMBER(38,0)                       AS contraction_score,
       data_by_row['outcome']::VARCHAR                                      AS outcome,
-      data_by_row['arr_expected_to_renew']::NUMBER(38,2)                   AS downtier_likely,
+      data_by_row['arr_expected_to_renew']::NUMBER(38,2)                   AS arr_expected_to_renew,
       uploaded_at::TIMESTAMP                                               AS uploaded_at
 
     FROM intermediate
