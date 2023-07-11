@@ -1,0 +1,19 @@
+
+
+
+
+
+
+[
+    {
+        "oldest_subscription_in_cohort": "0014M00001imUCDQA2",
+        "dim_crm_opportunity_id_current_open_renewal": "TEST",
+        "score_date": "2022-02-09",
+        "renewal_date": "2022-07-21",
+        "current_arr": "121000",
+        "churn_score": "24",
+        "contraction_score": "2",
+        "outcome": "TEST TEXT",
+        "arr_expected_to_renew": "121000"
+    }
+]
