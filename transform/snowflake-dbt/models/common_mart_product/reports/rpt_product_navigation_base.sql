@@ -84,6 +84,8 @@ WITH filtered_snowplow_events AS (
       AND
       event_category LIKE 'groups%'
     )
+    OR 
+    event_action = 'click_pinned_menu_item'
   {% if is_incremental() %}
 
     AND  behavior_at > (SELECT MAX(behavior_at) FROM {{ this }})
