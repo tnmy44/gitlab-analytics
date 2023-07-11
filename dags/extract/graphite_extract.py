@@ -26,7 +26,7 @@ from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
-pod_env_vars = {**gitlab_pod_env_vars, **{}}
+pod_env_vars = {**gitlab_pod_env_vars, **{"START_DATE": "{{ ds_nodash }}"}}
 
 default_args = {
     "depends_on_past": False,
