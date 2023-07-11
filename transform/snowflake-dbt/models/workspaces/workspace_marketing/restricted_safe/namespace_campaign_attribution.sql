@@ -1,8 +1,6 @@
-
 {{ config(
     materialized='table',
-    tags=["mnpi_exception", "marketing"],
-    materialized='table'
+    tags=["mnpi_exception", "marketing"]
 ) }}
 
 {{ simple_cte([
