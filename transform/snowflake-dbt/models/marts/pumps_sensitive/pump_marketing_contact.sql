@@ -73,6 +73,10 @@ SELECT
   is_member_of_public_ultimate_parent_namespace,
   is_member_of_private_ultimate_parent_namespace,
 
+  is_group_maintainer_of_saas_paid_tier,
+  is_group_maintainer_of_saas_free_tier,
+  is_group_maintainer_of_saas,
+
   --Ptpt fields
   is_ptpt_contact,
   ptpt_namespace_id,
