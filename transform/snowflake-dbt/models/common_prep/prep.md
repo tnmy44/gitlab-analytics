@@ -109,6 +109,12 @@ Creates a base view with generated keys for the campaign shared dimension and fa
 
 {% enddocs %}
 
+{% docs prep_crm_person %}
+
+Creates a base table containing contacts and leads from Salesforce joined to bizible and marketo data.
+
+{% enddocs %}
+
 {% docs prep_crm_user %}
 
 Creates a base view with generated keys for the user and live crm sales hierarchy shared dimensions and references in facts.

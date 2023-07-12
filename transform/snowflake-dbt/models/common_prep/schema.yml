@@ -147,6 +147,15 @@ models:
           - not_null
           - unique
 
+  - name: prep_crm_person
+    description: '{{ doc("prep_crm_user") }}'
+    columns:
+      - name: dim_crm_person_id
+        description: Unique identifier of a Salesforce user
+        tests:
+          - not_null
+          - unique
+
   - name: prep_crm_user
     description: '{{ doc("prep_crm_user") }}'
     columns:
