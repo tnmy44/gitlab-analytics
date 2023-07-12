@@ -214,9 +214,15 @@ def get_last_loaded(dag_name: String) -> string:
     if dag_name == "el_gitlab_ops":
         return None
 
-    return "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
-        task_identifier + "-pgp-extract"
-    )
+    xcom_date = "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
+        task_identifier + "-pgp-extract")
+
+    print(type(xcom_date))
+
+    if xcom_date is None:
+        return datetime.now().date() - timedelta(hours=73)
+    else:
+        return xcom_date
 
 
 def generate_cmd(dag_name, operation, cloudsql_instance_name):
