@@ -437,7 +437,7 @@ Below checklist of activities would be run once for quarter to validate security
       WHERE airflow.active ='TRUE'									 
       AND employee.termination_date IS NOT NULL
     ```
-
+2. [ ] Clean up old log files, following [this runbook](https://gitlab.com/gitlab-data/runbooks/-/blob/main/airflow_infrastructure/archival_pvc_volume/delete_pvc_volume.md). 
 
 <!-- DO NOT EDIT BELOW THIS LINE -->
 /label ~"Team::Data Platform" ~Snowflake ~TDF ~"Data Team" ~"Priority::1-Ops" ~"workflow::4 - scheduled" ~"Quarterly Data Health and Security Audit" ~"Periscope / Sisense"
