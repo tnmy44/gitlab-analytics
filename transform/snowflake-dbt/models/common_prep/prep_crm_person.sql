@@ -14,12 +14,13 @@ WITH biz_person AS (
 ), crm_tasks AS (
 
     SELECT 
-      task_id,
       sfdc_record_id,
-      task_completed_date,
-      task_owner_role
+      MIN(task_completed_date) AS min_task_completed_date_by_bdr_sdr
     FROM {{ref('prep_crm_task')}}
     WHERE is_deleted = 'FALSE'
+    AND task_owner_role LIKE '%BDR%' 
+    OR task_owner_role LIKE '%SDR%'
+    GROUP BY 1
 
 ), biz_person_with_touchpoints AS (
 
@@ -32,6 +33,7 @@ WITH biz_person AS (
     FROM biz_touchpoints
     JOIN biz_person
       ON biz_touchpoints.bizible_person_id = biz_person.person_id
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY bizible_lead_id ORDER BY bizible_touchpoint_date DESC) = 1
 
 ), sfdc_contacts AS (
 
@@ -64,6 +66,7 @@ WITH biz_person AS (
       sfdc_lead_id,
       sfdc_contact_id
     FROM {{ ref('marketo_lead_source') }}
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY sfdc_contact_id ORDER BY updated_at DESC) = 1
 
 ),  crm_person_final AS (
 
@@ -175,10 +178,8 @@ WITH biz_person AS (
       NULL                                           AS zoominfo_company_employee_count,
       zoominfo_contact_id,
       CASE
-        WHEN (crm_tasks.task_owner_role LIKE '%BDR%' 
-            OR crm_tasks.task_owner_role LIKE '%SDR%') 
-            AND sfdc_contacts.mql_datetime_inferred IS NOT null 
-            AND crm_tasks.task_completed_date >= sfdc_contacts.mql_datetime_inferred 
+        WHEN sfdc_contacts.mql_datetime_inferred IS NOT null 
+            AND crm_tasks.min_task_completed_date_by_bdr_sdr >= sfdc_contacts.mql_datetime_inferred 
             AND (sfdc_contacts.mql_datetime_inferred >= sfdc_contacts.marketo_qualified_lead_datetime 
             OR sfdc_contacts.marketo_qualified_lead_datetime IS null)
           THEN TRUE
@@ -306,10 +307,8 @@ WITH biz_person AS (
       zoominfo_company_employee_count,
       NULL AS zoominfo_contact_id,
       CASE
-        WHEN (crm_tasks.task_owner_role LIKE '%BDR%' 
-            OR crm_tasks.task_owner_role LIKE '%SDR%') 
-            AND sfdc_leads.mql_datetime_inferred IS NOT null 
-            AND crm_tasks.task_completed_date >= sfdc_leads.mql_datetime_inferred 
+        WHEN sfdc_leads.mql_datetime_inferred IS NOT null 
+            AND crm_tasks.min_task_completed_date_by_bdr_sdr >= sfdc_leads.mql_datetime_inferred 
             AND (sfdc_leads.mql_datetime_inferred >= sfdc_leads.marketo_qualified_lead_datetime 
             OR sfdc_leads.marketo_qualified_lead_datetime IS null)
           THEN TRUE
@@ -330,7 +329,6 @@ WITH biz_person AS (
     SELECT *
     FROM crm_person_final
     WHERE sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_crm_person_id ORDER BY sfdc_record_type DESC) = 1 
 
 )
 
