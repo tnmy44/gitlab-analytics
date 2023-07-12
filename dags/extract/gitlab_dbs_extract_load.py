@@ -309,11 +309,26 @@ for source_name, config in config_dict.items():
                 task_id=f"check_replica_snapshot",
                 name=f"check_replica_snapshot",
                 secrets=[
+                        CUSTOMERS_DB_HOST,
+                        CUSTOMERS_DB_NAME,
+                        CUSTOMERS_DB_PASS,
+                        CUSTOMERS_DB_USER,
+                        GITLAB_COM_DB_HOST,
+                        GITLAB_COM_DB_NAME,
+                        GITLAB_COM_DB_PASS,
+                        GITLAB_COM_DB_USER,
+                        GITLAB_COM_PG_PORT,
+                        GITLAB_COM_SCD_PG_PORT,
                         GITLAB_COM_CI_DB_NAME,
                         GITLAB_COM_CI_DB_HOST,
                         GITLAB_COM_CI_DB_PASS,
                         GITLAB_COM_CI_DB_PORT,
-                        GITLAB_COM_CI_DB_USER
+                        GITLAB_COM_CI_DB_USER,
+                        GITLAB_OPS_DB_USER,
+                        GITLAB_OPS_DB_PASS,
+                        GITLAB_OPS_DB_HOST,
+                        GITLAB_OPS_DB_NAME,
+                        PG_PORT
                         ],
                 env_vars={
                     **gitlab_pod_env_vars,
