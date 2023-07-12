@@ -27,7 +27,8 @@
         zuora_subscriptions.product_rate_plan_charge_name NOT IN (
           '1,000 CI Minutes',
           'Gitlab Storage 10GB - 1 Year',
-          'Premium Support'
+          'Premium Support',
+          '1,000 Compute Minutes'
         )
         OR charges.charge_type != 'OneTime'
       )
