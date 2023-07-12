@@ -63,7 +63,7 @@ def load_data():
         snowflake_stage_load_copy_remove(
             f"{destintation_path}/{filename}",
             f"test.oci_report",
-            f"test.{target_table}",
+            f"oci_reports.{target_table}",
             snowflake_engine,
             "csv",
             on_error="ABORT_STATEMENT",
