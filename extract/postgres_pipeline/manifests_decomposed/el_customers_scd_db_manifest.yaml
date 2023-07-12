@@ -230,6 +230,22 @@ tables:
       , source
       , billing_account_id
       FROM orders
+  provisions:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'provisions'
+    export_table_primary_key: subscription_id
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT subscription_name
+      , subscription_id
+      , state
+      , created_at
+      , updated_at
+      , state_reason
+      , subscription_version
+      FROM provisions
   reconciliations:
     advanced_metadata: true
     export_db: EXPORT_DB
