@@ -70,6 +70,7 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
     for table in manifest_dict["tables"]:
         logging.info(f"Processing Table: {table}")
         table_dict = manifest_dict["tables"][table]
+        logging.info(table_dict)
         current_table = PostgresPipelineTable(table_dict)
 
         # Check if the schema has changed or the table is new
