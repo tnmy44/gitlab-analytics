@@ -152,6 +152,8 @@ tables:
       , report_timestamp
       , license_starts_on
       , zuora_subscription_name
+      , hostname
+      , instance_identifier
       FROM license_seat_links
   license_versions:
     advanced_metadata: true
