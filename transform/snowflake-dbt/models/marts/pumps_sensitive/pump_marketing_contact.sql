@@ -73,10 +73,6 @@ SELECT
   is_member_of_public_ultimate_parent_namespace,
   is_member_of_private_ultimate_parent_namespace,
 
-  is_group_maintainer_of_saas_paid_tier,
-  is_group_maintainer_of_saas_free_tier,
-  is_group_maintainer_of_saas,
-
   --Ptpt fields
   is_ptpt_contact,
   ptpt_namespace_id,
@@ -110,6 +106,7 @@ SELECT
   ptp_past_score_group,
   ptp_days_since_trial_start,
   ptp_source,
+  is_group_maintainer_of_saas_paid_tier,
 
   -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
   last_changed
