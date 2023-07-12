@@ -216,7 +216,7 @@ def get_last_loaded(dag_name: String) -> string:
 
     xcom_date = datetime.now().date() - timedelta(hours=73)
     return "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] | default('{}') " \
-               "}}}}".format(task_identifier + "-pgp-extract", xcom_date)
+               "}}}}".format("-pgp-extract", xcom_date)
 
 
 def generate_cmd(dag_name, operation, cloudsql_instance_name):
