@@ -55,6 +55,7 @@
     fct_ping_instance_metric_with_license.is_license_mapped_to_subscription                    AS is_license_subscription_id_valid,
     fct_ping_instance_metric_with_license.is_service_ping_license_in_customerDot               AS is_service_ping_license_in_customerDot,
     dim_ping_instance.ping_delivery_type                                                       AS ping_delivery_type,
+    dim_ping_instance.ping_deployment_type                                                     AS ping_deployment_type,
     dim_ping_instance.cleaned_version                                                          AS cleaned_version
 
     FROM fct_ping_instance_metric_with_license
@@ -74,6 +75,7 @@
       ping_created_at,
       ping_created_date_month,
       ping_delivery_type,
+      ping_deployment_type,
       dim_host_id,
       dim_subscription_id,
       dim_license_id,
@@ -99,14 +101,14 @@
       {{ ping_instance_wave_metrics() }}
 
     FROM final
-    {{ dbt_utils.group_by(n=27)}}
+    {{ dbt_utils.group_by(n=28)}}
 
 )
 
 {{ dbt_audit(
     cte_ref="pivoted",
     created_by="@snalamaru",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-07-06",
-    updated_date="2023-04-04"
+    updated_date="2023-06-22"
 ) }}

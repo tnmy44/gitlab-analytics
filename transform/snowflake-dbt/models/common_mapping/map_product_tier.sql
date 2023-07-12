@@ -97,6 +97,7 @@ WITH zuora_product AS (
                                                                         'File Locking'
                                                                       , 'Time Tracking'
                                                                       , '1,000 CI Minutes'
+                                                                      , '1,000 Compute Minutes'
                                                                      )
           THEN 'SaaS - Other'
         WHEN TRIM(zuora_product_rate_plan.product_rate_plan_name) IN ('Gitlab Storage 10GB')
