@@ -47,7 +47,6 @@
     AND orders_snapshots.product_rate_plan_id = ci_minutes_charges.product_rate_plan_id
   WHERE ci_minutes_charges.subscription_id IS NULL
 
-
 ), converted_trials AS (
 
   SELECT DISTINCT
@@ -63,23 +62,25 @@
 
 
 
-), final AS (
+), joined AS (
   
-  SELECT
-
+  SELECT DISTINCT
+   --Natural Key--
     trials.order_id                                                                                             AS dim_order_id, 
-    trials.latest_namespace_id                                                                                  AS dim_namespace_id,
+
+    --Foreign Keys--
+    trials.gitlab_namespace_id                                                                                  AS dim_namespace_id,
+    trials.product_rate_plan_id                                                                                 AS dim_product_rate_plan_id,
     customers.customer_id                                                                                       AS customer_id,
-    
-      
     users.user_id                                                                                               AS user_id,
+       
+    --Other Attributes                                                                                           
     IFF(users.user_id IS NOT NULL, TRUE, FALSE)                                                                 AS is_gitlab_user,
     users.created_at                                                                                            AS user_created_at,
     
-    
     namespaces.created_at                                                                                       AS namespace_created_at,
     namespaces.namespace_type                                                                                   AS namespace_type,
-    
+  
     IFF(converted_trials.order_id IS NOT NULL, TRUE, FALSE)                                                     AS is_trial_converted,
     converted_trials.subscription_name_slugify                                                                  AS subscription_name_slugify,   
     
@@ -90,17 +91,51 @@
     
   FROM trials
     INNER JOIN customers 
-      ON trials.latest_customer_id = customers.customer_id
+      ON trials.customer_id = customers.customer_id
     LEFT JOIN namespaces 
-      ON trials.latest_namespace_id = namespaces.namespace_id
+      ON trials.gitlab_namespace_id = namespaces.namespace_id
     LEFT JOIN users 
       ON customers.customer_provider_user_id = users.user_id
     LEFT JOIN converted_trials 
       ON trials.order_id = converted_trials.order_id
   
   WHERE gitlab_namespace_id IS NOT NULL 
-    AND TRIAL_START_DATE IS NOT NULL
+    AND trial_start_date IS NOT NULL 
+    AND product_rate_plan_id IS NOT NULL
   
+), final AS 
+
+(
+
+  SELECT 
+   --Surrogate Key-- 
+     {{ dbt_utils.surrogate_key(['joined.dim_order_id', 'joined.dim__namespace_id', 'joined.product_rate_plan_id', 'joined.trial_start_date', 'joined.trial_end_date', 'joined.subscription_name_slugify']) }} AS trial_pk,
+
+   --Natural Key--
+    dim_order_id, 
+
+    --Foreign Keys--
+    dim_namespace_id,
+    dim_product_rate_plan_id,
+    customer_id,
+    user_id,
+       
+    --Other Attributes                                                                                           
+    is_gitlab_user,
+    user_created_at,
+    
+    namespace_created_at,
+    namespace_type,
+  
+    is_trial_converted,
+    subscription_name_slugify,   
+    
+    order_created_at,
+    trial_start_date, 
+    trial_end_date
+    
+  FROM final
+
 )
 
 {{ dbt_audit(
