@@ -397,7 +397,7 @@ for source_name, config in config_dict.items():
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
-            check_replica_snapshot = KubernetesPodOperator(
+            check_replica_snapshot_backfill = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DATA_IMAGE,
                 task_id=f"check_replica_snapshot",
@@ -422,7 +422,7 @@ for source_name, config in config_dict.items():
                 affinity=get_affinity("production"),
                 tolerations=get_toleration("production"),
                 arguments=[check_replica_snapshot_command],
-                dag=extract_dag,
+                dag=incremental_backfill_dag,
                 )
             is_incremental_backfill_dag = True
             for table in table_list:
@@ -456,7 +456,7 @@ for source_name, config in config_dict.items():
                         do_xcom_push=True,
                     )
                     if is_incremental_backfill_dag:
-                        check_replica_snapshot >> sync_extract
+                        check_replica_snapshot_backfill >> sync_extract
 
         globals()[
             f"{config['dag_name']}_db_incremental_backfill"
@@ -493,7 +493,7 @@ for source_name, config in config_dict.items():
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
-            check_replica_snapshot = KubernetesPodOperator(
+            check_replica_snapshot_scd = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DATA_IMAGE,
                 task_id=f"check_replica_snapshot",
@@ -554,5 +554,5 @@ for source_name, config in config_dict.items():
                         do_xcom_push=True,
                     )
                     if is_scd_dag:
-                        check_replica_snapshot >> scd_extract
+                        check_replica_snapshot_scd >> scd_extract
         globals()[f"{config['dag_name']}_db_sync"] = sync_dag
