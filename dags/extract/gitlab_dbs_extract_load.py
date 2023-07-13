@@ -302,6 +302,32 @@ for source_name, config in config_dict.items():
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
+            print(f"The config dict: {config['dag_name']}")
+            if 'el_gitlab_com_ci' in config['dag_name'] :
+                print("Checking CI DAG...")
+                check_replica_snapshot_command = (
+                f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ci"
+                )
+            elif 'el_gitlab_ops' in config['dag_name'] :
+                print("Checking ops_db DAG...")
+                check_replica_snapshot_command = (
+                f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ops"
+                )
+            elif 'el_customers_scd_db' in config['dag_name'] :
+                print("Checking customers DAG...")
+                check_replica_snapshot_command = (
+                f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_customers"
+                )
+            elif 'el_gitlab_com_scd' in config['dag_name'] :
+                print("Checking gitlab_dotcom_scd DAG...")
+                check_replica_snapshot_command = (
+                f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_gitlab_dotcom_scd"
+                )
+            else:
+                print("Checking gitlab_dotcom_incremental DAG...")
+                check_replica_snapshot_command = (
+                f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
+                )
 
             check_replica_snapshot = KubernetesPodOperator(
                 **gitlab_defaults,
@@ -309,26 +335,11 @@ for source_name, config in config_dict.items():
                 task_id=f"check_replica_snapshot",
                 name=f"check_replica_snapshot",
                 secrets=[
-                        CUSTOMERS_DB_HOST,
-                        CUSTOMERS_DB_NAME,
-                        CUSTOMERS_DB_PASS,
-                        CUSTOMERS_DB_USER,
-                        GITLAB_COM_DB_HOST,
-                        GITLAB_COM_DB_NAME,
-                        GITLAB_COM_DB_PASS,
-                        GITLAB_COM_DB_USER,
-                        GITLAB_COM_PG_PORT,
-                        GITLAB_COM_SCD_PG_PORT,
                         GITLAB_COM_CI_DB_NAME,
                         GITLAB_COM_CI_DB_HOST,
                         GITLAB_COM_CI_DB_PASS,
                         GITLAB_COM_CI_DB_PORT,
-                        GITLAB_COM_CI_DB_USER,
-                        GITLAB_OPS_DB_USER,
-                        GITLAB_OPS_DB_PASS,
-                        GITLAB_OPS_DB_HOST,
-                        GITLAB_OPS_DB_NAME,
-                        PG_PORT
+                        GITLAB_COM_CI_DB_USER
                         ],
                 env_vars={
                     **gitlab_pod_env_vars,
