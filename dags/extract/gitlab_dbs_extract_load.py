@@ -339,7 +339,13 @@ for source_name, config in config_dict.items():
                         GITLAB_COM_CI_DB_HOST,
                         GITLAB_COM_CI_DB_PASS,
                         GITLAB_COM_CI_DB_PORT,
-                        GITLAB_COM_CI_DB_USER
+                        GITLAB_COM_CI_DB_USER,
+                        GITLAB_COM_DB_USER,
+                        GITLAB_COM_DB_PASS,
+                        GITLAB_COM_DB_HOST,
+                        GITLAB_COM_DB_NAME,
+                        GITLAB_COM_PG_PORT,
+                        GITLAB_COM_SCD_PG_PORT
                         ],
                 env_vars={
                     **gitlab_pod_env_vars,
