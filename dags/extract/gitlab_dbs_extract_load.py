@@ -285,7 +285,7 @@ for source_name, config in config_dict.items():
     if "scd" not in source_name:
         extract_dag_args["start_date"] = config["start_date"]
         incremental_backfill_dag_args["start_date"] = config["start_date"]
-        extract_dag_args["dag_name"] = config['dag_name']
+        DAG_NAME= config['dag_name']
         extract_dag = DAG(
             f"{config['dag_name']}_db_extract",
             default_args=extract_dag_args,
@@ -328,7 +328,8 @@ for source_name, config in config_dict.items():
                         GITLAB_OPS_DB_PASS,
                         GITLAB_OPS_DB_HOST,
                         GITLAB_OPS_DB_NAME,
-                        PG_PORT
+                        PG_PORT,
+                        DAG_NAME
                         ],
                 env_vars={
                     **gitlab_pod_env_vars,
