@@ -14,7 +14,6 @@
 website_page_views AS (
 
   SELECT
-    fct.fct_behavior_website_page_view_sk,
     fct.dim_behavior_website_page_sk,
     fct.dim_behavior_referrer_page_sk,
     fct.dim_namespace_id,
