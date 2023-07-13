@@ -57,30 +57,11 @@ def main()-> None:
     config_dict = os.environ.copy()
     dag_db_name = config_dict.get("dag_name")
     print(f'The dag name is : {dag_db_name}')
-    if 'el_gitlab_com_ci' in dag_db_name :
-        database = config_dict.get("GITLAB_COM_CI_DB_NAME")
-        host = config_dict.get("GITLAB_COM_CI_DB_HOST")
-        password = config_dict.get("GITLAB_COM_CI_DB_PASS")
-        port = config_dict.get("GITLAB_COM_CI_DB_PORT")
-        user = config_dict.get("GITLAB_COM_CI_DB_USER")
-    elif 'el_customers_scd_db' in dag_db_name :
-        database = config_dict.get("GITLAB_COM_CI_DB_NAME")
-        host = config_dict.get("GITLAB_COM_CI_DB_HOST")
-        password = config_dict.get("GITLAB_COM_CI_DB_PASS")
-        port = config_dict.get("GITLAB_COM_CI_DB_PORT")
-        user = config_dict.get("GITLAB_COM_CI_DB_USER")
-    elif 'el_gitlab_ops' in dag_db_name :
-        database = config_dict.get("GITLAB_COM_CI_DB_NAME")
-        host = config_dict.get("GITLAB_COM_CI_DB_HOST")
-        password = config_dict.get("GITLAB_COM_CI_DB_PASS")
-        port = config_dict.get("GITLAB_COM_CI_DB_PORT")
-        user = config_dict.get("GITLAB_COM_CI_DB_USER")
-    else :
-        database = config_dict.get("GITLAB_COM_DB_NAME")
-        host = config_dict.get("GITLAB_COM_DB_HOST")
-        password = config_dict.get("GITLAB_COM_DB_PASS")
-        port = config_dict.get("GITLAB_COM_PG_PORT")
-        user = config_dict.get("GITLAB_COM_DB_USER")
+    database = config_dict.get("GITLAB_COM_DB_NAME")
+    host = config_dict.get("GITLAB_COM_DB_HOST")
+    password = config_dict.get("GITLAB_COM_DB_PASS")
+    port = config_dict.get("GITLAB_COM_PG_PORT")
+    user = config_dict.get("GITLAB_COM_DB_USER")
     logging.info("Creating database engines...")
     engine = create_engine(
         f"postgresql://{user}:{password}@{host}:{port}/{database}",
