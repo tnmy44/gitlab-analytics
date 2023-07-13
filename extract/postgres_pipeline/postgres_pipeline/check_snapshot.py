@@ -74,7 +74,7 @@ def main():
         password = config_dict.get("GITLAB_COM_CI_DB_PASS")
         port = config_dict.get("GITLAB_COM_CI_DB_PORT")
         user = config_dict.get("GITLAB_COM_CI_DB_USER")
-    elif :
+    else :
         database = config_dict.get("GITLAB_COM_DB_NAME")
         host = config_dict.get("GITLAB_COM_DB_HOST")
         password = config_dict.get("GITLAB_COM_DB_PASS")
