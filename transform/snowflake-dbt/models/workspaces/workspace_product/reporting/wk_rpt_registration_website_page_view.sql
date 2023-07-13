@@ -84,6 +84,6 @@ website_page_views AS (
     cte_ref="base",
     created_by="@eneuberger",
     updated_by="@mdrussell",
-    created_date="2023-04-12",
+    created_date="2023-07-12",
     updated_date="2023-07-13"
 ) }}
