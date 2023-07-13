@@ -67,6 +67,6 @@ behavior_structured_event AS (
     cte_ref="behavior_structured_event",
     created_by="@eneuberger",
     updated_by="@mdrussell",
-    created_date="2023-04-12",
+    created_date="2023-07-12",
     updated_date="2023-07-13"
 ) }}
