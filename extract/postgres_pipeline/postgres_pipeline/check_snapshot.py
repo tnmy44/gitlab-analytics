@@ -56,6 +56,8 @@ def check_snapshot_replica(
 def main():
     config_dict = os.environ.copy()
     dag_db_name = config_dict.get("dag_name")
+    print(dag_db_name)
+    logging.info(dag_db_name)
     if 'el_gitlab_com_ci' in dag_db_name :
         database = config_dict.get("GITLAB_COM_CI_DB_NAME")
         host = config_dict.get("GITLAB_COM_CI_DB_HOST")
