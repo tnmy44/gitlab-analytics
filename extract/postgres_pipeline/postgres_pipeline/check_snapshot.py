@@ -53,7 +53,7 @@ def check_snapshot_replica(
 #     return engine
 
 
-def main():
+def main()-> None:
     config_dict = os.environ.copy()
     dag_db_name = config_dict.get("dag_name")
     print(f'The dag name is : {dag_db_name}')
@@ -90,5 +90,4 @@ def main():
     check_snapshot_replica(engine)
     logging.info("Complete")
 
-if __name__ == "__main__":
-    main()
+main()

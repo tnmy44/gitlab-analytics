@@ -294,7 +294,7 @@ for source_name, config in config_dict.items():
         )
         
         check_replica_snapshot_command = (
-        f"{clone_and_setup_extraction_cmd} && "f"python postgres_pipeline/postgres_pipeline/check_snapshot.py"
+        f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py"
         )
 
         with extract_dag:
