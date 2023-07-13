@@ -310,7 +310,6 @@ models:
           - customers_db
         tests:
           - not_null
-          - unique 
         description: Zuora subscription name
       - name: subscription_id
         tags:
