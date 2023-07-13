@@ -67,6 +67,7 @@ def load_data():
             snowflake_engine,
             "csv",
             on_error="ABORT_STATEMENT",
+            "SKIP_HEADER = 1",
         )
 
         info(f"File {o.name} loaded to table {target_table}")
