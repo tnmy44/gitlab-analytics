@@ -285,7 +285,7 @@ for source_name, config in config_dict.items():
     if "scd" not in source_name:
         extract_dag_args["start_date"] = config["start_date"]
         incremental_backfill_dag_args["start_date"] = config["start_date"]
-
+        extract_dag_args["dag_name"] = config['dag_name']
         extract_dag = DAG(
             f"{config['dag_name']}_db_extract",
             default_args=extract_dag_args,
