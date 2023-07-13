@@ -1,7 +1,9 @@
-{{ config(
-    materialized='table',
-    tags=["mnpi_exception", "product"]
-) }}
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "behavior_structured_event_pk",
+    "tags": ["product","mnpi_exception"]
+    })
+}}
 
 {{ simple_cte([
     ('mart_behavior_structured_event','mart_behavior_structured_event')
@@ -10,7 +12,8 @@
 
 behavior_structured_event AS (
 
-	SELECT 
+	SELECT
+        behavior_structured_event_pk,
 		behavior_at,
 		behavior_date,
 		app_id,
@@ -52,13 +55,18 @@ behavior_structured_event AS (
 	FROM mart_behavior_structured_event mart
 	WHERE behavior_at::DATE >= DATEADD(DAY, -190, CURRENT_DATE::DATE)
 	AND LOWER(event_category) LIKE '%registration%'
+    {% if is_incremental() %}
+
+    AND  behavior_at > (SELECT MAX(behavior_at) FROM {{ this }})
+
+    {% endif %}
 
 )
 
 {{ dbt_audit(
     cte_ref="base",
     created_by="@eneuberger",
-    updated_by="@eneuberger",
+    updated_by="@mdrussell",
     created_date="2023-04-12",
-    updated_date="2023-04-12"
+    updated_date="2023-07-13"
 ) }}

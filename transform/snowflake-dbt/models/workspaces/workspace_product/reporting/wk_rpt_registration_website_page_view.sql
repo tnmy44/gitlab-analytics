@@ -1,7 +1,9 @@
-{{ config(
-    materialized='table',
-    tags=["mnpi_exception", "product"]
-) }}
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "fct_behavior_website_page_view_sk",
+    "tags": ["product","mnpi_exception"]
+    })
+}}
 
 {{ simple_cte([
     ('fct_behavior_website_page_view','fct_behavior_website_page_view'),
@@ -13,6 +15,7 @@
 website_page_views AS (
 
   SELECT DISTINCT
+    fct.fct_behavior_website_page_view_sk,
     fct.dim_behavior_website_page_sk,
     fct.dim_behavior_referrer_page_sk,
     fct.dim_namespace_id,
@@ -69,13 +72,18 @@ website_page_views AS (
     AND fct.event_name = 'page_view' 
     AND dim.app_id IN ('gitlab','gitlab_customers') -- production app_id
     AND fct.behavior_at::DATE >= DATEADD(DAY, -190, CURRENT_DATE::DATE)
+    {% if is_incremental() %}
+
+    AND  fct.behavior_at > (SELECT MAX(behavior_at) FROM {{ this }})
+
+    {% endif %}
 
 )
 
 {{ dbt_audit(
     cte_ref="base",
     created_by="@eneuberger",
-    updated_by="@eneuberger",
+    updated_by="@mdrussell",
     created_date="2023-04-12",
-    updated_date="2023-04-12"
+    updated_date="2023-07-13"
 ) }}
