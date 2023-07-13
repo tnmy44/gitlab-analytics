@@ -121,6 +121,11 @@
     LEFT JOIN prep_app_release_major_minor AS latest_version -- Join the latest version released at the time of the ping.
       ON add_country_info_to_usage_ping.ping_created_at BETWEEN latest_version.release_date AND {{ coalesce_to_infinity('latest_version.next_version_release_date') }}
       AND latest_version.application = 'GitLab'
+    QUALIFY RANK() OVER(PARTITION BY add_country_info_to_usage_ping.dim_ping_instance_id ORDER BY latest_version.release_date DESC) = 1
+    -- Adding the QUALIFY statement because of the latest_version CTE. There is rare case when the ping_created_at is right between the last day of a release and when the new one comes out.
+    -- This causes two records to be matched and then we have two records per one ping.
+    -- The rank statements gets rid of this. Using rank instead row_number since rank will preserve other might be duplicates in the data, while rank only addresses
+    -- the duplicates that are entered in the data consequence of the latest_version CTE join condition. 
 
 ), joined_payload AS (
 
