@@ -145,8 +145,8 @@ def edit_dataframe(dataframe: pd.DataFrame, version: str) -> pd.DataFrame:
         "Account Name": "ACCOUNT_NAME",
         "Account Code": "ACCOUNT_CODE",
         "Level Name": "LEVEL_NAME",
-        "Year": "YEAR",
-        "Month": "MONTH",
+        "Year": "CALENDAR_YEAR",
+        "Month": "CALENDAR_MONTH",
         "Value": "VALUE",
         "Version": "VERSION",
     }
