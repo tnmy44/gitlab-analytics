@@ -294,7 +294,7 @@ tables:
         , created_at
         , updated_at
         , request_date
-        , tart_date
+        , start_date
         , end_date
         , salesforce_opportunity_id
         , subscription_id
