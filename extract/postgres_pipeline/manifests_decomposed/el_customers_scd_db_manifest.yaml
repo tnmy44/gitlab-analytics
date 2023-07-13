@@ -286,7 +286,7 @@ tables:
     export_db: EXPORT_DB
     export_schema: 'customers'
     export_table: 'temporary_extension_histories'
-    export_table_primary_key: 
+    export_table_primary_key: subscription_name
     import_db: CUSTOMERS_DB
     import_query: |-
       SELECT billing_account_id
