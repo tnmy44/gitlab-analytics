@@ -15,7 +15,7 @@ import fire
 
 def check_snapshot_replica(
     source_engine: Engine
-):
+)-> None:
     current_date_check_query = "SELECT CURRENT_DATE;"
     pg_date_timestamp = query_executor(
         source_engine, current_date_check_query

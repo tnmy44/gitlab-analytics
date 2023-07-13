@@ -297,37 +297,26 @@ for source_name, config in config_dict.items():
         f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py"
         )
 
+        if 'el_gitlab_com_ci' in config['dag_name'] :
+            print("Checking CI DAG...")
+            check_replica_snapshot_command = (
+            f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ci"
+            )
+        elif 'el_gitlab_com_scd' in config['dag_name'] :
+            print("Checking gitlab_dotcom_scd DAG...")
+            check_replica_snapshot_command = (
+            f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_gitlab_dotcom_scd"
+            )
+        else:
+            print("Checking gitlab_dotcom_incremental DAG...")
+            check_replica_snapshot_command = (
+            f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
+            )
         with extract_dag:
             # Actual PGP extract
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
-            print(f"The config dict: {config['dag_name']}")
-            if 'el_gitlab_com_ci' in config['dag_name'] :
-                print("Checking CI DAG...")
-                check_replica_snapshot_command = (
-                f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ci"
-                )
-            elif 'el_gitlab_ops' in config['dag_name'] :
-                print("Checking ops_db DAG...")
-                check_replica_snapshot_command = (
-                f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ops"
-                )
-            elif 'el_customers_scd_db' in config['dag_name'] :
-                print("Checking customers DAG...")
-                check_replica_snapshot_command = (
-                f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_customers"
-                )
-            elif 'el_gitlab_com_scd' in config['dag_name'] :
-                print("Checking gitlab_dotcom_scd DAG...")
-                check_replica_snapshot_command = (
-                f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_gitlab_dotcom_scd"
-                )
-            else:
-                print("Checking gitlab_dotcom_incremental DAG...")
-                check_replica_snapshot_command = (
-                f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
-                )
 
             check_replica_snapshot = KubernetesPodOperator(
                 **gitlab_defaults,
@@ -408,6 +397,34 @@ for source_name, config in config_dict.items():
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
+            check_replica_snapshot = KubernetesPodOperator(
+                **gitlab_defaults,
+                image=DATA_IMAGE,
+                task_id=f"check_replica_snapshot",
+                name=f"check_replica_snapshot",
+                secrets=[
+                        GITLAB_COM_CI_DB_NAME,
+                        GITLAB_COM_CI_DB_HOST,
+                        GITLAB_COM_CI_DB_PASS,
+                        GITLAB_COM_CI_DB_PORT,
+                        GITLAB_COM_CI_DB_USER,
+                        GITLAB_COM_DB_USER,
+                        GITLAB_COM_DB_PASS,
+                        GITLAB_COM_DB_HOST,
+                        GITLAB_COM_DB_NAME,
+                        GITLAB_COM_PG_PORT,
+                        GITLAB_COM_SCD_PG_PORT
+                        ],
+                env_vars={
+                    **gitlab_pod_env_vars,
+                    **config["env_vars"]
+                },
+                affinity=get_affinity("production"),
+                tolerations=get_toleration("production"),
+                arguments=[check_replica_snapshot_command],
+                dag=extract_dag,
+                )
+            is_incremental_backfill_dag = True
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "backfill"
@@ -415,7 +432,7 @@ for source_name, config in config_dict.items():
                     task_identifier = (
                         f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
                     )
-
+                    
                     sync_cmd = generate_cmd(
                         config["dag_name"],
                         f"--load_type backfill --load_only_table {table}",
@@ -438,6 +455,8 @@ for source_name, config in config_dict.items():
                         arguments=[sync_cmd],
                         do_xcom_push=True,
                     )
+                    if is_incremental_backfill_dag:
+                        check_replica_snapshot >> sync_extract
 
         globals()[
             f"{config['dag_name']}_db_incremental_backfill"
@@ -452,11 +471,55 @@ for source_name, config in config_dict.items():
             description=config["description"],
         )
 
+        check_replica_snapshot_command = (
+        f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py"
+        )
+
+        if 'el_gitlab_com_ci_scd' in config['dag_name'] :
+            print("Checking CI DAG...")
+            check_replica_snapshot_command = (
+            f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ci"
+            )
+        elif 'el_gitlab_com_scd' in config['dag_name'] :
+            print("Checking gitlab_dotcom_scd DAG...")
+            check_replica_snapshot_command = (
+            f"{clone_and_setup_extraction_cmd} && " f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_gitlab_dotcom_scd"
+            )
+        else:
+            pass
+
         with sync_dag:
             # PGP Extract
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
+            check_replica_snapshot = KubernetesPodOperator(
+                **gitlab_defaults,
+                image=DATA_IMAGE,
+                task_id=f"check_replica_snapshot",
+                name=f"check_replica_snapshot",
+                secrets=[
+                        GITLAB_COM_CI_DB_NAME,
+                        GITLAB_COM_CI_DB_HOST,
+                        GITLAB_COM_CI_DB_PASS,
+                        GITLAB_COM_CI_DB_PORT,
+                        GITLAB_COM_CI_DB_USER,
+                        GITLAB_COM_DB_USER,
+                        GITLAB_COM_DB_PASS,
+                        GITLAB_COM_DB_HOST,
+                        GITLAB_COM_DB_NAME,
+                        GITLAB_COM_PG_PORT,
+                        GITLAB_COM_SCD_PG_PORT
+                        ],
+                env_vars={
+                    **gitlab_pod_env_vars,
+                    **config["env_vars"]
+                },
+                affinity=get_affinity("production"),
+                tolerations=get_toleration("production"),
+                arguments=[check_replica_snapshot_command],
+                dag=sync_dag,
+                )
             for table in table_list:
                 if not is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "db-scd"
@@ -464,7 +527,7 @@ for source_name, config in config_dict.items():
                     task_identifier = (
                         f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
                     )
-
+                    is_scd_dag = True
                     # SCD Task
                     scd_cmd = generate_cmd(
                         config["dag_name"],
@@ -490,4 +553,6 @@ for source_name, config in config_dict.items():
                         tolerations=get_toleration("scd"),
                         do_xcom_push=True,
                     )
+                    if is_scd_dag:
+                        check_replica_snapshot >> scd_extract
         globals()[f"{config['dag_name']}_db_sync"] = sync_dag
