@@ -67,7 +67,7 @@
         date_day,
         fiscal_year                     AS date_range_year,
         fiscal_quarter_name_fy          AS date_range_quarter,
-        DATE_TRUNC(month, date_actual)  AS date_range_month,
+        first_day_of_month  AS date_range_month,
         first_day_of_week               AS date_range_week
     FROM dim_date
 
