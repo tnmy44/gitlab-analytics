@@ -914,9 +914,9 @@ WITH date_details AS (
             THEN 'Premium'
         WHEN LOWER(product_category) LIKE '%ultimate%'
             THEN 'Ultimate'
-        WHEN LOWER(intented_product_tier) LIKE '%premium%'
+        WHEN LOWER(intended_product_tier) LIKE '%premium%'
             THEN 'Premium'
-        WHEN LOWER(intented_product_tier) LIKE '%ultimate%'
+        WHEN LOWER(intended_product_tier) LIKE '%ultimate%'
             THEN 'Ultimate'
         ELSE 'Other'
     END AS  product_category_tier,
