@@ -73,7 +73,7 @@
 
 ), inquiry_prep AS (
 
-    SELECT DISTINCT
+    SELECT
         date_base.*,
         true_inquiry_date,
         CASE 
@@ -101,7 +101,7 @@
 
  ), mql_prep AS (
      
-    SELECT DISTINCT
+    SELECT
         date_base.*,
         is_mql,
         CASE 
@@ -128,7 +128,7 @@
   
 ), sao_prep AS (
      
-    SELECT DISTINCT
+    SELECT
         date_base.*,
         is_sao,
         opp_order_type,
@@ -166,7 +166,7 @@
 
 ), inquiries AS (
 
-    SELECT DISTINCT
+    SELECT
         date_range_week,
         date_range_month,
         date_range_quarter,
@@ -182,11 +182,11 @@
         parent_crm_account_lam_dev_count,
         COUNT(DISTINCT actual_inquiry) AS inquiries
     FROM inquiry_prep
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
+    {{ dbt_utils.group_by(n=13) }}
   
 ), mqls AS (
 
-    SELECT DISTINCT
+    SELECT
         date_range_week,
         date_range_month,
         date_range_quarter,
@@ -202,11 +202,11 @@
         parent_crm_account_lam_dev_count,
         COUNT(DISTINCT mqls) AS mqls
     FROM mql_prep
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
+    {{ dbt_utils.group_by(n=13) }}
     
  ), saos AS (
   
-    SELECT DISTINCT
+    SELECT
         date_range_week,
         date_range_month,
         date_range_quarter,
@@ -223,7 +223,7 @@
         bizible_medium,
         COUNT(DISTINCT saos) AS saos
     FROM sao_prep
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+    {{ dbt_utils.group_by(n=14) }}
     
   ), final AS (
 
@@ -244,7 +244,7 @@
         0 AS mqls,
         0 AS saos
     FROM inquiries
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
+    {{ dbt_utils.group_by(n=12) }}
     UNION ALL
     SELECT
         date_range_week,
@@ -263,7 +263,7 @@
         SUM(mqls) AS mqls,
         0 AS saos
     FROM mqls
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
+    {{ dbt_utils.group_by(n=12) }}
     UNION ALL
     SELECT
         date_range_week,
@@ -282,7 +282,7 @@
         0 AS mqls,
         SUM(saos) AS saos
     FROM saos
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
+    {{ dbt_utils.group_by(n=12) }}
 
   )
 
@@ -292,5 +292,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-06-21",
-    updated_date="2023-07-10",
+    updated_date="2023-07-13",
   ) }}
