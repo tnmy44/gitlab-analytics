@@ -81,7 +81,7 @@ website_page_views AS (
 )
 
 {{ dbt_audit(
-    cte_ref="base",
+    cte_ref="website_page_views",
     created_by="@eneuberger",
     updated_by="@mdrussell",
     created_date="2023-04-12",

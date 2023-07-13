@@ -64,7 +64,7 @@ behavior_structured_event AS (
 )
 
 {{ dbt_audit(
-    cte_ref="base",
+    cte_ref="behavior_structured_event",
     created_by="@eneuberger",
     updated_by="@mdrussell",
     created_date="2023-04-12",
