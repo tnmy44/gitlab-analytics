@@ -281,6 +281,27 @@ tables:
     import_query: |-
       SELECT version
       FROM schema_migrations
+  temporary_extension_histories:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'temporary_extension_histories'
+    export_table_primary_key: 
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT billing_account_id
+        , license_id
+        , created_at
+        , updated_at
+        , request_date
+        , tart_date
+        , end_date
+        , salesforce_opportunity_id
+        , subscription_id
+        , requester_email
+        , subscription_name
+        , reason
+      FROM temporary_extension_histories
   trial_histories:
     advanced_metadata: true
     export_db: EXPORT_DB
