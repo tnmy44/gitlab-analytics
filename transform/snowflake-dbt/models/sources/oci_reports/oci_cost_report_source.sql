@@ -6,7 +6,7 @@ WITH source as (
 
 ), renamed as (
 
-    SELECT
+    SELECT DISTINCT
 
         lineitem__referenceno::VARCHAR                           AS lineitem__referenceno,
         lineitem__tenantid::VARCHAR                              AS lineitem__tenantid,

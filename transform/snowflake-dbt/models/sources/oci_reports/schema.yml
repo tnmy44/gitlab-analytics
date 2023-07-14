@@ -2,3 +2,9 @@ version: 2
 
 models:
   - name: oci_cost_report_source
+    columns:
+        - name: lineitem__referenceno
+          description: The primary key for oci line item cost data
+          tests:
+            - unique
+            - not_null
