@@ -386,6 +386,17 @@ A recreation of `prep_usage_ping_subscription_mapped_wave_2_3_metrics` for _SaaS
 
 {% enddocs %}
 
+
+{% docs prep_ping_instance_flattened_uploaded_at %}
+
+Column `uploaded_at` (`TIMESTAMP` data type) represent the moment WHEN the record is ingested into Snowflake. 
+The main motivation for introducing this column is for a few reasons:
+1. Be able to track back the exact date and time of data ingesting _(this information wasn't known to us)_
+1. Improving incremental load using `uploaded_at` column 
+1. Support "late_arriving" ping automatically, without the need to full-refresh a full lineage
+
+{% enddocs %}
+
 {% docs prep_saas_usage_ping_namespace %}
 
 fct table from the usage_ping_namespace. Granularity of one row per namespace per metric per run
@@ -488,6 +499,16 @@ Prep table for the dim table `dim_note`.
 {% docs prep_deployment %}
 
 Prep table for the dim table `dim_deployment` that is not yet created.
+
+{% enddocs %}
+
+{% docs uploaded_at %}
+
+Column `uploaded_at` (`TIMESTAMP` data type) represent the moment WHEN the record is ingested into Snowflake. 
+The main motivation for introducing this column is for a few reasons:
+1. Be able to track back the exact date and time of data ingesting _(this information wasn't known to us)_
+1. Improving incremental load using `uploaded_at` column 
+1. Support "late_arriving" ping automatically, without the need to full-refresh a full lineage
 
 {% enddocs %}
 
@@ -752,12 +773,41 @@ Prep model for merging the billing accounts data from both Zuora and CDot source
 
 {% docs dim_billing_account_sk %}
 
-A surrogate key that uniquely identifes each row of the billing account table.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
+A surrogate key that uniquely identifes each row of the billing account table.  It is currently formed by hashing the billing account IDs from Zuora that uniquely identify a Zuora account associated with a given Subscription ID. This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
 
 {% enddocs %}
 
 {% docs link_click_element_id %}
 
 The element id from the unstructured link click event
+
+{% enddocs %}
+
+{% docs prep_user_trial %}
+
+Prep table to store information about our users, trial users are also included. The data is sourced from an underlying tap-postgres customers table from customers.gitlab.com.
+
+{% enddocs %}
+
+{% docs dim_user_sk %}
+
+A surrogate key that uniquely identifes each row of the User table.  This is built as a conceptual [dimension](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/dimension-table-structure/) and can be used to build a dimension table to limit the number of columns on a fact table.
+
+{% enddocs %}
+
+{% docs prep_team_member_position %}
+
+This table contains team members' job history, including any changes in their job profile.
+
+The table joins the staffing_history_approved_source and job_profiles_source.
+
+Only team members who have had a job change, promotion, or hire event are included in the final table. We have also included a filter for edge cases so that whenever a job code for a team member changes, it is captured. 
+
+
+{% enddocs %}
+
+{% docs prep_namespace_order_trial %}
+
+This model contains data for all trial orders for each namespace from CDot trial histories and CDot orders that are being sourced from customers.gitlab.com.
 
 {% enddocs %}

@@ -106,9 +106,11 @@ WITH all_events AS (
         CASE
           WHEN ev.os_timezone = 'Asia/Calcutt' THEN 'Asia/Calcutta'
           WHEN ev.os_timezone = 'Asia/Rangoo' THEN 'Asia/Rangoon'
+          WHEN ev.os_timezone = 'Asia/Shangh' THEN 'Asia/Shanghai'
           WHEN ev.os_timezone = 'America/Buenos_Airesnos_Aires' THEN 'America/Buenos_Aires'
           WHEN ev.os_timezone = 'Asia/SaigonMinh' THEN 'Asia/Ho_Chi_Minh'
           WHEN ev.os_timezone = 'Etc/Unknown' THEN NULL
+          WHEN ev.os_timezone = 'America/A' THEN NULL
           ELSE ev.os_timezone
         END
         , '%2F', '/') AS os_timezone,

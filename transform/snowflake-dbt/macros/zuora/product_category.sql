@@ -80,12 +80,14 @@ CASE
                                       '#movingtogitlab'
                                     , 'Payment Gateway Test'
                                     , 'EdCast Settlement Revenue'
+                                    , 'GitLab Certification Exam'
                                     )
     THEN 'Other'
   WHEN TRIM({{product_column}}) IN (
                                       'File Locking'
                                     , 'Time Tracking'
                                     , '1,000 CI Minutes'
+                                    , '1,000 Compute Minutes'
                                     )
     THEN 'SaaS - Other'
   WHEN TRIM({{product_column}}) IN ('Gitlab Storage 10GB')

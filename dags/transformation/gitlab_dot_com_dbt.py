@@ -74,7 +74,7 @@ config_dict = {
         "dag_name": "t_gitlab_customers_db_dbt",
         "dbt_name": "customers",
         "start_date": datetime(2022, 9, 12),
-        "dbt_schedule_interval": "0 5 * * *",
+        "dbt_schedule_interval": "30 6 * * *",
         "task_name": "t_customers",
         "description": "This DAG does incremental refresh of the gitlab customer database,run snapshot on source table and DBT test",
     },

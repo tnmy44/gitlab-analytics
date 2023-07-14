@@ -4,7 +4,7 @@ The unique identifier of an event. This is a generated primary key and will not 
 
 {% enddocs %}
 
-{% docs dim_active_product_tier_id %}
+{% docs dim_latest_product_tier_id %}
 
 The unique identifier of the ultimate parent namespace's latest product tier, easily joined to `dim_product_tier`
 
@@ -660,12 +660,6 @@ The name of the ultimate parent account coming from SFDC
 
 {% enddocs %}
 
-{% docs parent_crm_account_billing_country %}
-
-The billing country of the ultimate parent account coming from SFDC
-
-{% enddocs %}
-
 {% docs parent_crm_account_sales_segment %}
 
 The sales segment of the ultimate parent account from SFDC. Sales Segments are explained [here](https://about.gitlab.com/handbook/sales/field-operations/gtm-resources/#segmentation)
@@ -684,7 +678,7 @@ The owner team of the ultimate parent account from SFDC
 
 {% enddocs %}
 
-{% docs parent_crm_account_sales_territory %}
+{% docs parent_crm_account_territory %}
 
 The sales territory of the ultimate parent account from SFDC
 
@@ -854,7 +848,9 @@ The date the license expires
 
 {% docs license_add_ons %}
 
-The add-ons associated with the license
+The add-ons associated with the license. In [the handbook](https://about.gitlab.com/handbook/support/license-and-renewals/#common-terminology), the term "add-on" is defined as
+
+> An optional extra that can be purchased to increase the limits of what is available in GitLab. Common examples of this are a Seat add-on where additional seats are purchased during the subscription term, or an additional Storage or Units of Compute purchase (on SaaS only). 
 
 {% enddocs %}
 
@@ -1121,6 +1117,12 @@ The version of the container registry in use (ex. 2.11.0-gitlab, 3.60.1-gitlab, 
 {% docs is_saas_dedicated %}
 
 Boolean flag set to True if the ping is from a Dedicated implementation
+
+{% enddocs %}
+
+{% docs ping_deployment_type %}
+
+Indicates whether the ping comes from a GitLab.com, SaaS Dedicated or Self-Managed instance.
 
 {% enddocs %}
 
@@ -1404,6 +1406,12 @@ Timestamp for the event recorded on the client device.
 {% docs behavior_at %}
 
 Timestamp for when the event actually happened. This appears as `derived_tstamp` in the raw Snowplow data.
+
+{% enddocs %}
+
+{% docs behavior_date %}
+
+The date when the event happened (YYYY-MM-DD)
 
 {% enddocs %}
 
@@ -1836,6 +1844,12 @@ This is the delivery type of GitLab to include either SaaS or Self-Managed.
 
 {% enddocs %}
 
+{% docs product_deployment_type %}
+
+This is the deployment type of GitLab to include either GitLab.com, Dedicated or Self-Managed.
+
+{% enddocs %}
+
 {% docs previous_month_product_delivery_type %}
 
 This is the previous month delivery type. Includes either SaaS or Self-Managed.
@@ -2093,5 +2107,36 @@ The title of the plan as given by GitLab.com
 {% docs is_plan_paid %}
 
 A flag to indicate if the plan is a paid plan or not.
+
+{% enddocs %}
+
+{% docs namespace_has_code_suggestions_enabled %}
+
+Boolean flag set to True if the namespace has code suggestions enabled. This appears as `code_suggestions` in the gitlab.com db `namespace_settings` table.
+
+{% enddocs %}
+
+{% docs intended_product_tier %}
+
+The intended product tier looking to be purchased for this opportunity.
+
+{% enddocs %}
+
+{% docs dim_parent_crm_opportunity_id %}
+
+The Salesforce opportunity ID for the parent opportunity of this opportunity.
+
+{% enddocs %}
+
+
+{% docs dim_namespace_order_trial_sk %}
+
+The surrogate key of `prep_namespace_order_trial` model. Currently identified by hashing the namespace_id field that is being sourced from customers portal at gitlab.com.
+
+{% enddocs %}
+
+{% docs dim_trial_latest_sk %}
+
+The surrogate key of `dim_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
 
 {% enddocs %}

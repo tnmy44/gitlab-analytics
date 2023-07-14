@@ -45,7 +45,6 @@ WITH final AS (
       prep_crm_account.count_active_ce_users,
       prep_crm_account.count_open_opportunities,
       prep_crm_account.count_using_ce,
-      prep_crm_account.potential_arr_lam,
       prep_crm_account.parent_crm_account_lam,
       prep_crm_account.parent_crm_account_lam_dev_count,
       prep_crm_account.carr_this_account,
@@ -70,7 +69,7 @@ WITH final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@lisvinueza",
     created_date="2022-08-10",
-    updated_date="2023-02-21"
+    updated_date="2023-05-21"
 ) }}

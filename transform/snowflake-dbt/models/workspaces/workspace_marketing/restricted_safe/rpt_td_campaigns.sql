@@ -11,7 +11,7 @@ WITH l2r AS (
    rpt_lead_to_revenue.is_inquiry,
    rpt_lead_to_revenue.is_sao,
    rpt_lead_to_revenue.is_mql,
-   rpt_lead_to_revenue.is_closed_won,
+   rpt_lead_to_revenue.is_won,
 
    rpt_lead_to_revenue.sales_accepted_date,
    rpt_lead_to_revenue.bizible_touchpoint_date,   
@@ -28,7 +28,7 @@ WITH l2r AS (
    rpt_lead_to_revenue.accepted_date,
    rpt_lead_to_revenue.bizible_landing_page,
    rpt_lead_to_revenue.bizible_form_url,
-   rpt_lead_to_revenue.touchpoint_type,
+   rpt_lead_to_revenue.bizible_touchpoint_type,
 
    rpt_lead_to_revenue.custom_sao,
    rpt_lead_to_revenue.won_custom_net_arr,
@@ -47,7 +47,7 @@ WITH l2r AS (
    fct_campaign.sub_region                                      AS sfdc_campaign_sub_region,
 
 
-   crm_person_status,
+   rpt_lead_to_revenue.status AS crm_person_status,
 
    --UTMs not captured by the Bizible
    PARSE_URL(bizible_form_url_raw):parameters:utm_content       AS bizible_form_page_utm_content,
@@ -101,7 +101,7 @@ WITH l2r AS (
 
 )
 
-  SELECT
+  SELECT DISTINCT
     l2r.*,
     tpd.fiscal_year                     AS date_range_year,
     tpd.fiscal_quarter_name_fy          AS date_range_quarter,

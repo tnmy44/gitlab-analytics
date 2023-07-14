@@ -23,6 +23,8 @@ WITH zuora_central_sandbox_product AS (
           THEN 'SaaS - Ultimate'
         WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%saas - premium%'
           THEN 'SaaS - Premium'
+        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%dedicated - ultimate%'
+          THEN 'Dedicated - Ultimate'     
         WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%ultimate%'
           THEN 'Self-Managed - Ultimate'
         WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%premium%'
@@ -49,7 +51,7 @@ WITH zuora_central_sandbox_product AS (
           THEN 'Trueup'
         WHEN LTRIM(LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name)) LIKE 'githost%'
           THEN 'GitHost'
-        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE ANY ('%quick start with ha%', '%proserv training per-seat add-on%')
+        WHEN LOWER(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) LIKE ANY ('%quick start with ha%', '%proserv training per-seat add-on%', 'dedicated engineer%')
           THEN 'Support'
         WHEN TRIM(zuora_central_sandbox_product_rate_plan.product_rate_plan_name) IN (
                                                                         'GitLab Service Package'
@@ -95,6 +97,7 @@ WITH zuora_central_sandbox_product AS (
                                                                       , 'Payment Gateway Test'
                                                                       , 'Time Tracking'
                                                                       , '1,000 CI Minutes'
+                                                                      , '1,000 Compute Minutes'
                                                                       , 'Gitlab Storage 10GB'
                                                                       , 'EdCast Settlement Revenue'
                                                                      )
@@ -104,25 +107,43 @@ WITH zuora_central_sandbox_product AS (
       CASE
         WHEN LOWER(product_tier_historical) LIKE '%self-managed%'
           THEN 'Self-Managed'
-        WHEN LOWER(product_tier_historical) LIKE '%saas%'
+        WHEN LOWER(product_tier_historical) LIKE ANY ('%saas%', 'storage', 'standard', 'basic', 'plus', 'githost', 'dedicated - ultimate%')
+          THEN 'SaaS'
+        WHEN product_tier_historical = 'SaaS - Other'
           THEN 'SaaS'
         WHEN product_tier_historical IN (
-                                          'Basic'
-                                        , 'GitHost'
-                                        , 'Other'
-                                        , 'Plus'
-                                        , 'Standard'
+                                          'Other'
                                         , 'Support'
                                         , 'Trueup'
                                         )
           THEN 'Others'
+        WHEN product_tier_historical = 'Not Applicable'
+          THEN 'Not Applicable'
         ELSE NULL
-      END                                                                       AS product_delivery_type,
+      END                                                           AS product_delivery_type,
+      CASE
+        WHEN LOWER(product_tier_historical) LIKE '%self-managed%'
+          THEN 'Self-Managed'
+        WHEN LOWER(product_tier_historical) LIKE 'dedicated - ultimate%'
+          THEN 'Dedicated'
+        WHEN LOWER(product_tier_historical) LIKE ANY ('%saas%', 'storage', 'standard', 'basic', 'plus', 'githost', 'saas - other')
+          THEN 'GitLab.com'
+        WHEN product_tier_historical IN (
+                                          'Other'
+                                        , 'Support'
+                                        , 'Trueup'
+                                        )
+          THEN 'Others'
+        WHEN product_tier_historical = 'Not Applicable'
+          THEN 'Not Applicable'
+        ELSE NULL
+      END                                                           AS product_deployment_type,
       CASE
         WHEN product_tier_historical IN (
                                           'SaaS - Gold'
                                         , 'Self-Managed - Ultimate'
                                         , 'SaaS - Ultimate'
+                                        , 'Dedicated - Ultimate'
                                         )
           THEN 3
         WHEN product_tier_historical IN (
@@ -154,7 +175,7 @@ WITH zuora_central_sandbox_product AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2022-03-31",
-    updated_date="2022-03-31"
+    updated_date="2023-05-26"
 ) }}

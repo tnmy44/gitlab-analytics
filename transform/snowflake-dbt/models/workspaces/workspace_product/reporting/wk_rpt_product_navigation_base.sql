@@ -1,16 +1,13 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "behavior_structured_event_pk"
+    "unique_key": "behavior_structured_event_pk",
+    "tags": ["product","mnpi_exception"]
     })
 }}
 
 WITH filtered_snowplow_events AS (
 
   SELECT
-    behavior_at,
-    gsc_pseudonymized_user_id,
-    event_category,
-    event_action,
     CASE 
     WHEN 
     event_label LIKE 'group_dropdown_frequent_items_list_item_%'
@@ -26,14 +23,7 @@ WITH filtered_snowplow_events AS (
     THEN 'project_dropdown_frequent_items_list_item'
     ELSE event_label 
     END AS event_label,
-    event_property,
-    gsc_plan,
-    device_type,
-    behavior_structured_event_pk,
-    app_id,
-    ultimate_parent_namespace_id,
-    session_id,
-    gsc_extra
+     {{ dbt_utils.star(from=ref('mart_behavior_structured_event'), except=["EVENT_LABEL","CREATED_BY", "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
   FROM {{ ref('mart_behavior_structured_event') }}
   WHERE 
   behavior_at >= '2021-10-01'
@@ -95,7 +85,9 @@ WITH filtered_snowplow_events AS (
     event_action = 'click_menu_item'
     AND
     event_category LIKE 'groups%'
-    )  
+    ) 
+    OR 
+    event_action = 'click_pinned_menu_item' 
     {% if is_incremental() %}
 
     AND  behavior_at > (SELECT MAX(behavior_at) FROM {{ this }})
@@ -108,5 +100,5 @@ WITH filtered_snowplow_events AS (
     created_by="@mdrussell",
     updated_by="@mpetersen",
     created_date="2022-10-11",
-    updated_date="2023-02-09"
+    updated_date="2023-05-16"
 ) }}

@@ -146,6 +146,7 @@
       dim_crm_person.matched_account_sdr_assigned,
       dim_crm_person.matched_account_type,
       dim_crm_person.matched_account_gtm_strategy,
+      dim_crm_person.matched_account_bdr_prospecting_status,
       dim_crm_person.is_first_order_initial_mql,
       dim_crm_person.is_first_order_mql,
       dim_crm_person.is_first_order_person,
@@ -267,7 +268,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@degan",
+    updated_by="@dmicovic",
     created_date="2020-12-07",
-    updated_date="2023-02-13",
+    updated_date="2023-05-10",
   ) }}  

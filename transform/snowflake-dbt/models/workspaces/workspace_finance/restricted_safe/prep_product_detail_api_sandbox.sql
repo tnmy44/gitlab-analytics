@@ -52,6 +52,7 @@ WITH zuora_api_sandbox_product AS (
       common_product_tier.product_tier_name                                                         AS product_tier_name,
       common_product_tier.product_tier_name_short                                                   AS product_tier_name_short,
       common_product_tier_mapping.product_delivery_type                                             AS product_delivery_type,
+      common_product_tier_mapping.product_deployment_type                                           AS product_deployment_type,
       CASE
         WHEN LOWER(zuora_api_sandbox_product_rate_plan.product_rate_plan_name) LIKE '%support%'
           THEN 'Support Only'
@@ -117,7 +118,7 @@ WITH zuora_api_sandbox_product AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ken_aguilar",
-    updated_by="@ken_aguilar",
+    updated_by="@jpeguero",
     created_date="2021-8-26",
-    updated_date="2021-08-26"
+    updated_date="2023-05-26"
 ) }}

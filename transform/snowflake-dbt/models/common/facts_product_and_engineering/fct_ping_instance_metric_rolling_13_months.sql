@@ -29,7 +29,7 @@ fct_ping_instance_metric AS (
   FROM {{ ref('fct_ping_instance_metric') }}
   WHERE DATE_TRUNC(MONTH, ping_created_date) >= DATEADD(MONTH, -13, DATE_TRUNC(MONTH, CURRENT_DATE))
     {% if is_incremental() %}
-      AND ping_created_date >= (SELECT MAX(ping_created_date) FROM {{ this }})
+      AND uploaded_at >= (SELECT MAX(uploaded_at) FROM {{ this }})
     {% endif %}
 
 ),
@@ -48,7 +48,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@pempey",
+    updated_by="@rbacovic",
     created_date="2022-07-20",
-    updated_date="2022-09-30"
+    updated_date="2023-06-05"
 ) }}

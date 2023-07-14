@@ -5,6 +5,7 @@ Daily Dag for Sales Analytics notebooks
 
 import os
 from datetime import datetime, timedelta
+import pathlib
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -50,22 +51,25 @@ default_args = {
 dag = DAG(
     "sales_analytics_daily_notebooks",
     default_args=default_args,
-    schedule_interval="0 18 * * *",
+    schedule_interval="0 2 * * *",
     concurrency=1,
 )
 
-DAILY_NOTEBOOKS_PATH = f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/daily/"
 notebooks = get_sales_analytics_notebooks(frequency="daily")
 
 # Task 1
 start = DummyOperator(task_id="Start", dag=dag)
 
 for notebook, task_name in notebooks.items():
+    absolute_path = pathlib.Path(SALES_ANALYTICS_NOTEBOOKS_PATH) / notebook
+    notebook_parent = absolute_path.parent.as_posix()
+    notebook_filename = absolute_path.name
+
     # Set the command for the container for loading the data
     container_cmd_load = f"""
         {clone_repo_cmd} &&
-        cd {DAILY_NOTEBOOKS_PATH} &&
-        papermill {notebook} -p is_local_development False
+        cd {notebook_parent} &&
+        papermill {notebook_filename} -p is_local_development False
         """
     task_identifier = f"{task_name}"
     # Task 2

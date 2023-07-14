@@ -1,13 +1,12 @@
 {% docs rpt_event_xmau_metric_monthly %}
 
-**Description:** GitLab.com (SaaS) xMAU metrics by month and user group (total, free, paid), sourced from the gitlab.com db replica. This model is used for xMAU/PI reporting and is the source for paid SaaS xMAU in the `[td_xmau]` snippet.
+**Description:** GitLab.com xMAU metrics by month and user group (total, free, paid), sourced from the gitlab.com db replica. 
+This model is used for xMAU/PI reporting and is the source for paid GitLab.com xMAU in the `[td_xmau]` snippet.
 
 **Data Grain:**
 - event_calendar_month
 - user_group
-- section_name
-- stage_name
-- group_name
+- event_name_array
 
 **Filters Applied to Model:**
 - Include events that occurred on the last 28 days of the calendar month
@@ -23,8 +22,8 @@
 **Business Logic in this Model:** 
 - The Last Plan Id of the Month for the Namespace is used for the `user_group` attribution
 - Usage is aggregated by xMAU metric instead of `event_name`. Metrics spanning multiple events are aggregated and deduped for ease of reporting. See `event_name_array` for all events included in the metric.
-- `group_name` will be NULL if the metric spans events associated with multiple groups. (This is necessary for the metrics to aggregate properly)
-- `stage_name IS NULL` for UMAU events
+- `group_name` is NULL if the metric spans events associated with multiple groups. (This is necessary for the metrics to aggregate properly)
+- `stage_name` is NULL for UMAU events
 - Aggregated Counts are based on the Event Date being within the Last Day of the Month and 27 days prior to the Last Day of the Month (total 28 days)
   - Events that are 29,30 or 31 days prior to the Last Day of the Month will Not be included in these totals
   - This is intended to match the installation-level Service Ping metrics by getting a 28-day count
@@ -439,5 +438,21 @@ Simpler incremental version of the rpt_ping_metric_totals_w_estimates_monthly sn
 {% docs rpt_event_xmau_metric_monthly_snapshot_model %}
 
 Simpler incremental version of the rpt_event_xmau_metric_monthly snapshot model. See [rpt_event_xmau_metric_monthly](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.rpt_event_xmau_metric_monthly) for more information about the model being snapshotted.
+
+{% enddocs %}
+
+{% docs rpt_product_navigation_base %}
+
+**Description:** Navigation events are tracked by the team and identified using the logic contained. This has gone through iterations wherein the logic expands on the query but the tracking has gotten simpler. The resulting where clause is to capture past events and current but as we continue forward the past could become distant enough to simplify the WHERE logic to the current nav_* based event tracking. The intention of this model is to enable reporting on the navigation use in conjuction with our new nav project in 2023.
+
+**Data Grain:** 
+`behavior_structured_event_pk`; inherited from `mart_behavior_structured_event`.
+
+This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all).
+
+**Filters:**
+- Only includes events from `2021-10-01` and on
+- Only includes events where `app_id IN ('gitlab', 'gitlab_customers')`
+- Only includes events related to product navigation. Some of the filters catch historical product navigation events, while some catch current product navigation events.
 
 {% enddocs %}

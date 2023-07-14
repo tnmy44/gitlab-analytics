@@ -61,7 +61,6 @@ manifest = extract_manifest(f"{REPO_BASE_PATH}/extract/zuora_query_api/src/queri
 tables = manifest.get("tables")
 
 for table_name in tables:
-
     extract_command = f"""
         {clone_and_setup_extraction_cmd} &&
             python zuora_query_api/src/main.py tap zuora_query_api/src/queries.yml --load_only_table {table_name}

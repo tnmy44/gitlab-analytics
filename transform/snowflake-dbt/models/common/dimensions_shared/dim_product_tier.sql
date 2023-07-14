@@ -12,6 +12,7 @@ WITH prep_product_tier AS (
     product_tier_name,
     product_tier_name_short,
     product_delivery_type,
+    product_deployment_type,
     product_ranking
   FROM prep_product_tier
   
@@ -20,7 +21,7 @@ WITH prep_product_tier AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@ischweickartDD",
+    updated_by="@jpeguero",
     created_date="2020-12-28",
-    updated_date="2021-01-26"
+    updated_date="2023-05-25"
 ) }}

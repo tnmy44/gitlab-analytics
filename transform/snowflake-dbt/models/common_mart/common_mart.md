@@ -17,7 +17,7 @@
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - Not all events have a user associated with them (ex: 'milestones'), and not all events have a namespace associated with them (ex: 'users_created'). Therefore it is expected that `dim_user_sk` or `dim_ultimate_parent_namespace_id` will be NULL for these events
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
@@ -47,7 +47,7 @@
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
 **Other Comments:**
@@ -77,7 +77,7 @@
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
 **Other Comments:**
@@ -289,7 +289,7 @@
 - License / Subscription Logic:
   - `latest_subscription_id` reflects the most recent available subscription_id `WHERE subscription_status IN ('Active','Cancelled')`. This is not necessarily the subscription_id at the time of ping generation
   - `is_program_subscription` = TRUE `WHERE product_rate_plan_name LIKE ('%edu%' or '%oss%')`
-  - `product_delivery_type = 'Self-Managed'`
+  - `ping_deployment_type IN ('Self-Managed', 'SaaS')`
   - `product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')`
   - `charge_type = 'Recurring'`
 - The installation's subscription information reflects the plan at time of ping generation
@@ -366,7 +366,7 @@
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_month`) is determined by the plan for the last event on a given month
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
 **Other Comments:**

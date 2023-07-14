@@ -12,18 +12,127 @@ models:
         tags: ["tdf", "sfdc"]
         tests:
           - not_null
+      - name: account_id_18
+      - name: master_record_id
+      - name: owner_id
+      - name: parent_id
+      - name: primary_contact_id
+      - name: record_type_id
+      - name: ultimate_parent_id
+      - name: partner_vat_tax_id
+      - name: gitlab_com_user
+      - name: account_manager
+      - name: account_owner
+      - name: account_owner_team
+      - name: proposed_account_owner
+      - name: business_development_rep
+      - name: dedicated_service_engineer
+      - name: sales_development_rep
+      - name: technical_account_manager_id
+      - name: ultimate_parent_account_id
+      - name: ultimate_parent_account_name
+      - name: account_type
+      - name: df_industry
+      - name: industry
+      - name: sub_industry
+      - name: parent_account_industry_hierarchy
+      - name: account_tier
+      - name: account_tier_notes
+      - name: customer_since_date
+      - name: carr_this_account
+      - name: carr_account_family
+      - name: next_renewal_date
+      - name: license_utilization
+      - name: support_level
+      - name: named_account
+      - name: billing_country
+      - name: billing_country_code
+      - name: billing_postal_code
       - name: is_sdr_target_account
         tags: ["tdf", "sfdc"]
         tests:
           - not_null
-      - name: tsp_max_hierarchy_sales_segment
-        description: Maximum account sales segment within the account hierarchy.
-      - name: division_sales_segment
-        description: Sales segment of the specific account.
+      - name: lam
+      - name: lam_dev_count
+      - name: is_jihu_account
+      - name: partners_signed_contract_date
+      - name: partner_account_iban_number
+      - name: partner_type
+      - name: partner_status
+      - name: is_first_order_available
+      - name: zi_technologies
+      - name: technical_account_manager_date
+      - name: gitlab_customer_success_project
+      - name: forbes_2000_rank
+      - name: potential_users
+      - name: number_of_licenses_this_account
+      - name: decision_maker_count_linkedin
+      - name: number_of_employees
+      - name: account_phone
+      - name: zoominfo_account_phone
+      - name: admin_manual_source_number_of_employees
+      - name: admin_manual_source_account_address
+      - name: account_sales_segment
+      - name: account_geo
+      - name: account_region
+      - name: account_area
+      - name: account_territory
+      - name: account_business_unit
+      - name: account_role_type
+      - name: account_employee_count
+      - name: account_max_family_employee
+      - name: account_upa_country
+      - name: account_upa_state
+      - name: account_upa_city
+      - name: account_upa_street
+      - name: account_upa_postal_code
+      - name: health_number
+      - name: health_score_color
+      - name: count_active_subscription_charges
+      - name: count_active_subscriptions
+      - name: count_billing_accounts
+      - name: count_licensed_users
+      - name: count_of_new_business_won_opportunities
+      - name: count_open_renewal_opportunities
+      - name: count_opportunities
+      - name: count_products_purchased
+      - name: count_won_opportunities
+      - name: count_concurrent_ee_subscriptions
+      - name: count_ce_instances
+      - name: count_active_ce_users
+      - name: count_open_opportunities
+      - name: count_using_ce
+      - name: abm_tier
+      - name: gtm_strategy
+      - name: gtm_acceleration_date
+      - name: gtm_account_based_date
+      - name: gtm_account_centric_date
+      - name: abm_tier_1_date
+      - name: abm_tier_2_date
+      - name: abm_tier_3_date
+      - name: demandbase_account_list
+      - name: demandbase_intent
+      - name: demandbase_page_views
+      - name: demandbase_score
+      - name: demandbase_sessions
+      - name: demandbase_trending_offsite_intent
+      - name: demandbase_trending_onsite_engagement
       - name: ultimate_parent_sales_segment
         description: Sales segment of the parent of the account hierarchy.
+      - name: division_sales_segment
+        description: Sales segment of the specific account.
+      - name: account_owner_user_segment
+      - name: sales_segment
+      - name: account_segment
+      - name: is_locally_managed_account
+      - name: is_strategic_account
+      - name: next_fy_account_owner_temp
+      - name: next_fy_planning_notes_temp
+      - name: partner_track
+      - name: partners_partner_type
+      - name: gitlab_partner_program
       - name: zoom_info_company_name
-        description: The name of the company matched by the Zoom Info enrichment process.
+        description: The name of the company matched by the Zoom Info enrichment process.      
       - name: zoom_info_company_revenue
         description: The estimated revenue of the company matched by the Zoom Info enrichment process.
       - name: zoom_info_company_employee_count
@@ -31,13 +140,37 @@ models:
       - name: zoom_info_company_industry
         description: The the primary industry of the company matched by the Zoom Info enrichment process.
       - name: zoom_info_company_city
-        description: The city of the company matched by the Zoom Info enrichment process.
+        description: The city of the company matched by the Zoom Info enrichment process.      
       - name: zoom_info_company_state_province
         description: The state or province of the company matched by the Zoom Info enrichment process.
       - name: zoom_info_company_country
         description: The country of the company matched by the Zoom Info enrichment process.
       - name: is_excluded_from_zoom_info_enrich
         description: A flag to indicate if the account should be included in the Zoom Info enrichment process.
+      - name: zoom_info_website
+      - name: zoom_info_company_other_domains
+      - name: zoom_info_dozisf_zi_id
+      - name: zoom_info_parent_company_zi_id
+      - name: zoom_info_parent_company_name
+      - name: zoom_info_ultimate_parent_company_zi_id
+      - name: zoom_info_ultimate_parent_company_name
+      - name: zoom_info_number_of_developers
+      - name: zoom_info_total_funding
+      - name: is_key_account
+      - name: gs_first_value_date
+      - name: gs_last_csm_activity_date
+      - name: eoa_sentiment
+      - name: gs_health_user_engagement
+      - name: gs_health_cd
+      - name: gs_health_devsecops
+      - name: gs_health_ci
+      - name: gs_health_scm
+      - name: risk_impact
+      - name: risk_reason
+      - name: last_timeline_at_risk_update
+      - name: last_at_risk_update_comments
+      - name: bdr_prospecting_status
+        description: Indicates whether the account is actively being prospected by a BDR.
 
   - name: sfdc_account_history_source
     description: Source model for SFDC Account History
@@ -92,6 +225,8 @@ models:
         tests:
           - not_null
           - unique
+      - name: campaign_member_status
+        description: Status of the campaign member response. 
   - name: sfdc_case_source
     description: Source model for SFDC Case
     columns:
@@ -131,6 +266,8 @@ models:
         description: The state or province of the company matched by the Zoom Info enrichment process.
       - name: zoominfo_company_country
         description: The country of the company matched by the Zoom Info enrichment process.
+      - name: is_high_priority
+        description: Indicates whether the record is of high priority to contact by sales. 
   - name: sfdc_contact_history_source
     description: Source model for SFDC Contacts History
     columns:
@@ -216,6 +353,10 @@ models:
         description: The city of the company matched by the Zoom Info enrichment process.
       - name: zoominfo_company_industry
         description: The industry of the company matched by the Zoom Info enrichment process.
+      - name: matched_account_bdr_prospecting_status
+        description: Indicates whether the account of the lead record is actively being prospected by a BDR.
+      - name: is_high_priority
+        description: Indicates whether the record is of high priority to contact by sales. 
   - name: sfdc_lead_history_source
     description: Source model for SFDC Leads History
     columns:

@@ -205,6 +205,10 @@ models:
         +materialized: table
         +schema: gainsight
 
+      gainsight_customer_success:
+        +schema: gainsight_customer_success
+        +tags: ["gainsight"]
+
       gcp_billing:
         +materialized: table
         +schema: gcp_billing
@@ -263,6 +267,10 @@ models:
         sensitive:
           +schema: sensitive
           secure: true
+
+      omamori:
+        +materialized: table
+        +schema: omamori
 
       pto:
         +materialized: table
@@ -436,6 +444,14 @@ models:
     common_mart_marketing:
       +materialized: table
       +schema: common_mart_marketing
+      restricted_safe:
+        +schema: restricted_safe_common_mart_marketing
+        +tags: ["safe"]
+        secure: true
+
+    common_mart_people:
+      +materialized: table
+      +schema: common_mart_people
 
     # ------------------
     # Legacy (formerly Staging)

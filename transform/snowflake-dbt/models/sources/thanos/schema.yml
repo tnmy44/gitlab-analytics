@@ -58,7 +58,7 @@ models:
         - name: message_type
         - name: status_code
         - name: is_success
-    - name: thanos_stage_group_error_budget_completeness_source
+    - name: thanos_stage_group_error_budget_indicators
       columns:
         - name: metric_time_stamp
         - name: metric_value
@@ -75,6 +75,7 @@ models:
             combination_of_columns:
               - metric_query
               - metric_created_at
+              - metric_sla_type
               - metric_value
       columns:
         - name: metric_query

@@ -33,7 +33,7 @@
     FROM subscriptions
     INNER JOIN dates
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE    -- first month Usage Ping was collected
-    WHERE subscriptions.product_delivery_type = 'Self-Managed'
+    WHERE subscriptions.product_deployment_type IN ('Self-Managed', 'Dedicated')
     {{ dbt_utils.group_by(n=4)}}
 
 
@@ -42,7 +42,7 @@
     SELECT *
     FROM ping_instance_wave
     WHERE dim_subscription_id IS NOT NULL
-      AND ping_delivery_type = 'Self-Managed'
+      AND ping_deployment_type IN ('Self-Managed', 'Dedicated')
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
         dim_subscription_id,
@@ -76,6 +76,8 @@
       ping_instance_wave_sm.cleaned_version,
       ping_instance_wave_sm.dim_location_country_id,
       ping_instance_wave_sm.installation_creation_date,
+      ping_instance_wave_sm.ping_delivery_type,
+      ping_instance_wave_sm.ping_deployment_type,
       -- Wave 1
       DIV0(
           ping_instance_wave_sm.license_billable_users,
@@ -263,6 +265,8 @@
       ping_instance_wave_sm.merge_requests_security_policy_28_days_user,
       ping_instance_wave_sm.pipelines_implicit_auto_devops_28_days_event,
       ping_instance_wave_sm.pipeline_schedules_28_days_user,
+      -- Wave 8
+      ping_instance_wave_sm.ci_internal_pipelines_28_days_event,
       -- Data Quality Flags
       IFF(ping_instance_wave_sm.instance_user_count != seat_link.active_user_count,
           ping_instance_wave_sm.instance_user_count, NULL)                                               AS instance_user_count_not_aligned,
@@ -314,5 +318,5 @@
     created_by="@snalamaru",
     updated_by="@jpeguero",
     created_date="2022-07-21",
-    updated_date="2023-04-04"
+    updated_date="2023-06-22"
 ) }}
