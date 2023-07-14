@@ -2110,15 +2110,12 @@ roles:
             databases:
                 read:
                     - raw
-                    - prep
             schemas:
                 read:
                     - raw.oci_reports
-                    - prep.oci_reports
             tables:
                 read:
                     - raw.oci_reports.*
-                    - prep.oci_reports.*
 
     - postgres_pipeline:
         warehouses:

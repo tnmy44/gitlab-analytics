@@ -1,0 +1,4 @@
+version: 2
+
+models:
+  - name: oci_cost_report_source
