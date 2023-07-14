@@ -343,6 +343,8 @@ for source_name, config in config_dict.items():
                 affinity=get_affinity("production"),
                 tolerations=get_toleration("production"),
                 arguments=[check_replica_snapshot_command],
+                retries=2,
+                retry_delay=timedelta(seconds=300),
                 dag=extract_dag,
             )
         with extract_dag:
@@ -427,6 +429,8 @@ for source_name, config in config_dict.items():
                     affinity=get_affinity("production"),
                     tolerations=get_toleration("production"),
                     arguments=[check_replica_snapshot_command],
+                    retries=2,
+                    retry_delay=timedelta(seconds=300),
                     dag=incremental_backfill_dag,
                 )
             is_incremental_backfill_dag = True
@@ -527,6 +531,8 @@ for source_name, config in config_dict.items():
                     affinity=get_affinity("production"),
                     tolerations=get_toleration("production"),
                     arguments=[check_replica_snapshot_command],
+                    retries=2,
+                    retry_delay=timedelta(seconds=300),
                     dag=sync_dag,
                 )
             for table in table_list:
