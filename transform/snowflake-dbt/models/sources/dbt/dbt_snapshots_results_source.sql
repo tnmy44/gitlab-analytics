@@ -42,8 +42,8 @@ WITH source AS (
           ]) }}                                       AS run_unique_key
     FROM flattened
     LEFT JOIN LATERAL FLATTEN(INPUT => data_by_row['timing']::ARRAY, outer => true) timing
-    ON IFNULL(timing.value['name'], 'compile') = 'compile'
     WHERE dbt_version is not null
+      AND IFNULL(timing.value['name'], 'compile') = 'compile'
   
 ), v0model_parsed_out AS (
   
@@ -69,8 +69,8 @@ WITH source AS (
           ]) }}                                                      AS run_unique_key
     FROM flattened
     LEFT JOIN LATERAL FLATTEN(INPUT => data_by_row['timing']::ARRAY, outer => true) timing
-    ON IFNULL(timing.value['name'], 'compile') = 'compile'
     WHERE dbt_version is null
+      AND IFNULL(timing.value['name'], 'compile') = 'compile'
 )
 
 SELECT *
