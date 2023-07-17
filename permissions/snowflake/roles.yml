@@ -219,6 +219,11 @@ databases:
     - rrendon_prep:
         shared: no
 
+    - sbalasani_prod:
+        shared: no
+    - sbalasani_prep:
+        shared: no
+
     - schaturvedi_prod:
         shared: no
     - schaturvedi_prep:
@@ -804,6 +809,7 @@ roles:
                     - prod.restricted_safe_common_mart_sales
                     - prod.common_mart_product
                     - prod.common_mart_marketing
+                    - prod.common_mart_people
                     - raw.*
                 write:
                     - prod.boneyard
@@ -821,6 +827,7 @@ roles:
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.common_mart_product.*
                     - prod.common_mart_marketing.*
+                    - prod.common_mart_people.*
                     - raw.*.*
                 write:
                     - prod.boneyard.*
@@ -1151,6 +1158,7 @@ roles:
                 - prod.common_mart_marketing
                 - prod.common_mart_sales
                 - prod.common_mart_product
+                - prod.common_mart_people
                 - prod.legacy
                 - prep.sensitive
                 - monte_carlo.prod_insights
@@ -1161,6 +1169,7 @@ roles:
                 - prod.common_mart_marketing.*
                 - prod.common_mart_sales.*
                 - prod.common_mart_product.*
+                - prod.common_mart_people.*
                 - prod.legacy.*
                 - prep.sensitive.*
                 - monte_carlo.prod_insights.*
@@ -1266,9 +1275,11 @@ roles:
             schemas:
                 read:
                     - raw.tap_adaptive
+                    - raw.adaptive_custom
             tables:
                 read:
                     - raw.tap_adaptive.*
+                    - raw.adaptive_custom.*
 
     - bamboohr_analytics:
         warehouses:
@@ -1281,10 +1292,12 @@ roles:
             schemas:
                 read:
                     - prod.common
+                    - prod.pumps_sensitive
                     - prod.legacy
             tables:
                 read:
                     - prod.common.*
+                    - prod.pumps_sensitive.pump_disaster_relief_fund
                     - prod.legacy.*
                     - prep.sensitive.employee_directory
                     - prep.sensitive.employee_directory_intermediate
@@ -1448,6 +1461,7 @@ roles:
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
+                    - prod.common_mart_people
                     - prod.common_prep
             tables:
                 read:
@@ -1457,6 +1471,7 @@ roles:
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
+                    - prod.common_mart_people.*
                     - prod.common_prep.*
 
     - container_registry:
@@ -1503,6 +1518,7 @@ roles:
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
+                    - prod.common_mart_people
                     - prod.common_prep
                     - prod.data_quality
                     - prod.legacy
@@ -1526,6 +1542,7 @@ roles:
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
+                    - prod.common_mart_people.*
                     - prod.common_prep.*
                     - prod.data_quality.*
                     - prod.legacy.*
@@ -2943,6 +2960,7 @@ roles:
             - analyst_engineering
             - analyst_growth
             - coupa
+            - customers_db
             - restricted_safe
             - bi_tool_eval_read
             - marketo
@@ -4656,6 +4674,51 @@ roles:
         member_of: []
         warehouses: []
 
+    - sbalasani:
+        member_of:
+         - analytics_engineer_core
+         - analyst_engineering
+         - analyst_growth
+         - bi_tool_eval_read
+         - data_team_analyst
+         - marketo
+         - restricted_safe
+         - zuora
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - sbalasani_prep
+                - sbalasani_prod
+            schemas:
+                - sbalasani_prep.*
+                - sbalasani_prod.*
+            tables:
+                - sbalasani_prep.*.*
+                - sbalasani_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - sbalasani_prep
+                    - sbalasani_prod
+                write:
+                    - sbalasani_prep
+                    - sbalasani_prod
+            schemas:
+                read:
+                    - sbalasani_prep.*
+                    - sbalasani_prod.*
+                write:
+                    - sbalasani_prep.*
+                    - sbalasani_prod.*
+            tables:
+                read:
+                    - sbalasani_prep.*.*
+                    - sbalasani_prod.*.*
+                write:
+                    - sbalasani_prep.*.*
+                    - sbalasani_prod.*.*
+
     - schaturvedi:
         member_of:
             - engineer
@@ -5505,6 +5568,11 @@ users:
     - rwoo:
         can_login: no
         member_of: []
+
+    - sbalasani:
+        can_login: yes
+        member_of:
+            - sbalasani
 
     - schaturvedi:
         can_login: yes

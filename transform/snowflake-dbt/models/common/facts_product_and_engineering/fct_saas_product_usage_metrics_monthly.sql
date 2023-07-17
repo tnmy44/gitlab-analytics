@@ -22,12 +22,13 @@
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE                        -- first month Usage Ping was collected
     LEFT JOIN charges 
       ON charges.dim_subscription_id = zuora_subscriptions.dim_subscription_id
-    WHERE zuora_subscriptions.product_delivery_type = 'SaaS'
+    WHERE zuora_subscriptions.product_deployment_type = 'GitLab.com'
       AND (
         zuora_subscriptions.product_rate_plan_charge_name NOT IN (
           '1,000 CI Minutes',
           'Gitlab Storage 10GB - 1 Year',
-          'Premium Support'
+          'Premium Support',
+          '1,000 Compute Minutes'
         )
         OR charges.charge_type != 'OneTime'
       )

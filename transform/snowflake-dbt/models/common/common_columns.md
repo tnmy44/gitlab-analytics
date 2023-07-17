@@ -1409,6 +1409,12 @@ Timestamp for when the event actually happened. This appears as `derived_tstamp`
 
 {% enddocs %}
 
+{% docs behavior_date %}
+
+The date when the event happened (YYYY-MM-DD)
+
+{% enddocs %}
+
 {% docs tracker_version %}
 
 Information about the event tracker version. 
@@ -1835,6 +1841,12 @@ This is the previous month's product tier. A GitLab offering that provides a set
 {% docs product_delivery_type %}
 
 This is the delivery type of GitLab to include either SaaS or Self-Managed.
+
+{% enddocs %}
+
+{% docs product_deployment_type %}
+
+This is the deployment type of GitLab to include either GitLab.com, Dedicated or Self-Managed.
 
 {% enddocs %}
 

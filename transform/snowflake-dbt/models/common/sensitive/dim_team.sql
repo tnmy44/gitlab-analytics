@@ -187,13 +187,8 @@ final AS (
   FROM team_data
   LEFT JOIN team_hierarchy
     ON team_hierarchy.team_id = team_data.team_id
-      AND (
-        CASE
-          WHEN team_data.team_data_valid_from >= team_hierarchy.hierarchy_valid_from AND team_data.team_data_valid_from < team_hierarchy.hierarchy_valid_to THEN TRUE
-          WHEN team_data.team_data_valid_to > team_hierarchy.hierarchy_valid_from AND team_data.team_data_valid_to <= team_hierarchy.hierarchy_valid_to THEN TRUE
-          WHEN team_hierarchy.hierarchy_valid_from >= team_data.team_data_valid_from AND team_hierarchy.hierarchy_valid_from < team_data.team_data_valid_to THEN TRUE
-          ELSE FALSE
-        END) = TRUE
+      AND NOT (team_data.team_data_valid_to <= team_hierarchy.hierarchy_valid_from
+          OR team_data.team_data_valid_from >= team_hierarchy.hierarchy_valid_to)
 
 )
 
@@ -203,5 +198,5 @@ final AS (
     created_by="@lisvinueza",
     updated_by="@lisvinueza",
     created_date="2023-01-17",
-    updated_date="2023-06-07",
+    updated_date="2023-06-30",
  	) }}

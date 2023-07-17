@@ -18,6 +18,7 @@
       free_user_metrics.hostname,
       free_user_metrics.dim_installation_id,
       free_user_metrics.delivery_type,
+      free_user_metrics.deployment_type,
       free_user_metrics.cleaned_version,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       crm_account_name,
@@ -224,6 +225,7 @@
         'hostname',
         'dim_installation_id',
         'delivery_type',
+        'deployment_type',
         'cleaned_version',
         'dim_crm_account_id',
         'crm_account_name',
@@ -407,7 +409,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2021-06-14",
-    updated_date="2023-06-05"
+    updated_date="2023-06-22"
 ) }}
