@@ -156,6 +156,8 @@ models:
           description: The Touchpoint Marketing Channel Path of the Bizible Touchpoint in Salesforce. 
         - name: bizible_medium
           description: The Touchpoint Medium of the Bizible Touchpoint in Salesforce. 
+        - name: date_day
+          description: The day of the metric's Date. 
         - name: date_range_week
           description: The week of the metric's Date. 
         - name: date_range_month
