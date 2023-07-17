@@ -13,9 +13,11 @@ import fire
 def check_snapshot_replica(source_engine: Engine) -> None:
     current_date_check_query = "SELECT CURRENT_DATE;"
     pg_date_timestamp = query_executor(source_engine, current_date_check_query)[0][0]
-    #Because sometimes we do not get a pg_last_xact_replay_timestamp, added a step to validate this.
+    # Because sometimes we do not get a pg_last_xact_replay_timestamp, added a step to validate this.
     last_replica_date_check_query = "SELECT pg_last_xact_replay_timestamp();;"
-    pg_last_xact_replay_timestamp = query_executor(source_engine, current_date_check_query)[0][0]
+    pg_last_xact_replay_timestamp = query_executor(
+        source_engine, current_date_check_query
+    )[0][0]
     if current_date_check_query:
         logging.info(f"Timestamp value from Postgres:{pg_date_timestamp}")
     if last_replica_date_check_query is not None:
