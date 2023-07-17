@@ -106,11 +106,7 @@
       metrics_path                                                  AS metrics_path,
       metric_value                                                  AS metric_value,
       has_timed_out                                                 AS has_timed_out,
-      ping_type                                                     AS ping_type,
-      cleaned_version,
-      add_country_info_to_usage_ping.major_version,
-      add_country_info_to_usage_ping.minor_version,
-      add_country_info_to_usage_ping.major_minor_version
+      ping_type                                                     AS ping_type
     FROM add_country_info_to_usage_ping
     LEFT JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
