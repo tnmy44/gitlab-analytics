@@ -14,6 +14,7 @@
 website_page_views AS (
 
   SELECT
+    fct.fct_behavior_website_page_view_sk,
     fct.dim_behavior_website_page_sk,
     fct.dim_behavior_referrer_page_sk,
     fct.dim_namespace_id,
@@ -84,5 +85,5 @@ website_page_views AS (
     created_by="@eneuberger",
     updated_by="@mdrussell",
     created_date="2023-07-12",
-    updated_date="2023-07-13"
+    updated_date="2023-07-17"
 ) }}
