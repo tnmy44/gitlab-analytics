@@ -231,6 +231,10 @@ models:
           description: Unique identifier of a bizible attribution touchpoint from Salesforce.
         - name: dim_crm_opportunity_id
           description: Unique identifier of a crm opportunity from Salesforce.
+        - name: dim_crm_user_id
+          description: Unique identifier for the lead/contact owner from Salesforce. 
+        - name: opp_dim_crm_user_id
+          description: Unique identifier for the opportunity owner from Salesforce. 
         - name: dim_campaign_id
           description: Unique identifier of a crm campaign from Salesforce.
         - name: email_hash
@@ -242,6 +246,8 @@ models:
         - name: true_inquiry_date
           description: The SoT field for Inquiry date on a lead/contact, taken from the Inquiry DateTime field in Salesforce.
         - name: mql_date_first_pt
+          description: The first instance of a MQL date on a lead/contact, from Salesforce. 
+        - name: mql_date_lastest_pt
           description: The SoT field for MQL date on a lead/contact, taken from the Marketo MQL Date field in Salesforce.
         - name: accepted_date
           description: The SoT field for Accepted date on a lead/contact, taken from the Accepted DateTime field in Salesforce.
