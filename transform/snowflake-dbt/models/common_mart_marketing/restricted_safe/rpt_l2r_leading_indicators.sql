@@ -67,7 +67,7 @@
         date_day,
         fiscal_year                     AS date_range_year,
         fiscal_quarter_name_fy          AS date_range_quarter,
-        first_day_of_month  AS date_range_month,
+        first_day_of_month              AS date_range_month,
         first_day_of_week               AS date_range_week
     FROM dim_date
 
@@ -167,6 +167,7 @@
 ), inquiries AS (
 
     SELECT
+        date_day,
         date_range_week,
         date_range_month,
         date_range_quarter,
@@ -182,11 +183,12 @@
         parent_crm_account_lam_dev_count,
         COUNT(DISTINCT actual_inquiry) AS inquiries
     FROM inquiry_prep
-    {{ dbt_utils.group_by(n=13) }}
+    {{ dbt_utils.group_by(n=14) }}
   
 ), mqls AS (
 
     SELECT
+        date_day,
         date_range_week,
         date_range_month,
         date_range_quarter,
@@ -202,11 +204,12 @@
         parent_crm_account_lam_dev_count,
         COUNT(DISTINCT mqls) AS mqls
     FROM mql_prep
-    {{ dbt_utils.group_by(n=13) }}
+    {{ dbt_utils.group_by(n=14) }}
     
  ), saos AS (
   
     SELECT
+        date_day,
         date_range_week,
         date_range_month,
         date_range_quarter,
@@ -223,11 +226,12 @@
         bizible_medium,
         COUNT(DISTINCT saos) AS saos
     FROM sao_prep
-    {{ dbt_utils.group_by(n=14) }}
+    {{ dbt_utils.group_by(n=15) }}
     
   ), final AS (
 
     SELECT 
+        date_day,
         date_range_week,
         date_range_month,
         date_range_quarter,
@@ -244,9 +248,10 @@
         0 AS mqls,
         0 AS saos
     FROM inquiries
-    {{ dbt_utils.group_by(n=12) }}
+    {{ dbt_utils.group_by(n=13) }}
     UNION ALL
     SELECT
+        date_day,
         date_range_week,
         date_range_month,
         date_range_quarter,
@@ -263,9 +268,10 @@
         SUM(mqls) AS mqls,
         0 AS saos
     FROM mqls
-    {{ dbt_utils.group_by(n=12) }}
+    {{ dbt_utils.group_by(n=13) }}
     UNION ALL
     SELECT
+        date_day,
         date_range_week,
         date_range_month,
         date_range_quarter,
@@ -282,7 +288,7 @@
         0 AS mqls,
         SUM(saos) AS saos
     FROM saos
-    {{ dbt_utils.group_by(n=12) }}
+    {{ dbt_utils.group_by(n=13) }}
 
   )
 
@@ -292,5 +298,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-06-21",
-    updated_date="2023-07-13",
+    updated_date="2023-07-14",
   ) }}
