@@ -13,6 +13,13 @@ installation_agg AS (
       'installation_creation_date'
     )
     AND metric_value != 0 -- 0, when cast to timestamp, returns 1970-01-01
+
+    -- filtering out these two installations per this discussion: 
+    -- https://gitlab.com/gitlab-data/analytics/-/merge_requests/8416#note_1473684265
+    AND dim_installation_id NOT IN (
+      'cc89cba853f6caf1a100259b1048704f',
+      '5f03898242847ecbaff5b5f8973d5910'
+    )
   {{ dbt_utils.group_by(n = 1) }}
 ),
 
