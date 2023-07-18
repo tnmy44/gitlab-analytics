@@ -104,4 +104,8 @@ sources:
           - name: updated_at
             tests:
               - not_null
-        
+      - name: customers_db_provisions
+        columns:
+          - name: subscription_id
+            tests:
+              - not_null

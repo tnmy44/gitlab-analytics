@@ -88,6 +88,7 @@
       dim_crm_person.sfdc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
       mart_crm_touchpoint.dim_campaign_id,
+      person_base.dim_crm_user_id,
   
   --Person Data
       person_base.email_hash,
@@ -95,6 +96,7 @@
       person_base.source_buckets,
       person_base.true_inquiry_date,
       person_base.mql_date_first_pt,
+      person_base.mql_date_lastest_pt,
       person_base.accepted_date,
       person_base.status,
       person_base.lead_source,
@@ -192,6 +194,7 @@
       mart_crm_account.dim_parent_crm_account_id,
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
+      opp.dim_crm_user_id AS opp_dim_crm_user_id,
     
     --Opp Data
       opp.order_type AS opp_order_type,
@@ -414,7 +417,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=77)}}
+    {{dbt_utils.group_by(n=78)}}
     
 ), cohort_base_combined AS (
   
@@ -428,6 +431,8 @@
       opp_base_with_batp.dim_crm_touchpoint_id AS dim_crm_batp_touchpoint_id,
       dim_crm_opportunity_id,
       COALESCE (person_base_with_tp.dim_campaign_id,opp_base_with_batp.dim_campaign_id) AS dim_campaign_id, 
+      dim_crm_user_id,
+      opp_dim_crm_user_id,
   
   --Person Data
       email_hash,
@@ -435,6 +440,7 @@
       source_buckets,
       true_inquiry_date,
       mql_date_first_pt,
+      mql_date_lastest_pt,
       accepted_date,
       status,
       lead_source,
@@ -628,7 +634,7 @@
   LEFT JOIN dim_date AS inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date AS mql_date
-    ON cohort_base_combined.mql_date_first_pt = mql_date.date_day
+    ON cohort_base_combined.mql_date_lastest_pt = mql_date.date_day
   LEFT JOIN dim_date AS opp_create_date
     ON cohort_base_combined.opp_created_date = opp_create_date.date_day
   LEFT JOIN dim_date AS sao_date
@@ -650,5 +656,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-06-02",
+    updated_date="2023-07-10",
   ) }}
