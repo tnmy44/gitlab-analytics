@@ -11,6 +11,7 @@
 , final AS (
 
   SELECT
+    fct_behavior_structured_event_without_assignment.behavior_structured_event_pk,
     fct_behavior_structured_event_without_assignment.behavior_at,
     fct_behavior_structured_event_without_assignment.gsc_pseudonymized_user_id,
     dim_behavior_event.event_category,
