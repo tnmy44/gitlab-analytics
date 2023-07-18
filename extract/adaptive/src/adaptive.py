@@ -91,6 +91,8 @@ class Adaptive:
             "Bookings_Model_New.5K_Customer_Number",
             "Bookings_Model_New.100K_Customer_Number",
             "Headcount",
+            "Current_Billings",
+            "Total_Calc_Billings",
         ]
 
         account_codes_xml = "".join(

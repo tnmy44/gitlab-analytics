@@ -45,7 +45,7 @@ default_args = {
 dag = DAG(
     "adaptive_extract",
     default_args=default_args,
-    schedule_interval="0 8 * * *",
+    schedule_interval="0 2 * * *",
     start_date=datetime(2022, 12, 26),
     catchup=False,
     max_active_runs=1,
@@ -53,7 +53,7 @@ dag = DAG(
 
 adaptive_extract_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    "python adaptive/src/adaptive.py --folder_criteria='Shared with Data (Test)'"
+    "python adaptive/src/adaptive.py --folder_criteria='Shared with Data'"
 )
 
 adaptive_task = KubernetesPodOperator(
