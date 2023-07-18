@@ -73,8 +73,8 @@ clari_task = KubernetesPodOperator(
         "logical_date": "{{ logical_date }}",  # run yest's quarter
         "task_schedule": TASK_SCHEDULE,
     },
-    affinity=get_affinity("test"),
-    tolerations=get_toleration("test"),
+    affinity=get_affinity("production"),
+    tolerations=get_toleration("production"),
     arguments=[clari_extract_command],
     dag=dag,
 )
