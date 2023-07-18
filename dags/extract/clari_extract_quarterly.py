@@ -99,8 +99,8 @@ clari_task_new_quarter = KubernetesPodOperator(
         "logical_date": "{{ next_execution_date }}",
         "task_schedule": TASK_SCHEDULE,
     },
-    affinity=get_affinity("production"),
-    tolerations=get_toleration("production"),
+    affinity=get_affinity("test"),
+    tolerations=get_toleration("test"),
     arguments=[clari_extract_command],
     dag=dag,
 )

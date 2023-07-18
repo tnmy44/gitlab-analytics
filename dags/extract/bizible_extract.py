@@ -99,8 +99,8 @@ for table_name in tables:
             "task_id": task_identifier,
             "START_TIME": "{{ logical_date }}",
         },
-        affinity=get_affinity("production"),
-        tolerations=get_toleration("production"),
+        affinity=get_affinity("test"),
+        tolerations=get_toleration("test"),
         arguments=[extract_command],
         dag=dag,
     )
