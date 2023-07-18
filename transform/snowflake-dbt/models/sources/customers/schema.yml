@@ -300,3 +300,53 @@ models:
           - customers_db
         tests:
           - not_null
+
+  - name: customers_db_provisions_source
+    description: '{{ doc("customers_db_provisions_source") }}'  
+    columns:
+      - name: subscription_name
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+        description: Zuora subscription name
+      - name: subscription_id
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+          - unique 
+        description: Zuora subscription id
+      - name: subscription_version
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+        description: Zuora subscription version number
+      - name: state
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+        description: The state of the provision
+      - name: created_at
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+      - name: updated_at
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+      - name: state_reason
+        tags:
+          - tdf
+          - customers_db
+        description: Reason to justify the set status after auditing

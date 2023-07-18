@@ -1275,9 +1275,11 @@ roles:
             schemas:
                 read:
                     - raw.tap_adaptive
+                    - raw.adaptive_custom
             tables:
                 read:
                     - raw.tap_adaptive.*
+                    - raw.adaptive_custom.*
 
     - bamboohr_analytics:
         warehouses:
