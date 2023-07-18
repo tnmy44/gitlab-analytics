@@ -19,16 +19,9 @@ tables:
       , ended_at
       , events
       , iid
-      , NULL AS severity
       , status
       , issue_id
       , project_id
-      , NULL AS title
-      , NULL AS description
-      , NULL AS service
-      , NULL AS monitoring_tool
-      , NULL AS hosts
-      , NULL AS payload
       FROM alert_management_alerts
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
