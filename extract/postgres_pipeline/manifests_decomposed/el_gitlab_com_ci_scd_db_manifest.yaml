@@ -97,10 +97,8 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , NULL AS key
       , project_id
       , protected
-      , NULL AS environment_scope
       , masked
       , variable_type
       FROM ci_variables

@@ -269,7 +269,6 @@ tables:
     import_query: |-
       SELECT id
       , trigger_id
-      , NULL AS variables
       , created_at
       , updated_at
       , commit_id
@@ -288,7 +287,6 @@ tables:
       , updated_at
       , project_id
       , owner_id
-      , NULL AS description
       FROM ci_triggers
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

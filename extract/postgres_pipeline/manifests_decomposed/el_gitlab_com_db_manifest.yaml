@@ -292,15 +292,12 @@ tables:
       , created_at
       , updated_at
       , enabled
-      , NULL AS name
       , environment_scope
       , cluster_type
       , domain
       , managed
-      , NULL AS namespace_per_environment
       , management_project_id
       , cleanup_status
-      , NULL AS cleanup_status_reason
       , helm_major_version
       FROM clusters
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -332,7 +329,6 @@ tables:
     import_query: |-
       SELECT id
       , project_id
-      , NULL AS name
       , created_at
       , updated_at
       , status
@@ -347,7 +343,6 @@ tables:
       , migration_skipped_at
       , migration_retries_count
       , migration_skipped_reason
-      , NULL AS migration_aborted_in_state
       , last_cleanup_deleted_tags_count
       FROM container_repositories
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -411,7 +406,6 @@ tables:
       , created_at
       , updated_at
       , status
-      , NULL AS comment
       , approval_rule_id
       FROM deployment_approvals
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp

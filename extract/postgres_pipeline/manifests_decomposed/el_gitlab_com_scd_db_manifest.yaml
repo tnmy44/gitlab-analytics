@@ -128,8 +128,6 @@ tables:
     import_query: |-
       SELECT cluster_id
       , enabled
-      , NULL AS encrypted_alert_manager_token
-      , NULL AS encrypted_alert_manager_token_iv
       , health_status
       , created_at
       , updated_at
