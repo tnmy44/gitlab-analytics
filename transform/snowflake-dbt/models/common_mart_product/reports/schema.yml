@@ -1418,3 +1418,14 @@ models:
       description: '{{ doc("model_created_date") }}'
     - name: model_updated_date
       description: '{{ doc("model_updated_date") }}'
+
+- name: rpt_webstore_subscription_purchase_flow_funnel_base
+  description: 
+  columns:
+    - name: behavior_structured_event_pk
+      tests:
+        - not_null
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+      description: '{{ doc("behavior_structured_event_pk") }}'
