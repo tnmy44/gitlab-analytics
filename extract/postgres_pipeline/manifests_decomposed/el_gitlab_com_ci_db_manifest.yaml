@@ -78,7 +78,6 @@ tables:
       , created_at
       , updated_at
       , file_store
-      , NULL AS name
       FROM ci_secure_files
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -145,10 +144,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , NULL AS description
       , ref
-      , NULL AS cron
-      , NULL AS cron_timezone
       , next_run_at
       , project_id
       , owner_id
@@ -232,15 +228,12 @@ tables:
       , description
       , contacted_at
       , active
-      , NULL AS name
       , version
       , revision
       , platform
-      , NULL AS architecture
       , run_untagged
       , locked
       , access_level
-      , NULL AS ip_address
       , maximum_timeout
       , runner_type
       , public_projects_minutes_cost_factor

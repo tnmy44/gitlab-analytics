@@ -61,7 +61,6 @@ tables:
     import_query: |-
       SELECT pipeline_id
       , chat_name_id
-      , NULL AS response_url
       FROM ci_pipeline_chat_data
   ci_project_monthly_usages:
     dbt_source_model: true

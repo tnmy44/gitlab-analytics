@@ -59,7 +59,6 @@ WITH prep_ci_runner AS (
     ci_runner_version,
     revision,
     platform,
-    architecture,
     is_untagged,
     is_locked,
     access_level,
