@@ -36,10 +36,6 @@ tables:
       , updated_at
       , project_id
       , active
-      , NULL AS endpoint_identifier
-      , NULL AS name
-      , NULL AS payload_example
-      , NULL AS payload_attribute_mapping
       FROM alert_management_http_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -97,7 +93,6 @@ tables:
       , updated_at
       , merge_request_id
       , approvals_required
-      , NULL AS name
       , rule_type
       , report_type
       , section
@@ -176,9 +171,7 @@ tables:
       , created_at
       , user_id
       , result
-      , NULL AS ip_address
       , provider
-      , NULL AS user_name
       FROM authentication_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
