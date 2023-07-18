@@ -1420,7 +1420,6 @@ models:
       description: '{{ doc("model_updated_date") }}'
 
 - name: rpt_webstore_subscription_purchase_flow_funnel_base
-  description: 
   columns:
     - name: behavior_structured_event_pk
       tests:
