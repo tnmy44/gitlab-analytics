@@ -1,6 +1,7 @@
 {{ config(
     materialized='incremental',
     unique_key='xmau_metric_monthly_snapshot_id',
+    on_schema_change='sync_all_columns',
     tags=["mnpi_exception","edm_snapshot", "product"]
 ) }}
 
