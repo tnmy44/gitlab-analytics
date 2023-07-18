@@ -140,40 +140,12 @@ models:
     - name: rpt_l2r_leading_indicators
       description: Tableau-specific table that is used to aggregate top KPIS; Inquiries, MQLs, and SAOs, by date and a few dimensions from Lead to Revenue
       columns:
-        - name: dim_crm_person_id
-          description: A dbt generated surrogate key combining the lead id and contact id.
-        - name: dim_crm_opportunity_id
-          description: Unique identifier of a crm opportunity from Salesforce.
-        - name: email_hash
-          description: A dbt generated hash of the lead/contact email address from Salesforce.
-        - name: email_domain_type
-          description: The bucketed type of domain of the lead/contact email from Salesforce.
-        - name: person_order_type
-          description: The Order Type, applied to the Person (Lead/Contact), through custom logic that looks up Order Type from related opps.
-        - name: account_demographics_sales_segment
-          description: The Sales Segment of the matched Ultimate Parent Account, from the lead/contact in Salesforce.
-        - name: account_demographics_geo
-          description: The Geo of the matched Ultimate Parent Account, from the lead/contact in Salesforce.
-        - name: lead_source
-          description: The Lead Source field from the lead/contact in Salesforce. 
-        - name: inquiry_sum
-          description: The sum of inquiries, by Bizible Touchpoint, in Salesforce. 
-        - name: mql_sum
-          description: The sum of mqls, by Bizible Touchpoint, in Salesforce. 
-        - name: true_inquiry_date
-          description: The SoT field for Inquiry date on a lead/contact, taken from the Inquiry DateTime field in Salesforce.
-        - name: mql_date_first_pt
-          description: The SoT field for MQL date on a lead/contact, taken from the Marketo MQL Date field in Salesforce.
-        - name: opp_order_type
-          description: The Order Type from the opportunity object in Salesforce. 
-        - name: crm_opp_owner_sales_segment_stamped
-          description: The Sales Segment of the Parent Account of the Opportunity, taking into account historical changes in Salesforce. 
-        - name: crm_opp_owner_geo_stamped
-          description: The Geo of the Parent Account of the Opportunity, taking into account historical changes in Salesforce. 
-        - name: sales_qualified_source_name
-          description: The Sales Qualified Source field on the Opportunity object in Salesforce. 
-        - name: sales_accepted_date
-          description: The SoT date for Sales Acceptance on the Opportunity object in Salesforce. 
+        - name: order_type
+          description: The Order Type, applied to the Person (Lead/Contact), through custom logic that looks up Order Type from related opps, and/or Opportunity based on Order Type from that object.
+        - name: sales_segment
+          description: The Sales Segment of the matched Ultimate Parent Account, from the lead/contact/opportunity in Salesforce.
+        - name: geo
+          description: The Geo of the matched Ultimate Parent Account, from the lead/contact/opportunity in Salesforce.
         - name: parent_crm_account_lam
           description: The LAM of the ultimate parent account in Salesforce. 
         - name: parent_crm_account_lam_dev_count
@@ -184,34 +156,22 @@ models:
           description: The Touchpoint Marketing Channel Path of the Bizible Touchpoint in Salesforce. 
         - name: bizible_medium
           description: The Touchpoint Medium of the Bizible Touchpoint in Salesforce. 
-        - name: is_mql
-          description: A calculated flag to determine if a lead/contact is currently an MQL. 
-        - name: is_sao
-          description: The Is SAO flag on the Opportunity object in Salesforce. 
-        - name: inquiry_date_range_week
-          description: The week of the True Inquiry Date. 
-        - name: inquiry_date_range_month
-          description: The month of the True Inquiry Date. 
-        - name: inquiry_date_range_quarter
-          description: The quarter of the True Inquiry Date. 
-        - name: inquiry_date_range_year
-          description: The year of the True Inquiry Date. 
-        - name: mql_date_range_week
-          description: The week of the MQL Date. 
-        - name: mql_date_range_month
-          description: The month of the MQL Date. 
-        - name: mql_date_range_quarter
-          description: The quarter of the MQLDate. 
-        - name: mql_date_range_year
-          description: The year of the MQL Date. 
-        - name: sao_date_range_week
-          description: The week of the Sales Accepted Date. 
-        - name: sao_date_range_month
-          description: The month of the Sales Accepted Date. 
-        - name: sao_date_range_quarter
-          description: The quarter of the Sales Accepted Date. 
-        - name: sao_date_range_year
-          description: The year of the Sales Accepted Date. 
+        - name: date_day
+          description: The day of the metric's Date. 
+        - name: date_range_week
+          description: The week of the metric's Date. 
+        - name: date_range_month
+          description: The month of the metric's Date. 
+        - name: date_range_quarter
+          description: The quarter of the metric's Date. 
+        - name: date_range_year
+          description: The year of the metric's Date. 
+        - name: inquiries
+          description: The sum of Inquiries by the various dimensions. 
+        - name: mqls
+          description: The sum of MQLs by the various dimensions. 
+        - name: saos
+          description: The sum of SAOs by the various dimensions. 
 
 
     - name: rpt_lead_to_revenue

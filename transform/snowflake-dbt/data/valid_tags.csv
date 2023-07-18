@@ -58,3 +58,4 @@ zuora_revenue, Relates to Zuora Revenue data
 zuora_query_api, Relates to Zuora Query API data
 zuora_order, Relates to Zuora Order data
 true_up, Relates to True Ups
+marketing, Data related to or owned by the Marketing team.

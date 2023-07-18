@@ -885,7 +885,7 @@ WITH date_details AS (
         WHEN is_edu_oss = 0
             AND is_deleted = 0
             -- For stage age we exclude only ps/other
-            AND order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+            AND order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
             -- Only include deal types with meaningful journeys through the stages
             AND opportunity_category IN ('Standard')
             -- Web Purchase have a different dynamic and should not be included
@@ -914,9 +914,9 @@ WITH date_details AS (
             THEN 'Premium'
         WHEN LOWER(product_category) LIKE '%ultimate%'
             THEN 'Ultimate'
-        WHEN LOWER(intented_product_tier) LIKE '%premium%'
+        WHEN LOWER(intended_product_tier) LIKE '%premium%'
             THEN 'Premium'
-        WHEN LOWER(intented_product_tier) LIKE '%ultimate%'
+        WHEN LOWER(intended_product_tier) LIKE '%ultimate%'
             THEN 'Ultimate'
         ELSE 'Other'
     END AS  product_category_tier,

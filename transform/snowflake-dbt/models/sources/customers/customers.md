@@ -37,3 +37,7 @@ This model is the data from tap-postgres for the customer billing accounts table
 {% docs customers_db_cloud_activations_source %}
 This model is the data from tap-postgres for the cloud activations table from customers.gitlab.com. It stores information about all the activation codes that were generated for Cloud licenses. Customers use this code after the installation of their GitLab instance. The schema of the database is defined in [this ruby code](https://gitlab.com/gitlab-org/customers-gitlab-com/blob/master/db/schema.rb).
 {% enddocs %}
+
+{% docs customers_db_provisions_source %}
+This model is the data from tap-postgres for the provisions table from customers.gitlab.com. It is used to track the provision of SM and SaaS subscriptions through its entire life cycle. The schema of the database is defined in [this ruby code](https://gitlab.com/gitlab-org/customers-gitlab-com/blob/master/db/schema.rb).
+{% enddocs %}
