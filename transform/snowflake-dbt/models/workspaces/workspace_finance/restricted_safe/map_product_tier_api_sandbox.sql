@@ -97,6 +97,7 @@ WITH zuora_api_sandbox_product AS (
                                                                       , 'Payment Gateway Test'
                                                                       , 'Time Tracking'
                                                                       , '1,000 CI Minutes'
+                                                                      , '1,000 Compute Minutes'
                                                                       , 'Gitlab Storage 10GB'
                                                                       , 'EdCast Settlement Revenue'
                                                                      )

@@ -444,3 +444,19 @@ Simpler incremental version of the rpt_ping_metric_totals_w_estimates_monthly sn
 Simpler incremental version of the rpt_event_xmau_metric_monthly snapshot model. See [rpt_event_xmau_metric_monthly](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.rpt_event_xmau_metric_monthly) for more information about the model being snapshotted.
 
 {% enddocs %}
+
+{% docs rpt_product_navigation_base %}
+
+**Description:** Navigation events are tracked by the team and identified using the logic contained. This has gone through iterations wherein the logic expands on the query but the tracking has gotten simpler. The resulting where clause is to capture past events and current but as we continue forward the past could become distant enough to simplify the WHERE logic to the current nav_* based event tracking. The intention of this model is to enable reporting on the navigation use in conjuction with our new nav project in 2023.
+
+**Data Grain:** 
+`behavior_structured_event_pk`; inherited from `mart_behavior_structured_event`.
+
+This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all).
+
+**Filters:**
+- Only includes events from `2021-10-01` and on
+- Only includes events where `app_id IN ('gitlab', 'gitlab_customers')`
+- Only includes events related to product navigation. Some of the filters catch historical product navigation events, while some catch current product navigation events.
+
+{% enddocs %}

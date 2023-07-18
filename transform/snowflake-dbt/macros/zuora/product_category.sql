@@ -87,6 +87,7 @@ CASE
                                       'File Locking'
                                     , 'Time Tracking'
                                     , '1,000 CI Minutes'
+                                    , '1,000 Compute Minutes'
                                     )
     THEN 'SaaS - Other'
   WHEN TRIM({{product_column}}) IN ('Gitlab Storage 10GB')

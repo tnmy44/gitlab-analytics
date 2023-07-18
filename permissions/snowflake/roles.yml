@@ -809,6 +809,7 @@ roles:
                     - prod.restricted_safe_common_mart_sales
                     - prod.common_mart_product
                     - prod.common_mart_marketing
+                    - prod.common_mart_people
                     - raw.*
                 write:
                     - prod.boneyard
@@ -826,6 +827,7 @@ roles:
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.common_mart_product.*
                     - prod.common_mart_marketing.*
+                    - prod.common_mart_people.*
                     - raw.*.*
                 write:
                     - prod.boneyard.*
@@ -1156,6 +1158,7 @@ roles:
                 - prod.common_mart_marketing
                 - prod.common_mart_sales
                 - prod.common_mart_product
+                - prod.common_mart_people
                 - prod.legacy
                 - prep.sensitive
                 - monte_carlo.prod_insights
@@ -1166,6 +1169,7 @@ roles:
                 - prod.common_mart_marketing.*
                 - prod.common_mart_sales.*
                 - prod.common_mart_product.*
+                - prod.common_mart_people.*
                 - prod.legacy.*
                 - prep.sensitive.*
                 - monte_carlo.prod_insights.*
@@ -1271,9 +1275,11 @@ roles:
             schemas:
                 read:
                     - raw.tap_adaptive
+                    - raw.adaptive_custom
             tables:
                 read:
                     - raw.tap_adaptive.*
+                    - raw.adaptive_custom.*
 
     - bamboohr_analytics:
         warehouses:
@@ -1455,6 +1461,7 @@ roles:
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
+                    - prod.common_mart_people
                     - prod.common_prep
             tables:
                 read:
@@ -1464,6 +1471,7 @@ roles:
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
+                    - prod.common_mart_people.*
                     - prod.common_prep.*
 
     - container_registry:
@@ -1510,6 +1518,7 @@ roles:
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
+                    - prod.common_mart_people
                     - prod.common_prep
                     - prod.data_quality
                     - prod.legacy
@@ -1533,6 +1542,7 @@ roles:
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
+                    - prod.common_mart_people.*
                     - prod.common_prep.*
                     - prod.data_quality.*
                     - prod.legacy.*
@@ -2950,6 +2960,7 @@ roles:
             - analyst_engineering
             - analyst_growth
             - coupa
+            - customers_db
             - restricted_safe
             - bi_tool_eval_read
             - marketo
