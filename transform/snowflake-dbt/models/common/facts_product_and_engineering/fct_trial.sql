@@ -52,7 +52,7 @@
   SELECT DISTINCT
     trials.order_id                                                                                              AS order_id,
     orders_shapshots_excluding_ci_minutes.subscription_name_slugify                                              AS subscription_name_slugify,
-    zuora_subscription_with_positive_mrr_tcv.subscription_start_date                                             AS subscription_start_date
+    subscription.subscription_start_date                                                                         AS subscription_start_date
   FROM trials
   INNER JOIN orders_shapshots_excluding_ci_minutes
     ON trials.order_id = orders_shapshots_excluding_ci_minutes.order_id
@@ -125,7 +125,7 @@
     subscription_name_slugify, 
     subscription_start_date,
     country,
-    company_size 
+    company_size, 
 
     order_created_at,
     order_updated_at,

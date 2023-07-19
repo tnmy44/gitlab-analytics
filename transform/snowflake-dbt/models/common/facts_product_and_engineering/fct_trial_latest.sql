@@ -17,7 +17,7 @@
     FROM fct_trial
     QUALIFY ROW_NUMBER() OVER (PARTITION BY TRY_TO_NUMBER(dim_namespace_id) ORDER BY order_updated_at DESC, dim_order_id DESC) = 1
 
-
+)
 , estimated_latest_trial_dates AS (
                                      
     SELECT 
@@ -33,11 +33,11 @@
 , trials_joined AS (
 
     SELECT
-      namespace_with_latest_trial_date.namespace_id,
-      COALESCE(latest_trial_per_namespace.order_start_date, 
+      estimated_latest_trial_dates.namespace_id,
+      COALESCE(latest_trial_per_namespace.trial_start_date, 
                estimated_latest_trial_dates.estimated_latest_trial_start_date) AS latest_trial_start_date,
-      namespace_with_latest_trial_date.latest_trial_end_date,
-      latest_trial_per_namespace.susbscription_start_date,
+      estimated_latest_trial_dates.latest_trial_end_date,
+      latest_trial_per_namespace.subscription_start_date,
       latest_trial_per_namespace.customer_id,
       latest_trial_per_namespace.country,
       latest_trial_per_namespace.company_size,
@@ -46,6 +46,7 @@
       latest_trial_per_namespace.user_created_at,
       latest_trial_per_namespace.namespace_created_at,
       latest_trial_per_namespace.namespace_type
+
       
     FROM estimated_latest_trial_dates
     LEFT JOIN latest_trial_per_namespace 
@@ -60,19 +61,19 @@
       trials_joined.country,
       trials_joined.company_size,
         
-      trials_joined.user_id                                  AS gitlab_user_id,
+      trials_joined.user_id                                  AS user_id,
       trials_joined.is_gitlab_user                           AS is_gitlab_user,
-      trials_joined.created_at                               AS user_created_at,
+      trials_joined.user_created_at                          AS user_created_at,
       
-      trials_joined.created_at                               AS namespace_created_at,
+      trials_joined.namespace_created_at                     AS namespace_created_at,
       trials_joined.namespace_type,
       
       trials_joined.latest_trial_start_date, 
       trials_joined.latest_trial_end_date,
-      MIN(trials_joined.subscription_start_date)                           AS subscription_start_date  
+      MIN(trials_joined.subscription_start_date)             AS subscription_start_date  
 
     FROM trials_joined
-
+    {{dbt_utils.group_by(11)}} 
   
 ), final AS (
 
@@ -84,7 +85,6 @@
     dim_namespace_id,
 
     --Foreign Keys--
-    dim_product_rate_plan_id,
     customer_id,
     user_id,
        
@@ -92,16 +92,14 @@
     is_gitlab_user,
     user_created_at,
     
+    country,
+    company_size, 
     namespace_created_at,
     namespace_type,
-  
-    is_trial_converted,
-    subscription_name_slugify,   
-    
-    order_created_at,
-    order_updated_at,
-    trial_start_date, 
-    trial_end_date
+   
+    subscription_start_date, 
+    latest_trial_start_date, 
+    latest_trial_end_date
     
   FROM joined
 
