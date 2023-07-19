@@ -34,7 +34,13 @@ from sqlalchemy import (
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
 
-SCHEMA = "tap_postgres"
+# SCHEMA = "tap_postgres"
+
+# bucket_name: test-saas-pipeline-backfills
+BUCKET_NAME = os.environ["GITLAB_BACKFILL_BUCKET"]
+METADATA_SCHEMA = os.environ["GITLAB_METADATA_SCHEMA"]
+BACKFILL_METADATA_TABLE = "backfill_metadata"
+DELETE_METADATA_TABLE = "delete_metadata"
 
 
 def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
@@ -436,12 +442,15 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
         connection_dict["postgres_source_connection"], env
     )
 
-    snowflake_engine = snowflake_engine_factory(env, role="LOADER", schema='tap_postgres')
+    snowflake_engine = snowflake_engine_factory(
+        env, role="LOADER", schema="tap_postgres"
+    )
 
     metadata_engine = postgres_engine_factory(
         connection_dict["postgres_metadata_connection"], env
     )
     return postgres_engine, snowflake_engine, metadata_engine
+
 
 def query_export_status(
     metadata_engine: Engine, metadata_table: str, source_table: str

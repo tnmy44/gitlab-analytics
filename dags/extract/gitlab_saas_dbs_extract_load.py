@@ -25,6 +25,7 @@ from kube_secrets import (
     GCP_PROJECT,
     GCP_REGION,
     GCP_SERVICE_CREDS,
+    GITLAB_BACKFILL_BUCKET,
     GITLAB_COM_DB_HOST,
     GITLAB_COM_DB_NAME,
     GITLAB_COM_DB_PASS,
@@ -46,6 +47,12 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    GITLAB_METADATA_DB_NAME,
+    GITLAB_METADATA_DB_HOST,
+    GITLAB_METADATA_DB_PASS,
+    GITLAB_METADATA_PG_PORT,
+    GITLAB_METADATA_DB_USER,
+    GITLAB_METADATA_SCHEMA,
 )
 
 # Load the env vars into a dict and set env vars
@@ -59,6 +66,8 @@ standard_secrets = [
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_WAREHOUSE,
     SNOWFLAKE_LOAD_ROLE,
+    GITLAB_BACKFILL_BUCKET,
+    GITLAB_METADATA_SCHEMA,
 ]
 
 
@@ -91,6 +100,11 @@ config_dict = {
             GITLAB_COM_DB_HOST,
             GITLAB_COM_DB_NAME,
             GITLAB_COM_PG_PORT,
+            GITLAB_METADATA_DB_NAME,
+            GITLAB_METADATA_DB_HOST,
+            GITLAB_METADATA_DB_PASS,
+            GITLAB_METADATA_PG_PORT,
+            GITLAB_METADATA_DB_USER,
         ],
         "start_date": datetime(2019, 5, 30),
         "task_name": "gitlab-com",
@@ -109,6 +123,11 @@ config_dict = {
             GITLAB_COM_CI_DB_PASS,
             GITLAB_COM_CI_DB_PORT,
             GITLAB_COM_CI_DB_USER,
+            GITLAB_METADATA_DB_NAME,
+            GITLAB_METADATA_DB_HOST,
+            GITLAB_METADATA_DB_PASS,
+            GITLAB_METADATA_PG_PORT,
+            GITLAB_METADATA_DB_USER,
         ],
         "start_date": datetime(2019, 5, 30),
         "task_name": "gitlab-com",
