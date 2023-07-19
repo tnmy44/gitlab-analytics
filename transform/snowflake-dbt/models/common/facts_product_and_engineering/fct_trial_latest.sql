@@ -3,110 +3,87 @@
 ) }}
 
 {{ simple_cte([
-    ('customers', 'customers_db_customers_source'),
-    ('namespaces', 'gitlab_dotcom_namespaces'),
+    ('fct_trial', 'fct_trial'),
     ('orders_snapshots', 'customers_db_orders_snapshots_base'),
-    ('users', 'gitlab_dotcom_users'),
-    ('fct_trial','fct_trial')
+    ('gitlab_subscriptions','gitlab_dotcom_gitlab_subscriptions_snapshots_base')
 
 
 ]) }}
 
 
-, latest_trials_per_namespace AS (
+, latest_trial_per_namespace AS (
   
     SELECT *
     FROM fct_trial
     QUALIFY ROW_NUMBER() OVER (PARTITION BY TRY_TO_NUMBER(dim_namespace_id) ORDER BY order_updated_at DESC, dim_order_id DESC) = 1
 
 
+, estimated_latest_trial_dates AS (
+                                     
+    SELECT 
+      namespace_id, 
+      MAX(gitlab_subscription_trial_ends_on)                      AS latest_trial_end_date,
+      DATEADD('day', -30, MAX(gitlab_subscription_trial_ends_on)) AS estimated_latest_trial_start_date
+    FROM gitlab_subscriptions
+    WHERE gitlab_subscription_trial_ends_on IS NOT NULL
+    GROUP BY 1
 
-), zuora_subscription_with_positive_mrr_tcv AS (
-  
-  SELECT DISTINCT
-    subscription_name_slugify,
-    subscription_start_date
-  FROM {{ ref('zuora_base_mrr') }}
+)
 
-  
-), ci_minutes_charges AS (
-  
-  SELECT 
-    *
-  FROM {{ ref('zuora_rate_plan') }}
-  WHERE rate_plan_name = '1,000 CI Minutes'
+, trials_joined AS (
 
-  
-), orders_shapshots_excluding_ci_minutes AS (
-
-  SELECT DISTINCT
-   orders_snapshots.order_id                                                                                     AS order_id,
-   orders_snapshots.subscription_name_slugify                                                                    AS subscription_name_slugify
-  FROM orders_snapshots
-  LEFT JOIN ci_minutes_charges
-    ON orders_snapshots.subscription_id = ci_minutes_charges.subscription_id
-    AND orders_snapshots.product_rate_plan_id = ci_minutes_charges.product_rate_plan_id
-  WHERE ci_minutes_charges.subscription_id IS NULL
-
-), converted_trials AS (
-
-  SELECT DISTINCT
-    trials.order_id                                                                                              AS order_id,
-    orders_shapshots_excluding_ci_minutes.subscription_name_slugify                                              AS subscription_name_slugify
-  FROM trials
-  INNER JOIN orders_shapshots_excluding_ci_minutes
-    ON trials.order_id = orders_shapshots_excluding_ci_minutes.order_id
-  INNER JOIN zuora_subscription_with_positive_mrr_tcv AS subscription
-    ON orders_shapshots_excluding_ci_minutes.subscription_name_slugify = subscription.subscription_name_slugify
-      AND trials.order_start_date <= subscription.subscription_start_date
-  WHERE orders_shapshots_excluding_ci_minutes.subscription_name_slugify IS NOT NULL
-
+    SELECT
+      namespace_with_latest_trial_date.namespace_id,
+      COALESCE(latest_trial_per_namespace.order_start_date, 
+               estimated_latest_trial_dates.estimated_latest_trial_start_date) AS latest_trial_start_date,
+      namespace_with_latest_trial_date.latest_trial_end_date,
+      latest_trial_per_namespace.susbscription_start_date,
+      latest_trial_per_namespace.customer_id,
+      latest_trial_per_namespace.country,
+      latest_trial_per_namespace.company_size,
+      latest_trial_per_namespace.user_id,
+      latest_trial_per_namespace.is_gitlab_user,
+      latest_trial_per_namespace.user_created_at,
+      latest_trial_per_namespace.namespace_created_at,
+      latest_trial_per_namespace.namespace_type
+      
+    FROM estimated_latest_trial_dates
+    LEFT JOIN latest_trial_per_namespace 
+      ON estimated_latest_trial_dates.namespace_id = latest_trial_per_namespace.dim_namespace_id
 
 
 ), joined AS (
   
-  SELECT DISTINCT
+    SELECT
+      trials_joined.namespace_id                             AS dim_namespace_id,
+      trials_joined.customer_id,
+      trials_joined.country,
+      trials_joined.company_size,
+        
+      trials_joined.user_id                                  AS gitlab_user_id,
+      trials_joined.is_gitlab_user                           AS is_gitlab_user,
+      trials_joined.created_at                               AS user_created_at,
+      
+      trials_joined.created_at                               AS namespace_created_at,
+      trials_joined.namespace_type,
+      
+      trials_joined.latest_trial_start_date, 
+      trials_joined.latest_trial_end_date,
+      MIN(trials_joined.subscription_start_date)                           AS subscription_start_date  
 
-    trials.order_id                                                                                             AS dim_order_id, 
-    trials.gitlab_namespace_id                                                                                  AS dim_namespace_id,
-    trials.product_rate_plan_id                                                                                 AS dim_product_rate_plan_id,
-    customers.customer_id                                                                                       AS customer_id,
-    users.user_id                                                                                               AS user_id,                                                                                         
-    IFF(users.user_id IS NOT NULL, TRUE, FALSE)                                                                 AS is_gitlab_user,
-    users.created_at                                                                                            AS user_created_at,
-    namespaces.created_at                                                                                       AS namespace_created_at,
-    namespaces.namespace_type                                                                                   AS namespace_type,
-    IFF(converted_trials.order_id IS NOT NULL, TRUE, FALSE)                                                     AS is_trial_converted,
-    converted_trials.subscription_name_slugify                                                                  AS subscription_name_slugify,   
-    trials.order_created_at                                                                                     AS order_created_at,
-    trials.order_updated_at                                                                                     AS order_updated_at,
-    (trials.order_start_date)::DATE                                                                             AS trial_start_date, 
-    (trials.order_end_date)::DATE                                                                               AS trial_end_date
-    
-    
-  FROM trials
-    INNER JOIN customers 
-      ON trials.customer_id = customers.customer_id
-    LEFT JOIN namespaces 
-      ON trials.gitlab_namespace_id = namespaces.namespace_id
-    LEFT JOIN users 
-      ON customers.customer_provider_user_id = users.user_id
-    LEFT JOIN converted_trials 
-      ON trials.order_id = converted_trials.order_id
-  
-  WHERE trial_start_date IS NOT NULL 
+    FROM trials_joined
+
   
 ), final AS (
 
   SELECT 
-   --Surrogate Key-- 
-     {{ dbt_utils.surrogate_key(['joined.dim_order_id', 'joined.dim_namespace_id', 'joined.dim_product_rate_plan_id', 'joined.trial_start_date', 'joined.trial_end_date', 'joined.subscription_name_slugify', 'joined.order_updated_at']) }} AS trial_pk,
+   --Primary Key-- 
+     {{ dbt_utils.surrogate_key(['dim_namespace_id']) }} AS trial_latest_pk,
 
    --Natural Key--
-    dim_order_id, 
+    dim_namespace_id,
 
     --Foreign Keys--
-    dim_namespace_id,
     dim_product_rate_plan_id,
     customer_id,
     user_id,

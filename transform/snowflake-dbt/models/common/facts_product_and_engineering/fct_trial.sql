@@ -51,7 +51,8 @@
 
   SELECT DISTINCT
     trials.order_id                                                                                              AS order_id,
-    orders_shapshots_excluding_ci_minutes.subscription_name_slugify                                              AS subscription_name_slugify
+    orders_shapshots_excluding_ci_minutes.subscription_name_slugify                                              AS subscription_name_slugify,
+    zuora_subscription_with_positive_mrr_tcv.subscription_start_date                                             AS subscription_start_date
   FROM trials
   INNER JOIN orders_shapshots_excluding_ci_minutes
     ON trials.order_id = orders_shapshots_excluding_ci_minutes.order_id
@@ -76,11 +77,14 @@
     namespaces.created_at                                                                                       AS namespace_created_at,
     namespaces.namespace_type                                                                                   AS namespace_type,
     IFF(converted_trials.order_id IS NOT NULL, TRUE, FALSE)                                                     AS is_trial_converted,
-    converted_trials.subscription_name_slugify                                                                  AS subscription_name_slugify,   
+    converted_trials.subscription_name_slugify                                                                  AS subscription_name_slugify,
+    converted_trials.subscription_start_date                                                                    AS subscription_start_date,   
     trials.order_created_at                                                                                     AS order_created_at,
     trials.order_updated_at                                                                                     AS order_updated_at,
     (trials.order_start_date)::DATE                                                                             AS trial_start_date, 
-    (trials.order_end_date)::DATE                                                                               AS trial_end_date
+    (trials.order_end_date)::DATE                                                                               AS trial_end_date,
+    customers.country                                                                                           AS country,
+    customers.company_size                                                                                      AS company_size
     
     
   FROM trials
@@ -98,7 +102,7 @@
 ), final AS (
 
   SELECT 
-   --Surrogate Key-- 
+   --Primary Key-- 
      {{ dbt_utils.surrogate_key(['joined.dim_order_id', 'joined.dim_namespace_id', 'joined.dim_product_rate_plan_id', 'joined.trial_start_date', 'joined.trial_end_date', 'joined.subscription_name_slugify', 'joined.order_updated_at']) }} AS trial_pk,
 
    --Natural Key--
@@ -118,8 +122,11 @@
     namespace_type,
   
     is_trial_converted,
-    subscription_name_slugify,   
-    
+    subscription_name_slugify, 
+    subscription_start_date,
+    country,
+    company_size 
+
     order_created_at,
     order_updated_at,
     trial_start_date, 

@@ -35,7 +35,7 @@ WITH first_trial AS (
 
   SELECT 
 
-   --Surrogate Key-- 
+   --Primary Key-- 
      {{ dbt_utils.surrogate_key(['dim_order_id', 'latest_namespace_id']) }} AS trial_first_pk,
 
    --Natural Key--
