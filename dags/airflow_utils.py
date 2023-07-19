@@ -45,7 +45,6 @@ analytics_pipelines_dag = [
     "dbt_snowplow_backfill",
     "dbt_snowplow_backfill_specific_model",
     "dbt_snowplow_full_refresh",
-    "saas_usage_ping",
     "t_prep_dotcom_usage_events_backfill",
     "dbt_six_hourly",
 ]
@@ -57,6 +56,7 @@ data_science_pipelines_dag = [
     "ds_propensity_to_purchase_trial",
     "ds_namespace_segmentation",
     "ds_propensity_to_purchase_free",
+    "ds_churn_forecasting",
 ]
 
 sales_analytics_pipelines_dag = [

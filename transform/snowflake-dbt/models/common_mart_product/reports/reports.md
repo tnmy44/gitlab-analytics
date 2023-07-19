@@ -142,7 +142,7 @@ ORDER BY 1,2,3
 
 {% docs rpt_ping_latest_subscriptions_monthly %}
 
-**Description:** Self-Managed subscriptions by month and installation (if the subscription sent a ping that month). For xMAU/PI reporting, this model is used to determine the total number of active Self-Managed subscriptions on a given month and what percent of subscriptions sent a ping from a given version. It can also be used to determine what percent of subscriptions sent a ping on a given month, etc. 
+**Description:** Self-Managed and SaaS Dedicated subscriptions by month and installation (if the subscription sent a ping that month). For xMAU/PI reporting, this model is used to determine the total number of active Self-Managed/Dedicated subscriptions on a given month and what percent of subscriptions sent a ping from a given version. It can also be used to determine what percent of subscriptions sent a ping on a given month, etc. 
 - The version an installation is reporting on (major_minor_version_id), seat count (licensed_user_count), and count of pings sent that month (ping_count) are also included
 - Unpaid subscriptions (ex: OSS, EDU) are _included_ in this model
 
@@ -184,7 +184,7 @@ ORDER BY 1
 
 **Filters Applied to Model:**
 - Include subscriptions where:
-  - `product_delivery_type = 'Self-Managed'` 
+  - `product_deployment_type IN ('Self-Managed', 'Dedicated')`
   - `subscription_status IN ('Active','Cancelled')`
   - `product_tier_name <> 'Storage'`
 - `major_minor_version_id`, `version_is_prerelease`, and `instance_user_count` look at 'Last Ping of the Month' pings
@@ -198,7 +198,7 @@ ORDER BY 1
 
 {% docs rpt_ping_subscriptions_on_versions_estimate_factors_monthly %}
 
-**Description:** Self-Managed subscriptions and seats that sent a ping from a version of GitLab with a given metric instrumented on a given month. The totals are specific to the month, metric, edition, _and_ grain. These totals are used to generate inputs for the `metric/version check - subscription based estimation` (our "official" methodology) and `metric/version check - seat based estimation` estimation_grains for xMAU/PI reporting.
+**Description:** Self-Managed / Dedicated subscriptions and seats that sent a ping from a version of GitLab with a given metric instrumented on a given month. The totals are specific to the month, metric, edition, _and_ grain. These totals are used to generate inputs for the `metric/version check - subscription based estimation` (our "official" methodology) and `metric/version check - seat based estimation` estimation_grains for xMAU/PI reporting.
 
 _Note: This model is not expected to be used much (if at all) for analysis. The main purpose of the model is to create inputs for the estimation lineage._
 
@@ -207,10 +207,11 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - metrics_path
 - ping_edition
 - estimation_grain
+- ping_deployment_type
 
 **Filters Applied to Model:**
 - `Inherited` - Include subscriptions where:
-  - `product_delivery_type = 'Self-Managed'` 
+  - `product_deployment_type IN ('Self-Managed', 'Dedicated)` 
   - `subscription_status IN ('Active','Cancelled')`
   - `product_tier_name <> 'Storage'`
 - `Inherited` - Include metrics for 28 Day and All-Time time frames
@@ -245,7 +246,7 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 
 **Filters Applied to Model:**
 - `Inherited`- Include subscriptions where:
-  - `product_delivery_type = 'Self-Managed'` 
+  - `product_deployment_type IN ('Self-Managed', 'Dedicated')` 
   - `subscription_status IN ('Active','Cancelled')`
   - `product_tier_name <> 'Storage'`
 - `Inherited` - Include metrics for 28 Day and All-Time time frames
@@ -267,7 +268,7 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 
 {% docs rpt_ping_subscriptions_reported_estimate_factors_monthly %}
 
-**Description:** Self-Managed subscriptions and seats that report a given metric on a given month. The totals are specific to the month, metric, and grain, but will be the same across editions. These totals are used to generate inputs for the `reported metric - subscription based estimation` and `reported metric - seat based estimation` estimation_grains for xMAU/PI reporting.
+**Description:** Self-Managed / Dedicated subscriptions and seats that report a given metric on a given month. The totals are specific to the month, metric, and grain, but will be the same across editions. These totals are used to generate inputs for the `reported metric - subscription based estimation` and `reported metric - seat based estimation` estimation_grains for xMAU/PI reporting.
 
 _Note: This model is not expected to be used much (if at all) for analysis. The main purpose of the model is to create inputs for the estimation lineage._
 
@@ -276,10 +277,11 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - metrics_path
 - ping_edition
 - estimation_grain
+- ping_deployment_type
 
 **Filters Applied to Model:**
 - `Inherited` - Include subscriptions where:
-  - `product_delivery_type = 'Self-Managed'` 
+  - `product_deployment_type IN ('Self-Managed', 'Dedicated')` 
   - `subscription_status IN ('Active','Cancelled')`
   - `product_tier_name <> 'Storage'`
 - `Inherited` - Include metrics for 28 Day and All-Time time frames
@@ -309,7 +311,7 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - ping_edition
 - estimation_grain
 - ping_edition_product_tier
-- ping_delivery_type
+- ping_deployment_type
 
 **Filters Applied to Model:**
 - `Inherited` - Include metrics for 28 Day and All-Time time frames
@@ -326,7 +328,7 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
   - `SaaS` looks at recorded SaaS/gitlab.com usage, there is no additional estimation logic
 - `percent_reporting` is defined as `reporting_count / (reporting_count + not_reporting_count)`
 - `reporting_count` and `not_reporting_count` are defined by the `estimation_grain` (either count of subscriptions or count of seats)
-- For a given month, metric, delivery, edition, and grain, `percent_reporting`, `reporting_count`, and `not_reporting_count` is the same across all tiers
+- For a given month, metric, deployment, edition, and grain, `percent_reporting`, `reporting_count`, and `not_reporting_count` is the same across all tiers
 
 **Tips for Use:**
 - The "official" estimation_grain is `metric/version check - subscription based estimation`
@@ -343,7 +345,7 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 
 {% docs rpt_ping_subscriptions_reported_counts_monthly %}
 
-**Description:** Total Self-Managed subscriptions and seats by month. This model determines the total possible number of subscriptions on a given month and is the same across all records for a given month (there is no difference across metrics or editions). For xMAU/PI reporting, this model is used to determine the total number of active Self-Managed subscriptions and seats on a given month.
+**Description:** Total Self-Managed / Dedicated subscriptions and seats by month. This model determines the total possible number of subscriptions on a given month and is the same across all records for a given month (there is no difference across metrics or editions). For xMAU/PI reporting, this model is used to determine the total number of active Self-Managed / Dedicated subscriptions and seats on a given month.
 
 _Note: This model is not expected to be used much (if at all) for analysis. The main purpose of the model is to create inputs for the estimation lineage._
 
@@ -351,10 +353,11 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - ping_created_date_month
 - metrics_path
 - ping_edition
+- ping_deployment_type
 
 **Filters Applied to Model:**
 - `Inherited` - Include subscriptions where:
-  - `product_delivery_type = 'Self-Managed'` 
+  - `product_deployment_type IN ('Self-Managed', 'Dedicated)` 
   - `subscription_status IN ('Active','Cancelled')`
   - `product_tier_name <> 'Storage'`
 - `Inherited` - Exclude the current month
@@ -366,7 +369,7 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 
 {% docs rpt_ping_subscriptions_on_versions_counts_monthly %}
 
-**Description:** Self-Managed subscriptions and seats sending a ping from a version of GitLab with the metric instrumented by month. The counts of subscriptions and seats are specific to the metric and month, but the same across editions. This model is used as an input for the `metric/version check` estimation grains in xMAU/PI reporting.
+**Description:** Self-Managed / Dedicated subscriptions and seats sending a ping from a version of GitLab with the metric instrumented by month. The counts of subscriptions and seats are specific to the metric and month, but the same across editions. This model is used as an input for the `metric/version check` estimation grains in xMAU/PI reporting.
 
 _Note: This model is not expected to be used much (if at all) for analysis. The main purpose of the model is to create inputs for the estimation lineage._
 
@@ -374,10 +377,11 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - ping_created_date_month
 - metrics_path
 - ping_edition
+- ping_deployment_type
 
 **Filters Applied to Model:**
 - `Inherited` - Subscriptions and seats are limited to:
-  - `product_delivery_type = 'Self-Managed'` 
+  - `product_deployment_type IN ('Self-Managed', 'Dedicated')` 
   - `subscription_status IN ('Active','Cancelled')`
   - `product_tier_name <> 'Storage'`
 - `Inherited` - Include 28 Day and All-Time metrics  
@@ -385,14 +389,14 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 - `Inherited` - Exclude the current month
 
 **Business Logic in this Model:**
-- "Version of GitLab with the metric instrumented" is dependent on the first and last versions where a metric appears in a Self-Managed ping payload. These values come from [`rpt_ping_metric_first_last_versions`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.rpt_ping_metric_first_last_versions). The version is specific to both the `ping_edition` and `version_is_prerelease`
+- "Version of GitLab with the metric instrumented" is dependent on the first and last versions where a metric appears in a Self-Managed / Dedicated ping payload. These values come from [`rpt_ping_metric_first_last_versions`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.rpt_ping_metric_first_last_versions). The version is specific to both the `ping_edition` and `version_is_prerelease`
 - For a given month and metric, the count of subscriptions and seats is the same across editions
 
 {% enddocs %}
 
 {% docs rpt_gainsight_metrics_monthly_paid_saas %}
 
-**Description:** Joins SaaS Namespace Service Pings to a list of paid recurring SaaS subscriptions to limit to paying SaaS customers, and joins in seat/license data to calculate license utilization. The data from this table will be used for customer product insights. Most notably, this data is pumped into Gainsight and aggregated into customer health scores for use by TAMs.
+**Description:** Joins SaaS GitLab.com Namespace Service Pings to a list of paid recurring SaaS GitLab.com subscriptions to limit to paying SaaS GitLab.com customers, and joins in seat/license data to calculate license utilization. The data from this table will be used for customer product insights. Most notably, this data is pumped into Gainsight and aggregated into customer health scores for use by TAMs.
 
 **Data Grain:**
 - Namespace
@@ -402,7 +406,7 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 **Filters:**
 - Only includes Service Ping metrics that have been added via the "wave" process.
 - Only includes pings that have a license associated with them.
-- Only includes recurring paid SaaS subscriptions
+- Only includes recurring paid SaaS GitLab.com subscriptions
 
 **Business Logic in this Model:**
 - Hits Zuora tables related to charges and product rate plans to limit to paid SaaS customers with recurring subscriptions.
@@ -411,7 +415,7 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 
 {% docs rpt_gainsight_metrics_monthly_paid_self_managed %}
 
-**Description:** Joins Self-Managed Service Pings to a list of paid Self-Managed subscriptions to limit to paying SM customers, joins in seat/license data to calculate license utilization. The data from this table will be used for customer product insights. Most notably, this data is pumped into Gainsight and aggregated into customer health scores for use by TAMs.
+**Description:** Joins Self-Managed and Dedicated Service Pings to a list of paid Self-Managed and Dedicated subscriptions to limit to paying SM and Dedicated customers, joins in seat/license data to calculate license utilization. The data from this table will be used for customer product insights. Most notably, this data is pumped into Gainsight and aggregated into customer health scores for use by TAMs.
 
 **Data Grain:**
 - Installation
@@ -421,7 +425,7 @@ _Note: This model is not expected to be used much (if at all) for analysis. The 
 **Filters:**
 - Only includes Service Ping metrics that have been added via the "wave" process.
 - Only includes pings that have a license associated with them.
-- Only includes pings that have a paid Self-Managed subscription associated with them.
+- Only includes pings that have a paid Self-Managed or Dedicated subscription associated with them.
 
 **Business Logic in this Model:**
 - Resolves a one-to-many relationship between installation and instance types by prioritizing production instances above other instance types
@@ -438,5 +442,21 @@ Simpler incremental version of the rpt_ping_metric_totals_w_estimates_monthly sn
 {% docs rpt_event_xmau_metric_monthly_snapshot_model %}
 
 Simpler incremental version of the rpt_event_xmau_metric_monthly snapshot model. See [rpt_event_xmau_metric_monthly](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.rpt_event_xmau_metric_monthly) for more information about the model being snapshotted.
+
+{% enddocs %}
+
+{% docs rpt_product_navigation_base %}
+
+**Description:** Navigation events are tracked by the team and identified using the logic contained. This has gone through iterations wherein the logic expands on the query but the tracking has gotten simpler. The resulting where clause is to capture past events and current but as we continue forward the past could become distant enough to simplify the WHERE logic to the current nav_* based event tracking. The intention of this model is to enable reporting on the navigation use in conjuction with our new nav project in 2023.
+
+**Data Grain:** 
+`behavior_structured_event_pk`; inherited from `mart_behavior_structured_event`.
+
+This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.prep_snowplow_unnested_events_all).
+
+**Filters:**
+- Only includes events from `2021-10-01` and on
+- Only includes events where `app_id IN ('gitlab', 'gitlab_customers')`
+- Only includes events related to product navigation. Some of the filters catch historical product navigation events, while some catch current product navigation events.
 
 {% enddocs %}
