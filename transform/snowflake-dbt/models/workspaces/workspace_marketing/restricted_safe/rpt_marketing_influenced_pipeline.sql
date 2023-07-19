@@ -159,8 +159,8 @@
 
   FROM wk_sales_sfdc_opportunity_snapshot_history_xf
   INNER JOIN snapshot_dates ON wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_date = snapshot_dates.date_day
-  WHERE snapshot_dates.fiscal_quarter_name_fy = pipeline_created_fiscal_quarter_name
   LEFT JOIN dim_date on wk_sales_sfdc_opportunity_snapshot_history_xf.pipeline_created_date = dim_date.date_day 
+  WHERE snapshot_dates.fiscal_quarter_name_fy = pipeline_created_fiscal_quarter_name
 
 ), 
 
