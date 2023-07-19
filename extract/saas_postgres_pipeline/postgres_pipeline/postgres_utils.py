@@ -38,7 +38,6 @@ from sqlalchemy.schema import CreateTable, DropTable
 
 # bucket_name: test-saas-pipeline-backfills
 BUCKET_NAME = os.environ["GITLAB_BACKFILL_BUCKET"]
-METADATA_SCHEMA = os.environ["GITLAB_METADATA_SCHEMA"]
 BACKFILL_METADATA_TABLE = "backfill_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
 
@@ -452,19 +451,20 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
     return postgres_engine, snowflake_engine, metadata_engine
 
 
-def query_export_status(
+def query_backfill_status(
     metadata_engine: Engine, metadata_table: str, source_table: str
 ) -> List[Tuple[Any, Any, Any, Any]]:
     """
     Query the most recent record in the table to get the state of the backfill
     """
 
+    metadata_schema = os.environ["GITLAB_METADATA_SCHEMA"]
     query = (
         "SELECT is_export_completed, initial_load_start_date, last_extracted_id, upload_date "
-        f"FROM {METADATA_SCHEMA}.{metadata_table} "
+        f"FROM {metadata_schema}.{metadata_table} "
         "WHERE upload_date = ("
         "  SELECT MAX(upload_date)"
-        f" FROM {METADATA_SCHEMA}.{metadata_table}"
+        f" FROM {metadata_schema}.{metadata_table}"
         f" WHERE table_name = '{source_table}');"
     )
     logging.info(f"\nquery export status: {query}")
@@ -487,7 +487,7 @@ def is_resume_export(
     start_pk = 1
     initial_load_start_date = None
 
-    results = query_export_status(metadata_engine, metadata_table, source_table)
+    results = query_backfill_status(metadata_engine, metadata_table, source_table)
     print(f"\nresults: {results}")
 
     # if backfill metadata exists for table
