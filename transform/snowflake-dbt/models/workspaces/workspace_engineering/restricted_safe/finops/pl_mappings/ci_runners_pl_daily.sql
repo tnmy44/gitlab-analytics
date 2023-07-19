@@ -89,9 +89,9 @@ SELECT
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'linux-runner-mgr' THEN '2 - shared saas runners - small'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-medium-amd64' THEN '3 - shared saas runners - medium'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-medium-amd64' AND ci_runner_manager NOT LIKE '%gpu%' THEN '3 - shared saas runners - medium'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-large-amd64' THEN '4 - shared saas runners - large'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-large-amd64' AND ci_runner_manager NOT LIKE '%gpu%' THEN '4 - shared saas runners - large'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'macos shared runners' THEN '5 - shared saas macos runners'
 
