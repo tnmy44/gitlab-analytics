@@ -10,7 +10,7 @@
 , final AS (
 
   SELECT
-    *
+    {{ dbt_utils.star(from=ref('mart_behavior_structured_event'), except=["CREATED_BY", "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
   FROM mart_behavior_structured_event
   WHERE behavior_at > '2022-03-07'
     AND app_id IN (
@@ -47,5 +47,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2023-07-18",
-    updated_date="2022-07-18"
+    updated_date="2022-07-19"
 ) }}
