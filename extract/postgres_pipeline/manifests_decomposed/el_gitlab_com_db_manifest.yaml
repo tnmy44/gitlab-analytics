@@ -423,7 +423,6 @@ tables:
       , environment_id
       , ref
       , tag
-      , NULL AS sha
       , user_id
       , deployable_id
       , deployable_type
@@ -445,7 +444,6 @@ tables:
     import_query: |-
       SELECT id
       , user_id
-      , NULL AS email
       , created_at
       , updated_at
       , confirmed_at
