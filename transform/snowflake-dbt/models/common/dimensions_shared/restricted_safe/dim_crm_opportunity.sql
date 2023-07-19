@@ -104,6 +104,15 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.subscription_end_date,
       prep_crm_opportunity.resale_partner_name,
       prep_crm_opportunity.record_type_name,
+      prep_crm_opportunity.next_steps,
+      prep_crm_opportunity.auto_renewal_status,
+      prep_crm_opportunity.qsr_notes,
+      prep_crm_opportunity.qsr_status,
+      prep_crm_opportunity.manager_confidence,
+      prep_crm_opportunity.renewal_risk_category,
+      prep_crm_opportunity.renewal_swing_arr,
+      prep_crm_opportunity.renewal_manager, 
+      prep_crm_opportunity.renewal_forecast_health,
 
       --account people attributes
       prep_crm_opportunity.crm_account_owner_sales_segment,
@@ -236,5 +245,5 @@ WITH prep_crm_opportunity AS (
     created_by="@iweeks",
     updated_by="@jngCES",
     created_date="2020-11-20",
-    updated_date="2023-04-06"
+    updated_date="2023-07-19"
 ) }}

@@ -113,6 +113,15 @@
       dim_sales_qualified_source.sales_qualified_source_grouped,
       dim_sales_qualified_source.sqs_bucket_engagement,
       dim_crm_opportunity.record_type_name,
+      dim_crm_opportunity.next_steps,
+      dim_crm_opportunity.auto_renewal_status,
+      dim_crm_opportunity.qsr_notes,
+      dim_crm_opportunity.qsr_status,
+      dim_crm_opportunity.manager_confidence,
+      dim_crm_opportunity.renewal_risk_category,
+      dim_crm_opportunity.renewal_swing_arr,
+      dim_crm_opportunity.renewal_manager, 
+      dim_crm_opportunity.renewal_forecast_health,
 
        -- Account fields
       dim_crm_account.crm_account_name,
@@ -574,7 +583,7 @@
     created_by="@iweeks",
     updated_by="@lisvinueza",
     created_date="2020-12-07",
-    updated_date="2023-05-21"
+    updated_date="2023-07-19"
   ) }}
 
 
