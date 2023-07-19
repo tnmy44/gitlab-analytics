@@ -4,8 +4,9 @@ import os
 import sys
 import yaml
 import tempfile
+from datetime import datetime, timedelta
 from time import time
-from typing import Dict, List, Generator, Any, Tuple
+from typing import Dict, List, Generator, Any, Tuple, Optional
 
 from gitlabdata.orchestration_utils import (
     append_to_xcom_file,
@@ -441,3 +442,108 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
         connection_dict["postgres_metadata_connection"], env
     )
     return postgres_engine, snowflake_engine, metadata_engine
+
+def query_export_status(
+    metadata_engine: Engine, metadata_table: str, source_table: str
+) -> List[Tuple[Any, Any, Any, Any]]:
+    """
+    Query the most recent record in the table to get the state of the backfill
+    """
+
+    query = (
+        "SELECT is_export_completed, initial_load_start_date, last_extracted_id, upload_date "
+        f"FROM {METADATA_SCHEMA}.{metadata_table} "
+        "WHERE upload_date = ("
+        "  SELECT MAX(upload_date)"
+        f" FROM {METADATA_SCHEMA}.{metadata_table}"
+        f" WHERE table_name = '{source_table}');"
+    )
+    logging.info(f"\nquery export status: {query}")
+    results = query_executor(metadata_engine, query)
+    return results
+
+
+def is_resume_export(
+    metadata_engine: Engine, metadata_table: str, source_table: str
+) -> Tuple[bool, int, Optional[Any]]:
+    """
+    Determine if export should be resumed, for either 'backfill or 'delete'
+
+    First query the metadata database to see if there's a backfill in progress
+    If the backfill is in progress, check when the last file was written
+    If last file was written within 24 hours, continue from last_extracted_id
+    """
+    # initialize variables
+    is_resume_export_needed = False
+    start_pk = 1
+    initial_load_start_date = None
+
+    results = query_export_status(metadata_engine, metadata_table, source_table)
+    print(f"\nresults: {results}")
+
+    # if backfill metadata exists for table
+    if results:
+        (
+            is_export_completed,
+            prev_initial_load_start_date,
+            last_extracted_id,
+            last_upload_date,
+        ) = results[0]
+        time_since_last_upload = datetime.now() - last_upload_date
+
+        if not is_export_completed:
+            is_resume_export_needed = True
+            # if more than 24 HR since last upload, start backfill over,
+            if time_since_last_upload > timedelta(hours=24):
+                logging.info(
+                    f"In middle of export for {source_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Start export from beginning."
+                )
+
+            # else proceed with last extracted_id
+            else:
+                start_pk = last_extracted_id + 1
+                initial_load_start_date = prev_initial_load_start_date
+                logging.info(
+                    f"Resuming export with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}"
+                )
+
+    return is_resume_export_needed, start_pk, initial_load_start_date
+
+
+def get_prefix_template() -> str:
+    """
+    Returns something like this:
+    staging/backfill_data/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
+    """
+    return "{staging_or_processed}/{export_type}/{table}/{initial_load_prefix}"
+
+
+def get_export_type(metadata_table):
+    export_type = metadata_table.replace(
+        "_metadata", ""
+    )  # 'backfill_metadata' -> 'backfill'
+    return export_type
+
+
+def remove_unprocessed_files_from_gcs(metadata_table: str, source_table: str):
+    """
+    Prior to a fresh backfill/delete, remove all previously
+    backfilled files that haven't been processed downstream
+    """
+    bucket = get_gcs_bucket()
+
+    prefix = get_prefix_template().format(
+        staging_or_processed="staging",
+        export_type=get_export_type(metadata_table),
+        table=source_table,
+        initial_load_prefix="initial_load_start_",
+    )
+
+    blobs = bucket.list_blobs(prefix=prefix)
+
+    for i, blob in enumerate(blobs):
+        if i == 0:
+            logging.info(
+                f"In preparation of export, removing unprocessed files with prefix: {prefix}"
+            )
+        blob.delete()

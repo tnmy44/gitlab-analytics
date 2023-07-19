@@ -66,7 +66,7 @@ standard_secrets = [
 config_dict = {
     "el_customers_scd_db": {
         "cloudsql_instance_name": None,
-        "dag_name": "el_customers_scd",
+        "dag_name": "saas_el_customers_scd",
         "env_vars": {"DAYS": "1"},
         "extract_schedule_interval": "45 5 * * *",
         "secrets": [
@@ -81,7 +81,7 @@ config_dict = {
     },
     "el_gitlab_com": {
         "cloudsql_instance_name": None,
-        "dag_name": "el_gitlab_com",
+        "dag_name": "saas_el_gitlab_com",
         "env_vars": {"HOURS": "96"},
         "extract_schedule_interval": "30 2,15 */1 * *",
         "incremental_backfill_interval": "30 2 * * *",
@@ -99,7 +99,7 @@ config_dict = {
     },
     "el_gitlab_com_ci": {
         "cloudsql_instance_name": None,
-        "dag_name": "el_gitlab_com_ci",
+        "dag_name": "saas_el_gitlab_com_ci",
         "env_vars": {"HOURS": "96"},
         "extract_schedule_interval": "30 2,15 */1 * *",
         "incremental_backfill_interval": "30 2 * * *",
@@ -117,7 +117,7 @@ config_dict = {
     },
     "el_gitlab_com_scd": {
         "cloudsql_instance_name": None,
-        "dag_name": "el_gitlab_com_scd",
+        "dag_name": "saas_el_gitlab_com_scd",
         "env_vars": {},
         "extract_schedule_interval": "30 3,15 */1 * *",
         "secrets": [
@@ -133,7 +133,7 @@ config_dict = {
     },
     "el_gitlab_com_ci_scd": {
         "cloudsql_instance_name": None,
-        "dag_name": "el_gitlab_com_ci_scd",
+        "dag_name": "saas_el_gitlab_com_ci_scd",
         "env_vars": {},
         "extract_schedule_interval": "00 4,16 */1 * *",
         "secrets": [
@@ -149,7 +149,7 @@ config_dict = {
     },
     "el_gitlab_ops": {
         "cloudsql_instance_name": "ops-db-restore",
-        "dag_name": "el_gitlab_ops",
+        "dag_name": "saas_el_gitlab_ops",
         "env_vars": {"HOURS": "48"},
         "extract_schedule_interval": "0 */6 * * *",
         "incremental_backfill_interval": "0 3 * * *",
@@ -168,7 +168,7 @@ config_dict = {
     },
     "el_gitlab_ops_scd": {
         "cloudsql_instance_name": "ops-db-restore",
-        "dag_name": "el_gitlab_ops_scd",
+        "dag_name": "saas_el_gitlab_ops_scd",
         "env_vars": {"HOURS": "13"},
         "extract_schedule_interval": "0 2 */1 * *",
         "secrets": [

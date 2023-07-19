@@ -4,7 +4,7 @@ from typing import Dict, Any
 from sqlalchemy.engine.base import Engine
 
 import load_functions
-from postgres_utils import check_if_schema_changed, BACKFILL_METADATA_TABLE
+from postgres_utils import check_if_schema_changed, is_resume_export, remove_unprocessed_files_from_gcs, BACKFILL_METADATA_TABLE
 
 from gitlabdata.orchestration_utils import snowflake_engine_factory, query_executor
 
