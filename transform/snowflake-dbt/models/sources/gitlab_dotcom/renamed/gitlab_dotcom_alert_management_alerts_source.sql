@@ -17,7 +17,6 @@ WITH source AS (
         status::NUMBER            AS status_id,
         issue_id::NUMBER          AS issue_id,
         project_id::NUMBER        AS project_id,
-        service::VARCHAR          AS alert_management_alert_service,
         monitoring_tool::VARCHAR  AS monitoring_tool
 
     FROM source
