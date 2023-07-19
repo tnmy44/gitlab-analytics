@@ -38,7 +38,7 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
     filter_manifest(manifest_dict, load_only_table)
 
     postgres_engine, snowflake_engine, metadata_engine = get_engines(
-        manifest_dict["postgres_connection_info"]
+        manifest_dict["connection_info"]
     )
     logging.info(snowflake_engine)
 
