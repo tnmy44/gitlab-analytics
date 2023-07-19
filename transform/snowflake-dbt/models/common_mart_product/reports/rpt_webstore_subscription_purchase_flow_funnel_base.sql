@@ -4,38 +4,28 @@
 }}
 
 {{ simple_cte([
-    ('fct_behavior_structured_event_without_assignment','fct_behavior_structured_event_without_assignment'),
-    ('dim_behavior_event','dim_behavior_event')
+    ('mart_behavior_structured_event','mart_behavior_structured_event')
 ]) }}
 
 , final AS (
 
   SELECT
-    fct_behavior_structured_event_without_assignment.behavior_structured_event_pk,
-    fct_behavior_structured_event_without_assignment.behavior_at,
-    fct_behavior_structured_event_without_assignment.gsc_pseudonymized_user_id,
-    dim_behavior_event.event_category,
-    dim_behavior_event.event_action,
-    dim_behavior_event.event_label,
-    dim_behavior_event.event_property,
-    fct_behavior_structured_event_without_assignment.app_id
-  FROM fct_behavior_structured_event_without_assignment
-  LEFT JOIN dim_behavior_event
-    ON fct_behavior_structured_event_without_assignment.dim_behavior_event_sk = dim_behavior_event.dim_behavior_event_sk
-  WHERE fct_behavior_structured_event_without_assignment.behavior_at > '2022-03-07'
-    AND fct_behavior_structured_event_without_assignment.app_id IN (
+    *
+  FROM mart_behavior_structured_event
+  WHERE behavior_at > '2022-03-07'
+    AND app_id IN (
       'gitlab',
       'gitlab_customers'
     )
-    AND dim_behavior_event.event_category IN (
+    AND event_category IN (
       'subscriptions:new',
       'SubscriptionsController'
     )
-    AND dim_behavior_event.event_action IN (
+    AND event_action IN (
       'render',
       'click_button'
     )
-    AND dim_behavior_event.event_label IN (
+    AND event_label IN (
       'saas_checkout',
       'continue_billing',
       'continue_payment',
