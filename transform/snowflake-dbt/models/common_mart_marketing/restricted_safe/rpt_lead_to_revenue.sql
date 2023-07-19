@@ -110,8 +110,6 @@
     FROM person_base
     INNER JOIN dim_crm_person
       ON person_base.dim_crm_person_id = dim_crm_person.dim_crm_person_id
-    LEFT JOIN upa_base
-      ON person_base.dim_crm_account_id = upa_base.dim_crm_account_id
     FULL JOIN mart_crm_account
       ON person_base.dim_crm_account_id = mart_crm_account.dim_crm_account_id
     LEFT JOIN mart_crm_touchpoint
