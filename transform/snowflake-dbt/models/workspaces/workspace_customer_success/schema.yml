@@ -87,9 +87,9 @@ models:
     columns:
       - name: snowplow_events_service_ping_metrics_sk
         tests:
-        - unique:
-            config:
-              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
 
   - name: wk_rpt_user_based_metric_counts_namespace_monthly
     tests:
