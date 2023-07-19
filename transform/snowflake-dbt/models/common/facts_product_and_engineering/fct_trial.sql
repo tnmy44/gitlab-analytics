@@ -65,26 +65,20 @@
 ), joined AS (
   
   SELECT DISTINCT
-   --Natural Key--
-    trials.order_id                                                                                             AS dim_order_id, 
 
-    --Foreign Keys--
+    trials.order_id                                                                                             AS dim_order_id, 
     trials.gitlab_namespace_id                                                                                  AS dim_namespace_id,
     trials.product_rate_plan_id                                                                                 AS dim_product_rate_plan_id,
     customers.customer_id                                                                                       AS customer_id,
-    users.user_id                                                                                               AS user_id,
-       
-    --Other Attributes                                                                                           
+    users.user_id                                                                                               AS user_id,                                                                                         
     IFF(users.user_id IS NOT NULL, TRUE, FALSE)                                                                 AS is_gitlab_user,
     users.created_at                                                                                            AS user_created_at,
-    
     namespaces.created_at                                                                                       AS namespace_created_at,
     namespaces.namespace_type                                                                                   AS namespace_type,
-  
     IFF(converted_trials.order_id IS NOT NULL, TRUE, FALSE)                                                     AS is_trial_converted,
     converted_trials.subscription_name_slugify                                                                  AS subscription_name_slugify,   
-    
     trials.order_created_at                                                                                     AS order_created_at,
+    trials.order_updated_at                                                                                     AS order_updated_at,
     (trials.order_start_date)::DATE                                                                             AS trial_start_date, 
     (trials.order_end_date)::DATE                                                                               AS trial_end_date
     
@@ -99,17 +93,13 @@
     LEFT JOIN converted_trials 
       ON trials.order_id = converted_trials.order_id
   
-  WHERE gitlab_namespace_id IS NOT NULL 
-    AND trial_start_date IS NOT NULL 
-    AND product_rate_plan_id IS NOT NULL
+  WHERE trial_start_date IS NOT NULL 
   
-), final AS 
-
-(
+), final AS (
 
   SELECT 
    --Surrogate Key-- 
-     {{ dbt_utils.surrogate_key(['joined.dim_order_id', 'joined.dim__namespace_id', 'joined.product_rate_plan_id', 'joined.trial_start_date', 'joined.trial_end_date', 'joined.subscription_name_slugify']) }} AS trial_pk,
+     {{ dbt_utils.surrogate_key(['joined.dim_order_id', 'joined.dim_namespace_id', 'joined.dim_product_rate_plan_id', 'joined.trial_start_date', 'joined.trial_end_date', 'joined.subscription_name_slugify', 'joined.order_updated_at']) }} AS trial_pk,
 
    --Natural Key--
     dim_order_id, 
@@ -131,10 +121,11 @@
     subscription_name_slugify,   
     
     order_created_at,
+    order_updated_at,
     trial_start_date, 
     trial_end_date
     
-  FROM final
+  FROM joined
 
 )
 
