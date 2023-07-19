@@ -1,4 +1,4 @@
-connection_info:
+postgres_connection_info:
   database: CUSTOMERS_DB_NAME
   host: CUSTOMERS_DB_HOST
   pass: CUSTOMERS_DB_PASS

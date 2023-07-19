@@ -1,4 +1,4 @@
-connection_info:
+postgres_connection_info:
   database: GITLAB_OPS_DB_NAME
   host: GITLAB_OPS_DB_HOST
   pass: GITLAB_OPS_DB_PASS

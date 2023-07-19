@@ -1,9 +1,16 @@
-connection_info:
-  database: GITLAB_COM_DB_NAME
-  host: GITLAB_COM_DB_HOST
-  pass: GITLAB_COM_DB_PASS
-  port: GITLAB_COM_PG_PORT
-  user: GITLAB_COM_DB_USER
+postgres_connection_info:
+  postgres_source_connection:
+    database: GITLAB_COM_CI_DB_NAME
+    host: GITLAB_COM_CI_DB_HOST
+    pass: GITLAB_COM_CI_DB_PASS
+    port: GITLAB_COM_CI_DB_PORT
+    user: GITLAB_COM_CI_DB_USER
+  postgres_metadata_connection:
+    database: GITLAB_METADATA_DB_NAME
+    host: GITLAB_METADATA_DB_HOST
+    pass: GITLAB_METADATA_DB_PASS
+    port: GITLAB_METADATA_PG_PORT
+    user: GITLAB_METADATA_DB_USER
 tables:
   #alert_management_alerts:
   #  dbt_source_model: true
