@@ -46,6 +46,7 @@ default_args = {
 dag = DAG(
     "el_oci_usage",
     default_args=default_args,
+    schedule_interval="25 3 * * *",
     concurrency=2,
 )
 
