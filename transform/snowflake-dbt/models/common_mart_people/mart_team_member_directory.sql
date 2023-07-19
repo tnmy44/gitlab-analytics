@@ -18,12 +18,11 @@ WITH team_member_mapping AS (
       WHEN age = -1               THEN 'Unreported'
       ELSE NULL 
     END                                                                                             AS age_cohort,
-    DATE(valid_from)                                                                                AS valid_from,
-    DATE(valid_to)                                                                                  AS valid_to
+    MIN(DATE(valid_from))                                                                           AS valid_from,
+    MAX(DATE(valid_to))                                                                             AS valid_to 
   FROM {{ ref('workday_employee_mapping_source') }} 
-  --Remove multiple records for the same day
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, DATE(valid_from) ORDER BY DATE(valid_to) DESC) = 1
-
+  {{ dbt_utils.group_by(n=4)}}
+  
 ),
 
 team_member AS (
@@ -68,7 +67,7 @@ team_member AS (
     is_current_team_member,
     is_rehire,
     valid_from,
-    valid_to
+    LEAD(valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY valid_from)   AS valid_to
   FROM {{ ref('dim_team_member') }}
 
 ),
@@ -92,7 +91,7 @@ team_member_position AS (
     department,
     division,
     entity,
-    effective_date AS valid_from,
+    effective_date                                                                                AS valid_from,
     LEAD(valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ ref('fct_team_member_position') }}
 
