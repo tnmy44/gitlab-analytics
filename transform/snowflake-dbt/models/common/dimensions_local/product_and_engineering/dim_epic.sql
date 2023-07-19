@@ -29,7 +29,6 @@ WITH prep_epic AS (
       parent_id,
       relative_position,
       start_date_sourcing_epic_id,
-      external_key,
       is_confidential,
       state_name,
       epic_title_length,

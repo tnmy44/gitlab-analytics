@@ -464,10 +464,8 @@ tables:
       , name
       , created_at
       , updated_at
-      , NULL AS external_url
       , environment_type
       , state
-      , NULL AS slug
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -498,7 +496,6 @@ tables:
       , parent_id
       , relative_position
       , start_date_sourcing_epic_id
-      , NULL AS external_key
       , confidential
       FROM epics
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -532,8 +529,6 @@ tables:
       , project_id
       , created_at
       , updated_at
-      , NULL AS external_url
-      , NULL AS name
       FROM external_status_checks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -575,12 +570,10 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , NULL AS extern_uid
       , provider
       , user_id
       , created_at
       , updated_at
-      , NULL AS secondary_extern_uid
       , saml_provider_id
       FROM identities
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -728,8 +721,6 @@ tables:
       , failed_to_import_count
       , status
       , jid
-      , NULL AS jira_project_key
-      , NULL AS jira_project_name
       , scheduled_at
       , error_message
       FROM jira_imports
@@ -796,13 +787,10 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , NULL AS cn
       , group_access
       , group_id
       , created_at
       , updated_at
-      , NULL AS provider
-      , NULL AS filter
       FROM ldap_group_links
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

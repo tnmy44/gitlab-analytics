@@ -79,7 +79,6 @@
       gitlab_dotcom_epics_dedupe_source.parent_id::NUMBER                                    AS parent_id,
       gitlab_dotcom_epics_dedupe_source.relative_position::NUMBER                            AS relative_position,
       gitlab_dotcom_epics_dedupe_source.start_date_sourcing_epic_id::NUMBER                  AS start_date_sourcing_epic_id,
-      gitlab_dotcom_epics_dedupe_source.external_key::VARCHAR                                AS external_key,
       gitlab_dotcom_epics_dedupe_source.confidential::BOOLEAN                                AS is_confidential,
       {{ map_state_id('gitlab_dotcom_epics_dedupe_source.state_id') }}                       AS state_name,
       LENGTH(gitlab_dotcom_epics_dedupe_source.title)::NUMBER                                AS epic_title_length,

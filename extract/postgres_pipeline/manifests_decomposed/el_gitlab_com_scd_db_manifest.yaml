@@ -292,8 +292,6 @@ tables:
       , created_at
       , updated_at
       , status
-      , NULL AS jid
-      , NULL AS last_error
       , user_id
       FROM group_import_states
   issuable_severities:
@@ -340,10 +338,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , NULL AS client_key
-      , NULL AS encrypted_shared_secret
-      , NULL AS encrypted_shared_secret_iv
-      , NULL AS base_url
       , instance_url
       FROM jira_connect_installations
   keys:
