@@ -181,7 +181,8 @@
       location_country.country_name,
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
-      'Self-Managed'                                                               AS delivery_type,
+      monthly_sm_metrics.ping_delivery_type                                        AS delivery_type,
+      monthly_sm_metrics.ping_deployment_type                                      AS deployment_type,
       monthly_sm_metrics.installation_creation_date,
       -- Wave 1
       DIV0(
@@ -425,7 +426,8 @@
       NULL                                                                          AS country_name,
       NULL                                                                          AS iso_2_country_code,
       NULL                                                                          AS iso_3_country_code,
-      'SaaS'                                                                        AS delivery_type,
+      monthly_saas_metrics.ping_delivery_type                                       AS delivery_type,
+      monthly_saas_metrics.ping_deployment_type                                     AS deployment_type,
       NULL                                                                          AS installation_creation_date,
       -- Wave 1
       DIV0(
@@ -708,7 +710,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-09-09",
-    updated_date="2023-05-30"
+    updated_date="2023-06-26"
 ) }}

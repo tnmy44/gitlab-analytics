@@ -656,7 +656,11 @@ models:
       - name: iso_2_country_code
       - name: iso_3_country_code
       - name: delivery_type
-        description: Indicates if the product usage came from a SaaS or Self-Managed user.
+        description: '{{ doc("ping_delivery_type") }}'
+        tests:
+          - not_null
+      - name: deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
         tests:
           - not_null
       - name: umau_28_days_user

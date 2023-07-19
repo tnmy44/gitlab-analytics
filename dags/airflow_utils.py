@@ -45,7 +45,6 @@ analytics_pipelines_dag = [
     "dbt_snowplow_backfill",
     "dbt_snowplow_backfill_specific_model",
     "dbt_snowplow_full_refresh",
-    "saas_usage_ping",
     "t_prep_dotcom_usage_events_backfill",
     "dbt_six_hourly",
 ]
