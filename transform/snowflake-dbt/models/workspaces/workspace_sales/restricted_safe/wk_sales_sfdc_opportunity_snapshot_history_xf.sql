@@ -23,6 +23,7 @@ WITH date_details AS (
       order_type_stamped,
       deal_category,
       opportunity_category,
+      partner_category,
       deal_group,
       opportunity_owner_manager,
       is_edu_oss,
@@ -53,6 +54,7 @@ WITH date_details AS (
       report_opportunity_user_sub_business_unit,
       report_opportunity_user_division,
       report_opportunity_user_asm,
+      report_opportunity_user_role_type,
       
       -- FY23 keys 
       key_sqs,
@@ -479,6 +481,7 @@ WITH date_details AS (
       sfdc_opportunity_xf.deal_category,
       sfdc_opportunity_xf.opportunity_category,
       sfdc_opportunity_xf.deal_group,
+      sfdc_opportunity_xf.partner_category,
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.is_edu_oss,
 
@@ -487,6 +490,7 @@ WITH date_details AS (
       sfdc_opportunity_xf.report_opportunity_user_sub_business_unit,
       sfdc_opportunity_xf.report_opportunity_user_division,
       sfdc_opportunity_xf.report_opportunity_user_asm,
+      sfdc_opportunity_xf.report_opportunity_user_role_type,
       
       sfdc_opportunity_xf.key_bu,
       sfdc_opportunity_xf.key_bu_subbu,
