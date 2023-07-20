@@ -17,7 +17,7 @@ WITH first_trial AS (
     FIRST_VALUE(dim_namespace_id)
       OVER (PARTITION BY dim_order_id ORDER BY order_updated_at DESC)       AS latest_namespace_id,
     FIRST_VALUE(user_id)
-      OVER (PARTITION BY dim_order_id ORDER BY order_updated_at ASC)        AS latest_user_id,
+      OVER (PARTITION BY dim_order_id ORDER BY order_updated_at DESC)        AS latest_user_id,
     FIRST_VALUE(namespace_type)
       OVER (PARTITION BY dim_order_id ORDER BY order_updated_at DESC)       AS latest_namespace_type,
     namespace_created_at,

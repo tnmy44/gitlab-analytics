@@ -4,7 +4,6 @@
 
 {{ simple_cte([
     ('fct_trial', 'fct_trial'),
-    ('orders_snapshots', 'customers_db_orders_snapshots_base'),
     ('gitlab_subscriptions','gitlab_dotcom_gitlab_subscriptions_snapshots_base')
 
 
