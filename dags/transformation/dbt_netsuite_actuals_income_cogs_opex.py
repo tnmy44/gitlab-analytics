@@ -64,10 +64,9 @@ def return_branch_by_bday(**kwargs):
     """
     beg_of_month = datetime.today().replace(day=1).date()
     today = datetime.today().date()
-    if busday_count(beg_of_month, today) <= 8:
-        return "dbt-netsuite-actuals-income-cogs-opex"
-    else:
-        return "do_nothing"
+    return "dbt-netsuite-actuals-income-cogs-opex"
+    #else:
+    #    return "do_nothing"
 
 
 # Create the DAG
