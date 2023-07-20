@@ -26,6 +26,4 @@ models:
         - unique:
             config:
               where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
-        - not_null:
-            config:
-              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        - not_null
