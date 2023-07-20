@@ -21,7 +21,7 @@ from gitlabdata.orchestration_utils import (
 reporting_namespace = "bling"
 
 prefix_file = ""  # For cost and usage files
-destintation_path = "extract"
+destination_path = "extract"
 
 # Make a directory to receive reports
 if not os.path.exists(destintation_path):
