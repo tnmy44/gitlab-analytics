@@ -715,25 +715,25 @@
       cohort_base_combined.*,
 
     -- pulling dirrectly from the URL
-    PARSE_URL(bizible_landing_page_raw):parameters:utm_campaign  AS bizible_landing_page_utm_campaign,
-    PARSE_URL(bizible_landing_page_raw):parameters:utm_medium    AS bizible_landing_page_utm_medium,
-    PARSE_URL(bizible_landing_page_raw):parameters:utm_source    AS bizible_landing_page_utm_source,
+    PARSE_URL(bizible_landing_page_raw):parameters:utm_campaign::VARCHAR  AS bizible_landing_page_utm_campaign,
+    PARSE_URL(bizible_landing_page_raw):parameters:utm_medium::VARCHAR    AS bizible_landing_page_utm_medium,
+    PARSE_URL(bizible_landing_page_raw):parameters:utm_source::VARCHAR    AS bizible_landing_page_utm_source,
 
-    PARSE_URL(bizible_form_url_raw):parameters:utm_campaign     AS bizible_form_page_utm_campaign,
-    PARSE_URL(bizible_form_url_raw):parameters:utm_medium       AS bizible_form_page_utm_medium,
-    PARSE_URL(bizible_form_url_raw):parameters:utm_source       AS bizible_form_page_utm_source,
+    PARSE_URL(bizible_form_url_raw):parameters:utm_campaign::VARCHAR     AS bizible_form_page_utm_campaign,
+    PARSE_URL(bizible_form_url_raw):parameters:utm_medium::VARCHAR       AS bizible_form_page_utm_medium,
+    PARSE_URL(bizible_form_url_raw):parameters:utm_source::VARCHAR       AS bizible_form_page_utm_source,
 
 
     --UTMs not captured by the Bizible
-    PARSE_URL(bizible_form_url_raw):parameters:utm_content       AS bizible_form_page_utm_content,
-    PARSE_URL(bizible_form_url_raw):parameters:utm_budget        AS bizible_form_page_utm_budget,
-    PARSE_URL(bizible_form_url_raw):parameters:utm_allptnr       AS bizible_form_page_utm_allptnr,
-    PARSE_URL(bizible_form_url_raw):parameters:utm_partnerid     AS bizible_form_page_utm_partnerid,
+    PARSE_URL(bizible_form_url_raw):parameters:utm_content::VARCHAR       AS bizible_form_page_utm_content,
+    PARSE_URL(bizible_form_url_raw):parameters:utm_budget::VARCHAR        AS bizible_form_page_utm_budget,
+    PARSE_URL(bizible_form_url_raw):parameters:utm_allptnr::VARCHAR       AS bizible_form_page_utm_allptnr,
+    PARSE_URL(bizible_form_url_raw):parameters:utm_partnerid::VARCHAR     AS bizible_form_page_utm_partnerid,
 
-    PARSE_URL(bizible_landing_page_raw):parameters:utm_content   AS bizible_landing_page_utm_content,
-    PARSE_URL(bizible_landing_page_raw):parameters:utm_budget    AS bizible_landing_page_utm_budget,
-    PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr   AS bizible_landing_page_utm_allptnr,
-    PARSE_URL(bizible_landing_page_raw):parameters:utm_partnerid AS bizible_landing_page_utm_partnerid,
+    PARSE_URL(bizible_landing_page_raw):parameters:utm_content::VARCHAR   AS bizible_landing_page_utm_content,
+    PARSE_URL(bizible_landing_page_raw):parameters:utm_budget::VARCHAR    AS bizible_landing_page_utm_budget,
+    PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr::VARCHAR   AS bizible_landing_page_utm_allptnr,
+    PARSE_URL(bizible_landing_page_raw):parameters:utm_partnerid::VARCHAR AS bizible_landing_page_utm_partnerid,
 
     COALESCE(bizible_landing_page_utm_campaign, bizible_form_page_utm_campaign)   AS utm_campaign,
     COALESCE(bizible_landing_page_utm_medium, bizible_form_page_utm_medium)       AS utm_medium,
