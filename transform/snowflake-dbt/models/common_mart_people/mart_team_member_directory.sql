@@ -67,7 +67,7 @@ team_member AS (
     is_current_team_member,
     is_rehire,
     valid_from,
-    LEAD(valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY valid_from)   AS valid_to
+    valid_to
   FROM {{ ref('dim_team_member') }}
 
 ),
@@ -210,5 +210,5 @@ final AS (
     created_by="@lisvinueza",
     updated_by="@lisvinueza",
     created_date="2023-07-06",
-    updated_date="2023-07-06"
+    updated_date="2023-07-20"
 ) }}
