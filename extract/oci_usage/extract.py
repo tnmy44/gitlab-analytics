@@ -1,7 +1,7 @@
 import oci
 import os
 import sys
-from logging import info, basicConfig, getLogger, error
+from logging import info, basicConfig, getLogger
 from fire import Fire
 
 
