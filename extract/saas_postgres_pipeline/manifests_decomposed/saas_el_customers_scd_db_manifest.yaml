@@ -1,9 +1,10 @@
 connection_info:
-  database: CUSTOMERS_DB_NAME
-  host: CUSTOMERS_DB_HOST
-  pass: CUSTOMERS_DB_PASS
-  port: PG_PORT
-  user: CUSTOMERS_DB_USER
+  postgres_source_connection:
+    database: CUSTOMERS_DB_NAME
+    host: CUSTOMERS_DB_HOST
+    pass: CUSTOMERS_DB_PASS
+    port: PG_PORT
+    user: CUSTOMERS_DB_USER
 tables:
   billing_accounts:
     advanced_metadata: true

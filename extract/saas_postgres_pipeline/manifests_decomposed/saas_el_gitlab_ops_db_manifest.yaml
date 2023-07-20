@@ -1,9 +1,10 @@
 connection_info:
-  database: GITLAB_OPS_DB_NAME
-  host: GITLAB_OPS_DB_HOST
-  pass: GITLAB_OPS_DB_PASS
-  port: PG_PORT
-  user: GITLAB_OPS_DB_USER
+  postgres_source_connection:
+    database: GITLAB_OPS_DB_NAME
+    host: GITLAB_OPS_DB_HOST
+    pass: GITLAB_OPS_DB_PASS
+    port: PG_PORT
+    user: GITLAB_OPS_DB_USER
 tables:
   ci_pipelines:
     dbt_source_model: true
