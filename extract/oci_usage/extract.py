@@ -3,6 +3,10 @@ import os
 import sys
 from logging import info, basicConfig, getLogger
 from fire import Fire
+from gitlabdata.orchestration_utils import (
+    snowflake_engine_factory,
+    snowflake_stage_load_copy_remove,
+)
 
 
 config = {
@@ -12,11 +16,6 @@ config = {
     "tenancy": os.environ["OCI_TENANCY"],
     "region": os.environ["OCI_REGION"],
 }
-
-from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
-    snowflake_stage_load_copy_remove,
-)
 
 reporting_namespace = "bling"
 
