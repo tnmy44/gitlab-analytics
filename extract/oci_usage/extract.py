@@ -51,7 +51,7 @@ def load_data():
 
         if "cost" in filename:
             target_table = "oci_cost_report"
-        if "usage" in filename:
+        elif "usage" in filename:
             target_table = "oci_usage_report"
 
         with open(destintation_path + "/" + filename, "wb") as f:
