@@ -103,34 +103,34 @@
 
   SELECT 
    --Primary Key-- 
-     {{ dbt_utils.surrogate_key(['joined.dim_order_id', 'joined.dim_namespace_id', 'joined.dim_product_rate_plan_id', 'joined.trial_start_date', 'joined.trial_end_date', 'joined.subscription_name_slugify', 'joined.order_updated_at']) }} AS trial_pk,
+     {{ dbt_utils.surrogate_key(['joined.dim_order_id', 'joined.dim_namespace_id', 'joined.subscription_name_slugify', 'joined.order_updated_at']) }} AS trial_pk,
 
    --Natural Key--
-    dim_order_id, 
+    joined.dim_order_id, 
 
     --Foreign Keys--
-    dim_namespace_id,
-    dim_product_rate_plan_id,
-    customer_id,
+    joined.dim_namespace_id,
+    joined.dim_product_rate_plan_id,
+    joined.customer_id,
     user_id,
        
     --Other Attributes                                                                                           
-    is_gitlab_user,
-    user_created_at,
+    joined.is_gitlab_user,
+    joined.user_created_at,
     
-    namespace_created_at,
-    namespace_type,
+    joined.namespace_created_at,
+    joined.namespace_type,
   
-    is_trial_converted,
-    subscription_name_slugify, 
-    subscription_start_date,
-    country,
-    company_size, 
+    joined.is_trial_converted,
+    joined.subscription_name_slugify, 
+    joined.subscription_start_date,
+    joined.country,
+    joined.company_size, 
 
-    order_created_at,
-    order_updated_at,
-    trial_start_date, 
-    trial_end_date
+    joined.order_created_at,
+    joined.order_updated_at,
+    joined.trial_start_date, 
+    joined.trial_end_date
     
   FROM joined
 
