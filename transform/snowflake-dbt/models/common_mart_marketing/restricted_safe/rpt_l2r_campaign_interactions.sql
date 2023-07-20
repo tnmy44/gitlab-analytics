@@ -11,10 +11,10 @@
 
 , person_base_with_tp AS (
 
-    SELECT DISTINCT
+    SELECT
   --IDs
-    person_base.dim_crm_person_id,
-    person_base.dim_crm_account_id,
+    mart_crm_touchpoint.dim_crm_person_id,
+    mart_crm_touchpoint.dim_crm_account_id,
     dim_crm_account.dim_parent_crm_account_id,
 	person_base.dim_crm_user_id,
 	person_base.crm_partner_id,
@@ -111,11 +111,11 @@
 		mart_crm_touchpoint.count_net_new_mql AS new_mql_sum,
 		mart_crm_touchpoint.count_net_new_accepted AS new_accepted_sum    
     FROM mart_crm_touchpoint
-    INNER JOIN person_base
+    LEFT JOIN person_base ON
       {# ON mart_crm_touchpoint.email_hash = person_base.email_hash #}
-      ON mart_crm_touchpoint.dim_crm_person_id = person_base.dim_crm_person_id
+       mart_crm_touchpoint.dim_crm_person_id = person_base.dim_crm_person_id
     LEFT JOIN map_alternative_lead_demographics
-      ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
+      ON mart_crm_touchpoint.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
     LEFT JOIN dim_crm_account
       ON person_base.dim_crm_account_id=dim_crm_account.dim_crm_account_id
 
@@ -711,7 +711,7 @@
 
 ), intermediate AS (
   
-    SELECT DISTINCT
+    SELECT 
       cohort_base_combined.*,
 
     --UTMs not captured by the Bizible
@@ -813,7 +813,7 @@
 
 ), final AS (
 
-    SELECT DISTINCT *
+    SELECT  *
     FROM intermediate
 
 )
