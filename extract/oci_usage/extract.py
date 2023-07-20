@@ -20,7 +20,7 @@ from gitlabdata.orchestration_utils import (
 
 reporting_namespace = "bling"
 
-prefix_file = ""  #  For cost and usage files
+prefix_file = ""  # For cost and usage files
 destintation_path = "extract"
 
 # Make a directory to receive reports
