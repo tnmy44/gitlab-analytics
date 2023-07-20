@@ -36,26 +36,26 @@ WITH first_trial AS (
   SELECT 
 
    --Primary Key-- 
-     {{ dbt_utils.surrogate_key(['dim_order_id', 'latest_namespace_id']) }} AS trial_first_pk,
+     {{ dbt_utils.surrogate_key(['first_trial.dim_order_id']) }}                        AS trial_first_pk,
 
    --Natural Key--
-    dim_order_id, 
+    first_trial.dim_order_id, 
 
     --Foreign Keys--
-    latest_namespace_id                                                     AS dim_namespace_id,
-    latest_customer_id                                                      AS customer_id,
-    latest_user_id                                                          AS user_id, 
+    first_trial.latest_namespace_id                                                     AS dim_namespace_id,
+    first_trial.latest_customer_id                                                      AS customer_id,
+    first_trial.latest_user_id                                                          AS user_id, 
        
     --Other Attributes                                                                                           
-    first_subscription_name_slugify                                         AS subscription_name_slugify, 
-    latest_namespace_type                                                   AS namespace_type,
-    is_trial_converted,
-    IFF(latest_user_id IS NOT NULL, TRUE, FALSE)                            AS is_gitlab_user,
-    MIN(user_created_at)                                                    AS user_created_at,
-    MIN(namespace_created_at)                                               AS namespace_created_at,  
-    MIN(order_created_at)                                                   AS order_created_at,
-    MIN(trial_start_date)                                                   AS trial_start_date,
-    MAX(trial_end_date)                                                     AS trial_end_date
+    first_trial.first_subscription_name_slugify                                         AS subscription_name_slugify, 
+    first_trial.latest_namespace_type                                                   AS namespace_type,
+    first_trial.is_trial_converted,
+    IFF(first_trial.latest_user_id IS NOT NULL, TRUE, FALSE)                            AS is_gitlab_user,
+    MIN(first_trial.user_created_at)                                                    AS user_created_at,
+    MIN(first_trial.namespace_created_at)                                               AS namespace_created_at,  
+    MIN(first_trial.order_created_at)                                                   AS order_created_at,
+    MIN(first_trial.trial_start_date)                                                   AS trial_start_date,
+    MAX(first_trial.trial_end_date)                                                     AS trial_end_date
     
   FROM first_trial
  {{dbt_utils.group_by(9)}}
