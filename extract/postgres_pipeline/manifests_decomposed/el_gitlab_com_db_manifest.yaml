@@ -189,6 +189,21 @@ tables:
       FROM authentication_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  batched_background_migrations:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'batched_background_migrations'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , status
+      , finished_at
+      , created_at
+      , updated_at
+      FROM batched_background_migrations
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   banned_users:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -714,6 +729,7 @@ tables:
       , promoted_to_epic_id
       , sprint_id
       , health_status
+      , work_item_type_id
       FROM issues
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
