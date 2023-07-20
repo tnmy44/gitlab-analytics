@@ -330,6 +330,19 @@ LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY = Secret(
     "LEVEL_UP_THOUGHT_INDUSTRIES_API_KEY",
 )
 
+ADAPTIVE_USERNAME = Secret(
+    "env",
+    "ADAPTIVE_USERNAME",
+    "airflow",
+    "ADAPTIVE_USERNAME",
+)
+
+ADAPTIVE_PASSWORD = Secret(
+    "env",
+    "ADAPTIVE_PASSWORD",
+    "airflow",
+    "ADAPTIVE_PASSWORD",
+)
 
 ## OCI Usage Extraction
 
