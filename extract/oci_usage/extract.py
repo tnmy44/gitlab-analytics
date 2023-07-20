@@ -23,8 +23,8 @@ prefix_file = ""  # For cost and usage files
 destination_path = "extract"
 
 # Make a directory to receive reports
-if not os.path.exists(destintation_path):
-    os.mkdir(destintation_path)
+if not os.path.exists(destination_path):
+    os.mkdir(destination_path)
 
 # Get the list of reports
 reporting_bucket = config["tenancy"]
@@ -53,14 +53,14 @@ def load_data():
         elif "usage" in filename:
             target_table = "oci_usage_report"
 
-        with open(destintation_path + "/" + filename, "wb") as f:
+        with open(destination_path + "/" + filename, "wb") as f:
             for chunk in object_details.data.raw.stream(
                 1024 * 1024, decode_content=False
             ):
                 f.write(chunk)
 
         snowflake_stage_load_copy_remove(
-            f"{destintation_path}/{filename}",
+            f"{destination_path}/{filename}",
             "oci_reports.oci_report",
             f"oci_reports.{target_table}",
             snowflake_engine,
