@@ -445,9 +445,12 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
         env, role="LOADER", schema="tap_postgres"
     )
 
-    metadata_engine = postgres_engine_factory(
-        connection_dict["postgres_metadata_connection"], env
-    )
+    if connection_dict.get('postgres_metadata_connection'):
+        metadata_engine = postgres_engine_factory(
+            connection_dict["postgres_metadata_connection"], env
+        )
+    else:
+        metadata_engine = None
     return postgres_engine, snowflake_engine, metadata_engine
 
 
