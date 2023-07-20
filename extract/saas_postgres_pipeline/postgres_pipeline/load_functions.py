@@ -20,6 +20,7 @@ from postgres_utils import (
     get_engines,
     id_query_generator,
     manifest_reader,
+    get_min_or_max_id
 )
 
 
@@ -153,7 +154,6 @@ def trusted_data_pgp(
 
     logging.info(f"Processing table: {source_table_name}")
     query = f"{raw_query} {additional_filter}"
-    env = os.environ.copy()
     logging.info(query)
     chunk_and_upload(
         query,
@@ -165,38 +165,6 @@ def trusted_data_pgp(
         False,
     )
 
-    return True
-
-
-def sync_incremental_ids(
-    source_engine: Engine,
-    target_engine: Engine,
-    table: str,
-    table_dict: Dict[Any, Any],
-    table_name: str,
-) -> bool:
-    """
-    Sync incrementally-loaded tables based on their IDs.
-    """
-
-    raw_query = table_dict["import_query"]
-    additional_filtering = table_dict.get("additional_filtering", "")
-    primary_key = table_dict["export_table_primary_key"]
-    # If temp isn't in the name, we don't need to full sync.
-    # If a temp table exists, we know the sync didn't complete successfully
-    if "_TEMP" != table_name[-5:]:
-        logging.info(f"Table {table} doesn't need a full sync.")
-        return False
-
-    load_ids(
-        additional_filtering,
-        primary_key,
-        raw_query,
-        source_engine,
-        table,
-        table_name,
-        target_engine,
-    )
     return True
 
 
@@ -228,6 +196,7 @@ def load_scd(
     logging.info(f"Processing table: {source_table_name}")
     query = f"{raw_query} {additional_filter}"
 
+    # TODO: should we delete this section, we don't use 'append_only'
     if is_append_only:
         load_ids(
             additional_filter,
@@ -255,42 +224,52 @@ def load_scd(
 
 
 def load_ids(
-    additional_filtering: str,
-    primary_key: str,
-    raw_query: str,
-    source_engine: Engine,
-    source_table_name: str,
-    table_name: str,
-    target_engine: Engine,
-    id_range: int = 3_050_000,
-    backfill: bool = True,
+    database_kwargs: Dict[Any, Any],
+    table_dict: Dict[Any, Any],
+    initial_load_start_date: datetime.datetime,
+    start_pk: int,
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
 
+    if "_TEMP" != table_dict['target_table'][-5:]:
+        logging.info(f"Table {table_dict['source_table']} doesn't need a full sync.")
+        return False
+
+    raw_query = table_dict["import_query"]
+    additional_filtering = table_dict.get("additional_filtering", "")
+    primary_key = table_dict["export_table_primary_key"]
+
+    max_pk = get_min_or_max_id(
+        primary_key,
+        database_kwargs["source_engine"],
+        database_kwargs["source_table"],
+        "max",
+        database_kwargs["chunksize"],
+    )
+
     # Create a generator for queries that are chunked by ID range
     id_queries = id_query_generator(
-        source_engine,
         primary_key,
         raw_query,
-        target_engine,
-        source_table_name,
-        table_name,
-        id_range=id_range,
+        start_pk,
+        max_pk,
+        database_kwargs["chunksize"],
     )
+
     # Iterate through the generated queries
     for query in id_queries:
-        filtered_query = f"{query} {additional_filtering} ORDER BY {primary_key}"
-        logging.info(filtered_query)
-        chunk_and_upload(
+        filtered_query = f"{query} {additional_filtering}"
+        logging.info(f"\nfiltered_query: {filtered_query}")
+        # if no original load_start, need to preserve it for subsequent calls
+        initial_load_start_date = chunk_and_upload_backfill(
             filtered_query,
-            source_engine,
-            target_engine,
-            table_name,
-            source_table_name,
-            backfill=backfill,
+            primary_key,
+            max_pk,
+            initial_load_start_date,
+            database_kwargs,
         )
-        backfill = False  # this prevents it from seeding rows for every chunk
-
+    # TODO # upload_to_snowflake()
+    return True
 
 def check_new_tables(
     source_engine: Engine,

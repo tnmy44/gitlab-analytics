@@ -42,14 +42,22 @@ BACKFILL_METADATA_TABLE = "backfill_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
 
 
-def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
-    """Do the auth and return a usable gcs bucket object."""
+def get_gcs_scoped_credentials():
+    """Get scoped credential"""
+    # create the credentials object
+    keyfile = yaml.load(os.environ["GCP_SERVICE_CREDS"], Loader=yaml.FullLoader)
+    credentials = service_account.Credentials.from_service_account_info(keyfile)
 
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    credentials = service_account.Credentials.from_service_account_info(gapi_keyfile)
     scoped_credentials = credentials.with_scopes(scope)
+    return scoped_credentials
+
+
+def get_gcs_bucket() -> Bucket:
+    """Do the auth and return a usable gcs bucket object."""
+    scoped_credentials = get_gcs_scoped_credentials()
     storage_client = storage.Client(credentials=scoped_credentials)
-    return storage_client.get_bucket(bucket_name)
+    return storage_client.get_bucket(BUCKET_NAME)
 
 
 def upload_to_gcs(
@@ -58,21 +66,20 @@ def upload_to_gcs(
     """
     Write a dataframe to local storage and then upload it to a GCS bucket.
     """
+    bucket = get_gcs_bucket()
 
-    keyfile = yaml.load(os.environ["GCP_SERVICE_CREDS"], Loader=yaml.FullLoader)
-    bucket_name = "postgres_pipeline"
-    bucket = get_gcs_bucket(keyfile, bucket_name)
-
-    # Write out the TSV and upload it
-    enriched_df = dataframe_enricher(advanced_metadata, upload_df)
-    enriched_df.to_csv(
+    # Write out the parquet and upload it
+    # enriched_df = dataframe_enricher(advanced_metadata, upload_df)
+    enriched_df = upload_df
+    os.makedirs(
+        os.path.dirname(upload_file_name), exist_ok=True
+    )  # need to create director(ies) prior to to_parquet()
+    enriched_df.to_parquet(
         upload_file_name,
         compression="gzip",
-        escapechar="\\",
         index=False,
-        quoting=csv.QUOTE_NONE,
-        sep="\t",
     )
+    logging.info(f"GCS save location: {upload_file_name}")
     blob = bucket.blob(upload_file_name)
     blob.upload_from_filename(upload_file_name)
 
@@ -253,12 +260,6 @@ def chunk_and_upload(
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
 
         for idx, chunk_df in enumerate(iter_csv):
-            if backfill:
-                schema_types = transform_source_types_to_snowflake_types(
-                    chunk_df, source_table, source_engine
-                )
-                seed_table(advanced_metadata, schema_types, target_table, target_engine)
-                backfill = False
 
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
@@ -281,6 +282,91 @@ def chunk_and_upload(
     target_engine.dispose()
     source_engine.dispose()
 
+
+def chunk_and_upload_backfill(
+    query: str,
+    primary_key: str,
+    max_source_id: int,
+    initial_load_start_date: datetime,
+    database_kwargs: Dict[Any, Any],
+    advanced_metadata: bool = False,
+) -> datetime:
+    """
+    Call the functions that upload the dataframes as TSVs in GCS and then trigger Snowflake
+    to load those new files.
+
+    If it is part of a backfill, the first chunk gets sent to the dataframe_uploader
+    so that the table can be created automagically with the correct data types.
+
+    Each chunk is uploaded to GCS with a suffix of which chunk number it is.
+    All of the chunks are uploaded by using a regex that gets all of the files.
+    """
+
+    logging.info(
+        f"\ninitial_load_start_date / chunk_upload(): {initial_load_start_date}"
+    )
+    rows_uploaded = 0
+
+    with tempfile.TemporaryFile() as tmpfile:
+        iter_csv = read_sql_tmpfile(
+            query,
+            database_kwargs["source_engine"],
+            tmpfile,
+            database_kwargs["chunksize"],
+        )
+
+        for idx, chunk_df in enumerate(iter_csv):
+            logging.info(f"\nchunk_df.head(): {chunk_df.head()}")
+
+            row_count = chunk_df.shape[0]
+            rows_uploaded += row_count
+            last_extracted_id = chunk_df[primary_key].max()
+
+            upload_date = datetime.now()
+            if initial_load_start_date is None:
+                initial_load_start_date = upload_date
+
+            upload_file_name = get_upload_file_name(
+                database_kwargs["metadata_table"],
+                database_kwargs["source_table"],
+                initial_load_start_date,
+                upload_date,
+            )
+
+            if row_count > 0:
+                upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
+                logging.info(
+                    f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}"
+                )
+                is_export_completed = last_extracted_id >= max_source_id
+
+                if is_export_completed:
+                    schema_types = transform_source_types_to_snowflake_types(
+                        chunk_df, source_table, source_engine
+                    )
+                    seed_table(advanced_metadata, schema_types, target_table, target_engine)
+                    logging.info('export to GCS is complete, copying to Snowflake...')
+                    # TODO: upload_snowflake()
+                    logging.info('Copy to Snowflake complete')
+                write_backfill_metadata(
+                    database_kwargs["metadata_engine"],
+                    database_kwargs["metadata_table"],
+                    database_kwargs["source_database"],
+                    database_kwargs["source_table"],
+                    initial_load_start_date,
+                    upload_date,
+                    upload_file_name,
+                    last_extracted_id,
+                    max_source_id,
+                    is_export_completed,
+                    row_count,
+                )
+
+                logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
+
+    database_kwargs["source_engine"].dispose()
+    # need to return in case it was first set here
+    return initial_load_start_date
 
 def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFrame:
     """
@@ -350,78 +436,19 @@ def check_if_schema_changed(
 
 
 def id_query_generator(
-    postgres_engine: Engine,
     primary_key: str,
     raw_query: str,
-    snowflake_engine: Engine,
-    source_table: str,
-    target_table: str,
-    id_range: int = 750_000,
+    min_source_id: int,
+    max_source_id: int,
+    id_range: int,
 ) -> Generator[str, Any, None]:
     """
-    This function generates a list of queries based on the max ID in the target table.
-
-    Gets the diff between the IDs that exist in the DB vs the DW, generates queries for any rows
-    with IDs that are missing from the DW.
-
-    i.e. if the table in Snowflake has a max id of 2000, but postgres has a max id of 5000,
-    it will return a list of queries that load chunks of IDs until it has the same max id.
+    Yields a new query containing incrementing min/max id's based on the chunk size.
     """
-
-    # Get the max ID from the target DB
-    logging.info(f"Getting max primary key from target_table: {target_table}")
-    max_target_id_query = f"SELECT MAX({primary_key}) as id FROM {target_table}"
-    # If the table doesn't exist it will throw an error, ignore it and set a default ID
-    if snowflake_engine.has_table(target_table):
-        max_target_id_results = query_results_generator(
-            max_target_id_query, snowflake_engine
-        )
-        # Grab the max primary key, or if the table is empty default to 0
-        max_target_id = next(max_target_id_results)[primary_key].tolist()[0] or 0
-    else:
-        max_target_id = 0
-    logging.info(f"Target Max ID: {max_target_id}")
-
-    # Get the max ID from the source DB
-    logging.info(f"Getting max ID from source_table: {source_table}")
-    max_source_id_query = (
-        f"SELECT MAX({primary_key}) as {primary_key} FROM {source_table}"
-    )
-    try:
-        max_source_id_results = query_results_generator(
-            max_source_id_query, postgres_engine
-        )
-        max_source_id = next(max_source_id_results)[primary_key].tolist()[0]
-    except sqlalchemy.exc.ProgrammingError as e:
-        logging.exception(e)
-        sys.exit(1)
-    logging.info(f"Source Max ID: {max_source_id}")
-
-    if max_source_id is None:
-        logging.info("No source data found -- exiting")
-        append_to_xcom_file({target_table: 0, "load_ran": False})
-        sys.exit(0)
-
-    # Get the min ID from the source DB
-    logging.info(f"Getting min ID from source_table: {source_table}")
-    min_source_id_query = (
-        f"SELECT MIN({primary_key}) as {primary_key} FROM {source_table}"
-    )
-    try:
-        min_source_id_results = query_results_generator(
-            min_source_id_query, postgres_engine
-        )
-        min_source_id = next(min_source_id_results)[primary_key].tolist()[0]
-    except sqlalchemy.exc.ProgrammingError as e:
-        logging.exception(e)
-        sys.exit(1)
-    logging.info(f"Source Min ID: {min_source_id}")
 
     # Generate the range pairs based on the max source id and the
     # greatest of either the min_source_id or the max_target_id
-    for id_pair in range_generator(
-        max(max_target_id, min_source_id), max_source_id, step=id_range
-    ):
+    for id_pair in range_generator(min_source_id, max_source_id, step=id_range):
         id_range_query = (
             "".join(raw_query.lower().split("where")[0])
             + f" WHERE {primary_key} BETWEEN {id_pair[0]} AND {id_pair[1]}"
@@ -559,3 +586,34 @@ def remove_unprocessed_files_from_gcs(metadata_table: str, source_table: str):
                 f"In preparation of export, removing unprocessed files with prefix: {prefix}"
             )
         blob.delete()
+
+
+def get_min_or_max_id(
+    primary_key: str, engine: Engine, table: str, min_or_max: str, chunksize: int
+) -> int:
+    """
+    Retrieve the minimum or maximum value of the specified primary key column in the specified table.
+
+    Parameters:
+    primary_key (str): The name of the primary key column.
+    engine (Engine): The database engine to use for the query.
+    table (str): The name of the table to query.
+    min_or_max (str): Either "min" or "max" to indicate whether to retrieve the minimum or maximum ID.
+
+    Returns:
+    int: The minimum or maximum ID value.
+    """
+    logging.info(f"Getting {min_or_max} ID from table: {table}")
+    id_query = f"SELECT {min_or_max}({primary_key}) as {primary_key} FROM {table}"
+    try:
+        id_results = query_results_generator(id_query, engine, chunksize)
+        id_value = next(id_results)[primary_key].tolist()[0]
+    except sqlalchemy.exc.ProgrammingError as e:
+        logging.exception(e)
+        raise
+    logging.info(f"{min_or_max} ID: {id_value}")
+
+    if id_value is None:
+        logging.info(f"No data found when querying {min_or_max}(id) -- exiting")
+        sys.exit(0)
+    return id_value

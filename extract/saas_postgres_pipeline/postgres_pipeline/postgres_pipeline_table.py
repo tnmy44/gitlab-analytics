@@ -89,6 +89,7 @@ class PostgresPipelineTable:
     def do_incremental_backfill(
         self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine
     ) -> bool:
+
         (
             is_backfill_needed,
             start_pk,
@@ -100,14 +101,20 @@ class PostgresPipelineTable:
         if not self.is_incremental() or not is_backfill_needed:
             logging.info("table does not need incremental backfill")
             return False
-        target_table = self.get_temp_target_table_name()
-        loaded = load_functions.sync_incremental_ids(
-            source_engine,
-            target_engine,
-            self.source_table_name,
-            self.table_dict,
-            target_table,
-        )
+
+        database_kwargs = {
+            "chunksize": 5_000_000,
+            "metadata_engine": metadata_engine,
+            "metadata_table": BACKFILL_METADATA_TABLE,
+            "source_engine": source_engine,
+            "source_table": self.source_table_name,
+            "source_database": self.import_db,
+            "target_engine": target_engine,
+            "target_table": self.get_temp_target_table_name(),
+        }
+        loaded = load_functions.load_ids(
+            database_kwargs, self.table_dict, initial_load_start_date, start_pk,
+    )
         self.swap_temp_table_on_schema_change(loaded, is_backfill_needed, target_engine)
         return loaded
 
