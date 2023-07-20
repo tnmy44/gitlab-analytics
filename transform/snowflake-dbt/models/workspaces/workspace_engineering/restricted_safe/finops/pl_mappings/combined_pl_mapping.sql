@@ -363,6 +363,23 @@ runner_saas_large_gpu AS (
     ci_runners_pl_daily.pl             AS pl_category,
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 9'           AS from_mapping
+  FROM "DDENG_PROD".restricted_safe_workspace_engineering.ci_runners_pl_daily
+  WHERE mapping = '8 - shared saas runners gpu - medium' --to apply historic medium pl to large
+AND reporting_day<='2023-06-22' 
+
+  UNION ALL 
+
+SELECT DISTINCT
+    reporting_day                      AS date_day,
+    NULL                               AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    '9 - shared saas runners gpu - large'  AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 9'           AS from_mapping
   FROM {{ ref ('ci_runners_pl_daily') }}
   WHERE mapping = '9 - shared saas runners gpu - large'
 
@@ -371,6 +388,23 @@ runner_saas_large_gpu AS (
 runner_saas_large_ext_gpu AS (
 
   SELECT DISTINCT
+    reporting_day                      AS date_day,
+    '%-r-saas-l-l-%gpu%'               AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    NULL                               AS runner_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 9'           AS from_mapping
+  FROM "DDENG_PROD".restricted_safe_workspace_engineering.ci_runners_pl_daily
+  WHERE mapping = '8 - shared saas runners gpu - medium' --to apply historic medium pl to large
+AND reporting_day<='2023-06-22' 
+
+  UNION ALL 
+
+SELECT DISTINCT
     reporting_day                      AS date_day,
     '%-r-saas-l-l-%gpu%'               AS gcp_project_id,
     NULL                               AS gcp_service_description,
