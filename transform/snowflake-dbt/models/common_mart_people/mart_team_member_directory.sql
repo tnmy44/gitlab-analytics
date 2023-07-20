@@ -1,27 +1,33 @@
-WITH team_member_mapping AS (
+WITH cost_center AS (
+
+  /* We have a Islands problem in the cost_center calculation
+  We need to find groups based on when the cost center changes and not just the value of the cost_center
+  Example: We have team members that belong to one cost_center, get moved to a different one but then return to the
+  initial cost_center afterwards
+  */
 
   SELECT 
     employee_id,
     cost_center,
-    age,
-    CASE 
-      WHEN age BETWEEN 18 AND 24  THEN '18-24'
-      WHEN age BETWEEN 25 AND 29  THEN '25-29'
-      WHEN age BETWEEN 30 AND 34  THEN '30-34'
-      WHEN age BETWEEN 35 AND 39  THEN '35-39'
-      WHEN age BETWEEN 40 AND 44  THEN '40-44'
-      WHEN age BETWEEN 44 AND 49  THEN '44-49'
-      WHEN age BETWEEN 50 AND 54  THEN '50-54'
-      WHEN age BETWEEN 55 AND 59  THEN '55-59'
-      WHEN age >= 60              THEN '60+'
-      WHEN age IS NULL            THEN 'Unreported'
-      WHEN age = -1               THEN 'Unreported'
-      ELSE NULL 
-    END                                                                                             AS age_cohort,
-    MIN(DATE(valid_from))                                                                           AS valid_from,
-    MAX(DATE(valid_to))                                                                             AS valid_to 
+    DATE(valid_from)                                                                                           AS valid_from,
+    DATE(valid_to)                                                                                             AS valid_to,
+    LAG(cost_center, 1, NULL) OVER (PARTITION BY employee_id ORDER BY valid_from)                              AS lag_cost_center,
+    CONDITIONAL_TRUE_EVENT(cost_center != lag_cost_center) OVER (PARTITION BY employee_id ORDER BY valid_from) AS cost_center_group,
+    LEAD(valid_from,1) OVER (PARTITION BY employee_id ORDER BY valid_from)                                     AS next_entry
   FROM {{ ref('workday_employee_mapping_source') }} 
-  {{ dbt_utils.group_by(n=4)}}
+  
+),
+
+cost_center_group AS (
+
+  SELECT 
+    employee_id, 
+    cost_center, 
+    cost_center_group, 
+    MIN(valid_from)                                                                                            AS valid_from,
+    MAX(valid_to)                                                                                              AS valid_to 
+  FROM cost_center
+  {{ dbt_utils.group_by(n=3)}}
   
 ),
 
@@ -38,6 +44,22 @@ team_member AS (
     gender,
     work_email,
     date_of_birth,
+    DATEDIFF(year, date_of_birth, valid_from) + CASE WHEN (DATEADD(year,DATEDIFF(year, date_of_birth, valid_from) , date_of_birth) > valid_from) THEN - 1 ELSE 0 END 
+                                                                                                    AS age_calculated,
+    CASE 
+      WHEN age_calculated BETWEEN 18 AND 24  THEN '18-24'
+      WHEN age_calculated BETWEEN 25 AND 29  THEN '25-29'
+      WHEN age_calculated BETWEEN 30 AND 34  THEN '30-34'
+      WHEN age_calculated BETWEEN 35 AND 39  THEN '35-39'
+      WHEN age_calculated BETWEEN 40 AND 44  THEN '40-44'
+      WHEN age_calculated BETWEEN 44 AND 49  THEN '44-49'
+      WHEN age_calculated BETWEEN 50 AND 54  THEN '50-54'
+      WHEN age_calculated BETWEEN 55 AND 59  THEN '55-59'
+      WHEN age_calculated >= 60              THEN '60+'
+      WHEN age_calculated IS NULL            THEN 'Unreported'
+      WHEN age_calculated = -1               THEN 'Unreported'
+      ELSE NULL 
+    END                                                                                             AS age_cohort,
     gitlab_username,
     team_id,
     country,
@@ -104,7 +126,7 @@ unioned_dates AS (
     employee_id, 
     NULL AS team_id,
     valid_from
-  FROM team_member_mapping
+  FROM cost_center_group
   
   UNION
 
@@ -156,9 +178,9 @@ final AS (
     team_member.gender,
     team_member.work_email,
     team_member.date_of_birth,
-    team_member_mapping.age,
-    team_member_mapping.age_cohort,
-    team_member_mapping.cost_center,
+    team_member.age_calculated                                            AS age,
+    team_member.age_cohort,
+    cost_center_group.cost_center,
     team_member.gitlab_username,
     team_member.country,
     team_member.region,
@@ -194,10 +216,10 @@ final AS (
       AND date_range.valid_from != date_range.valid_to
         AND NOT (team_member.valid_to <= date_range.valid_from
           OR team_member.valid_from >= date_range.valid_to)
-  LEFT JOIN team_member_mapping
-    ON date_range.employee_id = team_member_mapping.employee_id 
-      AND NOT (team_member_mapping.valid_to <= date_range.valid_from
-          OR team_member_mapping.valid_from >= date_range.valid_to)
+  LEFT JOIN cost_center_group
+    ON date_range.employee_id = cost_center_group.employee_id 
+      AND NOT (cost_center_group.valid_to <= date_range.valid_from
+          OR cost_center_group.valid_from >= date_range.valid_to)
   LEFT JOIN team_member_position
     ON date_range.employee_id = team_member_position.employee_id 
       AND NOT (team_member_position.valid_to <= date_range.valid_from
