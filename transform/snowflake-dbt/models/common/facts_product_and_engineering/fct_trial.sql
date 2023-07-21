@@ -112,7 +112,7 @@
     joined.dim_namespace_id,
     joined.dim_product_rate_plan_id,
     joined.customer_id,
-    user_id,
+    joined.user_id,
        
     --Other Attributes                                                                                           
     joined.is_gitlab_user,
