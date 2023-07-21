@@ -43,7 +43,7 @@ WITH prep_epic AS (
 {{ dbt_audit(
     cte_ref="prep_epic",
     created_by="@mpeychet_",
-    updated_by="@chrissharp",
+    updated_by="@jpeguero",
     created_date="2021-06-22",
-    updated_date="2022-03-14"
+    updated_date="2023-07-21"
 ) }}
