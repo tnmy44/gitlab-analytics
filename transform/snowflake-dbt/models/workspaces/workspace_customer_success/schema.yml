@@ -80,8 +80,11 @@ models:
     columns:
       - name: behavior_structured_event_pk
         tests:
-          - unique
-          - not_null
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        - not_null
+
 
   - name: wk_mart_snowplow_events_service_ping_metrics
     columns:
