@@ -14,6 +14,7 @@
 fct_events AS (
 
   SELECT
+    prep_event_all.event_pk,
     prep_event_all.event_id,
     prep_event_all.event_name,
     prep_event_all.ultimate_parent_namespace_id,
@@ -49,7 +50,10 @@ gitlab_dotcom_fact AS (
 
   SELECT
     --Primary Key
-    fct_events.event_id AS event_pk,
+    fct_events.event_pk
+
+    --Natural Key
+    fct_events.event_id,
     
     --Foreign Keys
     dim_date.date_id AS dim_event_date_id,
@@ -83,7 +87,7 @@ gitlab_dotcom_fact AS (
 {{ dbt_audit(
     cte_ref="gitlab_dotcom_fact",
     created_by="@icooper-acp",
-    updated_by="@iweeks",
+    updated_by="@michellecooper",
     created_date="2022-01-20",
-    updated_date="2022-06-20"
+    updated_date="2023-07-21"
 ) }}
