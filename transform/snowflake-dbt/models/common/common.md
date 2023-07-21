@@ -1798,7 +1798,7 @@ This model collects all trials that start from the subscription portal. For this
 * It isolates the orders that are flagged with the column `is_trial = TRUE`
 * It joins with customers, users and namespaces. 
 
-Finally, this model identifies if a trial has been converted or not. To achieve that, we join the trials to the `order_snapshots` selecting only orders that converted to subscription after the trial starting date  (an example has been provided below). We exclude ci_minutes orders from the `order_snapshots`.   
+Finally, this model identifies if a trial has been converted or not. To achieve that, we join the trials to the `order_snapshots` selecting only orders that converted to subscription after the trial starting date (an example has been provided below). We exclude ci_minutes/compute_minutes orders from the `order_snapshots`.   
 
 In order to identify which subscriptions are actually valid and not refunded, we join to `zuora_rate_plan` and `zuora_base_mrr` models to filter out subscriptions that have (mrr <= 0 and tcv <=0). In this case, we also filter out those subscriptions that are cancelled instantly or fully refunded after a certain period.
 
