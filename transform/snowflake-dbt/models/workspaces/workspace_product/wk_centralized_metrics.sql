@@ -160,7 +160,7 @@ FROM service_ping_gitlab_dotcom_unioned
 
 
 {{ dbt_audit(
-    cte_ref="centralized_metrics",
+    cte_ref="results",
     created_by="@dpeterson",
     updated_by="@dpeterson",
     created_date="2023-07-20",
