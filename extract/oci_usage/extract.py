@@ -92,7 +92,7 @@ def snowflake_stage_load_new_only_copy(
             info(f"file: {file} already in stage: {stage}")
         else:
             connection.execute(put_query)
-            info(f"{file } added to stage: {stage}")
+            info(f"{file} added to stage: {stage}")
 
     finally:
         connection.close()
