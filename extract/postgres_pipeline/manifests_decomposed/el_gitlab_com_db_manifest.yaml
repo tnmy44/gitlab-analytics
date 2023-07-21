@@ -189,6 +189,21 @@ tables:
       FROM authentication_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  batched_background_migrations:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'batched_background_migrations'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , status
+      , finished_at
+      , created_at
+      , updated_at
+      FROM batched_background_migrations
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   banned_users:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -714,6 +729,7 @@ tables:
       , promoted_to_epic_id
       , sprint_id
       , health_status
+      , work_item_type_id
       FROM issues
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -925,11 +941,17 @@ tables:
       , merge_request_id
       , created_at
       , updated_at
-      , NULL AS base_commit_sha
+      , base_commit_sha
       , real_size
-      , NULL AS head_commit_sha
-      , NULL AS start_commit_sha
+      , head_commit_sha
+      , start_commit_sha
       , commits_count
+      , external_diff
+      , external_diff_store
+      , stored_externally
+      , files_count
+      , sorted
+      , diff_type
       FROM merge_request_diffs
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1384,12 +1406,12 @@ tables:
       , mr_default_target_self
       , NULL AS previous_default_branch
       , warn_about_potentially_unwanted_characters
-      , NULL AS merge_commit_template 
+      , NULL AS merge_commit_template
       , has_shimo
       , NULL AS squash_commit_template
       , legacy_open_source_license_available
       , NULL AS target_platforms
-      , enforce_auth_checks_on_uploads 
+      , enforce_auth_checks_on_uploads
       FROM project_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1506,7 +1528,7 @@ tables:
       , created_at
       , updated_at
       , user_id
-      , group_id 
+      , group_id
       FROM protected_branch_merge_access_levels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1524,7 +1546,7 @@ tables:
       , updated_at
       , user_id
       , group_id
-      , deploy_key_id 
+      , deploy_key_id
       FROM protected_branch_push_access_levels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2220,7 +2242,7 @@ tables:
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
-      SELECT id  
+      SELECT id
       , base_type
       , created_at
       , updated_at
