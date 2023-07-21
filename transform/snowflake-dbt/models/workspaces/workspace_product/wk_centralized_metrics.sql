@@ -1,6 +1,6 @@
 {{ config({    
-    "materialized"="view", --could be incremental
-    "tags"=["product", "mnpi_exception"]]
+    "materialized":"view", --could be incremental
+    "tags":["product", "mnpi_exception"]]
 }) }}
 
 {{ simple_cte([
