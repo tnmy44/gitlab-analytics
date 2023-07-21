@@ -1,5 +1,5 @@
 {{ config({    
-    "materialized":"view", --could be incremental
+    "materialized":"view",
     "tags":["product", "mnpi_exception"]]
 }) }}
 
