@@ -1566,6 +1566,8 @@ models:
         description: '{{ doc("ping_deployment_type") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: version
+        description: '{{ doc("version_ping_model") }}'
 
   - name: prep_billing_account_user
     description: Zuora Billing users
