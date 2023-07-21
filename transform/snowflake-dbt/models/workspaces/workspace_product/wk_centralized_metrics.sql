@@ -1,8 +1,3 @@
-{{ config(
-    materialized='view', --can be table
-    tags=["product"]
-) }}
-
 {{ simple_cte([
     ('rpt_ping_metric_totals_w_estimates_monthly', 'rpt_ping_metric_totals_w_estimates_monthly'),
     ('rpt_event_xmau_metric_monthly', 'rpt_event_xmau_metric_monthly')
