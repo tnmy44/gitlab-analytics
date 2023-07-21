@@ -25,7 +25,6 @@ pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -38,12 +37,12 @@ default_args = {
 # Set the command for the container
 container_cmd = f"""
     {clone_repo_cmd} &&
-    permifrost run analytics/permissions/snowflake/roles.yml
+    permifrost spec-test analytics/permissions/snowflake/roles.yml
 """
 
 # Create the DAG
 dag = DAG(
-    "snowflake_permissions", default_args=default_args, schedule_interval="0 0 */1 * *"
+    "snowflake_permissions", default_args=default_args, schedule_interval="0 0 */1 * *", catchup= False,
 )
 
 # Task 1
