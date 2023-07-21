@@ -3,6 +3,7 @@ import os
 import sys
 from logging import info, basicConfig, getLogger
 from fire import Fire
+from sqlalchemy.engine.base import Engine
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
 )
