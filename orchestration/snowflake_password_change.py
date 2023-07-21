@@ -61,7 +61,7 @@ class SnowflakeManager:
             else:
                 continue
             logging.info(f"Executing {query}")
-            # connection.execute(query)
+            connection.execute(query)
 
         self.engine.dispose()
 
