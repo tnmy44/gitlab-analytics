@@ -94,7 +94,7 @@ def iterative_query_upload(
     snowflake_engine_sysadmin.dispose()
 
     snowflake_engine_loader = snowflake_engine_factory(config_dict, "LOADER")
-    #dataframe_uploader(results_all, snowflake_engine_loader, table_name, "snowflake")
+    dataframe_uploader(results_all, snowflake_engine_loader, table_name, "snowflake")
     snowflake_engine_loader.dispose()
 
 
