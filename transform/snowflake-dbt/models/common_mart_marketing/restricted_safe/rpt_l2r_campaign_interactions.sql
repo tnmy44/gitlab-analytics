@@ -112,8 +112,8 @@
 		mart_crm_touchpoint.count_net_new_accepted AS new_accepted_sum    
     FROM mart_crm_touchpoint
     LEFT JOIN person_base ON
-      {# ON mart_crm_touchpoint.email_hash = person_base.email_hash #}
        mart_crm_touchpoint.dim_crm_person_id = person_base.dim_crm_person_id
+       {# AND mart_crm_touchpoint.email_hash = person_base.email_hash #}
     LEFT JOIN map_alternative_lead_demographics
       ON mart_crm_touchpoint.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
     LEFT JOIN dim_crm_account
@@ -324,7 +324,7 @@
       END AS won_custom_net_arr
 
     FROM mart_crm_attribution_touchpoint
-    INNER JOIN person_base
+    LEFT JOIN person_base
       ON mart_crm_attribution_touchpoint.dim_crm_person_id = person_base.dim_crm_person_id
       {# AND mart_crm_attribution_touchpoint.email_hash = person_base.email_hash #}
     LEFT JOIN mart_crm_opportunity_stamped_hierarchy_hist opp
