@@ -113,6 +113,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.renewal_swing_arr,
       prep_crm_opportunity.renewal_manager, 
       prep_crm_opportunity.renewal_forecast_health,
+      prep_crm_opportunity.renewal_ownership,
 
       --account people attributes
       prep_crm_opportunity.crm_account_owner_sales_segment,

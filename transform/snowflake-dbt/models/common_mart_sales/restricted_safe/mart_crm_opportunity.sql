@@ -122,6 +122,7 @@
       dim_crm_opportunity.renewal_swing_arr,
       dim_crm_opportunity.renewal_manager, 
       dim_crm_opportunity.renewal_forecast_health,
+      dim_crm_opportunity.renewal_ownership,
 
        -- Account fields
       dim_crm_account.crm_account_name,
@@ -147,6 +148,7 @@
       dim_crm_account.admin_manual_source_number_of_employees,
       dim_crm_account.admin_manual_source_account_address,
       dim_crm_account.parent_crm_account_lam_dev_count,
+      dim_crm_account.csm_sentiment,
 
       -- Flags
       fct_crm_opportunity.is_won,

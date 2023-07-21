@@ -201,8 +201,10 @@ WITH source AS (
         manager_forecast_confidence__c                  AS manager_confidence,
         renewal_risk_forecast__c                        AS renewal_risk_category,
         renewal_swing_arr__c                            AS renewal_swing_arr,
-        isr_c                                           AS renewal_manager, 
-        renewal_forecast_category_c                     AS renewal_forecast_health,
+        isr__c                                          AS renewal_manager, 
+        renewal_forecast_category__c                    AS renewal_forecast_health,
+        isr_priority__c                                 AS renewal_ownership,
+
 
 
       -- ************************************
