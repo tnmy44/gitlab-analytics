@@ -128,8 +128,8 @@ def load_data():
 
         snowflake_stage_load_new_only_copy(
             f"{destination_path}/{filename}",
-            "oci_reports.oci_report",
-            f"oci_reports.{target_table}",
+            "test.oci_report",
+            f"test.{target_table}",
             snowflake_engine,
             "csv",
             on_error="ABORT_STATEMENT",
