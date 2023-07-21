@@ -49,9 +49,7 @@ def snowflake_stage_load_new_only_copy(
     on_error: str = "abort_statement",
     file_format_options: str = "",
 ) -> None:
-    """
-
-    """
+    """ """
 
     file_name = os.path.basename(file)
     if file_name.endswith(".gz"):
