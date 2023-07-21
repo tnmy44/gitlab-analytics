@@ -1,7 +1,7 @@
-{{ config({
-    "materialized": "table"
-    })
-}}
+{{ config(
+    materialized='incremental',
+    unique_key='behavior_structured_event_pk'
+) }}
 
 {{ simple_cte([
     ('mart_behavior_structured_event','mart_behavior_structured_event')
@@ -13,6 +13,13 @@
     {{ dbt_utils.star(from=ref('mart_behavior_structured_event'), except=["CREATED_BY", "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
   FROM mart_behavior_structured_event
   WHERE behavior_at > '2022-03-07'
+  
+  {% if is_incremental() %}
+  
+      AND behavior_at >= (SELECT MAX(behavior_at) FROM {{this}})
+  
+  {% endif %}
+
     AND app_id IN (
       'gitlab',
       'gitlab_customers'
@@ -47,5 +54,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2023-07-18",
-    updated_date="2022-07-19"
+    updated_date="2023-07-21"
 ) }}
