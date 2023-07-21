@@ -1,7 +1,7 @@
-{{ config(
-    materialized='view', --can be table
-    tags=["product"]
-) }}
+{{ config({    
+    "materialized"="view", --could be incremental
+    "tags"=["product", "mnpi_exception"]]
+}) }}
 
 {{ simple_cte([
     ('rpt_ping_metric_totals_w_estimates_monthly', 'rpt_ping_metric_totals_w_estimates_monthly'),
@@ -149,7 +149,7 @@ SELECT
     edition
 ORDER BY reporting_month ASC ) AS previous_month_mau,
     MAX(IFF(is_umau = TRUE, mau_value,NULL)) OVER (PARTITION BY reporting_month,    
- estimation_grain,
+    estimation_grain,
     product_tier,
     breakdown,
     delivery,
