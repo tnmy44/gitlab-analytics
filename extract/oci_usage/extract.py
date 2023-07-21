@@ -39,11 +39,13 @@ report_bucket_objects = oci.pagination.list_call_get_all_results(
 snowflake_config_dict = os.environ.copy()
 snowflake_engine = snowflake_engine_factory(snowflake_config_dict, "LOADER")
 
-def rename_file(name:str)-> str:
+
+def rename_file(name: str) -> str:
 
     new_name = name.replace("/", "_")
 
     return new_name
+
 
 def snowflake_stage_load_new_only_copy(
     file: str,
@@ -83,7 +85,7 @@ def snowflake_stage_load_new_only_copy(
     try:
         connection = engine.connect()
         staged_files_i = connection.execute(list_query)
-        staged_files = list(staged_files_i)
+        staged_files = [staged_file.name for staged_file in staged_files_i]
         info(f"found staged files: {staged_files}")
         # connection.execute(put_query)
         # info("Query successfully run")
