@@ -23,6 +23,7 @@
 ), zuora_subscription_with_positive_mrr_tcv AS (
   
   SELECT DISTINCT
+    subscription_name, 
     subscription_name_slugify,
     subscription_start_date
   FROM {{ ref('zuora_base_mrr') }}
@@ -40,7 +41,8 @@
 
   SELECT DISTINCT
    orders_snapshots.order_id                                                                                     AS order_id,
-   orders_snapshots.subscription_name_slugify                                                                    AS subscription_name_slugify
+   orders_snapshots.subscription_name_slugify                                                                    AS subscription_name_slugify,
+   orders_snapshots.subscription_name                                                                            AS subscription_name
   FROM orders_snapshots
   LEFT JOIN ci_minutes_charges
     ON orders_snapshots.subscription_id = ci_minutes_charges.subscription_id
@@ -52,12 +54,14 @@
   SELECT DISTINCT
     trials.order_id                                                                                              AS order_id,
     orders_shapshots_excluding_ci_minutes.subscription_name_slugify                                              AS subscription_name_slugify,
+    orders_shapshots_excluding_ci_minutes.subscription_name                                                      AS subscription_name,
     subscription.subscription_start_date                                                                         AS subscription_start_date
   FROM trials
   INNER JOIN orders_shapshots_excluding_ci_minutes
     ON trials.order_id = orders_shapshots_excluding_ci_minutes.order_id
   INNER JOIN zuora_subscription_with_positive_mrr_tcv AS subscription
     ON orders_shapshots_excluding_ci_minutes.subscription_name_slugify = subscription.subscription_name_slugify
+      AND orders_shapshots_excluding_ci_minutes.subscription_name = subscription.subscription_name
       AND trials.order_start_date <= subscription.subscription_start_date
   WHERE orders_shapshots_excluding_ci_minutes.subscription_name_slugify IS NOT NULL
 
@@ -78,6 +82,7 @@
     namespaces.namespace_type                                                                                   AS namespace_type,
     IFF(converted_trials.order_id IS NOT NULL, TRUE, FALSE)                                                     AS is_trial_converted,
     converted_trials.subscription_name_slugify                                                                  AS subscription_name_slugify,
+    converted_trials.subscription_name                                                                          AS subscription_name,
     converted_trials.subscription_start_date                                                                    AS subscription_start_date,   
     trials.order_created_at                                                                                     AS order_created_at,
     trials.order_updated_at                                                                                     AS order_updated_at,
@@ -103,7 +108,7 @@
 
   SELECT 
    --Primary Key-- 
-     {{ dbt_utils.surrogate_key(['joined.dim_order_id', 'joined.dim_namespace_id', 'joined.subscription_name_slugify', 'joined.order_updated_at']) }} AS trial_pk,
+     {{ dbt_utils.surrogate_key(['joined.dim_order_id', 'joined.dim_namespace_id', 'joined.subscription_name', 'joined.order_updated_at']) }} AS trial_pk,
 
    --Natural Key--
     joined.dim_order_id, 
@@ -122,6 +127,7 @@
     joined.namespace_type,
   
     joined.is_trial_converted,
+    joined.subscription_name,
     joined.subscription_name_slugify, 
     joined.subscription_start_date,
     joined.country,

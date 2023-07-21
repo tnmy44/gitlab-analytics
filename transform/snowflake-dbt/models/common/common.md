@@ -1828,7 +1828,7 @@ The grain of this model is `order per namespace`.
 
 This model identifies if a trial has been converted or not. We exclude ci_minutes/compute_minutes orders from this model. 
 
-Finally, only valid subscriptions that are not refuned are identified by filtering out subscriptions that have (mrr <= 0 and tcv <=0). The subscriptions that are cancelled instantly or fully refunded after a certain period are excluded. 
+Finally, only valid subscriptions that are not refunded are identified by filtering out subscriptions that have (mrr <= 0 and tcv <=0). The subscriptions that are cancelled instantly or fully refunded after a certain period are excluded. 
 
 The `customers_db_orders_snapshots_base` model has reliable data from the 1st of September, 2019, therefore only the orders that have a `start_date` after this date are included this model.
 

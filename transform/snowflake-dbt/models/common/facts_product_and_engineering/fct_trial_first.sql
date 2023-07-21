@@ -12,6 +12,8 @@ WITH first_trial AS (
     customer_id,
     FIRST_VALUE(subscription_name_slugify) IGNORE NULLS
       OVER (PARTITION BY dim_order_id ORDER BY order_updated_at ASC)        AS first_subscription_name_slugify,
+    FIRST_VALUE(subscription_name) IGNORE NULLS
+      OVER (PARTITION BY dim_order_id ORDER BY order_updated_at ASC)        AS first_subscription_name,
     FIRST_VALUE(customer_id)
       OVER (PARTITION BY dim_order_id ORDER BY order_updated_at DESC)       AS latest_customer_id,
     FIRST_VALUE(dim_namespace_id)
@@ -29,7 +31,7 @@ WITH first_trial AS (
     is_trial_converted
 
   FROM {{ ref('fct_trial') }}
-  WHERE trial_start_date >= '2019-09-01'
+  WHERE trial_start_date >= '2019-09-01' --The `customers_db_orders_snapshots_base` model has reliable data from the 1st of September, 2019, therefore only the orders that have a `start_date` after this date are included.
 
 ), final AS (
 
@@ -47,9 +49,10 @@ WITH first_trial AS (
     first_trial.latest_user_id                                                          AS user_id, 
        
     --Other Attributes                                                                                           
+    first_trial.first_subscription_name                                                 AS subscription_name, 
     first_trial.first_subscription_name_slugify                                         AS subscription_name_slugify, 
     first_trial.latest_namespace_type                                                   AS namespace_type,
-    first_trial.is_trial_converted,
+    first_trial.is_trial_converted                                                      AS is_trial_converted,
     IFF(first_trial.latest_user_id IS NOT NULL, TRUE, FALSE)                            AS is_gitlab_user,
     MIN(first_trial.user_created_at)                                                    AS user_created_at,
     MIN(first_trial.namespace_created_at)                                               AS namespace_created_at,  
