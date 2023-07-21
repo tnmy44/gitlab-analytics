@@ -1826,7 +1826,7 @@ This model is a derived fact table that is built using the `fct_trial` model, wh
 
 The grain of this model is `order per namespace`. 
 
-This model identifies if a trial has been converted or not. We exclude ci_minutes orders from this model. 
+This model identifies if a trial has been converted or not. We exclude ci_minutes/compute_minutes orders from this model. 
 
 Finally, only valid subscriptions that are not refuned are identified by filtering out subscriptions that have (mrr <= 0 and tcv <=0). The subscriptions that are cancelled instantly or fully refunded after a certain period are excluded. 
 
