@@ -74,20 +74,20 @@ def snowflake_stage_load_new_only_copy(
                          on_error='{on_error}';
                         """
 
-    logging.basicConfig(stream=sys.stdout, level=20)
+    basicConfig(stream=sys.stdout, level=20)
 
     try:
         connection = engine.connect()
 
-        logging.info(
+        info(
             f"Removing file from internal stage with full_stage_file_path: {full_stage_file_path}"
         )
         connection.execute(remove_query)
-        logging.info("Query successfully run")
+        info("Query successfully run")
 
-        logging.info("Writing to Snowflake.")
+        info("Writing to Snowflake.")
         connection.execute(put_query)
-        logging.info("Query successfully run")
+        info("Query successfully run")
     finally:
         connection.close()
         engine.dispose()
@@ -95,13 +95,13 @@ def snowflake_stage_load_new_only_copy(
     try:
         connection = engine.connect()
 
-        logging.info(f"Copying to Table {table_path}.")
+        info(f"Copying to Table {table_path}.")
         connection.execute(copy_query)
-        logging.info("Query successfully run")
+        info("Query successfully run")
 
-        logging.info(f"Removing {file} from stage.")
+        info(f"Removing {file} from stage.")
         connection.execute(remove_query)
-        logging.info("Query successfully run")
+        info("Query successfully run")
     finally:
         connection.close()
         engine.dispose()
