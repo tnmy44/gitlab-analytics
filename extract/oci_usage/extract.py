@@ -78,7 +78,8 @@ def snowflake_stage_load_new_only_copy(
     try:
         connection = engine.connect()
         staged_files = connection.execute(list_query)
-        info(f"found {staged_files}")
+        for file in staged_files:
+            info(f"found {file.name}")
 
         connection.execute(put_query)
         info("Query successfully run")
