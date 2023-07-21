@@ -1862,7 +1862,7 @@ The data for latest trial per namespace is derived from `fct_trial` model. We th
 
 This model identifies if a trial has been converted or not. The logic for which has been included in `fct_trial` model. We exclude ci_minutes orders from this model.   
 
-Finally, only valid subscriptions that are not refuned are identified by filtering out subscriptions that have (mrr <= 0 and tcv <=0). The subscriptions that are cancelled instantly or fully refunded after a certain period are excluded.
+Finally, only valid subscriptions that are not refunded are identified by filtering out subscriptions that have (mrr <= 0 and tcv <=0). The subscriptions that are cancelled instantly or fully refunded after a certain period are excluded.
 
 {% enddocs %}
 
