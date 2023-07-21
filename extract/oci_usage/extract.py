@@ -56,7 +56,7 @@ def snowflake_stage_load_new_only_copy(
         full_stage_file_path = f"{stage}/{file_name}"
     else:
         full_stage_file_path = f"{stage}/{file_name}.gz"
-    remove_query = f"remove @{full_stage_file_path}"
+    list_query = f"list @{stage}"
     put_query = f"put 'file://{file}' @{stage} auto_compress=true;"
 
     if type == "json":
@@ -77,14 +77,9 @@ def snowflake_stage_load_new_only_copy(
 
     try:
         connection = engine.connect()
+        staged_files = connection.execute(list_query)
+        info(f"found {staged_files}")
 
-        info(
-            f"Removing file from internal stage with full_stage_file_path: {full_stage_file_path}"
-        )
-        connection.execute(remove_query)
-        info("Query successfully run")
-
-        info("Writing to Snowflake.")
         connection.execute(put_query)
         info("Query successfully run")
     finally:
@@ -98,8 +93,6 @@ def snowflake_stage_load_new_only_copy(
         connection.execute(copy_query)
         info("Query successfully run")
 
-        info(f"Removing {file} from stage.")
-        connection.execute(remove_query)
         info("Query successfully run")
     finally:
         connection.close()
