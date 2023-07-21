@@ -1845,7 +1845,7 @@ The grain of this model is `namespace_id`.
 ## Context
 
 To understand the context, the following information is important:
-* Before 2019-09-16, a namespace could subscribe to a trial several times. That was a bug corrected by the fulfillment team in September 2019. More info (here)[https://gitlab.com/gitlab-org/customers-gitlab-com/merge_requests/458].
+* Before 2019-09-16, a namespace could subscribe to a trial several times. That was a bug corrected by the fulfillment team in September 2019. More info [here](https://gitlab.com/gitlab-org/customers-gitlab-com/merge_requests/458).
 * All snapshots tables have also been created in September 2019. Before that we don't have historical information.
 * The Customers_db ETL was unstable before October 2019. We improved the logic at the end of October by changing from incremental model to a daily full "drop and create" to the raw database.
 
