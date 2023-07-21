@@ -33,7 +33,7 @@
   SELECT 
     *
   FROM {{ ref('zuora_rate_plan') }}
-  WHERE rate_plan_name = '1,000 CI Minutes'
+  WHERE rate_plan_name IN ('1,000 CI Minutes', '1,000 Compute Minutes')
 
   
 ), orders_shapshots_excluding_ci_minutes AS (
