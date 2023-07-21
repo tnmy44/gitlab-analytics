@@ -363,7 +363,7 @@ runner_saas_large_gpu AS (
     ci_runners_pl_daily.pl             AS pl_category,
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 9'           AS from_mapping
-  FROM "DDENG_PROD".restricted_safe_workspace_engineering.ci_runners_pl_daily
+  FROM {{ ref ('ci_runners_pl_daily') }}
   WHERE mapping = '8 - shared saas runners gpu - medium' --to apply historic medium pl to large
 AND reporting_day<='2023-06-22' 
 
@@ -398,7 +398,7 @@ runner_saas_large_ext_gpu AS (
     ci_runners_pl_daily.pl             AS pl_category,
     ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
     'ci_runner_pl_daily - 9'           AS from_mapping
-  FROM "DDENG_PROD".restricted_safe_workspace_engineering.ci_runners_pl_daily
+  FROM {{ ref ('ci_runners_pl_daily') }}
   WHERE mapping = '8 - shared saas runners gpu - medium' --to apply historic medium pl to large
 AND reporting_day<='2023-06-22' 
 
