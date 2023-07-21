@@ -1,5 +1,3 @@
-
-
 {{ config(
     materialized='view', --can be table
     tags=["product"]
