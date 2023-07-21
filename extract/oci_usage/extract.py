@@ -87,8 +87,13 @@ def snowflake_stage_load_new_only_copy(
         staged_files_i = connection.execute(list_query)
         staged_files = [staged_file.name for staged_file in staged_files_i]
         info(f"found staged files: {staged_files}")
-        # connection.execute(put_query)
-        # info("Query successfully run")
+
+        if file in staged_files:
+            info(f"file: {file} already in stage: {stage}")
+        else:
+            connection.execute(put_query)
+            info(f"{file } added to stage: {stage}")
+
     finally:
         connection.close()
         engine.dispose()
@@ -108,12 +113,12 @@ def snowflake_stage_load_new_only_copy(
 
 def load_data():
     for o in report_bucket_objects.data.objects:
-        info("Found extracted file " + o.name)
+
         object_details = object_storage.get_object(
             reporting_namespace, reporting_bucket, o.name
         )
         filename = rename_file(o.name)
-
+        info(f"Found extracted file: {filename}")
         if "cost" in filename:
             target_table = "oci_cost_report"
         elif "usage" in filename:
