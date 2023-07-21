@@ -5,7 +5,6 @@ from logging import info, basicConfig, getLogger
 from fire import Fire
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
-    snowflake_stage_load_copy_remove,
 )
 
 
@@ -40,6 +39,74 @@ snowflake_config_dict = os.environ.copy()
 snowflake_engine = snowflake_engine_factory(snowflake_config_dict, "LOADER")
 
 
+def snowflake_stage_load_new_only_copy(
+    file: str,
+    stage: str,
+    table_path: str,
+    engine: Engine,
+    type: str = "json",
+    on_error: str = "abort_statement",
+    file_format_options: str = "",
+) -> None:
+    """
+
+    """
+
+    file_name = os.path.basename(file)
+    if file_name.endswith(".gz"):
+        full_stage_file_path = f"{stage}/{file_name}"
+    else:
+        full_stage_file_path = f"{stage}/{file_name}.gz"
+    remove_query = f"remove @{full_stage_file_path}"
+    put_query = f"put 'file://{file}' @{stage} auto_compress=true;"
+
+    if type == "json":
+        copy_query = f"""copy into {table_path} (jsontext)
+                         from @{full_stage_file_path}
+                         file_format=(type='{type}'),
+                         on_error='{on_error}';
+                         """
+
+    else:
+        copy_query = f"""copy into {table_path}
+                         from @{full_stage_file_path}
+                         file_format=(type='{type}' {file_format_options}),
+                         on_error='{on_error}';
+                        """
+
+    logging.basicConfig(stream=sys.stdout, level=20)
+
+    try:
+        connection = engine.connect()
+
+        logging.info(
+            f"Removing file from internal stage with full_stage_file_path: {full_stage_file_path}"
+        )
+        connection.execute(remove_query)
+        logging.info("Query successfully run")
+
+        logging.info("Writing to Snowflake.")
+        connection.execute(put_query)
+        logging.info("Query successfully run")
+    finally:
+        connection.close()
+        engine.dispose()
+
+    try:
+        connection = engine.connect()
+
+        logging.info(f"Copying to Table {table_path}.")
+        connection.execute(copy_query)
+        logging.info("Query successfully run")
+
+        logging.info(f"Removing {file} from stage.")
+        connection.execute(remove_query)
+        logging.info("Query successfully run")
+    finally:
+        connection.close()
+        engine.dispose()
+
+
 def load_data():
     for o in report_bucket_objects.data.objects:
         info("Found file " + o.name)
@@ -59,7 +126,7 @@ def load_data():
             ):
                 f.write(chunk)
 
-        snowflake_stage_load_copy_remove(
+        snowflake_stage_load_new_only_copy(
             f"{destination_path}/{filename}",
             "oci_reports.oci_report",
             f"oci_reports.{target_table}",
