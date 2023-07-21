@@ -39,6 +39,11 @@ report_bucket_objects = oci.pagination.list_call_get_all_results(
 snowflake_config_dict = os.environ.copy()
 snowflake_engine = snowflake_engine_factory(snowflake_config_dict, "LOADER")
 
+def rename_file(name:str)-> str:
+
+    new_name = name.replace("/", "_")
+
+    return new_name
 
 def snowflake_stage_load_new_only_copy(
     file: str,
@@ -77,12 +82,11 @@ def snowflake_stage_load_new_only_copy(
 
     try:
         connection = engine.connect()
-        staged_files = connection.execute(list_query)
-        for file in staged_files:
-            info(f"found {file.name}")
-
-        connection.execute(put_query)
-        info("Query successfully run")
+        staged_files_i = connection.execute(list_query)
+        staged_files = list(staged_files_i)
+        info(f"found staged files: {staged_files}")
+        # connection.execute(put_query)
+        # info("Query successfully run")
     finally:
         connection.close()
         engine.dispose()
@@ -90,11 +94,11 @@ def snowflake_stage_load_new_only_copy(
     try:
         connection = engine.connect()
 
-        info(f"Copying to Table {table_path}.")
-        connection.execute(copy_query)
-        info("Query successfully run")
+        # info(f"Copying to Table {table_path}.")
+        # connection.execute(copy_query)
+        # info("Query successfully run")
 
-        info("Query successfully run")
+        # info("Query successfully run")
     finally:
         connection.close()
         engine.dispose()
@@ -102,11 +106,11 @@ def snowflake_stage_load_new_only_copy(
 
 def load_data():
     for o in report_bucket_objects.data.objects:
-        info("Found file " + o.name)
+        info("Found extracted file " + o.name)
         object_details = object_storage.get_object(
             reporting_namespace, reporting_bucket, o.name
         )
-        filename = o.name.replace("/", "_")
+        filename = rename_file(o.name)
 
         if "cost" in filename:
             target_table = "oci_cost_report"
