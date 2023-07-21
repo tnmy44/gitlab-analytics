@@ -34,7 +34,7 @@
     SELECT
       estimated_latest_trial_dates.namespace_id,
       COALESCE(latest_trial_per_namespace.trial_start_date, 
-               estimated_latest_trial_dates.estimated_latest_trial_start_date) AS latest_trial_start_date,
+      estimated_latest_trial_dates.estimated_latest_trial_start_date) AS latest_trial_start_date,
       estimated_latest_trial_dates.latest_trial_end_date,
       latest_trial_per_namespace.subscription_start_date,
       latest_trial_per_namespace.customer_id,
