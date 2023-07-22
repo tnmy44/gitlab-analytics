@@ -37,6 +37,7 @@ from sqlalchemy.schema import CreateTable, DropTable
 # SCHEMA = "tap_postgres"
 
 # bucket_name: test-saas-pipeline-backfills
+METADATA_SCHEMA = os.environ["GITLAB_METADATA_SCHEMA"]
 BUCKET_NAME = os.environ["GITLAB_BACKFILL_BUCKET"]
 BACKFILL_METADATA_TABLE = "backfill_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
@@ -96,16 +97,12 @@ def trigger_snowflake_upload(
 
     upload_query = f"""
         copy into {table}
-        from 'gcs://postgres_pipeline'
+        from f'gcs://{BUCKET_NAME}'
         storage_integration = gcs_integration
         pattern = '{upload_file_name}'
         {purge_opt}
-        force = TRUE
-        file_format = (
-            type = csv
-            field_delimiter = '\\\\t'
-            skip_header = 1
-        );
+        file_format = (type = parquet)
+        match_by_column_name = case_insensitive;
     """
     results = query_executor(engine, upload_query)
     total_rows = 0
@@ -240,42 +237,40 @@ def chunk_and_upload(
     target_engine: Engine,
     target_table: str,
     source_table: str,
+    initial_load_start_date: datetime = datetime.now(),
     advanced_metadata: bool = False,
-    backfill: bool = False,
 ) -> None:
     """
     Call the functions that upload the dataframes as TSVs in GCS and then trigger Snowflake
     to load those new files.
-
-    If it is part of a backfill, the first chunk gets sent to the dataframe_uploader
-    so that the table can be created automagically with the correct data types.
 
     Each chunk is uploaded to GCS with a suffix of which chunk number it is.
     All of the chunks are uploaded by using a regex that gets all of the files.
     """
 
     rows_uploaded = 0
+    prefix = "/staging/regular/{target_table}_CHUNK_"
 
     with tempfile.TemporaryFile() as tmpfile:
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
 
         for idx, chunk_df in enumerate(iter_csv):
-
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
 
-            upload_file_name = f"{target_table}_CHUNK.tsv.gz"
+            upload_file_name = (
+                f"{prefix}{str(idx)}.parquet.gz"
+            )
             if row_count > 0:
-                upload_to_gcs(
-                    advanced_metadata, chunk_df, upload_file_name + "." + str(idx)
-                )
-                logging.info(
-                    f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}"
-                )
+                upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
+                logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}")
 
     if rows_uploaded > 0:
         trigger_snowflake_upload(
-            target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
+            target_engine,
+            target_table,
+            upload_file_name + f"{prefix}",
+            purge=True,
         )
         logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
 
@@ -283,12 +278,158 @@ def chunk_and_upload(
     source_engine.dispose()
 
 
-def chunk_and_upload_backfill(
+def write_backfill_metadata(
+    metadata_engine: Engine,
+    metadata_table: Engine,
+    database_name: str,
+    table_name: str,
+    initial_load_start_date: datetime,
+    upload_date: datetime,
+    upload_file_name: str,
+    last_extracted_id: int,
+    max_id: int,
+    is_export_completed: bool,
+    chunk_row_count: int,
+) -> None:
+    """Write status of backfill to postgres"""
+
+    insert_query = f"""
+        INSERT INTO {METADATA_SCHEMA}.{metadata_table} (
+            database_name,
+            table_name,
+            initial_load_start_date,
+            upload_date,
+            upload_file_name,
+            last_extracted_id,
+            max_id,
+            is_export_completed,
+            chunk_row_count
+        )
+        VALUES (
+            '{database_name}',
+            '{table_name}',
+            '{initial_load_start_date}',
+            '{upload_date}',
+            '{upload_file_name}',
+            {last_extracted_id},
+            {max_id},
+            {is_export_completed},
+            {chunk_row_count}
+        );
+    """
+    with metadata_engine.connect() as connection:
+        connection.execute(insert_query)
+
+
+def get_prefix_template() -> str:
+    """
+    Returns something like this:
+    staging/backfill_data/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
+    """
+    return "{staging_or_processed}/{export_type}/{table}/{initial_load_prefix}"
+
+
+def get_initial_load_prefix(initial_load_start_date):
+    initial_load_prefix = f"initial_load_start_{initial_load_start_date.isoformat(timespec='milliseconds')}"
+    return initial_load_prefix
+
+
+def get_upload_file_name(
+    export_type: str,
+    table: str,
+    initial_load_start_date: datetime,
+    upload_date: datetime,
+    version: str = None,
+    filetype: str = "parquet",
+    compression: str = "gzip",
+    prefix_template: str = get_prefix_template(),
+    filename_template: str = "{timestamp}_{table}{version}.{filetype}.{compression}",
+) -> str:
+    """Generate a unique and descriptive filename for uploading data to cloud storage.
+
+    Args:
+        table (str): The name of the table.
+        initial_load_start_date (datetime): When load started
+        version (str, optional): The version of the data. Defaults to None.
+        filetype (str, optional): The file format. Defaults to 'parquet'.
+        compression (str, optional): The compression method. Defaults to 'gzip'.
+        prefix_template (str, optional): The prefix template for the folder structure.
+            Defaults to get_prefix_template()'s template
+        filename_template (str, optional): The filename template.
+            Defaults to '{timestamp}_{table}_{version}.{filetype}.{compression}'.
+
+    Returns:
+        str: The upload name with the folder structure and filename.
+    """
+    # Format folder structure
+    initial_load_prefix = get_initial_load_prefix(initial_load_start_date)
+    prefix = prefix_template.format(
+        staging_or_processed="staging",
+        export_type=get_export_type(metadata_table),
+        table=table,
+        initial_load_prefix=initial_load_prefix,
+    )
+
+    # Format filename
+    timestamp = upload_date.isoformat(timespec="milliseconds")
+    if version is None:
+        version = ""
+    else:
+        version = f"_{version}"
+    filename = filename_template.format(
+        timestamp=timestamp,
+        table=table,
+        version=version,
+        filetype=filetype,
+        compression=compression,
+    )
+
+    # Combine folder structure and filename
+    return os.path.join(prefix, filename).lower()
+
+
+def seed_and_upload_snowflake(
+    chunk_df, database_kwargs, export_type, advanced_metadata, initial_load_start_date
+):
+    schema_types = transform_source_types_to_snowflake_types(
+        chunk_df,
+        database_kwargs["source_table"],
+        database_kwargs["source_engine"],
+    )
+    seed_table(
+        advanced_metadata,
+        schema_types,
+        database_kwargs["target_table"],
+        database_kwargs["target_engine"],
+    )
+
+    prefix = get_prefix_template().format(
+        staging_or_processed="staging",
+        export_type=get_export_type(database_kwargs["metadata_table"]),
+        table=database_kwargs["source_table"],
+        initial_load_prefix=get_initial_load_prefix(initial_load_start_date),
+    )
+    logging.info(
+        f"export to GCS is complete, copying to Snowflake table '{database_kwargs['target_table']}'"
+    )
+    # don't purge files, will do after swap
+    trigger_snowflake_upload(
+        database_kwargs["target_engine"],
+        database_kwargs["target_table"],
+        f"{prefix}.*.parquet$",
+    )
+    logging.info(
+        "Finished copying to Snowflake table '{database_kwargs['target_table']}'"
+    )
+
+
+def chunk_and_upload_metadata(
     query: str,
     primary_key: str,
     max_source_id: int,
     initial_load_start_date: datetime,
     database_kwargs: Dict[Any, Any],
+    export_type: str,
     advanced_metadata: bool = False,
 ) -> datetime:
     """
@@ -327,7 +468,7 @@ def chunk_and_upload_backfill(
                 initial_load_start_date = upload_date
 
             upload_file_name = get_upload_file_name(
-                database_kwargs["metadata_table"],
+                export_type,
                 database_kwargs["source_table"],
                 initial_load_start_date,
                 upload_date,
@@ -341,13 +482,9 @@ def chunk_and_upload_backfill(
                 is_export_completed = last_extracted_id >= max_source_id
 
                 if is_export_completed:
-                    schema_types = transform_source_types_to_snowflake_types(
-                        chunk_df, source_table, source_engine
-                    )
-                    seed_table(advanced_metadata, schema_types, target_table, target_engine)
-                    logging.info('export to GCS is complete, copying to Snowflake...')
-                    # TODO: upload_snowflake()
-                    logging.info('Copy to Snowflake complete')
+                    seed_and_upload_snowflake(chunk_df, database_kwargs, export_type, advanced_metadata, initial_load_start_date)
+                    database_kwargs["source_engine"].dispose()
+                    database_kwargs["target_engine"].dispose()
                 write_backfill_metadata(
                     database_kwargs["metadata_engine"],
                     database_kwargs["metadata_table"],
@@ -364,11 +501,13 @@ def chunk_and_upload_backfill(
 
                 logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
 
-    database_kwargs["source_engine"].dispose()
     # need to return in case it was first set here
     return initial_load_start_date
 
-def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFrame:
+
+def read_sql_tmpfile(
+    query: str, db_engine: Engine, tmp_file: Any, chunksize=750_000
+) -> pd.DataFrame:
     """
     Uses postGres commands to copy data out of the DB and return a DF iterator
     """
@@ -379,7 +518,7 @@ def read_sql_tmpfile(query: str, db_engine: Engine, tmp_file: Any) -> pd.DataFra
     cur.copy_expert(copy_sql, tmp_file)
     tmp_file.seek(0)
     logging.info("Reading csv")
-    df = pd.read_csv(tmp_file, chunksize=750_000, parse_dates=True, low_memory=False)
+    df = pd.read_csv(tmp_file, chunksize=chunksize, parse_dates=True, low_memory=False)
     logging.info("CSV read")
     return df
 
@@ -472,7 +611,7 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
         env, role="LOADER", schema="tap_postgres"
     )
 
-    if connection_dict.get('postgres_metadata_connection'):
+    if connection_dict.get("postgres_metadata_connection"):
         metadata_engine = postgres_engine_factory(
             connection_dict["postgres_metadata_connection"], env
         )
@@ -488,13 +627,12 @@ def query_backfill_status(
     Query the most recent record in the table to get the state of the backfill
     """
 
-    metadata_schema = os.environ["GITLAB_METADATA_SCHEMA"]
     query = (
         "SELECT is_export_completed, initial_load_start_date, last_extracted_id, upload_date "
-        f"FROM {metadata_schema}.{metadata_table} "
+        f"FROM {METADATA_SCHEMA}.{metadata_table} "
         "WHERE upload_date = ("
         "  SELECT MAX(upload_date)"
-        f" FROM {metadata_schema}.{metadata_table}"
+        f" FROM {METADATA_SCHEMA}.{metadata_table}"
         f" WHERE table_name = '{source_table}');"
     )
     logging.info(f"\nquery export status: {query}")
@@ -557,14 +695,8 @@ def get_prefix_template() -> str:
     return "{staging_or_processed}/{export_type}/{table}/{initial_load_prefix}"
 
 
-def get_export_type(metadata_table):
-    export_type = metadata_table.replace(
-        "_metadata", ""
-    )  # 'backfill_metadata' -> 'backfill'
-    return export_type
 
-
-def remove_unprocessed_files_from_gcs(metadata_table: str, source_table: str):
+def remove_files_from_gcs(export_type=str, source_table: str):
     """
     Prior to a fresh backfill/delete, remove all previously
     backfilled files that haven't been processed downstream
@@ -573,7 +705,7 @@ def remove_unprocessed_files_from_gcs(metadata_table: str, source_table: str):
 
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
-        export_type=get_export_type(metadata_table),
+        export_type=get_export_type(export_type),
         table=source_table,
         initial_load_prefix="initial_load_start_",
     )

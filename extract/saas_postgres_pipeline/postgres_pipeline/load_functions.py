@@ -17,6 +17,7 @@ from sqlalchemy.engine.base import Engine
 
 from postgres_utils import (
     chunk_and_upload,
+    chunk_and_upload_metadata,
     get_engines,
     id_query_generator,
     manifest_reader,
@@ -228,6 +229,7 @@ def load_ids(
     table_dict: Dict[Any, Any],
     initial_load_start_date: datetime.datetime,
     start_pk: int,
+    export_type
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
 
@@ -261,14 +263,14 @@ def load_ids(
         filtered_query = f"{query} {additional_filtering}"
         logging.info(f"\nfiltered_query: {filtered_query}")
         # if no original load_start, need to preserve it for subsequent calls
-        initial_load_start_date = chunk_and_upload_backfill(
+        initial_load_start_date = chunk_and_upload_metadata(
             filtered_query,
             primary_key,
             max_pk,
             initial_load_start_date,
             database_kwargs,
+            export_type
         )
-    # TODO # upload_to_snowflake()
     return True
 
 def check_new_tables(

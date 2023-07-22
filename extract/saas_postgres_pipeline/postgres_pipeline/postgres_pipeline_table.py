@@ -7,7 +7,7 @@ import load_functions
 from postgres_utils import (
     check_if_schema_changed,
     is_resume_export,
-    remove_unprocessed_files_from_gcs,
+    remove_files_from_gcs,
     BACKFILL_METADATA_TABLE,
 )
 
@@ -95,7 +95,7 @@ class PostgresPipelineTable:
             start_pk,
             initial_load_start_date,
         ) = self.check_backfill_metadata(
-            source_engine, target_engine, metadata_engine, BACKFILL_METADATA_TABLE
+            source_engine, target_engine, metadata_engine, BACKFILL_METADATA_TABLE, 'backfill'
         )
 
         if not self.is_incremental() or not is_backfill_needed:
@@ -113,7 +113,7 @@ class PostgresPipelineTable:
             "target_table": self.get_temp_target_table_name(),
         }
         loaded = load_functions.load_ids(
-            database_kwargs, self.table_dict, initial_load_start_date, start_pk,
+            database_kwargs, self.table_dict, initial_load_start_date, start_pk, 'backfill'
     )
         self.swap_temp_table_on_schema_change(loaded, is_backfill_needed, target_engine)
         return loaded
@@ -214,6 +214,7 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
         backfill_metadata_table: str,
+        export_type: str,
     ):
         """
         There are 3 criteria that determine if a backfill is necessary:
@@ -246,8 +247,8 @@ class PostgresPipelineTable:
 
         # remove unprocessed files if backfill needed but not in middle of backfill
         if is_backfill_needed and initial_load_start_date is None:
-            remove_unprocessed_files_from_gcs(
-                backfill_metadata_table, self.source_table_name
+            remove_files_from_gcs(
+                export_type, self.source_table_name
             )
 
         return is_backfill_needed, start_pk, initial_load_start_date
