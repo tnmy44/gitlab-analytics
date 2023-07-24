@@ -1,13 +1,28 @@
 WITH job_profiles AS (
 
   SELECT 
-    job_code                                                                                                                   AS job_code,
+    /*
+      We weren't capturing history of job codes and when they changed, we didn't capture it anywhere
+      The following job codes from staffing_history don't exist in job_profiles so 
+      we are capturing them through this case statement
+    */
+
+    CASE 
+      WHEN job_code = 'SA.FSDN.P5' 
+        THEN job_code = 'SA.FSDN.P5-SAE'                                                        
+      WHEN job_code = 'SA.FSDN.P4' 
+        THEN job_code = 'SA.FSDN.P4-SAE'
+      WHEN job_code = 'MK.PMMF.M3-PM'
+        THEN  job_code = 'MK.PMMF.M4-PM'
+      ELSE job_code
+    END                                                                                                                        AS job_code,
     job_profile                                                                                                                AS position,
     job_family                                                                                                                 AS job_family,
     management_level                                                                                                           AS management_level, 
     job_level                                                                                                                  AS job_grade,
     is_job_profile_active                                                                                                      AS is_position_active
-  FROM {{ref('job_profiles_source')}}
+  FROM {{ref('job_profiles_snapshots_source')}}
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY job_code ORDER BY dbt_valid_from DESC) = 1 
 
 ),
 
