@@ -212,7 +212,6 @@
       sfdc_opportunity_source.sales_accepted_date::DATE                                                     AS sales_accepted_date,
       sfdc_opportunity_source.close_date::DATE                                                              AS close_date,
       sfdc_opportunity_source.net_arr                                                                       AS raw_net_arr,
-      sfdc_opportunity_source.next_steps                                                                    AS next_steps,
       {{ dbt_utils.surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                 AS crm_opportunity_snapshot_id,
       '99991231'                                                                                            AS snapshot_id,
       snapshot_dates.date_actual                                                                            AS snapshot_date,
