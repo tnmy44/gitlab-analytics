@@ -95,6 +95,8 @@ Aggregate mart_charge information (used as the basis of truth), this gets rid of
   SELECT
        dim_date.date_actual               AS arr_month,
        fct_charge.dim_subscription_id     AS dim_subscription_id,
+       dim_product_detail.product_delivery_type
+                                          AS product_delivery_type,
        dim_product_detail.product_deployment_type
                                           AS product_deployment_type,
        SUM(quantity)                      AS licensed_user_count,
@@ -114,7 +116,7 @@ Aggregate mart_charge information (used as the basis of truth), this gets rid of
         AND subscription_status IN ('Active','Cancelled')
         AND dim_product_detail.product_tier_name != 'Storage'
         AND DATE_TRUNC('MONTH', CURRENT_DATE) > arr_month
-      {{ dbt_utils.group_by(n=3)}}
+      {{ dbt_utils.group_by(n=4)}}
 
 /*
 Join mart_charge information bringing in mart_charge subscriptions which DO NOT appear in ping fact data
@@ -126,7 +128,7 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
     mart_charge_cleaned.arr_month                                                                           AS ping_created_date_month,
     joined_subscriptions.dim_installation_id                                                                AS dim_installation_id,
     mart_charge_cleaned.dim_subscription_id                                                                 AS latest_subscription_id,
-    IFNULL(joined_subscriptions.ping_delivery_type, 'Self-Managed')                                         AS ping_delivery_type, -- Hardcodding to sself-managed until next MR where dedicated will be changed to SaaS delivery type. Issue -> https://gitlab.com/gitlab-data/analytics/-/issues/16966
+    IFNULL(joined_subscriptions.ping_delivery_type, mart_charge_cleaned.product_delivery_type)              AS ping_delivery_type, 
     IFNULL(joined_subscriptions.ping_deployment_type, mart_charge_cleaned.product_deployment_type)          AS ping_deployment_type, 
     joined_subscriptions.ping_edition                                                                       AS ping_edition,
     joined_subscriptions.version_is_prerelease                                                              AS version_is_prerelease,
