@@ -86,6 +86,7 @@ def snowflake_stage_load_new_only_copy(
         connection = engine.connect()
         staged_files_i = connection.execute(list_query)
         staged_files = [staged_file.name for staged_file in staged_files_i]
+        info(f"working with file {file}")
         info(f"found staged files: {staged_files}")
 
         if file in staged_files:
@@ -140,7 +141,7 @@ def load_data():
             file_format_options="SKIP_HEADER = 1",
         )
 
-        info(f"File {filename} loaded to table {target_table}")
+        # info(f"File {filename} loaded to table {target_table}")
 
 
 if __name__ == "__main__":
