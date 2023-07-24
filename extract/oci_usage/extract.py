@@ -140,7 +140,7 @@ def load_data():
             file_format_options="SKIP_HEADER = 1",
         )
 
-        info(f"File {o.name} loaded to table {target_table}")
+        info(f"File {filename} loaded to table {target_table}")
 
 
 if __name__ == "__main__":
