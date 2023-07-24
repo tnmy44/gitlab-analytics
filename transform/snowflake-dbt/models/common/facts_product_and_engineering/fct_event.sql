@@ -50,7 +50,7 @@ gitlab_dotcom_fact AS (
 
   SELECT
     --Primary Key
-    fct_events.event_pk
+    fct_events.event_pk,
 
     --Natural Key
     fct_events.event_id,
