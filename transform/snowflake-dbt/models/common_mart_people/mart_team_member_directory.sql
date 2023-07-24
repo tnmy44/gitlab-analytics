@@ -103,14 +103,14 @@ team_member_position AS (
     employee_id,
     team_id,
     manager,
-    suporg,
-    job_code,
+    COALESCE(suporg,'Unknown Supervisory Organization')                                           AS suporg,
+    COALESCE(job_code,'Unknown Job Code')                                                         AS job_code,
     position,
-    job_family,
+    COALESCE(job_family,'Unknown Job Family')                                                     AS job_family,
     job_specialty_single,
     job_specialty_multi,
-    management_level,
-    job_grade,
+    COALESCE(management_level,'Unknown Management Level')                                         AS management_level,
+    COALESCE(job_grade,'Unknown Job Grade')                                                       AS job_grade,
     department,
     division,
     entity,
@@ -165,7 +165,7 @@ final AS (
 
     -- Surrogate keys
     team_member.dim_team_member_sk,
-    {{ dbt_utils.surrogate_key(['team_member.team_id']) }}                                   AS dim_team_sk,
+    {{ dbt_utils.surrogate_key(['team_member.team_id']) }}                AS dim_team_sk,
 
     --Natural keys
     team_member.employee_id,
@@ -181,7 +181,7 @@ final AS (
     team_member.date_of_birth,
     team_member.age_calculated                                            AS age,
     team_member.age_cohort,
-    cost_center_group.cost_center,
+    COALESCE(cost_center_group.cost_center,'Unknown Cost Center')         AS cost_center,
     team_member.gitlab_username,
     team_member.country,
     team_member.region,
