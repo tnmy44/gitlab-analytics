@@ -111,7 +111,7 @@
 		mart_crm_touchpoint.count_net_new_mql AS new_mql_sum,
 		mart_crm_touchpoint.count_net_new_accepted AS new_accepted_sum    
     FROM mart_crm_touchpoint
-    FULL JOIN person_base ON
+    LEFT JOIN person_base ON
        mart_crm_touchpoint.dim_crm_person_id = person_base.dim_crm_person_id
        AND mart_crm_touchpoint.email_hash = person_base.email_hash
     LEFT JOIN map_alternative_lead_demographics
