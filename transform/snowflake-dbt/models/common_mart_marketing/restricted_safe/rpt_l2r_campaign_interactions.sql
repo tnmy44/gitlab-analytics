@@ -111,9 +111,9 @@
 		mart_crm_touchpoint.count_net_new_mql AS new_mql_sum,
 		mart_crm_touchpoint.count_net_new_accepted AS new_accepted_sum    
     FROM mart_crm_touchpoint
-    LEFT JOIN person_base ON
+    FULL JOIN person_base ON
        mart_crm_touchpoint.dim_crm_person_id = person_base.dim_crm_person_id
-       {# AND mart_crm_touchpoint.email_hash = person_base.email_hash #}
+       AND mart_crm_touchpoint.email_hash = person_base.email_hash
     LEFT JOIN map_alternative_lead_demographics
       ON mart_crm_touchpoint.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
     LEFT JOIN dim_crm_account
@@ -838,5 +838,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-07-10",
+    updated_date="2023-07-24",
   ) }}
