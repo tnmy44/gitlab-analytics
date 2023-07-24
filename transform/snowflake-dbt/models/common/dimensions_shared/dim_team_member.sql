@@ -62,5 +62,5 @@ WITH final AS (
     created_by='@lisvinueza',
     updated_by='@lisvinueza',
     created_date='2023-03-27',
-    updated_date='2023-07-20'
+    updated_date='2023-07-24'
 ) }}

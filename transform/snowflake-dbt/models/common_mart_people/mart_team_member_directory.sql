@@ -85,6 +85,7 @@ team_member AS (
           'United States of America',
           'Non-US')                                                                                 AS urg_region,
     hire_date,
+    employee_type,
     termination_date,
     is_current_team_member,
     is_rehire,
@@ -190,6 +191,7 @@ final AS (
     team_member.urg_group,
     team_member.urg_region,
     team_member.hire_date,
+    team_member.employee_type,
     team_member.termination_date,
     team_member.is_current_team_member,
     team_member.is_rehire,
@@ -232,5 +234,5 @@ final AS (
     created_by="@lisvinueza",
     updated_by="@lisvinueza",
     created_date="2023-07-06",
-    updated_date="2023-07-20"
+    updated_date="2023-07-24"
 ) }}
