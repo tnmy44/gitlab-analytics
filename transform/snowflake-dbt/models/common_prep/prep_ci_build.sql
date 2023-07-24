@@ -44,7 +44,6 @@
       prep_project.namespace_is_internal,
       gitlab_dotcom_ci_builds_source.status                       AS ci_build_status,
       gitlab_dotcom_ci_builds_source.finished_at,
-      gitlab_dotcom_ci_builds_source.trace,
       gitlab_dotcom_ci_builds_source.created_at,
       gitlab_dotcom_ci_builds_source.updated_at,
       gitlab_dotcom_ci_builds_source.started_at,
@@ -59,13 +58,11 @@
       gitlab_dotcom_ci_builds_source.tag,
       gitlab_dotcom_ci_builds_source.ref,
       gitlab_dotcom_ci_builds_source.type                         AS ci_build_type,
-      gitlab_dotcom_ci_builds_source.target_url,
       gitlab_dotcom_ci_builds_source.description                  AS ci_build_description,
       gitlab_dotcom_ci_builds_source.ci_build_erased_by_id        AS erased_by_id,
       gitlab_dotcom_ci_builds_source.ci_build_erased_at           AS erased_at,
       gitlab_dotcom_ci_builds_source.ci_build_artifacts_expire_at AS artifacts_expire_at,
       gitlab_dotcom_ci_builds_source.environment,
-      gitlab_dotcom_ci_builds_source.yaml_variables,
       gitlab_dotcom_ci_builds_source.ci_build_queued_at           AS queued_at,
       gitlab_dotcom_ci_builds_source.lock_version,
       gitlab_dotcom_ci_builds_source.coverage_regex,
@@ -112,7 +109,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@ischweickartDD",
+    updated_by="@jpeguero",
     created_date="2021-06-17",
-    updated_date="2021-07-09"
+    updated_date="2023-07-21"
 ) }}

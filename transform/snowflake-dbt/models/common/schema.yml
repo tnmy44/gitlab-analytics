@@ -615,7 +615,7 @@ models:
     description: Table with the source data of the data being exposed in dimensional tables where various sources are combined.
 
   - name: dim_gitlab_ops_gitlab_emails
-    description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
+    description: This model limits the gitlab dotcom emails table to only have records for emails ending with `gitlab.com`.
     columns:
         - name: user_id
           tests:
