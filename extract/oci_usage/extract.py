@@ -20,7 +20,7 @@ config = {
 reporting_namespace = "bling"
 
 prefix_file = ""  # For cost and usage files
-destination_path = "extract"
+destination_path = "oci_report"
 
 # Make a directory to receive reports
 if not os.path.exists(destination_path):
