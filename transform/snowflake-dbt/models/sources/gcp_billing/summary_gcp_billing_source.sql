@@ -15,7 +15,8 @@ source AS (
   FROM {{ source('gcp_billing','summary_gcp_billing') }}
   {% if is_incremental() %}
 
-  WHERE gcs_export_time > (SELECT MAX(uploaded_at) FROM {{ this }})
+  WHERE date_part >= (SELECT TO_CHAR(MAX(partition_date),'YYYY-MM') FROM {{ this }})
+  AND gcs_export_time > (SELECT MAX(uploaded_at) FROM {{ this }})
 
   {% endif %}
 
