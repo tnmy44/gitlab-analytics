@@ -950,7 +950,7 @@ models:
   - name: prep_event_all
     description: '{{ doc("prep_event_all") }}'
     columns:
-      - name: event_id
+      - name: event_pk
         # tests:
           # - not_null
           # - unique
