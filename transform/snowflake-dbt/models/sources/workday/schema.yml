@@ -505,3 +505,18 @@ models:
       - name: uploaded_at
       - name: valid_from
       - name: valid_to
+  
+  - name: job_profiles_snapshots_source
+    description: '{{ doc("job_profiles") }}'
+    columns:
+      - name: job_code
+        tests: 
+          - unique
+          - not_null
+      - name: job_profile 
+        tests: 
+          - not_null                                                                                                               AS position,
+      - name: job_family                                                                                                                 AS job_family,
+      - name: management_level                                                                                                           AS management_level, 
+      - name: job_level                                                                                                                  AS job_grade,
+      - name: is_job_profile_active
