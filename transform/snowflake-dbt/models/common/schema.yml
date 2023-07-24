@@ -4560,6 +4560,8 @@ models:
       - name: zoom_info_company_revenue
       - name: zoom_info_company_state_province
       - name: zoominfo_account_phone
+      - name: csm_sentiment
+        description: Field from Gainsight. Customer Success Managers can use Red, Yellow, and Green to reflect their sentiment of a customer's health
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'

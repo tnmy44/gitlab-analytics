@@ -63,6 +63,8 @@ models:
         description: for deleted accounts this is the SFDC account they were merged to
       - name: crm_account_created_date
         description: The date on which the CRM account was created in SFDC
+      - name: csm_sentiment
+        description: Field from Gainsight. Customer Success Managers can use Red, Yellow, and Green to reflect their sentiment of a customer's health
 
   - name: prep_crm_opportunity
     description: '{{ doc("prep_crm_opportunity") }}'
