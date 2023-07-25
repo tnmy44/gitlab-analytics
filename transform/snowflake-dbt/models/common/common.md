@@ -1789,3 +1789,13 @@ This model does the following:
 * We can join this model with `customers_db_customers` in the downstream models in order to get information about country, company_size of the User who started the trial
 
 {% enddocs %}
+
+{% docs dim_requirement %}
+
+As described in the [GitLab documentation](https://docs.gitlab.com/ee/user/project/requirements/):
+
+With requirements, you can set criteria to check your products against. They can be based on users, stakeholders, system, software, or anything else you find important to capture. A requirement is an artifact in GitLab which describes the specific behavior of your product. Requirements are long-lived and don’t disappear unless manually cleared.
+
+This dimension model holds all requirement records and provides dimensional data around their state, creation dates, etc.
+
+{% enddocs %}
