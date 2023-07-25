@@ -31,7 +31,7 @@
       person_base.source_buckets,
       person_base.true_inquiry_date,
       person_base.mql_date_first_pt,
-      person_base.mql_date_lastest_pt,
+      person_base.mql_date_latest_pt,
       person_base.accepted_date,
       person_base.status,
       person_base.lead_source,
@@ -589,5 +589,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-07-19",
+    updated_date="2023-07-25",
   ) }}

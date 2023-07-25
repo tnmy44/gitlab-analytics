@@ -40,13 +40,13 @@
       legacy_mql_date_first.first_day_of_month AS legacy_mql_month_first,
       legacy_mql_date_first_pt.first_day_of_month
                                                AS legacy_mql_month_first_pt,
-      legacy_mql_date_latest.date_day          AS legacy_mql_date_lastest,
+      legacy_mql_date_latest.date_day          AS legacy_mql_date_latest,
       fct_crm_person.mql_datetime_latest,
       fct_crm_person.mql_datetime_latest_pt,
-      mql_date_latest_pt.date_day              AS mql_date_lastest_pt,
+      mql_date_latest_pt.date_day              AS mql_date_latest_pt,
       mql_date_latest.first_day_of_month       AS mql_month_latest,
       mql_date_latest_pt.first_day_of_month    AS mql_month_latest_pt,
-      legacy_mql_date_latest_pt.date_day       AS legacy_mql_date_lastest_pt,
+      legacy_mql_date_latest_pt.date_day       AS legacy_mql_date_latest_pt,
       legacy_mql_date_latest.first_day_of_month
                                                AS legacy_mql_month_latest,
       legacy_mql_date_latest_pt.first_day_of_month
@@ -268,7 +268,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-05-10",
+    updated_date="2023-07-25",
   ) }}  
