@@ -92,7 +92,6 @@ renamed AS (
     zi_phone__c AS zoominfo_account_phone,
     number_of_employees_manual_source_admin__c AS admin_manual_source_number_of_employees,
     account_address_manual_source_admin__c AS admin_manual_source_account_address,
-    focus_partner__c AS is_focus_partner,
 
     -- account demographics fields
 

@@ -163,7 +163,8 @@ WITH biz_person AS (
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
       NULL                                           AS zoominfo_company_employee_count,
-      zoominfo_contact_id
+      zoominfo_contact_id,
+      NULL                                           AS is_partner_recalled
 
 
     FROM sfdc_contacts
@@ -282,6 +283,7 @@ WITH biz_person AS (
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
       zoominfo_company_employee_count,
+      is_partner_recalled,
       NULL AS zoominfo_contact_id
 
     FROM sfdc_leads
