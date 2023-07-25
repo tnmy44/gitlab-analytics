@@ -180,8 +180,6 @@ WITH biz_person AS (
       CASE
         WHEN sfdc_contacts.mql_datetime_inferred IS NOT null 
             AND crm_tasks.min_task_completed_date_by_bdr_sdr >= sfdc_contacts.mql_datetime_inferred 
-            AND (sfdc_contacts.mql_datetime_inferred >= sfdc_contacts.marketo_qualified_lead_datetime 
-            OR sfdc_contacts.marketo_qualified_lead_datetime IS null)
           THEN TRUE
         ELSE FALSE
       END AS is_bdr_sdr_worked_inferred_mql
