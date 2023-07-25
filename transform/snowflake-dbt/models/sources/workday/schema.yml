@@ -510,13 +510,19 @@ models:
     description: '{{ doc("job_profiles") }}'
     columns:
       - name: job_code
+        description: The unique identification for each role at GitLab. A job code is different for each role and each seniority level (example - IT Security Analyst and Senior IT Security Analyst would have a different job_code)
         tests: 
           - unique
           - not_null
       - name: job_profile 
+        description: The role or position associated with the job code 
         tests: 
           - not_null 
       - name: job_family  
+        description: Job family the code belongs to
       - name: management_level
+        description: One of the following management levels- Individual Contributor, Manager, Director, Leader, Chief Executive Officer, Vice President
       - name: job_level
+        description: Job grades. GitLab job grades aid in mapping a role for internal equity with respect to cash and equity.
       - name: is_job_profile_active
+        description: Flag indicating whether the job profile is currently active.
