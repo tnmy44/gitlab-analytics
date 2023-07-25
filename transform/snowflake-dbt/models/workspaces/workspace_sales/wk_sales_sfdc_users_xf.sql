@@ -115,6 +115,8 @@ WITH source_user AS (
       base.is_active,
       base.is_hybrid_flag,
       base.employee_number,
+      base.crm_user_business_unit,
+
      
       CASE
         WHEN LOWER(title) LIKE '%strategic account%'
@@ -237,6 +239,8 @@ WITH source_user AS (
 
       -- ASM (X-Ray 4th hierarchy): definition pending
       CASE
+        WHEN LOWER(business_unit) = 'japan'
+          THEN 'Japan'   
         WHEN 
           LOWER(business_unit) = 'entg'
           AND LOWER(sub_business_unit) = 'amer'
