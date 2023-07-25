@@ -22,7 +22,7 @@ WITH job_profiles AS (
     job_level                                                                                                                  AS job_grade,
     is_job_profile_active                                                                                                      AS is_position_active
   FROM {{ref('job_profiles_snapshots_source')}}
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY job_code ORDER BY dbt_valid_from DESC) = 1 
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY job_code ORDER BY valid_from DESC) = 1 
 
 ),
 
