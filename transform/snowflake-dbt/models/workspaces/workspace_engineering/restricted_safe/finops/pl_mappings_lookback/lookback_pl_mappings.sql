@@ -32,12 +32,43 @@ flex_cud AS (
 
 ),
 
+t2d_cud AS (
+    with sku_list as (
+        SELECT 'Commitment v1: T2D AMD Cpu in Americas for 3 Year' as sku
+        UNION ALL
+        SELECT 'Commitment v1: T2D AMD Ram in Americas for 3 Year'
+    ),
+    infra_labels as (
+        SELECT 'shared' as label
+        UNION ALL
+        SELECT NULL
+    )
+    
+  SELECT
+    date_day                                        AS date_day,
+    t2d_cud_lookback.gcp_project_id                 AS gcp_project_id,
+    NULL                                            AS gcp_service_description,
+    sku_list.sku                                    AS gcp_sku_description,
+    infra_labels.label                              AS infra_label,
+    NULL                                            AS env_label,
+    NULL                                            AS runner_label,
+    LOWER(t2d_cud_lookback.pl_category)             AS pl_category,
+    t2d_cud_lookback.pl_percent                     AS pl_percent,
+    't2d_cud_lookback'                              AS from_mapping
+  FROM {{ ref ('t2d_cud_lookback') }}
+  CROSS JOIN sku_list
+  CROSS JOIN infra_labels
+
+),
+
 
 cte_append AS (SELECT *
   FROM ci_lookback
   UNION ALL
   SELECT *
   FROM flex_cud
+  UNION ALL 
+  SELECT * FROM t2d_cud
 )
 
 SELECT
