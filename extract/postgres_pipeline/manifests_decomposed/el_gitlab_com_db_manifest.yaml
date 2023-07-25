@@ -19,16 +19,9 @@ tables:
       , ended_at
       , events
       , iid
-      , NULL AS severity
       , status
       , issue_id
       , project_id
-      , NULL AS title
-      , NULL AS description
-      , NULL AS service
-      , NULL AS monitoring_tool
-      , NULL AS hosts
-      , NULL AS payload
       FROM alert_management_alerts
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -43,10 +36,6 @@ tables:
       , updated_at
       , project_id
       , active
-      , NULL AS endpoint_identifier
-      , NULL AS name
-      , NULL AS payload_example
-      , NULL AS payload_attribute_mapping
       FROM alert_management_http_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -104,7 +93,6 @@ tables:
       , updated_at
       , merge_request_id
       , approvals_required
-      , NULL AS name
       , rule_type
       , report_type
       , section
@@ -183,9 +171,7 @@ tables:
       , created_at
       , user_id
       , result
-      , NULL AS ip_address
       , provider
-      , NULL AS user_name
       FROM authentication_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -321,15 +307,12 @@ tables:
       , created_at
       , updated_at
       , enabled
-      , NULL AS name
       , environment_scope
       , cluster_type
       , domain
       , managed
-      , NULL AS namespace_per_environment
       , management_project_id
       , cleanup_status
-      , NULL AS cleanup_status_reason
       , helm_major_version
       FROM clusters
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -361,7 +344,6 @@ tables:
     import_query: |-
       SELECT id
       , project_id
-      , NULL AS name
       , created_at
       , updated_at
       , status
@@ -376,7 +358,6 @@ tables:
       , migration_skipped_at
       , migration_retries_count
       , migration_skipped_reason
-      , NULL AS migration_aborted_in_state
       , last_cleanup_deleted_tags_count
       FROM container_repositories
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -440,7 +421,6 @@ tables:
       , created_at
       , updated_at
       , status
-      , NULL AS comment
       , approval_rule_id
       FROM deployment_approvals
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -458,7 +438,6 @@ tables:
       , environment_id
       , ref
       , tag
-      , NULL AS sha
       , user_id
       , deployable_id
       , deployable_type
@@ -480,7 +459,6 @@ tables:
     import_query: |-
       SELECT id
       , user_id
-      , NULL AS email
       , created_at
       , updated_at
       , confirmed_at
@@ -501,10 +479,8 @@ tables:
       , name
       , created_at
       , updated_at
-      , NULL AS external_url
       , environment_type
       , state
-      , NULL AS slug
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -535,7 +511,6 @@ tables:
       , parent_id
       , relative_position
       , start_date_sourcing_epic_id
-      , NULL AS external_key
       , confidential
       FROM epics
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -569,8 +544,6 @@ tables:
       , project_id
       , created_at
       , updated_at
-      , NULL AS external_url
-      , NULL AS name
       FROM external_status_checks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -612,12 +585,10 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , NULL AS extern_uid
       , provider
       , user_id
       , created_at
       , updated_at
-      , NULL AS secondary_extern_uid
       , saml_provider_id
       FROM identities
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -766,8 +737,6 @@ tables:
       , failed_to_import_count
       , status
       , jid
-      , NULL AS jira_project_key
-      , NULL AS jira_project_name
       , scheduled_at
       , error_message
       FROM jira_imports
@@ -834,13 +803,10 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , NULL AS cn
       , group_access
       , group_id
       , created_at
       , updated_at
-      , NULL AS provider
-      , NULL AS filter
       FROM ldap_group_links
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
