@@ -1924,6 +1924,10 @@ models:
         description: Masked. Team member performance rating
         meta:
           masking_policy: analyst_people
+      - name: employee_type
+        description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
+        meta:
+          masking_policy: analyst_people
 
   - name: prep_billing_account
     description: '{{ doc("prep_billing_account") }}'
