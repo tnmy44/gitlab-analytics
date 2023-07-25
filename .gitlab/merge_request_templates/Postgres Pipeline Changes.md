@@ -16,6 +16,7 @@ Closes
 
 ## All MRs Checklist
 - [ ] [Label hygiene](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling) on issue.
+    - [ ] Set workflow to `6 - review` (or type command `/label ~"workflow::6 - review" ` in the comment) 
 - [ ] Branch set to delete. (Leave option `Squash commits when merge request is accepted.` unchecked)
 - [ ] This MR is ready for final review and merge.
 - [ ] All threads are resolved.
@@ -25,8 +26,8 @@ Closes
 ## Reviewer Checklist
 - [ ]  Check before setting to merge
 
-
 ## Further changes requested
 * [ ] **AUTHOR**: Uncheck all boxes before taking further action.
 * [ ] If any of `huge` table is modified? If yes, please refer to the page [Large table backfilling](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#large-tables-backfilling) and follow the steps to deploy MR avoiding work days
 
+/label ~"postgres pipeline (pgp)" ~Python
