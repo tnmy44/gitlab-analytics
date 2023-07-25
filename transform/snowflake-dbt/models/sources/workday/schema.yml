@@ -515,8 +515,8 @@ models:
           - not_null
       - name: job_profile 
         tests: 
-          - not_null                                                                                                               AS position,
-      - name: job_family                                                                                                                 AS job_family,
-      - name: management_level                                                                                                           AS management_level, 
-      - name: job_level                                                                                                                  AS job_grade,
+          - not_null 
+      - name: job_family  
+      - name: management_level
+      - name: job_level
       - name: is_job_profile_active
