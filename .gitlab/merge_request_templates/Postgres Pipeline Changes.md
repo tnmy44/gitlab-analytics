@@ -6,11 +6,22 @@ Closes
 
 #### Steps Taken to Test
 
-* _action items_
+Run one of this pipeline. Depends on the file you changed, you should run either:
+* [ ] `Extract` -> [pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#pgp_test) if one of this file(s) is changed:
+    * `el_customers_scd_db_manifest.yaml`
+    * `el_gitlab_com_ci_db_manifest.yaml`
+    * `el_gitlab_com_ci_scd_db_manifest.yaml`
+    * `el_gitlab_com_db_manifest.yaml`
+    * `el_gitlab_com_scd_db_manifest.yaml` 
+* [ ] `Extract` -> [gitlab_ops_pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#gitlab_ops_pgp_test) if one of this file(s) is changed: 
+    * `el_gitlab_ops_db_manifest.yaml`
+    * `el_gitlab_ops_scd_db_manifest.yaml`
+ 
+It should pass properly. 
 
 ## Submitter Checklist
+  
 
-* [ ] Does `Extract` -> [pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#pgp_test) pipeline passed properly?
 * [ ] Any `huge` table is modified? If yes, please refer to the page [Large table backfilling](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#large-tables-backfilling) and follow the steps
 * [ ] Check is any `RED` data in your changes, they shouldn't be extracted into Data Warehouse. For more details about Data Classification refer to [Data Classification Standard](https://about.gitlab.com/handbook/security/data-classification-standard.html) page
 
