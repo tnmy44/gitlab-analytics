@@ -10,7 +10,7 @@ models:
         - not_null
         - unique
     - name: event_id
-        description: '{{ doc("event_id") }}'
+      description: '{{ doc("event_id") }}'
     - name: dim_event_date_id
       description: '{{ doc("dim_event_date_id") }}'
     - name: dim_ultimate_parent_namespace_id
