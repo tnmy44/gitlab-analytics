@@ -28,6 +28,6 @@ Closes
 
 ## Further changes requested
 * [ ] **AUTHOR**: Uncheck all boxes before taking further action.
-* [ ] If any of `huge` table is modified? If yes, please refer to the page [Large table backfilling](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#large-tables-backfilling) and follow the steps to deploy MR avoiding work days
+* [ ] If any of `huge` table is modified? If yes, please refer to the page [Large table backfilling](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#large-tables-backfilling) and follow the steps to deploy MR avoiding work days. Be sure to send out an outage notification in slack before-hand so that the business stakeholders are aware of the changes being made.
 
 /label ~"postgres pipeline (pgp)" ~Python
