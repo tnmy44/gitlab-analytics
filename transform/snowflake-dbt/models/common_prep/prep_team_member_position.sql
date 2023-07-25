@@ -45,14 +45,14 @@ team_member_groups AS (
       The following job codes from staffing_history don't exist in job_profiles so 
       we are capturing them through this case statement
     */
-    
+
     CASE 
       WHEN job_code_current = 'SA.FSDN.P5' 
-        THEN job_code_current = 'SA.FSDN.P5-SAE'                                                        
+        THEN 'SA.FSDN.P5-SAE'                                                        
       WHEN job_code_current = 'SA.FSDN.P4' 
-        THEN job_code_current = 'SA.FSDN.P4-SAE'
+        THEN 'SA.FSDN.P4-SAE'
       WHEN job_code_current = 'MK.PMMF.M3-PM'
-        THEN  job_code_current = 'MK.PMMF.M4-PM'
+        THEN 'MK.PMMF.M4-PM'
       ELSE job_code_current
     END                                                                                                                        AS job_code,
     job_specialty_single_current                                                                                               AS job_specialty_single,
