@@ -10,7 +10,7 @@ models:
           - unique
           - not_null
       - name: event_id
-        description: The natural key of the table. This can be joined to other models in the data warehouse to get dimensional attributes about the event.
+        description: '{{ doc("event_id") }}'
       - name: ultimate_parent_namespace_id
         description: ID of the ultimate parent namespace in which the event was triggered
       - name: dim_project_id

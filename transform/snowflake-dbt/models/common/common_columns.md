@@ -4,6 +4,12 @@ The unique identifier of an event. This is a generated primary key and will not 
 
 {% enddocs %}
 
+{% docs event_id %}
+
+The natural key of an event. This will join back to the source models.
+
+{% enddocs %}
+
 {% docs dim_latest_product_tier_id %}
 
 The unique identifier of the ultimate parent namespace's latest product tier, easily joined to `dim_product_tier`
