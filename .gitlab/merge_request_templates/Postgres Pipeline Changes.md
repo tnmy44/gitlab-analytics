@@ -17,7 +17,7 @@ Run one of this pipeline. Depends on the file you changed, you should run either
     * `el_gitlab_ops_db_manifest.yaml`
     * `el_gitlab_ops_scd_db_manifest.yaml`
  
-It should pass properly. 
+It should pass properly to move forward. 
 
 ## Submitter Checklist
   
