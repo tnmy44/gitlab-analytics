@@ -31,7 +31,7 @@ job_info AS (
 team_member_groups AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['employee_id', 'team_id_current', 'manager_current','department_current','suporg_current','employee_type_current','job_code_current', 'job_specialty_single_current', 'job_specialty_multi_current', 'entity_current']) }}
+    {{ dbt_utils.surrogate_key(['employee_id', 'team_id_current', 'manager_current','department_current','suporg_current','job_code_current', 'job_specialty_single_current', 'job_specialty_multi_current', 'entity_current']) }}
                                                                                                                                AS unique_key,
     employee_id                                                                                                                AS employee_id,
     team_id_current                                                                                                            AS team_id,
@@ -72,7 +72,6 @@ staffing_history AS (
     team_member_groups.manager                                                                                                 AS manager,
     team_member_groups.department                                                                                              AS department,
     team_member_groups.suporg                                                                                                  AS suporg,
-    team_member_groups.employee_type                                                                                           AS employee_type,
     team_member_groups.job_code                                                                                                AS job_code,
     team_member_groups.job_specialty_single                                                                                    AS job_specialty_single,
     team_member_groups.job_specialty_multi                                                                                     AS job_specialty_multi,
