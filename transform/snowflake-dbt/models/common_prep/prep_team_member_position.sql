@@ -1,21 +1,7 @@
 WITH job_profiles AS (
 
   SELECT 
-    /*
-      We weren't capturing history of job codes and when they changed, we didn't capture it anywhere
-      The following job codes from staffing_history don't exist in job_profiles so 
-      we are capturing them through this case statement
-    */
-
-    CASE 
-      WHEN job_code = 'SA.FSDN.P5' 
-        THEN job_code = 'SA.FSDN.P5-SAE'                                                        
-      WHEN job_code = 'SA.FSDN.P4' 
-        THEN job_code = 'SA.FSDN.P4-SAE'
-      WHEN job_code = 'MK.PMMF.M3-PM'
-        THEN  job_code = 'MK.PMMF.M4-PM'
-      ELSE job_code
-    END                                                                                                                        AS job_code,
+    job_code,
     job_profile                                                                                                                AS position,
     job_family                                                                                                                 AS job_family,
     management_level                                                                                                           AS management_level, 
@@ -53,7 +39,22 @@ team_member_groups AS (
     department_current                                                                                                         AS department,
     suporg_current                                                                                                             AS suporg,
     employee_type_current                                                                                                      AS employee_type,
-    job_code_current                                                                                                           AS job_code,
+
+    /*
+      We weren't capturing history of job codes and when they changed, we didn't capture it anywhere
+      The following job codes from staffing_history don't exist in job_profiles so 
+      we are capturing them through this case statement
+    */
+    
+    CASE 
+      WHEN job_code_current = 'SA.FSDN.P5' 
+        THEN job_code_current = 'SA.FSDN.P5-SAE'                                                        
+      WHEN job_code_current = 'SA.FSDN.P4' 
+        THEN job_code_current = 'SA.FSDN.P4-SAE'
+      WHEN job_code_current = 'MK.PMMF.M3-PM'
+        THEN  job_code_current = 'MK.PMMF.M4-PM'
+      ELSE job_code_current
+    END                                                                                                                        AS job_code,
     job_specialty_single_current                                                                                               AS job_specialty_single,
     job_specialty_multi_current                                                                                                AS job_specialty_multi,
     entity_current                                                                                                             AS entity,
