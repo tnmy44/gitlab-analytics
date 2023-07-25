@@ -38,7 +38,6 @@ team_member_groups AS (
     manager_current                                                                                                            AS manager,
     department_current                                                                                                         AS department,
     suporg_current                                                                                                             AS suporg,
-    employee_type_current                                                                                                      AS employee_type,
 
     /*
       We weren't capturing history of job codes and when they changed, we didn't capture it anywhere
