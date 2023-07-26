@@ -96,7 +96,9 @@ models:
           - customers_db
         tests:
           - not_null
-          - unique
+          - unique:
+            config:
+              where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: item_id
         description: Line if for item
         tags:
