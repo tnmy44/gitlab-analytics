@@ -28,7 +28,10 @@ def get_sales_analytics_notebooks(frequency: str) -> Dict:
     notebooks = []
     fileNames = []
 
-    path = pathlib.Path(f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/")
+    if os.environ["IN_CLOUD"] == "False":
+        path = pathlib.Path(f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/")
+    else:
+        path = pathlib.Path(f"{REPO_BASE_PATH}/sales_analytics_notebooks/{frequency}/")
 
     for file in path.rglob("*.ipynb"):
         relative_path = file.relative_to(SALES_ANALYTICS_NOTEBOOKS_PATH)
