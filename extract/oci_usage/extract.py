@@ -45,17 +45,18 @@ def extract_files_from_oci(config, reporting_namespace, file_prefix, destination
             reporting_namespace, reporting_bucket, o.name
         )
         filename = rename_file(o.name)
+        full_file_path = destination_path + "/" + filename
 
-        with open(destination_path + "/" + filename, "wb") as f:
+        with open(full_file_path, "wb") as f:
             for chunk in object_details.data.raw.stream(
                 1024 * 1024, decode_content=False
             ):
                 f.write(chunk)
 
         if "cost" in filename:
-            oci_extraction["oci_cost_report"].append(filename)
+            oci_extraction["oci_cost_report"].append(full_file_path)
         elif "usage" in filename:
-            oci_extraction["oci_usage_report"].append(filename)
+            oci_extraction["oci_usage_report"].append(full_file_path)
 
     return oci_extraction
 
@@ -123,7 +124,6 @@ def snowflake_stage_put_copy_files(
         info(f"found staged files: {staged_files}")
         new_files = [file for file in file_list if file not in staged_files]
         info(f"puting files: {staged_files} into stage: {stage}")
-        loaded_files = []
         for file in new_files:
             put_query = f"put 'file://{file}' @{stage} auto_compress=true;"
             info(f"running: {put_query}")
