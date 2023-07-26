@@ -17,6 +17,7 @@ from airflow_utils import (
     clone_repo_cmd,
     REPO_BASE_PATH,
     get_sales_analytics_notebooks,
+    SALES_ANALYTICS_NOTEBOOKS_PATH,
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
@@ -57,13 +58,11 @@ dag = DAG(
 
 notebooks = get_sales_analytics_notebooks(frequency="daily")
 
-CLONED_SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
-
 # Task 1
 start = DummyOperator(task_id="Start", dag=dag)
 
 for notebook, task_name in notebooks.items():
-    absolute_path = pathlib.Path(CLONED_SALES_ANALYTICS_NOTEBOOKS_PATH) / notebook
+    absolute_path = pathlib.Path(SALES_ANALYTICS_NOTEBOOKS_PATH) / notebook
     notebook_parent = absolute_path.parent.as_posix()
     notebook_filename = absolute_path.name
 
