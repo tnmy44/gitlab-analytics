@@ -51,7 +51,12 @@ container_cmd = f"""
 """
 
 # Create the DAG
-dag = DAG("gainsight_extract", default_args=default_args, schedule_interval="0 6 * * *", catchup=False)
+dag = DAG(
+    "gainsight_extract",
+    default_args=default_args,
+    schedule_interval="0 6 * * *",
+    catchup=False,
+)
 
 # Task 1
 gainsight_run = KubernetesPodOperator(

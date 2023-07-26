@@ -76,7 +76,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval=None,
     concurrency=2,
-    catchup=False
+    catchup=False,
 )
 
 

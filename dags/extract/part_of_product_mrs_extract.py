@@ -50,7 +50,10 @@ container_cmd = f"""
 
 # Create the DAG
 dag = DAG(
-    "part_of_product_mrs", default_args=default_args, schedule_interval="0 4 * * *", catchup=False,
+    "part_of_product_mrs",
+    default_args=default_args,
+    schedule_interval="0 4 * * *",
+    catchup=False,
 )
 
 # Task 1

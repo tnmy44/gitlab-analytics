@@ -52,7 +52,7 @@ dag = DAG(
     default_args=default_args,
     concurrency=2,
     schedule_interval="25 */12 * * *",
-    catchup=False
+    catchup=False,
 )
 
 

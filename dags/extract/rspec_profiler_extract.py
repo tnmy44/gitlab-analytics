@@ -40,7 +40,10 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "rspec_profiler_extract", default_args=default_args, schedule_interval="0 */2 * * *", catchup=False,
+    "rspec_profiler_extract",
+    default_args=default_args,
+    schedule_interval="0 */2 * * *",
+    catchup=False,
 )
 
 # SFDC Extract

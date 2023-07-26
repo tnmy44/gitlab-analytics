@@ -42,7 +42,10 @@ container_cmd = f"""
 
 # Create the DAG
 dag = DAG(
-    "snowflake_permissions", default_args=default_args, schedule_interval="0 0 */1 * *", catchup= False,
+    "snowflake_permissions",
+    default_args=default_args,
+    schedule_interval="0 0 */1 * *",
+    catchup=False,
 )
 
 # Task 1

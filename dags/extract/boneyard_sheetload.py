@@ -44,7 +44,10 @@ container_cmd = f"""
 
 # Create the DAG
 dag = DAG(
-    "boneyard_sheetload", default_args=default_args, schedule_interval="30 */6 */1 * *", catchup=False,
+    "boneyard_sheetload",
+    default_args=default_args,
+    schedule_interval="30 */6 */1 * *",
+    catchup=False,
 )
 
 # Task 1

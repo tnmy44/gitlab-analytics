@@ -50,7 +50,12 @@ container_cmd = f"""
 """
 
 # Create the DAG
-dag = DAG("handbook_mrs", default_args=default_args, schedule_interval="0 2 * * *", catchup=False)
+dag = DAG(
+    "handbook_mrs",
+    default_args=default_args,
+    schedule_interval="0 2 * * *",
+    catchup=False,
+)
 
 # Task 1
 part_of_product_mrs_run = KubernetesPodOperator(

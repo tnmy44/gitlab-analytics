@@ -57,7 +57,10 @@ container_cmd = f"""
 
 # Create the DAG
 dag = DAG(
-    "value_page_extract", default_args=default_args, schedule_interval="0 2 * * */7", catchup=False
+    "value_page_extract",
+    default_args=default_args,
+    schedule_interval="0 2 * * */7",
+    catchup=False,
 )
 
 # Task 1

@@ -51,7 +51,10 @@ container_cmd = f"""
 
 # Create the DAG
 dag = DAG(
-    "greenhouse_extract", default_args=default_args, schedule_interval="0 22 */1 * *", catchup=False,
+    "greenhouse_extract",
+    default_args=default_args,
+    schedule_interval="0 22 */1 * *",
+    catchup=False,
 )
 
 # Task 1

@@ -79,7 +79,10 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "dbt_edm_snapshots", default_args=default_args, schedule_interval="0 17 * * *", catchup=False
+    "dbt_edm_snapshots",
+    default_args=default_args,
+    schedule_interval="0 17 * * *",
+    catchup=False,
 )
 
 # dbt-snapshot for daily tag
