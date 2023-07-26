@@ -47,7 +47,7 @@ tables:
       , failure_reason
       , scheduled_at
       , upstream_pipeline_id
-      FROM p_ci_builds
+      FROM ci_builds
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   ci_editor_ai_conversation_messages:
