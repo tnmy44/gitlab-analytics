@@ -116,14 +116,13 @@ def snowflake_stage_put_copy_files(
 
     list_query = f"list @{stage}"
 
-    info(f"checking for the following files: {file_list}")
+    info(f"checking for new files")
     try:
         connection = engine.connect()
         staged_files_i = connection.execute(list_query)
         staged_files = [staged_file.name for staged_file in staged_files_i]
-        info(f"found staged files: {staged_files}")
         new_files = [file for file in file_list if file not in staged_files]
-        info(f"puting files: {new_files} into stage: {stage}")
+        info(f"puting new files: {new_files} into stage: {stage}")
         for file in new_files:
             put_query = f"put 'file://{file}' @{stage} auto_compress=true;"
             info(f"running: {put_query}")
