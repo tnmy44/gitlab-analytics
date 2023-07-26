@@ -21,17 +21,14 @@ DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.1"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
 
-SALES_ANALYTICS_NOTEBOOKS_PATH = f"analytics/sales_analytics_notebooks"
+SALES_ANALYTICS_NOTEBOOKS_PATH = f"{REPO_BASE_PATH}/sales_analytics_notebooks"
 
 
 def get_sales_analytics_notebooks(frequency: str) -> Dict:
     notebooks = []
     fileNames = []
 
-    if os.environ["IN_CLOUD"] == "False":
-        path = pathlib.Path(f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/")
-    else:
-        path = pathlib.Path(f"{REPO_BASE_PATH}/sales_analytics_notebooks/{frequency}/")
+    path = pathlib.Path(f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/")
 
     for file in path.rglob("*.ipynb"):
         relative_path = file.relative_to(SALES_ANALYTICS_NOTEBOOKS_PATH)
@@ -327,8 +324,7 @@ clone_repo_cmd = f"""
     echo "checking out commit $GIT_COMMIT" &&
     cd analytics &&
     git checkout $GIT_COMMIT &&
-    cd ..
-    """
+    cd .."""
 
 clone_repo_sha_cmd = f"""
     {data_test_ssh_key_cmd} &&
