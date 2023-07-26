@@ -19,8 +19,7 @@ def rename_file(name: str) -> str:
 
 
 def extract_files_from_oci(config, reporting_namespace, file_prefix, destination_path):
-    info
-
+    info("running oci extraction")
     # Make a directory to receive reports
     if not os.path.exists(destination_path):
         os.mkdir(destination_path)
@@ -46,7 +45,6 @@ def extract_files_from_oci(config, reporting_namespace, file_prefix, destination
             reporting_namespace, reporting_bucket, o.name
         )
         filename = rename_file(o.name)
-        info(f"Found extracted file: {filename}")
 
         with open(destination_path + "/" + filename, "wb") as f:
             for chunk in object_details.data.raw.stream(
@@ -97,6 +95,7 @@ def snowflake_copy_staged_files_into_table(
         connection = engine.connect()
 
         info(f"Copying to Table {table_path}.")
+        info(f"running: {copy_query}")
         connection.execute(copy_query)
         info("Query successfully run")
 
@@ -127,7 +126,7 @@ def snowflake_stage_put_copy_files(
         loaded_files = []
         for file in new_files:
             put_query = f"put 'file://{file}' @{stage} auto_compress=true;"
-
+            info(f"running: {put_query}")
             connection.execute(put_query)
 
             snowflake_copy_staged_files_into_table(
