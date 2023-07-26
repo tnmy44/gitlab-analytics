@@ -30,7 +30,7 @@
       mql_date_first_pt.date_day               AS mql_date_first_pt,
       mql_date_first.first_day_of_month        AS mql_month_first,
       mql_date_first_pt.first_day_of_month     AS mql_month_first_pt,
-      mql_date_latest.date_day                 AS mql_date_lastest,
+      mql_date_latest.date_day                 AS mql_date_latest,
        initial_mql_date_first_pt.date_day      AS initial_mql_date_first_pt,
       initial_mql_date_first.first_day_of_month
                                                AS initial_mql_month_first,
