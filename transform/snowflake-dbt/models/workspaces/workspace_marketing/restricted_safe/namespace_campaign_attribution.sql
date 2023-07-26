@@ -94,6 +94,7 @@ snowplow_sessions as (
     where 1=1
         and namespace_created_at > '2022-01-01'
         and trial_start_date is not null
+        and trial_start_date >= namespace_created_at 
 
     union all
 
@@ -113,6 +114,7 @@ snowplow_sessions as (
     where 1=1
         and namespace_created_at > '2022-01-01'
         and first_paid_subscription_start_date is not null
+        and purchase_date >= namespace_created_at
         
 ), last_touch_attribution_session_to_event as (
     -- You've found the magic, here we use last touch attribution to find the 
@@ -138,7 +140,7 @@ snowplow_sessions as (
         snowplow_sessions.*,
         'attributed_free_signup' as attribution_event,
         datediff('hour', event_date, session_start) as hours_to_signup_event,
-        row_number() over (partition by user_snowplow_crossdomain_id order by SESSION_START DESC) as session_row_number
+        row_number() over (partition by ultimate_parent_namespace_id order by SESSION_START DESC) as session_row_number
     from
         snowplow_sessions
         join trial_and_free_union_namespaces 
@@ -157,7 +159,7 @@ snowplow_sessions as (
         snowplow_sessions.*,
         'attributed_trial_signup' as attribution_event,
         datediff('hour', event_date, session_start) as hours_to_signup_event,
-        row_number() over (partition by user_snowplow_crossdomain_id order by SESSION_START DESC) as session_row_number
+        row_number() over (partition by ultimate_parent_namespace_id order by SESSION_START DESC) as session_row_number
     from
         snowplow_sessions
         join trial_and_free_union_namespaces 
@@ -176,7 +178,7 @@ snowplow_sessions as (
         snowplow_sessions.*,
         'attributed_paid_signup' as attribution_event,
         datediff('hour', event_date, session_start) as hours_to_signup_event,
-        row_number() over (partition by user_snowplow_crossdomain_id order by SESSION_START DESC) as session_row_number
+        row_number() over (partition by ultimate_parent_namespace_id order by SESSION_START DESC) as session_row_number
     from
         snowplow_sessions
         join trial_and_free_union_namespaces 
@@ -305,5 +307,5 @@ snowplow_sessions as (
     created_by="@degan",
     updated_by="@degan",
     created_date="2023-06-30",
-    updated_date="2023-06-30"
+    updated_date="2023-07-26"
 ) }}
