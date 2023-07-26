@@ -16,7 +16,8 @@
     ('dates', 'dim_date'),
     ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace'),
     ('redis_metrics_28d_user', 'wk_rpt_user_based_metric_counts_namespace_monthly'),
-    ('redis_metrics_all_time_event', 'wk_rpt_event_based_metric_counts_namespace_all_time')
+    ('redis_metrics_all_time_event', 'wk_rpt_event_based_metric_counts_namespace_all_time'),
+    ('dim_product_detail', 'dim_product_detail')
 ]) }}
 
 
@@ -43,6 +44,17 @@
       ORDER BY
         subscription_version DESC
     ) = 1
+
+), subscription_with_deployment_type AS (
+  
+    SELECT DISTINCT
+        charges.dim_subscription_id,
+        dim_product_detail.product_delivery_type,
+        dim_product_detail.product_deployment_type
+    FROM charges
+    LEFT JOIN dim_product_detail
+      ON charges.dim_product_detail_id = dim_product_detail.dim_product_detail_id
+    WHERE dim_product_detail.product_deployment_type IN ('Self-Managed', 'Dedicated')
 
 ), zuora_licenses_per_subscription AS (
   
@@ -181,7 +193,10 @@
       location_country.country_name,
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
-      'Self-Managed'                                                               AS delivery_type,
+      COALESCE(monthly_sm_metrics.ping_delivery_type, subscription_with_deployment_type.product_delivery_type, 'Self-Managed')
+                                                                                   AS delivery_type,
+      COALESCE(monthly_sm_metrics.ping_deployment_type, subscription_with_deployment_type.product_deployment_type, 'Self-Managed')
+                                                                                   AS deployment_type,
       monthly_sm_metrics.installation_creation_date,
       -- Wave 1
       DIV0(
@@ -389,6 +404,8 @@
       ON monthly_sm_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
       ON subscriptions.dim_subscription_id = monthly_sm_metrics.dim_subscription_id
+    LEFT JOIN subscription_with_deployment_type
+      ON subscription_with_deployment_type.dim_subscription_id = monthly_sm_metrics.dim_subscription_id
     LEFT JOIN most_recent_subscription_version
       ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
     LEFT JOIN zuora_licenses_per_subscription 
@@ -426,6 +443,7 @@
       NULL                                                                          AS iso_2_country_code,
       NULL                                                                          AS iso_3_country_code,
       'SaaS'                                                                        AS delivery_type,
+      'GitLab.com'                                                                  AS deployment_type,
       NULL                                                                          AS installation_creation_date,
       -- Wave 1
       DIV0(
@@ -696,7 +714,7 @@
         [
           'snapshot_month',
           'dim_subscription_id',
-          'delivery_type',
+          'deployment_type',
           'uuid',
           'hostname',
           'dim_namespace_id'
@@ -709,7 +727,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2021-06-11",
-    updated_date="2023-06-05"
+    updated_date="2023-06-22"
 ) }}

@@ -124,6 +124,8 @@ models:
           description: Sales segment of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: sdr_region
           description: Region of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
+        - name: bdr_prospecting_status
+          description: Indicates whether the account is actively being prospected by a BDR.
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
@@ -135,6 +137,42 @@ models:
           tests:
               - not_null
               - unique
+    - name: rpt_l2r_leading_indicators
+      description: Tableau-specific table that is used to aggregate top KPIS; Inquiries, MQLs, and SAOs, by date and a few dimensions from Lead to Revenue
+      columns:
+        - name: order_type
+          description: The Order Type, applied to the Person (Lead/Contact), through custom logic that looks up Order Type from related opps, and/or Opportunity based on Order Type from that object.
+        - name: sales_segment
+          description: The Sales Segment of the matched Ultimate Parent Account, from the lead/contact/opportunity in Salesforce.
+        - name: geo
+          description: The Geo of the matched Ultimate Parent Account, from the lead/contact/opportunity in Salesforce.
+        - name: parent_crm_account_lam
+          description: The LAM of the ultimate parent account in Salesforce. 
+        - name: parent_crm_account_lam_dev_count
+          description: The LAM developer count of the ultimate parent account in Salesforce. 
+        - name: bizible_marketing_channel
+          description: The Touchpoint Marketing Channel of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_marketing_channel_path
+          description: The Touchpoint Marketing Channel Path of the Bizible Touchpoint in Salesforce. 
+        - name: bizible_medium
+          description: The Touchpoint Medium of the Bizible Touchpoint in Salesforce. 
+        - name: date_day
+          description: The day of the metric's Date. 
+        - name: date_range_week
+          description: The week of the metric's Date. 
+        - name: date_range_month
+          description: The month of the metric's Date. 
+        - name: date_range_quarter
+          description: The quarter of the metric's Date. 
+        - name: date_range_year
+          description: The year of the metric's Date. 
+        - name: inquiries
+          description: The sum of Inquiries by the various dimensions. 
+        - name: mqls
+          description: The sum of MQLs by the various dimensions. 
+        - name: saos
+          description: The sum of SAOs by the various dimensions. 
+
 
     - name: rpt_lead_to_revenue
       description: Maps a person (unconverted lead or a contact) to an opportunity through their associated Salesforce account and connects any of their related touchpoints.
@@ -153,6 +191,10 @@ models:
           description: Unique identifier of a bizible attribution touchpoint from Salesforce.
         - name: dim_crm_opportunity_id
           description: Unique identifier of a crm opportunity from Salesforce.
+        - name: dim_crm_user_id
+          description: Unique identifier for the lead/contact owner from Salesforce. 
+        - name: opp_dim_crm_user_id
+          description: Unique identifier for the opportunity owner from Salesforce. 
         - name: dim_campaign_id
           description: Unique identifier of a crm campaign from Salesforce.
         - name: email_hash
@@ -164,6 +206,8 @@ models:
         - name: true_inquiry_date
           description: The SoT field for Inquiry date on a lead/contact, taken from the Inquiry DateTime field in Salesforce.
         - name: mql_date_first_pt
+          description: The first instance of a MQL date on a lead/contact, from Salesforce. 
+        - name: mql_date_lastest_pt
           description: The SoT field for MQL date on a lead/contact, taken from the Marketo MQL Date field in Salesforce.
         - name: accepted_date
           description: The SoT field for Accepted date on a lead/contact, taken from the Accepted DateTime field in Salesforce.

@@ -24,12 +24,13 @@
     FROM bdg_subscription_product_rate_plan
     LEFT JOIN charges 
       ON charges.dim_subscription_id = bdg_subscription_product_rate_plan.dim_subscription_id
-    WHERE bdg_subscription_product_rate_plan.product_delivery_type = 'SaaS'
+    WHERE bdg_subscription_product_rate_plan.product_deployment_type = 'GitLab.com'
       AND (
         bdg_subscription_product_rate_plan.product_rate_plan_charge_name NOT IN (
           '1,000 CI Minutes',
           'Gitlab Storage 10GB - 1 Year',
-          'Premium Support'
+          'Premium Support',
+          '1,000 Compute Minutes'
         )
         OR charges.charge_type != 'OneTime'
       )
@@ -67,6 +68,8 @@
       {{ get_date_id('saas_usage_ping.ping_date') }}                                    AS ping_created_date_id,
       saas_usage_ping.instance_type,
       saas_usage_ping.included_in_health_measures_str,
+      'SaaS'                                                                            AS ping_delivery_type,
+      'GitLab.com'                                                                      AS ping_deployment_type,
       -- Wave 1
       gitlab_seats.seats                                                                AS subscription_seats,
       gitlab_seats.seats_in_use                                                         AS billable_user_count,
@@ -279,7 +282,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-10-12",
-    updated_date="2023-05-30"
+    updated_date="2023-06-26"
 ) }}

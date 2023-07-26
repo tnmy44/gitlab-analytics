@@ -27,7 +27,6 @@ WITH source AS (
       parent_id::NUMBER                            AS parent_id,
       relative_position::NUMBER                    AS relative_position,
       start_date_sourcing_epic_id::NUMBER          AS start_date_sourcing_epic_id,
-      external_key::VARCHAR                         AS external_key,
       confidential::BOOLEAN                         AS is_confidential,
       {{ map_state_id('state_id') }}                AS state,
       LENGTH(title)::NUMBER                        AS epic_title_length,

@@ -11,5 +11,7 @@ models:
       description: '{{ doc("ptpt_scores_source") }}'
     - name: ptpf_scores_source
       description: '{{ doc("ptpf_scores_source") }}'
+    - name: churn_forecasting_scores_source
+      description: '{{ doc("churn_forecasting_scores_source") }}'
 
 

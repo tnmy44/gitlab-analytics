@@ -8,7 +8,7 @@ from typing import List, Dict
 
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
-DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.27"
+DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.29"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.1"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
@@ -26,7 +26,6 @@ def get_sales_analytics_notebooks(frequency: str) -> Dict:
 
     n = 0
     for file in path.rglob("*.ipynb"):
-
         print(n + 1)
         relative_path = file.relative_to(SALES_ANALYTICS_NOTEBOOKS_PATH)
         notebooks.append(relative_path.as_posix())
@@ -42,7 +41,6 @@ def test_cd_into_local_path():
     notebooks = get_sales_analytics_notebooks(frequency="daily")
     print(notebooks)
     for notebook, task_name in notebooks.items():
-
         if notebook is None:
             break
 

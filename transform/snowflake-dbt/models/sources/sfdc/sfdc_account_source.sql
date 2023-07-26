@@ -74,6 +74,7 @@ renamed AS (
     partner_account_iban_number__c AS partner_account_iban_number,
     partners_partner_type__c AS partner_type,
     partners_partner_status__c AS partner_status,
+    bdr_prospecting_status__c AS bdr_prospecting_status,
     first_order_available__c::BOOLEAN AS is_first_order_available,
     REPLACE(
       zi_technologies__c,
@@ -168,6 +169,7 @@ renamed AS (
     partner_track__c AS partner_track,
     partners_partner_type__c AS partners_partner_type,
     gitlab_partner_programs__c AS gitlab_partner_program,
+    focus_partner__c AS is_focus_partner,
 
     --*************************************
     -- Zoom Info Fields

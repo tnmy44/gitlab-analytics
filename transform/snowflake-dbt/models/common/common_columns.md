@@ -1120,6 +1120,12 @@ Boolean flag set to True if the ping is from a Dedicated implementation
 
 {% enddocs %}
 
+{% docs ping_deployment_type %}
+
+Indicates whether the ping comes from a GitLab.com, SaaS Dedicated or Self-Managed instance.
+
+{% enddocs %}
+
 {% docs raw_usage_data_payload %}
 
 Either the original payload value or a reconstructed value. See https://gitlab.com/gitlab-data/analytics/-/merge_requests/4064/diffs#bc1d7221ae33626053b22854f3ecbbfff3ffe633 for rationale.
@@ -1400,6 +1406,12 @@ Timestamp for the event recorded on the client device.
 {% docs behavior_at %}
 
 Timestamp for when the event actually happened. This appears as `derived_tstamp` in the raw Snowplow data.
+
+{% enddocs %}
+
+{% docs behavior_date %}
+
+The date when the event happened (YYYY-MM-DD)
 
 {% enddocs %}
 
@@ -1832,6 +1844,12 @@ This is the delivery type of GitLab to include either SaaS or Self-Managed.
 
 {% enddocs %}
 
+{% docs product_deployment_type %}
+
+This is the deployment type of GitLab to include either GitLab.com, Dedicated or Self-Managed.
+
+{% enddocs %}
+
 {% docs previous_month_product_delivery_type %}
 
 This is the previous month delivery type. Includes either SaaS or Self-Managed.
@@ -2095,5 +2113,30 @@ A flag to indicate if the plan is a paid plan or not.
 {% docs namespace_has_code_suggestions_enabled %}
 
 Boolean flag set to True if the namespace has code suggestions enabled. This appears as `code_suggestions` in the gitlab.com db `namespace_settings` table.
+
+{% enddocs %}
+
+{% docs intended_product_tier %}
+
+The intended product tier looking to be purchased for this opportunity.
+
+{% enddocs %}
+
+{% docs dim_parent_crm_opportunity_id %}
+
+The Salesforce opportunity ID for the parent opportunity of this opportunity.
+
+{% enddocs %}
+
+
+{% docs dim_namespace_order_trial_sk %}
+
+The surrogate key of `prep_namespace_order_trial` model. Currently identified by hashing the namespace_id field that is being sourced from customers portal at gitlab.com.
+
+{% enddocs %}
+
+{% docs dim_trial_latest_sk %}
+
+The surrogate key of `dim_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
 
 {% enddocs %}

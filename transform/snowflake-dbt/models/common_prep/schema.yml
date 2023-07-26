@@ -1364,6 +1364,10 @@ models:
         description:  '{{ doc("dim_installation_id") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
       - name: original_edition
         description: '{{ doc("original_edition") }}'
       - name: id
@@ -1494,6 +1498,12 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
 
 
   - name: prep_ping_instance_flattened
@@ -1514,6 +1524,8 @@ models:
         description:  '{{ doc("dim_installation_id") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("prep_ping_instance_flattened_uploaded_at") }}'
       - name: ip_address_hash
         description: '{{ doc("ip_address_hash_ping_model") }}'
       - name: license_md5
@@ -1546,8 +1558,16 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: version
+        description: '{{ doc("version_ping_model") }}'
 
   - name: prep_billing_account_user
     description: Zuora Billing users
@@ -1862,6 +1882,8 @@ models:
         description: Team member gitlab username 
       - name: region
         description: Current/latest region the team member resides in
+      - name: team_id
+        description: Identification number of the team to which the particular team member belongs
       - name: hire_date
         description: Most recent hire date. Field is updated if a team member is re-hired after a termination
       - name: termination_date
@@ -1902,6 +1924,10 @@ models:
           masking_policy: analyst_people
       - name: performance_rating 
         description: Masked. Team member performance rating
+        meta:
+          masking_policy: analyst_people
+      - name: employee_type
+        description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
         meta:
           masking_policy: analyst_people
 
@@ -1997,21 +2023,26 @@ models:
             combination_of_columns:
               - employee_id
               - team_id
-              - position_effective_date
-              - position_date_time_initiated
+              - effective_date
     columns:
       - name: dim_team_member_sk
         description: A unique ID for each team member.
         tests:
           - not_null
       - name: dim_team_sk
-        description: A unique ID for each team.
-        tests:
-          - not_null
+        description: A unique ID for each team. This field didn't exist before the move to Workday
       - name: employee_id
         description: Unique ID of the team member.
         tests:
           - not_null
+      - name: manager
+        description: The team member's manager name
+      - name: suporg
+        description: The team member's suporg
+      - name: department
+        description: The team member's department
+      - name: division
+        description: The team member's division
       - name: job_code
         description: The code of the team member's job position.
       - name: job_specialty_single
@@ -2034,8 +2065,6 @@ models:
         description: Whether the team member's job position is active.
       - name: is_current
         description: Whether the team member's job position is the most current as of the date the query is run.
-      - name: position_date_time_initiated
-        description: The date when the team member's position update was requested 
       - name: position_effective_date
         description: The date when the team member's position update becomes effective
 
@@ -2104,3 +2133,34 @@ models:
       - name: valid_to
         tests: 
           - not_null
+ 
+  - name: prep_namespace_order_trial
+    description: '{{ doc("prep_namespace_order_trial") }}'
+    columns:
+      - name: dim_namespace_order_trial_sk
+        description: '{{ doc("dim_namespace_order_trial_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: dim_namespace_id
+        description: The unique ID of the namespace related to the trial.
+      - name: order_start_date
+        description: The date when the trial period of the order begins
+      - name: order_end_date
+        description: The date when the trial period of the order ends
+      - name: order_created_at
+      - name: order_updated_at
+      - name: glm_source
+      - name: glm_content
+      - name: trial_entity
+        description: Can contain values of company or individial
+      - name: record_source
+        decsription: Identifies the source of the record - values include trial_histories or orders
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'

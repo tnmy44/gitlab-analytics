@@ -16,7 +16,6 @@ tables:
       SELECT id
       , status
       , finished_at
-      , NULL AS trace
       , created_at
       , updated_at
       , started_at
@@ -33,15 +32,12 @@ tables:
       , ref
       , user_id
       , type
-      , target_url
       , description
       , project_id
       , erased_by_id
       , erased_at
       , CASE WHEN artifacts_expire_at > '2262-01-01' THEN '2262-01-01' ELSE artifacts_expire_at END AS artifacts_expire_at
       , environment
-      , "when"
-      , yaml_variables
       , queued_at
       , lock_version
       , coverage_regex
@@ -85,9 +81,9 @@ tables:
       , type
       , created_at
       , created_by_id
-      , invite_email
+      , NULL AS invite_email
       , invite_accepted_at
-      , invite_token
+      , NULL AS invite_token
       , requested_at
       , CASE WHEN expires_at > '2262-01-01' THEN '2262-01-01' ELSE expires_at END AS expires_at
       , ldap

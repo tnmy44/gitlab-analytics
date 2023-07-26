@@ -21,7 +21,7 @@
       dim_product_tier_id,
       product_tier_name
     FROM product_details
-    WHERE product_delivery_type = 'SaaS'
+    WHERE product_deployment_type = 'GitLab.com'
 
 ), saas_subscriptions AS (
 
@@ -30,7 +30,7 @@
       product_rate_plan_id,
       dim_product_tier_id
     FROM subscription_delivery_types
-    WHERE product_delivery_type = 'SaaS'
+    WHERE product_deployment_type = 'GitLab.com'
 
 ), trial_tiers AS (
 
@@ -48,7 +48,7 @@
     INNER JOIN product_details
       ON fct_mrr_with_zero_dollar_charges.dim_product_detail_id = product_details.dim_product_detail_id
     WHERE fct_mrr_with_zero_dollar_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
-      AND product_details.product_delivery_type = 'SaaS'
+      AND product_details.product_deployment_type = 'GitLab.com'
       AND subscription_status IN ('Active', 'Cancelled')
 
 ), namespace_list AS (
@@ -269,7 +269,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-06-02",
-    updated_date="2022-04-04"
+    updated_date="2022-06-22"
 ) }}

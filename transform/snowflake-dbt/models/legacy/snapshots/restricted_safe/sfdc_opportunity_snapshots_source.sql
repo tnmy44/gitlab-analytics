@@ -242,6 +242,7 @@ WITH source AS (
         vartopiadrs__dr_status1__c                                                          AS dr_status,
         distributor__c                                                                      AS distributor,
         influence_partner__c                                                                AS influence_partner,
+        focus_partner__c                                                                    AS is_focus_partner,
         fulfillment_partner__c                                                              AS fulfillment_partner,
         platform_partner__c                                                                 AS platform_partner,
         partner_track__c                                                                    AS partner_track,
@@ -303,6 +304,10 @@ WITH source AS (
         arr_basis_for_clari__c                          AS arr_basis_for_clari,
         forecasted_churn_for_clari__c                   AS forecasted_churn_for_clari,
         override_arr_basis_clari__c                     AS override_arr_basis_clari,
+
+        -- ps fields - original issue: https://gitlab.com/gitlab-com/sales-team/field-operations/customer-success-operations/-/issues/2723
+        intended_product_tier__c                        AS intended_product_tier,
+        parent_opportunity__c                           AS parent_opportunity_id,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',

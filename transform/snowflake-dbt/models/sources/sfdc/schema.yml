@@ -169,6 +169,8 @@ models:
       - name: risk_reason
       - name: last_timeline_at_risk_update
       - name: last_at_risk_update_comments
+      - name: bdr_prospecting_status
+        description: Indicates whether the account is actively being prospected by a BDR.
 
   - name: sfdc_account_history_source
     description: Source model for SFDC Account History
@@ -223,6 +225,8 @@ models:
         tests:
           - not_null
           - unique
+      - name: campaign_member_status
+        description: Status of the campaign member response. 
   - name: sfdc_case_source
     description: Source model for SFDC Case
     columns:
@@ -262,6 +266,8 @@ models:
         description: The state or province of the company matched by the Zoom Info enrichment process.
       - name: zoominfo_company_country
         description: The country of the company matched by the Zoom Info enrichment process.
+      - name: is_high_priority
+        description: Indicates whether the record is of high priority to contact by sales. 
   - name: sfdc_contact_history_source
     description: Source model for SFDC Contacts History
     columns:
@@ -347,6 +353,10 @@ models:
         description: The city of the company matched by the Zoom Info enrichment process.
       - name: zoominfo_company_industry
         description: The industry of the company matched by the Zoom Info enrichment process.
+      - name: matched_account_bdr_prospecting_status
+        description: Indicates whether the account of the lead record is actively being prospected by a BDR.
+      - name: is_high_priority
+        description: Indicates whether the record is of high priority to contact by sales. 
   - name: sfdc_lead_history_source
     description: Source model for SFDC Leads History
     columns:

@@ -49,14 +49,14 @@ In doing so exceptions are noted within `namespace_order_subscription_match_stat
 
 {% docs bdg_self_managed_order_subscription %}
 
-The purpose of this table to connect Order IDs from Customer DB to Subscription for Self-Managed purchases. This table expands the functionality of the subscriptions by improving the join to orders. Subscriptions listed in this table are all Self-Managed (determined by the `product_rate_plan_id` from `zuora_rate_plan_source`) and the `is_active_subscription` column can be used to filter to subscription that are currently active (status is Active or Cancelled with a recurring charge in the current month). Orders in this table are all Self-Managed (determined by the `product_rate_plan_id` from `customers_db_orders_source`) and the `is_active_order` column can be used to filter to orders that are currently active (`order_end_date` is NULL or greater than the date that this table was refreshed).
+The purpose of this table to connect Order IDs from Customer DB to Subscription for Self-Managed and SaaS Dedicated purchases. This table expands the functionality of the subscriptions by improving the join to orders. Subscriptions listed in this table are all Self-Managed (determined by the `product_rate_plan_id` from `zuora_rate_plan_source`) and the `is_active_subscription` column can be used to filter to subscription that are currently active (status is Active or Cancelled with a recurring charge in the current month). Orders in this table are all Self-Managed (determined by the `product_rate_plan_id` from `customers_db_orders_source`) and the `is_active_order` column can be used to filter to orders that are currently active (`order_end_date` is NULL or greater than the date that this table was refreshed).
 
 The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three parts of the Venn diagram (orders, subscriptions, and the overlap between the two).In doing so exceptions are noted within `order_subscription_match_status` to identify rows that do not match between systems.
 
 {% enddocs %}
 
 {% docs bdg_subscription_product_rate_plan %}
-The goal of this table is to build a bridge from the entire "universe" of subscriptions in Zuora (`zuora_subscription_source` without any filters applied) to all of the [product rate plans](https://www.zuora.com/developer/api-reference/#tag/Product-Rate-Plan) to which those subscriptions are mapped. This provides the ability to filter subscriptions by delivery type ('SaaS' or 'Self-Managed').
+The goal of this table is to build a bridge from the entire "universe" of subscriptions in Zuora (`zuora_subscription_source` without any filters applied) to all of the [product rate plans](https://www.zuora.com/developer/api-reference/#tag/Product-Rate-Plan) to which those subscriptions are mapped. This provides the ability to filter subscriptions by delivery type ('SaaS' or 'Self-Managed') and deployment_type ('GitLab.com', 'Dedicated' or 'Self-Managed').
 
 {% enddocs %}
 
@@ -478,11 +478,13 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs fct_saas_product_usage_metrics_monthly %}
-This table builds on the set of all Zuora subscriptions that are associated with a **SaaS** rate plans. Historical namespace seat charges and billable user data (`gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base`) are combined with high priority Usage Ping metrics (`prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table. Only the most recently collected namespace "Usage Ping" and membership data per `dim_subscription_id` each month are reported in this table.
+This table builds on the set of all Zuora subscriptions that are associated with a **SaaS GitLab.com** rate plans. Historical namespace seat charges and billable user data (`gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base`) are combined with high priority Usage Ping metrics (`prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table. Only the most recently collected namespace "Usage Ping" and membership data per `dim_subscription_id` each month are reported in this table.
 
 The data from this table will be used to create a mart table (`mart_saas_product_usage_monthly`) for Gainsight Customer Product Insights.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+**Note**: This model DOES NOT include data from SaaS Dedicated instances, as the grain of the data is different (namespace_id vs instance_id). From a data perspective, SaaS Dedicated, is more closely related to Self-Managed data. 
 
 {% enddocs %}
 
@@ -1400,14 +1402,14 @@ Example: `pi_monthly_estimated_targets`: `{"2022-02-28":1000,"2022-03-31":2000,"
 
 {% docs fct_ping_instance_metric_wave %}
 
-The purpose of this data model is to identify the service pings that can be mapped to a subscription and to pivot thet set of [wave metrics required for Gainsight](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/ping_instance_wave_metrics.sql) from the `fct_ping_instance_metric` model, strip all the sensitive data out, and then report one value for each metric in that column.
+The purpose of this data model is to identify the service pings, from Self-Managed and SaaS Dedicated, that can be mapped to a subscription and to pivot thet set of [wave metrics required for Gainsight](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/ping_instance_wave_metrics.sql) from the `fct_ping_instance_metric` model, strip all the sensitive data out, and then report one value for each metric in that column.
 
 {% enddocs %}
 
 
 {% docs fct_ping_instance_metric_wave_monthly %}
 
-This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB (`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`fct_ping_instance_metric_wave`) to build out the set of facts included in this table.
+This table builds on the set of all Zuora subscriptions that are associated with **Self-Managed**  or **SaaS Dedicated** rate plans. Seat Link data from Customers DB (`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`fct_ping_instance_metric_wave`) to build out the set of facts included in this table.
 
 The grain of this table is `hostname` per `dim_instance_id(uuid)` per `dim_subscription_id` per `snapshot_month`. Since there are Self-Managed subscriptions that do not send Usage Ping payloads, it is possible for `dim_instance_id` and `hostname` to be null.
 
@@ -1459,7 +1461,7 @@ Fact model of all [Salesforce Tasks](https://help.salesforce.com/s/articleView?i
 
 {% docs fct_ping_instance_free_user_metrics %}
 
-Table containing **free** Self-Managed users in preparation for free user service ping metrics fact table.
+Table containing **free** Self-Managed and SaaS Dedicated users in preparation for free user service ping metrics fact table.
 
 The grain of this table is one row per uuid-hostname combination per month.
 
@@ -1758,14 +1760,11 @@ The reason why the date and time when the change was initiated was added to the 
 
 {% enddocs %}
 
-
-
 {% docs fct_team_member_status %}
 
 This table contains the termination reason, type, exit impact and employment_status. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. This table contains only past terminations. Future terminations are not included at this time. We will evaluate the possibility of making future terminations available to people with the analyst_people role in a future iteration. The grain of this table is one row per employee_id, employment_status and status_effective_date combination.
 
 {% enddocs %}
-
 
 {% docs fct_team_status %}
 
@@ -1774,5 +1773,19 @@ This table is a derived fact from fct_team_member_status and fct_team_member_pos
 This table only contains one change in the team member's position per effective date, as opposed to the fct_team_member_position table which contains all changes to a team member's position profile, regardless of whether they became effective or not. This table doesn't include future hires, only people working at GitLab as of today's date.
 
 The grain of this table is one row per employee_id and valid_from combination
+
+{% enddocs %}
+
+{% docs dim_trial_latest %}
+
+This table summarizes all the trials Orders information for a specific namespace.
+
+We utilize the `customers_db_orders_snapshots_base` model in order to isolate/filter out all the trials. 
+
+This model does the following:
+
+* It isolates the orders that are flagged with the column `is_trial = TRUE`
+* It deduplicates by taking the latest row created for a specific `gitlab_namespace_id`
+* We can join this model with `customers_db_customers` in the downstream models in order to get information about country, company_size of the User who started the trial
 
 {% enddocs %}

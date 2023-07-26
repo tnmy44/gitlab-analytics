@@ -63,7 +63,7 @@
 
     SELECT
       {{ dbt_utils.surrogate_key(['date_day', 'kpi_name', 'crm_user_sales_segment', 'crm_user_geo', 'crm_user_region',
-        'crm_user_area', 'order_type_name', 'alliance_type_name', 'sales_qualified_source_name', 'crm_user_business_unit']) }}    AS primary_key,
+        'crm_user_area', 'order_type_name', 'alliance_type_name', 'sales_qualified_source_name', 'crm_user_business_unit', 'partner_category_name']) }}    AS primary_key,
       date_day                                                                                                                    AS target_date,
       DATEADD('day', 1, target_date)                                                                                              AS report_target_date,
       first_day_of_week,
@@ -110,5 +110,5 @@
     created_by="@jpeguero",
     updated_by="@michellecooper",
     created_date="2021-04-08",
-    updated_date="2023-03-17",
+    updated_date="2023-07-12",
   ) }}

@@ -22,7 +22,7 @@
   FROM 
   dim_date
   WHERE 
-  day_of_fiscal_quarter_normalised = 90 AND date_day BETWEEN '2023-01-31' AND CURRENT_DATE
+  (day_of_fiscal_quarter_normalised = 90 or date_day = CURRENT_DATE-2) AND date_day BETWEEN '2023-01-31' AND CURRENT_DATE
     ORDER BY 1 DESC
 
 
@@ -104,6 +104,8 @@
     wk_sales_sfdc_opportunity_snapshot_history_xf.net_arr_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf.close_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_date AS opportunity_snapshot_date,
+    dim_date.day_of_fiscal_quarter_normalised as pipeline_created_day_of_fiscal_quarter_normalised,
+    dim_date.day_of_fiscal_year_normalised as pipeline_created_day_of_fiscal_year_normalised,
 
 --User Hierarchy
     wk_sales_sfdc_opportunity_snapshot_history_xf.report_opportunity_user_segment,
@@ -157,6 +159,7 @@
 
   FROM wk_sales_sfdc_opportunity_snapshot_history_xf
   INNER JOIN snapshot_dates ON wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_date = snapshot_dates.date_day
+  LEFT JOIN dim_date on wk_sales_sfdc_opportunity_snapshot_history_xf.pipeline_created_date = dim_date.date_day 
   WHERE snapshot_dates.fiscal_quarter_name_fy = pipeline_created_fiscal_quarter_name
 
 ), 
@@ -177,6 +180,8 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_fiscal_quarter_name,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_fiscal_year,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_day_of_fiscal_quarter_normalised,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_day_of_fiscal_year_normalised,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.net_arr_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.close_date,
     attribution_touchpoint_snapshot_base.bizible_touchpoint_date,
@@ -287,6 +292,8 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_fiscal_quarter_name,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_fiscal_year,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_day_of_fiscal_quarter_normalised,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_day_of_fiscal_year_normalised,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.net_arr_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.close_date,
     NULL AS bizible_touchpoint_date,
