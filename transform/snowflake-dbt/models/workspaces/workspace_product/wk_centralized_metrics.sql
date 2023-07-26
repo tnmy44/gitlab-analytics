@@ -115,7 +115,7 @@ FROM service_ping_with_estimate)
 ), results AS (
 
 SELECT 
-  {{ dbt_utils.surrogate_key(['service_ping_gitlab_dotcom_unioned.reporting_month', 'service_ping_gitlab_dotcom_unioned.event_name', 'service_ping_gitlab_dotcom_unioned.product_tier','service_ping_gitlab_dotcom_unioned.breakdown']) }}       
+  {{ dbt_utils.surrogate_key(['service_ping_gitlab_dotcom_unioned.reporting_month', 'service_ping_gitlab_dotcom_unioned.metric', 'service_ping_gitlab_dotcom_unioned.product_tier','service_ping_gitlab_dotcom_unioned.breakdown']) }}       
                                                AS event_namespace_monthly_pk,  
   *,
   LAG(mau_value,12) OVER (PARTITION BY
