@@ -8,13 +8,15 @@ from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
 )
 
-# methods 
+# methods
+
 
 def rename_file(name: str) -> str:
 
     new_name = name.replace("/", "_")
 
     return new_name
+
 
 def extract_files_from_oci(config, reporting_namespace, file_prefix, destination_path):
     info
@@ -33,7 +35,10 @@ def extract_files_from_oci(config, reporting_namespace, file_prefix, destination
         prefix=prefix_file,
     )
 
-    oci_extraction = {}
+    oci_extraction = {
+        "oci_cost_report": [],
+        "oci_usage_report": [],
+    }
 
     for o in report_bucket_objects.data.objects:
 
@@ -42,21 +47,20 @@ def extract_files_from_oci(config, reporting_namespace, file_prefix, destination
         )
         filename = rename_file(o.name)
         info(f"Found extracted file: {filename}")
-    
-        if "cost" in filename:
-            target_table = "oci_cost_report"
-        elif "usage" in filename:
-            target_table = "oci_usage_report"
 
         with open(destination_path + "/" + filename, "wb") as f:
             for chunk in object_details.data.raw.stream(
                 1024 * 1024, decode_content=False
             ):
                 f.write(chunk)
-    
-        oci_extraction[target_table].append(filename)
+
+        if "cost" in filename:
+            oci_extraction["oci_cost_report"].append(filename)
+        elif "usage" in filename:
+            oci_extraction["oci_usage_report"].append(filename)
 
     return oci_extraction
+
 
 def snowflake_copy_staged_files_into_table(
     file: str,
@@ -99,6 +103,7 @@ def snowflake_copy_staged_files_into_table(
     finally:
         connection.close()
 
+
 def snowflake_stage_put_copy_files(
     file_list: list,
     stage: str,
@@ -119,20 +124,14 @@ def snowflake_stage_put_copy_files(
         info(f"found staged files: {staged_files}")
         new_files = [file for file in file_list if file not in staged_files]
         info(f"puting files: {staged_files} into stage: {stage}")
-        loaded_files =[]
+        loaded_files = []
         for file in new_files:
             put_query = f"put 'file://{file}' @{stage} auto_compress=true;"
-            
+
             connection.execute(put_query)
-            
+
             snowflake_copy_staged_files_into_table(
-                file,
-                stage,
-                table_path,
-                engine,
-                type,
-                on_error,
-                file_format_options
+                file, stage, table_path, engine, type, on_error, file_format_options
             )
 
             info(f"File {file} loaded to table {table_path}")
@@ -141,6 +140,7 @@ def snowflake_stage_put_copy_files(
         connection.close()
         engine.dispose()
         engine.dispose()
+
 
 # snowflake config
 snowflake_config_dict = os.environ.copy()
@@ -164,7 +164,9 @@ destination_path = "oci_report"
 
 def load_data():
     info("running oci extraction")
-    oci_extraction = extract_files_from_oci(oci_config, reporting_namespace, prefix_file, destination_path)
+    oci_extraction = extract_files_from_oci(
+        oci_config, reporting_namespace, prefix_file, destination_path
+    )
 
     for item in oci_extraction.items():
         target_table = item[0]
