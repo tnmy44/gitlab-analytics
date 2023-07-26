@@ -17,8 +17,7 @@ def rename_file(name: str) -> str:
     return new_name
 
 def extract_files_from_oci(config, reporting_namespace, file_prefix, destination_path):
-
-    basicConfig(stream=sys.stdout, level=20)
+    info
 
     # Make a directory to receive reports
     if not os.path.exists(destination_path):
@@ -90,8 +89,6 @@ def snowflake_copy_staged_files_into_table(
                          on_error='{on_error}';
                         """
 
-    basicConfig(stream=sys.stdout, level=20)
-
     try:
         connection = engine.connect()
 
@@ -113,7 +110,7 @@ def snowflake_stage_put_copy_files(
 ) -> None:
 
     list_query = f"list @{stage}"
-    basicConfig(stream=sys.stdout, level=20)
+
     info(f"checking for the following files: {file_list}")
     try:
         connection = engine.connect()
@@ -166,14 +163,13 @@ destination_path = "oci_report"
 
 
 def load_data():
-    basicConfig(stream=sys.stdout, level=20)
-
+    info("running oci extraction")
     oci_extraction = extract_files_from_oci(oci_config, reporting_namespace, prefix_file, destination_path)
 
     for item in oci_extraction.items():
         target_table = item[0]
         oci_files = item[1]
-
+        info(f"loading files {oci_files} into table: {target_table}")
         snowflake_stage_put_copy_files(
             oci_files,
             "test.oci_report",
