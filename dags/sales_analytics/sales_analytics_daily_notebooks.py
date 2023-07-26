@@ -57,8 +57,6 @@ dag = DAG(
 
 notebooks = get_sales_analytics_notebooks(frequency="daily")
 
-SALES_ANALYTICS_NOTEBOOKS_PATH = f"{REPO_BASE_PATH}/sales_analytics_notebooks"
-
 # Task 1
 start = DummyOperator(task_id="Start", dag=dag)
 
