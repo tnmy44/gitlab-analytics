@@ -71,10 +71,10 @@
   
   SELECT DISTINCT
 
-    trials.order_id                                                                                             AS dim_order_id, 
+    trials.order_id                                                                                             AS internal_order_id, --Specific to Customer Dot Orders and can only be joined to CDot Orders
     trials.gitlab_namespace_id                                                                                  AS dim_namespace_id,
-    trials.product_rate_plan_id                                                                                 AS dim_product_rate_plan_id,
-    customers.customer_id                                                                                       AS customer_id,
+    trials.product_rate_plan_id                                                                                 AS product_rate_plan_id,
+    customers.customer_id                                                                                       AS internal_customer_id, --Specific to Customer Dot Customers and can only be joined to CDot Customers
     users.user_id                                                                                               AS user_id,                                                                                         
     IFF(users.user_id IS NOT NULL, TRUE, FALSE)                                                                 AS is_gitlab_user,
     users.created_at                                                                                            AS user_created_at,
@@ -108,15 +108,15 @@
 
   SELECT 
    --Primary Key-- 
-     {{ dbt_utils.surrogate_key(['joined.dim_order_id', 'joined.dim_namespace_id', 'joined.subscription_name', 'joined.order_updated_at']) }} AS trial_pk,
+     {{ dbt_utils.surrogate_key(['joined.internal_order_id', 'joined.dim_namespace_id', 'joined.subscription_name', 'joined.order_updated_at']) }} AS trial_pk,
 
    --Natural Key--
-    joined.dim_order_id, 
+    joined.internal_order_id, 
 
     --Foreign Keys--
     joined.dim_namespace_id,
-    joined.dim_product_rate_plan_id,
-    joined.customer_id,
+    joined.product_rate_plan_id,
+    joined.internal_customer_id,
     joined.user_id,
        
     --Other Attributes                                                                                           

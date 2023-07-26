@@ -1798,7 +1798,7 @@ This model collects all trials that start from the subscription portal. For this
 * It isolates the orders that are flagged with the column `is_trial = TRUE`
 * It joins with customers, users and namespaces. 
 
-Finally, this model identifies if a trial has been converted or not. To achieve that, we join the trials to the `order_snapshots` selecting only orders that converted to subscription after the trial starting date (an example has been provided below). We exclude ci_minutes/compute_minutes orders from the `order_snapshots`.   
+Finally, this model identifies if a trial has been converted or not. To achieve that, we join the trials to the `order_snapshots` by selecting only the orders that converted to subscription after the trial starting date (an example has been provided below). We exclude ci_minutes/compute_minutes orders from the `order_snapshots`.   
 
 In order to identify which subscriptions are actually valid and not refunded, we join to `zuora_rate_plan` and `zuora_base_mrr` models to filter out subscriptions that have (mrr <= 0 and tcv <=0). In this case, we also filter out those subscriptions that are cancelled instantly or fully refunded after a certain period.
 
@@ -1822,11 +1822,11 @@ This order exemplifies perfectly what is happening in the table `customers_db_or
 
 {% docs fct_trial_first %}
 
-This model is a derived fact table that is built using the `fct_trial` model, which contains all trials that start from the subscription portal. This model additionally deduplicates by taking the first row that was created for customers, namespaces and users based on the `order_updated_at` column. 
+This model is a derived fact table that is built using the `fct_trial` model, which contains all trial orders that start from the subscription portal. This model additionally deduplicates by taking the first row that was created for customers, namespaces and users based on the `order_updated_at` column. 
 
-The grain of this model is `order per namespace`. 
+The grain of this model is `trial order per namespace`. 
 
-This model identifies if a trial has been converted or not. We exclude ci_minutes/compute_minutes orders from this model. 
+This model identifies if a trial order has been converted or not. We exclude ci_minutes/compute_minutes orders from this model. 
 
 Finally, only valid subscriptions that are not refunded are identified by filtering out subscriptions that have (mrr <= 0 and tcv <=0). The subscriptions that are cancelled instantly or fully refunded after a certain period are excluded. 
 
@@ -1838,9 +1838,9 @@ The `customers_db_orders_snapshots_base` model has reliable data from the 1st of
 
 {% docs fct_trial_latest %}
 
-This model captures the latest trials information for a specific namespace. 
+This model captures information about the latest trial Orders for a specific namespace. 
 
-The grain of this model is `namespace_id`.
+The grain of this model is `trial order per namespace`.
 
 ## Context
 
