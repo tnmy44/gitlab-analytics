@@ -60,7 +60,7 @@
     CASE
         WHEN person_base.is_first_order_person = TRUE 
           THEN '1. New - First Order'
-        ELSE ' 3. Growth'
+        ELSE '3. Growth'
       END AS person_order_type,
 
 
