@@ -325,8 +325,7 @@ clone_repo_cmd = f"""
     cd analytics &&
     git checkout $GIT_COMMIT &&
     cd ..
-    ls 
-    cd .. 
+    cd analytics/ 
     ls """
 
 clone_repo_sha_cmd = f"""
