@@ -6,15 +6,15 @@ Closes
 
 #### Steps Taken to Test
 
-* Run the `clone_raw_postgres_pipeline` CI job
+* Run the ❄️`Snowflake` -> [clone_raw_postgres_pipeline](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#clone_raw_postgres_pipeline) CI job
 * Run one of this pipeline. Depends on the file you changed, you should run either:
-    * [ ] `Extract` -> [pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#pgp_test) if one of this file(s) is changed:
+    * [ ] 🚂`Extract` -> [pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#pgp_test) if one of this file(s) is changed:
         * `el_customers_scd_db_manifest.yaml`
         * `el_gitlab_com_ci_db_manifest.yaml`
         * `el_gitlab_com_ci_scd_db_manifest.yaml`
         * `el_gitlab_com_db_manifest.yaml`
         * `el_gitlab_com_scd_db_manifest.yaml` 
-    * [ ] `Extract` -> [gitlab_ops_pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#gitlab_ops_pgp_test) if one of this file(s) is changed: 
+    * [ ] 🚂`Extract` -> [gitlab_ops_pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#gitlab_ops_pgp_test) if one of this file(s) is changed: 
         * `el_gitlab_ops_db_manifest.yaml`
         * `el_gitlab_ops_scd_db_manifest.yaml`
  
