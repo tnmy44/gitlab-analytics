@@ -8,8 +8,8 @@ models:
         tests:
           - not_null
           - unique:
-            config:
-              where: "export_time >= DATEADD('day',-3,CURRENT_DATE())"
+              config:
+                where: "export_time >= DATEADD('day',-3,CURRENT_DATE())"
       - name: billing_account_id
         tests:
           - not_null

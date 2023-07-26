@@ -97,8 +97,8 @@ models:
         tests:
           - not_null
           - unique:
-            config:
-              where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: item_id
         description: Line if for item
         tags:

@@ -25,8 +25,8 @@ models:
           tests:
             - not_null
             - unique:
-            config:
-              where: "ping_date >= DATEADD('day',-3,CURRENT_DATE())"
+                config:
+                  where: "ping_date >= DATEADD('day',-3,CURRENT_DATE())"
     - name: instance_combined_metrics
       tags: ["product", "service_ping"]
       description: '{{ doc("instance_combined_metrics") }}'
