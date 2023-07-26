@@ -57,13 +57,13 @@ dag = DAG(
 
 notebooks = get_sales_analytics_notebooks(frequency="daily")
 
-SALES_ANALYTICS_NOTEBOOKS_PATH = f"{REPO_BASE_PATH}/sales_analytics_notebooks"
+CLONED_SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
 
 # Task 1
 start = DummyOperator(task_id="Start", dag=dag)
 
 for notebook, task_name in notebooks.items():
-    absolute_path = pathlib.Path(SALES_ANALYTICS_NOTEBOOKS_PATH) / notebook
+    absolute_path = pathlib.Path(CLONED_SALES_ANALYTICS_NOTEBOOKS_PATH) / notebook
     notebook_parent = absolute_path.parent.as_posix()
     notebook_filename = absolute_path.name
 
