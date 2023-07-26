@@ -324,7 +324,10 @@ clone_repo_cmd = f"""
     echo "checking out commit $GIT_COMMIT" &&
     cd analytics &&
     git checkout $GIT_COMMIT &&
-    cd .."""
+    cd ..
+    ls 
+    cd .. 
+    ls """
 
 clone_repo_sha_cmd = f"""
     {data_test_ssh_key_cmd} &&
