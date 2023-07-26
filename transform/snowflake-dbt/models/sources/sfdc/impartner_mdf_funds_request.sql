@@ -1,6 +1,3 @@
-{{ config(
-    tags=["mnpi"]
-) }}
 
 WITH source AS (
 
