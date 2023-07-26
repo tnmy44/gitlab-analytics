@@ -18,6 +18,8 @@ def rename_file(name: str) -> str:
 
 def extract_files_from_oci(config, reporting_namespace, file_prefix, destination_path):
 
+    basicConfig(stream=sys.stdout, level=20)
+
     # Make a directory to receive reports
     if not os.path.exists(destination_path):
         os.mkdir(destination_path)
@@ -164,6 +166,7 @@ destination_path = "oci_report"
 
 
 def load_data():
+    basicConfig(stream=sys.stdout, level=20)
 
     oci_extraction = extract_files_from_oci(oci_config, reporting_namespace, prefix_file, destination_path)
 
