@@ -373,7 +373,7 @@
       source_buckets,
       true_inquiry_date,
       mql_date_first_pt,
-      mql_date_lastest_pt,
+      mql_date_latest_pt,
       accepted_date,
       status,
       lead_source,
@@ -567,7 +567,7 @@
   LEFT JOIN dim_date AS inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date AS mql_date
-    ON cohort_base_combined.mql_date_lastest_pt = mql_date.date_day
+    ON cohort_base_combined.mql_date_latest_pt = mql_date.date_day
   LEFT JOIN dim_date AS opp_create_date
     ON cohort_base_combined.opp_created_date = opp_create_date.date_day
   LEFT JOIN dim_date AS sao_date
@@ -589,5 +589,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-07-25",
+    updated_date="2023-07-26",
   ) }}
