@@ -15,7 +15,7 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     slack_failed_task,
     clone_repo_cmd,
-    SALES_ANALYTICS_NOTEBOOKS_PATH,
+    REPO_BASE_PATH,
     get_sales_analytics_notebooks,
 )
 from kube_secrets import (
@@ -56,6 +56,8 @@ dag = DAG(
 )
 
 notebooks = get_sales_analytics_notebooks(frequency="daily")
+
+SALES_ANALYTICS_NOTEBOOKS_PATH = f"{REPO_BASE_PATH}/sales_analytics_notebooks"
 
 # Task 1
 start = DummyOperator(task_id="Start", dag=dag)
