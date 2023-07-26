@@ -17,6 +17,7 @@ from airflow_utils import (
     clone_repo_cmd,
     REPO_BASE_PATH,
     get_sales_analytics_notebooks,
+    SALES_ANALYTICS_NOTEBOOKS_PATH
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
