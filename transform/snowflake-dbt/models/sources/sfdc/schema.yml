@@ -593,3 +593,7 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: sfdc_impartner_mdf_funds_request_source
+  
+  - name: sfdc_impartner_mdf_funds_claim_source
