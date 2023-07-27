@@ -1,8 +1,6 @@
 import logging
 import sys
 import os
-from time import time
-from typing import Dict
 import sqlalchemy
 from sqlalchemy.engine.base import Engine
 from sqlalchemy import create_engine
@@ -11,6 +9,11 @@ import fire
 
 
 def check_snapshot_replica(source_engine: Engine) -> None:
+    """
+    The check replica snapshot is done by checking the last replay timestamp and current of the postgres database(main or ci).
+    If the replay timestamp is not null, the snapshot is successfully restored or else we would need to inspect the data-server-rebuild-ansible pipelines.
+    """
+
     current_date_check_query = "SELECT CURRENT_DATE;"
     pg_current_date_timestamp = query_executor(source_engine, current_date_check_query)[
         0
@@ -35,6 +38,9 @@ def check_snapshot_replica(source_engine: Engine) -> None:
 
 
 def check_snapshot_ci() -> None:
+    """
+    The check snapshot ci method is used to establish connectivity to the database.
+    """
     config_dict = os.environ.copy()
     database = config_dict.get("GITLAB_COM_CI_DB_NAME")
     host = config_dict.get("GITLAB_COM_CI_DB_HOST")
@@ -52,6 +58,9 @@ def check_snapshot_ci() -> None:
 
 
 def check_snapshot_main_db_incremental() -> None:
+    """
+    The check snapshot main db incremental method is used to establish connectivity to the database.
+    """
     config_dict = os.environ.copy()
     database = config_dict.get("GITLAB_COM_DB_NAME")
     host = config_dict.get("GITLAB_COM_DB_HOST")
@@ -69,6 +78,9 @@ def check_snapshot_main_db_incremental() -> None:
 
 
 def check_snapshot_gitlab_dotcom_scd() -> None:
+    """
+    The check snapshot main db scd method is used to establish connectivity to the database.
+    """
     config_dict = os.environ.copy()
     database = config_dict.get("GITLAB_COM_DB_NAME")
     host = config_dict.get("GITLAB_COM_DB_HOST")
