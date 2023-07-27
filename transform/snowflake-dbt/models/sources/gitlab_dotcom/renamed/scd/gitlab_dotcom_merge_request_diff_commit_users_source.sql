@@ -11,7 +11,8 @@ renamed AS (
   SELECT
     id,
     name,
-    email AS email
+    email,
+    _uploaded_at
   FROM source
 
 )
