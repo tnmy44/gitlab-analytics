@@ -324,8 +324,8 @@ for source_name, config in config_dict.items():
             check_replica_snapshot = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DATA_IMAGE,
-                task_id=f"check_replica_snapshot",
-                name=f"check_replica_snapshot",
+                task_id="check_replica_snapshot",
+                name="check_replica_snapshot",
                 secrets=[
                     GITLAB_COM_CI_DB_NAME,
                     GITLAB_COM_CI_DB_HOST,
@@ -410,8 +410,8 @@ for source_name, config in config_dict.items():
                 check_replica_snapshot_backfill = KubernetesPodOperator(
                     **gitlab_defaults,
                     image=DATA_IMAGE,
-                    task_id=f"check_replica_snapshot",
-                    name=f"check_replica_snapshot",
+                    task_id="check_replica_snapshot",
+                    name="check_replica_snapshot",
                     secrets=[
                         GITLAB_COM_CI_DB_NAME,
                         GITLAB_COM_CI_DB_HOST,
@@ -512,8 +512,8 @@ for source_name, config in config_dict.items():
                 check_replica_snapshot_scd = KubernetesPodOperator(
                     **gitlab_defaults,
                     image=DATA_IMAGE,
-                    task_id=f"check_replica_snapshot",
-                    name=f"check_replica_snapshot",
+                    task_id="check_replica_snapshot",
+                    name="check_replica_snapshot",
                     secrets=[
                         GITLAB_COM_CI_DB_NAME,
                         GITLAB_COM_CI_DB_HOST,
