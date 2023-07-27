@@ -595,5 +595,7 @@ models:
           - unique
 
   - name: sfdc_impartner_mdf_funds_request_source
+    description: Source model for SFDC custom object from impartner with parter MDF fund requests
   
   - name: sfdc_impartner_mdf_funds_claim_source
+    description: Source model for SFDC custom object from impartner with parter MDF fund claims after requests
