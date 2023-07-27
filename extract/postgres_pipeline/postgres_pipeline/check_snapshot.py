@@ -14,7 +14,7 @@ def check_snapshot_replica(source_engine: Engine) -> None:
     current_date_check_query = "SELECT CURRENT_DATE;"
     pg_current_date_timestamp = query_executor(source_engine, current_date_check_query)[0][0]
     # Because sometimes we do not get a pg_last_xact_replay_timestamp, added a step to validate this.
-    last_replica_date_check_query = "SELECT pg_last_xact_replay_timestamp();;"
+    last_replica_date_check_query = "SELECT pg_last_xact_replay_timestamp();"
     pg_last_xact_replay_timestamp = query_executor(
         source_engine, last_replica_date_check_query
     )[0][0]
