@@ -307,6 +307,7 @@ WITH map_merged_crm_account AS (
 
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,
+      sfdc_account.is_focus_partner,
       IFF(sfdc_record_type.record_type_label = 'Partner'
           AND sfdc_account.partner_type IN ('Alliance', 'Channel')
           AND sfdc_account.partner_status = 'Authorized',
