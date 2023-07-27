@@ -9,9 +9,9 @@ WITH source AS (
 renamed AS (
 
   SELECT
-    id   ,
-    name ,
-    email      AS email
+    id,
+    name,
+    email AS email
   FROM source
 
 )
@@ -19,4 +19,3 @@ renamed AS (
 
 SELECT *
 FROM renamed
-
