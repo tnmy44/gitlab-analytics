@@ -15,7 +15,6 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     slack_failed_task,
     clone_repo_cmd,
-    REPO_BASE_PATH,
     get_sales_analytics_notebooks,
     SALES_ANALYTICS_NOTEBOOKS_PATH,
 )
