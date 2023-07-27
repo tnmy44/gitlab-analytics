@@ -1,5 +1,5 @@
 {{ config(
-    tags=["product"
+    tags=["product"]
 ) }}
 
 {{ simple_cte([
