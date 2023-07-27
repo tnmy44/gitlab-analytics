@@ -615,7 +615,7 @@ models:
     description: Table with the source data of the data being exposed in dimensional tables where various sources are combined.
 
   - name: dim_gitlab_ops_gitlab_emails
-    description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
+    description: This model limits the gitlab dotcom emails table to only have records for emails ending with `gitlab.com`.
     columns:
         - name: user_id
           tests:
@@ -3090,6 +3090,10 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
+      - name: dim_latest_available_app_release_major_minor_sk
+        description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
 
   - name: fct_ping_instance_metric_rolling_6_months
     description: '{{ doc("fct_ping_instance_metric_rolling_6_months") }}'
@@ -4206,6 +4210,10 @@ models:
         description: '{{ doc("umau_value") }}'
       - name: data_source
         description: '{{ doc("data_source") }}'
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
+      - name: dim_latest_available_app_release_major_minor_sk
+        description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -7256,6 +7264,10 @@ models:
           masking_policy: analyst_people
       - name: performance_rating 
         description: Masked. Team member performance rating
+        meta:
+          masking_policy: analyst_people
+      - name: employee_type
+        description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
         meta:
           masking_policy: analyst_people
 

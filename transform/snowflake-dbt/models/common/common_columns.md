@@ -1409,6 +1409,12 @@ Timestamp for when the event actually happened. This appears as `derived_tstamp`
 
 {% enddocs %}
 
+{% docs behavior_date %}
+
+The date when the event happened (YYYY-MM-DD)
+
+{% enddocs %}
+
 {% docs tracker_version %}
 
 Information about the event tracker version. 

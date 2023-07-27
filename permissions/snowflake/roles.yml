@@ -1275,9 +1275,11 @@ roles:
             schemas:
                 read:
                     - raw.tap_adaptive
+                    - raw.adaptive_custom
             tables:
                 read:
                     - raw.tap_adaptive.*
+                    - raw.adaptive_custom.*
 
     - bamboohr_analytics:
         warehouses:
@@ -2100,6 +2102,21 @@ roles:
                     - prep.sensitive.netsuite_vendors_pii
                     - raw.netsuite_fivetran.*
 
+
+    - oci_reports:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.oci_reports
+            tables:
+                read:
+                    - raw.oci_reports.*
+
     - postgres_pipeline:
         warehouses:
             - dev_xs
@@ -2908,6 +2925,7 @@ roles:
     - cleroux:
         member_of:
             - analyst_engineering
+            - oci_reports
             - prometheus
             - restricted_safe
         warehouses:
