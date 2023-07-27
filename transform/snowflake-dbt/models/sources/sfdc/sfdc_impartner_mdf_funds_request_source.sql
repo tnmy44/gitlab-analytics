@@ -2,7 +2,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('salesforce', 'impartnermdf__fundsrequest__c') }}
+    FROM {{ source('salesforce', 'impartner_mdf_funds_request') }}
 
 ), renamed AS (
 
