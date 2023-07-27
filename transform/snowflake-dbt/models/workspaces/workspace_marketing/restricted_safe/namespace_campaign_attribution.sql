@@ -114,7 +114,7 @@ snowplow_sessions as (
     where 1=1
         and namespace_created_at > '2022-01-01'
         and first_paid_subscription_start_date is not null
-        and purchase_date >= namespace_created_at
+        and first_paid_subscription_start_date >= namespace_created_at
         
 ), last_touch_attribution_session_to_event as (
     -- You've found the magic, here we use last touch attribution to find the 
