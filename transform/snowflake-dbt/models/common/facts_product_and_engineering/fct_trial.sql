@@ -26,7 +26,9 @@
     subscription_name, 
     subscription_name_slugify,
     subscription_start_date
-  FROM {{ ref('zuora_base_mrr') }}
+  FROM {{ ref('prep_charge') }}
+  WHERE tcv > 0 
+  OR mrr > 0
 
   
 ), ci_minutes_charges AS (
