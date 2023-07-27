@@ -165,6 +165,7 @@ models:
           - customers_db
         tests:
           - not_null
+      - name: billing_account_id
       - name: product_rate_plan_id
       - name: subscription_id
         description: This column references a Zuora subscription and can be joined with Zuora tables to get more information about the order.
@@ -185,6 +186,8 @@ models:
         tests:
           - not_null
       - name: order_source
+      - name: task_instance
+
   - name: customers_db_reconciliations_source
     description: '{{ doc("customers_db_reconciliations_source") }}'  
   - name: customers_db_trial_histories_source
