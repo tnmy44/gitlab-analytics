@@ -753,16 +753,16 @@
               OR budget_holder = 'abm'
               OR utm_budget = 'abm')
               THEN 'Account Based Marketing'
-      WHEN (lower(utm_budget) LIKE '%ptnr%' 
-              OR lower(utm_budget) LIKE '%chnl%')
-              OR (lower(budget_holder) LIKE '%ptnr%' 
-              OR lower(budget_holder) LIKE '%chnl%')
+      WHEN (LOWER(utm_budget) LIKE '%ptnr%' 
+              OR LOWER(utm_budget) LIKE '%chnl%')
+              OR (LOWER(budget_holder) LIKE '%ptnr%' 
+              OR LOWER(budget_holder) LIKE '%chnl%')
               THEN 'Partner Marketing'
-      WHEN (lower(budget_holder) LIKE '%corp%' 
-              OR lower(utm_budget) LIKE '%corp%')
+      WHEN (LOWER(budget_holder) LIKE '%corp%' 
+              OR LOWER(utm_budget) LIKE '%corp%')
               THEN 'Corporate Events'
-      WHEN (lower(budget_holder) LIKE '%dmp%' 
-              OR lower(utm_budget) LIKE '%dmp%')
+      WHEN (LOWER(budget_holder) LIKE '%dmp%' 
+              OR LOWER(utm_budget) LIKE '%dmp%')
               THEN 'Digital Marketing'
       ELSE 'No Budget Holder' END AS intergrated_budget_holder,
 
