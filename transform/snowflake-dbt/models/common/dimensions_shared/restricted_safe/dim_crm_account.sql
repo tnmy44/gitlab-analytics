@@ -108,7 +108,6 @@ WITH final AS (
       prep_crm_account.admin_manual_source_number_of_employees,
       prep_crm_account.admin_manual_source_account_address,
       prep_crm_account.eoa_sentiment,
-      prep_crm_account.csm_sentiment,
       prep_crm_account.gs_health_user_engagement,
       prep_crm_account.gs_health_cd,
       prep_crm_account.gs_health_devsecops,

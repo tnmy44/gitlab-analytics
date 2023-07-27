@@ -214,7 +214,6 @@ WITH map_merged_crm_account AS (
       sfdc_account.account_employee_count                                 AS crm_account_employee_count,
       sfdc_account.parent_account_industry_hierarchy                      AS parent_crm_account_industry,
       sfdc_account.gtm_strategy                                           AS crm_account_gtm_strategy,
-      sfdc_account.csm_sentiment                                          AS csm_sentiment,
       CASE 
         WHEN sfdc_account.account_sales_segment IN ('Large', 'PubSec') THEN 'Large'
         WHEN sfdc_account.account_sales_segment = 'Unknown' THEN 'SMB'

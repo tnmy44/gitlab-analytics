@@ -9,7 +9,8 @@
     ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date', 'dim_date'),
-    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy')
+    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy'),
+    ('gainsight_company', 'wk_gs_company')
 ]) }}
   
 , final AS (
@@ -138,7 +139,7 @@
       dim_crm_account.crm_account_focus_account,
       dim_crm_account.crm_account_zi_technologies,
       dim_crm_account.is_jihu_account,
-      dim_crm_account.csm_sentiment,
+      gainsight_company.csm_sentiment,
 
       -- Flags
       fct_crm_opportunity.is_won,
@@ -649,6 +650,8 @@
       ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id 
     LEFT JOIN dim_crm_account AS fulfillment_partner
       ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
+    LEFT JOIN gainsight_company
+      ON dim_crm_account.dim_crm_account_id = gainsight_company.sfdc_account_id
 
 )
 
