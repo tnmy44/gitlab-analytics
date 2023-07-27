@@ -411,7 +411,7 @@
 ), services_source AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_integrations') }}
+    FROM {{ ref('gitlab_dotcom_integrations_source') }}
     WHERE service_type != 'GitlabIssueTrackerService'
 
 ), successful_ci_pipelines_source AS (

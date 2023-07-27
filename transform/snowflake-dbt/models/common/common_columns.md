@@ -2141,28 +2141,34 @@ The surrogate key of `dim_trial_latest` model. Currently identified by hashing t
 
 {% enddocs %}
 
-{% docs dim_service_sk %}
+{% docs dim_integration_sk %}
 
-The surrogate key of `dim_service` model. Currently identified by hashing the `service_id` field.
-
-{% enddocs %}
-
-
-{% docs service_id %}
-
-The natural key of `dim_service` model.
+The surrogate key of `dim_integration` model. Currently identified by hashing the `integration_id` field.
 
 {% enddocs %}
 
 
-{% docs service_created_at %}
+{% docs integration_id %}
 
-The date a service was created.
+The natural key of `dim_integration` model.
+
+{% enddocs %}
+
+{% docs integration_is_active %}
+
+Boolean representing if an integration is active or not.
 
 {% enddocs %}
 
 
-{% docs service_updated_at %}
+{% docs integration_created_at %}
+
+The date a integration was created.
+
+{% enddocs %}
+
+
+{% docs integration_updated_at %}
 
 The latest date a service was updated.
 

@@ -1789,3 +1789,11 @@ This model does the following:
 * We can join this model with `customers_db_customers` in the downstream models in order to get information about country, company_size of the User who started the trial
 
 {% enddocs %}
+
+{% docs dim_integration %}
+
+A dimensional model describing the integration associated with GitLab namespaces.
+
+From the GitLab.com [documentation](https://docs.gitlab.com/ee/user/project/integrations/), we know integrations are like plugins, which give customers the freedom to add functionality to GitLab.
+
+{% enddocs %}

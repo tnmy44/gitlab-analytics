@@ -14,7 +14,7 @@
     ('dim_project', 'dim_project'),
 ]) }}
 
-, service_source AS (
+, integration_source AS (
     
     SELECT *
     FROM {{ ref('gitlab_dotcom_integrations_source') }} 
@@ -27,15 +27,16 @@
 ), joined AS (
 
     SELECT 
-      {{ dbt_utils.surrogate_key(['service_source.service_id']) }}              AS dim_service_sk,
-      service_source.service_id                                                 AS service_id,
+      {{ dbt_utils.surrogate_key(['integration_source.integration_id']) }}      AS dim_integration_sk,
+      service_source.integration_id                                             AS integration_id,
       IFNULL(dim_project.dim_project_id, -1)                                    AS dim_project_id,
       IFNULL(dim_project.ultimate_parent_namespace_id, -1)                      AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                           AS dim_plan_id,
       dim_date.date_id                                                          AS created_date_id,
-      service_source.created_at::TIMESTAMP                                      AS created_at,
-      service_source.updated_at::TIMESTAMP                                      AS updated_at
-    FROM  service_source
+      integration_source.is_active                                              AS is_active,
+      integration_source.created_at::TIMESTAMP                                  AS created_at,
+      integration_source.updated_at::TIMESTAMP                                  AS updated_at
+    FROM  integration_source
     LEFT JOIN dim_project 
       ON  service_source.project_id = dim_project.dim_project_id
     LEFT JOIN dim_namespace_plan_hist 
