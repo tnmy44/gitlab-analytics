@@ -320,7 +320,7 @@ for source_name, config in config_dict.items():
                 f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
             )
             is_gitlab_main_db = True
-        if is_gitlab_main_db == True or is_gitlab_ci_db == True:
+        if is_gitlab_main_db is True or is_gitlab_ci_db is True:
             check_replica_snapshot = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DATA_IMAGE,
@@ -389,7 +389,7 @@ for source_name, config in config_dict.items():
                 )
 
                 if is_incremental_dag and (
-                    is_gitlab_ci_db == True or is_gitlab_main_db == True
+                    is_gitlab_ci_db is True or is_gitlab_main_db is True
                 ):
                     check_replica_snapshot >> incremental_extract
         globals()[f"{config['dag_name']}_db_extract"] = extract_dag
@@ -406,7 +406,7 @@ for source_name, config in config_dict.items():
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
-            if is_gitlab_main_db == True or is_gitlab_ci_db == True:
+            if is_gitlab_main_db is True or is_gitlab_ci_db is True:
                 check_replica_snapshot_backfill = KubernetesPodOperator(
                     **gitlab_defaults,
                     image=DATA_IMAGE,
@@ -465,7 +465,7 @@ for source_name, config in config_dict.items():
                         do_xcom_push=True,
                     )
                     if is_incremental_backfill_dag and (
-                        is_gitlab_ci_db == True or is_gitlab_main_db == True
+                        is_gitlab_ci_db is True or is_gitlab_main_db is True
                     ):
                         check_replica_snapshot_backfill >> sync_extract
         globals()[
@@ -508,7 +508,7 @@ for source_name, config in config_dict.items():
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
-            if is_gitlab_main_db == True or is_gitlab_ci_db == True:
+            if is_gitlab_main_db is True or is_gitlab_ci_db is True:
                 check_replica_snapshot_scd = KubernetesPodOperator(
                     **gitlab_defaults,
                     image=DATA_IMAGE,
@@ -569,7 +569,7 @@ for source_name, config in config_dict.items():
                         do_xcom_push=True,
                     )
                     if is_scd_dag and (
-                        is_gitlab_ci_db == True or is_gitlab_main_db == True
+                        is_gitlab_ci_db is True or is_gitlab_main_db is True
                     ):
                         check_replica_snapshot_scd >> scd_extract
         globals()[f"{config['dag_name']}_db_sync"] = sync_dag
