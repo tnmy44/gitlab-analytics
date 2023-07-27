@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product", "mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('saas_usage_ping_namespace', 'saas_usage_ping_namespace'),
     ('dim_date', 'dim_date')
