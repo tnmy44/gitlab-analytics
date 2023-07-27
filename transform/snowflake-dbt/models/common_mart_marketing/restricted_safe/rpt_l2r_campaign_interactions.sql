@@ -61,7 +61,7 @@
           WHEN person_base.is_first_order_person = TRUE 
             THEN '1. New - First Order'
           ELSE '3. Growth'
-        END AS person_order_type,
+      END AS person_order_type,
 
 
   --Person Dates
@@ -253,7 +253,7 @@
           WHEN person_base.is_first_order_person = TRUE 
             THEN '1. New - First Order'
           ELSE '3. Growth'
-        END AS person_order_type,
+      END AS person_order_type,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -285,7 +285,7 @@
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.bizible_salesforce_campaign,
-	    mart_crm_attribution_touchpoint.campaign_rep_role_name,
+	  mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.gtm_motion,
       mart_crm_attribution_touchpoint.pipe_name,
@@ -345,7 +345,7 @@
       partner_prospect_id,
       dim_crm_touchpoint_id,
       dim_campaign_id,
-     null AS dim_crm_opportunity_id,
+      null AS dim_crm_opportunity_id,
       null AS opp_dim_crm_user_id,
       null AS duplicate_opportunity_id,
       null AS merged_crm_opportunity_id,
@@ -495,7 +495,7 @@
       bizible_referrer_page_raw,
       bizible_integrated_campaign_grouping,
       bizible_salesforce_campaign,
-	    campaign_rep_role_name,
+	  campaign_rep_role_name,
       touchpoint_segment,
       gtm_motion,
       pipe_name,
