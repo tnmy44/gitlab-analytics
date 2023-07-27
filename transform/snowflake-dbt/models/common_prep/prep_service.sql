@@ -27,13 +27,14 @@
 ), joined AS (
 
     SELECT 
-      service_source.service_id                                  AS dim_service_id,
-      IFNULL(dim_project.dim_project_id, -1)                     AS dim_project_id,
-      IFNULL(dim_project.ultimate_parent_namespace_id, -1)       AS ultimate_parent_namespace_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)            AS dim_plan_id,
-      dim_date.date_id                                           AS created_date_id,
-      service_source.created_at::TIMESTAMP                       AS created_at,
-      service_source.updated_at::TIMESTAMP                       AS updated_at
+      {{ dbt_utils.surrogate_key(['service_source.service_id']) }}              AS dim_service_sk,
+      service_source.service_id                                                 AS service_id,
+      IFNULL(dim_project.dim_project_id, -1)                                    AS dim_project_id,
+      IFNULL(dim_project.ultimate_parent_namespace_id, -1)                      AS ultimate_parent_namespace_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                           AS dim_plan_id,
+      dim_date.date_id                                                          AS created_date_id,
+      service_source.created_at::TIMESTAMP                                      AS created_at,
+      service_source.updated_at::TIMESTAMP                                      AS updated_at
     FROM  service_source
     LEFT JOIN dim_project 
       ON  service_source.project_id = dim_project.dim_project_id
@@ -48,7 +49,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@chrissharp",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2022-03-28",
-    updated_date="2022-08-03"
+    updated_date="2023-07-27"
 ) }}

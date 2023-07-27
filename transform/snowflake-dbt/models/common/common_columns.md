@@ -2140,3 +2140,32 @@ The surrogate key of `prep_namespace_order_trial` model. Currently identified by
 The surrogate key of `dim_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
 
 {% enddocs %}
+
+{% docs dim_service_sk %}
+
+The surrogate key of `dim_service` model. Currently identified by hashing the `service_id` field.
+
+{% enddocs %}
+
+
+{% docs service_id %}
+
+The natural key of `dim_service` model.
+
+{% enddocs %}
+
+
+{% docs service_created_at %}
+
+The date a service was created.
+
+{% enddocs %}
+
+
+{% docs service_updated_at %}
+
+The latest date a service was updated.
+
+{% enddocs %}
+
+
