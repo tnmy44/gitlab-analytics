@@ -27,8 +27,8 @@
 ), joined AS (
 
     SELECT 
-      {{ dbt_utils.surrogate_key(['integration_source.integration_id']) }}      AS dim_integration_sk,
-      integration_source.integration_id                                         AS integration_id,
+      {{ dbt_utils.surrogate_key(['integration_source.service_id']) }}          AS dim_integration_sk,
+      integration_source.service_id                                             AS integration_id,
       IFNULL(dim_project.dim_project_id, -1)                                    AS dim_project_id,
       IFNULL(dim_project.ultimate_parent_namespace_id, -1)                      AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                           AS dim_plan_id,
