@@ -29,21 +29,21 @@
 ), renamed AS (
   
     SELECT
-      {{ dbt_utils.get_surrogate_key(['gitlab_dotcom_packages_packages_source.packages_package_id']) }}     AS dim_package_sk,
-      packages_package_id                                                                                   AS package_id,
+      {{ dbt_utils.surrogate_key(['gitlab_dotcom_packages_packages_source.packages_package_id']) }}     AS dim_package_sk,
+      packages_package_id                                                                               AS package_id,
       -- FOREIGN KEYS
-      prep_project.dim_project_id                                                                           AS dim_project_id,
-      prep_namespace.dim_namespace_id                                                                       AS dim_namespace_id,
-      prep_namespace.ultimate_parent_namespace_id                                                           AS ultimate_parent_namespace_id,
-      dim_date.date_id                                                                                      AS created_date_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                                                       AS dim_plan_id,
-      gitlab_dotcom_packages_packages_dedupe_source.creator_id                                              AS creator_id,
+      prep_project.dim_project_id                                                                       AS dim_project_id,
+      prep_namespace.dim_namespace_id                                                                   AS dim_namespace_id,
+      prep_namespace.ultimate_parent_namespace_id                                                       AS ultimate_parent_namespace_id,
+      dim_date.date_id                                                                                  AS created_date_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                                                   AS dim_plan_id,
+      gitlab_dotcom_packages_packages_dedupe_source.creator_id                                          AS creator_id,
 
       -- package attributes
-      gitlab_dotcom_packages_packages_source.package_version                                                AS package_version,
-      gitlab_dotcom_packages_packages_source.package_type                                                   AS package_type,
-      gitlab_dotcom_packages_packages_source.created_at                                                     AS created_at,
-      gitlab_dotcom_packages_packages_source.updated_at                                                     AS updated_at
+      gitlab_dotcom_packages_packages_source.package_version                                            AS package_version,
+      gitlab_dotcom_packages_packages_source.package_type                                               AS package_type,
+      gitlab_dotcom_packages_packages_source.created_at                                                 AS created_at,
+      gitlab_dotcom_packages_packages_source.updated_at                                                 AS updated_at
 
     FROM gitlab_dotcom_packages_packages_source
     LEFT JOIN prep_project 
