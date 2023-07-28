@@ -7268,8 +7268,6 @@ models:
           masking_policy: analyst_people
       - name: employee_type
         description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
-        meta:
-          masking_policy: analyst_people
 
   - name: fct_team_member_status
     description: '{{ doc("fct_team_member_status") }}'
