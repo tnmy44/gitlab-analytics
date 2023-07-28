@@ -27,7 +27,7 @@
 ), joined AS (
 
     SELECT
-      {{ dbt_utils.get_surrogate_key(['snippet_source.snippet_id']) }}  AS dim_snippet_sk,
+      {{ dbt_utils.surrogate_key(['snippet_source.snippet_id']) }}  AS dim_snippet_sk,
       snippet_source.snippet_id                                         AS snippet_id,
       snippet_source.author_id                                          AS author_id,
       IFNULL(dim_project.dim_project_id, -1)                            AS dim_project_id,
