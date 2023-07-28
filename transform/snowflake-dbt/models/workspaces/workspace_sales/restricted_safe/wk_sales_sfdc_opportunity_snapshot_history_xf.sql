@@ -115,7 +115,7 @@ WITH date_details AS (
       raw_net_arr,
       sales_qualified_source,
 
-      industry
+      industry,
       lam_dev_count_bin,
       lam_dev_count
 
