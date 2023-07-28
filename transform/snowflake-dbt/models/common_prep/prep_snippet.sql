@@ -27,13 +27,13 @@
 ), joined AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['snippet_source.snippet_id']) }}  AS dim_snippet_sk,
+      {{ dbt_utils.surrogate_key(['snippet_source.snippet_id']) }}      AS dim_snippet_sk,
       snippet_source.snippet_id                                         AS snippet_id,
       snippet_source.author_id                                          AS author_id,
       IFNULL(dim_project.dim_project_id, -1)                            AS dim_project_id,
       IFNULL(dim_namespace_plan_hist.dim_namespace_id, -1)              AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                   AS dim_plan_id,
-      snippet_source.type                                               AS snippet_type,
+      snippet_source.snippet_type                                       AS snippet_type,
       dim_date.date_id                                                  AS created_date_id,
       snippet_source.created_at                                         AS created_at,
       snippet_source.updated_at                                         AS updated_at
