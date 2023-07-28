@@ -1866,6 +1866,20 @@ Finally, only valid subscriptions that are not refunded are identified by filter
 
 {% enddocs %}
 
+{% docs dim_snippet %}
+
+[Snippets](https://docs.gitlab.com/ee/user/snippets.html) are pieces of code which can be stored and shared with others on GitLab. This model stores dimensional attributes about snippets including:
+
+  - Author
+  - Project
+  - Ultimate Namespace
+  - Plan
+  - Type (project/personal)
+  - Created Date
+  - Updated Date
+
+{% enddocs %}
+
 
 
 

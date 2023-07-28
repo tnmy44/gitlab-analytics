@@ -2140,3 +2140,34 @@ The surrogate key of `prep_namespace_order_trial` model. Currently identified by
 The surrogate key of `dim_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
 
 {% enddocs %}
+
+
+{% docs dim_snippet_sk %}
+
+The surrogate key of `dim_snippet` model. Currently identified by hashing the `snippet_id` field.
+
+{% enddocs %}
+
+{% docs snippet_id %}
+
+The natural key of `dim_snippet` model.
+
+{% enddocs %}
+
+{% docs snippet_type %}
+
+Identifies a snippet as a `Personal Snippet` or `Project Snippet`.
+
+{% enddocs %}
+
+{% docs snippet_created_at %}
+
+The date a snippet was created.
+
+{% enddocs %}
+
+{% docs snippet_updated_at %}
+
+The latest date a snippet was updated.
+
+{% enddocs %}
