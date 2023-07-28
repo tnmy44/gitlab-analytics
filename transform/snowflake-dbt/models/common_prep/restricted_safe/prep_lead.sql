@@ -27,7 +27,7 @@ WITH source AS (
       trial_start_date,
       is_opt_in::BOOLEAN,
       is_currently_in_trial::BOOLEAN,
-      is_for_business_use,
+      is_for_business_use::BOOLEAN,
       employees_bucket,
       country,
       state,
