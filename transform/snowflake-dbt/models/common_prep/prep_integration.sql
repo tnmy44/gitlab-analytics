@@ -28,7 +28,7 @@
 
     SELECT 
       {{ dbt_utils.surrogate_key(['integration_source.integration_id']) }}      AS dim_integration_sk,
-      service_source.integration_id                                             AS integration_id,
+      integration_source.integration_id                                         AS integration_id,
       IFNULL(dim_project.dim_project_id, -1)                                    AS dim_project_id,
       IFNULL(dim_project.ultimate_parent_namespace_id, -1)                      AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                           AS dim_plan_id,
@@ -38,12 +38,12 @@
       integration_source.updated_at::TIMESTAMP                                  AS updated_at
     FROM  integration_source
     LEFT JOIN dim_project 
-      ON  service_source.project_id = dim_project.dim_project_id
+      ON  integration_source.project_id = dim_project.dim_project_id
     LEFT JOIN dim_namespace_plan_hist 
       ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
-      AND  service_source.created_at >= dim_namespace_plan_hist.valid_from
-      AND  service_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
-    INNER JOIN dim_date ON TO_DATE(service_source.created_at) = dim_date.date_day
+      AND  integration_source.created_at >= dim_namespace_plan_hist.valid_from
+      AND  integration_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
+    INNER JOIN dim_date ON TO_DATE(integration_source.created_at) = dim_date.date_day
 
 )
 
