@@ -658,6 +658,14 @@ models:
       description: '{{ doc("ping_created_date_month") }}'
     - name: is_last_ping_of_month
       description: '{{ doc("is_last_ping_of_month") }}'
+    - name: major_minor_version_num
+      description: '{{ doc("major_minor_version_num") }}'
+    - name: days_after_version_release_date
+      description: '{{ doc("days_after_version_release_date") }}'
+    - name: latest_version_available_at_ping_creation
+      description: '{{ doc("latest_version_available_at_ping_creation") }}'
+    - name: versions_behind_latest_at_ping_creation
+      description: '{{ doc("versions_behind_latest_at_ping_creation") }}'
     - name: created_by
       description: '{{ doc("created_by") }}'
     - name: updated_by
@@ -784,6 +792,14 @@ models:
       description: '{{ doc("ping_created_date_week") }}'
     - name: is_last_ping_of_week
       description: '{{ doc("is_last_ping_of_week") }}'
+    - name: major_minor_version_num
+      description: '{{ doc("major_minor_version_num") }}'
+    - name: days_after_version_release_date
+      description: '{{ doc("days_after_version_release_date") }}'
+    - name: latest_version_available_at_ping_creation
+      description: '{{ doc("latest_version_available_at_ping_creation") }}'
+    - name: versions_behind_latest_at_ping_creation
+      description: '{{ doc("versions_behind_latest_at_ping_creation") }}'
     - name: created_by
       description: '{{ doc("created_by") }}'
     - name: updated_by
@@ -912,6 +928,14 @@ models:
       description: '{{ doc("ping_created_date_week") }}'
     - name: is_last_ping_of_week
       description: '{{ doc("is_last_ping_of_week") }}'
+    - name: major_minor_version_num
+      description: '{{ doc("major_minor_version_num") }}'
+    - name: days_after_version_release_date
+      description: '{{ doc("days_after_version_release_date") }}'
+    - name: latest_version_available_at_ping_creation
+      description: '{{ doc("latest_version_available_at_ping_creation") }}'
+    - name: versions_behind_latest_at_ping_creation
+      description: '{{ doc("versions_behind_latest_at_ping_creation") }}'
     - name: created_by
       description: '{{ doc("created_by") }}'
     - name: updated_by
@@ -1040,6 +1064,14 @@ models:
       description: '{{ doc("ping_created_date_week") }}'
     - name: is_last_ping_of_week
       description: '{{ doc("is_last_ping_of_week") }}'
+    - name: major_minor_version_num
+      description: '{{ doc("major_minor_version_num") }}'
+    - name: days_after_version_release_date
+      description: '{{ doc("days_after_version_release_date") }}'
+    - name: latest_version_available_at_ping_creation
+      description: '{{ doc("latest_version_available_at_ping_creation") }}'
+    - name: versions_behind_latest_at_ping_creation
+      description: '{{ doc("versions_behind_latest_at_ping_creation") }}'
     - name: created_by
       description: '{{ doc("created_by") }}'
     - name: updated_by
@@ -1168,6 +1200,14 @@ models:
       description: '{{ doc("ping_created_date_week") }}'
     - name: is_last_ping_of_week
       description: '{{ doc("is_last_ping_of_week") }}'
+    - name: major_minor_version_num
+      description: '{{ doc("major_minor_version_num") }}'
+    - name: days_after_version_release_date
+      description: '{{ doc("days_after_version_release_date") }}'
+    - name: latest_version_available_at_ping_creation
+      description: '{{ doc("latest_version_available_at_ping_creation") }}'
+    - name: versions_behind_latest_at_ping_creation
+      description: '{{ doc("versions_behind_latest_at_ping_creation") }}'
     - name: created_by
       description: '{{ doc("created_by") }}'
     - name: updated_by
