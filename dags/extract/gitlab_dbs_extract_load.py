@@ -308,11 +308,11 @@ def get_check_replica_snapshot_command(dag_name):
     return check_replica_snapshot_command
 
 
-def get_check_replica_snapshot_task(dag_name, dag_config_args):
+def get_check_replica_snapshot_task(dag_name, dag_obj):
     """
     This function is responsible for generating the dag configuration for the replica snapshot DAG.
     """
-    check_replica_snapshot_dag_config = KubernetesPodOperator(
+    check_replica_snapshot_task = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
         task_id="check_replica_snapshot",
@@ -336,10 +336,10 @@ def get_check_replica_snapshot_task(dag_name, dag_config_args):
         arguments=[get_check_replica_snapshot_command(dag_name)],
         retries=2,
         retry_delay=timedelta(seconds=300),
-        dag=dag_config_args,
+        dag=dag_obj,
     )
 
-    return check_replica_snapshot_dag_config
+    return check_replica_snapshot_task
 
 
 # Loop through each config_dict and generate a DAG
