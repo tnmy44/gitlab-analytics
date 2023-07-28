@@ -308,7 +308,7 @@ def get_check_replica_snapshot_command(dag_name):
     return check_replica_snapshot_command
 
 
-def get_replica_snapshot_dag_config(dag_name, dag_config_args):
+def get_check_replica_snapshot_task(dag_name, dag_config_args):
     """
     This function is responsible for generating the dag configuration for the replica snapshot DAG.
     """
@@ -360,7 +360,7 @@ for source_name, config in config_dict.items():
         )
 
         if has_replica_snapshot:
-            check_replica_snapshot = get_replica_snapshot_dag_config(
+            check_replica_snapshot = get_check_replica_snapshot_task(
                 config["dag_name"], extract_dag
             )
         with extract_dag:
@@ -378,7 +378,6 @@ for source_name, config in config_dict.items():
                 task_identifier = (
                     f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
                 )
-                is_incremental_dag = True
                 incremental_cmd = generate_cmd(
                     config["dag_name"],
                     f"--load_type incremental --load_only_table {table}",
@@ -404,7 +403,7 @@ for source_name, config in config_dict.items():
                     do_xcom_push=True,
                 )
 
-                if is_incremental_dag and has_replica_snapshot:
+                if has_replica_snapshot:
                     check_replica_snapshot >> incremental_extract
         globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
@@ -421,10 +420,9 @@ for source_name, config in config_dict.items():
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             if has_replica_snapshot:
-                check_replica_snapshot_backfill = get_replica_snapshot_dag_config(
+                check_replica_snapshot_backfill = get_check_replica_snapshot_task(
                     config["dag_name"], incremental_backfill_dag
                 )
-            is_incremental_backfill_dag = True
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "backfill"
@@ -455,7 +453,7 @@ for source_name, config in config_dict.items():
                         arguments=[sync_cmd],
                         do_xcom_push=True,
                     )
-                if is_incremental_backfill_dag and has_replica_snapshot:
+                if has_replica_snapshot:
                     check_replica_snapshot_backfill >> sync_extract
         globals()[
             f"{config['dag_name']}_db_incremental_backfill"
@@ -476,7 +474,7 @@ for source_name, config in config_dict.items():
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             if has_replica_snapshot:
-                check_replica_snapshot_scd = get_replica_snapshot_dag_config(
+                check_replica_snapshot_scd = get_check_replica_snapshot_task(
                     config["dag_name"], sync_dag
                 )
             for table in table_list:
@@ -486,7 +484,6 @@ for source_name, config in config_dict.items():
                     task_identifier = (
                         f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
                     )
-                    is_scd_dag = True
                     # SCD Task
                     scd_cmd = generate_cmd(
                         config["dag_name"],
@@ -512,6 +509,6 @@ for source_name, config in config_dict.items():
                         tolerations=get_toleration("scd"),
                         do_xcom_push=True,
                     )
-                    if is_scd_dag and has_replica_snapshot:
+                    if has_replica_snapshot:
                         check_replica_snapshot_scd >> scd_extract
         globals()[f"{config['dag_name']}_db_sync"] = sync_dag
