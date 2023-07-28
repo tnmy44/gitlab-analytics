@@ -1,3 +1,13 @@
+{{ config(
+    tags=["product"]
+) }}
+
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "dim_requirement_sk"
+    })
+}}
+
 WITH source AS (
 
   SELECT
@@ -20,6 +30,11 @@ WITH source AS (
     created_at,
     updated_at
   FROM {{ ref('prep_requirement') }}
+  {% if is_incremental() %}
+
+  WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+
+  {% endif %}
 
 )
 
