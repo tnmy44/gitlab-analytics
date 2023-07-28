@@ -443,7 +443,7 @@ WITH sfdc_users_xf AS (
 
        CASE
         WHEN fpa_master_bookings_flag = 1
-          THEN arr_basis_for_clari - won_arr_basis_for_clari
+          THEN won_arr_basis_for_clari - arr_basis_for_clari
         ELSE 0
        END                         AS booked_churned_contraction_net_arr,
        

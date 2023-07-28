@@ -404,7 +404,7 @@ WITH date_details AS (
       edm_snapshot_opty.won_arr_basis_for_clari AS won_atr,
       CASE
         WHEN edm_snapshot_opty.fpa_master_bookings_flag = 1
-          THEN edm_snapshot_opty.arr_basis_for_clari - edm_snapshot_opty.won_arr_basis_for_clari
+          THEN edm_snapshot_opty.won_arr_basis_for_clari - edm_snapshot_opty.arr_basis_for_clari
         ELSE 0
       END                                       AS booked_churned_contraction_net_arr
       
