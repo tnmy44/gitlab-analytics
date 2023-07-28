@@ -37,7 +37,7 @@
       prep_namespace.ultimate_parent_namespace_id                                                       AS ultimate_parent_namespace_id,
       dim_date.date_id                                                                                  AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                                                   AS dim_plan_id,
-      gitlab_dotcom_packages_packages_dedupe_source.creator_id                                          AS creator_id,
+      gitlab_dotcom_packages_packages_source.creator_id                                                 AS creator_id,
 
       -- package attributes
       gitlab_dotcom_packages_packages_source.package_version                                            AS package_version,
