@@ -158,6 +158,11 @@ WITH edm_opty AS (
     edm_opty.other_non_recurring_amount,
     edm_opty.arr_basis,
     edm_opty.arr,
+    
+    -- ATR for Booked Churned / Contraction metrics
+    edm_opty.atr,
+    edm_opty.won_atr,
+    edm_opty.booked_churned_contraction_net_arr,
 
     edm_opty.competitors,
     edm_opty.fpa_master_bookings_flag,
@@ -551,6 +556,19 @@ WITH edm_opty AS (
         ELSE 'Other'
     END AS  product_category_deployment,
 
+    -- 
+    CASE
+        WHEN cycle_time_in_days BETWEEN 1 AND 29
+            THEN '[0,30)'
+        WHEN cycle_time_in_days BETWEEN 30 AND 179
+            THEN '[30,180)'
+        WHEN cycle_time_in_days BETWEEN 179 AND 364
+            THEN '[180,365)'
+        WHEN cycle_time_in_days > 364
+            THEN '[365+)'
+        ELSE 'Other'
+    END                  AS age_bin,
+
     -- demographics fields
     edm_opty.parent_crm_account_upa_country,
     edm_opty.parent_crm_account_upa_state,
@@ -558,6 +576,7 @@ WITH edm_opty AS (
     edm_opty.parent_crm_account_upa_street,
     edm_opty.parent_crm_account_upa_postal_code,
     account.parent_crm_account_upa_country_name,
+    account.industry,
     edm_opty.parent_crm_account_business_unit
     
     FROM edm_opty
