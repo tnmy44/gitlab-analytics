@@ -426,8 +426,6 @@ WITH edm_opty AS (
     edm_opty.open_3plus_net_arr,
     edm_opty.open_4plus_net_arr,
     edm_opty.booked_net_arr,
-    edm_opty.booked_churned_contraction_net_arr,
-    edm_opty.churned_contraction_net_arr,
    
     edm_opty.deal_size,
     edm_opty.calculated_deal_size,
