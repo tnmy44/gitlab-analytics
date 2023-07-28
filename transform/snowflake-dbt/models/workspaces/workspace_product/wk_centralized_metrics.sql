@@ -145,7 +145,7 @@ SELECT
     delivery,
     deployment,
     edition
- ORDER BY reporting_month ASC ) AS previous_year_mau,
+ ORDER BY reporting_month ASC ) AS previous_year_metric_value,
   LAG(metric_value,1) OVER (PARTITION BY
     section_name,
     stage_name,
@@ -161,7 +161,7 @@ SELECT
     delivery,
     deployment,
     edition
-ORDER BY reporting_month ASC ) AS previous_month_mau,
+ORDER BY reporting_month ASC ) AS previous_month_metric_value,
     MAX(IFF(is_umau = TRUE, metric_value,NULL)) OVER (PARTITION BY reporting_month,    
  estimation_grain,
     product_tier,
