@@ -743,28 +743,31 @@
       COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)     AS utm_allptnr,
       COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid) AS utm_partnerid,
 
-      CASE WHEN (LOWER(utm_content) LIKE '%field%'
-              OR campaign_rep_role_name LIKE '%Field Marketing%'
-              OR budget_holder = 'fmm'
-              OR utm_budget = 'fmm') 
-              THEN 'Field Marketing'
-      WHEN (LOWER(utm_content) LIKE '%abm%'
-              OR campaign_rep_role_name LIKE '%ABM%'
-              OR budget_holder = 'abm'
-              OR utm_budget = 'abm')
-              THEN 'Account Based Marketing'
-      WHEN (LOWER(utm_budget) LIKE '%ptnr%' 
-              OR LOWER(utm_budget) LIKE '%chnl%')
-              OR (LOWER(budget_holder) LIKE '%ptnr%' 
-              OR LOWER(budget_holder) LIKE '%chnl%')
-              THEN 'Partner Marketing'
-      WHEN (LOWER(budget_holder) LIKE '%corp%' 
-              OR LOWER(utm_budget) LIKE '%corp%')
-              THEN 'Corporate Events'
-      WHEN (LOWER(budget_holder) LIKE '%dmp%' 
-              OR LOWER(utm_budget) LIKE '%dmp%')
-              THEN 'Digital Marketing'
-      ELSE 'No Budget Holder' END AS intergrated_budget_holder,
+      CASE 
+        WHEN (LOWER(utm_content) LIKE '%field%'
+          OR campaign_rep_role_name LIKE '%Field Marketing%'
+          OR budget_holder = 'fmm'
+          OR utm_budget = 'fmm') 
+          THEN 'Field Marketing'
+        WHEN (LOWER(utm_campaign) LIKE '%abm%'
+          OR LOWER(utm_content) LIKE '%abm%'
+          OR campaign_rep_role_name like '%ABM%'
+          OR dim_campaign.budget_holder = 'abm'
+          OR utm_budget = 'abm') THEN 'Account Based Marketing'
+
+        WHEN (LOWER(utm_budget) LIKE '%ptnr%' 
+          OR LOWER(utm_budget) LIKE '%chnl%')
+          OR (LOWER(budget_holder) LIKE '%ptnr%' 
+          OR LOWER(budget_holder) LIKE '%chnl%')
+          THEN 'Partner Marketing'
+        WHEN (LOWER(budget_holder) LIKE '%corp%' 
+          OR LOWER(utm_budget) LIKE '%corp%')
+          THEN 'Corporate Events'
+        WHEN (LOWER(budget_holder) LIKE '%dmp%' 
+          OR LOWER(utm_budget) LIKE '%dmp%')
+          THEN 'Digital Marketing'
+        ELSE 'No Budget Holder' 
+      END AS integrated_budget_holder,
 
 
      --inquiry_date fields
@@ -837,5 +840,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-07-26",
+    updated_date="2023-07-28",
   ) }}
