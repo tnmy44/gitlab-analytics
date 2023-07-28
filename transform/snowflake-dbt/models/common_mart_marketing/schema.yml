@@ -555,3 +555,19 @@ models:
           description: The dim_date date_range_week, when joined to the bizible_touchpoint_date.           
         - name: touchpoint_date_range_id
           description: The dim_date date_range_id when joined to the bizible_touchpoint_date. 
+
+    - name: rpt_lead_to_revenue
+      description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
+      columns:
+        - name: influenced_opportunity_id
+          description: The Salesforce Opportunity ID, where there is a related Bizible Touchpoint, in Salesforce.
+        - name: custom_sao
+          description: The sum of SAOs created, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: pipeline_custom_net_arr
+          description: The sum of Pipeline Net ARR, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: won_custom
+          description: The sum of Closed Won Opportunities closed, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: won_custom_net_arr
+          description: The sum of Won Net ARR, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: integrated_budget_holder
+          description: A case statement to categorize the budget (and usually owner) of online and offline campaigns. Uses utm_content, campaign owner role from SFDC, budget holder from SFDC, and utm_budget.
