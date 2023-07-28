@@ -507,7 +507,7 @@ WITH edm_opty AS (
             THEN '3. Late'
         ELSE '4. Closed'
     END                     AS pipeline_category,
-   
+
     ---------------------------------------------
     ---------------------------------------------
 
@@ -577,7 +577,10 @@ WITH edm_opty AS (
     edm_opty.parent_crm_account_upa_postal_code,
     account.parent_crm_account_upa_country_name,
     account.industry,
-    edm_opty.parent_crm_account_business_unit
+    edm_opty.parent_crm_account_business_unit,
+
+    -- account driven fields
+    account.lam_dev_count_bin
     
     FROM edm_opty
     -- Date helpers

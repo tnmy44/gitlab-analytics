@@ -116,6 +116,8 @@ WITH date_details AS (
       sales_qualified_source,
 
       industry
+      lam_dev_count_bin,
+      lam_dev_count
 
       -- Channel Org. fields
       -- this fields should be changed to this historical version
@@ -526,7 +528,9 @@ WITH date_details AS (
 
       opportunity_owner.name                                     AS opportunity_owner,
 
-      opportunity_owner.is_rep_flag
+      opportunity_owner.is_rep_flag,
+      sfdc_opportunity_xf.lam_dev_count_bin,
+      sfdc_opportunity_xf.lam_dev_count
 
       
     FROM sfdc_opportunity_snapshot_history AS opp_snapshot

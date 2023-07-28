@@ -1,13 +1,14 @@
 WITH job_profiles AS (
 
   SELECT 
-    job_code                                                                                                                   AS job_code,
+    job_code,
     job_profile                                                                                                                AS position,
     job_family                                                                                                                 AS job_family,
     management_level                                                                                                           AS management_level, 
     job_level                                                                                                                  AS job_grade,
     is_job_profile_active                                                                                                      AS is_position_active
-  FROM {{ref('job_profiles_source')}}
+  FROM {{ref('job_profiles_snapshots_source')}}
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY job_code ORDER BY valid_from DESC) = 1 
 
 ),
 
@@ -37,7 +38,22 @@ team_member_groups AS (
     manager_current                                                                                                            AS manager,
     department_current                                                                                                         AS department,
     suporg_current                                                                                                             AS suporg,
-    job_code_current                                                                                                           AS job_code,
+
+    /*
+      We weren't capturing history of job codes and when they changed, we didn't capture it anywhere
+      The following job codes from staffing_history don't exist in job_profiles so 
+      we are capturing them through this case statement
+    */
+
+    CASE 
+      WHEN job_code_current = 'SA.FSDN.P5' 
+        THEN 'SA.FSDN.P5-SAE'                                                        
+      WHEN job_code_current = 'SA.FSDN.P4' 
+        THEN 'SA.FSDN.P4-SAE'
+      WHEN job_code_current = 'MK.PMMF.M3-PM'
+        THEN 'MK.PMMF.M4-PM'
+      ELSE job_code_current
+    END                                                                                                                        AS job_code,
     job_specialty_single_current                                                                                               AS job_specialty_single,
     job_specialty_multi_current                                                                                                AS job_specialty_multi,
     entity_current                                                                                                             AS entity,
