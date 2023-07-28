@@ -1,7 +1,6 @@
 import logging
 import sys
 import os
-import sqlalchemy
 from sqlalchemy.engine.base import Engine
 from sqlalchemy import create_engine
 from gitlabdata.orchestration_utils import query_executor
