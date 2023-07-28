@@ -7623,7 +7623,7 @@ models:
       - name: trial_end_date
         description: The expiration date of the trial Order, which is usually 30 days from the trial start date
 
- - name: dim_integration
+  - name: dim_integration
     description: '{{ ("dim_integration") }}'
     columns:
       - name: dim_integration_sk
