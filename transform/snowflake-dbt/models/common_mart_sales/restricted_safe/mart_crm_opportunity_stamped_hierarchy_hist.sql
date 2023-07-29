@@ -139,7 +139,7 @@
       dim_crm_account.crm_account_focus_account,
       dim_crm_account.crm_account_zi_technologies,
       dim_crm_account.is_jihu_account,
-      gainsight_company.csm_sentiment,
+      gainsight_company.csm_sentiment_score_gc                             AS csm_sentiment,
 
       -- Flags
       fct_crm_opportunity.is_won,

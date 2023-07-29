@@ -149,7 +149,7 @@
       dim_crm_account.admin_manual_source_number_of_employees,
       dim_crm_account.admin_manual_source_account_address,
       dim_crm_account.parent_crm_account_lam_dev_count,
-      gainsight_company.csm_sentiment,
+      gainsight_company.csm_sentiment_score_gc                             AS csm_sentiment,
 
       -- Flags
       fct_crm_opportunity.is_won,
