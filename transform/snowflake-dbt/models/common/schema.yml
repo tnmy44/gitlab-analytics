@@ -7520,7 +7520,7 @@ models:
         description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
       - name: country
         description: The country selected by the User during registration
-      - name: company size
+      - name: company_size
         description: The size of the company as provided by the user during registration
       - name: order_created_at
         description: The date when the Order was created
@@ -7566,7 +7566,7 @@ models:
         description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term
       - name: country
         description: The country selected by the User during registration
-      - name: company size
+      - name: company_size
         description: The size of the company as provided by the user during registration
       - name: is_trial_converted
         description: Boolean flag to indicate if the Trial order(from CDot) has been converted to Paid Order or not
@@ -7614,7 +7614,7 @@ models:
         description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term
       - name: country
         description: The country selected by the User during registration
-      - name: company size
+      - name: company_size
         description: The size of the company as provided by the user during registration
       - name: order_created_at
         description: The date when the Order was first created in CDot
