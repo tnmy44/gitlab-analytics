@@ -4,7 +4,7 @@ The main test routine for Automated Service Ping
 
 from datetime import datetime, timedelta
 import pytest
-from extract.saas_usage_ping.usage_ping import UsagePing, get_backfill_filter
+from extract.saas_usage_ping.usage_ping import UsagePing, filter_instance_namespace_metrics
 
 
 @pytest.fixture(name="metrics_definition_test_dict")
@@ -221,7 +221,7 @@ def test_get_backfill_filter(namespace_file, test_value, expected_value):
     lambda as a return statement
     """
 
-    metrics_filter = get_backfill_filter([test_value])
+    metrics_filter = filter_instance_namespace_metrics([test_value])
 
     for namespace in namespace_file:
         if metrics_filter(namespace):
