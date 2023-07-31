@@ -13,8 +13,7 @@
     ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date', 'dim_date'),
-    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy'),
-    ('gainsight_company', 'wk_gs_company')
+    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy')
 ]) }}
 
 , final AS (
@@ -149,7 +148,6 @@
       dim_crm_account.admin_manual_source_number_of_employees,
       dim_crm_account.admin_manual_source_account_address,
       dim_crm_account.parent_crm_account_lam_dev_count,
-      gainsight_company.csm_sentiment_score_gc                             AS csm_sentiment,
 
       -- Flags
       fct_crm_opportunity.is_won,
