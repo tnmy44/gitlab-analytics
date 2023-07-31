@@ -648,8 +648,6 @@
       ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id 
     LEFT JOIN dim_crm_account AS fulfillment_partner
       ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
-    LEFT JOIN gainsight_company
-      ON dim_crm_account.dim_crm_account_id = gainsight_company.sfdc_account_id
 
 )
 
