@@ -22,7 +22,7 @@
   FROM 
   dim_date
   WHERE 
-  (day_of_fiscal_quarter_normalised = 90 or date_day = CURRENT_DATE-2) AND date_day BETWEEN '2023-01-31' AND CURRENT_DATE-2
+  day_of_fiscal_quarter_normalised = 90 AND date_day BETWEEN '2023-01-31' AND CURRENT_DATE-2
   UNION 
   
 --latest snapshot for current quarter
