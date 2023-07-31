@@ -9,23 +9,17 @@ WITH export AS (
   SELECT * FROM {{ ref('gcp_billing_export_xf') }}
   WHERE invoice_month >= '2022-01-01'
 
-),
-
-infra_labels AS (
+),infra_labels AS (
 
   SELECT * FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'gl_product_category'
 
-),
-
-env_labels AS (
+),env_labels AS (
 
   SELECT * FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'env'
 
-),
-
-runner_labels AS (
+),runner_labels AS (
 
   SELECT
     source_primary_key,
@@ -61,16 +55,31 @@ runner_labels AS (
     END AS resource_label_value
   FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'runner_manager_name'
-),
 
-unit_mapping AS (
+),unit_mapping AS (
 
   SELECT * FROM {{ ref('gcp_billing_unit_mapping') }}
   WHERE category = 'usage'
 
-),
+),project_ancestory AS (
 
-billing_base AS (
+  SELECT *
+  FROM {{ ref('gcp_billing_export_project_ancestry') }}
+
+),folder_pl_mapping AS (
+
+  SELECT *
+  FROM {{ ref('gcp_billing_folder_pl_mapping') }}
+
+),folder_labels AS (
+
+  SELECT a.source_primary_key,
+        a.folder_id
+  FROM project_ancestory AS a
+  JOIN folder_pl_mapping AS b on a.folder_id = b.folder_id
+
+),billing_base AS (
+
   SELECT
     DATE(export.usage_start_time)             AS day,
     export.project_id                         AS project_id,
@@ -79,6 +88,7 @@ billing_base AS (
     infra_labels.resource_label_value         AS infra_label,
     env_labels.resource_label_value           AS env_label,
     runner_labels.resource_label_value        AS runner_label,
+    folder_labels.folder_id                   AS folder_label,
     export.usage_unit                         AS usage_unit,
     export.pricing_unit                       AS pricing_unit,
     SUM(export.usage_amount)                  AS usage_amount,
@@ -99,7 +109,10 @@ billing_base AS (
     runner_labels
     ON
       export.source_primary_key = runner_labels.source_primary_key
-  {{ dbt_utils.group_by(n=9) }}
+  LEFT JOIN 
+    folder_labels ON export.source_primary_key = folder_labels.source_primary_key
+  {{ dbt_utils.group_by(n=10) }}
+
 )
 
 SELECT
@@ -110,6 +123,7 @@ SELECT
   bill.infra_label                   AS infra_label,
   bill.env_label                     AS env_label,
   bill.runner_label                  AS runner_label,
+  bill.folder_label,
   bill.usage_unit,
   bill.pricing_unit,
   bill.usage_amount                  AS usage_amount,

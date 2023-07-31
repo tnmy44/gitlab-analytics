@@ -22,6 +22,7 @@ WITH source AS (
         source.primary_key                                       AS source_primary_key,
         project_ancestors_flat.value['display_name']::VARCHAR                AS folder_name,
         SPLIT_PART(project_ancestors_flat.value['resource_name']::VARCHAR, '/', 2)              AS folder_id,
+        ROW_NUMBER() OVER (PARTITION BY source.primary_key ORDER BY project_ancestors_flat.index) AS hierarchy_level,
         source.uploaded_at                                       AS uploaded_at,
         {{ dbt_utils.surrogate_key([
             'source_primary_key',
