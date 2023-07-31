@@ -391,6 +391,8 @@ models:
       - name: person_first_country
         description: >
           Selects the first country contact enhanmenet services using abilve data. Following the order:  Zoominfo Company Country, Zoominfo Contact Country, Cognism Company Office Country, Cognism Country
+      - name: is_partner_recalled
+        description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
 
   - name: dim_crm_user
     description: '{{ doc("dim_crm_user") }}'
@@ -4568,6 +4570,8 @@ models:
       - name: zoom_info_company_revenue
       - name: zoom_info_company_state_province
       - name: zoominfo_account_phone
+      - name: is_focus_partner
+        description: A partner account on the focus partner list
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
