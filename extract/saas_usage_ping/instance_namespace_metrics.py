@@ -1,21 +1,33 @@
 """
 Namespace module for support instance_namespace_ping pipeline
 """
-import Fire
-import sys
+import datetime
 import os
+import sys
 from logging import basicConfig, info
 
-from utils import EngineFactory, Utils
+import Fire
 import pandas as pd
 from sqlalchemy.exc import SQLAlchemyError
+from utils import EngineFactory, Utils
 
-class InstanceNamespaceMetrics():
-    def __init__(self,namespace_metrics_filter=None):
-        if namespace_metrics_filter is not None:
-            self.metrics_backfill = namespace_metrics_filter
+
+class InstanceNamespaceMetrics:
+    """
+    Handling instance_namespace_metrics pipeline
+    """
+
+    def __init__(self, ping_date=None, namespace_metrics_filter=None):
+        if ping_date is not None:
+            self.end_date = datetime.datetime.strptime(ping_date, "%Y-%m-%d").date()
         else:
-            self.metrics_backfill = []
+            self.end_date = datetime.datetime.now().date()
+
+        self.start_date_28 = self.end_date - datetime.timedelta(28)
+        if namespace_metrics_filter is not None:
+            self.metrics_filter = namespace_metrics_filter
+        else:
+            self.metrics_filter = []
 
         self.engine_factory = EngineFactory()
         self.utils = Utils()
@@ -32,7 +44,7 @@ class InstanceNamespaceMetrics():
         """
         return self.metrics_filter
 
-    def filter_instance_namespace_metrics(filter_list: list):
+    def filter_instance_namespace_metrics(self, filter_list: list):
         """
         Filter instance_namespace_metrics for
         processing a namespace metrics load
@@ -105,9 +117,7 @@ class InstanceNamespaceMetrics():
         metric_name, metric_query, _ = self.get_prepared_values(query=query_dict)
 
         if "namespace_ultimate_parent_id" not in metric_query:
-            info(
-                f"Skipping ping {metric_name} due to no namespace information."
-            )
+            info(f"Skipping ping {metric_name} due to no namespace information.")
             return
 
         results = self.get_result(query_dict=query_dict, conn=connection)
@@ -135,9 +145,7 @@ class InstanceNamespaceMetrics():
 
         full_path = os.path.join(os.path.dirname(__file__), self.utils.NAMESPACE_FILE)
 
-
         namespace_queries = self.utils.load_from_json_file(file_name=full_path)
-        )
 
         for instance_namespace_query in namespace_queries:
             if self.metrics_filter(instance_namespace_query):
@@ -145,7 +153,9 @@ class InstanceNamespaceMetrics():
                     f"Start loading metrics: {instance_namespace_query.get('counter_name')}"
                 )
 
-                self.process_namespace_ping(query_dict=instance_namespace_query, connection=connection)
+                self.process_namespace_ping(
+                    query_dict=instance_namespace_query, connection=connection
+                )
 
         connection.close()
         self.engine_factory.dispose()
@@ -160,7 +170,9 @@ class InstanceNamespaceMetrics():
         # and only if time_window_query == False
         namespace_filter_list = self.get_metrics_filter()
 
-        namespace_filter = self.filter_instance_namespace_metrics(filter_list=namespace_filter_list)
+        namespace_filter = self.filter_instance_namespace_metrics(
+            filter_list=namespace_filter_list
+        )
 
         self.saas_namespace_ping(metrics_filter=namespace_filter)
 

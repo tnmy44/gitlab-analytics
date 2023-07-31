@@ -20,8 +20,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from utils import EngineFactory, Utils
 
 
-
-
 class UsagePing:
     """
     Usage ping class represent as an umbrella
@@ -36,8 +34,6 @@ class UsagePing:
             self.end_date = datetime.datetime.strptime(ping_date, "%Y-%m-%d").date()
         else:
             self.end_date = datetime.datetime.now().date()
-
-
 
         self.start_date_28 = self.end_date - datetime.timedelta(28)
         self.dataframe_api_columns = self.utils.META_API_COLUMNS
@@ -59,9 +55,6 @@ class UsagePing:
             metric_dict["key_path"]: metric_dict for metric_dict in metric_definitions
         }
         return metric_definitions_dict
-
-
-
 
     def _get_instance_sql_metrics_queries(self) -> Dict:
         """
@@ -491,9 +484,6 @@ class UsagePing:
             self.upload_instance_sql_metrics_errors(sql_metric_errors=sql_metric_errors)
 
         # self.run_metric_checks()
-
-
-
 
 
 if __name__ == "__main__":
