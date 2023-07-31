@@ -43,3 +43,10 @@ Prep model for the live crm opportunity dimension and fact models. This model is
  - If all of the methods for finding an opportunity-subscription mapping match for one record, select this subscription-opportunity pair.
 
 {% enddocs %}
+
+
+{% docs prep_lead %}
+
+This model is used to store hand raise and trial leads sourced from leads table(tap postgres) from customers.gitlab.com.
+
+{% enddocs %}
