@@ -7273,7 +7273,7 @@ models:
       - name: employee_type
         description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
 
-- name: dim_team
+  - name: dim_team
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
