@@ -47,6 +47,8 @@ sources:
       - name: banned_users
         identifier: gitlab_db_banned_users
         freshness: null
+      - name: batched_background_migrations
+        identifier: gitlab_db_batched_background_migrations
       - name: board_assignees
         identifier: gitlab_db_board_assignees
       - name: board_labels

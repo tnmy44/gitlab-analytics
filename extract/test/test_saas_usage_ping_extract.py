@@ -426,3 +426,14 @@ def test_merge_dicts():
 
     # still only one dup key from first assert
     assert len(usage_ping_test.duplicate_keys) == 1
+
+
+def test_validate_namespace_queries(namespace_file):
+    """
+    Test does namespace file have proper SQL
+    % -> %%
+    """
+
+    for n in namespace_file:
+        if "%" in n.get("counter_query", ""):
+            assert "%%" in n.get("counter_query", "")

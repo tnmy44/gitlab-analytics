@@ -113,7 +113,11 @@ WITH date_details AS (
       is_won,
       is_duplicate_flag,
       raw_net_arr,
-      sales_qualified_source
+      sales_qualified_source,
+
+      industry,
+      lam_dev_count_bin,
+      lam_dev_count
 
       -- Channel Org. fields
       -- this fields should be changed to this historical version
@@ -375,37 +379,6 @@ WITH date_details AS (
       edm_snapshot_opty.net_new_source_categories,           
       edm_snapshot_opty.record_type_id,
       
-
-      -- JK 2022-10-25 they are being calculated in a CTE later for now
-      -- edm_snapshot_opty.churned_contraction_deal_count,
-      -- edm_snapshot_opty.open_1plus_net_arr,
-      -- edm_snapshot_opty.open_3plus_net_arr,
-      -- edm_snapshot_opty.open_4plus_net_arr,
-      -- edm_snapshot_opty.churned_contraction_net_arr,
-      -- edm_snapshot_opty.booked_net_arr,
-      -- edm_snapshot_opty.is_booked_net_arr                       AS is_booked_net_arr_flag,
-      -- edm_snapshot_opty.is_eligible_asp_analysis                AS is_eligible_asp_analysis_flag,
-      -- edm_snapshot_opty.is_eligible_age_analysis                AS is_eligible_age_analysis_flag,
-      -- edm_snapshot_opty.is_eligible_churn_contraction           AS is_eligible_churn_contraction_flag,
-      -- edm_snapshot_opty.is_excluded_from_pipeline_created       AS is_excluded_flag,
-
-      -- CASE edm_snapshot_opty.is_sao 
-      --   WHEN TRUE THEN 1 
-      --   ELSE 0 
-      -- END                                                        AS is_eligible_sao_flag,
-
-      -- edm_snapshot_opty.created_in_snapshot_quarter_net_arr,
-      -- edm_snapshot_opty.created_and_won_same_quarter_net_arr,
-
-      -- edm_snapshot_opty.open_1plus_deal_count,
-      -- edm_snapshot_opty.open_3plus_deal_count,
-      -- edm_snapshot_opty.open_4plus_deal_count,
-      -- edm_snapshot_opty.booked_deal_count,
-      -- edm_snapshot_opty.deal_size,
-      -- edm_snapshot_opty.calculated_deal_size,
-      -- edm_snapshot_opty.is_eligible_open_pipeline               AS is_eligible_open_pipeline_flag,
-      -- edm_snapshot_opty.created_in_snapshot_quarter_deal_count,
-
       edm_snapshot_opty.dim_crm_account_id                       AS account_id,
       edm_snapshot_opty.account_owner_team_stamped,
       edm_snapshot_opty.account_owner_team_stamped_cro_level,
@@ -425,7 +398,15 @@ WITH date_details AS (
       edm_snapshot_opty.parent_crm_account_territory,
       fact_snapshot_opty.dim_parent_crm_opportunity_id AS parent_opportunity,
       edm_snapshot_opty.intended_product_tier,
-      edm_snapshot_opty.product_category
+      edm_snapshot_opty.product_category,
+
+      edm_snapshot_opty.arr_basis_for_clari     AS atr,
+      edm_snapshot_opty.won_arr_basis_for_clari AS won_atr,
+      CASE
+        WHEN edm_snapshot_opty.fpa_master_bookings_flag = 1
+          THEN edm_snapshot_opty.won_arr_basis_for_clari - edm_snapshot_opty.arr_basis_for_clari
+        ELSE 0
+      END                                       AS booked_churned_contraction_net_arr
       
 
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
@@ -509,6 +490,8 @@ WITH date_details AS (
       sfdc_opportunity_xf.parent_crm_account_upa_country_name,
       sfdc_opportunity_xf.parent_crm_account_business_unit,
 
+      sfdc_opportunity_xf.industry,
+
       -- fields calculated with both live and snapshot fields
       CASE 
         WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
@@ -545,7 +528,9 @@ WITH date_details AS (
 
       opportunity_owner.name                                     AS opportunity_owner,
 
-      opportunity_owner.is_rep_flag
+      opportunity_owner.is_rep_flag,
+      sfdc_opportunity_xf.lam_dev_count_bin,
+      sfdc_opportunity_xf.lam_dev_count
 
       
     FROM sfdc_opportunity_snapshot_history AS opp_snapshot
@@ -911,6 +896,19 @@ WITH date_details AS (
         WHEN is_renewal = 0 AND is_open = 1
             THEN DATEDIFF(day, created_date, snapshot_date)
     END                                                           AS cycle_time_in_days,
+
+    -- 
+    CASE
+        WHEN cycle_time_in_days BETWEEN 1 AND 29
+            THEN '[0,30)'
+        WHEN cycle_time_in_days BETWEEN 30 AND 179
+            THEN '[30,180)'
+        WHEN cycle_time_in_days BETWEEN 179 AND 364
+            THEN '[180,365)'
+        WHEN cycle_time_in_days > 364
+            THEN '[365+)'
+        ELSE 'Other'
+    END                  AS age_bin,
 
     -- Calculated fields
     CASE

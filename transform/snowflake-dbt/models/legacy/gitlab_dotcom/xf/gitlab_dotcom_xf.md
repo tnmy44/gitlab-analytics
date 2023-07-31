@@ -53,12 +53,6 @@ This model anonymizes three fields: `environment_name`, `slug`, `external_url` b
 
 {% enddocs %}
 
-{% docs gitlab_dotcom_gitlab_emails %}
-
-This model limits the gitlab dotcom emails table to only have records for emails ending with `gitlab.com`.
-
-{% enddocs %}
-
 {% docs gitlab_dotcom_gitlab_internal_sprints %}
 
 This model limits the gitlab dotcom sprints table to only have records from groups gitlab-org(9970) and gitlab-com(6543), or projects that are part of product.
