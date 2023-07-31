@@ -22,7 +22,20 @@
   FROM 
   dim_date
   WHERE 
-  (day_of_fiscal_quarter_normalised = 90 or date_day = CURRENT_DATE-2) AND date_day BETWEEN '2023-01-31' AND CURRENT_DATE
+  (day_of_fiscal_quarter_normalised = 90 or date_day = CURRENT_DATE-2) AND date_day BETWEEN '2023-01-31' AND CURRENT_DATE-2
+  UNION 
+  
+--latest snapshot for current quarter
+  SELECT DISTINCT
+  date_day,
+  fiscal_year,
+  fiscal_quarter,
+  fiscal_quarter_name_fy,
+  snapshot_date_fpa
+  FROM 
+  dim_date 
+  WHERE (day_of_fiscal_quarter_normalised BETWEEN 3 AND 89) AND date_day = CURRENT_DATE-2 
+
     ORDER BY 1 DESC
 
 
