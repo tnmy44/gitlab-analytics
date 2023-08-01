@@ -105,24 +105,6 @@ repo_storage_pl_daily_ext AS (
 
 ),
 
-sandbox_projects_pl AS (
-
-  SELECT
-    date_spine.date_day,
-    sandbox_projects_pl.gcp_project_id        AS gcp_project_id,
-    NULL                                      AS gcp_service_description,
-    NULL                                      AS gcp_sku_description,
-    NULL                                      AS infra_label,
-    NULL                                      AS env_label,
-    NULL                                      AS runner_label,
-    NULL                                      AS folder_label,
-    LOWER(sandbox_projects_pl.classification) AS pl_category,
-    1                                         AS pl_percent,
-    'sandbox_projects_pl'                     AS from_mapping
-  FROM date_spine
-  CROSS JOIN {{ ref ('sandbox_projects_pl') }}
-),
-
 container_registry_pl_daily AS (
 
   SELECT
@@ -566,9 +548,6 @@ cte_append AS (SELECT *
   UNION ALL
   SELECT *
   FROM repo_storage_pl_daily_ext
-  UNION ALL
-  SELECT *
-  FROM sandbox_projects_pl
   UNION ALL
   SELECT *
   FROM container_registry_pl_daily
