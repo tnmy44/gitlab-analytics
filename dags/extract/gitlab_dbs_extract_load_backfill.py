@@ -199,61 +199,8 @@ for source_name, config in config_dict.items():
         extract_dag_args["start_date"] = config["start_date"]
         incremental_backfill_dag_args["start_date"] = config["start_date"]
 
-        # Regular Extract DAG
-        """
-        extract_dag = DAG(
-            f"{config['dag_name']}_db_extract",
-            default_args=extract_dag_args,
-            schedule_interval=config["extract_schedule_interval"],
-            description=config["description"],
-        )
-
-        with extract_dag:
-
-            # Actual PGP extract
-            file_path = f"analytics/extract/saas_postgres_pipeline_backfill/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
-            manifest = extract_manifest(file_path)
-            table_list = extract_table_list_from_manifest(manifest)
-
-            for table in table_list:
-                # tables that aren't incremental won't be processed by the incremental dag
-                if not is_incremental(manifest["tables"][table]["import_query"]):
-                    continue
-
-                TASK_TYPE = "db-incremental"
-                task_identifier = (
-                    f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
-                )
-
-                incremental_cmd = generate_cmd(
-                    config["dag_name"],
-                    f"--load_type incremental --load_only_table {table}",
-                    config["cloudsql_instance_name"],
-                )
-
-                incremental_extract = KubernetesPodOperator(
-                    **gitlab_defaults,
-                    image=DATA_IMAGE,
-                    task_id=f"{task_identifier}-pgp-extract",
-                    name=f"{task_identifier}-pgp-extract",
-                    pool=get_task_pool(config["task_name"]),
-                    secrets=standard_secrets + config["secrets"],
-                    env_vars={
-                        **gitlab_pod_env_vars,
-                        **config["env_vars"],
-                        "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                        "LAST_LOADED": get_last_loaded(config["dag_name"]),
-                    },
-                    affinity=get_affinity(False),
-                    tolerations=get_toleration(False),
-                    arguments=[incremental_cmd],
-                    do_xcom_push=True,
-                )
-        globals()[f"{config['dag_name']}_db_extract"] = extract_dag
-        """
-
         incremental_backfill_dag = DAG(
-            f"{config['dag_name']}_db_incremental_backfillv8",
+            f"{config['dag_name']}_db_incremental_backfill",
             default_args=incremental_backfill_dag_args,
             schedule_interval=config["incremental_backfill_interval"],
             concurrency=1,
@@ -267,13 +214,7 @@ for source_name, config in config_dict.items():
             if config["dag_name"] == "el_gitlab_com_new":
                 table_list = [
                     "alert_management_http_integrations",
-                    "container_expiration_policies",
-                    "merge_request_metrics",
-                    "vulnerabilities",
                 ]
-            elif config["dag_name"] == "el_gitlab_com_ci_new":
-                table_list = ["ci_runners", "ci_trigger_requests"]
-                # table_list = ['ci_secure_files']
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "backfill"
@@ -308,111 +249,3 @@ for source_name, config in config_dict.items():
         globals()[
             f"{config['dag_name']}_db_incremental_backfill"
         ] = incremental_backfill_dag
-
-        deletes_dag = DAG(
-            f"{config['dag_name']}_db_deletes_v4",
-            default_args=incremental_backfill_dag_args,
-            schedule_interval=config["delete_interval"],
-            concurrency=1,
-            description=config["description_deletes"],
-        )
-
-        with deletes_dag:
-            file_path = f"analytics/extract/saas_postgres_pipeline_backfill/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
-            manifest = extract_manifest(file_path)
-            table_list = extract_table_list_from_manifest(manifest)
-            if config["dag_name"] == "el_gitlab_com_new":
-                table_list = [
-                    "alert_management_http_integrations",
-                    "container_expiration_policies",
-                    "merge_request_metrics",
-                    "vulnerabilities",
-                ]
-            elif config["dag_name"] == "el_gitlab_com_ci_new":
-                table_list = ["ci_runners", "ci_trigger_requests"]
-                # table_list = ['ci_secure_files']
-            for table in table_list:
-                if is_incremental(manifest["tables"][table]["import_query"]):
-                    TASK_TYPE = "deletes"
-
-                    task_identifier = (
-                        f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
-                    )
-
-                    sync_cmd = generate_cmd(
-                        config["dag_name"],
-                        f"--load_type {TASK_TYPE} --load_only_table {table}",
-                        config["cloudsql_instance_name"],
-                    )
-                    sync_extract = KubernetesPodOperator(
-                        **gitlab_defaults,
-                        image=DATA_IMAGE,
-                        task_id=task_identifier,
-                        name=task_identifier,
-                        pool=get_task_pool(config["task_name"]),
-                        secrets=standard_secrets + config["secrets"],
-                        env_vars={
-                            **gitlab_pod_env_vars,
-                            **config["env_vars"],
-                            "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                        },
-                        affinity=get_affinity(False),
-                        tolerations=get_toleration(False),
-                        arguments=[sync_cmd],
-                        # do_xcom_push=True, # TODO: do we need this still?
-                    )
-
-        globals()[f"{config['dag_name']}_db_deletes"] = deletes_dag
-
-    # SCD DAG's
-    """
-    else:
-        scd_dag_args["start_date"] = config["start_date"]
-        sync_dag = DAG(
-            f"{config['dag_name']}_db_sync",
-            default_args=scd_dag_args,
-            schedule_interval=config["extract_schedule_interval"],
-            concurrency=6,
-            description=config["description"],
-        )
-
-        with sync_dag:
-            # PGP Extract
-            file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
-            manifest = extract_manifest(file_path)
-            table_list = extract_table_list_from_manifest(manifest)
-            for table in table_list:
-                if not is_incremental(manifest["tables"][table]["import_query"]):
-                    TASK_TYPE = "db-scd"
-
-                    task_identifier = (
-                        f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
-                    )
-
-                    # SCD Task
-                    scd_cmd = generate_cmd(
-                        config["dag_name"],
-                        f"--load_type scd --load_only_table {table}",
-                        config["cloudsql_instance_name"],
-                    )
-
-                    scd_extract = KubernetesPodOperator(
-                        **gitlab_defaults,
-                        image=DATA_IMAGE,
-                        task_id=task_identifier,
-                        name=task_identifier,
-                        pool=get_task_pool(config["task_name"]),
-                        secrets=standard_secrets + config["secrets"],
-                        env_vars={
-                            **gitlab_pod_env_vars,
-                            **config["env_vars"],
-                            "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                            "task_id": task_identifier,
-                        },
-                        arguments=[scd_cmd],
-                        affinity=get_affinity(True),
-                        tolerations=get_toleration(True),
-                        do_xcom_push=True,
-                    )
-        globals()[f"{config['dag_name']}_db_sync"] = sync_dag
-    """
