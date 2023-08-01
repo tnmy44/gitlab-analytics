@@ -153,8 +153,9 @@ class InstanceNamespaceMetrics:
         """
         connection = self.engine_factory.connect()
 
-
-        namespace_queries = self.get_meta_data_from_file(self, file_name=self.utils.NAMESPACE_FILE)
+        namespace_queries = self.get_meta_data_from_file(
+            self, file_name=self.utils.NAMESPACE_FILE
+        )
 
         for instance_namespace_query in namespace_queries:
             if self.metrics_filter(instance_namespace_query):
