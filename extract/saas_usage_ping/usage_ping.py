@@ -3,7 +3,6 @@ Automated Service Ping main unit
 
 usage_ping.py is responsible for uploading the following into Snowflake:
 - usage ping combined metrics (sql + redis)
-- usage ping namespace
 """
 import datetime
 import json
@@ -35,7 +34,6 @@ class UsagePing:
         else:
             self.end_date = datetime.datetime.now().date()
 
-        self.start_date_28 = self.end_date - datetime.timedelta(28)
         self.dataframe_api_columns = self.utils.META_API_COLUMNS
         self.missing_definitions = {self.utils.SQL_KEY: [], self.utils.REDIS_KEY: []}
         self.duplicate_keys = []

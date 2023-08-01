@@ -1,13 +1,16 @@
 """
 Namespace module for support instance_namespace_ping pipeline
+
+instance_namespace_metrics.py is responsible for uploading the following into Snowflake:
+- usage ping namespace
 """
 import datetime
 import os
 import sys
 from logging import basicConfig, info
 
-from fire import Fire
 import pandas as pd
+from fire import Fire
 from sqlalchemy.exc import SQLAlchemyError
 from utils import EngineFactory, Utils
 
@@ -25,9 +28,9 @@ class InstanceNamespaceMetrics:
 
         self.start_date_28 = self.end_date - datetime.timedelta(28)
         if namespace_metrics_filter is not None:
-            self.metrics_filter = namespace_metrics_filter
+            self.metrics_backfill_filter = namespace_metrics_filter
         else:
-            self.metrics_filter = []
+            self.metrics_backfill_filter = []
 
         self.engine_factory = EngineFactory()
         self.utils = Utils()
@@ -42,19 +45,14 @@ class InstanceNamespaceMetrics:
 
         return self.utils.load_from_json_file(file_name=full_path)
 
-    def set_metrics_filter(self, metrics: list):
-        """
-        setter for metrics filter
-        """
-        self.metrics_filter = metrics
-
     def get_metrics_filter(self) -> list:
         """
         getter for metrics filter
         """
-        return self.metrics_filter
+        return self.metrics_backfill_filter
 
-    def filter_instance_namespace_metrics(self, filter_list: list):
+    @staticmethod
+    def filter_instance_namespace_metrics(filter_list: list):
         """
         Filter instance_namespace_metrics for
         processing a namespace metrics load
@@ -97,7 +95,7 @@ class InstanceNamespaceMetrics:
 
     def get_result(self, query_dict: dict, conn) -> pd.DataFrame:
         """
-        Try to execute query and return results
+        Execute query and return results
         """
         name, sql, level = self.get_prepared_values(query=query_dict)
 
@@ -154,11 +152,11 @@ class InstanceNamespaceMetrics:
         connection = self.engine_factory.connect()
 
         namespace_queries = self.get_meta_data_from_file(
-            self, file_name=self.utils.NAMESPACE_FILE
+            file_name=self.utils.NAMESPACE_FILE
         )
 
         for instance_namespace_query in namespace_queries:
-            if self.metrics_filter(instance_namespace_query):
+            if metrics_filter(instance_namespace_query):
                 info(
                     f"Start loading metrics: {instance_namespace_query.get('counter_name')}"
                 )
