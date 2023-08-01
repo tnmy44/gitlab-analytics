@@ -519,8 +519,8 @@ def is_resume_export(
 
         if not is_export_completed:
             is_resume_export_needed = True
-            # if more than 24 HR since last upload, start backfill over,
-            if time_since_last_upload > timedelta(hours=24):
+            # if more than 48 HR since last upload, start backfill over,
+            if time_since_last_upload > timedelta(hours=48):
                 logging.info(
                     f"In middle of export for {source_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Start export from beginning."
                 )
