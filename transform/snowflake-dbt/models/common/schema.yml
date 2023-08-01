@@ -5744,7 +5744,9 @@ models:
       - name: fct_behavior_website_page_view_sk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("fct_behavior_website_page_view_sk") }}'  
       - name: dim_behavior_website_page_sk
         description: '{{ doc("dim_behavior_website_page_sk") }}' 
@@ -6168,7 +6170,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
