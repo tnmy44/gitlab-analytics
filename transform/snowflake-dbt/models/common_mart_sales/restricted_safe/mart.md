@@ -56,3 +56,10 @@ The cohort quarter of the ultimate parent account.
 The cohort month of the ultimate parent account.
 
 {% enddocs %}
+
+
+{% docs qsr_notes %}
+
+Read more about Quarterly Subscription Reconciliation in the [fulfillment handbook page](https://about.gitlab.com/handbook/product/fulfillment-guide/#quarterly-subscription-reconciliation-qsr)
+
+{% enddocs %}

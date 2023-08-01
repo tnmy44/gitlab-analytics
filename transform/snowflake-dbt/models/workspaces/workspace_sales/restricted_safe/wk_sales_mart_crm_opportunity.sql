@@ -436,6 +436,18 @@ WITH sfdc_users_xf AS (
        calculated_age_in_days,
        days_since_last_activity,
        arr_basis,
+
+      -- NF 28072023 These fields will be updated
+       arr_basis_for_clari        AS atr,
+       won_arr_basis_for_clari    AS won_atr,
+
+       CASE
+        WHEN fpa_master_bookings_flag = 1
+          THEN won_arr_basis_for_clari - arr_basis_for_clari
+        ELSE 0
+       END                         AS booked_churned_contraction_net_arr,
+       
+       ------------------------------------------
        iacv,
        net_iacv,
        segment_order_type_iacv_to_net_arr_ratio,
@@ -456,7 +468,7 @@ WITH sfdc_users_xf AS (
        churned_contraction_net_arr,
        calculated_deal_count,
        booked_churned_contraction_deal_count,
-       booked_churned_contraction_net_arr,
+       --booked_churned_contraction_net_arr,
        arr,
        recurring_amount,
        true_up_amount,
