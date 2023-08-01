@@ -8,6 +8,7 @@ WITH ci_lookback AS (
     'continuous_integration'                  AS infra_label,
     NULL                                      AS env_label,
     NULL                                      AS runner_label,
+    NULL AS folder_label,
     LOWER(ci_runners_pl_lookback.pl_category) AS pl_category,
     ci_runners_pl_lookback.pl_percent         AS pl_percent,
     'continous_integration_lookback'          AS from_mapping
@@ -25,6 +26,7 @@ flex_cud AS (
     'shared'                                        AS infra_label,
     NULL                                            AS env_label,
     NULL                                            AS runner_label,
+    NULL AS folder_label,
     LOWER(flex_cud_lookback.pl_category)            AS pl_category,
     flex_cud_lookback.pl_percent                    AS pl_percent,
     'flex_cud_lookback'                             AS from_mapping
@@ -52,6 +54,7 @@ t2d_cud AS (
     infra_labels.label                              AS infra_label,
     NULL                                            AS env_label,
     NULL                                            AS runner_label,
+    NULL AS folder_label,
     LOWER(t2d_cud_lookback.pl_category)             AS pl_category,
     t2d_cud_lookback.pl_percent                     AS pl_percent,
     't2d_cud_lookback'                              AS from_mapping
@@ -79,6 +82,7 @@ SELECT
   infra_label,
   env_label,
   runner_label,
+  NULL AS folder_label,
   LOWER(pl_category)           AS pl_category,
   pl_percent,
   LISTAGG(DISTINCT from_mapping, ' || ') WITHIN GROUP (

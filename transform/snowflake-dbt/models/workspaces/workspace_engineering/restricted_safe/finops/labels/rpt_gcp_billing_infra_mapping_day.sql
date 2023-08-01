@@ -76,7 +76,8 @@ WITH export AS (
   SELECT a.source_primary_key,
         a.folder_id
   FROM project_ancestory AS a
-  JOIN folder_pl_mapping AS b on a.folder_id = b.folder_id
+  LEFT JOIN folder_pl_mapping AS b on a.folder_id = b.folder_id
+  WHERE b.folder_id IS NOT NULL OR a.folder_name != 'gitlab-production' -- project to be excluded for folder_pl mapping
 
 ),billing_base AS (
 
