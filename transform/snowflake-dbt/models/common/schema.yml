@@ -5001,6 +5001,25 @@ models:
         description: '{{ doc("intended_product_tier") }}'
       - name: dim_parent_crm_opportunity_id
         description: '{{ doc("dim_parent_crm_opportunity_id") }}'
+      - name: next_steps
+        description: Free text field that provides insight into the next step to continue progressing the Opportunity through the Sales Pipeline.
+      - name: auto_renewal_status
+        descripton: Flag with on/off. Indicates whether a current subscription will automatically renew for the same term as their current subscription after the expiration of the current term
+      - name: qsr_notes
+        description: '{{ doc("qsr_notes") }}'
+      - name: qsr_status  
+        description: Quarterly Subscription Reconciliation status (Pending, failed, processed)
+      - name: manager_confidence
+      - name: renewal_risk_category
+        description: Renewal forecasting field indicating whether the customer will renew, churn or contract (actionable or not)
+      - name: renewal_swing_arr
+        description: The revenue the Account team believes can be saved on an at-risk Renewal if action is taken
+      - name: renewal_manager
+        description:  Renewals Manager supporting this Opportunity
+      - name: renewal_forecast_health
+        description: Red, Yellow, Green health rating based on the Net ARR field
+      - name: renewal_ownership
+        description: This field determines Rules of Engagement (ROE) and ownership for the Renewal between the Renewals Manager and the Account Executive
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
