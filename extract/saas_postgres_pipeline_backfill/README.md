@@ -1,3 +1,7 @@
+### Purpose - updated, 2023-08-01
+This folder is used specifically to perform backfill of `merge_request_diff_commits` table.
+After that table is backfilled, this folder will be removed until a fully integrated solution is implemented.
+
 ### Purpose
 This is a copy of `extract/postgres_pipeline`, but with some backfill logic being adjusted.
 
