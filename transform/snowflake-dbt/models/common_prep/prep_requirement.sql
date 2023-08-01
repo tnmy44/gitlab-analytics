@@ -4,8 +4,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_requirement_sk",
-    "post-hook": "{{ missing_member_column(primary_key = 'dim_requirement_sk', not_null_test_cols = []) }}"
+    "unique_key": "dim_requirement_sk"
     })
 }}
 
