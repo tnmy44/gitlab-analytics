@@ -45,9 +45,11 @@
       -- if the column is part of a not null test, set it to 0 so this test does not fail
       {% elif col.name|lower in not_null_test_columns|lower %}
       '0' AS {{ col.name|lower }}
-      -- if the column contains "_ID" this indicates it is an id so assign it "-1"
+      -- if the column contains "_ID" this indicates it is an id so assign it "-1" or the hash of -1
       {% elif ('_ID' in col.name|string and col.data_type.startswith('character varying')) %}
       MD5('-1') AS {{ col.name|lower }}
+      {% elif ('_ID' in col.name|string and col.data_type.startswith('numeric')) %}
+      -1 AS {{ col.name|lower }}
       {% elif col.name|string == 'IS_DELETED' %}
       '0' AS {{ col.name|lower }}
       -- boolean
