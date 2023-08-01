@@ -82,10 +82,10 @@ SELECT
   infra_label,
   env_label,
   runner_label,
-  NULL AS folder_label,
+  folder_label,
   LOWER(pl_category)           AS pl_category,
   pl_percent,
   LISTAGG(DISTINCT from_mapping, ' || ') WITHIN GROUP (
     ORDER BY from_mapping ASC) AS from_mapping
 FROM cte_append
-{{ dbt_utils.group_by(n=9) }}
+{{ dbt_utils.group_by(n=10) }}

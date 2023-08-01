@@ -63,7 +63,8 @@ WITH export AS (
 
 ),project_ancestory AS (
 
-  SELECT *
+  SELECT *,
+  MAX(IFF(folder_id=805818759045,1,0)) OVER (PARTITION BY source_primary_key) AS has_project_to_exclude --gitlab-production to be excluded
   FROM {{ ref('gcp_billing_export_project_ancestry') }}
 
 ),folder_pl_mapping AS (
@@ -76,8 +77,8 @@ WITH export AS (
   SELECT a.source_primary_key,
         a.folder_id
   FROM project_ancestory AS a
-  LEFT JOIN folder_pl_mapping AS b on a.folder_id = b.folder_id
-  WHERE b.folder_id IS NOT NULL OR a.folder_name != 'gitlab-production' -- project to be excluded for folder_pl mapping
+  JOIN folder_pl_mapping AS b on a.folder_id = b.folder_id
+  WHERE a.has_project_to_exclude = 0 -- project to be excluded for folder_pl mapping
 
 ),billing_base AS (
 

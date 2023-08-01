@@ -27,6 +27,7 @@ overlaps AS (
     service_base.infra_label,
     service_base.env_label,
     service_base.runner_label,
+    service_base.folder_label,
     lookback_pl_mappings.pl_category,
     service_base.usage_unit,
     service_base.pricing_unit,
@@ -43,14 +44,16 @@ overlaps AS (
       service_base.gcp_sku_description,
       service_base.infra_label,
       service_base.env_label,
-      service_base.runner_label
+      service_base.runner_label,
+      service_base.folder_label
       ORDER BY
-        (CASE WHEN lookback_pl_mappings.gcp_project_id IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN lookback_pl_mappings.gcp_service_description IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN lookback_pl_mappings.gcp_sku_description IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN lookback_pl_mappings.infra_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN lookback_pl_mappings.env_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
-        (CASE WHEN lookback_pl_mappings.runner_label IS NOT NULL THEN 1 ELSE 0 END) DESC
+        (CASE WHEN lookback_pl_mappings.runner_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
+        (CASE WHEN lookback_pl_mappings.folder_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
+        (CASE WHEN lookback_pl_mappings.gcp_project_id IS NOT NULL THEN 1 ELSE 0 END) DESC
     )                                                                                        AS priority
   FROM
     service_base
@@ -61,6 +64,7 @@ overlaps AS (
     AND COALESCE(lookback_pl_mappings.infra_label, COALESCE(service_base.infra_label, '')) = COALESCE(service_base.infra_label, '')
     AND COALESCE(lookback_pl_mappings.env_label, COALESCE(service_base.env_label, '')) = COALESCE(service_base.env_label, '')
     AND COALESCE(lookback_pl_mappings.runner_label, COALESCE(service_base.runner_label, '')) = COALESCE(service_base.runner_label, '')
+    AND COALESCE(lookback_pl_mappings.folder_label, COALESCE(service_base.folder_label, 0)) = COALESCE(service_base.folder_label, 0)
 
 )
 
