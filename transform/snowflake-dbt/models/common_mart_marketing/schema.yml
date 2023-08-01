@@ -556,7 +556,7 @@ models:
         - name: touchpoint_date_range_id
           description: The dim_date date_range_id when joined to the bizible_touchpoint_date. 
 
-    - name: rpt_lead_to_revenue
+    - name: rpt_l2r_campaign_interactions
       description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
       columns:
         - name: influenced_opportunity_id
