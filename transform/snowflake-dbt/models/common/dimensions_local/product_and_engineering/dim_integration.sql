@@ -11,12 +11,19 @@
 WITH final AS (
 
     SELECT 
+      -- Surrogate Key
       dim_integration_sk,
+
+      -- Natural Key
       integration_id,
+
+      -- Foreign Keys
       dim_project_id,
       ultimate_parent_namespace_id,
       dim_plan_id,
       created_date_id,
+
+      -- Dimensional Contexts
       is_active,
       created_at,
       updated_at
