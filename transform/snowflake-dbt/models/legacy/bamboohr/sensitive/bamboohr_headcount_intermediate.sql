@@ -290,7 +290,7 @@ WITH dates AS (
       CASE
         WHEN division = 'Sales' 
           THEN 'Sales'
-        WHEN division in ('Product', 'Engineering')
+        WHEN division in ('Product', 'Engineering', 'Security')
           THEN 'Tech'
         ELSE 'Non-Tech' END             AS division,
       NULL                              AS job_role,

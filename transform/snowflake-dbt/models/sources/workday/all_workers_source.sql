@@ -2,6 +2,7 @@ WITH source AS (
 
   SELECT *
   FROM {{ source('workday','all_workers') }}
+  WHERE NOT _fivetran_deleted
 
 ),
 
@@ -16,6 +17,9 @@ renamed AS (
     gender::VARCHAR                   AS gender,
     work_email::VARCHAR               AS work_email,
     date_of_birth::DATE               AS date_of_birth,
+    city::VARCHAR                     AS city,
+    state_province::VARCHAR           AS state_province,
+    country::VARCHAR                  AS country,
     _fivetran_deleted::BOOLEAN        AS is_deleted,
     _fivetran_synced::TIMESTAMP       AS uploaded_at
   FROM source

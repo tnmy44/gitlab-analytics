@@ -22,7 +22,7 @@
     FROM {{ ref('version_usage_data_source') }} as usage
 
   {% if is_incremental() %}
-          WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+          WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
   {% endif %}
 
 ), usage_data AS (
@@ -32,9 +32,10 @@
       host_id                                                                                                                 AS dim_host_id,
       uuid                                                                                                                    AS dim_instance_id,
       ping_created_at                                                                                                         AS ping_created_at,
+      uploaded_at                                                                                                             AS uploaded_at,
       source_ip_hash                                                                                                          AS ip_address_hash,
       edition                                                                                                                 AS original_edition,
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }}
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP','UPLOADED_AT']) }}
     FROM source
     WHERE uuid IS NOT NULL
       AND version NOT LIKE ('%VERSION%')
@@ -47,9 +48,10 @@
       usage_data.dim_instance_id                                                                                                                  AS dim_instance_id,
       {{ dbt_utils.surrogate_key(['dim_host_id', 'dim_instance_id'])}}                                                                            AS dim_installation_id,
       ping_created_at                                                                                                                             AS ping_created_at,
+      usage_data.uploaded_at                                                                                                                      AS uploaded_at,
       ip_address_hash                                                                                                                             AS ip_address_hash,
       original_edition                                                                                                                            AS original_edition,
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP','UPLOADED_AT']) }},
       IFF(original_edition = 'CE', 'CE', 'EE')                                                                                                    AS main_edition,
       CASE
         WHEN original_edition = 'CE'                                     THEN 'Core'
@@ -60,24 +62,49 @@
         WHEN original_edition = 'EEP'                                    THEN 'Premium'
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                                                                             AS product_tier,
-        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)                                          AS raw_usage_data_payload,
+      CASE
+        WHEN hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
+                                                                    '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
+          THEN TRUE
+        ELSE FALSE
+      END                                                                                                                                         AS is_saas_dedicated,
+      -- CASE
+      --   WHEN ping_created_at <= '2023-06-01' AND hostname LIKE ANY ('%gitlab-dedicated.us%', '%gitlab-dedicated.com%', -- Production instances
+      --                                                               '%gitlab-dedicated.systems%', '%testpony.net%', '%gitlab-private.org%') -- beta, sandbox, test
+      --     THEN TRUE
+      --   WHEN ping_created_at > '2023-06-01'  AND COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)['gitlab_dedicated']::BOOLEAN = TRUE
+      --     THEN TRUE
+      --   ELSE FALSE
+      -- END                                                                                                                                         AS is_saas_dedicated,
+      CASE
+        WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
+        WHEN is_saas_dedicated = TRUE THEN 'SaaS' 
+        ELSE 'Self-Managed'
+      END                                                                                                                                         AS ping_delivery_type,
+      CASE
+        WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'GitLab.com'
+        WHEN is_saas_dedicated = TRUE THEN 'Dedicated'
+        ELSE 'Self-Managed'
+      END                                                                                                                                         AS ping_deployment_type,
+      COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)                                            AS raw_usage_data_payload,
       IFF(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7', 'SaaS - Manual', 'Self-Managed') AS ping_type --GitLab SaaS pings here are manual, everything else is SM
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
-    WHERE usage_data.ping_created_at <= (SELECT MAX(created_at) FROM raw_usage_data)
+    WHERE usage_data.ping_created_at  < (SELECT MAX(created_at) FROM raw_usage_data)
       AND NOT(dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7' AND ping_created_at >= '2023-02-19') --excluding GitLab SaaS pings from 2023-02-19 and after
 
 ), automated_service_ping AS (
 
     SELECT
-      id AS dim_ping_instance_id,
-      host_id AS dim_host_id,
-      uuid AS dim_instance_id,
+      id                                                AS dim_ping_instance_id,
+      host_id                                           AS dim_host_id,
+      uuid                                              AS dim_instance_id,
       {{ dbt_utils.surrogate_key(['host_id', 'uuid'])}} AS dim_installation_id,
-      created_at AS ping_created_at,
-      NULL AS ip_address_hash,
-      edition AS original_edition,
+      created_at                                        AS ping_created_at,
+      created_at                                        AS uploaded_at,
+      NULL                                              AS ip_address_hash,
+      edition                                           AS original_edition,
       id,
       version,
       instance_user_count,
@@ -143,8 +170,11 @@
         WHEN edition = 'EES'                  THEN 'Starter'
         WHEN edition = 'EEP'                  THEN 'Premium'
         WHEN edition = 'EEU'                  THEN 'Ultimate'
-        ELSE NULL 
+        ELSE NULL
       END AS product_tier,
+      FALSE AS is_saas_dedicated,
+      'SaaS' AS ping_delivery_type,
+      'GitLab.com' AS ping_deployment_type,
       raw_usage_data_payload,
       ping_type
     FROM automated_instance_service_ping
@@ -163,7 +193,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-03-17",
-    updated_date="2023-02-21"
+    updated_date="2023-07-04"
 ) }}

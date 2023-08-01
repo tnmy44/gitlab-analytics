@@ -49,6 +49,8 @@ WITH prep_amendment AS (
          THEN NULL
        ELSE subscription_opportunity_mapping.dim_crm_opportunity_id
     END                                                                             AS dim_crm_opportunity_id,
+    subscription.dim_crm_opportunity_id_current_open_renewal,
+    subscription.dim_crm_opportunity_id_closed_lost_renewal,
     {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}                        AS dim_amendment_id_subscription,
 
     --Subscription Information
@@ -122,5 +124,5 @@ WITH prep_amendment AS (
     created_by="@snalamaru",
     updated_by="@michellecooper",
     created_date="2020-12-16",
-    updated_date="2022-11-21"
+    updated_date="2023-04-12"
 ) }}

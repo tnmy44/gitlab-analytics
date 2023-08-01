@@ -27,7 +27,7 @@ fact_with_dims AS (
                                           
     --Foreign Keys
     dim_ultimate_parent_namespace_id,
-    dim_active_product_tier_id,
+    dim_latest_product_tier_id,
     dim_latest_subscription_id,
     dim_crm_account_id,
     dim_billing_account_id,
@@ -71,7 +71,7 @@ fact_with_dims AS (
 {{ dbt_audit(
     cte_ref="fact_with_dims",
     created_by="@cbraza",
-    updated_by="@cbraza",
+    updated_by="@michellecooper",
     created_date="2023-02-14",
-    updated_date="2023-02-14"
+    updated_date="2023-05-12"
 ) }}

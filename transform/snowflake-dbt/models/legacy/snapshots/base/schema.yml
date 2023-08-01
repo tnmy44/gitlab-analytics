@@ -155,6 +155,8 @@ models:
         description: The country of the company matched by the Zoom Info enrichment process.
       - name: is_excluded_from_zoom_info_enrich
         description: A flag to indicate if the account should be included in the Zoom Info enrichment process.
+      - name: bdr_prospecting_status
+        description: Indicates whether the account is actively being prospected by a BDR.
   - name: sfdc_bizible_attribution_touchpoint_snapshots_source
     description: Attibtution touchpoints from Bizible loaded into Salesforce.
   - name: sfdc_bizible_touchpoint_snapshots_source
@@ -173,6 +175,37 @@ models:
           - not_null
       - name: valid_from
           - not_null
+  
+  - name: sfdc_contact_snapshots_source
+    description: This is the source model for snapshots of the salesforce contact table.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - contact_id
+            - dbt_valid_from
+    columns:
+      - name: contact_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
+  - name: sfdc_lead_snapshots_source
+    description: This is the source model for snapshots of the salesforce lead table.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - lead_id
+            - dbt_valid_from
+    columns:
+      - name: lead_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
   - name: sfdc_user_snapshots_source
     description: This is the source model for snapshots of the salesforce user table for cleaning and renaming.
     columns:
@@ -200,3 +233,33 @@ models:
     description: Source layer for Zuora Rate Plan Charges Snapshots for cleaning and renaming
   - name: zuora_subscription_snapshots_source
     description: Source layer for Zuora Subscriptions
+
+  - name: customers_db_billing_accounts_snapshots_base
+    description: This is the base model for snapshotted billing accounts data from the customers.gitlab.com database.
+    columns:
+      - name: billing_account_snapshot_id
+        description: Auto-generated primary key when building the snapshot with dbt
+        tests:
+          - not_null
+          - unique
+      - name: billing_account_id
+        description: A system-generated unique ID for billing accounts in CDot
+        tests:
+          - not_null
+      - name: zuora_account_id
+        description: A unique Zuora account number associated with the User
+      - name: zuora_account_name
+        description: The name of the zuora account associated with the zuora account id
+      - name: sfdc_account_id
+        description: The customer account ID for the account
+      - name: billing_account_created_at
+        description: The date the billing account was created for the customer
+      - name: billing_account_created_at
+        description: The date when any changes happened to the Billing account record for a customer
+      - name: valid_from
+        tests:
+          - not_null
+      - name: valid_to
+
+
+

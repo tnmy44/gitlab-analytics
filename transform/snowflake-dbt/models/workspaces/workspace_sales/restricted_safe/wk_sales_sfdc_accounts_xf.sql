@@ -1,24 +1,23 @@
 {{ config(alias='sfdc_accounts_xf') }}
 
-WITH mart_crm_account AS (
-    SELECT *
-    FROM {{ref('mart_crm_account')}}
+WITH raw_account AS (
+
+  SELECT id,
+    account_demographics_upa_country_name__c AS account_upa_country_name
+  FROM {{ source('salesforce', 'account') }}
+
+), mart_crm_account AS (
+
+    SELECT mart_account.*,
+        raw_account.account_upa_country_name AS parent_crm_account_upa_country_name
+    FROM {{ref('mart_crm_account')}} mart_account
+    LEFT JOIN raw_account
+        ON raw_account.id = mart_account.dim_crm_account_id
 
 ), account_owner AS (
 
 SELECT *
 FROM {{ref('wk_sales_sfdc_users_xf')}}
-
-), parent_account AS (
-    SELECT
-        dim_crm_account_id,
-        dim_crm_user_id,
-        parent_crm_account_demographics_sales_segment,
-        parent_crm_account_demographics_geo,
-        parent_crm_account_demographics_region,
-        parent_crm_account_demographics_area,
-        parent_crm_account_demographics_territory
-    FROM {{ref('mart_crm_account')}}
 
 ), sfdc_record_type AS (
     -- using source in prep temporarily
@@ -31,52 +30,46 @@ SELECT
     mart.crm_account_name                                    AS account_name,
     mart.master_record_id,
     mart.dim_crm_user_id                                     AS owner_id,
-
-    -----------------------
-
-    account_owner.business_unit                 AS account_owner_user_business_unit,
-    account_owner.sub_business_unit             AS account_owner_user_sub_business_unit,
-    account_owner.division                      AS account_owner_user_division,
-    account_owner.asm                           AS account_owner_user_asm,
-
-    account_owner.adjusted_user_segment         AS account_owner_user_segment,
+    account_owner.business_unit                              AS account_owner_user_business_unit,
+    account_owner.sub_business_unit                          AS account_owner_user_sub_business_unit,
+    account_owner.division                                   AS account_owner_user_division,
+    account_owner.asm                                        AS account_owner_user_asm,
+    account_owner.adjusted_user_segment                      AS account_owner_user_segment,
 
     -- NF: Add the logic for hybrid users
     -- If hybrid user we leverage the account demographics data
     CASE 
         WHEN account_owner.is_hybrid_flag = 1
-        THEN mart.parent_crm_account_demographics_sales_segment  
+        THEN mart.parent_crm_account_sales_segment  
         ELSE account_owner.user_segment  
-    END                                         AS account_owner_raw_user_segment,
-    mart.crm_account_owner_geo                  AS account_owner_user_geo,
-    mart.crm_account_owner_region               AS account_owner_user_region,
+    END                                                      AS account_owner_raw_user_segment,
+    mart.crm_account_owner_geo                               AS account_owner_user_geo,
+    mart.crm_account_owner_region                            AS account_owner_user_region,
     
     -- NF: Add the logic for hybrid users
     -- If hybrid user we leverage the account demographics data
        CASE 
         WHEN account_owner.is_hybrid_flag = 1
-        THEN mart.parent_crm_account_demographics_area  
+        THEN mart.parent_crm_account_area  
         ELSE account_owner.user_area  
-       END                                      AS account_owner_user_area,
+       END                                                   AS account_owner_user_area,
 
-    account_owner.role_type                     AS account_owner_user_role_type,
+    account_owner.role_type                                  AS account_owner_user_role_type,
 
-    parent_account_owner.business_unit          AS parent_account_owner_user_business_unit,
-    parent_account_owner.sub_business_unit      AS parent_account_owner_user_sub_business_unit,
-    parent_account_owner.division               AS parent_account_owner_user_division,
-    parent_account_owner.asm                    AS parent_account_owner_user_asm,
+    parent_account_owner.business_unit                       AS parent_account_owner_user_business_unit,
+    parent_account_owner.sub_business_unit                   AS parent_account_owner_user_sub_business_unit,
+    parent_account_owner.division                            AS parent_account_owner_user_division,
+    parent_account_owner.asm                                 AS parent_account_owner_user_asm,
 
-    parent_account_owner.role_type              AS parent_account_owner_user_role_type,
+    parent_account_owner.role_type                           AS parent_account_owner_user_role_type,
 
     ------------------------
-    mart.dim_crm_person_primary_contact_id      AS primary_contact_id,
+    mart.dim_crm_person_primary_contact_id                   AS primary_contact_id,
     mart.record_type_id,
     mart.partner_vat_tax_id,
-    mart.federal_account,
     mart.gitlab_com_user,
     mart.account_manager,
     mart.account_owner,
-    mart.crm_account_owner_team                              AS account_owner_team,
     mart.business_development_rep,
     mart.dedicated_service_engineer,
     mart.sales_development_rep,
@@ -85,7 +78,7 @@ SELECT
     mart.crm_account_type                                    AS account_type,
     mart.crm_account_industry                                AS industry,
     mart.crm_account_sub_industry                            AS sub_industry,
-    mart.parent_account_industry_hierarchy,
+    mart.parent_crm_account_industry                         AS parent_account_industry,
     mart.account_tier,
     mart.customer_since_date,
     mart.carr_this_account,
@@ -100,7 +93,6 @@ SELECT
     mart.is_sdr_target_account,
     mart.parent_crm_account_lam                              AS lam,
     mart.parent_crm_account_lam_dev_count                    AS lam_dev_count,
-    mart.potential_arr_lam,
     mart.is_jihu_account,
     mart.partners_signed_contract_date,
     mart.partner_account_iban_number,
@@ -119,19 +111,19 @@ SELECT
     mart.zoominfo_account_phone,
     mart.admin_manual_source_number_of_employees,
     mart.admin_manual_source_account_address,
-    mart.parent_crm_account_demographics_sales_segment       AS account_demographics_sales_segment,
-    mart.parent_crm_account_demographics_geo                 AS account_demographics_geo,
-    mart.parent_crm_account_demographics_region              AS account_demographics_region,
-    mart.parent_crm_account_demographics_area                AS account_demographics_area,
-    mart.parent_crm_account_demographics_territory           AS account_demographics_territory,
-    mart.crm_account_demographics_employee_count             AS account_demographics_employee_count,
-    mart.parent_crm_account_demographics_max_family_employee AS account_demographics_max_family_employee,
-    mart.parent_crm_account_demographics_upa_country         AS account_demographics_upa_country,
-    mart.parent_crm_account_demographics_upa_state           AS account_demographics_upa_state,
-    mart.parent_crm_account_demographics_upa_city            AS account_demographics_upa_city,
-    mart.parent_crm_account_demographics_upa_street          AS account_demographics_upa_street,
-    mart.parent_crm_account_demographics_upa_postal_code     AS account_demographics_upa_postal_code,
-    mart.health_score,
+    mart.parent_crm_account_sales_segment,
+    mart.parent_crm_account_geo,
+    mart.parent_crm_account_region,
+    mart.parent_crm_account_area,
+    mart.parent_crm_account_territory,
+    mart.crm_account_employee_count,
+    mart.parent_crm_account_max_family_employee,
+    mart.parent_crm_account_upa_country,
+    mart.parent_crm_account_upa_state,
+    mart.parent_crm_account_upa_city,
+    mart.parent_crm_account_upa_street,
+    mart.parent_crm_account_upa_postal_code,
+    mart.parent_crm_account_business_unit,
     mart.health_number,
     mart.health_score_color,
     mart.count_active_subscription_charges,
@@ -218,23 +210,31 @@ SELECT
     mart.is_zi_circle_ci_present                                    AS zi_circle_ci_presence_flag,
     mart.is_zi_bit_bucket_present                                   AS zi_bit_bucket_presence_flag,
 
- 
+    -- fields from RAW table
+    mart.parent_crm_account_upa_country_name,
 
-    parent_account.parent_crm_account_demographics_sales_segment    AS upa_demographics_segment,
-    parent_account.parent_crm_account_demographics_geo              AS upa_demographics_geo,
-    parent_account.parent_crm_account_demographics_region           AS upa_demographics_region,
-    parent_account.parent_crm_account_demographics_area             AS upa_demographics_area,
-    parent_account.parent_crm_account_demographics_territory        AS upa_demographics_territory
+    CASE 
+        WHEN mart.parent_crm_account_lam_dev_count BETWEEN 0 AND 25
+            THEN '[0-25]'
+        WHEN mart.parent_crm_account_lam_dev_count BETWEEN 26 AND 100
+            THEN '(25-100]'
+        WHEN mart.parent_crm_account_lam_dev_count BETWEEN 101 AND 250
+            THEN '(100-250]'     
+        WHEN mart.parent_crm_account_lam_dev_count BETWEEN 251 AND 1000
+            THEN '(250-1000]'     
+        WHEN mart.parent_crm_account_lam_dev_count BETWEEN 1001 AND 2500
+            THEN '(1000-2500]'
+        WHEN mart.parent_crm_account_lam_dev_count > 2500
+            THEN '(2500+]'      
+    END                     AS lam_dev_count_bin
 
 
 FROM mart_crm_account AS mart
-LEFT JOIN parent_account
-    ON mart.dim_parent_crm_account_id = parent_account.dim_crm_account_id
 LEFT JOIN sfdc_record_type
     ON mart.record_type_id = sfdc_record_type.record_type_id
 LEFT JOIN account_owner 
     ON account_owner.user_id = mart.dim_crm_user_id
 LEFT JOIN account_owner parent_account_owner
-    ON parent_account_owner.user_id = parent_account.dim_crm_user_id
+    ON parent_account_owner.user_id = mart.dim_crm_user_id
 
 WHERE mart.is_deleted = FALSE

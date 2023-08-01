@@ -38,7 +38,7 @@ WITH seat_links AS (
       product_rate_plan_id,
       dim_product_tier_id
     FROM {{ ref('dim_product_detail') }}
-    WHERE product_delivery_type = 'Self-Managed'
+    WHERE product_deployment_type IN ('Self-Managed', 'Dedicated')
 
 ), joined AS (
 
@@ -74,7 +74,7 @@ WITH seat_links AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@jpeguero",
     created_date="2021-02-02",
-    updated_date="2021-02-16"
+    updated_date="2023-06-22"
 ) }}

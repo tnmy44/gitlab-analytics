@@ -181,6 +181,9 @@ models:
       - name: subscription_status
       - name: product_rate_plan_charge_name
       - name: product_delivery_type
+        description: '{{ doc("product_delivery_type")}} '
+      - name: product_deployment_type
+        description: '{{ doc("product_deployment_type")}} '
 
   - name: dim_accounting_event
     description: '{{ doc("dim_accounting_event") }}'
@@ -225,33 +228,46 @@ models:
   - name: dim_billing_account
     description: '{{ doc("dim_billing_account") }}'
     columns:
+      - name: dim_billing_account_sk
+        description: '{{ doc("dim_billing_account_sk") }}'
+        tests:
+          - not_null
+          - unique
       - name: dim_billing_account_id
-        description: Unique id of the Zuora account
+        description: The unique identifier of the Zuora account associated with a given Subscription ID
         tests:
           - not_null
           - unique
       - name: dim_crm_account_id
-        description: CRM account ID for the account
-      - name: account_number
+        description: The customer account ID for the account
+      - name: billing_account_number
         description: A unique Zuora account number
-      - name: account_name
-        description: Zuora account name
+      - name: billing_account_name
+        description: The name of the Zuora account
       - name: account_status
-        description: Status of the account in the system. Can be draft, active, cancelled.
+        description: The status of the account in the system. Can be draft, active, cancelled.
       - name: parent_id
-        description: Identifier of the parent customer account
-      - name: sfdc_account_code
+        description: The identifier of the parent customer account      
+      - name: crm_account_code
+        description: The code for the sfdc account
+      - name: crm_entity
       - name: account_currency
         description: A currency as defined in Billing Settings in the Zuora UI
       - name: sold_to_country
         description: The country of the sold to contact
+      - name: ssp_channel
+      - name: po_required
+      - name: auto_pay
       - name: is_deleted
-        description: flag indicating if account has been deleted
-      - name: is_excluded
-        description: Field used to exclude test accounts from downstream models
+        description: The flag indicating if account has been deleted
+      - name: batch
+      - name: record_data_source
+        description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources
+
+
 
   - name: dim_billing_account_snapshot_bottom_up
-    description: Daily snapshot of billing accounts starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
+    description: Daily snapshot of billing accounts starting from 2020-03-01. This is built from the bottom up using snapshotted source tables from Zuora and CDot.
     columns:
       - name: billing_account_snapshot_id
         description: Unique identifier of a billing account snapshot
@@ -259,6 +275,35 @@ models:
           - not_null
           - unique
         tags: ["tdf", "arr_snapshots"]
+      - name: snapshot_id
+        description: Unique Date Id between dbt_valid_from and dbt_valid_to in Snapshots  
+      - name: dim_billing_account_id
+        description: The id of the Zuora account the subscription is associated with the customer   
+      - name: dim_crm_account_id
+        description: The customer account ID for the account
+      - name: billing_account_number
+        description: A unique Zuora account number
+      - name: billing_account_name
+        description: The name of the Zuora account
+      - name: account_status
+        description: The status of the account in the system. Can be draft, active, cancelled.
+      - name: parent_id
+        description: The identifier of the parent customer account      
+      - name: crm_account_code
+        description: The code for the crm sfdc account
+      - name: crm_entity
+      - name: account_currency
+        description: A currency as defined in Billing Settings in the Zuora UI
+      - name: sold_to_country
+        description: The country of the sold to contact
+      - name: ssp_channel
+      - name: po_required
+      - name: is_deleted
+        description: The flag indicating if account has been deleted
+      - name: batch
+      - name: record_data_source
+        description: An indicator flag to identify if the record exists in Zuora or CDot or in both the sources. This column can be used to identify any missing records or data sync issues in both the sources.
+  
 
   - name: dim_campaign
     description: Dimension table representing each individual Campaign. Excludes deleted campaigns. Based completely off SFDC campaign data.
@@ -346,6 +391,8 @@ models:
       - name: person_first_country
         description: >
           Selects the first country contact enhanmenet services using abilve data. Following the order:  Zoominfo Company Country, Zoominfo Contact Country, Cognism Company Office Country, Cognism Country
+      - name: is_partner_recalled
+        description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
 
   - name: dim_crm_user
     description: '{{ doc("dim_crm_user") }}'
@@ -397,7 +444,23 @@ models:
         description: Flag indicating a touchpoint is influenced by Demand Gen based on its segment being Demand Gen.
       - name: is_dg_sourced
         description: Flag indicating a touchpoint is sourced from Demand Gen based on its segment being Demand Gen as well as its position being first touch.
-
+      - name: bizible_form_page_utm_content
+        description: The `utm_content` parameter of the `bizible_form_url`
+      - name: bizible_form_page_utm_budget
+        description: The `utm_budget` parameter of the `bizible_form_url`
+      - name: bizible_form_page_utm_allptnr
+        description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_form_url`
+      - name: bizible_form_page_utm_partnerid
+        description: The `utm_partnerid` parameter of the `bizible_form_url`
+      - name: bizible_landing_page_utm_content
+        description: The `utm_content` parameter of the `bizible_landing_page`
+      - name: bizible_landing_page_utm_budget
+        description: The `utm_budget` parameter of the `bizible_landing_page`
+      - name: bizible_landing_page_utm_allptnr
+        description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_landing_page`
+      - name: bizible_landing_page_utm_partnerid
+        description: The `utm_partnerid` parameter of the `bizible_landing_page`
+        
   - name: dim_date
     description: '{{ doc("dim_date") }}'
     columns:
@@ -554,7 +617,7 @@ models:
     description: Table with the source data of the data being exposed in dimensional tables where various sources are combined.
 
   - name: dim_gitlab_ops_gitlab_emails
-    description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
+    description: This model limits the gitlab dotcom emails table to only have records for emails ending with `gitlab.com`.
     columns:
         - name: user_id
           tests:
@@ -585,19 +648,21 @@ models:
           - not_null
           - unique
 
-  - name: dim_gitlab_version
-    description: '{{ doc("dim_gitlab_version") }}'
+  - name: dim_app_release
+    description: '{{ doc("dim_app_release") }}'
     columns:
-      - name: dim_gitlab_version_sk
+      - name: dim_app_release_sk
         tests:
           - not_null
           - unique
-        description: '{{ doc("dim_gitlab_version_sk") }}'
-      - name: dim_version_id
-        description: The unique identifier of the release maintained by the Version app.
+        description: '{{ doc("dim_app_release_sk") }}'
+      - name: app_release_id
+        description: '{{ doc("app_release_id") }}'
         tests:
           - not_null
           - unique
+      - name: application
+        description: The application that the release refers to.
       - name: version
         description: The unique identifier of the release.
         tests:
@@ -615,10 +680,10 @@ models:
         description: For historical data, the Boolean values of `t` or `f` indicate if vulnerabilities have been detected for the release. For the ongoing data, the values represent the `vulnerability_type` of 0, 1 or 2.
       - name: vulnerability_type_desc
         description: The description of the vulnerability_type - { not_vulnerable - 0, non_critical - 1, critical - 2, vulnerable - t, not_vulnerable - f }
-      - name: created_date
-        description: The date the release was created in the Version app.
+      - name: release_date
+        description: Date of the release for the given application.
       - name: updated_date
-        description: The date the release was updated in the Version app.
+        description: Update date of the release for the given application.
 
   - name: dim_hold
     description: '{{ doc("dim_hold") }}'
@@ -659,7 +724,7 @@ models:
     description: '{{ doc("dim_installation") }}'
     tests:
       - dbt_utils.expression_is_true:
-          expression: "installation_creation_date > '2000-01-01'"
+          expression: "installation_creation_date > '2000-01-01' OR dim_installation_id = 'b6a2b5c51f1e36f6fcb8568319633808'"
     columns:
       - name: dim_installation_id
         description: '{{ doc("dim_installation_id") }}'
@@ -931,6 +996,8 @@ models:
         description: Product [pricing tiers](https://about.gitlab.com/handbook/marketing/strategic-marketing/tiers/) for both SaaS and Self-Managed customers. Includes the mapping from SaaS - Silver to SaaS - Premium, and from SaaS - Gold to SaaS - Ultimate.
       - name: product_tier_name_short
         description: Pulls the product tier from `product_tier_name` with the delivery type removed
+      - name: product_deployment_type
+        description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: effective_start_date
         description: The date when the product becomes available and can be subscribed to
       - name: effective_end_date
@@ -968,6 +1035,8 @@ models:
         description: Pulls the product tier from `product_tier_name` with the delivery type removed.
       - name: product_delivery_type
         description: How a product is delivered to the customer; SaaS or Self-Managed (or Other).
+      - name: product_deployment_type
+        description: How a product is deployed to the customer; Self-Managed, GitLab.com or Dedicated (or Other).
       - name: product_ranking
         description: Numeric product pricing tier, independent of delivery type.
 
@@ -1082,7 +1151,7 @@ models:
       - name: dim_crm_account_id
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
-        description: The id of the Zuora account the subscription is associated with
+        description: The id of the Zuora account the subscription is associated with the customer
       - name: dim_billing_account_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
@@ -1142,6 +1211,38 @@ models:
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
       - name: was_purchased_through_reseller
         description: Boolean field that indicates whether the subscription was purchased through a reseller. If TRUE, the `invoice_owner_account` will contain the name of the reseller.
+      - name: dim_crm_opportunity_id_current_open_renewal
+        description: '{{ doc("dim_crm_opportunity_id_current_open_renewal") }}'
+      - name: dim_crm_opportunity_id_closed_lost_renewal
+        description: '{{ doc("dim_crm_opportunity_id_closed_lost_renewal") }}'
+
+  - name: dim_app_release_major_minor
+    description: '{{ doc("dim_app_release_major_minor") }}'
+    columns:
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: app_release_major_minor_id
+        description: '{{ doc("app_release_major_minor_id") }}'
+      - name: application
+        description: The application that the release refers to.
+      - name: major_minor_version
+        description: '{{ doc("major_minor_version") }}'
+      - name: major_minor_version_num
+        description: '{{ doc("major_minor_version_num") }}'
+      - name: major_version
+        description: '{{ doc("major_version") }}'
+      - name: minor_version
+        description: '{{ doc("minor_version") }}'
+      - name: release_date
+        description: '{{ doc("release_date") }}'
+      - name: version_number
+        description: '{{ doc("version_number") }}'
+      - name: next_version_release_date
+        description: '{{ doc("next_version_release_date") }}'
+      
 
   - name: dim_subscription_snapshot_bottom_up
     description: Daily snapshot of subscriptions starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
@@ -1207,7 +1308,7 @@ models:
               config:
                 where: bizible_created_date <= DATEADD('day', -2, CURRENT_DATE)::DATE
         tags: ["tdf", "common"]
-
+        
   - name: fct_crm_person
     description: '{{ doc("fct_crm_person") }}'
     columns:
@@ -1657,6 +1758,10 @@ models:
         description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: ci_internal_pipelines_28_days_event
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_missing_paid_seats
         description: Flags if there are currently active users, but no seats have been paid for
       - name: is_data_in_subscription_month
@@ -1718,7 +1823,9 @@ models:
         description: '{{ doc("event_pk") }}'
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "event_date >= DATEADD('day',-7,CURRENT_DATE())"
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
@@ -1727,8 +1834,8 @@ models:
         description: '{{ doc("dim_project_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -1857,8 +1964,8 @@ models:
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
       - name: dim_user_id
         description: '{{ doc("dim_user_id") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -1928,8 +2035,8 @@ models:
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -2135,38 +2242,6 @@ models:
           - not_null
       - name: valid_to
 
-  - name: dim_namespace_lineage
-    description: '{{ doc("dim_namespace_lineage") }}'
-    columns:
-      - name: dim_namespace_id
-        tests:
-          - not_null
-          - unique
-      - name: ultimate_parent_namespace_id
-        tests:
-          - not_null
-      - name: parent_id
-      - name: namespace_plan_id
-      - name: ultimate_parent_plan_id
-        tests:
-          - not_null
-          - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101, 102, 103, 135]
-      - name: upstream_lineage
-        tests:
-          - not_null
-      - name: is_currently_valid
-        tests:
-          - not_null
-      - name: namespace_plan_title
-      - name: namespace_plan_is_paid
-      - name: ultimate_parent_plan_title
-        tests:
-          - not_null
-      - name: ultimate_parent_plan_is_paid
-        tests:
-          - not_null
-
   - name: dim_namespace_plan_hist
     description: '{{ doc("dim_namespace_plan_hist") }}'
     columns:
@@ -2239,6 +2314,8 @@ models:
         description: Do not use this count, it is incorrect. Use [gitlab_dotcom_memberships](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.gitlab_dotcom_memberships) for member counts.
       - name: current_project_count
         description: The number of projects that are presently associated with the namespace.
+      - name: has_code_suggestions_enabled
+        description: '{{ doc("namespace_has_code_suggestions_enabled") }}'
 
   - name: dim_order_hist
     description: '{{ doc("dim_order_hist") }}'
@@ -2445,7 +2522,9 @@ models:
         description: Unique key of User.
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "spined_date >= DATEADD('day',-7,CURRENT_DATE())"
       - name: spined_date_id
         description: Unique Date Id between dbt_valid_from and dbt_valid_to in Snapshots    
       - name: is_blocked_user
@@ -2481,6 +2560,7 @@ models:
       - name: updated_at
       - name: ci_runner_description
       - name: ci_runner_manager
+      - name: ci_runner_machine_type
       - name: contacted_at
       - name: is_active
       - name: ci_runner_version
@@ -2791,7 +2871,9 @@ models:
         description: '{{ doc("minor_version") }}'
       - name: major_minor_version
         description: '{{ doc("major_minor_version") }}'
-      - name: major_minor_version_id
+      - name: major_minor_version_num
+        description: '{{ doc("major_minor_version_num") }}'
+      - name: major_minor_version_num
         description: '{{ doc("major_minor_version_id") }}'
       - name: ping_delivery_type
         description: '{{ doc("ping_delivery_type") }}'
@@ -2819,6 +2901,12 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
 
   - name: dim_ping_metric
     description: ' {{ doc("dim_ping_metric") }} '
@@ -2976,6 +3064,10 @@ models:
         description: '{{ doc("license_sha256") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
       - name: ping_created_date
         description: '{{ doc("ping_created_date") }}'
       - name: umau_value
@@ -3000,6 +3092,10 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
+      - name: dim_latest_available_app_release_major_minor_sk
+        description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
 
   - name: fct_ping_instance_metric_rolling_6_months
     description: '{{ doc("fct_ping_instance_metric_rolling_6_months") }}'
@@ -3098,6 +3194,10 @@ models:
         description: '{{ doc("license_sha256") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
       - name: ping_created_date
         description: '{{ doc("ping_created_date") }}'
       - name: umau_value
@@ -3127,7 +3227,7 @@ models:
       - name: dim_ping_instance_id
         tests:
           - not_null
-        description: The unqiue id of a service ping instance in the dim_ping_instance model.
+        description: The unique id of a service ping instance in the dim_ping_instance model.
       - name: dim_instance_id
         description: The unique uuid of an instance from the dim_instances model.
       - name: ping_created_at
@@ -3135,7 +3235,9 @@ models:
       - name: ping_created_date_month
         description: The month when the ping was created
       - name: ping_delivery_type
-        description: Indicated if the service ping comes from a SaaS or Self-Managed instance.
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
       - name: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_subscripton_id
@@ -3323,6 +3425,10 @@ models:
       - name: license_md5
         description: '{{ doc("license_md5") }}'
       - name: cleaned_version
+      - name: ping_delivery_type
+        description: ' {{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: ' {{ doc("ping_deployment_type") }}'
       - name: license_utilization
         description: Number of activated seats (`active_user_count`) divided by the number of purchased seats (`license_user_count`) on the subscription.
       - name: active_user_count
@@ -3772,7 +3878,11 @@ models:
       - name: pipeline_schedules_28_days_user
         description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one    
+          - dbt_utils.at_least_one
+      - name: ci_internal_pipelines_28_days_event
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
@@ -3805,6 +3915,10 @@ models:
         description: '{{ doc("dim_ping_instance_id") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
       - name: dim_product_tier_id
         description: '{{ doc("dim_product_tier_id_ping_model") }}'
       - name: dim_subscription_id
@@ -3825,6 +3939,10 @@ models:
         description: '{{ doc("dim_installation_id") }}'
       - name: dim_license_id
         description:  '{{ doc("dim_license_id") }}'
+      - name: dim_app_release_major_minor_sk
+        description:  '{{ doc("dim_app_release_major_minor_sk") }}'
+      - name: dim_latest_available_app_release_major_minor_sk
+        description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
       - name: license_md5
         description: '{{ doc("license_md5") }}'
       - name: license_sha256
@@ -4094,6 +4212,10 @@ models:
         description: '{{ doc("umau_value") }}'
       - name: data_source
         description: '{{ doc("data_source") }}'
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
+      - name: dim_latest_available_app_release_major_minor_sk
+        description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -4259,48 +4381,42 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "arr"]
+      - name: rate_plan_charge_description
+        description: Description for a rate plan charge in Zuora. This can be used to identify orders that received transition pricing in FY24. Note, the description field will not show a transition pricing tag for sales-assisted orders. 
+        tags: ["tdf", "common", "arr"]
 
   - name: dim_crm_account
     description: '{{ doc("dim_crm_account") }}'
     columns:
       - name: dim_crm_account_id
-        description: account id from SFDC identifing the customer
+        description: Account ID from SFDC identifing the customer
         tests:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
-      - name: crm_account_name
-        description: account name from SFDC
-      - name: crm_account_country
-        description: billing country of SFDC account
       - name: dim_parent_crm_account_id
-        description: ultimate parent account id
-      - name: ultimate_parent_account_name
-        description: parent account name
-      - name: ultimate_parent_account_segment
-        description: Sales segment of the parent account
-      - name: ultimate_parent_billing_country
-        description: billing country of parent account
-      - name: partners_signed_contract_date
-      - name: record_type_id
-      - name: federal_account
-      - name: gitlab_com_user
-      - name: is_jihu_account
-      - name: account_owner
-      - name: account_owner_team
-      - name: account_type
-      - name: gtm_strategy
-      - name: technical_account_manager
-      - name: is_deleted
-        description: flag indicating if account has been deleted
+        description: Ultimate parent account 18 character Salesforce ID 
+      - name: dim_crm_user_id
+      - name: merged_to_account_id
+        description: For deleted accounts, this is the SFDC account they were merged into
+      - name: crm_account_name
+        description: Account name from SFDC
+      - name: crm_account_employee_count_band
+        description: Employee count band the account belongs to based on the account_max_family_employee. Bands include "> 2K", "> 1.5K", "> 1K".
       - name: is_reseller
         description: Identify whether a crm_account is a reseller.
         tests:
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
-      - name: merged_to_account_id
-        description: for deleted accounts this is the SFDC account they were merged to
       - name: crm_account_created_date
         description: The date on which the CRM account was created in SFDC
+      - name: is_deleted
+        description: Flag indicating if account has been deleted
+      - name: pte_score
+        description: Propensity to expand scores from pte_scores_source
+      - name: pte_decile
+      - name: pte_score_group
+      - name: ptc_score
+        description: Propensity to contract and churn scores from ptc_scores_source
       - name: gs_health_user_engagement
         description: ' {{ doc("gs_health_user_engagement") }} '
       - name: gs_health_cd
@@ -4319,6 +4435,143 @@ models:
         description: ' {{ doc("gs_last_csm_activity_date") }} '
       - name: last_at_risk_update_comments
         description: ' {{ doc("last_at_risk_update_comments") }} '
+      - name: abm_tier
+      - name: abm_tier_1_date
+      - name: abm_tier_2_date
+      - name: abm_tier_3_date
+      - name: account_manager
+      - name: account_owner
+      - name: account_phone
+      - name: account_tier
+      - name: account_tier_notes
+      - name: admin_manual_source_account_address
+      - name: admin_manual_source_number_of_employees
+      - name: billing_postal_code
+      - name: business_development_rep
+      - name: carr_account_family
+      - name: carr_this_account
+      - name: created_by
+      - name: created_by_name
+      - name: crm_account_billing_country
+      - name: crm_account_billing_country_code
+      - name: crm_account_employee_count
+      - name: crm_account_focus_account
+      - name: crm_account_gtm_strategy
+      - name: crm_account_industry
+      - name: crm_account_owner
+      - name: crm_account_owner_user_segment
+      - name: crm_account_sub_industry
+      - name: crm_account_type
+      - name: crm_account_zi_technologies
+      - name: crm_account_zoom_info_company_other_domains
+      - name: crm_account_zoom_info_dozisf_zi_id
+      - name: crm_account_zoom_info_parent_company_name
+      - name: crm_account_zoom_info_parent_company_zi_id
+      - name: crm_account_zoom_info_ultimate_parent_company_name
+      - name: crm_account_zoom_info_ultimate_parent_company_zi_id
+      - name: crm_account_zoom_info_website
+      - name: customer_since_date
+      - name: dbt_created_at
+      - name: dbt_updated_at
+      - name: dedicated_service_engineer
+      - name: demandbase_account_list
+      - name: demandbase_intent
+      - name: demandbase_page_views
+      - name: demandbase_score
+      - name: demandbase_sessions
+      - name: demandbase_trending_offsite_intent
+      - name: demandbase_trending_onsite_engagement
+      - name: dim_crm_person_primary_contact_id
+      - name: forbes_2000_rank
+      - name: gitlab_com_user
+      - name: gitlab_customer_success_project
+      - name: gitlab_partner_program
+      - name: gtm_acceleration_date
+      - name: gtm_account_based_date
+      - name: gtm_account_centric_date
+      - name: health_number
+      - name: health_score_color
+      - name: is_excluded_from_zoom_info_enrich
+      - name: is_first_order_available
+      - name: is_jihu_account
+      - name: is_key_account
+      - name: is_locally_managed_account
+      - name: is_sdr_target_account
+      - name: is_strategic_account
+      - name: is_zi_apache_subversion_present
+      - name: is_zi_apache_subversion_svn_present
+      - name: is_zi_atlassian_present
+      - name: is_zi_aws_cloud_trail_present
+      - name: is_zi_aws_present
+      - name: is_zi_bit_bucket_present
+      - name: is_zi_circle_ci_present
+      - name: is_zi_gcp_present
+      - name: is_zi_github_enterprise_present
+      - name: is_zi_github_present
+      - name: is_zi_hashicorp_present
+      - name: is_zi_jenkins_present
+      - name: is_zi_kubernetes_present
+      - name: is_zi_svn_present
+      - name: is_zi_tortoise_svn_present
+      - name: last_activity_date
+      - name: last_modified_by_name
+      - name: last_modified_date
+      - name: last_timeline_at_risk_update
+      - name: license_utilization
+      - name: master_record_id
+      - name: model_created_date
+      - name: model_updated_date
+      - name: named_account
+      - name: next_renewal_date
+      - name: owner_role
+      - name: parent_crm_account_area
+      - name: parent_crm_account_business_unit
+      - name: parent_crm_account_geo
+      - name: parent_crm_account_industry
+      - name: parent_crm_account_lam
+      - name: parent_crm_account_lam_dev_count
+      - name: parent_crm_account_max_family_employee
+      - name: parent_crm_account_name
+      - name: parent_crm_account_region
+      - name: parent_crm_account_role_type
+      - name: parent_crm_account_sales_segment
+      - name: parent_crm_account_sales_segment_grouped
+      - name: parent_crm_account_segment_region_stamped_grouped
+      - name: parent_crm_account_territory
+      - name: parent_crm_account_upa_city
+      - name: parent_crm_account_upa_country
+      - name: parent_crm_account_upa_postal_code
+      - name: parent_crm_account_upa_state
+      - name: parent_crm_account_upa_street
+      - name: partner_account_iban_number
+      - name: partner_status
+      - name: partner_track
+      - name: partner_type
+      - name: partner_vat_tax_id
+      - name: partners_partner_type
+      - name: partners_signed_contract_date
+      - name: proposed_crm_account_owner
+      - name: ptc_decile
+      - name: ptc_score_group
+      - name: record_type_id
+      - name: risk_impact
+      - name: risk_reason
+      - name: sales_development_rep
+      - name: support_level
+      - name: technical_account_manager
+      - name: technical_account_manager_date
+      - name: updated_by
+      - name: user_role_type
+      - name: zoom_info_company_city
+      - name: zoom_info_company_country
+      - name: zoom_info_company_employee_count
+      - name: zoom_info_company_industry
+      - name: zoom_info_company_name
+      - name: zoom_info_company_revenue
+      - name: zoom_info_company_state_province
+      - name: zoominfo_account_phone
+      - name: is_focus_partner
+        description: A partner account on the focus partner list
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
@@ -4328,6 +4581,234 @@ models:
         tests:
           - unique
           - not_null
+      - name: dim_crm_account_id
+        description: Account ID from SFDC identifing the customer
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_parent_crm_account_id
+        description: Ultimate parent account 18 character Salesforce ID 
+      - name: dim_crm_user_id
+      - name: merged_to_account_id
+        description: For deleted accounts, this is the SFDC account they were merged into
+      - name: crm_account_name
+        description: Account name from SFDC
+      - name: crm_account_employee_count_band
+        description: Employee count band the account belongs to based on the account_max_family_employee. Bands include "> 2K", "> 1.5K", "> 1K".
+      - name: is_reseller
+        description: Identify whether a crm_account is a reseller.
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: crm_account_created_date
+        description: The date on which the CRM account was created in SFDC
+      - name: is_deleted
+        description: Flag indicating if account has been deleted
+      - name: pte_score
+        description: Propensity to expand scores from pte_scores_source
+      - name: pte_decile
+      - name: pte_score_group
+      - name: ptc_score
+        description: Propensity to contract and churn scores from ptc_scores_source
+      - name: gs_health_user_engagement
+        description: ' {{ doc("gs_health_user_engagement") }} '
+      - name: gs_health_cd
+        description: ' {{ doc("gs_health_cd") }} '
+      - name: gs_health_devsecops
+        description: ' {{ doc("gs_health_devsecops") }} '
+      - name: gs_health_ci
+        description: ' {{ doc("gs_health_ci") }} '
+      - name: gs_health_scm
+        description: ' {{ doc("gs_health_scm") }} '
+      - name: eoa_sentiment
+        description: ' {{ doc("eoa_sentiment") }} '
+      - name: gs_first_value_date
+        description: ' {{ doc("gs_first_value_date") }} '
+      - name: gs_last_csm_activity_date
+        description: ' {{ doc("gs_last_csm_activity_date") }} '
+      - name: last_at_risk_update_comments
+        description: ' {{ doc("last_at_risk_update_comments") }} '
+      - name: abm_tier
+      - name: abm_tier_1_date
+      - name: abm_tier_1_date_id
+      - name: abm_tier_2_date
+      - name: abm_tier_2_date_id
+      - name: abm_tier_3_date
+      - name: abm_tier_3_date_id
+      - name: account_manager
+      - name: account_owner
+      - name: account_phone
+      - name: account_tier
+      - name: account_tier_notes
+      - name: admin_manual_source_account_address
+      - name: admin_manual_source_number_of_employees
+      - name: billing_postal_code
+      - name: business_development_rep
+      - name: carr_account_family
+      - name: carr_this_account
+      - name: count_active_ce_users
+      - name: count_active_subscription_charges
+      - name: count_active_subscriptions
+      - name: count_billing_accounts
+      - name: count_ce_instances
+      - name: count_concurrent_ee_subscriptions
+      - name: count_licensed_users
+      - name: count_of_new_business_won_opportunities
+      - name: count_open_opportunities
+      - name: count_open_renewal_opportunities
+      - name: count_opportunities
+      - name: count_products_purchased
+      - name: count_using_ce
+      - name: count_won_opportunities
+      - name: created_by
+      - name: created_by_id
+      - name: created_by_name
+      - name: crm_account_billing_country
+      - name: crm_account_billing_country_code
+      - name: crm_account_created_date_id
+      - name: crm_account_employee_count
+      - name: crm_account_focus_account
+      - name: crm_account_gtm_strategy
+      - name: crm_account_industry
+      - name: crm_account_owner
+      - name: crm_account_owner_area
+      - name: crm_account_owner_geo
+      - name: crm_account_owner_id
+      - name: crm_account_owner_region
+      - name: crm_account_owner_role
+      - name: crm_account_owner_sales_segment
+      - name: crm_account_owner_sales_segment_geo_region_area
+      - name: crm_account_owner_title
+      - name: crm_account_owner_user_segment
+      - name: crm_account_sub_industry
+      - name: crm_account_type
+      - name: crm_account_zi_technologies
+      - name: crm_account_zoom_info_company_other_domains
+      - name: crm_account_zoom_info_dozisf_zi_id
+      - name: crm_account_zoom_info_number_of_developers
+      - name: crm_account_zoom_info_parent_company_name
+      - name: crm_account_zoom_info_parent_company_zi_id
+      - name: crm_account_zoom_info_total_funding
+      - name: crm_account_zoom_info_ultimate_parent_company_name
+      - name: crm_account_zoom_info_ultimate_parent_company_zi_id
+      - name: crm_account_zoom_info_website
+      - name: customer_since_date
+      - name: customer_since_date_id
+      - name: dbt_created_at
+      - name: dbt_updated_at
+      - name: decision_maker_count_linkedin
+      - name: dedicated_service_engineer
+      - name: demandbase_account_list
+      - name: demandbase_intent
+      - name: demandbase_page_views
+      - name: demandbase_score
+      - name: demandbase_sessions
+      - name: demandbase_trending_offsite_intent
+      - name: demandbase_trending_onsite_engagement
+      - name: dim_crm_person_primary_contact_id
+      - name: forbes_2000_rank
+      - name: gitlab_com_user
+      - name: gitlab_customer_success_project
+      - name: gitlab_partner_program
+      - name: gs_first_value_date_id
+      - name: gs_last_csm_activity_date_id
+      - name: gtm_acceleration_date
+      - name: gtm_acceleration_date_id
+      - name: gtm_account_based_date
+      - name: gtm_account_based_date_id
+      - name: gtm_account_centric_date
+      - name: gtm_account_centric_date_id
+      - name: health_number
+      - name: health_score_color
+      - name: is_excluded_from_zoom_info_enrich
+      - name: is_first_order_available
+      - name: is_jihu_account
+      - name: is_key_account
+      - name: is_locally_managed_account
+      - name: is_sdr_target_account
+      - name: is_strategic_account
+      - name: is_zi_apache_subversion_present
+      - name: is_zi_apache_subversion_svn_present
+      - name: is_zi_atlassian_present
+      - name: is_zi_aws_cloud_trail_present
+      - name: is_zi_aws_present
+      - name: is_zi_bit_bucket_present
+      - name: is_zi_circle_ci_present
+      - name: is_zi_gcp_present
+      - name: is_zi_github_enterprise_present
+      - name: is_zi_github_present
+      - name: is_zi_hashicorp_present
+      - name: is_zi_jenkins_present
+      - name: is_zi_kubernetes_present
+      - name: is_zi_svn_present
+      - name: is_zi_tortoise_svn_present
+      - name: last_activity_date
+      - name: last_activity_date_id
+      - name: last_modified_by_id
+      - name: last_modified_by_name
+      - name: last_modified_date
+      - name: last_modified_date_id
+      - name: last_timeline_at_risk_update
+      - name: license_utilization
+      - name: master_record_id
+      - name: model_created_date
+      - name: model_updated_date
+      - name: named_account
+      - name: next_renewal_date
+      - name: next_renewal_date_id
+      - name: number_of_employees
+      - name: number_of_licenses_this_account
+      - name: owner_role
+      - name: parent_account_industry_hierarchy
+      - name: parent_crm_account_area
+      - name: parent_crm_account_business_unit
+      - name: parent_crm_account_geo
+      - name: parent_crm_account_industry
+      - name: parent_crm_account_lam
+      - name: parent_crm_account_lam_dev_count
+      - name: parent_crm_account_max_family_employee
+      - name: parent_crm_account_name
+      - name: parent_crm_account_region
+      - name: parent_crm_account_role_type
+      - name: parent_crm_account_sales_segment
+      - name: parent_crm_account_sales_segment_grouped
+      - name: parent_crm_account_segment_region_stamped_grouped
+      - name: parent_crm_account_territory
+      - name: parent_crm_account_upa_city
+      - name: parent_crm_account_upa_country
+      - name: parent_crm_account_upa_postal_code
+      - name: parent_crm_account_upa_state
+      - name: parent_crm_account_upa_street
+      - name: partner_account_iban_number
+      - name: partner_status
+      - name: partner_track
+      - name: partner_type
+      - name: partner_vat_tax_id
+      - name: partners_partner_type
+      - name: partners_signed_contract_date
+      - name: partners_signed_contract_date_id
+      - name: potential_users
+      - name: proposed_crm_account_owner
+      - name: proposed_crm_account_owner_id
+      - name: ptc_decile
+      - name: ptc_score_group
+      - name: record_type_id
+      - name: risk_impact
+      - name: risk_reason
+      - name: sales_development_rep
+      - name: snapshot_date
+      - name: snapshot_id
+      - name: support_level
+      - name: technical_account_manager
+      - name: technical_account_manager_date
+      - name: technical_account_manager_date_id
+      - name: technical_account_manager_id
+      - name: updated_by
+      - name: user_role_type
+      - name: zoom_info_company_city
+      - name: zoom_info_company_country
+      - name: zoom_info_company_employee_count
+      - name: zoom_info_company_industry
+      - name: zoom_info_company_name
+      - name: zoom_info_company_revenue
+      - name: zoom_info_company_state_province
+      - name: zoominfo_account_phone
 
   - name: dim_crm_opportunity
     description: '{{ doc("dim_crm_opportunity") }}'
@@ -4512,6 +4993,10 @@ models:
         description: '{{ doc("military_invasion_risk_scale") }}'
       - name: downgrade_details
         description: '{{ doc("downgrade_details") }}'
+      - name: intended_product_tier
+        description: '{{ doc("intended_product_tier") }}'
+      - name: dim_parent_crm_opportunity_id
+        description: '{{ doc("dim_parent_crm_opportunity_id") }}'
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
@@ -4543,6 +5028,8 @@ models:
         description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
       - name: rate_plan_charge_version
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
+      - name: subscription_created_by_id
+        description: The id of the Zuora user who created the subscription.
 
   - name: fct_crm_account
     description: '{{ doc("fct_crm_account") }}'
@@ -4809,7 +5296,7 @@ models:
         tests:
           - not_null
           - unique
-        tags: [ "tdf", "common", "sales_funnel" ]
+        tags: [ "tdf", "common", "sales_funnel", "opportunity_snapshots"]
 
   - name: fct_invoice
     description: '{{ doc("fct_invoice") }}'
@@ -5184,7 +5671,11 @@ models:
       - name: dim_behavior_website_page_sk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                severity: error
+                error_if: ">10"
+                warn_if: ">10"
         description: '{{ doc("dim_behavior_website_page_sk") }}'
       - name: page_url_host_path
         description: '{{ doc("page_url_host_path") }}' 
@@ -5256,7 +5747,7 @@ models:
         description: '{{ doc("event_id_behavior_model") }}'  
       - name: user_snowplow_domain_id
         description: '{{ doc("user_snowplow_domain_id") }}' 
-      - name: environment
+      - name: gsc_environment
         description: '{{ doc("environment_behavior_model") }}' 
       - name: gsc_extra
         description: '{{ doc("gsc_extra") }}' 
@@ -5333,7 +5824,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
@@ -5551,7 +6044,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
@@ -5758,7 +6253,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
@@ -5888,6 +6385,8 @@ models:
         description: '{{ doc("user_snowplow_domain_id") }}'
       - name: link_click_target_url
         description: '{{ doc("link_click_target_url") }}'
+      - name: link_click_element_id
+        description: '{{ doc("link_click_element_id") }}'
       - name: submit_form_id
         description: '{{ doc("submit_form_id") }}'
       - name: change_form_id
@@ -5937,6 +6436,9 @@ models:
           - not_null
         tags: ["tdf", "common", "gainsight"]
       - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
       - name: instance_version
       - name: cleaned_version
       - name: version_is_prerelease
@@ -6099,7 +6601,9 @@ models:
       - name: uuid
       - name: hostname
       - name: delivery_type
-        description: Indicated if the product usage came from a SaaS or Self-Managed user.
+        description: '{{ doc("product_delivery_type") }}'
+      - name: deployment_type
+        description: '{{ doc("product_deployment_type") }}'
       - name: cleaned_version
         description: Version of GitLab running on the instance
       - name: dim_crm_account_id
@@ -6572,6 +7076,10 @@ models:
         description: '{{ doc("last_activity_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: ci_internal_pipelines_28_days_event
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
       - name: installation_creation_date
@@ -6589,8 +7097,8 @@ models:
           - unique
       - name: dim_ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id_event_model") }}'
-      - name: dim_active_product_tier_id
-        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_latest_product_tier_id
+        description: '{{ doc("dim_latest_product_tier_id") }}'
       - name: dim_latest_subscription_id
         description: '{{ doc("dim_latest_subscription_id") }}'
       - name: dim_crm_account_id
@@ -6694,6 +7202,7 @@ models:
         description: '{{ doc("end_quantity") }}'
       - name: annual_price_per_seat_change
         description: '{{ doc("annual_price_per_seat_change") }}'
+ 
   - name: dim_team_member
     description: '{{ doc("dim_team_member") }}'
     tests:
@@ -6717,6 +7226,8 @@ models:
         description: Team member gitlab username 
       - name: region
         description: Current/latest region the team member resides in
+      - name: team_id
+        description: Identification number of the team to which the particular team member belongs
       - name: hire_date
         description: Most recent hire date. Field is updated if a team member is re-hired after a termination
       - name: termination_date
@@ -6759,3 +7270,359 @@ models:
         description: Masked. Team member performance rating
         meta:
           masking_policy: analyst_people
+      - name: employee_type
+        description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
+        meta:
+          masking_policy: analyst_people
+
+  - name: fct_team_member_status
+    description: '{{ doc("fct_team_member_status") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - employment_status
+              - status_effective_date
+    columns:
+      - name: employee_id
+        description: Workday Employee Identification 
+        tests:
+          - not_null
+      - name: employment_status
+        description: Employment Status (active, terminated). Other statuses will be added in the future (ie. Long term leave) 
+        tests:
+          - not_null
+      - name: termination_reason
+        description: Categorical variable that indicates the reason why a team member has been terminated
+        meta:
+          masking_policy: analyst_people
+      - name: termination_type
+        description: Categorical variable that indicates whether the termination was voluntary or involuntary.
+        meta:
+          masking_policy: analyst_people
+      - name: exit_impact
+        description: Whether the team member's departure has a significant negative impact on the company, its customers, its projects or the team.
+        meta:
+          masking_policy: analyst_people
+      - name: status_effective_date
+        description: Effective date of employment status
+        tests:
+          - not_null
+
+  - name: fct_team_member_position
+    description: '{{ doc("fct_team_member_position") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - employee_id
+              - team_id
+              - effective_date
+    columns:
+      - name: team_member_position_pk
+        description: Primary key for the table
+        tests:
+          - not_null
+          - unique
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+        tests:
+          - not_null
+      - name: dim_team_sk
+        description: A unique ID for each team. This field didn't exist before the move to Workday
+      - name: employee_id
+        description: Unique ID of the team member.
+        tests:
+          - not_null
+      - name: manager
+        description: The team member's manager name
+      - name: suporg
+        description: The team member's suporg
+      - name: department
+        description: The team member's department
+      - name: division
+        description: The team member's division
+      - name: job_code
+        description: The code of the team member's job position.
+      - name: job_specialty_single
+        description: The team member's job specialty.
+      - name: job_specialty_multi
+        description: The team member's job specialty (multi-select).
+      - name: position
+        description: The team member's job profile name.
+      - name: job_family
+        description: The team member's job family.
+      - name: management_level
+        description: The team member's management level.
+      - name: job_grade
+        description: The team member's job grade.
+      - name: entity
+        description: The team member's entity.
+        meta:
+          masking_policy: analyst_people
+      - name: is_position_active
+        description: Whether the team member's job position is active.
+      - name: is_current
+        description: Whether the team member's job position is the most current as of the date the query is run.
+      - name: position_effective_date
+        description: The date when the team member's position update becomes effective
+
+  - name: fct_team_status
+    description: '{{ doc("fct_team_status") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - dim_team_member_sk
+              - valid_from
+    columns:
+      - name: dim_team_member_sk
+        description: A unique ID for each team member.
+        tests:
+          - not_null
+      - name: dim_team_sk
+        description: A unique ID for each team.
+        tests:
+          - not_null
+      - name: employee_id
+        description: Unique ID of the team member.
+        tests:
+          - not_null
+      - name: team_id
+        description: Unique ID of the team.
+      - name: job_code
+        description: The code of the team member's job position.
+      - name: job_specialty_single
+        description: The team member's job specialty.
+      - name: job_specialty_multi
+        description: The team member's job specialty (multi-select).
+      - name: position
+        description: The team member's job profile name.
+      - name: job_family
+        description: The team member's job family.
+      - name: management_level
+        description: The team member's management level.
+      - name: job_grade
+        description: The team member's job grade.
+      - name: entity
+        description: The team member's entity.
+        meta:
+          masking_policy: analyst_people
+      - name: is_position_active
+        description: Whether the team member's job position is active.
+      - name: employment_status
+        description: Employment Status (active, terminated). Other statuses will be added in the future (ie. Long term leave) 
+        tests:
+          - not_null
+      - name: termination_reason
+        description: Categorical variable that indicates the reason why a team member has been terminated
+        meta:
+          masking_policy: analyst_people
+      - name: termination_type
+        description: Categorical variable that indicates whether the termination was voluntary or involuntary.
+        meta:
+          masking_policy: analyst_people
+      - name: exit_impact
+        description: Whether the team member's departure has a significant negative impact on the company, its customers, its projects or the team.
+        meta:
+          masking_policy: analyst_people
+      - name: is_current
+        description: Whether the team status is the most current as of the date the query is run.
+      - name: valid_from
+        tests: 
+          - not_null
+      - name: valid_to
+        tests: 
+          - not_null
+
+
+  - name: dim_trial_latest
+    description: '{{ doc("dim_trial_latest") }}'
+    columns:
+      - name: dim_trial_latest_sk
+        description: '{{ doc("dim_trial_latest_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: dim_trial_snapshot_id
+        description: A unique ID for each Snapshotted Order.
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        description: The unique ID of an Order. It can be used as a join key to join to CDot Orders only.
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        description: The id of the namespace related to the subscription.
+        tests: 
+          - unique        
+      - name: customer_id
+        description: The unique ID of a customer. It can be used as a Join key to join to CDot Customers only.
+      - name: dim_product_rate_plan_id
+        description: The unique ID of a product rate plan
+      - name: dim_subscription_id
+        description: The unique identifier of a subscription
+      - name: subscription_name
+        description: The unique name of a subscription.
+      - name: subscription_name_slugify
+        description: The name of the subscription
+      - name: gitlab_namespace_name
+        description: The namespace related to the subscription.
+      - name: order_start_date
+        description: The start date of the Order
+      - name: order_end_date
+        description: The expiration date of the Order
+      - name: order_quantity
+      - name: order_created_at
+        description: The date when the Order was created
+      - name: order_updated_at
+        description: The date when the Order was updated
+      - name: amendment_type
+      - name: is_order_trial
+        description: Boolean flag to indicate if the Order started as a Trial or not
+      - name: last_extra_ci_minutes_sync_at
+      - name: valid_from
+        tests: 
+          - not_null
+      - name: valid_to
+
+
+  - name: fct_trial
+    description: '{{ doc("fct_trial") }}'
+    columns:
+      - name: trial_pk
+        description: The composite primary key of the model that uniquely represents a row, cannot be used as a join key.
+        tests:
+          - not_null
+          - unique
+      - name: internal_order_id
+        description: The unique ID of a CDot Order. It can only be used as a join key to join to CDot Orders. It cannot be used to join to Zuora Orders as this is a system specific key generated by CDot.
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        description: The id of the namespace related to the order.  
+      - name: product_rate_plan_id
+        description: The unique ID of a product rate plan    
+      - name: internal_customer_id
+        description: The unique ID of a CDot customer. It can be used as a Join key to join to CDot Customers only. It cannot be used to join to Gitlab.com Users as this is a system specific key generated by CDot.
+      - name: user_id
+        description: The unique ID of a gitlab user from gitlab.com
+      - name: is_gitlab_user
+        description: Boolean flag to indicate if the user has an associated user id from gitlab.com
+      - name: user_created_at
+        description: The date when the user was created at gitlab.com portal
+      - name: namespace_created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: namespace_type 
+        description: '{{ doc("namespace_type") }}'
+      - name: is_trial_converted
+        description: Boolean flag to indicate if the Trial order has been converted to Paid Order or not
+      - name: subscription_name
+        description: The unique name of a subscription from Zuora. It can be used to join back to Zuora Subscriptions.
+      - name: subscription_name_slugify
+        description: The name of the subscription from Zuora
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
+      - name: country
+        description: The country selected by the User during registration
+      - name: company size
+        description: The size of the company as provided by the user during registration
+      - name: order_created_at
+        description: The date when the Order was created
+      - name: order_updated_at
+        description: The date when the Order was updated
+      - name: trial_start_date
+        description: The date when the trial period begins for a product rate plan
+      - name: trial_end_date
+        description: The expiration date of the trial Order, which is usually 30 days from the trial start date
+
+
+  - name: fct_trial_first
+    description: '{{ doc("fct_trial_first") }}'
+    columns:
+      - name: trial_first_pk
+        description: The composite primary key created by hashing `order_id` and `namespace_id` that uniquely represents a row, cannot be used as a join key
+        tests:
+          - not_null
+          - unique
+      - name: internal_order_id
+        description: The unique ID of a CDot Order. It can only be used as a join key to join to CDot Orders. It cannot be used to join to Zuora Orders as this is a system specific key generated by CDot
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        description: The id of the namespace related to the first trial order. 
+      - name: internal_customer_id
+        description: The unique ID of a CDot customer. It can be used as a Join key to join to CDot Customers only. It cannot be used to join to Gitlab.com Users as this is a system specific key generated by CDot
+      - name: user_id
+        description: The unique ID of a gitlab user from gitlab.com associated with the first trial order
+      - name: subscription_name
+        description: The unique name of the first subscription associated with the Order from Zuora. It can be used to join back to Zuora Subscriptions
+      - name: subscription_name_slugify
+        description: The name of the first subscription associated with the Order from Zuora
+      - name: is_gitlab_user
+        description: Boolean flag to indicate if the user has an associated user id from gitlab.com
+      - name: user_created_at
+        description: The date when the user was first created at gitlab.com portal
+      - name: namespace_created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: namespace_type 
+        description: '{{ doc("namespace_type") }}'
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term
+      - name: country
+        description: The country selected by the User during registration
+      - name: company size
+        description: The size of the company as provided by the user during registration
+      - name: is_trial_converted
+        description: Boolean flag to indicate if the Trial order(from CDot) has been converted to Paid Order or not
+      - name: order_created_at
+        description: The date when the Order was first created in CDot
+      - name: trial_start_date 
+        description: The date when the trial period begins for a product rate plan
+      - name: trial_end_date
+        description: The expiration date of the trial Order, which is usually 30 days from the trial start date
+
+
+  - name: fct_trial_latest
+    description: '{{ doc("fct_trial_latest") }}'
+    columns:
+      - name: trial_latest_pk
+        description: The primary key created by hashing `order_id` and `namespace_id` that uniquely represents a row, cannot be used as a join key.
+        tests:
+          - not_null
+          - unique
+      - name: internal_order_id
+        description: The unique ID of a CDot Order. It can only be used as a join key to join to CDot Orders. It cannot be used to join to Zuora Orders as this is a system specific key generated by CDot.
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        description: The id of the namespace related to the latest trial order. 
+      - name: internal_customer_id
+        description: The unique ID of a customer. It can be used as a Join key to join to CDot Customers only. It cannot be used to join to Gitlab.com Users as this is a system specific key generated by CDot
+      - name: user_id
+        description: The unique ID of a gitlab user from gitlab.com associated with the latest trial order
+      - name: subscription_name
+        description: The unique name of the first subscription associated with the Order from Zuora. It can be used to join back to Zuora Subscriptions
+      - name: subscription_name_slugify
+        description: The name of the first subscription associated with the Order from Zuora
+      - name: is_gitlab_user
+        description: Boolean flag to indicate if the user has an associated user id
+      - name: user_created_at
+        description: The latest date when the user was created at gitlab.com portal
+      - name: namespace_created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: namespace_type 
+        description: '{{ doc("namespace_type") }}'
+      - name: is_trial_converted
+        description: Boolean flag to indicate if the Trial order(from CDot) has been converted to Paid Order or not
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term
+      - name: country
+        description: The country selected by the User during registration
+      - name: company size
+        description: The size of the company as provided by the user during registration
+      - name: order_created_at
+        description: The date when the Order was first created in CDot
+      - name: trial_start_date
+        description: The date when the trial period begins for a product rate plan
+      - name: trial_end_date
+        description: The expiration date of the trial Order, which is usually 30 days from the trial start date

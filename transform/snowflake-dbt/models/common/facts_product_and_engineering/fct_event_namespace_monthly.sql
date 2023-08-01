@@ -50,7 +50,7 @@ fct_event_namespace_monthly AS (
                                             
       --Foreign Keys
       fact_with_month.dim_ultimate_parent_namespace_id,
-      fact_with_month.dim_active_product_tier_id,
+      fact_with_month.dim_latest_product_tier_id,
       fact_with_month.dim_latest_subscription_id,
       fact_with_month.dim_crm_account_id,
       fact_with_month.dim_billing_account_id,
@@ -86,7 +86,7 @@ fct_event_namespace_monthly AS (
 {{ dbt_audit(
     cte_ref="fct_event_namespace_monthly",
     created_by="@cbraza",
-    updated_by="@cbraza",
+    updated_by="@michellecooper",
     created_date="2023-02-14",
-    updated_date="2023-02-14"
+    updated_date="2023-05-12"
 ) }}

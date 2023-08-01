@@ -1,4 +1,5 @@
 import os
+import yaml
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -47,30 +48,43 @@ dag = DAG(
     "zuora_query_api_extract_and_load",
     default_args=default_args,
     schedule_interval="0 3 * * *",
+    concurrency=2,
 )
 
-zuora_data_query_extract_cmd = f"""
-    {clone_and_setup_extraction_cmd} &&
-    python zuora_query_api/src/main.py
-"""
 
-zuora_data_query_extract_extract = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DATA_IMAGE,
-    task_id="zuora-query-api-extract",
-    name="zuora-query-api-extract",
-    secrets=[
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-        SNOWFLAKE_LOAD_PASSWORD,
-        ZUORA_API_CLIENT_ID,
-        ZUORA_API_CLIENT_SECRET,
-    ],
-    env_vars=pod_env_vars,
-    affinity=get_affinity("production"),
-    tolerations=get_toleration("production"),
-    arguments=[zuora_data_query_extract_cmd],
-    dag=dag,
-)
+def extract_manifest(file_path):
+    with open(file_path, "r") as file:
+        manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
+    return manifest_dict
+
+
+manifest = extract_manifest("analytics/extract/zuora_query_api/src/queries.yml")
+tables = manifest.get("tables")
+
+for table_name in tables:
+    extract_command = f"""
+        {clone_and_setup_extraction_cmd} &&
+            python zuora_query_api/src/main.py tap zuora_query_api/src/queries.yml --load_only_table {table_name}
+    """
+    task_identifier = f"{table_name.replace('_', '-')}"
+
+    zuora_data_query_extract = KubernetesPodOperator(
+        **gitlab_defaults,
+        image=DATA_IMAGE,
+        task_id=task_identifier,
+        name=task_identifier,
+        secrets=[
+            SNOWFLAKE_ACCOUNT,
+            SNOWFLAKE_LOAD_ROLE,
+            SNOWFLAKE_LOAD_USER,
+            SNOWFLAKE_LOAD_WAREHOUSE,
+            SNOWFLAKE_LOAD_PASSWORD,
+            ZUORA_API_CLIENT_ID,
+            ZUORA_API_CLIENT_SECRET,
+        ],
+        env_vars=pod_env_vars,
+        affinity=get_affinity("production"),
+        tolerations=get_toleration("production"),
+        arguments=[extract_command],
+        dag=dag,
+    )

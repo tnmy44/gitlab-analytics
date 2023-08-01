@@ -39,7 +39,31 @@ performance_growth_potential AS (
 
 ), 
 
+team_member_info AS (
+
+  /*
+  We need to identify and isolate groups of consecutive records that share the same country, region, employee_type, or team (islands)
+  and the gaps between those groups
+  */
+
+  SELECT
+    {{ dbt_utils.surrogate_key(['employee_id', 'team_id_current', 'country_current','region_current','employee_type_current']) }}              AS unique_key,
+    employee_id                                                                                                                                AS employee_id,
+    team_id_current                                                                                                                            AS team_id,
+    country_current                                                                                                                            AS country,
+    region_current                                                                                                                             AS region,
+    employee_type_current                                                                                                                      AS employee_type,
+    effective_date                                                                                                                             AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from)                                               AS valid_to
+  FROM {{ref('staffing_history_approved_source')}}
+
+),
+
 staffing_history AS (
+
+  /*
+  This CTE pulls the remaining fields we need from staffing_history_approved_source
+  */
 
   SELECT
     employee_id,
@@ -47,13 +71,46 @@ staffing_history AS (
     hire_date,
     termination_date,
     LAST_VALUE(hire_date IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY effective_date ROWS UNBOUNDED PRECEDING) AS most_recent_hire_date,
-    current_country AS country,
-    current_region AS region,
     IFF(termination_date IS NULL, TRUE, FALSE) AS is_current_team_member,
     IFF(COUNT(hire_date) OVER (PARTITION BY employee_id ORDER BY effective_date ASC ROWS UNBOUNDED PRECEDING) > 1, TRUE, FALSE) AS is_rehire, -- team member is a rehire if they have more than 1 hire_date event
     effective_date AS valid_from,
     LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
+  WHERE business_process_type = 'Hire' OR business_process_type = 'Termination' OR business_process_type = 'Contract Contingent Worker'
+
+),
+
+history_combined AS (
+
+  /*
+  This CTE combines the fields from staffing history and the fields we want to keep track of (country, region, team_id) from 
+  the team_member_info CTE
+  */
+
+  SELECT
+    staffing_history.employee_id                                                AS employee_id,
+    staffing_history.hire_date                                                  AS hire_date,
+    staffing_history.termination_date                                           AS termination_date,
+    staffing_history.most_recent_hire_date                                      AS most_recent_hire_date,
+    /*team_id didn't exist before Workday. To avoid confusion, nullify the value before the Workday
+    cutover date
+    */
+    CASE WHEN team_member_info.valid_from >= '2022-06-16' 
+      THEN team_member_info.team_id  
+      ELSE NULL   
+    END                                                                         AS team_id,
+    team_member_info.country                                                    AS country,
+    team_member_info.region                                                     AS region,
+    team_member_info.employee_type                                              AS employee_type,
+    staffing_history.is_current_team_member                                     AS is_current_team_member,
+    staffing_history.is_rehire                                                  AS is_rehire, 
+    GREATEST(team_member_info.valid_from, staffing_history.valid_from)          AS valid_from,
+    LEAST(team_member_info.valid_to, staffing_history.valid_to)                 AS valid_to
+  FROM staffing_history
+  LEFT JOIN team_member_info
+    ON team_member_info.employee_id = staffing_history.employee_id 
+      AND NOT (team_member_info.valid_to <= staffing_history.valid_from
+        OR team_member_info.valid_from >= staffing_history.valid_to)
 
 ),
 
@@ -88,7 +145,7 @@ unioned AS (
   SELECT 
     employee_id,
     valid_from
-  FROM staffing_history
+  FROM history_combined
 
 ),
 
@@ -119,12 +176,14 @@ final AS (
     COALESCE(gitlab_usernames.gitlab_username, 'Unknown Username')                                          AS gitlab_username,
     COALESCE(performance_growth_potential.growth_potential_rating, 'Unknown Rating')                        AS growth_potential_rating,
     COALESCE(performance_growth_potential.performance_rating, 'Unknown Rating')                             AS performance_rating,
-    COALESCE(staffing_history.country, 'Unknown Country')                                                   AS country,
-    COALESCE(staffing_history.region, 'Unknown Region')                                                     AS region,
-    staffing_history.most_recent_hire_date                                                                  AS hire_date,
-    staffing_history.termination_date                                                                       AS termination_date,
-    staffing_history.is_current_team_member                                                                 AS is_current_team_member,
-    staffing_history.is_rehire                                                                              AS is_rehire,
+    COALESCE(history_combined.country, 'Unknown Country')                                                   AS country,
+    COALESCE(history_combined.region, 'Unknown Region')                                                     AS region,
+    COALESCE(history_combined.team_id, 'Unknown Team ID')                                                   AS team_id,
+    COALESCE(history_combined.employee_type, 'Unknown Employee Type')                                       AS employee_type,
+    history_combined.most_recent_hire_date                                                                  AS hire_date,
+    history_combined.termination_date                                                                       AS termination_date,
+    history_combined.is_current_team_member                                                                 AS is_current_team_member,
+    history_combined.is_rehire                                                                              AS is_rehire,
     date_range.valid_from                                                                                   AS valid_from,
     date_range.valid_to                                                                                     AS valid_to,
     date_range.is_current                                                                                   AS is_current
@@ -140,41 +199,21 @@ final AS (
 
     LEFT JOIN key_talent
       ON key_talent.employee_id = date_range.employee_id 
-        AND (
-          CASE
-            WHEN date_range.valid_from >= key_talent.valid_from AND date_range.valid_from < key_talent.valid_to THEN TRUE
-            WHEN date_range.valid_to > key_talent.valid_from AND date_range.valid_to <= key_talent.valid_to THEN TRUE
-            WHEN key_talent.valid_from >= date_range.valid_from AND key_talent.valid_from < date_range.valid_to THEN TRUE
-            ELSE FALSE
-          END) = TRUE
+        AND NOT (key_talent.valid_to <= date_range.valid_from
+          OR key_talent.valid_from >= date_range.valid_to)
     LEFT JOIN gitlab_usernames
       ON gitlab_usernames.employee_id = date_range.employee_id 
-        AND (
-          CASE
-            WHEN date_range.valid_from >= gitlab_usernames.valid_from AND date_range.valid_from < gitlab_usernames.valid_to THEN TRUE
-            WHEN date_range.valid_to > gitlab_usernames.valid_from AND date_range.valid_to <= gitlab_usernames.valid_to THEN TRUE
-            WHEN gitlab_usernames.valid_from >= date_range.valid_from AND gitlab_usernames.valid_from < date_range.valid_to THEN TRUE
-            ELSE FALSE
-          END) = TRUE
-        AND gitlab_usernames.valid_from != gitlab_usernames.valid_to
+        AND NOT (gitlab_usernames.valid_to <= date_range.valid_from
+          OR gitlab_usernames.valid_from >= date_range.valid_to)
+            AND gitlab_usernames.valid_from != gitlab_usernames.valid_to
     LEFT JOIN performance_growth_potential
       ON performance_growth_potential.employee_id = date_range.employee_id 
-        AND (
-          CASE
-            WHEN date_range.valid_from >= performance_growth_potential.valid_from AND date_range.valid_from < performance_growth_potential.valid_to THEN TRUE
-            WHEN date_range.valid_to > performance_growth_potential.valid_from AND date_range.valid_to <= performance_growth_potential.valid_to THEN TRUE
-            WHEN performance_growth_potential.valid_from >= date_range.valid_from AND performance_growth_potential.valid_from < date_range.valid_to THEN TRUE
-            ELSE FALSE
-          END) = TRUE
-    LEFT JOIN staffing_history
-      ON staffing_history.employee_id = date_range.employee_id 
-        AND (
-          CASE
-            WHEN date_range.valid_from >= staffing_history.valid_from AND date_range.valid_from < staffing_history.valid_to THEN TRUE
-            WHEN date_range.valid_to > staffing_history.valid_from AND date_range.valid_to <= staffing_history.valid_to THEN TRUE
-            WHEN staffing_history.valid_from >= date_range.valid_from AND staffing_history.valid_from < date_range.valid_to THEN TRUE
-            ELSE FALSE
-          END) = TRUE
+        AND NOT (performance_growth_potential.valid_to <= date_range.valid_from
+          OR performance_growth_potential.valid_from >= date_range.valid_to)
+    LEFT JOIN history_combined
+      ON history_combined.employee_id = date_range.employee_id 
+        AND NOT (history_combined.valid_to <= date_range.valid_from
+          OR history_combined.valid_from >= date_range.valid_to)
 
 )
 

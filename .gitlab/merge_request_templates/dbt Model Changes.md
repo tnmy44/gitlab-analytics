@@ -59,6 +59,7 @@ Paste the results of dbt test here, including the command.
 * [ ] Run the [run_changed_models_sql](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#%EF%B8%8Frun_changed_models_sql) with the variable `ANCESTOR_TYPE` set to either `+` to build changed models and all upstream models or `@` to test downstream models and pull in all dependencies. 
 * [ ] Re-run the [run_changed_models_sql](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#%EF%B8%8Frun_changed_models_sql) pipeline (you may need to create a new pipeline with the "Run Pipeline" button), which will run only the models that have changed (ex. dim_subscription), to remove any un-related pipeline failures.  You do not need to provide any variable values in this case.
 * Note, if your changes are only to the `schema.yml` or `source.yml` files you will need to run the [dbt-run](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#%EF%B8%8F-dbt-run) CI jobs while inputting the model names manually as those changes are not picked up by the `run_changed_*` jobs
+* [ ] If your changes are only to the `schema.yml`, `source.yml` or any `*.md` file files you will need to run the [📚✏️generate_dbt_docs](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#generate_dbt_docs) CI job to check and validate `dbt` documentations changes
 **Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
 
 **Provide an explanation here in case of any pipeline failures:**
@@ -133,13 +134,28 @@ Example: You might be looking at the count of opportunities before and after, if
   - [ ] Run the Monte Carlo permissions script (documented in the [Handbook](https://about.gitlab.com/handbook/business-technology/data-team/platform/monte-carlo/#note-on-dwh-permissions) and located in MC's official docs) with the corresponding database name as a parameter, for the permissions on this schema to be granted to the `data_observability` role
 </details>
 
-#### Snapshot model
+#### Snapshot Model
 <details>
 <summary><i>Click to toggle Snapshot model</i></summary>
 
 - [ ] Is this MR creating or renaming a snapshot model?
 - [ ] Does it concern Gitlab.com data?
   - [ ] Make sure its captured into the selection criteria of the [GDPR deletion](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/warehouse/gdpr_delete_gitlab_dotcom.sql) macro for GitLab.com data.
+</details>
+
+#### Salesforce Models
+
+<details>
+<summary><i>Click to toggle Salesforce Models</i></summary>
+
+- [ ] Does this MR add, remove, or update logic in `sfdc_account_source`?
+  - [ ] Mirror the changes in `sfdc_account_snapshots_source`.
+- [ ] Does this MR add, remove, or update logic in `sfdc_opportunity_source`?
+  - [ ] Mirror the changes in `sfdc_opportunity_snapshots_source`.
+- [ ] Does this MR add, remove, or update logic in `sfdc_users_source`?
+  - [ ] Mirror the changes in `sfdc_user_snapshots_source`.
+- [ ] Does this MR add, remove, or update logic in `sfdc_account_fields`, `sfdc_user_fields`, or `prep_crm_opportunity`?
+  - [ ]If the MR updates these models, a `dbt run --full-refresh` will be needed after merging the MR. Please, add it to the Reviewer Checklist to warn them that this step is required.
 </details>
 
 ## All MRs Checklist

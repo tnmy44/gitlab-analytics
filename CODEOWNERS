@@ -8,15 +8,15 @@
 # nested in that directory, on any level
 
 [Admin]
-/.gitlab/       @iweeks @dvanrooijen2
-/admin/         @iweeks @dvanrooijen2
-/analyze/       @iweeks
+/.gitlab/       @iweeks @dvanrooijen2 @nmcavinue @amiebright
+/admin/         @iweeks @dvanrooijen2 @nmcavinue @amiebright
+/analyze/       @iweeks @dvanrooijen2 @nmcavinue @amiebright
 
-CODEOWNERS         @iweeks @dvanrooijen2
+CODEOWNERS         @iweeks @dvanrooijen2 @nmcavinue @amiebright
 .gitignore         @jjstark @paul_armstrong @vedprakash2021
-CONTRIBUTING.md    @iweeks @dvanrooijen2
-LICENSE.md         @iweeks @dvanrooijen2 
-README.md          @iweeks @dvanrooijen2
+CONTRIBUTING.md    @iweeks @dvanrooijen2 @nmcavinue @amiebright
+LICENSE.md         @iweeks @dvanrooijen2 @nmcavinue @amiebright
+README.md          @iweeks @dvanrooijen2 @nmcavinue @amiebright
 
 [Data Engineering]
 /dags/              @paul_armstrong @vedprakash2021 @rbacovic @jjstark
@@ -87,6 +87,8 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
 /transform/snowflake-dbt/models/sources/engineering/        @jjstark @paul_armstrong @pempey @iweeks
 /transform/snowflake-dbt/models/legacy/engineering/         @pempey @iweeks
+
+/transform/snowflake-dbt/models/sources/gainsight_customer_success/ @jjstark @rbacovic @mdrussell @iweeks
 
 /transform/snowflake-dbt/models/sources/gitlab_data_yaml/   @jjstark @paul_armstrong @chrissharp @snalamaru @mdrussell @iweeks
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/    @chrissharp @snalamaru @mdrussell @iweeks
@@ -161,8 +163,8 @@ transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armst
 /transform/snowflake-dbt/data/handbook_file_classification_mapping.csv                  @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/historical_counts_maintainers_engineers.csv               @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/netsuite_expense_cost_category.csv                        @iweeks @snalamaru @pempey
-/transform/snowflake-dbt/data/projects_part_of_product.csv                              @clefelhocz1
-/transform/snowflake-dbt/data/projects_part_of_product_ops.csv                          @clefelhocz1
+/transform/snowflake-dbt/data/projects_part_of_product.csv                              @clefelhocz1 @timzallmann @cdu1 @wayne @sgoldstein @dsatcher @m_gill @jeromezng
+/transform/snowflake-dbt/data/projects_part_of_product_ops.csv                          @clefelhocz1 @timzallmann @cdu1 @wayne @sgoldstein @dsatcher @m_gill @jeromezng
 /transform/snowflake-dbt/data/raw_netsuite_currencies.csv                               @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/seeds.md                                                  @iweeks @snalamaru @pempey
 /transform/snowflake-dbt/data/seeds.yml                                                 @iweeks @snalamaru @pempey

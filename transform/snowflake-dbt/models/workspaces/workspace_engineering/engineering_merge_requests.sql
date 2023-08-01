@@ -37,7 +37,12 @@ WITH internal_merge_requests AS (
     FROM {{ ref('dim_user') }}
     WHERE email_domain LIKE '%noreply.gitlab.com'
 
-), engineering_merge_requests AS (
+), milestones AS (
+
+  SELECT *
+  FROM {{ ref('gitlab_dotcom_milestones') }}
+
+),engineering_merge_requests AS (
 
   SELECT
     internal_merge_requests.merge_request_id                                                                                    AS merge_request_id,
@@ -60,7 +65,10 @@ WITH internal_merge_requests AS (
     internal_merge_requests.milestone_id                                                                                        AS milestone_id,
     internal_merge_requests.milestone_title                                                                                     AS milestone_title,
     internal_merge_requests.milestone_description                                                                               AS milestone_description,
+    milestones.start_date AS milestone_start_date,
+    milestones.due_date AS milestone_due_date,
     internal_merge_requests.namespace_id                                                                                        AS namespace_id,
+    internal_merge_requests.ultimate_parent_id AS ultimate_parent_id,
     internal_merge_requests.labels                                                                                              AS labels,
     ARRAY_TO_STRING(internal_merge_requests.labels,'|')                                                                         AS masked_label_title,
     ARRAY_CONTAINS('community contribution'::variant, internal_merge_requests.labels)                                           AS is_community_contribution,
@@ -68,15 +76,15 @@ WITH internal_merge_requests AS (
     IFNULL(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bpriority::([0-9]+)'), 'priority::', ''),'undefined')                                                                                                                    AS priority_label,
     IFNULL(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bseverity::([0-9]+)'), 'severity::', ''),'undefined')                                                                                                                    AS severity_label,
     CASE
-      WHEN array_contains('gitaly::cluster'::variant,internal_merge_requests.labels)
+      WHEN array_contains('group::gitaly::cluster'::variant,internal_merge_requests.labels)
         THEN 'gitaly::cluster'
-      WHEN array_contains('gitaly::git'::variant,internal_merge_requests.labels)
+      WHEN array_contains('group::gitaly::git'::variant,internal_merge_requests.labels)
         THEN 'gitaly::git'
-      WHEN array_contains('distribution::build'::variant,internal_merge_requests.labels)
+      WHEN array_contains('group::distribution::build'::variant,internal_merge_requests.labels)
         THEN 'distribution::build'
-      WHEN array_contains('distribution::deploy'::variant,internal_merge_requests.labels)
+      WHEN array_contains('group::distribution::deploy'::variant,internal_merge_requests.labels)
         THEN 'distribution::deploy'
-      WHEN array_contains('distribution::operate'::variant,internal_merge_requests.labels)
+      WHEN array_contains('group::distribution::operate'::variant,internal_merge_requests.labels)
         THEN 'distribution::operate'
         ELSE
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml),REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_merge_requests.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''),'undefined') END                    AS group_label,
@@ -103,11 +111,7 @@ WITH internal_merge_requests AS (
         WHEN ns_1.dim_namespace_id IS NOT NULL 
             THEN ns_1.namespace_path || '/' || ns.namespace_path
         ELSE  ns.namespace_path END                                                                                             AS full_group_path,
-    CASE
-        WHEN projects.visibility_level = 'public'
-            THEN '[' || REPLACE(REPLACE(LEFT(internal_merge_requests.merge_request_title,64),'[',''),']','') ||'](https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/merge_requests/' || internal_merge_requests.merge_request_iid || ')'
-        ELSE 'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/merge_requests/' || internal_merge_requests.merge_request_iid 
-        END                                                                                                                     AS url
+    'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/merge_requests/' || internal_merge_requests.merge_request_iid  AS url
   FROM internal_merge_requests
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_merge_requests.target_project_id
@@ -123,6 +127,8 @@ WITH internal_merge_requests AS (
     ON ns_3.dim_namespace_id = ns_2.parent_id and ns_2.namespace_is_ultimate_parent = FALSE
   LEFT JOIN namespaces ns_4 
     ON ns_4.dim_namespace_id = ns_3.parent_id and ns_3.namespace_is_ultimate_parent = FALSE
+  LEFT JOIN milestones
+    ON milestones.milestone_id = internal_merge_requests.milestone_id
   WHERE is_part_of_product = TRUE
 )
 

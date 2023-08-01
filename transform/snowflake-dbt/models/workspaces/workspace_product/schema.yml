@@ -94,6 +94,66 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: dbt_updated_at
       - name: dbt_created_at
+  
+  - name: wk_rpt_namespace_onboarding
+    description: '{{ doc("wk_rpt_namespace_onboarding") }}'
+    columns:
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+        tests:
+          - not_null
+          - unique
+      - name: namespace_created_at
+      - name: namespace_created_date
+      - name: namespace_created_month
+      - name: namespace_created_week
+      - name: creator_id
+      - name: sfdc_record_id
+        description: Functional analytics team owner is Marketing Analytics. Is the SFDC ID of namespace creator. This could be either a lead or contact in SFDC. Joined from dim_crm_person 
+      - name: namespace_type
+      - name: setup_for_company
+      - name: visibility_level
+      - name: current_gitlab_plan_id
+      - name: current_gitlab_plan_title
+      - name: current_project_count
+      - name: days_since_namespace_creation
+      - name: handraise_pql_date
+      - name: is_namespace_created_within_2min_of_creator_invite_acceptance
+      - name: trial_start_date
+      - name: days_since_namespace_creation_at_trial
+      - name: first_paid_subscription_start_date
+      - name: days_since_namespace_creation_at_first_paid_subscription
+      - name: first_paid_plan_name
+      - name: is_first_paid_plan_purchased_through_subscription_portal
+      - name: days_since_namespace_creation_at_activation_event 
+      - name: activation_event_array 
+      - name: acitivity_between_d60_d90
+      - name: creator_is_valuable_signup 
+      - name: namespace_contains_valuable_signup
+      - name: has_team_activation
+      - name: namespace_creator_role 
+      - name: namespace_creator_jtbd
+      - name: namespace_creator_is_first_order_person
+        description: Functional analytics team owner is Marketing Analytics. Is First Order field from the lead and contact model in SFDC joined from dim_crm_person through dim_marketing_contact. When this value is true, the creator of the namespace is a first order person in SFDC right now. This join is ultimately is created by matching email addresses.
+      - name: days_since_namespace_creation_at_first_plan_event_date
+      - name: days_since_namespace_creation_at_first_secure_event_date
+      - name: days_since_namespace_creation_at_first_create_event_date 
+      - name: days_since_namespace_creation_at_first_verify_event_date
+      - name: days_since_namespace_creation_at_first_release_event_date
+      - name: days_since_latest_plan_event_date
+      - name: days_since_latest_secure_event_date
+      - name: days_since_latest_create_event_date 
+      - name: days_since_latest_verify_event_date
+      - name: days_since_latest_release_event_date
+      - name: stage_adoption_order
+      - name: total_stages_adopted
+        description: Unique count of product stages adopted all time.
+      - name: current_billable_member_count
+      - name: current_month_storage_gib  
+      - name: first_activity_date  
+      - name: latest_activity_date 
+      - name: dbt_updated_at
+      - name: dbt_created_at
 
   - name: suggested_merge_request_reviewers
     description: Table for exploring the suggested reviewers for a merge request
@@ -107,5 +167,10 @@ models:
   - name: wk_gitlab_dotcom_web_hooks
     description: Workspace table for exposing gitlab_dotcom_web_hooks table to Sisense.
 
-  - name: wk_rpt_product_navigation_base
-    description: Workspace table for tracking Navigation events for easier and faster querying to Sisense.
+  - name: wk_usage_ping_geo_node_usage
+    description: Workspace table for Service ping geo node usage
+    columns:
+      - name: uploaded_at
+        description: '{{ doc("wk_usage_ping_geo_node_usage_uploaded_at") }}'
+        tests:
+          - not_null

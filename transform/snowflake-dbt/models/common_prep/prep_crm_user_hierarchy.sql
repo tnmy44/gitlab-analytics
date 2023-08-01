@@ -48,7 +48,9 @@
       AND prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
+      AND IFF(dim_date.fiscal_year > 2023, prep_crm_user_daily_snapshot.crm_user_business_unit IS NOT NULL, 1=1) -- with the change in structure, business unit must be present after FY23
       AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
+      AND prep_crm_user_daily_snapshot.is_active = TRUE 
 
 ), user_hierarchy_sheetload AS (
 /*
@@ -101,6 +103,7 @@
       prep_crm_opportunity.user_business_unit_stamped                AS user_business_unit,
       prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk    AS dim_crm_user_hierarchy_sk
     FROM prep_crm_opportunity
+    WHERE is_live = 1
   
 ), unioned AS (
 /*
@@ -203,6 +206,7 @@
     FROM final_unioned
     LEFT JOIN current_fiscal_year
       ON final_unioned.fiscal_year = current_fiscal_year.fiscal_year
+    WHERE dim_crm_user_hierarchy_sk IS NOT NULL
 
 )
 
@@ -211,5 +215,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2021-01-05",
-    updated_date="2023-03-10"
+    updated_date="2023-05-02"
 ) }}

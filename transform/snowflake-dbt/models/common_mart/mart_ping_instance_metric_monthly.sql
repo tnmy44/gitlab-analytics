@@ -13,7 +13,10 @@
     ('dim_license', 'dim_license'),
     ('dim_hosts', 'dim_hosts'),
     ('dim_location', 'dim_location_country'),
-    ('dim_ping_metric', 'dim_ping_metric')
+    ('dim_ping_metric', 'dim_ping_metric'),
+    ('fct_ping_instance', 'fct_ping_instance'),
+    ('dim_app_release_major_minor', 'dim_app_release_major_minor')
+
     ])
 
 }}
@@ -58,11 +61,10 @@
       dim_crm_accounts.crm_account_name                                           AS crm_account_name,
       dim_crm_accounts.dim_parent_crm_account_id                                  AS dim_parent_crm_account_id,
       dim_crm_accounts.parent_crm_account_name                                    AS parent_crm_account_name,
-      dim_crm_accounts.parent_crm_account_billing_country                         AS parent_crm_account_billing_country,
+      dim_crm_accounts.parent_crm_account_upa_country                             AS parent_crm_account_upa_country,
       dim_crm_accounts.parent_crm_account_sales_segment                           AS parent_crm_account_sales_segment,
       dim_crm_accounts.parent_crm_account_industry                                AS parent_crm_account_industry,
-      dim_crm_accounts.parent_crm_account_owner_team                              AS parent_crm_account_owner_team,
-      dim_crm_accounts.parent_crm_account_sales_territory                         AS parent_crm_account_sales_territory,
+      dim_crm_accounts.parent_crm_account_territory                               AS parent_crm_account_territory,
       dim_crm_accounts.technical_account_manager                                  AS technical_account_manager,
       IFF(MAX(fct_charge.mrr) > 0, TRUE, FALSE)                                   AS is_paid_subscription,
       MAX(IFF(dim_product_detail.product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE)) 
@@ -85,7 +87,7 @@
         AND fct_charge.charge_type = 'Recurring'
     INNER JOIN dim_product_detail
       ON dim_product_detail.dim_product_detail_id = fct_charge.dim_product_detail_id
-      AND dim_product_detail.product_delivery_type = 'Self-Managed'
+      AND dim_product_detail.product_deployment_type IN ('Self-Managed', 'Dedicated')
       AND dim_product_detail.product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
     LEFT JOIN dim_billing_account
       ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
@@ -93,7 +95,7 @@
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
     INNER JOIN dim_date
       ON fct_charge.effective_start_month <= dim_date.date_day AND fct_charge.effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=22)}}
+    {{ dbt_utils.group_by(n=21)}}
 
 
   ), latest_subscription AS (
@@ -148,23 +150,30 @@
         COALESCE(license_sha256.crm_account_name, license_md5.crm_account_name)                                                         AS crm_account_name,
         COALESCE(license_sha256.dim_parent_crm_account_id, license_md5.dim_parent_crm_account_id)                                       AS dim_parent_crm_account_id,
         COALESCE(license_sha256.parent_crm_account_name, license_md5.parent_crm_account_name)                                           AS parent_crm_account_name,
-        COALESCE(license_sha256.parent_crm_account_billing_country, license_md5.parent_crm_account_billing_country)                     AS parent_crm_account_billing_country,
+        COALESCE(license_sha256.parent_crm_account_upa_country, license_md5.parent_crm_account_upa_country)                             AS parent_crm_account_upa_country,
         COALESCE(license_sha256.parent_crm_account_sales_segment, license_md5.parent_crm_account_sales_segment)                         AS parent_crm_account_sales_segment,
         COALESCE(license_sha256.parent_crm_account_industry, license_md5.parent_crm_account_industry)                                   AS parent_crm_account_industry,
-        COALESCE(license_sha256.parent_crm_account_owner_team, license_md5.parent_crm_account_owner_team)                               AS parent_crm_account_owner_team,
-        COALESCE(license_sha256.parent_crm_account_sales_territory, license_md5.parent_crm_account_sales_territory)                     AS parent_crm_account_sales_territory,
+        COALESCE(license_sha256.parent_crm_account_territory, license_md5.parent_crm_account_territory)                                 AS parent_crm_account_territory,
         COALESCE(license_sha256.technical_account_manager, license_md5.technical_account_manager)                                       AS technical_account_manager,
         COALESCE(license_sha256.is_paid_subscription, license_md5.is_paid_subscription, FALSE)                                          AS is_paid_subscription,
         COALESCE(license_sha256.is_program_subscription, license_md5.is_program_subscription, FALSE)                                    AS is_program_subscription,
         dim_ping_instance.ping_delivery_type                                                                                            AS ping_delivery_type,
+        dim_ping_instance.ping_deployment_type                                                                                          AS ping_deployment_type,
         dim_ping_instance.ping_edition                                                                                                  AS ping_edition,
         dim_ping_instance.product_tier                                                                                                  AS ping_product_tier,
         dim_ping_instance.ping_edition || ' - ' || dim_ping_instance.product_tier                                                       AS ping_edition_product_tier,
         dim_ping_instance.major_version                                                                                                 AS major_version,
         dim_ping_instance.minor_version                                                                                                 AS minor_version,
         dim_ping_instance.major_minor_version                                                                                           AS major_minor_version,
+        dim_app_release_major_minor.major_minor_version_num                                                                             AS major_minor_version_num,
         dim_ping_instance.major_minor_version_id                                                                                        AS major_minor_version_id,
         dim_ping_instance.version_is_prerelease                                                                                         AS version_is_prerelease,
+        IFF(DATEDIFF('days', dim_app_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at) < 0 AND version_is_prerelease = FALSE,
+          0, DATEDIFF('days', dim_app_release_major_minor.release_date, fct_ping_instance_metric.ping_created_at)) 
+                                                                                                                                        AS days_after_version_release_date,
+        latest_version.major_minor_version                                                                                              AS latest_version_available_at_ping_creation,
+        IFF(latest_version.version_number - dim_app_release_major_minor.version_number < 0 AND version_is_prerelease = FALSE,
+          0, latest_version.version_number - dim_app_release_major_minor.version_number)                                                AS versions_behind_latest_at_ping_creation,
         dim_ping_instance.is_internal                                                                                                   AS is_internal,
         dim_ping_instance.is_staging                                                                                                    AS is_staging,
         dim_ping_instance.instance_user_count                                                                                           AS instance_user_count,
@@ -196,7 +205,11 @@
           AND dim_date.first_day_of_month = license_sha256.reporting_month
       LEFT JOIN dim_location
         ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
-      WHERE dim_ping_instance.ping_delivery_type = 'Self-Managed'
+      LEFT JOIN dim_app_release_major_minor
+        ON fct_ping_instance_metric.dim_app_release_major_minor_sk = dim_app_release_major_minor.dim_app_release_major_minor_sk
+      LEFT JOIN dim_app_release_major_minor AS latest_version
+        ON fct_ping_instance_metric.dim_latest_available_app_release_major_minor_sk = latest_version.dim_app_release_major_minor_sk
+     WHERE dim_ping_instance.ping_deployment_type IN ('Self-Managed', 'Dedicated')
         OR (dim_ping_instance.ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
 
 ), sorted AS (
@@ -224,13 +237,18 @@
       host_name,
       -- metadata usage ping
       ping_delivery_type,
+      ping_deployment_type,
       ping_edition,
       ping_product_tier,
       ping_edition_product_tier,
       major_version,
       minor_version,
       major_minor_version,
+      major_minor_version_num,
       version_is_prerelease,
+      days_after_version_release_date,
+      latest_version_available_at_ping_creation,
+      versions_behind_latest_at_ping_creation,
       is_internal,
       is_staging,
       is_trial,
@@ -262,11 +280,10 @@
       -- account metadata
       crm_account_name,
       parent_crm_account_name,
-      parent_crm_account_billing_country,
+      parent_crm_account_upa_country,
       parent_crm_account_sales_segment,
       parent_crm_account_industry,
-      parent_crm_account_owner_team,
-      parent_crm_account_sales_territory,
+      parent_crm_account_territory,
       technical_account_manager,
 
       ping_created_at,
@@ -283,7 +300,7 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2022-03-11",
-    updated_date="2022-02-01"
+    updated_date="2023-06-30"
 ) }}

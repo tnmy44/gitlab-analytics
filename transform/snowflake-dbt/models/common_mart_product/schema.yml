@@ -80,6 +80,8 @@ models:
       - name: hostname
       - name: delivery_type
         description: Indicated if the product usage came from a SaaS or Self-Managed user.
+      - name: deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
       - name: cleaned_version
         description: Version of GitLab running on the instance
       - name: dim_crm_account_id
@@ -592,6 +594,10 @@ models:
           - dbt_utils.at_least_one
       - name: pipeline_schedules_28_days_user
         description: '{{ doc("pipeline_schedules_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_internal_pipelines_28_days_event
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: is_latest_data

@@ -22,7 +22,7 @@
     {% if is_incremental() %}
 
    -- this filter will only be applied on an incremental run
-   AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
+   AND date_id > (SELECT MAX(snapshot_id) FROM {{ this }})
 
    {% endif %}
 {%- endif %}
@@ -36,6 +36,7 @@
       {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
       snapshot_dates.date_id                                                                           AS snapshot_id,
       snapshot_dates.fiscal_year                                                                       AS snapshot_fiscal_year,
+      snapshot_dates.date_actual                                                                       AS snapshot_date,
       sfdc_user_snapshots_source.*
       {%- endif %}
     FROM
@@ -61,6 +62,7 @@
       {%- if model_type == 'snapshot' %}
       sfdc_users.crm_user_snapshot_id,
       sfdc_users.snapshot_id,
+      sfdc_users.snapshot_date,
       {%- endif %}
       sfdc_users.user_id                                                                                                              AS dim_crm_user_id,
       sfdc_users.employee_number,
@@ -74,6 +76,7 @@
       sfdc_users.is_active,
       sfdc_users.start_date,
       sfdc_users.ramping_quota,
+      sfdc_users.user_timezone,
       sfdc_users.user_role_id,
       sfdc_user_roles_source.name                                                                                                     AS user_role_name,
       {{ dbt_utils.surrogate_key(['sfdc_users.user_segment']) }}                                                                      AS dim_crm_user_sales_segment_id,
@@ -89,6 +92,15 @@
       sfdc_users.user_business_unit                                                                                                   AS crm_user_business_unit,
       {{ dbt_utils.surrogate_key(['sfdc_users.user_role_type']) }}                                                                    AS dim_crm_user_role_type_id,
       sfdc_users.user_role_type                                                                                                       AS crm_user_role_type,
+      CASE 
+        WHEN sfdc_users.is_hybrid_user = 'Yes' 
+          THEN 1
+        WHEN sfdc_users.is_hybrid_user = 'No' 
+          THEN  0
+        WHEN sfdc_users.is_hybrid_user IS NULL 
+          THEN 0
+        ELSE 0 
+      END                                                                                                                             AS is_hybrid_user,
       {%- if model_type == 'live' %}
       CASE
         WHEN LOWER(sfdc_users.user_business_unit) = 'comm'

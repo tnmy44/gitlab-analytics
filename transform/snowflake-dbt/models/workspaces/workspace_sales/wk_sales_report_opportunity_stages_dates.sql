@@ -26,7 +26,8 @@ WITH sfdc_opportunity_field_history AS (
            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(new_value_string, '2-Developing', '2-Scoping'), '7 - Closing',
                                            '7-Closing'), 'Developing', '2-Scoping'), 'Closed Lost', '8-Closed Lost'),
                    '8-8-Closed Lost', '8-Closed Lost') AS new_value_string,
-           MAX(field_modified_at::date)                AS min_stage_date
+         -- MIN as we want to track the lowest possible case when the stage showed up.
+           MIN(field_modified_at::date)                AS min_stage_date
 
     FROM sfdc_opportunity_field_history
     WHERE opportunity_field = 'stagename'

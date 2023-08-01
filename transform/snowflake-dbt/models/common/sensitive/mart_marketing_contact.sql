@@ -18,6 +18,8 @@
   ('services', 'gitlab_dotcom_integrations_source'),
   ('project', 'prep_project'),
   ('ptpt_scores_by_user', 'prep_ptpt_scores_by_user'),
+  ('ptpf_scores_by_user', 'prep_ptpf_scores_by_user'),
+  ('ptp_scores_by_user', 'prep_ptp_scores_by_user'),
   ('namespace_details', 'gitlab_dotcom_namespace_details_source')
 ]) }}
 
@@ -388,6 +390,29 @@
       END                                                                                        AS is_individual_namespace_owner,
       CASE 
         WHEN MAX(CASE 
+                  WHEN marketing_contact_order.marketing_contact_role IN (
+                                                                          'Group Namespace Maintainer'
+                                                                        )
+                  AND (marketing_contact_order.is_saas_ultimate_tier OR marketing_contact_order.is_saas_premium_tier OR marketing_contact_order.is_saas_bronze_tier)
+                    THEN 1
+                  ELSE 0
+                END) >= 1 THEN TRUE 
+        ELSE FALSE
+      END                                                                                        AS is_group_maintainer_of_saas_paid_tier,
+      CASE 
+        WHEN MAX(CASE 
+                  WHEN marketing_contact_order.marketing_contact_role IN (
+                                                                          'Group Namespace Maintainer'
+                                                                        )
+                  AND marketing_contact_order.is_saas_free_tier
+                    THEN 1
+                  ELSE 0
+                END) >= 1 THEN TRUE 
+        ELSE FALSE
+      END                                                                                        AS is_group_maintainer_of_saas_free_tier,
+      IFF(is_group_maintainer_of_saas_free_tier OR is_group_maintainer_of_saas_paid_tier, TRUE, FALSE) AS is_group_maintainer_of_saas,
+      CASE 
+        WHEN MAX(CASE 
                   WHEN marketing_contact_order.marketing_contact_role = 'Customer DB Owner' 
                     THEN 1 
                   ELSE 0 
@@ -751,7 +776,7 @@
       marketing_contact.country,
       marketing_contact.mobile_phone,
       marketing_contact.sfdc_parent_sales_segment,
-      marketing_contact.sfdc_parent_crm_account_tsp_region,
+      marketing_contact.sfdc_parent_crm_account_region,
       marketing_contact.marketo_lead_id,
       marketing_contact.is_marketo_lead,
       marketing_contact.is_marketo_email_hard_bounced,
@@ -814,6 +839,36 @@
       ptpt_scores_by_user.past_score_group        AS ptpt_past_score_group,
       ptpt_scores_by_user.past_score_date         AS ptpt_past_score_date,
 
+      -- Propensity to purchase Free fields
+      IFF(ptpf_scores_by_user.namespace_id IS NOT NULL, TRUE, FALSE)
+                                                  AS is_ptpf_contact,
+      ptpf_scores_by_user.namespace_id            AS ptpf_namespace_id,
+      ptpf_scores_by_user.score_group             AS ptpf_score_group,
+      ptpf_scores_by_user.score_date              AS ptpf_score_date,
+      ptpf_scores_by_user.past_score_group        AS ptpf_past_score_group,
+      ptpf_scores_by_user.past_score_date         AS ptpf_past_score_date,
+
+      -- Propensity to purchase fields
+      IFF(ptp_scores_by_user.namespace_id IS NOT NULL, TRUE, FALSE)
+                                                  AS is_ptp_contact,
+      IFF(is_ptp_contact = TRUE OR (is_ptp_contact = FALSE AND marketing_contact.is_ptp_contact_marketo = TRUE
+        ), TRUE, FALSE)
+                                                  AS is_ptp_contact_change,
+      ptp_scores_by_user.namespace_id             AS ptp_namespace_id,
+      ptp_scores_by_user.score_group              AS ptp_score_group,
+      ptp_scores_by_user.score_date               AS ptp_score_date,
+      ptp_scores_by_user.insights                 AS ptp_insights,
+      ptp_scores_by_user.past_insights            AS ptp_past_insights,
+      ptp_scores_by_user.past_score_group         AS ptp_past_score_group,
+      ptp_scores_by_user.past_score_date          AS ptp_past_score_date,
+      CASE
+        WHEN ptp_scores_by_user.days_since_trial_start BETWEEN 0 AND 30 THEN '< 30 days'
+        WHEN ptp_scores_by_user.days_since_trial_start BETWEEN 30 AND 60 THEN '30 - 60 days'
+        WHEN ptp_scores_by_user.days_since_trial_start BETWEEN 60 AND 90 THEN '60 - 90 days'
+        WHEN ptp_scores_by_user.days_since_trial_start >= 90 THEN '90+ days'
+      END                                         AS ptp_days_since_trial_start,
+      ptp_scores_by_user.ptp_source               AS ptp_source,
+
       -- Namespace notification dates
       namespace_notifications.user_limit_namespace_id,
       namespace_notifications.user_limit_notification_at,
@@ -871,6 +926,10 @@
       ON users_role_by_email.email = marketing_contact.email_address
     LEFT JOIN ptpt_scores_by_user
       ON ptpt_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
+    LEFT JOIN ptpf_scores_by_user
+      ON ptpf_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
+    LEFT JOIN ptp_scores_by_user
+      ON ptp_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN namespace_notifications
       ON namespace_notifications.email_address = marketing_contact.email_address
 )
@@ -955,7 +1014,18 @@
       'is_impacted_by_user_limit',
       'is_impacted_by_user_limit_change',
       'user_limit_namespace_id',
-      'marketo_lead_id'
+      'marketo_lead_id',
+      'is_ptp_contact',
+      'is_ptp_contact_change',
+      'ptp_namespace_id',
+      'ptp_score_group',
+      'ptp_score_date',
+      'ptp_insights',
+      'ptp_past_insights',
+      'ptp_past_score_group',
+      'ptp_days_since_trial_start',
+      'ptp_source',
+      'is_group_maintainer_of_saas_paid_tier'
       ]
 ) }}
 
@@ -964,5 +1034,5 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2023-01-27"
+    updated_date="2023-06-19"
 ) }}

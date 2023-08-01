@@ -20,12 +20,12 @@ team_data AS (
     IFF(
       source.is_deleted AND source.team_inactivated_date IS NULL,
       source.uploaded_at,
-      source.team_inactivated_date)      AS team_inactivated_date,
+      source.team_inactivated_date)                     AS team_inactivated_date,
     source.is_deleted,
-    DATE_TRUNC('day', source.valid_from) AS valid_from,
+    DATE_TRUNC('day', source.valid_from)                AS team_data_valid_from,
     COALESCE(DATE_TRUNC('day', source.valid_to),
       {{ var('tomorrow') }}
-    )                                    AS valid_to
+    )                                                   AS team_data_valid_to
   FROM source
 
 ),
@@ -37,11 +37,11 @@ team_superior_groups AS (
     team_id,
     team_name,
     team_superior_team_id,
-    COALESCE(team_superior_team_id, '')                                                                         AS no_null_superior,
-    LAG(no_null_superior, 1, '') OVER (PARTITION BY team_id ORDER BY valid_from)                                AS lag_superior_id,
-    CONDITIONAL_TRUE_EVENT(no_null_superior != lag_superior_id) OVER (PARTITION BY team_id ORDER BY valid_from) AS superior_id_group,
-    valid_from,
-    valid_to
+    COALESCE(team_superior_team_id, '')                                                                                   AS no_null_superior,
+    LAG(no_null_superior, 1, '') OVER (PARTITION BY team_id ORDER BY team_data_valid_from)                                AS lag_superior_id,
+    CONDITIONAL_TRUE_EVENT(no_null_superior != lag_superior_id) OVER (PARTITION BY team_id ORDER BY team_data_valid_from) AS superior_id_group,
+    team_data_valid_from,
+    team_data_valid_to
   FROM team_data
 
 ),
@@ -54,8 +54,8 @@ team_superior_change AS (
     team_name,
     team_superior_team_id,
     superior_id_group,
-    MIN(valid_from) AS valid_from,
-    MAX(valid_to)   AS valid_to
+    MIN(team_data_valid_from) AS valid_from,
+    MAX(team_data_valid_to)   AS valid_to
   FROM team_superior_groups
   GROUP BY 1, 2, 3, 4
 
@@ -140,8 +140,8 @@ team_hierarchy AS (
     MAX(from_list.value::TIMESTAMP)                                             AS hierarchy_valid_from,
     MIN(to_list.value::TIMESTAMP)                                               AS hierarchy_valid_to
   FROM recursive_hierarchy
-  INNER JOIN LATERAL FLATTEN(INPUT => recursive_hierarchy.valid_from_list) AS from_list
-  INNER JOIN LATERAL FLATTEN(INPUT => recursive_hierarchy.valid_to_list) AS to_list
+  INNER JOIN LATERAL FLATTEN(INPUT => recursive_hierarchy.valid_from_list)      AS from_list
+  INNER JOIN LATERAL FLATTEN(INPUT => recursive_hierarchy.valid_to_list)        AS to_list
   {{ dbt_utils.group_by(n=22) }}
   HAVING hierarchy_valid_to > hierarchy_valid_from
 
@@ -150,6 +150,7 @@ team_hierarchy AS (
 final AS (
 
   SELECT
+    {{ dbt_utils.surrogate_key(['team_data.team_id']) }}                        AS dim_team_sk,
     team_data.team_id,
     team_data.team_superior_team_id,
     team_hierarchy.hierarchy_level_1,
@@ -171,7 +172,7 @@ final AS (
     team_hierarchy.hierarchy_level_8_name,
     team_hierarchy.hierarchy_level_9_name,
     team_hierarchy.hierarchy_levels_array,
-    team_data.team_hierarchy_level                                      AS team_hierarchy_level,
+    team_data.team_hierarchy_level                                                AS team_hierarchy_level,
     team_data.is_team_inactivated,
     team_data.team_name,
     team_data.team_manager_name,
@@ -179,20 +180,15 @@ final AS (
     team_data.team_inactivated_date,
     team_data.team_members_count,
     team_data.is_team_manager_inherited,
-    IFF(team_data.team_inactivated_date IS NULL, TRUE, FALSE)           AS is_team_active,
-    GREATEST(team_hierarchy.hierarchy_valid_from, team_data.valid_from) AS valid_from,
-    LEAST(team_hierarchy.hierarchy_valid_to, team_data.valid_to)        AS valid_to,
-    IFF(DATE(valid_to) = {{ var('tomorrow') }}, TRUE, FALSE)            AS is_current
+    IFF(team_data.team_inactivated_date IS NULL, TRUE, FALSE)                     AS is_team_active,
+    GREATEST(team_hierarchy.hierarchy_valid_from, team_data.team_data_valid_from) AS valid_from,
+    LEAST(team_hierarchy.hierarchy_valid_to, team_data.team_data_valid_to)        AS valid_to,
+    IFF(DATE(valid_to) = {{ var('tomorrow') }}, TRUE, FALSE)                      AS is_current
   FROM team_data
   LEFT JOIN team_hierarchy
     ON team_hierarchy.team_id = team_data.team_id
-      AND (
-        CASE
-          WHEN team_data.valid_from >= team_hierarchy.hierarchy_valid_from AND team_data.valid_from < team_hierarchy.hierarchy_valid_to THEN TRUE
-          WHEN team_data.valid_to > team_hierarchy.hierarchy_valid_from AND team_data.valid_to <= team_hierarchy.hierarchy_valid_to THEN TRUE
-          WHEN team_hierarchy.hierarchy_valid_from >= team_data.valid_from AND team_hierarchy.hierarchy_valid_from < team_data.valid_to THEN TRUE
-          ELSE FALSE
-        END) = TRUE
+      AND NOT (team_data.team_data_valid_to <= team_hierarchy.hierarchy_valid_from
+          OR team_data.team_data_valid_from >= team_hierarchy.hierarchy_valid_to)
 
 )
 
@@ -202,5 +198,5 @@ final AS (
     created_by="@lisvinueza",
     updated_by="@lisvinueza",
     created_date="2023-01-17",
-    updated_date="2023-04-03",
+    updated_date="2023-06-30",
  	) }}

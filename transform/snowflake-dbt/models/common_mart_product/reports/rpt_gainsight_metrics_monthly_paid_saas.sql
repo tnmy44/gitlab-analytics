@@ -24,12 +24,13 @@
     FROM bdg_subscription_product_rate_plan
     LEFT JOIN charges 
       ON charges.dim_subscription_id = bdg_subscription_product_rate_plan.dim_subscription_id
-    WHERE bdg_subscription_product_rate_plan.product_delivery_type = 'SaaS'
+    WHERE bdg_subscription_product_rate_plan.product_deployment_type = 'GitLab.com'
       AND (
         bdg_subscription_product_rate_plan.product_rate_plan_charge_name NOT IN (
           '1,000 CI Minutes',
           'Gitlab Storage 10GB - 1 Year',
-          'Premium Support'
+          'Premium Support',
+          '1,000 Compute Minutes'
         )
         OR charges.charge_type != 'OneTime'
       )
@@ -67,6 +68,8 @@
       {{ get_date_id('saas_usage_ping.ping_date') }}                                    AS ping_created_date_id,
       saas_usage_ping.instance_type,
       saas_usage_ping.included_in_health_measures_str,
+      'SaaS'                                                                            AS ping_delivery_type,
+      'GitLab.com'                                                                      AS ping_deployment_type,
       -- Wave 1
       gitlab_seats.seats                                                                AS subscription_seats,
       gitlab_seats.seats_in_use                                                         AS billable_user_count,
@@ -250,6 +253,8 @@
       "usage_activity_by_stage_monthly.govern.user_merge_requests_for_projects_with_assigned_security_policy_project"       AS merge_requests_security_policy_28_days_user,
       "redis_hll_counters.ci_templates.p_ci_templates_implicit_auto_devops_monthly"                                         AS pipelines_implicit_auto_devops_28_days_event,
       "usage_activity_by_stage_monthly.verify.ci_pipeline_schedules"                                                        AS pipeline_schedules_28_days_user,
+      -- Wave 8
+      "counts_monthly.ci_internal_pipelines"    AS ci_internal_pipelines_28_days_event,
       -- Data Quality Flags
       IFF(license_utilization = 0
             AND billable_user_count > 0,
@@ -277,7 +282,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-10-12",
-    updated_date="2023-03-15"
+    updated_date="2023-06-26"
 ) }}

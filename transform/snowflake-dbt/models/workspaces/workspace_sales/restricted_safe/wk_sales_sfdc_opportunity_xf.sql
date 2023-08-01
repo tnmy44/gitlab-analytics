@@ -145,23 +145,6 @@ WITH edm_opty AS (
     edm_opty.order_type                            AS order_type_stamped,
     edm_opty.order_type_live                       AS order_type_live,
 
-    -- stage rank
-    CASE edm_opty.stage_name
-        WHEN '0-Pending Acceptance'      THEN 0
-        WHEN '1-Discovery'               THEN 1
-        WHEN '2-Scoping'                 THEN 2
-        WHEN '3-Technical Evaluation'    THEN 3
-        WHEN '4-Proposal'                THEN 4
-        WHEN '5-Negotiating'             THEN 5
-        WHEN '6-Awaiting Signature'      THEN 6
-        WHEN '7-Closing'                 THEN 7
-        WHEN '8-Closed Lost'             THEN 8
-        WHEN 'Closed Won'                 THEN 9
-        WHEN '9-Unqualified'             THEN 11
-        WHEN '10-Duplicate'              THEN 10
-    ELSE NULL
-    END                                             AS stage_name_rank,
-
     ----------------------------------------------------------
     ----------------------------------------------------------
     -- Amount fields
@@ -175,12 +158,18 @@ WITH edm_opty AS (
     edm_opty.other_non_recurring_amount,
     edm_opty.arr_basis,
     edm_opty.arr,
+    
+    -- ATR for Booked Churned / Contraction metrics
+    edm_opty.atr,
+    edm_opty.won_atr,
+    edm_opty.booked_churned_contraction_net_arr,
 
     edm_opty.competitors,
     edm_opty.fpa_master_bookings_flag,
     edm_opty.forecast_category_name,
     edm_opty.invoice_number,
     edm_opty.professional_services_value,
+    edm_opty.is_ps_opp,
     edm_opty.reason_for_loss,
     edm_opty.reason_for_loss_details,
     edm_opty.downgrade_reason,
@@ -274,39 +263,33 @@ WITH edm_opty AS (
     edm_opty.dim_parent_crm_account_id                 AS ultimate_parent_account_id,
     edm_opty.is_jihu_account,
 
-    account_owner.name                                  AS account_owner_name,
-    account_owner.user_id                               AS account_owner_id,                                       
+    account_owner.name                                 AS account_owner_name,
+    account_owner.user_id                              AS account_owner_id,                                               
 
-    edm_opty.account_demographics_segment,
-    edm_opty.account_demographics_geo,
-    edm_opty.account_demographics_region,
-    edm_opty.account_demographics_area,
-    edm_opty.account_demographics_territory,
+    edm_opty.parent_crm_account_sales_segment,
+    edm_opty.parent_crm_account_geo,
+    edm_opty.parent_crm_account_region,
+    edm_opty.parent_crm_account_area,
+    edm_opty.parent_crm_account_territory,
 
-    upa.account_demographics_sales_segment            AS upa_demographics_segment,
-    upa.account_demographics_geo                      AS upa_demographics_geo,
-    upa.account_demographics_region                   AS upa_demographics_region,
-    upa.account_demographics_area                     AS upa_demographics_area,
-    upa.account_demographics_territory                AS upa_demographics_territory,
-
-    edm_opty.sales_qualified_source_name              AS sales_qualified_source,
+    edm_opty.sales_qualified_source_name               AS sales_qualified_source,
     edm_opty.stage_category,
     edm_opty.calculated_partner_track,
     edm_opty.deal_path_engagement,
     edm_opty.is_refund,
-    edm_opty.is_credit                                AS is_credit_flag,
-    edm_opty.is_contract_reset                        AS is_contract_reset_flag,
+    edm_opty.is_credit                                 AS is_credit_flag,
+    edm_opty.is_contract_reset                         AS is_contract_reset_flag,
     edm_opty.is_net_arr_pipeline_created,
-    CAST(edm_opty.is_won AS INTEGER)                  AS is_won,
+    CAST(edm_opty.is_won AS INTEGER)                   AS is_won,
     edm_opty.is_lost,
     edm_opty.is_open,
-    edm_opty.is_duplicate                             AS is_duplicate_flag,    
+    edm_opty.is_duplicate                              AS is_duplicate_flag,    
     CASE edm_opty.is_closed 
       WHEN TRUE THEN 1 
       ELSE 0 
-    END                                               AS is_closed,
-    edm_opty.is_closed                                AS stage_is_closed,
-    edm_opty.is_active                                AS stage_is_active,
+    END                                                AS is_closed,
+    edm_opty.is_closed                                 AS stage_is_closed,
+    edm_opty.is_active                                 AS stage_is_active,
     edm_opty.is_renewal,
 
 
@@ -403,6 +386,7 @@ WITH edm_opty AS (
     edm_opty.deal_category,
     edm_opty.deal_group,
     edm_opty.calculated_deal_count                                   AS calculated_deal_count,
+    edm_opty.lam_dev_count,
 
     ----------------------------------------------------------------
     -- NF 2022-01-28 This is probably TO BE DEPRECATED too, need to align with Channel ops
@@ -442,8 +426,6 @@ WITH edm_opty AS (
     edm_opty.open_3plus_net_arr,
     edm_opty.open_4plus_net_arr,
     edm_opty.booked_net_arr,
-    edm_opty.booked_churned_contraction_net_arr,
-    edm_opty.churned_contraction_net_arr,
    
     edm_opty.deal_size,
     edm_opty.calculated_deal_size,
@@ -483,7 +465,47 @@ WITH edm_opty AS (
             THEN DATEDIFF(day, edm_opty.created_date, CURRENT_DATE)
     END                                                           AS cycle_time_in_days,
 
-    
+    -- For some analysis it is important to order stages by rank
+    CASE
+            WHEN edm_opty.stage_name = '0-Pending Acceptance'
+                THEN 0
+            WHEN edm_opty.stage_name = '1-Discovery'
+                THEN 1
+             WHEN edm_opty.stage_name = '2-Scoping'
+                THEN 2
+            WHEN edm_opty.stage_name = '3-Technical Evaluation'
+                THEN 3
+            WHEN edm_opty.stage_name = '4-Proposal'
+                THEN 4
+            WHEN edm_opty.stage_name = '5-Negotiating'
+                THEN 5
+            WHEN edm_opty.stage_name = '6-Awaiting Signature'
+                THEN 6
+            WHEN edm_opty.stage_name = '7-Closing'
+                THEN 7
+            WHEN edm_opty.stage_name = 'Closed Won'
+                THEN 8
+            WHEN edm_opty.stage_name = '8-Closed Lost'
+                THEN 9
+            WHEN edm_opty.stage_name = '9-Unqualified'
+                THEN 10
+            WHEN edm_opty.stage_name = '10-Duplicate'
+                THEN 11
+            ELSE NULL
+    END                     AS stage_name_rank,
+
+    CASE
+        WHEN edm_opty.stage_name IN ('0-Pending Acceptance')
+            THEN '0. Acceptance' 
+         WHEN edm_opty.stage_name IN ('1-Discovery','2-Scoping')
+            THEN '1. Early'
+         WHEN edm_opty.stage_name IN ('3-Technical Evaluation','4-Proposal')
+            THEN '2. Middle'
+         WHEN edm_opty.stage_name IN ('5-Negotiating','6-Awaiting Signature')
+            THEN '3. Late'
+        ELSE '4. Closed'
+    END                     AS pipeline_category,
+
     ---------------------------------------------
     ---------------------------------------------
 
@@ -500,7 +522,63 @@ WITH edm_opty AS (
       ELSE 0 
     END                                             AS is_eligible_sao_flag,
     edm_opty.is_deleted,
-    opportunity_owner.is_rep_flag
+    opportunity_owner.is_rep_flag,
+    edm_opty.pushed_count,
+    edm_opty.intented_product_tier,
+
+    -- to simplify reporting, we adjust parent opportunity to default to the opportunity id when null
+    CASE
+        WHEN edm_opty.parent_opportunity IS NULL
+            THEN edm_opty.dim_crm_opportunity_id
+        ELSE edm_opty.parent_opportunity
+    END  AS parent_opportunity,
+
+    -- Calculated fields
+    CASE
+        WHEN LOWER(edm_opty.product_category) LIKE '%premium%'
+            THEN 'Premium'
+        WHEN LOWER(edm_opty.product_category) LIKE '%ultimate%'
+            THEN 'Ultimate'
+        WHEN LOWER(edm_opty.intented_product_tier) LIKE '%premium%'
+            THEN 'Premium'
+        WHEN LOWER(edm_opty.intented_product_tier) LIKE '%ultimate%'
+            THEN 'Ultimate'
+        ELSE 'Other'
+    END AS  product_category_tier,
+
+    CASE
+        WHEN lower(edm_opty.product_category) LIKE '%saas%'
+                THEN 'SaaS'
+        WHEN lower(edm_opty.product_category) LIKE '%self-managed%'
+                THEN 'Self-Managed'
+        ELSE 'Other'
+    END AS  product_category_deployment,
+
+    -- 
+    CASE
+        WHEN cycle_time_in_days BETWEEN 1 AND 29
+            THEN '[0,30)'
+        WHEN cycle_time_in_days BETWEEN 30 AND 179
+            THEN '[30,180)'
+        WHEN cycle_time_in_days BETWEEN 179 AND 364
+            THEN '[180,365)'
+        WHEN cycle_time_in_days > 364
+            THEN '[365+)'
+        ELSE 'Other'
+    END                  AS age_bin,
+
+    -- demographics fields
+    edm_opty.parent_crm_account_upa_country,
+    edm_opty.parent_crm_account_upa_state,
+    edm_opty.parent_crm_account_upa_city,
+    edm_opty.parent_crm_account_upa_street,
+    edm_opty.parent_crm_account_upa_postal_code,
+    account.parent_crm_account_upa_country_name,
+    account.industry,
+    edm_opty.parent_crm_account_business_unit,
+
+    -- account driven fields
+    account.lam_dev_count_bin
     
     FROM edm_opty
     -- Date helpers
@@ -508,8 +586,6 @@ WITH edm_opty AS (
       ON account.account_id = edm_opty.dim_crm_account_id
     INNER JOIN sfdc_users_xf AS account_owner
       ON account_owner.user_id = account.owner_id
-    INNER JOIN sfdc_accounts_xf AS upa
-      ON upa.account_id = edm_opty.dim_parent_crm_account_id
     INNER JOIN date_details AS created_date_detail
       ON created_date_detail.date_actual = edm_opty.created_date::DATE
     INNER JOIN sfdc_users_xf AS opportunity_owner
@@ -543,21 +619,59 @@ WITH edm_opty AS (
         AND (o.is_won = 1
             OR (is_renewal = 1 AND is_lost = 1))
 
+), service_opportunities AS (
+
+    SELECT
+        CASE
+            WHEN parent_opportunity IS NULL
+                THEN opportunity_id
+            ELSE parent_opportunity
+            END  AS opportunity_id,
+        COUNT(opportunity_id)               AS count_service_opportunities,
+        SUM(professional_services_value)    AS total_professional_services_value,
+        SUM(CASE
+                WHEN is_won = 1
+                    THEN professional_services_value
+                ELSE 0
+            END)                            AS total_book_professional_services_value,
+       SUM(CASE
+                WHEN is_lost = 1
+                    THEN professional_services_value
+                ELSE 0
+            END)                            AS total_lost_professional_services_value,
+       SUM(CASE
+                WHEN is_open = 1
+                    THEN professional_services_value
+                ELSE 0
+            END)                            AS total_open_professional_services_value
+    FROM sfdc_opportunity_xf
+    WHERE professional_services_value <> 0
+    GROUP BY 1
+
 ), oppty_final AS (
 
     SELECT
-      sfdc_opportunity_xf.*,
+        sfdc_opportunity_xf.*,
 
-      -- Customer Success related fields
-      -- DRI Michael Armtz
-      churn_metrics.reason_for_loss_staged,
-      -- churn_metrics.reason_for_loss_calc, -- part of edm opp mart
-      churn_metrics.churn_contraction_type_calc
+        -- Customer Success related fields
+        -- DRI Michael Armtz
+        churn_metrics.reason_for_loss_staged,
+        -- churn_metrics.reason_for_loss_calc, -- part of edm opp mart
+        churn_metrics.churn_contraction_type_calc,
+
+        --services total amount
+        COALESCE(service_opportunities.total_professional_services_value,0) AS total_professional_services_value,
+      
+        COALESCE(service_opportunities.total_book_professional_services_value,0) AS total_book_professional_services_value,
+        COALESCE(service_opportunities.total_lost_professional_services_value,0) AS total_lost_professional_services_value,
+        COALESCE(service_opportunities.total_open_professional_services_value,0) AS total_open_professional_services_value
 
     FROM sfdc_opportunity_xf
     CROSS JOIN today
     LEFT JOIN churn_metrics
       ON churn_metrics.opportunity_id = sfdc_opportunity_xf.opportunity_id
+    LEFT JOIN service_opportunities 
+      ON service_opportunities.opportunity_id = sfdc_opportunity_xf.opportunity_id
 
 ), add_calculated_net_arr_to_opty_final AS (
 

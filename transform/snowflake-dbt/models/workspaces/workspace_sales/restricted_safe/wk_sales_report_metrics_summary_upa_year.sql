@@ -6,6 +6,12 @@ WITH report_metrics_summary_account_year AS (
     --FROM  prod.workspace_sales.report_metrics_summary_account_year
     FROM {{ ref('wk_sales_report_metrics_summary_account_year') }}
 
+), raw_account AS (
+  
+    SELECT *
+    FROM {{ source('salesforce', 'account') }}
+    --FROM raw.salesforce_stitch.account 
+
 ), upa_virtual_cte AS (
 
 SELECT 
@@ -13,19 +19,19 @@ SELECT
     upa_id,
     upa_name,
     upa_user_geo,
-    account_id              AS virtual_upa_id,
-    account_name            AS virtual_upa_name,
-    upa_ad_segment          AS virtual_upa_segment,
-    account_user_geo        AS virtual_upa_geo,
-    account_user_region     AS virtual_upa_region,
-    account_user_area       AS virtual_upa_area,
-    account_country         AS virtual_upa_country,
-    account_zip_code        AS virtual_upa_zip_code,
-    account_industry        AS virtual_upa_industry,
-    account_state           AS virtual_upa_state,
-    account_owner_name      AS virtual_upa_owner_name,
-    account_owner_title_category AS virtual_upa_owner_title_category,
-    account_owner_id        AS virtual_upa_owner_id,
+    account_id                                AS virtual_upa_id,
+    account_name                              AS virtual_upa_name,
+    parent_crm_account_sales_segment          AS virtual_upa_segment,
+    parent_crm_account_geo                    AS virtual_upa_geo,
+    parent_crm_account_region                 AS virtual_upa_region,
+    parent_crm_account_area                   AS virtual_upa_area,
+    crm_account_billing_country               AS virtual_upa_country,
+    parent_crm_account_upa_postal_code        AS virtual_upa_zip_code,
+    account_industry                          AS virtual_upa_industry,
+    account_state                             AS virtual_upa_state,
+    account_owner_name                        AS virtual_upa_owner_name,
+    account_owner_title_category              AS virtual_upa_owner_title_category,
+    account_owner_id                          AS virtual_upa_owner_id,
     account_id,
     account_name,
     account_owner_name,
@@ -236,33 +242,33 @@ FROM selected_hierarchy_virtual_upa final
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_segment
-        ELSE acc.upa_ad_segment
+        ELSE acc.parent_crm_account_sales_segment
     END                                     AS upa_ad_segment,
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_geo
-        ELSE acc.upa_ad_geo
+        ELSE acc.parent_crm_account_geo
     END                                     AS upa_ad_geo,
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_region 
-        ELSE acc.upa_ad_region
+        ELSE acc.parent_crm_account_region
     END                                     AS upa_ad_region,
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_area
-        ELSE acc.upa_ad_area
+        ELSE acc.parent_crm_account_area
     END                                     AS upa_ad_area,
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_country 
-        ELSE acc.upa_ad_country
+        ELSE acc.crm_account_billing_country
     END                                     AS upa_ad_country,
 
     CASE 
         WHEN new_upa.upa_id IS NOT NULL 
             THEN new_upa.virtual_upa_zip_code 
-        ELSE acc.upa_ad_zip_code
+        ELSE acc.parent_crm_account_upa_postal_code
     END                                     AS upa_ad_zip_code,
 
     -- Account User Owner fields
@@ -417,7 +423,20 @@ FROM selected_hierarchy_virtual_upa final
         AND new_upa.report_fiscal_year = acc.report_fiscal_year
   GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
 
+), final AS (
+
+    SELECT  
+            upa.*,
+            raw.account_demographics_territory__c       AS upa_ad_territory,
+            raw.account_demographics_upa_state__c       AS upa_ad_state_code,
+            raw.account_demographics_upa_state_name__c  AS upa_ad_state_name
+
+    FROM consolidated_upa upa
+        LEFT JOIN raw_account raw
+        ON upa.upa_id = raw.id
+
 )
 
 SELECT *
-FROM consolidated_upa
+FROM final
+

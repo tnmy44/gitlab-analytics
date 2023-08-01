@@ -2,47 +2,33 @@
     tags=["mnpi_exception"]
 ) }}
 
-WITH date_details AS (
+{{ simple_cte([
+      ('map_merged_crm_account', 'map_merged_crm_account'),
+      ('date_details', 'date_details'),
+      ('zuora_account_source', 'zuora_account_source'),
+      ('prep_billing_account_user', 'prep_billing_account_user'),
+      ('sfdc_customer_subscription_source', 'sfdc_customer_subscription_source')
 
-    SELECT *
-    FROM {{ ref('date_details') }}
+])}}
 
-), map_merged_crm_account AS (
-
-    SELECT *
-    FROM {{ ref('map_merged_crm_account') }}
-
-), zuora_subscription AS (
+, zuora_subscription AS (
 
     SELECT *
     FROM {{ ref('zuora_subscription_source') }}
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
-), zuora_account AS (
-
-    SELECT
-      account_id,
-      account_name,
-      crm_id
-    FROM {{ ref('zuora_account_source') }}
-
-), zuora_user AS (
-
-    SELECT
-      zuora_user_id,
-      is_integration_user
-    FROM {{ ref('prep_billing_account_user') }}
-
 ), joined AS (
 
     SELECT
       zuora_subscription.subscription_id                                        AS dim_subscription_id,
       map_merged_crm_account.dim_crm_account_id                                 AS dim_crm_account_id,
-      zuora_account.account_id                                                  AS dim_billing_account_id,
+      zuora_account_source.account_id                                           AS dim_billing_account_id,
       zuora_subscription.invoice_owner_id                                       AS dim_billing_account_id_invoice_owner_account,
       zuora_subscription.creator_account_id                                     AS dim_billing_account_id_creator_account,
       zuora_subscription.sfdc_opportunity_id                                    AS dim_crm_opportunity_id,
+      sfdc_customer_subscription_source.current_open_renewal_id                 AS dim_crm_opportunity_id_current_open_renewal,
+      sfdc_customer_subscription_source.closed_lost_renewal_id                  AS dim_crm_opportunity_id_closed_lost_renewal,
       zuora_subscription.original_id                                            AS dim_subscription_id_original,
       zuora_subscription.previous_subscription_id                               AS dim_subscription_id_previous,
       zuora_subscription.amendment_id                                           AS dim_amendment_id_subscription,
@@ -59,7 +45,7 @@ WITH date_details AS (
       zuora_subscription.renewal_term_period_type,
       zuora_subscription.eoa_starter_bronze_offer_accepted,
       CASE 
-        WHEN zuora_user.is_integration_user = 1
+        WHEN prep_billing_account_user.is_integration_user = 1
           THEN 'Self-Service'
         ELSE 'Sales-Assisted'
       END                                                                       AS subscription_sales_type,
@@ -109,22 +95,24 @@ WITH date_details AS (
       zuora_subscription.created_date::DATE                                     AS subscription_created_date,
       zuora_subscription.updated_date::DATE                                     AS subscription_updated_date
     FROM zuora_subscription
-    INNER JOIN zuora_account
-      ON zuora_subscription.account_id = zuora_account.account_id
-    LEFT JOIN zuora_account AS invoice_owner
+    INNER JOIN zuora_account_source
+      ON zuora_subscription.account_id = zuora_account_source.account_id
+    LEFT JOIN zuora_account_source AS invoice_owner
       ON zuora_subscription.invoice_owner_id = invoice_owner.account_id
-    LEFT JOIN zuora_account AS creator_account
+    LEFT JOIN zuora_account_source AS creator_account
       ON zuora_subscription.creator_account_id = creator_account.account_id
     LEFT JOIN map_merged_crm_account
-      ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
+      ON zuora_account_source.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN date_details
       ON zuora_subscription.subscription_end_date::DATE = date_details.date_day
     LEFT JOIN date_details term_start_date
       ON zuora_subscription.term_start_date = term_start_date.date_day 
     LEFT JOIN date_details term_end_date 
       ON zuora_subscription.term_end_date = term_end_date.date_day
-    LEFT JOIN zuora_user
-      ON zuora_subscription.created_by_id = zuora_user.zuora_user_id
+    LEFT JOIN prep_billing_account_user
+      ON zuora_subscription.created_by_id = prep_billing_account_user.zuora_user_id
+    LEFT JOIN sfdc_customer_subscription_source
+      ON zuora_subscription.subscription_id = sfdc_customer_subscription_source.current_zuora_subscription_id
 
 )
 
@@ -133,5 +121,5 @@ WITH date_details AS (
     created_by="@ischweickartDD",
     updated_by="@michellecooper",
     created_date="2021-01-07",
-    updated_date="2022-11-21"
+    updated_date="2023-04-12"
 ) }}

@@ -3,6 +3,13 @@ WITH source AS (
     SELECT *
     FROM {{ source('snapshots', 'sfdc_user_snapshots') }}
 
+    QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY 
+        dbt_valid_from::DATE, 
+        id 
+    ORDER BY dbt_valid_from DESC
+    ) = 1
+
 ), renamed AS(
 
     SELECT
@@ -30,12 +37,14 @@ WITH source AS (
       user_area__c                                                      AS user_area,
       user_business_unit__c                                             AS user_business_unit,
       user_segment_geo_region_area__c                                   AS user_segment_geo_region_area,
+      timezonesidkey                                                    AS user_timezone,
       CASE 
         WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
         ELSE user_segment
       END                                                               AS user_segment_grouped,
       {{ sales_segment_region_grouped('user_segment', 'user_geo', 'user_region') }}
                                                                         AS user_segment_region_grouped,
+      hybrid__c                                                         AS is_hybrid_user,
 
       --metadata
       createdbyid                                                       AS created_by_id,

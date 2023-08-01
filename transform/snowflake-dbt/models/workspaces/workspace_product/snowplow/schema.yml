@@ -23,5 +23,7 @@ models:
     columns:
       - name: behavior_structured_event_pk
         tests:
-          - not_null
-          - unique
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        - not_null

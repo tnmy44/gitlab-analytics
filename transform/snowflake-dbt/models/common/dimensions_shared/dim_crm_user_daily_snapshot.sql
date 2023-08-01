@@ -14,6 +14,11 @@ WITH final AS (
            ) 
       }}
     FROM {{ ref('prep_crm_user_daily_snapshot') }}
+    {% if is_incremental() %}
+
+    WHERE snapshot_date >= (SELECT MAX(snapshot_date) FROM {{this}})
+
+    {% endif %}
 
 )
 

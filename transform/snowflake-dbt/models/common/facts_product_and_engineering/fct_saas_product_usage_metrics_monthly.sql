@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception", "product"]
 ) }}
 
 {{ simple_cte([
@@ -22,12 +22,13 @@
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE                        -- first month Usage Ping was collected
     LEFT JOIN charges 
       ON charges.dim_subscription_id = zuora_subscriptions.dim_subscription_id
-    WHERE zuora_subscriptions.product_delivery_type = 'SaaS'
+    WHERE zuora_subscriptions.product_deployment_type = 'GitLab.com'
       AND (
         zuora_subscriptions.product_rate_plan_charge_name NOT IN (
           '1,000 CI Minutes',
           'Gitlab Storage 10GB - 1 Year',
-          'Premium Support'
+          'Premium Support',
+          '1,000 Compute Minutes'
         )
         OR charges.charge_type != 'OneTime'
       )
@@ -248,6 +249,8 @@
       "usage_activity_by_stage_monthly.govern.user_merge_requests_for_projects_with_assigned_security_policy_project"       AS merge_requests_security_policy_28_days_user,
       "redis_hll_counters.ci_templates.p_ci_templates_implicit_auto_devops_monthly"                                         AS pipelines_implicit_auto_devops_28_days_event,
       "usage_activity_by_stage_monthly.verify.ci_pipeline_schedules"                                                        AS pipeline_schedules_28_days_user,
+      -- Wave 8
+      "counts_monthly.ci_internal_pipelines"    AS ci_internal_pipelines_28_days_event,
       -- Data Quality Flags
       IFF(license_utilization = 0
             AND billable_user_count > 0,
@@ -278,5 +281,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-02",
-    updated_date="2023-03-15"
+    updated_date="2023-05-30"
 ) }}

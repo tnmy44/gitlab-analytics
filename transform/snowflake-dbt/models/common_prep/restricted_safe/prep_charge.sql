@@ -13,14 +13,7 @@
     SELECT *
     FROM {{ ref('sfdc_account_source') }}
     WHERE account_id IS NOT NULL
-
-), ultimate_parent_account AS (
-
-    SELECT
-      account_id
-    FROM sfdc_account
-    WHERE account_id = ultimate_parent_account_id
-
+    
 ), zuora_account AS (
 
     SELECT *
@@ -147,6 +140,7 @@
       zuora_subscription.subscription_name,
       zuora_subscription.subscription_name_slugify,
       zuora_subscription.version                                        AS subscription_version,
+      zuora_subscription.created_by_id                                  AS subscription_created_by_id,
       zuora_rate_plan_charge.rate_plan_charge_number,
       zuora_rate_plan_charge.version                                    AS rate_plan_charge_version,
       zuora_rate_plan_charge.segment                                    AS rate_plan_charge_segment,
@@ -160,7 +154,7 @@
       zuora_rate_plan.subscription_id                                   AS dim_subscription_id,
       zuora_rate_plan_charge.account_id                                 AS dim_billing_account_id,
       map_merged_crm_account.dim_crm_account_id                         AS dim_crm_account_id,
-      ultimate_parent_account.account_id                                AS dim_parent_crm_account_id,
+      sfdc_account.ultimate_parent_account_id                           AS dim_parent_crm_account_id,
       charge_to_order.order_id                                          AS dim_order_id,
       {{ get_date_id('zuora_rate_plan_charge.effective_start_date') }}  AS effective_start_date_id,
       {{ get_date_id('zuora_rate_plan_charge.effective_end_date') }}    AS effective_end_date_id,
@@ -169,6 +163,7 @@
       zuora_subscription.subscription_status                            AS subscription_status,
       zuora_rate_plan.rate_plan_name                                    AS rate_plan_name,
       zuora_rate_plan_charge.rate_plan_charge_name,
+      zuora_rate_plan_charge.description                                AS rate_plan_charge_description,
       zuora_rate_plan_charge.is_last_segment,
       zuora_rate_plan_charge.discount_level,
       zuora_rate_plan_charge.charge_type,
@@ -189,6 +184,7 @@
       END                                                               AS is_included_in_arr_calc,
 
       --Dates
+      zuora_subscription.subscription_start_date                        AS subscription_start_date,
       zuora_subscription.subscription_end_date                          AS subscription_end_date,
       zuora_rate_plan_charge.effective_start_date::DATE                 AS effective_start_date,
       zuora_rate_plan_charge.effective_end_date::DATE                   AS effective_end_date,
@@ -257,8 +253,6 @@
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN sfdc_account
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
-    LEFT JOIN ultimate_parent_account
-      ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
     LEFT JOIN charge_to_order
       ON zuora_rate_plan_charge.rate_plan_charge_id = charge_to_order.rate_plan_charge_id
 
@@ -288,6 +282,7 @@
       active_zuora_subscription.subscription_name                                           AS subscription_name,
       active_zuora_subscription.subscription_name_slugify                                   AS subscription_name_slugify,
       active_zuora_subscription.version                                                     AS subscription_version,
+      active_zuora_subscription.created_by_id                                               AS subscription_created_by_id,
       NULL                                                                                  AS rate_plan_charge_number,
       NULL                                                                                  AS rate_plan_charge_version,
       NULL                                                                                  AS rate_plan_charge_segment,
@@ -304,6 +299,7 @@
       active_zuora_subscription.subscription_status                                         AS subscription_status,
       'manual true up allocation'                                                           AS rate_plan_name,
       'manual true up allocation'                                                           AS rate_plan_charge_name,
+      'manual true up allocation'                                                           AS rate_plan_charge_description,
       'TRUE'                                                                                AS is_last_segment,
       NULL                                                                                  AS discount_level,
       'Recurring'                                                                           AS charge_type,
@@ -316,6 +312,7 @@
           THEN TRUE
         ELSE FALSE
       END                                                                                   AS is_included_in_arr_calc,
+      active_zuora_subscription.subscription_start_date                                     AS subscription_start_date,
       active_zuora_subscription.subscription_end_date                                       AS subscription_end_date,
       effective_start_date                                                                  AS effective_start_date,
       effective_end_date                                                                    AS effective_end_date,
@@ -357,8 +354,6 @@
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN sfdc_account
       ON map_merged_crm_account.dim_crm_account_id = sfdc_account.account_id
-    LEFT JOIN ultimate_parent_account
-      ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
 
 
 ), combined_charges AS (
@@ -399,5 +394,5 @@
     created_by="@iweeks",
     updated_by="@chrissharp",
     created_date="2021-04-28",
-    updated_date="2023-02-10"
+    updated_date="2023-06-13"
 ) }}

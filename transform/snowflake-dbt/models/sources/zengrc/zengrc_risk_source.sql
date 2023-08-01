@@ -18,7 +18,7 @@ renamed AS (
       title::VARCHAR                                         AS risk_title,
       type::VARCHAR                                          AS zengrc_object_type,
       updated_at::TIMESTAMP                                  AS risk_updated_at,
-      __loaded_at::TIMESTAMP                                 AS risk_loaded_at,
+      _sdc_extracted_at::TIMESTAMP                           AS risk_loaded_at,
       PARSE_JSON(custom_attributes)['156']['value']::VARCHAR AS acceptance_of_risk_ownership,
       PARSE_JSON(custom_attributes)['44']['value']::VARCHAR  AS cia_impact,
       PARSE_JSON(custom_attributes)['79']['value']::DATE     AS risk_identified_date,

@@ -35,6 +35,8 @@ sources:
       - name: sfdc_account_snapshots
       - name: sfdc_bizible_attribution_touchpoint_snapshots
       - name: sfdc_bizible_touchpoint_snapshots
+      - name: sfdc_contact_snapshots
+      - name: sfdc_lead_snapshots
       - name: sfdc_opportunity_snapshots
       - name: sfdc_user_snapshots
       - name: sheetload_comp_band_snapshots
@@ -68,3 +70,5 @@ sources:
       - name: rpt_ping_metric_totals_w_estimates_monthly_snapshot
       - name: rpt_event_xmau_metric_monthly_snapshot
       - name: dim_user_snapshot
+      - name: customers_db_billing_accounts_snapshots
+      - name: job_profiles_snapshots

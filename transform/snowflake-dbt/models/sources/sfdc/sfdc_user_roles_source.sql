@@ -1,3 +1,7 @@
+{{ config(
+    tags=["six_hourly"]
+) }}
+
 with base as (
 
     SELECT * 

@@ -47,10 +47,12 @@ WITH crm_person AS (
       bizible_touchpoint_date,
       sequence_step_type,
       is_actively_being_sequenced,
+      is_high_priority,
       prospect_share_status,
       partner_prospect_status,
       partner_prospect_owner_name,
       partner_prospect_id,
+      is_partner_recalled,
       marketo_last_interesting_moment,
       marketo_last_interesting_moment_date,
       outreach_step_number,
@@ -59,6 +61,7 @@ WITH crm_person AS (
       matched_account_sdr_assigned,
       matched_account_type,
       matched_account_gtm_strategy,
+      matched_account_bdr_prospecting_status,
       is_first_order_initial_mql,
       is_first_order_mql,
       is_first_order_person,
@@ -111,7 +114,7 @@ WITH crm_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jjstark",
-    updated_by="@degan",
+    updated_by="@dmicovic",
     created_date="2020-09-10",
-    updated_date="2023-02-13"
+    updated_date="2023-05-11"
 ) }}

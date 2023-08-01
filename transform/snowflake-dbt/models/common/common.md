@@ -49,14 +49,14 @@ In doing so exceptions are noted within `namespace_order_subscription_match_stat
 
 {% docs bdg_self_managed_order_subscription %}
 
-The purpose of this table to connect Order IDs from Customer DB to Subscription for Self-Managed purchases. This table expands the functionality of the subscriptions by improving the join to orders. Subscriptions listed in this table are all Self-Managed (determined by the `product_rate_plan_id` from `zuora_rate_plan_source`) and the `is_active_subscription` column can be used to filter to subscription that are currently active (status is Active or Cancelled with a recurring charge in the current month). Orders in this table are all Self-Managed (determined by the `product_rate_plan_id` from `customers_db_orders_source`) and the `is_active_order` column can be used to filter to orders that are currently active (`order_end_date` is NULL or greater than the date that this table was refreshed).
+The purpose of this table to connect Order IDs from Customer DB to Subscription for Self-Managed and SaaS Dedicated purchases. This table expands the functionality of the subscriptions by improving the join to orders. Subscriptions listed in this table are all Self-Managed (determined by the `product_rate_plan_id` from `zuora_rate_plan_source`) and the `is_active_subscription` column can be used to filter to subscription that are currently active (status is Active or Cancelled with a recurring charge in the current month). Orders in this table are all Self-Managed (determined by the `product_rate_plan_id` from `customers_db_orders_source`) and the `is_active_order` column can be used to filter to orders that are currently active (`order_end_date` is NULL or greater than the date that this table was refreshed).
 
 The tier(s) connected to the subscription are determined using the underlying Zuora recurring charges. This view uses a `FULL OUTER JOIN` to show all three parts of the Venn diagram (orders, subscriptions, and the overlap between the two).In doing so exceptions are noted within `order_subscription_match_status` to identify rows that do not match between systems.
 
 {% enddocs %}
 
 {% docs bdg_subscription_product_rate_plan %}
-The goal of this table is to build a bridge from the entire "universe" of subscriptions in Zuora (`zuora_subscription_source` without any filters applied) to all of the [product rate plans](https://www.zuora.com/developer/api-reference/#tag/Product-Rate-Plan) to which those subscriptions are mapped. This provides the ability to filter subscriptions by delivery type ('SaaS' or 'Self-Managed').
+The goal of this table is to build a bridge from the entire "universe" of subscriptions in Zuora (`zuora_subscription_source` without any filters applied) to all of the [product rate plans](https://www.zuora.com/developer/api-reference/#tag/Product-Rate-Plan) to which those subscriptions are mapped. This provides the ability to filter subscriptions by delivery type ('SaaS' or 'Self-Managed') and deployment_type ('GitLab.com', 'Dedicated' or 'Self-Managed').
 
 {% enddocs %}
 
@@ -386,12 +386,23 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs dim_gitlab_version %}
-Dimensional table representing released versions of GitLab.
+{% docs dim_app_release_major_minor %}
+Dimensional table representing released versions (major and minor) of GitLab. Here `app` stands for application. 
 
-The grain of the table is a version_id.
+The grain of the table is a major_minor_version.
 
 Additional information can be found on the [GitLab Releases](https://about.gitlab.com/releases/categories/releases/) page.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_app_release %}
+Dimensional table representing released versions of an application (app). Currently, it only holds releases from GitLab.
+
+The grain of the table is the major, minor and patch version together with the application that these represent.
+
+Additional information specific to the GitLab Releases can be found in the following [page](https://about.gitlab.com/releases/categories/releases/).
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
@@ -467,11 +478,13 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 {% enddocs %}
 
 {% docs fct_saas_product_usage_metrics_monthly %}
-This table builds on the set of all Zuora subscriptions that are associated with a **SaaS** rate plans. Historical namespace seat charges and billable user data (`gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base`) are combined with high priority Usage Ping metrics (`prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table. Only the most recently collected namespace "Usage Ping" and membership data per `dim_subscription_id` each month are reported in this table.
+This table builds on the set of all Zuora subscriptions that are associated with a **SaaS GitLab.com** rate plans. Historical namespace seat charges and billable user data (`gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base`) are combined with high priority Usage Ping metrics (`prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table. Only the most recently collected namespace "Usage Ping" and membership data per `dim_subscription_id` each month are reported in this table.
 
 The data from this table will be used to create a mart table (`mart_saas_product_usage_monthly`) for Gainsight Customer Product Insights.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+**Note**: This model DOES NOT include data from SaaS Dedicated instances, as the grain of the data is different (namespace_id vs instance_id). From a data perspective, SaaS Dedicated, is more closely related to Self-Managed data. 
 
 {% enddocs %}
 
@@ -493,7 +506,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 **Business Logic in this Model:**
 - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
 - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - Not all events have a user associated with them (ex: 'milestones'), and not all events have a namespace associated with them (ex: 'users_created'). Therefore it is expected that `dim_user_sk` or `dim_ultimate_parent_namespace_id` will be NULL for these events
 - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
@@ -545,7 +558,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
 **Other Comments:**
@@ -574,7 +587,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_date`) is determined by the plan for the last event on a given day
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
 **Other Comments:**
@@ -710,14 +723,6 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 Table containing GitLab namespace snapshots.
 
 The grain of this table is one row per namespace per valid_to/valid_from combination. The Primary Key is `namespace_snapshot_id`.
-
-{% enddocs %}
-
-{% docs dim_namespace_lineage %}
-
-Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.
-
-The grain of this table is one row per namespace. The Primary Key is `dim_namespace_id`.
 
 {% enddocs %}
 
@@ -1001,7 +1006,7 @@ The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
   - (OR) hostname IN ('staging.gitlab.com','dr.gitlab.com')
 - `is_trial` = `IFF(ping_created_at < license_trial_ends_on, TRUE, FALSE)`
 - `major_minor_version` = `major_version || '.' || minor_version`
-- `major_minor_version_id` = `major_version * 100 + minor_version` (helpful for sorting or filtering versions)
+- `app_release_major_minor_id` = `major_version * 100 + minor_version` (helpful for sorting or filtering versions)
 - `version_is_prerelease` = `IFF(version ILIKE '%-pre', TRUE, FALSE)`
 - `cleaned_edition` = `IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, ping_edition, 'EE Free')`
 
@@ -1397,14 +1402,14 @@ Example: `pi_monthly_estimated_targets`: `{"2022-02-28":1000,"2022-03-31":2000,"
 
 {% docs fct_ping_instance_metric_wave %}
 
-The purpose of this data model is to identify the service pings that can be mapped to a subscription and to pivot thet set of [wave metrics required for Gainsight](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/ping_instance_wave_metrics.sql) from the `fct_ping_instance_metric` model, strip all the sensitive data out, and then report one value for each metric in that column.
+The purpose of this data model is to identify the service pings, from Self-Managed and SaaS Dedicated, that can be mapped to a subscription and to pivot thet set of [wave metrics required for Gainsight](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/ping_instance_wave_metrics.sql) from the `fct_ping_instance_metric` model, strip all the sensitive data out, and then report one value for each metric in that column.
 
 {% enddocs %}
 
 
 {% docs fct_ping_instance_metric_wave_monthly %}
 
-This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB (`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`fct_ping_instance_metric_wave`) to build out the set of facts included in this table.
+This table builds on the set of all Zuora subscriptions that are associated with **Self-Managed**  or **SaaS Dedicated** rate plans. Seat Link data from Customers DB (`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`fct_ping_instance_metric_wave`) to build out the set of facts included in this table.
 
 The grain of this table is `hostname` per `dim_instance_id(uuid)` per `dim_subscription_id` per `snapshot_month`. Since there are Self-Managed subscriptions that do not send Usage Ping payloads, it is possible for `dim_instance_id` and `hostname` to be null.
 
@@ -1456,7 +1461,7 @@ Fact model of all [Salesforce Tasks](https://help.salesforce.com/s/articleView?i
 
 {% docs fct_ping_instance_free_user_metrics %}
 
-Table containing **free** Self-Managed users in preparation for free user service ping metrics fact table.
+Table containing **free** Self-Managed and SaaS Dedicated users in preparation for free user service ping metrics fact table.
 
 The grain of this table is one row per uuid-hostname combination per month.
 
@@ -1617,7 +1622,7 @@ This ID is generated using `event_id` and `page_view_end_at` from [prep_snowplow
 **Business Logic in this Model:**
 - `Inherited` - A namespace's plan information (ex: `plan_name_at_event_month`) is determined by the plan for the last event on a given month
 - `Inherited` - The ultimate parent namespace's subscription, billing, and account information (ex: `dim_latest_subscription_id`) reflects the most recent available attributes associated with that namespace
-- `Inherited` - `dim_active_product_tier_id` reflects the _current_ product tier of the namespace
+- `Inherited` - `dim_latest_product_tier_id` reflects the _current_ product tier of the namespace
 - `Inherited` - `section_name`, `stage_name`, `group_name`, and xMAU metric flags (ex: `is_gmau`) are based on the _current_ event mappings and may not match the mapping at the time of the event
 
 **Other Comments:**
@@ -1746,3 +1751,121 @@ Model Caveat:
 This table contains team members work and personal information. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. The table includes information regarding current team members, new hires who have records created in Workday before their start date and team members who were terminated in 2021 onwards. Team members who were terminated before 2021 are not captured in this model at this time. The grain of this table is one row per employee_id per valid_to/valid_from combination.
 
 {% enddocs %}
+
+{% docs fct_team_member_position %}
+
+This table contains team members' job history, including any changes in their job profile or team. The table joins the staffing_history_approved_source and job_profiles_source. The grain of this table is one row per employee_id, team_id, effective_date and date_time_initiated combination. 
+
+The reason why the date and time when the change was initiated was added to the grain is because there are changes that are scheduled to take effect on the same date. In order to make sure that we capture the most up-to-date change and ensure the records are unique, we need to add take this timestamp into account.
+
+{% enddocs %}
+
+{% docs fct_team_member_status %}
+
+This table contains the termination reason, type, exit impact and employment_status. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake. This table contains only past terminations. Future terminations are not included at this time. We will evaluate the possibility of making future terminations available to people with the analyst_people role in a future iteration. The grain of this table is one row per employee_id, employment_status and status_effective_date combination.
+
+{% enddocs %}
+
+{% docs fct_team_status %}
+
+This table is a derived fact from fct_team_member_status and fct_team_member_position. Sensitive columns are masked and only visible by team members with the analyst_people role assigned in Snowflake.
+
+This table only contains one change in the team member's position per effective date, as opposed to the fct_team_member_position table which contains all changes to a team member's position profile, regardless of whether they became effective or not. This table doesn't include future hires, only people working at GitLab as of today's date.
+
+The grain of this table is one row per employee_id and valid_from combination
+
+{% enddocs %}
+
+{% docs dim_trial_latest %}
+
+This table summarizes all the trial Orders information for a specific namespace.
+
+We utilize the `customers_db_orders_snapshots_base` model in order to isolate/filter out all the trials. 
+
+This model does the following:
+
+* It isolates the orders that are flagged with the column `is_trial = TRUE`
+* It deduplicates by taking the latest row created for a specific `gitlab_namespace_id`
+* We can join this model with `customers_db_customers` in the downstream models in order to get information about country, company_size of the User who started the trial
+
+{% enddocs %}
+
+
+{% docs fct_trial %}
+
+This model collects all trials that start from the subscription portal. For this we use the `customers_db_orders_snapshots_base` model in order to isolate them. This model does the following:
+
+* It isolates the orders that are flagged with the column `is_trial = TRUE`
+* It joins with customers, users and namespaces. 
+
+Finally, this model identifies if a trial has been converted or not. To achieve that, we join the trials to the `order_snapshots` by selecting only the orders that converted to subscription after the trial starting date (an example has been provided below). We exclude ci_minutes/compute_minutes orders from the `order_snapshots`.   
+
+In order to identify which subscriptions are actually valid and not refunded, we join to `zuora_rate_plan` and `zuora_base_mrr` models to filter out subscriptions that have (mrr <= 0 and tcv <=0). In this case, we also filter out those subscriptions that are cancelled instantly or fully refunded after a certain period.
+
+Examples:
+
+| ORDER_ID | ORDER_UPDATED_AT        | ORDER_START_DATE  | ORDER_END_DATE | ORDER_IS_TRIAL | SUBSCRIPTION_NAME_SLUGIFY |
+|----------|-------------------------|-------------------|----------------|----------------|---------------------------|
+| 32177    | 2019-09-06 23:09:21.858 | 2019-08-17        | 2019-09-15     | TRUE           |                           |
+| 32177    | 2019-09-13 22:39:18.916 | 2019-08-17        | 2019-09-27     | TRUE           |                           |
+| 32177    | 2019-09-26 21:26:23.227 | 2019-08-17        | 2019-10-02     | TRUE           |                           |
+| 32177    | 2019-10-02 16:32:45.664 | 2019-10-02        | 2019-10-04     | TRUE           |                           |
+| 32177    | 2019-10-02 00:00:00.075 | 2019-10-02        |                | FALSE          |                           |
+| 32177    | 2019-10-03 20:11:31.497 | 2019-10-02        | 2020-10-02     | FALSE          | order-1-name-gold         |
+
+Note: The column `subscription_name_slugify` has been anonymised.
+
+This order exemplifies perfectly what is happening in the table `customers_db_orders`. When the order starts, 17th Aug, 2019, it is a trial. That means that the flag `order_is_trial` is set to TRUE. But it doesn't have either a subscription_id or a subscription_name (`subscription_name_slugify` is null). When it converts, 2nd Nov, 2019, the `order_is_trial` flag is set to `FALSE`, the order_start_date (and order_end_date) is changed and a `subscription_name` and `subscription_id` are set! (last row of the table)
+
+
+{% enddocs %}
+
+{% docs fct_trial_first %}
+
+This model is a derived fact table that is built using the `fct_trial` model, which contains all trial orders that start from the subscription portal. This model additionally deduplicates by taking the first row that was created for customers, namespaces and users based on the `order_updated_at` column. 
+
+The grain of this model is `trial order per namespace`. 
+
+This model identifies if a trial order has been converted or not. We exclude ci_minutes/compute_minutes orders from this model. 
+
+Finally, only valid subscriptions that are not refunded are identified by filtering out subscriptions that have (mrr <= 0 and tcv <=0). The subscriptions that are cancelled instantly or fully refunded after a certain period are excluded. 
+
+The `customers_db_orders_snapshots_base` model has reliable data from the 1st of September, 2019, therefore only the orders that have a `start_date` after this date are included this model.
+
+
+{% enddocs %}
+
+
+{% docs fct_trial_latest %}
+
+This model captures information about the latest trial Orders for a specific namespace. 
+
+The grain of this model is `trial order per namespace`.
+
+## Context
+
+To understand the context, the following information is important:
+* Before 2019-09-16, a namespace could subscribe to a trial several times. That was a bug corrected by the fulfillment team in September 2019. More info [here](https://gitlab.com/gitlab-org/customers-gitlab-com/merge_requests/458).
+* All snapshots tables have also been created in September 2019. Before that we don't have historical information.
+* The Customers_db ETL was unstable before October 2019. We improved the logic at the end of October by changing from incremental model to a daily full "drop and create" to the raw database.
+
+## Process
+
+Trial Information is collected in 2 tables (one in the subscription portal database - customer_db, the other in the .com database - main app). These 2 tables don't talk to each other and have incomplete information. We join them together to create a more consistent and complete picture of trials started.
+
+For the gitlab_dotcom database, information is stored in `gitlab_dotcom_gitlab_subscriptions` table. As described [here](https://gitlab.com/gitlab-data/analytics/merge_requests/1983#note_249268694), rows can be deleted in this table, so we use the `gitlab_dotcom_gitlab_subscriptions_snapshot` for higher reporting accuracy.  In this model, we do the following operations:
+* We isolate trials by looking at a specific column `gitlab_subscription_trial_ends_on` which is filled only when a specific subscription was a trial before.
+* We then group by the namespace_id in order to only select the latest trials started for a specific namespace.
+* One weird behaviour of this table is the way it deals with expired orders. It is explained [here](/model.gitlab_snowflake.gitlab_dotcom_gitlab_subscriptions). That means that the `start_date` is NOT a reliable source for us in order to find the trial start date. We therefore use the `gitlab_subscription_trial_ends_on` column in order to estimate when the trial has been started (30 days before the end of the trials in most cases)
+
+The data for latest trial per namespace is derived from `fct_trial` model. We then join the 2 CTEs created on `gitlab_namespace_id`.
+
+This model identifies if a trial has been converted or not. The logic for which has been included in `fct_trial` model. We exclude ci_minutes orders from this model.   
+
+Finally, only valid subscriptions that are not refunded are identified by filtering out subscriptions that have (mrr <= 0 and tcv <=0). The subscriptions that are cancelled instantly or fully refunded after a certain period are excluded.
+
+{% enddocs %}
+
+
+
+

@@ -33,7 +33,8 @@
                                  'prep_sales_funnel_partner_alliance_target.sales_qualified_source',
                                  'prep_sales_funnel_partner_alliance_target.order_type',
                                  'channel_type.dim_channel_type_id',
-                                 'alliance_type.dim_alliance_type_id'
+                                 'alliance_type.dim_alliance_type_id',
+                                 'partner_category.dim_partner_category_id'
                                  ]) }}                                                                    AS sales_funnel_partner_alliance_target_id,
       prep_sales_funnel_partner_alliance_target.kpi_name,
       date.first_day_of_month,

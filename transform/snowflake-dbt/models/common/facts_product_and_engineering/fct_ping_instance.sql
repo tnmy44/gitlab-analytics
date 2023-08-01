@@ -13,6 +13,7 @@
     ('dim_product_tier', 'dim_product_tier'),
     ('prep_ping_instance', 'prep_ping_instance'),
     ('dim_crm_account','dim_crm_account'),
+    ('prep_app_release_major_minor', 'prep_app_release_major_minor'),
     ('dim_installation', 'dim_installation') 
     ])
 
@@ -37,14 +38,19 @@
       prep_ping_instance.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value
     FROM prep_ping_instance
       {% if is_incremental() %}
-                  WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+                  WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
       {% endif %}
 
 ), add_country_info_to_usage_ping AS (
 
     SELECT
       source.*,
-      map_ip_location.dim_location_country_id     AS dim_location_country_id
+      REGEXP_REPLACE(NULLIF(source.version, ''), '[^0-9.]+')                                              AS cleaned_version,
+      SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                         AS major_version,
+      SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                         AS minor_version,
+      major_version || '.' || minor_version                                                               AS major_minor_version,
+      map_ip_location.dim_location_country_id                                                             AS dim_location_country_id
+
     FROM source
     LEFT JOIN map_ip_location
       ON source.ip_address_hash = map_ip_location.ip_address_hash
@@ -57,7 +63,10 @@
       add_country_info_to_usage_ping.dim_instance_id                                     AS dim_instance_id,
       add_country_info_to_usage_ping.dim_installation_id                                 AS dim_installation_id,
       dim_product_tier.dim_product_tier_id                                               AS dim_product_tier_id,
+      prep_app_release_major_minor.dim_app_release_major_minor_sk                        AS dim_app_release_major_minor_sk,
+      latest_version.dim_app_release_major_minor_sk                                      AS dim_latest_available_app_release_major_minor_sk,
       add_country_info_to_usage_ping.ping_created_at                                     AS ping_created_at,
+      add_country_info_to_usage_ping.uploaded_at                                         AS uploaded_at,
       add_country_info_to_usage_ping.hostname                                            AS hostname,
       add_country_info_to_usage_ping.license_sha256                                      AS license_sha256,
       add_country_info_to_usage_ping.license_md5                                         AS license_md5,
@@ -75,15 +84,26 @@
     FROM add_country_info_to_usage_ping
     LEFT JOIN dim_product_tier
       ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
-      AND IFF( add_country_info_to_usage_ping.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
-      AND dim_product_tier.product_tier_name != 'Dedicated - Ultimate'
-  
+      AND add_country_info_to_usage_ping.ping_deployment_type = dim_product_tier.product_deployment_type
+    LEFT JOIN prep_app_release_major_minor
+      ON prep_app_release_major_minor.major_minor_version = add_country_info_to_usage_ping.major_minor_version
+      AND prep_app_release_major_minor.application = 'GitLab'
+    LEFT JOIN prep_app_release_major_minor AS latest_version -- Join the latest version released at the time of the ping.
+      ON add_country_info_to_usage_ping.ping_created_at BETWEEN latest_version.release_date AND {{ coalesce_to_infinity('latest_version.next_version_release_date') }}
+      AND latest_version.application = 'GitLab'
+    QUALIFY RANK() OVER(PARTITION BY add_country_info_to_usage_ping.dim_ping_instance_id ORDER BY latest_version.release_date DESC) = 1
+    -- Adding the QUALIFY statement because of the latest_version CTE. There is rare case when the ping_created_at is right between the last day of a release and when the new one comes out.
+    -- This causes two records to be matched and then we have two records per one ping.
+    -- The rank statements gets rid of this. Using rank instead row_number since rank will preserve other might be duplicates in the data, while rank only addresses
+    -- the duplicates that are entered in the data consequence of the latest_version CTE join condition. 
+      
 ), prep_usage_ping_and_license AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['prep_usage_ping_cte.dim_ping_instance_id']) }}                         AS ping_instance_id,
       prep_usage_ping_cte.dim_ping_instance_id                                                            AS dim_ping_instance_id,
       prep_usage_ping_cte.ping_created_at                                                                 AS ping_created_at,
+      prep_usage_ping_cte.uploaded_at                                                                     AS uploaded_at,
       prep_usage_ping_cte.dim_product_tier_id                                                             AS dim_product_tier_id,
       COALESCE(sha256.dim_subscription_id, md5.dim_subscription_id)                                       AS dim_subscription_id,
       prep_usage_ping_cte.license_subscription_id                                                         AS license_subscription_id,
@@ -93,6 +113,8 @@
       prep_usage_ping_cte.dim_host_id                                                                     AS dim_host_id,
       prep_usage_ping_cte.dim_installation_id                                                             AS dim_installation_id,
       COALESCE(sha256.dim_license_id, md5.dim_license_id)                                                 AS dim_license_id,
+      prep_usage_ping_cte.dim_app_release_major_minor_sk                                                  AS dim_app_release_major_minor_sk, 
+      prep_usage_ping_cte.dim_latest_available_app_release_major_minor_sk                                 AS dim_latest_available_app_release_major_minor_sk,
       prep_usage_ping_cte.license_sha256                                                                  AS license_sha256,
       prep_usage_ping_cte.license_md5                                                                     AS license_md5,
       prep_usage_ping_cte.license_billable_users                                                          AS license_billable_users,
@@ -121,6 +143,7 @@
       prep_usage_ping_and_license.ping_instance_id                                                           AS ping_instance_id,
       prep_usage_ping_and_license.dim_ping_instance_id                                                       AS dim_ping_instance_id,
       prep_usage_ping_and_license.ping_created_at                                                            AS ping_created_at,
+      prep_usage_ping_and_license.uploaded_at                                                                AS uploaded_at,
       prep_usage_ping_and_license.dim_product_tier_id                                                        AS dim_product_tier_id,
       COALESCE(prep_usage_ping_and_license.license_subscription_id, prep_subscription.dim_subscription_id)   AS dim_subscription_id,
       prep_subscription.dim_crm_account_id                                                                   AS dim_crm_account_id,
@@ -131,6 +154,8 @@
       prep_usage_ping_and_license.dim_host_id                                                                AS dim_host_id,
       prep_usage_ping_and_license.dim_installation_id                                                        AS dim_installation_id,
       prep_usage_ping_and_license.dim_license_id                                                             AS dim_license_id,
+      prep_usage_ping_and_license.dim_app_release_major_minor_sk                                             AS dim_app_release_major_minor_sk,
+      prep_usage_ping_and_license.dim_latest_available_app_release_major_minor_sk                            AS dim_latest_available_app_release_major_minor_sk,
       prep_usage_ping_and_license.license_sha256                                                             AS license_sha256,
       prep_usage_ping_and_license.license_md5                                                                AS license_md5,
       prep_usage_ping_and_license.license_billable_users                                                     AS license_billable_users,
@@ -158,7 +183,7 @@
 {{ dbt_audit(
     cte_ref="joined_payload",
     created_by="@icooper-acp",
-    updated_by="@mdrussell",
+    updated_by="@jpeguero",
     created_date="2022-03-08",
-    updated_date="2023-04-04"
+    updated_date="2023-06-12"
 ) }}

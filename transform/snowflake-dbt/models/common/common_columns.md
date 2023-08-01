@@ -4,7 +4,7 @@ The unique identifier of an event. This is a generated primary key and will not 
 
 {% enddocs %}
 
-{% docs dim_active_product_tier_id %}
+{% docs dim_latest_product_tier_id %}
 
 The unique identifier of the ultimate parent namespace's latest product tier, easily joined to `dim_product_tier`
 
@@ -463,13 +463,77 @@ The concatenation of major and minor version, easily joined to `dim_gitlab_relea
 
 {% docs major_minor_version_id %}
 
-The id of the major minor version, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_id` is 1306. This id is intended to facilitate easy filtering on versions
+The id of the major minor version, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_id` is 1306. This id is intended to facilitate easy filtering on versions. To be replaced with `major_minor_version_num`.
+
+{% enddocs %}
+
+{% docs major_minor_version_num %}
+
+The numeric variation of `major_minor_version`, defined as `major_version*100 + minor_version`. For example, for 13.6.2, the `major_minor_version_num` is 1306. This id is intended to facilitate easy ordering on versions.
+
+{% enddocs %}
+
+{% docs app_release_major_minor_id %}
+
+The natural key of dim_app_release_major_minor. This natural key is defined as the concatenation of the `application` and the major minor version. For example, for the GitLab version 13.6.2, the `app_release_major_minor_id` is `GiLab-13.06`.
+
+{% enddocs %}
+
+{% docs dim_app_release_major_minor_sk %}
+
+Surrogate key of dim_app_release_major_minor. Currently identified by hashing the major_minor_version field combined with the application field.
+
+{% enddocs %}
+
+{% docs dim_latest_available_app_release_major_minor_sk %}
+
+The latest avaiable dim_app_release_major_minor_sk at the moment the ping is sent.
 
 {% enddocs %}
 
 {% docs version_is_prerelease %}
 
 Boolean flag which is set to True if the version is a pre-release Version of the GitLab App. See more details [here](https://docs.gitlab.com/ee/policy/maintenance.html). This is defined as `IFF(version ILIKE '%-pre', TRUE, FALSE)`.
+
+{% enddocs %}
+
+{% docs release_date %}
+
+Release date of the GitLab version.
+
+{% enddocs %}
+
+{% docs version_number %}
+
+The sequential number of the major_minor_version.
+
+{% enddocs %}
+
+{% docs next_version_release_date %}
+
+Release date of the next GitLab version.
+
+{% enddocs %}
+
+{% docs days_after_version_release_date %}
+
+The number of days between the date the ping was sent and the release date of the version associated with the ping. When `version_is_prerelease = TRUE`, then this field is less than 0.
+
+There are some cases when `version_is_prerelease = FALSE` and the field is still lower than 0. These cases where manually set to zero in the data model.
+
+{% enddocs %}
+
+{% docs latest_version_available_at_ping_creation %}
+
+The most recent version that is available at the time the ping is created. 
+
+{% enddocs %}
+
+{% docs versions_behind_latest_at_ping_creation %}
+
+The number of versions by which the ping-associated version lags behind. When `version_is_prerelease = TRUE`, then this field is less than 0.
+
+There are some cases when `version_is_prerelease = FALSE` and the field is still lower than 0. These cases where manually set to zero in the data model.
 
 {% enddocs %}
 
@@ -596,12 +660,6 @@ The name of the ultimate parent account coming from SFDC
 
 {% enddocs %}
 
-{% docs parent_crm_account_billing_country %}
-
-The billing country of the ultimate parent account coming from SFDC
-
-{% enddocs %}
-
 {% docs parent_crm_account_sales_segment %}
 
 The sales segment of the ultimate parent account from SFDC. Sales Segments are explained [here](https://about.gitlab.com/handbook/sales/field-operations/gtm-resources/#segmentation)
@@ -620,7 +678,7 @@ The owner team of the ultimate parent account from SFDC
 
 {% enddocs %}
 
-{% docs parent_crm_account_sales_territory %}
+{% docs parent_crm_account_territory %}
 
 The sales territory of the ultimate parent account from SFDC
 
@@ -790,7 +848,9 @@ The date the license expires
 
 {% docs license_add_ons %}
 
-The add-ons associated with the license
+The add-ons associated with the license. In [the handbook](https://about.gitlab.com/handbook/support/license-and-renewals/#common-terminology), the term "add-on" is defined as
+
+> An optional extra that can be purchased to increase the limits of what is available in GitLab. Common examples of this are a Seat add-on where additional seats are purchased during the subscription term, or an additional Storage or Units of Compute purchase (on SaaS only). 
 
 {% enddocs %}
 
@@ -1057,6 +1117,12 @@ The version of the container registry in use (ex. 2.11.0-gitlab, 3.60.1-gitlab, 
 {% docs is_saas_dedicated %}
 
 Boolean flag set to True if the ping is from a Dedicated implementation
+
+{% enddocs %}
+
+{% docs ping_deployment_type %}
+
+Indicates whether the ping comes from a GitLab.com, SaaS Dedicated or Self-Managed instance.
 
 {% enddocs %}
 
@@ -1340,6 +1406,12 @@ Timestamp for the event recorded on the client device.
 {% docs behavior_at %}
 
 Timestamp for when the event actually happened. This appears as `derived_tstamp` in the raw Snowplow data.
+
+{% enddocs %}
+
+{% docs behavior_date %}
+
+The date when the event happened (YYYY-MM-DD)
 
 {% enddocs %}
 
@@ -1772,6 +1844,12 @@ This is the delivery type of GitLab to include either SaaS or Self-Managed.
 
 {% enddocs %}
 
+{% docs product_deployment_type %}
+
+This is the deployment type of GitLab to include either GitLab.com, Dedicated or Self-Managed.
+
+{% enddocs %}
+
 {% docs previous_month_product_delivery_type %}
 
 This is the previous month delivery type. Includes either SaaS or Self-Managed.
@@ -1868,9 +1946,15 @@ The action to be carried out on the subscription. For example, 'Amend Subscripti
 
 {% enddocs %}
 
-{% docs dim_gitlab_version_sk %}
+{% docs dim_app_release_sk %}
 
-The unique surrogate key created by using `version_id` which is a unique identifier of a release maintained by the versions app. 
+Unique identifier of an application (app) release. Identifies the combination of major, minor and patch version of a release from an specific application.
+
+{% enddocs %}
+
+{% docs app_release_id %}
+
+The unique identifier of the release of an application.
 
 {% enddocs %}
 
@@ -1969,5 +2053,90 @@ This field is for tracking the risk of this deal being impacted by military inva
 {% docs downgrade_details %}
 
 Field where rep can add in more details as to why the customer has downgraded.
+
+{% enddocs %}
+
+{% docs dim_crm_opportunity_id_current_open_renewal %}
+
+The current open renewal opportunity mapped to a subscription.
+
+{% enddocs %}
+
+{% docs dim_crm_opportunity_id_closed_lost_renewal %}
+
+The closed lost renewal opportunity, where applicable, mapped mapped to a subscription.
+
+{% enddocs %}
+
+{% docs dim_plan_sk %}
+
+The surrogate key for joining to the `dim_plan` table
+
+{% enddocs %}
+
+{% docs dim_plan_id %}
+
+The id of the plan as given by GitLab.com
+
+{% enddocs %}
+
+{% docs plan_id_modified %}
+
+Modified plan id to conform legacy gold and silver plan ids to ultimate and premium plan ids.
+
+{% enddocs %}
+
+{% docs plan_name %}
+
+The name of the plan as given by GitLab.com
+
+{% enddocs %}
+
+{% docs plan_name_modified %}
+
+Modified plan name to conform legacy gold and silver plan names to ultimate and premium plan names.
+
+{% enddocs %}
+
+{% docs plan_title %}
+
+The title of the plan as given by GitLab.com
+
+{% enddocs %}
+
+{% docs is_plan_paid %}
+
+A flag to indicate if the plan is a paid plan or not.
+
+{% enddocs %}
+
+{% docs namespace_has_code_suggestions_enabled %}
+
+Boolean flag set to True if the namespace has code suggestions enabled. This appears as `code_suggestions` in the gitlab.com db `namespace_settings` table.
+
+{% enddocs %}
+
+{% docs intended_product_tier %}
+
+The intended product tier looking to be purchased for this opportunity.
+
+{% enddocs %}
+
+{% docs dim_parent_crm_opportunity_id %}
+
+The Salesforce opportunity ID for the parent opportunity of this opportunity.
+
+{% enddocs %}
+
+
+{% docs dim_namespace_order_trial_sk %}
+
+The surrogate key of `prep_namespace_order_trial` model. Currently identified by hashing the namespace_id field that is being sourced from customers portal at gitlab.com.
+
+{% enddocs %}
+
+{% docs dim_trial_latest_sk %}
+
+The surrogate key of `dim_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
 
 {% enddocs %}
