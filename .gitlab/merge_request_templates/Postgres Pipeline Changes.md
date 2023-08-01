@@ -33,7 +33,7 @@ Determine if there is downstream impact. I.e. additional changes to downstream m
 ## Submitter Checklist
 
 * [ ] Any >200M row table is **modified**? If yes, please refer to the page [Large table backfilling](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#large-tables-backfilling) and follow the steps
-* [ ] Check is any `RED` data in your changes, they shouldn't be extracted into Data Warehouse. For more details about Data Classification refer to [Data Classification Standard](https://about.gitlab.com/handbook/security/data-classification-standard.html) page
+* [ ] Confirm there is no `RED` data loaded due to your changes. For more details about Data Classification refer to [Data Classification Standard](https://about.gitlab.com/handbook/security/data-classification-standard.html) page
 
 ## All MRs Checklist
 - [ ] [Label hygiene](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling) on issue.
