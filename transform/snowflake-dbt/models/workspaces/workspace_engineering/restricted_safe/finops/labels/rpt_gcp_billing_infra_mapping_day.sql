@@ -9,17 +9,23 @@ WITH export AS (
   SELECT * FROM {{ ref('gcp_billing_export_xf') }}
   WHERE invoice_month >= '2022-01-01'
 
-),infra_labels AS (
+),
+
+infra_labels AS (
 
   SELECT * FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'gl_product_category'
 
-),env_labels AS (
+),
+
+env_labels AS (
 
   SELECT * FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'env'
 
-),runner_labels AS (
+),
+
+runner_labels AS (
 
   SELECT
     source_primary_key,
@@ -36,11 +42,11 @@ WITH export AS (
       WHEN resource_label_value LIKE '%runners-manager-shared-gitlab-org-blue-%' AND resource_label_value NOT LIKE '%gpu%' THEN '1 - shared gitlab org runners' --ok
       WHEN resource_label_value LIKE '%runners-manager-private-blue-%' AND resource_label_value NOT LIKE '%gpu%' THEN '6 - private internal runners' --ok, project_pl internal
       WHEN resource_label_value LIKE '%runners-manager-private-green-%' AND resource_label_value NOT LIKE '%gpu%' THEN '6 - private internal runners' --ok, project_pl internal
-      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%shared-gitlab-org-%' AND resource_label_value NOT LIKE '%gpu%' ) THEN '1 - shared gitlab org runners' --ok
-      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%amd64%' AND resource_label_value NOT LIKE '%gpu%' ) THEN 'runners-saas'
-      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%s-shared-%' AND resource_label_value NOT LIKE '%gpu%' ) THEN '2 - shared saas runners - small' --ok
-      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%-shared-%' AND resource_label_value NOT LIKE '%gitlab%' AND resource_label_value NOT LIKE '%gpu%' ) THEN '2 - shared saas runners - small' --ok
-      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%-private-%' AND resource_label_value NOT LIKE '%gpu%' ) THEN '6 - private internal runners' --ok, project_pl internal
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%shared-gitlab-org-%' AND resource_label_value NOT LIKE '%gpu%') THEN '1 - shared gitlab org runners' --ok
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%amd64%' AND resource_label_value NOT LIKE '%gpu%') THEN 'runners-saas'
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%s-shared-%' AND resource_label_value NOT LIKE '%gpu%') THEN '2 - shared saas runners - small' --ok
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%-shared-%' AND resource_label_value NOT LIKE '%gitlab%' AND resource_label_value NOT LIKE '%gpu%') THEN '2 - shared saas runners - small' --ok
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%-private-%' AND resource_label_value NOT LIKE '%gpu%') THEN '6 - private internal runners' --ok, project_pl internal
       WHEN resource_label_value LIKE '%runners-manager-saas-linux-medium-%' AND resource_label_value LIKE '%gpu%' THEN '8 - shared saas runners gpu - medium'
       WHEN resource_label_value LIKE '%runners-manager-saas-linux-large-%' AND resource_label_value LIKE '%gpu%' THEN '9 - shared saas runners gpu - large'
       WHEN resource_label_value LIKE '%gke-runners-gke-default-pool-%' THEN 'gke-runners-gke-default-pool-'
@@ -56,31 +62,43 @@ WITH export AS (
   FROM {{ ref('gcp_billing_export_resource_labels') }}
   WHERE resource_label_key = 'runner_manager_name'
 
-),unit_mapping AS (
+),
+
+unit_mapping AS (
 
   SELECT * FROM {{ ref('gcp_billing_unit_mapping') }}
   WHERE category = 'usage'
 
-),project_ancestory AS (
+),
 
-  SELECT *,
-  MAX(IFF(folder_id=805818759045,1,0)) OVER (PARTITION BY source_primary_key) AS has_project_to_exclude --gitlab-production to be excluded
+project_ancestory AS (
+
+  SELECT
+    *,
+    MAX(IFF(folder_id = 805818759045, 1, 0)) OVER (PARTITION BY source_primary_key) AS has_project_to_exclude --gitlab-production to be excluded
   FROM {{ ref('gcp_billing_export_project_ancestry') }}
 
-),folder_pl_mapping AS (
+),
+
+folder_pl_mapping AS (
 
   SELECT *
   FROM {{ ref('gcp_billing_folder_pl_mapping') }}
 
-),folder_labels AS (
+),
 
-  SELECT a.source_primary_key,
-        a.folder_id
+folder_labels AS (
+
+  SELECT
+    a.source_primary_key,
+    a.folder_id
   FROM project_ancestory AS a
-  JOIN folder_pl_mapping AS b on a.folder_id = b.folder_id
+  INNER JOIN folder_pl_mapping AS b ON a.folder_id = b.folder_id
   WHERE a.has_project_to_exclude = 0 -- project to be excluded for folder_pl mapping
 
-),billing_base AS (
+),
+
+billing_base AS (
 
   SELECT
     DATE(export.usage_start_time)             AS day,
@@ -111,7 +129,7 @@ WITH export AS (
     runner_labels
     ON
       export.source_primary_key = runner_labels.source_primary_key
-  LEFT JOIN 
+  LEFT JOIN
     folder_labels ON export.source_primary_key = folder_labels.source_primary_key
   {{ dbt_utils.group_by(n=10) }}
 
