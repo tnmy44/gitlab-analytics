@@ -1,7 +1,3 @@
-{{ config({
-    "post-hook": "{{ missing_member_column(primary_key = 'dim_team_sk') }}"
-}) }}
-
 WITH source AS (
 
   SELECT *
