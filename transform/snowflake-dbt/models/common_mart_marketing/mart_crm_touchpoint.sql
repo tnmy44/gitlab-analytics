@@ -97,6 +97,7 @@
       dim_crm_person.account_demographics_geo,
       dim_crm_person.account_demographics_region,
       dim_crm_person.account_demographics_area,
+      dim_crm_person.is_partner_recalled,
 
       -- campaign info
       dim_campaign.dim_campaign_id,
@@ -190,6 +191,7 @@
       dim_crm_account.technical_account_manager,
       dim_crm_account.merged_to_account_id,
       dim_crm_account.is_reseller,
+      dim_crm_account.is_focus_partner,
 
       -- bizible influenced
        CASE

@@ -22,7 +22,20 @@
   FROM 
   dim_date
   WHERE 
-  (day_of_fiscal_quarter_normalised = 90 or date_day = CURRENT_DATE-2) AND date_day BETWEEN '2023-01-31' AND CURRENT_DATE
+  day_of_fiscal_quarter_normalised = 90 AND date_day BETWEEN '2023-01-31' AND CURRENT_DATE-2
+  UNION 
+  
+--latest snapshot for current quarter
+  SELECT DISTINCT
+  date_day,
+  fiscal_year,
+  fiscal_quarter,
+  fiscal_quarter_name_fy,
+  snapshot_date_fpa
+  FROM 
+  dim_date 
+  WHERE (day_of_fiscal_quarter_normalised BETWEEN 3 AND 89) AND date_day = CURRENT_DATE-2 
+
     ORDER BY 1 DESC
 
 
@@ -63,7 +76,8 @@
     sfdc_bizible_attribution_touchpoint_snapshots_source.touchpoint_id = mart_crm_attribution_touchpoint.dim_crm_touchpoint_id
 
     INNER JOIN snapshot_dates ON 
-    dbt_valid_FROM <= date_day AND dbt_valid_to > date_day 
+        (dbt_valid_FROM <= date_day AND dbt_valid_to > date_day) OR (dbt_valid_from <= date_day AND dbt_valid_to is null)
+
 
     LEFT JOIN mart_crm_opportunity_stamped_hierarchy_hist ON
     sfdc_bizible_attribution_touchpoint_snapshots_source.opportunity_id = mart_crm_opportunity_stamped_hierarchy_hist.DIM_CRM_OPPORTUNITY_ID
@@ -392,5 +406,5 @@ combined_models AS (
     created_by="@rkohnke",
     updated_by="@dmicovic",
     created_date="2023-04-11",
-    updated_date="2023-06-02",
+    updated_date="2023-07-31",
   ) }}

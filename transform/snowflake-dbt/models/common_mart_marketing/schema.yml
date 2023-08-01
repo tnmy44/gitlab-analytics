@@ -66,6 +66,8 @@ models:
           description: Net ARR associated with touchpoint under [Bizible custom attribution model](https://about.gitlab.com/handbook/marketing/marketing-operations/bizible/#custom-attribution-based-on-bizible-machine-learning-algorithm).
         - name: net_arr_per_campaign
           description: Average net ARR associated with a campaign based on the number of campaigns connected to an opportunity that is tied to the touchpoint.
+        - name: is_partner_recalled
+          description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
 
     - name: mart_crm_touchpoint
       description: Model containing Bizible touchpoints (non-attribution) along with contact, lead, account, and campaign details.
@@ -111,6 +113,8 @@ models:
           description: Count of touchpoints that occured on or before the `mql_date` that are also Lead Created.
         - name: count_net_new_accepted
           description: Count of touchpoints that occured on or before the `accepted_date` that are also Lead Created.
+        - name: is_partner_recalled
+          description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
 
     - name: mart_crm_person
       description: Model with person and MQL business logic.
@@ -126,6 +130,8 @@ models:
           description: Region of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: bdr_prospecting_status
           description: Indicates whether the account is actively being prospected by a BDR.
+        - name: is_partner_recalled
+          description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
@@ -521,3 +527,19 @@ models:
           description: The dim_date date_range_week, when joined to the bizible_touchpoint_date.           
         - name: touchpoint_date_range_id
           description: The dim_date date_range_id when joined to the bizible_touchpoint_date. 
+
+    - name: rpt_l2r_campaign_interactions
+      description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
+      columns:
+        - name: influenced_opportunity_id
+          description: The Salesforce Opportunity ID, where there is a related Bizible Touchpoint, in Salesforce.
+        - name: custom_sao
+          description: The sum of SAOs created, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: pipeline_custom_net_arr
+          description: The sum of Pipeline Net ARR, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: won_custom
+          description: The sum of Closed Won Opportunities closed, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: won_custom_net_arr
+          description: The sum of Won Net ARR, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: integrated_budget_holder
+          description: A case statement to categorize the budget (and usually owner) of online and offline campaigns. Uses utm_content, campaign owner role from SFDC, budget holder from SFDC, and utm_budget.

@@ -157,9 +157,6 @@ models:
         +materialized: table
         +schema: clari
 
-      container_registry:
-        +schema: container_registry
-
       customers:
         +schema: customers
         sensitive:
