@@ -6,7 +6,7 @@ import os
 import sys
 from logging import basicConfig, info
 
-import Fire
+from fire import Fire
 import pandas as pd
 from sqlalchemy.exc import SQLAlchemyError
 from utils import EngineFactory, Utils
@@ -31,6 +31,16 @@ class InstanceNamespaceMetrics:
 
         self.engine_factory = EngineFactory()
         self.utils = Utils()
+
+    def get_meta_data_from_file(self, file_name: str) -> dict:
+        """
+        Load metadata from .json file from the file system
+        param file_name: str
+        return: dict
+        """
+        full_path = os.path.join(os.path.dirname(__file__), file_name)
+
+        return self.utils.load_from_json_file(file_name=full_path)
 
     def set_metrics_filter(self, metrics: list):
         """
@@ -143,9 +153,8 @@ class InstanceNamespaceMetrics:
         """
         connection = self.engine_factory.connect()
 
-        full_path = os.path.join(os.path.dirname(__file__), self.utils.NAMESPACE_FILE)
 
-        namespace_queries = self.utils.load_from_json_file(file_name=full_path)
+        namespace_queries = self.get_meta_data_from_file(self, file_name=self.utils.NAMESPACE_FILE)
 
         for instance_namespace_query in namespace_queries:
             if self.metrics_filter(instance_namespace_query):
