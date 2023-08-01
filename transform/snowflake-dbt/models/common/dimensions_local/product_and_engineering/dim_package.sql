@@ -11,14 +11,21 @@
 WITH final AS (
 
     SELECT
+      -- Surrogate Key
       dim_package_sk,
+
+      -- Natural Key
       package_id,
+
+      -- Foreign Keys
       dim_project_id,
       dim_namespace_id,
       ultimate_parent_namespace_id,
       created_date_id,
       dim_plan_id,
       creator_id,
+
+      -- Dimensional contexts
       package_version,
       package_type,
       created_at,
