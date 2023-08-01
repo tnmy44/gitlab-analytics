@@ -118,6 +118,7 @@ WITH final AS (
       prep_crm_account.last_timeline_at_risk_update,
       prep_crm_account.last_at_risk_update_comments,
       prep_crm_account.bdr_prospecting_status,
+      prep_crm_account.is_focus_partner,
 
       --measures (maintain for now to not break reporting)
       prep_crm_account.parent_crm_account_lam,
