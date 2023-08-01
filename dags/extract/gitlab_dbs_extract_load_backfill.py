@@ -97,34 +97,7 @@ config_dict = {
         "description": "This DAG does Incremental extract & load  of gitlab.com database(Postgres) to snowflake",
         "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com database(Postgres) to snowflake",
         "description_deletes": "This DAG loads the PK only to check for deletes within gitlab.com database(Postgres)",
-    },
-    "el_gitlab_com_ci": {
-        "cloudsql_instance_name": None,
-        "dag_name": "el_gitlab_com_ci_new",
-        "env_vars": {"HOURS": "96"},
-        "extract_schedule_interval": "30 2,14 */1 * *",
-        "incremental_backfill_interval": "30 2 * * *",
-        "delete_interval": "30 2 * * 0",
-        "secrets": [
-            GITLAB_COM_CI_DB_NAME,
-            GITLAB_COM_CI_DB_HOST,
-            GITLAB_COM_CI_DB_PASS,
-            GITLAB_COM_CI_DB_PORT,
-            GITLAB_COM_CI_DB_USER,
-            GITLAB_BACKFILL_BUCKET,
-            GITLAB_METADATA_DB_NAME,
-            GITLAB_METADATA_DB_HOST,
-            GITLAB_METADATA_DB_PASS,
-            GITLAB_METADATA_PG_PORT,
-            GITLAB_METADATA_DB_USER,
-            GITLAB_METADATA_SCHEMA,
-        ],
-        "start_date": datetime(2019, 5, 30),
-        "task_name": "gitlab-com",
-        "description": "This DAG does Incremental extract & load of gitlab.com CI* database(Postgres) to snowflake",
-        "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com CI* database(Postgres) to snowflake",
-        "description_deletes": "This DAG loads the PK only to check for deletes within gitlab.com database(Postgres)",
-    },
+    }
 }
 
 
