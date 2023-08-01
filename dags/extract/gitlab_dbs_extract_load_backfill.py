@@ -200,7 +200,7 @@ for source_name, config in config_dict.items():
         incremental_backfill_dag_args["start_date"] = config["start_date"]
 
         incremental_backfill_dag = DAG(
-            f"{config['dag_name']}_db_incremental_backfill",
+            f"{config['dag_name']}_db_incremental_backfillv2",
             default_args=incremental_backfill_dag_args,
             schedule_interval=config["incremental_backfill_interval"],
             concurrency=1,
@@ -213,7 +213,7 @@ for source_name, config in config_dict.items():
             table_list = extract_table_list_from_manifest(manifest)
             if config["dag_name"] == "el_gitlab_com_new":
                 table_list = [
-                    "alert_management_alerts",
+                    "merge_request_diff_commits",
                 ]
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):

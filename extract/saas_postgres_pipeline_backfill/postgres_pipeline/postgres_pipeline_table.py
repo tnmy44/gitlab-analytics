@@ -74,7 +74,7 @@ class PostgresPipelineTable:
             source_engine, metadata_engine, BACKFILL_METADATA_TABLE
         )
 
-        backfill_chunksize = 5_000_000
+        backfill_chunksize = 2_500_000
         logging.info(f"\nstart_pk: {start_pk}")
         logging.info(f"\ninitial_load_start_date: {initial_load_start_date}")
         logging.info(f"\nis_backfill_needed: {is_backfill_needed}")

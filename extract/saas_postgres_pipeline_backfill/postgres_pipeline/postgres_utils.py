@@ -376,7 +376,9 @@ def chunk_and_upload(
             query,
             database_kwargs["source_engine"],
             tmpfile,
-            database_kwargs["chunksize"],
+            # we are querying 2,500,000 ids, but it returns far more records because it's not the PK
+            # multiple by 3 because we want to have 7.5M records per parquet
+            database_kwargs["chunksize"] * 4,
         )
 
         for idx, chunk_df in enumerate(iter_csv):
