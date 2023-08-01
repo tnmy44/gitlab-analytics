@@ -76,7 +76,7 @@ config_dict = {
         "dag_name": "el_gitlab_com_new",
         "env_vars": {"HOURS": "96"},
         "extract_schedule_interval": "30 2,14 */1 * *",
-        "incremental_backfill_interval": "30 2 * * *",
+        "incremental_backfill_interval": "30 2,14 * * *",
         "delete_interval": "30 2 * * 0",
         "secrets": [
             GITLAB_COM_DB_USER,
@@ -213,7 +213,7 @@ for source_name, config in config_dict.items():
             table_list = extract_table_list_from_manifest(manifest)
             if config["dag_name"] == "el_gitlab_com_new":
                 table_list = [
-                    "alert_management_http_integrations",
+                    "alert_management_alerts",
                 ]
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):
