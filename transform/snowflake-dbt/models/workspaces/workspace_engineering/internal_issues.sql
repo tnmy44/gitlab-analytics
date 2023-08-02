@@ -74,7 +74,8 @@ derived_close_date AS (
   WHERE noteable_type = 'Issue'
     AND system = TRUE
     AND (CONTAINS(note, 'closed')
-      OR CONTAINS(note, 'moved to'))
+      OR CONTAINS(note, 'moved to')
+      OR note ILIKE ANY ('Status changed to closed%', 'closed via%'))
   QUALIFY ROW_NUMBER() OVER (PARTITION BY noteable_id ORDER BY created_at DESC) = 1
 
 ),
