@@ -162,6 +162,7 @@ WITH edm_opty AS (
     -- ATR for Booked Churned / Contraction metrics
     edm_opty.atr,
     edm_opty.won_atr,
+    edm_opty.churned_contraction_net_arr,
     edm_opty.booked_churned_contraction_net_arr,
 
     edm_opty.competitors,
