@@ -86,7 +86,7 @@ instance_combined_metrics_ping = KubernetesPodOperator(
 namespace_cmd = f"""
     {clone_repo_cmd} &&
     cd analytics/extract/saas_usage_ping/ &&
-    python3 instance_namespace_metrics.py saas_namespace_ping --ping_date=$RUN_DATE
+    python3 instance_namespace_metrics.py saas_instance_namespace_metrics --ping_date=$RUN_DATE
 """
 
 namespace_ping = KubernetesPodOperator(

@@ -136,7 +136,7 @@ class InstanceNamespaceMetrics:
 
         info(f"metric_name loaded: {metric_name}")
 
-    def saas_namespace_ping(self, metrics_filter=lambda _: True):
+    def saas_instance_namespace_metrics(self, metrics_filter=lambda _: True):
         """
         Take a dictionary of the following type and run each
         query to then upload to a table in raw.
@@ -182,7 +182,7 @@ class InstanceNamespaceMetrics:
             filter_list=namespace_filter_list
         )
 
-        self.saas_namespace_ping(metrics_filter=namespace_filter)
+        self.saas_instance_namespace_metrics(metrics_filter=namespace_filter)
 
 
 if __name__ == "__main__":
