@@ -108,7 +108,7 @@ billing_base AS (
     infra_labels.resource_label_value         AS infra_label,
     env_labels.resource_label_value           AS env_label,
     runner_labels.resource_label_value        AS runner_label,
-    folder_labels.folder_id                   AS folder_label,
+    iff(export.project_id is null, 1, folder_labels.folder_id)                   AS folder_label,
     export.usage_unit                         AS usage_unit,
     export.pricing_unit                       AS pricing_unit,
     SUM(export.usage_amount)                  AS usage_amount,
