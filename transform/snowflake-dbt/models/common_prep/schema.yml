@@ -1012,7 +1012,9 @@ models:
         description: Unique key of CI Build
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: dim_project_id
         description: Foreign key that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id

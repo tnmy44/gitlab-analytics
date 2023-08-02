@@ -109,3 +109,7 @@ sources:
       - name: zqu_quote_rate_plan_charge
         identifier: zqu__quoterateplancharge__c
         description: '{{ doc("sfdc_zqu_quote_rate_plan_charge_source")}}'
+      - name: impartner_mdf_funds_claim
+        identifier: impartnermdf__fundsclaim__c
+      - name: impartner_mdf_funds_request
+        identifier: impartnermdf__fundsrequest__c

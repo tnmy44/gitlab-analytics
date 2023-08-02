@@ -3596,22 +3596,6 @@ roles:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
 
-    - jstemmer:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
-            - bi_tool_eval_read
-            - zoominfo_inbound
-            - data_science
-            - data_science_sensitive
-        warehouses:
-            - dev_xs
-            - dev_xl
-
     - juwong:
         member_of:
             - engineer
@@ -5368,11 +5352,6 @@ users:
             - jstark
             - securityadmin
             - sysadmin
-
-    - jstemmer:
-        can_login: yes
-        member_of:
-            - jstemmer
 
     - juwong:
         can_login: yes
