@@ -73,24 +73,15 @@ def snowflake_copy_staged_files_into_table(
     """ """
 
     file_name = os.path.basename(file)
-    if file_name.endswith(".gz"):
-        full_stage_file_path = f"{stage}/{file_name}"
-    else:
-        full_stage_file_path = f"{stage}/{file_name}.gz"
 
-    if type == "json":
-        copy_query = f"""copy into {table_path} (jsontext)
-                         from @{full_stage_file_path}
-                         file_format=(type='{type}'),
-                         on_error='{on_error}';
-                         """
+    full_stage_file_path = f"{stage}/{file_name}"
 
-    else:
-        copy_query = f"""copy into {table_path}
-                         from @{full_stage_file_path}
-                         file_format=(type='{type}' {file_format_options}),
-                         on_error='{on_error}';
-                        """
+    copy_query = f"""COPY INTO {table_path}
+                        FROM @{full_stage_file_path}
+                        FILE_FORMAT=test_csv_format
+                        , ON_ERROR='ABORT_STATEMENT'
+                        MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                    """
 
     try:
         connection = engine.connect()
