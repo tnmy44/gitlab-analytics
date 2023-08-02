@@ -402,9 +402,6 @@ models:
     - name: repo_storage_pl_daily
       description: '{{ doc("finops_pipeline_desc_repo_storage_pl_daily") }}'
 
-    - name: single_sku_pl
-      description: '{{ doc("finops_pipeline_desc_single_sku_pl") }}'
-
     - name: rpt_gcp_billing_skus_day
       description: '{{ doc("finops_pipeline_desc_skus_day") }}'
 
