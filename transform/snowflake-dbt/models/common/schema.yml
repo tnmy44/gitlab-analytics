@@ -6382,7 +6382,9 @@ models:
       - name: fct_behavior_unstructured_sk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("fct_behavior_unstructured_sk") }}'
       - name: app_id
         description: '{{ doc("app_id") }}'

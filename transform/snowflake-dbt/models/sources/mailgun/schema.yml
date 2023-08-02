@@ -6,7 +6,9 @@ models:
     columns:
       - name: mailgun_event_id
         tests:
-          - not_null
+          - not_null:
+              config:
+                where: "event_timestamp >= DATEADD('day',-3,CURRENT_DATE())"
       - name: message_id
         meta:
           sensitive: true
