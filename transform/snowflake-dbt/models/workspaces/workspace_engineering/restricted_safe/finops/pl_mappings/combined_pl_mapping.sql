@@ -179,25 +179,6 @@ build_artifacts_pl_dev_daily AS (
 
 ),
 
-single_sku_pl AS (
-
-  SELECT
-    date_spine.date_day,
-    NULL                              AS gcp_project_id,
-    single_sku_pl.service_description AS gcp_service_description,
-    single_sku_pl.sku_description     AS gcp_sku_description,
-    NULL                              AS infra_label,
-    NULL                              AS env_label,
-    NULL                              AS runner_label,
-    NULL                              AS folder_label,
-    LOWER(single_sku_pl.type)         AS pl_category,
-    single_sku_pl.allocation          AS pl_percent,
-    'single_sku_pl'                   AS from_mapping
-  FROM date_spine
-  CROSS JOIN {{ ref ('single_sku_pl') }}
-
-),
-
 runner_shared_gitlab_org AS (
   -- shared gitlab org runner
   SELECT DISTINCT
@@ -560,9 +541,6 @@ cte_append AS (SELECT *
   UNION ALL
   SELECT *
   FROM build_artifacts_pl_dev_daily
-  UNION ALL
-  SELECT *
-  FROM single_sku_pl
   UNION ALL
   SELECT *
   FROM runner_shared_gitlab_org
