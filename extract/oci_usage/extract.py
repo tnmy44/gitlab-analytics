@@ -80,9 +80,8 @@ def snowflake_copy_staged_files_into_table(
                         FROM @{full_stage_file_path}
                         FILE_FORMAT=raw.test.oci_csv_format
                         , ON_ERROR='ABORT_STATEMENT'
-                        MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                        MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
                     """
-
     try:
         connection = engine.connect()
 
@@ -90,6 +89,11 @@ def snowflake_copy_staged_files_into_table(
         info(f"running: {copy_query}")
         connection.execute(copy_query)
         info("Query successfully run")
+
+    except:
+        info(f"failed to copy file: {file} into table: {table_path}. Removing it from stage.")
+        remove_query = f"remove @{full_stage_file_path};"
+        connection.execute(remove_query)
 
     finally:
         connection.close()
