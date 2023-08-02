@@ -109,10 +109,7 @@ joined AS (
     issues.updated_at                                                                  AS issue_updated_at,
     issues.issue_last_edited_at,
     --issue_closed_at,
-    IFF(issues.issue_closed_at IS NULL
-      AND issues.state = 'closed',
-      derived_close_date.derived_closed_at,
-      issues.issue_closed_at)                                                          AS issue_closed_at,
+    COALESCE(issues.issue_closed_at, derived_close_date.derived_closed_at)             AS issue_closed_at,
     --issues.visibility_level,
     issues.is_confidential                                                             AS issue_is_confidential,
 
