@@ -12,51 +12,6 @@ connection_info:
     port: GITLAB_METADATA_PG_PORT
     user: GITLAB_METADATA_DB_USER
 tables:
-  alert_management_alerts:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'alert_management_alerts'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , started_at
-      , ended_at
-      , events
-      , iid
-      , severity
-      , status
-      , issue_id
-      , project_id
-      , title
-      , description
-      , service
-      , monitoring_tool
-      , hosts
-      , payload
-      FROM alert_management_alerts
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  alert_management_http_integrations:
-    export_schema: "gitlab_com"
-    export_table: alert_management_http_integrations
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , project_id
-      , active
-      , endpoint_identifier
-      , name
-      , payload_example
-      , payload_attribute_mapping
-      FROM alert_management_http_integrations
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   merge_request_diff_commits:
     dbt_source_model: true
     export_schema: 'gitlab_com'
