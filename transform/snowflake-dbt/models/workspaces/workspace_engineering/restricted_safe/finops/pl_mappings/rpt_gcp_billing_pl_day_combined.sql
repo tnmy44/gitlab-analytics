@@ -58,13 +58,13 @@ overlaps AS (
   FROM
     service_base
   LEFT JOIN combined_pl_mapping ON combined_pl_mapping.date_day = service_base.day
-    AND COALESCE(service_base.gcp_project_id, 'null') like COALESCE(combined_pl_mapping.gcp_project_id, COALESCE(service_base.gcp_project_id, ''))
+    AND COALESCE(service_base.gcp_project_id, 'null') LIKE COALESCE(combined_pl_mapping.gcp_project_id, COALESCE(service_base.gcp_project_id, ''))
     AND COALESCE(combined_pl_mapping.gcp_service_description, service_base.gcp_service_description) = service_base.gcp_service_description
     AND COALESCE(combined_pl_mapping.gcp_sku_description, service_base.gcp_sku_description) = service_base.gcp_sku_description
     AND COALESCE(combined_pl_mapping.infra_label, COALESCE(service_base.infra_label, '')) = COALESCE(service_base.infra_label, '')
     AND COALESCE(combined_pl_mapping.env_label, COALESCE(service_base.env_label, '')) = COALESCE(service_base.env_label, '')
     AND COALESCE(combined_pl_mapping.runner_label, COALESCE(service_base.runner_label, '')) = COALESCE(service_base.runner_label, '')
-    AND COALESCE(combined_pl_mapping.folder_label,COALESCE(service_base.folder_label,0)) = COALESCE(service_base.folder_label,0)
+    AND COALESCE(combined_pl_mapping.folder_label, COALESCE(service_base.folder_label, 0)) = COALESCE(service_base.folder_label, 0)
 
 )
 

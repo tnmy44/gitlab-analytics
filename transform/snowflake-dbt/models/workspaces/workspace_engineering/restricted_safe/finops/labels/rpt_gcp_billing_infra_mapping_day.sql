@@ -101,20 +101,20 @@ folder_labels AS (
 billing_base AS (
 
   SELECT
-    DATE(export.usage_start_time)             AS day,
-    export.project_id                         AS project_id,
-    export.service_description                AS service,
-    export.sku_description                    AS sku_description,
-    infra_labels.resource_label_value         AS infra_label,
-    env_labels.resource_label_value           AS env_label,
-    runner_labels.resource_label_value        AS runner_label,
-    iff(export.project_id is null, 1, folder_labels.folder_id)                   AS folder_label,
-    export.usage_unit                         AS usage_unit,
-    export.pricing_unit                       AS pricing_unit,
-    SUM(export.usage_amount)                  AS usage_amount,
-    SUM(export.usage_amount_in_pricing_units) AS usage_amount_in_pricing_units,
-    SUM(export.cost_before_credits)           AS cost_before_credits,
-    SUM(export.total_cost)                    AS net_cost
+    DATE(export.usage_start_time)                              AS day,
+    export.project_id                                          AS project_id,
+    export.service_description                                 AS service,
+    export.sku_description                                     AS sku_description,
+    infra_labels.resource_label_value                          AS infra_label,
+    env_labels.resource_label_value                            AS env_label,
+    runner_labels.resource_label_value                         AS runner_label,
+    IFF(export.project_id IS NULL, 1, folder_labels.folder_id) AS folder_label,
+    export.usage_unit                                          AS usage_unit,
+    export.pricing_unit                                        AS pricing_unit,
+    SUM(export.usage_amount)                                   AS usage_amount,
+    SUM(export.usage_amount_in_pricing_units)                  AS usage_amount_in_pricing_units,
+    SUM(export.cost_before_credits)                            AS cost_before_credits,
+    SUM(export.total_cost)                                     AS net_cost
   FROM
     export
   LEFT JOIN

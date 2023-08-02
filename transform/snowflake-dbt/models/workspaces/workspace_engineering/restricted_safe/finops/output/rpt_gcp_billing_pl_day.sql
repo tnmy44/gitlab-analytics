@@ -20,8 +20,8 @@ lookback_pl_mappings AS (
 overlaps AS (
 
   SELECT
-    service_base.date_day                                                                    AS date_day,
-    service_base.gcp_project_id                                                              AS gcp_project_id,
+    service_base.date_day                                                                     AS date_day,
+    service_base.gcp_project_id                                                               AS gcp_project_id,
     service_base.gcp_service_description,
     service_base.gcp_sku_description,
     service_base.infra_label,
@@ -54,11 +54,11 @@ overlaps AS (
         (CASE WHEN lookback_pl_mappings.env_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN lookback_pl_mappings.runner_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN lookback_pl_mappings.gcp_project_id IS NOT NULL THEN 1 ELSE 0 END) DESC
-    )                                                                                        AS priority
+    )                                                                                         AS priority
   FROM
     service_base
   LEFT JOIN lookback_pl_mappings ON lookback_pl_mappings.date_day = service_base.date_day
-    AND COALESCE(service_base.gcp_project_id, 'null') like COALESCE(lookback_pl_mappings.gcp_project_id, COALESCE(service_base.gcp_project_id, ''))
+    AND COALESCE(service_base.gcp_project_id, 'null') LIKE COALESCE(lookback_pl_mappings.gcp_project_id, COALESCE(service_base.gcp_project_id, ''))
     AND COALESCE(lookback_pl_mappings.gcp_service_description, service_base.gcp_service_description) = service_base.gcp_service_description
     AND COALESCE(lookback_pl_mappings.gcp_sku_description, service_base.gcp_sku_description) = service_base.gcp_sku_description
     AND COALESCE(lookback_pl_mappings.infra_label, COALESCE(service_base.infra_label, '')) = COALESCE(service_base.infra_label, '')

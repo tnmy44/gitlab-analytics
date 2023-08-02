@@ -8,27 +8,29 @@
 
 WITH source AS (
 
-    SELECT *
-    FROM {{ ref('summary_gcp_billing_source') }}
-    {% if is_incremental() %}
+  SELECT *
+  FROM {{ ref('summary_gcp_billing_source') }}
+  {% if is_incremental() %}
 
-    WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
+    WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{ this }})
 
-    {% endif %}
+  {% endif %}
 
-), renamed as (
+),
 
-    SELECT
-        source.primary_key                                       AS source_primary_key,
-        project_ancestors_flat.value['display_name']::VARCHAR                AS folder_name,
-        SPLIT_PART(project_ancestors_flat.value['resource_name']::VARCHAR, '/', 2)              AS folder_id,
-        ROW_NUMBER() OVER (PARTITION BY source.primary_key ORDER BY project_ancestors_flat.index) AS hierarchy_level,
-        source.uploaded_at                                       AS uploaded_at,
-        {{ dbt_utils.surrogate_key([
+renamed AS (
+
+  SELECT
+    source.primary_key                                                                        AS source_primary_key,
+    project_ancestors_flat.value['display_name']::VARCHAR                                     AS folder_name,
+    SPLIT_PART(project_ancestors_flat.value['resource_name']::VARCHAR, '/', 2)                AS folder_id,
+    ROW_NUMBER() OVER (PARTITION BY source.primary_key ORDER BY project_ancestors_flat.index) AS hierarchy_level,
+    source.uploaded_at                                                                        AS uploaded_at,
+    {{ dbt_utils.surrogate_key([
             'source_primary_key',
             'folder_name',
-            'folder_id'] ) }}                          AS project_folder_label_pk
-    FROM source,
+            'folder_id'] ) }}                                                                                            AS project_folder_label_pk
+  FROM source,
     LATERAL FLATTEN(input=> project_ancestors) project_ancestors_flat
 )
 
