@@ -73,7 +73,7 @@ standard_secrets = [
 config_dict = {
     "el_gitlab_com": {
         "cloudsql_instance_name": None,
-        "dag_name": "el_gitlab_com_backfil",
+        "dag_name": "el_gitlab_com_backfill_temp",
         "env_vars": {"HOURS": "96"},
         "extract_schedule_interval": "30 2,14 */1 * *",
         "incremental_backfill_interval": "30 2,14 * * *",
