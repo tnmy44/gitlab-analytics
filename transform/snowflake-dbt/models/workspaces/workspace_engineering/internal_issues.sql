@@ -67,7 +67,7 @@ all_labels AS (
 
 close_moved_date AS (
 
-  -- Get the creation date of notes with closed information to replace missing issue_closed_at 
+  -- Derive close date from the latest note from an issue, when it contains closed or moved details
 
   SELECT
     noteable_id AS issue_id,
@@ -84,7 +84,7 @@ close_moved_date AS (
 
 derived_close_date AS (
 
-  -- Derive close date from the latest note from issues that have a state of closed
+  -- Derive close date from the latest note from an issue, regardless of the type of note
 
   SELECT
     noteable_id AS issue_id,
@@ -153,10 +153,15 @@ joined AS (
     issues.created_at                                                                  AS issue_created_at,
     issues.updated_at                                                                  AS issue_updated_at,
     issues.issue_last_edited_at,
-    CASE WHEN issues.state = 'closed' THEN COALESCE(issues.closed_at, derived_close_date.derived_closed_at) 
-         WHEN issues.state = 'opened' THEN COALESCE(issues.closed_at, close_moved_date.derived_closed_at)   
-         ELSE issue_updated_at               
-    END AS issue_closed_at,
+    /* 
+      If the issue is closed, then get the closed_at date from one of the following sources:
+      - The closed_at date from the raw data
+      - The derived_closed_at date from the last moved or closed note in the notes_source
+      - The derived_closed_at date from the last note left in the issue (regardless of the type of note)
+      - As a last resource, get the last updated_at date from the issue and make that the closed_at date
+    */
+    IFF(issues.state = 'closed', COALESCE(issues.closed_at, close_moved_date.derived_closed_at, derived_close_date.derived_closed_at, issues.updated_at), issues.closed_at) 
+                                                                                       AS issue_closed_at,
     issues.is_confidential                                                             AS issue_is_confidential,
     COALESCE(issues.namespace_id = 9970
       AND ARRAY_CONTAINS('community contribution'::VARIANT, agg_labels.labels), FALSE) AS is_community_contributor_related,
@@ -189,7 +194,7 @@ joined AS (
       TRUE, FALSE)                                                                     AS is_included_in_engineering_metrics,
     IFF(issues.project_id IN ({{ is_project_part_of_product() }}),
       TRUE, FALSE)                                                                     AS is_part_of_product,
-    IFF(issue_closed_at IS NULL, issues.state, 'closed')                               AS state,
+    issues.state,
     issues.weight,
     issues.due_date,
     issues.lock_version,
