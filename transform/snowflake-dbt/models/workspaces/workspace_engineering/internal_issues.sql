@@ -71,7 +71,7 @@ close_moved_date AS (
 
   SELECT
     noteable_id AS issue_id,
-    created_at  AS closed_at
+    created_at  AS derived_closed_at
   FROM {{ ref('gitlab_dotcom_notes_source') }}
   WHERE noteable_type = 'Issue'
     AND system = TRUE
@@ -82,7 +82,7 @@ close_moved_date AS (
 
 ),
 
-derived_closed_date AS (
+derived_close_date AS (
 
   -- Derive close date from the latest note from issues that have a state of closed
 
@@ -154,7 +154,8 @@ joined AS (
     issues.updated_at                                                                  AS issue_updated_at,
     issues.issue_last_edited_at,
     CASE WHEN issues.state = 'closed' THEN COALESCE(issues.closed_at, derived_close_date.derived_closed_at) 
-         WHEN issues.state = 'opened' THEN COALESCE(issues.closed_at, close_moved_date.derived_closed_at)                   
+         WHEN issues.state = 'opened' THEN COALESCE(issues.closed_at, close_moved_date.derived_closed_at)   
+         ELSE issue_updated_at               
     END AS issue_closed_at,
     issues.is_confidential                                                             AS issue_is_confidential,
     COALESCE(issues.namespace_id = 9970
@@ -214,7 +215,7 @@ joined AS (
   LEFT JOIN first_events_weight
     ON issues.issue_id = first_events_weight.issue_id
   LEFT JOIN close_moved_date
-    ON issues.issue_id = derived_close_date.issue_id
+    ON issues.issue_id = close_moved_date.issue_id
   LEFT JOIN derived_close_date
     ON issues.issue_id = derived_close_date.issue_id
      AND issues.state = 'closed' AND issues.closed_at IS NULL
