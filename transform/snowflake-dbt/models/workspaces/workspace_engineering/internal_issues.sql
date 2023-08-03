@@ -223,7 +223,6 @@ joined AS (
     ON issues.issue_id = close_moved_date.issue_id
   LEFT JOIN derived_close_date
     ON issues.issue_id = derived_close_date.issue_id
-     AND issues.state = 'closed' AND issues.closed_at IS NULL
 
     
 )
