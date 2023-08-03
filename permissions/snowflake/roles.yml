@@ -3923,6 +3923,7 @@ roles:
     - mcooper:
         member_of:
             - analyst_finance
+            - analyst_growth
             - analyst_marketing
             - analytics_engineer_core
             - bamboohr
