@@ -130,6 +130,12 @@ models:
           description: Region of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: bdr_prospecting_status
           description: Indicates whether the account is actively being prospected by a BDR.
+        - name: traction_first_response_time
+          description: The response time from Traction. 
+        - name: traction_first_response_time_seconds
+          description: The response time from Traction in seconds. 
+        - name: traction_response_time_in_business_hours
+          description: The response time from Traction, based only in working hours for the user/rep. 
         - name: is_partner_recalled
           description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
 
@@ -253,6 +259,12 @@ models:
           description: A case statement assigning geo according the [FY23 Territories Mapping File - SSoT](https://docs.google.com/spreadsheets/d/1gElhORjqraKDMQnWzApPelyP_vVa24tAOA85vb5f3Uc/edit#gid=1236326957) using first_country from dim_crm_person.
         - name: inferred_geo
           description: The Uppsercase version of geo_custom.
+        - name: traction_first_response_time
+          description: The response time from Traction. 
+        - name: traction_first_response_time_seconds
+          description: The response time from Traction in seconds. 
+        - name: traction_response_time_in_business_hours
+          description: The response time from Traction, based only in working hours for the user/rep. 
         - name: opp_order_type
           description: The Order Type from the opportunity object in Salesforce. 
         - name: sales_qualified_source_name
