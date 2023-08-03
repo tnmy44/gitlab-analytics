@@ -11,38 +11,10 @@ WITH internal_projects AS (
 issues AS (
 
   SELECT
-    issues.issue_id,
-    issues.issue_iid,
-    issues.author_id,
-    issues.project_id,
-    issues.milestone_id,
-    issues.sprint_id,
-    issues.updated_by_id,
-    issues.last_edited_by_id,
-    issues.moved_to_id,
-    issues.created_at,
-    issues.updated_at,
-    issues.issue_last_edited_at,
-    issues.issue_closed_at                          AS closed_at,
-    issues.is_confidential,
-    issues.issue_title,
-    issues.issue_description,
-    issues.state,
-    issues.weight,
-    issues.due_date,
-    issues.lock_version,
-    issues.time_estimate,
-    issues.has_discussion_locked,
-    issues.closed_by_id,
-    issues.relative_position,
-    issues.service_desk_reply_to,
-    issues.state_id,
-    issues.duplicated_to_id,
-    issues.promoted_to_epic_id,
-    issues.issue_type,
+    issues.*,
     internal_projects.parent_namespace_id           AS namespace_id,
     internal_projects.ultimate_parent_namespace_id
-  FROM {{ ref('gitlab_dotcom_issues_source') }}     AS issues
+  FROM {{ ref('gitlab_dotcom_issues_source') }} AS issues
   INNER JOIN internal_projects
     ON issues.project_id = internal_projects.project_id
 
@@ -160,7 +132,7 @@ joined AS (
       - The derived_closed_at date from the last note left in the issue (regardless of the type of note)
       - As a last resource, get the last updated_at date from the issue and make that the closed_at date
     */
-    IFF(issues.state = 'closed', COALESCE(issues.closed_at, close_moved_date.derived_closed_at, derived_close_date.derived_closed_at, issues.updated_at), issues.closed_at) 
+    IFF(issues.state = 'closed', COALESCE(issues.issue_closed_at, close_moved_date.derived_closed_at, derived_close_date.derived_closed_at, issues.updated_at), issues.issue_closed_at) 
                                                                                        AS issue_closed_at,
     issues.is_confidential                                                             AS issue_is_confidential,
     COALESCE(issues.namespace_id = 9970
@@ -223,9 +195,7 @@ joined AS (
     ON issues.issue_id = close_moved_date.issue_id
   LEFT JOIN derived_close_date
     ON issues.issue_id = derived_close_date.issue_id
-     AND issues.state = 'closed' AND issues.closed_at IS NULL
-
-    
+   
 )
 
 SELECT *
