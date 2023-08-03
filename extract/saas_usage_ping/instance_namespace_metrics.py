@@ -21,19 +21,20 @@ class InstanceNamespaceMetrics:
     """
 
     def __init__(self, ping_date=None, namespace_metrics_filter=None):
+        self.engine_factory = EngineFactory()
+        self.utils = Utils()
+
+        self.start_date_28 = self.end_date - datetime.timedelta(28)
+
         if ping_date is not None:
             self.end_date = datetime.datetime.strptime(ping_date, "%Y-%m-%d").date()
         else:
             self.end_date = datetime.datetime.now().date()
 
-        self.start_date_28 = self.end_date - datetime.timedelta(28)
         if namespace_metrics_filter is not None:
             self.metrics_backfill_filter = namespace_metrics_filter
         else:
             self.metrics_backfill_filter = []
-
-        self.engine_factory = EngineFactory()
-        self.utils = Utils()
 
     def get_meta_data_from_file(self, file_name: str) -> dict:
         """
@@ -124,6 +125,8 @@ class InstanceNamespaceMetrics:
 
         metric_name, metric_query, _ = self.get_prepared_values(query=query_dict)
 
+        info(f"Start loading metrics: {metric_name}")
+
         if "namespace_ultimate_parent_id" not in metric_query:
             info(f"Skipping ping {metric_name} due to no namespace information.")
             return
@@ -135,6 +138,24 @@ class InstanceNamespaceMetrics:
         )
 
         info(f"metric_name loaded: {metric_name}")
+
+    def calculate_namespace_metrics(self, queries: dict, metrics_filter=lambda _: True) -> None:
+        """
+        Get the list of queries in json file format
+        and execute it on Snowflake to calculate
+        metrics
+        """
+        connection = self.engine_factory.connect()
+
+        for instance_namespace_query in queries:
+            if metrics_filter(instance_namespace_query):
+
+                self.process_namespace_ping(
+                    query_dict=instance_namespace_query, connection=connection
+                )
+
+        connection.close()
+        self.engine_factory.dispose()
 
     def saas_instance_namespace_metrics(self, metrics_filter=lambda _: True):
         """
@@ -149,24 +170,12 @@ class InstanceNamespaceMetrics:
             }
         }
         """
-        connection = self.engine_factory.connect()
 
         namespace_queries = self.get_meta_data_from_file(
             file_name=self.utils.NAMESPACE_FILE
         )
 
-        for instance_namespace_query in namespace_queries:
-            if metrics_filter(instance_namespace_query):
-                info(
-                    f"Start loading metrics: {instance_namespace_query.get('counter_name')}"
-                )
-
-                self.process_namespace_ping(
-                    query_dict=instance_namespace_query, connection=connection
-                )
-
-        connection.close()
-        self.engine_factory.dispose()
+        self.calculate_namespace_metrics(queries=namespace_queries, metrics_filter=metrics_filter)
 
     def backfill(self):
         """
