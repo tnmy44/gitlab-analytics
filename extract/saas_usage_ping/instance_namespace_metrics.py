@@ -21,20 +21,21 @@ class InstanceNamespaceMetrics:
     """
 
     def __init__(self, ping_date=None, namespace_metrics_filter=None):
-        self.engine_factory = EngineFactory()
-        self.utils = Utils()
-
-        self.start_date_28 = self.end_date - datetime.timedelta(28)
-
         if ping_date is not None:
             self.end_date = datetime.datetime.strptime(ping_date, "%Y-%m-%d").date()
         else:
             self.end_date = datetime.datetime.now().date()
 
+        self.start_date_28 = self.end_date - datetime.timedelta(28)
+
         if namespace_metrics_filter is not None:
             self.metrics_backfill_filter = namespace_metrics_filter
         else:
             self.metrics_backfill_filter = []
+
+        self.engine_factory = EngineFactory()
+        self.utils = Utils()
+
 
     def get_meta_data_from_file(self, file_name: str) -> dict:
         """
