@@ -66,8 +66,6 @@ models:
           masking_policy: analyst_people
       - name: region_modified
         description: Region modified for team members from the Americas. Team members are split into LATAM or NORAM
-        meta:
-          masking_policy: analyst_people
       - name: gender_region
         description: Team member's gender and region combined
         meta:
