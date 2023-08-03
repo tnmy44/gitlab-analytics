@@ -60,7 +60,8 @@ models:
           sensitive: true
       - name: company_name
         meta:
-          sensitive: true          
+          sensitive: true    
+
   - name: customers_db_license_seat_links_source
     description: '{{ doc("customers_db_license_seat_links_source") }}' 
     columns:
@@ -77,6 +78,7 @@ models:
           - customers_db
         tests:
           - not_null
+
   - name: customers_db_licenses_source
     description: This table contains data from licenses in customers portal.
     columns:
@@ -89,6 +91,7 @@ models:
           - unique:
               config:
                 where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
+
   - name: customers_db_license_versions_source
     description: '{{ doc("customers_db_license_versions_source") }}'
     columns:
@@ -153,6 +156,7 @@ models:
           sensitive: true
       - name: _uploaded_at
         description: Timestamp when record is inserted in the RAW layer
+
   - name: customers_db_orders_source
     description: '{{ doc("customers_db_orders_source") }}'  
     columns:
@@ -204,6 +208,7 @@ models:
         tests:
           - not_null
           - unique
+
   - name: customers_db_billing_accounts_source
     description: '{{ doc("customers_db_billing_accounts_source") }}'  
     columns:
@@ -357,3 +362,41 @@ models:
           - tdf
           - customers_db
         description: Reason to justify the set status after auditing
+
+
+  - name: customers_db_billing_account_contacts_source
+    description: '{{ doc("customers_db_billing_account_contacts_source") }}'  
+    columns:
+      - name: billing_account_contact_id
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+          - unique
+      - name: work_email
+        description: Billing account contact's work email
+      - name: zuora_account_id
+        description: Zuora account id associated with the Billing Account Contact
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+      - name: zuora_contact_id
+        description: Zuora contact id associated with the Billing Account Contact
+        tests:
+          - not_null
+          - unique       
+      - name: billing_account_contact_created_at
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+      - name: billing_account_contact_updated_at
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null

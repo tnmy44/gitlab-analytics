@@ -171,7 +171,7 @@ clone_stop:
   stage: 🐍 Python
   tags:
     - analytics
-  image: registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.21
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.27
   only:
     changes:
       - "**/*.py"
