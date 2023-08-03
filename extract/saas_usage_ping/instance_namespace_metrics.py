@@ -20,7 +20,9 @@ class InstanceNamespaceMetrics:
     Handling instance_namespace_metrics pipeline
     """
 
-    def __init__(self, ping_date=None, namespace_metrics_filter=None):
+    def __init__(
+        self, ping_date=None, namespace_metrics_filter=None, chunk_no=0, no_of_tasks=0
+    ):
         if ping_date is not None:
             self.end_date = datetime.datetime.strptime(ping_date, "%Y-%m-%d").date()
         else:
@@ -33,9 +35,13 @@ class InstanceNamespaceMetrics:
         else:
             self.metrics_backfill_filter = []
 
+        # chunk_no = 0 - instance_namespace_metrics backfilling (no chunks)
+        # chunk_no > 0 - load instance_namespace_metrics in chunks
+        self.chunk_no = chunk_no
+        self.no_of_tasks = no_of_tasks
+
         self.engine_factory = EngineFactory()
         self.utils = Utils()
-
 
     def get_meta_data_from_file(self, file_name: str) -> dict:
         """
@@ -140,7 +146,9 @@ class InstanceNamespaceMetrics:
 
         info(f"metric_name loaded: {metric_name}")
 
-    def calculate_namespace_metrics(self, queries: dict, metrics_filter=lambda _: True) -> None:
+    def calculate_namespace_metrics(
+        self, queries: dict, metrics_filter=lambda _: True
+    ) -> None:
         """
         Get the list of queries in json file format
         and execute it on Snowflake to calculate
@@ -176,7 +184,9 @@ class InstanceNamespaceMetrics:
             file_name=self.utils.NAMESPACE_FILE
         )
 
-        self.calculate_namespace_metrics(queries=namespace_queries, metrics_filter=metrics_filter)
+        self.calculate_namespace_metrics(
+            queries=namespace_queries, metrics_filter=metrics_filter
+        )
 
     def backfill(self):
         """

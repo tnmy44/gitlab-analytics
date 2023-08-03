@@ -8,22 +8,25 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.operators.dummy_operator import DummyOperator
 from airflow_utils import (
     DATA_IMAGE,
     clone_repo_cmd,
     gitlab_defaults,
-    slack_failed_task,
     gitlab_pod_env_vars,
+    slack_failed_task,
 )
 from kube_secrets import (
+    GITLAB_ANALYTICS_PRIVATE_TOKEN,
     SNOWFLAKE_ACCOUNT,
+    SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
-    SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_USER,
-    GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
+
+NUMBER_OF_TASKS = 20
 
 # tomorrow_ds -  the day after the execution date as YYYY-MM-DD
 # ds - the execution date as YYYY-MM-DD
@@ -59,17 +62,19 @@ default_args = {
 
 DAG_DESCRIPTION = (
     "This DAG run to calculate 2 types of metrics: "
-    "- instance_combined_metrics (instance_sql_metrics and instance_redis_metrics) "
-    "- instance_namespace_metrics "
+    "1) instance_combined_metrics and "
+    "2) instance_namespace_metrics "
 )
 
 # Create the DAG
 #  Monday at 0700 UTC
-dag = DAG("saas_usage_ping",
-          default_args=default_args,
-          concurrency=2,
-          description=DAG_DESCRIPTION,
-          schedule_interval="0 7 * * 1")
+dag = DAG(
+    "saas_usage_ping",
+    default_args=default_args,
+    concurrency=3,
+    description=DAG_DESCRIPTION,
+    schedule_interval="0 7 * * 1",
+)
 
 # Instance Level Usage Ping
 instance_combined_metrics_cmd = f"""
@@ -90,27 +95,40 @@ instance_combined_metrics_ping = KubernetesPodOperator(
     dag=dag,
 )
 
-# Namespace, Group, Project, User Level Usage Ping
-namespace_cmd = f"""
-    {clone_repo_cmd} &&
-    cd analytics/extract/saas_usage_ping/ &&
-    python3 instance_namespace_metrics.py saas_instance_namespace_metrics --ping_date=$RUN_DATE
-"""
+start_namespace = DummyOperator(task_id="start_saas-namespace-usage-ping", dag=dag)
 
 
-def get_task_name(current_chunk: int, no_of_tasks: int) -> str:
+def get_task_name(current_chunk: int, number_of_tasks: int) -> str:
     """
     Generate task name
     """
 
-    return f"saas-namespace-usage-ping-chunk-{current_chunk}-{no_of_tasks}"
+    return f"saas-namespace-usage-ping-chunk-{current_chunk}-{number_of_tasks}"
 
 
-def generate_task(current_chunk: int, no_of_tasks: int) -> None:
+def generate_command(chunk_no: int, number_of_tasks: int):
+    """
+    Generate command to run instance_namespace_metrics (per chunk)
+    """
+    # Namespace, Group, Project, User Level Usage Ping
+    return f"""
+        {clone_repo_cmd} &&
+        cd analytics/extract/saas_usage_ping/ &&
+        python3 instance_namespace_metrics.py saas_instance_namespace_metrics --ping_date=$RUN_DATE --chunk_no={chunk_no} --number_of_tasks={number_of_tasks}
+    """
+
+
+def generate_task(current_chunk: int, number_of_tasks: int) -> KubernetesPodOperator:
     """
     Generate tasks for namespace
     """
-    task_id = task_name = get_task_name(current_chunk=current_chunk, no_of_tasks=no_of_tasks)
+    task_id = task_name = get_task_name(
+        current_chunk=current_chunk, number_of_tasks=number_of_tasks
+    )
+
+    namespace_command = generate_command(
+        chunk_no=current_chunk, number_of_tasks=number_of_tasks
+    )
 
     return KubernetesPodOperator(
         **gitlab_defaults,
@@ -119,13 +137,13 @@ def generate_task(current_chunk: int, no_of_tasks: int) -> None:
         name=task_name,
         secrets=secrets,
         env_vars=pod_env_vars,
-        arguments=[namespace_cmd],
+        arguments=[namespace_command],
         dag=dag,
     )
 
 
 [instance_combined_metrics_ping]
 
-NO_OF_TASKS = 20
-for i in range(1, NO_OF_TASKS + 1):
-    generate_task(current_chunk=i, no_of_tasks=NO_OF_TASKS)
+
+for i in range(1, NUMBER_OF_TASKS + 1):
+    start_namespace >> generate_task(current_chunk=i, number_of_tasks=NUMBER_OF_TASKS)
