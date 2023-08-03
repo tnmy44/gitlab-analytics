@@ -502,8 +502,8 @@ models:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: preparation
 
-      gitlab_dotcom_backfill:
-        +tags: ["gitlab_dotcom_backfill"]
+      gitlab_dotcom_backfill_chunked:
+        +tags: ["gitlab_dotcom_backfill_chunked"]
          
       gitlab_ops:
         source_view:
