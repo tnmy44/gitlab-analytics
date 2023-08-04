@@ -156,9 +156,9 @@ renamed AS (
     account_demographics_upa_postal_code__c AS account_demographics_upa_postal_code,
 
     --Traction Fields
-    TracRTC__First_Response_Time_Start__c AS traction_first_response_time,
-    TracRTC__First_Response_Time_In_Seconds__c AS traction_first_response_time_seconds,
-    TracRTC__Response_Time_Within_Business_Hours__c AS traction_response_time_in_business_hours, 
+    tracrtc__first_response_time_start__c AS traction_first_response_time,
+    tracrtc__first_response_time_in_seconds__c AS traction_first_response_time_seconds,
+    tracrtc__response_time_within_business_hours__c AS traction_response_time_in_business_hours, 
 
     --path factory info
     pathfactory_experience_name__c AS pathfactory_experience_name,

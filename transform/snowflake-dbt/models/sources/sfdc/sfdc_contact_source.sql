@@ -151,9 +151,9 @@ renamed AS (
     pathfactory_topic_list__c AS pathfactory_topic_list,
 
     --Traction Fields
-    TracRTC__First_Response_Time_Start__c AS traction_first_response_time,
-    TracRTC__First_Response_Time_In_Seconds__c AS traction_first_response_time_seconds,
-    TracRTC__Response_Time_Within_Business_Hours__c AS traction_response_time_in_business_hours,
+    tracrtc__first_response_time_start__c AS traction_first_response_time,
+    tracrtc__first_response_time_in_seconds__c AS traction_first_response_time_seconds,
+    tracrtc__response_time_within_business_hours__c AS traction_response_time_in_business_hours,
 
     --gl info
     account_owner__c AS account_owner,
