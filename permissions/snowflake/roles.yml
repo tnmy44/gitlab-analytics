@@ -4024,6 +4024,13 @@ roles:
         warehouses:
             - dev_xs
 
+    - mgilgalindo:
+        member_of:
+            - reporter
+            - salesforce
+        warehouses:
+            - dev_xs
+
     - mnohr:
         member_of: []
         warehouses: []
@@ -5436,6 +5443,11 @@ users:
         can_login: yes
         member_of:
             - mfleisher
+
+    - mgilgalindo:
+        can_login: yes
+        member_of:
+            - mgilgalindo
 
     - mnohr:
         can_login: no
