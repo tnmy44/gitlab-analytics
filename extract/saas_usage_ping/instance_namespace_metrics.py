@@ -19,7 +19,11 @@ class InstanceNamespaceMetrics:
     """
 
     def __init__(
-        self, ping_date=None, namespace_metrics_filter=None, chunk_no=0, no_of_tasks=0
+        self,
+        ping_date=None,
+        chunk_no=0,
+        number_of_tasks=0,
+        namespace_metrics_filter=None,
     ):
         if ping_date is not None:
             self.end_date = datetime.datetime.strptime(ping_date, "%Y-%m-%d").date()
@@ -36,7 +40,7 @@ class InstanceNamespaceMetrics:
         # chunk_no = 0 - instance_namespace_metrics backfilling (no chunks)
         # chunk_no > 0 - load instance_namespace_metrics in chunks
         self.chunk_no = chunk_no
-        self.no_of_tasks = no_of_tasks
+        self.number_of_tasks = number_of_tasks
 
         self.engine_factory = EngineFactory()
         self.utils = Utils()
@@ -200,7 +204,7 @@ class InstanceNamespaceMetrics:
             }
         }
         """
-        info(F"no_of_tasks: {self.no_of_tasks}, chunk_no: {self.chunk_no}")
+        info(f"number_of_tasks: {self.number_of_tasks}, chunk_no: {self.chunk_no}")
         # namespace_queries = self.get_meta_data_from_file(
         #     file_name=self.utils.NAMESPACE_FILE
         # )
