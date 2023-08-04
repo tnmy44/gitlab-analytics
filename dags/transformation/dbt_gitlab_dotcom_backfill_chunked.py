@@ -90,12 +90,17 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="30 16 * * 0",  #
     concurrency=2,
+    catchup=True,
 )
 
-dbt_vars = '{"start_date": "{{ execution_date }}", "end_date": "{{ next_execution_date }}"}'
+# dbt_vars = '{"start_date": "{{ execution_date }}", "end_date": "{{ next_execution_date }}"}'
+dbt_vars = '{"start_date": "2023-08-01", "end_date": "2023-08-03"}'
+dbt_vars = (
+    '{"start_date": "{{ execution_date}} ", "end_date": " {{ next_execution_date }} "}'
+)
 dbt_models_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run --profiles-dir profile --target {target} --models tag:{DBT_MODULE_NAME} --vars {dbt_vars}'; ret=$?;
+        dbt run --profiles-dir profile --target {target} --models tag:{DBT_MODULE_NAME} --vars '{dbt_vars}'; ret=$?;
 
         montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
@@ -142,3 +147,6 @@ dbt_models_task
 
 
 # dbt run --model tag:gitlab_dotcom_backfill_chunked --vars '{"start_date": {{ execution_date }}, "end_date": {{ next_execution_date }} }'
+
+
+# dbt run --model tag:gitlab_dotcom_backfill_chunked --vars '{"start_date": "2023-08-01", "end_date": "2023-08-03"}'
