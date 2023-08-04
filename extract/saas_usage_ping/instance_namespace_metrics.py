@@ -9,9 +9,7 @@ import os
 import sys
 from logging import basicConfig, info
 
-import pandas as pd
 from fire import Fire
-from sqlalchemy.exc import SQLAlchemyError
 from utils import EngineFactory, Utils
 
 
@@ -42,6 +40,20 @@ class InstanceNamespaceMetrics:
 
         self.engine_factory = EngineFactory()
         self.utils = Utils()
+
+        self.SQL_INSERT_PART = (
+            "INSERT INTO "
+            "gitlab_dotcom_namespace"
+            "(id, "
+            "namespace_ultimate_parent_id, "
+            "counter_value, "
+            "ping_name, "
+            "level, "
+            "query_ran, "
+            "error, "
+            "ping_date, "
+            "_uploaded_at) "
+        )
 
     def get_meta_data_from_file(self, file_name: str) -> dict:
         """
@@ -101,29 +113,42 @@ class InstanceNamespaceMetrics:
 
         return name, prepared_sql, level
 
-    def get_result(self, query_dict: dict, conn) -> pd.DataFrame:
+    def prepare_insert_query(
+        self,
+        query_dict: str,
+        ping_name: str,
+        ping_date: str,
+        ping_level: str = "namespace",
+    ):
         """
-        Execute query and return results
+        Prepare query for insert and enrich it with few more values
         """
-        name, sql, level = self.get_prepared_values(query=query_dict)
+
+        prepared_query = f"{self.SQL_INSERT_PART}{query_dict}"
+        prepared_query = prepared_query.replace(
+            "FROM",
+            f",'{ping_name}', '{ping_level}', '{query_dict}', 'Success', '{ping_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()) FROM",
+        )
+
+        return prepared_query
+
+    def upload_results(self, query_dict: dict, conn) -> None:
+        """
+        Execute query and return results.
+        This should be done directly in Snowflake
+        """
+        name, sql_select, level = self.get_prepared_values(query=query_dict)
+
+        sql_insert = self.prepare_insert_query(
+            query_dict=sql_select, ping_name=name, ping_date=self.end_date
+        )
 
         try:
-            res = pd.read_sql(sql=sql, con=conn)
-            error = "Success"
-        except SQLAlchemyError as e:
-            error = str(e.__dict__["orig"])
-            res = pd.DataFrame(
-                columns=["id", "namespace_ultimate_parent_id", "counter_value"]
+            conn.execute(f"{sql_insert}{sql_select}")
+        except Exception as e:
+            conn.execute(
+                f"{self.SQL_INSERT_PART} VALUES(NULL, NULL, NULL, '{name}', '{level}', '{sql_select}', '{repr(e)}', '{self.end_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()))"
             )
-            res.loc[0] = [None, None, None]
-
-        res["ping_name"] = name
-        res["level"] = level
-        res["query_ran"] = sql
-        res["error"] = error
-        res["ping_date"] = self.end_date
-
-        return res
 
     def process_namespace_ping(self, query_dict, connection) -> None:
         """
@@ -138,11 +163,7 @@ class InstanceNamespaceMetrics:
             info(f"Skipping ping {metric_name} due to no namespace information.")
             return
 
-        results = self.get_result(query_dict=query_dict, conn=connection)
-
-        self.engine_factory.upload_to_snowflake(
-            table_name="gitlab_dotcom_namespace", data=results
-        )
+        self.upload_results(query_dict=query_dict, conn=connection)
 
         info(f"metric_name loaded: {metric_name}")
 
@@ -179,14 +200,14 @@ class InstanceNamespaceMetrics:
             }
         }
         """
-
-        namespace_queries = self.get_meta_data_from_file(
-            file_name=self.utils.NAMESPACE_FILE
-        )
-
-        self.calculate_namespace_metrics(
-            queries=namespace_queries, metrics_filter=metrics_filter
-        )
+        info(F"no_of_tasks: {self.no_of_tasks}, chunk_no: {self.chunk_no}")
+        # namespace_queries = self.get_meta_data_from_file(
+        #     file_name=self.utils.NAMESPACE_FILE
+        # )
+        #
+        # self.calculate_namespace_metrics(
+        #     queries=namespace_queries, metrics_filter=metrics_filter
+        # )
 
     def backfill(self):
         """

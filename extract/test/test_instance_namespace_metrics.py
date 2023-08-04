@@ -5,6 +5,7 @@ The main test routine for instance_namespace_metrics
 from datetime import datetime, timedelta
 
 import pytest
+
 from extract.saas_usage_ping.instance_namespace_metrics import InstanceNamespaceMetrics
 
 
@@ -157,3 +158,25 @@ def test_validate_namespace_queries(namespace_file):
     for n in namespace_file:
         if "%" in n.get("counter_query", ""):
             assert "%%" in n.get("counter_query", "")
+
+
+def test_prepare_insert_query(namespace_file, namespace_ping):
+    """
+    Test query replacement
+    """
+    insert_part = (
+        "INSERT INTO "
+        "gitlab_dotcom_namespace"
+        "(id, namespace_ultimate_parent_id, counter_value, "
+        "ping_name, level, query_ran, error, ping_date, _uploaded_at)"
+    )
+    for namespace_query in namespace_file:
+        expected = namespace_ping.prepare_insert_query(
+            query_dict=namespace_query.get("counter_query"),
+            ping_name=namespace_query.get("counter_name"),
+            ping_date=namespace_ping.end_date,
+        )
+        assert insert_part in expected
+        assert "Success" in expected
+        assert "namespace" in expected
+        assert "FROM" in expected

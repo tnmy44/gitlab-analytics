@@ -25,6 +25,7 @@ from kube_secrets import (
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_USER,
 )
+from kubernetes_helpers import get_affinity, get_toleration
 
 NUMBER_OF_TASKS = 20
 
@@ -71,7 +72,7 @@ DAG_DESCRIPTION = (
 dag = DAG(
     "saas_usage_ping",
     default_args=default_args,
-    concurrency=3,
+    concurrency=2,
     description=DAG_DESCRIPTION,
     schedule_interval="0 7 * * 1",
 )
@@ -139,6 +140,8 @@ def generate_task(current_chunk: int, number_of_tasks: int) -> KubernetesPodOper
         env_vars=pod_env_vars,
         arguments=[namespace_command],
         dag=dag,
+        affinity=get_affinity("scd"),
+        tolerations=get_toleration("scd"),
     )
 
 
