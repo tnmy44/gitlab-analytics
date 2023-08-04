@@ -22,3 +22,4 @@ tables:
       FROM merge_request_diff_commits
       WHERE committed_date BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+        AND merge_request_diff_id > 700000000
