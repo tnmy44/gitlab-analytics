@@ -178,15 +178,15 @@ class InstanceNamespaceMetrics:
 
         metric_name, metric_query, _ = self.get_prepared_values(query=query_dict)
 
-        info(f"Start loading metrics: {metric_name}")
+        info(f"...Start loading metrics: {metric_name}")
 
         if "namespace_ultimate_parent_id" not in metric_query:
             info(f"Skipping ping {metric_name} due to no namespace information.")
             return
 
-        self.upload_results(query_dict=query_dict, conn=connection)
+        # self.upload_results(query_dict=query_dict, conn=connection)
 
-        info(f"metric_name loaded: {metric_name}")
+        info(f"...End loading metrics: {metric_name}")
 
     def calculate_namespace_metrics(
         self, queries: dict, metrics_filter=lambda _: True
@@ -237,10 +237,10 @@ class InstanceNamespaceMetrics:
 
         info(f"Will process: {len(namespace_queries)} queries")
 
-        #
-        # self.calculate_namespace_metrics(
-        #     queries=namespace_queries, metrics_filter=metrics_filter
-        # )
+        self.calculate_namespace_metrics(
+            queries=namespace_queries, metrics_filter=metrics_filter
+        )
+
         info("<<<END2 PROCESSING>>>")
 
     def backfill(self):
