@@ -180,3 +180,41 @@ def test_prepare_insert_query(namespace_file, namespace_ping):
         assert "Success" in expected
         assert "namespace" in expected
         assert "FROM" in expected
+
+
+@pytest.mark.parametrize(
+    "test, expected",
+    [
+        ((1, 20), (0, 30)),
+        ((2, 20), (30, 60)),
+        ((3, 20), (60, 90)),
+        ((20, 20), (570, 600)),
+        ((1, 19), (0, 31)),
+        ((2, 19), (31, 62)),
+        ((1, 1), (0, 581)),
+    ],
+)
+def test_chunk_list(namespace_file, namespace_ping, test, expected):
+    """
+    Test list slicing
+    for dynamic queries splitting
+    """
+    namespace_ping.chunk_no = test[0]
+    namespace_ping.number_of_tasks = test[1]
+
+    actual = namespace_ping.chunk_list(namespace_size=len(namespace_file))
+
+    assert actual == expected
+
+
+def test_chunk_list_edge_case(namespace_file, namespace_ping):
+    """
+    Test list slicing
+    for dynamic queries splitting
+    """
+    namespace_ping.chunk_no = 0
+    namespace_ping.number_of_tasks = 0
+
+    actual = namespace_ping.chunk_list(namespace_size=len(namespace_file))
+
+    assert actual == (0, len(namespace_file))

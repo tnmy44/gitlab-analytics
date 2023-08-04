@@ -5,6 +5,7 @@ instance_namespace_metrics.py is responsible for uploading the following into Sn
 - usage ping namespace
 """
 import datetime
+import math
 import os
 import sys
 from logging import basicConfig, info
@@ -154,6 +155,22 @@ class InstanceNamespaceMetrics:
                 f"{self.SQL_INSERT_PART} VALUES(NULL, NULL, NULL, '{name}', '{level}', '{sql_select}', '{repr(e)}', '{self.end_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()))"
             )
 
+    def chunk_list(self, namespace_size: int) -> tuple:
+        """
+        Determine minimum and maximum position
+        for slicing queries in chunks
+        """
+
+        if self.chunk_no == 0 or self.number_of_tasks ==0:
+            return 0, namespace_size
+
+        chunk_size = math.ceil(namespace_size / self.number_of_tasks)
+
+        max_position = chunk_size * self.chunk_no
+        min_position = max_position - chunk_size
+
+        return min_position, max_position
+
     def process_namespace_ping(self, query_dict, connection) -> None:
         """
         Upload result of namespace ping to Snowflake
@@ -204,14 +221,27 @@ class InstanceNamespaceMetrics:
             }
         }
         """
+
+        info("<<<START PROCESSING>>>")
         info(f"number_of_tasks: {self.number_of_tasks}, chunk_no: {self.chunk_no}")
-        # namespace_queries = self.get_meta_data_from_file(
-        #     file_name=self.utils.NAMESPACE_FILE
-        # )
+
+        namespace_queries = self.get_meta_data_from_file(
+            file_name=self.utils.NAMESPACE_FILE
+        )
+
+        if self.chunk_no != 0:
+            start_slice, end_slice = self.chunk_list(
+                namespace_size=len(namespace_queries)
+            )
+            namespace_queries = namespace_queries[start_slice:end_slice]
+
+        info(f"Will process: {len(namespace_queries)} queries")
+
         #
         # self.calculate_namespace_metrics(
         #     queries=namespace_queries, metrics_filter=metrics_filter
         # )
+        info("<<<END2 PROCESSING>>>")
 
     def backfill(self):
         """
