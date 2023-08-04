@@ -48,7 +48,7 @@ sheets:
     owner: '@Jean Peguero'
     tabs:
       - pricing_list
-  name: pnps_2023_respondents
+  - name: pnps_2023_respondents
     owner: '@moliver28'
     tabs:
       - data
