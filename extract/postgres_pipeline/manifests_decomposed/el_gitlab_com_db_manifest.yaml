@@ -16,7 +16,7 @@ tables:
       , committed_date
       , merge_request_diff_id
       , relative_order
-      , sha
+      , CAST(sha AS VARCHAR) AS sha
       , commit_author_id
       , committer_id
       FROM merge_request_diff_commits
