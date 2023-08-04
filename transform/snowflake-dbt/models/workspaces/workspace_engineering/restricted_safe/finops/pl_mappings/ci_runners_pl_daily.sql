@@ -25,42 +25,17 @@ WITH ci_minutes AS (
     END                                          AS runner_type,
 
     CASE
-      WHEN LOWER(ci_runner_description) LIKE 'green-_.saas-linux-medium-amd64-gpu%' THEN 'green-_.saas-linux-medium-amd64-gpu'
-      WHEN LOWER(ci_runner_description) LIKE 'green-_.saas-linux-medium-amd64%' THEN 'green-_.saas-linux-medium-amd64'
-      WHEN LOWER(ci_runner_description) LIKE 'green-_.saas-linux-large-amd64-gpu%' THEN 'green-_.saas-linux-large-amd64-gpu'
-      WHEN LOWER(ci_runner_description) LIKE 'green-_.saas-linux-large-amd64%' THEN 'green-_.saas-linux-large-amd64'
-      WHEN LOWER(ci_runner_description) LIKE 'blue-_.saas-linux-large-amd64-gpu%' THEN 'blue-_.saas-linux-large-amd64-gpu'
-      WHEN LOWER(ci_runner_description) LIKE 'blue-_.saas-linux-large-amd64%' THEN 'blue-_.saas-linux-large-amd64'
-      WHEN LOWER(ci_runner_description) LIKE 'blue-_.saas-linux-medium-amd64-gpu%' THEN 'blue-_.saas-linux-medium-amd64-gpu'
-      WHEN LOWER(ci_runner_description) LIKE 'blue-_.saas-linux-medium-amd64%' THEN 'blue-_.saas-linux-medium-amd64'
+      WHEN LOWER(ci_runner_description) LIKE '%-_.saas-linux-medium-amd64-gpu%' THEN '%-_.saas-linux-medium-amd64-gpu'
+      WHEN LOWER(ci_runner_description) LIKE '%-_.saas-linux-large-amd64-gpu%' THEN '%-_.saas-linux-large-amd64-gpu'
+      WHEN LOWER(ci_runner_description) LIKE '%-_.saas-linux-medium-amd64%' THEN '%-_.saas-linux-medium-amd64'
+      WHEN LOWER(ci_runner_description) LIKE '%-_.saas-linux-large-amd64%' THEN '%-_.saas-linux-large-amd64'
+      WHEN LOWER(ci_runner_description) LIKE '%.saas-linux-small-amd64%' THEN '%.saas-linux-small-amd64'
+      WHEN LOWER(ci_runner_description) LIKE '%.saas-linux-xlarge-amd64%' THEN '%.saas-linux-xlarge-amd64'
       WHEN LOWER(ci_runner_description) LIKE 'macos shared%' THEN 'macos shared runners'
       ELSE ci_runner_manager
     END                                          AS ci_runner_manager,
 
     is_paid_by_gitlab,
-
-    CASE
-      WHEN LOWER(ci_runner_description) LIKE 'green-%.saas-linux-large-amd64-gpu%' THEN 'green-_.saas-linux-large-amd64-gpu'
-      WHEN LOWER(ci_runner_description) LIKE 'green-%.saas-linux-large-amd64.%' THEN 'green-_.saas-linux-large-amd64.'
-      WHEN LOWER(ci_runner_description) LIKE 'green-%.saas-linux-medium-amd64.%' THEN 'green-_.saas-linux-medium-amd64.'
-
-      WHEN LOWER(ci_runner_description) LIKE 'blue-%.saas-linux-large-amd64-gpu%' THEN 'blue-_.saas-linux-large-amd64-gpu'
-      WHEN LOWER(ci_runner_description) LIKE 'blue-%.saas-linux-large-amd64.%' THEN 'blue-_.saas-linux-large-amd64.'
-      WHEN LOWER(ci_runner_description) LIKE 'blue-%.saas-linux-medium-amd64.%' THEN 'blue-_.saas-linux-medium-amd64.'
-
-      WHEN LOWER(ci_runner_description) LIKE '_-blue.shared-gitlab-org%' THEN '_-blue.shared-gitlab-org'
-      WHEN LOWER(ci_runner_description) LIKE '_-green.shared-gitlab-org%' THEN '_-green.shared-gitlab-org'
-
-      WHEN LOWER(ci_runner_description) LIKE 'green-_.private.runners-manager%' THEN 'green-_.private.runners-manager'
-      WHEN LOWER(ci_runner_description) LIKE 'blue-_.private.runners-manager%' THEN 'blue-_.private.runners-manager'
-
-      WHEN LOWER(ci_runner_description) LIKE '_-blue.shared.runners-manager%' THEN '_-blue.shared.runners-manager'
-      WHEN LOWER(ci_runner_description) LIKE '_-green.shared.runners-manager%' THEN '_-green.shared.runners-manager'
-
-      WHEN LOWER(ci_runner_description) LIKE 'windows-shared-runners-manager-%' THEN 'windows-shared-runners-manager-'
-
-
-    END                                          AS ci_runner_description,
 
     SUM(ci_build_duration_in_s) / 60             AS ci_build_minutes
 
@@ -71,10 +46,10 @@ WITH ci_minutes AS (
     ON fct_ci_runner_activity.dim_namespace_id = dim_namespace.dim_namespace_id
     JOIN {{ ref('prep_gitlab_dotcom_plan') }} --common_prep.prep_gitlab_dotcom_plan
     ON fct_ci_runner_activity.dim_plan_id = prep_gitlab_dotcom_plan.dim_plan_id
-  WHERE DATE_TRUNC('month', ci_build_started_at) >= '2023-02-01'
+  WHERE DATE_TRUNC('month', ci_build_started_at) >= '2023-01-01'
     AND ci_build_finished_at IS NOT NULL
     AND namespace_creator_is_blocked = FALSE
-{{ dbt_utils.group_by(n=6) }}
+{{ dbt_utils.group_by(n=5) }}
 
 )
 
@@ -87,19 +62,21 @@ SELECT
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'shared-gitlab-org-runner-mgr' THEN '1 - shared gitlab org runners'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'linux-runner-mgr' THEN '2 - shared saas runners - small'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%.saas-linux-small-amd64' THEN '2 - shared saas runners - small'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-medium-amd64' AND ci_runner_manager NOT LIKE '%gpu%' THEN '3 - shared saas runners - medium'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64' AND ci_runner_manager NOT LIKE '%gpu%' THEN '3 - shared saas runners - medium'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-large-amd64' AND ci_runner_manager NOT LIKE '%gpu%' THEN '4 - shared saas runners - large'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64' AND ci_runner_manager NOT LIKE '%gpu%' THEN '4 - shared saas runners - large'
+
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%.saas-linux-xlarge-amd64' THEN '10 - shared saas runners - xlarge'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'macos shared runners' THEN '5 - shared saas macos runners'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'windows-runner-mgr' THEN '7 - shared saas windows runners'
     
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-medium-amd64-gpu' THEN '8 - shared saas runners gpu - medium'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64-gpu' THEN '8 - shared saas runners gpu - medium'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager LIKE '%-_.saas-linux-large-amd64-gpu' THEN '9 - shared saas runners gpu - large'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64-gpu' THEN '9 - shared saas runners gpu - large'
 
   END                                                                                   AS mapping,
   pl,
