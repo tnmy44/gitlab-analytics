@@ -920,6 +920,23 @@ tables:
       FROM merge_request_diffs
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  merge_request_diff_commits:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'merge_request_diff_commits'
+    export_table_primary_key: merge_request_diff_id # real PK is composite key fyi
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT authored_date
+      , committed_date
+      , merge_request_diff_id
+      , relative_order
+      , sha
+      , commit_author_id
+      , committer_id
+      FROM merge_request_diff_commits
+      WHERE committed_date BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   merge_request_metrics:
     additional_filtering: AND COALESCE(first_comment_at,'3000-01-01 00:00:00.000'::TIMESTAMP) >= '2000-01-01 00:00:00.000'::TIMESTAMP
     dbt_source_model: true
