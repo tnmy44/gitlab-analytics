@@ -254,6 +254,8 @@
             THEN '1. New - First Order'
           ELSE '3. Growth'
       END AS person_order_type,
+      last_utm_campaign,
+      last_utm_content,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -387,6 +389,8 @@
       inferred_employee_segment,
       geo_custom,
       inferred_geo,
+      last_utm_campaign,
+      last_utm_content,
 
   --Person Dates
       true_inquiry_date,
@@ -574,6 +578,8 @@
       inferred_employee_segment,
       geo_custom,
       inferred_geo,
+      last_utm_campaign,
+      last_utm_content,
     
     --Person Dates
       true_inquiry_date,
@@ -768,6 +774,12 @@
           THEN 'Digital Marketing'
         ELSE 'No Budget Holder' 
       END AS integrated_budget_holder,
+      fct_campaign.start_date as campaign_start_date,
+      fct_campaign.region as sfdc_campaign_region,
+      fct_campaign.sub_region as sfdc_campaign_sub_region,
+      dim_campaign.type as sfdc_campaign_type,
+      fct_campaign.budgeted_cost,
+      fct_campaign.actual_cost,
 
 
      --inquiry_date fields
@@ -814,6 +826,8 @@
   FROM cohort_base_combined
   LEFT JOIN dim_campaign
     ON cohort_base_combined.dim_campaign_id = dim_campaign.dim_campaign_id
+  LEFT JOIN fct_campaign
+    ON cohort_base_combined.dim_campaign_id = fct_campaign.dim_campaign_id
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
