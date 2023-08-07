@@ -2753,7 +2753,7 @@ roles:
 # User Roles
 # ==========================================
 
-   - aarts:
+    - aarts:
         member_of:
             - analyst_sales
             - data_team_analyst
