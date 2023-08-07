@@ -213,9 +213,11 @@ def get_last_loaded(dag_name: String) -> string:
     """Pull from xcom value  last loaded timestamp for the table"""
     if dag_name == "el_gitlab_ops":
         return None
+    xcom_date = datetime.now() - timedelta(hours=54)
 
-    return "{{{{ task_instance.xcom_pull('{task_id}', include_prior_dates=True)['max_data_available'] }}}}".format(
-            task_id=task_identifier + "-pgp-extract"
+    return "{{{{ task_instance.xcom_pull('{task_id}', include_prior_dates=True)['max_data_available'] | " \
+           "default('{default_date}', true) }}}}".format(
+            task_id=task_identifier + "-pgp-extract", default_date=xcom_date.strftime("%Y-%m-%dT%H:%M:%S") + '+00:00'
     )
 
 
