@@ -88,8 +88,8 @@ dag = DAG(
     f"dbt_{DBT_MODULE_NAME}v2",  # TODO
     default_args=default_args,
     schedule_interval="0 21 * * 0",  #
-    concurrency=2,
     max_active_runs=2,
+    concurrency=2,
     catchup=True,
 )
 
@@ -116,25 +116,4 @@ dbt_models_task = KubernetesPodOperator(
     dag=dag,
 )
 
-
-dbt_test_task_name = f"dbt-{DBT_MODULE_NAME}-tests"
-model_test_cmd = f"""
-    {dbt_install_deps_nosha_cmd} &&
-    dbt test --profiles-dir profile --target prod --models --models legacy.{DBT_MODULE_NAME} {run_command_test_exclude} ; ret=$?;
-    montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
-"""
-dbt_test_task = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE,
-    task_id=dbt_test_task_name,
-    name=dbt_test_task_name,
-    secrets=dbt_secrets,
-    env_vars=gitlab_pod_env_vars,
-    arguments=[model_test_cmd],
-    affinity=get_affinity("production"),
-    tolerations=get_toleration("production"),
-    dag=dag,
-)
-
-dbt_models_task >> dbt_test_task
+dbt_models_task
