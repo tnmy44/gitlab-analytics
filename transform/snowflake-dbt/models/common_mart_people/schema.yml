@@ -86,8 +86,6 @@ models:
         description: Team member's hire date
       - name: employee_type
         description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
-        meta:
-          masking_policy: analyst_people
       - name: termination_date
         description: Team member's termination date
       - name: is_current_team_member
