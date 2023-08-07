@@ -46,7 +46,7 @@ WITH ci_minutes AS (
     ON fct_ci_runner_activity.dim_namespace_id = dim_namespace.dim_namespace_id
     JOIN {{ ref('prep_gitlab_dotcom_plan') }} --common_prep.prep_gitlab_dotcom_plan
     ON fct_ci_runner_activity.dim_plan_id = prep_gitlab_dotcom_plan.dim_plan_id
-  WHERE DATE_TRUNC('month', ci_build_started_at) >= '2023-01-01'
+  WHERE DATE_TRUNC('month', ci_build_started_at) >= '2023-02-01' -- FY23 start date for data recency and accuracy purposes
     AND ci_build_finished_at IS NOT NULL
     AND namespace_creator_is_blocked = FALSE
 {{ dbt_utils.group_by(n=5) }}
