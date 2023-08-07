@@ -151,6 +151,7 @@ class InstanceNamespaceMetrics:
         try:
             conn.execute(f"{sql_insert}{sql_select}")
         except Exception as e:
+            info(f"......ERROR: {repr(e)}")
             conn.execute(
                 f"{self.SQL_INSERT_PART} VALUES(NULL, NULL, NULL, '{name}', '{level}', '{sql_select}', '{repr(e)}', '{self.end_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()))"
             )
@@ -161,7 +162,9 @@ class InstanceNamespaceMetrics:
         for slicing queries in chunks
         """
 
-        if self.chunk_no == 0 or self.number_of_tasks ==0:
+        # in case it is backfilling, no chunks,
+        # everything goes in one pass
+        if self.chunk_no == 0 or self.number_of_tasks == 0:
             return 0, namespace_size
 
         chunk_size = math.ceil(namespace_size / self.number_of_tasks)
@@ -184,7 +187,7 @@ class InstanceNamespaceMetrics:
             info(f"Skipping ping {metric_name} due to no namespace information.")
             return
 
-        # self.upload_results(query_dict=query_dict, conn=connection)
+        self.upload_results(query_dict=query_dict, conn=connection)
 
         info(f"...End loading metrics: {metric_name}")
 
