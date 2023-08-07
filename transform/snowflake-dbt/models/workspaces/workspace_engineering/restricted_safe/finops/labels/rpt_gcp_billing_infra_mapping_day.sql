@@ -30,24 +30,28 @@ runner_labels AS (
   SELECT
     source_primary_key,
     CASE
-      WHEN resource_label_value LIKE '%runners-manager-shared-blue-%' AND resource_label_value NOT LIKE '%gpu%' THEN '2 - shared saas runners - small' --ok
-      WHEN resource_label_value LIKE '%runners-manager-shared-green-%' AND resource_label_value NOT LIKE '%gpu%' THEN '2 - shared saas runners - small' --ok
-      WHEN resource_label_value LIKE '%runners-manager-saas-linux-small-amd64-%' AND resource_label_value NOT LIKE '%gpu%' THEN '2 - shared saas runners - small'
-      WHEN resource_label_value LIKE '%runners-manager-saas-linux-medium-amd64-%' AND resource_label_value NOT LIKE '%gpu%' THEN '3 - shared saas runners - medium' --ok
-      WHEN resource_label_value LIKE '%runners-manager-saas-linux-large-amd64-%' AND resource_label_value NOT LIKE '%gpu%' THEN '4 - shared saas runners - large' --ok
-      WHEN resource_label_value LIKE '%runners-manager-saas-linux-xlarge-amd64-%' AND resource_label_value NOT LIKE '%gpu%' THEN '10 - shared saas runners - xlarge'
-      WHEN resource_label_value LIKE '%runners-manager-saas-macos-staging-green-%' AND resource_label_value NOT LIKE '%gpu%' THEN 'runners-manager-saas-macos-staging-green-'
-      WHEN resource_label_value LIKE '%runners-manager-saas-macos-staging-blue-%' AND resource_label_value NOT LIKE '%gpu%' THEN 'runners-manager-saas-macos-staging-blue-'
-      WHEN resource_label_value LIKE '%runners-manager-shared-gitlab-org-%' AND resource_label_value NOT LIKE '%gpu%' THEN '1 - shared gitlab org runners' --ok
-      WHEN resource_label_value LIKE '%runners-manager-private-blue-%' AND resource_label_value NOT LIKE '%gpu%' THEN '6 - private internal runners' --ok, project_pl internal
-      WHEN resource_label_value LIKE '%runners-manager-private-green-%' AND resource_label_value NOT LIKE '%gpu%' THEN '6 - private internal runners' --ok, project_pl internal
-      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%shared-gitlab-org-%' AND resource_label_value NOT LIKE '%gpu%') THEN '1 - shared gitlab org runners' --ok
-      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%amd64%' AND resource_label_value NOT LIKE '%gpu%') THEN 'runners-saas'
-      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%s-shared-%' AND resource_label_value NOT LIKE '%gpu%') THEN '2 - shared saas runners - small' --ok
-      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%-shared-%' AND resource_label_value NOT LIKE '%gitlab%' AND resource_label_value NOT LIKE '%gpu%') THEN '2 - shared saas runners - small' --ok
-      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%-private-%' AND resource_label_value NOT LIKE '%gpu%') THEN '6 - private internal runners' --ok, project_pl internal
-      WHEN resource_label_value LIKE '%runners-manager-saas-linux-medium-%' AND resource_label_value LIKE '%gpu%' THEN '8 - shared saas runners gpu - medium'
-      WHEN resource_label_value LIKE '%runners-manager-saas-linux-large-%' AND resource_label_value LIKE '%gpu%' THEN '9 - shared saas runners gpu - large'
+      WHEN resource_label_value LIKE '%gpu%' THEN
+        CASE WHEN resource_label_value LIKE '%runners-manager-saas-linux-medium-%' THEN '8 - shared saas runners gpu - medium'
+          WHEN resource_label_value LIKE '%runners-manager-saas-linux-large-%' THEN '9 - shared saas runners gpu - large'
+          ELSE resource_label_value
+        END
+      WHEN resource_label_value LIKE '%runners-manager-shared-blue-%' THEN '2 - shared saas runners - small' --ok
+      WHEN resource_label_value LIKE '%runners-manager-shared-green-%' THEN '2 - shared saas runners - small' --ok
+      WHEN resource_label_value LIKE '%runners-manager-saas-linux-small-amd64-%' THEN '2 - shared saas runners - small'
+      WHEN resource_label_value LIKE '%runners-manager-saas-linux-medium-amd64-%' THEN '3 - shared saas runners - medium' --ok
+      WHEN resource_label_value LIKE '%runners-manager-saas-linux-large-amd64-%' THEN '4 - shared saas runners - large' --ok
+      WHEN resource_label_value LIKE '%runners-manager-saas-linux-xlarge-amd64-%' THEN '10 - shared saas runners - xlarge'
+      WHEN resource_label_value LIKE '%runners-manager-saas-macos-staging-%' THEN 'runners-manager-saas-macos-staging-'
+      WHEN resource_label_value LIKE '%runners-manager-saas-macos%-m1-%' THEN '5 - shared saas macos runners'
+      WHEN resource_label_value LIKE '%runners-manager-shared-gitlab-org-%' THEN '1 - shared gitlab org runners' --ok
+      WHEN resource_label_value LIKE '%runners-manager-private-blue-%' THEN '6 - private internal runners' --ok, project_pl internal
+      WHEN resource_label_value LIKE '%runners-manager-private-green-%' THEN '6 - private internal runners' --ok, project_pl internal
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%shared-gitlab-org-%') THEN '1 - shared gitlab org runners' --ok
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%amd64%') THEN 'runners-saas'
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%s-shared-%') THEN '2 - shared saas runners - small' --ok
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%-shared-%' AND resource_label_value NOT LIKE '%gitlab%') THEN '2 - shared saas runners - small' --ok
+      WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%-private-%') THEN '6 - private internal runners' --ok, project_pl internal
+
       WHEN resource_label_value LIKE '%gke-runners-gke-default-pool-%' THEN 'gke-runners-gke-default-pool-'
       WHEN resource_label_value LIKE '%test-machine-%' THEN 'test-machine-'
       WHEN resource_label_value LIKE '%tm-runner-%' THEN 'tm-runner-'

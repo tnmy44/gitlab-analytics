@@ -40,16 +40,16 @@ WITH ci_minutes AS (
     SUM(ci_build_duration_in_s) / 60             AS ci_build_minutes
 
   FROM {{ ref('fct_ci_runner_activity') }} --common.fct_ci_runner_activity 
-    JOIN {{ ref('dim_ci_runner') }} --common.dim_ci_runner
+  INNER JOIN {{ ref('dim_ci_runner') }} --common.dim_ci_runner
     ON fct_ci_runner_activity.dim_ci_runner_id = dim_ci_runner.dim_ci_runner_id
-    JOIN {{ ref('dim_namespace') }} --common.dim_namespace
+  INNER JOIN {{ ref('dim_namespace') }} --common.dim_namespace
     ON fct_ci_runner_activity.dim_namespace_id = dim_namespace.dim_namespace_id
-    JOIN {{ ref('prep_gitlab_dotcom_plan') }} --common_prep.prep_gitlab_dotcom_plan
+  INNER JOIN {{ ref('prep_gitlab_dotcom_plan') }} --common_prep.prep_gitlab_dotcom_plan
     ON fct_ci_runner_activity.dim_plan_id = prep_gitlab_dotcom_plan.dim_plan_id
   WHERE DATE_TRUNC('month', ci_build_started_at) >= '2023-02-01' -- FY23 start date for data recency and accuracy purposes
     AND ci_build_finished_at IS NOT NULL
     AND namespace_creator_is_blocked = FALSE
-{{ dbt_utils.group_by(n=5) }}
+  {{ dbt_utils.group_by(n=5) }}
 
 )
 
@@ -62,21 +62,25 @@ SELECT
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'shared-gitlab-org-runner-mgr' THEN '1 - shared gitlab org runners'
 
+    WHEN ci_runner_manager LIKE '%gpu%' THEN
+      CASE WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64-gpu' THEN '8 - shared saas runners gpu - medium'
+
+        WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64-gpu' THEN '9 - shared saas runners gpu - large'
+      END
+
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%.saas-linux-small-amd64' THEN '2 - shared saas runners - small'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64' AND ci_runner_manager NOT LIKE '%gpu%' THEN '3 - shared saas runners - medium'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64' THEN '3 - shared saas runners - medium'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64' AND ci_runner_manager NOT LIKE '%gpu%' THEN '4 - shared saas runners - large'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64' THEN '4 - shared saas runners - large'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%.saas-linux-xlarge-amd64' THEN '10 - shared saas runners - xlarge'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'macos shared runners' THEN '5 - shared saas macos runners'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'windows-runner-mgr' THEN '7 - shared saas windows runners'
-    
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64-gpu' THEN '8 - shared saas runners gpu - medium'
 
-    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64-gpu' THEN '9 - shared saas runners gpu - large'
+
 
   END                                                                                   AS mapping,
   pl,
