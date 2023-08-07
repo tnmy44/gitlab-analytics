@@ -216,8 +216,8 @@ def get_last_loaded(dag_name: String) -> string:
 
     xcom_date = datetime.now() - timedelta(hours=54)
     return (
-        "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] | default('{}', true) "
-        "}}}}".format("-pgp-extract", xcom_date.strftime("%Y-%m-%dT%H:%M:%S") + '+00:00')
+        "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] "
+        "}}}}".format("-pgp-extract")
     )
 
 
