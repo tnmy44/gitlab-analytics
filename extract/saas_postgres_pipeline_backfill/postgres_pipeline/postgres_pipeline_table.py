@@ -218,12 +218,6 @@ class PostgresPipelineTable:
                 )
                 is_backfill_needed = True
 
-        # remove unprocessed files if backfill needed but not in middle of backfill
-        if is_backfill_needed and initial_load_start_date is None:
-            remove_unprocessed_files_from_gcs(
-                backfill_metadata_table, self.source_table_name
-            )
-
         return is_backfill_needed, start_pk, initial_load_start_date
 
     def check_delete(self, metadata_engine: Engine, delete_metadata_table: str):

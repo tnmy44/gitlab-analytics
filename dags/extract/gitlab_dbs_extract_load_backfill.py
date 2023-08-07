@@ -213,7 +213,8 @@ for source_name, config in config_dict.items():
             table_list = extract_table_list_from_manifest(manifest)
             if config["dag_name"] == "el_gitlab_com_new":
                 table_list = [
-                    "merge_request_diff_commits",
+                    # "merge_request_diff_commits",
+                    "alert_management_alerts",
                 ]
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):

@@ -561,7 +561,7 @@ def get_latest_parquet_file(source_table: str) -> Union[str, None]:
     bucket = get_gcs_bucket()
 
     prefix = get_prefix_template().format(
-        staging_or_processed="processed",
+        staging_or_processed="staging",
         export_type=get_export_type(BACKFILL_METADATA_TABLE),
         table=source_table,
         initial_load_prefix="initial_load_start_",

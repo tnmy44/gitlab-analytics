@@ -29,3 +29,23 @@ tables:
       FROM merge_request_diff_commits
       WHERE committed_date BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  alert_management_alerts:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'alert_management_alerts'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , started_at
+      , ended_at
+      , events
+      , iid
+      , status
+      , issue_id
+      , project_id
+      FROM alert_management_alerts
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
