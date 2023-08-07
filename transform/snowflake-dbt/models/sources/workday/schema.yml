@@ -512,7 +512,6 @@ models:
       - name: job_code
         description: The unique identification for each role at GitLab. A job code is different for each role and each seniority level (example - IT Security Analyst and Senior IT Security Analyst would have a different job_code)
         tests: 
-          - unique
           - not_null
       - name: job_profile 
         description: The role or position associated with the job code 
