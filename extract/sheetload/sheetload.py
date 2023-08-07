@@ -75,7 +75,6 @@ def sheet_loader(
         # is returned.
         schema_check = f"""CREATE SCHEMA IF NOT EXISTS "{database}".{schema}"""
         query_executor(engine, schema_check)
-
     else:
         engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
 
