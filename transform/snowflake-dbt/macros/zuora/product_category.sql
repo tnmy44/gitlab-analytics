@@ -33,7 +33,7 @@ CASE
     THEN 'Trueup'
   WHEN LTRIM(LOWER({{product_column}})) LIKE 'githost%'
     THEN 'GitHost'
-  WHEN LOWER({{product_column}}) LIKE ANY ('%quick start with ha%', '%proserv training per-seat add-on%')
+  WHEN LOWER({{product_column}}) LIKE ANY ('%quick start with ha%', '%proserv training per-seat add-on%', 'code suggestions%')
     THEN 'Support'
   WHEN TRIM({{product_column}}) IN (
                                       'GitLab Service Package'
