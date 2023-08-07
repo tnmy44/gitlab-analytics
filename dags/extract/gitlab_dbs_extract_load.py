@@ -214,8 +214,8 @@ def get_last_loaded(dag_name: String) -> string:
     if dag_name == "el_gitlab_ops":
         return None
 
-    return "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
-            task_identifier + "-pgp-extract"
+    return "{{{{ task_instance.xcom_pull('{task_id}', include_prior_dates=True)['max_data_available'] }}}}".format(
+            task_id=task_identifier + "-pgp-extract"
     )
 
 
