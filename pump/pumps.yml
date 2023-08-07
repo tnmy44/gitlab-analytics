@@ -24,7 +24,7 @@ pumps:
     owner: '@rigerta'
     stage: s3_data_science_pump
   - model: pump_churn_forecasting_scores
-    timestamp_column: uploaded_at
+    timestamp_column: updated_at
     sensitive: True
     single: False
     owner: '@rigerta'
