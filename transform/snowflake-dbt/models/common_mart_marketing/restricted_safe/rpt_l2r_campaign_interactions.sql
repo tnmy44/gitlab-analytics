@@ -6,6 +6,7 @@
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_date','dim_date'),
+    ('fct_campaign','fct_campaign'),
     ('dim_campaign', 'dim_campaign')
 ]) }}
 
@@ -854,5 +855,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-07-28",
+    updated_date="2023-08-07",
   ) }}
