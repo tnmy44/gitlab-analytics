@@ -2753,6 +2753,16 @@ roles:
 # User Roles
 # ==========================================
 
+   - aarts:
+        member_of:
+            - analyst_sales
+            - data_team_analyst
+            - reporter
+            - restricted_safe
+            - xactly
+        warehouses:
+            - dev_xs
+
     - airflow:
         warehouses:
             - dev_l
@@ -5126,6 +5136,11 @@ roles:
 # Users
 # ==========================================
 users:
+
+    - aarts:
+        can_login: yes
+        member_of:
+            - aarts
 
     - airflow:
         can_login: yes
