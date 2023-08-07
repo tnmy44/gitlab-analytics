@@ -76,31 +76,29 @@ DBT_MODULE_NAME = "gitlab_dotcom_backfill_chunked"
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
     # TODO: this needs to start at the minimum commit_date of the data
-    "start_date": datetime(2021, 7, 1),
+    "start_date": datetime(2021, 6, 26),
 }
 
 # Create the DAG
 dag = DAG(
-    f"dbt_{DBT_MODULE_NAME}",
+    f"dbt_{DBT_MODULE_NAME}v2",  # TODO
     default_args=default_args,
-    schedule_interval="30 16 * * 0",  #
+    schedule_interval="0 21 * * 0",  #
     concurrency=2,
+    max_active_runs=2,
     catchup=True,
 )
 
-# dbt_vars = '{"start_date": "{{ execution_date }}", "end_date": "{{ next_execution_date }}"}'
-dbt_vars = '{"start_date": "2023-08-01", "end_date": "2023-08-03"}'
 dbt_vars = (
     '{"start_date": "{{ execution_date}} ", "end_date": " {{ next_execution_date }} "}'
 )
 dbt_models_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run --profiles-dir profile --target {target} --models tag:{DBT_MODULE_NAME} --vars '{dbt_vars}'; ret=$?;
+        dbt run --profiles-dir profile --target {target} --models legacy.{DBT_MODULE_NAME} --vars '{dbt_vars}'; ret=$?;
 
         montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
@@ -117,14 +115,12 @@ dbt_models_task = KubernetesPodOperator(
     arguments=[dbt_models_cmd],
     dag=dag,
 )
-dbt_models_task.dry_run()
 
 
-'''
 dbt_test_task_name = f"dbt-{DBT_MODULE_NAME}-tests"
 model_test_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt test --profiles-dir profile --target prod --models tag:{DBT_MODULE_NAME}+ {run_command_test_exclude} ; ret=$?;
+    dbt test --profiles-dir profile --target prod --models --models legacy.{DBT_MODULE_NAME} {run_command_test_exclude} ; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
@@ -140,13 +136,5 @@ dbt_test_task = KubernetesPodOperator(
     tolerations=get_toleration("production"),
     dag=dag,
 )
-'''
 
-dbt_models_task
-# dbt_models_task >> dbt_test_task
-
-
-# dbt run --model tag:gitlab_dotcom_backfill_chunked --vars '{"start_date": {{ execution_date }}, "end_date": {{ next_execution_date }} }'
-
-
-# dbt run --model tag:gitlab_dotcom_backfill_chunked --vars '{"start_date": "2023-08-01", "end_date": "2023-08-03"}'
+dbt_models_task >> dbt_test_task
