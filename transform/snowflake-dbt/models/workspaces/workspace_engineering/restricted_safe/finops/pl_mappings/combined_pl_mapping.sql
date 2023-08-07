@@ -488,6 +488,44 @@ runner_saas_macos AS (
 
 ),
 
+runner_saas_private AS (
+
+  SELECT
+    reporting_day                      AS date_day,
+    NULL                               AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    '6 - private internal runners'     AS runner_label,
+    NULL                               AS folder_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 6'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '6 - private internal runners'
+
+),
+
+runner_saas_private_ext AS (
+
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    'gitlab-ci-private-_'              AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    NULL                               AS runner_label,
+    NULL                               AS folder_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 6'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '6 - private internal runners'
+
+),
+
 haproxy_pl AS (
 
   SELECT * FROM {{ ref('haproxy_backend_pl') }}
@@ -647,6 +685,12 @@ cte_append AS (SELECT *
   UNION ALL
   SELECT *
   FROM runner_saas_macos
+  UNION ALL
+  SELECT *
+  FROM runner_saas_private
+  UNION ALL
+  SELECT *
+  FROM runner_saas_private_ext
   UNION ALL
   SELECT *
   FROM haproxy_isp

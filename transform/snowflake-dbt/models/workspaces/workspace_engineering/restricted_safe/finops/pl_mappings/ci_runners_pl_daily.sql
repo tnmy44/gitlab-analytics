@@ -31,7 +31,7 @@ WITH ci_minutes AS (
       WHEN LOWER(ci_runner_description) LIKE '%-_.saas-linux-large-amd64%' THEN '%-_.saas-linux-large-amd64'
       WHEN LOWER(ci_runner_description) LIKE '%.saas-linux-small-amd64%' THEN '%.saas-linux-small-amd64'
       WHEN LOWER(ci_runner_description) LIKE '%.saas-linux-xlarge-amd64%' THEN '%.saas-linux-xlarge-amd64'
-      WHEN LOWER(ci_runner_description) LIKE 'macos shared%' THEN 'macos shared runners'
+      WHEN LOWER(ci_runner_description) LIKE 'macos shared%' OR LOWER(ci_runner_description) LIKE '%.saas-macos-medium-m1.runners-manager%' THEN 'macos shared runners'
       ELSE ci_runner_manager
     END                                          AS ci_runner_manager,
 
@@ -79,8 +79,6 @@ SELECT
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'macos shared runners' THEN '5 - shared saas macos runners'
 
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'windows-runner-mgr' THEN '7 - shared saas windows runners'
-
-
 
   END                                                                                   AS mapping,
   pl,

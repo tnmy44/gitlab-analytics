@@ -44,8 +44,7 @@ runner_labels AS (
       WHEN resource_label_value LIKE '%runners-manager-saas-macos-staging-%' THEN 'runners-manager-saas-macos-staging-'
       WHEN resource_label_value LIKE '%runners-manager-saas-macos%-m1-%' THEN '5 - shared saas macos runners'
       WHEN resource_label_value LIKE '%runners-manager-shared-gitlab-org-%' THEN '1 - shared gitlab org runners' --ok
-      WHEN resource_label_value LIKE '%runners-manager-private-blue-%' THEN '6 - private internal runners' --ok, project_pl internal
-      WHEN resource_label_value LIKE '%runners-manager-private-green-%' THEN '6 - private internal runners' --ok, project_pl internal
+      WHEN resource_label_value LIKE '%runners-manager-private-%' THEN '6 - private internal runners' --ok, project_pl internal
       WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%shared-gitlab-org-%') THEN '1 - shared gitlab org runners' --ok
       WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%amd64%') THEN 'runners-saas'
       WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%s-shared-%') THEN '2 - shared saas runners - small' --ok
