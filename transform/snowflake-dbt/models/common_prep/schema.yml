@@ -1356,8 +1356,8 @@ models:
         description: '{{ doc("dim_project_id") }}'
       - name: ultimate_parent_namespace_id
         description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
-      - name: dim_plan_id_at_creation
-        description: '{{ doc("dim_plan_id_at_creation") }}'
+      - name: dim_plan_id
+        description: '{{ doc("dim_plan_id") }}'
       - name: snippet_type
         description: '{{ doc("snippet_type") }}'
       - name: created_at

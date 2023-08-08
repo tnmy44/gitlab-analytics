@@ -22,7 +22,7 @@ WITH final AS (
       author_id,
       dim_project_id,
       ultimate_parent_namespace_id,
-      dim_plan_id_at_creation,
+      dim_plan_id,
       created_date_id,
 
       -- Dimensional Contexts
@@ -42,6 +42,6 @@ WITH final AS (
     cte_ref="final",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2022-07-28",
+    created_date="2022-08-07",
     updated_date="2023-08-07"
 ) }}
