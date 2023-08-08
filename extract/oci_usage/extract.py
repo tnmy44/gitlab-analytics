@@ -11,14 +11,23 @@ from gitlabdata.orchestration_utils import (
 # methods
 
 
-def rename_file(name: str) -> str:
+def rename_oci_file(name: str) -> str:
+    """
+    standardize format for file naming and matching in stage
+    """
 
     new_name = name.replace("/", "_")
 
     return new_name
 
 
-def extract_files_from_oci(config, reporting_namespace, file_prefix, destination_path):
+def extract_files_from_oci(
+    config: dict, reporting_namespace: str, file_prefix: str, destination_path: str
+) -> dict:
+    """
+    extract all report files from OCI bucket and return a dictionary of filenames and report types
+    """
+
     info("running oci extraction")
     # Make a directory to receive reports
     if not os.path.exists(destination_path):
@@ -44,7 +53,7 @@ def extract_files_from_oci(config, reporting_namespace, file_prefix, destination
         object_details = object_storage.get_object(
             reporting_namespace, reporting_bucket, o.name
         )
-        filename = rename_file(o.name)
+        filename = rename_oci_file(o.name)
         full_file_path = destination_path + "/" + filename
 
         with open(full_file_path, "wb") as f:
@@ -70,7 +79,9 @@ def snowflake_copy_staged_files_into_table(
     on_error: str = "abort_statement",
     file_format_options: str = "",
 ) -> None:
-    """ """
+    """
+    copy file into specified table. remove file if copy into fails
+    """
 
     file_name = os.path.basename(file)
 
@@ -91,7 +102,9 @@ def snowflake_copy_staged_files_into_table(
         info("Query successfully run")
 
     except:
-        info(f"failed to copy file: {file} into table: {table_path}. Removing it from stage.")
+        info(
+            f"failed to copy file: {file} into table: {table_path}. Removing it from stage."
+        )
         remove_query = f"remove @{full_stage_file_path};"
         connection.execute(remove_query)
 
@@ -108,6 +121,9 @@ def snowflake_stage_put_copy_files(
     on_error: str = "abort_statement",
     file_format_options: str = "",
 ) -> None:
+    """
+    compares file list with files in stage, putting new files into stage, then copying into tables using snowflake_copy_staged_files_into_table
+    """
 
     list_query = f"list @{stage}"
 
@@ -156,6 +172,9 @@ destination_path = "oci_report"
 
 
 def load_data():
+    """
+    executable method for Fire
+    """
 
     oci_extraction = extract_files_from_oci(
         oci_config, reporting_namespace, prefix_file, destination_path
