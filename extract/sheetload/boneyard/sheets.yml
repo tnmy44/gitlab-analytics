@@ -51,7 +51,7 @@ sheets:
   - name: pnps_2023_respondents
     owner: '@moliver28'
     tabs:
-      - data
+      - pnps_2023_respondents
   - name: ptp_free_scores_temp
     owner: '@Kevin Dietz'
     tabs:
