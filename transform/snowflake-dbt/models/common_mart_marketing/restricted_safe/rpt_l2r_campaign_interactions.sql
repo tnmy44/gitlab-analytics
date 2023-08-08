@@ -7,7 +7,8 @@
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_date','dim_date'),
     ('fct_campaign','fct_campaign'),
-    ('dim_campaign', 'dim_campaign')
+    ('dim_campaign', 'dim_campaign'),
+    ('dim_crm_user', 'dim_crm_user')
 ]) }}
 
 , person_base_with_tp AS (
@@ -760,6 +761,7 @@
           THEN 'Field Marketing'
         WHEN (LOWER(utm_campaign) LIKE '%abm%'
           OR LOWER(utm_content) LIKE '%abm%'
+          OR LOWER(bizible_ad_campaign_name) LIKE '%abm%'
           OR campaign_rep_role_name like '%ABM%'
           OR dim_campaign.budget_holder = 'abm'
           OR utm_budget = 'abm') THEN 'Account Based Marketing'
@@ -784,6 +786,20 @@
       fct_campaign.budgeted_cost,
       fct_campaign.actual_cost,
 
+      -- user
+      user.user_name        AS record_owner_name,
+      user.manager_name     AS record_owner_manager,
+      user.title            AS record_owner_title,
+      user.department       AS record_owner_department,
+      user.team             AS record_owner_team,
+      manager.manager_name  AS record_owner_sales_dev_leader,
+      
+      CASE
+        WHEN  record_owner_title LIKE '%Sales Development%' 
+          or record_owner_title  LIKE '%Business Development%' 
+        THEN TRUE
+        ELSE FALSE
+      END as sales_dev_owned_record_flag,
 
      --inquiry_date fields
       inquiry_date.fiscal_year                     AS inquiry_date_range_year,
@@ -831,6 +847,10 @@
     ON cohort_base_combined.dim_campaign_id = dim_campaign.dim_campaign_id
   LEFT JOIN fct_campaign
     ON cohort_base_combined.dim_campaign_id = fct_campaign.dim_campaign_id
+  LEFT JOIN dim_crm_user user
+    ON cohort_base_combined.dim_crm_user_id = user.dim_crm_user_id
+  LEFT JOIN dim_crm_user manager
+    ON user.manager_id = manager.dim_crm_user_id
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
