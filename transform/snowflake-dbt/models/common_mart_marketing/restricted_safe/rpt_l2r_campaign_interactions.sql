@@ -219,6 +219,7 @@
 
     --Person Data
       person_base.dim_crm_person_id,
+      person_base.dim_crm_user_id,
       person_base.crm_partner_id,
       person_base.email_hash,
       person_base.email_domain,
@@ -338,7 +339,7 @@
       ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=159)}}
+  {{dbt_utils.group_by(n=160)}}
     
 ), cohort_base_combined AS (
   
@@ -347,6 +348,7 @@
       dim_crm_person_id,
       dim_crm_account_id,
       dim_parent_crm_account_id,
+      dim_crm_user_id,
       crm_partner_id,
       partner_prospect_id,
       dim_crm_touchpoint_id,
@@ -536,6 +538,7 @@
       dim_crm_person_id,
       dim_crm_account_id,
       dim_parent_crm_account_id,
+      dim_crm_user_id,
       crm_partner_id,
       null AS partner_prospect_id,
       dim_crm_touchpoint_id,
