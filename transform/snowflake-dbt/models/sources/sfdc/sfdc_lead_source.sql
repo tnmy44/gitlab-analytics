@@ -106,6 +106,7 @@ renamed AS (
     vartopiadrs__partner_prospect_status__c AS partner_prospect_status,
     vartopiadrs__vartopia_prospect_id__c AS partner_prospect_id,
     vartopiadrs__partner_prospect_owner_name__c AS partner_prospect_owner_name,
+    partner_recalled__c AS is_partner_recalled,
     name_of_active_sequence__c AS name_of_active_sequence,
     sequence_task_due_date__c::DATE AS sequence_task_due_date,
     sequence_status__c AS sequence_status,

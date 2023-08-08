@@ -20,12 +20,10 @@ team_data AS (
     IFF(
       source.is_deleted AND source.team_inactivated_date IS NULL,
       source.uploaded_at,
-      source.team_inactivated_date)                     AS team_inactivated_date,
+      source.team_inactivated_date)                                       AS team_inactivated_date,
     source.is_deleted,
-    DATE_TRUNC('day', source.valid_from)                AS team_data_valid_from,
-    COALESCE(DATE_TRUNC('day', source.valid_to),
-      {{ var('tomorrow') }}
-    )                                                   AS team_data_valid_to
+    DATE_TRUNC('day', source.valid_from)                                  AS team_data_valid_from,
+    COALESCE(DATE_TRUNC('day', source.valid_to), {{ var('tomorrow') }})   AS team_data_valid_to
   FROM source
 
 ),
@@ -83,7 +81,7 @@ recursive_hierarchy AS (
     iter.team_id                                                     AS team_id,
     iter.team_name                                                   AS team_name,
     iter.team_superior_team_id                                       AS team_superior_team_id,
-    iter.superior_id_group     										 AS superior_id_group,
+    iter.superior_id_group     										                   AS superior_id_group,
     iter.valid_from                                                  AS valid_from,
     iter.valid_to                                                    AS valid_to,
     ARRAY_APPEND(anchor.valid_from_list, iter.valid_from)            AS valid_from_list,

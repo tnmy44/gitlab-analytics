@@ -32,3 +32,4 @@ config.json
 /transform/safe_models.json
 .env
 snowsql_rt.log_bootstrap
+.python-version

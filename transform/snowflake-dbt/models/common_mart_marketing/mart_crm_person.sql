@@ -118,6 +118,7 @@
       dim_crm_person.was_converted_lead,
       dim_crm_person.source_buckets,
       dim_crm_person.crm_partner_id,
+      dim_crm_person.is_partner_recalled,
       dim_crm_person.prospect_share_status,
       dim_crm_person.partner_prospect_status,
       dim_crm_person.partner_prospect_owner_name,

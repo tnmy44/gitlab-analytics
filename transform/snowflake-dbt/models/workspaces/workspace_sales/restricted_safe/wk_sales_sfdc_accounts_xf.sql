@@ -211,7 +211,22 @@ SELECT
     mart.is_zi_bit_bucket_present                                   AS zi_bit_bucket_presence_flag,
 
     -- fields from RAW table
-    mart.parent_crm_account_upa_country_name
+    mart.parent_crm_account_upa_country_name,
+
+    CASE 
+        WHEN mart.parent_crm_account_lam_dev_count BETWEEN 0 AND 25
+            THEN '[0-25]'
+        WHEN mart.parent_crm_account_lam_dev_count BETWEEN 26 AND 100
+            THEN '(25-100]'
+        WHEN mart.parent_crm_account_lam_dev_count BETWEEN 101 AND 250
+            THEN '(100-250]'     
+        WHEN mart.parent_crm_account_lam_dev_count BETWEEN 251 AND 1000
+            THEN '(250-1000]'     
+        WHEN mart.parent_crm_account_lam_dev_count BETWEEN 1001 AND 2500
+            THEN '(1000-2500]'
+        WHEN mart.parent_crm_account_lam_dev_count > 2500
+            THEN '(2500+]'      
+    END                     AS lam_dev_count_bin
 
 
 FROM mart_crm_account AS mart

@@ -1452,3 +1452,89 @@ models:
       description: '{{ doc("model_created_date") }}'
     - name: model_updated_date
       description: '{{ doc("model_updated_date") }}'
+
+- name: rpt_webstore_subscription_purchase_flow_funnel_base
+  description: This data model stores Snowplow events related to the purchases on the Webstore for GitLab.com. This dataset can be used to understand user purchase journeys in detail and run funnel analysis to commute metrics like conversion rate, drop-off points etc.
+  columns:
+    - name: behavior_structured_event_pk
+      tests:
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+      description: '{{ doc("behavior_structured_event_pk") }}'
+    - name: behavior_at
+      description: '{{ doc("behavior_at") }}'
+    - name: behavior_date
+      description: '{{ doc("behavior_at") }}'
+    - name: dim_namespace_id
+      description: '{{ doc("dim_namespace_id_behavior_model") }}'
+    - name: dim_project_id
+      description: '{{ doc("dim_project_id_behavior_model") }}'
+    - name: app_id
+      description: '{{ doc("app_id") }}'
+    - name: gsc_pseudonymized_user_id
+      description: '{{ doc("gsc_pseudonymized_user_id") }}'
+    - name: gsc_plan
+      description: '{{ doc("gsc_plan") }}'
+    - name: user_snowplow_domain_id
+      description: '{{ doc("user_snowplow_domain_id") }}'
+    - name: gsc_source
+      description: '{{ doc("gsc_source") }}'
+    - name: event_value
+      description: '{{ doc("event_value") }}'
+    - name: event_action
+      description: '{{ doc("event_action") }}'
+    - name: event_category
+      description: '{{ doc("event_category") }}'
+    - name: event_property
+      description: '{{ doc("event_property") }}'
+    - name: event_label
+      description: '{{ doc("event_label") }}'
+    - name: ultimate_parent_namespace_id
+      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+    - name: is_device_mobile
+      description: '{{ doc("is_device_mobile") }}'
+    - name: device_type
+      description: '{{ doc("device_type") }}'
+    - name: contexts
+      description: '{{ doc("contexts") }}'
+    - name: page_url_path
+      description: '{{ doc("page_url_path") }}'
+    - name: page_url_fragment
+      description: '{{ doc("page_url_fragment") }}'
+    - name: gsc_google_analytics_client_id
+      description: '{{ doc("gsc_google_analytics_client_id") }}'
+    - name: gsc_extra
+      description: '{{ doc("gsc_extra") }}'
+    - name: namespace_is_internal
+      description: '{{ doc("namespace_is_internal") }}'
+    - name: namespace_type
+      description: '{{ doc("namespace_type") }}'
+    - name: visibility_level
+      description: '{{ doc("visibility_level") }}'
+    - name: session_index
+      description: '{{ doc("session_index") }}'
+    - name: session_id
+      description: '{{ doc("session_id") }}'
+    - name: namespace_is_ultimate_parent
+      description: '{{ doc("namespace_is_ultimate_parent") }}'
+    - name: dim_behavior_referrer_page_sk
+      description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+    - name: has_gitlab_service_ping_context
+      description: '{{ doc("has_gitlab_service_ping_context") }}'
+    - name: has_gitlab_experiment_context
+      description: '{{ doc("has_gitlab_experiment_context") }}'
+    - name: has_customer_standard_context
+      description: '{{ doc("has_customer_standard_context") }}'
+    - name: browser_name
+      description: '{{ doc("browser_name") }}'
+    - name: dim_behavior_browser_sk
+      description: '{{ doc("dim_behavior_browser_sk") }}'
+    - name: created_by
+      description: '{{ doc("created_by") }}'
+    - name: updated_by
+      description: '{{ doc("updated_by") }}'
+    - name: model_created_date
+      description: '{{ doc("model_created_date") }}'
+    - name: model_updated_date
+      description: '{{ doc("model_updated_date") }}'

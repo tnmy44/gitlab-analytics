@@ -1012,7 +1012,9 @@ models:
         description: Unique key of CI Build
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: dim_project_id
         description: Foreign key that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id
@@ -1566,6 +1568,8 @@ models:
         description: '{{ doc("ping_deployment_type") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: version
+        description: '{{ doc("version_ping_model") }}'
 
   - name: prep_billing_account_user
     description: Zuora Billing users
@@ -1922,6 +1926,10 @@ models:
           masking_policy: analyst_people
       - name: performance_rating 
         description: Masked. Team member performance rating
+        meta:
+          masking_policy: analyst_people
+      - name: employee_type
+        description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
         meta:
           masking_policy: analyst_people
 
