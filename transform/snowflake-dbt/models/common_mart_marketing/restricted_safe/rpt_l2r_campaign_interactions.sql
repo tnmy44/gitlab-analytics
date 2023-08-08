@@ -337,7 +337,7 @@
       ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=157)}}
+  {{dbt_utils.group_by(n=159)}}
     
 ), cohort_base_combined AS (
   
