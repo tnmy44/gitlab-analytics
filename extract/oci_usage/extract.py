@@ -43,7 +43,7 @@ def extract_files_from_oci(
         prefix=prefix_file,
     )
 
-    oci_extraction = {
+    oci_extraction: dict[str, list] = {
         "oci_cost_report": [],
         "oci_usage_report": [],
     }
