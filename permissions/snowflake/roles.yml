@@ -5015,9 +5015,16 @@ roles:
                 write:
                     - testing_db.*.*
 
+    - tjayaramaraju:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - tliu:
         member_of: []
         warehouses: []
+
     - tnguyen:
         member_of:
          - data_team_analyst
@@ -5662,6 +5669,11 @@ users:
         can_login: yes
         member_of:
             - target_snowflake
+
+    - tjayaramaraju:
+        can_login: yes
+        member_of:
+            - tjayaramaraju
 
     - tliu:
         can_login: no
