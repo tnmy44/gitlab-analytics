@@ -63,6 +63,8 @@
             THEN '1. New - First Order'
           ELSE '3. Growth'
       END AS person_order_type,
+      last_utm_campaign,
+      last_utm_content,
 
 
   --Person Dates
@@ -288,7 +290,7 @@
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.bizible_salesforce_campaign,
-	  mart_crm_attribution_touchpoint.campaign_rep_role_name,
+	    mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.gtm_motion,
       mart_crm_attribution_touchpoint.pipe_name,
