@@ -31,7 +31,7 @@
       person_base.source_buckets,
       person_base.true_inquiry_date,
       person_base.mql_date_first_pt,
-      person_base.mql_date_lastest_pt,
+      person_base.mql_date_latest_pt,
       person_base.accepted_date,
       person_base.status,
       person_base.lead_source,
@@ -378,7 +378,7 @@
       source_buckets,
       true_inquiry_date,
       mql_date_first_pt,
-      mql_date_lastest_pt,
+      mql_date_latest_pt,
       accepted_date,
       status,
       lead_source,
@@ -577,7 +577,7 @@
   LEFT JOIN dim_date AS inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date AS mql_date
-    ON cohort_base_combined.mql_date_lastest_pt = mql_date.date_day
+    ON cohort_base_combined.mql_date_latest_pt = mql_date.date_day
   LEFT JOIN dim_date AS opp_create_date
     ON cohort_base_combined.opp_created_date = opp_create_date.date_day
   LEFT JOIN dim_date AS sao_date

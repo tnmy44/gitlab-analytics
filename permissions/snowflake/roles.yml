@@ -2753,6 +2753,16 @@ roles:
 # User Roles
 # ==========================================
 
+    - aarts:
+        member_of:
+            - analyst_sales
+            - data_team_analyst
+            - reporter
+            - restricted_safe
+            - xactly
+        warehouses:
+            - dev_xs
+
     - airflow:
         warehouses:
             - dev_l
@@ -3487,6 +3497,13 @@ roles:
                     - jng_prep.*.*
                     - jng_prod.*.*
 
+    - jokal:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - jpeguero:
         member_of:
             - analyst_finance
@@ -4021,6 +4038,13 @@ roles:
             - analyst_sales_sensitive
             - data_team_analyst
             - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - mgilgalindo:
+        member_of:
+            - reporter
+            - salesforce
         warehouses:
             - dev_xs
 
@@ -4998,9 +5022,16 @@ roles:
                 write:
                     - testing_db.*.*
 
+    - tjayaramaraju:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - tliu:
         member_of: []
         warehouses: []
+
     - tnguyen:
         member_of:
          - data_team_analyst
@@ -5119,6 +5150,11 @@ roles:
 # Users
 # ==========================================
 users:
+
+    - aarts:
+        can_login: yes
+        member_of:
+            - aarts
 
     - airflow:
         can_login: yes
@@ -5336,6 +5372,11 @@ users:
         member_of:
             - jng
 
+    - jokal:
+        can_login: yes
+        member_of:
+            - jokal
+
     - jpeguero:
         can_login: yes
         member_of:
@@ -5436,6 +5477,11 @@ users:
         can_login: yes
         member_of:
             - mfleisher
+
+    - mgilgalindo:
+        can_login: yes
+        member_of:
+            - mgilgalindo
 
     - mnohr:
         can_login: no
@@ -5635,6 +5681,11 @@ users:
         can_login: yes
         member_of:
             - target_snowflake
+
+    - tjayaramaraju:
+        can_login: yes
+        member_of:
+            - tjayaramaraju
 
     - tliu:
         can_login: no

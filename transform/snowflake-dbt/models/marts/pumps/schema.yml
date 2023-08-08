@@ -1182,7 +1182,7 @@ models:
 
   - name: mart_product_usage_paid_user_metrics_monthly_report_view
     description: '{{ doc("mart_product_usage_paid_user_metrics_monthly_report_view") }}'
-  
+
   - name: pump_use_case_adoption_scoring
     description: Calculates product usage health scores per snapshot_month and installation_id (Self-Managed)/namespace_id (SaaS)
     columns:
@@ -1208,3 +1208,6 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: mart_crm_subscription_id
+    description: '{{ doc("mart_crm_subscription_id") }}'
