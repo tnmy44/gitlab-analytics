@@ -2171,3 +2171,9 @@ The date a snippet was created.
 The latest date a snippet was updated.
 
 {% enddocs %}
+
+{% docs dim_plan_id_at_creation %}
+
+The GitLab plan id of at the time of creation.
+
+{% enddocs %}

@@ -32,7 +32,7 @@
       snippet_source.author_id                                          AS author_id,
       IFNULL(dim_project.dim_project_id, -1)                            AS dim_project_id,
       IFNULL(dim_namespace_plan_hist.dim_namespace_id, -1)              AS ultimate_parent_namespace_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                   AS dim_plan_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                   AS dim_plan_id_at_creation,
       snippet_source.snippet_type                                       AS snippet_type,
       dim_date.date_id                                                  AS created_date_id,
       snippet_source.created_at                                         AS created_at,
@@ -52,5 +52,5 @@
     created_by="@chrissharp",
     updated_by="@michellecooper",
     created_date="2022-03-14",
-    updated_date="2023-07-28"
+    updated_date="2023-08-07"
 ) }}
