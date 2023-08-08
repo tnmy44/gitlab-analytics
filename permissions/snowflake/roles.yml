@@ -3497,6 +3497,13 @@ roles:
                     - jng_prep.*.*
                     - jng_prod.*.*
 
+    - jokal:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - jpeguero:
         member_of:
             - analyst_finance
@@ -5357,6 +5364,11 @@ users:
         can_login: yes
         member_of:
             - jng
+
+    - jokal:
+        can_login: yes
+        member_of:
+            - jokal
 
     - jpeguero:
         can_login: yes
