@@ -187,8 +187,8 @@ def load_data():
         info(f"loading files {oci_files} into table: {target_table}")
         snowflake_stage_put_copy_files(
             oci_files,
-            "test.oci_report",
-            f"test.{target_table}",
+            "oci_reports.oci_report",
+            f"oci_reports.{target_table}",
             snowflake_engine,
             "csv",
             on_error="ABORT_STATEMENT",
