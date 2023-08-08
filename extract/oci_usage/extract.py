@@ -1,6 +1,7 @@
 import oci
 import os
 import sys
+from typing import Dict
 from logging import info, basicConfig, getLogger
 from fire import Fire
 from sqlalchemy.engine.base import Engine
@@ -43,7 +44,7 @@ def extract_files_from_oci(
         prefix=prefix_file,
     )
 
-    oci_extraction: dict[str, list] = {
+    oci_extraction: Dict[str, list] = {
         "oci_cost_report": [],
         "oci_usage_report": [],
     }
