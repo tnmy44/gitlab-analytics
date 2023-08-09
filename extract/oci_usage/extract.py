@@ -87,7 +87,7 @@ def snowflake_copy_staged_files_into_table(
 
     copy_query = f"""COPY INTO {table_path}
                         FROM @{full_stage_file_path}
-                        FILE_FORMAT=raw.test.oci_csv_format
+                        FILE_FORMAT=raw.oci_reports.oci_csv_format
                         , ON_ERROR='ABORT_STATEMENT'
                         MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
                     """
@@ -128,7 +128,7 @@ def snowflake_stage_put_copy_files(
         info(f"putting new files: {new_files} into stage: {stage}")
         for file in new_files:
             put_query = f"put 'file://{file}' @{stage} auto_compress=true;"
-            info(f"running: {put_query}")
+            info("running: {put_query}")
             connection.execute(put_query)
 
             snowflake_copy_staged_files_into_table(
