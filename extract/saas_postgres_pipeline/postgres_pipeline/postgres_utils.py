@@ -671,7 +671,6 @@ def is_resume_export(
     initial_load_start_date = None
 
     results = query_backfill_status(metadata_engine, metadata_table, source_table)
-    print(f"\nresults: {results}")
 
     # if backfill metadata exists for table
     if results:

@@ -1,7 +1,6 @@
 import datetime
 import logging
 import os
-import sys
 from typing import Dict, Any, Optional
 import pytz
 
@@ -233,7 +232,7 @@ def load_ids(
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
 
-    if "_TEMP" != table_dict["target_table"][-5:]:
+    if "_TEMP" != database_kwargs["target_table"][-5:]:
         logging.info(f"Table {table_dict['source_table']} doesn't need a full sync.")
         return False
 
