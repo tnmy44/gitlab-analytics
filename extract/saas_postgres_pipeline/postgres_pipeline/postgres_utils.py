@@ -101,6 +101,7 @@ def trigger_snowflake_upload(
         file_format = (type = parquet)
         match_by_column_name = case_insensitive;
     """
+    print(f'\nupload_query: {upload_query}')
     results = query_executor(engine, upload_query)
     total_rows = 0
 
@@ -271,7 +272,7 @@ def chunk_and_upload(
         trigger_snowflake_upload(
             target_engine,
             target_table,
-            upload_file_name + f"{prefix}",
+            upload_file_name,
             purge=True,
         )
         logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
