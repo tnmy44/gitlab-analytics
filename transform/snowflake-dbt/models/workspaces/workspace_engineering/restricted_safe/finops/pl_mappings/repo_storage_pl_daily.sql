@@ -9,7 +9,7 @@ projects AS (SELECT * FROM {{ ref('gitlab_dotcom_projects_xf') }}
 
 project_statistics AS (
 
-  SELECT * FROM {{ ref('gitlab_dotcom_project_statistic_snapshots_daily') }}
+  SELECT * FROM {{ ref('gitlab_dotcom_project_statistic_daily_snapshot') }}
 ),
 
 namespaces_child AS (

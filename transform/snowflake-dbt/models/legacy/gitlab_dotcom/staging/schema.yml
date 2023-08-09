@@ -22,8 +22,6 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-  
-  - name: gitlab_dotcom_namespace_historical_monthly
 
   - name: gitlab_dotcom_namespace_lineage
     description: '{{ doc("gitlab_dotcom_namespace_lineage") }}'
