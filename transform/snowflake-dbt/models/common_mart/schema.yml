@@ -8,7 +8,9 @@ models:
       description: '{{ doc("event_pk") }}'
       tests:
         - not_null
-        - unique
+        - unique:
+            config:
+              where: "event_date >= DATEADD('day',-3,CURRENT_DATE())"
     - name: event_id
       description: '{{ doc("event_id") }}'
     - name: dim_event_date_id
@@ -547,7 +549,9 @@ models:
     - name: ping_instance_metric_id
       tests:
         - not_null
-        - unique
+        - unique:
+            config:
+              where: "ping_created_at >= DATEADD('day',-3,CURRENT_DATE())"
       description: The unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path
     - name: dim_ping_date_id
       description: '{{ doc("dim_ping_date_id") }}'
@@ -681,7 +685,9 @@ models:
     - name: ping_instance_metric_id
       tests:
         - not_null
-        - unique
+        - unique:
+            config:
+              where: "ping_created_at >= DATEADD('day',-3,CURRENT_DATE())"
       description: The unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path
     - name: dim_ping_date_id
       description: '{{ doc("dim_ping_date_id") }}'
@@ -815,7 +821,9 @@ models:
     - name: ping_instance_metric_id
       tests:
         - not_null
-        - unique
+        - unique:
+            config:
+              where: "ping_created_at >= DATEADD('day',-3,CURRENT_DATE())"
       description: The unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path
     - name: dim_ping_date_id
       description: '{{ doc("dim_ping_date_id") }}'
@@ -951,7 +959,9 @@ models:
     - name: ping_instance_metric_id
       tests:
         - not_null
-        - unique
+        - unique:
+            config:
+              where: "ping_created_at >= DATEADD('day',-3,CURRENT_DATE())"
       description: The unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path
     - name: dim_ping_date_id
       description: '{{ doc("dim_ping_date_id") }}'
@@ -1087,7 +1097,9 @@ models:
     - name: ping_instance_metric_id
       tests:
         - not_null
-        - unique
+        - unique:
+            config:
+              where: "ping_created_at >= DATEADD('day',-3,CURRENT_DATE())"
       description: The unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path
     - name: dim_ping_date_id
       description: '{{ doc("dim_ping_date_id") }}'
