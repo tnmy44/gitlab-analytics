@@ -247,7 +247,7 @@ def chunk_and_upload(
     """
 
     rows_uploaded = 0
-    prefix = f"/staging/regular/{target_table}/{target_table}_CHUNK_"
+    prefix = f"staging/regular/{target_table}/{target_table}_chunk"
     extension = '.parquet.gzip'
 
     with tempfile.TemporaryFile() as tmpfile:
@@ -334,7 +334,7 @@ def get_prefix_template() -> str:
 
 
 def get_initial_load_prefix(initial_load_start_date):
-    initial_load_prefix = f"initial_load_start_{initial_load_start_date.isoformat(timespec='milliseconds')}"
+    initial_load_prefix = f"initial_load_start_{initial_load_start_date.isoformat(timespec='milliseconds')}".lower()
     return initial_load_prefix
 
 
@@ -425,7 +425,7 @@ def seed_and_upload_snowflake(
     trigger_snowflake_upload(
         target_engine,
         database_kwargs["target_table"],
-        f"/{prefix}/.*.parquet.gzip$",
+        f"{prefix}/.*.parquet.gzip$",
     )
 
     target_engine.dispose()
