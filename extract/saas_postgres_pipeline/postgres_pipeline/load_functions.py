@@ -21,7 +21,7 @@ from postgres_utils import (
     get_engines,
     id_query_generator,
     manifest_reader,
-    get_min_or_max_id
+    get_min_or_max_id,
 )
 
 
@@ -229,11 +229,11 @@ def load_ids(
     table_dict: Dict[Any, Any],
     initial_load_start_date: datetime.datetime,
     start_pk: int,
-    export_type
+    export_type,
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
 
-    if "_TEMP" != table_dict['target_table'][-5:]:
+    if "_TEMP" != table_dict["target_table"][-5:]:
         logging.info(f"Table {table_dict['source_table']} doesn't need a full sync.")
         return False
 
@@ -270,9 +270,10 @@ def load_ids(
             max_pk,
             initial_load_start_date,
             database_kwargs,
-            export_type
+            export_type,
         )
     return True
+
 
 def check_new_tables(
     source_engine: Engine,

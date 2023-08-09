@@ -35,8 +35,8 @@ from sqlalchemy.schema import CreateTable, DropTable
 # SCHEMA = "tap_postgres"
 
 # bucket_name: test-saas-pipeline-backfills
-METADATA_SCHEMA = os.environ["GITLAB_METADATA_SCHEMA"]
-BUCKET_NAME = os.environ["GITLAB_BACKFILL_BUCKET"]
+METADATA_SCHEMA = os.environ.get("GITLAB_METADATA_SCHEMA")
+BUCKET_NAME = os.environ.get("GITLAB_BACKFILL_BUCKET")
 BACKFILL_METADATA_TABLE = "backfill_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
 

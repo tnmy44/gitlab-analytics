@@ -89,13 +89,16 @@ class PostgresPipelineTable:
     def do_incremental_backfill(
         self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine
     ) -> bool:
-
         (
             is_backfill_needed,
             start_pk,
             initial_load_start_date,
         ) = self.check_backfill_metadata(
-            source_engine, target_engine, metadata_engine, BACKFILL_METADATA_TABLE, 'backfill'
+            source_engine,
+            target_engine,
+            metadata_engine,
+            BACKFILL_METADATA_TABLE,
+            "backfill",
         )
 
         if not self.is_incremental() or not is_backfill_needed:
@@ -113,8 +116,12 @@ class PostgresPipelineTable:
             "target_table": self.get_temp_target_table_name(),
         }
         loaded = load_functions.load_ids(
-            database_kwargs, self.table_dict, initial_load_start_date, start_pk, 'backfill'
-    )
+            database_kwargs,
+            self.table_dict,
+            initial_load_start_date,
+            start_pk,
+            "backfill",
+        )
         self.swap_temp_table_on_schema_change(loaded, is_backfill_needed, target_engine)
         return loaded
 
@@ -152,7 +159,7 @@ class PostgresPipelineTable:
             "test": self.check_new_table,
             "trusted_data": self.do_trusted_data_pgp,
         }
-        if metadata_engine: # for backfills
+        if metadata_engine:  # for backfills
             return load_types[load_type](source_engine, target_engine, metadata_engine)
         else:
             return load_types[load_type](source_engine, target_engine)
@@ -247,8 +254,6 @@ class PostgresPipelineTable:
 
         # remove unprocessed files if backfill needed but not in middle of backfill
         if is_backfill_needed and initial_load_start_date is None:
-            remove_files_from_gcs(
-                export_type, self.source_table_name
-            )
+            remove_files_from_gcs(export_type, self.source_table_name)
 
         return is_backfill_needed, start_pk, initial_load_start_date
