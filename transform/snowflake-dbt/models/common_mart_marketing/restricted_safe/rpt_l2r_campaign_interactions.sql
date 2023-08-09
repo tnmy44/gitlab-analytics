@@ -66,7 +66,7 @@
 
   --Person Dates
       person_base.true_inquiry_date,
-      person_base.mql_date_lastest_pt,
+      person_base.mql_date_latest_pt,
       person_base.legacy_mql_date_first_pt,
       person_base.mql_sfdc_date_pt,
       person_base.mql_date_first_pt,
@@ -257,7 +257,7 @@
 
   --Person Dates
       person_base.true_inquiry_date,
-      person_base.mql_date_lastest_pt,
+      person_base.mql_date_latest_pt,
       person_base.legacy_mql_date_first_pt,
       person_base.mql_sfdc_date_pt,
       person_base.mql_date_first_pt,
@@ -390,7 +390,7 @@
 
   --Person Dates
       true_inquiry_date,
-      mql_date_lastest_pt,
+      mql_date_latest_pt,
       legacy_mql_date_first_pt,
       mql_sfdc_date_pt,
       mql_date_first_pt,
@@ -577,7 +577,7 @@
     
     --Person Dates
       true_inquiry_date,
-      mql_date_lastest_pt,
+      mql_date_latest_pt,
       legacy_mql_date_first_pt,
       mql_sfdc_date_pt,
       mql_date_first_pt,
@@ -817,7 +817,7 @@
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
-    ON cohort_base_combined.mql_date_lastest_pt = mql_date.date_day
+    ON cohort_base_combined.mql_date_latest_pt = mql_date.date_day
   LEFT JOIN dim_date opp_create_date
     ON cohort_base_combined.opp_created_date = opp_create_date.date_day
   LEFT JOIN dim_date sao_date
