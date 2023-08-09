@@ -430,7 +430,7 @@ def seed_and_upload_snowflake(
 
     target_engine.dispose()
     logging.info(
-        "Finished copying to Snowflake table '{database_kwargs['target_table']}'"
+        f"Finished copying to Snowflake table '{database_kwargs['target_table']}'"
     )
 
 
@@ -501,7 +501,6 @@ def chunk_and_upload_metadata(
                         initial_load_start_date,
                     )
                     database_kwargs["source_engine"].dispose()
-                    database_kwargs["target_engine"].dispose()
                 write_backfill_metadata(
                     database_kwargs["metadata_engine"],
                     database_kwargs["metadata_table"],
