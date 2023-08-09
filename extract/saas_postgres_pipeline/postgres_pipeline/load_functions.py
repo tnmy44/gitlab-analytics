@@ -264,6 +264,7 @@ def load_ids(
         logging.info(f"\nfiltered_query: {filtered_query}")
         # if no original load_start, need to preserve it for subsequent calls
         initial_load_start_date = chunk_and_upload_metadata(
+            database_kwargs["metadata_table"],
             filtered_query,
             primary_key,
             max_pk,

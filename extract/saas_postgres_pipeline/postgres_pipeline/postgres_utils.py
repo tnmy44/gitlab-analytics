@@ -1,11 +1,9 @@
-import csv
 import logging
 import os
 import sys
 import yaml
 import tempfile
 from datetime import datetime, timedelta
-from time import time
 from typing import Dict, List, Generator, Any, Tuple, Optional
 
 from gitlabdata.orchestration_utils import (
@@ -256,9 +254,7 @@ def chunk_and_upload(
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
 
-            upload_file_name = (
-                f"{prefix}{str(idx)}.parquet.gz"
-            )
+            upload_file_name = f"{prefix}{str(idx)}.parquet.gz"
             if row_count > 0:
                 upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
                 logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}")
@@ -363,7 +359,7 @@ def get_upload_file_name(
     initial_load_prefix = get_initial_load_prefix(initial_load_start_date)
     prefix = prefix_template.format(
         staging_or_processed="staging",
-        export_type=get_export_type(metadata_table),
+        export_type=export_type,
         table=table,
         initial_load_prefix=initial_load_prefix,
     )
@@ -403,7 +399,7 @@ def seed_and_upload_snowflake(
 
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
-        export_type=get_export_type(database_kwargs["metadata_table"]),
+        export_type=export_type,
         table=database_kwargs["source_table"],
         initial_load_prefix=get_initial_load_prefix(initial_load_start_date),
     )
@@ -480,7 +476,13 @@ def chunk_and_upload_metadata(
                 is_export_completed = last_extracted_id >= max_source_id
 
                 if is_export_completed:
-                    seed_and_upload_snowflake(chunk_df, database_kwargs, export_type, advanced_metadata, initial_load_start_date)
+                    seed_and_upload_snowflake(
+                        chunk_df,
+                        database_kwargs,
+                        export_type,
+                        advanced_metadata,
+                        initial_load_start_date,
+                    )
                     database_kwargs["source_engine"].dispose()
                     database_kwargs["target_engine"].dispose()
                 write_backfill_metadata(
@@ -693,8 +695,7 @@ def get_prefix_template() -> str:
     return "{staging_or_processed}/{export_type}/{table}/{initial_load_prefix}"
 
 
-
-def remove_files_from_gcs(export_type=str, source_table: str):
+def remove_files_from_gcs(export_type: str, source_table: str):
     """
     Prior to a fresh backfill/delete, remove all previously
     backfilled files that haven't been processed downstream
@@ -703,7 +704,7 @@ def remove_files_from_gcs(export_type=str, source_table: str):
 
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
-        export_type=get_export_type(export_type),
+        export_type=export_type,
         table=source_table,
         initial_load_prefix="initial_load_start_",
     )
