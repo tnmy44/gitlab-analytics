@@ -70,8 +70,7 @@ def upload_to_gcs(
     bucket = get_gcs_bucket()
 
     # Write out the parquet and upload it
-    # enriched_df = dataframe_enricher(advanced_metadata, upload_df)
-    enriched_df = upload_df
+    enriched_df = dataframe_enricher(advanced_metadata, upload_df)
     os.makedirs(
         os.path.dirname(upload_file_name), exist_ok=True
     )  # need to create director(ies) prior to to_parquet()
@@ -237,7 +236,6 @@ def chunk_and_upload(
     target_engine: Engine,
     target_table: str,
     source_table: str,
-    initial_load_start_date: datetime = datetime.now(),
     advanced_metadata: bool = False,
 ) -> None:
     """
@@ -249,7 +247,7 @@ def chunk_and_upload(
     """
 
     rows_uploaded = 0
-    prefix = "/staging/regular/{target_table}_CHUNK_"
+    prefix = f"/staging/regular/{target_table}/{target_table}_CHUNK_"
 
     with tempfile.TemporaryFile() as tmpfile:
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
