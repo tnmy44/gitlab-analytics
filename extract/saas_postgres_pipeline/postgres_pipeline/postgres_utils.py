@@ -94,7 +94,7 @@ def trigger_snowflake_upload(
 
     upload_query = f"""
         copy into {table}
-        from f'gcs://{BUCKET_NAME}'
+        from 'gcs://{BUCKET_NAME}'
         storage_integration = gcs_integration
         pattern = '{upload_file_name}'
         {purge_opt}
