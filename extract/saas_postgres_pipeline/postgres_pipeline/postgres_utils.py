@@ -101,7 +101,6 @@ def trigger_snowflake_upload(
         file_format = (type = parquet)
         match_by_column_name = case_insensitive;
     """
-    print(f'\nupload_query: {upload_query}')
     results = query_executor(engine, upload_query)
     total_rows = 0
 

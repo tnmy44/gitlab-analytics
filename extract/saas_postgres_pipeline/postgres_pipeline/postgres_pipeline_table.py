@@ -159,7 +159,7 @@ class PostgresPipelineTable:
             "test": self.check_new_table,
             "trusted_data": self.do_trusted_data_pgp,
         }
-        if metadata_engine:  # for backfills
+        if load_type == 'backfill':  # for backfills
             return load_types[load_type](source_engine, target_engine, metadata_engine)
         else:
             return load_types[load_type](source_engine, target_engine)
