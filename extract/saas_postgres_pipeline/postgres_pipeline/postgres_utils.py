@@ -393,6 +393,11 @@ def get_upload_file_name(
 def seed_and_upload_snowflake(
     chunk_df, database_kwargs, export_type, advanced_metadata, initial_load_start_date
 ):
+    # need to re-instantiate to avoid client session time-out
+    target_engine = snowflake_engine_factory(
+        os.environ.copy(), role="LOADER", schema="tap_postgres"
+    )
+
     schema_types = transform_source_types_to_snowflake_types(
         chunk_df,
         database_kwargs["source_table"],
@@ -402,7 +407,7 @@ def seed_and_upload_snowflake(
         advanced_metadata,
         schema_types,
         database_kwargs["target_table"],
-        database_kwargs["target_engine"],
+        target_engine,
     )
 
     prefix = get_prefix_template().format(
@@ -416,10 +421,12 @@ def seed_and_upload_snowflake(
     )
     # don't purge files, will do after swap
     trigger_snowflake_upload(
-        database_kwargs["target_engine"],
+        target_engine,
         database_kwargs["target_table"],
-        f"{prefix}.*.parquet$",
+        f"{prefix}.*.parquet.gzip$",
     )
+
+    target_engine.dispose()
     logging.info(
         "Finished copying to Snowflake table '{database_kwargs['target_table']}'"
     )
@@ -458,7 +465,7 @@ def chunk_and_upload_metadata(
             database_kwargs["chunksize"],
         )
 
-        for idx, chunk_df in enumerate(iter_csv):
+        for chunk_df in iter_csv:
             logging.info(f"\nchunk_df.head(): {chunk_df.head()}")
 
             row_count = chunk_df.shape[0]
@@ -479,7 +486,7 @@ def chunk_and_upload_metadata(
             if row_count > 0:
                 upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
                 logging.info(
-                    f"Uploaded {row_count} to GCS in {upload_file_name}.{str(idx)}"
+                    f"Uploaded {row_count} to GCS in {upload_file_name}"
                 )
                 is_export_completed = last_extracted_id >= max_source_id
 

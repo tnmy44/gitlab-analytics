@@ -112,7 +112,6 @@ class PostgresPipelineTable:
             "source_engine": source_engine,
             "source_table": self.source_table_name,
             "source_database": self.import_db,
-            "target_engine": target_engine,
             "target_table": self.get_temp_target_table_name(),
         }
         loaded = load_functions.load_ids(
@@ -159,7 +158,7 @@ class PostgresPipelineTable:
             "test": self.check_new_table,
             "trusted_data": self.do_trusted_data_pgp,
         }
-        if load_type == 'backfill':  # for backfills
+        if load_type == 'backfill':
             return load_types[load_type](source_engine, target_engine, metadata_engine)
         else:
             return load_types[load_type](source_engine, target_engine)
