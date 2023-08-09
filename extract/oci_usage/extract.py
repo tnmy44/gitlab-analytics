@@ -1,13 +1,16 @@
-import oci
+"""
+The main module for oci extraction process.
+"""
+
 import os
 import sys
+from logging import basicConfig, getLogger, info
 from typing import Dict
-from logging import info, basicConfig, getLogger
+
+import oci
 from fire import Fire
+from gitlabdata.orchestration_utils import snowflake_engine_factory
 from sqlalchemy.engine.base import Engine
-from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
-)
 
 # methods
 
@@ -23,7 +26,7 @@ def rename_oci_file(name: str) -> str:
 
 
 def extract_files_from_oci(
-    config: dict, reporting_namespace: str, file_prefix: str, destination_path: str
+    config: dict, reporting_namespace: str, destination_path: str
 ) -> dict:
     """
     extract all report files from OCI bucket and return a dictionary of filenames and report types
@@ -72,13 +75,7 @@ def extract_files_from_oci(
 
 
 def snowflake_copy_staged_files_into_table(
-    file: str,
-    stage: str,
-    table_path: str,
-    engine: Engine,
-    type: str = "json",
-    on_error: str = "abort_statement",
-    file_format_options: str = "",
+    file: str, stage: str, table_path: str, engine: Engine
 ) -> None:
     """
     copy file into specified table. remove file if copy into fails
@@ -114,13 +111,7 @@ def snowflake_copy_staged_files_into_table(
 
 
 def snowflake_stage_put_copy_files(
-    file_list: list,
-    stage: str,
-    table_path: str,
-    engine: Engine,
-    type: str = "json",
-    on_error: str = "abort_statement",
-    file_format_options: str = "",
+    file_list: list, stage: str, table_path: str, engine: Engine
 ) -> None:
     """
     compares file list with files in stage, putting new files into stage, then copying into tables using snowflake_copy_staged_files_into_table
@@ -128,7 +119,7 @@ def snowflake_stage_put_copy_files(
 
     list_query = f"list @{stage}"
 
-    info(f"checking for new files")
+    info("checking for new files")
     try:
         connection = engine.connect()
         staged_files_i = connection.execute(list_query)
@@ -141,7 +132,7 @@ def snowflake_stage_put_copy_files(
             connection.execute(put_query)
 
             snowflake_copy_staged_files_into_table(
-                file, stage, table_path, engine, type, on_error, file_format_options
+                file=file, stage=stage, table_path=table_path, engine=engine
             )
 
             info(f"File {file} loaded to table {table_path}")
@@ -178,7 +169,9 @@ def load_data():
     """
 
     oci_extraction = extract_files_from_oci(
-        oci_config, reporting_namespace, prefix_file, destination_path
+        config=oci_config,
+        reporting_namespace=reporting_namespace,
+        destination_path=destination_path,
     )
 
     for item in oci_extraction.items():
@@ -186,13 +179,10 @@ def load_data():
         oci_files = item[1]
         info(f"loading files {oci_files} into table: {target_table}")
         snowflake_stage_put_copy_files(
-            oci_files,
-            "oci_reports.oci_report",
-            f"oci_reports.{target_table}",
-            snowflake_engine,
-            "csv",
-            on_error="ABORT_STATEMENT",
-            file_format_options="SKIP_HEADER = 1",
+            file_list=oci_files,
+            stage="oci_reports.oci_report",
+            table_path=f"oci_reports.{target_table}",
+            engine=snowflake_engine,
         )
 
 
