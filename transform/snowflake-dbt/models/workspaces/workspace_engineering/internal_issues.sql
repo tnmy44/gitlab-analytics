@@ -130,9 +130,8 @@ joined AS (
       - The closed_at date from the raw data
       - The derived_closed_at date from the last moved or closed note in the notes_source
       - The derived_closed_at date from the last note left in the issue (regardless of the type of note)
-      - As a last resource, get the last updated_at date from the issue and make that the closed_at date
     */
-    IFF(issues.state = 'closed', COALESCE(issues.issue_closed_at, close_moved_date.derived_closed_at, derived_close_date.derived_closed_at, issues.updated_at), issues.issue_closed_at) 
+    IFF(issues.state = 'closed', COALESCE(issues.issue_closed_at, close_moved_date.derived_closed_at, derived_close_date.derived_closed_at), issues.issue_closed_at) 
                                                                                        AS issue_closed_at,
     issues.is_confidential                                                             AS issue_is_confidential,
     COALESCE(issues.namespace_id = 9970
