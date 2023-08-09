@@ -5,5 +5,6 @@ WITH source AS (
 
 )
 
-SELECT *
+SELECT *,
+       SYSDATE() as updated_at
 FROM source
