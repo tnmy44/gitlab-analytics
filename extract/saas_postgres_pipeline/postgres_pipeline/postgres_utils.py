@@ -248,6 +248,7 @@ def chunk_and_upload(
 
     rows_uploaded = 0
     prefix = f"/staging/regular/{target_table}/{target_table}_CHUNK_"
+    extension = '.parquet.gzip'
 
     with tempfile.TemporaryFile() as tmpfile:
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
@@ -263,7 +264,7 @@ def chunk_and_upload(
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
 
-            upload_file_name = f"{prefix}{str(idx)}.parquet.gz"
+            upload_file_name = f"{prefix}{str(idx)}{extension}"
             if row_count > 0:
                 upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
                 logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}")
@@ -272,7 +273,7 @@ def chunk_and_upload(
         trigger_snowflake_upload(
             target_engine,
             target_table,
-            upload_file_name,
+            f'{prefix}.*{extension}$',
             purge=True,
         )
         logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
@@ -424,7 +425,7 @@ def seed_and_upload_snowflake(
     trigger_snowflake_upload(
         target_engine,
         database_kwargs["target_table"],
-        f"{prefix}.*.parquet.gzip$",
+        f"/{prefix}/.*.parquet.gzip$",
     )
 
     target_engine.dispose()
