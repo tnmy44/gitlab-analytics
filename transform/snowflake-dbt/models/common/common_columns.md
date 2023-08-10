@@ -2214,8 +2214,10 @@ The latest date a service was updated.
 
 {% enddocs %}
 
-% docs dim_requirement_sk %}
+{% docs dim_requirement_sk %}
+
 The surrogate key of `dim_requirement` model. Currently identified by hashing the `requirement_id` field.
+
 {% enddocs %}
 
 {% docs requirement_id %}
