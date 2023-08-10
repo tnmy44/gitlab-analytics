@@ -220,9 +220,9 @@
   },
   {
     "event_name": "requirements",
-    "source_table_name": "gitlab_dotcom_requirements",
+    "source_table_name": "prep_requirement",
     "user_column_name": "author_id",
-    "key_to_parent_project": "project_id",
+    "key_to_parent_project": "dim_project_id",
     "primary_key": "requirement_id",
     "stage_name": "plan",
     "is_representative_of_stage": "False"

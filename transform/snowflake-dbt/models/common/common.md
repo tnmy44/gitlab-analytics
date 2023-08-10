@@ -1879,3 +1879,13 @@ A dimensional model describing the integration associated with GitLab namespaces
 From the GitLab.com [documentation](https://docs.gitlab.com/ee/user/project/integrations/), we know integrations are like plugins, which give customers the freedom to add functionality to GitLab.
 
 {% enddocs %}
+
+{% docs dim_requirement %}
+
+As described in the [GitLab documentation](https://docs.gitlab.com/ee/user/project/requirements/):
+
+With requirements, you can set criteria to check your products against. They can be based on users, stakeholders, system, software, or anything else you find important to capture. A requirement is an artifact in GitLab which describes the specific behavior of your product. Requirements are long-lived and don’t disappear unless manually cleared.
+
+This dimension model holds all requirement records and provides dimensional data around their state, creation dates, etc.
+
+{% enddocs %}

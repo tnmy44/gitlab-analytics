@@ -2213,3 +2213,39 @@ The date a integration was created.
 The latest date a service was updated.
 
 {% enddocs %}
+
+{% docs dim_requirement_sk %}
+
+The surrogate key of `dim_requirement` model. Currently identified by hashing the `requirement_id` field.
+
+{% enddocs %}
+
+{% docs requirement_id %}
+The natural key of `dim_requirement` model.
+{% enddocs %}
+
+{% docs requirement_internal_id %}
+An identifier for requirements in the `dim_requirement` model that is project-specific.
+{% enddocs %}
+
+{% docs requirement_state %}
+The state of the requirement (Opened/Archived) as defined by this [code](https://gitlab.com/gitlab-org/gitlab/-/blob/886e4652e57ef41b4ecdfeb9c42183467b625f72/ee/app/models/requirement.rb).
+{% enddocs %}
+
+{% docs created_date_id %}
+
+The ID of the created date, easily joined to `dim_date`
+
+{% enddocs %}
+
+{% docs requirement_created_at %}
+
+The date the requirement was created.
+
+{% enddocs %}
+
+{% docs requirement_updated_at %}
+
+The date the requirement was last updated.
+
+{% enddocs %}
