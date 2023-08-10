@@ -305,8 +305,8 @@ WITH biz_person AS (
       zoominfo_company_employee_count,
       NULL AS zoominfo_contact_id,
       CASE
-        WHEN sfdc_contacts.mql_datetime_inferred IS NOT null 
-            AND crm_tasks.min_task_completed_date_by_bdr_sdr >= sfdc_contacts.mql_datetime_inferred 
+        WHEN sfdc_leads.mql_datetime_inferred IS NOT null 
+            AND crm_tasks.min_task_completed_date_by_bdr_sdr >= sfdc_leads.mql_datetime_inferred 
           THEN TRUE
         ELSE FALSE
       END AS is_bdr_sdr_worked_inferred_mql
