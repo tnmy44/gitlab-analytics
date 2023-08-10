@@ -773,7 +773,7 @@ def get_min_or_max_id(
     return id_value
 
 
-def swap_temp_table(self, engine: Engine, real_table: str, temp_table: str) -> None:
+def swap_temp_table(engine: Engine, real_table: str, temp_table: str) -> None:
     """
     Drop the real table and rename the temp table to take the place of the
     real table.
