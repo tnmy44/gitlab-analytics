@@ -7703,3 +7703,32 @@ models:
         description: The date when the trial period begins for a product rate plan
       - name: trial_end_date
         description: The expiration date of the trial Order, which is usually 30 days from the trial start date
+
+  - name: dim_package
+    description: '{{ doc("dim_package")}}'
+    columns:
+      - name: dim_package_sk
+        description: '{{ ("dim_package_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: package_id
+        description: '{{ ("package_id") }}'
+      - name: dim_project_id
+        description: '{{ ("dim_project_id") }}'
+      - name: dim_namespace_id
+        description: '{{ ("dim_namespace_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ ("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ ("dim_plan_id") }}'
+      - name: creator_id
+        description: '{{ ("dim_user_id") }}'
+      - name: package_version
+        description: '{{ ("package_version") }}'
+      - name: package_type
+        description: '{{ ("package_type") }}'
+      - name: created_at
+        description: '{{ ("package_created_at") }}'
+      - name: updated_at
+        description: '{{ ("package_updated_at") }}'

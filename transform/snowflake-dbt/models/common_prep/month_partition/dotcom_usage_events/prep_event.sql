@@ -112,7 +112,7 @@
     "user_column_name": "creator_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_package_id",
+    "primary_key": "package_id",
     "stage_name": "package"
   },
   {

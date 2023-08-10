@@ -2146,3 +2146,40 @@ The surrogate key of `prep_namespace_order_trial` model. Currently identified by
 The surrogate key of `dim_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
 
 {% enddocs %}
+
+
+{% docs dim_package_sk %}
+
+The surrogate key of `dim_package` model. Currently identified by hashing the `package_id` field.
+
+{% enddocs %}
+
+{% docs package_id %}
+
+The natural key of `dim_package` model.
+
+{% enddocs %}
+
+{% docs package_version %}
+
+Version of the package in the [package registry](https://docs.gitlab.com/ee/user/packages/package_registry/).
+
+{% enddocs %}
+
+{% docs package_type %}
+
+Type of package in the [package registry](https://docs.gitlab.com/ee/user/packages/package_registry/).
+
+{% enddocs %}
+
+{% docs package_created_at %}
+
+Date the package was created.
+
+{% enddocs %}
+
+{% docs package_updated_at %}
+
+Latest date the package was updated.
+
+{% enddocs %}

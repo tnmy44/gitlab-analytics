@@ -1866,6 +1866,9 @@ Finally, only valid subscriptions that are not refunded are identified by filter
 
 {% enddocs %}
 
+{% docs dim_package %}
+
+Customers can publish and share packages in using GitLab's [package registry](https://docs.gitlab.com/ee/user/packages/package_registry/). This models contains dimensional attributes relating to the packages in the package registry.
 
 
-
+{% enddocs %}
