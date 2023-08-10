@@ -2249,3 +2249,33 @@ The date the requirement was created.
 The date the requirement was last updated.
 
 {% enddocs %}
+
+{% docs dim_snippet_sk %}
+
+The surrogate key of `dim_snippet` model. Currently identified by hashing the `snippet_id` field.
+
+{% enddocs %}
+
+{% docs snippet_id %}
+
+The natural key of `dim_snippet` model.
+
+{% enddocs %}
+
+{% docs snippet_type %}
+
+Identifies a snippet as a `Personal Snippet` or `Project Snippet`.
+
+{% enddocs %}
+
+{% docs snippet_created_at %}
+
+The date a snippet was created.
+
+{% enddocs %}
+
+{% docs snippet_updated_at %}
+
+The latest date a snippet was updated.
+
+{% enddocs %}

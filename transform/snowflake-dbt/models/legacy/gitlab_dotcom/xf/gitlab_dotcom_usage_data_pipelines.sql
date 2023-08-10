@@ -265,7 +265,7 @@
   },
   {
     "event_name": "snippets",
-    "source_table_name": "gitlab_dotcom_snippets",
+    "source_table_name": "gitlab_dotcom_snippets_source",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "snippet_id",

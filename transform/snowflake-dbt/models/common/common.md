@@ -1866,6 +1866,20 @@ Finally, only valid subscriptions that are not refunded are identified by filter
 
 {% enddocs %}
 
+{% docs dim_snippet %}
+
+[Snippets](https://docs.gitlab.com/ee/user/snippets.html) are pieces of code which can be stored and shared with others on GitLab. This model stores dimensional attributes about snippets including:
+
+  - Author
+  - Project
+  - Ultimate Namespace
+  - Plan
+  - Type (project/personal)
+  - Created Date
+  - Updated Date
+
+{% enddocs %}
+
 {% docs dim_package %}
 
 Customers can publish and share packages in using GitLab's [package registry](https://docs.gitlab.com/ee/user/packages/package_registry/). This models contains dimensional attributes relating to the packages in the package registry.
