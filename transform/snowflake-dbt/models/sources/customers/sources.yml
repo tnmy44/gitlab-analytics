@@ -109,3 +109,14 @@ sources:
           - name: subscription_id
             tests:
               - not_null
+      - name: customers_db_billing_account_contacts
+        columns:
+          - name: id
+            tests:
+              - not_null
+          - name: created_at
+            tests:
+              - not_null
+          - name: updated_at
+            tests:
+              - not_null

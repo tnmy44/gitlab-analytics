@@ -175,7 +175,7 @@
   },
   {
     "event_name": "packages",
-    "source_table_name": "gitlab_dotcom_packages_packages",
+    "source_table_name": "gitlab_dotcom_packages_packages_source",
     "user_column_name": "creator_id",
     "key_to_parent_project": "project_id",
     "primary_key": "packages_package_id",
