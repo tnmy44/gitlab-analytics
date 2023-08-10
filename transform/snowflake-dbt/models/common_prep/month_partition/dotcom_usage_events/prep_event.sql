@@ -315,11 +315,11 @@
   },
   {
     "event_name": "integrations",
-    "source_cte_name": "prep_service",
+    "source_cte_name": "prep_integration",
     "user_column_name": "NULL",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_service_id",
+    "primary_key": "integration_id",
     "stage_name": "create"
   },
   {
@@ -443,7 +443,7 @@
     ('prep_user_event', 'prep_user'),
     ('prep_board', 'prep_board'),
     ('prep_project_auto_devops', 'prep_project_auto_devops'),
-    ('prep_service', 'prep_service'),
+    ('prep_integration', 'prep_integration'),
     ('prep_issue_resource_weight', 'prep_issue_resource_weight'),
     ('prep_milestone', 'prep_milestone'),
     ('prep_ci_pipeline_schedule', 'prep_ci_pipeline_schedule'),

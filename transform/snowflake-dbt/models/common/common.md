@@ -1870,5 +1870,12 @@ Finally, only valid subscriptions that are not refunded are identified by filter
 
 Customers can publish and share packages in using GitLab's [package registry](https://docs.gitlab.com/ee/user/packages/package_registry/). This models contains dimensional attributes relating to the packages in the package registry.
 
+{% enddocs %}
+
+{% docs dim_integration %}
+
+A dimensional model describing the integration associated with GitLab namespaces.
+
+From the GitLab.com [documentation](https://docs.gitlab.com/ee/user/project/integrations/), we know integrations are like plugins, which give customers the freedom to add functionality to GitLab.
 
 {% enddocs %}

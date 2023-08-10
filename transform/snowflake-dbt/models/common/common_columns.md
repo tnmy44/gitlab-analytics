@@ -2183,3 +2183,33 @@ Date the package was created.
 Latest date the package was updated.
 
 {% enddocs %}
+
+{% docs dim_integration_sk %}
+
+The surrogate key of `dim_integration` model. Currently identified by hashing the `integration_id` field.
+
+{% enddocs %}
+
+{% docs integration_id %}
+
+The natural key of `dim_integration` model.
+
+{% enddocs %}
+
+{% docs integration_is_active %}
+
+Boolean representing if an integration is active or not.
+
+{% enddocs %}
+
+{% docs integration_created_at %}
+
+The date a integration was created.
+
+{% enddocs %}
+
+{% docs integration_updated_at %}
+
+The latest date a service was updated.
+
+{% enddocs %}
