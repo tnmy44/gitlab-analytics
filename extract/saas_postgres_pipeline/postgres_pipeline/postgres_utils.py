@@ -246,7 +246,7 @@ def chunk_and_upload(
     """
 
     rows_uploaded = 0
-    prefix = f"staging/regular/{target_table}/{target_table}_chunk"
+    prefix = f"staging/regular/{target_table}/{target_table}_chunk".lower()
     extension = ".parquet.gzip"
 
     with tempfile.TemporaryFile() as tmpfile:
@@ -431,6 +431,7 @@ def seed_and_upload_snowflake(
         f"{prefix}/.*.parquet.gzip$",
     )
 
+    # We do the swap here because snowflake engine instantiated here
     swap_temp_table(
         target_engine,
         database_kwargs["real_target_table"],
