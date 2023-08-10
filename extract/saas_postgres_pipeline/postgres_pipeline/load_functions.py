@@ -218,7 +218,7 @@ def load_scd(
         table_name,
         source_table_name,
         advanced_metadata,
-        backfill
+        backfill,
     )
     return True
 

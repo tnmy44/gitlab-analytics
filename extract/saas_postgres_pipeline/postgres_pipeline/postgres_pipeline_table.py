@@ -9,6 +9,7 @@ from postgres_utils import (
     is_resume_export,
     remove_files_from_gcs,
     BACKFILL_METADATA_TABLE,
+    swap_temp_table,
 )
 
 from gitlabdata.orchestration_utils import snowflake_engine_factory, query_executor
@@ -115,6 +116,7 @@ class PostgresPipelineTable:
             "source_table": self.source_table_name,
             "source_database": self.import_db,
             "target_table": self.get_temp_target_table_name(),
+            "real_target_table": self.get_target_table_name(),
         }
         loaded = load_functions.load_ids(
             database_kwargs,
@@ -123,7 +125,6 @@ class PostgresPipelineTable:
             start_pk,
             "backfill",
         )
-        self.swap_temp_table_on_schema_change(loaded, is_backfill_needed, target_engine)
         return loaded
 
     def check_new_table(
@@ -160,7 +161,7 @@ class PostgresPipelineTable:
             "test": self.check_new_table,
             "trusted_data": self.do_trusted_data_pgp,
         }
-        if load_type == 'backfill':
+        if load_type == "backfill":
             return load_types[load_type](source_engine, target_engine, metadata_engine)
         else:
             return load_types[load_type](source_engine, target_engine)
@@ -186,33 +187,11 @@ class PostgresPipelineTable:
     def get_temp_target_table_name(self):
         return self.get_target_table_name() + "_TEMP"
 
-    def _swap_temp_table(
-        self, engine: Engine, real_table: str, temp_table: str
-    ) -> None:
-        """
-        Drop the real table and rename the temp table to take the place of the
-        real table.
-        """
-
-        if engine.has_table(real_table):
-            logging.info(
-                f"Swapping the temp table: {temp_table} with the real table: {real_table}"
-            )
-            swap_query = f"ALTER TABLE IF EXISTS tap_postgres.{temp_table} SWAP WITH tap_postgres.{real_table}"
-            query_executor(engine, swap_query)
-        else:
-            logging.info(f"Renaming the temp table: {temp_table} to {real_table}")
-            rename_query = f"ALTER TABLE IF EXISTS tap_postgres.{temp_table} RENAME TO tap_postgres.{real_table}"
-            query_executor(engine, rename_query)
-
-        drop_query = f"DROP TABLE IF EXISTS tap_postgres.{temp_table}"
-        query_executor(engine, drop_query)
-
     def swap_temp_table_on_schema_change(
         self, schema_changed: bool, loaded: bool, engine: Engine
     ):
         if schema_changed and loaded:
-            self._swap_temp_table(
+            swap_temp_table(
                 engine, self.get_target_table_name(), self.get_temp_target_table_name()
             )
 

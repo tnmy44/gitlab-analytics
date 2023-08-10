@@ -101,7 +101,7 @@ def trigger_snowflake_upload(
         file_format = (type = parquet)
         match_by_column_name = case_insensitive;
     """
-    print(f'\nupload_query: {upload_query}')
+    print(f"\nupload_query: {upload_query}")
     results = query_executor(engine, upload_query)
     total_rows = 0
 
@@ -248,7 +248,7 @@ def chunk_and_upload(
 
     rows_uploaded = 0
     prefix = f"staging/regular/{target_table}/{target_table}_chunk"
-    extension = '.parquet.gzip'
+    extension = ".parquet.gzip"
 
     with tempfile.TemporaryFile() as tmpfile:
         iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
@@ -273,7 +273,7 @@ def chunk_and_upload(
         trigger_snowflake_upload(
             target_engine,
             target_table,
-            f'{prefix}.*{extension}$',
+            f"{prefix}.*{extension}$",
             purge=True,
         )
         logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
@@ -428,6 +428,12 @@ def seed_and_upload_snowflake(
         f"{prefix}/.*.parquet.gzip$",
     )
 
+    swap_temp_table(
+        target_engine,
+        database_kwargs["real_target_table"],
+        database_kwargs["target_table"],
+    )
+
     target_engine.dispose()
     logging.info(
         f"Finished copying to Snowflake table '{database_kwargs['target_table']}'"
@@ -487,9 +493,7 @@ def chunk_and_upload_metadata(
 
             if row_count > 0:
                 upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
-                logging.info(
-                    f"Uploaded {row_count} to GCS in {upload_file_name}"
-                )
+                logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}")
                 is_export_completed = last_extracted_id >= max_source_id
 
                 if is_export_completed:
@@ -570,6 +574,7 @@ def check_if_schema_changed(
     """
 
     if not target_engine.has_table(target_table):
+        print('made it to target_table does not exist')
         return True
     # Get the columns from the current query
     query_stem = raw_query.lower().split("where")[0]
@@ -586,6 +591,8 @@ def check_if_schema_changed(
         .drop(axis=1, columns=["_uploaded_at", "_task_instance"], errors="ignore")
         .columns
     )
+    print(f'\nsource_columns: {source_columns}')
+    print(f'\ntarget_columns: {target_columns}')
 
     return set(source_columns) != set(target_columns)
 
@@ -763,3 +770,24 @@ def get_min_or_max_id(
         logging.info(f"No data found when querying {min_or_max}(id) -- exiting")
         sys.exit(0)
     return id_value
+
+
+def swap_temp_table(self, engine: Engine, real_table: str, temp_table: str) -> None:
+    """
+    Drop the real table and rename the temp table to take the place of the
+    real table.
+    """
+
+    if engine.has_table(real_table):
+        logging.info(
+            f"Swapping the temp table: {temp_table} with the real table: {real_table}"
+        )
+        swap_query = f"ALTER TABLE IF EXISTS tap_postgres.{temp_table} SWAP WITH tap_postgres.{real_table}"
+        query_executor(engine, swap_query)
+    else:
+        logging.info(f"Renaming the temp table: {temp_table} to {real_table}")
+        rename_query = f"ALTER TABLE IF EXISTS tap_postgres.{temp_table} RENAME TO tap_postgres.{real_table}"
+        query_executor(engine, rename_query)
+
+    drop_query = f"DROP TABLE IF EXISTS tap_postgres.{temp_table}"
+    query_executor(engine, drop_query)
