@@ -1826,6 +1826,8 @@ models:
           - unique:
               config:
                 where: "event_date >= DATEADD('day',-7,CURRENT_DATE())"
+      - name: event_id
+        description: '{{ doc("event_id") }}'
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
@@ -1907,6 +1909,8 @@ models:
         # tests:
           # - not_null
           # - unique
+      - name: event_id
+        description: '{{ doc("event_id") }}'
       - name: event_name
         description: '{{ doc("event_name") }}'
       - name: dim_event_date_id
@@ -2357,6 +2361,7 @@ models:
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
+      - name: created_date
       - name: subscription_action_type
         description: '{{ doc("subscription_action_type") }}'
 
@@ -5744,7 +5749,9 @@ models:
       - name: fct_behavior_website_page_view_sk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("fct_behavior_website_page_view_sk") }}'  
       - name: dim_behavior_website_page_sk
         description: '{{ doc("dim_behavior_website_page_sk") }}' 
@@ -6168,7 +6175,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
@@ -6378,7 +6387,9 @@ models:
       - name: fct_behavior_unstructured_sk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("fct_behavior_unstructured_sk") }}'
       - name: app_id
         description: '{{ doc("app_id") }}'
@@ -7291,8 +7302,56 @@ models:
           masking_policy: analyst_people
       - name: employee_type
         description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
-        meta:
-          masking_policy: analyst_people
+
+  - name: dim_team
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - team_id
+            - valid_from
+    columns:
+      - name: team_hierarchy_level
+        tests:
+          - accepted_values:
+              values: ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+      - name: dim_team_sk
+        tests:
+          - not_null
+      - name: team_id
+        tests:
+          - not_null
+      - name: team_superior_team_id
+      - name: hierarchy_level_1
+      - name: hierarchy_level_2
+      - name: hierarchy_level_3
+      - name: hierarchy_level_4
+      - name: hierarchy_level_5
+      - name: hierarchy_level_6
+      - name: hierarchy_level_7
+      - name: hierarchy_level_8
+      - name: hierarchy_level_9
+      - name: hierarchy_level_1_name
+      - name: hierarchy_level_2_name
+      - name: hierarchy_level_3_name
+      - name: hierarchy_level_4_name
+      - name: hierarchy_level_5_name
+      - name: hierarchy_level_6_name
+      - name: hierarchy_level_7_name
+      - name: hierarchy_level_8_name
+      - name: hierarchy_level_9_name
+      - name: hierarchy_levels_array
+      - name: team_hierarchy_level
+      - name: is_team_inactivated
+      - name: team_name
+      - name: team_manager_name
+      - name: team_manager_name_id
+      - name: team_inactivated_date
+      - name: team_members_count
+      - name: is_team_manager_inherited
+      - name: is_team_active
+      - name: valid_from
+      - name: valid_to
+      - name: is_current
 
   - name: fct_team_member_status
     description: '{{ doc("fct_team_member_status") }}'
@@ -7543,7 +7602,7 @@ models:
         description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
       - name: country
         description: The country selected by the User during registration
-      - name: company size
+      - name: company_size
         description: The size of the company as provided by the user during registration
       - name: order_created_at
         description: The date when the Order was created
@@ -7589,7 +7648,7 @@ models:
         description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term
       - name: country
         description: The country selected by the User during registration
-      - name: company size
+      - name: company_size
         description: The size of the company as provided by the user during registration
       - name: is_trial_converted
         description: Boolean flag to indicate if the Trial order(from CDot) has been converted to Paid Order or not
@@ -7637,7 +7696,7 @@ models:
         description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term
       - name: country
         description: The country selected by the User during registration
-      - name: company size
+      - name: company_size
         description: The size of the company as provided by the user during registration
       - name: order_created_at
         description: The date when the Order was first created in CDot
@@ -7645,6 +7704,87 @@ models:
         description: The date when the trial period begins for a product rate plan
       - name: trial_end_date
         description: The expiration date of the trial Order, which is usually 30 days from the trial start date
+
+  - name: dim_package
+    description: '{{ doc("dim_package")}}'
+    columns:
+      - name: dim_package_sk
+        description: '{{ ("dim_package_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: package_id
+        description: '{{ ("package_id") }}'
+      - name: dim_project_id
+        description: '{{ ("dim_project_id") }}'
+      - name: dim_namespace_id
+        description: '{{ ("dim_namespace_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ ("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ ("dim_plan_id") }}'
+      - name: creator_id
+        description: '{{ ("dim_user_id") }}'
+      - name: package_version
+        description: '{{ ("package_version") }}'
+      - name: package_type
+        description: '{{ ("package_type") }}'
+      - name: created_at
+        description: '{{ ("package_created_at") }}'
+      - name: updated_at
+        description: '{{ ("package_updated_at") }}'
+
+  - name: dim_integration
+    description: '{{ ("dim_integration") }}'
+    columns:
+      - name: dim_integration_sk
+        description: '{{ doc("dim_integration_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: integration_id
+        description: '{{ doc("integration_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ doc("dim_plan_id") }}'
+      - name: is_active
+        description: '{{ doc("integration_is_active") }}'
+      - name: created_at
+        description: '{{ doc("integration_created_at") }}'
+      - name: updated_at
+        description: '{{ doc("integration_updated_at") }}'
+
+  - name: dim_requirement
+    description: '{{ doc("dim_requirement") }}'
+    columns:
+      - name: dim_requirement_sk
+        description: '{{ doc("dim_requirement_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: requirement_id
+        description: '{{ doc("requirement_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ doc("dim_plan_id") }}'
+      - name: author_id
+        description: '{{ doc("dim_user_id") }}'
+      - name: created_date_id
+        description: '{{ doc("created_date_id") }}'
+      - name: requirement_internal_id
+        description: '{{ doc("requirement_internal_id") }}'
+      - name: requirement_state
+        description: '{{ doc("requirement_state") }}'
+      - name: created_at
+        description: '{{ doc("requirement_created_at") }}'
+      - name: updated_at
+        description: '{{ doc("requirement_updated_at") }}'
 
   - name: dim_snippet
     description: '{{ doc("dim_snippet") }}'

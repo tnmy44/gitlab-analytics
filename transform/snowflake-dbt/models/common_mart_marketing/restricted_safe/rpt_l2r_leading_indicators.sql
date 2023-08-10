@@ -27,6 +27,7 @@
     --Person Dates
         true_inquiry_date,
         mql_date_first_pt,
+        mql_date_latest_pt,
 
     --Opportunity Data
         opp_order_type,
@@ -121,7 +122,7 @@
         parent_crm_account_lam_dev_count
   FROM rpt_lead_to_revenue_base
   LEFT JOIN date_base
-    ON rpt_lead_to_revenue_base.mql_date_first_pt=date_base.date_day
+    ON rpt_lead_to_revenue_base.mql_date_latest_pt=date_base.date_day
   WHERE 1=1 
    AND (account_demographics_geo != 'JIHU'
      OR account_demographics_geo IS null) 
@@ -298,5 +299,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-06-21",
-    updated_date="2023-07-14",
+    updated_date="2023-07-25",
   ) }}
