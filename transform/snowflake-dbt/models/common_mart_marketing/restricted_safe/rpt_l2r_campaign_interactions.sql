@@ -802,7 +802,7 @@
           or record_owner_title  LIKE '%Business Development%' 
         THEN TRUE
         ELSE FALSE
-      END as sales_dev_owned_record_flag,
+      END as is_sales_dev_owned_record,
 
      --inquiry_date fields
       inquiry_date.fiscal_year                     AS inquiry_date_range_year,
