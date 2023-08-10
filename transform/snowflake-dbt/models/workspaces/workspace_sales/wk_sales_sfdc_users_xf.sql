@@ -161,25 +161,11 @@ WITH source_user AS (
         -- H2 update
         WHEN LOWER(business_unit) = 'japan'
           THEN 'Japan'      
-      -- NF 202307 This part will be removed in the H2 update
-      -- just removing this part is enough at this level
-        WHEN
-          LOWER(business_unit) = 'comm'
-          AND
-            (
-            LOWER(user_segment) = 'smb'
-            AND LOWER(user_geo) = 'amer'
-            AND LOWER(user_area) = 'lowtouch'
-            ) 
-          THEN 'AMER Low-Touch'
-      ----------------
         WHEN
           LOWER(business_unit) = 'comm'
           AND
             (
             LOWER(user_segment) = 'mid-market'
-            AND (LOWER(user_geo) = 'amer' 
-                OR LOWER(user_geo) = 'emea')
             AND LOWER(role_type) = 'fo'
             )
           THEN 'MM First Orders'  --mid-market FO(?)
@@ -200,95 +186,38 @@ WITH source_user AS (
           THEN user_region
         WHEN LOWER(business_unit) = 'japan'
           THEN 'Japan'   
-        WHEN 
-          LOWER(business_unit) = 'comm'
-          AND (LOWER(sub_business_unit) = 'amer' 
-            OR LOWER(sub_business_unit) = 'emea')
-          AND LOWER(user_segment) = 'mid-market'
-          THEN 'Mid-Market'
         WHEN
           LOWER(business_unit) = 'comm'
           AND LOWER(user_segment) = 'mid-market'         
           AND LOWER(sub_business_unit) = 'mm first orders'
           THEN 'MM First Orders'
-
-        -- NF 202307 This piece will be removed as it is moving under 
-        -- SMB  
+        WHEN 
+          LOWER(business_unit) = 'comm'
+          AND LOWER(sub_business_unit) != 'mm first orders'
+          AND LOWER(user_segment) = 'mid-market'
+          THEN 'Mid-Market'
         WHEN
           LOWER(business_unit) = 'comm'
-          AND LOWER(user_segment) = 'smb'
-          AND LOWER(sub_business_unit) = 'amer low-touch'
-          THEN 'AMER Low-Touch'
-        WHEN
-          LOWER(business_unit) = 'comm'
-          AND (LOWER(sub_business_unit) = 'amer'
-             OR LOWER(sub_business_unit) = 'emea')
+          AND LOWER(sub_business_unit) != 'mm first orders'
           AND LOWER(user_segment) = 'smb'
           THEN 'SMB'
-        /*
-        -- H2 new structure for SMB
-        WHEN
-          LOWER(business_unit) = 'comm'
-          AND LOWER(user_segment) = 'smb'
-          AND (LOWER(sub_business_unit) = 'amer'
-             OR LOWER(sub_business_unit) = 'emea')
-          THEN 'SMB'
-        */
         ELSE 'Other'
       END AS division,
 
       -- ASM (X-Ray 4th hierarchy): definition pending
       CASE
         WHEN LOWER(business_unit) = 'japan'
-          THEN 'Japan'   
+          THEN user_area 
         WHEN 
           LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'amer'
-          THEN user_area
-        WHEN 
-          LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'emea'
-          AND (LOWER(division) = 'dach' 
-            OR LOWER(division) = 'neur' 
-            OR LOWER(division) = 'seur'
-            OR LOWER(division) = 'meta')
-          THEN user_area
-        WHEN 
-          LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'apac'
-          THEN user_area
-        
-        -- NF202307 Pubsec Adjustment of SLED, this should be fixed for H2
-        WHEN
-          LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'pubsec'
-          AND LOWER(division) != 'sled'
-          THEN user_area
-        WHEN
-          LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'pubsec'
-          AND LOWER(division) = 'sled'
-          THEN user_region
+          THEN user_area  
         WHEN 
           LOWER(business_unit) = 'comm'
-          AND LOWER(sub_business_unit) = 'mm first orders'
+          AND LOWER(division) = 'mm first orders'
           THEN user_geo
         WHEN
           LOWER(business_unit) = 'comm'
-          AND LOWER(user_segment) = 'smb'
-          AND LOWER(sub_business_unit) = 'amer low-touch'
-          AND LOWER(role_type) = 'fo'
-          THEN 'LowTouch FO'
-        WHEN
-          LOWER(business_unit) = 'comm'
-          AND LOWER(user_segment) = 'smb'
-          AND LOWER(sub_business_unit) = 'amer low-touch'
-          AND LOWER(role_type) != 'fo'
-          THEN 'LowTouch Pool'
-        WHEN
-          LOWER(business_unit) = 'comm'
-          AND (LOWER(sub_business_unit) = 'amer' 
-            OR LOWER(sub_business_unit) = 'emea')
+          AND LOWER(division) IN ('smb','mid-market')
           THEN user_area
         ELSE 'Other'
       END AS asm
