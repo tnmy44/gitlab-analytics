@@ -1,7 +1,8 @@
 {{ config(
     tags=["mnpi_exception", "product"],
     materialized = "incremental",
-    unique_key = "event_pk"
+    unique_key = "event_pk",
+    on_schema_change: "sync_all_columns"
 ) }}
 
 {{ simple_cte([
@@ -89,5 +90,5 @@ gitlab_dotcom_fact AS (
     created_by="@icooper-acp",
     updated_by="@michellecooper",
     created_date="2022-01-20",
-    updated_date="2023-07-21"
+    updated_date="2023-08-10"
 ) }}
