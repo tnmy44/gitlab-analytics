@@ -2361,6 +2361,7 @@ models:
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
+      - name: created_date
       - name: subscription_action_type
         description: '{{ doc("subscription_action_type") }}'
 
