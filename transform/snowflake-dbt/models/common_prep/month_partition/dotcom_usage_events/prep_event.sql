@@ -148,7 +148,7 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_requirement_sk",
+    "primary_key": "requirement_id",
     "stage_name": "plan"
   },
   {
