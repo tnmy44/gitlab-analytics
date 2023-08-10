@@ -1826,6 +1826,8 @@ models:
           - unique:
               config:
                 where: "event_date >= DATEADD('day',-7,CURRENT_DATE())"
+      - name: event_id
+        description: '{{ doc("event_id") }}'
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
@@ -1907,6 +1909,8 @@ models:
         # tests:
           # - not_null
           # - unique
+      - name: event_id
+        description: '{{ doc("event_id") }}'
       - name: event_name
         description: '{{ doc("event_name") }}'
       - name: dim_event_date_id

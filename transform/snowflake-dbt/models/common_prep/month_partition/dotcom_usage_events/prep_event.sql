@@ -605,7 +605,8 @@
 {% for event_cte in event_ctes %}
 
     SELECT
-      MD5({{ event_cte.source_cte_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_id,
+      MD5({{ event_cte.source_cte_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_pk,
+      {{ event_cte.source_cte_name}}.{{ event_cte.primary_key }}                                               AS event_id,
       '{{ event_cte.event_name }}'                                                                             AS event_name,
       '{{ event_cte.stage_name }}'                                                                             AS stage_name,
       {{ event_cte.source_cte_name}}.created_at                                                                AS event_created_at,

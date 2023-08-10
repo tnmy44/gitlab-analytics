@@ -1,14 +1,20 @@
 {%- macro schema_union_all(schema_part, table_name, exclude_part='scratch', database_name=none, day_limit=none) -%}
 
- {%- if database_name is not none -%}
+{% set local = var('local', 'no') %}
+
+  {%- if local != 'no' and database is not none -%}
+
+    {%- set database = generate_database_name(database_name) -%}
+
+  {%- elif database_name is not none-%}
 
     {%- set database = database_name -%}
 
- {%- else -%}
+  {%- else -%}
 
     {%- set database = target.database -%}
 
- {%- endif -%}
+  {%- endif -%}
 
  {%- call statement('get_schemata', fetch_result=True) -%}
 

@@ -4,11 +4,13 @@ models:
   - name: prep_event
     description: '{{ doc("prep_event") }}'
     columns:
-      - name: event_id
+      - name: event_pk
         description: primary key of the table. Unique ID of the event
         tests:
           - unique
           - not_null
+      - name: event_id
+        description: '{{ doc("event_id") }}'
       - name: ultimate_parent_namespace_id
         description: ID of the ultimate parent namespace in which the event was triggered
       - name: dim_project_id
