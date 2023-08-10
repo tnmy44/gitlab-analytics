@@ -326,25 +326,25 @@ tables:
   #    FROM clusters
   #    WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
   #      AND '{END_TIMESTAMP}'::timestamp
-  #container_expiration_policies:
-  #  export_schema: "gitlab_com"
-  #  export_table: container_expiration_policies
-  #  export_table_primary_key: project_id
-  #  import_db: GITLAB_DB
-  #  import_query: |-
-  #    SELECT created_at
-  #    , updated_at
-  #    , next_run_at
-  #    , project_id
-  #    , name_regex
-  #    , cadence
-  #    , older_than
-  #    , keep_n
-  #    , enabled
-  #    , name_regex_keep
-  #    FROM container_expiration_policies
-  #    WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-  #      AND '{END_TIMESTAMP}'::timestamp
+  container_expiration_policies:
+    export_schema: "gitlab_com"
+    export_table: container_expiration_policies
+    export_table_primary_key: project_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT created_at
+      , updated_at
+      , next_run_at
+      , project_id
+      , name_regex
+      , cadence
+      , older_than
+      , keep_n
+      , enabled
+      , name_regex_keep
+      FROM container_expiration_policies
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   #container_repositories:
   #  export_schema: "gitlab_com"
   #  export_table: container_repositories

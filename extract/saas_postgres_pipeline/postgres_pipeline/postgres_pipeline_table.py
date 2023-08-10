@@ -106,10 +106,9 @@ class PostgresPipelineTable:
             logging.info("table does not need incremental backfill")
             return False
 
-        # dipose engine now, create new Snowflake engine right before load
+        # dipose current engine, create new Snowflake engine before load
         target_engine.dispose()
         database_kwargs = {
-            "chunksize": 5_000_000,
             "metadata_engine": metadata_engine,
             "metadata_table": BACKFILL_METADATA_TABLE,
             "source_engine": source_engine,

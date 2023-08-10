@@ -21,6 +21,7 @@ from postgres_utils import (
     id_query_generator,
     manifest_reader,
     get_min_or_max_id,
+    BACKFILL_EXTRACT_CHUNKSIZE,
 )
 
 
@@ -245,7 +246,6 @@ def load_ids(
         database_kwargs["source_engine"],
         database_kwargs["source_table"],
         "max",
-        database_kwargs["chunksize"],
     )
 
     # Create a generator for queries that are chunked by ID range
@@ -254,7 +254,7 @@ def load_ids(
         raw_query,
         start_pk,
         max_pk,
-        database_kwargs["chunksize"],
+        BACKFILL_EXTRACT_CHUNKSIZE,
     )
 
     # Iterate through the generated queries

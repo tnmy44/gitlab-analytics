@@ -32,13 +32,14 @@ from sqlalchemy import (
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
 
-# SCHEMA = "tap_postgres"
 
-# bucket_name: test-saas-pipeline-backfills
 METADATA_SCHEMA = os.environ.get("GITLAB_METADATA_SCHEMA")
 BUCKET_NAME = os.environ.get("GITLAB_BACKFILL_BUCKET")
 BACKFILL_METADATA_TABLE = "backfill_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
+BACKFILL_EXTRACT_CHUNKSIZE = 15_000_000
+CSV_CHUNKSIZE_BACKFILL = 5_000_000
+CSV_CHUNKSIZE_REGULAR = 1_000_000
 
 
 def get_gcs_scoped_credentials():
@@ -147,20 +148,18 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
     return manifest_dict
 
 
-def query_results_generator(
-    query: str, engine: Engine, chunksize: int = 750_000
-) -> pd.DataFrame:
+def query_results_generator(query: str, engine: Engine) -> pd.DataFrame:
     """
     Use pandas to run a sql query and load it into a dataframe.
     Yield it back in chunks for scalability.
     """
 
     try:
-        query_df_iterator = pd.read_sql(sql=query, con=engine, chunksize=chunksize)
+        query_df = pd.read_sql(sql=query, con=engine)
     except Exception as e:
         logging.exception(e)
         sys.exit(1)
-    return query_df_iterator
+    return query_df
 
 
 def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
@@ -251,7 +250,9 @@ def chunk_and_upload(
     extension = ".parquet.gzip"
 
     with tempfile.TemporaryFile() as tmpfile:
-        iter_csv = read_sql_tmpfile(query, source_engine, tmpfile)
+        iter_csv = read_sql_tmpfile(
+            query, source_engine, tmpfile, CSV_CHUNKSIZE_REGULAR
+        )
 
         for idx, chunk_df in enumerate(iter_csv):
             if backfill:
@@ -438,7 +439,7 @@ def seed_and_upload_snowflake(
 
     target_engine.dispose()
     logging.info(
-        f"Finished copying to Snowflake table '{database_kwargs['target_table']}'"
+        f"Finished copying to Snowflake table '{database_kwargs['real_target_table']}'"
     )
 
 
@@ -472,7 +473,7 @@ def chunk_and_upload_metadata(
             query,
             database_kwargs["source_engine"],
             tmpfile,
-            database_kwargs["chunksize"],
+            CSV_CHUNKSIZE_BACKFILL,
         )
 
         for chunk_df in iter_csv:
@@ -529,7 +530,7 @@ def chunk_and_upload_metadata(
 
 
 def read_sql_tmpfile(
-    query: str, db_engine: Engine, tmp_file: Any, chunksize=750_000
+    query: str, db_engine: Engine, tmp_file: Any, chunksize
 ) -> pd.DataFrame:
     """
     Uses postGres commands to copy data out of the DB and return a DF iterator
@@ -743,7 +744,7 @@ def remove_files_from_gcs(export_type: str, source_table: str):
 
 
 def get_min_or_max_id(
-    primary_key: str, engine: Engine, table: str, min_or_max: str, chunksize: int
+    primary_key: str, engine: Engine, table: str, min_or_max: str
 ) -> int:
     """
     Retrieve the minimum or maximum value of the specified primary key column in the specified table.
@@ -760,8 +761,8 @@ def get_min_or_max_id(
     logging.info(f"Getting {min_or_max} ID from table: {table}")
     id_query = f"SELECT {min_or_max}({primary_key}) as {primary_key} FROM {table}"
     try:
-        id_results = query_results_generator(id_query, engine, chunksize)
-        id_value = next(id_results)[primary_key].tolist()[0]
+        id_results = query_results_generator(id_query, engine)
+        id_value = id_results[primary_key].tolist()[0]
     except sqlalchemy.exc.ProgrammingError as e:
         logging.exception(e)
         raise
