@@ -324,6 +324,8 @@ def write_backfill_metadata(
     with metadata_engine.connect() as connection:
         connection.execute(insert_query)
 
+    logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
+
 
 def get_prefix_template() -> str:
     """
@@ -518,8 +520,9 @@ def chunk_and_upload_metadata(
                     is_export_completed,
                     row_count,
                 )
-
-                logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
+                # for loop should auto-terminate, but just to be safe
+                if is_export_completed:
+                    break
 
     # need to return in case it was first set here
     return initial_load_start_date
@@ -574,7 +577,7 @@ def check_if_schema_changed(
     """
 
     if not target_engine.has_table(target_table):
-        print('made it to target_table does not exist')
+        logging.info(f"Target table '{target_table}' does not exist yet")
         return True
     # Get the columns from the current query
     query_stem = raw_query.lower().split("where")[0]
@@ -591,8 +594,6 @@ def check_if_schema_changed(
         .drop(axis=1, columns=["_uploaded_at", "_task_instance"], errors="ignore")
         .columns
     )
-    print(f'\nsource_columns: {source_columns}')
-    print(f'\ntarget_columns: {target_columns}')
 
     return set(source_columns) != set(target_columns)
 
