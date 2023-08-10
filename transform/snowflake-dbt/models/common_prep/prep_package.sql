@@ -4,7 +4,8 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_package_sk"
+    "unique_key": "dim_package_sk",
+    "on_schema_change": "sync_all_columns"
     })
 }}
 
@@ -65,5 +66,5 @@
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-08-05",
-    updated_date="2023-07-28"
+    updated_date="2023-08-10"
 ) }}

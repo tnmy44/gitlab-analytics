@@ -5,6 +5,7 @@
 {{ config({
     "materialized": "incremental",
     "unique_key": "dim_package_sk",
+    "on_schema_change": "sync_all_columns",
     "post-hook": "{{ missing_member_column(primary_key = 'dim_package_sk', not_null_test_cols = []) }}"
     })
 }}
@@ -45,5 +46,5 @@ WITH final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2021-07-28",
-    updated_date="2023-07-28"
+    updated_date="2023-08-10"
 ) }}
