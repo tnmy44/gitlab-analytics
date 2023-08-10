@@ -950,10 +950,12 @@ models:
   - name: prep_event_all
     description: '{{ doc("prep_event_all") }}'
     columns:
-      - name: event_id
+      - name: event_pk
         # tests:
           # - not_null
           # - unique
+      - name: event_id
+        description: '{{ doc("event_id") }}'
       - name: stage_name
         description: This field is _not_ the SSOT for the event-to-stage mapping. Please use [`map_gitlab_dotcom_xmau_metrics`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.map_gitlab_dotcom_xmau_metrics) for the mapping of event to stage.
 
@@ -1012,7 +1014,9 @@ models:
         description: Unique key of CI Build
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: dim_project_id
         description: Foreign key that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id
@@ -1160,10 +1164,31 @@ models:
   - name: prep_package
     description: '{{ doc("prep_package") }}'
     columns:
-      - name: dim_package_id
+      - name: dim_package_sk
+        description: '{{ ("dim_package_sk") }}'
         tests:
-          - unique
           - not_null
+          - unique
+      - name: package_id
+        description: '{{ ("package_id") }}'
+      - name: dim_project_id
+        description: '{{ ("dim_project_id") }}'
+      - name: dim_namespace_id
+        description: '{{ ("dim_namespace_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ ("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ ("dim_plan_id") }}'
+      - name: creator_id
+        description: '{{ ("dim_user_id") }}'
+      - name: package_version
+        description: '{{ ("package_version") }}'
+      - name: package_type
+        description: '{{ ("package_type") }}'
+      - name: created_at
+        description: '{{ ("package_created_at") }}'
+      - name: updated_at
+        description: '{{ ("package_updated_at") }}'
 
   - name: prep_release
     description: '{{ doc("prep_release") }}'
@@ -1321,13 +1346,28 @@ models:
           - not_null
           - unique
 
-  - name: prep_service
+  - name: prep_integration
     description: Prep table used in `prep_event`
     columns:
-      - name: dim_service_id
+      - name: dim_integration_sk
+        description: '{{ doc("dim_integration_sk") }}'
         tests:
           - not_null
           - unique
+      - name: integration_id
+        description: '{{ doc("integration_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ doc("dim_plan_id") }}'
+      - name: is_active
+        description: '{{ doc("integration_is_active") }}'
+      - name: created_at
+        description: '{{ doc("integration_created_at") }}'
+      - name: updated_at
+        description: '{{ doc("integration_updated_at") }}'
 
   - name: prep_issue_resource_weight
     description: Prep table used in `prep_event`

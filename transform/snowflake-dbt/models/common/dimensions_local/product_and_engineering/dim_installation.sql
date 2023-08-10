@@ -5,7 +5,7 @@
 installation_agg AS (
   SELECT
     dim_installation_id,
-    MIN(metric_value::TIMESTAMP) AS installation_creation_date
+    MIN(TRY_TO_TIMESTAMP(TRIM(metric_value::VARCHAR,'UTC'))) AS installation_creation_date
   FROM prep_ping_instance_flattened
   WHERE ping_created_at > '2023-03-15' --filtering out records that came before GitLab v15.10, when metric was released. Filter in place for full refresh runs.
     AND metrics_path IN (

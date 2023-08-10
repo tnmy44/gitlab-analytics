@@ -468,7 +468,6 @@ WITH sfdc_users_xf AS (
        churned_contraction_net_arr,
        calculated_deal_count,
        booked_churned_contraction_deal_count,
-       --booked_churned_contraction_net_arr,
        arr,
        recurring_amount,
        true_up_amount,
