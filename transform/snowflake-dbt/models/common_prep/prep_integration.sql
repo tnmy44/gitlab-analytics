@@ -4,7 +4,8 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_integration_sk"
+    "unique_key": "dim_integration_sk",
+    "on_schema_change": "sync_all_columns"
     })
 }}
 
@@ -52,5 +53,5 @@
     created_by="@chrissharp",
     updated_by="@michellecooper",
     created_date="2022-03-28",
-    updated_date="2023-07-27"
+    updated_date="2023-08-10"
 ) }}

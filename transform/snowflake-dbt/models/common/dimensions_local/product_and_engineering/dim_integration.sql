@@ -5,6 +5,7 @@
 {{ config({
     "materialized": "incremental",
     "unique_key": "dim_integration_sk",
+    "on_schema_change": "sync_all_columns",
     "post-hook": "{{ missing_member_column(primary_key = 'dim_integration_sk', not_null_test_cols = []) }}"
     })
 }}
@@ -40,6 +41,6 @@ WITH final AS (
     cte_ref="final",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2023-07-27",
-    updated_date="2023-07-27"
+    created_date="2023-08-10",
+    updated_date="2023-08-10"
 ) }}
