@@ -782,10 +782,10 @@
           THEN 'Digital Marketing'
         ELSE 'No Budget Holder' 
       END AS integrated_budget_holder,
-      fct_campaign.start_date as campaign_start_date,
-      fct_campaign.region as sfdc_campaign_region,
-      fct_campaign.sub_region as sfdc_campaign_sub_region,
-      dim_campaign.type as sfdc_campaign_type,
+      fct_campaign.start_date AS campaign_start_date,
+      fct_campaign.region AS sfdc_campaign_region,
+      fct_campaign.sub_region AS sfdc_campaign_sub_region,
+      dim_campaign.type AS sfdc_campaign_type,
       fct_campaign.budgeted_cost,
       fct_campaign.actual_cost,
 
@@ -799,10 +799,10 @@
       
       CASE
         WHEN  record_owner_title LIKE '%Sales Development%' 
-          or record_owner_title  LIKE '%Business Development%' 
+          OR record_owner_title  LIKE '%Business Development%' 
         THEN TRUE
         ELSE FALSE
-      END as is_sales_dev_owned_record,
+      END AS is_sales_dev_owned_record,
 
      --inquiry_date fields
       inquiry_date.fiscal_year                     AS inquiry_date_range_year,
