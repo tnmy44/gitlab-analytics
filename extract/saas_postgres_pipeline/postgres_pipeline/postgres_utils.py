@@ -603,8 +603,6 @@ def check_is_new_table_or_schema_addition(
     source_columns, target_columns = get_source_and_target_columns(
         raw_query, source_engine, target_engine, target_table
     )
-    print(f'\nsource_columns: {source_columns}')
-    print(f'\ntarget_columns: {target_columns}')
     return not all(source_column in target_columns for source_column in source_columns)
 
 
@@ -612,9 +610,7 @@ def drop_column_on_schema_removal(engine, table, columns_to_drop):
     columns_to_drop_str = ", ".join(columns_to_drop)
     alter_query = f"ALTER TABLE {table} DROP COLUMN {columns_to_drop_str};"
     query_executor(engine, alter_query)
-    logging.info(
-        f"Columns {columns_to_drop} were successfully dropped from Snowflake {table} table due to manifest change"
-    )
+    logging.info(f"Column(s) {columns_to_drop} were successfully dropped in Snowflake")
 
 
 def check_and_handle_schema_removal(
@@ -627,9 +623,11 @@ def check_and_handle_schema_removal(
     if not target_engine.has_table(target_table):
         return
     columns_to_drop = list(set(target_columns) - set(source_columns))
-    print(f'\ncolumns_to_drop: {columns_to_drop}')
 
     if columns_to_drop:
+        logging.info(
+            "Manifest column(s) removed, dropping in Snowflake table as well..."
+        )
         drop_column_on_schema_removal(target_engine, target_table, columns_to_drop)
 
 

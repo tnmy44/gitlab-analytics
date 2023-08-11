@@ -5,15 +5,13 @@ from sqlalchemy.engine.base import Engine
 
 import load_functions
 from postgres_utils import (
+    BACKFILL_METADATA_TABLE,
     check_is_new_table_or_schema_addition,
     check_and_handle_schema_removal,
     is_resume_export,
     remove_files_from_gcs,
-    BACKFILL_METADATA_TABLE,
     swap_temp_table,
 )
-
-from gitlabdata.orchestration_utils import snowflake_engine_factory, query_executor
 
 
 class PostgresPipelineTable:
@@ -55,7 +53,6 @@ class PostgresPipelineTable:
             is_append_only=self.table_dict.get("append_only", False),
         )
 
-        self.swap_temp_table_on_schema_change(loaded, is_schema_addition, target_engine)
         return loaded
 
     def is_incremental(self) -> bool:
@@ -146,7 +143,6 @@ class PostgresPipelineTable:
             self.table_dict,
             target_table,
         )
-        self.swap_temp_table_on_schema_change(loaded, is_schema_addition, target_engine)
         return loaded
 
     def do_load(
@@ -163,17 +159,25 @@ class PostgresPipelineTable:
             "test": self.check_new_table,
             "trusted_data": self.do_trusted_data_pgp,
         }
+
         if load_type == "backfill":
             return load_types[load_type](source_engine, target_engine, metadata_engine)
+
         else:
-            is_schema_addition = self.check_is_new_table_or_schema_addition(source_engine, target_engine)
-            print(f'\nis_schema_addition: {is_schema_addition}')
+            is_schema_addition = self.check_is_new_table_or_schema_addition(
+                source_engine, target_engine
+            )
             if not is_schema_addition:
-                print('made it to check and check_and_handle_schema_removal')
                 self.check_and_handle_schema_removal(source_engine, target_engine)
-            return load_types[load_type](
+            loaded = load_types[load_type](
                 source_engine, target_engine, is_schema_addition
             )
+
+            # If temp table, swap it
+            self.swap_temp_table_on_schema_change(
+                is_schema_addition, loaded, target_engine
+            )
+            return loaded
 
     def check_is_new_table_or_schema_addition(
         self, source_engine: Engine, target_engine: Engine
