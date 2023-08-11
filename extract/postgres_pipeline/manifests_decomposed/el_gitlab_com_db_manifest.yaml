@@ -921,7 +921,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   merge_request_diff_commits:
-    additional_filtering: AND merge_request_diff_id > 700000000
+    additional_filtering: AND merge_request_diff_id >= 615994456
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'merge_request_diff_commits'
