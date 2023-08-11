@@ -5,7 +5,8 @@ from sqlalchemy.engine.base import Engine
 
 import load_functions
 from postgres_utils import (
-    check_if_schema_changed,
+    check_is_new_table_or_schema_addition,
+    check_and_handle_schema_removal,
     is_resume_export,
     remove_files_from_gcs,
     BACKFILL_METADATA_TABLE,
@@ -35,13 +36,14 @@ class PostgresPipelineTable:
     def is_scd(self) -> bool:
         return not self.is_incremental()
 
-    def do_scd(self, source_engine: Engine, target_engine: Engine) -> bool:
-        schema_changed = self.check_if_schema_changed(source_engine, target_engine)
+    def do_scd(
+        self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
+    ) -> bool:
         if not self.is_scd():
             return True
         target_table = (
             self.get_temp_target_table_name()
-            if schema_changed
+            if is_schema_addition
             else self.get_target_table_name()
         )
         loaded = load_functions.load_scd(
@@ -53,16 +55,16 @@ class PostgresPipelineTable:
             is_append_only=self.table_dict.get("append_only", False),
         )
 
-        self.swap_temp_table_on_schema_change(loaded, schema_changed, target_engine)
+        self.swap_temp_table_on_schema_change(loaded, is_schema_addition, target_engine)
         return loaded
 
     def is_incremental(self) -> bool:
         return "{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query
 
-    def do_incremental(self, source_engine: Engine, target_engine: Engine) -> bool:
-        if self.check_if_schema_changed(source_engine, target_engine):
-            return False
-        if not self.is_incremental():
+    def do_incremental(
+        self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
+    ) -> bool:
+        if (is_schema_addition) or (not self.is_incremental()):
             return False
         target_table = self.get_target_table_name()
         return load_functions.load_incremental(
@@ -73,7 +75,9 @@ class PostgresPipelineTable:
             target_table,
         )
 
-    def do_trusted_data_pgp(self, source_engine: Engine, target_engine: Engine) -> bool:
+    def do_trusted_data_pgp(
+        self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
+    ) -> bool:
         """
         The function is used for trusted data extract and load.
         It is responsible for setting up the target table and then call trusted_data_pgp load function.
@@ -127,10 +131,9 @@ class PostgresPipelineTable:
         return loaded
 
     def check_new_table(
-        self, source_engine: Engine, target_engine: Engine, schema_changed: bool
+        self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
     ) -> bool:
-        schema_changed = self.check_if_schema_changed(source_engine, target_engine)
-        if not schema_changed:
+        if not is_schema_addition:
             logging.info(
                 f"Table {self.get_target_table_name()} already exists and won't be tested."
             )
@@ -143,7 +146,7 @@ class PostgresPipelineTable:
             self.table_dict,
             target_table,
         )
-        self.swap_temp_table_on_schema_change(loaded, schema_changed, target_engine)
+        self.swap_temp_table_on_schema_change(loaded, is_schema_addition, target_engine)
         return loaded
 
     def do_load(
@@ -163,22 +166,35 @@ class PostgresPipelineTable:
         if load_type == "backfill":
             return load_types[load_type](source_engine, target_engine, metadata_engine)
         else:
-            return load_types[load_type](source_engine, target_engine)
+            is_schema_addition = self.check_is_new_table_or_schema_addition
+            if not is_schema_addition:
+                self.check_and_handle_schema_removal()
+            return load_types[load_type](
+                source_engine, target_engine, is_schema_addition
+            )
 
-    def check_if_schema_changed(
+    def check_is_new_table_or_schema_addition(
         self, source_engine: Engine, target_engine: Engine
     ) -> bool:
-        schema_changed = check_if_schema_changed(
+        is_schema_addition = check_is_new_table_or_schema_addition(
             self.query,
             source_engine,
-            self.source_table_name,
-            self.source_table_primary_key,
             target_engine,
             self.target_table_name,
         )
-        if schema_changed:
-            logging.info(f"Schema has changed for table: {self.target_table_name}.")
-        return schema_changed
+        if is_schema_addition:
+            logging.info(f"New table or schema addition: {self.target_table_name}.")
+        return is_schema_addition
+
+    def check_and_handle_schema_removal(
+        self, source_engine: Engine, target_engine: Engine
+    ) -> bool:
+        check_and_handle_schema_removal(
+            self.query,
+            source_engine,
+            target_engine,
+            self.target_table_name,
+        )
 
     def get_target_table_name(self):
         return self.target_table_name
@@ -187,9 +203,9 @@ class PostgresPipelineTable:
         return self.get_target_table_name() + "_TEMP"
 
     def swap_temp_table_on_schema_change(
-        self, schema_changed: bool, loaded: bool, engine: Engine
+        self, is_schema_addition: bool, loaded: bool, engine: Engine
     ):
-        if schema_changed and loaded:
+        if is_schema_addition and loaded:
             swap_temp_table(
                 engine, self.get_target_table_name(), self.get_temp_target_table_name()
             )
@@ -205,8 +221,7 @@ class PostgresPipelineTable:
         """
         There are 3 criteria that determine if a backfill is necessary:
             1. In the middle of a backfill
-            1. New table
-            1. New columns in source
+            2. New table | New columns in source
 
         Will check in the above order. Must check if in middle of backfill first
         because if in mid-backfill that includes new column(s), we want to
@@ -227,7 +242,7 @@ class PostgresPipelineTable:
         )
 
         if not is_backfill_needed:
-            is_backfill_needed = self.check_if_schema_changed(
+            is_backfill_needed = self.check_is_new_table_or_schema_addition(
                 source_engine, target_engine
             )
 

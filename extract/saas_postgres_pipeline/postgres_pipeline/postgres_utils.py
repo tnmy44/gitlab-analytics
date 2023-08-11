@@ -562,25 +562,9 @@ def range_generator(
         start += step
 
 
-def check_if_schema_changed(
-    raw_query: str,
-    source_engine: Engine,
-    source_table: str,
-    table_index: str,
-    target_engine: Engine,
-    target_table: str,
-) -> bool:
-    """
-    Query the source table with the manifest query to get the columns, then check
-    what columns currently exist in the DW. Return a bool depending on whether
-    there has been a change or not.
-
-    If the table does not exist this function will also return True.
-    """
-
-    if not target_engine.has_table(target_table):
-        logging.info(f"Target table '{target_table}' does not exist yet")
-        return True
+def get_source_and_target_columns(
+    raw_query, source_engine, target_engine, target_table
+):
     # Get the columns from the current query
     query_stem = raw_query.lower().split("where")[0]
     source_query = "{0} limit 1"
@@ -596,8 +580,54 @@ def check_if_schema_changed(
         .drop(axis=1, columns=["_uploaded_at", "_task_instance"], errors="ignore")
         .columns
     )
+    return source_columns, target_columns
 
-    return set(source_columns) != set(target_columns)
+
+def check_is_new_table_or_schema_addition(
+    raw_query: str,
+    source_engine: Engine,
+    target_engine: Engine,
+    target_table: str,
+) -> bool:
+    """
+    Query the source table with the manifest query to get the columns, then check
+    what columns currently exist in the DW. Return a bool depending on whether
+    there has been a change or not.
+
+    If the table does not exist this function will also return True.
+    """
+
+    if not target_engine.has_table(target_table):
+        return True
+
+    source_columns, target_columns = get_source_and_target_columns(
+        raw_query, source_engine, target_engine, target_table
+    )
+    return not all(source_column in target_columns for source_column in source_columns)
+
+
+def drop_column_on_schema_removal(engine, table, columns_to_drop):
+    columns_to_drop_str = ", ".join(columns_to_drop)
+    alter_query = f"ALTER TABLE {table} DROP COLUMN {columns_to_drop_str};"
+    query_executor(engine, alter_query)
+    logging.info(
+        f"Columns {columns_to_drop} were successfully dropped from Snowflake {table} table due to manifest change"
+    )
+
+
+def check_and_handle_schema_removal(
+    raw_query: str, source_engine: Engine, target_engine: Engine, target_table: str
+):
+    source_columns, target_columns = get_source_and_target_columns(
+        raw_query, source_engine, target_engine, target_table
+    )
+
+    if not target_engine.has_table(target_table):
+        return
+    columns_to_drop = list(set(target_columns) - set(source_columns))
+
+    if columns_to_drop:
+        drop_column_on_schema_removal(target_engine, target_table, columns_to_drop)
 
 
 def id_query_generator(
