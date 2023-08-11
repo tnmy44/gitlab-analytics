@@ -1012,7 +1012,6 @@ roles:
             schemas:
               write:
                   - raw.tap_zengrc
-                  - raw.tap_adaptive
                   - raw.tap_xactly
                   - raw.tap_zendesk
                   - raw.tap_zendesk__community_relations
@@ -1020,7 +1019,6 @@ roles:
             tables:
               write:
                   - raw.tap_zengrc.*
-                  - raw.tap_adaptive.*
                   - raw.tap_xactly.*
                   - raw.tap_zendesk.*
                   - raw.tap_zendesk__community_relations.*
@@ -1274,11 +1272,9 @@ roles:
                     - raw
             schemas:
                 read:
-                    - raw.tap_adaptive
                     - raw.adaptive_custom
             tables:
                 read:
-                    - raw.tap_adaptive.*
                     - raw.adaptive_custom.*
 
     - bamboohr_analytics:
