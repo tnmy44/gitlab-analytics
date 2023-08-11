@@ -463,10 +463,6 @@ def chunk_and_upload_metadata(
     Each chunk is uploaded to GCS with a suffix of which chunk number it is.
     All of the chunks are uploaded by using a regex that gets all of the files.
     """
-
-    logging.info(
-        f"\ninitial_load_start_date / chunk_upload(): {initial_load_start_date}"
-    )
     rows_uploaded = 0
 
     with tempfile.TemporaryFile() as tmpfile:
@@ -478,11 +474,10 @@ def chunk_and_upload_metadata(
         )
 
         for chunk_df in iter_csv:
-            logging.info(f"\nchunk_df.head(): {chunk_df.head()}")
-
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
             last_extracted_id = chunk_df[primary_key].max()
+            logging.info(f'\nlast_extracted_id for current Postgres chunk: {last_extracted_id}')
 
             upload_date = datetime.now()
             if initial_load_start_date is None:

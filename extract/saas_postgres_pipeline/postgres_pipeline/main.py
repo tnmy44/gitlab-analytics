@@ -50,7 +50,8 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         loaded = current_table.do_load(
             load_type, postgres_engine, snowflake_engine, metadata_engine
         )
-        logging.info(f"Finished upload for table: {table}")
+        if loaded:
+            logging.info(f"Finished upload for table: {table}")
 
         count_query = f"SELECT COUNT(*) FROM {current_table.get_target_table_name()}"
         count = 0

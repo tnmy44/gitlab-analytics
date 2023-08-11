@@ -62,6 +62,7 @@ class PostgresPipelineTable:
         self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
     ) -> bool:
         if (is_schema_addition) or (not self.is_incremental()):
+            logging.info("Aborting... because schema_change OR non_incremental_load")
             return False
         target_table = self.get_target_table_name()
         return load_functions.load_incremental(
