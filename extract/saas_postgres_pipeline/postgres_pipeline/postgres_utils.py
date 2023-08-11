@@ -603,6 +603,8 @@ def check_is_new_table_or_schema_addition(
     source_columns, target_columns = get_source_and_target_columns(
         raw_query, source_engine, target_engine, target_table
     )
+    print(f'\nsource_columns: {source_columns}')
+    print(f'\ntarget_columns: {target_columns}')
     return not all(source_column in target_columns for source_column in source_columns)
 
 
@@ -625,6 +627,7 @@ def check_and_handle_schema_removal(
     if not target_engine.has_table(target_table):
         return
     columns_to_drop = list(set(target_columns) - set(source_columns))
+    print(f'\ncolumns_to_drop: {columns_to_drop}')
 
     if columns_to_drop:
         drop_column_on_schema_removal(target_engine, target_table, columns_to_drop)

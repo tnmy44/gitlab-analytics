@@ -166,9 +166,11 @@ class PostgresPipelineTable:
         if load_type == "backfill":
             return load_types[load_type](source_engine, target_engine, metadata_engine)
         else:
-            is_schema_addition = self.check_is_new_table_or_schema_addition
+            is_schema_addition = self.check_is_new_table_or_schema_addition(source_engine, target_engine)
+            print(f'\nis_schema_addition: {is_schema_addition}')
             if not is_schema_addition:
-                self.check_and_handle_schema_removal()
+                print('made it to check and check_and_handle_schema_removal')
+                self.check_and_handle_schema_removal(source_engine, target_engine)
             return load_types[load_type](
                 source_engine, target_engine, is_schema_addition
             )
