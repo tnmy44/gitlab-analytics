@@ -6,7 +6,7 @@ connection_info:
   user: GITLAB_COM_DB_USER
 tables:
   merge_request_diff_commits:
-    additional_filtering: AND merge_request_diff_id >= 615994456
+    additional_filtering: AND merge_request_diff_id >= 669209028
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'merge_request_diff_commits'
