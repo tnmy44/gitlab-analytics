@@ -6,7 +6,6 @@
     {%- set columns = adapter.get_columns_in_relation(this) -%}
     {%- set referential_integrity_columns = referential_integrity_cols|list -%}
     {%- set not_null_test_columns = not_null_test_cols|list -%}
-    {%- set sql_header = config.get('sql_header', none) -%}
     {%- set target = this -%}
 
     {%- set source %}
