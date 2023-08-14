@@ -71,8 +71,7 @@ def upload_to_gcs(
     bucket = get_gcs_bucket()
 
     # Write out the parquet and upload it
-    # enriched_df = dataframe_enricher(advanced_metadata, upload_df)
-    enriched_df = upload_df
+    enriched_df = dataframe_enricher(advanced_metadata, upload_df)
     os.makedirs(
         os.path.dirname(upload_file_name), exist_ok=True
     )  # need to create director(ies) prior to to_parquet()
@@ -561,7 +560,7 @@ def get_latest_parquet_file(source_table: str) -> Union[str, None]:
     bucket = get_gcs_bucket()
 
     prefix = get_prefix_template().format(
-        staging_or_processed="processed",
+        staging_or_processed="staging",
         export_type=get_export_type(BACKFILL_METADATA_TABLE),
         table=source_table,
         initial_load_prefix="initial_load_start_",

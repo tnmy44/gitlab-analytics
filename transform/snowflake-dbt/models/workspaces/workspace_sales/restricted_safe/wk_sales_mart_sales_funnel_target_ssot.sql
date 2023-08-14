@@ -28,38 +28,19 @@
       -- business unit should show up here
       -- Business Unit (X-Ray 1st hierarchy)
       -- will be replaced with the actual field
-      CASE
-        WHEN LOWER(crm_user_sales_segment) IN ('large','pubsec','all')  -- "all" segment is PubSec for ROW
-            THEN 'ENTG'
-        WHEN LOWER(crm_user_region) IN ('latam','meta')
-            OR LOWER(crm_user_geo) IN ('apac')
-            THEN 'ENTG'
-        WHEN LOWER(crm_user_sales_segment) IN ('mid-market','smb')
-            THEN 'COMM'
-        WHEN LOWER(crm_user_sales_segment) = 'jihu' THEN 'JiHu'
-        ELSE 'Other'
-      END                               AS crm_user_business_unit,
+    crm_user_business_unit,
 
     CASE
         WHEN LOWER(crm_user_business_unit) = 'entg'
           THEN crm_user_geo
-        WHEN
-          LOWER(crm_user_business_unit) = 'comm'
-          AND
-            (
-            LOWER(crm_user_sales_segment) = 'smb'
-            AND LOWER(crm_user_geo) = 'amer'
-            AND LOWER(crm_user_area) = 'lowtouch'
-            )
-          THEN 'AMER Low-Touch'
+        -- H2 update
+        WHEN LOWER(crm_user_business_unit) = 'japan'
+          THEN 'Japan'      
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
           AND
             (
             LOWER(crm_user_sales_segment) = 'mid-market'
-            AND (LOWER(crm_user_geo) = 'amer'
-                     OR LOWER(crm_user_geo) = 'emea')
-            AND LOWER(crm_user_area) != 'norben'
             AND LOWER(order_type_name) = '1. new - first order'
             )
           THEN 'MM First Orders'  --mid-market FO(?)
@@ -72,98 +53,47 @@
           AND LOWER(crm_user_geo) = 'amer'
           THEN 'AMER'
         ELSE 'Other'
-      END AS crm_user_sub_business_unit,
+        END AS crm_user_sub_business_unit,
 
       -- Division (X-Ray 3rd hierarchy)
-      CASE
+      CASE 
         WHEN LOWER(crm_user_business_unit) = 'entg'
           THEN crm_user_region
-
-
+        WHEN LOWER(crm_user_business_unit) = 'japan'
+          THEN 'Japan'   
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
-          AND LOWER(crm_user_sales_segment) = 'mid-market'
-          AND LOWER(crm_user_area) != 'norben'
-          AND LOWER(order_type_name) = '1. new - first order'
+          AND LOWER(crm_user_sales_segment) = 'mid-market'         
+          AND LOWER(crm_user_sub_business_unit) = 'mm first orders'
           THEN 'MM First Orders'
-        WHEN
+        WHEN 
           LOWER(crm_user_business_unit) = 'comm'
-          AND (LOWER(crm_user_sub_business_unit) = 'amer'
-                   OR LOWER(crm_user_sub_business_unit) = 'emea')
-          AND (LOWER(order_type_name) != '1. new - first order'
-                    OR LOWER(crm_user_area) = 'norben')
+          AND LOWER(crm_user_sub_business_unit) != 'mm first orders'
           AND LOWER(crm_user_sales_segment) = 'mid-market'
           THEN 'Mid-Market'
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
-          AND (LOWER(crm_user_sub_business_unit) = 'amer'
-                OR LOWER(crm_user_sub_business_unit) = 'emea')
+          AND LOWER(crm_user_sub_business_unit) != 'mm first orders'
           AND LOWER(crm_user_sales_segment) = 'smb'
           THEN 'SMB'
-        WHEN
-          LOWER(crm_user_business_unit) = 'comm'
-            AND LOWER(crm_user_sales_segment) = 'smb'
-          AND LOWER(crm_user_sub_business_unit) = 'amer low-touch'
-          THEN 'AMER Low-Touch'
         ELSE 'Other'
       END AS crm_user_division,
 
-       -- ASM (X-Ray 4th hierarchy): definition pending
+      -- ASM (X-Ray 4th hierarchy): definition pending
       CASE
-        WHEN
+        WHEN LOWER(crm_user_business_unit) = 'japan'
+          THEN crm_user_area 
+        WHEN 
           LOWER(crm_user_business_unit) = 'entg'
-          AND LOWER(crm_user_sub_business_unit) = 'amer'
-          THEN crm_user_area
-        WHEN
-          LOWER(crm_user_business_unit) = 'entg'
-          AND LOWER(crm_user_sub_business_unit) = 'emea'
-          AND (
-              LOWER(crm_user_division) = 'dach'
-                OR LOWER(crm_user_division) = 'neur'
-                OR LOWER(crm_user_division) = 'seur'
-              )
-          THEN crm_user_area
-        WHEN
-          LOWER(crm_user_business_unit) = 'entg'
-          AND LOWER(crm_user_sub_business_unit) = 'emea'
-          AND LOWER(crm_user_division) = 'meta'
-          THEN crm_user_sales_segment
-        WHEN
-          LOWER(crm_user_business_unit) = 'entg'
-          AND LOWER(crm_user_sub_business_unit) = 'apac'
-          THEN crm_user_area
-        WHEN
-          LOWER(crm_user_business_unit) = 'entg'
-          AND LOWER(crm_user_sub_business_unit) = 'pubsec'
-          AND LOWER(crm_user_division) != 'sled'
-          THEN crm_user_area
-        WHEN
-          LOWER(crm_user_business_unit) = 'entg'
-          AND LOWER(crm_user_sub_business_unit) = 'pubsec'
-          AND LOWER(crm_user_division) = 'sled'
-          THEN crm_user_region
-
-        WHEN
+          THEN crm_user_area  
+        WHEN 
           LOWER(crm_user_business_unit) = 'comm'
-          AND (LOWER(crm_user_sub_business_unit) = 'amer'
-                   OR LOWER(crm_user_sub_business_unit) = 'emea')
-          THEN crm_user_area
-        WHEN
-          LOWER(crm_user_business_unit) = 'comm'
-          AND LOWER(crm_user_sub_business_unit) = 'mm first orders'
+          AND LOWER(crm_user_division) = 'mm first orders'
           THEN crm_user_geo
         WHEN
           LOWER(crm_user_business_unit) = 'comm'
-            AND LOWER(crm_user_sales_segment) = 'smb'
-            AND LOWER(crm_user_sub_business_unit) = 'amer low-touch'
-            AND LOWER(order_type_name) = '1. new - first order'
-          THEN 'LowTouch FO'
-        WHEN
-          LOWER(crm_user_business_unit) = 'comm'
-            AND LOWER(crm_user_sales_segment) = 'smb'
-            AND LOWER(crm_user_sub_business_unit) = 'amer low-touch'
-            AND LOWER(order_type_name) != '1. new - first order'
-          THEN 'LowTouch Pool'
+          AND LOWER(crm_user_division) IN ('smb','mid-market')
+          THEN crm_user_area
         ELSE 'Other'
       END AS crm_user_asm,
 
