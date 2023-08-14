@@ -6,7 +6,7 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('prep_charge', 'prep_charge')
+    ('prep_charge', 'prep_charge_for_mrr')
 ]) }}
 
 , mrr AS (
@@ -31,18 +31,13 @@
       AND (prep_charge.effective_end_month > dim_date.date_actual
         OR prep_charge.effective_end_month IS NULL)
       AND dim_date.day_of_month = 1
-    WHERE subscription_status NOT IN ('Draft')
-      AND charge_type = 'Recurring'
-      /* This excludes Education customers (charge name EDU or OSS) with free subscriptions.
-         Pull in seats from Paid EDU Plans with no ARR */
-      AND (mrr != 0 OR LOWER(prep_charge.rate_plan_charge_name) = 'max enrollment')
     {{ dbt_utils.group_by(n=10) }}
 )
 
 {{ dbt_audit(
     cte_ref="mrr",
     created_by="@msendal",
-    updated_by="@chrissharp",
+    updated_by="@jpeguero",
     created_date="2020-09-10",
-    updated_date="2023-02-20",
+    updated_date="2023-08-14",
 ) }}
