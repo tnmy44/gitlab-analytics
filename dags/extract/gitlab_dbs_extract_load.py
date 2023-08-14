@@ -186,7 +186,7 @@ config_dict = {
     },
 }
 
-FINAL_TASK = 'merge_request_diff_commits'
+FINAL_TASK = "merge_request_diff_commits"
 
 
 def get_task_pool(task_name) -> string:
