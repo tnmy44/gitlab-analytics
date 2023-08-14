@@ -1,5 +1,6 @@
 {{ config(
-  materialized="incremental"
+  materialized="incremental",
+  full_refresh= only_force_full_refresh()
 ) }}
 
 WITH merge_request_diffs_internal AS (
@@ -11,9 +12,12 @@ WITH merge_request_diffs_internal AS (
 merge_request_diff_commits_chunked AS (
   SELECT *
   FROM {{ ref('gitlab_dotcom_merge_request_diffs') }}
+
+  {% if is_incremental() %}
   WHERE
-    updated_at >= '{{ var("start_date") }}'
-    AND updated_at < '{{ var("end_date") }}'
+    updated_at >= (select max( '{{ var("start_date", "updated_at" )}}' ) from {{ this }})
+    AND updated_at < (select max( '{{ var("end_date", "2999-12-31" )}}' ) from {{ this }})
+  {% endif %}
 ),
 
 merge_request_diff_commits_internal_chunked AS (
