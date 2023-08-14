@@ -319,6 +319,7 @@ WITH biz_person AS (
       CASE
         WHEN sfdc_leads.mql_datetime_inferred IS NOT null 
             AND crm_tasks.min_task_completed_date_by_bdr_sdr IS NOT NULL
+        THEN TRUE
         ELSE FALSE
       END AS is_bdr_sdr_worked_inferred_mql2
 
