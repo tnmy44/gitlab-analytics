@@ -144,12 +144,12 @@ class InstanceNamespaceMetrics:
         """
         name, sql_select, level = self.get_prepared_values(query=query_dict)
 
-        sql_insert = self.prepare_insert_query(
+        sql_ready = self.prepare_insert_query(
             query_dict=sql_select, ping_name=name, ping_date=self.end_date
         )
 
         try:
-            conn.execute(f"{sql_insert}{sql_select}")
+            conn.execute(f"{sql_ready}")
         except Exception as e:
             info(f"......ERROR: {repr(e)}")
             conn.execute(
