@@ -543,3 +543,5 @@ models:
           description: The sum of Won Net ARR, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
         - name: integrated_budget_holder
           description: A case statement to categorize the budget (and usually owner) of online and offline campaigns. Uses utm_content, campaign owner role from SFDC, budget holder from SFDC, and utm_budget.
+        - name: is_sales_dev_owned_record
+          description: A flag that is true when the person (lead or contact) is owned by a member of the Sales Dev team.

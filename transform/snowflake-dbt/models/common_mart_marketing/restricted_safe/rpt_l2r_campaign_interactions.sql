@@ -6,7 +6,9 @@
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_date','dim_date'),
-    ('dim_campaign', 'dim_campaign')
+    ('fct_campaign','fct_campaign'),
+    ('dim_campaign', 'dim_campaign'),
+    ('dim_crm_user', 'dim_crm_user')
 ]) }}
 
 , person_base_with_tp AS (
@@ -62,6 +64,8 @@
             THEN '1. New - First Order'
           ELSE '3. Growth'
       END AS person_order_type,
+      last_utm_campaign,
+      last_utm_content,
 
 
   --Person Dates
@@ -215,6 +219,7 @@
 
     --Person Data
       person_base.dim_crm_person_id,
+      person_base.dim_crm_user_id,
       person_base.crm_partner_id,
       person_base.email_hash,
       person_base.email_domain,
@@ -254,6 +259,8 @@
             THEN '1. New - First Order'
           ELSE '3. Growth'
       END AS person_order_type,
+      last_utm_campaign,
+      last_utm_content,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -285,7 +292,7 @@
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.bizible_salesforce_campaign,
-	  mart_crm_attribution_touchpoint.campaign_rep_role_name,
+	    mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.gtm_motion,
       mart_crm_attribution_touchpoint.pipe_name,
@@ -332,7 +339,7 @@
       ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=157)}}
+  {{dbt_utils.group_by(n=160)}}
     
 ), cohort_base_combined AS (
   
@@ -341,6 +348,7 @@
       dim_crm_person_id,
       dim_crm_account_id,
       dim_parent_crm_account_id,
+      dim_crm_user_id,
       crm_partner_id,
       partner_prospect_id,
       dim_crm_touchpoint_id,
@@ -387,6 +395,8 @@
       inferred_employee_segment,
       geo_custom,
       inferred_geo,
+      last_utm_campaign,
+      last_utm_content,
 
   --Person Dates
       true_inquiry_date,
@@ -528,6 +538,7 @@
       dim_crm_person_id,
       dim_crm_account_id,
       dim_parent_crm_account_id,
+      dim_crm_user_id,
       crm_partner_id,
       null AS partner_prospect_id,
       dim_crm_touchpoint_id,
@@ -574,6 +585,8 @@
       inferred_employee_segment,
       geo_custom,
       inferred_geo,
+      last_utm_campaign,
+      last_utm_content,
     
     --Person Dates
       true_inquiry_date,
@@ -751,6 +764,7 @@
           THEN 'Field Marketing'
         WHEN (LOWER(utm_campaign) LIKE '%abm%'
           OR LOWER(utm_content) LIKE '%abm%'
+          OR LOWER(bizible_ad_campaign_name) LIKE '%abm%'
           OR campaign_rep_role_name like '%ABM%'
           OR dim_campaign.budget_holder = 'abm'
           OR utm_budget = 'abm') THEN 'Account Based Marketing'
@@ -768,7 +782,27 @@
           THEN 'Digital Marketing'
         ELSE 'No Budget Holder' 
       END AS integrated_budget_holder,
+      fct_campaign.start_date AS campaign_start_date,
+      fct_campaign.region AS sfdc_campaign_region,
+      fct_campaign.sub_region AS sfdc_campaign_sub_region,
+      dim_campaign.type AS sfdc_campaign_type,
+      fct_campaign.budgeted_cost,
+      fct_campaign.actual_cost,
 
+      -- user
+      user.user_name        AS record_owner_name,
+      user.manager_name     AS record_owner_manager,
+      user.title            AS record_owner_title,
+      user.department       AS record_owner_department,
+      user.team             AS record_owner_team,
+      manager.manager_name  AS record_owner_sales_dev_leader,
+      
+      CASE
+        WHEN  record_owner_title LIKE '%Sales Development%' 
+          OR record_owner_title  LIKE '%Business Development%' 
+        THEN TRUE
+        ELSE FALSE
+      END AS is_sales_dev_owned_record,
 
      --inquiry_date fields
       inquiry_date.fiscal_year                     AS inquiry_date_range_year,
@@ -814,6 +848,12 @@
   FROM cohort_base_combined
   LEFT JOIN dim_campaign
     ON cohort_base_combined.dim_campaign_id = dim_campaign.dim_campaign_id
+  LEFT JOIN fct_campaign
+    ON cohort_base_combined.dim_campaign_id = fct_campaign.dim_campaign_id
+  LEFT JOIN dim_crm_user user
+    ON cohort_base_combined.dim_crm_user_id = user.dim_crm_user_id
+  LEFT JOIN dim_crm_user manager
+    ON user.manager_id = manager.dim_crm_user_id
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
@@ -840,5 +880,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-07-28",
+    updated_date="2023-08-07",
   ) }}
