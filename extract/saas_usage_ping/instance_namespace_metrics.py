@@ -156,7 +156,7 @@ class InstanceNamespaceMetrics:
             conn.execute(f"{sql_ready}")
         except Exception as programming_error:
             info(f"......ERROR: {str(programming_error)}")
-            error_text = str(programming_error)[53:90]
+            error_text = str(programming_error)[86:].replace('(','').replace(")","")
 
             error_record = (f"{self.SQL_INSERT_PART} "
                             f"VALUES "
