@@ -72,7 +72,7 @@ DAG_DESCRIPTION = (
 dag = DAG(
     "saas_usage_ping",
     default_args=default_args,
-    concurrency=2,
+    concurrency=4,
     description=DAG_DESCRIPTION,
     schedule_interval="0 7 * * 1",
 )

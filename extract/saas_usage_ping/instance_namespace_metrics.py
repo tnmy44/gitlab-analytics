@@ -47,8 +47,8 @@ class InstanceNamespaceMetrics:
         self.utils = Utils()
 
         self.SQL_INSERT_PART = (
-            "INSERT INTO "
-            "\"17485-NAMESPACE-SAAS-SERVICE-PING-PERFORMANCE-IMPROVEMENT_RAW\".saas_usage_ping.gitlab_dotcom_namespace"
+            'INSERT INTO "17485-NAMESPACE-SAAS-SERVICE-PING-PERFORMANCE-IMPROVEMENT_RAW".'
+            f"{self.engine_factory.schema_name}.gitlab_dotcom_namespace"
             "(id, "
             "namespace_ultimate_parent_id, "
             "counter_value, "
@@ -130,7 +130,7 @@ class InstanceNamespaceMetrics:
         """
 
         prepared_query = f"{self.SQL_INSERT_PART}{query_dict}"
-        safe_dict = query_dict.replace("'","\\'")
+        safe_dict = query_dict.replace("'", "\\'")
         prepared_query = prepared_query.replace(
             "FROM",
             f",'{ping_name}', '{ping_level}', '{safe_dict}', 'Success', '{ping_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()) FROM",
