@@ -16,8 +16,6 @@ merge_requests_internal AS (
   INNER JOIN dim_project_internal ON mr.target_project_id = dim_project_internal.dim_project_id
 ),
 
-
-
 merge_request_diffs_internal AS (
   SELECT mrd.*
   FROM

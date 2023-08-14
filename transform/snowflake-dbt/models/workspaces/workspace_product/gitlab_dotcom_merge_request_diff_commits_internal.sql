@@ -14,13 +14,13 @@ merge_request_diff_commits_chunked AS (
   FROM {{ ref('gitlab_dotcom_merge_request_diffs') }}
 
   {% if is_incremental() %}
-  WHERE
-    updated_at >= (select max( '{{ var("start_date", "updated_at" )}}' ) from {{ this }})
-    AND updated_at < (select max( '{{ var("end_date", "2999-12-31" )}}' ) from {{ this }})
+    WHERE
+      updated_at >= (SELECT MAX('{{ var("start_date", "updated_at" ) }}') FROM {{ this }})
+      AND updated_at < (SELECT MAX('{{ var("end_date", "2999-12-31" ) }}') FROM {{ this }})
   {% endif %}
 ),
 
-merge_request_diff_commits_internal_chunked AS (
+merge_request_diff_commits_internal AS (
   SELECT merge_request_diff_commits_chunked.* FROM merge_request_diffs_internal
   INNER JOIN merge_request_diff_commits_chunked
     ON merge_request_diffs_internal.merge_request_diff_id
@@ -28,4 +28,4 @@ merge_request_diff_commits_internal_chunked AS (
 
 )
 
-SELECT * FROM merge_request_diff_commits_internal_chunked
+SELECT * FROM merge_request_diff_commits_internal
