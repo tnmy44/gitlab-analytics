@@ -157,7 +157,7 @@ class InstanceNamespaceMetrics:
         except Exception as programming_error:
             info(f"......ERROR: {str(programming_error)}")
 
-            error_text = programming_error.msg
+            error_text = str(programming_error)[100:150]
 
             error_record = (f"{self.SQL_INSERT_PART} "
                             f"VALUES "
