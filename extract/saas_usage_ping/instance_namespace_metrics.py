@@ -157,8 +157,8 @@ class InstanceNamespaceMetrics:
         except Exception as programming_error:
             info(f"......ERROR: {str(programming_error)}")
 
-            error_text = str(programming_error)[100:200]
-            error_sql = 'SQLSQL'
+            error_text = "ERROR"
+            error_sql = sql_select.replace("\\'","")
 
             error_record = (f"{self.SQL_INSERT_PART} "
                             f"VALUES "
