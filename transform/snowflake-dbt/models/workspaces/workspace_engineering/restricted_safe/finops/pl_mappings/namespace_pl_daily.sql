@@ -8,11 +8,12 @@ plan_ids AS (
 
   SELECT DISTINCT
     gitlab_plan_id,
-    CASE WHEN gitlab_plan_title IN ('Premium (Formerly Silver)', 'Ultimate (Formerly Gold)', 'Bronze') THEN 'paid'
-      WHEN gitlab_plan_title IN ('Free', 'Premium Trial', 'Ultimate Trial', 'Open Source Program') THEN 'free'
-      WHEN gitlab_plan_title IS NULL THEN 'internal'
+    CASE
+      WHEN gitlab_plan_title = 'Default' THEN 'internal'
+      WHEN gitlab_plan_is_paid = TRUE THEN 'paid'
+      WHEN gitlab_plan_is_paid = FALSE THEN 'free'
       ELSE 'internal' END AS gitlab_plan_title
-  FROM {{ ref('dim_namespace') }}
+    FROM {{ ref('dim_namespace') }}
 -- add namespace_is_internal to internal identification
 ),
 
