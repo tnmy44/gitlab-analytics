@@ -89,6 +89,7 @@ def extract_logs(
                 except json.decoder.JSONDecodeError:
                     error("No response received")
                     break
+
                 items = data.get("items")
 
                 if items is None or len(items) == 0:
