@@ -158,13 +158,14 @@ class InstanceNamespaceMetrics:
             info(f"......ERROR: {str(programming_error)}")
 
             error_text = "EEE" # str(programming_error)[100:150]
+            error_sql = sql_select.replace("\\", "")
 
             error_record = (f"{self.SQL_INSERT_PART} "
                             f"VALUES "
                             f"(NULL, NULL, NULL, "
                             f"'{name}', "
                             f"'{level}', "
-                            f"'{sql_select}', "
+                            f"'{error_sql}', "
                             f"'{error_text}', "
                             f"'{self.end_date}', "
                             f"DATE_PART(epoch_second, CURRENT_TIMESTAMP()))")
