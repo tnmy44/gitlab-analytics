@@ -29,7 +29,16 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
-
+  
+  - name: prep_charge_for_mrr
+    description: '{{ doc("prep_charge_for_mrr") }}'
+    columns:
+      - name: dim_charge_id
+        description: The unique identifier of the rate plan charge.
+        tests:
+          - not_null
+          - unique
+  
   - name: prep_crm_account
     description: '{{ doc("prep_crm_account") }}'
     columns:

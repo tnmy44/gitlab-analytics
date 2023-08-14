@@ -13,8 +13,8 @@
 
   SELECT
     prep_charge_for_mrr.dim_crm_account_id,
-    MIN(prep_date.first_day_of_month)          AS crm_account_cohort_month,
-    MIN(prep_date.first_day_of_fiscal_quarter) AS crm_account_cohort_quarter
+    MIN(prep_date.first_day_of_month)          AS crm_account_arr_cohort_month,
+    MIN(prep_date.first_day_of_fiscal_quarter) AS crm_account_arr_cohort_quarter
   FROM prep_charge_for_mrr
   LEFT JOIN prep_date
     ON prep_date.date_id = prep_charge_for_mrr.date_id
@@ -195,8 +195,8 @@
       prep_crm_account.next_renewal_date,
       prep_crm_account.gs_first_value_date,
       prep_crm_account.gs_last_csm_activity_date,
-      cohort_date.crm_account_cohort_month,
-      cohort_date.crm_account_cohort_quarter,
+      cohort_date.crm_account_arr_cohort_month,
+      cohort_date.crm_account_arr_cohort_quarter,
       parent_cohort_date.parent_account_arr_cohort_month,
       parent_cohort_date.parent_account_arr_cohort_quarter,
 
