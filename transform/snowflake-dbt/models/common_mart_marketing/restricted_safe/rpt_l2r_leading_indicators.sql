@@ -229,7 +229,7 @@
     FROM sao_prep
     {{ dbt_utils.group_by(n=15) }}
     
-  ), final AS (
+  ), intermediate AS (
 
     SELECT 
         date_day,
@@ -291,6 +291,27 @@
     FROM saos
     {{ dbt_utils.group_by(n=13) }}
 
+  ), final AS (
+
+    SELECT
+        date_day,
+        date_range_week,
+        date_range_month,
+        date_range_quarter,
+        date_range_year,
+        sales_segment,
+        geo,
+        order_type,
+        parent_crm_account_lam,
+        parent_crm_account_lam_dev_count,
+        bizible_marketing_channel,
+        bizible_marketing_channel_path,
+        bizible_medium,
+        SUM(inquiries) AS inquiries,
+        SUM(mqls) AS mqls,
+        SUM(saos) AS saos
+    FROM intermediate
+    {{ dbt_utils.group_by(n=13) }}
   )
 
 
@@ -299,5 +320,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-06-21",
-    updated_date="2023-07-25",
+    updated_date="2023-08-10",
   ) }}
