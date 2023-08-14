@@ -24,7 +24,7 @@ class EngineFactory:
         self.loader_engine = None
         self.processing_warehouse = "LOADER"
         self.schema_name = "saas_usage_ping"
-
+        print(f">>>>>> {self.config_vars}")
     def connect(self):
         """
         Connect to engine factory, return connection object
