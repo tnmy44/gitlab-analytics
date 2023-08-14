@@ -38,7 +38,7 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "retries": 0,
+    "retries": 2,
     "retry_delay": timedelta(minutes=10),
     "start_date": datetime(2023, 1, 1),
     "dagrun_timeout": timedelta(hours=2),
