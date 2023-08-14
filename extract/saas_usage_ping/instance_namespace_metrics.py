@@ -163,7 +163,7 @@ class InstanceNamespaceMetrics:
                             f"(NULL, NULL, NULL, "
                             f"'{name}', "
                             f"'{level}', "
-                            f"'TEST_ERROR', " # f"'{sql_ready}', "
+                            f"'{sql_ready}', "
                             f"'ERROR_TEXT', "
                             f"'{self.end_date}', "
                             f"DATE_PART(epoch_second, CURRENT_TIMESTAMP()))")
