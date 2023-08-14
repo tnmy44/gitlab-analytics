@@ -99,7 +99,8 @@
           a.email_column_names, 
           b.non_email_column_names
         FROM email_columns a
-        LEFT JOIN non_email_columns b ON a.fqd_name = b.fqd_name;
+        LEFT JOIN non_email_columns b ON a.fqd_name = b.fqd_name
+        where b.non_email_column_names is not null;
 
     {%- endcall -%}
 
