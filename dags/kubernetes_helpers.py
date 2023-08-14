@@ -45,8 +45,8 @@ def is_local_test():
 
 
 def get_affinity(affinity):
-    if is_local_test():
-        return test_affinity
+    #if is_local_test():
+        #return test_affinity
     if affinity == "scd":
         return scd_affinity
     if affinity == "data_science":
@@ -55,8 +55,8 @@ def get_affinity(affinity):
 
 
 def get_toleration(tolerations):
-    if is_local_test():
-        return test_tolerations
+    #if is_local_test():
+        #return test_tolerations
     if tolerations == "scd":
         return scd_tolerations
     if tolerations == "data_science":
