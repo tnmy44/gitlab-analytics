@@ -140,6 +140,39 @@ class InstanceNamespaceMetrics:
 
         return prepared_query
 
+    def prepare_error_insert(
+        self,
+        metrics_name: str,
+        metrics_level: str,
+        metric_sql_select: str,
+        error_text: str,
+    ) -> str:
+        """
+        Refine and prepare data for upload in case error occurred with
+        instance_namespace_metrics query
+        """
+
+        info(f"......ERROR: {str(error_text)}")
+
+        error_text = "ERROR"
+        error_sql = metric_sql_select.replace("'", "\\'")
+
+        error_record = (
+            f"{self.SQL_INSERT_PART} "
+            f"VALUES "
+            f"(NULL, NULL, NULL, "
+            f"'{metrics_name}', "
+            f"'{metrics_level}', "
+            f"'placeholder_error_sql', "
+            f"'{error_text}', "
+            f"'{self.end_date}', "
+            f"DATE_PART(epoch_second, CURRENT_TIMESTAMP()))"
+        ).replace("\\", "")
+
+        error_record = error_record.replace("placeholder_error_sql", error_sql)
+
+        info(f"......inserting ERROR record: {error_record}")
+        return error_record
 
     def upload_results(self, query_dict: dict, conn) -> None:
         """
@@ -155,28 +188,14 @@ class InstanceNamespaceMetrics:
         try:
             conn.execute(f"{sql_ready}")
         except Exception as programming_error:
-            info(f"......ERROR: {str(programming_error)}")
-
-            error_text = "ERROR"
-            error_sql = sql_select.replace("'", "\\'")
-
-            error_record = (f"{self.SQL_INSERT_PART} "
-                            f"VALUES "
-                            f"(NULL, NULL, NULL, "
-                            f"'{name}', "
-                            f"'{level}', "
-                            f"'placeholder_error_sql', "
-                            f"'{error_text}', "
-                            f"'{self.end_date}', "
-                            f"DATE_PART(epoch_second, CURRENT_TIMESTAMP()))").replace("\\","")
-
-            error_record = error_record.replace("placeholder_error_sql",error_sql)
+            insert_error_record = self.prepare_error_insert(
+                metrics_name=name,
+                metrics_level=level,
+                metric_sql_select=sql_select,
+                error_text=str(programming_error),
+            )
             
-            info(f"......inserting ERROR record: {error_record}")
-
-            conn.execute(error_record)
-        # except Exception as e:
-        #     info(f"......Other ERROR: {str(e)}")
+            conn.execute(insert_error_record)
 
     def chunk_list(self, namespace_size: int) -> tuple:
         """
