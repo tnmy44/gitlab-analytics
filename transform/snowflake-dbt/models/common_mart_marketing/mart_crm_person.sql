@@ -177,6 +177,9 @@
       fct_crm_person.last_transfer_date_time,
       fct_crm_person.time_from_last_transfer_to_sequence,
       fct_crm_person.time_from_mql_to_last_transfer,
+      fct_crm_person.traction_first_response_time,
+      fct_crm_person.traction_first_response_time_seconds,
+      fct_crm_person.traction_response_time_in_business_hours,
       fct_crm_person.zoominfo_contact_id,
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
@@ -271,5 +274,5 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-07-25",
+    updated_date="2023-08-03",
   ) }}  

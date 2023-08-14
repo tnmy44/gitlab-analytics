@@ -1338,6 +1338,12 @@ models:
         description: The most recent date a lead or contact was assigned a Marketo Qualified Lead Date.
       - name: is_mql
         description: a boolean field created in the warehouse to flag Marketing Qualified Leads.
+      - name: traction_first_response_time
+        description: The response time from Traction. 
+      - name: traction_first_response_time_seconds
+        description: The response time from Traction in seconds. 
+      - name: traction_response_time_in_business_hours
+        description: The response time from Traction, based only in working hours for the user/rep. 
 
   - name: fct_saas_product_usage_metrics_monthly
     description: '{{ doc("fct_saas_product_usage_metrics_monthly") }}'
