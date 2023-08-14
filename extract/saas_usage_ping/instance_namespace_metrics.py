@@ -130,9 +130,10 @@ class InstanceNamespaceMetrics:
         """
 
         prepared_query = f"{self.SQL_INSERT_PART}{query_dict}"
+        safe_dict = query_dict.replace("'","\\'")
         prepared_query = prepared_query.replace(
             "FROM",
-            f",'{ping_name}', '{ping_level}', '{query_dict}', 'Success', '{ping_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()) FROM",
+            f",'{ping_name}', '{ping_level}', '{safe_dict}', 'Success', '{ping_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()) FROM",
         )
 
         return prepared_query
