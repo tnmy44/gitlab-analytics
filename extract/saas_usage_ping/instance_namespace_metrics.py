@@ -158,7 +158,7 @@ class InstanceNamespaceMetrics:
             info(f"......ERROR: {str(programming_error)}")
 
             error_text = str(programming_error)[100:200]
-            error_sql = sql_select[:50]
+            error_sql = 'SQLSQL'
 
             error_record = (f"{self.SQL_INSERT_PART} "
                             f"VALUES "
