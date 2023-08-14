@@ -36,6 +36,8 @@ WITH source_user AS (
       IFNULL(edm_user.crm_user_region, 'Other')             AS user_region,
 
 
+      edm_user.crm_user_business_unit,
+
       CASE 
         WHEN LOWER(source_user.user_segment) = 'lrg' 
           THEN 'Large'
@@ -57,6 +59,8 @@ WITH source_user AS (
         -- If MM/SMB and Geo = APAC then Segment = Large
         -- Use that Adjusted Segment Field in our FY23 models
         CASE
+        WHEN LOWER(crm_user_business_unit) = 'japan'
+            THEN 'Japan'
         WHEN (LOWER(final_user_segment) = 'mid-market'
                 OR LOWER(final_user_segment)  = 'smb')
             AND LOWER(user_region) = 'meta'
@@ -111,6 +115,8 @@ WITH source_user AS (
       base.is_active,
       base.is_hybrid_flag,
       base.employee_number,
+      base.crm_user_business_unit,
+
      
       CASE
         WHEN LOWER(title) LIKE '%strategic account%'
@@ -129,7 +135,7 @@ WITH source_user AS (
 
       -- Business Unit (X-Ray 1st hierarchy)
       -- will be replaced with the actual field
-      CASE 
+      /*CASE 
         WHEN LOWER(user_segment) IN ('large','pubsec','all') -- "all" segment is PubSec for ROW
             THEN 'ENTG'
         WHEN LOWER(user_region) IN ('latam','meta')
@@ -139,7 +145,10 @@ WITH source_user AS (
             THEN 'COMM'
         WHEN LOWER(user_segment) = 'jihu' THEN 'JiHu'
         ELSE 'Other'
-      END AS business_unit,
+      END
+      */ 
+      
+      crm_user_business_unit AS business_unit,
 
       -- Sub-Business Unit (X-Ray 2nd hierarchy)
       /*
@@ -149,23 +158,14 @@ WITH source_user AS (
       CASE
         WHEN LOWER(business_unit) = 'entg'
           THEN user_geo
-
-        WHEN
-          LOWER(business_unit) = 'comm'
-          AND
-            (
-            LOWER(user_segment) = 'smb'
-            AND LOWER(user_geo) = 'amer'
-            AND LOWER(user_area) = 'lowtouch'
-            ) 
-          THEN 'AMER Low-Touch'
+        -- H2 update
+        WHEN LOWER(business_unit) = 'japan'
+          THEN 'Japan'      
         WHEN
           LOWER(business_unit) = 'comm'
           AND
             (
             LOWER(user_segment) = 'mid-market'
-            AND (LOWER(user_geo) = 'amer' 
-                OR LOWER(user_geo) = 'emea')
             AND LOWER(role_type) = 'fo'
             )
           THEN 'MM First Orders'  --mid-market FO(?)
@@ -184,27 +184,21 @@ WITH source_user AS (
       CASE 
         WHEN LOWER(business_unit) = 'entg'
           THEN user_region
-
-        WHEN 
-          LOWER(business_unit) = 'comm'
-          AND (LOWER(sub_business_unit) = 'amer' 
-            OR LOWER(sub_business_unit) = 'emea')
-          AND LOWER(user_segment) = 'mid-market'
-          THEN 'Mid-Market'
+        WHEN LOWER(business_unit) = 'japan'
+          THEN 'Japan'   
         WHEN
           LOWER(business_unit) = 'comm'
           AND LOWER(user_segment) = 'mid-market'         
           AND LOWER(sub_business_unit) = 'mm first orders'
           THEN 'MM First Orders'
+        WHEN 
+          LOWER(business_unit) = 'comm'
+          AND LOWER(sub_business_unit) != 'mm first orders'
+          AND LOWER(user_segment) = 'mid-market'
+          THEN 'Mid-Market'
         WHEN
           LOWER(business_unit) = 'comm'
-          AND LOWER(user_segment) = 'smb'
-          AND LOWER(sub_business_unit) = 'amer low-touch'
-          THEN 'AMER Low-Touch'
-        WHEN
-          LOWER(business_unit) = 'comm'
-          AND (LOWER(sub_business_unit) = 'amer'
-             OR LOWER(sub_business_unit) = 'emea')
+          AND LOWER(sub_business_unit) != 'mm first orders'
           AND LOWER(user_segment) = 'smb'
           THEN 'SMB'
         ELSE 'Other'
@@ -212,56 +206,18 @@ WITH source_user AS (
 
       -- ASM (X-Ray 4th hierarchy): definition pending
       CASE
+        WHEN LOWER(business_unit) = 'japan'
+          THEN user_area 
         WHEN 
           LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'amer'
-          THEN user_area
-        WHEN 
-          LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'emea'
-          AND (LOWER(division) = 'dach' 
-            OR LOWER(division) = 'neur' 
-            OR LOWER(division) = 'seur')
-          THEN user_area
-        WHEN
-          LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'emea'
-          AND LOWER(division) = 'meta'
-          THEN user_segment 
-        WHEN 
-          LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'apac'
-          THEN user_area
-        WHEN
-          LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'pubsec'
-          AND LOWER(division) != 'sled'
-          THEN user_area
-        WHEN
-          LOWER(business_unit) = 'entg'
-          AND LOWER(sub_business_unit) = 'pubsec'
-          AND LOWER(division) = 'sled'
-          THEN user_region
+          THEN user_area  
         WHEN 
           LOWER(business_unit) = 'comm'
-          AND LOWER(sub_business_unit) = 'mm first orders'
+          AND LOWER(division) = 'mm first orders'
           THEN user_geo
         WHEN
           LOWER(business_unit) = 'comm'
-          AND LOWER(user_segment) = 'smb'
-          AND LOWER(sub_business_unit) = 'amer low-touch'
-          AND LOWER(role_type) = 'fo'
-          THEN 'LowTouch FO'
-        WHEN
-          LOWER(business_unit) = 'comm'
-          AND LOWER(user_segment) = 'smb'
-          AND LOWER(sub_business_unit) = 'amer low-touch'
-          AND LOWER(role_type) != 'fo'
-          THEN 'LowTouch Pool'
-        WHEN
-          LOWER(business_unit) = 'comm'
-          AND (LOWER(sub_business_unit) = 'amer' 
-            OR LOWER(sub_business_unit) = 'emea')
+          AND LOWER(division) IN ('smb','mid-market')
           THEN user_area
         ELSE 'Other'
       END AS asm

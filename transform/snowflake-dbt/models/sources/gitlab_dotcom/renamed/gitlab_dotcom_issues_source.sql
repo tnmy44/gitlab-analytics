@@ -41,7 +41,8 @@ WITH source AS (
       state_id::NUMBER                                         AS state_id,
       duplicated_to_id::NUMBER                                 AS duplicated_to_id,
       promoted_to_epic_id::NUMBER                              AS promoted_to_epic_id,
-      issue_type::NUMBER                                       AS issue_type
+      -- column to be dropped in a future MR
+      NULL                                      AS issue_type
 
     FROM source
 

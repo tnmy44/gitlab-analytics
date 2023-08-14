@@ -53,11 +53,6 @@ databases:
         shared: no
     - csharp_prep:
         shared: no
-        
-    - david_prod:
-        shared: no
-    - david_prep:
-        shared: no
 
     - ddeng_prod:
         shared: no
@@ -1012,7 +1007,6 @@ roles:
             schemas:
               write:
                   - raw.tap_zengrc
-                  - raw.tap_adaptive
                   - raw.tap_xactly
                   - raw.tap_zendesk
                   - raw.tap_zendesk__community_relations
@@ -1020,7 +1014,6 @@ roles:
             tables:
               write:
                   - raw.tap_zengrc.*
-                  - raw.tap_adaptive.*
                   - raw.tap_xactly.*
                   - raw.tap_zendesk.*
                   - raw.tap_zendesk__community_relations.*
@@ -1274,11 +1267,9 @@ roles:
                     - raw
             schemas:
                 read:
-                    - raw.tap_adaptive
                     - raw.adaptive_custom
             tables:
                 read:
-                    - raw.tap_adaptive.*
                     - raw.adaptive_custom.*
 
     - bamboohr_analytics:
@@ -2102,6 +2093,21 @@ roles:
                     - prep.sensitive.netsuite_vendors_pii
                     - raw.netsuite_fivetran.*
 
+
+    - oci_reports:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.oci_reports
+            tables:
+                read:
+                    - raw.oci_reports.*
+
     - postgres_pipeline:
         warehouses:
             - dev_xs
@@ -2738,6 +2744,16 @@ roles:
 # User Roles
 # ==========================================
 
+    - aarts:
+        member_of:
+            - analyst_sales
+            - data_team_analyst
+            - reporter
+            - restricted_safe
+            - xactly
+        warehouses:
+            - dev_xs
+
     - airflow:
         warehouses:
             - dev_l
@@ -2910,6 +2926,7 @@ roles:
     - cleroux:
         member_of:
             - analyst_engineering
+            - oci_reports
             - prometheus
             - restricted_safe
         warehouses:
@@ -3471,6 +3488,13 @@ roles:
                     - jng_prep.*.*
                     - jng_prod.*.*
 
+    - jokal:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - jpeguero:
         member_of:
             - analyst_finance
@@ -3579,22 +3603,6 @@ roles:
                 write:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
-
-    - jstemmer:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
-            - bi_tool_eval_read
-            - zoominfo_inbound
-            - data_science
-            - data_science_sensitive
-        warehouses:
-            - dev_xs
-            - dev_xl
 
     - juwong:
         member_of:
@@ -3923,6 +3931,7 @@ roles:
     - mcooper:
         member_of:
             - analyst_finance
+            - analyst_growth
             - analyst_marketing
             - analytics_engineer_core
             - bamboohr
@@ -4020,6 +4029,13 @@ roles:
             - analyst_sales_sensitive
             - data_team_analyst
             - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - mgilgalindo:
+        member_of:
+            - reporter
+            - salesforce
         warehouses:
             - dev_xs
 
@@ -4997,9 +5013,16 @@ roles:
                 write:
                     - testing_db.*.*
 
+    - tjayaramaraju:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - tliu:
         member_of: []
         warehouses: []
+
     - tnguyen:
         member_of:
          - data_team_analyst
@@ -5118,6 +5141,11 @@ roles:
 # Users
 # ==========================================
 users:
+
+    - aarts:
+        can_login: yes
+        member_of:
+            - aarts
 
     - airflow:
         can_login: yes
@@ -5335,6 +5363,11 @@ users:
         member_of:
             - jng
 
+    - jokal:
+        can_login: yes
+        member_of:
+            - jokal
+
     - jpeguero:
         can_login: yes
         member_of:
@@ -5352,11 +5385,6 @@ users:
             - jstark
             - securityadmin
             - sysadmin
-
-    - jstemmer:
-        can_login: yes
-        member_of:
-            - jstemmer
 
     - juwong:
         can_login: yes
@@ -5440,6 +5468,11 @@ users:
         can_login: yes
         member_of:
             - mfleisher
+
+    - mgilgalindo:
+        can_login: yes
+        member_of:
+            - mgilgalindo
 
     - mnohr:
         can_login: no
@@ -5639,6 +5672,11 @@ users:
         can_login: yes
         member_of:
             - target_snowflake
+
+    - tjayaramaraju:
+        can_login: yes
+        member_of:
+            - tjayaramaraju
 
     - tliu:
         can_login: no

@@ -206,7 +206,7 @@ models:
         description: Indicates whether the account is actively being prospected by a BDR.
 
   - name: mart_crm_opportunity
-    description: Model with single pane of glass sales and marketing metrics. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
+    description: This model is deprecated, use [mart_crm_opportunity_stamped_hierarchy_hist](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.mart_crm_opportunity_stamped_hierarchy_hist) instead. Model with single pane of glass sales and marketing metrics. This model is refreshed on a six hourly schedule using the `dbt_six_hourly` airflow DAG.
     columns:
       - name: dim_crm_opportunity_id
         tests:
@@ -249,6 +249,25 @@ models:
         description: '{{ doc("intended_product_tier") }}'
       - name: dim_parent_crm_opportunity_id
         description: '{{ doc("dim_parent_crm_opportunity_id") }}'
+      - name: next_steps
+        description: Free text field that provides insight into the next step to continue progressing the Opportunity through the Sales Pipeline.
+      - name: auto_renewal_status
+        descripton: Flag with on/off. Indicates whether a current subscription will automatically renew for the same term as their current subscription after the expiration of the current term
+      - name: qsr_notes
+        description: '{{ doc("qsr_notes") }}'
+      - name: qsr_status  
+        description: Quarterly Subscription Reconciliation status (Pending, failed, processed)
+      - name: manager_confidence
+      - name: renewal_risk_category
+        description: Renewal forecasting field indicating whether the customer will renew, churn or contract (actionable or not)
+      - name: renewal_swing_arr
+        description: The revenue the Account team believes can be saved on an at-risk Renewal if action is taken
+      - name: renewal_manager
+        description:  Renewals Manager supporting this Opportunity
+      - name: renewal_forecast_health
+        description: Red, Yellow, Green health rating based on the Net ARR field
+      - name: renewal_ownership
+        description: This field determines Rules of Engagement (ROE) and ownership for the Renewal between the Renewals Manager and the Account Executive
 
   - name: mart_crm_opportunity_daily_snapshot
     description: Model with single pane of glass sales and marketing metrics, snapshotted daily.
@@ -341,7 +360,26 @@ models:
       - name: military_invasion_risk_scale
         description: '{{ doc("military_invasion_risk_scale") }}'
       - name: downgrade_details
-        description: '{{ doc("downgrade_details") }}'
+        description: '{{ doc("downgrade_details") }}' 
+      - name: next_steps
+        description: Free text field that provides insight into the next step to continue progressing the Opportunity through the Sales Pipeline.
+      - name: auto_renewal_status
+        descripton: Flag with on/off. Indicates whether a current subscription will automatically renew for the same term as their current subscription after the expiration of the current term
+      - name: qsr_notes
+        description: '{{ doc("qsr_notes") }}'
+      - name: qsr_status  
+        description: Quarterly Subscription Reconciliation status (Pending, failed, processed)
+      - name: manager_confidence
+      - name: renewal_risk_category
+        description: Renewal forecasting field indicating whether the customer will renew, churn or contract (actionable or not)
+      - name: renewal_swing_arr
+        description: The revenue the Account team believes can be saved on an at-risk Renewal if action is taken
+      - name: renewal_manager
+        description:  Renewals Manager supporting this Opportunity
+      - name: renewal_forecast_health
+        description: Red, Yellow, Green health rating based on the Net ARR field
+      - name: renewal_ownership
+        description: This field determines Rules of Engagement (ROE) and ownership for the Renewal between the Renewals Manager and the Account Executive
 
   - name: mart_sales_funnel_target
     description: Model with Sales targets used for planning the go to market Sales and Marketing motion.

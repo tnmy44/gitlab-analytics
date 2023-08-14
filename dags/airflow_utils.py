@@ -16,7 +16,7 @@ else:
 
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
-DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.27"
+DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.29"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.1"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
@@ -51,7 +51,6 @@ analytics_pipelines_dag = [
     "dbt_snowplow_backfill",
     "dbt_snowplow_backfill_specific_model",
     "dbt_snowplow_full_refresh",
-    "saas_usage_ping",
     "t_prep_dotcom_usage_events_backfill",
     "dbt_six_hourly",
 ]

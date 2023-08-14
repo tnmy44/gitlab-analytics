@@ -14,6 +14,7 @@ from airflow_utils import (
     gitlab_defaults,
     slack_failed_task,
     gitlab_pod_env_vars,
+    clone_and_setup_extraction_cmd,
     REPO_BASE_PATH,
 )
 
@@ -278,8 +279,75 @@ extract_dag_args = {
     "dagrun_timeout": timedelta(hours=6),
     "trigger_rule": "all_success",
 }
+
+
+def get_check_replica_snapshot_command(dag_name):
+    """
+    The get_check_replica_snapshot_command is responsible for preparing the check_replica_snapshot_command, which is used in the dag configuration.
+    """
+
+    if "el_gitlab_com_ci" in dag_name:
+        print("Checking CI DAG...")
+        check_replica_snapshot_command = (
+            f"{clone_and_setup_extraction_cmd} && "
+            f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ci"
+        )
+    elif dag_name == "el_gitlab_com_scd":
+        print("Checking gitlab_dotcom_scd DAG...")
+        check_replica_snapshot_command = (
+            f"{clone_and_setup_extraction_cmd} && "
+            f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_gitlab_dotcom_scd"
+        )
+    elif dag_name == "el_gitlab_com":
+        print("Checking gitlab_dotcom_incremental DAG...")
+        check_replica_snapshot_command = (
+            f"{clone_and_setup_extraction_cmd} && "
+            f"python postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
+        )
+
+    return check_replica_snapshot_command
+
+
+def get_check_replica_snapshot_task(dag_name, dag_obj):
+    """
+    This function is responsible for generating the dag configuration for the replica snapshot DAG.
+    """
+    check_replica_snapshot_task = KubernetesPodOperator(
+        **gitlab_defaults,
+        image=DATA_IMAGE,
+        task_id="check_replica_snapshot",
+        name="check_replica_snapshot",
+        secrets=[
+            GITLAB_COM_CI_DB_NAME,
+            GITLAB_COM_CI_DB_HOST,
+            GITLAB_COM_CI_DB_PASS,
+            GITLAB_COM_CI_DB_PORT,
+            GITLAB_COM_CI_DB_USER,
+            GITLAB_COM_DB_USER,
+            GITLAB_COM_DB_PASS,
+            GITLAB_COM_DB_HOST,
+            GITLAB_COM_DB_NAME,
+            GITLAB_COM_PG_PORT,
+            GITLAB_COM_SCD_PG_PORT,
+        ],
+        env_vars={**gitlab_pod_env_vars, **config["env_vars"]},
+        affinity=get_affinity("production"),
+        tolerations=get_toleration("production"),
+        arguments=[get_check_replica_snapshot_command(dag_name)],
+        retries=2,
+        retry_delay=timedelta(seconds=300),
+        dag=dag_obj,
+    )
+
+    return check_replica_snapshot_task
+
+
 # Loop through each config_dict and generate a DAG
 for source_name, config in config_dict.items():
+    if "gitlab_com" in config["dag_name"]:
+        has_replica_snapshot = True
+    else:
+        has_replica_snapshot = False
     if "scd" not in source_name:
         extract_dag_args["start_date"] = config["start_date"]
         incremental_backfill_dag_args["start_date"] = config["start_date"]
@@ -292,6 +360,10 @@ for source_name, config in config_dict.items():
             catchup=True,
         )
 
+        if has_replica_snapshot:
+            check_replica_snapshot = get_check_replica_snapshot_task(
+                config["dag_name"], extract_dag
+            )
         with extract_dag:
             # Actual PGP extract
             file_path = f"{REPO_BASE_PATH}/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
@@ -307,7 +379,6 @@ for source_name, config in config_dict.items():
                 task_identifier = (
                     f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
                 )
-
                 incremental_cmd = generate_cmd(
                     config["dag_name"],
                     f"--load_type incremental --load_only_table {table}",
@@ -332,6 +403,9 @@ for source_name, config in config_dict.items():
                     arguments=[incremental_cmd],
                     do_xcom_push=True,
                 )
+
+                if has_replica_snapshot:
+                    check_replica_snapshot >> incremental_extract
         globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
         incremental_backfill_dag = DAG(
@@ -347,6 +421,10 @@ for source_name, config in config_dict.items():
             file_path = f"{REPO_BASE_PATH}/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
+            if has_replica_snapshot:
+                check_replica_snapshot_backfill = get_check_replica_snapshot_task(
+                    config["dag_name"], incremental_backfill_dag
+                )
             for table in table_list:
                 if is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "backfill"
@@ -377,7 +455,8 @@ for source_name, config in config_dict.items():
                         arguments=[sync_cmd],
                         do_xcom_push=True,
                     )
-
+                if has_replica_snapshot:
+                    check_replica_snapshot_backfill >> sync_extract
         globals()[
             f"{config['dag_name']}_db_incremental_backfill"
         ] = incremental_backfill_dag
@@ -397,6 +476,10 @@ for source_name, config in config_dict.items():
             file_path = f"{REPO_BASE_PATH}/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
+            if has_replica_snapshot:
+                check_replica_snapshot_scd = get_check_replica_snapshot_task(
+                    config["dag_name"], sync_dag
+                )
             for table in table_list:
                 if not is_incremental(manifest["tables"][table]["import_query"]):
                     TASK_TYPE = "db-scd"
@@ -404,7 +487,6 @@ for source_name, config in config_dict.items():
                     task_identifier = (
                         f"el-{config['task_name']}-{table.replace('_','-')}-{TASK_TYPE}"
                     )
-
                     # SCD Task
                     scd_cmd = generate_cmd(
                         config["dag_name"],
@@ -430,4 +512,6 @@ for source_name, config in config_dict.items():
                         tolerations=get_toleration("scd"),
                         do_xcom_push=True,
                     )
+                    if has_replica_snapshot:
+                        check_replica_snapshot_scd >> scd_extract
         globals()[f"{config['dag_name']}_db_sync"] = sync_dag

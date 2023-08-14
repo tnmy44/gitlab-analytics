@@ -38,7 +38,8 @@ WITH source AS (
         path                                                                                    AS metrics_path,
         IFF(value = -1, 0, value)                                                               AS metric_value,
         IFF(value = -1, TRUE, FALSE)                                                            AS has_timed_out,
-        ping_type                                                                               AS ping_type
+        ping_type                                                                               AS ping_type,
+        version
       FROM source,
         LATERAL FLATTEN(input => raw_usage_data_payload,
         RECURSIVE => true)
@@ -48,7 +49,7 @@ WITH source AS (
   {{ dbt_audit(
       cte_ref="flattened_high_level",
       created_by="@icooper-acp",
-      updated_by="@jpeguero",
+      updated_by="@michellecooper",
       created_date="2022-03-17",
-      updated_date="2023-06-12"
+      updated_date="2023-06-30"
   ) }}

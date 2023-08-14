@@ -391,6 +391,8 @@ models:
       - name: person_first_country
         description: >
           Selects the first country contact enhanmenet services using abilve data. Following the order:  Zoominfo Company Country, Zoominfo Contact Country, Cognism Company Office Country, Cognism Country
+      - name: is_partner_recalled
+        description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
 
   - name: dim_crm_user
     description: '{{ doc("dim_crm_user") }}'
@@ -615,7 +617,7 @@ models:
     description: Table with the source data of the data being exposed in dimensional tables where various sources are combined.
 
   - name: dim_gitlab_ops_gitlab_emails
-    description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
+    description: This model limits the gitlab dotcom emails table to only have records for emails ending with `gitlab.com`.
     columns:
         - name: user_id
           tests:
@@ -1336,6 +1338,12 @@ models:
         description: The most recent date a lead or contact was assigned a Marketo Qualified Lead Date.
       - name: is_mql
         description: a boolean field created in the warehouse to flag Marketing Qualified Leads.
+      - name: traction_first_response_time
+        description: The response time from Traction. 
+      - name: traction_first_response_time_seconds
+        description: The response time from Traction in seconds. 
+      - name: traction_response_time_in_business_hours
+        description: The response time from Traction, based only in working hours for the user/rep. 
 
   - name: fct_saas_product_usage_metrics_monthly
     description: '{{ doc("fct_saas_product_usage_metrics_monthly") }}'
@@ -1824,6 +1832,8 @@ models:
           - unique:
               config:
                 where: "event_date >= DATEADD('day',-7,CURRENT_DATE())"
+      - name: event_id
+        description: '{{ doc("event_id") }}'
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
@@ -1905,6 +1915,8 @@ models:
         # tests:
           # - not_null
           # - unique
+      - name: event_id
+        description: '{{ doc("event_id") }}'
       - name: event_name
         description: '{{ doc("event_name") }}'
       - name: dim_event_date_id
@@ -2355,6 +2367,7 @@ models:
       - name: quote_status
       - name: is_primary_quote
       - name: quote_start_date
+      - name: created_date
       - name: subscription_action_type
         description: '{{ doc("subscription_action_type") }}'
 
@@ -3090,6 +3103,10 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
+      - name: dim_latest_available_app_release_major_minor_sk
+        description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
 
   - name: fct_ping_instance_metric_rolling_6_months
     description: '{{ doc("fct_ping_instance_metric_rolling_6_months") }}'
@@ -4206,6 +4223,10 @@ models:
         description: '{{ doc("umau_value") }}'
       - name: data_source
         description: '{{ doc("data_source") }}'
+      - name: dim_app_release_major_minor_sk
+        description: '{{ doc("dim_app_release_major_minor_sk") }}'
+      - name: dim_latest_available_app_release_major_minor_sk
+        description: '{{ doc("dim_latest_available_app_release_major_minor_sk") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -4560,6 +4581,8 @@ models:
       - name: zoom_info_company_revenue
       - name: zoom_info_company_state_province
       - name: zoominfo_account_phone
+      - name: is_focus_partner
+        description: A partner account on the focus partner list
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
@@ -4985,6 +5008,25 @@ models:
         description: '{{ doc("intended_product_tier") }}'
       - name: dim_parent_crm_opportunity_id
         description: '{{ doc("dim_parent_crm_opportunity_id") }}'
+      - name: next_steps
+        description: Free text field that provides insight into the next step to continue progressing the Opportunity through the Sales Pipeline.
+      - name: auto_renewal_status
+        descripton: Flag with on/off. Indicates whether a current subscription will automatically renew for the same term as their current subscription after the expiration of the current term
+      - name: qsr_notes
+        description: '{{ doc("qsr_notes") }}'
+      - name: qsr_status  
+        description: Quarterly Subscription Reconciliation status (Pending, failed, processed)
+      - name: manager_confidence
+      - name: renewal_risk_category
+        description: Renewal forecasting field indicating whether the customer will renew, churn or contract (actionable or not)
+      - name: renewal_swing_arr
+        description: The revenue the Account team believes can be saved on an at-risk Renewal if action is taken
+      - name: renewal_manager
+        description:  Renewals Manager supporting this Opportunity
+      - name: renewal_forecast_health
+        description: Red, Yellow, Green health rating based on the Net ARR field
+      - name: renewal_ownership
+        description: This field determines Rules of Engagement (ROE) and ownership for the Renewal between the Renewals Manager and the Account Executive
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
@@ -5713,7 +5755,9 @@ models:
       - name: fct_behavior_website_page_view_sk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("fct_behavior_website_page_view_sk") }}'  
       - name: dim_behavior_website_page_sk
         description: '{{ doc("dim_behavior_website_page_sk") }}' 
@@ -6137,7 +6181,9 @@ models:
       - name: behavior_structured_event_pk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("behavior_structured_event_pk") }}'
       - name: dim_behavior_browser_sk
         description: '{{ doc("dim_behavior_browser_sk") }}'
@@ -6347,7 +6393,9 @@ models:
       - name: fct_behavior_unstructured_sk
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         description: '{{ doc("fct_behavior_unstructured_sk") }}'
       - name: app_id
         description: '{{ doc("app_id") }}'
@@ -7258,6 +7306,58 @@ models:
         description: Masked. Team member performance rating
         meta:
           masking_policy: analyst_people
+      - name: employee_type
+        description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
+
+  - name: dim_team
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - team_id
+            - valid_from
+    columns:
+      - name: team_hierarchy_level
+        tests:
+          - accepted_values:
+              values: ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+      - name: dim_team_sk
+        tests:
+          - not_null
+      - name: team_id
+        tests:
+          - not_null
+      - name: team_superior_team_id
+      - name: hierarchy_level_1
+      - name: hierarchy_level_2
+      - name: hierarchy_level_3
+      - name: hierarchy_level_4
+      - name: hierarchy_level_5
+      - name: hierarchy_level_6
+      - name: hierarchy_level_7
+      - name: hierarchy_level_8
+      - name: hierarchy_level_9
+      - name: hierarchy_level_1_name
+      - name: hierarchy_level_2_name
+      - name: hierarchy_level_3_name
+      - name: hierarchy_level_4_name
+      - name: hierarchy_level_5_name
+      - name: hierarchy_level_6_name
+      - name: hierarchy_level_7_name
+      - name: hierarchy_level_8_name
+      - name: hierarchy_level_9_name
+      - name: hierarchy_levels_array
+      - name: team_hierarchy_level
+      - name: is_team_inactivated
+      - name: team_name
+      - name: team_manager_name
+      - name: team_manager_name_id
+      - name: team_inactivated_date
+      - name: team_members_count
+      - name: is_team_manager_inherited
+      - name: is_team_active
+      - name: valid_from
+      - name: valid_to
+      - name: is_current
 
   - name: fct_team_member_status
     description: '{{ doc("fct_team_member_status") }}'
@@ -7469,3 +7569,250 @@ models:
           - not_null
       - name: valid_to
 
+
+  - name: fct_trial
+    description: '{{ doc("fct_trial") }}'
+    columns:
+      - name: trial_pk
+        description: The composite primary key of the model that uniquely represents a row, cannot be used as a join key.
+        tests:
+          - not_null
+          - unique
+      - name: internal_order_id
+        description: The unique ID of a CDot Order. It can only be used as a join key to join to CDot Orders. It cannot be used to join to Zuora Orders as this is a system specific key generated by CDot.
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        description: The id of the namespace related to the order.  
+      - name: product_rate_plan_id
+        description: The unique ID of a product rate plan    
+      - name: internal_customer_id
+        description: The unique ID of a CDot customer. It can be used as a Join key to join to CDot Customers only. It cannot be used to join to Gitlab.com Users as this is a system specific key generated by CDot.
+      - name: user_id
+        description: The unique ID of a gitlab user from gitlab.com
+      - name: is_gitlab_user
+        description: Boolean flag to indicate if the user has an associated user id from gitlab.com
+      - name: user_created_at
+        description: The date when the user was created at gitlab.com portal
+      - name: namespace_created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: namespace_type 
+        description: '{{ doc("namespace_type") }}'
+      - name: is_trial_converted
+        description: Boolean flag to indicate if the Trial order has been converted to Paid Order or not
+      - name: subscription_name
+        description: The unique name of a subscription from Zuora. It can be used to join back to Zuora Subscriptions.
+      - name: subscription_name_slugify
+        description: The name of the subscription from Zuora
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
+      - name: country
+        description: The country selected by the User during registration
+      - name: company_size
+        description: The size of the company as provided by the user during registration
+      - name: order_created_at
+        description: The date when the Order was created
+      - name: order_updated_at
+        description: The date when the Order was updated
+      - name: trial_start_date
+        description: The date when the trial period begins for a product rate plan
+      - name: trial_end_date
+        description: The expiration date of the trial Order, which is usually 30 days from the trial start date
+
+
+  - name: fct_trial_first
+    description: '{{ doc("fct_trial_first") }}'
+    columns:
+      - name: trial_first_pk
+        description: The composite primary key created by hashing `order_id` and `namespace_id` that uniquely represents a row, cannot be used as a join key
+        tests:
+          - not_null
+          - unique
+      - name: internal_order_id
+        description: The unique ID of a CDot Order. It can only be used as a join key to join to CDot Orders. It cannot be used to join to Zuora Orders as this is a system specific key generated by CDot
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        description: The id of the namespace related to the first trial order. 
+      - name: internal_customer_id
+        description: The unique ID of a CDot customer. It can be used as a Join key to join to CDot Customers only. It cannot be used to join to Gitlab.com Users as this is a system specific key generated by CDot
+      - name: user_id
+        description: The unique ID of a gitlab user from gitlab.com associated with the first trial order
+      - name: subscription_name
+        description: The unique name of the first subscription associated with the Order from Zuora. It can be used to join back to Zuora Subscriptions
+      - name: subscription_name_slugify
+        description: The name of the first subscription associated with the Order from Zuora
+      - name: is_gitlab_user
+        description: Boolean flag to indicate if the user has an associated user id from gitlab.com
+      - name: user_created_at
+        description: The date when the user was first created at gitlab.com portal
+      - name: namespace_created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: namespace_type 
+        description: '{{ doc("namespace_type") }}'
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term
+      - name: country
+        description: The country selected by the User during registration
+      - name: company_size
+        description: The size of the company as provided by the user during registration
+      - name: is_trial_converted
+        description: Boolean flag to indicate if the Trial order(from CDot) has been converted to Paid Order or not
+      - name: order_created_at
+        description: The date when the Order was first created in CDot
+      - name: trial_start_date 
+        description: The date when the trial period begins for a product rate plan
+      - name: trial_end_date
+        description: The expiration date of the trial Order, which is usually 30 days from the trial start date
+
+
+  - name: fct_trial_latest
+    description: '{{ doc("fct_trial_latest") }}'
+    columns:
+      - name: trial_latest_pk
+        description: The primary key created by hashing `order_id` and `namespace_id` that uniquely represents a row, cannot be used as a join key.
+        tests:
+          - not_null
+          - unique
+      - name: internal_order_id
+        description: The unique ID of a CDot Order. It can only be used as a join key to join to CDot Orders. It cannot be used to join to Zuora Orders as this is a system specific key generated by CDot.
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        description: The id of the namespace related to the latest trial order. 
+      - name: internal_customer_id
+        description: The unique ID of a customer. It can be used as a Join key to join to CDot Customers only. It cannot be used to join to Gitlab.com Users as this is a system specific key generated by CDot
+      - name: user_id
+        description: The unique ID of a gitlab user from gitlab.com associated with the latest trial order
+      - name: subscription_name
+        description: The unique name of the first subscription associated with the Order from Zuora. It can be used to join back to Zuora Subscriptions
+      - name: subscription_name_slugify
+        description: The name of the first subscription associated with the Order from Zuora
+      - name: is_gitlab_user
+        description: Boolean flag to indicate if the user has an associated user id
+      - name: user_created_at
+        description: The latest date when the user was created at gitlab.com portal
+      - name: namespace_created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: namespace_type 
+        description: '{{ doc("namespace_type") }}'
+      - name: is_trial_converted
+        description: Boolean flag to indicate if the Trial order(from CDot) has been converted to Paid Order or not
+      - name: subscription_start_date
+        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term
+      - name: country
+        description: The country selected by the User during registration
+      - name: company_size
+        description: The size of the company as provided by the user during registration
+      - name: order_created_at
+        description: The date when the Order was first created in CDot
+      - name: trial_start_date
+        description: The date when the trial period begins for a product rate plan
+      - name: trial_end_date
+        description: The expiration date of the trial Order, which is usually 30 days from the trial start date
+
+  - name: dim_package
+    description: '{{ doc("dim_package")}}'
+    columns:
+      - name: dim_package_sk
+        description: '{{ ("dim_package_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: package_id
+        description: '{{ ("package_id") }}'
+      - name: dim_project_id
+        description: '{{ ("dim_project_id") }}'
+      - name: dim_namespace_id
+        description: '{{ ("dim_namespace_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ ("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ ("dim_plan_id") }}'
+      - name: creator_id
+        description: '{{ ("dim_user_id") }}'
+      - name: package_version
+        description: '{{ ("package_version") }}'
+      - name: package_type
+        description: '{{ ("package_type") }}'
+      - name: created_at
+        description: '{{ ("package_created_at") }}'
+      - name: updated_at
+        description: '{{ ("package_updated_at") }}'
+
+  - name: dim_integration
+    description: '{{ ("dim_integration") }}'
+    columns:
+      - name: dim_integration_sk
+        description: '{{ doc("dim_integration_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: integration_id
+        description: '{{ doc("integration_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ doc("dim_plan_id") }}'
+      - name: is_active
+        description: '{{ doc("integration_is_active") }}'
+      - name: created_at
+        description: '{{ doc("integration_created_at") }}'
+      - name: updated_at
+        description: '{{ doc("integration_updated_at") }}'
+
+  - name: dim_requirement
+    description: '{{ doc("dim_requirement") }}'
+    columns:
+      - name: dim_requirement_sk
+        description: '{{ doc("dim_requirement_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: requirement_id
+        description: '{{ doc("requirement_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ doc("dim_plan_id") }}'
+      - name: author_id
+        description: '{{ doc("dim_user_id") }}'
+      - name: created_date_id
+        description: '{{ doc("created_date_id") }}'
+      - name: requirement_internal_id
+        description: '{{ doc("requirement_internal_id") }}'
+      - name: requirement_state
+        description: '{{ doc("requirement_state") }}'
+      - name: created_at
+        description: '{{ doc("requirement_created_at") }}'
+      - name: updated_at
+        description: '{{ doc("requirement_updated_at") }}'
+
+  - name: dim_snippet
+    description: '{{ doc("dim_snippet") }}'
+    columns:
+      - name: dim_snippet_sk
+        description: '{{ doc("dim_snippet_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: snippet_id
+        description: '{{ doc("snippet_id") }}'
+      - name: author_id
+        description: '{{ doc("dim_user_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ doc("dim_plan_id") }}'
+      - name: snippet_type
+        description: '{{ doc("snippet_type") }}'
+      - name: created_at
+        description: '{{ doc("snippet_created_at") }}'
+      - name: updated_at
+        description: '{{ doc("snippet_updated_at") }}'

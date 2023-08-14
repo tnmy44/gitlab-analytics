@@ -1024,7 +1024,8 @@
       'ptp_past_insights',
       'ptp_past_score_group',
       'ptp_days_since_trial_start',
-      'ptp_source'
+      'ptp_source',
+      'is_group_maintainer_of_saas_paid_tier'
       ]
 ) }}
 

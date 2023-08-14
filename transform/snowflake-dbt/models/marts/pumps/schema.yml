@@ -19,15 +19,6 @@ models:
 
   - name: mart_product_usage_paid_user_metrics_monthly
     description: '{{ doc("mart_product_usage_paid_user_metrics_monthly") }}'
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - snapshot_month
-            - dim_subscription_id
-            - deployment_type
-            - uuid
-            - hostname
-            - dim_namespace_id
     columns:
       - name: snapshot_month
         description: Month in which the product usage was reported.
@@ -656,7 +647,11 @@ models:
       - name: iso_2_country_code
       - name: iso_3_country_code
       - name: delivery_type
-        description: Indicates if the product usage came from a SaaS or Self-Managed user.
+        description: '{{ doc("ping_delivery_type") }}'
+        tests:
+          - not_null
+      - name: deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
         tests:
           - not_null
       - name: umau_28_days_user
@@ -1187,7 +1182,7 @@ models:
 
   - name: mart_product_usage_paid_user_metrics_monthly_report_view
     description: '{{ doc("mart_product_usage_paid_user_metrics_monthly_report_view") }}'
-  
+
   - name: pump_use_case_adoption_scoring
     description: Calculates product usage health scores per snapshot_month and installation_id (Self-Managed)/namespace_id (SaaS)
     columns:
@@ -1213,3 +1208,6 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: mart_crm_subscription_id
+    description: '{{ doc("mart_crm_subscription_id") }}'

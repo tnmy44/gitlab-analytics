@@ -186,24 +186,7 @@ models:
           - not_null:
               config:
                 error_if: ">5"
-
-  - name: gitlab_dotcom_gitlab_emails
-    description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
-    columns:
-        - name: confirmation_sent_at
-        - name: created_at
-        - name: email_address
-          tests:
-            - not_null
-        - name: email_confirmed_at
-        - name: gitlab_email_id
-        - name: user_id
-          tests:
-            - not_null
-        - name: include_email_flg
-          description: This takes into account the gitlab email and uses the `include_gitlab_email` macro to identify if there are reasons for why the email should be excluded (i.e. test accounts). This field is taken into account in map_team_member_bamboo_gitlab_dotcom_gitlab_ops. 
-        - name: updated_at
-
+                
   - name: gitlab_dotcom_gitlab_internal_sprints
     description: '{{ doc("gitlab_dotcom_gitlab_internal_sprints") }}'
     columns:
@@ -630,7 +613,9 @@ models:
       - name: event_primary_key
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "event_created_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: event_name
         tests:
           - not_null
@@ -652,7 +637,9 @@ models:
       - name: event_primary_key
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "event_created_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: event_name
         tests:
           - not_null

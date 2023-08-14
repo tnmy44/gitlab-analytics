@@ -343,3 +343,37 @@ ADAPTIVE_PASSWORD = Secret(
     "airflow",
     "ADAPTIVE_PASSWORD",
 )
+
+## OCI Usage Extraction
+
+OCI_FINGERPRINT = Secret("env", "OCI_FINGERPRINT", "airflow", "OCI_FINGERPRINT")
+
+OCI_KEY_CONTENT = Secret("env", "OCI_KEY_CONTENT", "airflow", "OCI_KEY_CONTENT")
+
+OCI_REGION = Secret("env", "OCI_REGION", "airflow", "OCI_REGION")
+
+OCI_TENANCY = Secret("env", "OCI_TENANCY", "airflow", "OCI_TENANCY")
+
+OCI_USER = Secret("env", "OCI_USER", "airflow", "OCI_USER")
+
+GITLAB_METADATA_DB_NAME = Secret(
+    "env", "GITLAB_METADATA_DB_NAME", "airflow", "GITLAB_METADATA_DB_NAME"
+)
+GITLAB_METADATA_DB_HOST = Secret(
+    "env", "GITLAB_METADATA_DB_HOST", "airflow", "GITLAB_METADATA_DB_HOST"
+)
+GITLAB_METADATA_DB_PASS = Secret(
+    "env", "GITLAB_METADATA_DB_PASS", "airflow", "GITLAB_METADATA_DB_PASS"
+)
+GITLAB_METADATA_PG_PORT = Secret(
+    "env", "GITLAB_METADATA_PG_PORT", "airflow", "GITLAB_METADATA_PG_PORT"
+)
+GITLAB_METADATA_DB_USER = Secret(
+    "env", "GITLAB_METADATA_DB_USER", "airflow", "GITLAB_METADATA_DB_USER"
+)
+GITLAB_METADATA_SCHEMA = Secret(
+    "env", "GITLAB_METADATA_SCHEMA", "airflow", "GITLAB_METADATA_SCHEMA"
+)
+GITLAB_BACKFILL_BUCKET = Secret(
+    "env", "GITLAB_BACKFILL_BUCKET", "airflow", "GITLAB_BACKFILL_BUCKET"
+)

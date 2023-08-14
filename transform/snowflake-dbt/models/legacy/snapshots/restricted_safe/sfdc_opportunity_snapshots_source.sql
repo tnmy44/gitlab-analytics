@@ -199,6 +199,16 @@ WITH source AS (
         comp_y2_iacv__c                                                                     AS comp_y2_iacv,
         comp_new_logo_override__c                                                           AS comp_new_logo_override,
         is_pipeline_created_eligible_flag__c                                                AS is_pipeline_created_eligible,
+        next_steps__c                                                                       AS next_steps,
+        auto_renewal_status__c                                                              AS auto_renewal_status,
+        qsr_notes__c                                                                        AS qsr_notes,
+        qsr_status__c                                                                       AS qsr_status,
+        manager_forecast_confidence__c                                                      AS manager_confidence,
+        renewal_risk_forecast__c                                                            AS renewal_risk_category,
+        renewal_swing_arr__c                                                                AS renewal_swing_arr,
+        isr__c                                                                              AS renewal_manager, 
+        renewal_forecast_category__c                                                        AS renewal_forecast_health,
+        isr_priority__c                                                                     AS renewal_ownership,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
