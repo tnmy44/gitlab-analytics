@@ -48,7 +48,7 @@ class InstanceNamespaceMetrics:
 
         self.SQL_INSERT_PART = (
             "INSERT INTO "
-            "gitlab_dotcom_namespace"
+            "\"17485-NAMESPACE-SAAS-SERVICE-PING-PERFORMANCE-IMPROVEMENT_RAW\".saas_usage_ping.gitlab_dotcom_namespace"
             "(id, "
             "namespace_ultimate_parent_id, "
             "counter_value, "
