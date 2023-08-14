@@ -13,7 +13,7 @@ from logging import basicConfig, info
 from fire import Fire
 from utils import EngineFactory, Utils
 
-
+from snowflake.connector.errors import ProgrammingError
 class InstanceNamespaceMetrics:
     """
     Handling instance_namespace_metrics pipeline
@@ -151,10 +151,14 @@ class InstanceNamespaceMetrics:
 
         try:
             conn.execute(f"{sql_ready}")
-        except Exception as e:
-            info(f"......ERROR: {repr(e)}")
+        except ProgrammingError as programming_error:
+            info(f"......ERROR: {str(programming_error)}")
+            error_text = str(programming_error).replace("{","").replace("}","")
             conn.execute(
-                f"{self.SQL_INSERT_PART} VALUES(NULL, NULL, NULL, '{name}', '{level}', '{sql_select}', '{repr(e)}', '{self.end_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()))"
+                f"{self.SQL_INSERT_PART} "
+                f"VALUES "
+                f"(NULL, NULL, NULL, '{name}', '{level}', '{sql_ready}', '{error_text}', '{self.end_date}', "
+                f"DATE_PART(epoch_second, CURRENT_TIMESTAMP()))"
             )
 
     def chunk_list(self, namespace_size: int) -> tuple:
