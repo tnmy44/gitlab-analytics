@@ -216,9 +216,12 @@ def get_last_loaded(dag_name: String) -> string:
         return None
     xcom_date = datetime.now() - timedelta(hours=54)
 
-    return "{{{{ task_instance.xcom_pull('{task_id}', include_prior_dates=True)['max_data_available'] | " \
-           "default('{default_date}', true) }}}}".format(
-            task_id=task_identifier + "-pgp-extract", default_date=xcom_date.strftime("%Y-%m-%dT%H:%M:%S") + '+00:00'
+    return (
+        "{{{{ task_instance.xcom_pull('{task_id}', include_prior_dates=True)['max_data_available'] | "
+        "default('{default_date}', true) }}}}".format(
+            task_id=task_identifier + "-pgp-extract",
+            default_date=xcom_date.strftime("%Y-%m-%dT%H:%M:%S") + "+00:00",
+        )
     )
 
 
