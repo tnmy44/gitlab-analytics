@@ -182,7 +182,13 @@ WITH biz_person AS (
             AND crm_tasks.min_task_completed_date_by_bdr_sdr >= sfdc_contacts.mql_datetime_inferred 
           THEN TRUE
         ELSE FALSE
-      END AS is_bdr_sdr_worked_inferred_mql
+      END AS is_bdr_sdr_worked_inferred_mql,
+      CASE
+        WHEN sfdc_contacts.mql_datetime_inferred IS NOT null 
+            AND crm_tasks.min_task_completed_date_by_bdr_sdr IS NOT NULL
+          THEN TRUE
+        ELSE FALSE
+      END AS is_bdr_sdr_worked_inferred_mql2
 
 
     FROM sfdc_contacts
@@ -309,7 +315,12 @@ WITH biz_person AS (
             AND crm_tasks.min_task_completed_date_by_bdr_sdr >= sfdc_leads.mql_datetime_inferred 
           THEN TRUE
         ELSE FALSE
-      END AS is_bdr_sdr_worked_inferred_mql
+      END AS is_bdr_sdr_worked_inferred_mql,
+      CASE
+        WHEN sfdc_leads.mql_datetime_inferred IS NOT null 
+            AND crm_tasks.min_task_completed_date_by_bdr_sdr IS NOT NULL
+        ELSE FALSE
+      END AS is_bdr_sdr_worked_inferred_mql2
 
     FROM sfdc_leads
     LEFT JOIN biz_person_with_touchpoints
@@ -333,5 +344,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-08-10"
+    updated_date="2023-08-14"
 ) }}
