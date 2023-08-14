@@ -140,6 +140,7 @@ class InstanceNamespaceMetrics:
 
         return prepared_query
 
+
     def upload_results(self, query_dict: dict, conn) -> None:
         """
         Execute query and return results.
@@ -154,7 +155,7 @@ class InstanceNamespaceMetrics:
         try:
             conn.execute(f"{sql_ready}")
         except ProgrammingError as programming_error:
-            info(f"......ERROR: {str(programming_error)}")
+            info(f"......ProgrammingError ERROR: {str(programming_error)}")
             error_text = str(programming_error).replace("{", "").replace("}", "")
 
             error_record = (f"{self.SQL_INSERT_PART} "
@@ -170,6 +171,8 @@ class InstanceNamespaceMetrics:
             info(f"......inserting ERROR record: {error_record}")
 
             conn.execute(error_record)
+        except Exception as e:
+            info(f"......Other ERROR: {str(e)}")
 
     def chunk_list(self, namespace_size: int) -> tuple:
         """
