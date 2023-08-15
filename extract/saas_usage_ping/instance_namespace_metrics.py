@@ -138,12 +138,13 @@ class InstanceNamespaceMetrics:
 
         return prepared_query
 
-    def generate_error_message(self, input_error: str) -> str:
+    @staticmethod
+    def generate_error_message(input_error: str) -> str:
         """
         Generate error message and delete characters
         Snowflake can't digest
         """
-        return str(input_error).replace("\n", " ").replace("'", "")
+        return input_error.replace("\n", " ").replace("'", "")
 
     def generate_error_insert(
         self,
@@ -194,7 +195,9 @@ class InstanceNamespaceMetrics:
             conn.execute(f"{sql_ready}")
 
         except Exception as programming_error:
-            error_message = self.generate_error_message(input_error=programming_error)
+            error_message = self.generate_error_message(
+                input_error=str(programming_error)
+            )
 
             info(
                 f"......ERROR: {type(programming_error).__name__}...."

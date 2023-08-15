@@ -165,8 +165,6 @@ def test_prepare_insert_query(namespace_file, namespace_ping):
     Test query replacement
     """
     insert_part = (
-        "INSERT INTO "
-        "gitlab_dotcom_namespace"
         "(id, namespace_ultimate_parent_id, counter_value, "
         "ping_name, level, query_ran, error, ping_date, _uploaded_at)"
     )
@@ -218,3 +216,37 @@ def test_chunk_list_edge_case(namespace_file, namespace_ping):
     actual = namespace_ping.chunk_list(namespace_size=len(namespace_file))
 
     assert actual == (0, len(namespace_file))
+
+
+def test_generate_error_message(namespace_ping):
+    """
+    Test generate_error_message
+    """
+
+    error_message = """(snowflake.connector.errors.ProgrammingError) 001003 (42000): 01ae51f0-0406-8c1e-0000-289d5a74c882: SQL compilation error:\n'
+[2023-08-15 08:16:59,539] INFO - b"syntax error line 1 at position 343 unexpected '{'.\n
+[2023-08-15 08:16:59,539] INFO - b"syntax error line 1 at position 342 unexpected '.'.\n"""
+
+    expected = namespace_ping.generate_error_message(input_error=error_message)
+
+    assert "\n" not in expected
+    assert "'" not in expected
+
+
+def test_generate_error_insert(namespace_ping):
+    """
+    Test generate_error_insert
+    """
+    metrics_sql_select = "SELECT 1"
+    expected = namespace_ping.generate_error_insert(
+        metrics_name="test_metrics",
+        metrics_level="namespace",
+        metric_sql_select=metrics_sql_select,
+        error_text="Test error message",
+    )
+
+    assert namespace_ping.SQL_INSERT_PART in expected
+    assert metrics_sql_select in expected
+    assert "namespace" in expected
+    assert "NULL, NULL, NULL" in expected
+    assert "\\" not in expected
