@@ -31,7 +31,7 @@ CASE
     THEN 'Basic'
   WHEN {{product_column}} = 'Trueup'
     THEN 'Trueup'
-  WHEN LOWER({{product_column}}) LIKE 'code suggestions%'
+  WHEN LOWER({{product_column}}) LIKE 'saas - code suggestions%'
     THEN 'SaaS - AI Add Ons'
   WHEN LTRIM(LOWER({{product_column}})) LIKE 'githost%'
     THEN 'GitHost'
