@@ -175,7 +175,7 @@
   },
   {
     "event_name": "packages",
-    "source_table_name": "gitlab_dotcom_packages_packages",
+    "source_table_name": "gitlab_dotcom_packages_packages_source",
     "user_column_name": "creator_id",
     "key_to_parent_project": "project_id",
     "primary_key": "packages_package_id",
@@ -220,9 +220,9 @@
   },
   {
     "event_name": "requirements",
-    "source_table_name": "gitlab_dotcom_requirements",
+    "source_table_name": "prep_requirement",
     "user_column_name": "author_id",
-    "key_to_parent_project": "project_id",
+    "key_to_parent_project": "dim_project_id",
     "primary_key": "requirement_id",
     "stage_name": "plan",
     "is_representative_of_stage": "False"
@@ -265,7 +265,7 @@
   },
   {
     "event_name": "snippets",
-    "source_table_name": "gitlab_dotcom_snippets",
+    "source_table_name": "gitlab_dotcom_snippets_source",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "snippet_id",
@@ -411,7 +411,7 @@
 ), services_source AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_integrations') }}
+    FROM {{ ref('gitlab_dotcom_integrations_source') }}
     WHERE service_type != 'GitlabIssueTrackerService'
 
 ), successful_ci_pipelines_source AS (

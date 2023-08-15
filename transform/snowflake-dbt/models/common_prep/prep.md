@@ -556,7 +556,7 @@ Prep table for the dim table `dim_release` that is not yet created. It is also u
 
 {% docs prep_requirement %}
 
-Prep table for the dim table `dim_requirement` that is not yet created. It is also used in the `prep_event` table
+Prep table for the dim table `dim_requirement`. It is also used in the `prep_event` table.
 {% enddocs %}
 
 {% docs prep_geozone %}

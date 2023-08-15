@@ -130,6 +130,12 @@ models:
           description: Region of the SDR maintained in a [sheetload](https://docs.google.com/spreadsheets/d/17Uhk8yan3C93eKDSznXOEUCYTX9cTbLwWD2klRVykHI/edit#gid=0)
         - name: bdr_prospecting_status
           description: Indicates whether the account is actively being prospected by a BDR.
+        - name: traction_first_response_time
+          description: The response time from Traction. 
+        - name: traction_first_response_time_seconds
+          description: The response time from Traction in seconds. 
+        - name: traction_response_time_in_business_hours
+          description: The response time from Traction, based only in working hours for the user/rep. 
         - name: is_partner_recalled
           description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
 
@@ -253,6 +259,12 @@ models:
           description: A case statement assigning geo according the [FY23 Territories Mapping File - SSoT](https://docs.google.com/spreadsheets/d/1gElhORjqraKDMQnWzApPelyP_vVa24tAOA85vb5f3Uc/edit#gid=1236326957) using first_country from dim_crm_person.
         - name: inferred_geo
           description: The Uppsercase version of geo_custom.
+        - name: traction_first_response_time
+          description: The response time from Traction. 
+        - name: traction_first_response_time_seconds
+          description: The response time from Traction in seconds. 
+        - name: traction_response_time_in_business_hours
+          description: The response time from Traction, based only in working hours for the user/rep. 
         - name: opp_order_type
           description: The Order Type from the opportunity object in Salesforce. 
         - name: sales_qualified_source_name
@@ -527,3 +539,21 @@ models:
           description: The dim_date date_range_week, when joined to the bizible_touchpoint_date.           
         - name: touchpoint_date_range_id
           description: The dim_date date_range_id when joined to the bizible_touchpoint_date. 
+
+    - name: rpt_l2r_campaign_interactions
+      description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
+      columns:
+        - name: influenced_opportunity_id
+          description: The Salesforce Opportunity ID, where there is a related Bizible Touchpoint, in Salesforce.
+        - name: custom_sao
+          description: The sum of SAOs created, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: pipeline_custom_net_arr
+          description: The sum of Pipeline Net ARR, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: won_custom
+          description: The sum of Closed Won Opportunities closed, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: won_custom_net_arr
+          description: The sum of Won Net ARR, by Bizible Touchpoint, weighted according to the Custom attribution model, in Salesforce. 
+        - name: integrated_budget_holder
+          description: A case statement to categorize the budget (and usually owner) of online and offline campaigns. Uses utm_content, campaign owner role from SFDC, budget holder from SFDC, and utm_budget.
+        - name: is_sales_dev_owned_record
+          description: A flag that is true when the person (lead or contact) is owned by a member of the Sales Dev team.

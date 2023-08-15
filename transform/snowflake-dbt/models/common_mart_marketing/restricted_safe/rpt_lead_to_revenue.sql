@@ -31,7 +31,7 @@
       person_base.source_buckets,
       person_base.true_inquiry_date,
       person_base.mql_date_first_pt,
-      person_base.mql_date_lastest_pt,
+      person_base.mql_date_latest_pt,
       person_base.accepted_date,
       person_base.status,
       person_base.lead_source,
@@ -43,6 +43,9 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
+      person_base.traction_first_response_time,
+      person_base.traction_first_response_time_seconds,
+      person_base.traction_response_time_in_business_hours,
       mart_crm_account.is_first_order_available,
       CASE
         WHEN person_base.is_first_order_person = TRUE 
@@ -130,6 +133,7 @@
       opp.dim_crm_user_id AS opp_dim_crm_user_id,
     
     --Opp Data
+      opp.opportunity_name,
       opp.order_type AS opp_order_type,
       opp.sdr_or_bdr,
       opp.sales_qualified_source_name,
@@ -153,6 +157,7 @@
       opp.crm_opp_owner_region_stamped,
       opp.crm_opp_owner_area_stamped,
       opp.crm_opp_owner_geo_stamped,
+      opp.product_category,
 
       --Account Data
       mart_crm_account.crm_account_name,
@@ -350,7 +355,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=78)}}
+    {{dbt_utils.group_by(n=80)}}
     
 ), cohort_base_combined AS (
   
@@ -373,7 +378,7 @@
       source_buckets,
       true_inquiry_date,
       mql_date_first_pt,
-      mql_date_lastest_pt,
+      mql_date_latest_pt,
       accepted_date,
       status,
       lead_source,
@@ -392,8 +397,12 @@
       inferred_employee_segment,
       geo_custom,
       inferred_geo,
+      traction_first_response_time,
+      traction_first_response_time_seconds,
+      traction_response_time_in_business_hours,
   
   --Opp Data
+      opportunity_name,
       opp_order_type,
       sdr_or_bdr,
       sales_qualified_source_name,
@@ -417,6 +426,7 @@
       crm_opp_owner_region_stamped,
       crm_opp_owner_area_stamped,
       crm_opp_owner_geo_stamped,
+      product_category,
 
   --Account Data
       COALESCE(person_base_with_tp.crm_account_name,opp_base_with_batp.crm_account_name) AS crm_account_name,
@@ -567,7 +577,7 @@
   LEFT JOIN dim_date AS inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date AS mql_date
-    ON cohort_base_combined.mql_date_lastest_pt = mql_date.date_day
+    ON cohort_base_combined.mql_date_latest_pt = mql_date.date_day
   LEFT JOIN dim_date AS opp_create_date
     ON cohort_base_combined.opp_created_date = opp_create_date.date_day
   LEFT JOIN dim_date AS sao_date
@@ -589,5 +599,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-07-19",
+    updated_date="2023-08-03",
   ) }}

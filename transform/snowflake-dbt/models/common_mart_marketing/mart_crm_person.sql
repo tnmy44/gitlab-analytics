@@ -30,7 +30,7 @@
       mql_date_first_pt.date_day               AS mql_date_first_pt,
       mql_date_first.first_day_of_month        AS mql_month_first,
       mql_date_first_pt.first_day_of_month     AS mql_month_first_pt,
-      mql_date_latest.date_day                 AS mql_date_lastest,
+      mql_date_latest.date_day                 AS mql_date_latest,
        initial_mql_date_first_pt.date_day      AS initial_mql_date_first_pt,
       initial_mql_date_first.first_day_of_month
                                                AS initial_mql_month_first,
@@ -40,13 +40,13 @@
       legacy_mql_date_first.first_day_of_month AS legacy_mql_month_first,
       legacy_mql_date_first_pt.first_day_of_month
                                                AS legacy_mql_month_first_pt,
-      legacy_mql_date_latest.date_day          AS legacy_mql_date_lastest,
+      legacy_mql_date_latest.date_day          AS legacy_mql_date_latest,
       fct_crm_person.mql_datetime_latest,
       fct_crm_person.mql_datetime_latest_pt,
-      mql_date_latest_pt.date_day              AS mql_date_lastest_pt,
+      mql_date_latest_pt.date_day              AS mql_date_latest_pt,
       mql_date_latest.first_day_of_month       AS mql_month_latest,
       mql_date_latest_pt.first_day_of_month    AS mql_month_latest_pt,
-      legacy_mql_date_latest_pt.date_day       AS legacy_mql_date_lastest_pt,
+      legacy_mql_date_latest_pt.date_day       AS legacy_mql_date_latest_pt,
       legacy_mql_date_latest.first_day_of_month
                                                AS legacy_mql_month_latest,
       legacy_mql_date_latest_pt.first_day_of_month
@@ -177,6 +177,9 @@
       fct_crm_person.last_transfer_date_time,
       fct_crm_person.time_from_last_transfer_to_sequence,
       fct_crm_person.time_from_mql_to_last_transfer,
+      fct_crm_person.traction_first_response_time,
+      fct_crm_person.traction_first_response_time_seconds,
+      fct_crm_person.traction_response_time_in_business_hours,
       fct_crm_person.zoominfo_contact_id,
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
@@ -269,7 +272,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-05-10",
+    updated_date="2023-08-03",
   ) }}  
