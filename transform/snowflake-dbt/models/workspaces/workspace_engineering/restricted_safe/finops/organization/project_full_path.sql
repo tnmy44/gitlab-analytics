@@ -30,6 +30,7 @@ SELECT
   gcp_project_id,
   full_path,
   MIN(uploaded_at) AS first_created_at,
-  MAX(uploaded_at) AS last_updated_at
+  MAX(uploaded_at) AS last_updated_at,
+  iff(row_number() over (partition by gcp_project_id order by last_updated_at desc,first_created_at desc) = 1, True, False) as most_recent
 FROM renamed
 GROUP BY 1, 2

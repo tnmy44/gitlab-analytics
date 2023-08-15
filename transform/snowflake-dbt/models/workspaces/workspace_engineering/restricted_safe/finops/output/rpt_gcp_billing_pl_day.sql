@@ -8,7 +8,6 @@ WITH pl_combined AS (
 
   SELECT * FROM {{ ref('rpt_gcp_billing_pl_day_combined') }}
 
-
 ),
 
 lookback_pl_mappings AS (
@@ -54,7 +53,7 @@ overlaps AS (
         (CASE WHEN lookback_pl_mappings.env_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN lookback_pl_mappings.runner_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN lookback_pl_mappings.gcp_project_id IS NOT NULL THEN 1 ELSE 0 END) DESC
-    )                                                                                         AS priority
+    )                                                                                        AS priority
   FROM
     pl_combined
   LEFT JOIN lookback_pl_mappings ON lookback_pl_mappings.date_day = pl_combined.date_day
@@ -65,10 +64,13 @@ overlaps AS (
     AND COALESCE(lookback_pl_mappings.env_label, COALESCE(pl_combined.env_label, '')) = COALESCE(pl_combined.env_label, '')
     AND COALESCE(lookback_pl_mappings.runner_label, COALESCE(pl_combined.runner_label, '')) = COALESCE(pl_combined.runner_label, '')
     AND COALESCE(lookback_pl_mappings.folder_label, COALESCE(pl_combined.folder_label, 0)) = COALESCE(pl_combined.folder_label, 0)
+    AND COALESCE(lookback_pl_mappings.pl_category, COALESCE(pl_combined.pl_category, '')) = COALESCE(pl_combined.pl_category, '')
 
 )
 
-SELECT *
-  EXCLUDE(priority)
+SELECT
+  * EXCLUDE(priority),
+  {{ dbt_utils.surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'folder_label', 'pl_category', 'from_mapping'
+     ]) }} AS pl_pk
 FROM overlaps
 WHERE priority = 1
