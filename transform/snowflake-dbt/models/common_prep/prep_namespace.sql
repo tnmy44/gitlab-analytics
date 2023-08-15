@@ -6,7 +6,7 @@
     ('namespace_current', 'gitlab_dotcom_namespaces_source'),
     ('namespace_snapshots', 'prep_namespace_hist'),
     ('namespace_settings', 'gitlab_dotcom_namespace_settings_source'),
-    ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
+    ('namespace_lineage_historical', 'gitlab_dotcom_namespace_subscription_plan_scd'),
     ('map_namespace_internal', 'map_namespace_internal'),
     ('plans', 'gitlab_dotcom_plans_source'),
     ('product_tiers', 'prep_product_tier'),
@@ -57,7 +57,7 @@ creators AS (
 
 namespace_lineage AS (
   SELECT
-    dim_namespace_id as namespace_id,
+    dim_namespace_id AS namespace_id,
     parent_id,
     upstream_lineage,
     ultimate_parent_id,
@@ -67,11 +67,11 @@ namespace_lineage AS (
     seats_in_use,
     max_seats_used,
     is_current,
-    is_current as ultimate_parent_is_current,
-    plan_title   AS ultimate_parent_plan_title,
-    plan_is_paid AS ultimate_parent_plan_is_paid,
-    plan_name    AS ultimate_parent_plan_name
-  FROM {{ ref('gitlab_dotcom_namespace_subscription_plan_scd') }}
+    is_current       AS ultimate_parent_is_current,
+    plan_title       AS ultimate_parent_plan_title,
+    plan_is_paid     AS ultimate_parent_plan_is_paid,
+    plan_name        AS ultimate_parent_plan_name
+  FROM namespace_lineage_historical
   QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id,parent_id,ultimate_parent_id ORDER BY combined_valid_from DESC) = 1
 ),
 
