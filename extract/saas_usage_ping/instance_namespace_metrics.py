@@ -13,7 +13,7 @@ from logging import basicConfig, info
 from fire import Fire
 from utils import EngineFactory, Utils
 
-from snowflake.connector.errors import ProgrammingError
+import snowflake
 
 
 class InstanceNamespaceMetrics:
@@ -188,19 +188,28 @@ class InstanceNamespaceMetrics:
 
         try:
             conn.execute(f"{sql_ready}")
-        except Exception as programming_error:
+
+        except snowflake.connector.errors.ProgrammingError as programming_error:
+            error_message = str(programming_error).replace('\n',' ').replace("'", "")
+
             info(
-                f"......ERROR: {type(programming_error).__name__}....{str(programming_error)}"
+                f"......ERROR: {type(programming_error).__name__}...."
+                f"{error_message}"
             )
 
             insert_error_record = self.prepare_error_insert(
                 metrics_name=name,
                 metrics_level=level,
                 metric_sql_select=sql_select,
-                error_text=str(programming_error),
+                error_text=error_message,
             )
 
             conn.execute(insert_error_record)
+        except Exception as e:
+            info(
+                f"......OTHER ERROR: {type(e).__name__}....{str(e)}"
+            )
+
 
     def chunk_list(self, namespace_size: int) -> tuple:
         """
