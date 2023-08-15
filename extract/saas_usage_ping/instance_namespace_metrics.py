@@ -13,8 +13,6 @@ from logging import basicConfig, info
 from fire import Fire
 from utils import EngineFactory, Utils
 
-import snowflake
-
 
 class InstanceNamespaceMetrics:
     """
@@ -140,7 +138,14 @@ class InstanceNamespaceMetrics:
 
         return prepared_query
 
-    def prepare_error_insert(
+    def generate_error_message(self, input_error: str) -> str:
+        """
+        Generate error message and delete characters
+        Snowflake can't digest
+        """
+        return str(input_error).replace("\n", " ").replace("'", "")
+
+    def generate_error_insert(
         self,
         metrics_name: str,
         metrics_level: str,
@@ -155,7 +160,6 @@ class InstanceNamespaceMetrics:
         This function sort it out
         """
 
-        error_text = "ERROR"
         error_sql = metric_sql_select.replace("'", "\\'")
 
         error_record = (
@@ -189,15 +193,15 @@ class InstanceNamespaceMetrics:
         try:
             conn.execute(f"{sql_ready}")
 
-        except snowflake.connector.errors.ProgrammingError as programming_error:
-            error_message = str(programming_error).replace('\n',' ').replace("'", "")
+        except Exception as programming_error:
+            error_message = self.generate_error_message(input_error=programming_error)
 
             info(
                 f"......ERROR: {type(programming_error).__name__}...."
                 f"{error_message}"
             )
 
-            insert_error_record = self.prepare_error_insert(
+            insert_error_record = self.generate_error_insert(
                 metrics_name=name,
                 metrics_level=level,
                 metric_sql_select=sql_select,
@@ -205,11 +209,6 @@ class InstanceNamespaceMetrics:
             )
 
             conn.execute(insert_error_record)
-        except Exception as e:
-            info(
-                f"......OTHER ERROR: {type(e).__name__}....{str(e)}"
-            )
-
 
     def chunk_list(self, namespace_size: int) -> tuple:
         """
