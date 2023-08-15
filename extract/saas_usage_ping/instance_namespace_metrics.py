@@ -49,7 +49,7 @@ class InstanceNamespaceMetrics:
         self.utils = Utils()
 
         self.SQL_INSERT_PART = (
-            "INSERT INTO " # {self.engine_factory.database_name}.'
+            "INSERT INTO "  # {self.engine_factory.database_name}.'
             f"{self.engine_factory.schema_name}.{self.table_name}"
             "(id, "
             "namespace_ultimate_parent_id, "
@@ -150,7 +150,7 @@ class InstanceNamespaceMetrics:
         res = input_error.replace("\n", " ").replace("'", "")
 
         if "[SQL:" in res:
-            res = res[100:res.index("[SQL:")]
+            res = res[100 : res.index("[SQL:")]
 
         return res
 
@@ -218,7 +218,7 @@ class InstanceNamespaceMetrics:
                 metric_sql_select=sql_select,
                 error_text=error_message,
             )
-            info(F"insert_error_record: {insert_error_record}")
+            info(f"insert_error_record: {insert_error_record}")
             # conn.execute(insert_error_record)
 
     def chunk_list(self, namespace_size: int) -> tuple:
