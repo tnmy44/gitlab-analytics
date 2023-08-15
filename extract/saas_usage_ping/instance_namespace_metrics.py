@@ -43,12 +43,14 @@ class InstanceNamespaceMetrics:
         self.chunk_no = chunk_no
         self.number_of_tasks = number_of_tasks
 
+        self.table_name = "gitlab_dotcom_namespace"
+
         self.engine_factory = EngineFactory()
         self.utils = Utils()
 
         self.SQL_INSERT_PART = (
-            f'INSERT INTO {self.engine_factory.database_name}.'
-            f"{self.engine_factory.schema_name}.gitlab_dotcom_namespace"
+            "INSERT INTO " # {self.engine_factory.database_name}.'
+            f"{self.engine_factory.schema_name}.{self.table_name}"
             "(id, "
             "namespace_ultimate_parent_id, "
             "counter_value, "
