@@ -27,7 +27,7 @@ from kube_secrets import (
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
-NUMBER_OF_TASKS = 20
+NUMBER_OF_TASKS = 30
 
 # tomorrow_ds -  the day after the execution date as YYYY-MM-DD
 # ds - the execution date as YYYY-MM-DD
@@ -72,7 +72,7 @@ DAG_DESCRIPTION = (
 dag = DAG(
     "saas_usage_ping",
     default_args=default_args,
-    concurrency=4,
+    concurrency=5,
     description=DAG_DESCRIPTION,
     schedule_interval="0 7 * * 1",
 )
@@ -140,6 +140,7 @@ def generate_task(current_chunk: int, number_of_tasks: int) -> KubernetesPodOper
         env_vars=pod_env_vars,
         arguments=[namespace_command],
         dag=dag,
+        retries=2,
         affinity=get_affinity("scd"),
         tolerations=get_toleration("scd"),
     )

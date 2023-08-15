@@ -144,8 +144,14 @@ class InstanceNamespaceMetrics:
         Generate error message and delete characters
         Snowflake can't digest
         """
-        return input_error.replace("\n", " ").replace("'", "")
 
+        res = input_error.replace("\n", " ").replace("'", "")
+
+        if "[SQL:" in res:
+            res = res[100:res.index("[SQL:")]
+
+        return res
+    
     def generate_error_insert(
         self,
         metrics_name: str,
