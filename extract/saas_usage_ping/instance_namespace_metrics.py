@@ -148,11 +148,12 @@ class InstanceNamespaceMetrics:
         error_text: str,
     ) -> str:
         """
-        Refine and prepare data for upload in case error occurred with
-        instance_namespace_metrics query
-        """
+        Refine and prepare data for uploading in case error occurred with
+        instance_namespace_metrics query.
 
-        info(f"......ERROR: {str(error_text)}")
+        This is workaround and Snowflake creates an error in case SQL contains single quote.
+        This function sort it out
+        """
 
         error_text = "ERROR"
         error_sql = metric_sql_select.replace("'", "\\'")
@@ -188,13 +189,17 @@ class InstanceNamespaceMetrics:
         try:
             conn.execute(f"{sql_ready}")
         except Exception as programming_error:
+            info(
+                f"......ERROR: {type(programming_error).__name__}....{str(programming_error)}"
+            )
+
             insert_error_record = self.prepare_error_insert(
                 metrics_name=name,
                 metrics_level=level,
                 metric_sql_select=sql_select,
                 error_text=str(programming_error),
             )
-            
+
             conn.execute(insert_error_record)
 
     def chunk_list(self, namespace_size: int) -> tuple:
