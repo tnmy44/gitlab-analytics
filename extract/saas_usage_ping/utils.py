@@ -24,6 +24,7 @@ class EngineFactory:
         self.loader_engine = None
         self.processing_role = "LOADER"
         self.schema_name = "saas_usage_ping"
+        self.database_name = self.config_vars["SNOWFLAKE_LOAD_DATABASE"]
 
     def connect(self):
         """

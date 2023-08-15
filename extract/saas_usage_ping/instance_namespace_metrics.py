@@ -47,7 +47,7 @@ class InstanceNamespaceMetrics:
         self.utils = Utils()
 
         self.SQL_INSERT_PART = (
-            'INSERT INTO "17485-NAMESPACE-SAAS-SERVICE-PING-PERFORMANCE-IMPROVEMENT_RAW".'
+            f'INSERT INTO {self.engine_factory.database_name}.'
             f"{self.engine_factory.schema_name}.gitlab_dotcom_namespace"
             "(id, "
             "namespace_ultimate_parent_id, "
@@ -151,7 +151,7 @@ class InstanceNamespaceMetrics:
             res = res[100:res.index("[SQL:")]
 
         return res
-    
+
     def generate_error_insert(
         self,
         metrics_name: str,
@@ -198,8 +198,8 @@ class InstanceNamespaceMetrics:
         )
 
         try:
-            conn.execute(f"{sql_ready}")
-
+            # conn.execute(f"{sql_ready}")
+            info(f"SQL_READY:' {sql_ready}")
         except Exception as programming_error:
             error_message = self.generate_error_message(
                 input_error=str(programming_error)
@@ -216,8 +216,8 @@ class InstanceNamespaceMetrics:
                 metric_sql_select=sql_select,
                 error_text=error_message,
             )
-
-            conn.execute(insert_error_record)
+            info(F"insert_error_record: {insert_error_record}")
+            # conn.execute(insert_error_record)
 
     def chunk_list(self, namespace_size: int) -> tuple:
         """
