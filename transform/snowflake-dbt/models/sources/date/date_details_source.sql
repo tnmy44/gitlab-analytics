@@ -183,8 +183,6 @@ WITH date_spine AS (
       calculated.snapshot_date_fpa,
       calculated.snapshot_date_billings,
       calculated.days_in_month_count,
-      COUNT(date_actual) OVER (PARTITION BY calculated.first_day_of_fiscal_quarter)  AS days_in_fiscal_quarter_count,
-      COUNT(date_actual) OVER (PARTITION BY calculated.first_day_of_fiscal_year)     AS days_in_fiscal_year_count,
       calculated.week_of_month_normalised,
       calculated.day_of_fiscal_quarter_normalised,
       calculated.week_of_fiscal_quarter_normalised,

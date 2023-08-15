@@ -603,6 +603,39 @@ models:
       - name: days_in_month_count
         description: '{{ doc("date_days_in_month_count") }}'
 
+      - name: current_day_of_month
+        description: '{{ doc("current_day_of_month") }}'
+      
+      - name: current_day_of_fiscal_quarter
+        description: '{{ doc("current_day_of_fiscal_quarter") }}'
+      
+      - name: current_day_of_fiscal_year
+        description: '{{ doc("current_day_of_fiscal_year") }}'
+      
+      - name: is_fiscal_month_to_date
+        description: '{{ doc("is_fiscal_month_to_date") }}'
+      
+      - name: is_fiscal_quarter_to_date
+        description: '{{ doc("is_fiscal_quarter_to_date") }}'
+      
+      - name: is_fiscal_year_to_date
+        description: '{{ doc("is_fiscal_year_to_date") }}'
+      
+      - name: fiscal_days_ago
+        description: '{{ doc("fiscal_days_ago") }}'
+      
+      - name: fiscal_weeks_ago
+        description: '{{ doc("fiscal_weeks_ago") }}'
+      
+      - name: fiscal_months_ago
+        description: '{{ doc("fiscal_months_ago") }}'
+      
+      - name: fiscal_quarters_ago
+        description: '{{ doc("fiscal_quarters_ago") }}'
+
+      - name: fiscal_years_ago
+        description: '{{ doc("fiscal_years_ago") }}'
+
   - name: dim_dr_partner_engagement
     description: '{{ doc("dim_dr_partner_engagement") }}'
     columns:
