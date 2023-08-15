@@ -1,4 +1,4 @@
-{% docs prep_charge_for_mrr %}
+{% docs prep_charge_mrr %}
 
 Prep model that takes prep_charge and perform the necessary filtering of the model to later be used to derive fct_mrr.
 

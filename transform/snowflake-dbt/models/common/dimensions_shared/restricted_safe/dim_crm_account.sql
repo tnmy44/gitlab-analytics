@@ -5,20 +5,20 @@
 
 {{ simple_cte([
     ('prep_crm_account','prep_crm_account'),
-    ('prep_charge_for_mrr', 'prep_charge_for_mrr'),
+    ('prep_charge_mrr', 'prep_charge_mrr'),
     ('prep_date', 'prep_date')
 ]) }}
 
 , cohort_date AS (
 
   SELECT
-    prep_charge_for_mrr.dim_crm_account_id,
+    prep_charge_mrr.dim_crm_account_id,
     MIN(prep_date.first_day_of_month)          AS crm_account_arr_cohort_month,
     MIN(prep_date.first_day_of_fiscal_quarter) AS crm_account_arr_cohort_quarter
-  FROM prep_charge_for_mrr
+  FROM prep_charge_mrr
   LEFT JOIN prep_date
-    ON prep_date.date_id = prep_charge_for_mrr.date_id
-  WHERE prep_charge_for_mrr.subscription_status IN ('Active', 'Cancelled')
+    ON prep_date.date_id = prep_charge_mrr.date_id
+  WHERE prep_charge_mrr.subscription_status IN ('Active', 'Cancelled')
   GROUP BY 1
 
 ), parent_cohort_date AS (
@@ -27,12 +27,12 @@
     prep_crm_account.dim_parent_crm_account_id,
     MIN(prep_date.first_day_of_month)          AS parent_account_arr_cohort_month,
     MIN(prep_date.first_day_of_fiscal_quarter) AS parent_account_arr_cohort_quarter
-  FROM prep_charge_for_mrr
+  FROM prep_charge_mrr
   LEFT JOIN prep_date
-    ON prep_date.date_id = prep_charge_for_mrr.date_id
+    ON prep_date.date_id = prep_charge_mrr.date_id
   LEFT JOIN prep_crm_account
-    ON prep_charge_for_mrr.dim_crm_account_id = prep_crm_account.dim_crm_account_id
-  WHERE prep_charge_for_mrr.subscription_status IN ('Active', 'Cancelled')
+    ON prep_charge_mrr.dim_crm_account_id = prep_crm_account.dim_crm_account_id
+  WHERE prep_charge_mrr.subscription_status IN ('Active', 'Cancelled')
   GROUP BY 1
 
 ), final AS (

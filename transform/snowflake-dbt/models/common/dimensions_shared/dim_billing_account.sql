@@ -6,20 +6,20 @@
 
 {{ simple_cte([
     ('prep_billing_account','prep_billing_account'),
-    ('prep_charge_for_mrr', 'prep_charge_for_mrr'),
+    ('prep_charge_mrr', 'prep_charge_mrr'),
     ('prep_date', 'prep_date')
 ]) }}
 
 , arr_cohort_date AS (
 
   SELECT
-    prep_charge_for_mrr.dim_billing_account_id,
+    prep_charge_mrr.dim_billing_account_id,
     MIN(prep_date.first_day_of_month)          AS billing_account_arr_cohort_month,
     MIN(prep_date.first_day_of_fiscal_quarter) AS billing_account_arr_cohort_quarter
-  FROM prep_charge_for_mrr
+  FROM prep_charge_mrr
   LEFT JOIN prep_date
-    ON prep_date.date_id = prep_charge_for_mrr.date_id
-  WHERE prep_charge_for_mrr.subscription_status IN ('Active', 'Cancelled')
+    ON prep_date.date_id = prep_charge_mrr.date_id
+  WHERE prep_charge_mrr.subscription_status IN ('Active', 'Cancelled')
   GROUP BY 1
 
 ), billing_account AS (
