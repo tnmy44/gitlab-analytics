@@ -96,6 +96,7 @@ WITH date_spine AS (
       DATEADD('day',7,DATEADD('month',1,first_day_of_month))                                  AS snapshot_date_fpa,
       DATEADD('day',44,DATEADD('month',1,first_day_of_month))                                 AS snapshot_date_billings,
       COUNT(date_actual) OVER (PARTITION BY first_day_of_month)                               AS days_in_month_count,
+      
       90 - DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)                             AS day_of_fiscal_quarter_normalised,
       12-floor((DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)/7))                    AS week_of_fiscal_quarter_normalised,
       CASE 
@@ -124,6 +125,7 @@ WITH date_spine AS (
       first_day_of_fiscal_year AS current_first_day_of_fiscal_year,
       fiscal_quarter_name_fy AS current_fiscal_quarter_name_fy,
       first_day_of_month AS current_first_day_of_month,
+      first_day_of_fiscal_quarter AS current_first_day_of_fiscal_quarter,
       date_actual AS current_date_actual
     FROM calculated
     WHERE CURRENT_DATE = date_actual
@@ -176,6 +178,8 @@ SELECT
   calculated.snapshot_date_fpa,
   calculated.snapshot_date_billings,
   calculated.days_in_month_count,
+  COUNT(date_actual) OVER (PARTITION BY calculated.first_day_of_fiscal_quarter)  AS days_in_fiscal_quarter_count,
+  COUNT(date_actual) OVER (PARTITION BY calculated.first_day_of_fiscal_year)     AS days_in_fiscal_year_count,
   calculated.week_of_month_normalised,
   calculated.day_of_fiscal_quarter_normalised,
   calculated.week_of_fiscal_quarter_normalised,
@@ -186,7 +190,8 @@ SELECT
   current_date_information.current_fiscal_year,
   current_date_information.current_first_day_of_fiscal_year,
   current_date_information.current_fiscal_quarter_name_fy,
-  current_date_information.current_first_day_of_month
+  current_date_information.current_first_day_of_month,
+  current_date_information.current_first_day_of_fiscal_quarter
 FROM calculated
 CROSS JOIN current_date_information
 
