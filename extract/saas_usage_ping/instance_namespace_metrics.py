@@ -200,8 +200,7 @@ class InstanceNamespaceMetrics:
         )
 
         try:
-            # conn.execute(f"{sql_ready}")
-            info(f"SQL_READY:' {sql_ready}")
+            conn.execute(f"{sql_ready}")
         except Exception as programming_error:
             error_message = self.generate_error_message(
                 input_error=str(programming_error)
@@ -218,8 +217,7 @@ class InstanceNamespaceMetrics:
                 metric_sql_select=sql_select,
                 error_text=error_message,
             )
-            info(f"insert_error_record: {insert_error_record}")
-            # conn.execute(insert_error_record)
+            conn.execute(insert_error_record)
 
     def chunk_list(self, namespace_size: int) -> tuple:
         """
