@@ -49,7 +49,7 @@ class InstanceNamespaceMetrics:
         self.utils = Utils()
 
         self.SQL_INSERT_PART = (
-            "INSERT INTO "  # {self.engine_factory.database_name}.'
+            "INSERT INTO "
             f"{self.engine_factory.schema_name}.{self.table_name}"
             "(id, "
             "namespace_ultimate_parent_id, "
