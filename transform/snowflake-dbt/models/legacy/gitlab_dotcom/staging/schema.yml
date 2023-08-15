@@ -123,7 +123,10 @@ models:
           - unique
 
   - name: gitlab_dotcom_namespace_subscription_plan_scd
-    description: A table that combines the namespace, namespace lineage, and subscription histories with the plan data.
+    description: >- 
+      A table that combines the namespace, namespace lineage, and subscription histories with the plan data.  
+      The table is at the grain of namespace_id and a valid from `DATE`.  Note that the valid_from and valid_to
+      fields are truncated from `TIMESTAMP` to `DATE`.
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
