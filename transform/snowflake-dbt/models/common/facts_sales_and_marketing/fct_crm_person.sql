@@ -31,7 +31,8 @@ WITH account_dims_mapping AS (
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
       zoominfo_contact_id,
-      is_bdr_sdr_worked_inferred_mql
+      is_bdr_sdr_worked_inferred_mql,
+      is_bdr_sdr_worked_inferred_mql2
       
 
     FROM {{ref('prep_crm_person')}}
@@ -276,6 +277,7 @@ WITH account_dims_mapping AS (
         ELSE 0
       END                                                                                                                 AS is_inquiry,
       is_bdr_sdr_worked_inferred_mql,
+      is_bdr_sdr_worked_inferred_mql2,
 
 
      -- information fields
@@ -324,5 +326,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2023-06-08"
+    updated_date="2023-08-15"
 ) }}

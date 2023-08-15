@@ -191,6 +191,7 @@
         ELSE FALSE
       END                                                        AS is_lead_source_trial,
       fct_crm_person.is_bdr_sdr_worked_inferred_mql,
+      fct_crm_person.is_bdr_sdr_worked_inferred_mql2,
       dim_crm_person.person_first_country
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
@@ -277,5 +278,5 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-06-08",
+    updated_date="2023-08-15",
   ) }}  
