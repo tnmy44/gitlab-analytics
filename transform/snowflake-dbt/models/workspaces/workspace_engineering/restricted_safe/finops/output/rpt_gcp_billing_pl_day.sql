@@ -64,13 +64,49 @@ overlaps AS (
     AND COALESCE(lookback_pl_mappings.env_label, COALESCE(pl_combined.env_label, '')) = COALESCE(pl_combined.env_label, '')
     AND COALESCE(lookback_pl_mappings.runner_label, COALESCE(pl_combined.runner_label, '')) = COALESCE(pl_combined.runner_label, '')
     AND COALESCE(lookback_pl_mappings.folder_label, COALESCE(pl_combined.folder_label, 0)) = COALESCE(pl_combined.folder_label, 0)
-    AND COALESCE(lookback_pl_mappings.pl_category, COALESCE(pl_combined.pl_category, '')) = COALESCE(pl_combined.pl_category, '')
 
+),
+
+grouping AS (
+  
+  SELECT
+    date_day,
+    gcp_project_id,
+    gcp_service_description,
+    gcp_sku_description,
+    infra_label,
+    env_label,
+    runner_label,
+    folder_label,
+    pl_category,
+    usage_unit,
+    pricing_unit,
+    SUM(usage_amount)                  AS usage_amount,
+    SUM(usage_amount_in_pricing_units) AS usage_amount_in_pricing_units,
+    SUM(cost_before_credits)           AS cost_before_credits,
+    SUM(net_cost)                      AS net_cost,
+    usage_standard_unit,
+    usage_amount_in_standard_unit,
+    from_mapping
+    FROM overlaps
+    WHERE priority = 1
+    GROUP BY date_day,
+      gcp_project_id,
+      gcp_service_description,
+      gcp_sku_description,
+      infra_label,
+      env_label,
+      runner_label,
+      folder_label,
+      pl_category,
+      usage_unit,
+      pricing_unit,
+      usage_standard_unit,
+      usage_amount_in_standard_unit,
+      from_mapping
 )
 
 SELECT
-  * EXCLUDE(priority),
-  {{ dbt_utils.surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'folder_label', 'pl_category', 'from_mapping'
-     ]) }} AS pl_pk
-FROM overlaps
-WHERE priority = 1
+  *,
+  {{ dbt_utils.surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'folder_label', 'pl_category', 'from_mapping']) }} AS pl_pk
+FROM grouping
