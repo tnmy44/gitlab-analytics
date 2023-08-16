@@ -167,5 +167,10 @@ final AS (
   WHERE combined_valid_from != combined_valid_to
 )
 
-SELECT *
-FROM final
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@pempey",
+    updated_by="@pempey",
+    created_date="2023-08-14",
+    updated_date="2023-08-14"
+) }}

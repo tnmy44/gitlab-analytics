@@ -184,7 +184,7 @@ joined AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@jpeguero",
+    updated_by="@pempey",
     created_date="2021-01-14",
-    updated_date="2023-06-22"
+    updated_date="2023-08-14"
 ) }}
