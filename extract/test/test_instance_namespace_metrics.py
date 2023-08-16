@@ -233,6 +233,20 @@ def test_generate_error_message(namespace_ping):
     assert "'" not in expected
 
 
+def test_generate_error_message_sql(namespace_ping):
+    """
+    Test generate_error_message
+    """
+
+    error_message = "(snowflake.connector.errors.ProgrammingError) 001003 (42000): 01ae51f0-0406-8c1e-0000-289d5a74c882  This is remaining part[SQL: This will be deleted"
+
+    expected = namespace_ping.generate_error_message(input_error=error_message)
+
+    assert "[SQL:" not in expected
+    assert "This will be deleted" not in expected
+    assert "This is remaining part" in expected
+
+
 def test_generate_error_insert(namespace_ping):
     """
     Test generate_error_insert

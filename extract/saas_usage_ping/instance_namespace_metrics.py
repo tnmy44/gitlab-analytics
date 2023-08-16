@@ -38,7 +38,7 @@ class InstanceNamespaceMetrics:
         else:
             self.metrics_backfill_filter = []
 
-        # chunk_no = 0 - instance_namespace_metrics backfilling (no chunks)
+        # chunk_no = 0 - instance_namespace_metrics back filling (no chunks)
         # chunk_no > 0 - load instance_namespace_metrics in chunks
         self.chunk_no = chunk_no
         self.number_of_tasks = number_of_tasks
