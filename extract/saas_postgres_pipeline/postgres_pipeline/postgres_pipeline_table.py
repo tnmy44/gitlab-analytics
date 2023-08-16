@@ -107,6 +107,7 @@ class PostgresPipelineTable:
         source_engine: Engine,
         target_engine: Engine,
         metadata_engine: Engine,
+        target_table: str,
         export_type: str,
         initial_load_start_date,
         start_pk,
@@ -119,7 +120,8 @@ class PostgresPipelineTable:
             "source_engine": source_engine,
             "source_table": self.source_table_name,
             "source_database": self.import_db,
-            "target_table": self.get_temp_target_table_name(),
+            # is either temp or actual table
+            "target_table": target_table,
             "real_target_table": self.get_target_table_name(),
         }
         loaded = load_functions.load_ids(
@@ -151,10 +153,12 @@ class PostgresPipelineTable:
             logging.info("table does not need incremental backfill")
             return False
 
+        target_table = self.get_temp_target_table_name()
         return self.__do_load_by_id(
             source_engine,
             target_engine,
             metadata_engine,
+            target_table,
             export_type,
             initial_load_start_date,
             start_pk,
@@ -167,10 +171,12 @@ class PostgresPipelineTable:
         start_pk, initial_load_start_date = self.check_incremental_load_by_id_metadata(
             metadata_engine
         )
+        target_table = self.get_target_table_name()
         return self.__do_load_by_id(
             source_engine,
             target_engine,
             metadata_engine,
+            target_table,
             export_type,
             initial_load_start_date,
             start_pk,
