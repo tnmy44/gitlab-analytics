@@ -189,7 +189,7 @@ def test_prepare_insert_query(namespace_file, namespace_ping):
         ((20, 20), (570, 600)),
         ((1, 19), (0, 31)),
         ((2, 19), (31, 62)),
-        ((1, 1), (0, 581)),
+        ((1, 1), (0, 583)),
     ],
 )
 def test_chunk_list(namespace_file, namespace_ping, test, expected):
