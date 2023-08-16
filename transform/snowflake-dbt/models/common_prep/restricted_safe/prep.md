@@ -1,3 +1,9 @@
+{% docs prep_charge_mrr %}
+
+Prep model that takes prep_charge and perform the necessary filtering of the model to later be used to derive fct_mrr.
+
+{% enddocs %}
+
 {% docs prep_crm_account %}
 
 Prep model for the live crm account dimension.
