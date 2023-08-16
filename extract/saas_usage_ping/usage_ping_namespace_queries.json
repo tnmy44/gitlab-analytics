@@ -3484,6 +3484,18 @@
     "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id, COUNT(approval_rules.merge_request_id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_approval_merge_request_rules_dedupe_source AS approval_rules INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_merge_requests_dedupe_source AS merge_requests ON merge_requests.id = approval_rules.merge_request_id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = merge_requests.source_project_id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE approval_rules.rule_type = 2 AND approvals_required > 0 AND approval_rules.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1;",
     "time_window_query": true,
     "level": "namespace"
+  },
+  {
+    "counter_name": "counts_monthly.ci_builds",
+    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(ci_builds.id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_ci_builds_dedupe_source AS ci_builds LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = ci_builds.project_id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE ci_builds.type = 'Ci::Build' AND ci_builds.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
+    "time_window_query": true,
+    "level": "namespace"
+  },
+  {
+    "counter_name": "counts.groups",
+    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id, COUNT(namespaces.id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE namespaces.type = 'Group' GROUP BY 1",
+    "time_window_query": false,
+    "level": "namespace"
   }
 
 ]
