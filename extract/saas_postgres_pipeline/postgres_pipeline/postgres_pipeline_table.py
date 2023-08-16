@@ -11,6 +11,7 @@ from postgres_utils import (
     is_resume_export,
     remove_files_from_gcs,
     swap_temp_table,
+    query_backfill_status,
 )
 
 
@@ -30,6 +31,7 @@ class PostgresPipelineTable:
         ).upper()
         self.table_dict = table_config
         self.target_table_name_td_sf = table_config["export_table"]
+        self.incremental_type = table_config.get("incremental_type")
 
     def is_scd(self) -> bool:
         return not self.is_incremental()
@@ -59,11 +61,22 @@ class PostgresPipelineTable:
         return "{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query
 
     def do_incremental(
-        self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
+        self,
+        source_engine: Engine,
+        target_engine: Engine,
+        metadata_engine: Engine,
+        is_schema_addition: bool,
     ) -> bool:
         if (is_schema_addition) or (not self.is_incremental()):
             logging.info("Aborting... because schema_change OR non_incremental_load")
             return False
+        # load by incrementally by id rather than by date
+        if self.incremental_type == "incremental_load_by_id":
+            return self.do_incremental_load_by_id(
+                source_engine, target_engine, metadata_engine
+            )
+
+        # default, load incrementally by date
         target_table = self.get_target_table_name()
         return load_functions.load_incremental(
             source_engine,
@@ -89,25 +102,15 @@ class PostgresPipelineTable:
             target_table,
         )
 
-    def do_incremental_backfill(
-        self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine
+    def __do_load_by_id(
+        self,
+        source_engine: Engine,
+        target_engine: Engine,
+        metadata_engine: Engine,
+        export_type: str,
+        initial_load_start_date,
+        start_pk,
     ) -> bool:
-        (
-            is_backfill_needed,
-            start_pk,
-            initial_load_start_date,
-        ) = self.check_backfill_metadata(
-            source_engine,
-            target_engine,
-            metadata_engine,
-            BACKFILL_METADATA_TABLE,
-            "backfill",
-        )
-
-        if not self.is_incremental() or not is_backfill_needed:
-            logging.info("table does not need incremental backfill")
-            return False
-
         # dipose current engine, create new Snowflake engine before load
         target_engine.dispose()
         database_kwargs = {
@@ -124,9 +127,54 @@ class PostgresPipelineTable:
             self.table_dict,
             initial_load_start_date,
             start_pk,
-            "backfill",
+            export_type,
         )
         return loaded
+
+    def do_incremental_backfill(
+        self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine
+    ) -> bool:
+        export_type = "backfill"
+        (
+            is_backfill_needed,
+            initial_load_start_date,
+            start_pk,
+        ) = self.check_backfill_metadata(
+            source_engine,
+            target_engine,
+            metadata_engine,
+            BACKFILL_METADATA_TABLE,
+            export_type,
+        )
+
+        if not self.is_incremental() or not is_backfill_needed:
+            logging.info("table does not need incremental backfill")
+            return False
+
+        return self.__do_load_by_id(
+            source_engine,
+            target_engine,
+            metadata_engine,
+            export_type,
+            initial_load_start_date,
+            start_pk,
+        )
+
+    def do_incremental_load_by_id(
+        self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine
+    ) -> bool:
+        export_type = self.incremental_type
+        start_pk, initial_load_start_date = self.check_incremental_load_by_id_metadata(
+            metadata_engine
+        )
+        return self.__do_load_by_id(
+            source_engine,
+            target_engine,
+            metadata_engine,
+            export_type,
+            initial_load_start_date,
+            start_pk,
+        )
 
     def check_new_table(
         self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
@@ -164,21 +212,27 @@ class PostgresPipelineTable:
         if load_type == "backfill":
             return load_types[load_type](source_engine, target_engine, metadata_engine)
 
-        else:
-            is_schema_addition = self.check_is_new_table_or_schema_addition(
-                source_engine, target_engine
-            )
-            if not is_schema_addition:
-                self.check_and_handle_schema_removal(source_engine, target_engine)
-            loaded = load_types[load_type](
-                source_engine, target_engine, is_schema_addition
+        is_schema_addition = self.check_is_new_table_or_schema_addition(
+            source_engine, target_engine
+        )
+
+        if load_type == "incremental":
+            return load_types[load_type](
+                source_engine, target_engine, metadata_engine, is_schema_addition
             )
 
-            # If temp table, swap it
-            self.swap_temp_table_on_schema_change(
-                is_schema_addition, loaded, target_engine
-            )
-            return loaded
+        # remaining load_types
+        if not is_schema_addition:
+            self.check_and_handle_schema_removal(source_engine, target_engine)
+        loaded = load_types[load_type](
+            source_engine, target_engine, is_schema_addition
+        )
+
+        # If temp table, swap it, for scd schema change
+        self.swap_temp_table_on_schema_change(
+            is_schema_addition, loaded, target_engine
+        )
+        return loaded
 
     def check_is_new_table_or_schema_addition(
         self, source_engine: Engine, target_engine: Engine
@@ -257,4 +311,11 @@ class PostgresPipelineTable:
         if is_backfill_needed and initial_load_start_date is None:
             remove_files_from_gcs(export_type, self.source_table_name)
 
-        return is_backfill_needed, start_pk, initial_load_start_date
+        return is_backfill_needed, initial_load_start_date, start_pk
+
+    def check_incremental_load_by_id_metadata(self, metadata_engine):
+        results = query_backfill_status(
+            metadata_engine, BACKFILL_METADATA_TABLE, self.source_table_name
+        )
+        initial_load_start_date, start_pk = results[1], results[2]
+        return initial_load_start_date, start_pk

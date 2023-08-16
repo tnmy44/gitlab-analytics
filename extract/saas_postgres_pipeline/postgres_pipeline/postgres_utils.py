@@ -395,6 +395,26 @@ def get_upload_file_name(
     return os.path.join(prefix, filename).lower()
 
 
+def upload_snowflake(
+    target_engine, database_kwargs, export_type, initial_load_start_date
+):
+    prefix = get_prefix_template().format(
+        staging_or_processed="staging",
+        export_type=export_type,
+        table=database_kwargs["source_table"],
+        initial_load_prefix=get_initial_load_prefix(initial_load_start_date),
+    )
+    logging.info(
+        f"Beging COPY INTO from GCS to Snowflake table '{database_kwargs['target_table']}'"
+    )
+    # don't purge files, will do after swap
+    trigger_snowflake_upload(
+        target_engine,
+        database_kwargs["target_table"],
+        f"{prefix}/.*.parquet.gzip$",
+    )
+
+
 def seed_and_upload_snowflake(
     chunk_df, database_kwargs, export_type, advanced_metadata, initial_load_start_date
 ):
@@ -415,20 +435,8 @@ def seed_and_upload_snowflake(
         target_engine,
     )
 
-    prefix = get_prefix_template().format(
-        staging_or_processed="staging",
-        export_type=export_type,
-        table=database_kwargs["source_table"],
-        initial_load_prefix=get_initial_load_prefix(initial_load_start_date),
-    )
-    logging.info(
-        f"export to GCS is complete, copying to Snowflake table '{database_kwargs['target_table']}'"
-    )
-    # don't purge files, will do after swap
-    trigger_snowflake_upload(
-        target_engine,
-        database_kwargs["target_table"],
-        f"{prefix}/.*.parquet.gzip$",
+    upload_snowflake(
+        target_engine, database_kwargs, export_type, initial_load_start_date
     )
 
     # We do the swap here because snowflake engine instantiated here
@@ -477,7 +485,9 @@ def chunk_and_upload_metadata(
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
             last_extracted_id = chunk_df[primary_key].max()
-            logging.info(f'\nlast_extracted_id for current Postgres chunk: {last_extracted_id}')
+            logging.info(
+                f"\nlast_extracted_id for current Postgres chunk: {last_extracted_id}"
+            )
 
             upload_date = datetime.now()
             if initial_load_start_date is None:
@@ -496,14 +506,19 @@ def chunk_and_upload_metadata(
                 is_export_completed = last_extracted_id >= max_source_id
 
                 if is_export_completed:
-                    seed_and_upload_snowflake(
-                        chunk_df,
-                        database_kwargs,
-                        export_type,
-                        advanced_metadata,
-                        initial_load_start_date,
-                    )
-                    database_kwargs["source_engine"].dispose()
+                    if export_type == "incremental_load_by_id":
+                        upload_snowflake(
+                            database_kwargs, export_type, initial_load_start_date
+                        )
+                    else:
+                        seed_and_upload_snowflake(
+                            chunk_df,
+                            database_kwargs,
+                            export_type,
+                            advanced_metadata,
+                            initial_load_start_date,
+                        )
+                        database_kwargs["source_engine"].dispose()
                 write_backfill_metadata(
                     database_kwargs["metadata_engine"],
                     database_kwargs["metadata_table"],
@@ -735,7 +750,7 @@ def is_resume_export(
                     f"Resuming export with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}"
                 )
 
-    return is_resume_export_needed, start_pk, initial_load_start_date
+    return is_resume_export_needed, initial_load_start_date, start_pk
 
 
 def get_prefix_template() -> str:
