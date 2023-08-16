@@ -4,11 +4,7 @@ import os
 from typing import Dict, Any, Optional
 import pytz
 
-utc = pytz.UTC
-
-
 from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
     query_executor,
     append_to_xcom_file,
 )
@@ -17,9 +13,7 @@ from sqlalchemy.engine.base import Engine
 from postgres_utils import (
     chunk_and_upload,
     chunk_and_upload_metadata,
-    get_engines,
     id_query_generator,
-    manifest_reader,
     get_min_or_max_id,
     BACKFILL_EXTRACT_CHUNKSIZE,
 )
@@ -75,7 +69,7 @@ def load_incremental(
         )
         logging.info(f"Timestamp from the database is : {replication_timestamp_value}")
 
-        replication_timestamp = utc.localize(replication_timestamp_value)
+        replication_timestamp = pytz.UTC.localize(replication_timestamp_value)
 
         last_load_time = get_last_load_time()
 
@@ -253,8 +247,6 @@ def load_ids(
         "max",
     )
 
-    print(f"\nstart_pk: {start_pk}")
-    print(f"\nmax_pk: {max_pk}")
     # Create a generator for queries that are chunked by ID range
     id_queries = id_query_generator(
         primary_key,
