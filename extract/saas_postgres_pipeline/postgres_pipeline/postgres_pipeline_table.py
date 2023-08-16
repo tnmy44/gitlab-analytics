@@ -58,7 +58,9 @@ class PostgresPipelineTable:
         return loaded
 
     def is_incremental(self) -> bool:
-        return ("{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query) or (self.incremental_type)
+        return (
+            "{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query
+        ) or (self.incremental_type)
 
     def do_incremental(
         self,
@@ -230,14 +232,10 @@ class PostgresPipelineTable:
         # remaining load_types
         if not is_schema_addition:
             self.check_and_handle_schema_removal(source_engine, target_engine)
-        loaded = load_types[load_type](
-            source_engine, target_engine, is_schema_addition
-        )
+        loaded = load_types[load_type](source_engine, target_engine, is_schema_addition)
 
         # If temp table, swap it, for scd schema change
-        self.swap_temp_table_on_schema_change(
-            is_schema_addition, loaded, target_engine
-        )
+        self.swap_temp_table_on_schema_change(is_schema_addition, loaded, target_engine)
         return loaded
 
     def check_is_new_table_or_schema_addition(

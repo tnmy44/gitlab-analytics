@@ -233,8 +233,8 @@ def load_ids(
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
 
-    if "_TEMP" != database_kwargs["target_table"][-5:]:
-        logging.info(f"Table {table_dict['source_table']} doesn't need a full sync.")
+    if "_TEMP" != database_kwargs["target_table"][-5:] and export_type !='incremental_load_by_id':
+        logging.info(f"Table {database_kwargs['source_table']} doesn't need a full sync.")
         return False
 
     raw_query = table_dict["import_query"]
