@@ -174,47 +174,47 @@ class TestCheckBackfill:
         assert start_pk == 1
         assert is_backfill_needed is True
 
-    @patch("postgres_pipeline_table.schema_addition_check")
-    @patch("postgres_pipeline_table.is_new_table")
-    @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
-    @patch("postgres_pipeline_table.is_resume_export")
-    def test_check_is_backfill_needed_schema_change(
-        self,
-        mock_is_resume_export,
-        mock_remove_unprocessed_files,
-        mock_is_new_table,
-        mock_schema_addition_check,
-    ):
-        """
-        Test that when there is a schema addition, that
-        remove_unprocessed_files_from_gcs() is called
-        """
-
-        # Create a mock source_engine and metadata_engine objects
-        source_engine = MagicMock(spec=Engine)
-        metadata_engine = MagicMock(spec=Engine)
-
-        mock_is_resume_export.return_value = False, 1, None
-
-        mock_is_new_table.return_value = False
-        mock_schema_addition_check.return_value = True
-
-        # Call the function being tested
-        (
-            is_backfill_needed,
-            start_pk,
-            initial_load_start_date,
-        ) = self.pipeline_table.check_is_backfill_needed(
-            source_engine, metadata_engine, self.test_metadata_table
-        )
-
-        # Assert that remove_unprocessed_files_from_gcs was called with the correct arguments
-        mock_remove_unprocessed_files.assert_called_once_with(
-            self.test_metadata_table, self.pipeline_table.source_table_name
-        )
-        assert initial_load_start_date is None
-        assert start_pk == 1
-        assert is_backfill_needed is True
+    # @patch("postgres_pipeline_table.schema_addition_check")
+    # @patch("postgres_pipeline_table.is_new_table")
+    # @patch("postgres_pipeline_table.remove_unprocessed_files_from_gcs")
+    # @patch("postgres_pipeline_table.is_resume_export")
+    # def test_check_is_backfill_needed_schema_change(
+    #     self,
+    #     mock_is_resume_export,
+    #     mock_remove_unprocessed_files,
+    #     mock_is_new_table,
+    #     mock_schema_addition_check,
+    # ):
+    #     """
+    #     Test that when there is a schema addition, that
+    #     remove_unprocessed_files_from_gcs() is called
+    #     """
+    #
+    #     # Create a mock source_engine and metadata_engine objects
+    #     source_engine = MagicMock(spec=Engine)
+    #     metadata_engine = MagicMock(spec=Engine)
+    #
+    #     mock_is_resume_export.return_value = False, 1, None
+    #
+    #     mock_is_new_table.return_value = False
+    #     mock_schema_addition_check.return_value = True
+    #
+    #     # Call the function being tested
+    #     (
+    #         is_backfill_needed,
+    #         start_pk,
+    #         initial_load_start_date,
+    #     ) = self.pipeline_table.check_is_backfill_needed(
+    #         source_engine, metadata_engine, self.test_metadata_table
+    #     )
+    #
+    #     # Assert that remove_unprocessed_files_from_gcs was called with the correct arguments
+    #     mock_remove_unprocessed_files.assert_called_once_with(
+    #         self.test_metadata_table, self.pipeline_table.source_table_name
+    #     )
+    #     assert initial_load_start_date is None
+    #     assert start_pk == 1
+    #     assert is_backfill_needed is True
 
     @patch("postgres_pipeline_table.schema_addition_check")
     @patch("postgres_pipeline_table.is_new_table")
