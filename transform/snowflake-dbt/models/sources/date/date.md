@@ -195,7 +195,7 @@ Example: For current_date = '2023-08-15', `current_day_of_fiscal_quarter` -> 15.
 {% docs current_day_of_fiscal_year %}
 The day of the fiscal year for the current date. Since it references the current date it is the same number for every record in the data model.
 
-Example: For current_date = '2023-08-15', `current_day_of_fiscal_uear` -> 196. Because we count the number of days from Feb 1st 2023 (start of fiscal quarter) to 15th August 2023 (current_date).
+Example: For current_date = '2023-08-15', `current_day_of_fiscal_year` -> 196. Because we count the number of days from Feb 1st 2023 (start of fiscal quarter) to 15th August 2023 (current_date).
 {% enddocs %}
 
 {% docs is_fiscal_month_to_date %}
