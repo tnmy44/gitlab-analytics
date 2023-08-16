@@ -199,23 +199,23 @@ Example: For current_date = '2023-08-15', `current_day_of_fiscal_uear` -> 196. B
 {% enddocs %}
 
 {% docs is_fiscal_month_to_date %}
-Boolean flag indicating if the day `day_of_month` is less or equal than the current_date `current_day_of_month`. This calculation is not only done for the current month, it is done for ALL months.
+Boolean flag indicating if the day `day_of_month` is less than or equal to the current_date `current_day_of_month`. This calculation is not only done for the current month, it is done for ALL months.
 
-Example: For current_date = '2023-08-15', and date_actual = 2023-07-14 `is_fiscal_month_to_date` -> TRUE. Because the day of date_actual = 14 which is less or equal than the day of the current_date, even though the months are different.
+Example: For current_date = '2023-08-15', and date_actual = 2023-07-14 `is_fiscal_month_to_date` -> TRUE. Because the day of date_actual = 14 which is less than or equal to the day of the current_date, even though the months are different.
 
 {% enddocs %}
 
 {% docs is_fiscal_quarter_to_date %}
-Boolean flag indicating if the day of the `day_of_fiscal_quarter` is less or equal than the current_date `current_day_of_fiscal_quarter`. This calculation is not only done for the current fiscal quarter, it is done for ALL fiscal quarters.
+Boolean flag indicating if the day of the `day_of_fiscal_quarter` is less than or equal to the current_date `current_day_of_fiscal_quarter`. This calculation is not only done for the current fiscal quarter, it is done for ALL fiscal quarters.
 
-Example: For current_date = '2023-08-15', and date_actual = 2023-07-14 `is_fiscal_quarter_to_date` -> TRUE. Because the `day_of_fiscal_quarter` = 14 which is less or equal than the day of the `current_day_of_fiscal_quarter`.
+Example: For current_date = '2023-08-15', and date_actual = 2023-07-14 `is_fiscal_quarter_to_date` -> TRUE. Because the `day_of_fiscal_quarter` = 14 which is less than or equal to the day of the `current_day_of_fiscal_quarter`.
 
 {% enddocs %}
 
 {% docs is_fiscal_year_to_date %}
-Boolean flag indicating if the day of the `day_of_fiscal_year` is less or equal than the current_date `current_day_of_fiscal_year`. This calculation is not only done for the current fiscal year, it is done for ALL fiscal years.
+Boolean flag indicating if the day of the `day_of_fiscal_year` is less than or equal to the current_date `current_day_of_fiscal_year`. This calculation is not only done for the current fiscal year, it is done for ALL fiscal years.
 
-Example: For current_date = '2023-02-15', and date_actual = 2022-02-14 `is_fiscal_year_to_date` -> TRUE. Because the `day_of_fiscal_year` = 14 which is less or equal than the day of the `current_day_of_fiscal_year`.
+Example: For current_date = '2023-02-15', and date_actual = 2022-02-14 `is_fiscal_year_to_date` -> TRUE. Because the `day_of_fiscal_year` = 14 which is less than or equal to the day of the `current_day_of_fiscal_year`.
 
 {% enddocs %}
 
