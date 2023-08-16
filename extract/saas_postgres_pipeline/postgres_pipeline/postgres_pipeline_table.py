@@ -323,5 +323,5 @@ class PostgresPipelineTable:
         results = query_backfill_status(
             metadata_engine, BACKFILL_METADATA_TABLE, self.source_table_name
         )
-        initial_load_start_date, start_pk = results[1], results[2]
+        initial_load_start_date, start_pk = results[0][1], results[0][2]
         return initial_load_start_date, start_pk
