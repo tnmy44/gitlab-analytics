@@ -145,6 +145,24 @@ WHERE is_billable = TRUE
 {% enddocs %}
 
 
+{% docs gitlab_dotcom_monthly_stage_active_users %}
+
+For each month, this model shows for each event, the users and namespaces who perform this specific event, with 2 additional measures: the number of times this event is performed by a specific user in a specific namespace, and the number of days this event is performed (for example a specific user A has opened in a namespace 1, 15 issues in 10 days)
+
+We don't use calendar month for this calculation but the last 28 days of the month as explained in [the KPI Definition here](https://about.gitlab.com/handbook/product/metrics/#stage-monthly-active-users-smau)
+
+{% enddocs %}
+
+
+{% docs gitlab_dotcom_events_monthly_active_users%}
+
+For each day, this model counts the number of active users from the previous 28 days. The definiton of an active user is completing one or more audit events within the timeframe. This model includes the referenced date as part of the 28-day window. So for example, the window on January 31th would be from the start of January 4th to the end of January 31 (inclusive).
+
+This model includes one row for every day, but MAU for a given month will typically be reported as the MAU on the **last day of the month**.
+
+{% enddocs %}
+
+
 {% docs gitlab_dotcom_merge_request_assignment_events %}
 
 This model contains the history of assignments, unassignments, and reassignments for merge requests within internal namespaces. From `gitlab_dotcom_internal_notes_xf`, notes of type `MergeRequest` are queried. Notes are stemmed down to referenced usernames, tokenized, and flattened so that for each event (assign, unassign, reassign) a row is created for each referenced username in the order it appears in the note. Finally, usernames are replaced with user id's by joining to `gitlab_dotcom_users`. Usernames that do not have an associated user_id (if the user was deleted or changed usernames) are not included in this model so as to not misattribute assignee changes.
