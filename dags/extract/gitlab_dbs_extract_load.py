@@ -186,8 +186,6 @@ config_dict = {
     },
 }
 
-FINAL_TASK = "merge_request_diff_commits"
-
 
 def get_task_pool(task_name) -> string:
     """Return airflow pool name"""
@@ -370,8 +368,6 @@ for source_name, config in config_dict.items():
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
-            has_task_dependencies = FINAL_TASK in table_list
-            incremental_extracts = []
 
             for table in table_list:
                 # tables that aren't incremental won't be processed by the incremental dag
@@ -407,19 +403,8 @@ for source_name, config in config_dict.items():
                     do_xcom_push=True,
                 )
 
-                incremental_extracts.append(incremental_extract)
-
-                if has_task_dependencies:
-                    if table == FINAL_TASK:
-                        final_extract = incremental_extract
-                        incremental_extracts.pop(-1)
-
-            if has_replica_snapshot:
-                check_replica_snapshot >> incremental_extracts
-
-            if has_task_dependencies:
-                incremental_extracts >> final_extract
-
+                if has_replica_snapshot:
+                    check_replica_snapshot >> incremental_extract
         globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 
         incremental_backfill_dag = DAG(
