@@ -133,9 +133,12 @@ class InstanceNamespaceMetrics:
 
         prepared_query = f"{self.SQL_INSERT_PART}{query_dict}"
         safe_dict = query_dict.replace("'", "\\'")
+
+        prepared_data = (ping_name, ping_level, safe_dict, ping_date)
         prepared_query = prepared_query.replace(
             "FROM",
-            f",'{ping_name}', '{ping_level}', '{safe_dict}', 'Success', '{ping_date}', DATE_PART(epoch_second, CURRENT_TIMESTAMP()) FROM",
+            ",%s, %s, %s, 'Success', %s, DATE_PART(epoch_second, CURRENT_TIMESTAMP()) FROM"
+            % prepared_data,
         )
 
         return prepared_query
@@ -171,21 +174,27 @@ class InstanceNamespaceMetrics:
 
         error_sql = metric_sql_select.replace("'", "\\'")
 
-        error_record = (
-            f"{self.SQL_INSERT_PART} "
-            f"VALUES "
-            f"(NULL, NULL, NULL, "
-            f"'{metrics_name}', "
-            f"'{metrics_level}', "
-            f"'placeholder_error_sql', "
-            f"'{error_text}', "
-            f"'{self.end_date}', "
-            f"DATE_PART(epoch_second, CURRENT_TIMESTAMP()))"
-        ).replace("\\", "")
+        error_data = (
+            self.SQL_INSERT_PART,
+            metrics_name,
+            metrics_level,
+            error_text,
+            self.end_date,
+        )
 
+        error_record = (
+            "%s VALUES (NULL, NULL, NULL, "
+            "%s, %s, "
+            "'placeholder_error_sql', "
+            "%s, %s, "
+            "DATE_PART(epoch_second, CURRENT_TIMESTAMP())"
+        ) % error_data
+
+        error_record = error_record.replace("\\", "")
         error_record = error_record.replace("placeholder_error_sql", error_sql)
 
         info(f"......inserting ERROR record: {error_record}")
+
         return error_record
 
     def upload_results(self, query_dict: dict, conn) -> None:
