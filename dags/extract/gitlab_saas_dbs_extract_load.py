@@ -211,9 +211,12 @@ def get_task_pool(task_name) -> string:
     return f"{task_name}-pool"
 
 
-def is_incremental(raw_query):
+def is_incremental(table_dict):
     """Determine if the extraction is incremental or full extract i.e. SCD"""
-    return "{EXECUTION_DATE}" in raw_query or "{BEGIN_TIMESTAMP}" in raw_query
+    raw_query = table_dict['import_query']
+    is_valid_query = "{EXECUTION_DATE}" in raw_query or "{BEGIN_TIMESTAMP}" in raw_query
+    incremental_type = table_dict.get('incremental_type')
+    return is_valid_query or incremental_type
 
 
 def use_cloudsql_proxy(dag_name, operation, instance_name):
@@ -319,7 +322,7 @@ for source_name, config in config_dict.items():
 
             for table in table_list:
                 # tables that aren't incremental won't be processed by the incremental dag
-                if not is_incremental(manifest["tables"][table]["import_query"]):
+                if not is_incremental(manifest["tables"][table]):
                     continue
 
                 TASK_TYPE = "db-incremental"
@@ -366,7 +369,7 @@ for source_name, config in config_dict.items():
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             for table in table_list:
-                if is_incremental(manifest["tables"][table]["import_query"]):
+                if is_incremental(manifest["tables"][table]):
                     TASK_TYPE = "backfill"
 
                     task_identifier = (
@@ -415,7 +418,7 @@ for source_name, config in config_dict.items():
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             for table in table_list:
-                if not is_incremental(manifest["tables"][table]["import_query"]):
+                if not is_incremental(manifest["tables"][table]):
                     TASK_TYPE = "db-scd"
 
                     task_identifier = (

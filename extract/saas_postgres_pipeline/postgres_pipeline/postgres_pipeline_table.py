@@ -58,7 +58,7 @@ class PostgresPipelineTable:
         return loaded
 
     def is_incremental(self) -> bool:
-        return "{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query
+        return ("{EXECUTION_DATE}" in self.query or "{BEGIN_TIMESTAMP}" in self.query) or (self.incremental_type)
 
     def do_incremental(
         self,
