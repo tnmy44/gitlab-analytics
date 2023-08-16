@@ -60,8 +60,8 @@ clone_data_science_ptpf_repo_cmd = f"""
         else
         export REPO="{DATA_SCIENCE_PTPF_SSH_REPO}";
     fi &&
-    echo "git clone -b main --single-branch --filter=blob:none --no-checkout --depth 1 $REPO" &&
-    git clone -b main --single-branch --filter=blob:none --no-checkout --depth 1 $REPO &&
+    echo "git clone -b modify-stage-loading --single-branch --filter=blob:none --no-checkout --depth 1 $REPO" &&
+    git clone -b modify-stage-loading --single-branch --filter=blob:none --no-checkout --depth 1 $REPO &&
     echo "checking out commit $GIT_COMMIT" &&
     cd propensity-to-purchase &&
     git sparse-checkout init &&
