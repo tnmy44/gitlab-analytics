@@ -253,6 +253,8 @@ def load_ids(
         "max",
     )
 
+    print(f"\nstart_pk: {start_pk}")
+    print(f"\nmax_pk: {max_pk}")
     # Create a generator for queries that are chunked by ID range
     id_queries = id_query_generator(
         primary_key,

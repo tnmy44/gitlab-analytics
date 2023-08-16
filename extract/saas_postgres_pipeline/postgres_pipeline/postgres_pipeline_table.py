@@ -170,7 +170,7 @@ class PostgresPipelineTable:
         self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine
     ) -> bool:
         export_type = self.incremental_type
-        start_pk, initial_load_start_date = self.check_incremental_load_by_id_metadata(
+        initial_load_start_date, start_pk = self.check_incremental_load_by_id_metadata(
             metadata_engine
         )
         target_table = self.get_target_table_name()
@@ -302,7 +302,7 @@ class PostgresPipelineTable:
 
         # check if mid-backfill first, must always check before schema_change
         # if not mid-backfill, returns start_pk=1, initial_load_start_date=None
-        is_backfill_needed, start_pk, initial_load_start_date = is_resume_export(
+        is_backfill_needed, initial_load_start_date, start_pk = is_resume_export(
             metadata_engine, backfill_metadata_table, self.source_table_name
         )
 
