@@ -7756,6 +7756,10 @@ models:
         description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
       - name: dim_plan_id
         description: '{{ doc("dim_plan_id") }}'
+      - name: integration_type
+        description: '{{ doc("integration_type") }}'
+      - name: integration_category
+        description: '{{ doc("integration_category") }}'
       - name: is_active
         description: '{{ doc("integration_is_active") }}'
       - name: created_at

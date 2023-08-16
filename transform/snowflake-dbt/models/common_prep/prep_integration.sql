@@ -35,6 +35,8 @@
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                           AS dim_plan_id,
       dim_date.date_id                                                          AS created_date_id,
       integration_source.is_active                                              AS is_active,
+      integration_source.service_type                                           AS integration_type,
+      integration_source.integration_category                                   AS integration_category,
       integration_source.created_at::TIMESTAMP                                  AS created_at,
       integration_source.updated_at::TIMESTAMP                                  AS updated_at
     FROM  integration_source
@@ -53,5 +55,5 @@
     created_by="@chrissharp",
     updated_by="@michellecooper",
     created_date="2022-03-28",
-    updated_date="2023-08-10"
+    updated_date="2023-08-16"
 ) }}
