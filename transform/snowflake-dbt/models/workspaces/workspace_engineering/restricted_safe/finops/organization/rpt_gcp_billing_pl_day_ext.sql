@@ -12,7 +12,9 @@ project_full_path AS (
   WHERE most_recent = TRUE
 
 ),
-
+/*
+For every new category breakout, a new cte is created to join with the previous one
+*/
 join_path AS (
 
   SELECT
@@ -45,8 +47,9 @@ join_product_component AS (
     END AS product_component
   FROM join_path
 
-),
+)
 
+/*
 join_finance_component AS (
 
   SELECT
@@ -184,6 +187,6 @@ join_finance_component AS (
     END AS finance_sku_subtype
   FROM join_product_component
   
-)
+)*/
 
-SELECT * FROM join_finance_component
+SELECT * FROM join_product_component
