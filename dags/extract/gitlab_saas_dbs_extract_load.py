@@ -213,9 +213,9 @@ def get_task_pool(task_name) -> string:
 
 def is_incremental(table_dict):
     """Determine if the extraction is incremental or full extract i.e. SCD"""
-    raw_query = table_dict['import_query']
+    raw_query = table_dict["import_query"]
     is_valid_query = "{EXECUTION_DATE}" in raw_query or "{BEGIN_TIMESTAMP}" in raw_query
-    incremental_type = table_dict.get('incremental_type')
+    incremental_type = table_dict.get("incremental_type")
     return is_valid_query or incremental_type
 
 
