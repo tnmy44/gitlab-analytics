@@ -8,7 +8,7 @@ WITH source AS (
 
     SELECT
 
-      id::NUMBER                                                                 AS project_id,
+      id::NUMBER                                                                  AS project_id,
       description::VARCHAR                                                        AS project_description,
       import_source::VARCHAR                                                      AS project_import_source,
       issues_template::VARCHAR                                                    AS project_issues_template,
@@ -26,27 +26,23 @@ WITH source AS (
 
       last_activity_at::TIMESTAMP                                                 AS last_activity_at,
 
-      CASE
-        WHEN visibility_level = '20' THEN 'public'
-        WHEN visibility_level = '10' THEN 'internal'
-        ELSE 'private'
-      END::VARCHAR                                                                AS visibility_level,
+      {{ visibility_level_name('visibility_level') }}                             AS visibility_level,
 
       archived::BOOLEAN                                                           AS archived,
 
       IFF(avatar IS NULL, FALSE, TRUE)::BOOLEAN                                   AS has_avatar,
 
-      star_count::NUMBER                                                         AS project_star_count,
+      star_count::NUMBER                                                          AS project_star_count,
       merge_requests_rebase_enabled::BOOLEAN                                      AS merge_requests_rebase_enabled,
       IFF(LOWER(import_type) = 'nan', NULL, import_type)                          AS import_type,
-      approvals_before_merge::NUMBER                                             AS approvals_before_merge,
+      approvals_before_merge::NUMBER                                              AS approvals_before_merge,
       reset_approvals_on_push::BOOLEAN                                            AS reset_approvals_on_push,
       merge_requests_ff_only_enabled::BOOLEAN                                     AS merge_requests_ff_only_enabled,
       mirror::BOOLEAN                                                             AS mirror,
-      mirror_user_id::NUMBER                                                     AS mirror_user_id,
+      mirror_user_id::NUMBER                                                      AS mirror_user_id,
       shared_runners_enabled::BOOLEAN                                             AS shared_runners_enabled,
       build_allow_git_fetch::BOOLEAN                                              AS build_allow_git_fetch,
-      build_timeout::NUMBER                                                      AS build_timeout,
+      build_timeout::NUMBER                                                       AS build_timeout,
       mirror_trigger_builds::BOOLEAN                                              AS mirror_trigger_builds,
       pending_delete::BOOLEAN                                                     AS pending_delete,
       public_builds::BOOLEAN                                                      AS public_builds,
@@ -62,13 +58,13 @@ WITH source AS (
       ci_config_path,
       lfs_enabled::BOOLEAN                                                        AS lfs_enabled,
       only_allow_merge_if_all_discussions_are_resolved::BOOLEAN                   AS only_allow_merge_if_all_discussions_are_resolved,
-      repository_size_limit::NUMBER                                              AS repository_size_limit,
+      repository_size_limit::NUMBER                                               AS repository_size_limit,
       printing_merge_request_link_enabled::BOOLEAN                                AS printing_merge_request_link_enabled,
       IFF(auto_cancel_pending_pipelines :: int = 1, TRUE, FALSE)                  AS has_auto_canceling_pending_pipelines,
       service_desk_enabled::BOOLEAN                                               AS service_desk_enabled,
       IFF(LOWER(delete_error) = 'nan', NULL, delete_error)                        AS delete_error,
       last_repository_updated_at::TIMESTAMP                                       AS last_repository_updated_at,
-      storage_version::NUMBER                                                    AS storage_version,
+      storage_version::NUMBER                                                     AS storage_version,
       resolve_outdated_diff_discussions::BOOLEAN                                  AS resolve_outdated_diff_discussions,
       disable_overriding_approvers_per_merge_request::BOOLEAN                     AS disable_overriding_approvers_per_merge_request,
       remote_mirror_available_overridden::BOOLEAN                                 AS remote_mirror_available_overridden,

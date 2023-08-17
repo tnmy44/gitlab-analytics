@@ -7816,6 +7816,8 @@ models:
         description: '{{ doc("dim_plan_id") }}'
       - name: snippet_type
         description: '{{ doc("snippet_type") }}'
+      - name: visibility_level
+        description: '{{ doc("visibility_level") }}'
       - name: created_at
         description: '{{ doc("snippet_created_at") }}'
       - name: updated_at
