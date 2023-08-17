@@ -338,8 +338,11 @@ class PostgresPipelineTable:
         Or start a new extract starting from
         the max PK in the target Snowflake table.
         """
-        target_start_pk = (
-            get_min_or_max_id(self.source_table_primary_key, target_engine, "max") + 1
+        target_start_pk = 1 + get_min_or_max_id(
+            self.source_table_primary_key,
+            target_engine,
+            self.target_table_name,
+            "max",
         )
 
         (
