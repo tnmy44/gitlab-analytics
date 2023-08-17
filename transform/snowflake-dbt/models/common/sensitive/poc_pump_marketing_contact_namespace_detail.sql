@@ -244,7 +244,7 @@
     SELECT
       project.dim_namespace_id                                                                   AS dim_namespace_id,
       COUNT(*)                                                                                   AS nbr_integrations_installed,
-      ARRAY_AGG(DISTINCT services.service_type) WITHIN GROUP (ORDER BY services.service_type)    AS integrations_installed
+      ARRAY_AGG(DISTINCT services.integration_type) WITHIN GROUP (ORDER BY services.integration_type)    AS integrations_installed
     FROM services
     LEFT JOIN project
       ON services.project_id = project.dim_project_id

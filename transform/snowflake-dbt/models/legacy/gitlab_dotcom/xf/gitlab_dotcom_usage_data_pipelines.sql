@@ -412,7 +412,7 @@
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_integrations_source') }}
-    WHERE service_type != 'GitlabIssueTrackerService'
+    WHERE integration_type != 'GitlabIssueTrackerService'
 
 ), successful_ci_pipelines_source AS (
 
