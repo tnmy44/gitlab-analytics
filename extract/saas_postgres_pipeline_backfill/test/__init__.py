@@ -7,6 +7,7 @@ import sys
 
 test_paths = [
     "extract/postgres_pipeline/manifests_decomposed/",
+    "extract/saas_postgres_pipeline_backfill/postgres_pipeline",
 ]
 absolute_test_path = os.path.dirname(os.path.realpath(__file__))
 
