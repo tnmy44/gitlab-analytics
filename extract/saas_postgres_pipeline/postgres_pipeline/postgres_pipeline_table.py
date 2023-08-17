@@ -361,13 +361,13 @@ class PostgresPipelineTable:
                 metadata_start_pk,
             )
             logging.info(
-                f"Restarting incremental export based on last metadata_start_pk: {metadata_start_pk}"
+                f"Restarting incremental export based on metadata_start_pk: {metadata_start_pk}"
             )
         # use latest Snowflake pk
         else:
             initial_load_start_date, start_pk = None, target_start_pk
             logging.info(
-                f"Starting new incremental export based on max Snowflake PK: {target_start_pk}"
+                f"Starting new incremental export based on Snowflake target_start_pk: {target_start_pk}"
             )
 
         return initial_load_start_date, start_pk
