@@ -60,8 +60,8 @@
       -- Foreign Keys
       {{ dbt_utils.surrogate_key(['page_url', 'app_id', 'page_url_scheme']) }}          AS dim_behavior_website_page_sk,
       {{ dbt_utils.surrogate_key(['referer_url', 'app_id', 'referer_url_scheme']) }}    AS dim_behavior_referrer_page_sk,
-      page_views_w_clean_url.gsc_project_id                                             AS dim_namespace_id,
-      page_views_w_clean_url.gsc_project_id                                             AS dim_project_id,
+      page_views_w_clean_url.dim_namespace_id,
+      page_views_w_clean_url.dim_project_id,
 
       --Time Attributes
       page_views_w_clean_url.page_view_start_at,
@@ -101,5 +101,5 @@
     created_by="@chrissharp",
     updated_by="@michellecooper",
     created_date="2022-07-22",
-    updated_date="2023-08-16"
+    updated_date="2023-08-17"
 ) }}
