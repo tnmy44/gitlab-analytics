@@ -8,10 +8,7 @@ import yaml
 from yaml.loader import SafeLoader
 
 abs_path = os.path.dirname(os.path.realpath(__file__))
-abs_path = (
-    abs_path[: abs_path.find("extract")]
-    + "extract/saas_postgres_pipeline/manifests_decomposed/"
-)
+abs_path = abs_path[: abs_path.find("/test")] + "/manifests_decomposed/"
 
 
 TABLES_LIST = [

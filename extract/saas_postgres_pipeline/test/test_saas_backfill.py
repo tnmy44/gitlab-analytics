@@ -1,4 +1,3 @@
-
 """
 Unit testing various 'pgp backfill' methods
 """
@@ -7,14 +6,14 @@ import re
 import sys
 from unittest.mock import Mock, MagicMock, patch
 
-'''
+"""
 abs_path = os.path.dirname(os.path.realpath(__file__))
 abs_path = (
     abs_path[: abs_path.find("extract")]
     + "extract/saas_postgres_pipeline_backfill/postgres_pipeline/"
 )
 sys.path.append(abs_path)
-'''
+"""
 
 from postgres_utils import (
     has_new_columns,

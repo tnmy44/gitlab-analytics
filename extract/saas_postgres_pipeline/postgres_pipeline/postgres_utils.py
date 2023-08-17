@@ -36,6 +36,7 @@ from sqlalchemy.schema import CreateTable, DropTable
 METADATA_SCHEMA = os.environ.get("GITLAB_METADATA_SCHEMA")
 BUCKET_NAME = os.environ.get("GITLAB_BACKFILL_BUCKET")
 BACKFILL_METADATA_TABLE = "backfill_metadata"
+INCREMENTAL_LOAD_BY_ID_METADATA_TABLE = "INCREMENTAL_LOAD_BY_ID"
 DELETE_METADATA_TABLE = "delete_metadata"
 BACKFILL_EXTRACT_CHUNKSIZE = 15_000_000
 CSV_CHUNKSIZE_BACKFILL = 5_000_000
@@ -283,7 +284,7 @@ def chunk_and_upload(
     source_engine.dispose()
 
 
-def write_backfill_metadata(
+def write_metadata(
     metadata_engine: Engine,
     metadata_table: Engine,
     database_name: str,
@@ -413,16 +414,19 @@ def upload_snowflake(
         database_kwargs["target_table"],
         f"{prefix}/.*.parquet.gzip$",
     )
+    logging.info(
+        f"Finished COPY INTO from GCS to Snowflake table '{database_kwargs['target_table']}'"
+    )
 
 
 def seed_and_upload_snowflake(
-    chunk_df, database_kwargs, export_type, advanced_metadata, initial_load_start_date
+    target_engine,
+    chunk_df,
+    database_kwargs,
+    export_type,
+    advanced_metadata,
+    initial_load_start_date,
 ):
-    # need to re-instantiate to avoid client session time-out
-    target_engine = snowflake_engine_factory(
-        os.environ.copy(), role="LOADER", schema="tap_postgres"
-    )
-
     schema_types = transform_source_types_to_snowflake_types(
         chunk_df,
         database_kwargs["source_table"],
@@ -446,9 +450,8 @@ def seed_and_upload_snowflake(
         database_kwargs["target_table"],
     )
 
-    target_engine.dispose()
     logging.info(
-        f"Finished copying to Snowflake table '{database_kwargs['real_target_table']}'"
+        f"Finished swapping tables to Snowflake table '{database_kwargs['real_target_table']}'"
     )
 
 
@@ -462,14 +465,9 @@ def chunk_and_upload_metadata(
     advanced_metadata: bool = False,
 ) -> datetime:
     """
-    Call the functions that upload the dataframes as TSVs in GCS and then trigger Snowflake
-    to load those new files.
-
-    If it is part of a backfill, the first chunk gets sent to the dataframe_uploader
-    so that the table can be created automagically with the correct data types.
-
-    Each chunk is uploaded to GCS with a suffix of which chunk number it is.
-    All of the chunks are uploaded by using a regex that gets all of the files.
+    Similiar to chunk_and_upload(), with the following differences:
+        - After each upload to GCS, write to metadata table
+        - COPY to Snowflake after all files have been uploaded to GCS
     """
     rows_uploaded = 0
 
@@ -481,45 +479,57 @@ def chunk_and_upload_metadata(
             CSV_CHUNKSIZE_BACKFILL,
         )
 
-        for chunk_df in iter_csv:
-            row_count = chunk_df.shape[0]
-            rows_uploaded += row_count
-            last_extracted_id = chunk_df[primary_key].max()
-            logging.info(
-                f"\nlast_extracted_id for current Postgres chunk: {last_extracted_id}"
-            )
+    for chunk_df in iter_csv:
+        row_count = chunk_df.shape[0]
+        rows_uploaded += row_count
+        last_extracted_id = chunk_df[primary_key].max()
+        logging.info(
+            f"\nlast_extracted_id for current Postgres chunk: {last_extracted_id}"
+        )
 
-            upload_date = datetime.now()
-            if initial_load_start_date is None:
-                initial_load_start_date = upload_date
+        upload_date = datetime.now()
+        if initial_load_start_date is None:
+            initial_load_start_date = upload_date
 
-            upload_file_name = get_upload_file_name(
-                export_type,
-                database_kwargs["source_table"],
-                initial_load_start_date,
-                upload_date,
-            )
+        upload_file_name = get_upload_file_name(
+            export_type,
+            database_kwargs["source_table"],
+            initial_load_start_date,
+            upload_date,
+        )
 
-            if row_count > 0:
-                upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
-                logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}")
-                is_export_completed = last_extracted_id >= max_source_id
+        if row_count > 0:
+            upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
+            logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}")
+            is_export_completed = last_extracted_id >= max_source_id
 
-                if is_export_completed:
-                    if export_type == "incremental_load_by_id":
-                        upload_snowflake(
-                            database_kwargs, export_type, initial_load_start_date
-                        )
-                    else:
-                        seed_and_upload_snowflake(
-                            chunk_df,
-                            database_kwargs,
-                            export_type,
-                            advanced_metadata,
-                            initial_load_start_date,
-                        )
-                        database_kwargs["source_engine"].dispose()
-                write_backfill_metadata(
+            if is_export_completed:
+                # need to re-instantiate to avoid client session time-out
+                target_engine = snowflake_engine_factory(
+                    os.environ.copy(), role="LOADER", schema="tap_postgres"
+                )
+
+                if export_type == "incremental_load_by_id":
+                    upload_snowflake(
+                        target_engine,
+                        database_kwargs,
+                        export_type,
+                        initial_load_start_date,
+                    )
+                else:
+                    seed_and_upload_snowflake(
+                        target_engine,
+                        chunk_df,
+                        database_kwargs,
+                        export_type,
+                        advanced_metadata,
+                        initial_load_start_date,
+                    )
+                database_kwargs["source_engine"].dispose()
+                target_engine.dispose()
+
+            if export_type != "incremental_load_by_id":
+                write_metadata(
                     database_kwargs["metadata_engine"],
                     database_kwargs["metadata_table"],
                     database_kwargs["source_database"],
@@ -532,9 +542,9 @@ def chunk_and_upload_metadata(
                     is_export_completed,
                     row_count,
                 )
-                # for loop should auto-terminate, but just to be safe
-                if is_export_completed:
-                    break
+            # for loop should auto-terminate, but just to be safe
+            if is_export_completed:
+                break
 
     # need to return in case it was first set here
     return initial_load_start_date
@@ -739,7 +749,7 @@ def is_resume_export(
             # if more than 24 HR since last upload, start backfill over,
             if time_since_last_upload > timedelta(hours=24):
                 logging.info(
-                    f"In middle of export for {source_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Start export from beginning."
+                    f"In middle of export for {source_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Discarding this export."
                 )
 
             # else proceed with last extracted_id
@@ -801,7 +811,9 @@ def get_min_or_max_id(
     int: The minimum or maximum ID value.
     """
     logging.info(f"Getting {min_or_max} ID from table: {table}")
-    id_query = f"SELECT {min_or_max}({primary_key}) as {primary_key} FROM {table}"
+    id_query = (
+        f"SELECT COALESCE({min_or_max}({primary_key}), 1) as {primary_key} FROM {table}"
+    )
     try:
         id_results = query_results_generator(id_query, engine)
         id_value = id_results[primary_key].tolist()[0]

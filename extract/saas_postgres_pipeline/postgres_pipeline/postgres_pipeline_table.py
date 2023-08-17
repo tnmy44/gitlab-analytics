@@ -6,12 +6,13 @@ from sqlalchemy.engine.base import Engine
 import load_functions
 from postgres_utils import (
     BACKFILL_METADATA_TABLE,
+    INCREMENTAL_LOAD_BY_ID_METADATA_TABLE,
     check_is_new_table_or_schema_addition,
     check_and_handle_schema_removal,
     is_resume_export,
     remove_files_from_gcs,
     swap_temp_table,
-    query_backfill_status,
+    get_min_or_max_id,
 )
 
 
@@ -31,7 +32,10 @@ class PostgresPipelineTable:
         ).upper()
         self.table_dict = table_config
         self.target_table_name_td_sf = table_config["export_table"]
-        self.incremental_type = table_config.get("incremental_type")
+        # backfill/deletes/incremental_load_by_id
+        self.incremental_type = table_config.get(
+            "incremental_type", "incremental_load_by_date"
+        )
 
     def is_scd(self) -> bool:
         return not self.is_incremental()
@@ -110,6 +114,7 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
         target_table: str,
+        metadata_table: str,
         export_type: str,
         initial_load_start_date,
         start_pk,
@@ -118,7 +123,7 @@ class PostgresPipelineTable:
         target_engine.dispose()
         database_kwargs = {
             "metadata_engine": metadata_engine,
-            "metadata_table": BACKFILL_METADATA_TABLE,
+            "metadata_table": metadata_table,
             "source_engine": source_engine,
             "source_table": self.source_table_name,
             "source_database": self.import_db,
@@ -161,6 +166,7 @@ class PostgresPipelineTable:
             target_engine,
             metadata_engine,
             target_table,
+            BACKFILL_METADATA_TABLE,
             export_type,
             initial_load_start_date,
             start_pk,
@@ -171,7 +177,7 @@ class PostgresPipelineTable:
     ) -> bool:
         export_type = self.incremental_type
         initial_load_start_date, start_pk = self.check_incremental_load_by_id_metadata(
-            metadata_engine
+            target_engine, metadata_engine, INCREMENTAL_LOAD_BY_ID_METADATA_TABLE
         )
         target_table = self.get_target_table_name()
         return self.__do_load_by_id(
@@ -179,6 +185,7 @@ class PostgresPipelineTable:
             target_engine,
             metadata_engine,
             target_table,
+            INCREMENTAL_LOAD_BY_ID_METADATA_TABLE,
             export_type,
             initial_load_start_date,
             start_pk,
@@ -220,19 +227,22 @@ class PostgresPipelineTable:
         if load_type == "backfill":
             return load_types[load_type](source_engine, target_engine, metadata_engine)
 
+        # Non-backfill section
         is_schema_addition = self.check_is_new_table_or_schema_addition(
             source_engine, target_engine
         )
-
-        if load_type == "incremental":
-            return load_types[load_type](
-                source_engine, target_engine, metadata_engine, is_schema_addition
-            )
-
-        # remaining load_types
         if not is_schema_addition:
             self.check_and_handle_schema_removal(source_engine, target_engine)
-        loaded = load_types[load_type](source_engine, target_engine, is_schema_addition)
+
+        if load_type == "incremental":
+            loaded = load_types[load_type](
+                source_engine, target_engine, metadata_engine, is_schema_addition
+            )
+        # remaining load_types
+        else:
+            loaded = load_types[load_type](
+                source_engine, target_engine, is_schema_addition
+            )
 
         # If temp table, swap it, for scd schema change
         self.swap_temp_table_on_schema_change(is_schema_addition, loaded, target_engine)
@@ -280,7 +290,7 @@ class PostgresPipelineTable:
         source_engine: Engine,
         target_engine: Engine,
         metadata_engine: Engine,
-        backfill_metadata_table: str,
+        metadata_table: str,
         export_type: str,
     ):
         """
@@ -303,7 +313,7 @@ class PostgresPipelineTable:
         # check if mid-backfill first, must always check before schema_change
         # if not mid-backfill, returns start_pk=1, initial_load_start_date=None
         is_backfill_needed, initial_load_start_date, start_pk = is_resume_export(
-            metadata_engine, backfill_metadata_table, self.source_table_name
+            metadata_engine, metadata_table, self.source_table_name
         )
 
         if not is_backfill_needed:
@@ -317,9 +327,35 @@ class PostgresPipelineTable:
 
         return is_backfill_needed, initial_load_start_date, start_pk
 
-    def check_incremental_load_by_id_metadata(self, metadata_engine):
-        results = query_backfill_status(
-            metadata_engine, BACKFILL_METADATA_TABLE, self.source_table_name
+    def check_incremental_load_by_id_metadata(
+        self, target_engine: Engine, metadata_engine: Engine, metadata_table: str
+    ):
+        """
+        Similiar to `check_backfill_metadata()`.
+
+        Check metadata  to see if extract should start
+        from previous load (i.e due to network failure),
+
+        Or start a new extract starting from
+        the max PK in the target Snowflake table.
+        """
+        target_start_pk = (
+            get_min_or_max_id(self.source_table_primary_key, target_engine, "max") + 1
         )
-        initial_load_start_date, start_pk = results[0][1], results[0][2]
+
+        (
+            is_resume_export_needed,
+            prev_initial_load_start_date,
+            metadata_start_pk,
+        ) = is_resume_export(metadata_engine, metadata_table, self.source_table_name)
+        # use metadata_start_pk and continue export
+        if is_resume_export_needed and metadata_start_pk > target_start_pk:
+            initial_load_start_date, start_pk = (
+                prev_initial_load_start_date,
+                metadata_start_pk,
+            )
+        # use latest Snowflake pk
+        else:
+            initial_load_start_date, start_pk = None, target_start_pk
+
         return initial_load_start_date, start_pk
