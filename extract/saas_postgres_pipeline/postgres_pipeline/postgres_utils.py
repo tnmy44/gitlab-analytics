@@ -104,7 +104,7 @@ def trigger_snowflake_upload(
         file_format = (type = parquet)
         match_by_column_name = case_insensitive;
     """
-    logging(f"\nupload_query: {upload_query}")
+    logging.info(f"\nupload_query: {upload_query}")
     results = query_executor(engine, upload_query)
     total_rows = 0
 
@@ -576,6 +576,7 @@ def range_generator(
     """
     while True:
         if start > stop:
+            logging.info("No more id pairs to extract. Stopping")
             break
         else:
             yield tuple([start, start + step])
