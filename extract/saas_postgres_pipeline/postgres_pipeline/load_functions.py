@@ -241,6 +241,7 @@ def load_ids(
     additional_filtering = table_dict.get("additional_filtering", "")
     primary_key = table_dict["export_table_primary_key"]
 
+    logging.info("Getting max id of Postgres source table...")
     max_pk = get_min_or_max_id(
         primary_key,
         database_kwargs["source_engine"],
@@ -260,6 +261,7 @@ def load_ids(
     # Iterate through the generated queries
     for query in id_queries:
         filtered_query = f"{query} {additional_filtering}"
+        logging.info(f"\nfiltered_query: {filtered_query}")
         # if no original load_start, need to preserve it for subsequent calls
         initial_load_start_date = chunk_and_upload_metadata(
             filtered_query,

@@ -314,8 +314,11 @@ class PostgresPipelineTable:
         is_backfill_needed, initial_load_start_date, start_pk = is_resume_export(
             metadata_engine, metadata_table, self.source_table_name
         )
-
-        if not is_backfill_needed:
+        if is_backfill_needed:
+            logging.info(
+                f"Resuming export with start_pk: {start_pk} and initial_load_start_date: {initial_load_start_date}"
+            )
+        else:
             is_backfill_needed = self.check_is_new_table_or_schema_addition(
                 source_engine, target_engine
             )
@@ -361,7 +364,7 @@ class PostgresPipelineTable:
         else:
             initial_load_start_date, start_pk = None, target_start_pk
             logging.info(
-                "Starting new incremental export based on max Snowflake PK: {target_start_pk}"
+                f"Starting new incremental export based on max Snowflake PK: {target_start_pk}"
             )
 
         return initial_load_start_date, start_pk

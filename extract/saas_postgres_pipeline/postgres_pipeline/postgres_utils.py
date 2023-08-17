@@ -756,9 +756,6 @@ def is_resume_export(
             else:
                 start_pk = last_extracted_id + 1
                 initial_load_start_date = prev_initial_load_start_date
-                logging.info(
-                    f"Resuming export with last_extracted_id: {last_extracted_id} and initial_load_start_date: {initial_load_start_date}"
-                )
 
     return is_resume_export_needed, initial_load_start_date, start_pk
 
@@ -810,7 +807,6 @@ def get_min_or_max_id(
     Returns:
     int: The minimum or maximum ID value.
     """
-    logging.info(f"Getting {min_or_max} ID from table: {table}")
     id_query = (
         f"SELECT COALESCE({min_or_max}({primary_key}), 1) as {primary_key} FROM {table}"
     )
