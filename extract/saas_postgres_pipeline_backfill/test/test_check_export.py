@@ -444,6 +444,9 @@ class TestCheckBackfill:
 
 
 class TestCheckDelete:
+    """
+    Class for checking the deletion
+    """
     def setup(self):
         """
         - Create test metdata table
