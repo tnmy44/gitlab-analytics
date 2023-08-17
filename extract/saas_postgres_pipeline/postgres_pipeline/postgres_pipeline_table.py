@@ -338,7 +338,7 @@ class PostgresPipelineTable:
         Or start a new extract starting from
         the max PK in the target Snowflake table.
         """
-        logging.info('Getting current max id of Snowflake table...')
+        logging.info("Getting current max id of Snowflake table...")
         target_start_pk = 1 + get_min_or_max_id(
             self.source_table_primary_key,
             target_engine,

@@ -104,7 +104,7 @@ def trigger_snowflake_upload(
         file_format = (type = parquet)
         match_by_column_name = case_insensitive;
     """
-    print(f"\nupload_query: {upload_query}")
+    logging(f"\nupload_query: {upload_query}")
     results = query_executor(engine, upload_query)
     total_rows = 0
 
@@ -529,20 +529,19 @@ def chunk_and_upload_metadata(
                     database_kwargs["source_engine"].dispose()
                     target_engine.dispose()
 
-                if export_type != INCREMENTAL_LOAD_TYPE_BY_ID:
-                    write_metadata(
-                        database_kwargs["metadata_engine"],
-                        database_kwargs["metadata_table"],
-                        database_kwargs["source_database"],
-                        database_kwargs["source_table"],
-                        initial_load_start_date,
-                        upload_date,
-                        upload_file_name,
-                        last_extracted_id,
-                        max_source_id,
-                        is_export_completed,
-                        row_count,
-                    )
+                write_metadata(
+                    database_kwargs["metadata_engine"],
+                    database_kwargs["metadata_table"],
+                    database_kwargs["source_database"],
+                    database_kwargs["source_table"],
+                    initial_load_start_date,
+                    upload_date,
+                    upload_file_name,
+                    last_extracted_id,
+                    max_source_id,
+                    is_export_completed,
+                    row_count,
+                )
                 # for loop should auto-terminate, but just to be safe
                 if is_export_completed:
                     break
