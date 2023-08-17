@@ -6,8 +6,7 @@ import sys
 import os
 
 abs_path = os.path.dirname(os.path.realpath(__file__))
-abs_path = (
-    abs_path[: abs_path.find("extract")]
-    + "extract/saas_postgres_pipeline/manifests_decomposed/"
-)
+manifest_path = abs_path[: abs_path.find("/test")] + "/manifests_decomposed/"
+postgres_pipeline_path = abs_path[: abs_path.find("/test")] + "/postgres_pipeline/"
 sys.path.append(abs_path)
+sys.path.append(postgres_pipeline_path)
