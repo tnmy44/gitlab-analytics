@@ -338,6 +338,7 @@ class PostgresPipelineTable:
         Or start a new extract starting from
         the max PK in the target Snowflake table.
         """
+        logging.info('Getting current max id of Snowflake table...')
         target_start_pk = 1 + get_min_or_max_id(
             self.source_table_primary_key,
             target_engine,
@@ -359,5 +360,8 @@ class PostgresPipelineTable:
         # use latest Snowflake pk
         else:
             initial_load_start_date, start_pk = None, target_start_pk
+            logging.info(
+                "Starting new incremental export based on max Snowflake PK: {target_start_pk}"
+            )
 
         return initial_load_start_date, start_pk

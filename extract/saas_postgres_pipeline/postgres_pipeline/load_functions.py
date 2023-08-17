@@ -260,7 +260,6 @@ def load_ids(
     # Iterate through the generated queries
     for query in id_queries:
         filtered_query = f"{query} {additional_filtering}"
-        logging.info(f"\nfiltered_query: {filtered_query}")
         # if no original load_start, need to preserve it for subsequent calls
         initial_load_start_date = chunk_and_upload_metadata(
             filtered_query,
