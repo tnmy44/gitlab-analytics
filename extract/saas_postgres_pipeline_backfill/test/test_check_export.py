@@ -42,6 +42,7 @@ class TestCheckBackfill:
     """
     The main class for testing
     """
+
     def setup(self):
         """
         - Create test metdata table
