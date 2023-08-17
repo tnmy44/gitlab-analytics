@@ -16,6 +16,7 @@ from postgres_utils import (
     id_query_generator,
     get_min_or_max_id,
     BACKFILL_EXTRACT_CHUNKSIZE,
+    INCREMENTAL_LOAD_TYPE_BY_ID,
 )
 
 
@@ -229,7 +230,7 @@ def load_ids(
 
     if (
         "_TEMP" != database_kwargs["target_table"][-5:]
-        and export_type != "incremental_load_by_id"
+        and export_type != INCREMENTAL_LOAD_TYPE_BY_ID
     ):
         logging.info(
             f"Table {database_kwargs['source_table']} doesn't need a full sync."

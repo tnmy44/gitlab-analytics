@@ -36,11 +36,12 @@ from sqlalchemy.schema import CreateTable, DropTable
 METADATA_SCHEMA = os.environ.get("GITLAB_METADATA_SCHEMA")
 BUCKET_NAME = os.environ.get("GITLAB_BACKFILL_BUCKET")
 BACKFILL_METADATA_TABLE = "backfill_metadata"
-INCREMENTAL_LOAD_BY_ID_METADATA_TABLE = "INCREMENTAL_LOAD_BY_ID"
+INCREMENTAL_METADATA_TABLE = "incremental_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
 BACKFILL_EXTRACT_CHUNKSIZE = 15_000_000
 CSV_CHUNKSIZE_BACKFILL = 5_000_000
 CSV_CHUNKSIZE_REGULAR = 1_000_000
+INCREMENTAL_LOAD_TYPE_BY_ID = "load_by_id"
 
 
 def get_gcs_scoped_credentials():
@@ -509,7 +510,7 @@ def chunk_and_upload_metadata(
                     os.environ.copy(), role="LOADER", schema="tap_postgres"
                 )
 
-                if export_type == "incremental_load_by_id":
+                if export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
                     upload_snowflake(
                         target_engine,
                         database_kwargs,
@@ -528,7 +529,7 @@ def chunk_and_upload_metadata(
                 database_kwargs["source_engine"].dispose()
                 target_engine.dispose()
 
-            if export_type != "incremental_load_by_id":
+            if export_type != INCREMENTAL_LOAD_TYPE_BY_ID:
                 write_metadata(
                     database_kwargs["metadata_engine"],
                     database_kwargs["metadata_table"],

@@ -6,13 +6,14 @@ from sqlalchemy.engine.base import Engine
 import load_functions
 from postgres_utils import (
     BACKFILL_METADATA_TABLE,
-    INCREMENTAL_LOAD_BY_ID_METADATA_TABLE,
+    INCREMENTAL_METADATA_TABLE,
     check_is_new_table_or_schema_addition,
     check_and_handle_schema_removal,
     is_resume_export,
     remove_files_from_gcs,
     swap_temp_table,
     get_min_or_max_id,
+    INCREMENTAL_LOAD_TYPE_BY_ID,
 )
 
 
@@ -32,10 +33,8 @@ class PostgresPipelineTable:
         ).upper()
         self.table_dict = table_config
         self.target_table_name_td_sf = table_config["export_table"]
-        # backfill/deletes/incremental_load_by_id
-        self.incremental_type = table_config.get(
-            "incremental_type", "incremental_load_by_date"
-        )
+        # options: load_by_id | load_by_date
+        self.incremental_type = table_config.get("incremental_type", "load_by_date")
 
     def is_scd(self) -> bool:
         return not self.is_incremental()
@@ -77,7 +76,7 @@ class PostgresPipelineTable:
             logging.info("Aborting... because schema_change OR non_incremental_load")
             return False
         # load by incrementally by id rather than by date
-        if self.incremental_type == "incremental_load_by_id":
+        if self.incremental_type == INCREMENTAL_LOAD_TYPE_BY_ID:
             return self.do_incremental_load_by_id(
                 source_engine, target_engine, metadata_engine
             )
@@ -177,7 +176,7 @@ class PostgresPipelineTable:
     ) -> bool:
         export_type = self.incremental_type
         initial_load_start_date, start_pk = self.check_incremental_load_by_id_metadata(
-            target_engine, metadata_engine, INCREMENTAL_LOAD_BY_ID_METADATA_TABLE
+            target_engine, metadata_engine, INCREMENTAL_METADATA_TABLE
         )
         target_table = self.get_target_table_name()
         return self.__do_load_by_id(
@@ -185,7 +184,7 @@ class PostgresPipelineTable:
             target_engine,
             metadata_engine,
             target_table,
-            INCREMENTAL_LOAD_BY_ID_METADATA_TABLE,
+            INCREMENTAL_METADATA_TABLE,
             export_type,
             initial_load_start_date,
             start_pk,
