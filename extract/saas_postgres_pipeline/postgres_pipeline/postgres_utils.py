@@ -604,6 +604,10 @@ def get_source_and_target_columns(
     return source_columns, target_columns
 
 
+def check_is_new_table(engine: Engine, table: Engine, schema=None) -> bool:
+    return not engine.has_table(table, schema=schema)
+
+
 def check_is_new_table_or_schema_addition(
     raw_query: str,
     source_engine: Engine,
@@ -618,7 +622,8 @@ def check_is_new_table_or_schema_addition(
     If the table does not exist this function will also return True.
     """
 
-    if not target_engine.has_table(target_table):
+    is_new_table = check_is_new_table(target_engine, target_table)
+    if is_new_table:
         return True
 
     source_columns, target_columns = get_source_and_target_columns(
