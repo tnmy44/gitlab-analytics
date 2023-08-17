@@ -480,72 +480,72 @@ def chunk_and_upload_metadata(
             CSV_CHUNKSIZE_BACKFILL,
         )
 
-    for chunk_df in iter_csv:
-        row_count = chunk_df.shape[0]
-        rows_uploaded += row_count
-        last_extracted_id = chunk_df[primary_key].max()
-        logging.info(
-            f"\nlast_extracted_id for current Postgres chunk: {last_extracted_id}"
-        )
+        for chunk_df in iter_csv:
+            row_count = chunk_df.shape[0]
+            rows_uploaded += row_count
+            last_extracted_id = chunk_df[primary_key].max()
+            logging.info(
+                f"\nlast_extracted_id for current Postgres chunk: {last_extracted_id}"
+            )
 
-        upload_date = datetime.now()
-        if initial_load_start_date is None:
-            initial_load_start_date = upload_date
+            upload_date = datetime.now()
+            if initial_load_start_date is None:
+                initial_load_start_date = upload_date
 
-        upload_file_name = get_upload_file_name(
-            export_type,
-            database_kwargs["source_table"],
-            initial_load_start_date,
-            upload_date,
-        )
+            upload_file_name = get_upload_file_name(
+                export_type,
+                database_kwargs["source_table"],
+                initial_load_start_date,
+                upload_date,
+            )
 
-        if row_count > 0:
-            upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
-            logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}")
-            is_export_completed = last_extracted_id >= max_source_id
+            if row_count > 0:
+                upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
+                logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}")
+                is_export_completed = last_extracted_id >= max_source_id
 
-            if is_export_completed:
-                # need to re-instantiate to avoid client session time-out
-                target_engine = snowflake_engine_factory(
-                    os.environ.copy(), role="LOADER", schema="tap_postgres"
-                )
-
-                if export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
-                    upload_snowflake(
-                        target_engine,
-                        database_kwargs,
-                        export_type,
-                        initial_load_start_date,
+                if is_export_completed:
+                    # need to re-instantiate to avoid client session time-out
+                    target_engine = snowflake_engine_factory(
+                        os.environ.copy(), role="LOADER", schema="tap_postgres"
                     )
-                else:
-                    seed_and_upload_snowflake(
-                        target_engine,
-                        chunk_df,
-                        database_kwargs,
-                        export_type,
-                        advanced_metadata,
-                        initial_load_start_date,
-                    )
-                database_kwargs["source_engine"].dispose()
-                target_engine.dispose()
 
-            if export_type != INCREMENTAL_LOAD_TYPE_BY_ID:
-                write_metadata(
-                    database_kwargs["metadata_engine"],
-                    database_kwargs["metadata_table"],
-                    database_kwargs["source_database"],
-                    database_kwargs["source_table"],
-                    initial_load_start_date,
-                    upload_date,
-                    upload_file_name,
-                    last_extracted_id,
-                    max_source_id,
-                    is_export_completed,
-                    row_count,
-                )
-            # for loop should auto-terminate, but just to be safe
-            if is_export_completed:
-                break
+                    if export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
+                        upload_snowflake(
+                            target_engine,
+                            database_kwargs,
+                            export_type,
+                            initial_load_start_date,
+                        )
+                    else:
+                        seed_and_upload_snowflake(
+                            target_engine,
+                            chunk_df,
+                            database_kwargs,
+                            export_type,
+                            advanced_metadata,
+                            initial_load_start_date,
+                        )
+                    database_kwargs["source_engine"].dispose()
+                    target_engine.dispose()
+
+                if export_type != INCREMENTAL_LOAD_TYPE_BY_ID:
+                    write_metadata(
+                        database_kwargs["metadata_engine"],
+                        database_kwargs["metadata_table"],
+                        database_kwargs["source_database"],
+                        database_kwargs["source_table"],
+                        initial_load_start_date,
+                        upload_date,
+                        upload_file_name,
+                        last_extracted_id,
+                        max_source_id,
+                        is_export_completed,
+                        row_count,
+                    )
+                # for loop should auto-terminate, but just to be safe
+                if is_export_completed:
+                    break
 
     # need to return in case it was first set here
     return initial_load_start_date
