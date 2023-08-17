@@ -81,6 +81,10 @@ join_finance_component AS (
       WHEN LOWER(gcp_sku_description) LIKE '%support%' THEN 'Support'
       WHEN LOWER(gcp_sku_description) LIKE '%security command center%' THEN 'Support'
       WHEN LOWER(gcp_sku_description) LIKE '%marketplace%' THEN 'Support'
+
+      -- OTHERS
+      when lower(gcp_service_description) = 'cloud storage' then 'Storage'
+      when LOWER(gcp_service_description) = 'compute engine' then 'Compute'
       ELSE gcp_service_description
     END AS finance_sku_type,
 
@@ -100,7 +104,6 @@ join_finance_component AS (
       WHEN LOWER(gcp_service_description) LIKE 'bigquery' AND LOWER(gcp_sku_description) NOT LIKE 'storage' THEN 'Data Warehouse (compute)'
       WHEN LOWER(gcp_service_description) LIKE 'cloud sql' AND (LOWER(gcp_sku_description) LIKE '%cpu%' OR LOWER(gcp_sku_description) LIKE '%ram%') THEN 'Data Warehouse (compute)'
       WHEN LOWER(gcp_service_description) LIKE '%memorystore%' AND LOWER(gcp_sku_description) LIKE '%capacity%' THEN 'Memorystores (compute)'
-      when LOWER(gcp_service_description) = 'compute engine' then 'Compute'
 
       -- NETWORKING
       WHEN LOWER(gcp_service_description) = 'cloud sql' AND LOWER(gcp_sku_description) LIKE '%networking%' THEN 'Databases (networking)'
@@ -117,6 +120,9 @@ join_finance_component AS (
       WHEN LOWER(gcp_sku_description) LIKE '%security command center%' THEN 'Security (support)'
       WHEN LOWER(gcp_sku_description) LIKE '%marketplace%' THEN 'Marketplace (support)'
 
+      -- OTHERS
+      when lower(gcp_service_description) = 'cloud storage' then 'Storage'
+      when LOWER(gcp_service_description) = 'compute engine' then 'Compute'
       ELSE gcp_service_description
     END AS finance_sku_subtype
   FROM join_product_component
