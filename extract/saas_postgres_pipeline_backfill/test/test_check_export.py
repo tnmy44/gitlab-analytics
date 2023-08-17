@@ -24,29 +24,24 @@ Note that all GCS / Gitlab DB components still need to be mocked
 
 """
 import os
-import sys
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
-from sqlalchemy.engine.base import Engine
-
-abs_path = os.path.dirname(os.path.realpath(__file__))
-abs_path = (
-    abs_path[: abs_path.find("extract")]
-    + "extract/saas_postgres_pipeline_backfill/postgres_pipeline/"
-)
-sys.path.append(abs_path)
 
 from postgres_pipeline_table import PostgresPipelineTable
 from postgres_utils import (
-    postgres_engine_factory,
-    manifest_reader,
+    METADATA_SCHEMA,
     is_new_table,
     is_resume_export,
-    METADATA_SCHEMA,
+    manifest_reader,
+    postgres_engine_factory,
 )
+from sqlalchemy.engine.base import Engine
 
 
 class TestCheckBackfill:
+    """
+    The main class for testing
+    """
     def setup(self):
         """
         - Create test metdata table
@@ -86,6 +81,9 @@ class TestCheckBackfill:
         self.pipeline_table = PostgresPipelineTable(table_config)
 
     def teardown(self):
+        """
+        Teardown function
+        """
         drop_query = f""" drop table if exists {self.test_metadata_table_full_path}"""
 
         with self.metadata_engine.connect() as connection:
@@ -484,6 +482,9 @@ class TestCheckDelete:
         self.pipeline_table = PostgresPipelineTable(table_config)
 
     def teardown(self):
+        """
+        teardown function
+        """
         drop_query = f""" drop table if exists {self.test_metadata_table_full_path}"""
 
         with self.metadata_engine.connect() as connection:
