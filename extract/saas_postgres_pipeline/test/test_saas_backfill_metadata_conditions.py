@@ -35,7 +35,6 @@ from postgres_utils import (
     BACKFILL_METADATA_TABLE,
     INCREMENTAL_METADATA_TABLE,
     METADATA_SCHEMA,
-    INCREMENTAL_LOAD_TYPE_BY_ID,
     check_is_new_table,
     check_is_new_table_or_schema_addition,
     postgres_engine_factory,

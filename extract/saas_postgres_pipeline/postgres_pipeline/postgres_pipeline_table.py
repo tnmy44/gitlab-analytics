@@ -190,7 +190,7 @@ class PostgresPipelineTable:
             start_pk,
         )
 
-    def check_new_table(
+    def do_test(
         self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
     ) -> bool:
         if not is_schema_addition:
@@ -219,7 +219,7 @@ class PostgresPipelineTable:
             "incremental": self.do_incremental,
             "scd": self.do_scd,
             "backfill": self.do_incremental_backfill,
-            "test": self.check_new_table,
+            "test": self.do_test,
             "trusted_data": self.do_trusted_data_pgp,
         }
 
