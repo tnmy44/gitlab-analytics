@@ -183,7 +183,7 @@ runner_shared_gitlab_org AS (
   -- shared gitlab org runner
   SELECT DISTINCT
     reporting_day                      AS date_day,
-    'gitlab-ci-155816'                 AS gcp_project_id,
+    NULL                               AS gcp_project_id,
     NULL                               AS gcp_service_description,
     NULL                               AS gcp_sku_description,
     NULL                               AS infra_label,
