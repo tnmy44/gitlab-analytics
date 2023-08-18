@@ -398,7 +398,11 @@ def get_upload_file_name(
 
 
 def upload_snowflake_to_prefix(
-        target_engine, database_kwargs, export_type, initial_load_start_date, purge: bool = True
+    target_engine,
+    database_kwargs,
+    export_type,
+    initial_load_start_date,
+    purge: bool = True,
 ):
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
@@ -816,9 +820,7 @@ def get_min_or_max_id(
     Returns:
     int: The minimum or maximum ID value.
     """
-    id_query = (
-        f"SELECT COALESCE({min_or_max}({primary_key}), -1) as {primary_key} FROM {table}"
-    )
+    id_query = f"SELECT COALESCE({min_or_max}({primary_key}), -1) as {primary_key} FROM {table}"
     try:
         id_results = query_results_generator(id_query, engine)
         id_value = id_results[primary_key].tolist()[0]

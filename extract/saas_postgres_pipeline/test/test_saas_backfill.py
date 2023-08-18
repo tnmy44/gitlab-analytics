@@ -338,7 +338,7 @@ class TestCheckBackfill:
         Should backfill, but need to start from beginning
         """
 
-        export_type = 'backfill'
+        export_type = "backfill"
         last_extracted_id = 10
         initial_load_start_date = datetime(2023, 2, 1)
         # Arrange metadata table
@@ -368,7 +368,11 @@ class TestCheckBackfill:
             returned_initial_load_start_date,
             start_pk,
         ) = self.pipeline_table.check_backfill_metadata(
-            self.source_engine, self.target_engine, self.metadata_engine, self.test_metadata_table, export_type
+            self.source_engine,
+            self.target_engine,
+            self.metadata_engine,
+            self.test_metadata_table,
+            export_type,
         )
 
         # Verify results
@@ -376,7 +380,6 @@ class TestCheckBackfill:
         assert start_pk == last_extracted_id + 1
         assert returned_initial_load_start_date == initial_load_start_date
         mock_remove_files_from_gcs.assert_not_called()
-
 
     @patch("postgres_pipeline_table.check_is_new_table_or_schema_addition")
     @patch("postgres_pipeline_table.remove_files_from_gcs")
@@ -391,7 +394,7 @@ class TestCheckBackfill:
         - No new schema addition
         - resume_export is False (since is_export_completed=True)
         """
-        export_type = 'backfill'
+        export_type = "backfill"
         # Update metdata table
         upload_date_less_than_24hr = datetime.utcnow() - timedelta(hours=23, minutes=40)
 
@@ -405,7 +408,7 @@ class TestCheckBackfill:
             "last_extracted_id": 10,
             "max_id": 20,
             "is_export_completed": True,
-            "chunk_row_count": 3
+            "chunk_row_count": 3,
         }
 
         insert_into_metadata_db(
@@ -416,7 +419,11 @@ class TestCheckBackfill:
 
         # Check if backfill needed - main code
         is_backfill_needed, _, _ = self.pipeline_table.check_backfill_metadata(
-            self.source_engine, self.target_engine, self.metadata_engine, self.test_metadata_table, export_type
+            self.source_engine,
+            self.target_engine,
+            self.metadata_engine,
+            self.test_metadata_table,
+            export_type,
         )
 
         # Verify results
