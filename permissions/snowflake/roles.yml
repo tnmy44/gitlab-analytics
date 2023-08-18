@@ -5504,7 +5504,7 @@ users:
         member_of:
             - mwawrzyniak
 
-     - mxiao:
+    - mxiao:
         can_login: yes
         member_of:
             - mxiao           
