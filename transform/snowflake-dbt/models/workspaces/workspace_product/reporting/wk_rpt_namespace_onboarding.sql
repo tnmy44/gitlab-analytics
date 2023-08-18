@@ -50,7 +50,6 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     WHERE namespace_is_internal = FALSE
       AND namespace_creator_is_blocked = FALSE
       AND namespace_is_ultimate_parent = TRUE
-      AND namespace_created_date >= DATEADD(days, -30, current_date)
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11
 
 ), trials AS ( -- Current trial data does not specify what type of trial was started
