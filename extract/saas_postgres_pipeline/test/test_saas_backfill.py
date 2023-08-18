@@ -71,6 +71,11 @@ class TestCheckBackfill:
 
         manifest_dict = manifest_reader(manifest_file_path)
         env = os.environ.copy()
+
+        # Create a mock source/self.target_engine
+        self.source_engine = MagicMock(spec=Engine)
+        self.target_engine = MagicMock(spec=Engine)
+
         self.metadata_engine = postgres_engine_factory(
             manifest_dict["connection_info"]["postgres_metadata_connection"], env
         )
@@ -135,8 +140,6 @@ class TestCheckBackfill:
         self, mock_check_is_new_table, mock_get_source_and_target_columns
     ):
         raw_query = "some_query"
-        source_engine = MagicMock(spec=Engine)
-        target_engine = MagicMock(spec=Engine)
         target_table = "some_table"
         mock_check_is_new_table.return_value = False
 
@@ -146,7 +149,7 @@ class TestCheckBackfill:
         mock_get_source_and_target_columns.return_value = source_columns, target_columns
 
         res = check_is_new_table_or_schema_addition(
-            raw_query, source_engine, target_engine, target_table
+            raw_query, self.source_engine, self.target_engine, target_table
         )
         assert res is True
 
@@ -156,7 +159,7 @@ class TestCheckBackfill:
         mock_get_source_and_target_columns.return_value = source_columns, target_columns
 
         res = check_is_new_table_or_schema_addition(
-            raw_query, source_engine, target_engine, target_table
+            raw_query, self.source_engine, self.target_engine, target_table
         )
         assert res is False
 
@@ -166,7 +169,7 @@ class TestCheckBackfill:
         mock_get_source_and_target_columns.return_value = source_columns, target_columns
 
         res = check_is_new_table_or_schema_addition(
-            raw_query, source_engine, target_engine, target_table
+            raw_query, self.source_engine, self.target_engine, target_table
         )
         assert res is False
 
@@ -184,9 +187,7 @@ class TestCheckBackfill:
         remove_files_from_gcs() is called
         """
 
-        # Create a mock source_engine and metadata_engine objects
-        source_engine = MagicMock(spec=Engine)
-        target_engine = MagicMock(spec=Engine)
+        # Create a mock self.source_engine and metadata_engine objects
         metadata_engine = MagicMock(spec=Engine)
         export_type = "backfill"
 
@@ -198,8 +199,8 @@ class TestCheckBackfill:
             initial_load_start_date,
             start_pk,
         ) = self.pipeline_table.check_backfill_metadata(
-            source_engine,
-            target_engine,
+            self.source_engine,
+            self.target_engine,
             metadata_engine,
             self.test_metadata_table,
             export_type,
@@ -227,9 +228,7 @@ class TestCheckBackfill:
         Assumes that `test_if_new_table_backfill()` was already run
         """
 
-        # Create a mock source_engine and metadata_engine objects
-        source_engine = MagicMock(spec=Engine)
-        target_engine = MagicMock(spec=Engine)
+        # Create a mock self.source_engine and metadata_engine objects
         export_type = "backfill"
 
         mock_check_is_new_table_or_schema_addition.return_value = False
@@ -256,8 +255,8 @@ class TestCheckBackfill:
             initial_load_start_date,
             start_pk,
         ) = self.pipeline_table.check_backfill_metadata(
-            source_engine,
-            target_engine,
+            self.source_engine,
+            self.target_engine,
             self.metadata_engine,
             self.test_metadata_table,
             export_type,
@@ -269,15 +268,12 @@ class TestCheckBackfill:
         assert initial_load_start_date is None
         mock_remove_files_from_gcs.assert_not_called()
 
-    '''
     @patch("postgres_pipeline_table.check_is_new_table_or_schema_addition")
-    @patch("postgres_pipeline_table.is_new_table")
     @patch("postgres_pipeline_table.remove_files_from_gcs")
     def test_is_resume_export_past_24hr(
         self,
         mock_remove_files_from_gcs,
         mock_check_is_new_table_or_schema_addition,
-        mock_schema_addition_check,
     ):
         """
         Insert a more recent record where is_export_completed = False
@@ -286,6 +282,7 @@ class TestCheckBackfill:
         Should backfill, but need to start from beginning
         """
 
+        export_type = "backfill"
         metadata = {
             "source_table": "some_table",
             "database_name": "some_db",
@@ -295,57 +292,43 @@ class TestCheckBackfill:
             "last_extracted_id": 10,
             "max_id": 20,
             "is_export_completed": False,
-            "chunk_row_count": 3
+            "chunk_row_count": 3,
         }
 
-        insert_query = f"""
-        INSERT INTO {self.test_metadata_table_full_path}
-        VALUES (
-            '{metadata[database_name]}',
-            '{metadata[source_table]}',
-            '{metadata[initial_load_start_date]}',
-            '{metadata[upload_date]}',
-            '{metadata[upload_file_name]}',
-            {metadata[last_extracted_id]},
-            {metadata[max_id]},
-            {metadata[is_export_completed]},
-            {metadata[chunk_row_count]});
-        """
-        # Test when table is inserted into metadata
-        with self.metadata_engine.connect() as connection:
-            connection.execute(insert_query)
+        insert_into_metadata_db(
+            self.metadata_engine, self.test_metadata_table_full_path, metadata
+        )
 
-        # Create a mock source_engine and metadata_engine objects
-        source_engine = MagicMock(spec=Engine)
-
+        # Create a mock self.source_engine and metadata_engine objects
         mock_check_is_new_table_or_schema_addition.return_value = False
-        mock_schema_addition_check.return_value = False
 
         # Call the function being tested
         (
             is_backfill_needed,
-            start_pk,
             initial_load_start_date,
+            start_pk,
         ) = self.pipeline_table.check_backfill_metadata(
-            source_engine, self.metadata_engine, self.test_metadata_table
+            self.source_engine,
+            self.target_engine,
+            self.metadata_engine,
+            self.test_metadata_table,
+            export_type,
         )
 
         # Verify results
         assert is_backfill_needed is True
-        assert start_pk == 1
         assert initial_load_start_date is None
+        assert start_pk == 1
         mock_remove_files_from_gcs.assert_called_once_with(
-            self.test_metadata_table, self.pipeline_table.source_table_name
+            export_type, self.pipeline_table.source_table_name
         )
 
     @patch("postgres_pipeline_table.check_is_new_table_or_schema_addition")
-    @patch("postgres_pipeline_table.is_new_table")
     @patch("postgres_pipeline_table.remove_files_from_gcs")
     def test_is_resume_export_within_24hr(
         self,
         mock_remove_files_from_gcs,
         mock_check_is_new_table_or_schema_addition,
-        mock_schema_addition_check,
     ):
         """
         Insert a more recent record where is_export_completed = False
@@ -355,48 +338,37 @@ class TestCheckBackfill:
         Should backfill, but need to start from beginning
         """
 
-        # Arrange metadata table
-        source_table = "some_table"
-        database_name = "some_db"
-        initial_load_start_date = datetime(2023, 2, 1)
-        upload_date_less_than_24hr = datetime.utcnow() - timedelta(hours=23, minutes=40)
-        upload_date = upload_date_less_than_24hr
-        upload_file_name = "some_file"
+        export_type = 'backfill'
         last_extracted_id = 10
-        max_id = 20
-        is_export_completed = False
-        chunk_row_count = 3
+        initial_load_start_date = datetime(2023, 2, 1)
+        # Arrange metadata table
+        metadata = {
+            "source_table": "some_table",
+            "database_name": "some_db",
+            "initial_load_start_date": initial_load_start_date,
+            "upload_date_less_than_24hr": datetime.utcnow()
+            - timedelta(hours=23, minutes=40),
+            "upload_date": datetime.utcnow() - timedelta(hours=23, minutes=40),
+            "upload_file_name": "some_file",
+            "last_extracted_id": last_extracted_id,
+            "max_id": 20,
+            "is_export_completed": False,
+            "chunk_row_count": 3,
+        }
 
-        insert_query = f"""
-        INSERT INTO {self.test_metadata_table_full_path}
-        VALUES (
-            '{database_name}',
-            '{source_table}',
-            '{initial_load_start_date}',
-            '{upload_date}',
-            '{upload_file_name}',
-            {last_extracted_id},
-            {max_id},
-            {is_export_completed},
-            {chunk_row_count});
-        """
-        # Test when table is inserted into metadata
-        with self.metadata_engine.connect() as connection:
-            connection.execute(insert_query)
-
-        # Create a mock source_engine and metadata_engine objects
-        source_engine = MagicMock(spec=Engine)
+        insert_into_metadata_db(
+            self.metadata_engine, self.test_metadata_table_full_path, metadata
+        )
 
         mock_check_is_new_table_or_schema_addition.return_value = False
-        mock_schema_addition_check.return_value = False
 
         # Call the function being tested
         (
             is_backfill_needed,
-            start_pk,
             returned_initial_load_start_date,
+            start_pk,
         ) = self.pipeline_table.check_backfill_metadata(
-            source_engine, self.metadata_engine, self.test_metadata_table
+            self.source_engine, self.target_engine, self.metadata_engine, self.test_metadata_table, export_type
         )
 
         # Verify results
@@ -405,60 +377,48 @@ class TestCheckBackfill:
         assert returned_initial_load_start_date == initial_load_start_date
         mock_remove_files_from_gcs.assert_not_called()
 
+
     @patch("postgres_pipeline_table.check_is_new_table_or_schema_addition")
     @patch("postgres_pipeline_table.remove_files_from_gcs")
     def test_no_backfill_needed(
         self,
         mock_remove_files_from_gcs,
-        mock_schema_addition_check,
+        mock_check_is_new_table_or_schema_addition,
     ):
         """
         Test that no backfill is needed when the following conditions are true:
         - not a new table
         - No new schema addition
-        - resume_export is False
+        - resume_export is False (since is_export_completed=True)
         """
+        export_type = 'backfill'
         # Update metdata table
-        # Insert record indicating export_completed=True
         upload_date_less_than_24hr = datetime.utcnow() - timedelta(hours=23, minutes=40)
 
-        source_table = "some_table"
-        database_name = "some_db"
-        initial_load_start_date = datetime(2023, 2, 1)
-        upload_date = upload_date_less_than_24hr
-        upload_file_name = "some_file"
-        last_extracted_id = 10
-        max_id = 20
-        is_export_completed = True
-        chunk_row_count = 3
+        metadata = {
+            "source_table": "some_table",
+            "database_name": "some_db",
+            "initial_load_start_date": datetime(2023, 2, 1),
+            "upload_date_less_than_24hr": upload_date_less_than_24hr,
+            "upload_date": upload_date_less_than_24hr,
+            "upload_file_name": "some_file",
+            "last_extracted_id": 10,
+            "max_id": 20,
+            "is_export_completed": True,
+            "chunk_row_count": 3
+        }
 
-        insert_query = f"""
-        INSERT INTO {self.test_metadata_table_full_path}
-        VALUES (
-            '{database_name}',
-            '{source_table}',
-            '{initial_load_start_date}',
-            '{upload_date}',
-            '{upload_file_name}',
-            {last_extracted_id},
-            {max_id},
-            {is_export_completed},
-            {chunk_row_count});
-        """
-        with self.metadata_engine.connect() as connection:
-            connection.execute(insert_query)
-
+        insert_into_metadata_db(
+            self.metadata_engine, self.test_metadata_table_full_path, metadata
+        )
         # have to mock schema addition check because can't connect to Postgres DB
-        mock_schema_addition_check.return_value = False
+        mock_check_is_new_table_or_schema_addition.return_value = False
 
         # Check if backfill needed - main code
-        source_engine = MagicMock(spec=Engine)
         is_backfill_needed, _, _ = self.pipeline_table.check_backfill_metadata(
-            source_engine, self.metadata_engine, self.test_metadata_table
+            self.source_engine, self.target_engine, self.metadata_engine, self.test_metadata_table, export_type
         )
 
         # Verify results
         mock_remove_files_from_gcs.assert_not_called()
         assert is_backfill_needed is False
-
-'''

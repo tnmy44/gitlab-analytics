@@ -330,7 +330,10 @@ class PostgresPipelineTable:
         return is_backfill_needed, initial_load_start_date, start_pk
 
     def check_incremental_load_by_id_metadata(
-        self, target_engine: Engine, metadata_engine: Engine, metadata_table: str
+        self,
+        target_engine: Engine,
+        metadata_engine: Engine,
+        metadata_table: str,
     ):
         """
         Similiar to `check_backfill_metadata()`.
@@ -363,6 +366,7 @@ class PostgresPipelineTable:
             logging.info(
                 f"Restarting incremental export based on metadata_start_pk: {metadata_start_pk}"
             )
+
         # use latest Snowflake pk
         else:
             initial_load_start_date, start_pk = None, target_start_pk
