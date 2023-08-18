@@ -46,6 +46,10 @@ WITH prep_ci_runner AS (
         THEN 'SaaS Runner Linux - Medium'
       WHEN ci_runner_description LIKE '%saas-linux-large-amd64%'
         THEN 'SaaS Runner Linux - Large'
+      WHEN ci_runner_description LIKE '%saas-linux-xlarge-amd64%'
+        THEN 'SaaS Runner Linux - XLarge'
+      WHEN ci_runner_description LIKE '%saas-linux-2xlarge-amd64%'
+        THEN 'SaaS Runner Linux - 2XLarge'
       --- MacOS Runners
       WHEN ci_runner_description LIKE '%macOS%'
         THEN 'SaaS Runners macOS - Medium - amd64'
