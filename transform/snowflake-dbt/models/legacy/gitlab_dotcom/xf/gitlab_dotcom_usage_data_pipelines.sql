@@ -259,7 +259,7 @@
     "source_cte_name": "services_source",
     "user_column_name": "NULL",
     "key_to_parent_project": "project_id",
-    "primary_key": "service_id",
+    "primary_key": "integration_id",
     "stage_name": "create",
     "is_representative_of_stage": "False"
   },
