@@ -4202,6 +4202,12 @@ roles:
                     - mwawrzyniak_prep.*.*
                     - mwawrzyniak_prod.*.*
 
+    - mxiao:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - nbelokolodov:
         member_of:
             - analyst_growth
@@ -5497,6 +5503,11 @@ users:
         can_login: yes
         member_of:
             - mwawrzyniak
+
+     - mxiao:
+        can_login: yes
+        member_of:
+            - mxiao           
 
     - nbelokolodov:
         can_login: yes
