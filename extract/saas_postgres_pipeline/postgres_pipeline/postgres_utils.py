@@ -397,8 +397,8 @@ def get_upload_file_name(
     return os.path.join(prefix, filename).lower()
 
 
-def upload_snowflake(
-    target_engine, database_kwargs, export_type, initial_load_start_date
+def upload_snowflake_to_prefix(
+        target_engine, database_kwargs, export_type, initial_load_start_date, purge: bool = True
 ):
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
@@ -414,6 +414,7 @@ def upload_snowflake(
         target_engine,
         database_kwargs["target_table"],
         f"{prefix}/.*.parquet.gzip$",
+        purge,
     )
     logging.info(
         f"Finished COPY INTO from GCS to Snowflake table '{database_kwargs['target_table']}'"
@@ -440,7 +441,7 @@ def seed_and_upload_snowflake(
         target_engine,
     )
 
-    upload_snowflake(
+    upload_snowflake_to_prefix(
         target_engine, database_kwargs, export_type, initial_load_start_date
     )
 
@@ -511,13 +512,15 @@ def chunk_and_upload_metadata(
                     )
 
                     if export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
-                        upload_snowflake(
+                        # upload directly to snowflake if incremental
+                        upload_snowflake_to_prefix(
                             target_engine,
                             database_kwargs,
                             export_type,
                             initial_load_start_date,
                         )
                     else:
+                        # else need to create 'temp' table first
                         seed_and_upload_snowflake(
                             target_engine,
                             chunk_df,
@@ -542,7 +545,7 @@ def chunk_and_upload_metadata(
                     is_export_completed,
                     row_count,
                 )
-                # for loop should auto-terminate, but just to be safe
+                # for loop should auto-terminate, but to be safe, avoid table overwrite
                 if is_export_completed:
                     break
 
