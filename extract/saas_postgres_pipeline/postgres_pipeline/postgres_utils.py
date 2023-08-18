@@ -335,7 +335,7 @@ def get_prefix_template() -> str:
     Returns something like this:
     staging/backfill_data/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
     """
-    return "{staging_or_processed}/{export_type}/{table}/{initial_load_prefix}"
+    return "{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
 
 
 def get_initial_load_prefix(initial_load_start_date):
@@ -344,7 +344,7 @@ def get_initial_load_prefix(initial_load_start_date):
 
 
 def get_upload_file_name(
-    export_type: str,
+    load_by_id_export_type: str,
     table: str,
     initial_load_start_date: datetime,
     upload_date: datetime,
@@ -374,7 +374,7 @@ def get_upload_file_name(
     initial_load_prefix = get_initial_load_prefix(initial_load_start_date)
     prefix = prefix_template.format(
         staging_or_processed="staging",
-        export_type=export_type,
+        load_by_id_export_type=load_by_id_export_type,
         table=table,
         initial_load_prefix=initial_load_prefix,
     )
@@ -400,13 +400,13 @@ def get_upload_file_name(
 def upload_snowflake_to_prefix(
     target_engine,
     database_kwargs,
-    export_type,
+    load_by_id_export_type,
     initial_load_start_date,
     purge: bool = True,
 ):
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
-        export_type=export_type,
+        load_by_id_export_type=load_by_id_export_type,
         table=database_kwargs["source_table"],
         initial_load_prefix=get_initial_load_prefix(initial_load_start_date),
     )
@@ -429,7 +429,7 @@ def seed_and_upload_snowflake(
     target_engine,
     chunk_df,
     database_kwargs,
-    export_type,
+    load_by_id_export_type,
     advanced_metadata,
     initial_load_start_date,
 ):
@@ -446,7 +446,7 @@ def seed_and_upload_snowflake(
     )
 
     upload_snowflake_to_prefix(
-        target_engine, database_kwargs, export_type, initial_load_start_date
+        target_engine, database_kwargs, load_by_id_export_type, initial_load_start_date
     )
 
     # We do the swap here because snowflake engine instantiated here
@@ -467,7 +467,7 @@ def chunk_and_upload_metadata(
     max_source_id: int,
     initial_load_start_date: datetime,
     database_kwargs: Dict[Any, Any],
-    export_type: str,
+    load_by_id_export_type: str,
     advanced_metadata: bool = False,
 ) -> datetime:
     """
@@ -498,7 +498,7 @@ def chunk_and_upload_metadata(
                 initial_load_start_date = upload_date
 
             upload_file_name = get_upload_file_name(
-                export_type,
+                load_by_id_export_type,
                 database_kwargs["source_table"],
                 initial_load_start_date,
                 upload_date,
@@ -515,12 +515,12 @@ def chunk_and_upload_metadata(
                         os.environ.copy(), role="LOADER", schema="tap_postgres"
                     )
 
-                    if export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
+                    if load_by_id_export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
                         # upload directly to snowflake if incremental
                         upload_snowflake_to_prefix(
                             target_engine,
                             database_kwargs,
-                            export_type,
+                            load_by_id_export_type,
                             initial_load_start_date,
                         )
                     else:
@@ -529,7 +529,7 @@ def chunk_and_upload_metadata(
                             target_engine,
                             chunk_df,
                             database_kwargs,
-                            export_type,
+                            load_by_id_export_type,
                             advanced_metadata,
                             initial_load_start_date,
                         )
@@ -778,10 +778,10 @@ def get_prefix_template() -> str:
     Returns something like this:
     staging/backfill_data/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
     """
-    return "{staging_or_processed}/{export_type}/{table}/{initial_load_prefix}"
+    return "{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
 
 
-def remove_files_from_gcs(export_type: str, source_table: str):
+def remove_files_from_gcs(load_by_id_export_type: str, source_table: str):
     """
     Prior to a fresh backfill/delete, remove all previously
     backfilled files that haven't been processed downstream
@@ -790,7 +790,7 @@ def remove_files_from_gcs(export_type: str, source_table: str):
 
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
-        export_type=export_type,
+        load_by_id_export_type=load_by_id_export_type,
         table=source_table,
         initial_load_prefix="initial_load_start_",
     )

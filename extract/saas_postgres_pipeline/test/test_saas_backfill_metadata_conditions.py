@@ -218,7 +218,7 @@ class TestCheckBackfill:
 
         # Create a mock self.source_engine and metadata_engine objects
         metadata_engine = MagicMock(spec=Engine)
-        export_type = "backfill"
+        load_by_id_export_type = "backfill"
 
         mock_is_resume_export.return_value = False, None, 1
         mock_check_is_new_table_or_schema_addition.return_value = True
@@ -232,12 +232,12 @@ class TestCheckBackfill:
             self.target_engine,
             metadata_engine,
             self.test_metadata_backfill_table,
-            export_type,
+            load_by_id_export_type,
         )
 
         # Assert that remove_files_from_gcs was called with the correct arguments
         mock_remove_files_from_gcs.assert_called_once_with(
-            export_type, self.pipeline_table.source_table_name
+            load_by_id_export_type, self.pipeline_table.source_table_name
         )
         assert initial_load_start_date is None
         assert start_pk == 1
@@ -258,7 +258,7 @@ class TestCheckBackfill:
         """
 
         # Create a mock self.source_engine and metadata_engine objects
-        export_type = "backfill"
+        load_by_id_export_type = "backfill"
 
         mock_check_is_new_table_or_schema_addition.return_value = False
 
@@ -288,7 +288,7 @@ class TestCheckBackfill:
             self.target_engine,
             self.metadata_engine,
             self.test_metadata_backfill_table,
-            export_type,
+            load_by_id_export_type,
         )
 
         # Verify results
@@ -311,7 +311,7 @@ class TestCheckBackfill:
         Should backfill, but need to start from beginning
         """
 
-        export_type = "backfill"
+        load_by_id_export_type = "backfill"
         metadata = {
             "source_table": "some_table",
             "database_name": "some_db",
@@ -341,7 +341,7 @@ class TestCheckBackfill:
             self.target_engine,
             self.metadata_engine,
             self.test_metadata_backfill_table,
-            export_type,
+            load_by_id_export_type,
         )
 
         # Verify results
@@ -349,7 +349,7 @@ class TestCheckBackfill:
         assert initial_load_start_date is None
         assert start_pk == 1
         mock_remove_files_from_gcs.assert_called_once_with(
-            export_type, self.pipeline_table.source_table_name
+            load_by_id_export_type, self.pipeline_table.source_table_name
         )
 
     @patch("postgres_pipeline_table.check_is_new_table_or_schema_addition")
@@ -367,7 +367,7 @@ class TestCheckBackfill:
         Should backfill, but need to start from beginning
         """
 
-        export_type = "backfill"
+        load_by_id_export_type = "backfill"
         last_extracted_id = 10
         initial_load_start_date = datetime(2023, 2, 1)
         # Arrange metadata table
@@ -399,7 +399,7 @@ class TestCheckBackfill:
             self.target_engine,
             self.metadata_engine,
             self.test_metadata_backfill_table,
-            export_type,
+            load_by_id_export_type,
         )
 
         # Verify results
@@ -421,7 +421,7 @@ class TestCheckBackfill:
         - No new schema addition
         - resume_export is False (since is_export_completed=True)
         """
-        export_type = "backfill"
+        load_by_id_export_type = "backfill"
         # Update metdata table
         upload_date_less_than_24hr = datetime.utcnow() - timedelta(hours=23, minutes=40)
 
@@ -449,7 +449,7 @@ class TestCheckBackfill:
             self.target_engine,
             self.metadata_engine,
             self.test_metadata_backfill_table,
-            export_type,
+            load_by_id_export_type,
         )
 
         # Verify results

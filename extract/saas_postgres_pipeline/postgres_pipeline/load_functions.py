@@ -224,13 +224,13 @@ def load_ids(
     table_dict: Dict[Any, Any],
     initial_load_start_date: datetime.datetime,
     start_pk: int,
-    export_type,
+    load_by_id_export_type,
 ) -> None:
     """Load a query by chunks of IDs instead of all at once."""
 
     if (
         "_TEMP" != database_kwargs["target_table"][-5:]
-        and export_type != INCREMENTAL_LOAD_TYPE_BY_ID
+        and load_by_id_export_type != INCREMENTAL_LOAD_TYPE_BY_ID
     ):
         logging.info(
             f"Table {database_kwargs['source_table']} doesn't need a full sync."
@@ -269,7 +269,7 @@ def load_ids(
             max_pk,
             initial_load_start_date,
             database_kwargs,
-            export_type,
+            load_by_id_export_type,
         )
     return True
 

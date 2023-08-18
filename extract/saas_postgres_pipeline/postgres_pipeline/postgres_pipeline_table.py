@@ -114,7 +114,7 @@ class PostgresPipelineTable:
         metadata_engine: Engine,
         target_table: str,
         metadata_table: str,
-        export_type: str,
+        load_by_id_export_type: str,
         initial_load_start_date,
         start_pk,
     ) -> bool:
@@ -135,14 +135,14 @@ class PostgresPipelineTable:
             self.table_dict,
             initial_load_start_date,
             start_pk,
-            export_type,
+            load_by_id_export_type,
         )
         return loaded
 
     def do_incremental_backfill(
         self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine
     ) -> bool:
-        export_type = "backfill"
+        load_by_id_export_type = "backfill"
         (
             is_backfill_needed,
             initial_load_start_date,
@@ -152,7 +152,7 @@ class PostgresPipelineTable:
             target_engine,
             metadata_engine,
             BACKFILL_METADATA_TABLE,
-            export_type,
+            load_by_id_export_type,
         )
 
         if not self.is_incremental() or not is_backfill_needed:
@@ -166,7 +166,7 @@ class PostgresPipelineTable:
             metadata_engine,
             target_table,
             BACKFILL_METADATA_TABLE,
-            export_type,
+            load_by_id_export_type,
             initial_load_start_date,
             start_pk,
         )
@@ -174,7 +174,7 @@ class PostgresPipelineTable:
     def do_incremental_load_by_id(
         self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine
     ) -> bool:
-        export_type = self.incremental_type
+        load_by_id_export_type = self.incremental_type
         initial_load_start_date, start_pk = self.check_incremental_load_by_id_metadata(
             target_engine, metadata_engine, INCREMENTAL_METADATA_TABLE
         )
@@ -185,7 +185,7 @@ class PostgresPipelineTable:
             metadata_engine,
             target_table,
             INCREMENTAL_METADATA_TABLE,
-            export_type,
+            load_by_id_export_type,
             initial_load_start_date,
             start_pk,
         )
@@ -290,7 +290,7 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
         metadata_table: str,
-        export_type: str,
+        load_by_id_export_type: str,
     ):
         """
         There are 3 criteria that determine if a backfill is necessary:
@@ -325,7 +325,7 @@ class PostgresPipelineTable:
 
         # remove unprocessed files if backfill needed but not in middle of backfill
         if is_backfill_needed and initial_load_start_date is None:
-            remove_files_from_gcs(export_type, self.source_table_name)
+            remove_files_from_gcs(load_by_id_export_type, self.source_table_name)
 
         return is_backfill_needed, initial_load_start_date, start_pk
 
