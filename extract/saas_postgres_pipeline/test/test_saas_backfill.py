@@ -230,7 +230,7 @@ class TestCheckBackfill:
         # Create a mock source_engine and metadata_engine objects
         source_engine = MagicMock(spec=Engine)
         target_engine = MagicMock(spec=Engine)
-        export_type = 'backfill'
+        export_type = "backfill"
 
         mock_check_is_new_table_or_schema_addition.return_value = False
 
@@ -256,7 +256,11 @@ class TestCheckBackfill:
             initial_load_start_date,
             start_pk,
         ) = self.pipeline_table.check_backfill_metadata(
-            source_engine, target_engine, self.metadata_engine, self.test_metadata_table, export_type
+            source_engine,
+            target_engine,
+            self.metadata_engine,
+            self.test_metadata_table,
+            export_type,
         )
 
         # Verify results

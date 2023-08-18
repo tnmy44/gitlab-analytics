@@ -814,7 +814,7 @@ def get_min_or_max_id(
     int: The minimum or maximum ID value.
     """
     id_query = (
-        f"SELECT COALESCE({min_or_max}({primary_key}), 1) as {primary_key} FROM {table}"
+        f"SELECT COALESCE({min_or_max}({primary_key}), -1) as {primary_key} FROM {table}"
     )
     try:
         id_results = query_results_generator(id_query, engine)
