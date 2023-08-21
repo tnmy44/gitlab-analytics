@@ -96,7 +96,9 @@ instance_combined_metrics_ping = KubernetesPodOperator(
     dag=dag,
 )
 
-start_namespace = DummyOperator(task_id="start_saas-namespace-usage-ping", dag=dag)
+dummy_start_namespace = DummyOperator(
+    task_id="start_saas-namespace-usage-ping", dag=dag
+)
 
 
 def get_task_name(current_chunk: int, number_of_tasks: int) -> str:
@@ -104,7 +106,7 @@ def get_task_name(current_chunk: int, number_of_tasks: int) -> str:
     Generate task name
     """
 
-    return f"saas-namespace-usage-ping-chunk-{current_chunk}-{number_of_tasks}"
+    return f"saas-namespace-usage-ping-chunk-{current_chunk:02}-{number_of_tasks:02}"
 
 
 def generate_command(chunk_no: int, number_of_tasks: int):
@@ -150,4 +152,6 @@ def generate_task(current_chunk: int, number_of_tasks: int) -> KubernetesPodOper
 
 
 for i in range(1, NUMBER_OF_TASKS + 1):
-    start_namespace >> generate_task(current_chunk=i, number_of_tasks=NUMBER_OF_TASKS)
+    dummy_start_namespace >> generate_task(
+        current_chunk=i, number_of_tasks=NUMBER_OF_TASKS
+    )

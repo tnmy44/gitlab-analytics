@@ -198,7 +198,8 @@ def test_chunk_list(namespace_file, namespace_ping, test, expected):
     """
     namespace_ping.chunk_no = test[0]
     namespace_ping.number_of_tasks = test[1]
-    actual = namespace_ping.chunk_list(namespace_size=len(namespace_file))
+
+    actual = namespace_ping.chunk_list(namespace_size=582)
 
     assert actual == expected
 

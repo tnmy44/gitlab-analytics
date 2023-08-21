@@ -188,7 +188,7 @@ class InstanceNamespaceMetrics:
         info(f"......inserting ERROR record: {error_record}")
         return error_record
 
-    def upload_results(self, query_dict: dict, conn) -> None:
+    def prepare_and_upload_results(self, query_dict: dict, conn) -> None:
         """
         Execute query and return results.
         This should be done directly in Snowflake
@@ -223,9 +223,11 @@ class InstanceNamespaceMetrics:
         """
         Determine minimum and maximum position
         for slicing queries in chunks
+        min_position is inclusive
+        max_position is exclusive in determination of the chunk
         """
 
-        # in case it is backfilling, no chunks,
+        # in case it is back filling, no chunks,
         # everything goes in one pass
         if self.chunk_no == 0 or self.number_of_tasks == 0:
             return 0, namespace_size
@@ -250,7 +252,7 @@ class InstanceNamespaceMetrics:
             info(f"Skipping ping {metric_name} due to no namespace information.")
             return
 
-        self.upload_results(query_dict=query_dict, conn=connection)
+        self.prepare_and_upload_results(query_dict=query_dict, conn=connection)
 
         info(f"...End loading metrics: {metric_name}")
 
@@ -291,23 +293,26 @@ class InstanceNamespaceMetrics:
         info("<<<START PROCESSING>>>")
         info(f"number_of_tasks: {self.number_of_tasks}, chunk_no: {self.chunk_no}")
 
-        namespace_queries = self.get_meta_data_from_file(
-            file_name=self.utils.NAMESPACE_FILE
-        )
-
         if self.chunk_no != 0:
+
+            namespace_queries = self.get_meta_data_from_file(
+                file_name=self.utils.NAMESPACE_FILE
+            )
+
             start_slice, end_slice = self.chunk_list(
                 namespace_size=len(namespace_queries)
             )
             namespace_queries = namespace_queries[start_slice:end_slice]
 
-        info(f"Will process: {len(namespace_queries)} queries")
+            info(f"Will process: {len(namespace_queries)} queries")
 
-        self.calculate_namespace_metrics(
-            queries=namespace_queries, metrics_filter=metrics_filter
-        )
+            self.calculate_namespace_metrics(
+                queries=namespace_queries, metrics_filter=metrics_filter
+            )
 
-        info("<<<END2 PROCESSING>>>")
+            info("<<<END2 PROCESSING>>>")
+        else:
+            raise ValueError("Invalid error for chunk_no, should be greater than 0")
 
     def backfill(self):
         """
