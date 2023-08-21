@@ -144,7 +144,6 @@ models:
       - name: first_paid_plan_name
         description: Name of plan associated with first paid ultimate parent namespace subscription from customers_db_charges_xf. 
       - name: is_first_paid_plan_purchased_through_subscription_portal
-        description: 
       - name: days_since_namespace_creation_at_activation_event 
         description: Date difference in days between ultimate parent namespace creation and first team activation event. 
       - name: activation_event_array 
