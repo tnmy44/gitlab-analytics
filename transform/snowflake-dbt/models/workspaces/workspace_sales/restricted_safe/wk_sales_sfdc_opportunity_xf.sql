@@ -557,7 +557,7 @@ WITH edm_opty AS (
 
     -- 
     CASE
-        WHEN cycle_time_in_days BETWEEN 1 AND 29
+        WHEN cycle_time_in_days BETWEEN 0 AND 29
             THEN '[0,30)'
         WHEN cycle_time_in_days BETWEEN 30 AND 179
             THEN '[30,180)'
