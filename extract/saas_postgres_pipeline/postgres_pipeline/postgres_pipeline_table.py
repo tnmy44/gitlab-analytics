@@ -107,7 +107,7 @@ class PostgresPipelineTable:
             target_table,
         )
 
-    def __do_load_by_id(
+    def _do_load_by_id(
         self,
         source_engine: Engine,
         target_engine: Engine,
@@ -160,7 +160,7 @@ class PostgresPipelineTable:
             return False
 
         target_table = self.get_temp_target_table_name()
-        return self.__do_load_by_id(
+        return self._do_load_by_id(
             source_engine,
             target_engine,
             metadata_engine,
@@ -179,7 +179,7 @@ class PostgresPipelineTable:
             target_engine, metadata_engine, INCREMENTAL_METADATA_TABLE
         )
         target_table = self.get_target_table_name()
-        return self.__do_load_by_id(
+        return self._do_load_by_id(
             source_engine,
             target_engine,
             metadata_engine,
