@@ -811,3 +811,9 @@ Only team members who have had a job change, promotion, or hire event are includ
 This model contains data for all trial orders for each namespace from CDot trial histories and CDot orders that are being sourced from customers.gitlab.com.
 
 {% enddocs %}
+
+{% docs prep_order %}
+
+This table stores information about the subscription purchased by the customer plus some additional details used for syncing purposes with GitLab.com. The data is sourced from tap-postgres from the orders table from customers.gitlab.com.
+
+{% enddocs %}
