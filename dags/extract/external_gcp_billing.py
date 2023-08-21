@@ -76,7 +76,7 @@ default_args = {
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
     # Only has data from March 2018
-    "start_date": datetime(2018, 3, 27),
+    "start_date": datetime(2023, 8, 24),
 }
 
 dag = DAG(

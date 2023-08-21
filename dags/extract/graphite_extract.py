@@ -37,7 +37,7 @@ default_args = {
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
     # Want to extract the last year
-    "start_date": datetime(2023, 7, 2),
+    "start_date": datetime(2023, 8, 24),
 }
 
 dag = DAG(

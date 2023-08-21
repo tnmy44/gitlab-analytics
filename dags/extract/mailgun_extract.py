@@ -34,7 +34,7 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2023, 5, 31),
+    "start_date": datetime(2023, 8, 24),
 }
 
 dag = DAG(
