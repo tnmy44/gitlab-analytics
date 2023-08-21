@@ -36,7 +36,7 @@ The results of the queries are then uploaded into the `RAW.SAAS_USAGE_PING` sche
     
 The `instance queries` generate data about GitLab.com as a whole, while the `namespace queries` generate data about each namespace on GitLab.com.
 Data is stored in the table: 
-- `RAW.SAAS_USAGE_PING.INSTANCE_SQL_METRICS` - this data is generated results of `SQL` queries. 
+- `RAW.SAAS_USAGE_PING.INSTANCE_COMBINED_METRICS` - this data is generated results of `SQL` queries. 
     - Note: this is table is deprecated as of Nov 2022,  as only the `combined` metrics are persisted into Snowflake in the table `INSTANCE_COMBINED_METRICS`.
 - `RAW.SAAS_USAGE_PING.INSTANCE_SQL_ERROR` - this table contains `SQL` commands where error pops-up with the error description. If there is any record in this table, means some `SQL` query failed with an execution and the `Data team` will be alerted - via logs in `Airflow` and in [Trusted data framework (`TDF`)](https://about.gitlab.com/handbook/business-technology/data-team/platform/#tdf). 
 - `RAW.SAAS_USAGE_PING.GITLAB_DOTCOM_NAMESPACE` - namespace data is stored in this table 
@@ -62,7 +62,7 @@ One more kind of data is uploaded for the `service_ping` - data from `Redis` ins
 The main purpose of loading data from Redis is to ensure fine granulation of metrics.
 
 Data is stored in the table:
-- `RAW.SAAS_USAGE_PING.INSTANCE_REDIS_METRICS` - this data is generated results of `RESTful API` call
+- `RAW.SAAS_USAGE_PING.INSTANCE_COMBINED_METRICS` - this data is generated results of `RESTful API` call
     - Note: this is table is deprecated as of Nov 2022,  as only the `combined` metrics are persisted into Snowflake in the table `INSTANCE_COMBINED_METRICS`.
     
 ##### Graphical representation of the pipeline for `INSTANCE_REDIS_METRICS`:
