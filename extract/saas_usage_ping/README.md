@@ -131,7 +131,7 @@ Explanation for the metrics definition:
  * `time_window_query` - Do we use time window or the metrics is all-time metrics. Possible values are: `true` or `false`, with lowercase (Example: `false`) 
  * `level`: - level of granulation. Default value is `"namespace"` (as of now, this value is always `"namespace"`)
  
-The DAG in the Airflow for calculating `instance_namespace_metrics` is created to allow fast execution of queries. We use `30` tasks to execute queries in chunks. Each chunk contains approx. `20` queries. In case any of these task failed, only non-finished tasks should be re-run.
+The `DAG` in the Airflow [saas_usage_ping](https://airflow.gitlabdata.com/tree?dag_id=saas_usage_ping) for calculating `instance_namespace_metrics` is created to allow fast execution of queries. We use `30` tasks to execute queries in chunks. Each chunk contains approx. `20` queries. In case any of these tasks failed, only non-finished tasks should be re-run.
 
 
 ##### Namespace backfill
@@ -147,7 +147,7 @@ The example how variable `NAMESPACE_BACKFILL_VAR` should look like:
 }
 ```
 
-The `saas_usage_ping_backfill`  `DAG` will backfill data for the metrics where the following conditions are applied: 
+The [saas_usage_ping_backfill](https://airflow.gitlabdata.com/tree?dag_id=saas_usage_ping_backfill)  `DAG` will backfill data for the metrics where the following conditions are applied: 
 * For the defined period (`start_date` and `end_date` value from `NAMESPACE_BACKFILL_VAR` variable)
 * `"time_window_query": true` - `time_window_query` variable. This variable is stored in the `.json` file `usage_ping_namespace_queries.json` and predefined along with other metrics details. One example for namespace metrics definition is:
     ```json{
