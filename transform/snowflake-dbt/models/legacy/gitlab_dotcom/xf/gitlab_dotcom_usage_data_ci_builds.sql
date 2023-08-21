@@ -24,7 +24,7 @@
 {%- set event_ctes = [
   {
     "event_name": "ci_builds",
-    "source_table_name": "temp_gitlab_dotcom_ci_builds_filtered",
+    "source_table_name": "gitlab_dotcom_ci_builds",
     "user_column_name": "ci_build_user_id",
     "key_to_parent_project": "ci_build_project_id",
     "primary_key": "ci_build_id",

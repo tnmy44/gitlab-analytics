@@ -40,13 +40,6 @@ What you can't do with it ?
 
 {% enddocs %}
 
-{% docs gitlab_dotcom_elasticsearch_indexed_namespaces_current %}
-
-Only the most recent gitlab_dotcom elasticsearch_indexed_namespaces data.  
-Records that have been deleted in the source database have been filtered out.
-
-{% enddocs %}
-
 {% docs gitlab_dotcom_environments_xf %}
 
 This model anonymizes three fields: `environment_name`, `slug`, `external_url` based on the visibility of the projects the environments are associated to 
@@ -151,6 +144,7 @@ WHERE is_billable = TRUE
 
 {% enddocs %}
 
+
 {% docs gitlab_dotcom_monthly_stage_active_users %}
 
 For each month, this model shows for each event, the users and namespaces who perform this specific event, with 2 additional measures: the number of times this event is performed by a specific user in a specific namespace, and the number of days this event is performed (for example a specific user A has opened in a namespace 1, 15 issues in 10 days)
@@ -162,11 +156,12 @@ We don't use calendar month for this calculation but the last 28 days of the mon
 
 {% docs gitlab_dotcom_events_monthly_active_users%}
 
-For each day, this model counts the number of active users from the previous 28 days. The definiton of an active user is completing one or more audit events within the timeframe. This model includes the referenced date as part of the 28-day window. So for example, the window on January 31th would be from the start of January 4th to the end of January 31 (inclusive).  
+For each day, this model counts the number of active users from the previous 28 days. The definiton of an active user is completing one or more audit events within the timeframe. This model includes the referenced date as part of the 28-day window. So for example, the window on January 31th would be from the start of January 4th to the end of January 31 (inclusive).
 
 This model includes one row for every day, but MAU for a given month will typically be reported as the MAU on the **last day of the month**.
 
 {% enddocs %}
+
 
 {% docs gitlab_dotcom_merge_request_assignment_events %}
 
@@ -215,17 +210,6 @@ Includes all columns from the projects base model.
 Adds the count of members associated with the project.
 Adds a boolean column, `namespaces_plan_is_paid`, to provide extra context.
 Adds additional information about the associated namespace (name and path).
-
-{% enddocs %}
-
-
-{% docs gitlab_dotcom_retention_cohorts%}
-
-This table produces monthly retention rates by monthly signup cohort.
-
-The `cohorting` CTE establishes how long the user was active by comparing `created_at` with `last_activity_on` and marking this length of activity in months.
-
-The final result is determined by merging the `cohorting` table to itself when activity length = 0 so that we have the based size of the cohort, then take the rate from members active in each period of activity.
 
 {% enddocs %}
 
