@@ -1,3 +1,6 @@
+"""
+Test the functions in postgres_pipeline_table.py
+"""
 from datetime import datetime
 from unittest.mock import MagicMock, patch
 from sqlalchemy.engine.base import Engine
@@ -18,11 +21,15 @@ class TestPostgresPipelineTable:
         self.engine = MagicMock(spec=Engine)
 
     def test_get_target_table_name(self):
+        """check that get_target_name() matches its attribute"""
         actual_table_name = self.pipeline_table.get_target_table_name()
         expected_table_name = self.pipeline_table.target_table_name
         assert actual_table_name == expected_table_name
 
     def test_get_temp_target_table_name(self):
+        """
+        Test that get_temp_target_table_name() adds a TEMP to the table_name
+        """
         actual = self.pipeline_table.get_temp_target_table_name()
         expected = f"{self.pipeline_table.get_target_table_name()}_TEMP"
         assert actual == expected
@@ -79,7 +86,8 @@ class TestPostgresPipelineTable:
         mock_check_is_new_table_or_schema_addition,
         mock_swap_temp_table_on_schema_change,
     ):
-        """Test that on backfill,
+        """
+        Test that on backfill,
         check_is_new_table_or_schema_addition() is not called
         and swap_temp_table_on_schema_change() is not called
         """

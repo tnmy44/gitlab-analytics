@@ -406,6 +406,7 @@ def upload_gcs_to_snowflake(
     initial_load_start_date,
     purge: bool = True,
 ):
+    """Upload data from GCS bucket -> Snowflake"""
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
         load_by_id_export_type=load_by_id_export_type,
@@ -435,6 +436,10 @@ def seed_and_upload_snowflake(
     advanced_metadata,
     initial_load_start_date,
 ):
+    """
+    Seed (create a new table in Snowflake with correct schema)
+    and then upload the data from GCS -> Snowflake
+    """
     if "temp" not in database_kwargs["target_table"].lower():
         raise ValueError(
             f"Target table {database_kwargs['target_table']} is NOT a TEMP table, aborting upload to Snowflake"
@@ -600,6 +605,10 @@ def range_generator(
 def get_source_and_target_columns(
     raw_query, source_engine, target_engine, target_table
 ):
+    """
+    Using the respective query engines, retrieve source and target cols.
+    Used to check if the schema has changed
+    """
     # Get the columns from the current query
     query_stem = raw_query.lower().split("where")[0]
     source_query = "{0} limit 1"
@@ -647,6 +656,7 @@ def check_is_new_table_or_schema_addition(
 
 
 def drop_column_on_schema_removal(engine, table, columns_to_drop):
+    """Execute the drop function"""
     columns_to_drop_str = ", ".join(columns_to_drop)
     alter_query = f"ALTER TABLE {table} DROP COLUMN {columns_to_drop_str};"
     query_executor(engine, alter_query)
@@ -656,6 +666,11 @@ def drop_column_on_schema_removal(engine, table, columns_to_drop):
 def check_and_handle_schema_removal(
     raw_query: str, source_engine: Engine, target_engine: Engine, target_table: str
 ):
+    """
+    When manifest file has a column removed, drop the column from Snowflake
+    rather than re-backfilling the entire table
+    """
+
     source_columns, target_columns = get_source_and_target_columns(
         raw_query, source_engine, target_engine, target_table
     )

@@ -1,5 +1,6 @@
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
+from datetime import datetime
 
 from sqlalchemy.engine.base import Engine
 
@@ -118,6 +119,12 @@ class PostgresPipelineTable:
         initial_load_start_date,
         start_pk,
     ) -> bool:
+        """Extract by id rather than by date
+        Used always for backfills
+        Can be used for incremental extracts as well assuming:
+            1. insert-only table (as it cannot handle updates)
+            2. no updated_at column
+        """
         # dipose current engine, create new Snowflake engine before load
         target_engine.dispose()
         database_kwargs = {
@@ -174,6 +181,12 @@ class PostgresPipelineTable:
     def do_incremental_load_by_id(
         self, source_engine: Engine, target_engine: Engine, metadata_engine: Engine
     ) -> bool:
+        """
+        Load incrementally by PK id, rather than by date
+        Can be used for incremental extracts as well assuming:
+            1. insert-only table (as it cannot handle updates)
+            2. no updated_at column
+        """
         load_by_id_export_type = self.incremental_type
         initial_load_start_date, start_pk = self.check_incremental_load_by_id_metadata(
             target_engine, metadata_engine, INCREMENTAL_METADATA_TABLE
@@ -215,6 +228,13 @@ class PostgresPipelineTable:
         target_engine: Engine,
         metadata_engine: Engine,
     ) -> bool:
+        """
+        Handles the following:
+            1. Calls the correct do_load_* function
+            2. Checks if schema has changed (and passes it along)
+            3. Deletes any columns on manifest schema removal
+            4. Swaps any temp tables with real table
+        """
         load_types = {
             "incremental": self.do_incremental,
             "scd": self.do_scd,
@@ -291,7 +311,7 @@ class PostgresPipelineTable:
         metadata_engine: Engine,
         metadata_table: str,
         load_by_id_export_type: str,
-    ):
+    ) -> Tuple[bool, datetime, int]:
         """
         There are 3 criteria that determine if a backfill is necessary:
             1. In the middle of a backfill
@@ -341,7 +361,7 @@ class PostgresPipelineTable:
         Check metadata  to see if extract should start
         from previous load (i.e due to network failure),
 
-        Or start a new extract starting from
+        Or instead, start a new extract starting from
         the max PK in the target Snowflake table.
         """
         logging.info("Getting current max id of Snowflake table...")
