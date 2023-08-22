@@ -253,8 +253,6 @@ class TestCheckBackfill:
         """
         Check that no backfill is needed when
         the latest is_export_completed is True
-
-        Assumes that `test_if_new_table_backfill()` was already run
         """
 
         # Create a mock self.source_engine and metadata_engine objects

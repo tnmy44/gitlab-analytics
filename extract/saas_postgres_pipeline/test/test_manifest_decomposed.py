@@ -38,7 +38,7 @@ def test_remove_incremental_tables() -> None:
     from the el_gitlab_com_db_manifest file.
     return: None
     """
-    full_path = f"{abs_path}el_gitlab_com_db_manifest.yaml"
+    full_path = f"{abs_path}saas_el_gitlab_com_db_manifest.yaml"
     loaded_file = load_yaml_file(full_path)
     for table in TABLES_LIST:
         with pytest.raises(KeyError):
@@ -52,7 +52,7 @@ def test_add_scd_tables() -> None:
     el_gitlab_com_scd_db_manifest
     return: None
     """
-    full_path = f"{abs_path}el_gitlab_com_scd_db_manifest.yaml"
+    full_path = f"{abs_path}saas_el_gitlab_com_scd_db_manifest.yaml"
     loaded_file = load_yaml_file(full_path)
 
     for table in TABLES_LIST:
