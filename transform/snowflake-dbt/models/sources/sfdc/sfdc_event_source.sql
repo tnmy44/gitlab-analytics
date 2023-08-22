@@ -97,7 +97,7 @@ WITH source AS (
       -- metadata
       lastmodifiedbyid                       AS last_modified_id,
       lastmodifieddate                       AS last_modified_date,
-      systemmodstamp
+      systemmodstamp,
 
       isdeleted::BOOLEAN                     AS is_deleted
 
