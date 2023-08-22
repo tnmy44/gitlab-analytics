@@ -115,7 +115,7 @@
       IFF(projects_source.import_type='gitlab_project' AND projects_source.project_path='learn-gitlab',  
         TRUE, 
         FALSE)                                                       AS is_learn_gitlab,
-      ARRAYAGG(active_services.service_type)                         AS active_service_types_array,
+      ARRAYAGG(active_services.integration_type)                     AS active_service_types_array,
 
       IFNULL(COUNT(DISTINCT members_source.member_id), 0)            AS member_count
     FROM projects_source
