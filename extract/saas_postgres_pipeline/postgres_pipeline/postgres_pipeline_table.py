@@ -235,16 +235,11 @@ class PostgresPipelineTable:
             3. Deletes any columns on manifest schema removal
             4. Swaps any temp tables with real table
         """
-        load_types = {
-            "incremental": self.do_incremental,
-            "scd": self.do_scd,
-            "backfill": self.do_incremental_backfill,
-            "test": self.do_test,
-            "trusted_data": self.do_trusted_data_pgp,
-        }
 
         if load_type == "backfill":
-            return load_types[load_type](source_engine, target_engine, metadata_engine)
+            return self.do_incremental_backfill(
+                source_engine, target_engine, metadata_engine
+            )
 
         # Non-backfill section
         is_schema_addition = self.check_is_new_table_or_schema_addition(
@@ -254,12 +249,16 @@ class PostgresPipelineTable:
             self.check_and_handle_schema_removal(source_engine, target_engine)
 
         if load_type == "incremental":
-            loaded = load_types[load_type](
+            self.do_incremental(
                 source_engine, target_engine, metadata_engine, is_schema_addition
             )
-        # remaining load_types
         else:
-            loaded = load_types[load_type](
+            remaining_load_types = {
+                "scd": self.do_scd,
+                "test": self.do_test,
+                "trusted_data": self.do_trusted_data_pgp,
+            }
+            loaded = remaining_load_types[load_type](
                 source_engine, target_engine, is_schema_addition
             )
 
@@ -282,7 +281,7 @@ class PostgresPipelineTable:
 
     def check_and_handle_schema_removal(
         self, source_engine: Engine, target_engine: Engine
-    ) -> bool:
+    ):
         check_and_handle_schema_removal(
             self.query,
             source_engine,

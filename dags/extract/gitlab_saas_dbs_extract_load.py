@@ -1,8 +1,8 @@
 """ Gitlab.Com Extract and load DAG"""
 import os
-import string
 from tokenize import String
 from datetime import datetime, timedelta
+from typing import Dict, Any, Union
 import yaml
 
 from airflow import DAG
@@ -71,7 +71,7 @@ standard_secrets = [
 
 
 # Dictionary containing the configuration values for the various Postgres DBs
-config_dict = {
+config_dict: Dict[Any, Any] = {
     "el_customers_scd_db": {
         "cloudsql_instance_name": None,
         "dag_name": "saas_el_customers_scd",
@@ -206,7 +206,7 @@ config_dict = {
 }
 
 
-def get_task_pool(task_name) -> string:
+def get_task_pool(task_name) -> str:
     """Return airflow pool name"""
     return f"{task_name}-pool"
 
@@ -231,7 +231,7 @@ def use_cloudsql_proxy(dag_name, operation, instance_name):
     """
 
 
-def get_last_loaded(dag_name: String) -> string:
+def get_last_loaded(dag_name: String) -> Union[None, str]:
     """Pull from xcom value  last loaded timestamp for the table"""
     if dag_name == "el_gitlab_ops":
         return None

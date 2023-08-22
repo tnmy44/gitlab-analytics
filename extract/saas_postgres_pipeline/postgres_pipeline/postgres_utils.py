@@ -754,7 +754,7 @@ def query_backfill_status(
 
 def is_resume_export(
     metadata_engine: Engine, metadata_table: str, source_table: str
-) -> Tuple[bool, int, Optional[Any]]:
+) -> Tuple[bool, Optional[Any], int]:
     """
     Determine if export should be resumed, for either 'backfill or 'delete'
 
@@ -793,16 +793,6 @@ def is_resume_export(
                 initial_load_start_date = prev_initial_load_start_date
 
     return is_resume_export_needed, initial_load_start_date, start_pk
-
-
-def get_prefix_template() -> str:
-    """
-    Returns something like this:
-    staging/backfill_data/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
-    """
-    return (
-        "{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
-    )
 
 
 def remove_files_from_gcs(load_by_id_export_type: str, source_table: str):

@@ -211,7 +211,7 @@ def load_ids(
     initial_load_start_date: datetime.datetime,
     start_pk: int,
     load_by_id_export_type,
-) -> None:
+) -> bool:
     """Load a query by chunks of IDs instead of all at once."""
 
     if (
