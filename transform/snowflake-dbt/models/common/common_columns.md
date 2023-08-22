@@ -2297,3 +2297,15 @@ The date a snippet was created.
 The latest date a snippet was updated.
 
 {% enddocs %}
+
+{% docs dim_plan_id_at_creation %}
+
+The GitLab plan id of at the time of object creation.
+
+{% enddocs %}
+
+{% docs is_internal_epic %}
+
+Boolean flag set to True if the epic's namespace is identified as an internal GitLab namespace.
+
+{% enddocs %}

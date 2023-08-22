@@ -9,7 +9,7 @@ WITH prep_epic AS (
       group_id,
       ultimate_parent_namespace_id,
       created_date_id,
-      dim_plan_id,
+      dim_plan_id_at_creation,
       assignee_id,
 
       --METADATA
@@ -30,6 +30,7 @@ WITH prep_epic AS (
       relative_position,
       start_date_sourcing_epic_id,
       is_confidential,
+      is_internal_epic,
       state_name,
       epic_title_length,
       epic_description_length,
@@ -43,7 +44,7 @@ WITH prep_epic AS (
 {{ dbt_audit(
     cte_ref="prep_epic",
     created_by="@mpeychet_",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-06-22",
-    updated_date="2023-07-21"
+    updated_date="2023-08-22"
 ) }}

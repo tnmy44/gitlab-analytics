@@ -31,7 +31,7 @@
       resource_label_events.resource_label_event_id                         AS dim_issue_label_id,
       COALESCE(dim_issue.dim_project_id,
                 dim_merge_request.dim_project_id)                           AS dim_project_id,
-      COALESCE(dim_epic.dim_plan_id,
+      COALESCE(dim_epic.dim_plan_id_at_creation,
                 dim_issue.dim_plan_id,
                 dim_merge_request.dim_plan_id)                              AS dim_plan_id,
       COALESCE(dim_epic.group_id,
@@ -60,5 +60,5 @@
     created_by="@chrissharp",
     updated_by="@chrissharp",
     created_date="2022-03-14",
-    updated_date="2022-06-01"
+    updated_date="2022-08-22"
 ) }}
