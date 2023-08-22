@@ -91,7 +91,7 @@ tables:
       , company
       , company_size
       , salesforce_account_id
-      , billable
+      , NULL AS billable
       , confirmed_at
       , confirmation_sent_at
       , first_name
