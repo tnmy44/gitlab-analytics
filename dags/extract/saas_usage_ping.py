@@ -121,7 +121,9 @@ def generate_command(chunk_no: int, number_of_tasks: int):
     """
 
 
-def generate_namespace_task(current_chunk: int, number_of_tasks: int) -> KubernetesPodOperator:
+def generate_namespace_task(
+    current_chunk: int, number_of_tasks: int
+) -> KubernetesPodOperator:
     """
     Generate tasks for namespace
     """
