@@ -574,7 +574,7 @@ WITH edm_opty AS (
             THEN '[0,30)'
         WHEN cycle_time_in_days BETWEEN 30 AND 179
             THEN '[30,180)'
-        WHEN cycle_time_in_days BETWEEN 179 AND 364
+        WHEN cycle_time_in_days BETWEEN 180 AND 364
             THEN '[180,365)'
         WHEN cycle_time_in_days > 364
             THEN '[365+)'
@@ -586,7 +586,7 @@ WITH edm_opty AS (
         WHEN edm_opty.stage_name = '0-Pending Acceptance'
             THEN edm_opty.created_date
         WHEN edm_opty.stage_name = '1-Discovery'
-            THEN edm_opty.stage_1_discovery_fiscal_quarter_date
+            THEN edm_opty.stage_1_discovery_date
         WHEN edm_opty.stage_name = '2-Scoping'
             THEN edm_opty.stage_2_scoping_date
         WHEN edm_opty.stage_name = '3-Technical Evaluation'
@@ -622,7 +622,7 @@ WITH edm_opty AS (
             THEN '[0,30)'
         WHEN current_stage_age BETWEEN 30 AND 179
             THEN '[30,180)'
-        WHEN current_stage_age BETWEEN 179 AND 364
+        WHEN current_stage_age BETWEEN 180 AND 364
             THEN '[180,365)'
         WHEN current_stage_age > 364
             THEN '[365+)'
