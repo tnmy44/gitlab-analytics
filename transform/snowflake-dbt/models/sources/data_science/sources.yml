@@ -22,3 +22,4 @@ sources:
     - name: namespace_segmentation_scores
     - name: ptpf_scores
     - name: churn_forecasting_scores
+    - name: ptpl_scores

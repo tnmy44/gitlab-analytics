@@ -258,6 +258,10 @@ models:
       - name: ssp_channel
       - name: po_required
       - name: auto_pay
+      - name: billing_account_arr_cohort_month
+        description: First month the billing account has had ARR (Annual Recurrent Revenue).
+      - name: billing_account_arr_cohort_quarter
+        description: First fiscal quarter the billing account has had ARR (Annual Recurrent Revenue).
       - name: is_deleted
         description: The flag indicating if account has been deleted
       - name: batch
@@ -602,6 +606,39 @@ models:
 
       - name: days_in_month_count
         description: '{{ doc("date_days_in_month_count") }}'
+
+      - name: current_day_of_month
+        description: '{{ doc("current_day_of_month") }}'
+      
+      - name: current_day_of_fiscal_quarter
+        description: '{{ doc("current_day_of_fiscal_quarter") }}'
+      
+      - name: current_day_of_fiscal_year
+        description: '{{ doc("current_day_of_fiscal_year") }}'
+      
+      - name: is_fiscal_month_to_date
+        description: '{{ doc("is_fiscal_month_to_date") }}'
+      
+      - name: is_fiscal_quarter_to_date
+        description: '{{ doc("is_fiscal_quarter_to_date") }}'
+      
+      - name: is_fiscal_year_to_date
+        description: '{{ doc("is_fiscal_year_to_date") }}'
+      
+      - name: fiscal_days_ago
+        description: '{{ doc("fiscal_days_ago") }}'
+      
+      - name: fiscal_weeks_ago
+        description: '{{ doc("fiscal_weeks_ago") }}'
+      
+      - name: fiscal_months_ago
+        description: '{{ doc("fiscal_months_ago") }}'
+      
+      - name: fiscal_quarters_ago
+        description: '{{ doc("fiscal_quarters_ago") }}'
+
+      - name: fiscal_years_ago
+        description: '{{ doc("fiscal_years_ago") }}'
 
   - name: dim_dr_partner_engagement
     description: '{{ doc("dim_dr_partner_engagement") }}'
@@ -4583,6 +4620,14 @@ models:
       - name: zoominfo_account_phone
       - name: is_focus_partner
         description: A partner account on the focus partner list
+      - name: crm_account_arr_cohort_month
+        description: First month the CRM account has had ARR (Annual Recurrent Revenue).
+      - name: crm_account_arr_cohort_quarter
+        description: First fiscal quarter the CRM account has had ARR (Annual Recurrent Revenue).
+      - name: parent_account_arr_cohort_month
+        description: First month the ultimate parent CRM account has had ARR (Annual Recurrent Revenue).
+      - name: parent_account_arr_cohort_quarter
+        description: First fiscal quarter the ultimate parent CRM account has had ARR (Annual Recurrent Revenue).
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'

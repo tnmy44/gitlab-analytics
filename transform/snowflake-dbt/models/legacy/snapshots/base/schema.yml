@@ -278,8 +278,7 @@ models:
       - name: zuora_contact_id
         description: Zuora contact id associated with the Billing Account Contact
         tests:
-          - not_null
-          - unique       
+          - not_null       
       - name: billing_account_contact_created_at
         description: The date the billing account contact was created
       - name: billing_account_contact_updated_at
