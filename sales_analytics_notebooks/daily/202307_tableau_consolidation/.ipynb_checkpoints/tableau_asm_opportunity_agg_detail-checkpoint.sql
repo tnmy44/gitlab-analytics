@@ -9,11 +9,11 @@ report_date AS (
     SELECT
         fiscal_year                      AS current_fiscal_year,
         date_actual                      AS current_calendar_date,
-        fiscal_quarter_name_fy           AS current_fiscal_quarter_name,
+        current_fiscal_quarter_name_fy   AS current_fiscal_quarter_name,
         first_day_of_fiscal_quarter      AS current_fiscal_quarter_date,
         day_of_fiscal_quarter_normalised AS current_day_of_fiscal_quarter_normalized
     FROM date_details
-    WHERE date_actual = CURRENT_DATE
+    WHERE date_actual = DATEADD(DAY, -1, CURRENT_DATE)
 
 ),
 
@@ -24,17 +24,17 @@ sfdc_opportunity_xf AS (
         opty.*,
 
         CASE
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 3
-                THEN 'CQ'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 6
-                THEN 'CQ+1'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 9
-                THEN 'CQ+2'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 12
-                THEN 'CQ+3'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) >= 12
-                THEN 'CQ+4 >'
-        END                  AS pipeline_landing_quarter,
+            WHEN cycle_time_in_days BETWEEN 1 AND 29
+                THEN '[0,30)'
+            WHEN cycle_time_in_days BETWEEN 30 AND 179
+                THEN '[30,180)'
+            WHEN cycle_time_in_days BETWEEN 179 AND 364
+                THEN '[180,365)'
+            WHEN cycle_time_in_days > 364
+                THEN '[365+)'
+            ELSE 'Other'
+        END                  AS age_bin,
+
 
         calculated_deal_size AS deal_size_bin
 
@@ -48,6 +48,101 @@ sfdc_opportunity_xf AS (
         --AND opty.key_bu_subbu_division NOT LIKE '%other%'
         AND opty.is_jihu_account = 0
         --AND opty.net_arr != 0
+
+),
+
+detail AS (
+    SELECT
+
+
+        -------
+        -------
+        -- DIMENSIONS
+
+        owner_id,
+        opportunity_owner,
+
+        account_id,
+        account_name,
+
+        report_opportunity_user_business_unit,
+        report_opportunity_user_sub_business_unit,
+        report_opportunity_user_division,
+        report_opportunity_user_asm,
+        report_opportunity_user_role_type,
+
+        deal_size_bin,
+        age_bin,
+        partner_category,
+        sales_qualified_source,
+        stage_name,
+        order_type_stamped,
+        deal_group,
+        sales_type,
+        forecast_category_name,
+        product_category_tier,
+        product_category_deployment,
+
+        parent_crm_account_upa_country_name,
+
+        is_web_portal_purchase,
+        COALESCE (is_open = 1, FALSE) AS is_open,
+        is_stage_1_plus,
+        is_stage_3_plus,
+        fpa_master_bookings_flag,
+
+        -----------------------------------------------
+        -- Dimensions for Detail
+
+        is_eligible_created_pipeline_flag,
+        opportunity_id,
+        opportunity_name,
+
+        -----------------------------------------------
+        -- Date dimensions Detail
+        close_date,
+        created_date,
+        pipeline_created_date,
+
+        -----------------------------------------------
+        -- Date dimensions Aggregated
+        NULL                          AS report_date,
+
+        -----------------------------------------------
+        -- Measures for Detail / Aggregated
+
+        net_arr,
+        booked_net_arr,
+        open_1plus_net_arr,
+
+        calculated_deal_count         AS deal_count,
+        booked_deal_count,
+        cycle_time_in_days            AS age_in_days,
+
+        total_professional_services_value,
+        total_book_professional_services_value,
+        total_lost_professional_services_value,
+        total_open_professional_services_value,
+
+        -----------------------------------------------
+        -- Measures for Aggregated
+        NULL                          AS prev_quarter_booked_net_arr,
+        NULL                          AS prev_quarter_booked_deal_count,
+        NULL                          AS prev_quarter_booked_professional_services,
+        NULL                          AS prev_year_booked_net_arr,
+        NULL                          AS prev_year_booked_deal_count,
+        NULL                          AS prev_year_booked_professional_services
+
+        -----------------------------------------------
+        --current_fiscal_year,
+        --current_calendar_date,
+        --current_fiscal_quarter_name,
+        --current_fiscal_quarter_date,
+        --current_day_of_fiscal_quarter_normalized
+
+    FROM sfdc_opportunity_xf
+    WHERE close_fiscal_year >= current_fiscal_year - 1
+
 
 ),
 
@@ -81,9 +176,6 @@ aggregated_base AS (
         forecast_category_name,
         product_category_tier,
         product_category_deployment,
-        industry,
-        lam_dev_count_bin,
-        pipeline_landing_quarter,
 
         parent_crm_account_upa_country_name,
 
@@ -114,11 +206,11 @@ aggregated_base AS (
         SUM(total_open_professional_services_value) AS total_open_professional_services_value
 
     FROM sfdc_opportunity_xf
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27
 
 ),
 
-eligible_report_dates AS (
+b AS (
     SELECT DISTINCT first_day_of_fiscal_quarter AS report_date
     FROM date_details
     CROSS JOIN report_date
@@ -126,7 +218,6 @@ eligible_report_dates AS (
         date_details.fiscal_year >= report_date.current_fiscal_year - 1
         AND date_details.fiscal_year <= report_date.current_fiscal_year + 1
 ),
-
 base_key AS (
     SELECT DISTINCT
         a.owner_id,
@@ -152,9 +243,6 @@ base_key AS (
         a.forecast_category_name,
         a.product_category_tier,
         a.product_category_deployment,
-        a.industry,
-        a.lam_dev_count_bin,
-        a.pipeline_landing_quarter,
 
         a.parent_crm_account_upa_country_name,
 
@@ -168,7 +256,7 @@ base_key AS (
         -- Date dimensions
         b.report_date
     FROM aggregated_base AS a
-    CROSS JOIN eligible_report_dates AS b
+    CROSS JOIN b
     WHERE a.net_arr != 0
 
 ),
@@ -199,9 +287,6 @@ aggregated_final AS (
         base_key.forecast_category_name,
         base_key.product_category_tier,
         base_key.product_category_deployment,
-        base_key.industry,
-        base_key.lam_dev_count_bin,
-        base_key.pipeline_landing_quarter,
 
         base_key.parent_crm_account_upa_country_name,
 
@@ -212,8 +297,17 @@ aggregated_final AS (
         base_key.fpa_master_bookings_flag,
 
         -----------------------------------------------
+        -- Dimensions for Detail
+
+        NULL                                                    AS is_eligible_created_pipeline_flag,
+        NULL                                                    AS opportunity_id,
+        NULL                                                    AS opportunity_name,
+
+        -----------------------------------------------
         -- Date dimensions Detail
         base_key.report_date                                    AS close_date,
+        NULL                                                    AS created_date,
+        NULL                                                    AS pipeline_created_date,
 
         -----------------------------------------------
         -- Date dimensions
@@ -269,9 +363,6 @@ aggregated_final AS (
             AND base_key.is_web_portal_purchase = aggregated_base.is_web_portal_purchase
             AND base_key.fpa_master_bookings_flag = aggregated_base.fpa_master_bookings_flag
             AND base_key.report_date = aggregated_base.report_date
-            AND base_key.industry = aggregated_base.industry
-            AND base_key.lam_dev_count_bin = aggregated_base.lam_dev_count_bin
-            AND base_key.pipeline_landing_quarter = aggregated_base.pipeline_landing_quarter
     LEFT JOIN aggregated_base AS previous_quarter
         ON
             base_key.owner_id = previous_quarter.owner_id
@@ -295,9 +386,6 @@ aggregated_final AS (
             AND base_key.is_web_portal_purchase = previous_quarter.is_web_portal_purchase
             AND base_key.fpa_master_bookings_flag = previous_quarter.fpa_master_bookings_flag
             AND base_key.report_date = DATEADD(MONTH, 3, previous_quarter.report_date)
-            AND base_key.industry = previous_quarter.industry
-            AND base_key.lam_dev_count_bin = previous_quarter.lam_dev_count_bin
-            AND base_key.pipeline_landing_quarter = previous_quarter.pipeline_landing_quarter
     LEFT JOIN aggregated_base AS previous_year
         ON
             base_key.owner_id = previous_year.owner_id
@@ -321,9 +409,20 @@ aggregated_final AS (
             AND base_key.is_web_portal_purchase = previous_year.is_web_portal_purchase
             AND base_key.fpa_master_bookings_flag = previous_year.fpa_master_bookings_flag
             AND base_key.report_date = DATEADD(MONTH, 12, previous_year.report_date)
-            AND base_key.industry = previous_year.industry
-            AND base_key.lam_dev_count_bin = previous_year.lam_dev_count_bin
-            AND base_key.pipeline_landing_quarter = previous_year.pipeline_landing_quarter
+
+),
+
+consolidated AS (
+
+    SELECT
+        'opportunity detail' AS record_type,
+        detail.*
+    FROM detail
+    UNION
+    SELECT
+        'net arr aggregated' AS record_type,
+        aggregated_final.*
+    FROM aggregated_final
 
 ),
 
@@ -331,34 +430,19 @@ final AS (
 
     SELECT
         final.*,
+        COALESCE (close_date >= current_fiscal_quarter_date
+        AND close_date <= DATEADD(MONTH, 15, current_fiscal_quarter_date), FALSE)  AS is_open_pipeline_range_flag,
+        COALESCE (close_date <= current_fiscal_quarter_date
+        AND close_date >= DATEADD(MONTH, -15, current_fiscal_quarter_date), FALSE) AS is_bookings_range_flag,
 
-        COALESCE(final.close_date = current_fiscal_quarter_date, FALSE)                    AS is_cfq_flag,
+        COALESCE (is_open = TRUE
+        AND is_stage_1_plus = 1, FALSE)                                            AS is_open_stage_1_plus,
 
-        COALESCE(final.close_date = DATEADD(MONTH, 3, current_fiscal_quarter_date), FALSE) AS is_cfq_plus_1_flag,
+        COALESCE (is_open = TRUE
+        AND is_stage_3_plus = 1, FALSE)                                            AS is_open_stage_3_plus,
 
-        COALESCE(final.close_date = DATEADD(MONTH, 6, current_fiscal_quarter_date), FALSE) AS is_cfq_plus_2_flag,
-
-        COALESCE(
-            close_date >= current_fiscal_quarter_date
-            AND close_date <= DATEADD(MONTH, 15, current_fiscal_quarter_date), FALSE
-        )                                                                                  AS is_open_pipeline_range_flag,
-        COALESCE(
-            close_date <= current_fiscal_quarter_date
-            AND close_date >= DATEADD(MONTH, -15, current_fiscal_quarter_date), FALSE
-        )                                                                                  AS is_bookings_range_flag,
-
-        COALESCE(
-            is_open = TRUE
-            AND is_stage_1_plus = 1, FALSE
-        )                                                                                  AS is_open_stage_1_plus,
-
-        COALESCE(
-            is_open = TRUE
-            AND is_stage_3_plus = 1, FALSE
-        )                                                                                  AS is_open_stage_3_plus,
-
-        fiscal_year                                                                        AS close_fiscal_year,
-        fiscal_quarter_name_fy                                                             AS close_fiscal_quarter_name,
+        fiscal_year                                                                AS close_fiscal_year,
+        fiscal_quarter_name_fy                                                     AS close_fiscal_quarter_name,
 
         LOWER(
             CONCAT(
@@ -369,15 +453,15 @@ final AS (
                 '_', sales_qualified_source,
                 '_', deal_group
             )
-        )                                                                                  AS key_bu_subbu_division_asm_sqs_ot,
+        )                                                                          AS key_bu_subbu_division_asm_sqs_ot,
 
         LOWER(
             CONCAT(
                 report_opportunity_user_business_unit,
                 '_', report_opportunity_user_sub_business_unit
             )
-        )                                                                                  AS key_bu_subbu
-    FROM aggregated_final AS final
+        )                                                                          AS key_bu_subbu
+    FROM consolidated AS final
     CROSS JOIN report_date
     LEFT JOIN date_details AS close_date
         ON close_date.date_actual = final.close_date
@@ -394,3 +478,19 @@ final AS (
 
 SELECT *
 FROM final
+
+
+/*
+SELECT close_fiscal_year,
+       --close_fiscal_quarter_name,
+       SUM(booked_net_arr),
+       SUM(prev_quarter_booked_net_arr),
+       SUM(prev_year_booked_net_arr)
+FROM final
+where close_fiscal_year IN (2023,2024)
+and record_type = 'net arr aggregated'
+--and record_type = 'opportunity detail'
+GROUP BY 1--,2
+order by 1,2
+
+ */

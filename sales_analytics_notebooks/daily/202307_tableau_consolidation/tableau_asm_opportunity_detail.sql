@@ -23,6 +23,19 @@ sfdc_opportunity_xf AS (
         report_date.*,
         opty.*,
 
+        CASE
+            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 3
+                THEN 'CQ'
+            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 6
+                THEN 'CQ+1'
+            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 9
+                THEN 'CQ+2'
+            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 12
+                THEN 'CQ+3'
+            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) >= 12
+                THEN 'CQ+4 >'
+        END                  AS pipeline_landing_quarter,
+
         calculated_deal_size AS deal_size_bin
 
     FROM prod.restricted_safe_workspace_sales.sfdc_opportunity_xf AS opty
@@ -69,6 +82,8 @@ detail AS (
         product_category_tier,
         product_category_deployment,
         industry,
+        lam_dev_count_bin,
+        pipeline_landing_quarter,
 
         parent_crm_account_upa_country_name,
 
@@ -101,17 +116,24 @@ detail AS (
         -- Measures for Detail / Aggregated
 
         net_arr,
-        booked_net_arr,
         open_1plus_net_arr,
+        booked_net_arr,
+        booked_churned_contraction_net_arr,
 
         calculated_deal_count        AS deal_count,
         booked_deal_count,
+        booked_churned_contraction_deal_count,
         cycle_time_in_days           AS age_in_days,
+
+
 
         total_professional_services_value,
         total_book_professional_services_value,
         total_lost_professional_services_value,
-        total_open_professional_services_value
+        total_open_professional_services_value,
+
+        lam_dev_count
+
 
 
 

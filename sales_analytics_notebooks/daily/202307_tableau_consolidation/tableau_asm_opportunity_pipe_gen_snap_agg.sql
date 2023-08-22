@@ -234,13 +234,71 @@ snap_aggregated AS (
 
 aggregated AS (
 
-    SELECT *
-    FROM snap_aggregated
-    UNION
-    SELECT *
-    FROM opty_aggregated
+SELECT *
+   FROM snap_aggregated
+   UNION
+   SELECT *
+   FROM opty_aggregated
 
-),
+), eligible_report_dates AS (
+
+    SELECT DISTINCT first_day_of_fiscal_quarter AS report_date
+    FROM date_details
+    CROSS JOIN current_quarter_date
+    WHERE
+        date_details.fiscal_year >= current_quarter_date.current_fiscal_year - 1
+        AND date_details.fiscal_year <= current_quarter_date.current_fiscal_year + 1
+
+), base_keys AS (
+
+        -------
+        -------
+        -- DIMENSIONS
+
+        owner_id,
+        opportunity_owner,
+
+        account_id,
+        account_name,
+
+        report_opportunity_user_business_unit,
+        report_opportunity_user_sub_business_unit,
+        report_opportunity_user_division,
+        report_opportunity_user_asm,
+        report_opportunity_user_role_type,
+
+        deal_size_bin,
+        age_bin,
+        partner_category,
+        sales_qualified_source,
+        stage_name,
+        order_type_stamped,
+        deal_group,
+        sales_type,
+        forecast_category_name,
+        product_category_tier,
+        product_category_deployment,
+        industry,
+
+        parent_crm_account_upa_country_name,
+
+        is_web_portal_purchase,
+        is_open,
+        is_eligible_open_pipeline_flag,
+        is_stage_1_plus,
+        is_stage_3_plus,
+        fpa_master_bookings_flag,
+        pipeline_landing_quarter,
+
+        -----------------------------------------------
+        snapshot_fiscal_quarter_date         AS snapshot_date,
+        pipeline_created_fiscal_quarter_date AS pipeline_created_date,
+
+    FROM aggregated
+
+)
+
+
 
 final AS (
 

@@ -67,6 +67,7 @@ aggregated_base AS (
         product_category_tier,
         product_category_deployment,
         industry,
+        lam_dev_count_bin,
 
         parent_crm_account_upa_country_name,
 
@@ -112,7 +113,7 @@ aggregated_base AS (
     WHERE
         pipeline_created_fiscal_quarter_date IS NOT NULL
         AND is_eligible_created_pipeline_flag = 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
 ),
 
 eligible_dates AS (
@@ -150,6 +151,7 @@ base_key AS (
         a.product_category_tier,
         a.product_category_deployment,
         a.industry,
+        a.lam_dev_count_bin,
         a.pipeline_landing_quarter,
 
         a.parent_crm_account_upa_country_name,
@@ -196,6 +198,7 @@ consolidated AS (
         base_key.product_category_tier,
         base_key.product_category_deployment,
         base_key.industry,
+        base_key.lam_dev_count_bin,
         base_key.pipeline_landing_quarter,
 
         base_key.parent_crm_account_upa_country_name,
@@ -253,6 +256,7 @@ consolidated AS (
             AND base_key.report_date = aggregated_base.pipeline_created_fiscal_quarter_date
             AND base_key.industry = aggregated_base.industry
             AND base_key.pipeline_landing_quarter = aggregated_base.pipeline_landing_quarter
+            AND base_key.lam_dev_count_bin = aggregated_base.lam_dev_count_bin
     LEFT JOIN aggregated_base AS previous_quarter
         ON
             base_key.owner_id = previous_quarter.owner_id
@@ -278,6 +282,7 @@ consolidated AS (
             AND base_key.report_date = DATEADD(MONTH, 3, previous_quarter.pipeline_created_fiscal_quarter_date)
             AND base_key.industry = previous_quarter.industry
             AND base_key.pipeline_landing_quarter = previous_quarter.pipeline_landing_quarter
+            AND base_key.lam_dev_count_bin = previous_quarter.lam_dev_count_bin
     LEFT JOIN aggregated_base AS previous_year
         ON
             base_key.owner_id = previous_year.owner_id
@@ -303,6 +308,7 @@ consolidated AS (
             AND base_key.report_date = DATEADD(MONTH, 12, previous_year.pipeline_created_fiscal_quarter_date)
             AND base_key.industry = previous_year.industry
             AND base_key.pipeline_landing_quarter = previous_year.pipeline_landing_quarter
+            AND base_key.lam_dev_count_bin = previous_year.lam_dev_count_bin
 
 ),
 
