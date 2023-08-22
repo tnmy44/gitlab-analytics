@@ -578,7 +578,7 @@ WITH edm_opty AS (
             THEN '[180,365)'
         WHEN cycle_time_in_days > 364
             THEN '[365+)'
-        ELSE 'Other'
+        ELSE 'N/A'
     END                  AS age_bin,
 
     -- age in stage
@@ -616,6 +616,18 @@ WITH edm_opty AS (
             THEN DATEDIFF(DAY,current_stage_start_date,close_date)
         ELSE NULL
     END                                 AS current_stage_age,
+
+    CASE
+        WHEN current_stage_age BETWEEN 0 AND 29
+            THEN '[0,30)'
+        WHEN current_stage_age BETWEEN 30 AND 179
+            THEN '[30,180)'
+        WHEN current_stage_age BETWEEN 179 AND 364
+            THEN '[180,365)'
+        WHEN current_stage_age > 364
+            THEN '[365+)'
+        ELSE 'N/A'
+    END                  AS current_stage_age_bin,
 
     -- demographics fields
     edm_opty.parent_crm_account_upa_country,
