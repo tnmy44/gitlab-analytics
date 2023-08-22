@@ -507,6 +507,19 @@ WITH edm_opty AS (
         ELSE '4. Closed'
     END                     AS pipeline_category,
 
+    CASE
+        WHEN DATEDIFF(MONTH, edm_opty.pipeline_created_fiscal_quarter_date, edm_opty.close_fiscal_quarter_date) < 3
+            THEN 'CQ'
+        WHEN DATEDIFF(MONTH, edm_opty.pipeline_created_fiscal_quarter_date, edm_opty.close_fiscal_quarter_date) < 6
+            THEN 'CQ+1'
+        WHEN DATEDIFF(MONTH, edm_opty.pipeline_created_fiscal_quarter_date, edm_opty.close_fiscal_quarter_date) < 9
+            THEN 'CQ+2'
+        WHEN DATEDIFF(MONTH, edm_opty.pipeline_created_fiscal_quarter_date, edm_opty.close_fiscal_quarter_date) < 12
+            THEN 'CQ+3'
+        WHEN DATEDIFF(MONTH, edm_opty.pipeline_created_fiscal_quarter_date, edm_opty.close_fiscal_quarter_date) >= 12
+            THEN 'CQ+4 >'
+    END                                         AS pipeline_landing_quarter,
+
     ---------------------------------------------
     ---------------------------------------------
 
@@ -567,6 +580,42 @@ WITH edm_opty AS (
             THEN '[365+)'
         ELSE 'Other'
     END                  AS age_bin,
+
+    -- age in stage
+    CASE
+        WHEN edm_opty.stage_name = '0-Pending Acceptance'
+            THEN edm_opty.created_date
+        WHEN edm_opty.stage_name = '1-Discovery'
+            THEN edm_opty.stage_1_discovery_fiscal_quarter_date
+        WHEN edm_opty.stage_name = '2-Scoping'
+            THEN edm_opty.stage_2_scoping_date
+        WHEN edm_opty.stage_name = '3-Technical Evaluation'
+            THEN edm_opty.stage_3_technical_evaluation_date
+        WHEN edm_opty.stage_name = '4-Proposal'
+            THEN edm_opty.stage_4_proposal_date
+        WHEN edm_opty.stage_name = '5-Negotiating'
+            THEN edm_opty.stage_5_negotiating_date
+        WHEN edm_opty.stage_name = '6-Awaiting Signature'
+            THEN edm_opty.stage_6_awaiting_signature_date_date
+        WHEN edm_opty.stage_name = '7-Closing'
+            THEN edm_opty.close_date
+        WHEN edm_opty.stage_name = '8-Closed Lost'
+            THEN edm_opty.close_date
+        WHEN edm_opty.stage_name = '9-Unqualified'
+            THEN edm_opty.close_date
+        WHEN edm_opty.stage_name = '10-Duplicate'
+            THEN edm_opty.close_date
+        WHEN edm_opty.stage_name = 'Closed Won'
+            THEN edm_opty.close_date
+    END                                 AS current_stage_start_date,
+
+    CASE 
+        WHEN is_open = 1 AND current_stage_start_date < CURRENT_DATE()
+            THEN DATEDIFF(DAY,current_stage_start_date,CURRENT_DATE())
+        WHEN current_stage_start_date < close_date
+            THEN DATEDIFF(DAY,current_stage_start_date,close_date)
+        ELSE NULL
+    END                                 AS current_stage_age,
 
     -- demographics fields
     edm_opty.parent_crm_account_upa_country,
