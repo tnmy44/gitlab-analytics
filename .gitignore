@@ -32,3 +32,4 @@ config.json
 /transform/safe_models.json
 .env
 snowsql_rt.log_bootstrap
+!test_iter_csv.csv

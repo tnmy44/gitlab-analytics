@@ -335,7 +335,9 @@ def get_prefix_template() -> str:
     Returns something like this:
     staging/backfill_data/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
     """
-    return "{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
+    return (
+        "{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
+    )
 
 
 def get_initial_load_prefix(initial_load_start_date):
@@ -397,7 +399,7 @@ def get_upload_file_name(
     return os.path.join(prefix, filename).lower()
 
 
-def upload_snowflake_to_prefix(
+def upload_gcs_to_snowflake(
     target_engine,
     database_kwargs,
     load_by_id_export_type,
@@ -433,6 +435,11 @@ def seed_and_upload_snowflake(
     advanced_metadata,
     initial_load_start_date,
 ):
+    if "temp" not in database_kwargs["target_table"].lower():
+        raise ValueError(
+            f"Target table {database_kwargs['target_table']} is NOT a TEMP table, aborting upload to Snowflake"
+        )
+
     schema_types = transform_source_types_to_snowflake_types(
         chunk_df,
         database_kwargs["source_table"],
@@ -445,7 +452,7 @@ def seed_and_upload_snowflake(
         target_engine,
     )
 
-    upload_snowflake_to_prefix(
+    upload_gcs_to_snowflake(
         target_engine, database_kwargs, load_by_id_export_type, initial_load_start_date
     )
 
@@ -517,7 +524,7 @@ def chunk_and_upload_metadata(
 
                     if load_by_id_export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
                         # upload directly to snowflake if incremental
-                        upload_snowflake_to_prefix(
+                        upload_gcs_to_snowflake(
                             target_engine,
                             database_kwargs,
                             load_by_id_export_type,
@@ -778,7 +785,9 @@ def get_prefix_template() -> str:
     Returns something like this:
     staging/backfill_data/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
     """
-    return "{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
+    return (
+        "{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
+    )
 
 
 def remove_files_from_gcs(load_by_id_export_type: str, source_table: str):
