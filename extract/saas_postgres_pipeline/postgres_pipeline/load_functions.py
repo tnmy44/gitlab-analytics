@@ -192,20 +192,6 @@ def load_scd(
     logging.info(f"Processing table: {source_table_name}")
     query = f"{raw_query} {additional_filter}"
 
-    # TODO: should we delete this section, we don't use 'append_only'
-    if is_append_only:
-        load_ids(
-            additional_filter,
-            table_dict["export_table_primary_key"],
-            raw_query,
-            source_engine,
-            source_table_name,
-            table_name,
-            target_engine,
-            backfill=backfill,
-        )
-        return True
-
     logging.info(query)
     chunk_and_upload(
         query,
