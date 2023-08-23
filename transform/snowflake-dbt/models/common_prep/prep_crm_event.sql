@@ -13,7 +13,6 @@ WITH source AS (
       source.event_id                                               AS dim_crm_event_pk,
       source.account_id                                             AS dim_crm_account_id,
       source.owner_id                                               AS dim_crm_user_id,
-      source.booked_by_employee_number,
       source.lead_or_contact_id,
       source.related_account_name,
       source.related_lead_id,
