@@ -10,7 +10,7 @@ WITH source AS (
 
     --keys
       {{ dbt_utils.surrogate_key(['source.event_id']) }}            AS dim_crm_event_sk,
-      source.task_id                                                AS dim_crm_event_pk,
+      source.event_id                                               AS dim_crm_event_pk,
       source.account_id                                             AS dim_crm_account_id,
       source.owner_id                                               AS dim_crm_user_id,
       source.booked_by_employee_number,
