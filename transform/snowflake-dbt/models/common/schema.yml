@@ -2706,11 +2706,10 @@ models:
           - not_null
           - unique
       - name: dim_project_id
-      - name: dim_plan_id
-        tests:
-          - not_null
       - name: dim_plan_id_at_creation
         description: '{{ doc("dim_plan_id_at_creation") }}'
+        tests:
+          - not_null
       - name: is_internal_epic
         description: '{{ doc("is_internal_epic") }}'
 
