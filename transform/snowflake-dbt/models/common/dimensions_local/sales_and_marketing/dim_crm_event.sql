@@ -21,14 +21,9 @@ ITH prep_crm_event AS (
         prep_crm_task.event_type,
         prep_crm_task.event_sub_type,
         prep_crm_task.event_disposition,
-        prep_crm_task.attributed_active_sequence,
-        prep_crm_task.call_recording,
         prep_crm_task.event_description, 
         prep_crm_task.duration_time_in_minutes, 
         prep_crm_task.event_subtype,
-        prep_crm_task.meeting_source, 
-        prep_crm_task.persona_functions,
-        prep_crm_task.persona_levels,
         prep_crm_task.booked_by_employee_number,
         prep_crm_task.sa_activity_type,
         prep_crm_task.event_show_as,
@@ -86,7 +81,7 @@ ITH prep_crm_event AS (
       -- metadata
         prep_crm_task.last_modified_id,
         prep_crm_task.last_modified_date,
-        prep_crm_task.systemmodstamp,
+        prep_crm_task.systemmodstamp
 
     FROM prep_crm_event
 
@@ -97,5 +92,5 @@ ITH prep_crm_event AS (
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-08-22"
+    updated_date="2023-08-23"
 ) }}
