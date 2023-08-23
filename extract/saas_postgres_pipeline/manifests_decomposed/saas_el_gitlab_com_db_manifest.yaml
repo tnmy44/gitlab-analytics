@@ -27,33 +27,33 @@ tables:
       , commit_author_id
       , committer_id
       FROM merge_request_diff_commits
-  #alert_management_alerts:
-  #  dbt_source_model: true
-  #  export_schema: 'gitlab_com'
-  #  export_table: 'alert_management_alerts'
-  #  export_table_primary_key: id
-  #  import_db: GITLAB_DB
-  #  import_query: |-
-  #    SELECT id
-  #    , created_at
-  #    , updated_at
-  #    , started_at
-  #    , ended_at
-  #    , events
-  #    , iid
-  #    , NULL AS severity
-  #    , status
-  #    , issue_id
-  #    , project_id
-  #    , NULL AS title
-  #    , NULL AS description
-  #    , NULL AS service
-  #    , NULL AS monitoring_tool
-  #    , NULL AS hosts
-  #    , NULL AS payload
-  #    FROM alert_management_alerts
-  #    WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-  #      AND '{END_TIMESTAMP}'::timestamp
+  alert_management_alerts:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'alert_management_alerts'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , started_at
+      , ended_at
+      , events
+      , iid
+      , NULL AS severity
+      , status
+      , issue_id
+      , project_id
+      , NULL AS title
+      , NULL AS description
+      , NULL AS service
+      , NULL AS monitoring_tool
+      , NULL AS hosts
+      , NULL AS payload
+      FROM alert_management_alerts
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   alert_management_http_integrations:
     export_schema: "gitlab_com"
     export_table: alert_management_http_integrations
