@@ -15,7 +15,7 @@ WITH source AS (
       source.owner_id                                               AS dim_crm_user_id,
       source.booked_by_employee_number,
       source.lead_or_contact_id,
-      source.related_to_account_name,
+      source.related_account_name,
       source.related_lead_id,
       source.related_contact_id,
       source.related_opportunity_id                                 AS dim_crm_opportunity_id,
