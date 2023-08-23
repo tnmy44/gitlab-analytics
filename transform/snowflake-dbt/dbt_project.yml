@@ -134,7 +134,7 @@ models:
       +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +schema: dbt_artifacts
     sources:
-      +database: "{{ env_var('SNOWFLAKE_LOADING_DATABASE') }}" #RAW
+      +database: "{{ env_var('SNOWFLAKE_LOAD_DATABASE') }}" #RAW
       +schema: dbt_artifacts
 
   # ==================
