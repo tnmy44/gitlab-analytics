@@ -22,7 +22,7 @@
 
 namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters out namespaces with blocked creators, and internal namespaces. Filtered to ultimate parent namespaces.
 
-        SELECT DISTINCT
+    SELECT DISTINCT
       dim_namespace.ultimate_parent_namespace_id, -- Keeping this id naming convention for clarity
       dim_namespace.created_at                                    AS namespace_created_at, --timestamp is useful for relative calculations - ex) file created win 1 minute of namespace creation
       dim_namespace.created_at::DATE                              AS namespace_created_date,
@@ -102,6 +102,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
   SELECT DISTINCT
     namespaces.ultimate_parent_namespace_id,
     DATEDIFF(day, namespace_created_date, dim_user.created_at::DATE)   AS days_since_namespace_creation_at_2nd_user_add, --2nd user add date
+    dim_user.created_at::DATE                                          AS second_user_created_date,                        
     COUNT(DISTINCT dim_user.dim_user_id)                               AS count_billable_members, -- # of users added on the date of the 2nd add - could be 1 or 2 - field is not in final output
     SUM(count_billable_members) OVER (PARTITION BY namespaces.ultimate_parent_namespace_id ORDER BY days_since_namespace_creation_at_2nd_user_add)
                                                                        AS total_users_added   -- always 2 - field is not in final output    
@@ -117,7 +118,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
   WHERE IFNULL(charges.first_paid_subscription_start_date,CURRENT_DATE) >= dim_user.created_at::DATE -- excluding users joining namespaces with a subscription before they were created 
     AND namespace_created_date <= dim_user.created_at::DATE -- excluding users created prior to namespace creation 
     AND days_since_namespace_creation_at_2nd_user_add <= 13
-  GROUP BY 1,2 --grouping by namespace and days since namespace creation when a user was added
+  GROUP BY 1,2,3 --grouping by namespace and days since namespace creation when a user was added
     QUALIFY total_users_added = 2
 
 ), d60_retention AS ( --return event between 60 - 90 days
@@ -248,6 +249,32 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     ON storage.ultimate_parent_namespace_id = namespaces.ultimate_parent_namespace_id
   WHERE snapshot_month = DATE_TRUNC('month', GETDATE())::DATE --current month storage snapshot
 
+), team_activation_prep AS ( -- CTEs activation_events and second_billable_member are the building blocks for team activation - must union first
+ 
+  SELECT DISTINCT
+    ultimate_parent_namespace_id,
+    event_activation_date       AS event_date,
+    activation_event_array      AS event_name
+  FROM activation_events
+
+  UNION ALL 
+
+  SELECT DISTINCT
+    ultimate_parent_namespace_id,
+    second_user_created_date    AS event_date,
+    'second user added'         AS event_name
+  FROM second_billable_member
+
+), team_activation AS ( -- CTEs activation_events and second_billable_member are the building blocks for team activation
+ 
+  SELECT DISTINCT
+    ultimate_parent_namespace_id,
+    ARRAY_TO_STRING(ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name ASC), ' , ')
+                                                         AS activation_event_array,
+    MIN(event_date)                                      AS team_activation_date 
+  FROM team_activation_prep
+  GROUP BY 1
+
 ), base AS (
 
     SELECT DISTINCT
@@ -267,7 +294,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       namespaces.days_since_namespace_creation,
       namespaces.handraise_pql_date,
       IFF(namespaces.is_namespace_created_within_2min_of_creator_invite_acceptance = 1, TRUE, FALSE) 
-                                                                  AS is_namespace_created_within_2min_of_creator_invite_acceptance, --consistent TRUE/FALSE formatting to match the rest of the resulting boolean values
+                                                                          AS is_namespace_created_within_2min_of_creator_invite_acceptance, --consistent TRUE/FALSE formatting to match the rest of the resulting boolean values
       trials.trial_start_date,
       trials.days_since_namespace_creation_at_trial,
       charges.first_paid_subscription_start_date,
@@ -275,8 +302,9 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       charges.first_paid_plan_name,
       COALESCE(charges.first_paid_plan_purchased_through_subscription_portal, FALSE)
                                                                            AS is_first_paid_plan_purchased_through_subscription_portal,
-      activation_events.days_since_namespace_creation_at_activation_event,
-      activation_events.activation_event_array,
+      DATEDIFF(days, namespaces.namespace_created_date, team_activation.team_activation_date)    
+                                                                           AS days_since_namespace_creation_at_activation_event, -- all possible team activation events
+      team_activation.activation_event_array, -- all possible team activation events within 14 days
       CASE WHEN DATEDIFF(days, namespace_created_date, current_date()) < 59 THEN NULL -- If namespace is not at day 59 yet, then null
            WHEN d60_retention.ultimate_parent_namespace_id IS NOT NULL THEN TRUE
            ELSE FALSE                                         END          AS acitivity_between_d60_d90,
@@ -284,7 +312,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       IFF(valuable_signup.ultimate_parent_namespace_id IS NOT NULL, TRUE, FALSE)  
                                                                            AS namespace_contains_valuable_signup,
       second_billable_member.days_since_namespace_creation_at_2nd_user_add,
-      IFF(second_billable_member.ultimate_parent_namespace_id IS NOT NULL OR activation_events.ultimate_parent_namespace_id IS NOT NULL, TRUE, FALSE)
+      IFF(team_activation.ultimate_parent_namespace_id IS NOT NULL, TRUE, FALSE)
                                                                            AS has_team_activation,
       creator_attributes.namespace_creator_role,
       creator_attributes.namespace_creator_jtbd,
@@ -308,8 +336,9 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       COALESCE(total_stages_adopted, 0)                                     AS total_stages_adopted, --stages per ultimate namespace up to current
       billable_members.billable_member_count                                AS current_billable_member_count,
       storage.storage_gib                                                   AS current_month_storage_gib,
-	    first_last_activity.min_event_date                                    AS first_activity_date,
-      first_last_activity.max_event_date                                    AS latest_activity_date
+	  first_last_activity.min_event_date                                    AS first_activity_date,
+      first_last_activity.max_event_date                                    AS latest_activity_date,
+      team_activation.team_activation_date
     FROM namespaces 
     LEFT JOIN trials
       ON namespaces.ultimate_parent_namespace_id = trials.ultimate_parent_namespace_id
@@ -332,15 +361,17 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     LEFT JOIN storage
       ON namespaces.ultimate_parent_namespace_id = storage.ultimate_parent_namespace_id
 	LEFT JOIN first_last_activity
-      ON namespaces.ultimate_parent_namespace_id = first_last_activity.ultimate_parent_namespace_id    
+      ON namespaces.ultimate_parent_namespace_id = first_last_activity.ultimate_parent_namespace_id 
+    LEFT JOIN team_activation
+      ON namespaces.ultimate_parent_namespace_id = team_activation.ultimate_parent_namespace_id  
 
-)
+    )
 
 
 {{ dbt_audit(
     cte_ref="base",
     created_by="@eneuberger",
-    updated_by="@degan",
+    updated_by="@eneuberger",
     created_date="2023-02-14",
-    updated_date="2023-05-24"
+    updated_date="2023-08-18"
 ) }}
