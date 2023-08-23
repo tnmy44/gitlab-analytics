@@ -67,7 +67,7 @@ WITH source AS (
       is_correct_contact__c::BOOLEAN         AS is_correct_contact,
       is_left_message__c::BOOLEAN            AS is_left_message,
       is_not_answered__c::BOOLEAN            AS is_not_answered,
-      meeting_canceled__c::BOOLEAN           AS is_meeting_canceled,
+      meeting_cancelled__c::BOOLEAN          AS is_meeting_canceled,
       close_task__c::BOOLEAN                 AS is_closed_task,
       activity__c::BOOLEAN                   AS is_activity,
 
