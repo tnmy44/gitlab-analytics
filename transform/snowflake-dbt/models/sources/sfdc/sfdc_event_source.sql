@@ -22,7 +22,7 @@ WITH source AS (
       activity_source__c::VARCHAR            AS event_source,
       outreach_meeting_type__c::VARCHAR      AS outreach_meeting_type,
       type::VARCHAR                          AS event_type,
-      eventsubtype::VARCHAR                  AS event_sub_type,
+      eventsubtype::VARCHAR                  AS event_subtype,
       event_disposition__c::VARCHAR          AS event_disposition,
       description::VARCHAR                   AS event_description, 
       booked_by_employee_number__c::VARCHAR  AS booked_by_employee_number,
