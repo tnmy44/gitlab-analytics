@@ -27,8 +27,8 @@
     prep_crm_event.event_date,
     {{ get_date_id('prep_crm_event.event_end_date') }}             AS event_end_date_id,
     prep_crm_event.event_end_date,
-    {{ get_date_id('prep_crm_event.reminder_date') }}              AS reminder_date_id,
-    prep_crm_event.reminder_date,
+    {{ get_date_id('prep_crm_event.reminder_date_time') }}         AS reminder_date_id,
+    prep_crm_event.reminder_date_time,
     {{ get_date_id('prep_crm_event.event_recurrence_end_date') }}  AS event_recurrence_end_date_id,
     prep_crm_event.event_recurrence_end_date,
     {{ get_date_id('prep_crm_event.event_recurrence_start_date_time') }} AS event_recurrence_start_date_id,
@@ -53,5 +53,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-08-22"
+    updated_date="2023-08-23"
 ) }}
