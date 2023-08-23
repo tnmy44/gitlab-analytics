@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 from datetime import datetime
 
 from sqlalchemy.engine.base import Engine
@@ -8,13 +8,13 @@ import load_functions
 from postgres_utils import (
     BACKFILL_METADATA_TABLE,
     INCREMENTAL_METADATA_TABLE,
+    INCREMENTAL_LOAD_TYPE_BY_ID,
     check_is_new_table_or_schema_addition,
     check_and_handle_schema_removal,
     is_resume_export,
     remove_files_from_gcs,
     swap_temp_table,
     get_min_or_max_id,
-    INCREMENTAL_LOAD_TYPE_BY_ID,
 )
 
 
@@ -35,7 +35,7 @@ class PostgresPipelineTable:
         self.table_dict = table_config
         self.target_table_name_td_sf = table_config["export_table"]
         # options: load_by_id | load_by_date
-        self.incremental_type = table_config.get("incremental_type", "load_by_date")
+        self.incremental_type = table_config.get("incremental_type")
 
     def is_scd(self) -> bool:
         return not self.is_incremental()
@@ -44,7 +44,8 @@ class PostgresPipelineTable:
         self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
     ) -> bool:
         if not self.is_scd():
-            return True
+            logging.info("Not SCD load, aborting...")
+            return False
         target_table = (
             self.get_temp_target_table_name()
             if is_schema_addition
@@ -56,7 +57,6 @@ class PostgresPipelineTable:
             self.source_table_name,
             self.table_dict,
             target_table,
-            is_append_only=self.table_dict.get("append_only", False),
         )
 
         return loaded
@@ -115,7 +115,7 @@ class PostgresPipelineTable:
         metadata_engine: Engine,
         target_table: str,
         metadata_table: str,
-        load_by_id_export_type: str,
+        load_by_id_export_type: Optional[str],
         initial_load_start_date,
         start_pk,
     ) -> bool:
@@ -312,7 +312,7 @@ class PostgresPipelineTable:
         load_by_id_export_type: str,
     ) -> Tuple[bool, datetime, int]:
         """
-        There are 3 criteria that determine if a backfill is necessary:
+        There are 2 main criteria that determine if a backfill is necessary:
             1. In the middle of a backfill
             2. New table | New columns in source
 
@@ -376,6 +376,11 @@ class PostgresPipelineTable:
             prev_initial_load_start_date,
             metadata_start_pk,
         ) = is_resume_export(metadata_engine, metadata_table, self.source_table_name)
+        logging.info(
+            f"Comparing metadata_start_pk {metadata_start_pk}"
+            f" and target_start_pk {target_start_pk}..."
+        )
+
         # use metadata_start_pk and continue export
         if is_resume_export_needed and metadata_start_pk > target_start_pk:
             initial_load_start_date, start_pk = (

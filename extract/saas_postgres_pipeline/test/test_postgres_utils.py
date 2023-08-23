@@ -79,7 +79,7 @@ class TestPostgresUtils:
             seed_and_upload_snowflake(None, None, database_kwargs, None, None, None)
 
     @patch("postgres_utils.write_metadata")
-    @patch("postgres_utils.upload_gcs_to_snowflake")
+    @patch("postgres_utils.upload_initial_load_prefix_to_snowflake")
     @patch("postgres_utils.snowflake_engine_factory")
     @patch("postgres_utils.upload_to_gcs")
     @patch("postgres_utils.read_sql_tmpfile")
@@ -88,7 +88,7 @@ class TestPostgresUtils:
         mock_read_sql_tmpfile,
         mock_upload_to_gcs,
         mock_snowflake_engine_factory,
-        mock_upload_gcs_to_snowflake,
+        mock_upload_initial_load_prefix_to_snowflake,
         mock_write_metadata,
     ):
         """
@@ -125,11 +125,11 @@ class TestPostgresUtils:
             load_by_id_export_type,
         )
 
-        mock_upload_gcs_to_snowflake.assert_not_called()
+        mock_upload_initial_load_prefix_to_snowflake.assert_not_called()
         assert returned_initial_load_start_date == initial_load_start_date
 
     @patch("postgres_utils.write_metadata")
-    @patch("postgres_utils.upload_gcs_to_snowflake")
+    @patch("postgres_utils.upload_initial_load_prefix_to_snowflake")
     @patch("postgres_utils.snowflake_engine_factory")
     @patch("postgres_utils.upload_to_gcs")
     @patch("postgres_utils.read_sql_tmpfile")
@@ -138,7 +138,7 @@ class TestPostgresUtils:
         mock_read_sql_tmpfile,
         mock_upload_to_gcs,
         mock_snowflake_engine_factory,
-        mock_upload_gcs_to_snowflake,
+        mock_upload_initial_load_prefix_to_snowflake,
         mock_write_metadata,
     ):
         """
@@ -151,7 +151,7 @@ class TestPostgresUtils:
         Therefore, test that upload_to_gcs() and write_metadata()
         are called twice.
 
-        Test that upload_gcs_to_snowflake is called only once
+        Test that upload_initial_load_prefix_to_snowflake is called only once
 
         """
         iter_csv = pd.read_csv(
@@ -186,7 +186,7 @@ class TestPostgresUtils:
 
         assert mock_upload_to_gcs.call_count == 2
         assert mock_write_metadata.call_count == 2
-        mock_upload_gcs_to_snowflake.assert_called_once_with(
+        mock_upload_initial_load_prefix_to_snowflake.assert_called_once_with(
             some_engine,
             database_kwargs,
             load_by_id_export_type,
@@ -212,7 +212,7 @@ class TestPostgresUtils:
         Test LOAD_TYPE_BY_ID=BACKFILL
 
         Similiar to abovve test2, but make sure we call `seed_and_upload_snowflake`
-        instead of `upload_gcs_to_snowflake`
+        instead of `upload_initial_load_prefix_to_snowflake`
 
         """
         iter_csv = pd.read_csv(
@@ -310,8 +310,8 @@ class TestPostgresUtils:
         )
         mock_drop_column_on_schema_removal.assert_called_once()
 
-    @patch("postgres_utils.query_results_generator")
-    def test_get_min_or_max_id(self, mock_query_results_generator):
+    @patch("postgres_utils.query_results")
+    def test_get_min_or_max_id(self, mock_query_results):
         """
         This is a tough function to test because the main logic involves running the min()/max()
         against the sql engine
@@ -322,12 +322,12 @@ class TestPostgresUtils:
 
         min_or_max = "min"
         dataframe = pd.DataFrame({"ID": [1]})
-        mock_query_results_generator.return_value = dataframe
+        mock_query_results.return_value = dataframe
         min_id = get_min_or_max_id(primary_key, engine, table, min_or_max)
         assert min_id == 1
 
         min_or_max = "max"
         dataframe = pd.DataFrame({"ID": [20]})
-        mock_query_results_generator.return_value = dataframe
+        mock_query_results.return_value = dataframe
         max_id = get_min_or_max_id(primary_key, engine, table, min_or_max)
         assert max_id == 20

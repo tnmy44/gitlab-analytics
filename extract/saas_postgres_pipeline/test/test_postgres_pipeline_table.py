@@ -20,6 +20,27 @@ class TestPostgresPipelineTable:
         # Create a mock source/self.target_engine
         self.engine = MagicMock(spec=Engine)
 
+    def test_is_scd(self):
+        """
+        Test that
+        """
+        is_scd = self.pipeline_table.is_scd()
+        is_incremental = self.pipeline_table.is_incremental()
+        assert is_scd
+        assert is_incremental is False
+
+        table_config2 = {
+            "import_query": "SELECT * FROM some_table WHERE updated_at >= '{BEGIN_TIMESTAMP}'::timestamp;",
+            "import_db": "some_database",
+            "export_table": "some_table",
+            "export_table_primary_key": "id",
+        }
+        pipeline_table2 = PostgresPipelineTable(table_config2)
+        is_scd = pipeline_table2.is_scd()
+        is_incremental = pipeline_table2.is_incremental()
+        assert is_scd is False
+        assert is_incremental
+
     def test_get_target_table_name(self):
         """check that get_target_name() matches its attribute"""
         actual_table_name = self.pipeline_table.get_target_table_name()

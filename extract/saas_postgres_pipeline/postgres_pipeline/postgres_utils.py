@@ -148,7 +148,7 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
     return manifest_dict
 
 
-def query_results_generator(query: str, engine: Engine) -> pd.DataFrame:
+def query_results(query: str, engine: Engine) -> pd.DataFrame:
     """
     Use pandas to run a sql query and load it into a dataframe.
     Yield it back in chunks for scalability.
@@ -230,7 +230,7 @@ def chunk_and_upload(
     target_table: str,
     source_table: str,
     advanced_metadata: bool = False,
-    backfill: bool = False,
+    backfill: bool = False,  # this is needed for scd load
 ) -> None:
     """
     Call the functions that upload the dataframes as TSVs in GCS and then trigger Snowflake
@@ -320,7 +320,7 @@ def write_metadata(
     with metadata_engine.connect() as connection:
         connection.execute(insert_query)
 
-    logging.info(f"Wrote to backfill metadata db for: {upload_file_name}")
+    logging.info(f"Wrote to {metadata_table} table for: {upload_file_name}")
 
 
 def get_prefix_template() -> str:
@@ -392,14 +392,17 @@ def get_upload_file_name(
     return os.path.join(prefix, filename).lower()
 
 
-def upload_gcs_to_snowflake(
+def upload_initial_load_prefix_to_snowflake(
     target_engine,
     database_kwargs,
     load_by_id_export_type,
     initial_load_start_date,
     purge: bool = True,
 ):
-    """Upload data from GCS bucket -> Snowflake"""
+    """
+    From GCS bucket, upload all files from a
+    initial_load_start_date prefix -> Snowflake
+    """
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
         load_by_id_export_type=load_by_id_export_type,
@@ -407,7 +410,7 @@ def upload_gcs_to_snowflake(
         initial_load_prefix=get_initial_load_prefix(initial_load_start_date),
     )
     logging.info(
-        f"Beging COPY INTO from GCS to Snowflake table '{database_kwargs['target_table']}'"
+        f"Beginning COPY INTO from GCS to Snowflake table '{database_kwargs['target_table']}'"
     )
     # don't purge files, will do after swap
     trigger_snowflake_upload(
@@ -450,7 +453,7 @@ def seed_and_upload_snowflake(
         target_engine,
     )
 
-    upload_gcs_to_snowflake(
+    upload_initial_load_prefix_to_snowflake(
         target_engine, database_kwargs, load_by_id_export_type, initial_load_start_date
     )
 
@@ -522,7 +525,7 @@ def chunk_and_upload_metadata(
 
                     if load_by_id_export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
                         # upload directly to snowflake if incremental
-                        upload_gcs_to_snowflake(
+                        upload_initial_load_prefix_to_snowflake(
                             target_engine,
                             database_kwargs,
                             load_by_id_export_type,
@@ -830,7 +833,7 @@ def get_min_or_max_id(
         f"SELECT COALESCE({min_or_max}({primary_key}), 0) as {primary_key} FROM {table}"
     )
     try:
-        id_results = query_results_generator(id_query, engine)
+        id_results = query_results(id_query, engine)
         id_value = id_results[primary_key].tolist()[0]
     except sqlalchemy.exc.ProgrammingError as e:
         logging.exception(e)
