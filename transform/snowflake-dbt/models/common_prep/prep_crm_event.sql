@@ -90,7 +90,8 @@ WITH source AS (
       -- metadata
       source.last_modified_id,
       source.last_modified_date,
-      source.systemmodstamp
+      source.systemmodstamp,
+      source.is_deleted
 
     FROM source
 )

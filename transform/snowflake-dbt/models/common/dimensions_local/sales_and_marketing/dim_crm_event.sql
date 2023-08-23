@@ -1,4 +1,4 @@
-ITH prep_crm_event AS (
+WITH prep_crm_event AS (
 
   SELECT *
   FROM {{ ref('prep_crm_event') }}
