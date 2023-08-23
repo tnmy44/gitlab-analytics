@@ -69,7 +69,7 @@ WITH source AS (
       source.is_left_message,
       source.is_not_answered,
       source.is_meeting_canceled,
-      source.is_closed_task,
+      source.is_closed_event,
       source.is_activity,
 
     --Recurrence Info

@@ -68,7 +68,7 @@ WITH source AS (
       is_left_message__c::FLOAT              AS is_left_message,
       is_not_answered__c::FLOAT              AS is_not_answered,
       meeting_cancelled__c::BOOLEAN          AS is_meeting_canceled,
-      close_task__c::BOOLEAN                 AS is_closed_task,
+      close_task__c::BOOLEAN                 AS is_closed_event,
       activity__c::FLOAT                     AS is_activity,
 
 
