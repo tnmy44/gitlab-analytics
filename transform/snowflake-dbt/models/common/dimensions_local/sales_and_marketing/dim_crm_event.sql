@@ -19,7 +19,6 @@ ITH prep_crm_event AS (
         prep_crm_task.event_source,
         prep_crm_task.outreach_meeting_type,
         prep_crm_task.event_type,
-        prep_crm_task.event_sub_type,
         prep_crm_task.event_disposition,
         prep_crm_task.event_description, 
         prep_crm_task.duration_time_in_minutes, 

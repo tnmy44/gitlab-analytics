@@ -31,7 +31,6 @@ WITH source AS (
       source.event_source,
       source.outreach_meeting_type,
       source.event_type,
-      source.event_sub_type,
       source.event_disposition,
       source.event_description, 
       source.event_subtype,
