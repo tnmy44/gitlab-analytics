@@ -23,6 +23,7 @@ WITH source AS (
       source.related_to_id,
       source.created_by_id,
       source.booked_by_dim_crm_user_id,
+      source.what_id,
       COALESCE(source.related_lead_id, source.related_contact_id)   AS sfdc_record_id,
 
     -- Task infomation

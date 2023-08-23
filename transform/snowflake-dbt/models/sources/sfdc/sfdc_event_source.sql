@@ -39,9 +39,9 @@ WITH source AS (
     --Event Relations Info
       related_to_account__c::VARCHAR         AS related_to_account_id,
       related_to_account_name__c::VARCHAR    AS related_to_account_name,
-      related_to_lead__c::VARCHAR            AS related_to_lead_id,
-      related_to_opportunity__c::VARCHAR     AS related_to_opportunity_id,
-      related_to_contact__c::VARCHAR         AS related_to_contact_id, 
+      related_to_lead__c::VARCHAR            AS related_lead_id,
+      related_to_opportunity__c::VARCHAR     AS related_opportunity_id,
+      related_to_contact__c::VARCHAR         AS related_contact_id, 
 
     --Dates and Datetimes
       startdatetime::TIMESTAMP               AS event_start_date_time,
