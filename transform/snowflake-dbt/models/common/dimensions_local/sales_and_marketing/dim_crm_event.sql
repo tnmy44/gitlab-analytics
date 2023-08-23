@@ -69,7 +69,7 @@ WITH prep_crm_event AS (
         prep_crm_event.event_recurrence_instance,
         prep_crm_event.event_recurrence_interval,
         prep_crm_event.event_recurrence_month_of_year, 
-        prep_crm_event.event_recurrence_stat_date_time,
+        prep_crm_event.event_recurrence_start_date_time,
         prep_crm_event.event_recurrence_timezone_key,
         prep_crm_event.event_recurrence_type,
         prep_crm_event.is_recurrence_2_exclusion,
