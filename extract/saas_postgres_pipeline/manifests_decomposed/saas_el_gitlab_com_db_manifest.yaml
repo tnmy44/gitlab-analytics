@@ -356,7 +356,7 @@ tables:
       , older_than
       , keep_n
       , enabled
-      , name_regex_keep
+      # TODO , name_regex_keep
       FROM container_expiration_policies
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
