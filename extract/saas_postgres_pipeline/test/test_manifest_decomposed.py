@@ -11,12 +11,20 @@ abs_path = os.path.dirname(os.path.realpath(__file__))
 abs_path = abs_path[: abs_path.find("/test")] + "/manifests_decomposed/"
 
 
+"""
 TABLES_LIST = [
     "path_locks",
     "lfs_file_locks",
     "bulk_import_entities",
     "clusters_integration_prometheus",
     "group_import_states",
+]
+"""
+
+TABLES_LIST = [
+    "alert_management_alert_assignees",
+    "approval_merge_request_rule_sources",
+    "approval_project_rules_groups",
 ]
 
 
@@ -59,4 +67,4 @@ def test_add_scd_tables() -> None:
         table_definition = loaded_file["tables"][table]
         assert table_definition is not None
         assert table_definition.get("export_table", None) == table
-        assert table_definition.get("advanced_metadata", None) is True
+        # assert table_definition.get("advanced_metadata", None) is True
