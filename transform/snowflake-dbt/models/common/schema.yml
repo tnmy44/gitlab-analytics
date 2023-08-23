@@ -5679,6 +5679,10 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common"]
+      - name: dim_mapped_opportunity_id
+        description: '{{ doc("dim_mapped_opportunity_id") }}'
+      - name: task_mapped_to
+        description: '{{ doc("task_mapped_to") }}'
 
   - name: dim_behavior_browser
     description: '{{ doc("dim_behavior_browser") }}'

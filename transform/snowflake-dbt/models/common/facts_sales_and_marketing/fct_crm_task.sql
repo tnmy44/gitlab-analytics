@@ -1,7 +1,5 @@
 {{ simple_cte([
     ('prep_crm_person', 'prep_crm_person'),
-    ('prep_crm_opportunity', 'prep_crm_opportunity'),
-    ('prep_crm_account', 'prep_crm_account'),
     ('dim_date', 'dim_date')
 ]) }}
 
@@ -9,6 +7,18 @@
 
   SELECT *
   FROM {{ ref('prep_crm_task') }}
+  WHERE is_deleted = FALSE
+
+), prep_crm_opportunity AS (
+
+  SELECT *
+  FROM {{ ref('prep_crm_opportunity') }}
+  WHERE is_deleted = FALSE
+
+), prep_crm_account AS (
+
+  SELECT *
+  FROM {{ ref('prep_crm_account') }}
   WHERE is_deleted = FALSE
 
 ), final AS (
@@ -30,7 +40,7 @@
       WHEN account_opp_mapping.dim_crm_opportunity_id is not NULL
         THEN account_opp_mapping.dim_crm_opportunity_id
       ELSE NULL
-      END as mapped_opportunity_id,
+      END as dim_mapped_opportunity_id,
 
     prep_crm_task.sfdc_record_id,
 

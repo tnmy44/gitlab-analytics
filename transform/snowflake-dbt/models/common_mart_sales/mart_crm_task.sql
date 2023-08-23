@@ -23,12 +23,14 @@
     fct_crm_task.dim_crm_person_id,
     fct_crm_task.sfdc_record_id,
     fct_crm_task.dim_crm_opportunity_id,
+    fct_crm_task.dim_mapped_opportunity_id,
 
     -- Task infomation
     fct_crm_task.task_date_id,
     fct_crm_task.task_date,
     fct_crm_task.task_completed_date_id,
     fct_crm_task.task_completed_date,
+    fct_crm_task.task_mapped_to,
     dim_crm_task.full_comments,
     dim_crm_task.task_subject,
     dim_crm_task.task_status,
