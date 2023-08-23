@@ -44,7 +44,6 @@
 
     --Dates and Datetimes
     dim_crm_event.event_start_date_time,
-    dim_crm_event.reminder_date_time,
     dim_crm_event.event_end_date_time,
     dim_crm_event.event_datetime,
     dim_crm_event.created_at,
@@ -53,7 +52,7 @@
     fct_crm_event.event_end_date_id,
     fct_crm_event.event_end_date,
     fct_crm_event.reminder_date_id,
-    fct_crm_event.reminder_date,
+    fct_crm_event.reminder_date_time,
     fct_crm_event.event_recurrence_end_date_id,
     fct_crm_event.event_recurrence_end_date,
     fct_crm_event.event_recurrence_start_date_id,
