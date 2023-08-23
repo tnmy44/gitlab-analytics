@@ -44,7 +44,7 @@ pvs AS (
         AND
         d.app_id IN ('gitlab', 'gitlab_customers')
         AND
-        d.page_view_start_at::DATE < CURRENT_DATE
+        p.page_view_start_at::DATE < CURRENT_DATE
 )
 
 
