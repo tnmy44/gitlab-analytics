@@ -56,8 +56,8 @@ SELECT
     COUNT(p.fct_behavior_website_page_view_sk) AS page_views,
     COUNT(n.dim_behavior_website_page_sk) AS nav_source_events,
     page_views - nav_source_events AS page_views_not_sourced_from_nav,
-    nav_source_events / page_views AS percent_from_nav,
-    page_views_not_sourced_from_nav / page_views AS percent_not_from_nav
+    100*(nav_source_events / page_views) AS percent_from_nav,
+    100*(page_views_not_sourced_from_nav / page_views) AS percent_not_from_nav
 FROM
     pvs AS p
 LEFT JOIN
