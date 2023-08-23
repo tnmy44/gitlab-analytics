@@ -1,9 +1,6 @@
 {{ simple_cte([
     ('dim_crm_task', 'dim_crm_task'),
-    ('fct_crm_task', 'fct_crm_task'),
-    ('dim_crm_opportunity', 'dim_crm_opportunity'),
-    ('dim_crm_account', 'dim_crm_account'),
-    ('dim_date', 'dim_date')
+    ('fct_crm_task', 'fct_crm_task')
 ]) }}
 
 , final AS (
@@ -26,13 +23,6 @@
     fct_crm_task.dim_crm_person_id,
     fct_crm_task.sfdc_record_id,
     fct_crm_task.dim_crm_opportunity_id,
-    CASE
-      WHEN dim_crm_opportunity.dim_crm_opportunity_id is not NULL
-        THEN fct_crm_task.dim_crm_opportunity_id
-      WHEN account_opp_mapping.dim_crm_opportunity_id is not NULL
-        THEN account_opp_mapping.dim_crm_opportunity_id
-      ELSE NULL
-      END as mapped_opportunity_id,
 
     -- Task infomation
     fct_crm_task.task_date_id,
@@ -55,13 +45,6 @@
     dim_crm_task.outreach_meeting_type,
     dim_crm_task.customer_interaction_sentiment,
     dim_crm_task.task_owner_role,
-    CASE 
-      WHEN dim_crm_opportunity.dim_crm_opportunity_id is not null 
-        THEN 'Opportunity'
-      WHEN account_opp_mapping.dim_crm_opportunity_id is not null 
-        THEN 'Account'
-      ELSE 'Not Mappable'
-      END as task_mapped_to,
 
     -- Activity infromation
     dim_crm_task.activity_disposition,
@@ -166,22 +149,14 @@
     FROM fct_crm_task 
     LEFT JOIN dim_crm_task 
       ON fct_crm_task.dim_crm_task_sk = dim_crm_task.dim_crm_task_sk
-    LEFT JOIN dim_crm_opportunity
-      ON fct_crm_task.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
-    LEFT JOIN dim_date
-      ON fct_crm_task.dim_date_id = dim_date.dim_date_id
-    LEFT JOIN dim_crm_opportunity as account_opp_mapping 
-      ON fct_crm_task.account_or_opportunity_id =dim_crm_opportunity.dim_crm_account_id
-      AND fct_crm_task.task_date < account_opp_mapping.close_date
-      AND fct_crm_task.task_date >= DATEADD('month', -9, dim_date.first_day_of_fiscal_quarter)
-      AND dim_crm_task.sa_activity_type is not null
+
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@jngCES",
+    updated_by="@michellecooper",
     created_date="2022-12-05",
-    updated_date="2023-08-23"
+    updated_date="2023-03-13"
 ) }}
