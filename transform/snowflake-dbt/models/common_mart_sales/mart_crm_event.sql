@@ -28,7 +28,6 @@
     dim_crm_event.event_source,
     dim_crm_event.outreach_meeting_type,
     dim_crm_event.event_type,
-    dim_crm_event.event_sub_type,
     dim_crm_event.event_disposition,
     dim_crm_event.event_description, 
     dim_crm_event.event_subtype,
@@ -47,10 +46,8 @@
     dim_crm_event.event_start_date_time,
     dim_crm_event.reminder_date_time,
     dim_crm_event.event_end_date_time,
-    dim_crm_event.event_date,
     dim_crm_event.event_datetime,
     dim_crm_event.created_at,
-    dim_crm_event.event_end_date,
     fct_crm_event.event_date_id,
     fct_crm_event.event_date,
     fct_crm_event.event_end_date_id,
@@ -82,5 +79,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-08-22"
+    updated_date="2023-08-23"
 ) }}
