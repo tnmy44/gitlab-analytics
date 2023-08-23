@@ -42,6 +42,7 @@ on-run-start:
 on-run-end:
     - "{{ grant_usage_to_schemas() }}"
     - "{{ suspend_warehouse(var('suspend_warehouse', false), var('warehouse_name')) }}"
+    - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
 
 # ======
 # Seed Configs
@@ -121,6 +122,20 @@ models:
   # ------------------
   snowflake_spend:
     +materialized: table
+
+  # ------------------
+  # dbt Artifacts Package https://hub.getdbt.com/brooklyn-data/dbt_artifacts
+  # ------------------
+  dbt_artifacts:
+    
+    +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
+    +schema: workspace_data
+    staging:
+      +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
+      +schema: dbt_artifacts
+    sources:
+      +database: "{{ env_var('SNOWFLAKE_LOADING_DATABASE') }}" #RAW
+      +schema: dbt_artifacts
 
   # ==================
   # GitLab Models
