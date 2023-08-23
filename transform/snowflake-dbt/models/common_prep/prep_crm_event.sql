@@ -43,7 +43,7 @@ WITH source AS (
       source.google_doc_link,
       source.comments,
       source.qualified_convo_or_meeting,
-      FIRST_VALUE(source.created_at) OVER (PARTITION BY source.related_opportunity_id ORDER BY source.event_created_date ASC) AS first_opportunity_event_created_date,
+      FIRST_VALUE(source.created_at) OVER (PARTITION BY source.related_opportunity_id ORDER BY source.created_at ASC) AS first_opportunity_event_created_date,
     
     --Dates and Datetimes
       source.event_start_date_time,
