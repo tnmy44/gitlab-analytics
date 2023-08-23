@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, Tuple
+from typing import Dict, Tuple
 from datetime import datetime
 
 from sqlalchemy.engine.base import Engine

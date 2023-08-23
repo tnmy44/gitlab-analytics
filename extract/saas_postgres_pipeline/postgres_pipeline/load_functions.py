@@ -26,8 +26,7 @@ def get_last_load_time() -> Optional[datetime.datetime]:
 
     if last_load_tstamp != "":
         return datetime.datetime.strptime(last_load_tstamp, "%Y-%m-%dT%H:%M:%S%z")
-    else:
-        return None
+    return None
 
 
 def load_incremental(
@@ -90,7 +89,7 @@ def load_incremental(
                 minutes=30
             )  # Allow for 30 minute overlap to ensure late arriving data is not skipped
         else:
-            logging.warn(
+            logging.warning(
                 "No last load time found, using the earliest of the replication timestamp and execution date."
             )
             this_run_beginning_timestamp = min(
@@ -170,7 +169,6 @@ def load_scd(
     source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
-    is_append_only: bool = False,
 ) -> bool:
     """
     Load tables that are slow-changing dimensions.

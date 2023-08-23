@@ -1,14 +1,12 @@
 import logging
 import os
 import sys
-import yaml
 import tempfile
 from datetime import datetime, timedelta
 from typing import Dict, List, Generator, Any, Tuple, Optional
+import yaml
 
 from gitlabdata.orchestration_utils import (
-    append_to_xcom_file,
-    dataframe_uploader,
     dataframe_enricher,
     snowflake_engine_factory,
     query_executor,
@@ -167,18 +165,13 @@ def query_results_generator(query: str, engine: Engine) -> pd.DataFrame:
 def transform_dataframe_column(column_name: str, pg_type: str) -> List[Column]:
     if pg_type == "timestamp with time zone":
         return Column(column_name, DateTime)
-    elif (
-        pg_type == "integer"
-        or pg_type == "smallint"
-        or pg_type == "numeric"
-        or pg_type == "bigint"
-    ):
+    elif pg_type in ("integer", "smallint", "numeric", "bigint"):
         return Column(column_name, Integer)
     elif pg_type == "date":
         return Column(column_name, Date)
     elif pg_type == "boolean":
         return Column(column_name, Boolean)
-    elif pg_type == "float" or pg_type == "double precision":
+    elif pg_type in ("float", "double precision"):
         return Column(column_name, Float)
     else:
         return Column(column_name, String)
@@ -597,8 +590,7 @@ def range_generator(
         if start > stop:
             logging.info("No more id pairs to extract. Stopping")
             break
-        else:
-            yield tuple([start, start + step])
+        yield tuple([start, start + step])
         start += step
 
 
