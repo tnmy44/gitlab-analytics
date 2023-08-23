@@ -22,7 +22,20 @@
   FROM 
   dim_date
   WHERE 
-  (day_of_fiscal_quarter_normalised = 90 or date_day = CURRENT_DATE-2) AND date_day BETWEEN '2023-01-31' AND CURRENT_DATE
+  day_of_fiscal_quarter_normalised = 90 AND date_day BETWEEN '2023-01-31' AND CURRENT_DATE-2
+  UNION 
+  
+--latest snapshot for current quarter
+  SELECT DISTINCT
+  date_day,
+  fiscal_year,
+  fiscal_quarter,
+  fiscal_quarter_name_fy,
+  snapshot_date_fpa
+  FROM 
+  dim_date 
+  WHERE (day_of_fiscal_quarter_normalised BETWEEN 3 AND 89) AND date_day = CURRENT_DATE-2 
+
     ORDER BY 1 DESC
 
 
@@ -63,7 +76,8 @@
     sfdc_bizible_attribution_touchpoint_snapshots_source.touchpoint_id = mart_crm_attribution_touchpoint.dim_crm_touchpoint_id
 
     INNER JOIN snapshot_dates ON 
-    dbt_valid_FROM <= date_day AND dbt_valid_to > date_day 
+        (dbt_valid_FROM <= date_day AND dbt_valid_to > date_day) OR (dbt_valid_from <= date_day AND dbt_valid_to is null)
+
 
     LEFT JOIN mart_crm_opportunity_stamped_hierarchy_hist ON
     sfdc_bizible_attribution_touchpoint_snapshots_source.opportunity_id = mart_crm_opportunity_stamped_hierarchy_hist.DIM_CRM_OPPORTUNITY_ID
@@ -104,6 +118,8 @@
     wk_sales_sfdc_opportunity_snapshot_history_xf.net_arr_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf.close_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_date AS opportunity_snapshot_date,
+    dim_date.day_of_fiscal_quarter_normalised as pipeline_created_day_of_fiscal_quarter_normalised,
+    dim_date.day_of_fiscal_year_normalised as pipeline_created_day_of_fiscal_year_normalised,
 
 --User Hierarchy
     wk_sales_sfdc_opportunity_snapshot_history_xf.report_opportunity_user_segment,
@@ -157,6 +173,7 @@
 
   FROM wk_sales_sfdc_opportunity_snapshot_history_xf
   INNER JOIN snapshot_dates ON wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_date = snapshot_dates.date_day
+  LEFT JOIN dim_date on wk_sales_sfdc_opportunity_snapshot_history_xf.pipeline_created_date = dim_date.date_day 
   WHERE snapshot_dates.fiscal_quarter_name_fy = pipeline_created_fiscal_quarter_name
 
 ), 
@@ -177,6 +194,8 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_fiscal_quarter_name,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_fiscal_year,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_day_of_fiscal_quarter_normalised,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_day_of_fiscal_year_normalised,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.net_arr_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.close_date,
     attribution_touchpoint_snapshot_base.bizible_touchpoint_date,
@@ -287,6 +306,8 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_fiscal_quarter_name,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_fiscal_year,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_day_of_fiscal_quarter_normalised,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.pipeline_created_day_of_fiscal_year_normalised,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.net_arr_created_date,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.close_date,
     NULL AS bizible_touchpoint_date,
@@ -385,5 +406,5 @@ combined_models AS (
     created_by="@rkohnke",
     updated_by="@dmicovic",
     created_date="2023-04-11",
-    updated_date="2023-06-02",
+    updated_date="2023-07-31",
   ) }}

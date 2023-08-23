@@ -12,7 +12,7 @@ issues AS (
 
   SELECT
     issues.*,
-    internal_projects.parent_namespace_id AS namespace_id,
+    internal_projects.parent_namespace_id           AS namespace_id,
     internal_projects.ultimate_parent_namespace_id
   FROM {{ ref('gitlab_dotcom_issues_source') }} AS issues
   INNER JOIN internal_projects
@@ -37,7 +37,9 @@ all_labels AS (
 
 ),
 
-derived_close_date AS (
+close_moved_date AS (
+
+  -- Derive close date from the latest note from an issue, when it contains closed or moved details
 
   SELECT
     noteable_id AS issue_id,
@@ -46,7 +48,22 @@ derived_close_date AS (
   WHERE noteable_type = 'Issue'
     AND system = TRUE
     AND (CONTAINS(note, 'closed')
-      OR CONTAINS(note, 'moved to'))
+      OR CONTAINS(note, 'moved to')
+      OR note ILIKE ANY ('Status changed to closed%', 'closed via%'))
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY noteable_id ORDER BY created_at DESC) = 1
+
+),
+
+derived_close_date AS (
+
+  -- Derive close date from the latest note from an issue, regardless of the type of note
+
+  SELECT
+    noteable_id AS issue_id,
+    created_at  AS derived_closed_at
+  FROM {{ ref('gitlab_dotcom_notes_source') }}
+  WHERE noteable_type = 'Issue'
+    AND system = TRUE
   QUALIFY ROW_NUMBER() OVER (PARTITION BY noteable_id ORDER BY created_at DESC) = 1
 
 ),
@@ -108,14 +125,15 @@ joined AS (
     issues.created_at                                                                  AS issue_created_at,
     issues.updated_at                                                                  AS issue_updated_at,
     issues.issue_last_edited_at,
-    --issue_closed_at,
-    IFF(issues.issue_closed_at IS NULL
-      AND issues.state = 'closed',
-      derived_close_date.derived_closed_at,
-      issues.issue_closed_at)                                                          AS issue_closed_at,
-    --issues.visibility_level,
+    /* 
+      If the issue is closed, then get the closed_at date from one of the following sources:
+      - The closed_at date from the raw data
+      - The derived_closed_at date from the last moved or closed note in the notes_source
+      - The derived_closed_at date from the last note left in the issue (regardless of the type of note)
+    */
+    IFF(issues.state = 'closed', COALESCE(issues.issue_closed_at, close_moved_date.derived_closed_at, derived_close_date.derived_closed_at), issues.issue_closed_at) 
+                                                                                       AS issue_closed_at,
     issues.is_confidential                                                             AS issue_is_confidential,
-
     COALESCE(issues.namespace_id = 9970
       AND ARRAY_CONTAINS('community contribution'::VARIANT, agg_labels.labels), FALSE) AS is_community_contributor_related,
 
@@ -130,7 +148,6 @@ joined AS (
         THEN 'severity 4'
       ELSE 'undefined'
     END                                                                                AS severity_tag,
-
     CASE
       WHEN ARRAY_CONTAINS('priority::1'::VARIANT, agg_labels.labels) OR ARRAY_CONTAINS('P1'::VARIANT, agg_labels.labels)
         THEN 'priority 1'
@@ -142,10 +159,8 @@ joined AS (
         THEN 'priority 4'
       ELSE 'undefined'
     END                                                                                AS priority_tag,
-
     COALESCE(issues.namespace_id = 9970
       AND ARRAY_CONTAINS('security'::VARIANT, agg_labels.labels), FALSE)               AS is_security_issue,
-
     IFF(issues.project_id IN ({{ is_project_included_in_engineering_metrics() }}),
       TRUE, FALSE)                                                                     AS is_included_in_engineering_metrics,
     IFF(issues.project_id IN ({{ is_project_part_of_product() }}),
@@ -162,15 +177,12 @@ joined AS (
     issues.duplicated_to_id,
     issues.promoted_to_epic_id,
     issues.issue_type,
-
     agg_labels.labels,
     ARRAY_TO_STRING(agg_labels.labels, '|')                                            AS masked_label_title,
-
     issue_metrics.first_mentioned_in_commit_at,
     issue_metrics.first_associated_with_milestone_at,
     issue_metrics.first_added_to_board_at,
     first_events_weight.first_weight_set_at
-
   FROM issues
   LEFT JOIN agg_labels
     ON issues.issue_id = agg_labels.issue_id
@@ -178,8 +190,11 @@ joined AS (
     ON issues.issue_id = issue_metrics.issue_id
   LEFT JOIN first_events_weight
     ON issues.issue_id = first_events_weight.issue_id
+  LEFT JOIN close_moved_date
+    ON issues.issue_id = close_moved_date.issue_id
   LEFT JOIN derived_close_date
     ON issues.issue_id = derived_close_date.issue_id
+   
 )
 
 SELECT *

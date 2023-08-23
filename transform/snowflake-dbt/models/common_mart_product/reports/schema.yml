@@ -142,6 +142,10 @@ models:
       description: '{{ doc("dim_installation_id") }}'
     - name: latest_subscription_id
       description: '{{ doc("latest_subscription_id") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: version_is_prerelease
@@ -174,11 +178,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_subscriptions_on_versions_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, and estimation_grain
+      description: The unique composite ID for the rpt_ping_subscriptions_on_versions_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, estimation_grain and ping_deployment_type
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: stage_name
@@ -221,11 +229,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_subscriptions_reported_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, and estimation_grain
+      description: The unique composite ID for the rpt_ping_subscriptions_reported_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, estimation_grain and ping_deployment_type
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: stage_name
@@ -268,11 +280,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_metric_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, and estimation_grain
+      description: The unique composite ID for the rpt_ping_metric_estimate_factors_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, estimation_grain and ping_deployment_type.
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: stage_name
@@ -315,13 +331,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_metric_totals_w_estimates_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, estimation_grain, ping_edition_product_tier, and ping_delivery_type
+      description: The unique composite ID for the rpt_ping_metric_totals_w_estimates_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, estimation_grain, ping_edition_product_tier and ping_deployment_type
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: ping_delivery_type
       description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: ping_product_tier
@@ -372,11 +390,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_subscriptions_reported_counts_monthly model consisting of ping_created_date_month, metrics_path, and ping_edition
+      description: The unique composite ID for the rpt_ping_subscriptions_reported_counts_monthly model consisting of ping_created_date_month, metrics_path, ping_edition and ping_deployment_type
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: total_subscription_count
@@ -399,11 +421,15 @@ models:
       tests:
         - not_null
         - unique
-      description: The unique composite ID for the rpt_ping_subscriptions_on_versions_counts_monthly model consisting of ping_created_date_month, metrics_path, and ping_edition
+      description: The unique composite ID for the rpt_ping_subscriptions_on_versions_counts_monthly model consisting of ping_created_date_month, metrics_path, ping_edition, ping_delivery_type and ping_deployment_type
     - name: ping_created_date_month
       description: '{{ doc("ping_created_date_month") }}'
     - name: metrics_path
       description: '{{ doc("metrics_path") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: ping_edition
       description: '{{ doc("ping_edition") }}'
     - name: total_subscription_count
@@ -452,6 +478,10 @@ models:
     - name: max_historical_user_count
     - name: included_in_health_measures_str
       description: '{{ doc("included_in_health_measures_str") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: umau_28_days_user
       description: '{{ doc("umau_28_days_user_desc") }}'
     - name: action_monthly_active_users_project_repo_28_days_user
@@ -842,6 +872,10 @@ models:
     - name: max_historical_user_count
     - name: included_in_health_measures_str
       description: '{{ doc("included_in_health_measures_str") }}'
+    - name: ping_delivery_type
+      description: '{{ doc("ping_delivery_type") }}'
+    - name: ping_deployment_type
+      description: '{{ doc("ping_deployment_type") }}'
     - name: umau_28_days_user
       description: '{{ doc("umau_28_days_user_desc") }}'
     - name: action_monthly_active_users_project_repo_28_days_user
@@ -1346,6 +1380,92 @@ models:
       description: '{{ doc("behavior_at") }}'
     - name: behavior_date
       description: '{{ doc("behavior_date") }}'
+    - name: dim_namespace_id
+      description: '{{ doc("dim_namespace_id_behavior_model") }}'
+    - name: dim_project_id
+      description: '{{ doc("dim_project_id_behavior_model") }}'
+    - name: app_id
+      description: '{{ doc("app_id") }}'
+    - name: gsc_pseudonymized_user_id
+      description: '{{ doc("gsc_pseudonymized_user_id") }}'
+    - name: gsc_plan
+      description: '{{ doc("gsc_plan") }}'
+    - name: user_snowplow_domain_id
+      description: '{{ doc("user_snowplow_domain_id") }}'
+    - name: gsc_source
+      description: '{{ doc("gsc_source") }}'
+    - name: event_value
+      description: '{{ doc("event_value") }}'
+    - name: event_action
+      description: '{{ doc("event_action") }}'
+    - name: event_category
+      description: '{{ doc("event_category") }}'
+    - name: event_property
+      description: '{{ doc("event_property") }}'
+    - name: event_label
+      description: '{{ doc("event_label") }}'
+    - name: ultimate_parent_namespace_id
+      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+    - name: is_device_mobile
+      description: '{{ doc("is_device_mobile") }}'
+    - name: device_type
+      description: '{{ doc("device_type") }}'
+    - name: contexts
+      description: '{{ doc("contexts") }}'
+    - name: page_url_path
+      description: '{{ doc("page_url_path") }}'
+    - name: page_url_fragment
+      description: '{{ doc("page_url_fragment") }}'
+    - name: gsc_google_analytics_client_id
+      description: '{{ doc("gsc_google_analytics_client_id") }}'
+    - name: gsc_extra
+      description: '{{ doc("gsc_extra") }}'
+    - name: namespace_is_internal
+      description: '{{ doc("namespace_is_internal") }}'
+    - name: namespace_type
+      description: '{{ doc("namespace_type") }}'
+    - name: visibility_level
+      description: '{{ doc("visibility_level") }}'
+    - name: session_index
+      description: '{{ doc("session_index") }}'
+    - name: session_id
+      description: '{{ doc("session_id") }}'
+    - name: namespace_is_ultimate_parent
+      description: '{{ doc("namespace_is_ultimate_parent") }}'
+    - name: dim_behavior_referrer_page_sk
+      description: '{{ doc("dim_behavior_referrer_page_sk") }}'
+    - name: has_gitlab_service_ping_context
+      description: '{{ doc("has_gitlab_service_ping_context") }}'
+    - name: has_gitlab_experiment_context
+      description: '{{ doc("has_gitlab_experiment_context") }}'
+    - name: has_customer_standard_context
+      description: '{{ doc("has_customer_standard_context") }}'
+    - name: browser_name
+      description: '{{ doc("browser_name") }}'
+    - name: dim_behavior_browser_sk
+      description: '{{ doc("dim_behavior_browser_sk") }}'
+    - name: created_by
+      description: '{{ doc("created_by") }}'
+    - name: updated_by
+      description: '{{ doc("updated_by") }}'
+    - name: model_created_date
+      description: '{{ doc("model_created_date") }}'
+    - name: model_updated_date
+      description: '{{ doc("model_updated_date") }}'
+
+- name: rpt_webstore_subscription_purchase_flow_funnel_base
+  description: This data model stores Snowplow events related to the purchases on the Webstore for GitLab.com. This dataset can be used to understand user purchase journeys in detail and run funnel analysis to commute metrics like conversion rate, drop-off points etc.
+  columns:
+    - name: behavior_structured_event_pk
+      tests:
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+      description: '{{ doc("behavior_structured_event_pk") }}'
+    - name: behavior_at
+      description: '{{ doc("behavior_at") }}'
+    - name: behavior_date
+      description: '{{ doc("behavior_at") }}'
     - name: dim_namespace_id
       description: '{{ doc("dim_namespace_id_behavior_model") }}'
     - name: dim_project_id

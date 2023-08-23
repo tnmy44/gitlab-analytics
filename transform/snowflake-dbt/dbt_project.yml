@@ -135,10 +135,6 @@ models:
       +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +tags: ["sources"]
 
-      adaptive:
-        +materialized: table
-        +schema: adaptive
-         
       airflow:
         +materialized: table
         +schema: airflow
@@ -156,9 +152,6 @@ models:
       clari:
         +materialized: table
         +schema: clari
-
-      container_registry:
-        +schema: container_registry
 
       customers:
         +schema: customers
@@ -267,6 +260,9 @@ models:
         sensitive:
           +schema: sensitive
           secure: true
+
+      oci_reports:
+        +schema: oci_reports
 
       omamori:
         +materialized: table

@@ -21,3 +21,7 @@ Propensity to purchase for free account scores, created by ML algorithms.
 {% docs churn_forecasting_scores_source %}
 Propensity to churn on subscription/opportunity level.
 {% enddocs %}
+
+{% docs ptpl_scores_source %}
+Propensity to purchase leads.
+{% enddocs %}

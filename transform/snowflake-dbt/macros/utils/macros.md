@@ -180,6 +180,8 @@ This macro was built to be used in conjunction with the distinct_source macro.
 
 {% docs schema_union_all %}
 This macro takes a schema prefix and a table name and does a UNION ALL on all tables that match the pattern. The exclude_part parameter defaults to 'scratch' and all schemas matching that pattern will be ignored. Optionally, an integer representing a limit on the number of days to be included can be passed to limit the schemas that are included in the union.  This only limits to the month of the day represented by the integer, to filter to the precise day limit use `schema_union_limit` macro.
+
+If the user would like to test their changes with local versions of the unioned tables (i.e. those in their `USER_PREP`/`USER_PROD` schemas), they can apply a variable at run time in the terminal to pull the data from there instead of production. The variable defined in this macro is `local` will pull from local copies if it is not null when added in the terminal. Ex. `dbt run --m your_model_name --vars '{"local": "yes"}'`.
 {% enddocs %}
 
 

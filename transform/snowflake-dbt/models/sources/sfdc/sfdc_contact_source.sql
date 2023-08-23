@@ -150,6 +150,11 @@ renamed AS (
     pathfactory_content_journey__c AS pathfactory_content_journey,
     pathfactory_topic_list__c AS pathfactory_topic_list,
 
+    --Traction Fields
+    tracrtc__first_response_time_start__c AS traction_first_response_time,
+    tracrtc__first_response_time_in_seconds__c AS traction_first_response_time_seconds,
+    tracrtc__response_time_within_business_hours__c AS traction_response_time_in_business_hours,
+
     --gl info
     account_owner__c AS account_owner,
     ae_comments__c AS ae_comments,

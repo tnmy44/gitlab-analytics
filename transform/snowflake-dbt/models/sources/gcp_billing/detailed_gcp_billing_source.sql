@@ -15,12 +15,13 @@ source AS (
   FROM {{ source('gcp_billing','detail_gcp_billing') }}
   {% if is_incremental() %}
 
-  WHERE gcs_export_time > (SELECT MAX({{ var('incremental_backfill_date', 'uploaded_at') }}) FROM {{ this }})
-    AND gcs_export_time <= (SELECT DATEADD(MONTH, 1, MAX({{ var('incremental_backfill_date', 'uploaded_at') }})) FROM {{ this }})
+  WHERE date_part > (SELECT MAX({{ var('incremental_backfill_date', 'partition_date') }}) FROM {{ this }})
+    AND date_part <= (SELECT DATEADD(MONTH, 1, MAX({{ var('incremental_backfill_date', 'partition_date') }})) FROM {{ this }})
+    AND gcs_export_time > (SELECT MAX(uploaded_at) FROM {{ this }})
 
   {% else %}
   -- This will cover the first creation of the table or a full refresh and requires that the table be backfilled
-  WHERE gcs_export_time > DATEADD('day', -30 ,CURRENT_DATE())
+  WHERE date_part > DATEADD('day', -30 ,CURRENT_DATE())
 
   {% endif %}
 

@@ -71,3 +71,5 @@ sources:
       - name: rpt_event_xmau_metric_monthly_snapshot
       - name: dim_user_snapshot
       - name: customers_db_billing_accounts_snapshots
+      - name: job_profiles_snapshots
+      - name: customers_db_billing_account_contacts_snapshots

@@ -46,6 +46,10 @@ WITH prep_ci_runner AS (
         THEN 'SaaS Runner Linux - Medium'
       WHEN ci_runner_description LIKE '%saas-linux-large-amd64%'
         THEN 'SaaS Runner Linux - Large'
+      WHEN ci_runner_description LIKE '%saas-linux-xlarge-amd64%'
+        THEN 'SaaS Runner Linux - XLarge'
+      WHEN ci_runner_description LIKE '%saas-linux-2xlarge-amd64%'
+        THEN 'SaaS Runner Linux - 2XLarge'
       --- MacOS Runners
       WHEN ci_runner_description LIKE '%macOS%'
         THEN 'SaaS Runners macOS - Medium - amd64'
@@ -59,7 +63,6 @@ WITH prep_ci_runner AS (
     ci_runner_version,
     revision,
     platform,
-    architecture,
     is_untagged,
     is_locked,
     access_level,
@@ -80,7 +83,7 @@ WITH prep_ci_runner AS (
 {{ dbt_audit(
     cte_ref="prep_ci_runner",
     created_by="@snalamaru",
-    updated_by="@nhervas",
+    updated_by="@jpeguero",
     created_date="2021-06-23",
-    updated_date="2023-04-13"
+    updated_date="2023-07-21"
 ) }}

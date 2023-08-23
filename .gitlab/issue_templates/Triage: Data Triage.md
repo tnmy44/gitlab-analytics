@@ -108,7 +108,7 @@ The focus area for the Data Engineer are the Data Pipelines and Data Infrastruct
 
 In addition to these tasks, the Data Engineer on triage should be focused on resolving these issues, including the backlog found on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859) as well as updating the [runbooks](https://gitlab.com/gitlab-data/runbooks) project where relevant.
 
-* [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#data-pipelines** and **#data-prom-alerts** so that it is clear for the next triager what time to check for issues from.
+* [ ] At the end of your working day post EOD message to slack along with a link to this issue only in **#data-pipelines**  so that it is clear demarcation that all the alert until this point has either open issue in [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859) or  issue has been resolved.  
 
 ### Data Notification Templates
 

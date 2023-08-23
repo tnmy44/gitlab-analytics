@@ -159,11 +159,15 @@ WITH biz_person AS (
       zoominfo_mobile_phone_number,
       zoominfo_do_not_call_direct_phone,
       zoominfo_do_not_call_mobile_phone,
+      traction_first_response_time,
+      traction_first_response_time_seconds,
+      traction_response_time_in_business_hours,
       last_transfer_date_time,
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
       NULL                                           AS zoominfo_company_employee_count,
-      zoominfo_contact_id
+      zoominfo_contact_id,
+      NULL                                           AS is_partner_recalled
 
 
     FROM sfdc_contacts
@@ -278,11 +282,15 @@ WITH biz_person AS (
       zoominfo_mobile_phone_number,
       zoominfo_do_not_call_direct_phone,
       zoominfo_do_not_call_mobile_phone,
+      traction_first_response_time,
+      traction_first_response_time_seconds,
+      traction_response_time_in_business_hours,
       last_transfer_date_time,
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
       zoominfo_company_employee_count,
-      NULL AS zoominfo_contact_id
+      NULL AS zoominfo_contact_id,
+      is_partner_recalled
 
     FROM sfdc_leads
     LEFT JOIN biz_person_with_touchpoints
@@ -314,7 +322,7 @@ WITH biz_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-05-30"
+    updated_date="2023-08-03"
 ) }}
