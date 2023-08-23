@@ -100,7 +100,7 @@
         agg_labels.labels)                                                                   AS labels,
       IFNULL(upvote_count.upvote_count, 0)                                                   AS upvote_count
     FROM gitlab_dotcom_epics_dedupe_source
-    LEFT JOIN prep_namespace
+    LEFT JOIN namespace_prep
         ON gitlab_dotcom_epics_dedupe_source.group_id = namespace_prep.dim_namespace_id
     LEFT JOIN prep_namespace_plan_hist
         ON namespace_prep.ultimate_parent_namespace_id = prep_namespace_plan_hist.dim_namespace_id
