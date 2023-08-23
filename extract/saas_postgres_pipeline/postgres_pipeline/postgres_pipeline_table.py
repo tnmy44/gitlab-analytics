@@ -249,7 +249,7 @@ class PostgresPipelineTable:
             self.check_and_handle_schema_removal(source_engine, target_engine)
 
         if load_type == "incremental":
-            self.do_incremental(
+            loaded = self.do_incremental(
                 source_engine, target_engine, metadata_engine, is_schema_addition
             )
         else:
