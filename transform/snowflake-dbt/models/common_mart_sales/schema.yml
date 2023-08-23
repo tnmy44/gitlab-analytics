@@ -16,9 +16,9 @@ models:
         meta:
            masking_policy: analyst_sales_sensitive
 
-    - name: mart_crm_event
-      description: Record of all Salesforce Events related to leads, contact, accounts, and opportunities. 
-      columns:
+  - name: mart_crm_event
+    description: Record of all Salesforce Events related to leads, contact, accounts, and opportunities. 
+    columns:
       - name: dim_crm_event_sk
         description: The utility-generated ID key, from the event_id. 
         tests:
