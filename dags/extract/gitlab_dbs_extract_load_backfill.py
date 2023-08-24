@@ -134,8 +134,8 @@ def get_last_loaded(dag_name: str) -> Union[None, str]:
     return (
         "{{{{ task_instance.xcom_pull('{task_id}', include_prior_dates=True)['max_data_available'] | "
         "default('{default_date}', true) }}}}".format(
-                task_id=task_identifier + "-pgp-extract",
-                default_date=xcom_date.strftime("%Y-%m-%dT%H:%M:%S") + "+00:00",
+            task_id=task_identifier + "-pgp-extract",
+            default_date=xcom_date.strftime("%Y-%m-%dT%H:%M:%S") + "+00:00",
         )
     )
 
