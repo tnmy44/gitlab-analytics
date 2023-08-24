@@ -88,7 +88,7 @@ models:
       - name: csm_activity_type
         description: The CSM's Activity Type of the Event. 
       - name: customer_interaction_sentiment
-        description: The Csutomer's sentiment/feedback on the Event
+        description: The Customer's sentiment/feedback on the Event
       - name: google_doc_link
         description: The link to a google doc related to the event. 
       - name: comments
@@ -114,7 +114,7 @@ models:
       - name: is_all_day_event
         description: Boolean value - Whether or not the Event is an all day event. 
       - name: is_archived
-        description: Boolean value -Whether or not the event is now archvied. 
+        description: Boolean value -Whether or not the event is now archived. 
       - name: is_child_event
         description: Boolean value - Whether or not the Event is the child of another Event. 
       - name: is_group_event
