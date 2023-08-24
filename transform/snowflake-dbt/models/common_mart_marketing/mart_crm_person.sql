@@ -195,7 +195,6 @@
         ELSE FALSE
       END                                                        AS is_lead_source_trial,
       fct_crm_person.is_bdr_sdr_worked,
-      fct_crm_person.is_partner_recalled,
       dim_crm_person.person_first_country
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
