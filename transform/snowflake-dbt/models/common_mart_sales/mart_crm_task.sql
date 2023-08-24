@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('dim_crm_task', 'dim_crm_task'),
     ('fct_crm_task', 'fct_crm_task')
