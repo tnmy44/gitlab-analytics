@@ -139,7 +139,7 @@ models:
         - name: propensity_to_purchase_score_date
           description: This field indicates the date when most recent probability to purchase score was calculated.
         - name: propensity_to_purchase_score_group
-          description: 	This field indicates the propensity to purchase score, 5 being the highest probability to purchase.
+          description: This field indicates the propensity to purchase score, 5 being the highest probability to purchase.
         - name: pql_namespace_creator_job_description
           description: namespace creator self-described job description
         - name: pql_namespace_id
