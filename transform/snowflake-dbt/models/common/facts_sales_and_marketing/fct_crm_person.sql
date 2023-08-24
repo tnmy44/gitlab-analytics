@@ -26,6 +26,9 @@ WITH account_dims_mapping AS (
       name_of_active_sequence,
       sequence_task_due_date,
       sequence_status,
+      traction_first_response_time,
+      traction_first_response_time_seconds,
+      traction_response_time_in_business_hours,
       last_activity_date,
       last_transfer_date_time,
       time_from_last_transfer_to_sequence,
@@ -286,6 +289,9 @@ WITH account_dims_mapping AS (
       crm_person.last_transfer_date_time,
       crm_person.time_from_last_transfer_to_sequence,
       crm_person.time_from_mql_to_last_transfer,
+      crm_person.traction_first_response_time,
+      crm_person.traction_first_response_time_seconds,
+      crm_person.traction_response_time_in_business_hours,
 
      -- additive fields
 

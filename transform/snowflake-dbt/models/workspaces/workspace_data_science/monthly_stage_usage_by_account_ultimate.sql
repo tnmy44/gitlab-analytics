@@ -49,8 +49,8 @@ ultimate_namespaces AS (
     FROM {{ ref('gitlab_dotcom_namespace_lineage_historical_monthly') }} namespace_lineage_historical
     LEFT JOIN {{ ref('gitlab_dotcom_plans_source') }} plan_info
       ON namespace_lineage_historical.ultimate_parent_plan_id = plan_info.plan_id
-    WHERE plan_title = 'Ultimate (Formerly Gold)'
-        OR plan_title = 'Gold'
+    WHERE plan_name = 'ultimate'
+        OR plan_name = 'gold'
 
 
 ),

@@ -23,6 +23,7 @@ WITH date_details AS (
       order_type_stamped,
       deal_category,
       opportunity_category,
+      partner_category,
       deal_group,
       opportunity_owner_manager,
       is_edu_oss,
@@ -53,6 +54,7 @@ WITH date_details AS (
       report_opportunity_user_sub_business_unit,
       report_opportunity_user_division,
       report_opportunity_user_asm,
+      report_opportunity_user_role_type,
       
       -- FY23 keys 
       key_sqs,
@@ -88,6 +90,15 @@ WITH date_details AS (
       key_bu_subbu_division_sqs,
       key_bu_subbu_division_asm,
 
+
+      parent_crm_account_upa_country,
+      parent_crm_account_upa_state,
+      parent_crm_account_upa_city,
+      parent_crm_account_upa_street,
+      parent_crm_account_upa_postal_code,
+      parent_crm_account_upa_country_name,
+      parent_crm_account_business_unit,
+
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
       -- I am adding this logic
@@ -102,7 +113,11 @@ WITH date_details AS (
       is_won,
       is_duplicate_flag,
       raw_net_arr,
-      sales_qualified_source
+      sales_qualified_source,
+
+      industry,
+      lam_dev_count_bin,
+      lam_dev_count
 
       -- Channel Org. fields
       -- this fields should be changed to this historical version
@@ -129,6 +144,12 @@ WITH date_details AS (
 
     SELECT * 
     FROM {{ref('wk_sales_sfdc_users_xf')}}  
+
+), fct_crm_snapshot_daily AS (
+
+    SELECT crm_opportunity_snapshot_id,
+        dim_parent_crm_opportunity_id
+    FROM  {{ref('fct_crm_opportunity_daily_snapshot')}}  
 
 ), sfdc_opportunity_snapshot_history AS (
 
@@ -358,37 +379,6 @@ WITH date_details AS (
       edm_snapshot_opty.net_new_source_categories,           
       edm_snapshot_opty.record_type_id,
       
-
-      -- JK 2022-10-25 they are being calculated in a CTE later for now
-      -- edm_snapshot_opty.churned_contraction_deal_count,
-      -- edm_snapshot_opty.open_1plus_net_arr,
-      -- edm_snapshot_opty.open_3plus_net_arr,
-      -- edm_snapshot_opty.open_4plus_net_arr,
-      -- edm_snapshot_opty.churned_contraction_net_arr,
-      -- edm_snapshot_opty.booked_net_arr,
-      -- edm_snapshot_opty.is_booked_net_arr                       AS is_booked_net_arr_flag,
-      -- edm_snapshot_opty.is_eligible_asp_analysis                AS is_eligible_asp_analysis_flag,
-      -- edm_snapshot_opty.is_eligible_age_analysis                AS is_eligible_age_analysis_flag,
-      -- edm_snapshot_opty.is_eligible_churn_contraction           AS is_eligible_churn_contraction_flag,
-      -- edm_snapshot_opty.is_excluded_from_pipeline_created       AS is_excluded_flag,
-
-      -- CASE edm_snapshot_opty.is_sao 
-      --   WHEN TRUE THEN 1 
-      --   ELSE 0 
-      -- END                                                        AS is_eligible_sao_flag,
-
-      -- edm_snapshot_opty.created_in_snapshot_quarter_net_arr,
-      -- edm_snapshot_opty.created_and_won_same_quarter_net_arr,
-
-      -- edm_snapshot_opty.open_1plus_deal_count,
-      -- edm_snapshot_opty.open_3plus_deal_count,
-      -- edm_snapshot_opty.open_4plus_deal_count,
-      -- edm_snapshot_opty.booked_deal_count,
-      -- edm_snapshot_opty.deal_size,
-      -- edm_snapshot_opty.calculated_deal_size,
-      -- edm_snapshot_opty.is_eligible_open_pipeline               AS is_eligible_open_pipeline_flag,
-      -- edm_snapshot_opty.created_in_snapshot_quarter_deal_count,
-
       edm_snapshot_opty.dim_crm_account_id                       AS account_id,
       edm_snapshot_opty.account_owner_team_stamped,
       edm_snapshot_opty.account_owner_team_stamped_cro_level,
@@ -405,12 +395,25 @@ WITH date_details AS (
       edm_snapshot_opty.parent_crm_account_geo,
       edm_snapshot_opty.parent_crm_account_region,
       edm_snapshot_opty.parent_crm_account_area,
-      edm_snapshot_opty.parent_crm_account_territory
+      edm_snapshot_opty.parent_crm_account_territory,
+      fact_snapshot_opty.dim_parent_crm_opportunity_id AS parent_opportunity,
+      edm_snapshot_opty.intended_product_tier,
+      edm_snapshot_opty.product_category,
+
+      edm_snapshot_opty.arr_basis_for_clari     AS atr,
+      edm_snapshot_opty.won_arr_basis_for_clari AS won_atr,
+      CASE
+        WHEN edm_snapshot_opty.fpa_master_bookings_flag = 1
+          THEN edm_snapshot_opty.won_arr_basis_for_clari - edm_snapshot_opty.arr_basis_for_clari
+        ELSE 0
+      END                                       AS booked_churned_contraction_net_arr
       
 
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
     INNER JOIN date_details AS close_date_detail
       ON edm_snapshot_opty.close_date::DATE = close_date_detail.date_actual
+    LEFT JOIN fct_crm_snapshot_daily fact_snapshot_opty
+        ON fact_snapshot_opty.crm_opportunity_snapshot_id = edm_snapshot_opty.crm_opportunity_snapshot_id
 
 ), sfdc_opportunity_snapshot_history_xf AS (
 
@@ -459,6 +462,7 @@ WITH date_details AS (
       sfdc_opportunity_xf.deal_category,
       sfdc_opportunity_xf.opportunity_category,
       sfdc_opportunity_xf.deal_group,
+      sfdc_opportunity_xf.partner_category,
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.is_edu_oss,
 
@@ -467,8 +471,8 @@ WITH date_details AS (
       sfdc_opportunity_xf.report_opportunity_user_sub_business_unit,
       sfdc_opportunity_xf.report_opportunity_user_division,
       sfdc_opportunity_xf.report_opportunity_user_asm,
+      sfdc_opportunity_xf.report_opportunity_user_role_type,
       
-
       sfdc_opportunity_xf.key_bu,
       sfdc_opportunity_xf.key_bu_subbu,
       sfdc_opportunity_xf.key_bu_subbu_ot,
@@ -478,43 +482,26 @@ WITH date_details AS (
       sfdc_opportunity_xf.key_bu_subbu_division_sqs,
       sfdc_opportunity_xf.key_bu_subbu_division_asm,
 
-      -- fields calculated with both live and snapshot fields
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_date 
-        ELSE NULL
-      END                                               AS stage_1_date,
+      sfdc_opportunity_xf.parent_crm_account_upa_country,
+      sfdc_opportunity_xf.parent_crm_account_upa_state,
+      sfdc_opportunity_xf.parent_crm_account_upa_city,
+      sfdc_opportunity_xf.parent_crm_account_upa_street,
+      sfdc_opportunity_xf.parent_crm_account_upa_postal_code,
+      sfdc_opportunity_xf.parent_crm_account_upa_country_name,
+      sfdc_opportunity_xf.parent_crm_account_business_unit,
 
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_date_month 
-        ELSE NULL
-      END                                               AS stage_1_date_month,
+      sfdc_opportunity_xf.industry,
 
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_fiscal_year 
-        ELSE NULL
-      END                                               AS stage_1_fiscal_year,
 
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_fiscal_quarter_name 
-        ELSE NULL
-      END                                               AS stage_1_fiscal_quarter_name,
-
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_fiscal_quarter_date 
-        ELSE NULL
-      END                                               AS stage_1_fiscal_quarter_date,
       
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
 
       opportunity_owner.name                                     AS opportunity_owner,
 
-      opportunity_owner.is_rep_flag
+      opportunity_owner.is_rep_flag,
+      sfdc_opportunity_xf.lam_dev_count_bin,
+      sfdc_opportunity_xf.lam_dev_count
 
       
     FROM sfdc_opportunity_snapshot_history AS opp_snapshot
@@ -850,7 +837,120 @@ WITH date_details AS (
          WHEN stage_name IN ('5-Negotiating','6-Awaiting Signature')
             THEN '3. Late'
         ELSE '4. Closed'
-    END                     AS pipeline_category
+    END                     AS pipeline_category,
+
+    -- NF: cycle time will consider if the opty is renewal and eligible to be considered 
+    -- using the is_eligible_cycle_time_analysis
+    CASE 
+        WHEN is_edu_oss = 0
+            AND is_deleted = 0
+            -- For stage age we exclude only ps/other
+            AND order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+            -- Only include deal types with meaningful journeys through the stages
+            AND opportunity_category IN ('Standard')
+            -- Web Purchase have a different dynamic and should not be included
+            AND is_web_portal_purchase = 0
+                THEN 1
+        ELSE 0
+    END                                                           AS is_eligible_cycle_time_analysis_flag,
+
+    -- NF: We consider net_arr_created date for renewals as they haver a very distinct motion than 
+    --      add on and First Orders
+    --     Logic is different for open deals so we can evaluate their current cycle time.
+    CASE
+        WHEN is_renewal = 1 AND is_closed = 1
+            THEN DATEDIFF(day, net_arr_created_date, close_date)
+        WHEN is_renewal = 0 AND is_closed = 1
+            THEN DATEDIFF(day, created_date, close_date)
+         WHEN is_renewal = 1 AND is_open = 1
+            THEN DATEDIFF(day, net_arr_created_date, snapshot_date)
+        WHEN is_renewal = 0 AND is_open = 1
+            THEN DATEDIFF(day, created_date, snapshot_date)
+    END                                                           AS cycle_time_in_days,
+
+    -- 
+    CASE
+        WHEN cycle_time_in_days BETWEEN 0 AND 29
+            THEN '[0,30)'
+        WHEN cycle_time_in_days BETWEEN 30 AND 179
+            THEN '[30,180)'
+        WHEN cycle_time_in_days BETWEEN 180 AND 364
+            THEN '[180,365)'
+        WHEN cycle_time_in_days > 364
+            THEN '[365+)'
+        ELSE 'Other'
+    END                  AS age_bin,
+
+    -- age in stage
+    CASE
+        WHEN stage_name = '0-Pending Acceptance'
+            THEN created_date
+        WHEN stage_name = '1-Discovery'
+            THEN stage_1_discovery_date
+        WHEN stage_name = '2-Scoping'
+            THEN stage_2_scoping_date
+        WHEN stage_name = '3-Technical Evaluation'
+            THEN stage_3_technical_evaluation_date
+        WHEN stage_name = '4-Proposal'
+            THEN stage_4_proposal_date
+        WHEN stage_name = '5-Negotiating'
+            THEN stage_5_negotiating_date
+        WHEN stage_name = '6-Awaiting Signature'
+            THEN stage_6_awaiting_signature_date
+        WHEN stage_name = '7-Closing'
+            THEN close_date
+        WHEN stage_name = '8-Closed Lost'
+            THEN close_date
+        WHEN stage_name = '9-Unqualified'
+            THEN close_date
+        WHEN stage_name = '10-Duplicate'
+            THEN close_date
+        WHEN stage_name = 'Closed Won'
+            THEN close_date
+    END                                 AS current_stage_start_date,
+
+    CASE 
+        WHEN is_open = 1 AND current_stage_start_date < snapshot_date
+            THEN DATEDIFF(DAY,current_stage_start_date,snapshot_date)
+        WHEN current_stage_start_date < close_date
+            THEN DATEDIFF(DAY,current_stage_start_date,close_date)
+        ELSE NULL
+    END                                 AS current_stage_age,
+
+    CASE
+        WHEN current_stage_age BETWEEN 0 AND 29
+            THEN '[0,30)'
+        WHEN current_stage_age BETWEEN 30 AND 179
+            THEN '[30,180)'
+        WHEN current_stage_age BETWEEN 180 AND 364
+            THEN '[180,365)'
+        WHEN current_stage_age > 364
+            THEN '[365+)'
+        ELSE 'N/A'
+    END                  AS current_stage_age_bin,
+
+
+    -- Calculated fields
+    CASE
+        WHEN LOWER(product_category) LIKE '%premium%'
+            THEN 'Premium'
+        WHEN LOWER(product_category) LIKE '%ultimate%'
+            THEN 'Ultimate'
+        WHEN LOWER(intended_product_tier) LIKE '%premium%'
+            THEN 'Premium'
+        WHEN LOWER(intended_product_tier) LIKE '%ultimate%'
+            THEN 'Ultimate'
+        ELSE 'Other'
+    END AS  product_category_tier,
+
+    CASE
+        WHEN lower(product_category) LIKE '%saas%'
+                THEN 'SaaS'
+        WHEN lower(product_category) LIKE '%self-managed%'
+                THEN 'Self-Managed'
+        ELSE 'Other'
+    END AS  product_category_deployment
+
 
     FROM add_compound_metrics
 )

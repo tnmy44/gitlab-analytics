@@ -171,7 +171,7 @@ models:
       - name: last_at_risk_update_comments
       - name: bdr_prospecting_status
         description: Indicates whether the account is actively being prospected by a BDR.
-
+        
   - name: sfdc_account_history_source
     description: Source model for SFDC Account History
     columns:
@@ -225,6 +225,8 @@ models:
         tests:
           - not_null
           - unique
+      - name: campaign_member_status
+        description: Status of the campaign member response. 
   - name: sfdc_case_source
     description: Source model for SFDC Case
     columns:
@@ -408,6 +410,25 @@ models:
         description: '{{ doc("vsa_status") }}'
       - name: vsa_end_date
         description: '{{ doc("vsa_end_date") }}'
+      - name: next_steps
+        description: Free text field that provides insight into the next step to continue progressing the Opportunity through the Sales Pipeline.
+      - name: auto_renewal_status
+        descripton: Flag with on/off. Indicates whether a current subscription will automatically renew for the same term as their current subscription after the expiration of the current term
+      - name: qsr_notes
+        description: '{{ doc("qsr_notes") }}'
+      - name: qsr_status  
+        description: Quarterly Subscription Reconciliation status (Pending, failed, processed)
+      - name: manager_confidence
+      - name: renewal_risk_category
+        description: Renewal forecasting field indicating whether the customer will renew, churn or contract (actionable or not)
+      - name: renewal_swing_arr
+        description: The revenue the Account team believes can be saved on an at-risk Renewal if action is taken
+      - name: renewal_manager
+        description:  Renewals Manager supporting this Opportunity
+      - name: renewal_forecast_health
+        description: Red, Yellow, Green health rating based on the Net ARR field
+      - name: renewal_ownership
+        description: This field determines Rules of Engagement (ROE) and ownership for the Renewal between the Renewals Manager and the Account Executive
 
   - name: sfdc_opportunity_history_source
     description: Source model for SFDC Opportunity History
@@ -591,3 +612,9 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: sfdc_impartner_mdf_funds_request_source
+    description: Source model for SFDC custom object from impartner with parter MDF fund requests
+  
+  - name: sfdc_impartner_mdf_funds_claim_source
+    description: Source model for SFDC custom object from impartner with parter MDF fund claims after requests

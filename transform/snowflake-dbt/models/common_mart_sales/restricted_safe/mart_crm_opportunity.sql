@@ -26,6 +26,7 @@
       --surrogate keys
       dim_crm_account.dim_parent_crm_account_id,
       fct_crm_opportunity.dim_crm_user_id,
+      dim_crm_opportunity.dim_parent_crm_opportunity_id,
       dim_crm_opportunity.duplicate_opportunity_id,
       fct_crm_opportunity.merged_crm_opportunity_id,
       fct_crm_opportunity.record_type_id,
@@ -71,6 +72,7 @@
       dim_crm_opportunity.vsa_end_date,
       dim_crm_opportunity.vsa_url,
       dim_crm_opportunity.vsa_status,
+      dim_crm_opportunity.intended_product_tier,
       dim_crm_opportunity.deployment_preference,
       dim_crm_opportunity.net_new_source_categories,
       dim_crm_opportunity.invoice_number,
@@ -111,6 +113,16 @@
       dim_sales_qualified_source.sales_qualified_source_grouped,
       dim_sales_qualified_source.sqs_bucket_engagement,
       dim_crm_opportunity.record_type_name,
+      dim_crm_opportunity.next_steps,
+      dim_crm_opportunity.auto_renewal_status,
+      dim_crm_opportunity.qsr_notes,
+      dim_crm_opportunity.qsr_status,
+      dim_crm_opportunity.manager_confidence,
+      dim_crm_opportunity.renewal_risk_category,
+      dim_crm_opportunity.renewal_swing_arr,
+      dim_crm_opportunity.renewal_manager, 
+      dim_crm_opportunity.renewal_forecast_health,
+      dim_crm_opportunity.renewal_ownership,
 
        -- Account fields
       dim_crm_account.crm_account_name,
@@ -495,6 +507,7 @@
       fct_crm_opportunity.arr_basis_for_clari,
       fct_crm_opportunity.forecasted_churn_for_clari,
       fct_crm_opportunity.override_arr_basis_clari
+      
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_opportunity
@@ -571,7 +584,7 @@
     created_by="@iweeks",
     updated_by="@lisvinueza",
     created_date="2020-12-07",
-    updated_date="2023-05-21"
+    updated_date="2023-07-19"
   ) }}
 
 

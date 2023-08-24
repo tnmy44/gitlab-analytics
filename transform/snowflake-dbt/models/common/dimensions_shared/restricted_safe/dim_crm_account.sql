@@ -3,7 +3,39 @@
     "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_account_id', not_null_test_cols = ['is_reseller']) }}"
 }) }}
 
-WITH final AS (
+{{ simple_cte([
+    ('prep_crm_account','prep_crm_account'),
+    ('prep_charge_mrr', 'prep_charge_mrr'),
+    ('prep_date', 'prep_date')
+]) }}
+
+, cohort_date AS (
+
+  SELECT
+    prep_charge_mrr.dim_crm_account_id,
+    MIN(prep_date.first_day_of_month)          AS crm_account_arr_cohort_month,
+    MIN(prep_date.first_day_of_fiscal_quarter) AS crm_account_arr_cohort_quarter
+  FROM prep_charge_mrr
+  LEFT JOIN prep_date
+    ON prep_date.date_id = prep_charge_mrr.date_id
+  WHERE prep_charge_mrr.subscription_status IN ('Active', 'Cancelled')
+  GROUP BY 1
+
+), parent_cohort_date AS (
+
+  SELECT
+    prep_crm_account.dim_parent_crm_account_id,
+    MIN(prep_date.first_day_of_month)          AS parent_account_arr_cohort_month,
+    MIN(prep_date.first_day_of_fiscal_quarter) AS parent_account_arr_cohort_quarter
+  FROM prep_charge_mrr
+  LEFT JOIN prep_date
+    ON prep_date.date_id = prep_charge_mrr.date_id
+  LEFT JOIN prep_crm_account
+    ON prep_charge_mrr.dim_crm_account_id = prep_crm_account.dim_crm_account_id
+  WHERE prep_charge_mrr.subscription_status IN ('Active', 'Cancelled')
+  GROUP BY 1
+
+), final AS (
 
     SELECT 
       --primary key
@@ -118,6 +150,7 @@ WITH final AS (
       prep_crm_account.last_timeline_at_risk_update,
       prep_crm_account.last_at_risk_update_comments,
       prep_crm_account.bdr_prospecting_status,
+      prep_crm_account.is_focus_partner,
 
       --measures (maintain for now to not break reporting)
       prep_crm_account.parent_crm_account_lam,
@@ -162,6 +195,10 @@ WITH final AS (
       prep_crm_account.next_renewal_date,
       prep_crm_account.gs_first_value_date,
       prep_crm_account.gs_last_csm_activity_date,
+      cohort_date.crm_account_arr_cohort_month,
+      cohort_date.crm_account_arr_cohort_quarter,
+      parent_cohort_date.parent_account_arr_cohort_month,
+      parent_cohort_date.parent_account_arr_cohort_quarter,
 
       --metadata
       prep_crm_account.created_by_name,
@@ -175,16 +212,20 @@ WITH final AS (
       prep_crm_account.ptc_score,
       prep_crm_account.ptc_decile,
       prep_crm_account.ptc_score_group
-    FROM {{ ref('prep_crm_account') }}
+    FROM prep_crm_account
+    LEFT JOIN cohort_date
+        ON cohort_date.dim_crm_account_id = prep_crm_account.dim_crm_account_id
+    LEFT JOIN parent_cohort_date
+        ON parent_cohort_date.dim_parent_crm_account_id = prep_crm_account.dim_parent_crm_account_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@lisvinueza",
+    updated_by="@jpeguero",
     created_date="2020-06-01",
-    updated_date="2023-05-21"
+    updated_date="2023-08-14"
 ) }}
 
 

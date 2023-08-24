@@ -2,9 +2,9 @@ version: 2
 
 models:
   - name: bizible_attribution_touchpoint_snapshots_source
-    description: Attibtution touchpoints from Bizible loaded into Salesforce.
+    description: Attribution touchpoints from Bizible loaded into Salesforce.
   - name: bizible_touchpoint_snapshots_source
-    description: Attibtution touchpoints from Bizible loaded into Salesforce.
+    description: Attribution touchpoints from Bizible loaded into Salesforce.
   - name: comp_band_loc_factor_base
     description: This model captures percent over comp band data from the sheetload_employee_location_factor snapshotted model. This sheetload is active between 2019.10  - 2020.05.20.
   - name: customers_db_customers_snapshots_base
@@ -146,7 +146,7 @@ models:
       - name: zoom_info_company_employee_count
         description: The number of employees of the company matched by the Zoom Info enrichment process.
       - name: zoom_info_company_industry
-        description: The the primary industry of the company matched by the Zoom Info enrichment process.
+        description: The primary industry of the company matched by the Zoom Info enrichment process.
       - name: zoom_info_company_city
         description: The city of the company matched by the Zoom Info enrichment process.
       - name: zoom_info_company_state_province
@@ -158,9 +158,9 @@ models:
       - name: bdr_prospecting_status
         description: Indicates whether the account is actively being prospected by a BDR.
   - name: sfdc_bizible_attribution_touchpoint_snapshots_source
-    description: Attibtution touchpoints from Bizible loaded into Salesforce.
+    description: Attribution touchpoints from Bizible loaded into Salesforce.
   - name: sfdc_bizible_touchpoint_snapshots_source
-    description: Attibtution touchpoints from Bizible loaded into Salesforce.
+    description: Attribution touchpoints from Bizible loaded into Salesforce.
   - name: sfdc_opportunity_snapshots_base
     description: This is the base model for snapshots of the salesforce opportunity table for 2019-10-01 and forward.
     columns:
@@ -233,3 +233,62 @@ models:
     description: Source layer for Zuora Rate Plan Charges Snapshots for cleaning and renaming
   - name: zuora_subscription_snapshots_source
     description: Source layer for Zuora Subscriptions
+
+  - name: customers_db_billing_accounts_snapshots_base
+    description: This is the base model for snapshotted billing accounts data from the customers.gitlab.com database.
+    columns:
+      - name: billing_account_snapshot_id
+        description: Auto-generated primary key when building the snapshot with dbt
+        tests:
+          - not_null
+          - unique
+      - name: billing_account_id
+        description: A system-generated unique ID for billing accounts in CDot
+        tests:
+          - not_null
+      - name: zuora_account_id
+        description: A unique Zuora account number associated with the User
+      - name: zuora_account_name
+        description: The name of the zuora account associated with the zuora account id
+      - name: sfdc_account_id
+        description: The customer account ID for the account
+      - name: billing_account_created_at
+        description: The date the billing account was created for the customer
+      - name: billing_account_created_at
+        description: The date when any changes happened to the Billing account record for a customer
+      - name: valid_from
+        tests:
+          - not_null
+      - name: valid_to
+
+  - name: customers_db_billing_account_contacts_snapshots_base
+    description: This is the base model for snapshotted billing account contacts data from the customers.gitlab.com database.
+    columns:
+      - name: billing_account_contact_snapshot_id
+        description: Auto-generated primary key when building the snapshot with dbt
+        tests:
+          - not_null
+          - unique
+      - name: work_email
+        description: Billing account contact's work email
+      - name: zuora_account_id
+        description: Zuora account id associated with the Billing Account Contact
+        tests:
+          - not_null
+      - name: zuora_contact_id
+        description: Zuora contact id associated with the Billing Account Contact
+        tests:
+          - not_null       
+      - name: billing_account_contact_created_at
+        description: The date the billing account contact was created
+      - name: billing_account_contact_updated_at
+        description: The date the billing account contact was updated
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: valid_to
+
+
+

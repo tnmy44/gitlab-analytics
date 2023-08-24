@@ -392,6 +392,17 @@ A recreation of `prep_usage_ping_subscription_mapped_wave_2_3_metrics` for _SaaS
 
 {% enddocs %}
 
+
+{% docs prep_ping_instance_flattened_uploaded_at %}
+
+Column `uploaded_at` (`TIMESTAMP` data type) represent the moment WHEN the record is ingested into Snowflake. 
+The main motivation for introducing this column is for a few reasons:
+1. Be able to track back the exact date and time of data ingesting _(this information wasn't known to us)_
+1. Improving incremental load using `uploaded_at` column 
+1. Support "late_arriving" ping automatically, without the need to full-refresh a full lineage
+
+{% enddocs %}
+
 {% docs prep_saas_usage_ping_namespace %}
 
 fct table from the usage_ping_namespace. Granularity of one row per namespace per metric per run
@@ -497,6 +508,16 @@ Prep table for the dim table `dim_deployment` that is not yet created.
 
 {% enddocs %}
 
+{% docs uploaded_at %}
+
+Column `uploaded_at` (`TIMESTAMP` data type) represent the moment WHEN the record is ingested into Snowflake. 
+The main motivation for introducing this column is for a few reasons:
+1. Be able to track back the exact date and time of data ingesting _(this information wasn't known to us)_
+1. Improving incremental load using `uploaded_at` column 
+1. Support "late_arriving" ping automatically, without the need to full-refresh a full lineage
+
+{% enddocs %}
+
 {% docs prep_package %}
 
 Prep table for the dim table `dim_package` that is not yet created. It is also used in the `prep_event` table
@@ -541,7 +562,7 @@ Prep table for the dim table `dim_release` that is not yet created. It is also u
 
 {% docs prep_requirement %}
 
-Prep table for the dim table `dim_requirement` that is not yet created. It is also used in the `prep_event` table
+Prep table for the dim table `dim_requirement`. It is also used in the `prep_event` table.
 {% enddocs %}
 
 {% docs prep_geozone %}
@@ -791,5 +812,14 @@ Only team members who have had a job change, promotion, or hire event are includ
 
 {% enddocs %}
 
+{% docs prep_namespace_order_trial %}
 
+This model contains data for all trial orders for each namespace from CDot trial histories and CDot orders that are being sourced from customers.gitlab.com.
 
+{% enddocs %}
+
+{% docs prep_order %}
+
+This table stores information about the subscription purchased by the customer plus some additional details used for syncing purposes with GitLab.com. The data is sourced from tap-postgres from the orders table from customers.gitlab.com.
+
+{% enddocs %}

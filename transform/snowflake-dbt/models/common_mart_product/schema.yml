@@ -80,6 +80,8 @@ models:
       - name: hostname
       - name: delivery_type
         description: Indicated if the product usage came from a SaaS or Self-Managed user.
+      - name: deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
       - name: cleaned_version
         description: Version of GitLab running on the instance
       - name: dim_crm_account_id

@@ -31,5 +31,7 @@ seeds:
     description: CSV containing the conversion rate for various usage and pricing unit. https://docs.google.com/spreadsheets/d/1V6_XwqjoKRo4LwbNPh8YtvnbHZPw5zM3HhgFxwyF-Mc/edit?usp=sharing
   - name: internal_gitlab_namespaces
     description: '{{ doc("internal_gitlab_namespaces") }}'
+  - name: gcp_billing_ai_mapping
+    description: CSV containing the resource names for AI resources in unreview-poc project
   - name: snowflake_non_team_member_user_types
     description: A categorization of non GitLab team member snowflake users

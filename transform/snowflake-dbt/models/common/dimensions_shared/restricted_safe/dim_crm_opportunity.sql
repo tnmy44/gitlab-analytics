@@ -16,6 +16,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.dim_crm_opportunity_id,
       prep_crm_opportunity.opportunity_name,
       prep_crm_opportunity.dim_crm_user_id,
+      prep_crm_opportunity.dim_parent_crm_opportunity_id,
 
       -- logistical information
       prep_crm_opportunity.generated_source,
@@ -103,6 +104,16 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.subscription_end_date,
       prep_crm_opportunity.resale_partner_name,
       prep_crm_opportunity.record_type_name,
+      prep_crm_opportunity.next_steps,
+      prep_crm_opportunity.auto_renewal_status,
+      prep_crm_opportunity.qsr_notes,
+      prep_crm_opportunity.qsr_status,
+      prep_crm_opportunity.manager_confidence,
+      prep_crm_opportunity.renewal_risk_category,
+      prep_crm_opportunity.renewal_swing_arr,
+      prep_crm_opportunity.renewal_manager, 
+      prep_crm_opportunity.renewal_forecast_health,
+      prep_crm_opportunity.renewal_ownership,
 
       --account people attributes
       prep_crm_opportunity.crm_account_owner_sales_segment,
@@ -218,8 +229,10 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.military_invasion_comments,
       prep_crm_opportunity.military_invasion_risk_scale,
 
-      prep_crm_opportunity.downgrade_details,
+      -- PS related
+      prep_crm_opportunity.intended_product_tier,
 
+      prep_crm_opportunity.downgrade_details,
 
       -- metadata
       prep_crm_opportunity._last_dbt_run
@@ -233,5 +246,5 @@ WITH prep_crm_opportunity AS (
     created_by="@iweeks",
     updated_by="@jngCES",
     created_date="2020-11-20",
-    updated_date="2023-04-06"
+    updated_date="2023-07-19"
 ) }}

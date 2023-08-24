@@ -31,3 +31,6 @@ config.json
 /transform/snowflake-dbt/dbt_packages/*
 /transform/safe_models.json
 .env
+snowsql_rt.log_bootstrap
+.python-version
+sales_analytics_notebooks/daily/202307_tableau_consolidation/.ipynb_checkpoints/tableau_table_consolidation-checkpoint.ipynb

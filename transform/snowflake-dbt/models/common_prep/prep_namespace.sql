@@ -6,7 +6,7 @@
     ('namespace_current', 'gitlab_dotcom_namespaces_source'),
     ('namespace_snapshots', 'prep_namespace_hist'),
     ('namespace_settings', 'gitlab_dotcom_namespace_settings_source'),
-    ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
+    ('namespace_lineage_historical', 'gitlab_dotcom_namespace_subscription_plan_scd'),
     ('map_namespace_internal', 'map_namespace_internal'),
     ('plans', 'gitlab_dotcom_plans_source'),
     ('product_tiers', 'prep_product_tier'),
@@ -56,29 +56,23 @@ creators AS (
 ),
 
 namespace_lineage AS (
-
   SELECT
-    namespace_lineage_historical.*,
-    IFF(ROW_NUMBER() OVER (
-      PARTITION BY namespace_lineage_historical.namespace_id
-      ORDER BY namespace_lineage_historical.snapshot_day DESC) = 1,
-      TRUE, FALSE)     AS is_current,
-    IFF(namespace_lineage_historical.snapshot_day = CURRENT_DATE,
-      TRUE, FALSE)     AS ultimate_parent_is_current,
-    plans.plan_title   AS ultimate_parent_plan_title,
-    plans.plan_is_paid AS ultimate_parent_plan_is_paid,
-    plans.plan_name    AS ultimate_parent_plan_name
+    dim_namespace_id AS namespace_id,
+    parent_id,
+    upstream_lineage,
+    ultimate_parent_id,
+    namespace_is_internal,
+    ultimate_parent_plan_id,
+    seats,
+    seats_in_use,
+    max_seats_used,
+    is_current,
+    is_current       AS ultimate_parent_is_current,
+    plan_title       AS ultimate_parent_plan_title,
+    plan_is_paid     AS ultimate_parent_plan_is_paid,
+    plan_name        AS ultimate_parent_plan_name
   FROM namespace_lineage_historical
-  INNER JOIN plans
-    ON namespace_lineage_historical.ultimate_parent_plan_id = plans.plan_id
-  QUALIFY ROW_NUMBER() OVER (
-      PARTITION BY
-        namespace_lineage_historical.namespace_id,
-        namespace_lineage_historical.parent_id,
-        namespace_lineage_historical.ultimate_parent_id
-      ORDER BY namespace_lineage_historical.snapshot_day DESC
-    ) = 1
-
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id,parent_id,ultimate_parent_id ORDER BY combined_valid_from DESC) = 1
 ),
 
 namespaces AS (
@@ -173,7 +167,7 @@ joined AS (
   LEFT JOIN map_namespace_internal
     ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
   LEFT JOIN product_tiers saas_product_tiers
-    ON saas_product_tiers.product_delivery_type = 'SaaS'
+    ON saas_product_tiers.product_deployment_type = 'GitLab.com'
       AND namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(saas_product_tiers.product_tier_name_short != 'Trial: Ultimate',
         saas_product_tiers.product_tier_historical_short,
         'ultimate_trial'))
@@ -190,7 +184,7 @@ joined AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@cbraza",
+    updated_by="@pempey",
     created_date="2021-01-14",
-    updated_date="2023-05-18"
+    updated_date="2023-08-14"
 ) }}

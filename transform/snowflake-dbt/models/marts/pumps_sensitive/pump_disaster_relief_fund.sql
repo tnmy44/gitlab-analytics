@@ -41,9 +41,9 @@ WITH current_employees AS (
 
     SELECT 
       '3936'          AS "Fund",
-      first_name      AS "First Name",
-      last_name       AS "Last Name",
-      employee_number AS "Employee ID",
+      first_name      AS "Firstname",
+      last_name       AS "Lastname",
+      employee_number AS "Employeenumber",
       last_work_email AS "Email",
       action          AS "Action",
       CURRENT_DATE()  AS report_date

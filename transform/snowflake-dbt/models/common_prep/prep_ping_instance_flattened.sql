@@ -11,7 +11,7 @@ WITH source AS (
         *
     FROM {{ ref('prep_ping_instance')}} as usage
     {% if is_incremental() %}
-          WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+          WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
     {% endif %}
 
 ) , flattened_high_level as (
@@ -22,19 +22,24 @@ WITH source AS (
         dim_instance_id                                                                         AS dim_instance_id,
         dim_installation_id                                                                     AS dim_installation_id,
         ping_created_at                                                                         AS ping_created_at,
+        uploaded_at                                                                             AS uploaded_at,
         ip_address_hash                                                                         AS ip_address_hash,
         license_md5                                                                             AS license_md5,
         license_sha256                                                                          AS license_sha256,
         original_edition                                                                        AS original_edition,
         main_edition                                                                            AS main_edition,
         product_tier                                                                            AS product_tier,
+        is_saas_dedicated                                                                       AS is_saas_dedicated,
+        ping_delivery_type                                                                      AS ping_delivery_type,
+        ping_deployment_type                                                                    AS ping_deployment_type,
         TO_DATE(source.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
         (source.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
         source.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
         path                                                                                    AS metrics_path,
         IFF(value = -1, 0, value)                                                               AS metric_value,
         IFF(value = -1, TRUE, FALSE)                                                            AS has_timed_out,
-        ping_type                                                                               AS ping_type
+        ping_type                                                                               AS ping_type,
+        version
       FROM source,
         LATERAL FLATTEN(input => raw_usage_data_payload,
         RECURSIVE => true)
@@ -44,7 +49,7 @@ WITH source AS (
   {{ dbt_audit(
       cte_ref="flattened_high_level",
       created_by="@icooper-acp",
-      updated_by="@rbacovic",
+      updated_by="@michellecooper",
       created_date="2022-03-17",
-      updated_date="2022-12-01"
+      updated_date="2023-06-30"
   ) }}

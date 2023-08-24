@@ -7,7 +7,7 @@ models:
           combination_of_columns:
             - snapshot_month
             - dim_subscription_id
-            - delivery_type
+            - deployment_type
             - uuid
             - hostname
             - dim_namespace_id
@@ -33,6 +33,9 @@ models:
       - name: delivery_type
         tests:
           - not_null
+      - name: deployment_type
+        tests:
+          - not_null
       - name: primary_key
         tests:
           - unique
@@ -55,6 +58,9 @@ models:
       - name: delivery_type
         tests:
           - not_null
+      - name: deployment_type
+        tests:
+          - not_null
       - name: primary_key
         tests:
           - unique
@@ -74,15 +80,19 @@ models:
     columns:
       - name: behavior_structured_event_pk
         tests:
-          - unique
-          - not_null
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        - not_null
+
 
   - name: wk_mart_snowplow_events_service_ping_metrics
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - behavior_structured_event_pk
-            - metrics_path
+    columns:
+      - name: snowplow_events_service_ping_metrics_sk
+        tests:
+          - unique:
+              config:
+                where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
 
   - name: wk_rpt_user_based_metric_counts_namespace_monthly
     tests:

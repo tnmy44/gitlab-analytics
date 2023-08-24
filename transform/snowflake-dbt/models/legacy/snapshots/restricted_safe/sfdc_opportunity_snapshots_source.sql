@@ -199,6 +199,16 @@ WITH source AS (
         comp_y2_iacv__c                                                                     AS comp_y2_iacv,
         comp_new_logo_override__c                                                           AS comp_new_logo_override,
         is_pipeline_created_eligible_flag__c                                                AS is_pipeline_created_eligible,
+        next_steps__c                                                                       AS next_steps,
+        auto_renewal_status__c                                                              AS auto_renewal_status,
+        qsr_notes__c                                                                        AS qsr_notes,
+        qsr_status__c                                                                       AS qsr_status,
+        manager_forecast_confidence__c                                                      AS manager_confidence,
+        renewal_risk_forecast__c                                                            AS renewal_risk_category,
+        renewal_swing_arr__c                                                                AS renewal_swing_arr,
+        isr__c                                                                              AS renewal_manager, 
+        renewal_forecast_category__c                                                        AS renewal_forecast_health,
+        isr_priority__c                                                                     AS renewal_ownership,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
@@ -242,6 +252,7 @@ WITH source AS (
         vartopiadrs__dr_status1__c                                                          AS dr_status,
         distributor__c                                                                      AS distributor,
         influence_partner__c                                                                AS influence_partner,
+        focus_partner__c                                                                    AS is_focus_partner,
         fulfillment_partner__c                                                              AS fulfillment_partner,
         platform_partner__c                                                                 AS platform_partner,
         partner_track__c                                                                    AS partner_track,
@@ -303,6 +314,10 @@ WITH source AS (
         arr_basis_for_clari__c                          AS arr_basis_for_clari,
         forecasted_churn_for_clari__c                   AS forecasted_churn_for_clari,
         override_arr_basis_clari__c                     AS override_arr_basis_clari,
+
+        -- ps fields - original issue: https://gitlab.com/gitlab-com/sales-team/field-operations/customer-success-operations/-/issues/2723
+        intended_product_tier__c                        AS intended_product_tier,
+        parent_opportunity__c                           AS parent_opportunity_id,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',

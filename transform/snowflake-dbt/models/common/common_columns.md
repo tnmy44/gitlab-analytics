@@ -4,6 +4,12 @@ The unique identifier of an event. This is a generated primary key and will not 
 
 {% enddocs %}
 
+{% docs event_id %}
+
+The natural key of an event. This will join back to the source models.
+
+{% enddocs %}
+
 {% docs dim_latest_product_tier_id %}
 
 The unique identifier of the ultimate parent namespace's latest product tier, easily joined to `dim_product_tier`
@@ -1120,6 +1126,12 @@ Boolean flag set to True if the ping is from a Dedicated implementation
 
 {% enddocs %}
 
+{% docs ping_deployment_type %}
+
+Indicates whether the ping comes from a GitLab.com, SaaS Dedicated or Self-Managed instance.
+
+{% enddocs %}
+
 {% docs raw_usage_data_payload %}
 
 Either the original payload value or a reconstructed value. See https://gitlab.com/gitlab-data/analytics/-/merge_requests/4064/diffs#bc1d7221ae33626053b22854f3ecbbfff3ffe633 for rationale.
@@ -1400,6 +1412,12 @@ Timestamp for the event recorded on the client device.
 {% docs behavior_at %}
 
 Timestamp for when the event actually happened. This appears as `derived_tstamp` in the raw Snowplow data.
+
+{% enddocs %}
+
+{% docs behavior_date %}
+
+The date when the event happened (YYYY-MM-DD)
 
 {% enddocs %}
 
@@ -1832,6 +1850,12 @@ This is the delivery type of GitLab to include either SaaS or Self-Managed.
 
 {% enddocs %}
 
+{% docs product_deployment_type %}
+
+This is the deployment type of GitLab to include either GitLab.com, Dedicated or Self-Managed.
+
+{% enddocs %}
+
 {% docs previous_month_product_delivery_type %}
 
 This is the previous month delivery type. Includes either SaaS or Self-Managed.
@@ -2095,5 +2119,181 @@ A flag to indicate if the plan is a paid plan or not.
 {% docs namespace_has_code_suggestions_enabled %}
 
 Boolean flag set to True if the namespace has code suggestions enabled. This appears as `code_suggestions` in the gitlab.com db `namespace_settings` table.
+
+{% enddocs %}
+
+{% docs intended_product_tier %}
+
+The intended product tier looking to be purchased for this opportunity.
+
+{% enddocs %}
+
+{% docs dim_parent_crm_opportunity_id %}
+
+The Salesforce opportunity ID for the parent opportunity of this opportunity.
+
+{% enddocs %}
+
+
+{% docs dim_namespace_order_trial_sk %}
+
+The surrogate key of `prep_namespace_order_trial` model. Currently identified by hashing the namespace_id field that is being sourced from customers portal at gitlab.com.
+
+{% enddocs %}
+
+{% docs dim_trial_latest_sk %}
+
+The surrogate key of `dim_trial_latest` model. Currently identified by hashing the `order_snapshot_id` field that is being sourced from Snapshotted Orders model.
+
+{% enddocs %}
+
+
+{% docs dim_package_sk %}
+
+The surrogate key of `dim_package` model. Currently identified by hashing the `package_id` field.
+
+{% enddocs %}
+
+{% docs package_id %}
+
+The natural key of `dim_package` model.
+
+{% enddocs %}
+
+{% docs package_version %}
+
+Version of the package in the [package registry](https://docs.gitlab.com/ee/user/packages/package_registry/).
+
+{% enddocs %}
+
+{% docs package_type %}
+
+Type of package in the [package registry](https://docs.gitlab.com/ee/user/packages/package_registry/).
+
+{% enddocs %}
+
+{% docs package_created_at %}
+
+Date the package was created.
+
+{% enddocs %}
+
+{% docs package_updated_at %}
+
+Latest date the package was updated.
+
+{% enddocs %}
+
+{% docs dim_integration_sk %}
+
+The surrogate key of `dim_integration` model. Currently identified by hashing the `integration_id` field.
+
+{% enddocs %}
+
+{% docs integration_id %}
+
+The natural key of `dim_integration` model.
+
+{% enddocs %}
+
+{% docs integration_is_active %}
+
+Boolean representing if an integration is active or not.
+
+{% enddocs %}
+
+{% docs integration_created_at %}
+
+The date a integration was created.
+
+{% enddocs %}
+
+{% docs integration_updated_at %}
+
+The latest date a service was updated.
+
+{% enddocs %}
+
+{% docs integration_type %}
+
+Text field describing the type of integration (ex. Integrations::Discord, Integrations::Slack, Integrations::Prometheus, Integrations::Bamboo).
+
+{% enddocs %}
+
+{% docs integration_category %}
+
+Text field describing the broader category of the integration (ex.CI, monitoring, deployment, chat).
+
+{% enddocs %}
+
+{% docs dim_requirement_sk %}
+
+The surrogate key of `dim_requirement` model. Currently identified by hashing the `requirement_id` field.
+
+{% enddocs %}
+
+{% docs requirement_id %}
+
+The natural key of `dim_requirement` model.
+
+{% enddocs %}
+
+{% docs requirement_internal_id %}
+
+An identifier for requirements in the `dim_requirement` model that is project-specific.
+
+{% enddocs %}
+
+{% docs requirement_state %}
+
+The state of the requirement (Opened/Archived) as defined by this [code](https://gitlab.com/gitlab-org/gitlab/-/blob/886e4652e57ef41b4ecdfeb9c42183467b625f72/ee/app/models/requirement.rb).
+
+{% enddocs %}
+
+{% docs created_date_id %}
+
+The ID of the created date, easily joined to `dim_date`
+
+{% enddocs %}
+
+{% docs requirement_created_at %}
+
+The date the requirement was created.
+
+{% enddocs %}
+
+{% docs requirement_updated_at %}
+
+The date the requirement was last updated.
+
+{% enddocs %}
+
+{% docs dim_snippet_sk %}
+
+The surrogate key of `dim_snippet` model. Currently identified by hashing the `snippet_id` field.
+
+{% enddocs %}
+
+{% docs snippet_id %}
+
+The natural key of `dim_snippet` model.
+
+{% enddocs %}
+
+{% docs snippet_type %}
+
+Identifies a snippet as a `Personal Snippet` or `Project Snippet`.
+
+{% enddocs %}
+
+{% docs snippet_created_at %}
+
+The date a snippet was created.
+
+{% enddocs %}
+
+{% docs snippet_updated_at %}
+
+The latest date a snippet was updated.
 
 {% enddocs %}

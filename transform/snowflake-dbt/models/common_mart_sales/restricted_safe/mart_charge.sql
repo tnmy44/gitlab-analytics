@@ -12,7 +12,10 @@
     ('dim_product_detail','dim_product_detail'),
     ('dim_subscription','dim_subscription'),
     ('dim_crm_user','dim_crm_user'),
-    ('fct_charge','fct_charge')
+    ('dim_order', 'dim_order'),
+    ('dim_order_action', 'dim_order_action'),
+    ('fct_charge','fct_charge'),
+    ('prep_billing_account_user', 'prep_billing_account_user')
 ]) }}
 
 , mart_charge AS (
@@ -31,6 +34,7 @@
       --Charge Information
       dim_charge.rate_plan_name                                                       AS rate_plan_name,
       dim_charge.rate_plan_charge_name                                                AS rate_plan_charge_name,
+      dim_charge.rate_plan_charge_description                                         AS rate_plan_charge_description,
       dim_charge.charge_type                                                          AS charge_type,
       dim_charge.is_paid_in_full                                                      AS is_paid_in_full,
       dim_charge.is_last_segment                                                      AS is_last_segment,
@@ -102,6 +106,32 @@
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
+
+      -- order info
+      fct_charge.dim_order_id                                                         AS dim_order_id,
+      CASE
+        WHEN (dim_order_action.dim_order_action_id IS NOT NULL
+        OR dim_amendment_subscription.amendment_type = 'Renewal')
+          AND (dim_order.order_description = 'AutoRenew by CustomersDot'
+          OR dim_amendment_subscription.amendment_name = 'AutoRenew by CustomersDot'
+          OR dim_amendment_subscription.amendment_type = 'Composite')
+            THEN 'Auto-Renewal'
+        WHEN (dim_order_action.dim_order_action_id IS NOT NULL
+        OR dim_amendment_subscription.amendment_type = 'Renewal')
+          AND (prep_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
+          OR dim_subscription.subscription_sales_type = 'Sales-Assisted')
+            THEN 'Sales-Assisted'
+        WHEN (dim_order_action.dim_order_action_id IS NOT NULL
+        OR dim_amendment_subscription.amendment_type = 'Renewal')
+          AND (dim_order.order_description NOT IN 
+            ('AutoRenew by CustomersDot', 'Automated seat reconciliation')
+            OR dim_order.order_description IS NULL)
+          AND prep_billing_account_user.user_name IN (
+            'svc_zuora_fulfillment_int@gitlab.com',
+            'ruben_APIproduction@gitlab.com')
+            THEN 'Customer Portal'
+        ELSE NULL
+      END                                                                             AS subscription_renewal_type,
 
       --Cohort Information
       dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
@@ -178,6 +208,13 @@
       ON dim_subscription.dim_amendment_id_subscription = dim_amendment_subscription.dim_amendment_id
     LEFT JOIN dim_amendment AS dim_amendment_charge
       ON fct_charge.dim_amendment_id_charge = dim_amendment_charge.dim_amendment_id
+    LEFT JOIN dim_order
+      ON fct_charge.dim_order_id = dim_order.dim_order_id
+    LEFT JOIN dim_order_action
+      ON fct_charge.dim_order_id = dim_order_action.dim_order_id
+      AND dim_order_action.order_action_type IN ('RenewSubscription', 'CancelSubscription')
+    LEFT JOIN prep_billing_account_user
+      ON fct_charge.subscription_created_by_user_id = prep_billing_account_user.zuora_user_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,
@@ -188,7 +225,7 @@
 {{ dbt_audit(
     cte_ref="mart_charge",
     created_by="@iweeks",
-    updated_by="@lisvinueza",
+    updated_by="@chrissharp",
     created_date="2021-06-07",
-    updated_date="2023-05-22"
+    updated_date="2023-06-13"
 ) }}

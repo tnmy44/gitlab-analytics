@@ -959,10 +959,12 @@ models:
   - name: prep_event_all
     description: '{{ doc("prep_event_all") }}'
     columns:
-      - name: event_id
+      - name: event_pk
         # tests:
           # - not_null
           # - unique
+      - name: event_id
+        description: '{{ doc("event_id") }}'
       - name: stage_name
         description: This field is _not_ the SSOT for the event-to-stage mapping. Please use [`map_gitlab_dotcom_xmau_metrics`](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.map_gitlab_dotcom_xmau_metrics) for the mapping of event to stage.
 
@@ -1021,7 +1023,9 @@ models:
         description: Unique key of CI Build
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                where: "created_at >= DATEADD('day',-3,CURRENT_DATE())"
       - name: dim_project_id
         description: Foreign key that shows the ID of the project in which the build has been triggered.
       - name: dim_namespace_id
@@ -1169,10 +1173,31 @@ models:
   - name: prep_package
     description: '{{ doc("prep_package") }}'
     columns:
-      - name: dim_package_id
+      - name: dim_package_sk
+        description: '{{ ("dim_package_sk") }}'
         tests:
-          - unique
           - not_null
+          - unique
+      - name: package_id
+        description: '{{ ("package_id") }}'
+      - name: dim_project_id
+        description: '{{ ("dim_project_id") }}'
+      - name: dim_namespace_id
+        description: '{{ ("dim_namespace_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ ("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ ("dim_plan_id") }}'
+      - name: creator_id
+        description: '{{ ("dim_user_id") }}'
+      - name: package_version
+        description: '{{ ("package_version") }}'
+      - name: package_type
+        description: '{{ ("package_type") }}'
+      - name: created_at
+        description: '{{ ("package_created_at") }}'
+      - name: updated_at
+        description: '{{ ("package_updated_at") }}'
 
   - name: prep_release
     description: '{{ doc("prep_release") }}'
@@ -1185,10 +1210,31 @@ models:
   - name: prep_requirement
     description: '{{ doc("prep_requirement") }}'
     columns:
-      - name: dim_requirement_id
+      - name: dim_requirement_sk
+        description: '{{ doc("dim_requirement_sk") }}'
         tests:
           - unique
           - not_null
+      - name: requirement_id
+        description: '{{ doc("requirement_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ doc("dim_plan_id") }}'
+      - name: author_id
+        description: '{{ doc("dim_user_id") }}'
+      - name: created_date_id
+        description: '{{ doc("created_date_id") }}'
+      - name: requirement_internal_id
+        description: '{{ doc("requirement_internal_id") }}'
+      - name: requirement_state
+        description: '{{ doc("requirement_state") }}'
+      - name: created_at
+        description: '{{ doc("requirement_created_at") }}'
+      - name: updated_at
+        description: '{{ doc("requirement_updated_at") }}'
 
   - name: prep_geozone
     description: '{{ doc("prep_geozone") }}'
@@ -1309,13 +1355,32 @@ models:
           - not_null
           - unique
 
-  - name: prep_service
+  - name: prep_integration
     description: Prep table used in `prep_event`
     columns:
-      - name: dim_service_id
+      - name: dim_integration_sk
+        description: '{{ doc("dim_integration_sk") }}'
         tests:
           - not_null
           - unique
+      - name: integration_id
+        description: '{{ doc("integration_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ doc("dim_plan_id") }}'
+      - name: integration_type
+        description: '{{ doc("integration_type") }}'
+      - name: integration_category
+        description: '{{ doc("integration_category") }}'
+      - name: is_active
+        description: '{{ doc("integration_is_active") }}'
+      - name: created_at
+        description: '{{ doc("integration_created_at") }}'
+      - name: updated_at
+        description: '{{ doc("integration_updated_at") }}'
 
   - name: prep_issue_resource_weight
     description: Prep table used in `prep_event`
@@ -1352,10 +1417,29 @@ models:
   - name: prep_snippet
     description: Prep table used in `prep_event`
     columns:
-      - name: dim_snippet_id
+      - name: dim_snippet_sk
+        description: '{{ doc("dim_snippet_sk") }}'
         tests:
           - not_null
           - unique
+      - name: snippet_id
+        description: '{{ doc("snippet_id") }}'
+      - name: author_id
+        description: '{{ doc("dim_user_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_plan_id
+        description: '{{ doc("dim_plan_id") }}'
+      - name: snippet_type
+        description: '{{ doc("snippet_type") }}'
+      - name: visibility_level
+        description: '{{ doc("visibility_level") }}'
+      - name: created_at
+        description: '{{ doc("snippet_created_at") }}'
+      - name: updated_at
+        description: '{{ doc("snippet_updated_at") }}'
 
   - name: prep_ping_instance
     description: ' {{ doc("prep_ping_instance") }} '
@@ -1373,6 +1457,10 @@ models:
         description:  '{{ doc("dim_installation_id") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("uploaded_at") }}'
+        tests:
+          - not_null
       - name: original_edition
         description: '{{ doc("original_edition") }}'
       - name: id
@@ -1503,6 +1591,12 @@ models:
         description: '{{ doc("model_updated_date") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
 
 
   - name: prep_ping_instance_flattened
@@ -1523,6 +1617,8 @@ models:
         description:  '{{ doc("dim_installation_id") }}'
       - name: ping_created_at
         description: '{{ doc("ping_created_at") }}'
+      - name: uploaded_at
+        description: '{{ doc("prep_ping_instance_flattened_uploaded_at") }}'
       - name: ip_address_hash
         description: '{{ doc("ip_address_hash_ping_model") }}'
       - name: license_md5
@@ -1555,8 +1651,16 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: is_saas_dedicated
+        description: '{{ doc("is_saas_dedicated") }}'
+      - name: ping_delivery_type
+        description: '{{ doc("ping_delivery_type") }}'
+      - name: ping_deployment_type
+        description: '{{ doc("ping_deployment_type") }}'
       - name: ping_type
         description: '{{ doc("ping_type") }}'
+      - name: version
+        description: '{{ doc("version_ping_model") }}'
 
   - name: prep_billing_account_user
     description: Zuora Billing users
@@ -1871,6 +1975,8 @@ models:
         description: Team member gitlab username 
       - name: region
         description: Current/latest region the team member resides in
+      - name: team_id
+        description: Identification number of the team to which the particular team member belongs
       - name: hire_date
         description: Most recent hire date. Field is updated if a team member is re-hired after a termination
       - name: termination_date
@@ -1911,6 +2017,10 @@ models:
           masking_policy: analyst_people
       - name: performance_rating 
         description: Masked. Team member performance rating
+        meta:
+          masking_policy: analyst_people
+      - name: employee_type
+        description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
         meta:
           masking_policy: analyst_people
 
@@ -1992,7 +2102,7 @@ models:
         description: The size of the company the user works for
       - name: sfdc_account_id
         description: Salesforce/CRM account ID associated with the user account
-      - name: user_is_billable
+      - name: is_user_billable
         description: An indicator field with `True` or `false`, where `false means a purchase through a reseller.
       - name: confirmed_at
         description: Date when customer confirmed their account.
@@ -2006,21 +2116,26 @@ models:
             combination_of_columns:
               - employee_id
               - team_id
-              - position_effective_date
-              - position_date_time_initiated
+              - effective_date
     columns:
       - name: dim_team_member_sk
         description: A unique ID for each team member.
         tests:
           - not_null
       - name: dim_team_sk
-        description: A unique ID for each team.
-        tests:
-          - not_null
+        description: A unique ID for each team. This field didn't exist before the move to Workday
       - name: employee_id
         description: Unique ID of the team member.
         tests:
           - not_null
+      - name: manager
+        description: The team member's manager name
+      - name: suporg
+        description: The team member's suporg
+      - name: department
+        description: The team member's department
+      - name: division
+        description: The team member's division
       - name: job_code
         description: The code of the team member's job position.
       - name: job_specialty_single
@@ -2043,8 +2158,6 @@ models:
         description: Whether the team member's job position is active.
       - name: is_current
         description: Whether the team member's job position is the most current as of the date the query is run.
-      - name: position_date_time_initiated
-        description: The date when the team member's position update was requested 
       - name: position_effective_date
         description: The date when the team member's position update becomes effective
 
@@ -2113,3 +2226,88 @@ models:
       - name: valid_to
         tests: 
           - not_null
+ 
+  - name: prep_namespace_order_trial
+    description: '{{ doc("prep_namespace_order_trial") }}'
+    columns:
+      - name: dim_namespace_order_trial_sk
+        description: '{{ doc("dim_namespace_order_trial_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: dim_namespace_id
+        description: The unique ID of the namespace related to the trial.
+      - name: order_start_date
+        description: The date when the trial period of the order begins
+      - name: order_end_date
+        description: The date when the trial period of the order ends
+      - name: order_created_at
+      - name: order_updated_at
+      - name: glm_source
+      - name: glm_content
+      - name: trial_entity
+        description: Can contain values of company or individial
+      - name: record_source
+        decsription: Identifies the source of the record - values include trial_histories or orders
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
+
+
+  - name: prep_order
+    description: '{{ doc("prep_order") }}'
+    columns:
+      - name: dim_order_sk
+        description: The unique surrogate key of an Order that is created by hashing the `Order_id` column from Customers_db.
+        tests:
+          - not_null
+          - unique
+      - name: internal_order_id
+        description: The unique Id of the Order from Customers db. Can only be used to join back to CDot Orders
+        tests:
+          - not_null
+          - unique
+      - name: user_id
+        description: The Id of the Customer that owns this Order.
+      - name: dim_billing_account_id
+        description: The Zuora Billing Account Id associated with the Order
+      - name: zuora_account_id
+        description: The Zuora account ID of the customer.
+      - name: product_rate_plan_id  
+        description: The Zuora Product Rate Plan Id of the product that was purchased
+      - name: dim_subscription_id
+        description: The unique Id of a Subscription from Zuora
+      - name: subscription_name
+        description: The unique name of a Subscription from Zuora. Can be used to join back to Zuora data.
+      - name: subscription_name_slugify
+        description: The unique identifier of the subscription
+      - name: dim_namespace_id
+        description: Id of the group on GitLab.com that is linked to this subscription.
+      - name: namespace_name
+        description: Name of the group on GitLab.com that is linked to this subscription.
+      - name: order_start_date
+        description: The date when the order begins
+      - name: order_end_date
+        description: The date when the order ends
+      - name: order_quantity
+        description: Number of purchased units
+      - name: order_created_at
+        description: The date when the order was created 
+      - name: order_updated_at
+        description: The date when the order was last updated
+      - name: amendment_type
+        description: Last type of Zuora amendment applied to the subscription. For example - UpdateProduct.
+      - name: is_order_trial
+        description: Indicates if the Order is a trial plan.
+      - name: last_extra_ci_minutes_sync_at
+        description: Last time when CI minutes were synced to GitLab.com.
+      - name: increased_billing_rate_notified_at
+        description: Date Time of the notification sent to the customer before processing an extra charge by overuse.
+      - name: order_source
+        description: Source where the order originates
+      - name: task_instance

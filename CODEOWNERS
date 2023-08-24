@@ -8,15 +8,15 @@
 # nested in that directory, on any level
 
 [Admin]
-/.gitlab/       @iweeks @dvanrooijen2
-/admin/         @iweeks @dvanrooijen2
-/analyze/       @iweeks
+/.gitlab/       @iweeks @dvanrooijen2 @nmcavinue @amiebright
+/admin/         @iweeks @dvanrooijen2 @nmcavinue @amiebright
+/analyze/       @iweeks @dvanrooijen2 @nmcavinue @amiebright
 
-CODEOWNERS         @iweeks @dvanrooijen2
+CODEOWNERS         @iweeks @dvanrooijen2 @nmcavinue @amiebright
 .gitignore         @jjstark @paul_armstrong @vedprakash2021
-CONTRIBUTING.md    @iweeks @dvanrooijen2
-LICENSE.md         @iweeks @dvanrooijen2 
-README.md          @iweeks @dvanrooijen2
+CONTRIBUTING.md    @iweeks @dvanrooijen2 @nmcavinue @amiebright
+LICENSE.md         @iweeks @dvanrooijen2 @nmcavinue @amiebright
+README.md          @iweeks @dvanrooijen2 @nmcavinue @amiebright
 
 [Data Engineering]
 /dags/              @paul_armstrong @vedprakash2021 @rbacovic @jjstark
@@ -58,11 +58,11 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /transform/snowflake-dbt/models/common/bridge/  @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
 /transform/snowflake-dbt/models/common/dimensions_local/financial/                   @chrissharp @michellecooper @iweeks
 /transform/snowflake-dbt/models/common/dimensions_local/general_and_administrative/  @pempey @iweeks
-/transform/snowflake-dbt/models/common/dimensions_local/product_and_engineering/     @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks
+/transform/snowflake-dbt/models/common/dimensions_local/product_and_engineering/     @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks @michellecooper
 /transform/snowflake-dbt/models/common/dimensions_local/sales_and_marketing/         @chrissharp @michellecooper @iweeks
 /transform/snowflake-dbt/models/common/dimensions_shared/   @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
 /transform/snowflake-dbt/models/common/facts_general_and_administrative/             @pempey @iweeks
-/transform/snowflake-dbt/models/common/facts_product_and_engineering/                @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks
+/transform/snowflake-dbt/models/common/facts_product_and_engineering/                @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks @michellecooper
 /transform/snowflake-dbt/models/common/facts_sales_and_marketing/                    @chrissharp @michellecooper @iweeks
 /transform/snowflake-dbt/models/common/facts_financial/                              @chrissharp @michellecooper @iweeks
 
@@ -87,6 +87,8 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
 /transform/snowflake-dbt/models/sources/engineering/        @jjstark @paul_armstrong @pempey @iweeks
 /transform/snowflake-dbt/models/legacy/engineering/         @pempey @iweeks
+
+/transform/snowflake-dbt/models/sources/gainsight_customer_success/ @jjstark @rbacovic @mdrussell @iweeks
 
 /transform/snowflake-dbt/models/sources/gitlab_data_yaml/   @jjstark @paul_armstrong @chrissharp @snalamaru @mdrussell @iweeks
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/    @chrissharp @snalamaru @mdrussell @iweeks
@@ -150,7 +152,7 @@ transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armst
 
 /transform/snowflake-dbt/models/workspaces/workspace_customer_success/  @mdrussell @snalamaru @chrissharp
 
-/transform/snowflake-dbt/models/workspaces/workspace_product/           @cbraza @matthewpetersen @eneuberger @nraisinghani @mdrussell @snalamaru @jeanpeguero @dpeterson1 @nhervas
+/transform/snowflake-dbt/models/workspaces/workspace_product/           @cbraza @matthewpetersen @eneuberger @nraisinghani @mdrussell @snalamaru @jeanpeguero @dpeterson1 @nhervas @michellecooper
 
 # ======
 # dbt data file Overwrites

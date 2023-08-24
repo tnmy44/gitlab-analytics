@@ -353,9 +353,9 @@ models:
       - name: private_ultimate_parent_namespaces
         description: Array containing all the private ultimate parent namespaces the marketing contact is a member of.
       - name: is_paid_tier_change
-        description: This is a flag designed to keep Marketo in sync with the marketin database. If True, the marketing contact is_paid_tier flag is set to True OR the is_paid_tier flag is set to False and the is_paid_tier_marketo set to True (which means that it needs to be updated in Marketo)
+        description: This is a flag designed to keep Marketo in sync with the marketing database. If True, the marketing contact is_paid_tier flag is set to True OR the is_paid_tier flag is set to False and the is_paid_tier_marketo set to True (which means that it needs to be updated in Marketo)
       - name: is_pql_change
-        description: This is a flag designed to keep Marketo in sync with the marketin database. If True, the marketing contact is_pql flag is set to True OR the is_pql flag is set to False and the is_pql_marketo flag set to True (which means that it needs to be updated in Marketo)
+        description: This is a flag designed to keep Marketo in sync with the marketing database. If True, the marketing contact is_pql flag is set to True OR the is_pql flag is set to False and the is_pql_marketo flag set to True (which means that it needs to be updated in Marketo)
       - name: ptpt_namespace_id
         description: Namespace id which corresponds to the propensity to purchase Trial score. More information on the propensity to purchase project can be seen [HERE](https://docs.google.com/presentation/d/1EyS9Wq6F0qlQwt5sj7x8VnSSGD1vIy3AcSpMGddZdbk/edit#slide=id.g13222807856_0_0)
       - name: ptpt_score_group
@@ -402,6 +402,8 @@ models:
         description: The source of the score. Currently, only two values are possible, Free (PtPF model) or Trial (PtPT model)
       - name: is_ptp_contact
         description: Flag if marketing contact has a ptp score
+      - name: is_ptp_contact_change
+        description: This is a flag designed to keep Marketo in sync with the marketing database. If True, the marketing contact is_ptp_contact flag is set to True OR the is_ptp_contact flag is set to False and the is_ptp_contact_marketo flag set to True (which means that it needs to be updated in Marketo)
       - name: is_impacted_by_user_limit
         description: Flag that indicates if marketing contact is affected by namespace user limit campaign
       - name: user_limit_namespace_id
@@ -424,55 +426,7 @@ models:
         tests: 
           - unique
           - not_null
+      - name: max_trial_start_date
+        description: The most recent trial start date across all the namespaces associated with the marketing_contact.
       - name: namespaces_array
-        description: Ultimate parent namespaces that the marketing contact is directly related to.
-
-  - name: dim_team
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - team_id
-            - valid_from
-    columns:
-      - name: team_hierarchy_level
-        tests:
-          - accepted_values:
-              values: ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-      - name: dim_team_sk
-        tests:
-          - not_null
-      - name: team_id
-        tests:
-          - not_null
-      - name: team_superior_team_id
-      - name: hierarchy_level_1
-      - name: hierarchy_level_2
-      - name: hierarchy_level_3
-      - name: hierarchy_level_4
-      - name: hierarchy_level_5
-      - name: hierarchy_level_6
-      - name: hierarchy_level_7
-      - name: hierarchy_level_8
-      - name: hierarchy_level_9
-      - name: hierarchy_level_1_name
-      - name: hierarchy_level_2_name
-      - name: hierarchy_level_3_name
-      - name: hierarchy_level_4_name
-      - name: hierarchy_level_5_name
-      - name: hierarchy_level_6_name
-      - name: hierarchy_level_7_name
-      - name: hierarchy_level_8_name
-      - name: hierarchy_level_9_name
-      - name: hierarchy_levels_array
-      - name: team_hierarchy_level
-      - name: is_team_inactivated
-      - name: team_name
-      - name: team_manager_name
-      - name: team_manager_name_id
-      - name: team_inactivated_date
-      - name: team_members_count
-      - name: is_team_manager_inherited
-      - name: is_team_active
-      - name: valid_from
-      - name: valid_to
-      - name: is_current
+        description: '{{ doc("namespaces_array") }}'

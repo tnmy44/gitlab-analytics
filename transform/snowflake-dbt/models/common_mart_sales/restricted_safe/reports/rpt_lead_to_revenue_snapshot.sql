@@ -78,7 +78,7 @@
       person_base.email_hash,
       person_base.email_domain_type,
       person_base.true_inquiry_date,
-      person_base.mql_date_lastest_pt,
+      person_base.mql_date_latest_pt,
       person_base.status,
       person_base.lead_source,
       person_base.dim_crm_person_id,
@@ -146,7 +146,7 @@
     cohort_base.account_demographics_upa_country,
     cohort_base.account_demographics_territory,
     cohort_base.true_inquiry_date,
-    cohort_base.mql_date_lastest_pt,
+    cohort_base.mql_date_latest_pt,
   
     --opportunity data
     cohort_base.opp_created_date,
@@ -245,7 +245,7 @@
   LEFT JOIN dim_date inquiry_date 
     ON cohort_base.true_inquiry_date=inquiry_date.date_day
   LEFT JOIN dim_date mql_date
-    ON cohort_base.mql_date_lastest_pt=mql_date.date_day
+    ON cohort_base.mql_date_latest_pt=mql_date.date_day
   LEFT JOIN dim_date opp_create_date
     ON cohort_base.opp_created_date=opp_create_date.date_day
   LEFT JOIN dim_date sao_date
@@ -266,6 +266,6 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-28",
-    updated_date="2022-07-28",
+    updated_date="2023-07-25",
   ) }}
 

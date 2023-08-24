@@ -17,3 +17,11 @@ Namespace segmentation clusters created by ML algorithms.
 {% docs ptpf_scores_source %}
 Propensity to purchase for free account scores, created by ML algorithms.
 {% enddocs %}
+
+{% docs churn_forecasting_scores_source %}
+Propensity to churn on subscription/opportunity level.
+{% enddocs %}
+
+{% docs ptpl_scores_source %}
+Propensity to purchase leads.
+{% enddocs %}

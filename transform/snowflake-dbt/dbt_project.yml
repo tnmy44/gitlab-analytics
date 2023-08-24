@@ -135,10 +135,6 @@ models:
       +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
       +tags: ["sources"]
 
-      adaptive:
-        +materialized: table
-        +schema: adaptive
-         
       airflow:
         +materialized: table
         +schema: airflow
@@ -156,9 +152,6 @@ models:
       clari:
         +materialized: table
         +schema: clari
-
-      container_registry:
-        +schema: container_registry
 
       customers:
         +schema: customers
@@ -204,6 +197,10 @@ models:
       gainsight:
         +materialized: table
         +schema: gainsight
+
+      gainsight_customer_success:
+        +schema: gainsight_customer_success
+        +tags: ["gainsight"]
 
       gcp_billing:
         +materialized: table
@@ -263,6 +260,13 @@ models:
         sensitive:
           +schema: sensitive
           secure: true
+
+      oci_reports:
+        +schema: oci_reports
+
+      omamori:
+        +materialized: table
+        +schema: omamori
 
       pto:
         +materialized: table
@@ -440,6 +444,10 @@ models:
         +schema: restricted_safe_common_mart_marketing
         +tags: ["safe"]
         secure: true
+
+    common_mart_people:
+      +materialized: table
+      +schema: common_mart_people
 
     # ------------------
     # Legacy (formerly Staging)

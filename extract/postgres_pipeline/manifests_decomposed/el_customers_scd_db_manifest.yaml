@@ -91,7 +91,7 @@ tables:
       , company
       , company_size
       , salesforce_account_id
-      , billable
+      , NULL AS billable
       , confirmed_at
       , confirmation_sent_at
       , first_name
@@ -152,6 +152,8 @@ tables:
       , report_timestamp
       , license_starts_on
       , zuora_subscription_name
+      , hostname
+      , instance_identifier
       FROM license_seat_links
   license_versions:
     advanced_metadata: true
@@ -230,6 +232,22 @@ tables:
       , source
       , billing_account_id
       FROM orders
+  provisions:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'provisions'
+    export_table_primary_key: subscription_id
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT subscription_name
+      , subscription_id
+      , state
+      , created_at
+      , updated_at
+      , state_reason
+      , subscription_version
+      FROM provisions
   reconciliations:
     advanced_metadata: true
     export_db: EXPORT_DB
@@ -263,6 +281,27 @@ tables:
     import_query: |-
       SELECT version
       FROM schema_migrations
+  temporary_extension_histories:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'temporary_extension_histories'
+    export_table_primary_key: subscription_name
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT billing_account_id
+        , license_id
+        , created_at
+        , updated_at
+        , request_date
+        , start_date
+        , end_date
+        , salesforce_opportunity_id
+        , subscription_id
+        , requester_email
+        , subscription_name
+        , reason
+      FROM temporary_extension_histories
   trial_histories:
     advanced_metadata: true
     export_db: EXPORT_DB
