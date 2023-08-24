@@ -36,7 +36,7 @@
     {{ get_keyed_nulls('prep_crm_task.dim_crm_opportunity_id') }} AS dim_crm_opportunity_id,
     CASE
       WHEN prep_crm_opportunity.dim_crm_opportunity_id IS NOT NULL
-        THEN fct_crm_task.dim_crm_opportunity_id
+        THEN prep_crm_task.dim_crm_opportunity_id
       WHEN account_opp_mapping.dim_crm_opportunity_id IS NOT NULL
         THEN account_opp_mapping.dim_crm_opportunity_id
       ELSE {{ get_keyed_nulls('prep_crm_task.dim_crm_opportunity_id') }}

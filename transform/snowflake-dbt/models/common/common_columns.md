@@ -1188,7 +1188,7 @@ The unique surrogate key of a [task activity](https://help.salesforce.com/s/arti
 
 {% docs dim_mapped_opportunity_id %}
 
-A secondary key of a solutions-architect related task to be used similarly to `dim_crm_opportunity_id`. It relates an opportunity to a task if there is no opportunity directly related to the task, but if an opportunity and task belonging to the same account coincide in the same time-frame, they are mapped accordingly.
+A secondary key of a solutions-architect related task to be used similarly to `dim_crm_opportunity_id`. It relates an opportunity to a task if there is no opportunity directly related to the task, but if an [opportunity and task belonging to the same account coincide](https://gitlab.com/gitlab-com/sales-team/field-operations/analytics/-/issues/471#note_1519436401) in the same time-frame, they are mapped accordingly.
 
 {% enddocs %}
 
