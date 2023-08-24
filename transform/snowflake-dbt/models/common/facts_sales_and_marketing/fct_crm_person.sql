@@ -278,8 +278,8 @@ WITH account_dims_mapping AS (
         WHEN true_inquiry_date IS NOT NULL THEN 1
         ELSE 0
       END                                                                                                                 AS is_inquiry,
-      is_bdr_sdr_worked,
-      is_partner_recalled,
+      crm_person.is_bdr_sdr_worked,
+      crm_person.is_partner_recalled,
 
      -- information fields
       crm_person.name_of_active_sequence,
