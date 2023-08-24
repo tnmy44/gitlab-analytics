@@ -34,7 +34,8 @@ WITH account_dims_mapping AS (
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
       zoominfo_contact_id,
-      is_bdr_sdr_worked      
+      is_bdr_sdr_worked,
+      is_partner_recalled  
 
     FROM {{ref('prep_crm_person')}}
 
@@ -278,6 +279,7 @@ WITH account_dims_mapping AS (
         ELSE 0
       END                                                                                                                 AS is_inquiry,
       is_bdr_sdr_worked,
+      is_partner_recalled,
 
      -- information fields
       crm_person.name_of_active_sequence,
@@ -328,5 +330,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2023-08-17"
+    updated_date="2023-08-24"
 ) }}

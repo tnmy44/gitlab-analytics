@@ -180,6 +180,7 @@ WITH biz_person AS (
       time_from_mql_to_last_transfer,
       NULL                                           AS zoominfo_company_employee_count,
       zoominfo_contact_id,
+      NULL                                           AS is_partner_recalled,
       CASE
         WHEN crm_tasks.min_task_completed_date_by_bdr_sdr IS NOT NULL
           THEN TRUE
@@ -309,6 +310,7 @@ WITH biz_person AS (
       time_from_mql_to_last_transfer,
       zoominfo_company_employee_count,
       NULL AS zoominfo_contact_id,
+      is_partner_recalled,
       CASE
         WHEN crm_tasks.min_task_completed_date_by_bdr_sdr IS NOT NULL
           THEN TRUE
@@ -337,5 +339,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-08-17"
+    updated_date="2023-08-24"
 ) }}
