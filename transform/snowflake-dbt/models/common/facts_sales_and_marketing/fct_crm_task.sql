@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('prep_crm_person', 'prep_crm_person'),
     ('dim_date', 'dim_date')
