@@ -37,7 +37,7 @@ default_args = {
 # Set the command for the container
 container_cmd = f"""
     {clone_repo_cmd} &&
-    permifrost spec-test analytics/permissions/snowflake/roles.yml
+    permifrost run analytics/permissions/snowflake/roles.yml
 """
 
 # Create the DAG
