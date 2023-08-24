@@ -81,18 +81,7 @@ aggregated_base AS (
         -----------------------------------------------
         -- Date dimensions Aggregated
         pipeline_created_fiscal_quarter_date,
-        CASE
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 3
-                THEN 'CQ'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 6
-                THEN 'CQ+1'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 9
-                THEN 'CQ+2'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 12
-                THEN 'CQ+3'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) >= 12
-                THEN 'CQ+4 >'
-        END                                         AS pipeline_landing_quarter,
+        pipeline_landing_quarter,
         -----------------------------------------------
         -- Dimensions for Detail / Aggregated
 
@@ -364,11 +353,8 @@ final AS (
         ON pipe_gen_date.date_actual = final.pipeline_created_date
     WHERE (
         net_arr != 0
-        OR booked_net_arr != 0
         OR prev_quarter_net_arr != 0
-        OR prev_quarter_booked_net_arr != 0
         OR prev_year_net_arr != 0
-        OR prev_year_booked_net_arr != 0
     )
     AND pipeline_created_date <= report_date.current_fiscal_quarter_date
 )

@@ -23,19 +23,6 @@ sfdc_opportunity_xf AS (
         report_date.*,
         opty.*,
 
-        CASE
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 3
-                THEN 'CQ'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 6
-                THEN 'CQ+1'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 9
-                THEN 'CQ+2'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 12
-                THEN 'CQ+3'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) >= 12
-                THEN 'CQ+4 >'
-        END                  AS pipeline_landing_quarter,
-
         calculated_deal_size AS deal_size_bin
 
     FROM prod.restricted_safe_workspace_sales.sfdc_opportunity_xf AS opty

@@ -23,19 +23,6 @@ sfdc_opportunity_xf AS (
         report_date.*,
         opty.*,
 
-        CASE
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 3
-                THEN 'CQ'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 6
-                THEN 'CQ+1'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 9
-                THEN 'CQ+2'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) < 12
-                THEN 'CQ+3'
-            WHEN DATEDIFF(MONTH, opty.pipeline_created_fiscal_quarter_date, opty.close_fiscal_quarter_date) >= 12
-                THEN 'CQ+4 >'
-        END                  AS pipeline_landing_quarter,
-
         calculated_deal_size AS deal_size_bin
 
     FROM prod.restricted_safe_workspace_sales.sfdc_opportunity_xf AS opty
@@ -111,7 +98,12 @@ aggregated_base AS (
         SUM(total_professional_services_value)      AS total_professional_services_value,
         SUM(total_book_professional_services_value) AS total_book_professional_services_value,
         SUM(total_lost_professional_services_value) AS total_lost_professional_services_value,
-        SUM(total_open_professional_services_value) AS total_open_professional_services_value
+        SUM(total_open_professional_services_value) AS total_open_professional_services_value,
+
+        -- Churn / Contraction
+        SUM(churned_contraction_net_arr)            AS churned_contraction_net_arr,
+        SUM(booked_churned_contraction_net_arr)     AS booked_churned_contraction_net_arr
+
 
     FROM sfdc_opportunity_xf
     GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
@@ -235,15 +227,21 @@ aggregated_final AS (
         aggregated_base.total_lost_professional_services_value,
         aggregated_base.total_open_professional_services_value,
 
+        -- Churn / Contraction
+        aggregated_base.churned_contraction_net_arr,
+        aggregated_base.booked_churned_contraction_net_arr,
+
         -----------------------------------------------
         -- Dimensions for Aggregated
         previous_quarter.booked_net_arr                         AS prev_quarter_booked_net_arr,
         previous_quarter.booked_deal_count                      AS prev_quarter_booked_deal_count,
         previous_quarter.total_book_professional_services_value AS prev_quarter_booked_professional_services,
+        previous_quarter.booked_churned_contraction_net_arr     AS prev_quarter_booked_churned_contraction_net_arr,
 
         previous_year.booked_net_arr                            AS prev_year_booked_net_arr,
         previous_year.booked_deal_count                         AS prev_year_booked_deal_count,
-        previous_year.total_book_professional_services_value    AS prev_year_booked_professional_services
+        previous_year.total_book_professional_services_value    AS prev_year_booked_professional_services,
+        previous_year.booked_churned_contraction_net_arr        AS prev_year_booked_churned_contraction_net_arr
 
     FROM base_key
     LEFT JOIN aggregated_base
@@ -384,11 +382,14 @@ final AS (
     WHERE (
         net_arr != 0
         OR booked_net_arr != 0
+        OR booked_churned_contraction_net_arr != 0
         OR total_professional_services_value != 0
         OR prev_quarter_booked_professional_services != 0
         OR prev_year_booked_professional_services != 0
         OR prev_quarter_booked_net_arr != 0
         OR prev_year_booked_net_arr != 0
+        OR prev_quarter_booked_churned_contraction_net_arr != 0
+        OR prev_year_booked_churned_contraction_net_arr != 0
     )
 )
 

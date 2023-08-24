@@ -127,18 +127,7 @@ opty_aggregated AS (
         is_stage_3_plus,
         fpa_master_bookings_flag,
 
-        CASE
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 3
-                THEN 'CQ'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 6
-                THEN 'CQ+1'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 9
-                THEN 'CQ+2'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 12
-                THEN 'CQ+3'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) >= 12
-                THEN 'CQ+4 >'
-        END                                  AS pipeline_landing_quarter,
+        pipeline_landing_quarter,
         -----------------------------------------------
         CURRENT_DATE                         AS snapshot_date,
         pipeline_created_fiscal_quarter_date AS pipeline_created_date,
