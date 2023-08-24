@@ -48,7 +48,7 @@ WITH source AS (
       reminderdatetime::TIMESTAMP            AS reminder_date_time,
       enddatetime::TIMESTAMP                 AS event_end_date_time,
       activitydate::DATE                     AS event_date,
-      activitydatetime::DATE                 AS event_datetime,
+      activitydatetime::DATE                 AS event_date_time,
       createddate::TIMESTAMP                 AS created_at,
       enddate::TIMESTAMP                     AS event_end_date,
 

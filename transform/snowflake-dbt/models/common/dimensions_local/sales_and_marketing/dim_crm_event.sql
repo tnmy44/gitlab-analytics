@@ -37,8 +37,7 @@ WITH prep_crm_event AS (
         prep_crm_event.event_start_date_time,
         prep_crm_event.reminder_date_time,
         prep_crm_event.event_end_date_time,
-        prep_crm_event.event_date,
-        prep_crm_event.event_datetime,
+        prep_crm_event.event_date_time,
         prep_crm_event.created_at,
         prep_crm_event.event_end_date,
 

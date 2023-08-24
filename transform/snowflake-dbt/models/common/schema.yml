@@ -5773,7 +5773,7 @@ models:
       - name: is_private_event
         description: Boolean value - Whether or not the Event was a private event. 
       - name: is_recurrence
-        description: Boolean value - Whether or not the Event is  recurring Event.  
+        description: Boolean value - Whether or not the Event is a recurring Event.  
       - name: has_reminder_set
         description: Boolean value - Whether or not there is a reminder set for this Event. 
       - name: is_answered
@@ -5783,7 +5783,7 @@ models:
       - name: is_busy
         description: Boolean value - Whether or not the recipient of the call was busy. 
       - name: is_correct_contact
-        description: Boolean value - Whether or not the ep reached the correct contact.  
+        description: Boolean value - Whether or not the sales rep reached the correct contact.  
       - name: is_left_message
         description: Boolean value - Whether or not a VM message was left. 
       - name: is_not_answered

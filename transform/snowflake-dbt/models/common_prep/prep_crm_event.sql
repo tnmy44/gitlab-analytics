@@ -49,7 +49,7 @@ WITH source AS (
       source.reminder_date_time,
       source.event_end_date_time,
       source.event_date,
-      source.event_datetime,
+      source.event_date_time,
       source.created_at,
       source.event_end_date,
 
