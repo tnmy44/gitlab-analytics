@@ -128,6 +128,7 @@ opty_aggregated AS (
         fpa_master_bookings_flag,
 
         pipeline_landing_quarter,
+        current_stage_age_bin,
         -----------------------------------------------
         CURRENT_DATE                         AS snapshot_date,
         pipeline_created_fiscal_quarter_date AS pipeline_created_date,
@@ -144,7 +145,7 @@ opty_aggregated AS (
         AVG(cycle_time_in_days)              AS age_in_days
 
     FROM opty_base
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33
 
 ),
 
@@ -201,6 +202,7 @@ snap_aggregated AS (
             WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) >= 12
                 THEN 'CQ+4 >'
         END                                  AS pipeline_landing_quarter,
+        current_stage_age_bin,
         -----------------------------------------------
         snapshot_fiscal_quarter_date         AS snapshot_date,
         pipeline_created_fiscal_quarter_date AS pipeline_created_date,
@@ -219,7 +221,7 @@ snap_aggregated AS (
     FROM snap_base
     GROUP BY
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-        25, 26, 27, 28, 29, 30, 31, 32
+        25, 26, 27, 28, 29, 30, 31, 32, 33
 ),
 
 aggregated_base AS (
@@ -271,6 +273,7 @@ base_key AS (
         a.industry,
         a.lam_dev_count_bin,
         a.pipeline_landing_quarter,
+        a.current_stage_age_bin,
 
         a.parent_crm_account_upa_country_name,
 
@@ -318,6 +321,7 @@ consolidated AS (
         base_key.industry,
         base_key.lam_dev_count_bin,
         base_key.pipeline_landing_quarter,
+        base_key.current_stage_age_bin,
 
         base_key.parent_crm_account_upa_country_name,
 
@@ -375,6 +379,7 @@ consolidated AS (
             AND base_key.industry = aggregated_base.industry
             AND base_key.pipeline_landing_quarter = aggregated_base.pipeline_landing_quarter
             AND base_key.lam_dev_count_bin = aggregated_base.lam_dev_count_bin
+            AND base_key.current_stage_age_bin = aggregated_base.current_stage_age_bin
     LEFT JOIN aggregated_base AS previous_quarter
         ON
             base_key.owner_id = previous_quarter.owner_id
@@ -401,6 +406,7 @@ consolidated AS (
             AND base_key.industry = previous_quarter.industry
             AND base_key.pipeline_landing_quarter = previous_quarter.pipeline_landing_quarter
             AND base_key.lam_dev_count_bin = previous_quarter.lam_dev_count_bin
+            AND base_key.current_stage_age_bin = previous_quarter.current_stage_age_bin
     LEFT JOIN aggregated_base AS previous_year
         ON
             base_key.owner_id = previous_year.owner_id
@@ -427,6 +433,7 @@ consolidated AS (
             AND base_key.industry = previous_year.industry
             AND base_key.pipeline_landing_quarter = previous_year.pipeline_landing_quarter
             AND base_key.lam_dev_count_bin = previous_year.lam_dev_count_bin
+            AND base_key.current_stage_age_bin = previous_year.current_stage_age_bin
 
 ),
 
@@ -435,6 +442,7 @@ final AS (
     SELECT
         consolidated.*,
 
+        COALESCE(pipeline_date.fiscal_year = current_quarter_date.current_fiscal_year, FALSE)                AS is_cfy_flag,
         COALESCE(consolidated.pipeline_created_date = current_fiscal_quarter_date, FALSE)                    AS is_cfq_flag,
 
         COALESCE(consolidated.pipeline_created_date = DATEADD(MONTH, 3, current_fiscal_quarter_date), FALSE) AS is_cfq_plus_1_flag,

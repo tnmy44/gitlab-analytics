@@ -71,6 +71,7 @@ detail AS (
         industry,
         lam_dev_count_bin,
         pipeline_landing_quarter,
+        current_stage_age_bin,
 
         parent_crm_account_upa_country_name,
 
@@ -134,6 +135,7 @@ final AS (
     SELECT
         final.*,
 
+        COALESCE(close_date.fiscal_year = report_date.current_fiscal_year, FALSE)                   AS is_cfy_flag,
         COALESCE(close_fiscal_quarter_date = current_fiscal_quarter_date, FALSE)                    AS is_cfq_flag,
 
         COALESCE(close_fiscal_quarter_date = DATEADD(MONTH, 3, current_fiscal_quarter_date), FALSE) AS is_cfq_plus_1_flag,
@@ -178,6 +180,8 @@ final AS (
         )                                                                                           AS key_bu_subbu
     FROM detail AS final
     CROSS JOIN report_date
+    LEFT JOIN date_details AS close_date
+        ON close_date.date_actual = final.close_date
     WHERE (
         net_arr != 0
         OR booked_net_arr != 0
