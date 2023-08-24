@@ -14,6 +14,7 @@ from airflow_utils import (
     gitlab_defaults,
     slack_failed_task,
     gitlab_pod_env_vars,
+    REPO_BASE_PATH,
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
@@ -208,7 +209,7 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-            file_path = f"analytics/extract/saas_postgres_pipeline_backfill/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/saas_postgres_pipeline_backfill/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             if config["dag_name"] == "el_gitlab_com_new":
