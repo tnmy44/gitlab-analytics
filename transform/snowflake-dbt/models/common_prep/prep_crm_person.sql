@@ -165,6 +165,8 @@ WITH biz_person AS (
       last_transfer_date_time,
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
+      ptp_score_date                                 AS propensity_to_purchase_score_date,
+      ptp_score_group                                AS propensity_to_purchase_score_group,
       NULL                                           AS zoominfo_company_employee_count,
       zoominfo_contact_id,
       NULL                                           AS is_partner_recalled
@@ -288,6 +290,8 @@ WITH biz_person AS (
       last_transfer_date_time,
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
+      ptp_score_date                                 AS propensity_to_purchase_score_date,
+      ptp_score_group                                AS propensity_to_purchase_score_group,
       zoominfo_company_employee_count,
       NULL AS zoominfo_contact_id,
       is_partner_recalled
@@ -324,5 +328,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-08-03"
+    updated_date="2023-08-24"
 ) }}

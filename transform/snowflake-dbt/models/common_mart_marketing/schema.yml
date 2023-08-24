@@ -136,6 +136,10 @@ models:
           description: The response time from Traction in seconds. 
         - name: traction_response_time_in_business_hours
           description: The response time from Traction, based only in working hours for the user/rep. 
+        - name: propensity_to_purchase_score_date
+          description: This field indicates the date when most recent probability to purchase score was calculated.
+        - name: propensity_to_purchase_score_group
+          description: 	This field indicates the propensity to purchase score, 5 being the highest probability to purchase.
         - name: is_partner_recalled
           description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
 

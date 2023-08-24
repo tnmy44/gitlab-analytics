@@ -123,6 +123,8 @@
       dim_crm_person.partner_prospect_status,
       dim_crm_person.partner_prospect_owner_name,
       dim_crm_person.partner_prospect_id,
+      dim_crm_person.propensity_to_purchase_score_group,
+      fct_crm_person.propensity_to_purchase_score_date,
       fct_crm_person.ga_client_id,
       dim_crm_person.sequence_step_type,
       dim_crm_person.state,
@@ -274,5 +276,5 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-08-03",
+    updated_date="2023-08-24",
   ) }}  

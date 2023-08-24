@@ -33,6 +33,7 @@ WITH account_dims_mapping AS (
       last_transfer_date_time,
       time_from_last_transfer_to_sequence,
       time_from_mql_to_last_transfer,
+      propensity_to_purchase_score_date,
       zoominfo_contact_id
       
 
@@ -277,6 +278,7 @@ WITH account_dims_mapping AS (
       crm_person.traction_first_response_time,
       crm_person.traction_first_response_time_seconds,
       crm_person.traction_response_time_in_business_hours,
+      crm_person.propensity_to_purchase_score_date,
 
      -- additive fields
 
@@ -313,5 +315,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2023-08-03"
+    updated_date="2023-08-24"
 ) }}
