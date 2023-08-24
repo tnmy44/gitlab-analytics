@@ -58,11 +58,11 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /transform/snowflake-dbt/models/common/bridge/  @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
 /transform/snowflake-dbt/models/common/dimensions_local/financial/                   @chrissharp @michellecooper @iweeks
 /transform/snowflake-dbt/models/common/dimensions_local/general_and_administrative/  @pempey @iweeks
-/transform/snowflake-dbt/models/common/dimensions_local/product_and_engineering/     @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks
+/transform/snowflake-dbt/models/common/dimensions_local/product_and_engineering/     @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks @michellecooper
 /transform/snowflake-dbt/models/common/dimensions_local/sales_and_marketing/         @chrissharp @michellecooper @iweeks
 /transform/snowflake-dbt/models/common/dimensions_shared/   @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
 /transform/snowflake-dbt/models/common/facts_general_and_administrative/             @pempey @iweeks
-/transform/snowflake-dbt/models/common/facts_product_and_engineering/                @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks
+/transform/snowflake-dbt/models/common/facts_product_and_engineering/                @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks @michellecooper
 /transform/snowflake-dbt/models/common/facts_sales_and_marketing/                    @chrissharp @michellecooper @iweeks
 /transform/snowflake-dbt/models/common/facts_financial/                              @chrissharp @michellecooper @iweeks
 
@@ -152,7 +152,7 @@ transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armst
 
 /transform/snowflake-dbt/models/workspaces/workspace_customer_success/  @mdrussell @snalamaru @chrissharp
 
-/transform/snowflake-dbt/models/workspaces/workspace_product/           @cbraza @matthewpetersen @eneuberger @nraisinghani @mdrussell @snalamaru @jeanpeguero @dpeterson1 @nhervas
+/transform/snowflake-dbt/models/workspaces/workspace_product/           @cbraza @matthewpetersen @eneuberger @nraisinghani @mdrussell @snalamaru @jeanpeguero @dpeterson1 @nhervas @michellecooper
 
 # ======
 # dbt data file Overwrites

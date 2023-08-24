@@ -1,13 +1,39 @@
-{{ config(
-    materialized="table"
-) }}
+{{ config(materialized='table') }}
 
 {{ simple_cte([
-    ('rpt_lead_to_revenue','rpt_lead_to_revenue'),
-    ('dim_date','dim_date')
+    ('mart_sales_funnel_target_daily','mart_sales_funnel_target_daily'),
+    ('dim_date','dim_date'),
+    ('rpt_lead_to_revenue','rpt_lead_to_revenue')
 ]) }}
 
-, rpt_lead_to_revenue_base AS ( 
+, targets AS (
+  
+  SELECT 
+    target_date,
+    target_month,
+    first_day_of_week,
+    fiscal_quarter_name,
+    fiscal_year,
+    CASE
+      WHEN kpi_name = 'Stage 1 Opportunities' THEN 'SAO'
+      WHEN kpi_name = 'MQL' THEN 'MQL'
+      ELSE NULL
+    END AS kpi_name, 
+    crm_user_sales_segment,
+    crm_user_geo,
+    crm_user_region,
+    crm_user_area,
+    order_type_name,
+    sales_qualified_source_name,
+    daily_allocated_target,
+    wtd_allocated_target,
+    mtd_allocated_target,
+    qtd_allocated_target,
+    ytd_allocated_target
+  FROM mart_sales_funnel_target_daily 
+  WHERE kpi_name IN ('MQL','Stage 1 Opportunities')
+  
+), rpt_lead_to_revenue_base AS ( 
 
     SELECT
     --IDs    
@@ -20,7 +46,10 @@
         person_order_type,
         account_demographics_sales_segment,
         account_demographics_geo,
+        account_demographics_area,
+        account_demographics_region,
         lead_source,
+        source_buckets,
         inquiry_sum,
         mql_sum,
 
@@ -33,6 +62,8 @@
         opp_order_type,
         crm_opp_owner_sales_segment_stamped,
         crm_opp_owner_geo_stamped,
+        crm_opp_owner_region_stamped,
+        crm_opp_owner_area_stamped,
         sales_qualified_source_name,
 
     --Opportunity Dates
@@ -51,12 +82,6 @@
         is_mql,
         is_sao
     FROM rpt_lead_to_revenue
-    LEFT JOIN dim_date inquiry_date 
-        ON rpt_lead_to_revenue.true_inquiry_date=inquiry_date.date_actual
-    LEFT JOIN dim_date mql_date 
-        ON rpt_lead_to_revenue.mql_date_first_pt=mql_date.date_actual
-    LEFT JOIN dim_date sao_date 
-        ON rpt_lead_to_revenue.sales_accepted_date=sao_date.date_actual
     WHERE (account_demographics_geo != 'JIHU'
      OR account_demographics_geo IS null) 
      AND (crm_opp_owner_geo_stamped != 'JIHU'
@@ -87,12 +112,16 @@
         account_demographics_sales_segment,
         account_demographics_geo,
         lead_source,
+        source_buckets,
+        sales_qualified_source_name,
         inquiry_sum,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         bizible_medium,
         parent_crm_account_lam,
-        parent_crm_account_lam_dev_count
+        parent_crm_account_lam_dev_count,
+        account_demographics_area,
+        account_demographics_region
     FROM rpt_lead_to_revenue_base
     LEFT JOIN date_base
         ON rpt_lead_to_revenue_base.true_inquiry_date=date_base.date_day    
@@ -114,12 +143,16 @@
         account_demographics_sales_segment,
         account_demographics_geo,
         lead_source,
-        mql_sum,
+        source_buckets,
+        sales_qualified_source_name,
+        inquiry_sum,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         bizible_medium,
         parent_crm_account_lam,
-        parent_crm_account_lam_dev_count
+        parent_crm_account_lam_dev_count,
+        account_demographics_area,
+        account_demographics_region
   FROM rpt_lead_to_revenue_base
   LEFT JOIN date_base
     ON rpt_lead_to_revenue_base.mql_date_latest_pt=date_base.date_day
@@ -143,20 +176,25 @@
             WHEN crm_opp_owner_sales_segment_stamped = 'OTHER' 
                 THEN 'Other'
             ELSE crm_opp_owner_sales_segment_stamped
-        END AS crm_opp_owner_sales_segment_stamped_clean, 
+        END AS crm_opp_owner_sales_segment_stamped_clean,
         crm_opp_owner_geo_stamped,
+        email_domain_type,
+        lead_source,
+        source_buckets,
         sales_qualified_source_name,
+        parent_crm_account_lam,
+        parent_crm_account_lam_dev_count,
+        bizible_marketing_channel,
+        bizible_marketing_channel_path,
+        bizible_medium,
+        crm_opp_owner_region_stamped,
+        crm_opp_owner_area_stamped,
         CASE 
             WHEN is_sao = true 
                 THEN dim_crm_opportunity_id 
             ELSE null 
         END AS saos,
-        sales_accepted_date,
-        parent_crm_account_lam,
-        parent_crm_account_lam_dev_count,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
-        bizible_medium
+        sales_accepted_date
     FROM rpt_lead_to_revenue_base
     LEFT JOIN date_base 
         ON rpt_lead_to_revenue_base.sales_accepted_date=date_base.date_day
@@ -176,15 +214,21 @@
         person_order_type as order_type,
         account_demographics_sales_segment AS sales_segment,
         account_demographics_geo AS geo,
+        account_demographics_area AS area,
+        account_demographics_region AS region,
+        sales_qualified_source_name,
         lead_source,
+        source_buckets,
+        email_domain_type,
+        parent_crm_account_lam,
+        parent_crm_account_lam_dev_count,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         bizible_medium,
-        parent_crm_account_lam,
-        parent_crm_account_lam_dev_count,
-        COUNT(DISTINCT actual_inquiry) AS inquiries
+        'Inquiry' AS metric_type,
+        COUNT(DISTINCT actual_inquiry) AS metric_value
     FROM inquiry_prep
-    {{ dbt_utils.group_by(n=14) }}
+    {{ dbt_utils.group_by(n=20) }}
   
 ), mqls AS (
 
@@ -197,15 +241,21 @@
         person_order_type as order_type,
         account_demographics_sales_segment AS sales_segment,
         account_demographics_geo AS geo,
+        account_demographics_area AS area,
+        account_demographics_region AS region,
+        sales_qualified_source_name,
         lead_source,
+        source_buckets,
+        email_domain_type,
+        parent_crm_account_lam,
+        parent_crm_account_lam_dev_count,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         bizible_medium,
-        parent_crm_account_lam,
-        parent_crm_account_lam_dev_count,
-        COUNT(DISTINCT mqls) AS mqls
+        'MQL' AS metric_type,
+        COUNT(DISTINCT mqls) AS metric_value
     FROM mql_prep
-    {{ dbt_utils.group_by(n=14) }}
+    {{ dbt_utils.group_by(n=20) }}
     
  ), saos AS (
   
@@ -217,17 +267,22 @@
         date_range_year,
         crm_opp_owner_sales_segment_stamped_clean AS sales_segment, 
         crm_opp_owner_geo_stamped AS geo,
+        crm_opp_owner_region_stamped AS region,
+        crm_opp_owner_area_stamped AS area,
         sales_qualified_source_name,
         opp_order_type AS order_type,
-        sales_accepted_date,
+        lead_source,
+        source_buckets,
+        email_domain_type,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         bizible_medium,
-        COUNT(DISTINCT saos) AS saos
+        'SAO' AS metric_type,
+        COUNT(DISTINCT saos) AS metric_value
     FROM sao_prep
-    {{ dbt_utils.group_by(n=15) }}
+    {{ dbt_utils.group_by(n=20) }}
     
   ), intermediate AS (
 
@@ -237,88 +292,129 @@
         date_range_month,
         date_range_quarter,
         date_range_year,
+        order_type,
         sales_segment,
         geo,
-        order_type,
+        area,
+        region,
+        sales_qualified_source_name,
+        lead_source,
+        source_buckets,
+        email_domain_type,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         bizible_medium,
-        SUM(inquiries) AS inquiries,
-        0 AS mqls,
-        0 AS saos
+        metric_type,
+        metric_value
     FROM inquiries
-    {{ dbt_utils.group_by(n=13) }}
     UNION ALL
-    SELECT
+    SELECT 
         date_day,
         date_range_week,
         date_range_month,
         date_range_quarter,
         date_range_year,
+        order_type,
         sales_segment,
         geo,
-        order_type,
+        area,
+        region,
+        sales_qualified_source_name,
+        lead_source,
+        source_buckets,
+        email_domain_type,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         bizible_medium,
-        0 AS inquiries,
-        SUM(mqls) AS mqls,
-        0 AS saos
+        metric_type,
+        metric_value
     FROM mqls
-    {{ dbt_utils.group_by(n=13) }}
     UNION ALL
-    SELECT
+    SELECT 
         date_day,
         date_range_week,
         date_range_month,
         date_range_quarter,
         date_range_year,
+        order_type,
         sales_segment,
         geo,
-        order_type,
+        area,
+        region,
+        sales_qualified_source_name,
+        lead_source,
+        source_buckets,
+        email_domain_type,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         bizible_medium,
-        0 AS inquiries,
-        0 AS mqls,
-        SUM(saos) AS saos
+        metric_type,
+        metric_value
     FROM saos
-    {{ dbt_utils.group_by(n=13) }}
+    
+), final AS (
 
-  ), final AS (
-
-    SELECT
-        date_day,
-        date_range_week,
-        date_range_month,
-        date_range_quarter,
-        date_range_year,
-        sales_segment,
-        geo,
-        order_type,
-        parent_crm_account_lam,
-        parent_crm_account_lam_dev_count,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
-        bizible_medium,
-        SUM(inquiries) AS inquiries,
-        SUM(mqls) AS mqls,
-        SUM(saos) AS saos
-    FROM intermediate
-    {{ dbt_utils.group_by(n=13) }}
-  )
-
+  SELECT DISTINCT
+    date_day,
+    date_range_week,
+    date_range_month,
+    date_range_quarter,
+    date_range_year,
+    order_type,
+    sales_segment,
+    geo,
+    area,
+    region,
+    sales_qualified_source_name,
+    lead_source,
+    source_buckets,
+    email_domain_type,
+    parent_crm_account_lam,
+    parent_crm_account_lam_dev_count,
+    bizible_marketing_channel,
+    bizible_marketing_channel_path,
+    bizible_medium,
+    metric_type,
+    metric_value
+  FROM intermediate
+  UNION ALL
+  SELECT
+    target_date,
+    first_day_of_week,
+    target_month,
+    fiscal_quarter_name,
+    fiscal_year, 
+    order_type_name,
+    crm_user_sales_segment,
+    crm_user_geo,
+    crm_user_area,
+    crm_user_region,
+    sales_qualified_source_name,
+    NULL AS lead_source,
+    NULL AS source_buckets,
+    NULL AS email_domain_type,
+    NULL AS parent_crm_account_lam,
+    NULL AS parent_crm_account_lam_dev_count,
+    NULL AS bizible_marketing_channel,
+    NULL AS bizible_marketing_channel_path,
+    NULL AS bizible_medium,
+    kpi_name,
+    daily_allocated_target
+  FROM targets
+  
+)
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
     updated_by="@rkohnke",
-    created_date="2023-06-21",
-    updated_date="2023-08-10",
+    created_date="2023-08-22",
+    updated_date="2023-08-22",
   ) }}
+

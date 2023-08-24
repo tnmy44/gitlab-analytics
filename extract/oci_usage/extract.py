@@ -53,7 +53,6 @@ def extract_files_from_oci(
     }
 
     for o in report_bucket_objects.data.objects:
-
         object_details = object_storage.get_object(
             reporting_namespace, reporting_bucket, o.name
         )

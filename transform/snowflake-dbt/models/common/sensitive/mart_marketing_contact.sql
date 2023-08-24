@@ -223,7 +223,7 @@
     SELECT
       latest_pql.email                                                                           AS email,
       COUNT(*)                                                                                   AS pql_nbr_integrations_installed,
-      ARRAY_AGG(DISTINCT services.service_type) WITHIN GROUP (ORDER BY services.service_type)    AS pql_integrations_installed
+      ARRAY_AGG(DISTINCT services.integration_type) WITHIN GROUP (ORDER BY services.integration_type)    AS pql_integrations_installed
     FROM services
     LEFT JOIN project
       ON services.project_id = project.dim_project_id
@@ -1032,7 +1032,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-02-09",
-    updated_date="2023-06-19"
+    updated_date="2023-08-17"
 ) }}

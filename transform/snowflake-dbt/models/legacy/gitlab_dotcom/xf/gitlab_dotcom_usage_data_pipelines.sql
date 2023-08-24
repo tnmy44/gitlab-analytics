@@ -75,15 +75,6 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "clusters_applications_helm",
-    "source_table_name": "gitlab_dotcom_clusters_applications_helm_xf",
-    "user_column_name": "user_id",
-    "key_to_parent_project": "cluster_project_id",
-    "primary_key": "clusters_applications_helm_id",
-    "stage_name": "configure",
-    "is_representative_of_stage": "True"
-  },
-  {
     "event_name": "container_scanning",
     "source_cte_name": "container_scanning_jobs",
     "user_column_name": "ci_build_user_id",
@@ -259,7 +250,7 @@
     "source_cte_name": "services_source",
     "user_column_name": "NULL",
     "key_to_parent_project": "project_id",
-    "primary_key": "service_id",
+    "primary_key": "integration_id",
     "stage_name": "create",
     "is_representative_of_stage": "False"
   },
@@ -412,7 +403,7 @@
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_integrations_source') }}
-    WHERE service_type != 'GitlabIssueTrackerService'
+    WHERE integration_type != 'GitlabIssueTrackerService'
 
 ), successful_ci_pipelines_source AS (
 
