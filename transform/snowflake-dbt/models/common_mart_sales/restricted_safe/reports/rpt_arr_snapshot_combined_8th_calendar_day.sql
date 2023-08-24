@@ -8,12 +8,14 @@
 
 , dim_date_actual AS (
   
+    -- This CTE controls which months will be added from `mart_arr_current` to this table
+    -- If the last date in the snapshot table is below 7 we have to add two dates. The max month of the snapshot and the month before it
+    -- Example: if last date snapshot = 2023-08-07, then we need to add 2023-07-01 (as we are not yet on 2023-08-08) and also 2023-08-01 (current_month) to the table
     SELECT
       first_day_of_month,
       snapshot_date_fpa,
       date_actual,
       (SELECT MAX(snapshot_date) FROM mart_arr_snapshot_model) AS max_snapshot_date
-      {# '2023-09-06'::date AS max_snapshot_date #}
     FROM dim_date
     WHERE CASE
         WHEN DAY(max_snapshot_date) <= 7
