@@ -2866,7 +2866,7 @@ roles:
             - restricted_safe
         warehouses:
             - dev_xs
-       owns:
+        owns:
             databases:
                 - anelson_prep
                 - anelson_prod
