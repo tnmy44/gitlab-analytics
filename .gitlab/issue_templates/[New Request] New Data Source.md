@@ -12,7 +12,7 @@ To support the new data source triage process, try to complete the below checkli
   - [ ] Change/extension of an existing pipeline: `     `
 * [ ] Do any objects in this data source need to be snapshotted? If yes, please open separate issues to have the objects snapshotted.
 * [ ] Does it contain MNPI data?
-* [ ] Does it contain PII data?
+* [ ] Does it contain Personal Data?
 * [ ] Severity in case of an incident
   - [ ] Critical - S1
   - [ ] High - S2
@@ -20,7 +20,6 @@ To support the new data source triage process, try to complete the below checkli
   - [ ] Low - S4
 * [ ] Who will be using this data, and where (dashboards, snowflake UI, etc.)?
   - `      `
- 
  
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-standard.html#data-classification-levels#data-classification-levels))?
  - _`{data fields, columns, or objects}`_
@@ -60,7 +59,12 @@ use contact the Data Engineer assigned below for confirmation.
  
 **Triage**
 * [ ] Determine the extraction solution via decision [diagram](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/new-data-source/#extraction-solution):
-* [ ] Estimate the [issue points](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#issue-pointing), based on the current information
+* [ ] Estimate the [issue points](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#issue-pointing), based on the current information* 
+* [ ] This new data source is lised in the [tech_stack.yml](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/tech_stack.yml) and does not have `data_classification: Red`. If the data source does have `data_classification: Red`, the following approvals are required:
+    - [ ] BT/Data VP-level
+    - [ ] Security (Security Risk Management Officer)
+    - [ ] Privacy (Lead Legal Counsel - Privacy)
+    - [ ] Not applicable - this data source is already extraded and it concerns extending the current pipeline
  
 **Admin**
  * [ ] Create issue for creation of extract process (not needed if using Stitch/FiveTran)
