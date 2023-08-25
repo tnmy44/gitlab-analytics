@@ -2866,6 +2866,38 @@ roles:
             - restricted_safe
         warehouses:
             - dev_xs
+       owns:
+            databases:
+                - anelson_prep
+                - anelson_prod
+            schemas:
+                - anelson_prep.*
+                - anelson_prod.*
+            tables:
+                - anelson_prep.*.*
+                - anelson_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - anelson_prep
+                    - anelson_prod
+                write:
+                    - anelson_prep
+                    - anelson_prod
+            schemas:
+                read:
+                    - anelson_prep.*
+                    - anelsonprod.*
+                write:
+                    - anelson_prep.*
+                    - anelson_prod.*
+            tables:
+                read:
+                    - anelson_prep.*.*
+                    - anelson_prod.*.*
+                write:
+                    - anelson_prep.*.*
+                    - anelson_prod.*.*
 
     - bbutterfield:
         member_of:
