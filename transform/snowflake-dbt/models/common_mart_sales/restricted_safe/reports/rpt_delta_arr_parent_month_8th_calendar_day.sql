@@ -25,6 +25,7 @@ WITH dim_product_detail AS (
 
     SELECT *
     FROM {{ ref('rpt_arr_snapshot_combined_8th_calendar_day') }}
+    WHERE is_arr_month_finalized = TRUE
 
 ), finalized_arr_month AS (
 
