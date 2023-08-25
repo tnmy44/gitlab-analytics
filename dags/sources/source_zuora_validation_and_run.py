@@ -63,7 +63,6 @@ pod_secrets = [
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -81,6 +80,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="10 */12 * * *",
     description=f"This DAG tests the raw data for {data_source}, runs any snapshots, runs the source models, and tests the source models.",
+    catchup=False,
 )
 
 # Test raw source

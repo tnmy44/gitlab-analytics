@@ -30,7 +30,6 @@ pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -69,6 +68,7 @@ dag = DAG(
     "ds_propensity_to_purchase_trial",
     default_args=default_args,
     schedule_interval="0 5 * * *",
+    catchup=False,
 )
 
 # Task 1
