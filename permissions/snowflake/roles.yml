@@ -2887,7 +2887,7 @@ roles:
             schemas:
                 read:
                     - anelson_prep.*
-                    - anelsonprod.*
+                    - anelson_prod.*
                 write:
                     - anelson_prep.*
                     - anelson_prod.*
