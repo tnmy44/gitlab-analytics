@@ -2860,6 +2860,13 @@ roles:
         warehouses:
             - dev_xs
 
+    - anelson:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - bbutterfield:
         member_of:
             - analyst_sales
@@ -5196,6 +5203,11 @@ users:
         can_login: yes
         member_of:
             - aperez
+
+    - anelson:
+        can_login: yes
+        member_of:
+            - anelson
 
     - bi_tool_eval:
         can_login: yes
