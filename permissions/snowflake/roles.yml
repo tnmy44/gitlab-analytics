@@ -104,6 +104,11 @@ databases:
     - jstark_prep:
         shared: no
 
+    - jonglee_prod:
+        shared: no
+    - jonglee_prep:
+        shared: no     
+
     - juwong_prod:
         shared: no
     - juwong_prep:
@@ -3449,7 +3454,7 @@ roles:
             - restricted_safe
         warehouses:
             - dev_xs
-       owns:
+        owns:
             databases:
                 - jonglee_prep
                 - jonglee_prod
