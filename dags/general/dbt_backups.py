@@ -41,7 +41,6 @@ pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -52,7 +51,7 @@ default_args = {
 }
 
 # Create the DAG. Run daily at 04:05
-dag = DAG("dbt_backups", default_args=default_args, schedule_interval="5 4 * * *")
+dag = DAG("dbt_backups", default_args=default_args, schedule_interval="5 4 * * *", catchup=False)
 
 
 def generate_task(task: str, backup_list: list, is_included: bool = False) -> None:

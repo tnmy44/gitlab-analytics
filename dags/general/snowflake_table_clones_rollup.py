@@ -67,6 +67,7 @@ dag = DAG(
     "snowflake_table_clone_rollup",
     default_args=default_args,
     schedule_interval="0 12 9 * *",
+    catchup=False,
 )
 tables_to_rollup = [
     "MART_ARR",

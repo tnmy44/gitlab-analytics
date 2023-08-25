@@ -21,7 +21,6 @@ pod_env_vars = {
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -38,7 +37,7 @@ drop_cmd = f"""
 
 # Create the DAG
 dag = DAG(
-    "snowplow_event_sample", default_args=default_args, schedule_interval="0 21 * * 5"
+    "snowplow_event_sample", default_args=default_args, schedule_interval="0 21 * * 5", catchup=False
 )
 
 # Task 1
