@@ -61,7 +61,10 @@ container_cmd = f"""
 
 # Create the DAG
 dag = DAG(
-    "qualtrics_sheetload", default_args=default_args, schedule_interval="*/15 * * * *", catchup=False
+    "qualtrics_sheetload",
+    default_args=default_args,
+    schedule_interval="*/15 * * * *",
+    catchup=False,
 )
 
 # Task 1

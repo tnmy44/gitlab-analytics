@@ -51,7 +51,12 @@ default_args = {
 }
 
 # Create the DAG. Run daily at 04:05
-dag = DAG("dbt_backups", default_args=default_args, schedule_interval="5 4 * * *", catchup=False)
+dag = DAG(
+    "dbt_backups",
+    default_args=default_args,
+    schedule_interval="5 4 * * *",
+    catchup=False,
+)
 
 
 def generate_task(task: str, backup_list: list, is_included: bool = False) -> None:

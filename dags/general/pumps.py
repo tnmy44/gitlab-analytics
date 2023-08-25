@@ -41,7 +41,12 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("data_pumps", default_args=default_args, schedule_interval="0 5 * * *", catchup=False)
+dag = DAG(
+    "data_pumps",
+    default_args=default_args,
+    schedule_interval="0 5 * * *",
+    catchup=False,
+)
 
 with open(f"{REPO_BASE_PATH}/pump/pumps.yml", "r") as file:
     try:

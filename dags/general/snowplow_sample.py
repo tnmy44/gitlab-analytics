@@ -37,7 +37,10 @@ drop_cmd = f"""
 
 # Create the DAG
 dag = DAG(
-    "snowplow_event_sample", default_args=default_args, schedule_interval="0 21 * * 5", catchup=False
+    "snowplow_event_sample",
+    default_args=default_args,
+    schedule_interval="0 21 * * 5",
+    catchup=False,
 )
 
 # Task 1

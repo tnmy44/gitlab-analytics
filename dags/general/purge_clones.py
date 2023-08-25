@@ -31,7 +31,12 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("snowflake_cleanup", default_args=default_args, schedule_interval="0 5 * * 0", catchup=False)
+dag = DAG(
+    "snowflake_cleanup",
+    default_args=default_args,
+    schedule_interval="0 5 * * 0",
+    catchup=False,
+)
 
 # Task 1
 drop_clones_cmd = f"""
