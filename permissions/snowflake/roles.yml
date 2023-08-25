@@ -5408,7 +5408,7 @@ users:
         member_of:
             - jhope
 
-   - jonglee:
+    - jonglee:
         can_login: yes
         member_of:
             - jonglee
