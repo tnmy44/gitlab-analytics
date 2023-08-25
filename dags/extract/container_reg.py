@@ -29,7 +29,6 @@ GIT_BRANCH = env["GIT_BRANCH"]
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -44,6 +43,7 @@ dag = DAG(
     "el_gcs_container_registry",
     default_args=default_args,
     schedule_interval="0 3 * * *",
+    catchup=False,
 )
 
 airflow_home = env["AIRFLOW_HOME"]

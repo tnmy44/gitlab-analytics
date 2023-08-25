@@ -6,9 +6,13 @@ from datetime import date, timedelta
 from typing import List, Dict
 
 from airflow.models import Variable
-from airflow.operators.slack_operator import SlackAPIPostOperator
-from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
+from airflow.providers.slack.operators.slack import SlackAPIPostOperator
+from airflow.providers.slack.operators.slack_webhook import SlackWebhookOperator
 
+if os.environ["IN_CLOUD"] == "False":
+    REPO_BASE_PATH = f"{os.environ['AIRFLOW_HOME']}/analytics"
+else:
+    REPO_BASE_PATH = f"{os.environ['AIRFLOW_HOME']}/dags/repo"
 
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
@@ -17,17 +21,19 @@ DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.1"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
 
-SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
+SALES_ANALYTICS_NOTEBOOKS_PATH = f"analytics/sales_analytics_notebooks"
+# Needed to find the correct drives as the path when running in cloud in the latest Airflow is different
+AIRFLOW_SALES_ANALYTICS_NOTEBOOKS_PATH = f"{REPO_BASE_PATH}/sales_analytics_notebooks"
 
 
 def get_sales_analytics_notebooks(frequency: str) -> Dict:
     notebooks = []
     fileNames = []
 
-    path = pathlib.Path(f"{SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/")
+    path = pathlib.Path(f"{AIRFLOW_SALES_ANALYTICS_NOTEBOOKS_PATH}/{frequency}/")
 
     for file in path.rglob("*.ipynb"):
-        relative_path = file.relative_to(SALES_ANALYTICS_NOTEBOOKS_PATH)
+        relative_path = file.relative_to(AIRFLOW_SALES_ANALYTICS_NOTEBOOKS_PATH)
         notebooks.append(relative_path.as_posix())
         expanded_name = (
             str(relative_path.parent).replace("/", "_") + "_" + relative_path.stem
@@ -265,9 +271,6 @@ def slack_succeeded_task(context):
     return slack_alert.execute(context=None)
 
 
-# Set the resources for the task pods
-pod_resources = {"request_memory": "1Gi", "request_cpu": "500m"}
-
 # GitLab default settings for all DAGs
 gitlab_defaults = dict(
     get_logs=True,
@@ -275,7 +278,6 @@ gitlab_defaults = dict(
     in_cluster=not os.environ["IN_CLUSTER"] == "False",
     is_delete_operator_pod=True,
     namespace=os.environ["NAMESPACE"],
-    resources=pod_resources,
     cmds=["/bin/bash", "-c"],
 )
 

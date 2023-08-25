@@ -12,6 +12,7 @@ from airflow_utils import (
     gitlab_defaults,
     slack_failed_task,
     gitlab_pod_env_vars,
+    REPO_BASE_PATH,
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
@@ -40,9 +41,7 @@ default_args = {
     "dagrun_timeout": timedelta(hours=6),
 }
 
-airflow_home = env["AIRFLOW_HOME"]
-
-full_path = f"{airflow_home}/analytics/extract/gitlab_deduplication/manifest_deduplication/t_gitlab_com_deduplication_table_manifest.yaml"
+full_path = f"{REPO_BASE_PATH}/extract/gitlab_deduplication/manifest_deduplication/t_gitlab_com_deduplication_table_manifest.yaml"
 task_name = "t_deduplication"
 
 

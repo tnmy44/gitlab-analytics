@@ -9,6 +9,7 @@ from airflow_utils import (
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
+    REPO_BASE_PATH,
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
@@ -32,7 +33,6 @@ pod_env_vars = {
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -44,12 +44,11 @@ default_args = {
     "dagrun_timeout": timedelta(hours=6),
 }
 
-airflow_home = env["AIRFLOW_HOME"]
 task_name = "zuora-revenue"
 
 # Get all the table name for which tasks for loading needs to be created
 with open(
-    f"{airflow_home}/analytics/extract/zuora_revenue/zuora_revenue_table_name.yml", "r"
+    f"{REPO_BASE_PATH}/extract/zuora_revenue/zuora_revenue_table_name.yml", "r"
 ) as file:
     try:
         stream = safe_load(file)
@@ -69,6 +68,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 13 * * *",
     concurrency=1,
+    catchup=False,
 )
 
 start = DummyOperator(task_id="Start", dag=dag)

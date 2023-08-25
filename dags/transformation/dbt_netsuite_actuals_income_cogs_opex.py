@@ -49,7 +49,6 @@ pod_env_vars = {**gitlab_pod_env_vars}
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -78,6 +77,7 @@ dag = DAG(
     schedule_interval=dag_schedule,
     description="\nThis DAG runs netsuite_actuals_income_cogs_opex model and "
     "all parent models on business days 1-8",
+    catchup=False,
 )
 
 dbt_cmd = f"""

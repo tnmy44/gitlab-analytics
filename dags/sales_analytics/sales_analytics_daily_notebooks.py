@@ -15,8 +15,8 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     slack_failed_task,
     clone_repo_cmd,
-    SALES_ANALYTICS_NOTEBOOKS_PATH,
     get_sales_analytics_notebooks,
+    SALES_ANALYTICS_NOTEBOOKS_PATH,
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
@@ -42,7 +42,7 @@ default_args = {
     "owner": "airflow",
     "retries": 0,
     "retry_delay": timedelta(minutes=5),
-    "start_date": datetime(2022, 10, 12),
+    "start_date": datetime(2023, 7, 25),
     "dagrun_timeout": timedelta(hours=2),
 }
 

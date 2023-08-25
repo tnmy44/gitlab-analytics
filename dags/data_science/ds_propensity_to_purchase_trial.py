@@ -23,7 +23,6 @@ from kube_secrets import (
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
 
-
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
@@ -37,7 +36,7 @@ default_args = {
     "owner": "airflow",
     "retries": 2,
     "retry_delay": timedelta(minutes=10),
-    "start_date": datetime(2022, 8, 9),
+    "start_date": datetime(2023, 6, 24),
     "dagrun_timeout": timedelta(hours=2),
 }
 

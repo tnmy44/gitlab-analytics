@@ -26,7 +26,6 @@ GIT_BRANCH = env["GIT_BRANCH"]
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -58,7 +57,10 @@ container_cmd = f"""
 
 # Create the DAG
 dag = DAG(
-    "value_page_extract", default_args=default_args, schedule_interval="0 2 * * */7"
+    "value_page_extract",
+    default_args=default_args,
+    schedule_interval="0 2 * * */7",
+    catchup=False,
 )
 
 # Task 1
