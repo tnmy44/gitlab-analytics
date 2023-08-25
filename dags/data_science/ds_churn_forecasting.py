@@ -70,6 +70,7 @@ clone_data_science_ptc_repo_cmd = f"""
 dag = DAG(
     "ds_churn_forecasting",
     default_args=default_args,
+    catchup=False,
     schedule_interval="0 5 9 * *",
 )
 
