@@ -404,8 +404,8 @@
     NULL AS bizible_marketing_channel,
     NULL AS bizible_marketing_channel_path,
     NULL AS bizible_medium,
-    kpi_name as metric_type,
-    daily_allocated_target as metric_value
+    kpi_name AS metric_type,
+    daily_allocated_target AS metric_value
   FROM targets
   
 )
