@@ -181,7 +181,7 @@ config_dict = {
             GITLAB_OPS_DB_HOST,
             GITLAB_OPS_DB_NAME,
         ],
-        "start_date": datetime(2023, 8, 1),
+        "start_date": datetime(2023, 8, 24),
         "task_name": "gitlab-ops",
         "description": "This DAG does Full extract & load of Operational database (Postgres) to snowflake",
     },
