@@ -3443,6 +3443,45 @@ roles:
         warehouses:
             - dev_xs
 
+    - jonglee:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+       owns:
+            databases:
+                - jonglee_prep
+                - jonglee_prod
+            schemas:
+                - jonglee_prep.*
+                - jonglee_prod.*
+            tables:
+                - jonglee_prep.*.*
+                - jonglee_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jonglee_prep
+                    - jonglee_prod
+                write:
+                    - jonglee_prep
+                    - jonglee_prod
+            schemas:
+                read:
+                    - jonglee_prep.*
+                    - jonglee_prod.*
+                write:
+                    - jonglee_prep.*
+                    - jonglee_prod.*
+            tables:
+                read:
+                    - jonglee_prep.*.*
+                    - jonglee_prod.*.*
+                write:
+                    - jonglee_prep.*.*
+                    - jonglee_prod.*.*
+
     - jng:
         member_of:
          - analytics_engineer_core
@@ -5363,6 +5402,11 @@ users:
         can_login: yes
         member_of:
             - jhope
+
+   - jonglee:
+        can_login: yes
+        member_of:
+            - jonglee
 
     - jng:
         can_login: yes
