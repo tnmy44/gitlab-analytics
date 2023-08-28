@@ -94,7 +94,7 @@ dag = DAG(
 )
 
 dbt_vars = (
-    '{"start_date": "{{ execution_date}} ", "end_date": " {{ next_execution_date }} "}'
+    '{"airflow_chunk_start_date": "{{ execution_date }}", "airflow_chunk_end_date": "{{ next_execution_date }}"}'
 )
 dbt_models_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&

@@ -12,11 +12,33 @@ WITH merge_request_diffs_internal AS (
 merge_request_diff_commits_chunked AS (
   SELECT *
   FROM {{ ref('gitlab_dotcom_merge_request_diffs') }}
-
   {% if is_incremental() %}
     WHERE
-      updated_at >= (SELECT MAX('{{ var("start_date", "updated_at" ) }}') FROM {{ this }})
-      AND updated_at < (SELECT MAX('{{ var("end_date", "2999-12-31" ) }}') FROM {{ this }})
+    /*
+    if airflow passed in dbt variable, it means compare commited_date
+    against the passed in chunked dates.
+
+    Else, incrementall load based on _uploaded_at
+    */
+      {% if var('airflow_chunk_start_date', false) != false %}
+        created_at
+      {% else %}
+        _uploaded_at
+      {% endif %}
+      >= (
+        SELECT MAX('{{ var("airflow_chunk_start_date", "_uploaded_at") }}')
+        FROM {{ this }}
+      )
+      AND
+      {% if var('airflow_chunk_end_date', false) != false %}
+        created_at
+      {% else %}
+        _uploaded_at
+      {% endif %}
+      < (
+        SELECT MAX('{{ var("airflow_chunk_end_date", "2999-12-31") }}')
+        FROM {{ this }}
+      )
   {% endif %}
 ),
 

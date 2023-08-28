@@ -19,11 +19,11 @@ merge_requests_internal AS (
 merge_request_diffs_internal AS (
   SELECT mrd.*
   FROM
-    merge_requests_internal mr
-  INNER JOIN {{ ref('gitlab_dotcom_merge_request_diffs') }} mrd ON mr.merge_request_id = mrd.merge_request_id
+    {{ ref('gitlab_dotcom_merge_request_diffs') }} mrd
+  INNER JOIN merge_requests_internal mr ON mr.merge_request_id = mrd.merge_request_id
   WHERE
     -- corresponds to created_at=2021-07-01 00:00:01.446
-    mr.merge_request_diff_id >= 208751592
+    mrd.merge_request_diff_id >= 208751592
 )
 
 SELECT * FROM merge_request_diffs_internal
