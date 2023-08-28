@@ -27,7 +27,12 @@ databases:
         shared: no
     - abright_prep:
         shared: no
- 
+
+    - anelson_prod:
+        shared: no
+    - anelson_prep:
+        shared: no
+
     - bi_tool_eval:
         shared: no
 
@@ -2865,6 +2870,45 @@ roles:
         warehouses:
             - dev_xs
 
+    - anelson:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - anelson_prep
+                - anelson_prod
+            schemas:
+                - anelson_prep.*
+                - anelson_prod.*
+            tables:
+                - anelson_prep.*.*
+                - anelson_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - anelson_prep
+                    - anelson_prod
+                write:
+                    - anelson_prep
+                    - anelson_prod
+            schemas:
+                read:
+                    - anelson_prep.*
+                    - anelson_prod.*
+                write:
+                    - anelson_prep.*
+                    - anelson_prod.*
+            tables:
+                read:
+                    - anelson_prep.*.*
+                    - anelson_prod.*.*
+                write:
+                    - anelson_prep.*.*
+                    - anelson_prod.*.*
+
     - bbutterfield:
         member_of:
             - analyst_sales
@@ -5240,6 +5284,11 @@ users:
         can_login: yes
         member_of:
             - aperez
+
+    - anelson:
+        can_login: yes
+        member_of:
+            - anelson
 
     - bi_tool_eval:
         can_login: yes
