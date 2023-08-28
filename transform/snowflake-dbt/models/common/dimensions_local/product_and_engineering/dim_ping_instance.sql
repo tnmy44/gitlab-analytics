@@ -101,10 +101,10 @@ usage_data_w_date AS (
     
     IFF(ROW_NUMBER() OVER (
       PARTITION BY prep_ping_instance.uuid, prep_ping_instance.host_id, dim_date.first_day_of_month
-      ORDER BY ping_created_at DESC) = 1, TRUE, FALSE) AS last_ping_of_month_flag,
+      ORDER BY ping_created_at DESC, prep_ping_instance.id DESC) = 1, TRUE, FALSE) AS last_ping_of_month_flag,
     IFF(ROW_NUMBER() OVER (
       PARTITION BY prep_ping_instance.uuid, prep_ping_instance.host_id, dim_date.first_day_of_week
-      ORDER BY ping_created_at DESC) = 1, TRUE, FALSE) AS last_ping_of_week_flag,
+      ORDER BY ping_created_at DESC, prep_ping_instance.id DESC) = 1, TRUE, FALSE) AS last_ping_of_week_flag,
     CASE
       WHEN last_ping_of_month_flag = TRUE                      THEN TRUE
       ELSE FALSE
