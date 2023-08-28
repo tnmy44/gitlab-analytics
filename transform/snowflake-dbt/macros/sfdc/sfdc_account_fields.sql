@@ -196,6 +196,21 @@ WITH map_merged_crm_account AS (
       ----ultimate parent crm account info
        sfdc_account.ultimate_parent_account_name                          AS parent_crm_account_name,
 
+      --6 sense fields
+      sfdc_account.6_sense_6_qa,
+      sfdc_account.risk_rate_guid,
+      sfdc_account.6_sense_account_profile_fit,
+      sfdc_account.6_sense_account_reach_score,
+      sfdc_account.6_sense_account_profile_score,
+      sfdc_account.6_sense_account_buying_stage,
+      sfdc_account.6_sense_account_numerical_reach_score,
+      sfdc_account.6_sense_account_update_date,
+      sfdc_account.6_sense_account_6_qa_end_date,
+      sfdc_account.6_sense_account_6_qa_age_days,
+      sfdc_account.6_sense_account_6_qa_start_date,
+      sfdc_account.6_sense_account_intent_score,
+      sfdc_account.6_sense_segments, 
+
       --descriptive attributes
       sfdc_account.account_name                                           AS crm_account_name,
       sfdc_account.account_sales_segment                                  AS parent_crm_account_sales_segment,

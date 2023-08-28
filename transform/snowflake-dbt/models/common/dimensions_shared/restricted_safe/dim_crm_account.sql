@@ -158,6 +158,21 @@
       prep_crm_account.carr_account_family,
       prep_crm_account.carr_this_account,
 
+      --6 sense fields
+      prep_crm_account.6_sense_6_qa,
+      prep_crm_account.risk_rate_guid,
+      prep_crm_account.6_sense_account_profile_fit,
+      prep_crm_account.6_sense_account_reach_score,
+      prep_crm_account.6_sense_account_profile_score,
+      prep_crm_account.6_sense_account_buying_stage,
+      prep_crm_account.6_sense_account_numerical_reach_score,
+      prep_crm_account.6_sense_account_update_date,
+      prep_crm_account.6_sense_account_6_qa_end_date,
+      prep_crm_account.6_sense_account_6_qa_age_days,
+      prep_crm_account.6_sense_account_6_qa_start_date,
+      prep_crm_account.6_sense_account_intent_score,
+      prep_crm_account.6_sense_segments,
+
       --degenerative dimensions
       prep_crm_account.is_sdr_target_account,
       prep_crm_account.is_key_account,

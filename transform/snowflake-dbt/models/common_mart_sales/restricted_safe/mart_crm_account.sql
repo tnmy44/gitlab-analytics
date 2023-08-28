@@ -129,6 +129,22 @@
       dim_crm_account.bdr_prospecting_status,
       dim_crm_account.is_focus_partner,
 
+      --6 sense fields
+
+      dim_crm_account.6_sense_6_qa,
+      dim_crm_account.risk_rate_guid,
+      dim_crm_account.6_sense_account_profile_fit,
+      dim_crm_account.6_sense_account_reach_score,
+      dim_crm_account.6_sense_account_profile_score,
+      dim_crm_account.6_sense_account_buying_stage,
+      dim_crm_account.6_sense_account_numerical_reach_score,
+      dim_crm_account.6_sense_account_update_date,
+      dim_crm_account.6_sense_account_6_qa_end_date,
+      dim_crm_account.6_sense_account_6_qa_age_days,
+      dim_crm_account.6_sense_account_6_qa_start_date,
+      dim_crm_account.6_sense_account_intent_score,
+      dim_crm_account.6_sense_segments,
+
       --degenerative dimensions
       dim_crm_account.is_sdr_target_account,
       dim_crm_account.is_key_account,
