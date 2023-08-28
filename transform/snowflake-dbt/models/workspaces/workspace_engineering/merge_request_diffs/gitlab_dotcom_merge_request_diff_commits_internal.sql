@@ -20,23 +20,14 @@ merge_request_diff_commits_chunked AS (
 
     Else, incrementall load based on _uploaded_at
     */
-      {% if var('airflow_chunk_start_date', false) != false %}
-        created_at
-      {% else %}
-        _uploaded_at
-      {% endif %}
-      >= (
-        SELECT MAX('{{ var("airflow_chunk_start_date", "_uploaded_at") }}')
+    merge_request_diff_id >= (
+        SELECT MAX('{{ var("backfill_start_id", "merge_request_diff_id") }}')
         FROM {{ this }}
       )
       AND
-      {% if var('airflow_chunk_end_date', false) != false %}
-        created_at
-      {% else %}
-        _uploaded_at
-      {% endif %}
-      < (
-        SELECT MAX('{{ var("airflow_chunk_end_date", "2999-12-31") }}')
+      merge_request_diff_id
+      <= (
+        SELECT '{{ var("backfill_end_id", 9999999999999) }}'
         FROM {{ this }}
       )
   {% endif %}
