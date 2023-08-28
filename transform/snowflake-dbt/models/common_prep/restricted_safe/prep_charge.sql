@@ -152,6 +152,7 @@
       zuora_rate_plan_charge.product_rate_plan_charge_id                AS dim_product_detail_id,
       zuora_rate_plan.amendement_id                                     AS dim_amendment_id_charge,
       zuora_rate_plan.subscription_id                                   AS dim_subscription_id,
+      zuora_subscription.namespace_id                                   AS dim_namespace_id,
       zuora_rate_plan_charge.account_id                                 AS dim_billing_account_id,
       map_merged_crm_account.dim_crm_account_id                         AS dim_crm_account_id,
       sfdc_account.ultimate_parent_account_id                           AS dim_parent_crm_account_id,
@@ -290,6 +291,7 @@
       manual_charges_prep.dim_product_detail_id                                             AS dim_product_detail_id,
       NULL                                                                                  AS dim_amendment_id_charge,
       active_zuora_subscription.subscription_id                                             AS dim_subscription_id,
+      active_zuora_subscription.namespace_id                                                AS dim_namespace_id,
       manual_charges_prep.dim_billing_account_id                                            AS dim_billing_account_id,
       zuora_account.crm_id                                                                  AS dim_crm_account_id,
       sfdc_account.ultimate_parent_account_id                                               AS dim_parent_crm_account_id,
@@ -394,5 +396,5 @@
     created_by="@iweeks",
     updated_by="@chrissharp",
     created_date="2021-04-28",
-    updated_date="2023-06-13"
+    updated_date="2023-08-28"
 ) }}
