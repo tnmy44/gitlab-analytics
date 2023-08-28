@@ -19,7 +19,7 @@ WITH navs AS (
         {{ ref('fct_behavior_structured_event_without_assignment_190') }} AS fct
         ON b.behavior_structured_event_pk = fct.behavior_structured_event_pk
     WHERE
-        b.behavior_date > DATEADD(DAY, -90, CURRENT_DATE)
+        b.behavior_date > '2023-03-12'
         AND
         b.behavior_date < CURRENT_DATE
     GROUP BY
@@ -40,7 +40,7 @@ pvs AS (
         {{ ref('dim_behavior_website_page') }} AS d
         ON d.dim_behavior_website_page_sk = p.dim_behavior_website_page_sk
     WHERE
-        p.behavior_at > DATEADD(DAY, -90, CURRENT_DATE)
+        p.behavior_at::DATE >= '2023-03-12'
         AND
         d.app_id IN ('gitlab', 'gitlab_customers')
         AND
