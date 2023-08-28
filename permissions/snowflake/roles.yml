@@ -4559,6 +4559,8 @@ roles:
             - dev_m
             - loading
             - reporting
+            - transforming_l
+            - transforming_xl
         owns:
             databases:
                 - pempey_prep
