@@ -40,19 +40,19 @@ pvs AS (
         {{ ref('dim_behavior_website_page') }} AS d
         ON d.dim_behavior_website_page_sk = p.dim_behavior_website_page_sk
     WHERE
-        p.page_view_start_at > DATEADD(DAY, -90, CURRENT_DATE)
+        p.behavior_at > DATEADD(DAY, -90, CURRENT_DATE)
         AND
         d.app_id IN ('gitlab', 'gitlab_customers')
         AND
-        p.page_view_start_at::DATE < CURRENT_DATE
+        p.behavior_at::DATE < CURRENT_DATE
 )
 
 
 SELECT
     CASE
         WHEN p.using_new_nav = 1 THEN 'New Nav' ELSE 'Old Nav'
-    END AS is_new_nav,
-    p.page_view_start_at::DATE AS _date,
+    END AS nav_type,
+    p.behavior_at::DATE AS _date,
     COUNT(p.fct_behavior_website_page_view_sk) AS page_views,
     COUNT(n.dim_behavior_website_page_sk) AS nav_source_events,
     page_views - nav_source_events AS page_views_not_sourced_from_nav,
@@ -63,16 +63,16 @@ FROM
 LEFT JOIN
     navs AS n
     ON
-        p.page_view_start_at::DATE = n.behavior_date
+        p.behavior_at::DATE = n.behavior_date
         AND n.dim_behavior_website_page_sk = p.dim_behavior_referrer_page_sk
         AND n.using_new_nav = p.using_new_nav
         AND p.session_id = n.session_id
 {% if is_incremental() %}
     -- Goal is to only add complete days that are not currently added
     WHERE
-        p.page_view_start_at::DATE > (SELECT MAX(_date) FROM {{ this }})
+        p.behavior_at::DATE > (SELECT MAX(_date) FROM {{ this }})
         AND
-        p.page_view_start_at::DATE < CURRENT_DATE
+        p.behavior_at::DATE < CURRENT_DATE
 {% endif %}
 GROUP BY
     1, 2
