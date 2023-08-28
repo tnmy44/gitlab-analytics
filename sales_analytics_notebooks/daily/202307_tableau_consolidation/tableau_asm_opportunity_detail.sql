@@ -69,6 +69,9 @@ detail AS (
         product_category_tier,
         product_category_deployment,
         industry,
+        lam_dev_count_bin,
+        pipeline_landing_quarter,
+        current_stage_age_bin,
 
         parent_crm_account_upa_country_name,
 
@@ -101,17 +104,24 @@ detail AS (
         -- Measures for Detail / Aggregated
 
         net_arr,
-        booked_net_arr,
         open_1plus_net_arr,
+        booked_net_arr,
+        booked_churned_contraction_net_arr,
 
         calculated_deal_count        AS deal_count,
         booked_deal_count,
+        booked_churned_contraction_deal_count,
         cycle_time_in_days           AS age_in_days,
+
+
 
         total_professional_services_value,
         total_book_professional_services_value,
         total_lost_professional_services_value,
-        total_open_professional_services_value
+        total_open_professional_services_value,
+
+        lam_dev_count
+
 
 
 
@@ -125,6 +135,7 @@ final AS (
     SELECT
         final.*,
 
+        COALESCE(close_date.fiscal_year = report_date.current_fiscal_year, FALSE)                   AS is_cfy_flag,
         COALESCE(close_fiscal_quarter_date = current_fiscal_quarter_date, FALSE)                    AS is_cfq_flag,
 
         COALESCE(close_fiscal_quarter_date = DATEADD(MONTH, 3, current_fiscal_quarter_date), FALSE) AS is_cfq_plus_1_flag,
@@ -169,6 +180,8 @@ final AS (
         )                                                                                           AS key_bu_subbu
     FROM detail AS final
     CROSS JOIN report_date
+    LEFT JOIN date_details AS close_date
+        ON close_date.date_actual = final.close_date
     WHERE (
         net_arr != 0
         OR booked_net_arr != 0
