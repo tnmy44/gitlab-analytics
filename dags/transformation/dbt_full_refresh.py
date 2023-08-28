@@ -61,6 +61,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval=None,
     description="Adhoc DBT FULL Refresh",
+    catchup=False,
 )
 dag.doc_md = __doc__
 

@@ -44,7 +44,6 @@ pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -86,6 +85,7 @@ dag = DAG(
     description="This DAG is responsible for refreshing models at minute 55 past every 6th hour.",
     default_args=default_args,
     schedule_interval="55 */6 * * 1-6",
+    catchup=False,
 )
 
 
