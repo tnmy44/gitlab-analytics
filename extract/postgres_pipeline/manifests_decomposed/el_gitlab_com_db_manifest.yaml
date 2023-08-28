@@ -309,7 +309,7 @@ tables:
       , enabled
       , environment_scope
       , cluster_type
-      , domain
+      , NULL AS domain
       , managed
       , management_project_id
       , cleanup_status
@@ -1587,7 +1587,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , tag
+      , NULL AS tag
       , NULL AS description
       , project_id
       , created_at
