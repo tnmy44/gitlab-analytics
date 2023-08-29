@@ -50,7 +50,6 @@ secrets = [
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -61,7 +60,12 @@ default_args = {
 
 # Create the DAG
 #  Monday at 0700 UTC
-dag = DAG("saas_usage_ping", default_args=default_args, schedule_interval="0 7 * * 1")
+dag = DAG(
+    "saas_usage_ping",
+    default_args=default_args,
+    schedule_interval="0 7 * * 1",
+    catchup=False,
+)
 
 # Instance Level Usage Ping
 instance_combined_metrics_cmd = f"""

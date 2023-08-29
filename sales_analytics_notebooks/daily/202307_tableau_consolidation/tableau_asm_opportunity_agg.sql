@@ -69,6 +69,9 @@ aggregated_base AS (
         product_category_tier,
         product_category_deployment,
         industry,
+        lam_dev_count_bin,
+        pipeline_landing_quarter,
+        current_stage_age_bin,
 
         parent_crm_account_upa_country_name,
 
@@ -96,10 +99,15 @@ aggregated_base AS (
         SUM(total_professional_services_value)      AS total_professional_services_value,
         SUM(total_book_professional_services_value) AS total_book_professional_services_value,
         SUM(total_lost_professional_services_value) AS total_lost_professional_services_value,
-        SUM(total_open_professional_services_value) AS total_open_professional_services_value
+        SUM(total_open_professional_services_value) AS total_open_professional_services_value,
+
+        -- Churn / Contraction
+        SUM(churned_contraction_net_arr)            AS churned_contraction_net_arr,
+        SUM(booked_churned_contraction_net_arr)     AS booked_churned_contraction_net_arr
+
 
     FROM sfdc_opportunity_xf
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
 
 ),
 
@@ -138,6 +146,9 @@ base_key AS (
         a.product_category_tier,
         a.product_category_deployment,
         a.industry,
+        a.lam_dev_count_bin,
+        a.pipeline_landing_quarter,
+        a.current_stage_age_bin,
 
         a.parent_crm_account_upa_country_name,
 
@@ -183,6 +194,9 @@ aggregated_final AS (
         base_key.product_category_tier,
         base_key.product_category_deployment,
         base_key.industry,
+        base_key.lam_dev_count_bin,
+        base_key.pipeline_landing_quarter,
+        base_key.current_stage_age_bin,
 
         base_key.parent_crm_account_upa_country_name,
 
@@ -216,15 +230,21 @@ aggregated_final AS (
         aggregated_base.total_lost_professional_services_value,
         aggregated_base.total_open_professional_services_value,
 
+        -- Churn / Contraction
+        aggregated_base.churned_contraction_net_arr,
+        aggregated_base.booked_churned_contraction_net_arr,
+
         -----------------------------------------------
         -- Dimensions for Aggregated
         previous_quarter.booked_net_arr                         AS prev_quarter_booked_net_arr,
         previous_quarter.booked_deal_count                      AS prev_quarter_booked_deal_count,
         previous_quarter.total_book_professional_services_value AS prev_quarter_booked_professional_services,
+        previous_quarter.booked_churned_contraction_net_arr     AS prev_quarter_booked_churned_contraction_net_arr,
 
         previous_year.booked_net_arr                            AS prev_year_booked_net_arr,
         previous_year.booked_deal_count                         AS prev_year_booked_deal_count,
-        previous_year.total_book_professional_services_value    AS prev_year_booked_professional_services
+        previous_year.total_book_professional_services_value    AS prev_year_booked_professional_services,
+        previous_year.booked_churned_contraction_net_arr        AS prev_year_booked_churned_contraction_net_arr
 
     FROM base_key
     LEFT JOIN aggregated_base
@@ -251,6 +271,9 @@ aggregated_final AS (
             AND base_key.fpa_master_bookings_flag = aggregated_base.fpa_master_bookings_flag
             AND base_key.report_date = aggregated_base.report_date
             AND base_key.industry = aggregated_base.industry
+            AND base_key.lam_dev_count_bin = aggregated_base.lam_dev_count_bin
+            AND base_key.pipeline_landing_quarter = aggregated_base.pipeline_landing_quarter
+            AND base_key.current_stage_age_bin = aggregated_base.current_stage_age_bin
     LEFT JOIN aggregated_base AS previous_quarter
         ON
             base_key.owner_id = previous_quarter.owner_id
@@ -275,6 +298,9 @@ aggregated_final AS (
             AND base_key.fpa_master_bookings_flag = previous_quarter.fpa_master_bookings_flag
             AND base_key.report_date = DATEADD(MONTH, 3, previous_quarter.report_date)
             AND base_key.industry = previous_quarter.industry
+            AND base_key.lam_dev_count_bin = previous_quarter.lam_dev_count_bin
+            AND base_key.pipeline_landing_quarter = previous_quarter.pipeline_landing_quarter
+            AND base_key.current_stage_age_bin = previous_quarter.current_stage_age_bin
     LEFT JOIN aggregated_base AS previous_year
         ON
             base_key.owner_id = previous_year.owner_id
@@ -299,6 +325,9 @@ aggregated_final AS (
             AND base_key.fpa_master_bookings_flag = previous_year.fpa_master_bookings_flag
             AND base_key.report_date = DATEADD(MONTH, 12, previous_year.report_date)
             AND base_key.industry = previous_year.industry
+            AND base_key.lam_dev_count_bin = previous_year.lam_dev_count_bin
+            AND base_key.pipeline_landing_quarter = previous_year.pipeline_landing_quarter
+            AND base_key.current_stage_age_bin = previous_year.current_stage_age_bin
 
 ),
 
@@ -307,6 +336,7 @@ final AS (
     SELECT
         final.*,
 
+        COALESCE(close_date.fiscal_year = report_date.current_fiscal_year, FALSE)          AS is_cfy_flag,
         COALESCE(final.close_date = current_fiscal_quarter_date, FALSE)                    AS is_cfq_flag,
 
         COALESCE(final.close_date = DATEADD(MONTH, 3, current_fiscal_quarter_date), FALSE) AS is_cfq_plus_1_flag,
@@ -359,11 +389,14 @@ final AS (
     WHERE (
         net_arr != 0
         OR booked_net_arr != 0
+        OR booked_churned_contraction_net_arr != 0
         OR total_professional_services_value != 0
         OR prev_quarter_booked_professional_services != 0
         OR prev_year_booked_professional_services != 0
         OR prev_quarter_booked_net_arr != 0
         OR prev_year_booked_net_arr != 0
+        OR prev_quarter_booked_churned_contraction_net_arr != 0
+        OR prev_year_booked_churned_contraction_net_arr != 0
     )
 )
 

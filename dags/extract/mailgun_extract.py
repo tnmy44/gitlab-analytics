@@ -27,7 +27,6 @@ GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 default_args = {
-    "catchup": True,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -35,7 +34,7 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2020, 1, 1),
+    "start_date": datetime(2023, 8, 24),
 }
 
 dag = DAG(
@@ -43,6 +42,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 */12 * * *",
     concurrency=2,
+    catchup=True,
 )
 
 events = [
@@ -77,7 +77,7 @@ for e in events:
         ],
         env_vars={
             **pod_env_vars,
-            "START_TIME": "{{ execution_date }}",
+            "START_TIME": "{{ logical_date }}",
             "END_TIME": "{{ next_execution_date }}",
         },
         affinity=get_affinity("production"),
