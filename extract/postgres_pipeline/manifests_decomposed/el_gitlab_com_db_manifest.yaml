@@ -673,13 +673,51 @@ tables:
     import_query: |-
       SELECT id
       , iid
-      , title
+      , CASE WHEN project_id IN 
+          (13154706
+          , 14859125
+          , 15532587
+          , 16492321
+          , 26555111
+          , 26567411
+          , 26599489
+          , 26906211
+          , 28821822
+          , 30296511
+          , 30297111
+          , 30297823
+          , 34169285
+          , 35858823
+          , 40363072
+          , 40694272
+          , 41458091
+          , 42961472
+          , 44356021 ) THEN '**MASKED**' ELSE title END AS title --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
       , author_id
       , project_id
       , created_at
       , updated_at
       , confidential
-      , description
+      , CASE WHEN project_id IN 
+          (13154706
+          , 14859125
+          , 15532587
+          , 16492321
+          , 26555111
+          , 26567411
+          , 26599489
+          , 26906211
+          , 28821822
+          , 30296511
+          , 30297111
+          , 30297823
+          , 34169285
+          , 35858823
+          , 40363072
+          , 40694272
+          , 41458091
+          , 42961472
+          , 44356021 ) THEN '**MASKED**' ELSE description END AS description --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
       , milestone_id
       , updated_by_id
       , weight
