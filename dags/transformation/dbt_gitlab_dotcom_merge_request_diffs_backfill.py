@@ -52,11 +52,13 @@ def get_max_id_target_table(target_table):
     return max_id
 
 
-def generate_intervals(chunks, max_id):
+def generate_intervals(chunks: int, max_id: int):
+    """
+    Generates list of intervals, something like:
+    [ (1, 10), (11, 20), (etc, etc) ]
     """
     if chunks > max_id:
         raise ValueError('not enough ids to chunk... aborting')
-    """
 
     intervals = []
     interval_size = max_id // chunks
@@ -127,7 +129,7 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    f"dbt_{DBT_MODULE_NAME}",  # TODO
+    f"dbt_{DBT_MODULE_NAME}",
     default_args=default_args,
     schedule_interval="0 21 * * 0",  #
     max_active_runs=2,
