@@ -35,7 +35,9 @@ WITH account_dims_mapping AS (
       time_from_mql_to_last_transfer,
       zoominfo_contact_id,
       is_bdr_sdr_worked,
-      is_partner_recalled  
+      is_partner_recalled,
+      propensity_to_purchase_days_since_trial_start,
+      propensity_to_purchase_score_date 
 
     FROM {{ref('prep_crm_person')}}
 
@@ -332,5 +334,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2023-08-24"
+    updated_date="2023-08-29"
 ) }}

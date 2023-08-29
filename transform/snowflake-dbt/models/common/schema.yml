@@ -1383,6 +1383,7 @@ models:
         description: The response time from Traction, based only in working hours for the user/rep. 
       - name: propensity_to_purchase_score_date
         description: This field indicates the date when most recent probability to purchase score was calculated.
+      
 
   - name: fct_saas_product_usage_metrics_monthly
     description: '{{ doc("fct_saas_product_usage_metrics_monthly") }}'
