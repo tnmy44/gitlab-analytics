@@ -692,7 +692,7 @@ tables:
           , 40694272
           , 41458091
           , 42961472
-          , 44356021 ) THEN NULL ELSE title END AS title --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
+          , 44356021 ) THEN '**MASKED**' ELSE title END AS title --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
       , author_id
       , project_id
       , created_at
@@ -717,7 +717,7 @@ tables:
           , 40694272
           , 41458091
           , 42961472
-          , 44356021 ) THEN NULL ELSE description END AS description --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
+          , 44356021 ) THEN '**MASKED**' ELSE description END AS description --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
       , milestone_id
       , updated_by_id
       , weight
