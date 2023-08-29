@@ -2300,7 +2300,7 @@ The latest date a snippet was updated.
 
 {% docs dim_plan_id_at_creation %}
 
-The GitLab plan id of at the time of object creation.
+The GitLab plan id at the time of object creation.
 
 {% enddocs %}
 
