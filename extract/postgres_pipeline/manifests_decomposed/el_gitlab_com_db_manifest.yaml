@@ -789,7 +789,7 @@ tables:
       , created_at
       , updated_at
       , template
-      , description
+      , NULL AS description
       , type
       , group_id
       FROM labels
