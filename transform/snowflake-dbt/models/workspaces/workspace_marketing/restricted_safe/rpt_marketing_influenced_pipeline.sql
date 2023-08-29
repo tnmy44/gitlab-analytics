@@ -59,10 +59,64 @@
     mart_crm_attribution_touchpoint.campaign_sub_region,
     mart_crm_attribution_touchpoint.budgeted_cost,
     mart_crm_attribution_touchpoint.actual_cost,
-    mart_crm_attribution_touchpoint.bizible_form_page_utm_content AS utm_content,
-    mart_crm_attribution_touchpoint.bizible_form_page_utm_budget AS utm_budget,
-    mart_crm_attribution_touchpoint.bizible_form_page_utm_allptnr AS utm_allptnr,
-    mart_crm_attribution_touchpoint.bizible_form_page_utm_partnerid AS utm_partner_id,
+    -- pulling dirrectly from the URL
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_campaign::VARCHAR  AS bizible_landing_page_utm_campaign,
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_medium::VARCHAR    AS bizible_landing_page_utm_medium,
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_source::VARCHAR    AS bizible_landing_page_utm_source,
+
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_campaign::VARCHAR     AS bizible_form_page_utm_campaign,
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_medium::VARCHAR       AS bizible_form_page_utm_medium,
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_source::VARCHAR       AS bizible_form_page_utm_source,
+
+
+    --UTMs not captured by the Bizible
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_content::VARCHAR       AS bizible_form_page_utm_content,
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_budget::VARCHAR        AS bizible_form_page_utm_budget,
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_allptnr::VARCHAR       AS bizible_form_page_utm_allptnr,
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_partnerid::VARCHAR     AS bizible_form_page_utm_partnerid,
+
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_content::VARCHAR   AS bizible_landing_page_utm_content,
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_budget::VARCHAR    AS bizible_landing_page_utm_budget,
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_allptnr::VARCHAR   AS bizible_landing_page_utm_allptnr,
+    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_partnerid::VARCHAR AS bizible_landing_page_utm_partnerid,
+
+    COALESCE(bizible_landing_page_utm_campaign, bizible_form_page_utm_campaign)   AS utm_campaign,
+    COALESCE(bizible_landing_page_utm_medium, bizible_form_page_utm_medium)       AS utm_medium,
+    COALESCE(bizible_landing_page_utm_source, bizible_form_page_utm_source)       AS utm_source,
+      
+    COALESCE(bizible_landing_page_utm_budget, bizible_form_page_utm_budget)       AS utm_budget,
+    COALESCE(bizible_landing_page_utm_content, bizible_form_page_utm_content)     AS utm_content,
+    COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)     AS utm_allptnr,
+    COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid) AS utm_partnerid,
+
+    CASE 
+      WHEN (LOWER(utm_content) LIKE '%field%'
+        OR campaign_rep_role_name LIKE '%Field Marketing%'
+        OR budget_holder = 'fmm'
+        OR utm_budget = 'fmm') 
+      THEN 'Field Marketing'
+      WHEN (LOWER(utm_campaign) LIKE '%abm%'
+        OR LOWER(utm_content) LIKE '%abm%'
+        OR LOWER(mart_crm_attribution_touchpoint.bizible_ad_campaign_name) LIKE '%abm%'
+        OR campaign_rep_role_name like '%ABM%'
+        OR budget_holder = 'abm'
+        OR utm_budget = 'abm') 
+      THEN 'Account Based Marketing'
+
+      WHEN (LOWER(utm_budget) LIKE '%ptnr%' 
+        OR LOWER(utm_budget) LIKE '%chnl%')
+        OR (LOWER(budget_holder) LIKE '%ptnr%' 
+        OR LOWER(budget_holder) LIKE '%chnl%')
+      THEN 'Partner Marketing'
+      WHEN (LOWER(budget_holder) LIKE '%corp%' 
+        OR LOWER(utm_budget) LIKE '%corp%')
+      THEN 'Corporate Events'
+      WHEN (LOWER(budget_holder) LIKE '%dmp%' 
+        OR LOWER(utm_budget) LIKE '%dmp%')
+        THEN 'Digital Marketing'
+      ELSE 'No Budget Holder' 
+      END AS integrated_budget_holder,
+    mart_crm_attribution_touchpoint.type as sfdc_campaign_type,
     mart_crm_attribution_touchpoint.gtm_motion,
     mart_crm_attribution_touchpoint.account_demographics_sales_segment AS person_sales_segment,
     attribution_touchpoint_offer_type.touchpoint_offer_type,
@@ -100,8 +154,8 @@
     wk_sales_sfdc_opportunity_snapshot_history_xf.ultimate_parent_account_name,
     wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_opportunity_category AS opportunity_category,
     wk_sales_sfdc_opportunity_snapshot_history_xf.sales_type,
-    wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_order_type_stamped AS order_type,
-    wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_sales_qualified_source AS sales_qualified_source_name,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.order_type_stamped AS order_type,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.sales_qualified_source AS sales_qualified_source_name,
 
 --Account Info
     wk_sales_sfdc_opportunity_snapshot_history_xf.parent_crm_account_sales_segment,
@@ -143,23 +197,6 @@
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_web_portal_purchase,
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_edu_oss,
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_eligible_created_pipeline_flag,
-    COALESCE(
-        wk_sales_sfdc_opportunity_snapshot_history_xf.is_eligible_created_pipeline_flag,
-        CASE
-         WHEN wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
-           AND wk_sales_sfdc_opportunity_snapshot_history_xf.is_edu_oss = 0
-           AND wk_sales_sfdc_opportunity_snapshot_history_xf.net_arr_created_date IS NOT NULL --
-           AND wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')
-           AND wk_sales_sfdc_opportunity_snapshot_history_xf.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
-           AND (wk_sales_sfdc_opportunity_snapshot_history_xf.net_arr > 0
-             OR wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_opportunity_category = 'Credit')
-           AND wk_sales_sfdc_opportunity_snapshot_history_xf.snapshot_sales_qualified_source  != 'Web Direct Generated'
-           AND is_jihu_account = 0
-          THEN 1
-          ELSE 0
-        END
-        ) 
-    AS is_net_arr_pipeline_created_msa,
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_open,
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_lost,
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_closed,
@@ -230,8 +267,24 @@ combined_models AS (
 --Touchpoint Dimensions
     attribution_touchpoint_snapshot_base.bizible_touchpoint_type,
     attribution_touchpoint_snapshot_base.bizible_integrated_campaign_grouping,
-    attribution_touchpoint_snapshot_base.bizible_marketing_channel,
-    attribution_touchpoint_snapshot_base.bizible_marketing_channel_path,
+    CASE 
+      WHEN wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_qualified_source_name = 'SDR Generated' 
+        AND attribution_touchpoint_snapshot_base.dim_crm_touchpoint_id IS NULL
+      THEN 'SDR Generated'
+      WHEN wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_qualified_source_name = 'Web Direct Generated' 
+        AND attribution_touchpoint_snapshot_base.dim_crm_touchpoint_id IS NULL
+      THEN 'Web Direct'
+      ELSE attribution_touchpoint_snapshot_base.bizible_marketing_channel 
+    END AS bizible_marketing_channel,
+    CASE 
+      WHEN wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_qualified_source_name = 'SDR Generated' 
+        AND attribution_touchpoint_snapshot_base.dim_crm_touchpoint_id IS NULL
+      THEN 'SDR Generated.No Touchpoint'
+      WHEN wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_qualified_source_name = 'Web Direct Generated' 
+        AND attribution_touchpoint_snapshot_base.dim_crm_touchpoint_id IS NULL
+      THEN 'Web Direct.No Touchpoint'
+      ELSE attribution_touchpoint_snapshot_base.bizible_marketing_channel_path 
+    END AS bizible_marketing_channel_path,
     attribution_touchpoint_snapshot_base.snapshot_marketing_channel,
     attribution_touchpoint_snapshot_base.snapshot_marketing_channel_path,
     attribution_touchpoint_snapshot_base.bizible_ad_campaign_name,
@@ -241,10 +294,15 @@ combined_models AS (
     attribution_touchpoint_snapshot_base.campaign_sub_region,
     attribution_touchpoint_snapshot_base.budgeted_cost,
     attribution_touchpoint_snapshot_base.actual_cost,
+    attribution_touchpoint_snapshot_base.utm_campaign,
+    attribution_touchpoint_snapshot_base.utm_source,
+    attribution_touchpoint_snapshot_base.utm_medium,
     attribution_touchpoint_snapshot_base.utm_content,
     attribution_touchpoint_snapshot_base.utm_budget,
     attribution_touchpoint_snapshot_base.utm_allptnr,
-    attribution_touchpoint_snapshot_base.utm_partner_id,
+    attribution_touchpoint_snapshot_base.utm_partnerid,
+    attribution_touchpoint_snapshot_base.integrated_budget_holder,
+    attribution_touchpoint_snapshot_base.sfdc_campaign_type,
     attribution_touchpoint_snapshot_base.gtm_motion,
     attribution_touchpoint_snapshot_base.person_sales_segment,
     attribution_touchpoint_snapshot_base.touchpoint_offer_type,
@@ -253,7 +311,12 @@ combined_models AS (
   --Metrics
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.opp_net_arr,
     attribution_touchpoint_snapshot_base.bizible_count_custom_model,
-    attribution_touchpoint_snapshot_base.bizible_weight_custom_model/100 * wk_sales_sfdc_opportunity_snapshot_history_xf_base.opp_net_arr AS custom_net_arr,
+    attribution_touchpoint_snapshot_base.bizible_weight_custom_model/100 * wk_sales_sfdc_opportunity_snapshot_history_xf_base.opp_net_arr AS custom_net_arr_base,
+    CASE 
+      WHEN wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_qualified_source_name IN ('SDR Generated','Web Direct Generated') AND dim_crm_touchpoint_id IS NULL 
+      THEN opp_net_arr 
+    ELSE custom_net_arr_base 
+    END AS custom_net_arr,
     COALESCE(custom_net_arr,opp_net_arr) AS net_arr,
   --
 
@@ -263,7 +326,6 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_web_portal_purchase,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_edu_oss,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_eligible_created_pipeline_flag,
-    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_net_arr_pipeline_created_msa,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_open,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_lost,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_closed,
@@ -353,10 +415,15 @@ combined_models AS (
     NULL AS campaign_sub_region,
     NULL AS budgeted_cost,
     NULL AS actual_cost,
+    NULL AS utm_campaign,
+    NULL AS utm_source,
+    NULL AS utm_medium,
     NULL AS utm_content,
     NULL AS utm_budget,
     NULL AS utm_allptnr,
-    NULL AS utm_partner_id,
+    NULL AS utm_partnerid,
+    NULL AS integrated_budget_holder,
+    NULL AS sfdc_campaign_type,
     NULL AS gtm_motion,
     NULL AS person_sales_segment,
     NULL AS touchpoint_offer_type,
@@ -365,6 +432,7 @@ combined_models AS (
   --Metrics
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.opp_net_arr,
     missing_net_arr_difference.count_difference AS bizible_count_custom_model,
+    NULL AS custom_net_arr_base,
     missing_net_arr_difference.net_arr_difference AS custom_net_arr,
     COALESCE(custom_net_arr,wk_sales_sfdc_opportunity_snapshot_history_xf_base.opp_net_arr) AS net_arr,
   --
@@ -375,7 +443,6 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_web_portal_purchase,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_edu_oss,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_eligible_created_pipeline_flag,
-    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_net_arr_pipeline_created_msa,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_open,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_lost,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_closed,
@@ -406,5 +473,5 @@ combined_models AS (
     created_by="@rkohnke",
     updated_by="@dmicovic",
     created_date="2023-04-11",
-    updated_date="2023-07-31",
+    updated_date="2023-08-29",
   ) }}
