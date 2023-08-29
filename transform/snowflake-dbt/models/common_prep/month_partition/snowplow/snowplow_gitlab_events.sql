@@ -361,7 +361,12 @@ WITH filtered_source as (
       base.v_etl,
       base.v_tracker,
       base.uploaded_at,
-      base.infra_source
+      base.infra_source,
+      CASE
+        WHEN LOWER(page_url) LIKE 'https://staging.gitlab.com/%' THEN TRUE
+        WHEN LOWER(page_url) LIKE 'https://customers.stg.gitlab.com/%' THEN TRUE
+        ELSE FALSE
+      END AS is_staging_url
     FROM base
     LEFT JOIN events_with_web_page_id
       ON base.event_id = events_with_web_page_id.event_id
