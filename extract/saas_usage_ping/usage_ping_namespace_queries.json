@@ -246,12 +246,6 @@
     "level": "namespace"
   },
   {
-    "counter_name": "counts.incident_labeled_issues",
-    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(issues.id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_issues_dedupe_source AS issues INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_label_links_dedupe_source AS label_links ON label_links.target_type = 'Issue' AND label_links.target_id = issues.id INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_labels_dedupe_source AS labels ON labels.id = label_links.label_id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = issues.project_id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE labels.title = 'incident' AND labels.color = '#CC0033' AND labels.description = 'Denotes a disruption to IT services and the associated issues require immediate attention' GROUP BY 1",
-    "time_window_query": false,
-    "level": "namespace"
-  },
-  {
     "counter_name": "counts.milestones",
     "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(milestones.id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_milestones_dedupe_source AS milestones LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = milestones.project_id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id  GROUP BY 1,2",
     "time_window_query": false,
