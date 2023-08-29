@@ -14,8 +14,10 @@
     ('dim_crm_user','dim_crm_user'),
     ('dim_order', 'dim_order'),
     ('dim_order_action', 'dim_order_action'),
+    ('dim_namespace', 'dim_namespace'),
     ('fct_charge','fct_charge'),
-    ('prep_billing_account_user', 'prep_billing_account_user')
+    ('prep_billing_account_user', 'prep_billing_account_user'),
+    ('fct_trial_latest', 'fct_trial_latest')
 ]) }}
 
 , mart_charge AS (
@@ -36,6 +38,7 @@
       dim_charge.rate_plan_charge_name                                                AS rate_plan_charge_name,
       dim_charge.rate_plan_charge_description                                         AS rate_plan_charge_description,
       dim_charge.charge_type                                                          AS charge_type,
+      fct_charge.unit_of_measure                                                      AS unit_of_measure,
       dim_charge.is_paid_in_full                                                      AS is_paid_in_full,
       dim_charge.is_last_segment                                                      AS is_last_segment,
       dim_charge.is_included_in_arr_calc                                              AS is_included_in_arr_calc,
@@ -48,6 +51,8 @@
 
       --Subscription Information
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
+      dim_subscription.dim_subscription_id_original                                   AS dim_subscription_id_original,
+      dim_subscription.dim_subscription_id_previous                                   AS dim_subscription_id_previous,
       dim_subscription.created_by_id                                                  AS subscription_created_by_id,
       dim_subscription.updated_by_id                                                  AS subscription_updated_by_id,
       dim_subscription.subscription_start_date                                        AS subscription_start_date,
@@ -89,6 +94,15 @@
       dim_billing_account.po_required                                                 AS po_required,
       dim_billing_account.auto_pay                                                    AS auto_pay,
       dim_billing_account.default_payment_method_type                                 AS default_payment_method_type,
+
+      -- namespace info
+      dim_namespace.ultimate_parent_namespace_id                                      AS ultimate_parent_namespace_id,
+      dim_subscription.namespace_id                                                   AS dim_namespace_id,
+
+      -- customer db info
+      fct_trial_latest.internal_customer_id                                           AS internal_customer_id,
+      fct_trial_latest.is_trial_converted                                             AS is_trial_converted,
+      fct_trial_latest.latest_trial_start_date                                        AS latest_trial_start_date,
 
       -- crm account info
       dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
@@ -213,8 +227,12 @@
     LEFT JOIN dim_order_action
       ON fct_charge.dim_order_id = dim_order_action.dim_order_id
       AND dim_order_action.order_action_type IN ('RenewSubscription', 'CancelSubscription')
+    LEFT JOIN dim_namespace
+      ON dim_subscription.namespace_id = dim_namespace.dim_namespace_id
     LEFT JOIN prep_billing_account_user
       ON fct_charge.subscription_created_by_user_id = prep_billing_account_user.zuora_user_id
+    LEFT JOIN fct_trial_latest
+      ON dim_subscription.namespace_id = fct_trial_latest.dim_namespace_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,
