@@ -116,6 +116,7 @@ opty_aggregated AS (
         product_category_tier,
         product_category_deployment,
         industry,
+        lam_dev_count_bin,
 
         parent_crm_account_upa_country_name,
 
@@ -126,18 +127,8 @@ opty_aggregated AS (
         is_stage_3_plus,
         fpa_master_bookings_flag,
 
-        CASE
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 3
-                THEN 'CQ'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 6
-                THEN 'CQ+1'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 9
-                THEN 'CQ+2'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 12
-                THEN 'CQ+3'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) >= 12
-                THEN 'CQ+4 >'
-        END                                  AS pipeline_landing_quarter,
+        pipeline_landing_quarter,
+        current_stage_age_bin,
         -----------------------------------------------
         CURRENT_DATE                         AS snapshot_date,
         pipeline_created_fiscal_quarter_date AS pipeline_created_date,
@@ -154,7 +145,7 @@ opty_aggregated AS (
         AVG(cycle_time_in_days)              AS age_in_days
 
     FROM opty_base
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33
 
 ),
 
@@ -189,6 +180,7 @@ snap_aggregated AS (
         product_category_tier,
         product_category_deployment,
         industry,
+        lam_dev_count_bin,
 
         parent_crm_account_upa_country_name,
 
@@ -211,6 +203,7 @@ snap_aggregated AS (
             WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) >= 12
                 THEN 'CQ+4 >'
         END                                  AS pipeline_landing_quarter,
+        current_stage_age_bin,
         -----------------------------------------------
         snapshot_fiscal_quarter_date         AS snapshot_date,
         pipeline_created_fiscal_quarter_date AS pipeline_created_date,
@@ -229,7 +222,7 @@ snap_aggregated AS (
     FROM snap_base
     GROUP BY
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-        25, 26, 27, 28, 29, 30, 31
+        25, 26, 27, 28, 29, 30, 31, 32, 33
 ),
 
 aggregated AS (
@@ -247,6 +240,7 @@ final AS (
     SELECT
         aggregated.*,
 
+        COALESCE(pipeline_date.fiscal_year = current_quarter_date.current_fiscal_year, FALSE)              AS is_cfy_flag,
         COALESCE(aggregated.pipeline_created_date = current_fiscal_quarter_date, FALSE)                    AS is_cfq_flag,
 
         COALESCE(aggregated.pipeline_created_date = DATEADD(MONTH, 3, current_fiscal_quarter_date), FALSE) AS is_cfq_plus_1_flag,

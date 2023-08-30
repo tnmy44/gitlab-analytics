@@ -492,36 +492,7 @@ WITH date_details AS (
 
       sfdc_opportunity_xf.industry,
 
-      -- fields calculated with both live and snapshot fields
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_date 
-        ELSE NULL
-      END                                               AS stage_1_date,
 
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_date_month 
-        ELSE NULL
-      END                                               AS stage_1_date_month,
-
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_fiscal_year 
-        ELSE NULL
-      END                                               AS stage_1_fiscal_year,
-
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_fiscal_quarter_name 
-        ELSE NULL
-      END                                               AS stage_1_fiscal_quarter_name,
-
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_fiscal_quarter_date 
-        ELSE NULL
-      END                                               AS stage_1_fiscal_quarter_date,
       
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
@@ -899,16 +870,65 @@ WITH date_details AS (
 
     -- 
     CASE
-        WHEN cycle_time_in_days BETWEEN 1 AND 29
+        WHEN cycle_time_in_days BETWEEN 0 AND 29
             THEN '[0,30)'
         WHEN cycle_time_in_days BETWEEN 30 AND 179
             THEN '[30,180)'
-        WHEN cycle_time_in_days BETWEEN 179 AND 364
+        WHEN cycle_time_in_days BETWEEN 180 AND 364
             THEN '[180,365)'
         WHEN cycle_time_in_days > 364
             THEN '[365+)'
         ELSE 'Other'
     END                  AS age_bin,
+
+    -- age in stage
+    CASE
+        WHEN stage_name = '0-Pending Acceptance'
+            THEN created_date
+        WHEN stage_name = '1-Discovery'
+            THEN stage_1_discovery_date
+        WHEN stage_name = '2-Scoping'
+            THEN stage_2_scoping_date
+        WHEN stage_name = '3-Technical Evaluation'
+            THEN stage_3_technical_evaluation_date
+        WHEN stage_name = '4-Proposal'
+            THEN stage_4_proposal_date
+        WHEN stage_name = '5-Negotiating'
+            THEN stage_5_negotiating_date
+        WHEN stage_name = '6-Awaiting Signature'
+            THEN stage_6_awaiting_signature_date
+        WHEN stage_name = '7-Closing'
+            THEN close_date
+        WHEN stage_name = '8-Closed Lost'
+            THEN close_date
+        WHEN stage_name = '9-Unqualified'
+            THEN close_date
+        WHEN stage_name = '10-Duplicate'
+            THEN close_date
+        WHEN stage_name = 'Closed Won'
+            THEN close_date
+    END                                 AS current_stage_start_date,
+
+    CASE 
+        WHEN is_open = 1 AND current_stage_start_date < snapshot_date
+            THEN DATEDIFF(DAY,current_stage_start_date,snapshot_date)
+        WHEN current_stage_start_date < close_date
+            THEN DATEDIFF(DAY,current_stage_start_date,close_date)
+        ELSE NULL
+    END                                 AS current_stage_age,
+
+    CASE
+        WHEN current_stage_age BETWEEN 0 AND 29
+            THEN '[0,30)'
+        WHEN current_stage_age BETWEEN 30 AND 179
+            THEN '[30,180)'
+        WHEN current_stage_age BETWEEN 180 AND 364
+            THEN '[180,365)'
+        WHEN current_stage_age > 364
+            THEN '[365+)'
+        ELSE 'N/A'
+    END                  AS current_stage_age_bin,
+
 
     -- Calculated fields
     CASE

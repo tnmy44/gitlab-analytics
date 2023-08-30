@@ -28,7 +28,6 @@ pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -36,7 +35,7 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=12),
     "sla_miss_callback": slack_failed_task,
-    "start_date": datetime(2019, 1, 1),
+    "start_date": datetime(2023, 5, 15),
     "dagrun_timeout": timedelta(hours=2),
 }
 
@@ -46,6 +45,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 */8 * * *",
     concurrency=1,
+    catchup=False,
 )
 
 # YAML Extract

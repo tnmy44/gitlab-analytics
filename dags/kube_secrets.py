@@ -1,6 +1,6 @@
 """ This file contains k8s secrets used in all DAGs """
 
-from airflow.contrib.kubernetes.secret import Secret
+from airflow.kubernetes.secret import Secret
 
 # BambooHR
 BAMBOOHR_API_TOKEN = Secret(

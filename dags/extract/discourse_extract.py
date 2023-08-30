@@ -27,7 +27,6 @@ env = os.environ.copy()
 pod_env_vars = {"CI_PROJECT_DIR": "/analytics"}
 
 default_args = {
-    "catchup": True,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -44,6 +43,7 @@ dag = DAG(
     description="Monthly extract of Discourse analytics data",
     default_args=default_args,
     schedule_interval="0 7 1 * *",
+    catchup=False,
 )
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
@@ -71,7 +71,7 @@ kubernetes_operator = KubernetesPodOperator(
     env_vars={
         **pod_env_vars,
         **{
-            "START_DATE": "{{ execution_date.isoformat() }}",
+            "START_DATE": "{{ logical_date.isoformat() }}",
             "END_DATE": "{{ next_execution_date.isoformat() }}",
         },
     },

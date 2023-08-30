@@ -28,6 +28,7 @@ WITH final AS (
 
       -- Dimensional Contexts
       snippet_type,
+      visibility_level,
       created_at,
       updated_at
     FROM {{ ref('prep_snippet') }}
@@ -44,5 +45,5 @@ WITH final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-08-07",
-    updated_date="2023-08-07"
+    updated_date="2023-08-17"
 ) }}

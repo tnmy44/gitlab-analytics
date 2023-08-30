@@ -5,7 +5,7 @@
 , prep_crm_task AS (
 
   SELECT *
-  FROM {{ ref('prep_crm_task') }}
+  FROM {{ ref('prep_crm_task') }} 
   WHERE is_deleted = FALSE
 
 ), final AS (

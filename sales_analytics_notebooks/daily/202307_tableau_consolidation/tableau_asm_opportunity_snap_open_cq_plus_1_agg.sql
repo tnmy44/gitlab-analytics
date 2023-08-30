@@ -112,6 +112,8 @@ opty_aggregated AS (
         product_category_tier,
         product_category_deployment,
         industry,
+        lam_dev_count_bin,
+        current_stage_age_bin,
 
         parent_crm_account_upa_country_name,
 
@@ -142,7 +144,7 @@ opty_aggregated AS (
     FROM opty_base
     GROUP BY
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-        24, 25, 26, 27, 28, 29, 30, 31, 32
+        24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
 
 ),
 
@@ -177,6 +179,8 @@ snap_aggregated AS (
         product_category_tier,
         product_category_deployment,
         industry,
+        lam_dev_count_bin,
+        current_stage_age_bin,
 
         parent_crm_account_upa_country_name,
 
@@ -207,7 +211,7 @@ snap_aggregated AS (
     FROM snap_base
     GROUP BY
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-        25, 26, 27, 28, 29, 30, 31, 32
+        25, 26, 27, 28, 29, 30, 31, 32, 33, 34
 ),
 
 aggregated AS (
@@ -225,6 +229,7 @@ final AS (
     SELECT
         aggregated.*,
 
+        COALESCE(close_date.fiscal_year = current_quarter_date.current_fiscal_year, FALSE)      AS is_cfy_flag,
         COALESCE(aggregated.close_date = current_fiscal_quarter_date, FALSE)                    AS is_cfq_flag,
 
         COALESCE(aggregated.close_date = DATEADD(MONTH, 3, current_fiscal_quarter_date), FALSE) AS is_cfq_plus_1_flag,

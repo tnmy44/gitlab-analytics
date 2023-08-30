@@ -53,6 +53,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 6 7 * *",
     concurrency=1,
+    catchup=False,
 )
 
 notebooks = get_sales_analytics_notebooks(frequency="monthly")

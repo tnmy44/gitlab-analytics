@@ -52,7 +52,6 @@ secrets = [
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -75,6 +74,7 @@ dag = DAG(
     concurrency=5,
     description=DAG_DESCRIPTION,
     schedule_interval="0 7 * * 1",
+    catchup=False,
 )
 
 # Instance Level Usage Ping

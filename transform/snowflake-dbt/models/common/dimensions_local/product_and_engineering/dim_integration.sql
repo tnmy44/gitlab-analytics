@@ -26,6 +26,8 @@ WITH final AS (
       created_date_id,
 
       -- Dimensional Contexts
+      integration_type,
+      integration_category,
       is_active,
       created_at,
       updated_at
@@ -42,5 +44,5 @@ WITH final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2023-08-10",
-    updated_date="2023-08-10"
+    updated_date="2023-08-16"
 ) }}
