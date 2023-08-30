@@ -36,8 +36,6 @@ WITH filtered_source as (
           (
             -- js backend tracker
             v_tracker LIKE 'js%'
-            AND lower(page_url) NOT LIKE 'https://staging.gitlab.com/%'
-            AND lower(page_url) NOT LIKE 'https://customers.stg.gitlab.com/%'
             AND lower(page_url) NOT LIKE 'http://localhost:%'
           )
           
@@ -47,7 +45,15 @@ WITH filtered_source as (
             -- ruby backend tracker
             v_tracker LIKE 'rb%'
           )
+
+          OR
+
+          (
+            -- code suggestions events
+            v_tracker LIKE 'py%'
+          )
         )
+
       AND TRY_TO_TIMESTAMP(derived_tstamp) is not null
 )
 

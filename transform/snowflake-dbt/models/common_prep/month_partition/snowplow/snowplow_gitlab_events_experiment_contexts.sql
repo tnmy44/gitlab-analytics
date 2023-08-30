@@ -25,6 +25,7 @@ WITH base AS (
     AND (
       (v_tracker LIKE 'js%' ) -- js frontend tracker
       OR (v_tracker LIKE 'rb%') -- ruby backend tracker
+        OR (v_tracker LIKE 'py%') -- python tracker
     )
     
 
