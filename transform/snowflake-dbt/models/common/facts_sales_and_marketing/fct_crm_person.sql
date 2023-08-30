@@ -105,6 +105,7 @@ WITH account_dims_mapping AS (
 
     FROM sfdc_leads
     WHERE marketo_qualified_lead_datetime IS NOT NULL
+      OR mql_datetime_inferred IS NOT NULL
 
 ), marketing_qualified_contacts AS(
 
@@ -125,6 +126,7 @@ WITH account_dims_mapping AS (
 
     FROM sfdc_contacts
     WHERE marketo_qualified_lead_datetime IS NOT NULL
+      OR mql_datetime_inferred IS NOT NULL
     HAVING mql_event_id NOT IN (
                          SELECT mql_event_id
                          FROM marketing_qualified_leads
