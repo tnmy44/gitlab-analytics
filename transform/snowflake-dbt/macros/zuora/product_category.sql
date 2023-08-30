@@ -94,6 +94,7 @@ CASE
                                     , 'Time Tracking'
                                     , '1,000 CI Minutes'
                                     , '1,000 Compute Minutes'
+                                    , 'Training LMS Settlement Revenue'
                                     )
     THEN 'SaaS - Other'
   WHEN TRIM({{product_column}}) IN ('Gitlab Storage 10GB')
