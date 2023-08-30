@@ -44,7 +44,7 @@
       WHEN account_opp_mapping.dim_crm_opportunity_id IS NOT NULL
         THEN account_opp_mapping.dim_crm_opportunity_id
       ELSE {{ get_keyed_nulls('prep_crm_task.dim_crm_opportunity_id') }}
-      END as dim_mapped_opportunity_id,
+      END AS dim_mapped_opportunity_id,
 
     prep_crm_task.sfdc_record_id,
 
