@@ -45,7 +45,7 @@ WITH structured_events AS (
         COUNT(DISTINCT behavior_structured_event_pk) as total_events
     FROM {{ ref('mart_behavior_structured_event') }}
     WHERE metric IS NOT NULL
-    GROUP BY 1, 2, 3
+  {{ dbt_utils.group_by(n=3) }}
 
 ), pageviews AS (
 
@@ -66,7 +66,7 @@ WITH structured_events AS (
         COUNT(DISTINCT fct_behavior_website_page_view_sk) as total_events
     FROM {{ ref('fct_behavior_website_page_view') }}
     WHERE metric IS NOT NULL
-    GROUP BY 1, 2, 3
+  {{ dbt_utils.group_by(n=3) }}
 
 ), final AS (
 
