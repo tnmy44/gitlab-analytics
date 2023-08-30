@@ -8,6 +8,7 @@ WITH campaign_details AS (
     SELECT *
     FROM {{ ref('sfdc_bizible_touchpoint_source') }}
     WHERE is_deleted = 'FALSE'
+    AND bizible_medium != 'onlineformfill_c' -- exclude test records
 
 ), bizible_attribution_touchpoints AS (
 
