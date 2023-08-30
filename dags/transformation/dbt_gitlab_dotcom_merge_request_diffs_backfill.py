@@ -8,6 +8,7 @@ import os
 from datetime import datetime
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.models import Variable
 from airflow_utils import (
     DBT_IMAGE,
     dbt_install_deps_nosha_cmd,
@@ -39,15 +40,6 @@ from kube_secrets import (
     SNOWFLAKE_STATIC_DATABASE,
 )
 
-from gitlabdata.orchestration_utils import query_executor, snowflake_engine_factory
-
-
-def get_max_id_target_table(pk, target_table):
-    snowflake_engine = snowflake_engine_factory(env, "LOADER", "tap_postgres")
-    query = f"select max({pk}) from {target_table};"
-    max_id = query_executor(snowflake_engine, query)[0]
-    return max_id
-
 
 def generate_intervals(chunks: int, max_id: int, start: int = 1):
     """
@@ -58,8 +50,9 @@ def generate_intervals(chunks: int, max_id: int, start: int = 1):
         raise ValueError("not enough ids to chunk... aborting")
 
     intervals = []
-    interval_size = max_id // chunks
-    remaining = max_id % chunks
+    id_range_size = max_id - start + 1
+    interval_size = id_range_size // chunks
+    remaining = id_range_size % chunks
 
     for _ in range(chunks):
         end = start + interval_size - 1
@@ -140,12 +133,12 @@ dbt_models_diffs_cmd = f"""
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 
-dbt_diffs_task_name = "dbt-gitlab_dotcom_merge_request_diffs"
+DBT_DIFFS_TASK_NAME = "dbt-gitlab_dotcom_merge_request_diffs"
 dbt_diffs_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id=dbt_diffs_task_name,
-    name=dbt_diffs_task_name,
+    task_id=DBT_DIFFS_TASK_NAME,
+    name=DBT_DIFFS_TASK_NAME,
     secrets=dbt_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_models_diffs_cmd],
@@ -154,10 +147,12 @@ dbt_diffs_task = KubernetesPodOperator(
 
 
 CHUNKS = 10  # TODO
-start_id = 208751592 # merge_request_diff_commits diff_id starts here
-max_id = start_id + 10000  # TODO
-# TODO max_id = get_max_id_target_table()
-intervals = generate_intervals(CHUNKS, max_id, start_id)
+START_ID = 208751592  # merge_request_diff_commits diff_id starts here
+max_id = int(
+    Variable.get("DBT_GITLAB_DOTCOM_MERGE_REQUEST_DIFF_COMMITS_BACKFILL_MAX_ID")
+)
+
+intervals = generate_intervals(CHUNKS, max_id, START_ID)
 dbt_commits_tasks = []
 
 for chunk in range(CHUNKS):

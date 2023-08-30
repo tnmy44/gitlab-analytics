@@ -23,12 +23,11 @@ merge_request_diff_commits_chunked AS (
       merge_request_diff_id >= (
         SELECT
           {% if var('backfill_start_id', false) != false %}
-          distinct '{{ var("backfill_start_id") }}'
+          '{{ var("backfill_start_id") }}'
         {% else %}
             MAX(merge_request_diff_id)
+          FROM {{ this }}
           {% endif %}
-
-        FROM {{ this }}
       )
       AND
       merge_request_diff_id
