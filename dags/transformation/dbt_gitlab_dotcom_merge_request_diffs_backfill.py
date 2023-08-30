@@ -45,9 +45,9 @@ from kube_secrets import (
 from gitlabdata.orchestration_utils import query_executor, snowflake_engine_factory
 
 
-def get_max_id_target_table(target_table):
+def get_max_id_target_table(pk, target_table):
     snowflake_engine = snowflake_engine_factory(env, "LOADER", "tap_postgres")
-    query = f"select count(*) from {target_table}"
+    query = f"select max({pk}) from {target_table};"
     max_id = query_executor(snowflake_engine, query)[0]
     return max_id
 
