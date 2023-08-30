@@ -58,7 +58,7 @@ def generate_intervals(chunks: int, max_id: int):
     [ (1, 10), (11, 20), (etc, etc) ]
     """
     if chunks > max_id:
-        raise ValueError('not enough ids to chunk... aborting')
+        raise ValueError("not enough ids to chunk... aborting")
 
     intervals = []
     interval_size = max_id // chunks
@@ -117,7 +117,7 @@ dbt_secrets = [
 ]
 
 DBT_MODULE_NAME = "gitlab_dotcom_merge_request_diffs_backfill"
-CHUNKS = 100
+CHUNKS = 10 # TODO
 
 
 # Default arguments for the DAG
@@ -125,13 +125,14 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
+    "start_date": datetime(2023, 8, 28),
 }
 
 # Create the DAG
 dag = DAG(
     f"dbt_{DBT_MODULE_NAME}",
     default_args=default_args,
-    schedule_interval="0 21 * * 0",  #
+    schedule_interval=None,  #
     max_active_runs=2,
     concurrency=2,
     catchup=True,
@@ -144,7 +145,7 @@ intervals = generate_intervals(CHUNKS, max_id)
 
 for chunk in range(CHUNKS):
     start, end = get_interval(intervals, chunk)
-    dbt_vars = f'{"backfill_start_id": {start}, "backfill_end_id": end}'
+    dbt_vars = f'{{"backfill_start_id": {start}, "backfill_end_id": {end}}}'
     dbt_models_cmd = f"""
             {dbt_install_deps_nosha_cmd} &&
             dbt run --profiles-dir profile --target {target} --models workspaces.workspace_engineering.merge_request_diffs.* --vars '{dbt_vars}'; ret=$?;

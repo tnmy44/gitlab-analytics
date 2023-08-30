@@ -27,7 +27,7 @@ merge_request_diff_commits_chunked AS (
       AND
       merge_request_diff_id
       <= (
-        SELECT '{{ var("backfill_end_id", 9999999999999) }}'
+        SELECT max('{{ var("backfill_end_id", 9999999999999) }}')
         FROM {{ this }}
       )
   {% endif %}
