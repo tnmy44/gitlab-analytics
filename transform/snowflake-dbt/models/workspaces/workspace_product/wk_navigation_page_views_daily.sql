@@ -62,8 +62,9 @@ FROM
     pvs AS p
 LEFT JOIN
     navs AS n
-    ON
+    ON 
         p.behavior_at::DATE = n.behavior_date
+        -- by joining referrer to page view we hope to capture whether preceding page had navigation events fire.
         AND n.dim_behavior_website_page_sk = p.dim_behavior_referrer_page_sk
         AND n.using_new_nav = p.using_new_nav
         AND p.session_id = n.session_id
