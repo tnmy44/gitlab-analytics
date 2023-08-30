@@ -18,17 +18,22 @@ merge_request_diff_commits_chunked AS (
     if airflow passed in dbt variable, it means compare commited_date
     against the passed in chunked dates.
 
-    Else, incrementall load based on _uploaded_at
-    */
-    merge_request_diff_id >= (
-        SELECT MAX('{{ var("backfill_start_id", "merge_request_diff_id") }}')
+      Else, incrementall load based on _uploaded_at
+      */
+      merge_request_diff_id >= (
+        SELECT
+          {% if var('backfill_start_id', false) != false %}
+          distinct '{{ var("backfill_start_id") }}'
+        {% else %}
+            MAX(merge_request_diff_id)
+          {% endif %}
+
         FROM {{ this }}
       )
       AND
       merge_request_diff_id
       <= (
-        SELECT max('{{ var("backfill_end_id", 9999999999999) }}')
-        FROM {{ this }}
+        SELECT '{{ var("backfill_end_id", 9999999999999) }}'
       )
   {% endif %}
 ),
@@ -42,3 +47,9 @@ merge_request_diff_commits_internal AS (
 )
 
 SELECT * FROM merge_request_diff_commits_internal
+
+  {% if var('airflow_chunk_start_date', false) != false %}
+        created_at
+      {% else %}
+    _uploaded_at
+  {% endif %}

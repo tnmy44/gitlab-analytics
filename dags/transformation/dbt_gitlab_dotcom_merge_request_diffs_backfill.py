@@ -13,12 +13,9 @@ from airflow_utils import (
     dbt_install_deps_nosha_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
-    partitions,
     slack_failed_task,
-    run_command_test_exclude,
 )
 
-from kubernetes_helpers import get_affinity, get_toleration
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_CONFIG,
@@ -52,7 +49,7 @@ def get_max_id_target_table(pk, target_table):
     return max_id
 
 
-def generate_intervals(chunks: int, max_id: int):
+def generate_intervals(chunks: int, max_id: int, start: int = 1):
     """
     Generates list of intervals, something like:
     [ (1, 10), (11, 20), (etc, etc) ]
@@ -63,7 +60,6 @@ def generate_intervals(chunks: int, max_id: int):
     intervals = []
     interval_size = max_id // chunks
     remaining = max_id % chunks
-    start = 1
 
     for _ in range(chunks):
         end = start + interval_size - 1
@@ -116,8 +112,7 @@ dbt_secrets = [
     SNOWFLAKE_STATIC_DATABASE,
 ]
 
-DBT_MODULE_NAME = "gitlab_dotcom_merge_request_diffs_backfill"
-CHUNKS = 10 # TODO
+DBT_MODULE_NAME = "gitlab_dotcom_merge_request_diff_commits_backfill"
 
 
 # Default arguments for the DAG
@@ -137,31 +132,56 @@ dag = DAG(
     concurrency=2,
     catchup=True,
 )
+dbt_models_diffs_cmd = f"""
+        {dbt_install_deps_nosha_cmd} &&
+        dbt run --profiles-dir profile --target {target} --models gitlab_dotcom_merge_request_diffs_internal ; ret=$?;
+
+        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
+        python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+        """
+
+dbt_diffs_task_name = "dbt-gitlab_dotcom_merge_request_diffs"
+dbt_diffs_task = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id=dbt_diffs_task_name,
+    name=dbt_diffs_task_name,
+    secrets=dbt_secrets,
+    env_vars=pod_env_vars,
+    arguments=[dbt_models_diffs_cmd],
+    dag=dag,
+)
 
 
-max_id = 3002
+CHUNKS = 10  # TODO
+start_id = 208751592 # merge_request_diff_commits diff_id starts here
+max_id = start_id + 10000  # TODO
 # TODO max_id = get_max_id_target_table()
-intervals = generate_intervals(CHUNKS, max_id)
+intervals = generate_intervals(CHUNKS, max_id, start_id)
+dbt_commits_tasks = []
 
 for chunk in range(CHUNKS):
     start, end = get_interval(intervals, chunk)
     dbt_vars = f'{{"backfill_start_id": {start}, "backfill_end_id": {end}}}'
-    dbt_models_cmd = f"""
+    dbt_models_commits_cmd = f"""
             {dbt_install_deps_nosha_cmd} &&
-            dbt run --profiles-dir profile --target {target} --models workspaces.workspace_engineering.merge_request_diffs.* --vars '{dbt_vars}'; ret=$?;
+            dbt run --profiles-dir profile --target {target} --models gitlab_dotcom_merge_request_diff_commits_internal --vars '{dbt_vars}'; ret=$?;
 
             montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
             python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
             """
 
-    dbt_models_task_name = f"dbt-{DBT_MODULE_NAME}-{chunk:03d}"
-    dbt_models_task = KubernetesPodOperator(
+    dbt_commits_task_name = f"dbt-{DBT_MODULE_NAME}-{chunk+1:03d}"
+    dbt_commits_task = KubernetesPodOperator(
         **gitlab_defaults,
         image=DBT_IMAGE,
-        task_id=dbt_models_task_name,
-        name=dbt_models_task_name,
+        task_id=dbt_commits_task_name,
+        name=dbt_commits_task_name,
         secrets=dbt_secrets,
         env_vars=pod_env_vars,
-        arguments=[dbt_models_cmd],
+        arguments=[dbt_models_commits_cmd],
         dag=dag,
     )
+    dbt_commits_tasks.append(dbt_commits_task)
+
+dbt_diffs_task >> dbt_commits_tasks
