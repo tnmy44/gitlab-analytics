@@ -25,7 +25,7 @@ merge_request_diff_commits_chunked AS (
           {% if var('backfill_start_id', false) != false %}
           '{{ var("backfill_start_id") }}'
         {% else %}
-            MAX(merge_request_diff_id)
+            MAX(merge_request_diff_id) + 1
           FROM {{ this }}
           {% endif %}
       )
@@ -46,9 +46,3 @@ merge_request_diff_commits_internal AS (
 )
 
 SELECT * FROM merge_request_diff_commits_internal
-
-  {% if var('airflow_chunk_start_date', false) != false %}
-        created_at
-      {% else %}
-    _uploaded_at
-  {% endif %}
