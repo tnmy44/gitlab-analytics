@@ -497,6 +497,8 @@ models:
       description: '{{ doc("country_name_ping_model") }}'
     - name: iso_2_country_code
       description: '{{ doc("iso_2_country_code_ping_model") }}'
+    - name: installation_type
+      description: '{{ doc("installation_type") }}'
     - name: original_subscription_name_slugify
       description: '{{ doc("original_subscription_name_slugify") }}'
     - name: subscription_start_month
