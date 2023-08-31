@@ -1235,7 +1235,26 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , note
+      , CASE WHEN project_id IN 
+          (13154706
+          , 14859125
+          , 15532587
+          , 16492321
+          , 26555111
+          , 26567411
+          , 26599489
+          , 26906211
+          , 28821822
+          , 30296511
+          , 30297111
+          , 30297823
+          , 34169285
+          , 35858823
+          , 40363072
+          , 40694272
+          , 41458091
+          , 42961472
+          , 44356021 ) THEN '**MASKED**' ELSE note END AS note --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
       , noteable_type
       , author_id
       , created_at
