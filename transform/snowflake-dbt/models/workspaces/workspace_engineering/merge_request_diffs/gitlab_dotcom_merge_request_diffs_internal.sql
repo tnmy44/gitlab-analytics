@@ -12,7 +12,7 @@ WITH dim_project_internal AS (
 merge_requests_internal AS (
   SELECT mr.*
   FROM
-    {{ ref('gitlab_dotcom_merge_requests') }} mr
+    {{ ref('gitlab_dotcom_merge_requests') }} AS mr
   INNER JOIN dim_project_internal ON mr.target_project_id = dim_project_internal.dim_project_id
 ),
 

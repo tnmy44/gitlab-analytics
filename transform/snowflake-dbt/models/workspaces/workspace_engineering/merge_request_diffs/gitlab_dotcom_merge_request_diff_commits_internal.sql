@@ -14,10 +14,10 @@ merge_request_diff_commits_chunked AS (
   FROM {{ source('gitlab_dotcom', 'merge_request_diff_commits') }}
   {% if is_incremental() %}
     WHERE
-    /*
-    If there is a passed in backfill_start_id, use that
-    Else, handle like a regular incremental model using merge_request_diff_id
-    */
+      /*
+      If there is a passed in backfill_start_id, use that
+      Else, handle like a regular incremental model using merge_request_diff_id
+      */
       merge_request_diff_id >= (
         SELECT
           {% if var('backfill_start_id', false) != false %}
@@ -41,6 +41,24 @@ merge_request_diff_commits_internal AS (
     ON merge_request_diffs_internal.merge_request_diff_id
       = merge_request_diff_commits_chunked.merge_request_diff_id
 
+),
+
+merge_request_diff_commits_internal_dedupped AS (
+  SELECT * FROM merge_request_diff_commits_internal
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY merge_request_diff_id, relative_order ORDER BY _uploaded_at DESC) = 1
+),
+
+merge_request_diff_commits_internal_renamed AS (
+  SELECT
+    authored_date,
+    committed_date,
+    merge_request_diff_id,
+    relative_order,
+    REPLACE(sha, '\\x', '') AS sha,
+    commit_author_id,
+    committer_id,
+    _uploaded_at
+  FROM merge_request_diff_commits_internal_dedupped
 )
 
-SELECT * FROM merge_request_diff_commits_internal
+SELECT * FROM merge_request_diff_commits_internal_renamed
