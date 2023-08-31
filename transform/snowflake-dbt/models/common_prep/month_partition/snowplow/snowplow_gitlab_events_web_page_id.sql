@@ -52,6 +52,13 @@ WITH filtered_source as (
             -- code suggestions events
             v_tracker LIKE 'py%'
           )
+
+          OR
+
+          (
+            -- jetbrains plugin events
+            v_tracker LIKE 'java%'
+          )
         )
 
       AND TRY_TO_TIMESTAMP(derived_tstamp) is not null

@@ -186,6 +186,13 @@ WITH filtered_source as (
             -- code suggestions events
             v_tracker LIKE 'py%'
           )
+
+          OR
+
+          (
+            -- jetbrains plugin events
+            v_tracker LIKE 'java%'
+          )
         )
         -- removing it after approval from @rparker2 in this issue: https://gitlab.com/gitlab-data/analytics/-/issues/9112
 
