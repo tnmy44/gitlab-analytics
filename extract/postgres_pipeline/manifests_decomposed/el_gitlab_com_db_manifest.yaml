@@ -1134,8 +1134,8 @@ tables:
       , created_at
       , updated_at
       , NULL AS free_user_cap_over_limit_notified_at
-      , dashboard_notification_at
-      , dashboard_enforcement_at
+      , NULL AS dashboard_notification_at
+      , NULL AS dashboard_enforcement_at
       FROM namespace_details
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
