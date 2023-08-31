@@ -11,15 +11,13 @@ WITH merge_request_diffs_internal AS (
 
 merge_request_diff_commits_chunked AS (
   SELECT *
-  FROM {{ source('gitlab_dotcom_merge_request_diff_commits', 'merge_request_diff_commits') }}
+  FROM {{ source('gitlab_dotcom', 'merge_request_diff_commits') }}
   {% if is_incremental() %}
     WHERE
     /*
-    if airflow passed in dbt variable, it means compare commited_date
-    against the passed in chunked dates.
-
-      Else, incrementall load based on _uploaded_at
-      */
+    If there is a passed in backfill_start_id, use that
+    Else, handle like a regular incremental model using merge_request_diff_id
+    */
       merge_request_diff_id >= (
         SELECT
           {% if var('backfill_start_id', false) != false %}
