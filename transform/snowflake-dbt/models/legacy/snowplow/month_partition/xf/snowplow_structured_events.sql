@@ -58,7 +58,7 @@ WITH events AS (
 
     FROM events
     WHERE event = 'struct'
-      AND is_staging_url IS FALSE
+      AND is_staging_url = FALSE
 
 )
 
