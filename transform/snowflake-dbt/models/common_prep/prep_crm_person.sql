@@ -28,9 +28,9 @@ WITH biz_person AS (
       sfdc_record_id,
       MIN(event_date) AS min_task_completed_date_by_bdr_sdr
     FROM {{ref('prep_crm_event')}}
-    LEFT JOIN common.dim_crm_user event_user_id 
+    LEFT JOIN {{ref('dim_crm_user')}} event_user_id 
     ON prep_crm_event.dim_crm_user_id = event_user_id.dim_crm_user_id 
-    LEFT JOIN common.dim_crm_user event_booked_by_id
+    LEFT JOIN {{ref('dim_crm_user')}}  event_booked_by_id
     ON prep_crm_event.booked_by_employee_number = event_booked_by_id.employee_number
     WHERE 
     event_user_id.user_role_name LIKE '%BDR%' 
@@ -41,24 +41,23 @@ WITH biz_person AS (
 
   
 ), crm_activity_prep AS (
+  
     SELECT 
-    sfdc_record_id,
-    min_task_completed_date_by_bdr_sdr
-    FROM 
-    crm_tasks
+      sfdc_record_id,
+      min_task_completed_date_by_bdr_sdr
+    FROM crm_tasks
     UNION
     SELECT
-    sfdc_record_id,
-    min_task_completed_date_by_bdr_sdr
-    FROM 
-    crm_events
+      sfdc_record_id,
+      min_task_completed_date_by_bdr_sdr
+    FROM crm_events
   
 ),  crm_activity AS (
+
     SELECT 
-    sfdc_record_id,
-    min(min_task_completed_date_by_bdr_sdr) AS min_task_completed_date_by_bdr_sdr
-    FROM 
-    crm_activity_prep
+      sfdc_record_id,
+      min(min_task_completed_date_by_bdr_sdr) AS min_task_completed_date_by_bdr_sdr
+    FROM crm_activity_prep
     GROUP BY 1 
 
 ), biz_person_with_touchpoints AS (
