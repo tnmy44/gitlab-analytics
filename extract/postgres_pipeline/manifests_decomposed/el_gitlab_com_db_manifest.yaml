@@ -790,7 +790,7 @@ tables:
       , created_at
       , updated_at
       , jira_issue_transition_id
-      , project_key
+      , NULL AS project_key
       , issues_enabled
       , deployment_type
       , vulnerabilities_issuetype
@@ -1510,7 +1510,11 @@ tables:
     import_query: |-
       SELECT id
       , project_id
-      , name
+      , CASE
+            WHEN name = 'main' THEN 'main'
+            WHEN name = 'master' THEN 'master'
+            ELSE NULL
+        END as name
       , created_at
       , updated_at
       , code_owner_approval_required
