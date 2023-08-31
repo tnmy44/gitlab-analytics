@@ -11,7 +11,7 @@ WITH merge_request_diffs_internal AS (
 
 merge_request_diff_commits_chunked AS (
   SELECT *
-  FROM {{ ref('gitlab_dotcom_merge_request_diffs') }}
+  FROM {{ source('gitlab_dotcom_merge_request_diff_commits', 'merge_request_diff_commits') }}
   {% if is_incremental() %}
     WHERE
     /*

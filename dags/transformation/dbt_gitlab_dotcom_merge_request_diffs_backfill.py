@@ -146,7 +146,7 @@ dbt_diffs_task = KubernetesPodOperator(
 )
 
 
-CHUNKS = 10  # TODO
+CHUNKS = 100
 START_ID = 208751592  # merge_request_diff_commits diff_id starts here
 max_id = int(
     Variable.get("DBT_GITLAB_DOTCOM_MERGE_REQUEST_DIFF_COMMITS_BACKFILL_MAX_ID")
