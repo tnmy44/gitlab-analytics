@@ -22,6 +22,45 @@ WITH biz_person AS (
     OR task_owner_role LIKE '%SDR%'
     GROUP BY 1
 
+), crm_events AS (
+
+    SELECT 
+      sfdc_record_id,
+      MIN(event_date) AS min_task_completed_date_by_bdr_sdr
+    FROM {{ref('prep_crm_event')}}
+    LEFT JOIN common.dim_crm_user event_user_id 
+    ON prep_crm_event.dim_crm_user_id = event_user_id.dim_crm_user_id 
+    LEFT JOIN common.dim_crm_user event_booked_by_id
+    ON prep_crm_event.booked_by_employee_number = event_booked_by_id.employee_number
+    WHERE 
+    event_user_id.user_role_name LIKE '%BDR%' 
+    OR event_booked_by_id.user_role_name LIKE '%BDR%' 
+    OR event_user_id.user_role_name LIKE '%SDR%' 
+    OR event_booked_by_id.user_role_name LIKE '%SDR%' 
+    GROUP BY 1
+
+  
+), crm_activity_prep AS (
+    SELECT 
+    sfdc_record_id,
+    min_task_completed_date_by_bdr_sdr
+    FROM 
+    crm_tasks
+    UNION
+    SELECT
+    sfdc_record_id,
+    min_task_completed_date_by_bdr_sdr
+    FROM 
+    crm_events
+  
+),  crm_activity AS (
+    SELECT 
+    sfdc_record_id,
+    min(min_task_completed_date_by_bdr_sdr) AS min_task_completed_date_by_bdr_sdr
+    FROM 
+    crm_activity_prep
+    GROUP BY 1 
+
 ), biz_person_with_touchpoints AS (
 
     SELECT
@@ -195,7 +234,7 @@ WITH biz_person AS (
       zoominfo_contact_id,
       NULL                                           AS is_partner_recalled,
       CASE
-        WHEN crm_tasks.min_task_completed_date_by_bdr_sdr IS NOT NULL
+        WHEN crm_activity.min_task_completed_date_by_bdr_sdr IS NOT NULL
           THEN TRUE
         ELSE FALSE
       END AS is_bdr_sdr_worked
@@ -208,8 +247,8 @@ WITH biz_person AS (
       ON was_converted_lead.contact_id = sfdc_contacts.contact_id
     LEFT JOIN marketo_persons
       ON sfdc_contacts.contact_id = marketo_persons.sfdc_contact_id and sfdc_type = 'Contact'
-    LEFT JOIN crm_tasks
-      ON sfdc_contacts.contact_id=crm_tasks.sfdc_record_id
+    LEFT JOIN crm_activity
+      ON sfdc_contacts.contact_id=crm_activity.sfdc_record_id
 
     UNION
 
