@@ -1197,7 +1197,18 @@
                     '-',
                     close_fiscal_year
                     )
-    END AS dim_crm_opp_owner_stamped_hierarchy_sk
+    END AS dim_crm_opp_owner_stamped_hierarchy_sk, 
+
+    CASE
+        WHEN is_renewal = 1 AND sfdc_opportunity.is_closed = 1
+            THEN DATEDIFF(day, sfdc_opportunity.arr_created_date, close_date)
+        WHEN is_renewal = 0 AND sfdc_opportunity.is_closed = 1
+            THEN DATEDIFF(day, created_date, close_date)
+         WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
+            THEN DATEDIFF(day, sfdc_opportunity.arr_created_date, CURRENT_DATE)
+        WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
+            THEN DATEDIFF(day, created_date, CURRENT_DATE)
+    END                                                           AS cycle_time_in_days
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
@@ -1227,7 +1238,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@jngCES",
+    updated_by="@kmagda1",
     created_date="2022-02-23",
-    updated_date="2023-06-15"
+    updated_date="2023-09-01"
 ) }}
