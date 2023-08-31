@@ -92,7 +92,7 @@
   LEFT JOIN prep_crm_opportunity
     ON prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
   LEFT JOIN dim_date
-    ON {{ get_date_id('prep_crm_task.task_date') }} = dim_date.dim_date_id
+    ON {{ get_date_id('prep_crm_task.task_date') }} = dim_date.date_id
   LEFT JOIN prep_crm_opportunity AS account_opp_mapping 
     ON prep_crm_task.account_or_opportunity_id = dim_crm_opportunity.dim_crm_account_id
     AND prep_crm_task.task_date < account_opp_mapping.close_date
