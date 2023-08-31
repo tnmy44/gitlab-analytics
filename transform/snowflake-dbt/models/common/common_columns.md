@@ -2309,3 +2309,9 @@ The GitLab plan id at the time of object creation.
 Boolean flag set to True if the epic's namespace is identified as an internal GitLab namespace.
 
 {% enddocs %}
+
+{% docs cycle_time_in_days %}
+
+TBD 
+
+{% enddocs %}
