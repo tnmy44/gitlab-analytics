@@ -4628,6 +4628,32 @@ models:
         description: First month the ultimate parent CRM account has had ARR (Annual Recurrent Revenue).
       - name: parent_account_arr_cohort_quarter
         description: First fiscal quarter the ultimate parent CRM account has had ARR (Annual Recurrent Revenue).
+      - name: 6_sense_6_qa
+        description: The 6QA status of the account for the product.
+      - name: risk_rate_guid
+        description: The globally unique ID (GUID) for the third party record in NavEx RiskRate.
+      - name: 6_sense_account_profile_fit
+        description: A measure of how similar a company is to the ideal customer profile.
+      - name: 6_sense_account_reach_score
+        description: A measure of current outreach activities against optimal quality.
+      - name: 6_sense_account_profile_score
+        description: A measure of how similar a company is to the ideal customer profile.
+      - name: 6_sense_account_buying_stage
+        description: The 6QA buting stage of the account
+      - name: 6_sense_account_numerical_reach_score
+        description:  measure of current outreach activities against optimal quality.
+      - name: 6_sense_account_update_date
+        description: The latest update date and time when 6sense Scores were updated.
+      - name: 6_sense_account_6_qa_end_date
+        description: The date the account was disqualified from 6QA status 
+      - name: 6_sense_account_6_qa_age_days
+        description: The age of the Account's 6QA data, in days. 
+      - name: 6_sense_account_6_qa_start_date
+        description: The date the account qualified for 6QA status 
+      - name: 6_sense_account_intent_score
+        description: A measure, between 0 and 100, of how much an account is behaving like accounts with which there is a history of previously opened opportunities.
+      - name: 6_sense_segments
+        description: The Account's 6QA segment. 
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
