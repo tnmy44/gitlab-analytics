@@ -36,16 +36,16 @@ The focus area for the Analytics Engineer are the `DBT` models including the app
             - [ ] the [functional DRIs](https://about.gitlab.com/handbook/business-ops/data-team/organization/#team-organization)
             - [ ] OR to the  Manager, Data if you aren't sure. 
 
-* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) for each new failed DBT model.
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%3A%20Errors%20AE) for each new failed DBT model.
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**. 
     * [ ] Use the AE issue template to resolve the dbt-run failure.
-* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) for each new failed DBT test.
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%3A%20Errors%20AE) for each new failed DBT test.
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**
     * [ ] Use the AE issue template to resolve the dbt-test failure.
-* [ ] Review all dbt-test warnings and [create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) if needed
+* [ ] Review all dbt-test warnings and [create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%3A%20Errors%20AE) if needed
 * [ ] Investigate and respond to each **active** failure and alert in **#analytics-pipelines** by:
     * [ ] Updating the [Monte Carlo](https://getmontecarlo.com/monitors) status via Slack according to the defined action
-    * [ ] [Creating an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20DE) for each failure or relevant alert or reference the failure or alert in a related DBT Model Run failure issue. Use the AE issue template to resolve the Monte Carlo failure and alert. 
+    * [ ] [Creating an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%3A%20Errors%20DE) for each failure or relevant alert or reference the failure or alert in a related DBT Model Run failure issue. Use the AE issue template to resolve the Monte Carlo failure and alert. 
     * [ ] [Opening an incident issue](https://gitlab.com/gitlab-data/analytics/-/issues/new?issuable_template=incident&issue[issue_type]=incident) when the failure requires [immediate action](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#incidents) in order to avoid or rememdy a data outage.
         * [ ] Link to all resulting incidents/issues and MRs in Slack
 
