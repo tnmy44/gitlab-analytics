@@ -24,7 +24,7 @@ WITH base AS (
 , epics AS (
 
     SELECT * 
-    FROM {{ ref('gitlab_dotcom_epics_xf') }}
+    FROM {{ ref('prep_epic') }}
 )
 
 , namespaces AS (

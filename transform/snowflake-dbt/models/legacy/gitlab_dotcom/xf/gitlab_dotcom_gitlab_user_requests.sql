@@ -10,7 +10,7 @@ WITH epic_issues AS (
 ), epics AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_epics_xf') }}
+    FROM {{ ref('prep_epic') }}
 
 ), gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id AS (
 

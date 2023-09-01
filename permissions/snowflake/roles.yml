@@ -450,7 +450,6 @@ roles:
                     - prep.sensitive
             tables:
                 read:
-                    - prep.sensitive.gitlab_dotcom_epics
                     - prep.sensitive.gitlab_dotcom_issues
                     - prep.sensitive.gitlab_dotcom_labels
                     - prep.sensitive.gitlab_dotcom_merge_requests
@@ -1070,7 +1069,6 @@ roles:
                     - prep.sensitive
             tables:
                 read:
-                    - prep.sensitive.gitlab_dotcom_epics
                     - prep.sensitive.gitlab_dotcom_issues
                     - prep.sensitive.gitlab_dotcom_labels
                     - prep.sensitive.gitlab_dotcom_merge_requests
@@ -1761,7 +1759,6 @@ roles:
                     - prep.sensitive.gitlab_dotcom_audit_event_details
                     - prep.sensitive.gitlab_dotcom_audit_event_details_pii
                     - prep.sensitive.gitlab_dotcom_environments
-                    - prep.sensitive.gitlab_dotcom_epics
                     - prep.sensitive.gitlab_dotcom_identities
                     - prep.sensitive.gitlab_dotcom_issues
                     - prep.sensitive.gitlab_dotcom_labels
