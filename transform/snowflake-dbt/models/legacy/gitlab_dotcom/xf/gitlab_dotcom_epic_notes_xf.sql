@@ -56,10 +56,10 @@ WITH base AS (
           ELSE {{field}}
         END AS {{field}},
       {% endfor %}
-      epics.ultimate_parent_id
+      epics.ultimate_parent_namespace_id
     FROM base
       LEFT JOIN epics 
-        ON base.noteable_id = epics.epic_id
+        ON base.noteable_id = epics.dim_epic_id
       LEFT JOIN namespaces
         ON epics.group_id = namespaces.namespace_id
       LEFT JOIN internal_namespaces
