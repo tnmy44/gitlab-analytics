@@ -204,6 +204,9 @@
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_refund,
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_credit_flag,
     wk_sales_sfdc_opportunity_snapshot_history_xf.is_eligible_sao_flag,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.is_eligible_open_pipeline_flag,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.is_booked_net_arr_flag,
+    wk_sales_sfdc_opportunity_snapshot_history_xf.is_eligible_age_analysis_flag,
 
 --Metrics
     wk_sales_sfdc_opportunity_snapshot_history_xf.net_arr AS opp_net_arr
@@ -332,7 +335,10 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_renewal,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_refund,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_credit_flag,
-    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_eligible_sao_flag
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_eligible_sao_flag,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_eligible_open_pipeline_flag,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_booked_net_arr_flag,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_eligible_age_analysis_flag
     
   FROM wk_sales_sfdc_opportunity_snapshot_history_xf_base
   LEFT JOIN attribution_touchpoint_snapshot_base
@@ -449,7 +455,10 @@ combined_models AS (
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_renewal,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_refund,
     wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_credit_flag,
-    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_eligible_sao_flag
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_eligible_sao_flag,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_eligible_open_pipeline_flag,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_booked_net_arr_flag,
+    wk_sales_sfdc_opportunity_snapshot_history_xf_base.is_eligible_age_analysis_flag
 
     FROM missing_net_arr_difference
     INNER JOIN
