@@ -2312,6 +2312,6 @@ Boolean flag set to True if the epic's namespace is identified as an internal Gi
 
 {% docs cycle_time_in_days %}
 
-TBD 
+Number of days since created date of opportunity till its closure. For renewal opportunities created date = ARR created date 
 
 {% enddocs %}
