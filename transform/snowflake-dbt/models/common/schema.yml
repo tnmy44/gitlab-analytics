@@ -5367,6 +5367,8 @@ models:
         description: '{{ doc("override_arr_basis_clari") }}'
       - name: vsa_start_date_net_arr
         description: '{{ doc("vsa_start_date_net_arr") }}'
+      - name: cycle_time_in_days
+        description: '{{ doc("cycle_time_in_days") }}' 
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'
