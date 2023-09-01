@@ -149,6 +149,7 @@
             THEN 'Customer Portal'
         ELSE NULL
       END                                                                             AS subscription_renewal_type,
+      dim_order.is_first_order                                                        AS is_first_order,
 
       --Cohort Information
       dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
@@ -175,6 +176,7 @@
       dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
       dim_product_detail.is_licensed_user                                             AS is_licensed_user,
       dim_product_detail.is_arpu                                                      AS is_arpu,
+      dim_product_detail.is_oss_or_edu_rate_plan                                      AS is_oss_or_edu_rate_plan,
 
       --Amendment Information
       dim_subscription.dim_amendment_id_subscription,
