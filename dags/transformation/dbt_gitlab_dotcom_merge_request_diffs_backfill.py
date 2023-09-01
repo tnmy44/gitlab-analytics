@@ -6,6 +6,7 @@ evenly distribute the ids to each chunk
 """
 import os
 from datetime import datetime
+from typing import List, Tuple
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow.models import Variable
@@ -65,7 +66,7 @@ def generate_intervals(chunks: int, max_id: int, start: int = 1):
     return intervals
 
 
-def get_interval(intervals, chunk):
+def get_interval(intervals: List[Tuple[int, int]], chunk: int):
     interval = intervals[chunk]
     start = interval[0]
     end = interval[1]
@@ -148,16 +149,16 @@ dbt_diffs_task = KubernetesPodOperator(
 
 CHUNKS = 100
 START_ID = 208751592  # merge_request_diff_commits diff_id starts here
-max_id = int(
+MAX_ID = int(
     Variable.get("DBT_GITLAB_DOTCOM_MERGE_REQUEST_DIFF_COMMITS_BACKFILL_MAX_ID")
 )
 
-intervals = generate_intervals(CHUNKS, max_id, START_ID)
+intervals = generate_intervals(CHUNKS, MAX_ID, START_ID)
 dbt_commits_tasks = []
 
 for chunk in range(CHUNKS):
-    start, end = get_interval(intervals, chunk)
-    dbt_vars = f'{{"backfill_start_id": {start}, "backfill_end_id": {end}}}'
+    start_id, end_id = get_interval(intervals, chunk)
+    dbt_vars = f'{{"backfill_start_id": {start_id}, "backfill_end_id": {end_id}}}'
     dbt_models_commits_cmd = f"""
             {dbt_install_deps_nosha_cmd} &&
             dbt run --profiles-dir profile --target {target} --models gitlab_dotcom_merge_request_diff_commits_internal --vars '{dbt_vars}'; ret=$?;

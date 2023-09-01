@@ -1,5 +1,6 @@
 {{ config(
   materialized="incremental",
+  unique_key = ['merge_request_diff_id', 'relative_order'],
   full_refresh= only_force_full_refresh()
 ) }}
 
