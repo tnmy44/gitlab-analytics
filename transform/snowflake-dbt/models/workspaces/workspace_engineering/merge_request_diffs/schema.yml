@@ -1,6 +1,6 @@
 version: 2
 models:
-  - name: gitlab_dotcom_merge_request_diffs
+  - name: gitlab_dotcom_merge_request_diffs_internal
     description: Represents each new diff in a MR
     columns:
       - name: merge_request_diff_id
@@ -26,7 +26,7 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_merge_request_diff_commits
+  - name: gitlab_dotcom_merge_request_diff_commits_internal
     description: Represents each commit within a MR diff
     tests:
       - dbt_utils.unique_combination_of_columns:
