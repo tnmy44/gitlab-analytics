@@ -338,7 +338,10 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , instance_url
+      , CASE
+            WHEN instance_url IS NOT NULL THEN TRUE
+            ELSE NULL
+        END as instance_url
       FROM jira_connect_installations
   keys:
     dbt_source_model: true

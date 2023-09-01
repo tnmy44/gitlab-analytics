@@ -31,7 +31,7 @@ tables:
       , ref
       , user_id
       , type
-      , description
+      , NULL AS description
       , project_id
       , erased_by_id
       , erased_at
