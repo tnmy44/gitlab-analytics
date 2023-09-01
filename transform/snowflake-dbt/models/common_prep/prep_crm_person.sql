@@ -56,7 +56,7 @@ WITH biz_person AS (
 
     SELECT 
       sfdc_record_id,
-      min(min_task_completed_date_by_bdr_sdr) AS min_task_completed_date_by_bdr_sdr
+      MIN(min_task_completed_date_by_bdr_sdr) AS min_task_completed_date_by_bdr_sdr
     FROM crm_activity_prep
     GROUP BY 1 
 
