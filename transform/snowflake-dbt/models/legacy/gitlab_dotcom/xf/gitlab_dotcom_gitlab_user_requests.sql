@@ -91,7 +91,7 @@ WITH epic_issues AS (
     SELECT DISTINCT
       'Epic'                     AS noteable_type,
       'Note'                     AS mention_type,
-      epics.epic_id              AS noteable_id,
+      epics.dim_epic_id          AS noteable_id,
       epics.epic_internal_id     AS noteable_iid,
       epics.epic_title           AS noteable_title,
       epics.created_at           AS noteable_created_at,
@@ -110,7 +110,7 @@ WITH epic_issues AS (
       epics.epic_title --Redundant in this case.
     FROM gitlab_dotcom_notes_linked_to_sfdc_account_id
     INNER JOIN epics
-      ON gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_id = epics.epic_id
+      ON gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_id = epics.dim_epic_id
     LEFT JOIN namespaces
       ON epics.group_id = namespaces.namespace_id
     LEFT JOIN sfdc_accounts
