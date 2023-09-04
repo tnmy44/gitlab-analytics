@@ -12,6 +12,9 @@ WITH account_dimensions AS (
     SELECT *
     FROM {{ ref('sfdc_bizible_touchpoint_source') }}
     WHERE is_deleted = 'FALSE'
+    -- exclude records containing strings which cannot be parsed https://gitlab.com/gitlab-data/analytics/-/issues/18230
+    AND (bizible_form_url_raw LIKE 'http%' OR bizible_form_url_raw IS NULL)
+    AND (bizible_landing_page_raw LIKE 'http%' OR bizible_landing_page_raw IS NULL)
 
 ), crm_person AS (
 
