@@ -7,6 +7,24 @@
     ])
 }}
 
+, base AS (
+
+
+    SELECT dim_marketing_contact_id
+    FROM prep_ptpf_scores_by_user
+
+    UNION 
+
+    SELECT dim_marketing_contact_id
+    FROM prep_ptpl_scores_by_user
+
+    UNION
+
+    SELECT dim_marketing_contact_id
+    FROM prep_ptpt_scores_by_user
+
+)
+
 , dedup AS (
 
     SELECT
@@ -58,11 +76,13 @@
           THEN prep_ptpf_scores_by_user.days_since_trial_start
         ELSE NULL
       END AS days_since_trial_start
-    FROM prep_ptpt_scores_by_user
-    FULL OUTER JOIN prep_ptpf_scores_by_user
-      ON prep_ptpt_scores_by_user.dim_marketing_contact_id = prep_ptpf_scores_by_user.dim_marketing_contact_id
-    FULL OUTER JOIN prep_ptpl_scores_by_user
-      ON prep_ptpt_scores_by_user.dim_marketing_contact_id = prep_ptpl_scores_by_user.dim_marketing_contact_id
+    FROM base
+    LEFT JOIN prep_ptpt_scores_by_user
+      ON base.dim_marketing_contact_id = prep_ptpt_scores_by_user.dim_marketing_contact_id
+    LEFT JOIN prep_ptpf_scores_by_user
+      ON base.dim_marketing_contact_id = prep_ptpf_scores_by_user.dim_marketing_contact_id
+    LEFT JOIN prep_ptpl_scores_by_user
+      ON base.dim_marketing_contact_id = prep_ptpl_scores_by_user.dim_marketing_contact_id
 
 )
 
