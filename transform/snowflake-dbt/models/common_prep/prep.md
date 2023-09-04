@@ -62,19 +62,25 @@ This model assumes that only one priority is placed in a given description or no
 
 {% docs prep_ptp_scores_by_user %}
 
-Takes the scores from prep_ptpt_scores_by_user and prep_ptpf_scores_by_user, and return a single score per user.
+Takes the scores from prep_ptpt_scores_by_user, prep_ptpf_scores_by_user and prep_ptplscores_by_user, and return a single score per user.
 
-The rules for de duplication of scores are:
+The rules for de-duplication of scores are:
 
 1. If user only has PtP trial score then use that score
 1. If user only has PtP free score then use that score
-1. If user has both PtP trial score and free score:
+1. If user has multiple scores then:
 
    a. If Trial PTP Score is 4 or 5 stars then use Trial PtP
    
-   b. If Free PtP Score is 4 or 5 stars then use Free Ptp
+   b. If Free PtP Score is 5 stars then use Free Ptp
 
-   c. Else use Trial PtP Score
+   c. If Lead PtP Score is 5 stars then use Lead Ptp
+
+   d. If Free PtP Score is 4 stars then use Free Ptp
+
+   e. If Lead PtP Score is 4 stars then use Lead Ptp
+
+   f. Else use Trial, Free or Lead Score, in that order
 
 The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
 
@@ -91,6 +97,14 @@ The scores of this model are then used in mart_marketing_contact and the marketi
 {% docs prep_ptpf_scores_by_user %}
 
 Takes the scores from ptpf_scores, transforms it to user / email address grain and uses the latest score date available. It only syncs contacts with a `score_group >= 4`.
+
+The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
+
+{% enddocs %}
+
+{% docs prep_ptpl_scores_by_user %}
+
+Takes the scores from ptpl_scores (Propensity to Purchase: Leads), transforms it to user / email address grain and uses the latest score date available.
 
 The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
 
