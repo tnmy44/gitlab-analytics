@@ -831,6 +831,8 @@ models:
         tests:
           - not_null
           - unique
+      - name: is_first_order
+        description: Boolean field indicating whether this is the first order made by that account. If two orders are processed at the same time, the lower order number will be chosen.
 
   - name: dim_order_action
     description: '{{ doc("dim_order_action") }}'
