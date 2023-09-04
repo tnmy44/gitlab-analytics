@@ -35,7 +35,7 @@
           THEN prep_ptpf_scores_by_user.{{column}}
         WHEN ptp_source = 'Lead'
           THEN prep_ptpl_scores_by_user.{{column}}
-       END AS {{column}},
+      END AS {{column}},
       {% endfor %}
       CASE
         WHEN ptp_source = 'Trial'
@@ -44,7 +44,7 @@
           THEN 'Namespace'
         WHEN ptp_source = 'Lead'
           THEN 'Lead'
-       END AS model_grain,
+      END AS model_grain,
       CASE
         WHEN ptp_source = 'Trial'
           THEN prep_ptpt_scores_by_user.namespace_id
@@ -52,7 +52,12 @@
           THEN prep_ptpf_scores_by_user.namespace_id
         WHEN ptp_source = 'Lead'
           THEN prep_ptpl_scores_by_user.lead_id
-       END AS model_grain_id
+      END AS model_grain_id,
+      CASE
+        WHEN ptp_source = 'Free'
+          THEN prep_ptpf_scores_by_user.days_since_trial_start
+        ELSE NULL
+      END AS days_since_trial_start
     FROM prep_ptpt_scores_by_user
     FULL OUTER JOIN prep_ptpf_scores_by_user
       ON prep_ptpt_scores_by_user.dim_marketing_contact_id = prep_ptpf_scores_by_user.dim_marketing_contact_id
