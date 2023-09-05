@@ -89,7 +89,7 @@
       gitlab_dotcom_epics_dedupe_source.start_date_sourcing_epic_id::NUMBER                  AS start_date_sourcing_epic_id,
       gitlab_dotcom_epics_dedupe_source.confidential::BOOLEAN                                AS is_confidential,
       namespace_prep.namespace_is_internal                                                   AS is_internal_epic,
-      {{ map_state_id('gitlab_dotcom_epics_dedupe_source.state_id') }}                       AS state_name,
+      {{ map_state_id('gitlab_dotcom_epics_dedupe_source.state_id') }}                       AS epic_state,
       LENGTH(gitlab_dotcom_epics_dedupe_source.title)::NUMBER                                AS epic_title_length,
       LENGTH(gitlab_dotcom_epics_dedupe_source.description)::NUMBER                          AS epic_description_length,
       IFF(namespace_prep.visibility_level = 'private',
