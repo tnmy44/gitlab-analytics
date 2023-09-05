@@ -27,7 +27,12 @@ databases:
         shared: no
     - abright_prep:
         shared: no
- 
+
+    - anelson_prod:
+        shared: no
+    - anelson_prep:
+        shared: no
+
     - bi_tool_eval:
         shared: no
 
@@ -103,6 +108,11 @@ databases:
         shared: no
     - jstark_prep:
         shared: no
+
+    - jonglee_prod:
+        shared: no
+    - jonglee_prep:
+        shared: no     
 
     - juwong_prod:
         shared: no
@@ -1186,6 +1196,7 @@ roles:
                     - prod.*
                     - raw.snapshots
                     - raw.gcp_billing
+                    - raw.dbt_artifacts
             tables:
                 read:
                     - raw.*.*
@@ -1195,6 +1206,7 @@ roles:
                     - prod.*.*
                     - raw.snapshots.*
                     - raw.gcp_billing.*
+                    - raw.dbt_artifacts.*
 
     - sales_analytics:
         warehouses:
@@ -2860,6 +2872,45 @@ roles:
         warehouses:
             - dev_xs
 
+    - anelson:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - anelson_prep
+                - anelson_prod
+            schemas:
+                - anelson_prep.*
+                - anelson_prod.*
+            tables:
+                - anelson_prep.*.*
+                - anelson_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - anelson_prep
+                    - anelson_prod
+                write:
+                    - anelson_prep
+                    - anelson_prod
+            schemas:
+                read:
+                    - anelson_prep.*
+                    - anelson_prod.*
+                write:
+                    - anelson_prep.*
+                    - anelson_prod.*
+            tables:
+                read:
+                    - anelson_prep.*.*
+                    - anelson_prod.*.*
+                write:
+                    - anelson_prep.*.*
+                    - anelson_prod.*.*
+
     - bbutterfield:
         member_of:
             - analyst_sales
@@ -3442,6 +3493,45 @@ roles:
             - reporter
         warehouses:
             - dev_xs
+
+    - jonglee:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - jonglee_prep
+                - jonglee_prod
+            schemas:
+                - jonglee_prep.*
+                - jonglee_prod.*
+            tables:
+                - jonglee_prep.*.*
+                - jonglee_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jonglee_prep
+                    - jonglee_prod
+                write:
+                    - jonglee_prep
+                    - jonglee_prod
+            schemas:
+                read:
+                    - jonglee_prep.*
+                    - jonglee_prod.*
+                write:
+                    - jonglee_prep.*
+                    - jonglee_prod.*
+            tables:
+                read:
+                    - jonglee_prep.*.*
+                    - jonglee_prod.*.*
+                write:
+                    - jonglee_prep.*.*
+                    - jonglee_prod.*.*
 
     - jng:
         member_of:
@@ -4471,6 +4561,8 @@ roles:
             - dev_m
             - loading
             - reporting
+            - transforming_l
+            - transforming_xl
         owns:
             databases:
                 - pempey_prep
@@ -5197,6 +5289,11 @@ users:
         member_of:
             - aperez
 
+    - anelson:
+        can_login: yes
+        member_of:
+            - anelson
+
     - bi_tool_eval:
         can_login: yes
         member_of:
@@ -5363,6 +5460,11 @@ users:
         can_login: yes
         member_of:
             - jhope
+
+    - jonglee:
+        can_login: yes
+        member_of:
+            - jonglee
 
     - jng:
         can_login: yes

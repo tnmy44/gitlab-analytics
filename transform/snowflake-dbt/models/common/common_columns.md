@@ -2303,3 +2303,15 @@ The latest date a snippet was updated.
 Boolean flag to indicate if the Trial order has been converted to Paid Order or not
 
 {% enddocs %}
+
+{% docs dim_plan_id_at_creation %}
+
+The GitLab plan id at the time of object creation.
+
+{% enddocs %}
+
+{% docs is_internal_epic %}
+
+Boolean flag set to True if the epic's namespace is identified as an internal GitLab namespace.
+
+{% enddocs %}

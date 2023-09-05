@@ -57,7 +57,6 @@ secrets = [
 ]
 
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -191,6 +190,7 @@ if BACKFILL_PARAMETERS:
         schedule_interval=None,
         concurrency=2,
         description=DAG_DESCRIPTION,
+        catchup=False,
     )
 
     for run in get_date_range(start=start_date, end=end_date):

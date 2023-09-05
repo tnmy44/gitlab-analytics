@@ -1112,6 +1112,10 @@ models:
         tests:
           - unique
           - not_null
+      - name: dim_plan_id_at_creation
+        description: '{{ doc("dim_plan_id_at_creation") }}'
+      - name: is_internal_epic
+        description: '{{ doc("is_internal_epic") }}'
 
   - name: prep_deployment
     description: '{{ doc("prep_deployment") }}'

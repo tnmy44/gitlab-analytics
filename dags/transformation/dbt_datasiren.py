@@ -64,7 +64,6 @@ task_secrets = [
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -72,7 +71,9 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("dbt_datasiren", default_args=default_args, schedule_interval=None)
+dag = DAG(
+    "dbt_datasiren", default_args=default_args, schedule_interval=None, catchup=False
+)
 
 dbt_datasiren_command = f"""
         {dbt_install_deps_nosha_cmd} &&

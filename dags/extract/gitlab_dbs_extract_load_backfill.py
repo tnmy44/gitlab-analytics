@@ -14,6 +14,7 @@ from airflow_utils import (
     gitlab_defaults,
     slack_failed_task,
     gitlab_pod_env_vars,
+    REPO_BASE_PATH,
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
@@ -92,7 +93,7 @@ config_dict = {
             GITLAB_METADATA_DB_USER,
             GITLAB_METADATA_SCHEMA,
         ],
-        "start_date": datetime(2023, 8, 2),
+        "start_date": datetime(2023, 8, 24),
         "task_name": "gitlab-com",
         "description": "This DAG does Incremental extract & load  of gitlab.com database(Postgres) to snowflake",
         "description_incremental": "This DAG does backfill of incremental table extract & load of gitlab.com database(Postgres) to snowflake",
@@ -128,8 +129,14 @@ def get_last_loaded(dag_name: str) -> Union[None, str]:
     if dag_name == "el_gitlab_ops":
         return None
 
-    return "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
-        task_identifier + "-pgp-extract"
+    xcom_date = datetime.now() - timedelta(hours=54)
+
+    return (
+        "{{{{ task_instance.xcom_pull('{task_id}', include_prior_dates=True)['max_data_available'] | "
+        "default('{default_date}', true) }}}}".format(
+            task_id=task_identifier + "-pgp-extract",
+            default_date=xcom_date.strftime("%Y-%m-%dT%H:%M:%S") + "+00:00",
+        )
     )
 
 
@@ -208,7 +215,7 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-            file_path = f"analytics/extract/saas_postgres_pipeline_backfill/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/saas_postgres_pipeline_backfill/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             if config["dag_name"] == "el_gitlab_com_new":
