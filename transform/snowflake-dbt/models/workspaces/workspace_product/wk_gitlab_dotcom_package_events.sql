@@ -49,6 +49,7 @@ WITH structured_events AS (
         COUNT(DISTINCT behavior_structured_event_pk) as total_events
     FROM {{ ref('mart_behavior_structured_event') }}
     WHERE metric IS NOT NULL
+    --- filter out any internal namespaces
       AND namespace_is_internal = FALSE
   {{ dbt_utils.group_by(n=3) }}
 
@@ -73,9 +74,14 @@ WITH structured_events AS (
             THEN 'page_view_container_registry_ui'
         END as metric, 
         COUNT(DISTINCT fct_behavior_website_page_view_sk) as total_events
-    FROM {{ ref('fct_behavior_website_page_view') }}
+    FROM {{ ref('fct_behavior_website_page_view') }} as page_view
+    LEFT JOIN {{ ref('dim_plan')}} as plan 
+      ON plan.plan_name = page_view.gsc_plan
+    LEFT JOIN {{ ref('dim_namespace')}} as namespaces
+      ON namespaces.dim_namespace_id = page_view.gsc_namespace_id
     WHERE metric IS NOT NULL
-      AND 
+    --- filter out any namespaces that are internal and include any data from any records with no namespace
+      AND (namespace_is_internal = FALSE OR gsc_namespace_id IS NULL)
   {{ dbt_utils.group_by(n=3) }}
 
 ), final AS (
