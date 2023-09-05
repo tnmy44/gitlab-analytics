@@ -1,4 +1,4 @@
-{%- macro schema_union_all(schema_part, table_name, exclude_part='scratch', database_name=none, day_limit=none) -%}
+{%- macro schema_union_all(schema_part, table_name, exclude_part='scratch', database_name=none, day_limit=none, boolean_filter_statement=none) -%}
 
 {% set local = var('local', 'no') %}
 
@@ -52,6 +52,9 @@
           {% for schematable in values -%}
                 SELECT *
                 FROM "{{ database }}".{{ schematable }}
+                {%- if boolean_filter_statement %}
+                WHERE {{ boolean_filter_statement }}
+                {%- endif -%}
                 {% if not loop.last %}
                 UNION ALL
                 {% endif -%}
