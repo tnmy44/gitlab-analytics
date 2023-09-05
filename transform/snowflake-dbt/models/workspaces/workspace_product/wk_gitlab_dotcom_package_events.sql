@@ -10,6 +10,10 @@ WITH structured_events AS (
     SELECT 
         DATE_TRUNC('month', behavior_date) as reporting_month, 
         event_category,
+        dim_namespace_id as gsc_namespace_id,
+        dim_project_id as gsc_project_id,
+        gsc_pseudonymized_user_id,
+        plan_name_modified,
         CASE 
         WHEN event_action = 'pull_package' 
         THEN 'pull_package'
@@ -45,6 +49,7 @@ WITH structured_events AS (
         COUNT(DISTINCT behavior_structured_event_pk) as total_events
     FROM {{ ref('mart_behavior_structured_event') }}
     WHERE metric IS NOT NULL
+      AND namespace_is_internal = FALSE
   {{ dbt_utils.group_by(n=3) }}
 
 ), pageviews AS (
@@ -52,6 +57,10 @@ WITH structured_events AS (
     SELECT 
         date_trunc('month', behavior_at) as reporting_month, 
         NULL as event_category,
+        plan_name_modified,
+        gsc_namespace_id,
+        gsc_project_id,
+        gsc_pseudonymized_user_id,
         CASE 
             WHEN page_url_path LIKE '%/container_registry%'
             THEN 'page_view_container_registry'
@@ -66,6 +75,7 @@ WITH structured_events AS (
         COUNT(DISTINCT fct_behavior_website_page_view_sk) as total_events
     FROM {{ ref('fct_behavior_website_page_view') }}
     WHERE metric IS NOT NULL
+      AND 
   {{ dbt_utils.group_by(n=3) }}
 
 ), final AS (
@@ -74,6 +84,10 @@ WITH structured_events AS (
     {{ dbt_utils.surrogate_key(['reporting_month', 'metric']) }} AS event_reporting_month_pk,
     reporting_month, 
     event_category, 
+    plan_name_modified,
+    gsc_namespace_id,
+    gsc_project_id,
+    gsc_pseudonymized_user_id,
     total_events 
   FROM structured_events
 
@@ -83,6 +97,10 @@ UNION ALL
     {{ dbt_utils.surrogate_key(['reporting_month', 'metric']) }} AS event_reporting_month_pk,
     reporting_month, 
     event_category, 
+    plan_name_modified,
+    gsc_namespace_id,
+    gsc_project_id,
+    gsc_pseudonymized_user_id,
     total_events 
   FROM pageviews
 )
@@ -91,6 +109,6 @@ UNION ALL
     cte_ref="final",
     created_by="@nhervas",
     updated_by="@nhervas",
-    created_date="2023-08-23",
-    updated_date="2023-08-23"
+    created_date="2023-09-05",
+    updated_date="2023-09-05"
 ) }}
