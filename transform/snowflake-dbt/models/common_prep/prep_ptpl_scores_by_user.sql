@@ -29,7 +29,7 @@
     FROM ptpl_scores
     WHERE score_date IN (SELECT after_last_score_date FROM last_dates)
 
-), namespace_creator_ptpl_score AS (
+), ptpl_score_email AS (
 
     SELECT
       leads.lead_email                                     AS email_address,
@@ -43,7 +43,7 @@
       ON ptpl_scores_last.lead_id = leads.lead_id
     QUALIFY ROW_NUMBER() OVER(PARTITION BY email_address ORDER BY ptpl_scores_last.score DESC) = 1
 
-), namespace_creator_ptpl_score_last_2 AS (
+), ptpl_score_email_last_2 AS (
 
     SELECT
       leads.lead_email                                     AS email_address,
@@ -58,15 +58,16 @@
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['namespace_creator_ptpl_score.email_address']) }} AS dim_marketing_contact_id,
-  namespace_creator_ptpl_score.lead_id,
-  namespace_creator_ptpl_score.score,
-  namespace_creator_ptpl_score.score_group,
-  namespace_creator_ptpl_score.insights,
-  namespace_creator_ptpl_score.score_date,
-  namespace_creator_ptpl_score_last_2.insights          AS past_insights,
-  namespace_creator_ptpl_score_last_2.score_group       AS past_score_group,
-  namespace_creator_ptpl_score_last_2.score_date::DATE  AS past_score_date
-FROM namespace_creator_ptpl_score
-LEFT JOIN namespace_creator_ptpl_score_last_2
-  ON namespace_creator_ptpl_score.email_address = namespace_creator_ptpl_score_last_2.email_address
+  {{ dbt_utils.surrogate_key(['ptpl_score_email.email_address']) }} AS dim_marketing_contact_id,
+  ptpl_score_email.lead_id,
+  ptpl_score_email.score,
+  ptpl_score_email.score_group,
+  ptpl_score_email.insights,
+  ptpl_score_email.score_date,
+  ptpl_score_email_last_2.insights          AS past_insights,
+  ptpl_score_email_last_2.score_group       AS past_score_group,
+  ptpl_score_email_last_2.score_date::DATE  AS past_score_date
+FROM ptpl_score_email
+LEFT JOIN ptpl_score_email_last_2
+  ON ptpl_score_email.email_address = ptpl_score_email_last_2.email_address
+WHERE ptpl_score_email.score_group >= 3
