@@ -66,7 +66,7 @@
       gitlab_dotcom_issues_source.project_id                      AS dim_project_id,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
-      gitlab_dotcom_epic_issues_source.epic_id                    AS dim_epic_id,
+      gitlab_dotcom_epic_issues_source.epic_id                    AS epic_id,
       dim_date.date_id                                            AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
       gitlab_dotcom_issues_source.author_id,
@@ -149,7 +149,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2022-06-01"
+    updated_date="2023-09-05"
 ) }}

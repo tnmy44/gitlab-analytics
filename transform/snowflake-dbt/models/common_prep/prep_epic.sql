@@ -4,7 +4,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_epic_id"
+    "unique_key": "dim_epic_sk"
     })
 }}
 
@@ -37,7 +37,7 @@
 ), upvote_count AS (
 
     SELECT
-      awardable_id                                        AS dim_epic_id,
+      awardable_id                                        AS epic_id,
       SUM(IFF(award_emoji_name LIKE 'thumbsup%', 1, 0))   AS thumbsups_count,
       SUM(IFF(award_emoji_name LIKE 'thumbsdown%', 1, 0)) AS thumbsdowns_count,
       thumbsups_count - thumbsdowns_count                 AS upvote_count
@@ -48,12 +48,12 @@
 ), agg_labels AS (
 
     SELECT 
-      prep_label_links.dim_epic_id                                                                  AS dim_epic_id,
+      prep_label_links.epic_id                                                                      AS epic_id,
       ARRAY_AGG(LOWER(prep_labels.label_title)) WITHIN GROUP (ORDER BY prep_labels.label_title ASC) AS labels
     FROM prep_label_links
     LEFT JOIN prep_labels
       ON prep_label_links.dim_label_id = prep_labels.dim_label_id
-    WHERE prep_label_links.dim_epic_id IS NOT NULL
+    WHERE prep_label_links.epic_id IS NOT NULL
     GROUP BY 1  
 
 ), joined AS (
@@ -113,9 +113,9 @@
         ON gitlab_dotcom_routes_source.source_id = gitlab_dotcom_epics_dedupe_source.group_id
         AND gitlab_dotcom_routes_source.source_type = 'Namespace'
     LEFT JOIN agg_labels
-        ON agg_labels.dim_epic_id = gitlab_dotcom_epics_dedupe_source.id
+        ON agg_labels.epic_id = gitlab_dotcom_epics_dedupe_source.id
     LEFT JOIN upvote_count
-        ON upvote_count.dim_epic_id = gitlab_dotcom_epics_dedupe_source.id
+        ON upvote_count.epic_id = gitlab_dotcom_epics_dedupe_source.id
 
 )
 

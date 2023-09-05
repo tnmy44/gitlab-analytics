@@ -151,7 +151,7 @@ WITH gitlab_dotcom_namespaces AS (
 ), final AS ( -- In case there are various issues with the same link to issues and dim_crm_account_id, dedup them by taking the latest updated link
 
     SELECT
-      gitlab_epics.epic_id                                                    AS dim_epic_id,
+      gitlab_epics.epic_id                                                    AS epic_id,
       unioned_with_user_request_namespace_id.account_id                       AS dim_crm_account_id,
       unioned_with_user_request_namespace_id.collaboration_project_id         AS dim_collaboration_project_id,
       unioned_with_user_request_namespace_id.user_request_namespace_id        AS dim_namespace_id,
@@ -170,8 +170,8 @@ WITH gitlab_dotcom_namespaces AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-10-12",
-    updated_date="2022-01-10",
+    updated_date="2023-09-05",
 ) }}
 

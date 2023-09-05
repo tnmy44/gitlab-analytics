@@ -190,7 +190,7 @@
 ), union_links AS (
 
     SELECT
-      epic_id AS dim_epic_id,
+      epic_id,
       link_type,
       dim_crm_opportunity_id,
       dim_crm_account_id,
@@ -252,7 +252,7 @@
 ), final AS (
 
     SELECT
-      dim_epic_id,
+      epic_id,
       link_type,
       {{ get_keyed_nulls('dim_crm_opportunity_id') }}    AS dim_crm_opportunity_id,
       dim_crm_account_id,
@@ -267,7 +267,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-10-12",
-    updated_date="2023-03-14"
+    updated_date="2023-09-05"
 ) }}
