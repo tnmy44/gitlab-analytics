@@ -85,8 +85,6 @@
     ON prep_crm_task.sfdc_record_id = prep_crm_person.sfdc_record_id
   LEFT JOIN prep_crm_opportunity
     ON prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
-  LEFT JOIN prep_crm_account
-    ON prep_crm_task.dim_crm_account_id = prep_crm_account.dim_crm_account_id
   LEFT JOIN dim_date
     ON {{ get_date_id('prep_crm_task.task_date') }} = dim_date.date_id
   LEFT JOIN prep_crm_opportunity AS account_opp_mapping 
