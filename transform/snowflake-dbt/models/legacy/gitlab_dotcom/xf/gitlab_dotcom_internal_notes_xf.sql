@@ -47,7 +47,7 @@ WITH notes AS (
     AND notes.project_id = projects.project_id
   LEFT JOIN epics
     ON notes.noteable_type = 'Epic'
-    AND notes.noteable_id = epics.dim_epic_id
+    AND notes.noteable_id = epics.epic_id
   INNER JOIN internal_namespaces
     ON COALESCE(projects.ultimate_parent_id, epics.ultimate_parent_namespace_id) = internal_namespaces.namespace_id
 

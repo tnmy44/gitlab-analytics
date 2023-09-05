@@ -34,18 +34,18 @@
       COALESCE(dim_epic.dim_plan_id_at_creation,
                 dim_issue.dim_plan_id,
                 dim_merge_request.dim_plan_id)                              AS dim_plan_id,
-      COALESCE(dim_epic.group_id,
+      COALESCE(dim_epic.namespace_id,
                 dim_issue.ultimate_parent_namespace_id,
                 dim_merge_request.ultimate_parent_namespace_id)             AS ultimate_parent_namespace_id,
       user_id                                                               AS dim_user_id,
       dim_issue.dim_issue_id                                                AS dim_issue_id,
       dim_merge_request.dim_merge_request_id                                AS dim_merge_request_id,
-      dim_epic.dim_epic_id                                                  AS dim_epic_id,
+      dim_epic.dim_epic_sk                                                  AS dim_epic_sk,
       resource_label_events.created_at::TIMESTAMP                           AS created_at,
       dim_date.date_id                                                      AS created_date_id
     FROM resource_label_events
     LEFT JOIN dim_epic
-      ON resource_label_events.epic_id = dim_epic.dim_epic_id
+      ON resource_label_events.epic_id = dim_epic.epic_id
     LEFT JOIN dim_issue
       ON resource_label_events.issue_id = dim_issue.dim_issue_id
     LEFT JOIN dim_merge_request
@@ -58,7 +58,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@chrissharp",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2022-03-14",
-    updated_date="2022-08-22"
+    updated_date="2022-09-05"
 ) }}

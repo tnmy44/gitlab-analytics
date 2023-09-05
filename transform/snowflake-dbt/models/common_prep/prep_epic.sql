@@ -59,9 +59,10 @@
 ), joined AS (
 
     SELECT 
-      gitlab_dotcom_epics_dedupe_source.id::NUMBER                                           AS dim_epic_id,
+      {{ dbt_utils.surrogate_key(['gitlab_dotcom_epics_dedupe_source.id']) }}                AS dim_epic_sk,
+      gitlab_dotcom_epics_dedupe_source.id::NUMBER                                           AS epic_id,
       gitlab_dotcom_epics_dedupe_source.author_id::NUMBER                                    AS author_id,
-      gitlab_dotcom_epics_dedupe_source.group_id::NUMBER                                     AS group_id,
+      gitlab_dotcom_epics_dedupe_source.group_id::NUMBER                                     AS namespace_id,
       namespace_prep.ultimate_parent_namespace_id::NUMBER                                    AS ultimate_parent_namespace_id,
       prep_date.date_id::NUMBER                                                              AS created_date_id,
       IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)::NUMBER                               AS dim_plan_id_at_creation,
@@ -123,5 +124,5 @@
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-22",
-    updated_date="2023-08-22"
+    updated_date="2023-09-05"
 ) }}

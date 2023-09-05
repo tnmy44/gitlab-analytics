@@ -2,11 +2,14 @@ WITH prep_epic AS (
 
     SELECT
       -- PRIMARY KEY
-      dim_epic_id,
+      dim_epic_sk,
+
+      -- NATURAL KEY
+      epic_id,
 
       -- FOREIGN KEY
       author_id,
-      group_id,
+      namespace_id,
       ultimate_parent_namespace_id,
       created_date_id,
       dim_plan_id_at_creation,
@@ -46,5 +49,5 @@ WITH prep_epic AS (
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-22",
-    updated_date="2023-08-22"
+    updated_date="2023-09-05"
 ) }}

@@ -59,11 +59,11 @@ WITH base AS (
       epics.ultimate_parent_namespace_id AS ultimate_parent_id
     FROM base
       LEFT JOIN epics 
-        ON base.noteable_id = epics.dim_epic_id
+        ON base.noteable_id = epics.epic_id
       LEFT JOIN namespaces
-        ON epics.group_id = namespaces.namespace_id
+        ON epics.namespace_id = namespaces.namespace_id
       LEFT JOIN internal_namespaces
-        ON epics.group_id = internal_namespaces.namespace_id
+        ON epics.namespace_id = internal_namespaces.namespace_id
 
 )
 

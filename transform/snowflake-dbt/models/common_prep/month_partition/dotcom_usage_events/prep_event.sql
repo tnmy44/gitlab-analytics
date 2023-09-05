@@ -53,7 +53,7 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "NULL",
-    "primary_key": "dim_epic_id",
+    "primary_key": "epic_id",
     "stage_name": "plan",
     "plan_column_name": "dim_plan_id_at_creation"
   },

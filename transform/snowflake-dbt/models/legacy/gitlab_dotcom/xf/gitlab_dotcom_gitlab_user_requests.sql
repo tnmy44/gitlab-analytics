@@ -83,7 +83,7 @@ WITH epic_issues AS (
     LEFT JOIN epic_issues
       ON issues.issue_id = epic_issues.issue_id
     LEFT JOIN epics
-      ON epic_issues.epic_id = epics.dim_epic_id
+      ON epic_issues.epic_id = epics.epic_id
     WHERE gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_type = 'Issue'
 
 ), sfdc_accounts_from_epic_notes AS (
@@ -91,7 +91,7 @@ WITH epic_issues AS (
     SELECT DISTINCT
       'Epic'                     AS noteable_type,
       'Note'                     AS mention_type,
-      epics.dim_epic_id          AS noteable_id,
+      epics.epic_id          AS noteable_id,
       epics.epic_internal_id     AS noteable_iid,
       epics.epic_title           AS noteable_title,
       epics.created_at           AS noteable_created_at,
@@ -110,7 +110,7 @@ WITH epic_issues AS (
       epics.epic_title --Redundant in this case.
     FROM gitlab_dotcom_notes_linked_to_sfdc_account_id
     INNER JOIN epics
-      ON gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_id = epics.dim_epic_id
+      ON gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_id = epics.epic_id
     LEFT JOIN namespaces
       ON epics.group_id = namespaces.namespace_id
     LEFT JOIN sfdc_accounts
@@ -152,14 +152,14 @@ WITH epic_issues AS (
     LEFT JOIN epic_issues
       ON issues.issue_id = epic_issues.issue_id
     LEFT JOIN epics
-      ON epic_issues.epic_id = epics.dim_epic_id
+      ON epic_issues.epic_id = epics.epic_id
 
 ), sfdc_accounts_from_epic_descriptions AS (
 
     SELECT DISTINCT
       'Epic'                     AS noteable_type,
       'Description'              AS mention_type,
-      epics.dim_epic_id          AS noteable_id,
+      epics.epic_id          AS noteable_id,
       epics.epic_internal_id     AS noteable_iid,
       epics.epic_title           AS noteable_title,
       epics.created_at           AS noteable_created_at,
@@ -178,7 +178,7 @@ WITH epic_issues AS (
       epics.epic_title --Redundant in this case.
     FROM gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id
     INNER JOIN epics
-      ON gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.noteable_id = epics.dim_epic_id
+      ON gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.noteable_id = epics.epic_id
       AND gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.noteable_type = 'Epic'
     LEFT JOIN namespaces
       ON epics.group_id = namespaces.namespace_id

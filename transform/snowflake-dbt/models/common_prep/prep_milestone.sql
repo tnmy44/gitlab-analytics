@@ -40,7 +40,7 @@
     LEFT JOIN dim_project
       ON milestones.project_id = dim_project.dim_project_id
     LEFT JOIN prep_epic
-      ON milestones.group_id = prep_epic.dim_epic_id
+      ON milestones.group_id = prep_epic.epic_id
     LEFT JOIN dim_namespace_plan_hist 
       ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
       AND  milestones.created_at >= dim_namespace_plan_hist.valid_from
@@ -52,7 +52,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@chrissharp",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2022-04-01",
-    updated_date="2022-08-22"
+    updated_date="2022-09-05"
 ) }}
