@@ -19,12 +19,6 @@
   FROM {{ ref('prep_crm_opportunity') }}
   WHERE is_deleted = FALSE
 
-), prep_crm_account AS (
-
-  SELECT *
-  FROM {{ ref('prep_crm_account') }}
-  WHERE is_deleted = FALSE
-
 ), final AS (
 
   SELECT
@@ -96,7 +90,7 @@
   LEFT JOIN dim_date
     ON {{ get_date_id('prep_crm_task.task_date') }} = dim_date.date_id
   LEFT JOIN prep_crm_opportunity AS account_opp_mapping 
-    ON prep_crm_task.account_or_opportunity_id = prep_crm_account.dim_crm_account_id
+    ON prep_crm_task.account_or_opportunity_id = account_opp_mapping.dim_crm_account_id
     AND prep_crm_task.task_date < account_opp_mapping.close_date
     AND prep_crm_task.task_date >= DATEADD('month', -9, dim_date.first_day_of_fiscal_quarter)
     AND prep_crm_task.sa_activity_type IS NOT NULL
