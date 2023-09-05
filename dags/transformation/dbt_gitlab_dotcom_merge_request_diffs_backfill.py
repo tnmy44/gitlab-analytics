@@ -42,7 +42,9 @@ from kube_secrets import (
 )
 
 
-def generate_intervals(chunks: int, max_id: int, start: int = 1):
+def generate_intervals(
+    chunks: int, max_id: int, start: int = 1
+) -> List[Tuple[int, int]]:
     """
     Generates list of intervals, something like:
     [ (1, 10), (11, 20), (etc, etc) ]
@@ -66,7 +68,7 @@ def generate_intervals(chunks: int, max_id: int, start: int = 1):
     return intervals
 
 
-def get_interval(intervals: List[Tuple[int, int]], chunk: int):
+def get_interval(intervals: List[Tuple[int, int]], chunk: int) -> Tuple[int, int]:
     interval = intervals[chunk]
     start = interval[0]
     end = interval[1]
