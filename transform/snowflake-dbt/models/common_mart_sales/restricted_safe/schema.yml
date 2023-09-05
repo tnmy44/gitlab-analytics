@@ -176,6 +176,21 @@ models:
         description: Calculated field that indicates how a subscription renewal was made. Can be one of 'Auto-Renewal', 'Customer Portal', 'Sales-Assisted' or null when the charge is not related to a subscription renewal.
       - name: dim_order_id
         description: Unique identifier for an order. Can be used to join to dim_order.
+      - name: unit_of_measure
+      - name: charge_term
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: renewal_term
+      - name: renewal_term_period_type
+      - name: ultimate_parent_namespace_id
+      - name: dim_namespace_id
+      - name: internal_customer_id
+        description: Unique identifier of a customer taken from the Customers DB.
+      - name: is_trial_converted
+        description: '{{ doc("is_trial_converted") }}'
+      - name: latest_trial_start_date
+      - name: is_first_order
+      - name: is_oss_or_edu_rate_plan
 
   - name: mart_crm_account
     description: Model containing Salesforce crm accounts details for existing and historical customers.

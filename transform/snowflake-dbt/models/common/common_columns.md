@@ -2297,3 +2297,9 @@ The date a snippet was created.
 The latest date a snippet was updated.
 
 {% enddocs %}
+
+{% docs is_trial_converted %}
+
+Boolean flag to indicate if the Trial order has been converted to Paid Order or not
+
+{% enddocs %}
