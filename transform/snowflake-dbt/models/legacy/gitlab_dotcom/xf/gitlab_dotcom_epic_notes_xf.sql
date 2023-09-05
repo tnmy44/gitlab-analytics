@@ -56,7 +56,7 @@ WITH base AS (
           ELSE {{field}}
         END AS {{field}},
       {% endfor %}
-      epics.ultimate_parent_namespace_id
+      epics.ultimate_parent_namespace_id AS ultimate_parent_id
     FROM base
       LEFT JOIN epics 
         ON base.noteable_id = epics.dim_epic_id
