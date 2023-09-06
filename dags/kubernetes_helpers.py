@@ -39,6 +39,10 @@ data_science_affinity = get_affinity_with_key_value("data_science", ["true"])
 
 data_science_tolerations = get_toleration_with_value("data_science")
 
+sales_analytics_affinity = get_affinity_with_key_value("sales_analytics", ["true"])
+
+sales_analytics_tolerations = get_toleration_with_value("sales_analytics")
+
 
 def is_local_test():
     return "NAMESPACE" in env and env["NAMESPACE"] == "testing"
@@ -51,6 +55,8 @@ def get_affinity(affinity):
         return scd_affinity
     if affinity == "data_science":
         return data_science_affinity
+    if affinity == "sales_analytics":
+        return sales_analytics_affinity
     return production_affinity
 
 
@@ -61,4 +67,6 @@ def get_toleration(tolerations):
         return scd_tolerations
     if tolerations == "data_science":
         return data_science_tolerations
+    if tolerations == "sales_analytics":
+        return sales_analytics_tolerations
     return production_tolerations
