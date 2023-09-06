@@ -28,7 +28,7 @@
         paid_user_metrics.subscription_name,
         paid_user_metrics.dim_subscription_id_original,
         paid_user_metrics.dim_subscription_id,
-        IFF(mart_arr.product_tier_name ILIKE '%Ultimate%', TRUE, FALSE)                                                        AS is_ultimate_subscription,
+        IFF(mart_arr.product_tier_name ILIKE '%Ultimate%', 1, 0)                                                        AS ultimate_subscription_flag,
         paid_user_metrics.delivery_type,
         paid_user_metrics.deployment_type,
         paid_user_metrics.instance_type,
@@ -225,8 +225,8 @@
         IFF(security_measure_count = 0, NULL, CASE WHEN security_score <= 50 THEN 'Red'
                                                     WHEN security_score > 50 AND security_score <= 75 THEN 'Yellow'
                                                     WHEN security_score > 75 THEN 'Green' end)                                                  AS security_color,
-        IFF(is_ultimate_subscription IS TRUE, security_score, NULL)                                                                               AS security_score_ultimate_only,
-        IFF(is_ultimate_subscription IS TRUE, security_color, NULL)                                                                               AS security_color_ultimate_only,
+        IFF(ultimate_subscription_flag = 1, security_score, NULL)                                                                               AS security_score_ultimate_only,
+        IFF(ultimate_subscription_flag = 1, security_color, NULL)                                                                               AS security_color_ultimate_only,
 
 -- overall product score --
         IFF(license_utilization_score IS NULL, 0, .30) AS license_utilization_weight,
