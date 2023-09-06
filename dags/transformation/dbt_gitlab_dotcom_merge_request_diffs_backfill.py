@@ -130,7 +130,7 @@ dag = DAG(
 )
 dbt_models_diffs_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run --profiles-dir profile --target {target} --models gitlab_dotcom_merge_request_diffs_internal ; ret=$?;
+        dbt run --profiles-dir profile --target {target} --models internal_merge_request_diffs ; ret=$?;
 
         montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
@@ -163,7 +163,7 @@ for chunk in range(CHUNKS):
     dbt_vars = f'{{"backfill_start_id": {start_id}, "backfill_end_id": {end_id}}}'
     dbt_models_commits_cmd = f"""
             {dbt_install_deps_nosha_cmd} &&
-            dbt run --profiles-dir profile --target {target} --models gitlab_dotcom_merge_request_diff_commits_internal --vars '{dbt_vars}'; ret=$?;
+            dbt run --profiles-dir profile --target {target} --models internal_merge_request_diff_commits --vars '{dbt_vars}'; ret=$?;
 
             montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
             python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
