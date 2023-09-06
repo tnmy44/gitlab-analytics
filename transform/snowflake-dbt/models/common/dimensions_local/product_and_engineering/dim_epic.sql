@@ -14,17 +14,17 @@ WITH prep_epic AS (
       epic_id,
 
       -- FOREIGN KEY
-      author_id,
-      namespace_id,
+      dim_namespace_sk,
       ultimate_parent_namespace_id,
-      created_date_id,
-      dim_plan_id_at_creation,
-      assignee_id,
+      dim_created_date_id,
+      dim_plan_sk_at_creation,
+      dim_user_sk_assignee,
+      dim_user_sk_author,
+      dim_user_sk_updated_by,
+      dim_user_sk_last_edited_by,
 
       --METADATA
       epic_internal_id,
-      updated_by_id,
-      last_edited_by_id,
       lock_version,
       epic_start_date,
       epic_end_date,

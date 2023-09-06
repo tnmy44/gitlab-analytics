@@ -30,16 +30,17 @@ WITH base AS (
 , namespaces AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
+    FROM {{ ref('prep_namespace') }}
 )
 
 , internal_namespaces AS (
   
     SELECT 
       namespace_id,
-      namespace_ultimate_parent_id,
-      (namespace_ultimate_parent_id IN {{ get_internal_parent_namespaces() }}) AS namespace_is_internal
-    FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
+      dim_namespace_sk,
+      ultimate_parent_namespace_id AS namespace_ultimate_parent_id,
+      (ultimate_parent_namespace_id IN {{ get_internal_parent_namespaces() }}) AS namespace_is_internal
+    FROM {{ ref('prep_namespace') }}
 
 )
 
@@ -61,9 +62,9 @@ WITH base AS (
       LEFT JOIN epics 
         ON base.noteable_id = epics.epic_id
       LEFT JOIN namespaces
-        ON epics.namespace_id = namespaces.namespace_id
+        ON epics.dim_namespace_sk = namespaces.dim_namespace_sk
       LEFT JOIN internal_namespaces
-        ON epics.namespace_id = internal_namespaces.namespace_id
+        ON epics.dim_namespace_sk = internal_namespaces.dim_namespace_sk
 
 )
 

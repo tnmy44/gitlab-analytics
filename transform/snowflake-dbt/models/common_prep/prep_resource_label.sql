@@ -13,6 +13,8 @@
     ('dim_epic', 'dim_epic'),
     ('dim_issue', 'dim_issue'),
     ('dim_merge_request', 'dim_merge_request'),
+    ('dim_namespace', 'dim_namespace'),
+    ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan')
 ]) }}
 
 , resource_label_events AS (
@@ -31,10 +33,10 @@
       resource_label_events.resource_label_event_id                         AS dim_issue_label_id,
       COALESCE(dim_issue.dim_project_id,
                 dim_merge_request.dim_project_id)                           AS dim_project_id,
-      COALESCE(dim_epic.dim_plan_id_at_creation,
+      COALESCE(prep_gitlab_dotcom_plan.dim_plan_id,
                 dim_issue.dim_plan_id,
                 dim_merge_request.dim_plan_id)                              AS dim_plan_id,
-      COALESCE(dim_epic.namespace_id,
+      COALESCE(dim_namespace.namespace_id,
                 dim_issue.ultimate_parent_namespace_id,
                 dim_merge_request.ultimate_parent_namespace_id)             AS ultimate_parent_namespace_id,
       user_id                                                               AS dim_user_id,
@@ -52,6 +54,10 @@
       ON resource_label_events.merge_request_id = dim_merge_request.dim_merge_request_id
     INNER JOIN dim_date 
       ON TO_DATE(resource_label_events.created_at) = dim_date.date_day
+    LEFT JOIN dim_namespace
+      ON dim_epic.dim_namespace_sk = dim_namespace.dim_namespace_sk
+    LEFT JOIN prep_gitlab_dotcom_plan
+      ON dim_epic.dim_plan_sk_at_creation = prep_gitlab_dotcom_plan.dim_plan_sk
 
 )
 

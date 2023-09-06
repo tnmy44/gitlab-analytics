@@ -90,10 +90,23 @@ namespaces AS (
 joined AS (
 
   SELECT
+    {{ dbt_utils.surrogate_key(['namespaces.dim_namespace_id']) }}          AS dim_namespace_sk,
+
+    -- Natural Key
     namespaces.dim_namespace_id,
+    namespaces.dim_namespace_id                                             AS namespace_id,
+
+    -- Foreign Keys
+    namespaces.owner_id,
+    namespaces.parent_id,
+    IFNULL(creators.creator_id, namespaces.owner_id)                        AS creator_id,
+    namespace_lineage.ultimate_parent_plan_id                               AS gitlab_plan_id,
     COALESCE(namespace_lineage.ultimate_parent_id,
       namespaces.parent_id,
       namespaces.dim_namespace_id)                                          AS ultimate_parent_namespace_id,
+    {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}         AS dim_product_tier_id,
+
+    -- Attributes
     IFF(namespaces.dim_namespace_id = COALESCE(namespace_lineage.ultimate_parent_id,
       namespaces.parent_id,
       namespaces.dim_namespace_id),
@@ -112,7 +125,6 @@ joined AS (
       WHEN namespaces.visibility_level = 'internal' THEN 'internal - masked'
       WHEN namespaces.visibility_level = 'private' THEN 'private - masked'
     END                                                                     AS namespace_path,
-    namespaces.owner_id,
     namespaces.namespace_type                                               AS namespace_type,
     namespaces.has_avatar,
     namespaces.namespace_created_at                                         AS created_at,
@@ -128,7 +140,6 @@ joined AS (
     namespaces.ldap_sync_last_successful_update_at,
     namespaces.ldap_sync_last_sync_at,
     namespaces.lfs_enabled,
-    namespaces.parent_id,
     namespaces.shared_runners_enabled,
     namespaces.shared_runners_minutes_limit,
     namespaces.extra_shared_runners_minutes_limit,
@@ -137,12 +148,9 @@ joined AS (
     namespaces.two_factor_grace_period,
     namespaces.project_creation_level,
     namespaces.push_rule_id,
-    IFNULL(creators.creator_id, namespaces.owner_id)                        AS creator_id,
     IFNULL(users.is_blocked_user, FALSE)                                    AS namespace_creator_is_blocked,
-    namespace_lineage.ultimate_parent_plan_id                               AS gitlab_plan_id,
     namespace_lineage.ultimate_parent_plan_title                            AS gitlab_plan_title,
     namespace_lineage.ultimate_parent_plan_is_paid                          AS gitlab_plan_is_paid,
-    {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}         AS dim_product_tier_id,
     namespace_lineage.seats                                                 AS gitlab_plan_seats,
     namespace_lineage.seats_in_use                                          AS gitlab_plan_seats_in_use,
     namespace_lineage.max_seats_used                                        AS gitlab_plan_max_seats_used,
@@ -184,7 +192,7 @@ joined AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@pempey",
+    updated_by="@michellecooper",
     created_date="2021-01-14",
-    updated_date="2023-08-14"
+    updated_date="2023-09-06"
 ) }}

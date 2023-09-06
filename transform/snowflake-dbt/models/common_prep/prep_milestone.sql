@@ -13,7 +13,8 @@
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
     ('dim_project', 'dim_project'),
     ('dim_issue', 'dim_issue'),
-    ('prep_epic', 'prep_epic')
+    ('prep_epic', 'prep_epic'),
+    ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan')
 ]) }}
 
 , milestones AS (
@@ -35,7 +36,7 @@
       dim_date.date_id                                                                              AS created_date_id,
       IFNULL(dim_project.dim_project_id, -1)                                                        AS dim_project_id,
       COALESCE(dim_project.ultimate_parent_namespace_id, milestones.group_id, -1)                   AS ultimate_parent_namespace_id,
-      COALESCE(dim_namespace_plan_hist.dim_plan_id, prep_epic.dim_plan_id_at_creation, 34)          AS dim_plan_id
+  COALESCE(dim_namespace_plan_hist.dim_plan_id, prep_gitlab_dotcom_plan.dim_plan_id, 34)            AS dim_plan_id
     FROM milestones
     LEFT JOIN dim_project
       ON milestones.project_id = dim_project.dim_project_id
@@ -45,7 +46,10 @@
       ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
       AND  milestones.created_at >= dim_namespace_plan_hist.valid_from
       AND  milestones.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
-    INNER JOIN dim_date as dim_date ON TO_DATE(milestones.created_at) = dim_date.date_day
+    INNER JOIN dim_date as dim_date
+      ON TO_DATE(milestones.created_at) = dim_date.date_day
+    LEFT JOIN prep_gitlab_dotcom_plan
+      ON prep_epic.dim_plan_sk_at_creation = prep_gitlab_dotcom_plan.dim_plan_sk
 
 )
 
