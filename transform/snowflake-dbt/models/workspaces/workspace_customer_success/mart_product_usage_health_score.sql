@@ -225,8 +225,8 @@
         IFF(security_measure_count = 0, NULL, CASE WHEN security_score <= 50 THEN 'Red'
                                                     WHEN security_score > 50 AND security_score <= 75 THEN 'Yellow'
                                                     WHEN security_score > 75 THEN 'Green' end)                                                  AS security_color,
-        IFF(ultimate_subscription_flag = 1, security_score, NULL)                                                                               AS security_score_ultimate_only,
-        IFF(ultimate_subscription_flag = 1, security_color, NULL)                                                                               AS security_color_ultimate_only,
+        IFF(is_ultimate_subscription IS TRUE, security_score, NULL)                                                                               AS security_score_ultimate_only,
+        IFF(is_ultimate_subscription IS TRUE, security_color, NULL)                                                                               AS security_color_ultimate_only,
 
 -- overall product score --
         IFF(license_utilization_score IS NULL, 0, .30) AS license_utilization_weight,
