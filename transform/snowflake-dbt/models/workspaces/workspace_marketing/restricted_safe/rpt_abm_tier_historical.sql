@@ -111,8 +111,9 @@
   LEFT JOIN dim_date_base
     ON mart_crm_person_source.true_inquiry_date=dim_date_base.date_day
   LEFT JOIN account_history_final
-    ON inquiry_quarter=account_history_final.abm_tier_1_quarter
-    OR inquiry_quarter=account_history_final.abm_tier_2_quarter 
+    ON mart_crm_person_source.dim_crm_account_id=account_history_final.dim_crm_account_id
+    -- ON inquiry_quarter=account_history_final.abm_tier_1_quarter
+    -- OR inquiry_quarter=account_history_final.abm_tier_2_quarter 
   WHERE true_inquiry_date IS NOT NULL
   AND (abm_tier_1_quarter IS NOT NULL
     OR abm_tier_2_quarter IS NOT NULL)
@@ -137,8 +138,9 @@
   LEFT JOIN dim_date_base
     ON mart_crm_person_source.mql_date_latest_pt=dim_date_base.date_day
   LEFT JOIN account_history_final
-    ON mql_quarter=account_history_final.abm_tier_1_quarter
-    OR mql_quarter=account_history_final.abm_tier_2_quarter 
+    ON mart_crm_person_source.dim_crm_account_id=account_history_final.dim_crm_account_id
+    -- ON mql_quarter=account_history_final.abm_tier_1_quarter
+    -- OR mql_quarter=account_history_final.abm_tier_2_quarter 
   WHERE mql_date_latest_pt IS NOT NULL
   AND (abm_tier_1_quarter IS NOT NULL
     OR abm_tier_2_quarter IS NOT NULL)
@@ -163,8 +165,9 @@
   LEFT JOIN dim_date_base
     ON opp_history_source.sales_accepted_date=dim_date_base.date_day
   LEFT JOIN account_history_final
-    ON sao_quarter=account_history_final.abm_tier_1_quarter
-    OR sao_quarter=account_history_final.abm_tier_2_quarter 
+    ON opp_history_source.dim_crm_account_id=account_history_final.dim_crm_account_id
+    -- ON sao_quarter=account_history_final.abm_tier_1_quarter
+    -- OR sao_quarter=account_history_final.abm_tier_2_quarter 
   WHERE abm_tier IS NOT null
   AND sales_accepted_date IS NOT NULL
   AND (abm_tier_1_quarter IS NOT NULL
@@ -190,8 +193,9 @@
   LEFT JOIN dim_date_base
     ON opp_history_source.close_date=dim_date_base.date_day
   LEFT JOIN account_history_final
-    ON cw_quarter=account_history_final.abm_tier_1_quarter
-    OR cw_quarter=account_history_final.abm_tier_2_quarter 
+    ON opp_history_source.dim_crm_account_id=account_history_final.dim_crm_account_id
+    -- ON cw_quarter=account_history_final.abm_tier_1_quarter
+    -- OR cw_quarter=account_history_final.abm_tier_2_quarter 
   WHERE abm_tier IS NOT null
   AND is_net_arr_closed_deal = TRUE
   AND (abm_tier_1_quarter IS NOT NULL
