@@ -19,7 +19,6 @@
   ('project', 'prep_project'),
   ('ptpt_scores_by_user', 'prep_ptpt_scores_by_user'),
   ('ptpf_scores_by_user', 'prep_ptpf_scores_by_user'),
-  ('ptpf_scores_by_user', 'prep_ptpf_scores_by_user'),
   ('ptpl_scores_by_user', 'prep_ptpl_scores_by_user'),
   ('ptp_scores_by_user', 'prep_ptp_scores_by_user'),
   ('namespace_details', 'gitlab_dotcom_namespace_details_source')
