@@ -28,7 +28,7 @@
         paid_user_metrics.subscription_name,
         paid_user_metrics.dim_subscription_id_original,
         paid_user_metrics.dim_subscription_id,
-        IFF(mart_arr.product_tier_name ilike '%Ultimate%', 1, 0)                                                        AS ultimate_subscription_flag,
+        IFF(mart_arr.product_tier_name ILIKE '%Ultimate%', TRUE, FALSE)                                                        AS is_ultimate_subscription,
         paid_user_metrics.delivery_type,
         paid_user_metrics.deployment_type,
         paid_user_metrics.instance_type,
