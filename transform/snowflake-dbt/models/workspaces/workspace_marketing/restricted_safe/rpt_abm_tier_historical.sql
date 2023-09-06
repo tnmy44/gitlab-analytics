@@ -19,6 +19,8 @@
     abm_tier,
     dbt_valid_from
   FROM sfdc_account_snapshots_source
+  WHERE abm_tier_1_date >= '2022-02-01'
+    OR abm_tier_2_date >= '2022-02-01'
   
 ), dim_date_base AS (
   
@@ -67,6 +69,8 @@
     sales_accepted_date,
     close_date
   FROM mart_crm_opportunity_daily_snapshot
+  WHERE sales_accepted_date >= '2022-02-01'
+    OR close_date >= '2022-02-01'
   
 ), mart_crm_person_source AS (
 
@@ -196,11 +200,10 @@
 ), final AS (
   
   SELECT
-  --IDs
+  -- Name
     'Inquiry' AS kpi_name,
-    -- dim_crm_account_id,
 
-  -- ABM Quarters
+  -- Dates
     abm_tier_1_quarter,
     abm_tier_2_quarter,
     inquiry_quarter AS kpi_quarter,
@@ -215,11 +218,10 @@
   {{dbt_utils.group_by(n=7)}}
   UNION ALL
   SELECT
-  --IDs
+  -- Name
     'MQLs' AS kpi_name,
-    -- dim_crm_account_id,
   
-  -- ABM Quarters
+  -- Dates
     abm_tier_1_quarter,
     abm_tier_2_quarter,
     mql_quarter AS kpi_quarter,
@@ -234,11 +236,10 @@
   {{dbt_utils.group_by(n=7)}}
   UNION ALL
   SELECT
-  --IDs
+  -- Name
     'SAOs' AS kpi_name,
-    -- dim_crm_account_id,
 
-  --Quarters
+  -- Dates
     abm_tier_1_quarter,
     abm_tier_2_quarter,
     sao_quarter AS kpi_quarter,
@@ -246,18 +247,17 @@
   -- Opp Data
     order_type,
     sales_qualified_source_name,
-    net_arr,
+    SUM(net_arr) AS net_arr,
 
     COUNT(DISTINCT dim_crm_opportunity_id) AS kpi
   FROM sao_base 
-  {{dbt_utils.group_by(n=7)}}
+  {{dbt_utils.group_by(n=6)}}
   UNION ALL
   SELECT
-  --IDs
-    'Closed Won' AS kpi_name,
-    -- dim_crm_account_id,  
+  -- Name
+    'Closed Won' AS kpi_name, 
   
-  --Quarters
+  -- Dates
     abm_tier_1_quarter,
     abm_tier_2_quarter,
     cw_quarter AS kpi_quarter,
@@ -265,11 +265,11 @@
   -- Opp Data
     order_type,
     sales_qualified_source_name,
-    net_arr,
+    SUM(net_arr) AS net_arr,
 
     COUNT(DISTINCT dim_crm_opportunity_id) AS kpi
   FROM cw_base 
-  {{dbt_utils.group_by(n=7)}}
+  {{dbt_utils.group_by(n=6)}}
   
 )
 
