@@ -6,8 +6,8 @@ Currently limited to any internal diff_ids >= 208751592
   materialized="table"
 ) }}
 
-with internal_merge_requests AS (
-  SELECT merge_request_id
+WITH internal_merge_requests AS (
+  SELECT DISTINCT merge_request_id
   FROM
     {{ ref('internal_merge_requests') }}
 ),
