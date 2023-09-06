@@ -373,7 +373,7 @@ models:
       - name: ptpf_namespace_id
         description: Namespace id which corresponds to the propensity to purchase Free score. 
       - name: ptpf_score_group
-        description: 1-5 value which condenses the likelihood to convert the ptpf_namespace_id to paid. The higher the value the more likely the conversion.
+        description: 1-5 value (currently only 3-5 values are allowed) which condenses the likelihood to convert the ptpf_namespace_id to paid. The higher the value the more likely the conversion.
       - name: ptpf_score_date
         description: Date the ptpf_score_group was last updated
       - name: ptpf_past_score_group
@@ -383,7 +383,7 @@ models:
       - name: is_ptpf_contact
         description: Flag if marketing contact has a ptpf score
       - name: ptpl_score_group
-        description: 1-5 value which condenses the likelihood that the leads convert to paid. The higher the value the more likely the conversion.
+        description: 1-5 value (currently only 3-5 values are allowed) which condenses the likelihood that the leads convert to paid. The higher the value the more likely the conversion.
       - name: ptpl_score_date
         description: Date the ptpl_score_group was last updated
       - name: ptpl_past_score_group

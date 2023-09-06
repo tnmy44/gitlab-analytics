@@ -96,7 +96,7 @@ The scores of this model are then used in mart_marketing_contact and the marketi
 
 {% docs prep_ptpf_scores_by_user %}
 
-Takes the scores from ptpf_scores, transforms it to user / email address grain and uses the latest score date available. It only syncs contacts with a `score_group >= 4`.
+Takes the scores from ptpf_scores, transforms it to user / email address grain and uses the latest score date available. It only syncs contacts with a `score_group >= 3`.
 
 The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
 
@@ -104,7 +104,7 @@ The scores of this model are then used in mart_marketing_contact and the marketi
 
 {% docs prep_ptpl_scores_by_user %}
 
-Takes the scores from ptpl_scores (Propensity to Purchase: Leads), transforms it to user / email address grain and uses the latest score date available.
+Takes the scores from ptpl_scores (Propensity to Purchase: Leads), transforms it to user / email address grain and uses the latest score date available. It only syncs contacts with a `score_group >= 3`.
 
 The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
 
