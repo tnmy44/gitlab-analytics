@@ -1205,9 +1205,9 @@
         WHEN is_renewal = 0 AND sfdc_opportunity_stage.is_closed = 1
             THEN DATEDIFF(day, sfdc_opportunity.created_date, close_date.date_actual)
          WHEN is_renewal = 1 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, arr_created_date.date_actual, CURRENT_DATE)
+            THEN DATEDIFF(day, arr_created_date.date_actual, sfdc_opportunity.snapshot_date)
         WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
-            THEN DATEDIFF(day, sfdc_opportunity.created_date, CURRENT_DATE)
+            THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
     END                                                           AS cycle_time_in_days
 
     FROM sfdc_opportunity
