@@ -1,7 +1,7 @@
 version: 2
 models:
   - name: internal_merge_request_diffs
-    description: Represents each new diff in a MR. Design decision https://gitlab.com/gitlab-data/analytics/-/merge_requests/8611#note_1545690079
+    description: Represents each new diff in a MR. Only contains diff_ids >= 208751592. Design decision https://gitlab.com/gitlab-data/analytics/-/merge_requests/8611#note_1545690079
     columns:
       - name: merge_request_diff_id
         tests:
@@ -27,7 +27,7 @@ models:
           - not_null
 
   - name: internal_merge_request_diff_commits
-    description: Represents each commit within a MR diff. Design decision https://gitlab.com/gitlab-data/analytics/-/merge_requests/8611#note_1545690079
+    description: Represents each commit within a MR diff. Only contains diff_ids >= 208751592. Design decision https://gitlab.com/gitlab-data/analytics/-/merge_requests/8611#note_1545690079
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
