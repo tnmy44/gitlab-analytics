@@ -99,7 +99,7 @@ dbt_full_refresh_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
-    dbt run --profiles-dir profile --target prod --full-refresh --exclude common.dim_ip_to_geo workspaces.workspace_engineering.merge_request_diffs.* ; ret=$?;
+    dbt run --profiles-dir profile --target prod --full-refresh --exclude common.dim_ip_to_geo ; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
