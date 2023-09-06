@@ -149,23 +149,23 @@
   
   SELECT
    --IDs
-    opp_history_source.dim_crm_opportunity_id,
-    opp_history_source.dim_crm_account_id,
+    opp_history_final.dim_crm_opportunity_id,
+    opp_history_final.dim_crm_account_id,
   
   --Opp Data  
-    opp_history_source.order_type,
-    opp_history_source.sales_qualified_source_name,
-    opp_history_source.net_arr,
-    opp_history_source.is_net_arr_closed_deal,
-    opp_history_source.is_net_arr_pipeline_created,
+    opp_history_final.order_type,
+    opp_history_final.sales_qualified_source_name,
+    opp_history_final.net_arr,
+    opp_history_final.is_net_arr_closed_deal,
+    opp_history_final.is_net_arr_pipeline_created,
     dim_date_base.fiscal_quarter_name_fy AS sao_quarter,
     account_history_final.abm_tier_1_quarter,
     account_history_final.abm_tier_2_quarter
-  FROM opp_history_source
+  FROM opp_history_final
   LEFT JOIN dim_date_base
-    ON opp_history_source.sales_accepted_date=dim_date_base.date_day
+    ON opp_history_final.sales_accepted_date=dim_date_base.date_day
   LEFT JOIN account_history_final
-    ON opp_history_source.dim_crm_account_id=account_history_final.dim_crm_account_id
+    ON opp_history_final.dim_crm_account_id=account_history_final.dim_crm_account_id
     -- ON sao_quarter=account_history_final.abm_tier_1_quarter
     -- OR sao_quarter=account_history_final.abm_tier_2_quarter 
   WHERE abm_tier IS NOT null
@@ -177,23 +177,23 @@
   
   SELECT
    --IDs
-    opp_history_source.dim_crm_opportunity_id,
-    opp_history_source.dim_crm_account_id,
+    opp_history_final.dim_crm_opportunity_id,
+    opp_history_final.dim_crm_account_id,
   
   --Opp Data  
-    opp_history_source.order_type,
-    opp_history_source.sales_qualified_source_name,
-    opp_history_source.net_arr,
-    opp_history_source.is_net_arr_closed_deal,
-    opp_history_source.is_net_arr_pipeline_created,
+    opp_history_final.order_type,
+    opp_history_final.sales_qualified_source_name,
+    opp_history_final.net_arr,
+    opp_history_final.is_net_arr_closed_deal,
+    opp_history_final.is_net_arr_pipeline_created,
     dim_date_base.fiscal_quarter_name_fy AS cw_quarter,
     account_history_final.abm_tier_1_quarter,
     account_history_final.abm_tier_2_quarter
-  FROM opp_history_source
+  FROM opp_history_final
   LEFT JOIN dim_date_base
-    ON opp_history_source.close_date=dim_date_base.date_day
+    ON opp_history_final.close_date=dim_date_base.date_day
   LEFT JOIN account_history_final
-    ON opp_history_source.dim_crm_account_id=account_history_final.dim_crm_account_id
+    ON opp_history_final.dim_crm_account_id=account_history_final.dim_crm_account_id
     -- ON cw_quarter=account_history_final.abm_tier_1_quarter
     -- OR cw_quarter=account_history_final.abm_tier_2_quarter 
   WHERE abm_tier IS NOT null
