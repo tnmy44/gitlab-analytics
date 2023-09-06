@@ -29,7 +29,7 @@
     fiscal_quarter_name_fy,
     fiscal_year
   FROM dim_date
-  WHERE day_of_fiscal_quarter = 90
+  -- WHERE day_of_fiscal_quarter = 90
   
 ), account_history_final AS (
   
@@ -45,28 +45,9 @@
     abm_tier
   FROM account_history_source
   LEFT JOIN dim_date_base abm_tier_1
-    ON account_history_source.abm_tier_1_date=abm_tier_1.date_day
+    ON account_history_source.abm_tier_1_date::Date=abm_tier_1.date_day
   LEFT JOIN dim_date_base abm_tier_2
-    ON account_history_source.abm_tier_2_date=abm_tier_2.date_day
-  
-), opp_history_source AS (
-  
-  SELECT DISTINCT
-  --IDs
-    dim_crm_opportunity_id,
-    dim_crm_account_id,
-  
-  --Opp Data  
-    order_type,
-    sales_qualified_source_name,
-    net_arr,
-    is_net_arr_closed_deal,
-    is_net_arr_pipeline_created,
-   
-  --Opp Dates
-    sales_accepted_date,
-    close_date
-  FROM mart_crm_opportunity_daily_snapshot
+    ON account_history_source.abm_tier_2_date::Date=abm_tier_2.date_day
   
 ), opp_history_final AS (
   
@@ -85,7 +66,7 @@
   --Opp Dates
     sales_accepted_date,
     close_date
-  FROM opp_history_source
+  FROM mart_crm_opportunity_daily_snapshot
   
 ), mart_crm_person_source AS (
 
