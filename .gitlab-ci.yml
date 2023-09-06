@@ -143,12 +143,13 @@ clone_stop:
   stage: 🛑🐍 Python Critical
   image: registry.gitlab.com/gitlab-data/ci-python-image:v0.0.1
   before_script:
-    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.ipynb'$)
+    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | '\.py'|'\.ipynb' $)
   tags:
     - analytics
   only:
     changes:
       - "**/*.py"
+      - "**/*.ipynb"
     refs:
       - merge_requests
   allow_failure: false
