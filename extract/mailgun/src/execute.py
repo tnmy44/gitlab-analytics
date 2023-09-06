@@ -23,6 +23,7 @@ config_dict = env.copy()
 api_key = env.get("MAILGUN_API_KEY", "")
 domains = ["mg.gitlab.com"]
 
+
 def chunker(seq: List, size: int):
     """
 
