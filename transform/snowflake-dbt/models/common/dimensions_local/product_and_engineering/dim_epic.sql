@@ -34,7 +34,7 @@ WITH prep_epic AS (
       start_date_sourcing_epic_id,
       is_confidential,
       is_internal_epic,
-      state_name,
+      epic_state,
       epic_title_length,
       epic_description_length,
       epic_url,

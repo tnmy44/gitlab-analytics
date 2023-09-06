@@ -59,17 +59,24 @@
 ), joined AS (
 
     SELECT 
+      -- surrogate key
       {{ dbt_utils.surrogate_key(['gitlab_dotcom_epics_dedupe_source.id']) }}                AS dim_epic_sk,
+
+      -- natural key
       gitlab_dotcom_epics_dedupe_source.id::NUMBER                                           AS epic_id,
-      gitlab_dotcom_epics_dedupe_source.author_id::NUMBER                                    AS author_id,
+
+      -- foreign keys
       gitlab_dotcom_epics_dedupe_source.group_id::NUMBER                                     AS namespace_id,
       namespace_prep.ultimate_parent_namespace_id::NUMBER                                    AS ultimate_parent_namespace_id,
       prep_date.date_id::NUMBER                                                              AS created_date_id,
       IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)::NUMBER                               AS dim_plan_id_at_creation,
+      gitlab_dotcom_epics_dedupe_source.author_id::NUMBER                                    AS author_id,
       gitlab_dotcom_epics_dedupe_source.assignee_id::NUMBER                                  AS assignee_id,
-      gitlab_dotcom_epics_dedupe_source.iid::NUMBER                                          AS epic_internal_id,
       gitlab_dotcom_epics_dedupe_source.updated_by_id::NUMBER                                AS updated_by_id,
       gitlab_dotcom_epics_dedupe_source.last_edited_by_id::NUMBER                            AS last_edited_by_id,
+
+      -- attributes
+      gitlab_dotcom_epics_dedupe_source.iid::NUMBER                                          AS epic_internal_id,
       gitlab_dotcom_epics_dedupe_source.lock_version::NUMBER                                 AS lock_version,
       gitlab_dotcom_epics_dedupe_source.start_date::DATE                                     AS epic_start_date,
       gitlab_dotcom_epics_dedupe_source.end_date::DATE                                       AS epic_end_date,
