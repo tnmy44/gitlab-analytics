@@ -1,3 +1,6 @@
+/*
+Currently limited to any commits with diff_id >= 208751592
+*/
 {{ config(
   materialized="incremental",
   unique_key = ['merge_request_diff_id', 'relative_order'],
@@ -51,14 +54,14 @@ merge_request_diff_commits_internal_dedupped AS (
 
 merge_request_diff_commits_internal_renamed AS (
   SELECT
-    authored_date,
-    committed_date,
-    merge_request_diff_id,
-    relative_order,
-    REPLACE(sha, '\\x', '') AS sha,
-    commit_author_id,
-    committer_id,
-    _uploaded_at
+    authored_date::timestamp authored_date,
+    committed_date::timestamp committed_date,
+    merge_request_diff_id::int merge_request_diff_id,
+    relative_order::int relative_order,
+    REPLACE(sha, '\\x', '')::varchar AS sha,
+    commit_author_id::int commit_author_id,
+    committer_id::int committer_id,
+    _uploaded_at::float _uploaded_at
   FROM merge_request_diff_commits_internal_dedupped
 )
 
