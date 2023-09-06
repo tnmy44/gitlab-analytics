@@ -51,7 +51,7 @@ WITH structured_events AS (
     WHERE metric IS NOT NULL
     --- filter out any internal namespaces
       AND namespace_is_internal = FALSE
-  {{ dbt_utils.group_by(n=3) }}
+  {{ dbt_utils.group_by(n=7) }}
 
 ), pageviews AS (
 
@@ -82,7 +82,7 @@ WITH structured_events AS (
     WHERE metric IS NOT NULL
     --- filter out any namespaces that are internal and include any data from any records with no namespace
       AND (namespace_is_internal = FALSE OR gsc_namespace_id IS NULL)
-  {{ dbt_utils.group_by(n=3) }}
+  {{ dbt_utils.group_by(n=7) }}
 
 ), final AS (
 
