@@ -31,9 +31,9 @@
       CASE
         WHEN prep_ptpt_scores_by_user.score_group >= 4
           THEN 'Trial'
-        WHEN prep_ptpf_scores_by_user.score_group >= 5
+        WHEN prep_ptpf_scores_by_user.score_group = 5
           THEN 'Free'
-        WHEN prep_ptpl_scores_by_user.score_group >= 5
+        WHEN prep_ptpl_scores_by_user.score_group = 5
           THEN 'Lead'
         WHEN prep_ptpf_scores_by_user.score_group >= 4
           THEN 'Free'
