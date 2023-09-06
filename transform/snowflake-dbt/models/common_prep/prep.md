@@ -62,7 +62,7 @@ This model assumes that only one priority is placed in a given description or no
 
 {% docs prep_ptp_scores_by_user %}
 
-Takes the scores from prep_ptpt_scores_by_user, prep_ptpf_scores_by_user and prep_ptplscores_by_user, and return a single score per user.
+Takes the scores from prep_ptpt_scores_by_user, prep_ptpf_scores_by_user and prep_ptpl_scores_by_user, and return a single score per user.
 
 The rules for de-duplication of scores are:
 
