@@ -4,7 +4,8 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_epic_sk"
+    "unique_key": "dim_epic_sk",
+    "on_schema_change": "sync_all_columns"
     })
 }}
 

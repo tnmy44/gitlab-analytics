@@ -1,3 +1,12 @@
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "dim_epic_sk",
+    "on_schema_change": "sync_all_columns",
+    "post-hook": "{{ missing_member_column(primary_key = 'dim_epic_sk', not_null_test_cols = []) }}"
+    })
+}}
+
+
 WITH prep_epic AS (
 
     SELECT
@@ -41,6 +50,11 @@ WITH prep_epic AS (
       labels,
       upvote_count
     FROM {{ ref('prep_epic') }}
+    {% if is_incremental() %}
+
+    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+
+    {% endif %}
 
 )
 
