@@ -207,7 +207,8 @@ models:
 
   - name: mart_crm_opportunity
     description:  >-
-      Model with single pane of glass over the sales and marketing metrics. `mart_crm_opportunity_stamped_hierarchy_hist` should be used for year-over-year comparisons as it accounts for yearly changes in the sales hierarchy. The `mart_crm_opportunity_stamped_hierarchy_hist` model reflects how the sales hierarchy is applied in practice (ie. Hybrid users are assigned to the account's hierarchy)
+      Model with single pane of glass over the sales and marketing metrics. Depeding on your use case, you might use  `mart_crm_opportunity_stamped_hierarchy_hist` or `mart_crm_opportunity.`
+      `mart_crm_opportunity_stamped_hierarchy_hist` should be used for year-over-year comparisons as it accounts for yearly changes in the sales hierarchy and it reflects how the sales hierarchy is applied in practice (ie. Hybrid users are assigned to the account's hierarchy)
     columns:
       - name: dim_crm_opportunity_id
         tests:
