@@ -232,7 +232,8 @@
       sfdc_opportunity.arr_basis_for_clari,
       sfdc_opportunity.forecasted_churn_for_clari,
       sfdc_opportunity.override_arr_basis_clari,
-      sfdc_opportunity.vsa_start_date_net_arr
+      sfdc_opportunity.vsa_start_date_net_arr,
+      sfdc_opportunity.cycle_time_in_days
 
     FROM sfdc_opportunity
     LEFT JOIN crm_account_dimensions

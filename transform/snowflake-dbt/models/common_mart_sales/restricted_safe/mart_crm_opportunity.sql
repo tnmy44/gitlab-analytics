@@ -506,7 +506,8 @@
       fct_crm_opportunity.won_arr_basis_for_clari,
       fct_crm_opportunity.arr_basis_for_clari,
       fct_crm_opportunity.forecasted_churn_for_clari,
-      fct_crm_opportunity.override_arr_basis_clari
+      fct_crm_opportunity.override_arr_basis_clari,
+      fct_crm_opportunity.cycle_time_in_days
       
 
     FROM fct_crm_opportunity
@@ -582,9 +583,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@lisvinueza",
+    updated_by="@kmagda1",
     created_date="2020-12-07",
-    updated_date="2023-07-19"
+    updated_date="2023-09-01"
   ) }}
 
 
