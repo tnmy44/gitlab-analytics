@@ -104,7 +104,7 @@
 
       -- customer db info
       fct_trial_latest.internal_customer_id                                           AS internal_customer_id,
-      fct_trial_latest.is_trial_converted                                             AS is_trial_converted,
+      fct_trial_latest.is_trial_converted                                             AS is_trial_converted_namespace,
       fct_trial_latest.latest_trial_start_date                                        AS latest_trial_start_date,
 
       -- crm account info
