@@ -17,7 +17,8 @@
     abm_tier_2_date,
     abm_tier_3_date,
     abm_tier,
-    dbt_valid_from
+    dbt_valid_from,
+    dbt_valid_to
   FROM sfdc_account_snapshots_source
   WHERE abm_tier_1_date >= '2022-02-01'
     OR abm_tier_2_date >= '2022-02-01'
