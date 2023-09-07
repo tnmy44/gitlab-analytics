@@ -22,17 +22,6 @@
   WHERE abm_tier_1_date >= '2022-02-01'
     OR abm_tier_2_date >= '2022-02-01'
   
-), dim_date_base AS (
-  
-  SELECT 
-    date_day,
-    first_day_of_week,
-    first_day_of_month,
-    fiscal_quarter_name_fy,
-    fiscal_year
-  FROM dim_date
-  -- WHERE day_of_fiscal_quarter = 90
-  
 ), account_history_final AS (
   
   SELECT
@@ -46,9 +35,9 @@
     abm_tier_2.fiscal_quarter_name_fy AS abm_tier_2_quarter,
     abm_tier
   FROM account_history_source
-  LEFT JOIN dim_date_base abm_tier_1
+  LEFT JOIN dim_date abm_tier_1
     ON account_history_source.abm_tier_1_date::Date=abm_tier_1.date_day
-  LEFT JOIN dim_date_base abm_tier_2
+  LEFT JOIN dim_date abm_tier_2
     ON account_history_source.abm_tier_2_date::Date=abm_tier_2.date_day
   WHERE ((dbt_valid_from<=abm_tier_1.last_day_of_quarter
         AND dbt_valid_to > abm_tier_1.last_day_of_quarter)
@@ -112,12 +101,12 @@
     mart_crm_person_source.is_mql,
     mart_crm_person_source.is_inquiry,
     mart_crm_person_source.status,
-    dim_date_base.fiscal_quarter_name_fy AS inquiry_quarter,
+    dim_date.fiscal_quarter_name_fy AS inquiry_quarter,
     account_history_final.abm_tier_1_quarter,
     account_history_final.abm_tier_2_quarter
   FROM mart_crm_person_source
-  LEFT JOIN dim_date_base
-    ON mart_crm_person_source.true_inquiry_date=dim_date_base.date_day
+  LEFT JOIN dim_date
+    ON mart_crm_person_source.true_inquiry_date=dim_date.date_day
   LEFT JOIN account_history_final
     ON mart_crm_person_source.dim_crm_account_id=account_history_final.dim_crm_account_id
     -- ON inquiry_quarter=account_history_final.abm_tier_1_quarter
@@ -139,12 +128,12 @@
     mart_crm_person_source.is_mql,
     mart_crm_person_source.is_inquiry,
     mart_crm_person_source.status,
-    dim_date_base.fiscal_quarter_name_fy AS mql_quarter,
+    dim_date.fiscal_quarter_name_fy AS mql_quarter,
     account_history_final.abm_tier_1_quarter,
     account_history_final.abm_tier_2_quarter
   FROM mart_crm_person_source
-  LEFT JOIN dim_date_base
-    ON mart_crm_person_source.mql_date_latest_pt=dim_date_base.date_day
+  LEFT JOIN dim_date
+    ON mart_crm_person_source.mql_date_latest_pt=dim_date.date_day
   LEFT JOIN account_history_final
     ON mart_crm_person_source.dim_crm_account_id=account_history_final.dim_crm_account_id
     -- ON mql_quarter=account_history_final.abm_tier_1_quarter
@@ -166,12 +155,12 @@
     opp_history_final.net_arr,
     opp_history_final.is_net_arr_closed_deal,
     opp_history_final.is_net_arr_pipeline_created,
-    dim_date_base.fiscal_quarter_name_fy AS sao_quarter,
+    dim_date.fiscal_quarter_name_fy AS sao_quarter,
     account_history_final.abm_tier_1_quarter,
     account_history_final.abm_tier_2_quarter
   FROM opp_history_final
-  LEFT JOIN dim_date_base
-    ON opp_history_final.sales_accepted_date=dim_date_base.date_day
+  LEFT JOIN dim_date
+    ON opp_history_final.sales_accepted_date=dim_date.date_day
   LEFT JOIN account_history_final
     ON opp_history_final.dim_crm_account_id=account_history_final.dim_crm_account_id
     -- ON sao_quarter=account_history_final.abm_tier_1_quarter
@@ -194,12 +183,12 @@
     opp_history_final.net_arr,
     opp_history_final.is_net_arr_closed_deal,
     opp_history_final.is_net_arr_pipeline_created,
-    dim_date_base.fiscal_quarter_name_fy AS cw_quarter,
+    dim_date.fiscal_quarter_name_fy AS cw_quarter,
     account_history_final.abm_tier_1_quarter,
     account_history_final.abm_tier_2_quarter
   FROM opp_history_final
-  LEFT JOIN dim_date_base
-    ON opp_history_final.close_date=dim_date_base.date_day
+  LEFT JOIN dim_date
+    ON opp_history_final.close_date=dim_date.date_day
   LEFT JOIN account_history_final
     ON opp_history_final.dim_crm_account_id=account_history_final.dim_crm_account_id
     -- ON cw_quarter=account_history_final.abm_tier_1_quarter
