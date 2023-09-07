@@ -196,7 +196,7 @@
     {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['pipeline_authoring']['o_pipeline_authoring_unique_users_committing_ciconfigfile_weekly']") }}   AS commit_ci_config_file_7_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['verify']['ci_pipeline_config_repository']") }}                                             AS ci_pipeline_config_repository_all_time_user,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_pipeline_config_repository']") }}                                                                        AS ci_pipeline_config_repository_all_time_event,
-    {{ null_negative_numbers("raw_usage_data_payload[counts']['ci_pipeline_schedules']") }}                                                                                 AS pipeline_schedules_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_pipeline_schedules']") }}                                                                                 AS pipeline_schedules_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['verify']['ci_pipeline_schedules']") }}                                                     AS pipeline_schedules_all_time_user
 
 {%- endmacro -%}
