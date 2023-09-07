@@ -75,6 +75,8 @@ sources:
         identifier: gitlab_db_ci_job_token_project_scope_links
       - name: ci_namespace_monthly_usages
         identifier: gitlab_db_ci_namespace_monthly_usages
+      - name: ci_pipeline_artifacts
+        identifier: gitlab_db_ci_pipeline_artifacts
       - name: ci_pipeline_chat_data
         identifier: gitlab_db_ci_pipeline_chat_data
       - name: ci_pipeline_schedule_variables
