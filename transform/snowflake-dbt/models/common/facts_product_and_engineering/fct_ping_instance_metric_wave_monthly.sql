@@ -267,6 +267,15 @@
       ping_instance_wave_sm.pipeline_schedules_28_days_user,
       -- Wave 8
       ping_instance_wave_sm.ci_internal_pipelines_28_days_event,
+      -- Wave 9
+      ping_instance_wave_sm.ci_builds_28_days_event,
+      ping_instance_wave_sm.audit_features_28_days_user,
+      ping_instance_wave_sm.groups_all_time_event,
+      ping_instance_wave_sm.commit_ci_config_file_7_days_user,
+      ping_instance_wave_sm.ci_pipeline_config_repository_all_time_user,
+      ping_instance_wave_sm.ci_pipeline_config_repository_all_time_event,
+      ping_instance_wave_sm.pipeline_schedules_all_time_event,
+      ping_instance_wave_sm.pipeline_schedules_all_time_user,
       -- Data Quality Flags
       IFF(ping_instance_wave_sm.instance_user_count != seat_link.active_user_count,
           ping_instance_wave_sm.instance_user_count, NULL)                                               AS instance_user_count_not_aligned,
@@ -316,7 +325,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@mdrussell",
     created_date="2022-07-21",
-    updated_date="2023-06-22"
+    updated_date="2023-09-07"
 ) }}

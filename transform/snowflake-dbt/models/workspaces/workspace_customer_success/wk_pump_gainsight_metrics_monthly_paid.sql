@@ -381,6 +381,15 @@
       monthly_sm_metrics.pipeline_schedules_28_days_user,
       -- Wave 8
       monthly_sm_metrics.ci_internal_pipelines_28_days_event,
+      -- Wave 9
+      monthly_sm_metrics.ci_builds_28_days_event,
+      monthly_sm_metrics.audit_features_28_days_user,
+      monthly_sm_metrics.groups_all_time_event,
+      monthly_sm_metrics.commit_ci_config_file_7_days_user,
+      monthly_sm_metrics.ci_pipeline_config_repository_all_time_user,
+      monthly_sm_metrics.ci_pipeline_config_repository_all_time_event,
+      monthly_sm_metrics.pipeline_schedules_all_time_event,
+      monthly_sm_metrics.pipeline_schedules_all_time_user,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -626,6 +635,15 @@
       monthly_saas_metrics.pipeline_schedules_28_days_user,
       -- Wave 8
       monthly_saas_metrics.ci_internal_pipelines_28_days_event,
+      --Wave 9
+      monthly_saas_metrics.ci_builds_28_days_event,
+      monthly_saas_metrics.audit_features_28_days_user,
+      monthly_saas_metrics.groups_all_time_event,
+      monthly_saas_metrics.commit_ci_config_file_7_days_user,
+      monthly_saas_metrics.ci_pipeline_config_repository_all_time_user,
+      monthly_saas_metrics.ci_pipeline_config_repository_all_time_event,
+      monthly_saas_metrics.pipeline_schedules_all_time_event,
+      monthly_saas_metrics.pipeline_schedules_all_time_user,
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -712,5 +730,5 @@
     created_by="@mdrussell",
     updated_by="@jpeguero",
     created_date="2022-09-09",
-    updated_date="2023-06-26"
+    updated_date="2023-09-07"
 ) }}
