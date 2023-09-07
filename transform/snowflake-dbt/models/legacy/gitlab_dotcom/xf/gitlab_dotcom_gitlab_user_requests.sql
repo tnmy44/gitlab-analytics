@@ -35,7 +35,7 @@ WITH epic_issues AS (
 ), namespaces AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
+    FROM {{ ref('prep_namespace') }}
 
 ), sfdc_accounts AS (
 
@@ -112,7 +112,7 @@ WITH epic_issues AS (
     INNER JOIN epics
       ON gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_id = epics.epic_id
     LEFT JOIN namespaces
-      ON epics.namespace_id = namespaces.namespace_id
+      ON epics.dim_namespace_sk = namespaces.dim_namespace_sk
     LEFT JOIN sfdc_accounts
       ON gitlab_dotcom_notes_linked_to_sfdc_account_id.sfdc_account_id = sfdc_accounts.account_id
     WHERE gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_type = 'Epic'
@@ -181,7 +181,7 @@ WITH epic_issues AS (
       ON gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.noteable_id = epics.epic_id
       AND gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.noteable_type = 'Epic'
     LEFT JOIN namespaces
-      ON epics.namespace_id = namespaces.namespace_id
+      ON epics.dim_namespace_sk = namespaces.dim_namespace_sk
     LEFT JOIN sfdc_accounts
       ON gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.sfdc_account_id = sfdc_accounts.account_id
 

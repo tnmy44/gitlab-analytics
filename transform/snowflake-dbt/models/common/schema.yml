@@ -2708,7 +2708,7 @@ models:
           - not_null
           - unique
       - name: dim_project_id
-      - name: dim_plan_id_at_creation
+      - name: dim_plan_sk_at_creation
         description: '{{ doc("dim_plan_id_at_creation") }}'
         tests:
           - not_null

@@ -95,7 +95,7 @@
       gitlab_dotcom_issues_source.relative_position,
       gitlab_dotcom_issues_source.service_desk_reply_to,
       gitlab_dotcom_issues_source.state_id,
-        {{ map_state_id('state_id') }}                            AS state_name,
+      {{ map_state_id('gitlab_dotcom_issues_source.state_id') }}                            AS state_name,
       gitlab_dotcom_issues_source.duplicated_to_id,
       gitlab_dotcom_issues_source.promoted_to_epic_id,
       gitlab_dotcom_issues_source.issue_type,
