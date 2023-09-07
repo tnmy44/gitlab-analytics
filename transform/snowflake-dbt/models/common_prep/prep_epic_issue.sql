@@ -43,7 +43,7 @@
 
     FROM epic_issues
     LEFT JOIN prep_issue
-      ON epic_issues.issue = prep_project.issue
+      ON epic_issues.issue_id = prep_project.issue_id
     LEFT JOIN prep_epic
       ON epic_issues.epic_id = prep_epic.epic_id
 
@@ -53,6 +53,6 @@
     cte_ref="final",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2022-09-07",
-    updated_date="2022-09-07"
+    created_date="2023-09-07",
+    updated_date="2023-09-07"
 ) }}
