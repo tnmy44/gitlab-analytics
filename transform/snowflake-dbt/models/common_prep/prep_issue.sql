@@ -16,7 +16,7 @@
     ('prep_issue_severity', 'prep_issue_severity'),
     ('prep_label_links', 'prep_label_links'),
     ('prep_labels', 'prep_labels'),
-    ('gitlab_dotcom_epic_issues_source', 'gitlab_dotcom_epic_issues_source'),
+    ('prep_epic_issue', 'prep_epic_issue'),
     ('gitlab_dotcom_routes_source', 'gitlab_dotcom_routes_source'),
     ('gitlab_dotcom_projects_source', 'gitlab_dotcom_projects_source'),
     ('gitlab_dotcom_milestones_source', 'gitlab_dotcom_milestones_source'),
@@ -66,7 +66,7 @@
       gitlab_dotcom_issues_source.project_id                      AS dim_project_id,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
-      gitlab_dotcom_epic_issues_source.epic_id                    AS epic_id,
+      prep_epic_issue.dim_epic_sk                                 AS dim_epic_sk,
       dim_date.date_id                                            AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
       gitlab_dotcom_issues_source.author_id,
@@ -132,8 +132,8 @@
       ON TO_DATE(gitlab_dotcom_issues_source.created_at) = dim_date.date_day
     LEFT JOIN prep_issue_severity
       ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
-    LEFT JOIN gitlab_dotcom_epic_issues_source
-      ON gitlab_dotcom_issues_source.issue_id = gitlab_dotcom_epic_issues_source.issue_id
+    LEFT JOIN prep_epic_issue
+      ON gitlab_dotcom_issues_source.issue_id = prep_epic_issue.issue_id
     LEFT JOIN gitlab_dotcom_projects_source
       ON gitlab_dotcom_projects_source.project_id = gitlab_dotcom_issues_source.project_id
     LEFT JOIN gitlab_dotcom_routes_source
