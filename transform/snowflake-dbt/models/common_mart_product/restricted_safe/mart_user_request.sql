@@ -452,7 +452,7 @@
       dim_epic.created_at                                                         AS issue_epic_created_at,
       dim_epic.created_at::DATE                                                   AS issue_epic_created_date,
       DATE_TRUNC('month', dim_epic.created_at::DATE)                              AS issue_epic_created_month,
-      dim_epic.state_name                                                         AS issue_epic_state_name,
+      dim_epic.epic_state                                                         AS issue_epic_state_name,
       dim_epic.closed_at                                                          AS issue_epic_closed_at,
       dim_epic.closed_at::DATE                                                    AS issue_epic_closed_date,
       DATE_TRUNC('month', dim_epic.closed_at::DATE)                               AS issue_epic_closed_month,
