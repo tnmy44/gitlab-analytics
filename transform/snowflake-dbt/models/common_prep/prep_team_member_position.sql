@@ -1,4 +1,11 @@
-WITH job_profiles AS (
+
+{{ simple_cte([
+    ('job_info_source','blended_job_info_source'),
+    ('team_member','dim_team_member')
+]) }},
+
+
+ job_profiles AS (
 
   SELECT 
     job_code,
@@ -12,21 +19,53 @@ WITH job_profiles AS (
 
 ),
 
-job_info AS (
+division_department_info AS (
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['employee_id', 'job_title', 'reports_to','department','division','entity']) }}                 AS unique_key,
+    division, 
+    department,
+    MAX(effective_date)                                                                                                        AS effective_date
+  FROM job_info_source
+  LEFT JOIN team_member
+    ON job_info_source.employee_id = team_member.employee_id
+      AND termination_date IS NULL
+        AND (team_member.valid_from <= job_info_source.effective_date
+            AND team_member.valid_to >= job_info_source.effective_date)
+  GROUP BY 1,2
+
+),
+
+team_info AS (
+
+  SELECT 
+    {{ dbt_utils.surrogate_key(['employee_id', 'job_title', 'department', 'division', 'reports_to','entity']) }}               AS unique_key,
     employee_id                                                                                                                AS employee_id, 
     job_title                                                                                                                  AS position,
     reports_to                                                                                                                 AS manager,
-    department                                                                                                                 AS department, 
-    division                                                                                                                   AS division,
     entity                                                                                                                     AS entity, 
+    department                                                                                                                 AS department,
+    division                                                                                                                   AS division,
     effective_date                                                                                                             AS effective_date
-  FROM {{ref('blended_job_info_source')}}
+  FROM job_info_source
   QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date DESC) = 1
 
 ),
+
+job_info AS (
+
+  SELECT 
+    {{ dbt_utils.surrogate_key(['employee_id', 'job_role', 'job_grade']) }}                                                    AS unique_key,
+    employee_id                                                                                                                AS employee_id, 
+    job_role                                                                                                                   AS management_level,
+    job_grade                                                                                                                  AS job_grade, 
+    jobtitle_speciality_single_select                                                                                          AS job_specialty_single,
+    jobtitle_speciality_single_select                                                                                          AS job_specialty_multi,
+    DATE_TRUNC('day', uploaded_at)                                                                                             AS effective_date
+  FROM {{ref('blended_employee_mapping_source')}}
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date DESC) = 1
+
+),
+
 
 team_member_groups AS (
 
@@ -74,8 +113,8 @@ staffing_history AS (
     team_member_groups.job_code                                                                                                AS job_code,
     team_member_groups.job_specialty_single                                                                                    AS job_specialty_single,
     team_member_groups.job_specialty_multi                                                                                     AS job_specialty_multi,
-    team_member_groups.entity                                                                                                  AS entity,
-    job_info.division                                                                                                          AS division,
+    team_member_groups.entity                                                                                                  AS entity,   
+    team_info.division                                                                                                          AS division,
     job_profiles.position                                                                                                      AS position,
     job_profiles.job_family                                                                                                    AS job_family,
     job_profiles.management_level                                                                                              AS management_level,
@@ -83,12 +122,12 @@ staffing_history AS (
     job_profiles.is_position_active                                                                                            AS is_position_active,
     team_member_groups.effective_date                                                                                          AS effective_date
   FROM team_member_groups
+  --Temporary join while we add a key to join cost_centers to staffing_history
   LEFT JOIN job_profiles
     ON job_profiles.job_code = team_member_groups.job_code
-  --Temporary join while we add a key to join cost_centers to staffing_history
-  LEFT JOIN job_info
-    ON team_member_groups.employee_id = job_info.employee_id 
-      AND team_member_groups.effective_date = job_info.effective_date
+  LEFT JOIN team_info
+    ON team_member_groups.employee_id = team_info.employee_id 
+      AND team_member_groups.effective_date = team_info.effective_date
   
 ),
 
@@ -130,23 +169,26 @@ final AS (
     -- Team member position attributes
     job_info.employee_id                                                                                                       AS employee_id,
     NULL                                                                                                                       AS team_id,
-    job_info.manager                                                                                                           AS manager,
+    team_info.manager                                                                                                          AS manager,
     NULL                                                                                                                       AS suporg,
     NULL                                                                                                                       AS job_code,
-    job_info.position                                                                                                          AS position,
+    team_info.position                                                                                                         AS position,
     NULL                                                                                                                       AS job_family,
-    NULL                                                                                                                       AS job_specialty_single,
-    NULL                                                                                                                       AS job_specialty_multi,
-    NULL                                                                                                                       AS management_level,
-    NULL                                                                                                                       AS job_grade,
-    job_info.department                                                                                                        AS department,
-    job_info.division                                                                                                          AS division,
-    job_info.entity                                                                                                            AS entity,
+    job_info.job_specialty_single                                                                                              AS job_specialty_single,
+    job_info.job_specialty_multi                                                                                               AS job_specialty_multi,
+    job_info.management_level                                                                                                  AS management_level,
+    job_info.job_grade                                                                                                         AS job_grade,
+    team_info.department                                                                                                       AS department,
+    team_info.division                                                                                                         AS division,
+    team_info.entity                                                                                                           AS entity,
     NULL                                                                                                                       AS is_position_active,
-    job_info.effective_date                                                                                                    AS effective_date
+    team_info.effective_date                                                                                                   AS effective_date
   FROM job_info
+  LEFT JOIN team_info
+    ON job_info.employee_id = team_info.employee_id
+      AND job_info.effective_date = team_info.effective_date
   WHERE job_info.effective_date < '2022-06-16'
-  --Use data from blended job info source up to the transition from BHR to Workday
+  --Use data from blended source up to the transition from BHR to Workday
   --Job profiles didn't exist in BHR
 
 )
