@@ -506,3 +506,5 @@ sources:
         identifier: gitlab_db_boards_epic_boards
       - name: merge_request_diff_commit_users
         identifier: gitlab_db_merge_request_diff_commit_users
+      - name: merge_request_diff_commits
+        identifier: gitlab_db_merge_request_diff_commits
