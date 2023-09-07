@@ -50,7 +50,15 @@
     ON account_history_source.abm_tier_1_date::Date=abm_tier_1.date_day
   LEFT JOIN dim_date_base abm_tier_2
     ON account_history_source.abm_tier_2_date::Date=abm_tier_2.date_day
-  
+  WHERE ((dbt_valid_from<=abm_tier_1.last_day_of_quarter
+        AND dbt_valid_to > abm_tier_1.last_day_of_quarter)
+            OR (dbt_valid_from <= abm_tier_1.last_day_of_quarter
+                AND dbt_valid_To IS NULL))
+    OR ((dbt_valid_from<=abm_tier_2.last_day_of_quarter
+        AND dbt_valid_to > abm_tier_2.last_day_of_quarter)
+            OR (dbt_valid_from <= abm_tier_2.last_day_of_quarter
+                AND dbt_valid_To IS NULL))
+                
 ), opp_history_final AS (
   
   SELECT
