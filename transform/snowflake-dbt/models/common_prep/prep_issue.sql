@@ -62,7 +62,7 @@
   
     SELECT
       gitlab_dotcom_issues_source.issue_id                                    AS dim_issue_id,
-      {{ dbt_utils.surrogate_key(['gitlab_dotcom_issues_source.issue_id']) }} AS dim_issue_id
+      {{ dbt_utils.surrogate_key(['gitlab_dotcom_issues_source.issue_id']) }} AS dim_issue_sk,
       
       -- FOREIGN KEYS
       gitlab_dotcom_issues_source.project_id                                  AS dim_project_id,
