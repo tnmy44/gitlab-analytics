@@ -23,12 +23,14 @@
 
   SELECT DISTINCT
     prep_crm_task.dim_crm_task_pk as dim_crm_task_pk,
+
     CASE
         WHEN prep_crm_opportunity.dim_crm_opportunity_id IS NOT NULL
           THEN prep_crm_task.dim_crm_opportunity_id
         WHEN account_opp_mapping.dim_crm_opportunity_id IS NOT NULL
           THEN account_opp_mapping.dim_crm_opportunity_id
         END AS dim_mapped_opportunity_id,
+
     CASE 
         WHEN prep_crm_opportunity.dim_crm_opportunity_id IS NOT NULL 
           THEN 'Opportunity'
@@ -49,7 +51,6 @@
     AND prep_crm_task.task_date < account_opp_mapping.close_date
     AND prep_crm_task.task_date >= DATEADD('month', -9, dim_date.first_day_of_fiscal_quarter)
 WHERE prep_crm_task.SA_ACTIVITY_TYPE IS NOT NULL
-)
 
 ), final AS (
 
