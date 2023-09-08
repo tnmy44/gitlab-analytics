@@ -35,8 +35,8 @@
       -- Foreign Keys
       prep_issue.dim_issue_sk,
       prep_epic.dim_epic_sk,
-      epic_issue.issue_id,
-      epic_issue.epic_id,
+      epic_issues.issue_id,
+      epic_issues.epic_id,
 
       -- Other Attributes
       epic_issues.relative_position                                           AS epic_issue_relative_position

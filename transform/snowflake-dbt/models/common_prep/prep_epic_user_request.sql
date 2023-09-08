@@ -25,7 +25,7 @@
     SELECT
       prep_namespace.ultimate_parent_namespace_id AS dim_namespace_ultimate_parent_id,
       prep_epic.*
-    FROM epic
+    FROM prep_epic
     INNER JOIN prep_namespace
       ON prep_epic.dim_namespace_sk = prep_namespace.dim_namespace_sk
     WHERE prep_namespace.ultimate_parent_namespace_id = 9970 -- Gitlab-org group namespace id

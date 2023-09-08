@@ -144,7 +144,7 @@ WITH prep_namespace AS (
 
     SELECT
       collaboration_projects_issue_description_notes_unioned.*,
-      gitlab_dotcom_namespace_routes.namespace_id AS user_request_namespace_id
+      gitlab_dotcom_namespace_routes.namespace_id AS user_request_namespace_id,
       gitlab_dotcom_namespace_routes.dim_namespace_sk AS user_request_namespace_sk
     FROM collaboration_projects_issue_description_notes_unioned
     INNER JOIN gitlab_dotcom_namespace_routes

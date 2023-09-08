@@ -59,7 +59,7 @@
     "project_column_name": "NULL",
     "primary_key": "epic_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id_at_creation",
+    "plan_column_name": "dim_plan_sk_at_creation",
     "created_date_name": "dim_created_date_id"
   },
   {
