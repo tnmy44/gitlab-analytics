@@ -61,8 +61,14 @@
 ), renamed AS (
   
     SELECT
-      gitlab_dotcom_issues_source.issue_id                                    AS dim_issue_id,
+      -- Surrogate key
       {{ dbt_utils.surrogate_key(['gitlab_dotcom_issues_source.issue_id']) }} AS dim_issue_sk,
+
+      -- Natural Key
+      gitlab_dotcom_issues_source.issue_id                                    AS issue_id,
+
+      -- Legacy naming convention
+      gitlab_dotcom_issues_source.issue_id                                    AS dim_issue_id,
       
       -- FOREIGN KEYS
       gitlab_dotcom_issues_source.project_id                                  AS dim_project_id,
