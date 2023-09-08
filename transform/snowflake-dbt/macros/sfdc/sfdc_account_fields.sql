@@ -197,7 +197,7 @@ WITH map_merged_crm_account AS (
        sfdc_account.ultimate_parent_account_name                          AS parent_crm_account_name,
 
       --6 sense fields
-      sfdc_account.six_sense_6_qa,
+      sfdc_account.has_six_sense_6_qa,
       sfdc_account.risk_rate_guid,
       sfdc_account.six_sense_account_profile_fit,
       sfdc_account.six_sense_account_reach_score,

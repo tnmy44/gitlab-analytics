@@ -159,7 +159,7 @@
       prep_crm_account.carr_this_account,
 
       --6 sense fields
-      prep_crm_account.six_sense_6_qa,
+      prep_crm_account.has_six_sense_6_qa,
       prep_crm_account.risk_rate_guid,
       prep_crm_account.six_sense_account_profile_fit,
       prep_crm_account.six_sense_account_reach_score,

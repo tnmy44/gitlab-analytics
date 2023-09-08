@@ -131,7 +131,7 @@
 
       --6 sense fields
 
-      dim_crm_account.six_sense_6_qa,
+      dim_crm_account.has_six_sense_6_qa,
       dim_crm_account.risk_rate_guid,
       dim_crm_account.six_sense_account_profile_fit,
       dim_crm_account.six_sense_account_reach_score,
