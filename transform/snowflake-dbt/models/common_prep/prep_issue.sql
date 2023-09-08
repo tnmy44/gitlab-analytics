@@ -61,20 +61,21 @@
 ), renamed AS (
   
     SELECT
-      gitlab_dotcom_issues_source.issue_id                        AS dim_issue_id,
+      gitlab_dotcom_issues_source.issue_id                                    AS dim_issue_id,
+      {{ dbt_utils.surrogate_key(['gitlab_dotcom_issues_source.issue_id']) }} AS dim_issue_id
       
       -- FOREIGN KEYS
-      gitlab_dotcom_issues_source.project_id                      AS dim_project_id,
+      gitlab_dotcom_issues_source.project_id                                  AS dim_project_id,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
-      prep_epic.dim_epic_sk                                       AS dim_epic_sk,
-      dim_date.date_id                                            AS created_date_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
+      prep_epic.dim_epic_sk                                                   AS dim_epic_sk,
+      dim_date.date_id                                                        AS created_date_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                         AS dim_plan_id,
       gitlab_dotcom_issues_source.author_id,
       gitlab_dotcom_issues_source.milestone_id,
       gitlab_dotcom_issues_source.sprint_id,
 
-      gitlab_dotcom_issues_source.issue_iid                       AS issue_internal_id,
+      gitlab_dotcom_issues_source.issue_iid                                   AS issue_internal_id,
       gitlab_dotcom_issues_source.updated_by_id,
       gitlab_dotcom_issues_source.last_edited_by_id,
       gitlab_dotcom_issues_source.moved_to_id,

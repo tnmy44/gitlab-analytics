@@ -27,6 +27,7 @@ WITH prep_epic_user_request AS (
 
     SELECT
       epic_id,
+      dim_epic_sk,
       link_type,
       dim_crm_opportunity_id,
       dim_crm_account_id,
@@ -41,6 +42,7 @@ WITH prep_epic_user_request AS (
 
     SELECT
       epic_id,
+      dim_epic_sk,
       'Account'             AS link_type,
       MD5(-1)               AS dim_crm_opportunity_id,
       dim_crm_account_id,
@@ -58,5 +60,5 @@ WITH prep_epic_user_request AS (
     created_by="@jpeguero",
     updated_by="@michellecooper",
     created_date="2021-10-12",
-    updated_date="2023-09-05",
+    updated_date="2023-09-08",
 ) }}
