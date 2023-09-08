@@ -1383,7 +1383,33 @@ models:
         description: The response time from Traction, based only in working hours for the user/rep. 
       - name: propensity_to_purchase_score_date
         description: This field indicates the date when most recent probability to purchase score was calculated.
-      
+      - name: propensity_to_purchase_score_group
+        description: This field indicates the propensity to purchase score, 5 being the highest probability to purchase.
+      - name: pql_namespace_creator_job_description
+        description: namespace creator self-described job description
+      - name: pql_namespace_id
+        description: ID of the PQL's namespace, from SFDC. 
+      - name: pql_namespace_name
+        description: Name of the PQL's namespace, from SFDC. 
+      - name: pql_namespace_users
+        description: number of namespace users
+      - name: is_product_qualified_lead
+        description: Whether or not the lead is a PQL. 
+      - name: propensity_to_purchase_insights
+        description: This field provides insights into the probability score of a record to purchase.
+      - name: is_ptp_contact
+        description: This field indicates if the record has a calculated propensity to purchase score.
+      - name: propensity_to_purchase_namespace_id
+        description: This field indicates the namespace ID that has been scored for propensity to purchase.
+      - name: propensity_to_purchase_past_insights
+        description: This field provides insights into the previous probability score of a record to purchase.
+      - name: propensity_to_purchase_past_score_group
+        description: This field indicates the previous propensity to purchase score a user had.
+      - name: propensity_to_purchase_days_since_trial_start
+        description: This field indicates the number of days that passed since this user started a trial.
+      - name: is_partner_recalled
+        description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
+
 
   - name: fct_saas_product_usage_metrics_monthly
     description: '{{ doc("fct_saas_product_usage_metrics_monthly") }}'
