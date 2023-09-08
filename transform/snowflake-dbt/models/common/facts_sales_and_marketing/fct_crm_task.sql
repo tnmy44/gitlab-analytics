@@ -19,6 +19,38 @@
   FROM {{ ref('prep_crm_opportunity') }}
   WHERE is_deleted = FALSE
 
+), sub as (
+
+  SELECT DISTINCT
+    prep_crm_task.dim_crm_task_pk as dim_crm_task_pk,
+    CASE
+        WHEN prep_crm_opportunity.dim_crm_opportunity_id IS NOT NULL
+          THEN prep_crm_task.dim_crm_opportunity_id
+        WHEN account_opp_mapping.dim_crm_opportunity_id IS NOT NULL
+          THEN account_opp_mapping.dim_crm_opportunity_id
+        END AS dim_mapped_opportunity_id,
+    CASE 
+        WHEN prep_crm_opportunity.dim_crm_opportunity_id IS NOT NULL 
+          THEN 'Opportunity'
+        WHEN account_opp_mapping.dim_crm_opportunity_id IS NOT NULL 
+          THEN 'Account'
+        ELSE 'Not Mappable'
+        END AS task_mapped_to
+  
+  FROM prep_crm_task
+  LEFT JOIN prep_crm_person
+    ON prep_crm_task.sfdc_record_id = prep_crm_person.sfdc_record_id
+  LEFT JOIN dim_date
+    ON {{ get_date_id('prep_crm_task.task_date') }} = dim_date.date_id
+  LEFT JOIN prep_crm_opportunity ON
+      prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
+  LEFT JOIN prep_crm_opportunity AS account_opp_mapping 
+    ON prep_crm_task.account_or_opportunity_id = account_opp_mapping.dim_crm_account_id
+    AND prep_crm_task.task_date < account_opp_mapping.close_date
+    AND prep_crm_task.task_date >= DATEADD('month', -9, dim_date.first_day_of_fiscal_quarter)
+WHERE prep_crm_task.SA_ACTIVITY_TYPE IS NOT NULL
+)
+
 ), final AS (
 
   SELECT
@@ -32,13 +64,7 @@
     {{ get_keyed_nulls('prep_crm_task.sfdc_record_type_id') }}    AS sfdc_record_type_id,
     {{ get_keyed_nulls('prep_crm_person.dim_crm_person_id') }}    AS dim_crm_person_id,
     {{ get_keyed_nulls('prep_crm_task.dim_crm_opportunity_id') }} AS dim_crm_opportunity_id,
-    CASE
-      WHEN prep_crm_opportunity.dim_crm_opportunity_id IS NOT NULL
-        THEN prep_crm_task.dim_crm_opportunity_id
-      WHEN account_opp_mapping.dim_crm_opportunity_id IS NOT NULL
-        THEN account_opp_mapping.dim_crm_opportunity_id
-      ELSE {{ get_keyed_nulls('prep_crm_task.dim_crm_opportunity_id') }}
-      END AS dim_mapped_opportunity_id,
+    sub.dim_mapped_opportunity_id,
 
     prep_crm_task.sfdc_record_id,
 
@@ -55,13 +81,7 @@
     prep_crm_task.task_recurrence_start_date,
 
     -- Logic
-    CASE 
-      WHEN prep_crm_opportunity.dim_crm_opportunity_id IS NOT NULL 
-        THEN 'Opportunity'
-      WHEN account_opp_mapping.dim_crm_opportunity_id IS NOT NULL 
-        THEN 'Account'
-      ELSE 'Not Mappable'
-      END AS task_mapped_to,
+    sub.task_mapped_to,
 
     -- Counts
     prep_crm_task.account_or_opportunity_count,
@@ -83,15 +103,8 @@
   FROM prep_crm_task
   LEFT JOIN prep_crm_person
     ON prep_crm_task.sfdc_record_id = prep_crm_person.sfdc_record_id
-  LEFT JOIN prep_crm_opportunity
-    ON prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
-  LEFT JOIN dim_date
-    ON {{ get_date_id('prep_crm_task.task_date') }} = dim_date.date_id
-  LEFT JOIN prep_crm_opportunity AS account_opp_mapping 
-    ON prep_crm_task.account_or_opportunity_id = account_opp_mapping.dim_crm_account_id
-    AND prep_crm_task.task_date < account_opp_mapping.close_date
-    AND prep_crm_task.task_date >= DATEADD('month', -9, dim_date.first_day_of_fiscal_quarter)
-    AND prep_crm_task.sa_activity_type IS NOT NULL
+  LEFT JOIN sub
+    ON prep_crm_task.dim_crm_task_pk = sub.dim_crm_task_pk
 
 )
 
