@@ -3,21 +3,23 @@ WITH source AS (
   SELECT *
   FROM {{ ref('gitlab_dotcom_ci_pipeline_artifacts_dedupe_source') }}
 
-), renamed AS (
+),
+
+renamed AS (
 
   SELECT
-    id::number as id,
-    project_id::number as project_id,
-    pipeline_id::timestamp as pipeline_id,
-    file_type::number as file_type,
-    size::number as size,
-    created_at::timestamp as created_at,
-    updated_at::timestamp as updated_at,
-    expire_at::timestamp as expire_at,
-    file::varchar as file,
-    file_store::number as file_store,
-    file_format::number as file_format,
-    locked::number as locked
+    id::NUMBER             AS id,
+    project_id::NUMBER     AS project_id,
+    pipeline_id::TIMESTAMP AS pipeline_id,
+    file_type::NUMBER      AS file_type,
+    size::NUMBER           AS size,
+    created_at::TIMESTAMP  AS created_at,
+    updated_at::TIMESTAMP  AS updated_at,
+    expire_at::TIMESTAMP   AS expire_at,
+    file::VARCHAR          AS file,
+    file_store::NUMBER     AS file_store,
+    file_format::NUMBER    AS file_format,
+    locked::NUMBER         AS locked
   FROM source
 
 )
