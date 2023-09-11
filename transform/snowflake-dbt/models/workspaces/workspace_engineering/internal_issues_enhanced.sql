@@ -118,7 +118,7 @@ final AS (
     internal_issues.labels                                                                                                                                                                                                                                                                             AS labels,
     ARRAY_TO_STRING(internal_issues.labels, '|')                                                                                                                                                                                                                                                       AS masked_label_title,
     ARRAY_CONTAINS('community contribution'::VARIANT, internal_issues.labels)                                                                                                                                                                                                                          AS is_community_contribution,
-    ARRAY_CONTAINS('security'::VARIANT, internal_issues.labels)                                                                                                                                                                                                                                        AS is_security,
+    ARRAY_CONTAINS('sus::impacting'::VARIANT, internal_issues.labels)                                                                                                                                                                                                                                        AS is_sus_impacting,
     ARRAY_CONTAINS('corrective action'::VARIANT, internal_issues.
     labels)                                                                                 AS is_corrective_action,
     internal_issues.priority_tag                                                                                                                                                                                                                                                                       AS priority_label,
@@ -147,7 +147,20 @@ final AS (
         THEN COALESCE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bmaintenance::*([^,]*)'), 'undefined')
       WHEN type_label = 'feature'
         THEN COALESCE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bfeature::*([^,]*)'), 'undefined')
-      ELSE 'undefined' END                                                                                                                                                                                                                                                                             AS subtype_label,
+      ELSE 'undefined' END                                                                                                                                                                                                                                                 AS subtype_label,
+      case when subtype_label = 'bug::vulnerability' --change requested by James & Darva correct way to label vulnerability issues
+  AND internal_issues.namespace_id NOT IN (5821789,1819570,1986712,2139148,4955423,3786502)
+  AND NOT ARRAY_CONTAINS('feature'::variant, internal_issues.labels)
+  AND NOT ARRAY_CONTAINS('test'::variant, internal_issues.labels)
+  AND NOT ARRAY_CONTAINS('securitybot::ignore'::variant, internal_issues.labels)
+  AND NOT ARRAY_CONTAINS('documentation'::variant, internal_issues.labels)
+  AND NOT ARRAY_CONTAINS('type::feature'::variant, internal_issues.labels)
+  AND NOT ARRAY_CONTAINS('fedramp::dr status::open'::variant, internal_issues.labels)
+  AND NOT ARRAY_CONTAINS('vulnerability::vendor package::will not be fixed'::variant, internal_issues.labels)
+  AND NOT ARRAY_CONTAINS('vulnerability::vendor package::fix unavailable'::variant, internal_issues.labels)
+  AND NOT ARRAY_CONTAINS('vulnerability::vendor base container::will not be fixed'::variant, internal_issues.labels)  
+  AND NOT ARRAY_CONTAINS('vulnerability::vendor base container::fix unavailable'::variant, internal_issues.labels)
+  AND NOT ARRAY_CONTAINS('featureflag::disabled'::variant, internal_issues.labels) then True else False end as is_security,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bworkflow::*([^,]*)'), 'workflow::', '') IN (SELECT workflow_label FROM workflow_labels), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bworkflow::*([^,]*)'), 'workflow::', ''), 'undefined') AS workflow_label,
     IFF(ARRAY_CONTAINS('infradev'::VARIANT, internal_issues.labels), TRUE, FALSE)                                                AS is_infradev,
     IFF(ARRAY_CONTAINS('fedramp::vulnerability'::VARIANT, internal_issues.labels), TRUE, FALSE)                             AS fedramp_vulnerability,

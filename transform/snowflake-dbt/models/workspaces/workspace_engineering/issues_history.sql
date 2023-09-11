@@ -76,7 +76,56 @@ SELECT
   issues.is_community_contribution,
   issues.is_security,
   issues.is_corrective_action,
+  issues.is_sus_impacting,
   issues.is_part_of_product,
+  case when issues.is_security then CASE
+           WHEN severity_label_age_in_days > 30
+                AND severity.severity = 'S1' THEN 1
+           WHEN severity_label_age_in_days > 30
+                AND severity.severity = 'S2' THEN 1
+           WHEN severity_label_age_in_days > 90
+                AND severity.severity = 'S3' THEN 1
+           WHEN severity_label_age_in_days > 180
+                AND severity.severity = 'S4' THEN 1
+           ELSE 0
+       END
+  else
+  CASE
+           WHEN severity_label_age_in_days > 30
+                AND severity.severity = 'S1' THEN 1
+           WHEN severity_label_age_in_days > 60
+                AND severity.severity = 'S2' THEN 1
+           WHEN severity_label_age_in_days > 90
+                AND severity.severity = 'S3' THEN 1
+           WHEN severity_label_age_in_days > 120
+                AND severity.severity = 'S4' THEN 1
+           ELSE 0
+       END 
+       end AS slo_breach_counter,
+       case when issues.is_security then CASE
+           WHEN severity_label_age_in_days > 30
+                AND severity.severity = 'S1' THEN (severity_label_age_in_days - 30)
+           WHEN severity_label_age_in_days > 30
+                AND severity.severity = 'S2' THEN (severity_label_age_in_days - 30)
+           WHEN severity_label_age_in_days > 90
+                AND severity.severity = 'S3' THEN (severity_label_age_in_days - 90)
+           WHEN severity_label_age_in_days > 180
+                AND severity.severity = 'S4' THEN (severity_label_age_in_days - 180)
+           ELSE 0
+       END
+       else
+       CASE
+           WHEN severity_label_age_in_days > 30
+                AND severity.severity = 'S1' THEN (severity_label_age_in_days - 30)
+           WHEN severity_label_age_in_days > 60
+                AND severity.severity = 'S2' THEN (severity_label_age_in_days - 60)
+           WHEN severity_label_age_in_days > 90
+                AND severity.severity = 'S3' THEN (severity_label_age_in_days - 90)
+           WHEN severity_label_age_in_days > 120
+                AND severity.severity = 'S4' THEN (severity_label_age_in_days - 120)
+           ELSE 0
+       END 
+       end AS days_past_due,
   MAX(dates.date_actual) OVER () AS last_updated_at,
   ROW_NUMBER() OVER (PARTITION BY daily_issue_id 
   ORDER BY LEAST(COALESCE(severity_label_valid_to, CURRENT_DATE),COALESCE(team_label_valid_to,CURRENT_DATE)),COALESCE(workflow_label_valid_to,CURRENT_DATE)) AS rn
