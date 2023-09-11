@@ -394,7 +394,7 @@ The main motivation for introducing this column is for a few reasons:
 {% enddocs %}
 
 {% docs ci_builds_28_days_event_desc %}
-  Total monthly (28D) ci builds in Gitlab repositories for all project and project types [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20230531170613_ci_builds.yml)
+  Total monthly (28D) CI builds in Gitlab repositories for all project and project types [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20230531170613_ci_builds.yml)
 {% enddocs %}
 
 {% docs audit_features_28_days_user_desc %}

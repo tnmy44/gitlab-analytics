@@ -323,7 +323,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mdrussell",
-    updated_by="@jpeguero",
+    updated_by="@mdrussell",
     created_date="2022-10-12",
     updated_date="2023-09-07"
 ) }}
