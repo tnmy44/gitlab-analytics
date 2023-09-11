@@ -54,7 +54,7 @@
   {
     "event_name": "epic_creation",
     "source_cte_name": "prep_epic",
-    "user_column_name": "author_id",
+    "user_column_name": "dim_user_sk_author",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "NULL",
     "primary_key": "epic_id",

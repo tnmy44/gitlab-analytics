@@ -39,7 +39,7 @@
       epic_issues.epic_id,
 
       -- Other Attributes
-      epic_issues.relative_position                                           AS epic_issue_relative_position
+      epic_issues.epic_issue_relative_position                                AS epic_issue_relative_position
 
     FROM epic_issues
     LEFT JOIN prep_issue

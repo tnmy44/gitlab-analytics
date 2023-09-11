@@ -510,7 +510,7 @@
 
     SELECT
       {{ dbt_utils.surrogate_key(['user_request.dim_issue_id',
-                                  'user_request.dim_epic_sk',
+                                  'user_request.epic_id',
                                   'user_request.dim_crm_account_id',
                                   'user_request.dim_crm_opportunity_id',
                                   'user_request.dim_ticket_id']
