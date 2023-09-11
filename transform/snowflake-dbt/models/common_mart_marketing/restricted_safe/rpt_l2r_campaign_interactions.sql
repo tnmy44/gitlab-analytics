@@ -139,7 +139,7 @@
       opp.primary_campaign_source_id AS opp_primary_campaign_source_id,
       opp.owner_id AS opp_owner_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
-      opp.partner_account AS partner_account_id,
+      partner_account.crm_account_name AS partner_account_name,
 
 	--Opp Dates
       opp.created_date AS opp_created_date,
@@ -348,7 +348,9 @@
       ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=160)}}
+    LEFT JOIN dim_crm_account partner_account
+      ON opp.partner_account=partner_account.dim_crm_account_id
+  {{dbt_utils.group_by(n=164)}}
     
 ), cohort_base_combined AS (
   
@@ -369,7 +371,7 @@
       null AS ssp_id,
       null AS opp_primary_campaign_source_id,
       null AS opp_owner_id,
-      null AS partner_account_id,
+      null AS partner_account_name,
 
   --Person Data
       email_hash,
@@ -563,7 +565,7 @@
       ssp_id,
       opp_primary_campaign_source_id,
       opp_owner_id,
-      partner_account_id,
+      partner_account_name,
 
     --Person Data
       email_hash,
@@ -903,5 +905,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-08-07",
+    updated_date="2023-09-11",
   ) }}
