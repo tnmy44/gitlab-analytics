@@ -121,6 +121,28 @@ tables:
       FROM ci_job_artifacts
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  ci_pipeline_artifacts:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: ci_pipeline_artifacts
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , pipeline_id
+      , project_id
+      , size
+      , file_store
+      , file_type
+      , file_format
+      , file
+      , expire_at
+      , locked
+      FROM ci_pipeline_artifacts
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_pipeline_schedule_variables:
     dbt_source_model: true
     export_schema: 'gitlab_com'
