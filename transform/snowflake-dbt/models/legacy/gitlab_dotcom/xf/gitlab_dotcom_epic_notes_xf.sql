@@ -31,6 +31,7 @@ WITH base AS (
 
     SELECT *
     FROM {{ ref('prep_namespace') }}
+    WHERE is_currently_valid = TRUE
 )
 
 , internal_namespaces AS (

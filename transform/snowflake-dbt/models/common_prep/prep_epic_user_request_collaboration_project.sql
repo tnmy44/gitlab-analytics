@@ -6,6 +6,7 @@ WITH prep_namespace AS (
 
     SELECT *
     FROM {{ ref('prep_namespace') }}
+    WHERE is_currently_valid = TRUE
   
 ), issue_links AS (
 

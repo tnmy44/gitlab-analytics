@@ -36,6 +36,7 @@ WITH epic_issues AS (
 
     SELECT *
     FROM {{ ref('prep_namespace') }}
+    WHERE is_currently_valid = TRUE
 
 ), sfdc_accounts AS (
 
