@@ -46,6 +46,8 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
+      person_base.partner_prospect_status,
+      person_base.prospect_share_status,
       dim_crm_account.is_first_order_available,
       person_base.sales_segment_name AS person_sales_segment_name,
       person_base.sales_segment_grouped AS person_sales_segment_grouped,
@@ -66,7 +68,6 @@
       END AS person_order_type,
       last_utm_campaign,
       last_utm_content,
-
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -138,6 +139,7 @@
       opp.primary_campaign_source_id AS opp_primary_campaign_source_id,
       opp.owner_id AS opp_owner_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
+      opp.partner_account AS partner_account_id,
 
 	--Opp Dates
       opp.created_date AS opp_created_date,
@@ -216,6 +218,11 @@
       opp.calculated_deal_count,
       opp.days_in_stage,
       opp.record_type_name,
+      CASE
+        WHEN opp.dr_deal_id IS NOT null
+          THEN TRUE
+        ELSE FALSE
+      END AS is_created_through_deal_registration,
 
     --Person Data
       person_base.dim_crm_person_id,
@@ -261,6 +268,8 @@
       END AS person_order_type,
       last_utm_campaign,
       last_utm_content,
+      person_base.prospect_share_status,
+      person_base.partner_prospect_status,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -360,6 +369,7 @@
       null AS ssp_id,
       null AS opp_primary_campaign_source_id,
       null AS opp_owner_id,
+      null AS partner_account_id,
 
   --Person Data
       email_hash,
@@ -397,6 +407,8 @@
       inferred_geo,
       last_utm_campaign,
       last_utm_content,
+      prospect_share_status,
+      partner_prospect_status,
 
   --Person Dates
       true_inquiry_date,
@@ -443,6 +455,7 @@
       null AS critical_deal_flag,
       null AS is_public_sector_opp,
       null AS is_registration_from_portal,
+      null AS is_created_through_deal_registration,
 
     --Opp Data
       null AS new_logo_count,
@@ -550,6 +563,7 @@
       ssp_id,
       opp_primary_campaign_source_id,
       opp_owner_id,
+      partner_account_id,
 
     --Person Data
       email_hash,
@@ -587,6 +601,8 @@
       inferred_geo,
       last_utm_campaign,
       last_utm_content,
+      prospect_share_status,
+      partner_prospect_status,
     
     --Person Dates
       true_inquiry_date,
@@ -633,6 +649,7 @@
       critical_deal_flag,
       is_public_sector_opp,
       is_registration_from_portal,
+      is_created_through_deal_registration,
 
       --Opp Data
       new_logo_count,
@@ -788,6 +805,12 @@
       dim_campaign.type AS sfdc_campaign_type,
       fct_campaign.budgeted_cost,
       fct_campaign.actual_cost,
+      dim_campaign.is_channel_partner_involved,
+      CASE  
+        WHEN dim_campaign.will_there_be_mdf_funding = 'Yes'
+          THEN TRUE
+          ELSE FALSE
+      END AS is_mdf_campaign,
 
       -- user
       user.user_name        AS record_owner_name,
