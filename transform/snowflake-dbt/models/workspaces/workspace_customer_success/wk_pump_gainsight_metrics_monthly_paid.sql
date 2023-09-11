@@ -637,7 +637,7 @@
       monthly_saas_metrics.ci_internal_pipelines_28_days_event,
       --Wave 9
       monthly_saas_metrics.ci_builds_28_days_event,
-      monthly_saas_metrics.audit_features_28_days_user,
+      COALESCE(audit_users.distinct_users_whole_month, 0) AS audit_features_28_days_user,
       monthly_saas_metrics.groups_all_time_event,
       monthly_saas_metrics.commit_ci_config_file_7_days_user,
       monthly_saas_metrics.ci_pipeline_config_repository_all_time_user,
@@ -697,6 +697,9 @@
     LEFT JOIN user_approve_mr
       ON user_approve_mr.date_month = monthly_saas_metrics.snapshot_month
       AND user_approve_mr.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN audit_users
+      ON audit_users.date_month = monthly_saas_metrics.snapshot_month
+      AND audit_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -730,5 +733,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-09-09",
-    updated_date="2023-09-07"
+    updated_date="2023-09-11"
 ) }}
