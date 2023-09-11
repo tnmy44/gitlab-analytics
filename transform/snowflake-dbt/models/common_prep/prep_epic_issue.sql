@@ -43,7 +43,7 @@
 
     FROM epic_issues
     LEFT JOIN prep_issue
-      ON epic_issues.issue_id = prep_project.issue_id
+      ON epic_issues.issue_id = prep_issue.issue_id
     LEFT JOIN prep_epic
       ON epic_issues.epic_id = prep_epic.epic_id
 
