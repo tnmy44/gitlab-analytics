@@ -54,12 +54,12 @@
   {
     "event_name": "epic_creation",
     "source_cte_name": "prep_epic",
-    "user_column_name": "dim_user_sk_author",
+    "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "NULL",
     "primary_key": "epic_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_sk_at_creation",
+    "plan_column_name": "dim_plan_id_at_creation",
     "created_date_name": "dim_created_date_id"
   },
   {

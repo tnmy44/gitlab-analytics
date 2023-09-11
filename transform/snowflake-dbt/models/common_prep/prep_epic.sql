@@ -73,10 +73,13 @@
       namespace_prep.ultimate_parent_namespace_id::NUMBER                                    AS ultimate_parent_namespace_id,
       prep_date.date_id::NUMBER                                                              AS dim_created_date_id,
       prep_gitlab_dotcom_plan.dim_plan_sk                                                    AS dim_plan_sk_at_creation,
+      prep_gitlab_dotcom_plan.dim_plan_id                                                    AS dim_plan_id_at_creation,
       author.dim_user_sk                                                                     AS dim_user_sk_author,
       assignee.dim_user_sk                                                                   AS dim_user_sk_assignee,
       updated_by.dim_user_sk                                                                 AS dim_user_sk_updated_by,
       last_edited_by.dim_user_sk                                                             AS dim_user_sk_last_edited_by,
+      gitlab_dotcom_epics_dedupe_source.author_id,
+
 
       -- attributes
       gitlab_dotcom_epics_dedupe_source.iid::NUMBER                                          AS epic_internal_id,
