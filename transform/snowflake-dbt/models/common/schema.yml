@@ -4628,7 +4628,7 @@ models:
         description: First month the ultimate parent CRM account has had ARR (Annual Recurrent Revenue).
       - name: parent_account_arr_cohort_quarter
         description: First fiscal quarter the ultimate parent CRM account has had ARR (Annual Recurrent Revenue).
-      - name: 6_sense_6_qa
+      - name: has_six_sense_6_qa
         description: The 6QA status of the account for the product.
       - name: risk_rate_guid
         description: The globally unique ID (GUID) for the third party record in NavEx RiskRate.
