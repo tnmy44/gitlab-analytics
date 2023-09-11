@@ -42,6 +42,8 @@ WITH base AS (
       ultimate_parent_namespace_id AS namespace_ultimate_parent_id,
       (ultimate_parent_namespace_id IN {{ get_internal_parent_namespaces() }}) AS namespace_is_internal
     FROM {{ ref('prep_namespace') }}
+    WHERE is_currently_valid = TRUE
+
 
 )
 
