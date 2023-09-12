@@ -69,8 +69,8 @@
 
   SELECT DISTINCT  
     mart_crm_person.dim_crm_person_id,
-    converted_contact_id AS sfdc_record_id,
-    lead_id AS original_lead_id,
+    sfdc_lead.converted_contact_id AS sfdc_record_id,
+    sfdc_lead.lead_id AS original_lead_id,
     sales_dev_opps.DIM_CRM_OPPORTUNITY_ID,
     sales_dev_opps.opp_created_date,
     mart_crm_person.dim_crm_account_id
@@ -108,7 +108,7 @@
     dim_crm_user.dim_crm_user_id AS booked_by_user_id,
     mart_crm_event.event_date AS activity_date,
     'Event' AS activity_type,
-    event_type AS activity_subtype
+    mart_crm_event.event_type AS activity_subtype
   FROM mart_crm_event
   LEFT JOIN dim_crm_user 
     ON booked_by_employee_number = dim_crm_user.employee_number 
@@ -126,8 +126,8 @@
     mart_crm_task.dim_crm_person_id,
     NULL AS booked_by_user_id,
     mart_crm_task.task_completed_date AS activity_date,
-    task_type AS activity_type,
-    task_subtype AS activity_subtype
+    mart_crm_task.task_type AS activity_type,
+    mart_crm_task.task_subtype AS activity_subtype
   FROM mart_crm_task
   INNER JOIN sales_dev_hierarchy 
     ON mart_crm_task.dim_crm_user_id = sales_dev_hierarchy.sales_dev_rep_user_id
@@ -136,14 +136,14 @@
 ), activity_final AS (
 
   SELECT 
-    activity_id,
+    activity_base.activity_id,
     COALESCE(activity_base.booked_by_user_id,activity_base.dim_crm_user_id) AS dim_crm_user_id,
     mart_crm_person.dim_crm_person_id,
     COALESCE(mart_crm_person.sfdc_record_id, activity_base.sfdc_record_id) AS sfdc_record_id,
     COALESCE(mart_crm_person.dim_crm_account_id, activity_base.dim_crm_account_id) AS dim_crm_account_id,
-    activity_date::DATE AS activity_date,
-    activity_type,
-    activity_subtype
+    activity_base.activity_date::DATE AS activity_date,
+    activity_base.activity_type,
+    activity_base.activity_subtype
   FROM activity_base
   LEFT JOIN merged_person_base 
     ON activity_base.sfdc_record_id = merged_person_base.original_lead_id
