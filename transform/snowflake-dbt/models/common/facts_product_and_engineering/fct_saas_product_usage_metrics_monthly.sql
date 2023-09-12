@@ -251,7 +251,15 @@
       "usage_activity_by_stage_monthly.verify.ci_pipeline_schedules"                                                        AS pipeline_schedules_28_days_user,
       -- Wave 8
       "counts_monthly.ci_internal_pipelines"    AS ci_internal_pipelines_28_days_event,
-      -- Data Quality Flags
+      -- Wave 9
+      "counts_monthly.ci_builds"                                                                                AS ci_builds_28_days_event,
+      "counts_monthly.aggregated_metrics.compliance_features_track_unique_visits_union"                         AS audit_features_28_days_user,
+      "counts.groups"                                                                                           AS groups_all_time_event,
+      "redis_hll_counters.pipeline_authoring.o_pipeline_authoring_unique_users_committing_ciconfigfile_weekly"  AS commit_ci_config_file_7_days_user,
+      "usage_activity_by_stage.verify.ci_pipeline_config_repository"                                            AS ci_pipeline_config_repository_all_time_user,
+      "counts.ci_pipeline_config_repository"                                                                    AS ci_pipeline_config_repository_all_time_event,
+      "counts.ci_pipeline_schedules"                                                                            AS pipeline_schedules_all_time_event,
+      "usage_activity_by_stage.verify.ci_pipeline_schedules"                                                    AS pipeline_schedules_all_time_user,
       IFF(license_utilization = 0
             AND billable_user_count > 0,
           TRUE, FALSE)                                                                  AS is_missing_paid_seats,
@@ -281,5 +289,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-02",
-    updated_date="2023-05-30"
+    updated_date="2023-09-07"
 ) }}
