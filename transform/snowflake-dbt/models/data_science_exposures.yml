@@ -86,7 +86,6 @@ exposures:
       - ref('dim_namespace') 
       - ref('gitlab_dotcom_users_xf')
       - ref('mart_crm_opportunity_daily_snapshot')
-      - ref('account')
       - ref('mart_crm_attribution_touchpoint')
       - ref('sfdc_task')
       - ref('sfdc_lead_source')      
