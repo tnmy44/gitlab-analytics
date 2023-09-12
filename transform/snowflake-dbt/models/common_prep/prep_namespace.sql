@@ -49,8 +49,11 @@ creators AS (
   INNER JOIN audit_event_details_clean
     ON audit_events.audit_event_id = audit_event_details_clean.audit_event_id
   WHERE entity_type = 'Group'
-    AND key_name = 'add'
-    AND key_value = 'group'
+    AND (
+      (key_name = 'add' AND key_value = 'group')
+      OR
+      (key_name = 'custom_message' AND key_value = 'Added group')
+    )
   GROUP BY 1, 2
 
 ),
