@@ -151,6 +151,13 @@
     FROM redis_metrics_28d_user
     WHERE metrics_path = 'redis_hll_counters.code_review.i_code_review_user_approve_mr_monthly'
 
+), audit_users AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'counts_monthly.aggregated_metrics.compliance_features_track_unique_visits_union'
+
 ), sm_paid_user_metrics AS (
 
     SELECT
