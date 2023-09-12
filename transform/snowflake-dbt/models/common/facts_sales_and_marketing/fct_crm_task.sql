@@ -10,7 +10,8 @@
   WHERE is_deleted = FALSE
 
   ), converted_leads AS (
-
+-- Original CRM Task table would show null keyed id for dim_crm_person_id for leads that have been converted to contacts
+-- This CTE is pulling the most recent sfdc_record_id and dim_crm_person_id of a record so that they correspond to the values in the mart_crm_person model.
   SELECT
     sfdc_lead_source.converted_contact_id AS sfdc_record_id,
     sfdc_lead_source.lead_id,
