@@ -48,6 +48,7 @@ final AS (
     issues.milestone_description,
     issues.milestone_start_date,
     issues.milestone_due_date,
+    issues.milestone_recency,
     IFF(dates.date_actual >= DATE_TRUNC('day', issues.closed_at), 'closed', 'opened')                                                                                AS issue_state,
     issues.created_at                                                                                                                                                AS issue_created_at,
     issues.closed_at                                                                                                                                                 AS issue_closed_at,
@@ -91,15 +92,15 @@ final AS (
         AND severity.severity = 'S4' THEN 1
       ELSE 0
       END) ELSE (CASE
-      WHEN severity_label_age_in_days > 30
-        AND severity.severity = 'S1' THEN 1
-      WHEN severity_label_age_in_days > 60
-        AND severity.severity = 'S2' THEN 1
-      WHEN severity_label_age_in_days > 90
-        AND severity.severity = 'S3' THEN 1
-      WHEN severity_label_age_in_days > 120
-        AND severity.severity = 'S4' THEN 1
-      ELSE 0 END)
+        WHEN severity_label_age_in_days > 30
+          AND severity.severity = 'S1' THEN 1
+        WHEN severity_label_age_in_days > 60
+          AND severity.severity = 'S2' THEN 1
+        WHEN severity_label_age_in_days > 90
+          AND severity.severity = 'S3' THEN 1
+        WHEN severity_label_age_in_days > 120
+          AND severity.severity = 'S4' THEN 1
+        ELSE 0 END)
     END                                                                                                                                                              AS slo_breach_counter,
     CASE WHEN issues.is_security THEN (CASE
       WHEN severity_label_age_in_days > 30
@@ -112,15 +113,15 @@ final AS (
         AND severity.severity = 'S4' THEN (severity_label_age_in_days - 180)
       ELSE 0
       END) ELSE (CASE
-      WHEN severity_label_age_in_days > 30
-        AND severity.severity = 'S1' THEN (severity_label_age_in_days - 30)
-      WHEN severity_label_age_in_days > 60
-        AND severity.severity = 'S2' THEN (severity_label_age_in_days - 60)
-      WHEN severity_label_age_in_days > 90
-        AND severity.severity = 'S3' THEN (severity_label_age_in_days - 90)
-      WHEN severity_label_age_in_days > 120
-        AND severity.severity = 'S4' THEN (severity_label_age_in_days - 120)
-      ELSE 0 END)
+        WHEN severity_label_age_in_days > 30
+          AND severity.severity = 'S1' THEN (severity_label_age_in_days - 30)
+        WHEN severity_label_age_in_days > 60
+          AND severity.severity = 'S2' THEN (severity_label_age_in_days - 60)
+        WHEN severity_label_age_in_days > 90
+          AND severity.severity = 'S3' THEN (severity_label_age_in_days - 90)
+        WHEN severity_label_age_in_days > 120
+          AND severity.severity = 'S4' THEN (severity_label_age_in_days - 120)
+        ELSE 0 END)
     END                                                                                                                                                              AS days_past_due,
     MAX(dates.date_actual) OVER ()                                                                                                                                   AS last_updated_at,
     ROW_NUMBER() OVER (PARTITION BY daily_issue_id
