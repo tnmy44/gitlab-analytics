@@ -807,7 +807,7 @@
       dim_campaign.type AS sfdc_campaign_type,
       fct_campaign.budgeted_cost,
       fct_campaign.actual_cost,
-      dim_campaign.is_channel_partner_involved,
+      dim_campaign.is_a_channel_partner_involved,
       CASE  
         WHEN dim_campaign.will_there_be_mdf_funding = 'Yes'
           THEN TRUE
@@ -905,5 +905,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-09-11",
+    updated_date="2023-09-12",
   ) }}
