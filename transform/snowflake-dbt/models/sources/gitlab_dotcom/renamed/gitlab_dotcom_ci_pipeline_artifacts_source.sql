@@ -10,7 +10,7 @@ renamed AS (
   SELECT
     id::NUMBER             AS ci_pipeline_artifact_id,
     project_id::NUMBER     AS project_id,
-    pipeline_id::TIMESTAMP AS pipeline_id,
+    pipeline_id::NUMBER    AS pipeline_id,
     file_type::NUMBER      AS file_type,
     size::NUMBER           AS size,
     created_at::TIMESTAMP  AS created_at,
