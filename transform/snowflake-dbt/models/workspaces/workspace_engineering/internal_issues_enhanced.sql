@@ -14,7 +14,7 @@ cte_ns_explode AS (
     s.value AS lineage_namespace,
     s.index AS rn
   FROM {{ ref('gitlab_dotcom_namespace_lineage_scd') }},
-    LATERAL FLATTEN(a.upstream_lineage, OUTER=>TRUE) AS s
+    LATERAL FLATTEN(upstream_lineage, OUTER=>TRUE) AS s
   WHERE is_current
 
 ),
