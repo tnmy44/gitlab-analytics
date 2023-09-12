@@ -75,7 +75,7 @@ namespace_lineage AS (
     plan_is_paid     AS ultimate_parent_plan_is_paid,
     plan_name        AS ultimate_parent_plan_name
   FROM namespace_lineage_historical
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id,parent_id,ultimate_parent_id ORDER BY combined_valid_from DESC) = 1
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id, parent_id, ultimate_parent_id ORDER BY combined_valid_from DESC) = 1
 ),
 
 namespaces AS (
@@ -140,23 +140,23 @@ joined AS (
     namespaces.two_factor_grace_period,
     namespaces.project_creation_level,
     namespaces.push_rule_id,
-    IFNULL(creators.creator_id, namespaces.owner_id)                        AS creator_id,
-    IFNULL(users.is_blocked_user, FALSE)                                    AS namespace_creator_is_blocked,
+    COALESCE(creators.creator_id, namespaces.owner_id)                      AS creator_id,
+    COALESCE(users.is_blocked_user, FALSE)                                  AS namespace_creator_is_blocked,
     namespace_lineage.ultimate_parent_plan_id                               AS gitlab_plan_id,
     namespace_lineage.ultimate_parent_plan_title                            AS gitlab_plan_title,
     namespace_lineage.ultimate_parent_plan_is_paid                          AS gitlab_plan_is_paid,
-    {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}         AS dim_product_tier_id,
+{{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}         AS dim_product_tier_id,
     namespace_lineage.seats                                                 AS gitlab_plan_seats,
     namespace_lineage.seats_in_use                                          AS gitlab_plan_seats_in_use,
     namespace_lineage.max_seats_used                                        AS gitlab_plan_max_seats_used,
-    IFNULL(members.member_count, 0)                                         AS namespace_member_count,
-    IFNULL(projects.project_count, 0)                                       AS namespace_project_count,
+    COALESCE(members.member_count, 0)                                       AS namespace_member_count,
+    COALESCE(projects.project_count, 0)                                     AS namespace_project_count,
     namespace_settings.code_suggestions                                     AS has_code_suggestions_enabled,
-    IFNULL(namespaces.is_current AND namespace_lineage.is_current, FALSE)   AS is_currently_valid
+    COALESCE(namespaces.is_current AND namespace_lineage.is_current, FALSE) AS is_currently_valid
   FROM namespaces
   LEFT JOIN namespace_lineage
     ON namespaces.dim_namespace_id = namespace_lineage.namespace_id
-      AND IFNULL(namespaces.parent_id, namespaces.dim_namespace_id) = IFNULL(namespace_lineage.parent_id, namespace_lineage.namespace_id)
+      AND COALESCE(namespaces.parent_id, namespaces.dim_namespace_id) = COALESCE(namespace_lineage.parent_id, namespace_lineage.namespace_id)
   LEFT JOIN namespace_settings
     ON namespaces.dim_namespace_id = namespace_settings.namespace_id
   LEFT JOIN members
