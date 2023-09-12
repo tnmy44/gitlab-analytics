@@ -43,16 +43,16 @@ projects AS (
 creators AS (
 
   SELECT
-    author_id AS creator_id,
-    entity_id AS group_id
+    audit_events.author_id AS creator_id,
+    audit_events.entity_id AS group_id
   FROM audit_events
   INNER JOIN audit_event_details_clean
     ON audit_events.audit_event_id = audit_event_details_clean.audit_event_id
-  WHERE entity_type = 'Group'
+  WHERE audit_events.entity_type = 'Group'
     AND (
-      (key_name = 'add' AND key_value = 'group')
+      (audit_event_details_clean.key_name = 'add' AND audit_event_details_clean.key_value = 'group')
       OR
-      (key_name = 'custom_message' AND key_value = 'Added group')
+      (audit_event_details_clean.key_name = 'custom_message' AND audit_event_details_clean.key_value = 'Added group')
     )
   GROUP BY 1, 2
 
