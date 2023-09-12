@@ -167,18 +167,18 @@ final AS (
         THEN COALESCE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bfeature::*([^,]*)'), 'undefined')
       ELSE 'undefined' END                                                                                                                                                                                                                                                                              AS subtype_label,
     COALESCE(subtype_label = 'bug::vulnerability' --change requested by James & Darva correct way to label vulnerability issues
-    AND internal_issues.namespace_id NOT IN (5821789, 1819570, 1986712, 2139148, 4955423, 3786502)
-    AND NOT ARRAY_CONTAINS('feature'::VARIANT, internal_issues.labels)
-    AND NOT ARRAY_CONTAINS('test'::VARIANT, internal_issues.labels)
-    AND NOT ARRAY_CONTAINS('securitybot::ignore'::VARIANT, internal_issues.labels)
-    AND NOT ARRAY_CONTAINS('documentation'::VARIANT, internal_issues.labels)
-    AND NOT ARRAY_CONTAINS('type::feature'::VARIANT, internal_issues.labels)
-    AND NOT ARRAY_CONTAINS('fedramp::dr status::open'::VARIANT, internal_issues.labels)
-    AND NOT ARRAY_CONTAINS('vulnerability::vendor package::will not be fixed'::VARIANT, internal_issues.labels)
-    AND NOT ARRAY_CONTAINS('vulnerability::vendor package::fix unavailable'::VARIANT, internal_issues.labels)
-    AND NOT ARRAY_CONTAINS('vulnerability::vendor base container::will not be fixed'::VARIANT, internal_issues.labels)
-    AND NOT ARRAY_CONTAINS('vulnerability::vendor base container::fix unavailable'::VARIANT, internal_issues.labels)
-    AND NOT ARRAY_CONTAINS('featureflag::disabled'::VARIANT, internal_issues.labels), FALSE)                                                                                                                                                                                                            AS is_security,
+      AND internal_issues.namespace_id NOT IN (5821789, 1819570, 1986712, 2139148, 4955423, 3786502)
+      AND NOT ARRAY_CONTAINS('feature'::VARIANT, internal_issues.labels)
+      AND NOT ARRAY_CONTAINS('test'::VARIANT, internal_issues.labels)
+      AND NOT ARRAY_CONTAINS('securitybot::ignore'::VARIANT, internal_issues.labels)
+      AND NOT ARRAY_CONTAINS('documentation'::VARIANT, internal_issues.labels)
+      AND NOT ARRAY_CONTAINS('type::feature'::VARIANT, internal_issues.labels)
+      AND NOT ARRAY_CONTAINS('fedramp::dr status::open'::VARIANT, internal_issues.labels)
+      AND NOT ARRAY_CONTAINS('vulnerability::vendor package::will not be fixed'::VARIANT, internal_issues.labels)
+      AND NOT ARRAY_CONTAINS('vulnerability::vendor package::fix unavailable'::VARIANT, internal_issues.labels)
+      AND NOT ARRAY_CONTAINS('vulnerability::vendor base container::will not be fixed'::VARIANT, internal_issues.labels)
+      AND NOT ARRAY_CONTAINS('vulnerability::vendor base container::fix unavailable'::VARIANT, internal_issues.labels)
+      AND NOT ARRAY_CONTAINS('featureflag::disabled'::VARIANT, internal_issues.labels), FALSE)                                                                                                                                                                                                          AS is_security,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bworkflow::*([^,]*)'), 'workflow::', '') IN (SELECT workflow_label FROM workflow_labels), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bworkflow::*([^,]*)'), 'workflow::', ''), 'undefined')  AS workflow_label,
     IFF(ARRAY_CONTAINS('infradev'::VARIANT, internal_issues.labels), TRUE, FALSE)                                                                                                                                                                                                                       AS is_infradev,
     IFF(ARRAY_CONTAINS('fedramp::vulnerability'::VARIANT, internal_issues.labels), TRUE, FALSE)                                                                                                                                                                                                         AS fedramp_vulnerability,
@@ -191,7 +191,10 @@ final AS (
         THEN '[' || REPLACE(REPLACE(LEFT(internal_issues.issue_title, 64), '[', ''), ']', '') || '](https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/issues/' || internal_issues.issue_iid || ')'
       ELSE 'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/issues/' || internal_issues.issue_iid
     END                                                                                                                                                                                                                                                                                                 AS url,
-    internal_issues.is_part_of_product
+    internal_issues.is_part_of_product,
+    CASE WHEN is_part_of_product AND milestone_start_date <= DATEADD('month', 1, CURRENT_DATE) THEN
+      DENSE_RANK() OVER (PARTITION BY IFF(is_part_of_product AND milestone_start_date <= DATEADD('month', 1, CURRENT_DATE), 1, 0)
+        ORDER BY milestone_start_date DESC) END                                                                                                                                                                                                                                                         AS milestone_recency
   FROM internal_issues
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_issues.project_id
