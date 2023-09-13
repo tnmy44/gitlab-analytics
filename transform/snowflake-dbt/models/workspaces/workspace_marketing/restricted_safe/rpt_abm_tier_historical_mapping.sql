@@ -24,13 +24,13 @@ SELECT DISTINCT
     MIN(dbt_valid_from)::Date AS abm_tier_from,
     MAX(dbt_valid_to)::Date AS abm_tier_to
   FROM abm_tier_base
-  GROUP BY 1,2
+  {{dbt_utils.group_by(n=2)}}
   
 ), final AS (
 
 SELECT 
 abm_tier_final.*,
-abm_first_day_of_quarter.first_day_of_fiscal_quarter AS amb_tier_from_quarter,
+abm_first_day_of_quarter.first_day_of_fiscal_quarter AS abm_tier_from_quarter,
 DATE (abm_last_day_of_quarter.first_day_of_month-1) AS abm_tier_to_month_end
 FROM abm_tier_final
 LEFT JOIN dim_date abm_first_day_of_quarter 
@@ -45,5 +45,5 @@ LEFT JOIN dim_date abm_last_day_of_quarter
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-07",
-    updated_date="2023-09-07",
+    updated_date="2023-09-",
   ) }}

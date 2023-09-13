@@ -32,22 +32,8 @@
     abm_tier_1_date,
     abm_tier_2_date,
     abm_tier_3_date,
-    abm_tier_1.fiscal_quarter_name_fy AS abm_tier_1_quarter,
-    abm_tier_2.fiscal_quarter_name_fy AS abm_tier_2_quarter,
     abm_tier
   FROM account_history_source
-  LEFT JOIN dim_date abm_tier_1
-    ON account_history_source.abm_tier_1_date::Date=abm_tier_1.date_day
-  LEFT JOIN dim_date abm_tier_2
-    ON account_history_source.abm_tier_2_date::Date=abm_tier_2.date_day
-  WHERE ((dbt_valid_from<=abm_tier_1.last_day_of_quarter
-        AND dbt_valid_to > abm_tier_1.last_day_of_quarter)
-            OR (dbt_valid_from <= abm_tier_1.last_day_of_quarter
-                AND dbt_valid_To IS NULL))
-    OR ((dbt_valid_from<=abm_tier_2.last_day_of_quarter
-        AND dbt_valid_to > abm_tier_2.last_day_of_quarter)
-            OR (dbt_valid_from <= abm_tier_2.last_day_of_quarter
-                AND dbt_valid_To IS NULL))
                 
 ), opp_history_final AS (
   
@@ -62,6 +48,8 @@
     net_arr,
     is_net_arr_closed_deal,
     is_net_arr_pipeline_created,
+    is_sao,
+    is_won,
    
   --Opp Dates
     sales_accepted_date,
@@ -86,7 +74,12 @@
     
   --Person Dates
     true_inquiry_date,
-    mql_date_latest_pt
+    mql_date_latest_pt,
+
+  -Attributed Metrics
+    inquiry_sum,
+    mql_sum,
+    influenced_opportunity_id
   FROM rpt_lead_to_revenue
  
 ), inquiry_base AS (
@@ -96,25 +89,45 @@
     mart_crm_person_source.dim_crm_person_id,
     mart_crm_person_source.dim_crm_account_id,
     mart_crm_person_source.sfdc_record_id,
-  
+    account_history_final.dim_crm_parent_account_id,
+
   --Person Data
     mart_crm_person_source.email_hash,
-    mart_crm_person_source.is_mql,
+    mart_crm_person_source.inquiry_sum,
     mart_crm_person_source.is_inquiry,
+    mart_crm_person_source.true_inquiry_date,
     mart_crm_person_source.status,
-    dim_date.fiscal_quarter_name_fy AS inquiry_quarter,
-    account_history_final.abm_tier_1_quarter,
-    account_history_final.abm_tier_2_quarter
+    account_history_final.abm_tier_1_date,
+    account_history_final.abm_tier_2_date
+    CASE 
+      WHEN true_inquiry_date IS NOT NULL
+        THEN email_hash
+      ELSE NULL
+    END AS inquiry
   FROM mart_crm_person_source
-  LEFT JOIN dim_date
-    ON mart_crm_person_source.true_inquiry_date=dim_date.date_day
   LEFT JOIN account_history_final
     ON mart_crm_person_source.dim_crm_account_id=account_history_final.dim_crm_account_id
-    -- ON inquiry_quarter=account_history_final.abm_tier_1_quarter
-    -- OR inquiry_quarter=account_history_final.abm_tier_2_quarter 
   WHERE true_inquiry_date IS NOT NULL
-  AND (abm_tier_1_quarter IS NOT NULL
-    OR abm_tier_2_quarter IS NOT NULL)
+  AND (abm_tier_1_date IS NOT NULL
+    OR abm_tier_2_date IS NOT NULL)
+
+), inquiry_final AS (
+
+  SELECT
+  --IDs
+    dim_crm_account_id,
+    dim_crm_parent_account_id,
+
+  --Dates
+    true_inquiry_date,
+    abm_tier_1_date,
+    abm_tier_2_date,
+
+  --KPIs
+    COUNT(DISTINCT inquiry) AS total_inquiries,
+    SUM(inquiry_sum) AS attributed_inquiries
+  FROM inquiry_base
+  {{dbt_utils.group_by(n=5)}}
   
 ), mql_base AS (
   
@@ -123,26 +136,45 @@
     mart_crm_person_source.dim_crm_person_id,
     mart_crm_person_source.dim_crm_account_id,
     mart_crm_person_source.sfdc_record_id,
+    account_history_final.dim_crm_parent_account_id,
   
   --Person Data
     mart_crm_person_source.email_hash,
     mart_crm_person_source.is_mql,
-    mart_crm_person_source.is_inquiry,
     mart_crm_person_source.status,
-    dim_date.fiscal_quarter_name_fy AS mql_quarter,
-    account_history_final.abm_tier_1_quarter,
-    account_history_final.abm_tier_2_quarter
+    mart_crm_person_source.mql_sum,
+    CASE 
+      WHEN is_mql = TRUE THEN email_hash
+      ELSE NULL
+    END AS mqls,
+    mart_crm_person_source.mql_date_latest_pt,
+    account_history_final.abm_tier_1_date,
+    account_history_final.abm_tier_2_date    
   FROM mart_crm_person_source
-  LEFT JOIN dim_date
-    ON mart_crm_person_source.mql_date_latest_pt=dim_date.date_day
   LEFT JOIN account_history_final
     ON mart_crm_person_source.dim_crm_account_id=account_history_final.dim_crm_account_id
-    -- ON mql_quarter=account_history_final.abm_tier_1_quarter
-    -- OR mql_quarter=account_history_final.abm_tier_2_quarter 
   WHERE mql_date_latest_pt IS NOT NULL
-  AND (abm_tier_1_quarter IS NOT NULL
-    OR abm_tier_2_quarter IS NOT NULL)
+  AND (abm_tier_1_date IS NOT NULL
+    OR abm_tier_2_date IS NOT NULL)
   
+), mql_final AS (
+
+  SELECT
+  --IDs
+    dim_crm_account_id,
+    dim_crm_parent_account_id,
+
+  --Dates
+    true_inquiry_date,
+    abm_tier_1_date,
+    abm_tier_2_date,
+
+  --KPIs
+    COUNT(DISTINCT mqls) AS total_mqls,
+    SUM(mql_sum) AS attributed_mqls
+  FROM mql_base
+  {{dbt_utils.group_by(n=5)}}
+
 ), sao_base AS (
   
   SELECT
@@ -154,22 +186,56 @@
     opp_history_final.order_type,
     opp_history_final.sales_qualified_source_name,
     opp_history_final.net_arr,
+    opp_history_final.is_sao,
     opp_history_final.is_net_arr_closed_deal,
     opp_history_final.is_net_arr_pipeline_created,
-    dim_date.fiscal_quarter_name_fy AS sao_quarter,
-    account_history_final.abm_tier_1_quarter,
-    account_history_final.abm_tier_2_quarter
+    opp_history_final.sales_accepted_date,
+    CASE 
+      WHEN is_sao = TRUE THEN opp_history_final.dim_crm_opportunity_id 
+      ELSE NULL 
+    END AS saos,
+    CASE 
+      WHEN is_net_arr_pipeline_created = TRUE THEN opp_history_final.net_arr 
+      ELSE NULL 
+    END AS sao_net_arr,
+    CASE 
+      WHEN is_sao = TRUE THEN mart_crm_person_source.influenced_opportunity_id 
+      ELSE NULL 
+    END AS influenced_saos,
+    account_history_final.abm_tier_1_date,
+    account_history_final.abm_tier_2_date 
   FROM opp_history_final
-  LEFT JOIN dim_date
-    ON opp_history_final.sales_accepted_date=dim_date.date_day
   LEFT JOIN account_history_final
     ON opp_history_final.dim_crm_account_id=account_history_final.dim_crm_account_id
-    -- ON sao_quarter=account_history_final.abm_tier_1_quarter
-    -- OR sao_quarter=account_history_final.abm_tier_2_quarter 
-  WHERE abm_tier IS NOT null
+  LEFT JOIN mart_crm_person_source
+    ON opp_history_final.dim_crm_account_id=mart_crm_person_source.dim_crm_account_id
+  WHERE abm_tier IS NOT NULL
   AND sales_accepted_date IS NOT NULL
-  AND (abm_tier_1_quarter IS NOT NULL
-    OR abm_tier_2_quarter IS NOT NULL)
+  AND (abm_tier_1_date IS NOT NULL
+    OR abm_tier_2_date IS NOT NULL)
+
+), sao_final AS (
+
+  SELECT
+  --IDs
+    dim_crm_account_id,
+    dim_crm_parent_account_id,
+
+  --Opp Data
+    order_type,
+    sales_qualified_source_name,
+
+  --Dates
+    sales_accepted_date,
+    abm_tier_1_date,
+    abm_tier_2_date,
+
+  --KPIs
+    COUNT(DISTINCT saos) AS total_saos,
+    SUM(sao_net_arr) AS total_sao_net_arr,
+    SUM(influenced_saos) AS attributed_saos
+  FROM sao_base
+  {{dbt_utils.group_by(n=5)}}
 
 ), cw_base AS (
   
@@ -182,22 +248,56 @@
     opp_history_final.order_type,
     opp_history_final.sales_qualified_source_name,
     opp_history_final.net_arr,
+    opp_history_final.is_won,
     opp_history_final.is_net_arr_closed_deal,
     opp_history_final.is_net_arr_pipeline_created,
-    dim_date.fiscal_quarter_name_fy AS cw_quarter,
-    account_history_final.abm_tier_1_quarter,
-    account_history_final.abm_tier_2_quarter
+    opp_history_final.close_date,
+    CASE 
+      WHEN is_won = TRUE THEN opp_history_final.dim_crm_opportunity_id 
+      ELSE NULL 
+    END AS cw,
+    CASE 
+      WHEN is_net_arr_closed_deal = TRUE THEN opp_history_final.net_arr 
+      ELSE NULL 
+    END AS cw_net_arr,
+    CASE 
+      WHEN is_won = TRUE THEN mart_crm_person_source.influenced_opportunity_id 
+      ELSE NULL 
+    END AS influenced_cw,
+    account_history_final.abm_tier_1_date,
+    account_history_final.abm_tier_2_date 
   FROM opp_history_final
-  LEFT JOIN dim_date
-    ON opp_history_final.close_date=dim_date.date_day
   LEFT JOIN account_history_final
     ON opp_history_final.dim_crm_account_id=account_history_final.dim_crm_account_id
-    -- ON cw_quarter=account_history_final.abm_tier_1_quarter
-    -- OR cw_quarter=account_history_final.abm_tier_2_quarter 
-  WHERE abm_tier IS NOT null
-  AND is_net_arr_closed_deal = TRUE
-  AND (abm_tier_1_quarter IS NOT NULL
-    OR abm_tier_2_quarter IS NOT NULL)
+  LEFT JOIN mart_crm_person_source
+    ON opp_history_final.dim_crm_account_id=mart_crm_person_source.dim_crm_account_id
+  WHERE abm_tier IS NOT NULL
+  AND close_date IS NOT NULL
+  AND (abm_tier_1_date IS NOT NULL
+    OR abm_tier_2_date IS NOT NULL)
+
+), cw_final AS (
+
+  SELECT
+  --IDs
+    dim_crm_account_id,
+    dim_crm_parent_account_id,
+
+  --Opp Data
+    order_type,
+    sales_qualified_source_name,
+
+  --Dates
+    close_date,
+    abm_tier_1_date,
+    abm_tier_2_date,
+
+  --KPIs
+    COUNT(DISTINCT cw) AS total_cw,
+    SUM(cw_net_arr) AS total_cw_net_arr,
+    SUM(influenced_cw) AS attributed_cw
+  FROM cw_base
+  {{dbt_utils.group_by(n=5)}}
   
 ), final AS (
   
@@ -206,16 +306,17 @@
     'Inquiry' AS kpi_name,
 
   -- Dates
-    abm_tier_1_quarter,
-    abm_tier_2_quarter,
-    inquiry_quarter AS kpi_quarter,
+    abm_tier_1_date,
+    abm_tier_2_date,
+    true_inquiry_date AS kpi_date,
   
   -- Opp Data
     NULL AS order_type,
     NULL AS sales_qualified_source_name,
     NULL AS net_arr,
 
-    COUNT(DISTINCT dim_crm_person_id) AS kpi
+    SUM(total_inquiries) AS kpi,
+    SUM(attributed_inquiries) AS attributed_kpi
   FROM inquiry_base
   {{dbt_utils.group_by(n=7)}}
   UNION ALL
@@ -224,16 +325,17 @@
     'MQLs' AS kpi_name,
   
   -- Dates
-    abm_tier_1_quarter,
-    abm_tier_2_quarter,
-    mql_quarter AS kpi_quarter,
+    abm_tier_1_date,
+    abm_tier_2_date,
+    mql_date_latest_pt AS kpi_date,
   
   -- Opp Data
     NULL AS order_type,
     NULL AS sales_qualified_source_name,
     NULL AS net_arr,
 
-    COUNT(DISTINCT dim_crm_person_id) AS kpi
+    SUM(total_mqls) AS kpi,
+    SUM(attributed_mqls) AS attributed_kpi
   FROM mql_base
   {{dbt_utils.group_by(n=7)}}
   UNION ALL
@@ -242,16 +344,17 @@
     'SAOs' AS kpi_name,
 
   -- Dates
-    abm_tier_1_quarter,
-    abm_tier_2_quarter,
-    sao_quarter AS kpi_quarter,
+    abm_tier_1_date,
+    abm_tier_2_date,
+    sales_accepted_date AS kpi_date,
   
   -- Opp Data
     order_type,
     sales_qualified_source_name,
-    SUM(net_arr) AS net_arr,
+    SUM(total_sao_net_arr) AS net_arr,
 
-    COUNT(DISTINCT dim_crm_opportunity_id) AS kpi
+    SUM(total_saos) AS kpi,
+    SUM(attributed_saos) AS attributed_kpi
   FROM sao_base 
   {{dbt_utils.group_by(n=6)}}
   UNION ALL
@@ -260,16 +363,17 @@
     'Closed Won' AS kpi_name, 
   
   -- Dates
-    abm_tier_1_quarter,
-    abm_tier_2_quarter,
-    cw_quarter AS kpi_quarter,
+    abm_tier_1_date,
+    abm_tier_2_date,
+    close_date AS kpi_date,
   
   -- Opp Data
     order_type,
     sales_qualified_source_name,
-    SUM(net_arr) AS net_arr,
+    SUM(total_cw_net_arr) AS net_arr,
 
-    COUNT(DISTINCT dim_crm_opportunity_id) AS kpi
+    SUM(total_cw) AS kpi,
+    SUM(attributed_cw) AS attributed_kpi
   FROM cw_base 
   {{dbt_utils.group_by(n=6)}}
   
@@ -280,5 +384,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-09-06",
+    updated_date="2023-09-13",
   ) }}
