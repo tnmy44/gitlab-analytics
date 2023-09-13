@@ -37,7 +37,12 @@
         WHEN account_opp_mapping.dim_crm_opportunity_id IS NOT NULL 
           THEN 'Account'
         ELSE 'Not Mappable'
-        END AS task_mapped_to
+        END AS task_mapped_to,
+
+    ROW_NUMBER() OVER(PARTITION BY prep_crm_task.dim_crm_task_pk 
+      ORDER BY DATEDIFF('day', prep_crm_task.task_date, account_opp_mapping.close_date) ASC
+      , account_opp_mapping.net_arr DESC) 
+    AS rank_closest_opp
   
   FROM prep_crm_task
   LEFT JOIN prep_crm_person
@@ -106,6 +111,7 @@ WHERE prep_crm_task.SA_ACTIVITY_TYPE IS NOT NULL
     ON prep_crm_task.sfdc_record_id = prep_crm_person.sfdc_record_id
   LEFT JOIN sub
     ON prep_crm_task.dim_crm_task_pk = sub.dim_crm_task_pk
+    AND sub.rank_closest_opp = 1
 
 )
 
