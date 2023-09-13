@@ -122,7 +122,10 @@
       2                              AS row_number
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
-      ON current_mrr.dim_parent_crm_account_id = future_mrr.dim_parent_crm_account_id
+      {% for field in fields %}
+        {% if loop.first %} ON {% else %} AND {% endif %}
+        current_mrr.{{field}} = future_mrr.{{field}}
+      {% endfor %}
       AND current_mrr.retention_month = future_mrr.arr_month
 
 ), final AS (
