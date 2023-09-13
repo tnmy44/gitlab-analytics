@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS (
     SELECT
       -- ids
-      id::NUMBER                                  AS funds_claim_id,
+      id::VARCHAR                                 AS funds_claim_id,
       name::VARCHAR                               AS funds_claim_name,
 
       -- info
