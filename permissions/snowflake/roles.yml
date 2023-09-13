@@ -958,6 +958,7 @@ roles:
                   read:
                       - prod.workspace_data_science
                       - prod.common
+                      - prod.common_prep
                       - prod.legacy
                       - prod.common_mart_product
                       - prod.restricted_safe_common_mart_sales
@@ -988,6 +989,7 @@ roles:
                       - prep.customers.*
                       - prep.sfdc.*
                       - prod.common.*
+                      - prod.common_prep.*
                       - prod.legacy.*
                       - prod.common_mart_product.*
                       - prod.restricted_safe_common_mart_sales.*
@@ -3495,6 +3497,7 @@ roles:
         member_of:
             - reporter
             - restricted_safe
+            - salesforce
         warehouses:
             - dev_xs
         owns:

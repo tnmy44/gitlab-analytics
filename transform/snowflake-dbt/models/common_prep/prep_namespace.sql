@@ -43,14 +43,17 @@ projects AS (
 creators AS (
 
   SELECT
-    author_id AS creator_id,
-    entity_id AS group_id
+    audit_events.author_id AS creator_id,
+    audit_events.entity_id AS group_id
   FROM audit_events
   INNER JOIN audit_event_details_clean
     ON audit_events.audit_event_id = audit_event_details_clean.audit_event_id
-  WHERE entity_type = 'Group'
-    AND key_name = 'add'
-    AND key_value = 'group'
+  WHERE audit_events.entity_type = 'Group'
+    AND (
+      (audit_event_details_clean.key_name = 'add' AND audit_event_details_clean.key_value = 'group')
+      OR
+      (audit_event_details_clean.key_name = 'custom_message' AND audit_event_details_clean.key_value = 'Added group')
+    )
   GROUP BY 1, 2
 
 ),
@@ -72,7 +75,7 @@ namespace_lineage AS (
     plan_is_paid     AS ultimate_parent_plan_is_paid,
     plan_name        AS ultimate_parent_plan_name
   FROM namespace_lineage_historical
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id,parent_id,ultimate_parent_id ORDER BY combined_valid_from DESC) = 1
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id, parent_id, ultimate_parent_id ORDER BY combined_valid_from DESC) = 1
 ),
 
 namespaces AS (
@@ -99,7 +102,7 @@ joined AS (
     -- Foreign Keys
     namespaces.owner_id,
     namespaces.parent_id,
-    IFNULL(creators.creator_id, namespaces.owner_id)                        AS creator_id,
+    COALESCE(creators.creator_id, namespaces.owner_id)                      AS creator_id,
     namespace_lineage.ultimate_parent_plan_id                               AS gitlab_plan_id,
     COALESCE(namespace_lineage.ultimate_parent_id,
       namespaces.parent_id,
@@ -148,20 +151,20 @@ joined AS (
     namespaces.two_factor_grace_period,
     namespaces.project_creation_level,
     namespaces.push_rule_id,
-    IFNULL(users.is_blocked_user, FALSE)                                    AS namespace_creator_is_blocked,
+    COALESCE(users.is_blocked_user, FALSE)                                  AS namespace_creator_is_blocked,
     namespace_lineage.ultimate_parent_plan_title                            AS gitlab_plan_title,
     namespace_lineage.ultimate_parent_plan_is_paid                          AS gitlab_plan_is_paid,
     namespace_lineage.seats                                                 AS gitlab_plan_seats,
     namespace_lineage.seats_in_use                                          AS gitlab_plan_seats_in_use,
     namespace_lineage.max_seats_used                                        AS gitlab_plan_max_seats_used,
-    IFNULL(members.member_count, 0)                                         AS namespace_member_count,
-    IFNULL(projects.project_count, 0)                                       AS namespace_project_count,
+    COALESCE(members.member_count, 0)                                       AS namespace_member_count,
+    COALESCE(projects.project_count, 0)                                     AS namespace_project_count,
     namespace_settings.code_suggestions                                     AS has_code_suggestions_enabled,
-    IFNULL(namespaces.is_current AND namespace_lineage.is_current, FALSE)   AS is_currently_valid
+    COALESCE(namespaces.is_current AND namespace_lineage.is_current, FALSE) AS is_currently_valid
   FROM namespaces
   LEFT JOIN namespace_lineage
     ON namespaces.dim_namespace_id = namespace_lineage.namespace_id
-      AND IFNULL(namespaces.parent_id, namespaces.dim_namespace_id) = IFNULL(namespace_lineage.parent_id, namespace_lineage.namespace_id)
+      AND COALESCE(namespaces.parent_id, namespaces.dim_namespace_id) = COALESCE(namespace_lineage.parent_id, namespace_lineage.namespace_id)
   LEFT JOIN namespace_settings
     ON namespaces.dim_namespace_id = namespace_settings.namespace_id
   LEFT JOIN members

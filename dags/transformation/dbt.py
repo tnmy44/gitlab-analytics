@@ -252,7 +252,7 @@ dbt_workspaces_xl = KubernetesPodOperator(
     dag=dag,
 )
 
-# dbt-workspaces
+# dbt-workspaces-test
 dbt_workspaces_test_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&

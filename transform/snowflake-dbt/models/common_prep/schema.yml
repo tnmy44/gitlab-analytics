@@ -455,6 +455,15 @@ models:
           - not_null
           - unique
 
+  - name: prep_ptpl_scores_by_user
+    description: '{{ doc("prep_ptpl_scores_by_user") }}'
+    columns:
+      - name: dim_marketing_contact_id
+        description: Unique identifier for the marketing contact.
+        tests:
+          - not_null
+          - unique
+
   - name: prep_sales_segment
     description: '{{ doc("prep_sales_segment") }}'
     columns:
