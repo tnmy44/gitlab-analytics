@@ -19,13 +19,7 @@
 
 , rpt_arr AS (
 
-    SELECT
-      *,
-      CASE
-        WHEN product_name NOT IN ('Ultimate', 'Premium', 'Bronze/Starter') 
-          THEN 'All Others'
-        ELSE product_name
-      END AS product_name_grouped
+    SELECT *
     FROM {{ ref('rpt_arr_snapshot_combined_8th_calendar_day') }}
 
 )
@@ -67,11 +61,11 @@
 , parent_account_mrrs AS (
 
     SELECT
-      dim_crm_account.dim_parent_crm_account_id,
-
       {% for field in fields %}
 
-        {%- if field != 'dim_parent_crm_account_id' -%}
+        {%- if field == 'dim_parent_crm_account_id' -%}
+          dim_crm_account.{{field}},
+        {%- else -%}
           rpt_arr.{{field}},
         {%- endif -%}
 

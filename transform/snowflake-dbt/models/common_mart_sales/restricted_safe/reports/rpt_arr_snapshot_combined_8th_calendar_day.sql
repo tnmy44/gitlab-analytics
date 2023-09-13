@@ -46,6 +46,7 @@
       parent_crm_account_industry,
       parent_crm_account_owner_team,
       parent_crm_account_sales_territory,
+      dim_subscription_id,
       subscription_name,
       subscription_status,
       subscription_sales_type,
@@ -86,6 +87,7 @@
       parent_crm_account_industry,
       NULL                                                                                      AS parent_crm_account_owner_team,
       NULL                                                                                      AS parent_crm_account_sales_territory,
+      dim_subscription_id,
       subscription_name,
       subscription_status,
       subscription_sales_type,
@@ -131,6 +133,7 @@
       driveload_financial_metrics_program_phase_1_source.parent_crm_account_industry,
       driveload_financial_metrics_program_phase_1_source.parent_crm_account_owner_team,
       driveload_financial_metrics_program_phase_1_source.parent_crm_account_sales_territory,
+      NULL                                                                                         AS dim_subscription_id,
       driveload_financial_metrics_program_phase_1_source.subscription_name,
       driveload_financial_metrics_program_phase_1_source.subscription_status,
       driveload_financial_metrics_program_phase_1_source.subscription_sales_type,
@@ -204,6 +207,7 @@
       mart_arr_snapshot_model_combined.parent_crm_account_industry,
       mart_arr_snapshot_model_combined.parent_crm_account_owner_team,
       mart_arr_snapshot_model_combined.parent_crm_account_sales_territory                                      AS parent_crm_account_sales_territory,
+      mart_arr_snapshot_model_combined.dim_subscription_id,
       mart_arr_snapshot_model_combined.subscription_name,
       mart_arr_snapshot_model_combined.subscription_status,
       mart_arr_snapshot_model_combined.subscription_sales_type,
@@ -284,7 +288,12 @@
       CASE
         WHEN arr > 5000 THEN 'ARR > $5K'
         WHEN arr <= 5000 THEN 'ARR <= $5K'
-      END                                        AS arr_band_calc
+      END                                        AS arr_band_calc,
+      CASE
+        WHEN arr > 100000 THEN '1. ARR > $100K'
+        WHEN arr <= 100000 AND arr > 5000 THEN '2. ARR $5K-100K'
+        WHEN arr <= 5000 THEN '3. ARR <= $5K'
+      END                                        AS arr_band_calc_detailed
     FROM parent_arr
 
 ), edu_subscriptions AS (
@@ -322,10 +331,16 @@
       parent_crm_account_industry,
       parent_crm_account_owner_team,
       parent_crm_account_sales_territory,
+      combined.dim_subscription_id,
       combined.subscription_name,
       subscription_status,
       subscription_sales_type,
       product_name,
+      CASE
+        WHEN product_name NOT IN ('Ultimate', 'Premium', 'Bronze/Starter') 
+          THEN 'All Others'
+        ELSE product_name
+      END                                                                                AS product_name_grouped,
       product_rate_plan_name,
       product_tier_name,
       product_delivery_type,
@@ -350,7 +365,8 @@
       is_licensed_user,
       parent_account_cohort_month,
       months_since_parent_account_cohort_start,
-      COALESCE(parent_arr_band_calc.arr_band_calc, 'Missing crm_account_id')   AS arr_band_calc,
+      COALESCE(parent_arr_band_calc.arr_band_calc, 'Missing crm_account_id')            AS arr_band_calc,
+      COALESCE(parent_arr_band_calc.arr_band_calc_detailed, 'Missing crm_account_id')   AS arr_band_calc_detailed,
       parent_crm_account_employee_count_band
     FROM combined
     LEFT JOIN parent_arr_band_calc
@@ -366,5 +382,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-08-16",
-    updated_date="2023-08-24"
+    updated_date="2023-09-13"
 ) }}
