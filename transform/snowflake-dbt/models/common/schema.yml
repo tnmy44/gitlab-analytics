@@ -3037,6 +3037,8 @@ models:
         description: '{{ doc("is_smau") }}'
       - name: is_umau
         description: '{{ doc("is_umau") }}'
+      - name: is_health_score_metric
+        description: '{{ doc("is_health_score_metric") }}'
       - name: snapshot_date
         description: The date the data was extracted from metrics YAML files
       - name: uploaded_at
