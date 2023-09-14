@@ -88,7 +88,30 @@ WITH map_merged_crm_account AS (
       zuora_invoice_item.tax_amount                     AS tax_amount_sum,
       zuora_invoice.amount_without_tax                  AS invoice_amount_without_tax,
       zuora_invoice_item.charge_amount                  AS invoice_item_charge_amount,
-      zuora_invoice_item.unit_price                     AS invoice_item_unit_price
+      zuora_invoice_item.unit_price                     AS invoice_item_unit_price,
+      CASE
+        WHEN LOWER(product_rate_plan_name)          LIKE '%month%'
+          OR LOWER(product_rate_plan_charge_name)   LIKE '%month%'
+          OR LOWER(product_name)                    LIKE '%month%'
+          THEN (unit_price*12)
+        WHEN LOWER(product_rate_plan_name)          LIKE '%2 year%'
+          OR LOWER(product_rate_plan_charge_name)   LIKE '%2 year%'
+          OR LOWER(product_name)                    LIKE '%2 year%'
+          THEN (unit_price/2)
+        WHEN LOWER(product_rate_plan_name)          LIKE '%3 year%'
+          OR LOWER(product_rate_plan_charge_name)   LIKE '%3 year%'
+          OR LOWER(product_name)                    LIKE '%3 year%'
+          THEN (unit_price/3)
+        WHEN LOWER(product_rate_plan_name)          LIKE '%4 year%'
+          OR LOWER(product_rate_plan_charge_name)   LIKE '%4 year%'
+          OR LOWER(product_name)                    LIKE '%4 year%'
+          THEN (unit_price/4)
+        WHEN LOWER(product_rate_plan_name)          LIKE '%5 year%'
+          OR LOWER(product_rate_plan_charge_name)   LIKE '%5 year%'
+          OR LOWER(product_name)                    LIKE '%5 year%'
+          THEN (unit_price/5)
+        ELSE unit_price
+      END                                                                               AS annual_billing_invoice_price
     FROM zuora_invoice_item
     INNER JOIN zuora_invoice
       ON zuora_invoice_item.invoice_id = zuora_invoice.invoice_id
