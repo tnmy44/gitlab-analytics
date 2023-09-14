@@ -98,7 +98,7 @@
     mart_crm_person_source.true_inquiry_date,
     mart_crm_person_source.status,
     account_history_final.abm_tier_1_date,
-    account_history_final.abm_tier_2_date
+    account_history_final.abm_tier_2_date,
     CASE 
       WHEN true_inquiry_date IS NOT NULL
         THEN email_hash
