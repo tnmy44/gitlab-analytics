@@ -32,6 +32,12 @@ def get_last_load_time() -> Optional[datetime.datetime]:
     else:
         return None
 
+def get_additional_filtering(table_dict: Dict[Any,Any]) -> str:
+    
+    additional_filter = table_dict.get("additional_filtering", "")
+    
+    return additional_filter
+
 
 def load_incremental(
     source_engine: Engine,
@@ -45,7 +51,7 @@ def load_incremental(
     """
 
     raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "")
+    additional_filter = get_additional_filtering(table_dict)
 
     env = os.environ.copy()
 
@@ -180,7 +186,7 @@ def sync_incremental_ids(
     """
 
     raw_query = table_dict["import_query"]
-    additional_filtering = table_dict.get("additional_filtering", "")
+    additional_filter = get_additional_filtering(table_dict)
     primary_key = table_dict["export_table_primary_key"]
     # If temp isn't in the name, we don't need to full sync.
     # If a temp table exists, we know the sync didn't complete successfully
@@ -222,7 +228,7 @@ def load_scd(
         backfill = False
 
     raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "")
+    additional_filter = get_additional_filtering(table_dict)
     advanced_metadata = table_dict.get("advanced_metadata", False)
 
     logging.info(f"Processing table: {source_table_name}")
@@ -305,7 +311,7 @@ def check_new_tables(
     """
 
     raw_query = table_dict["import_query"].split("WHERE")[0]
-    additional_filtering = table_dict.get("additional_filtering", "")
+    additional_filter = get_additional_filtering(table_dict)
     advanced_metadata = table_dict.get("advanced_metadata", False)
     primary_key = table_dict["export_table_primary_key"]
 

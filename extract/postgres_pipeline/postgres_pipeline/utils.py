@@ -46,6 +46,17 @@ def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
     return storage_client.get_bucket(bucket_name)
 
 
+def get_internal_namespaces(file_location: str) -> list:
+    """
+    Get a list of current internal GitLab namespace keys from dbt seed file
+    """
+    df = pd.read_csv(file_location)
+    gitlab_namespaces = list(df['namespace_id'])
+
+    return gitlab_namespaces
+
+
+
 def upload_to_gcs(
     advanced_metadata: bool, upload_df: pd.DataFrame, upload_file_name: str
 ) -> bool:
