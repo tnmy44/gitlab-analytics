@@ -13,6 +13,9 @@ WITH prep_epic AS (
       -- NATURAL KEY
       epic_id,
 
+      -- LEGACY NATURAL_KEY TO BE DEPRECATED DURING CHANGE MANAGEMENT PLAN
+      dim_epic_id,
+
       -- FOREIGN KEY
       dim_namespace_sk,
       ultimate_parent_namespace_id,
@@ -55,5 +58,5 @@ WITH prep_epic AS (
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-22",
-    updated_date="2023-09-05"
+    updated_date="2023-09-14"
 ) }}

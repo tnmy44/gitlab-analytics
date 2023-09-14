@@ -68,6 +68,9 @@
       -- natural key
       gitlab_dotcom_epics_dedupe_source.id::NUMBER                                           AS epic_id,
 
+      -- legacy natural_key to be deprecated during change management plan
+      gitlab_dotcom_epics_dedupe_source.id::NUMBER                                           AS dim_epic_id,
+
       -- degenerate dimension keys
       namespace_prep.dim_namespace_sk                                                        AS dim_namespace_sk,
       namespace_prep.ultimate_parent_namespace_id::NUMBER                                    AS ultimate_parent_namespace_id,
@@ -148,5 +151,5 @@
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-22",
-    updated_date="2023-09-05"
+    updated_date="2023-09-14"
 ) }}
