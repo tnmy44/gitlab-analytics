@@ -45,5 +45,5 @@ LEFT JOIN dim_date abm_last_day_of_quarter
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-07",
-    updated_date="2023-09-",
+    updated_date="2023-09-13",
   ) }}
