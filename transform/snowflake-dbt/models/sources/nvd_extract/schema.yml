@@ -1,5 +1,0 @@
-version: 2
-
-models:
-    - name: cve_details_nvd
-      description: '{{ doc("cve_details_nvd") }}'

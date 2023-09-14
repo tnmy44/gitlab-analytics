@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: nvd_extract
+  - name: nvd
     database: '{{ env_var("SNOWFLAKE_STATIC_DATABASE") }}'
     schema: sensitive
 
@@ -11,4 +11,4 @@ sources:
       identifier: false
 
     tables:
-    - name: cve_details_nvd
+    - name: nvd_cve

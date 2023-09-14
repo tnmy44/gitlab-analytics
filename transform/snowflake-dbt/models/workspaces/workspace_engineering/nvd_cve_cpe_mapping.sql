@@ -1,7 +1,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ ref('cve_details_nvd') }}
+  FROM {{ ref('nvd_cve_source') }}
 
 )
 

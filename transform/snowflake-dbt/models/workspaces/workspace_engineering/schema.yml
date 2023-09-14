@@ -396,7 +396,7 @@ models:
     - name: namespace_pl_daily
       description: '{{ doc("finops_pipeline_desc_namespace_pl") }}'
     
-    - name: cve_extract_nvd
+    - name: nvd_cve_cpe_mapping
       description: A model containing data for CVE's and it's associated CPE's from NVD website.
       columns:
         - name: published_date
