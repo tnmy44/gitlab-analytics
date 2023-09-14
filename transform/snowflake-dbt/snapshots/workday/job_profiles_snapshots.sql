@@ -4,6 +4,7 @@
         config(
           unique_key='job_code',
           strategy='check',
+          invalidate_hard_deletes=True,
           check_cols=[
             'job_code',
             'job_profile',
