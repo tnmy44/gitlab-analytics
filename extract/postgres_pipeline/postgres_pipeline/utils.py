@@ -50,12 +50,11 @@ def get_internal_namespaces() -> list:
     """
     Get a list of current internal GitLab namespace keys from dbt seed file
     """
-    file_location = "https://gitlab.com/gitlab-data/analytics/-/raw/master/transform/snowflake-dbt/data/internal_gitlab_namespaces.csv" # this needs to be updated to local file
+    file_location = "https://gitlab.com/gitlab-data/analytics/-/raw/master/transform/snowflake-dbt/data/internal_gitlab_namespaces.csv"  # this needs to be updated to local file
     df = pd.read_csv(file_location)
-    gitlab_namespaces = list(df['namespace_id'])
+    gitlab_namespaces = list(df["namespace_id"])
 
     return gitlab_namespaces
-
 
 
 def upload_to_gcs(

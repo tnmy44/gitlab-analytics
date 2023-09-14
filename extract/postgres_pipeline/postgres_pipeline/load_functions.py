@@ -33,15 +33,18 @@ def get_last_load_time() -> Optional[datetime.datetime]:
     else:
         return None
 
-def get_additional_filtering(table_dict: Dict[Any,Any]) -> str:
-    
+
+def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
+
     additional_filter = table_dict.get("additional_filtering", "")
 
     if "INTERNAL_NAMESPACES" in additional_filter:
 
         internal_namespaces_list = get_internal_namespaces()
-        internal_namespaces_str = ','.join(str(id) for id in internal_namespaces_list) 
-        additional_filter = additional_filter.format(INTERNAL_NAMESPACES=internal_namespaces_str)
+        internal_namespaces_str = ",".join(str(id) for id in internal_namespaces_list)
+        additional_filter = additional_filter.format(
+            INTERNAL_NAMESPACES=internal_namespaces_str
+        )
 
     return additional_filter
 
