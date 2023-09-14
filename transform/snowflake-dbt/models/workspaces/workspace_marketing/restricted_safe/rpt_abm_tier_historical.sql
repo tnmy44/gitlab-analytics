@@ -76,7 +76,7 @@
     true_inquiry_date,
     mql_date_latest_pt,
 
-  -Attributed Metrics
+  --Attributed Metrics
     inquiry_sum,
     mql_sum,
     influenced_opportunity_id
@@ -384,5 +384,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-09-13",
+    updated_date="2023-09-14",
   ) }}
