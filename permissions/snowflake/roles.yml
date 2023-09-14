@@ -4002,6 +4002,14 @@ roles:
                     - lvinueza_prep.*.*
                     - lvinueza_prod.*.*
 
+    - manggara:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - marntz:
         member_of:
             - analyst_sales
@@ -5549,6 +5557,11 @@ users:
         can_login: yes
         member_of:
             - lvinueza
+
+    - manggara:
+        can_login: yes
+        member_of:
+            - manggara
 
     - marntz:
         can_login: yes
