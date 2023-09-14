@@ -2108,17 +2108,17 @@ roles:
                     - prep.sensitive.netsuite_vendors_pii
                     - raw.netsuite_fivetran.*
     
-    - nvd_extract:
+    - nvd:
         privileges:
             databases:
                 read:
                     - prep
             schemas:
                 read:
-                    - prep.cve_details_nvd
+                    - prep.nvd
             tables:
                 read:
-                    - prep.cve_details_nvd.*
+                    - prep.nvd.*
 
     - oci_reports:
         warehouses:
