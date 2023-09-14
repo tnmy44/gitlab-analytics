@@ -89,7 +89,7 @@
     form_url,
     full_url,
     PARSE_URL(full_url)['parameters']['utm_campaign']::VARCHAR AS utm_campaign,
-    PARSE_URL(full_url)['parameters']['utm_channel']::VARCHAR AS utmutm_channel_campaign,
+    PARSE_URL(full_url)['parameters']['utm_channel']::VARCHAR AS utm_channel,
     PARSE_URL(full_url)['parameters']['utm_medium']::VARCHAR AS utm_medium
   FROM intermediate
 
@@ -100,5 +100,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-12",
-    updated_date="2023-09-12",
+    updated_date="2023-09-14",
   ) }}
