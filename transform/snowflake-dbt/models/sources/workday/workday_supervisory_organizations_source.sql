@@ -2,6 +2,8 @@ WITH source AS (
 
   SELECT *
   FROM {{ source('snapshots','workday_supervisory_org_snapshots') }}
+  WHERE NOT _fivetran_deleted
+  
 
 ), renamed AS (
 
