@@ -2,7 +2,6 @@ WITH source AS (
 
   SELECT *
   FROM {{ source('snapshots','workday_supervisory_org_snapshots') }}
-  
 
 ), renamed AS (
 
