@@ -399,7 +399,7 @@ roles:
             - gitlab_dotcom
             - handbook
             - license_db
-            - nvd_extract
+            - nvd
             - postgres_pipeline
             - salesforce
             - sheetload
