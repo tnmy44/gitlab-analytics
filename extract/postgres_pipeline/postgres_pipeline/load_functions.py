@@ -38,11 +38,11 @@ def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
 
     additional_filtering = table_dict.get("additional_filtering", "")
 
-    if "INTERNAL_NAMESPACES" in additional_filter:
+    if "INTERNAL_NAMESPACES" in additional_filtering:
 
         internal_namespaces_list = get_internal_namespaces()
         internal_namespaces_str = ",".join(str(id) for id in internal_namespaces_list)
-        additional_filtering = additional_filter.format(
+        additional_filtering = additional_filtering.format(
             INTERNAL_NAMESPACES=internal_namespaces_str
         )
 
