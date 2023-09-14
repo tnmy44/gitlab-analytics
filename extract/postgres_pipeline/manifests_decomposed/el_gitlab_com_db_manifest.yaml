@@ -1445,15 +1445,15 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , name
-      , path
-      , description
       , created_at
       , updated_at
       , creator_id
       , namespace_id
       , last_activity_at
-      , import_url
+      , CASE
+          WHEN import_url IS NULL THEN 0
+          ELSE 1
+        END AS has_import_url
       , visibility_level
       , archived
       , NULL AS avatar
@@ -1502,6 +1502,26 @@ tables:
       , NULL AS external_authorization_classification_label
       , project_namespace_id
       , NULL AS container_registry_enabled
+      FROM projects
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  projects_internal_only:
+    additional_filtering: AND namespace_id in ({INTERNAL_NAMESPACES})
+    dbt_snapshots: true
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'projects_internal_only'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , name
+      , path
+      , description
+      , created_at
+      , updated_at
+      , namespace_id
+      , import_url
       FROM projects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
