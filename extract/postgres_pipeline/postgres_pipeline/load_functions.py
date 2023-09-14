@@ -318,7 +318,7 @@ def check_new_tables(
     """
 
     raw_query = table_dict["import_query"].split("WHERE")[0]
-    additional_filter = get_additional_filtering(table_dict)
+    additional_filtering = get_additional_filtering(table_dict)
     advanced_metadata = table_dict.get("advanced_metadata", False)
     primary_key = table_dict["export_table_primary_key"]
 
