@@ -165,7 +165,7 @@
     dim_crm_parent_account_id,
 
   --Dates
-    true_inquiry_date,
+    mql_date_latest_pt,
     abm_tier_1_date,
     abm_tier_2_date,
 
