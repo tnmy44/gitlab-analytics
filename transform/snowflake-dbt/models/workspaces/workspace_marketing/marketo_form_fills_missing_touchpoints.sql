@@ -1,4 +1,7 @@
-{{ config(materialized='table') }}
+{{ config(
+    tags=["mnpi_exception"],
+    materialized='table'
+) }}
 
 {{ simple_cte([
     ('wk_marketo_activity_fill_out_form','wk_marketo_activity_fill_out_form'),
