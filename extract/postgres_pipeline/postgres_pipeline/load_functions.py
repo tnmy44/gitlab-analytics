@@ -145,7 +145,7 @@ def load_incremental(
             f"Table {source_table_name} needs to be backfilled due to schema change, aborting incremental load."
         )
         return False
-    query = f"{raw_query.format(**env)} {additional_filter}"
+    query = f"{raw_query.format(**env)} {additional_filtering}"
 
     chunk_and_upload(query, source_engine, target_engine, table_name, source_table_name)
 
@@ -168,7 +168,7 @@ def trusted_data_pgp(
     advanced_metadata = False
 
     logging.info(f"Processing table: {source_table_name}")
-    query = f"{raw_query} {additional_filter}"
+    query = f"{raw_query} {additional_filtering}"
     env = os.environ.copy()
     logging.info(query)
     chunk_and_upload(
@@ -242,7 +242,7 @@ def load_scd(
     advanced_metadata = table_dict.get("advanced_metadata", False)
 
     logging.info(f"Processing table: {source_table_name}")
-    query = f"{raw_query} {additional_filter}"
+    query = f"{raw_query} {additional_filtering}"
 
     if is_append_only:
         load_ids(
