@@ -36,17 +36,17 @@ def get_last_load_time() -> Optional[datetime.datetime]:
 
 def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
 
-    additional_filter = table_dict.get("additional_filtering", "")
+    additional_filtering = table_dict.get("additional_filtering", "")
 
     if "INTERNAL_NAMESPACES" in additional_filter:
 
         internal_namespaces_list = get_internal_namespaces()
         internal_namespaces_str = ",".join(str(id) for id in internal_namespaces_list)
-        additional_filter = additional_filter.format(
+        additional_filtering = additional_filter.format(
             INTERNAL_NAMESPACES=internal_namespaces_str
         )
 
-    return additional_filter
+    return additional_filtering
 
 
 def load_incremental(
@@ -61,7 +61,7 @@ def load_incremental(
     """
 
     raw_query = table_dict["import_query"]
-    additional_filter = get_additional_filtering(table_dict)
+    additional_filtering = get_additional_filtering(table_dict)
 
     env = os.environ.copy()
 
@@ -164,7 +164,7 @@ def trusted_data_pgp(
     It is responsible for extracting from postgres and loading data in snowflake.
     """
     raw_query = table_dict["import_query"]
-    additional_filter = ""
+    additional_filtering = ""
     advanced_metadata = False
 
     logging.info(f"Processing table: {source_table_name}")
@@ -196,7 +196,7 @@ def sync_incremental_ids(
     """
 
     raw_query = table_dict["import_query"]
-    additional_filter = get_additional_filtering(table_dict)
+    additional_filtering = get_additional_filtering(table_dict)
     primary_key = table_dict["export_table_primary_key"]
     # If temp isn't in the name, we don't need to full sync.
     # If a temp table exists, we know the sync didn't complete successfully
@@ -238,7 +238,7 @@ def load_scd(
         backfill = False
 
     raw_query = table_dict["import_query"]
-    additional_filter = get_additional_filtering(table_dict)
+    additional_filtering = get_additional_filtering(table_dict)
     advanced_metadata = table_dict.get("advanced_metadata", False)
 
     logging.info(f"Processing table: {source_table_name}")
@@ -246,7 +246,7 @@ def load_scd(
 
     if is_append_only:
         load_ids(
-            additional_filter,
+            additional_filtering,
             table_dict["export_table_primary_key"],
             raw_query,
             source_engine,
