@@ -1471,6 +1471,9 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
+      , name
+      , path
+      , description
       , created_at
       , updated_at
       , creator_id
