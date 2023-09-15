@@ -21,6 +21,7 @@ from utils import (
     id_query_generator,
     manifest_reader,
     get_internal_namespaces,
+    get_internal_projects,
 )
 
 
