@@ -34,6 +34,7 @@ from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
 
 SCHEMA = "tap_postgres"
+DBT_SEED_DATA_PATH = "https://gitlab.com/gitlab-data/analytics/-/raw/master/transform/snowflake-dbt/data"# this needs to be updated to local path
 
 
 def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
@@ -50,11 +51,30 @@ def get_internal_namespaces() -> list:
     """
     Get a list of current internal GitLab namespace keys from dbt seed file
     """
-    file_location = "https://gitlab.com/gitlab-data/analytics/-/raw/master/transform/snowflake-dbt/data/internal_gitlab_namespaces.csv"  # this needs to be updated to local file
+    file_location = f"{DBT_SEED_DATA_PATH}/internal_gitlab_namespaces.csv"  
     df = pd.read_csv(file_location)
     gitlab_namespaces = list(df["namespace_id"])
 
     return gitlab_namespaces
+
+def get_internal_projects() -> list:
+    """
+    Get a list of current internal GitLab project keys from dbt seed files
+    """
+    
+    seed_files = [
+      "projects_part_of_product_ops.csv",
+      "projects_part_of_product.csv",
+    ]
+    
+    gitlab_projects = []
+
+    for seed_file in seed_files:
+      file_location = f"{DBT_SEED_DATA_PATH}/{seed_file}"
+      df = pd.read_csv(file_location)
+      gitlab_projects.extend(list(df["project_id"]))
+
+    return gitlab_projects
 
 
 def upload_to_gcs(

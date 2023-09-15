@@ -741,6 +741,32 @@ tables:
       FROM issues
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  issues:
+    additional_filtering: |-
+      AND created_at NOT IN (
+        '0001-01-01 00:00:00+00'
+        , '1000-01-01 00:00:00+00'
+        , '10000-01-01 00:00:00+00'
+        , '4714-11-24 00:00:00+00 BC'
+        )
+      AND author_id NOT IN (8311087)
+      AND project_id in ({INTERNAL_PROJECTS})
+    dbt_snapshots: true
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'issues'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , iid
+      , title
+      , description
+      , project_id
+      , updated_at
+      FROM issues
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   jira_connect_subscriptions:
     export_schema: "gitlab_com"
     export_table: jira_connect_subscriptions
@@ -1450,10 +1476,7 @@ tables:
       , creator_id
       , namespace_id
       , last_activity_at
-      , CASE
-          WHEN import_url IS NULL THEN 0
-          ELSE 1
-        END AS has_import_url
+      , import_url
       , visibility_level
       , archived
       , NULL AS avatar
