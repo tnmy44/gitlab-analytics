@@ -5175,7 +5175,7 @@ roles:
 
     - tscott:
         member_of:
-  	- data_team_analyst
+            - data_team_analyst
             - reporter
             - restricted_safe
         warehouses:
