@@ -288,12 +288,7 @@
       CASE
         WHEN arr > 5000 THEN 'ARR > $5K'
         WHEN arr <= 5000 THEN 'ARR <= $5K'
-      END                                        AS arr_band_calc,
-      CASE
-        WHEN arr > 100000 THEN '1. ARR > $100K'
-        WHEN arr <= 100000 AND arr > 5000 THEN '2. ARR $5K-100K'
-        WHEN arr <= 5000 THEN '3. ARR <= $5K'
-      END                                        AS arr_band_calc_detailed
+      END                                        AS arr_band_calc
     FROM parent_arr
 
 ), edu_subscriptions AS (
@@ -366,7 +361,6 @@
       parent_account_cohort_month,
       months_since_parent_account_cohort_start,
       COALESCE(parent_arr_band_calc.arr_band_calc, 'Missing crm_account_id')            AS arr_band_calc,
-      COALESCE(parent_arr_band_calc.arr_band_calc_detailed, 'Missing crm_account_id')   AS arr_band_calc_detailed,
       parent_crm_account_employee_count_band
     FROM combined
     LEFT JOIN parent_arr_band_calc
