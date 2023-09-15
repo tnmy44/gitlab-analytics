@@ -54,7 +54,6 @@ WITH map_merged_crm_account AS (
       zuora_subscription.subscription_id,
       zuora_rate_plan_charge.rate_plan_charge_id                                AS charge_id,
       zuora_rate_plan_charge.rate_plan_charge_number,
-      zuora_rate_plan.rate_plan_name,
       zuora_rate_plan_charge.segment                                            AS rate_plan_charge_segment,
       zuora_rate_plan_charge.version                                            AS rate_plan_charge_version,
       zuora_rate_plan_charge.mrr,
@@ -123,19 +122,6 @@ WITH map_merged_crm_account AS (
       base_charges.arr,
       invoice_charges.invoice_item_charge_amount,
       invoice_charges.invoice_item_unit_price,
-      CASE
-        WHEN LOWER(rate_plan_name) LIKE '%month%'
-          THEN (invoice_item_unit_price*12)
-        WHEN LOWER(rate_plan_name) LIKE '%2 year%'
-          THEN (invoice_item_unit_price/2)
-        WHEN LOWER(rate_plan_name) LIKE '%3 year%'
-          THEN (invoice_item_unit_price/3)
-        WHEN LOWER(rate_plan_name) LIKE '%4 year%'
-          THEN (invoice_item_unit_price/4)
-        WHEN LOWER(rate_plan_name) LIKE '%5 year%'
-          THEN (invoice_item_unit_price/5)
-        ELSE invoice_item_unit_price
-      END                                               AS annual_billing_invoice_price,
       invoice_charges.invoice_amount_without_tax,
       invoice_charges.tax_amount_sum,
       IFF(ROW_NUMBER() OVER (
@@ -154,7 +140,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2021-01-15",
-    updated_date="2023-09-14"
+    updated_date="2021-06-21"
 ) }}
