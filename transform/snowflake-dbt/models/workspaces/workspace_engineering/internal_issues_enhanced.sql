@@ -97,7 +97,24 @@ bot_users AS (
 
 milestones AS (
 
-  SELECT *
+  SELECT *,
+  CASE
+        WHEN group_id=9970
+        AND start_date <= DATEADD('month', 1, CURRENT_DATE)
+        and regexp_like(milestone_title, '\\d+\.\\d+') THEN 
+        DENSE_RANK() OVER (
+            PARTITION BY IFF(
+                group_id=9970
+        AND start_date <= DATEADD('month', 1, CURRENT_DATE)
+        and regexp_like(milestone_title, '\\d+\.\\d+'),
+                1,
+                0
+            )
+            ORDER BY
+                start_date DESC
+        )
+        else null
+    END as milestone_recency
   FROM {{ ref('gitlab_dotcom_milestones') }}
 
 ),
@@ -106,6 +123,21 @@ workflow_labels AS (
 
   SELECT * FROM {{ ref('engineering_analytics_workflow_labels') }}
 
+),
+
+excluded_project_path as (
+select 'team-tasks' as project_path union
+select 'ux-research' union
+select 'design.gitlab.com' union
+select 'pajamas-adoption-scanner' union
+select 'gitlab-design' union 
+select 'technical-writing' union
+select 'fulfillment-meta'  union
+select 'verify-stage' union
+select 'team' union 
+select 'group-tasks' union 
+select 'discussion' union
+select 'vulnerability-research' 
 ),
 
 final AS (
@@ -193,9 +225,8 @@ final AS (
       ELSE 'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/issues/' || internal_issues.issue_iid
     END                                                                                                                                                                                                                                                                                                 AS url,
     internal_issues.is_part_of_product,
-    CASE WHEN is_part_of_product AND milestone_start_date <= DATEADD('month', 1, CURRENT_DATE) THEN
-      DENSE_RANK() OVER (PARTITION BY IFF(is_part_of_product AND milestone_start_date <= DATEADD('month', 1, CURRENT_DATE), 1, 0)
-        ORDER BY milestone_start_date DESC) END                                                                                                                                                                                                                                                         AS milestone_recency
+    milestones.milestone_recency AS milestone_recency,
+    coalesce(internal_issues.is_part_of_product and internal_issues.namespace_id in (6543,9970) and projects.project_path not in (select * from excluded_project_path) and masked_label_title not like '%type::ignore%' and is_part_of_product and group_label!='undefined', False) as is_milestone_issue_reporting --this logic comes from [issues_by_milestone] sisense snippet
   FROM internal_issues
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_issues.project_id
