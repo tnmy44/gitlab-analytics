@@ -46,6 +46,11 @@ def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
             INTERNAL_NAMESPACES=internal_namespaces_str
         )
 
+    if "INTERNAL_PROJECTS" in additional_filter:
+
+        internal_project_list = get_internal_projects()
+        internal_project_str = ','.join(str(id) for id in internal_project_list) 
+        additional_filter = additional_filter.format(INTERNAL_PROJECTS=internal_project_str)
     return additional_filtering
 
 
@@ -59,7 +64,6 @@ def load_incremental(
     """
     Load tables incrementally based off of the execution date.
     """
-
     raw_query = table_dict["import_query"]
     additional_filtering = get_additional_filtering(table_dict)
 
