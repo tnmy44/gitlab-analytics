@@ -5089,7 +5089,6 @@ roles:
                     - svogel_prep.*.*
                     - svogel_prod.*.*
 
-
     - tableau:
         warehouses:
             - reporting
@@ -5175,8 +5174,12 @@ roles:
                     - tnguyen_prod.*.*
 
     - tscott:
-        member_of: []
-        warehouses: []
+        member_of:
+            - data_team_analyst
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
 
     - vagrawal:
         member_of:
@@ -5817,8 +5820,9 @@ users:
             - tnguyen
 
     - tscott:
-        can_login: no 
-        member_of: []
+        can_login: yes
+        member_of:
+            - tscott
 
     - vagrawal:
         can_login: yes
