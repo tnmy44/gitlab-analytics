@@ -50,8 +50,11 @@ def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
     if "INTERNAL_PROJECTS" in additional_filtering:
 
         internal_project_list = get_internal_projects()
-        internal_project_str = ','.join(str(id) for id in internal_project_list) 
-        additional_filtering = additional_filtering.format(INTERNAL_PROJECTS=internal_project_str)
+        internal_project_str = ",".join(str(id) for id in internal_project_list)
+        additional_filtering = additional_filtering.format(
+            INTERNAL_PROJECTS=internal_project_str
+        )
+
     return additional_filtering
 
 
