@@ -195,11 +195,13 @@ class GoogleDriveClient:
                 break
             except ssl.SSLError as e:
                 info(f"Caught SSL error when retrieving parent folder: {e}")
-                if retry_request_count != max_retry_request_count:
+                if retry_request_count <= max_retry_request_count:
                     info(
                         f"Retrying in {wait} seconds, {retry_request_count+1}/{max_retry_request_count} tries"
                     )
                     time.sleep(wait)
+                else:
+                    raise e
 
         previous_parents = ",".join(file.get("parents"))
 
