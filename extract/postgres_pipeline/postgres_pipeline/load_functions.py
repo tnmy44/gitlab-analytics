@@ -38,40 +38,40 @@ def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
 
     additional_filtering = table_dict.get("additional_filtering", "")
 
-    if "INTERNAL_NAMESPACE_IDS" in additional_filter:
+    if "INTERNAL_NAMESPACE_IDS" in additional_filtering:
         identifiers = ["namespace_id"]
         internal_namespace_ids_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filter = additional_filter.format(
+        additional_filtering = additional_filtering.format(
             INTERNAL_NAMESPACE_IDS=internal_namespace_ids_str
         )
 
-    elif "INTERNAL_PROJECT_IDS" in additional_filter:
+    elif "INTERNAL_PROJECT_IDS" in additional_filtering:
         identifiers = ["project_id"]
         internal_project_ids_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filter = additional_filter.format(
+        additional_filtering = additional_filtering.format(
             INTERNAL_PROJECT_IDS=internal_project_ids_str
         )
 
-    elif "INTERNAL_PROJECT_PATHS" in additional_filter:
+    elif "INTERNAL_PROJECT_PATHS" in additional_filtering:
         identifiers = ["project_path"]
         internal_project_paths_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filter = additional_filter.format(
+        additional_filtering = additional_filtering.format(
             INTERNAL_PROJECT_PATHS=internal_project_paths_str
         )
 
-    elif "INTERNAL_NAMESPACE_PATHS" in additional_filter:
+    elif "INTERNAL_NAMESPACE_PATHS" in additional_filtering:
         identifiers = ["namespace_path"]
         internal_namespace_paths_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filter = additional_filter.format(
+        additional_filtering = additional_filtering.format(
             INTERNAL_NAMESPACE_PATHS=internal_namespace_paths_str
         )
 
-    elif "INTERNAL_PATHS" in additional_filter:
+    elif "INTERNAL_PATHS" in additional_filtering:
         identifiers = ["namespace_path", "project_path"]
         internal_paths_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filter = additional_filter.format(INTERNAL_PATHS=internal_paths_str)
+        additional_filtering = additional_filtering.format(INTERNAL_PATHS=internal_paths_str)
 
-    return additional_filter
+    return additional_filtering
 
 
 def load_incremental(
