@@ -69,7 +69,9 @@ def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
     elif "INTERNAL_PATHS" in additional_filtering:
         identifiers = ["namespace_path", "project_path"]
         internal_paths_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filtering = additional_filtering.format(INTERNAL_PATHS=internal_paths_str)
+        additional_filtering = additional_filtering.format(
+            INTERNAL_PATHS=internal_paths_str
+        )
 
     return additional_filtering
 
