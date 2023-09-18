@@ -181,6 +181,7 @@
    --IDs
     opp_history_final.dim_crm_opportunity_id,
     opp_history_final.dim_crm_account_id,
+    account_history_final.dim_crm_parent_account_id,
   
   --Opp Data  
     opp_history_final.order_type,
@@ -243,6 +244,7 @@
    --IDs
     opp_history_final.dim_crm_opportunity_id,
     opp_history_final.dim_crm_account_id,
+    account_history_final.dim_crm_parent_account_id,
   
   --Opp Data  
     opp_history_final.order_type,
@@ -384,5 +386,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-09-14",
+    updated_date="2023-09-18",
   ) }}
