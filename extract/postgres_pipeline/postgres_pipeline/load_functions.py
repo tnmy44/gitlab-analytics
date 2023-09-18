@@ -35,6 +35,9 @@ def get_last_load_time() -> Optional[datetime.datetime]:
 
 
 def get_additional_filtering(additional_filter: str) -> str:
+
+    additional_filtering = table_dict.get("additional_filtering", "")
+
     if "INTERNAL_NAMESPACE_IDS" in additional_filter:
         identifiers = ["namespace_id"]
         internal_namespace_ids_str = tuple(get_internal_identifier_keys(identifiers))
