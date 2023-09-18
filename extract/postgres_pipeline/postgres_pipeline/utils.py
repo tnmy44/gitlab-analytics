@@ -34,8 +34,6 @@ from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
 
 SCHEMA = "tap_postgres"
-DBT_SEED_DATA_PATH = "https://gitlab.com/gitlab-data/analytics/-/raw/master/transform/snowflake-dbt/data"  # this needs to be updated to local path
-
 
 def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
     """Do the auth and return a usable gcs bucket object."""
@@ -47,35 +45,36 @@ def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
     return storage_client.get_bucket(bucket_name)
 
 
-def get_internal_namespaces() -> list:
+def get_internal_identifier_keys(identifiers: list) -> list:
     """
-    Get a list of current internal GitLab namespace keys from dbt seed file
+    Get a list of current internal GitLab project or namespace keys from dbt seed files
     """
-    file_location = f"{DBT_SEED_DATA_PATH}/internal_gitlab_namespaces.csv"
-    df = pd.read_csv(file_location)
-    gitlab_namespaces = list(df["namespace_id"])
+    dbt_seed_data_path = "https://gitlab.com/gitlab-data/analytics/-/raw/master/transform/snowflake-dbt/data"
 
-    return gitlab_namespaces
+    internal_identifiers = {
+        "project_id": [
+            "projects_part_of_product_ops.csv",
+            "projects_part_of_product.csv",
+        ],
+        "project_path": [
+            "projects_part_of_product_ops.csv",
+            "projects_part_of_product.csv",
+        ],
+        "namespace_id": ["internal_gitlab_namespaces.csv"],
+        "namespace_path": ["internal_gitlab_namespaces.csv"],
+    }
 
+    internal_identifier_keys = []
 
-def get_internal_projects() -> list:
-    """
-    Get a list of current internal GitLab project keys from dbt seed files
-    """
+    for identifier in identifiers:
+        seed_files = internal_identifiers[identifier]
 
-    seed_files = [
-        "projects_part_of_product_ops.csv",
-        "projects_part_of_product.csv",
-    ]
+        for seed_file in seed_files:
+            file_location = f"{dbt_seed_data_path}/{seed_file}"
+            df = pd.read_csv(file_location)
+            internal_identifier_keys.extend(list(df[identifier]))
 
-    gitlab_projects = []
-
-    for seed_file in seed_files:
-        file_location = f"{DBT_SEED_DATA_PATH}/{seed_file}"
-        df = pd.read_csv(file_location)
-        gitlab_projects.extend(list(df["project_id"]))
-
-    return gitlab_projects
+    return internal_identifier_keys
 
 
 def upload_to_gcs(

@@ -750,7 +750,7 @@ tables:
         , '4714-11-24 00:00:00+00 BC'
         )
       AND author_id NOT IN (8311087)
-      AND project_id in ({INTERNAL_PROJECTS})
+      AND project_id in {INTERNAL_PROJECTS}
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1532,7 +1532,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   projects_internal_only:
-    additional_filtering: AND namespace_id in ({INTERNAL_NAMESPACES})
+    additional_filtering: AND namespace_id in {INTERNAL_NAMESPACES}
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
