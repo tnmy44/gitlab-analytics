@@ -319,7 +319,7 @@
 
     SUM(total_inquiries) AS kpi,
     SUM(attributed_inquiries) AS attributed_kpi
-  FROM inquiry_base
+  FROM inquiry_final
   {{dbt_utils.group_by(n=7)}}
   UNION ALL
   SELECT
@@ -338,7 +338,7 @@
 
     SUM(total_mqls) AS kpi,
     SUM(attributed_mqls) AS attributed_kpi
-  FROM mql_base
+  FROM mql_final
   {{dbt_utils.group_by(n=7)}}
   UNION ALL
   SELECT
@@ -357,7 +357,7 @@
 
     SUM(total_saos) AS kpi,
     SUM(attributed_saos) AS attributed_kpi
-  FROM sao_base 
+  FROM sao_final
   {{dbt_utils.group_by(n=6)}}
   UNION ALL
   SELECT
@@ -376,7 +376,7 @@
 
     SUM(total_cw) AS kpi,
     SUM(attributed_cw) AS attributed_kpi
-  FROM cw_base 
+  FROM cw_final 
   {{dbt_utils.group_by(n=6)}}
   
 )
