@@ -20,8 +20,7 @@ from utils import (
     get_engines,
     id_query_generator,
     manifest_reader,
-    get_internal_namespaces,
-    get_internal_projects,
+    get_internal_identifier_keys,
 )
 
 
