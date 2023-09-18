@@ -34,7 +34,7 @@ def get_last_load_time() -> Optional[datetime.datetime]:
         return None
 
 
-def get_additional_filtering(additional_filter: str) -> str:
+def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
 
     additional_filtering = table_dict.get("additional_filtering", "")
 
