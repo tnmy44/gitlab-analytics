@@ -236,7 +236,7 @@
     SUM(sao_net_arr) AS total_sao_net_arr,
     SUM(influenced_saos) AS attributed_saos
   FROM sao_base
-  {{dbt_utils.group_by(n=5)}}
+  {{dbt_utils.group_by(n=7)}}
 
 ), cw_base AS (
   
@@ -299,7 +299,7 @@
     SUM(cw_net_arr) AS total_cw_net_arr,
     SUM(influenced_cw) AS attributed_cw
   FROM cw_base
-  {{dbt_utils.group_by(n=5)}}
+  {{dbt_utils.group_by(n=7)}}
   
 ), final AS (
   
