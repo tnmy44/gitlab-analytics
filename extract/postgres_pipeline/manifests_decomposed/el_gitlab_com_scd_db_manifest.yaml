@@ -834,6 +834,8 @@ tables:
       , registration_objective
       , provisioned_by_group_id
       , NULL AS provisioned_by_group_at
+      , organization
+      , discord
       FROM user_details
   users_security_dashboard_projects:
     dbt_source_model: true
