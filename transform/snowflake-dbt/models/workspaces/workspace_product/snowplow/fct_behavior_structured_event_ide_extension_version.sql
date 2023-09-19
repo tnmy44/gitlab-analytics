@@ -2,7 +2,7 @@
   config(
     materialized='incremental',
     unique_key='behavior_structured_event_pk',
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception", "product"]
   )
 }}
 
@@ -19,6 +19,7 @@ flattened AS (
   SELECT
     clicks.behavior_structured_event_pk,
     clicks.behavior_at,
+    clicks.contexts,
     flat_contexts.value['data']['extension_name']::VARCHAR AS extension_name,
     flat_contexts.value['data']['extension_version']::VARCHAR AS extension_version,
     flat_contexts.value['data']['ide_name']::VARCHAR AS ide_name,
@@ -26,7 +27,7 @@ flattened AS (
     flat_contexts.value['data']['ide_version']::VARCHAR AS ide_version
   FROM clicks,
   LATERAL FLATTEN(input => TRY_PARSE_JSON(clicks.contexts), path => 'data') AS flat_contexts
-  WHERE flat_contexts.value['schema']::VARCHAR = 'iglu:com.gitlab/ide_extension_version/jsonschema/1-0-0'
+  WHERE flat_contexts.value['schema']::VARCHAR LIKE 'iglu:com.gitlab/ide_extension_version/jsonschema/%'
     {% if is_incremental() %}
     
         AND clicks.behavior_at >= (SELECT MAX(behavior_at) FROM {{this}})
