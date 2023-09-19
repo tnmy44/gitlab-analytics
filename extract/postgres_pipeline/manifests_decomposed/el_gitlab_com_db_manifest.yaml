@@ -147,7 +147,7 @@ tables:
             WHEN details ilike '%add: group%' THEN details
             WHEN details ilike '%remove: group%' THEN details
             ELSE NULL
-        END as DETAILS
+        END as details
       , created_at
       FROM audit_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
