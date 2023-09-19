@@ -399,6 +399,7 @@ roles:
             - gitlab_dotcom
             - handbook
             - license_db
+            - nvd
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -959,6 +960,7 @@ roles:
                   read:
                       - prod.workspace_data_science
                       - prod.common
+                      - prod.common_prep
                       - prod.legacy
                       - prod.common_mart_product
                       - prod.restricted_safe_common_mart_sales
@@ -989,6 +991,7 @@ roles:
                       - prep.customers.*
                       - prep.sfdc.*
                       - prod.common.*
+                      - prod.common_prep.*
                       - prod.legacy.*
                       - prod.common_mart_product.*
                       - prod.restricted_safe_common_mart_sales.*
@@ -2104,7 +2107,18 @@ roles:
                     - prep.sensitive.netsuite_transaction_lines_pii
                     - prep.sensitive.netsuite_vendors_pii
                     - raw.netsuite_fivetran.*
-
+    
+    - nvd:
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.nvd
+            tables:
+                read:
+                    - prep.nvd.*
 
     - oci_reports:
         warehouses:
@@ -3498,6 +3512,7 @@ roles:
         member_of:
             - reporter
             - restricted_safe
+            - salesforce
         warehouses:
             - dev_xs
         owns:
@@ -3998,6 +4013,14 @@ roles:
                 write:
                     - lvinueza_prep.*.*
                     - lvinueza_prod.*.*
+
+    - manggara:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - restricted_safe
+        warehouses:
+            - dev_xs
 
     - marntz:
         member_of:
@@ -5078,7 +5101,6 @@ roles:
                     - svogel_prep.*.*
                     - svogel_prod.*.*
 
-
     - tableau:
         warehouses:
             - reporting
@@ -5164,8 +5186,12 @@ roles:
                     - tnguyen_prod.*.*
 
     - tscott:
-        member_of: []
-        warehouses: []
+        member_of:
+            - data_team_analyst
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
 
     - vagrawal:
         member_of:
@@ -5547,6 +5573,11 @@ users:
         member_of:
             - lvinueza
 
+    - manggara:
+        can_login: yes
+        member_of:
+            - manggara
+
     - marntz:
         can_login: yes
         member_of:
@@ -5801,8 +5832,9 @@ users:
             - tnguyen
 
     - tscott:
-        can_login: no 
-        member_of: []
+        can_login: yes
+        member_of:
+            - tscott
 
     - vagrawal:
         can_login: yes

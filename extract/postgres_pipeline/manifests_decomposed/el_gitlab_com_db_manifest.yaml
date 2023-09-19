@@ -261,6 +261,7 @@ tables:
       , created_at
       , updated_at
       , agent_id
+      , status
       FROM cluster_agent_tokens
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -663,7 +664,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   issues:
-    additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00','4714-11-24 00:00:00+00 BC')
+    additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00','4714-11-24 00:00:00+00 BC') AND author_id NOT IN (8311087)
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -673,7 +674,7 @@ tables:
     import_query: |-
       SELECT id
       , iid
-      , CASE WHEN project_id IN 
+      , CASE WHEN project_id IN
           (13154706
           , 14859125
           , 15532587
@@ -698,7 +699,7 @@ tables:
       , created_at
       , updated_at
       , confidential
-      , CASE WHEN project_id IN 
+      , CASE WHEN project_id IN
           (13154706
           , 14859125
           , 15532587
@@ -1235,7 +1236,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , CASE WHEN project_id IN 
+      , CASE WHEN project_id IN
           (13154706
           , 14859125
           , 15532587

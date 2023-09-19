@@ -2309,3 +2309,15 @@ The GitLab plan id at the time of object creation.
 Boolean flag set to True if the epic's namespace is identified as an internal GitLab namespace.
 
 {% enddocs %}
+
+{% docs cycle_time_in_days %}
+
+Number of days since created date of opportunity till its closure. For renewal opportunities created date = ARR created date 
+
+{% enddocs %}
+
+{% docs is_health_score_metric %}
+
+ Boolean flag set to True if the metric is used in Gainsight for customer health scoring.
+
+{% enddocs %}

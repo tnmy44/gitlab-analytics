@@ -11,6 +11,55 @@ WITH biz_person AS (
     WHERE bizible_touchpoint_position LIKE '%FT%'
      AND is_deleted = 'FALSE'
 
+), crm_tasks AS (
+
+    SELECT 
+      sfdc_record_id,
+      MIN(task_completed_date) AS min_task_completed_date_by_bdr_sdr
+    FROM {{ref('prep_crm_task')}}
+    WHERE is_deleted = 'FALSE'
+    AND task_owner_role LIKE '%BDR%' 
+    OR task_owner_role LIKE '%SDR%'
+    GROUP BY 1
+
+), crm_events AS (
+
+    SELECT 
+      sfdc_record_id,
+      MIN(event_date) AS min_task_completed_date_by_bdr_sdr
+    FROM {{ref('prep_crm_event')}}
+    LEFT JOIN {{ref('dim_crm_user')}} event_user_id 
+    ON prep_crm_event.dim_crm_user_id = event_user_id.dim_crm_user_id 
+    LEFT JOIN {{ref('dim_crm_user')}}  event_booked_by_id
+    ON prep_crm_event.booked_by_employee_number = event_booked_by_id.employee_number
+    WHERE 
+    event_user_id.user_role_name LIKE '%BDR%' 
+    OR event_booked_by_id.user_role_name LIKE '%BDR%' 
+    OR event_user_id.user_role_name LIKE '%SDR%' 
+    OR event_booked_by_id.user_role_name LIKE '%SDR%' 
+    GROUP BY 1
+
+  
+), crm_activity_prep AS (
+  
+    SELECT 
+      sfdc_record_id,
+      min_task_completed_date_by_bdr_sdr
+    FROM crm_tasks
+    UNION
+    SELECT
+      sfdc_record_id,
+      min_task_completed_date_by_bdr_sdr
+    FROM crm_events
+  
+),  crm_activity AS (
+
+    SELECT 
+      sfdc_record_id,
+      MIN(min_task_completed_date_by_bdr_sdr) AS min_task_completed_date_by_bdr_sdr
+    FROM crm_activity_prep
+    GROUP BY 1 
+
 ), biz_person_with_touchpoints AS (
 
     SELECT
@@ -22,6 +71,7 @@ WITH biz_person AS (
     FROM biz_touchpoints
     JOIN biz_person
       ON biz_touchpoints.bizible_person_id = biz_person.person_id
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY bizible_lead_id ORDER BY bizible_touchpoint_date DESC) = 1
 
 ), sfdc_contacts AS (
 
@@ -54,6 +104,7 @@ WITH biz_person AS (
       sfdc_lead_id,
       sfdc_contact_id
     FROM {{ ref('marketo_lead_source') }}
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY sfdc_contact_id ORDER BY updated_at DESC) = 1
 
 ),  crm_person_final AS (
 
@@ -180,7 +231,12 @@ WITH biz_person AS (
       ptp_past_score_group                           AS propensity_to_purchase_past_score_group,
       NULL                                           AS zoominfo_company_employee_count,
       zoominfo_contact_id,
-      NULL                                           AS is_partner_recalled
+      NULL                                           AS is_partner_recalled,
+      CASE
+        WHEN crm_activity.min_task_completed_date_by_bdr_sdr IS NOT NULL
+          THEN TRUE
+        ELSE FALSE
+      END AS is_bdr_sdr_worked
 
 
     FROM sfdc_contacts
@@ -190,6 +246,8 @@ WITH biz_person AS (
       ON was_converted_lead.contact_id = sfdc_contacts.contact_id
     LEFT JOIN marketo_persons
       ON sfdc_contacts.contact_id = marketo_persons.sfdc_contact_id and sfdc_type = 'Contact'
+    LEFT JOIN crm_activity
+      ON sfdc_contacts.contact_id=crm_activity.sfdc_record_id
 
     UNION
 
@@ -316,32 +374,27 @@ WITH biz_person AS (
       ptp_past_score_group                           AS propensity_to_purchase_past_score_group,
       zoominfo_company_employee_count,
       NULL AS zoominfo_contact_id,
-      is_partner_recalled
+      is_partner_recalled,
+      CASE
+        WHEN crm_tasks.min_task_completed_date_by_bdr_sdr IS NOT NULL
+          THEN TRUE
+        ELSE FALSE
+      END AS is_bdr_sdr_worked
 
     FROM sfdc_leads
     LEFT JOIN biz_person_with_touchpoints
       ON sfdc_leads.lead_id = biz_person_with_touchpoints.bizible_lead_id
     LEFT JOIN marketo_persons
       ON sfdc_leads.lead_id = marketo_persons.sfdc_lead_id and sfdc_type = 'Lead'
+    LEFT JOIN crm_tasks
+      ON sfdc_leads.lead_id=crm_tasks.sfdc_record_id
     WHERE is_converted = 'FALSE'
-
-), duplicates AS (
-
-    SELECT
-      dim_crm_person_id
-    FROM crm_person_final
-    GROUP BY 1
-    HAVING COUNT(*) > 1
 
 ), final AS (
 
     SELECT *
     FROM crm_person_final
-    WHERE dim_crm_person_id NOT IN (
-                                    SELECT *
-                                    FROM duplicates
-                                      )
-      AND sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
+    WHERE sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
 
 )
 

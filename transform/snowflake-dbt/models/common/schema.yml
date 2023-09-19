@@ -1383,6 +1383,33 @@ models:
         description: The response time from Traction, based only in working hours for the user/rep. 
       - name: propensity_to_purchase_score_date
         description: This field indicates the date when most recent probability to purchase score was calculated.
+      - name: propensity_to_purchase_score_group
+        description: This field indicates the propensity to purchase score, 5 being the highest probability to purchase.
+      - name: pql_namespace_creator_job_description
+        description: namespace creator self-described job description
+      - name: pql_namespace_id
+        description: ID of the PQL's namespace, from SFDC. 
+      - name: pql_namespace_name
+        description: Name of the PQL's namespace, from SFDC. 
+      - name: pql_namespace_users
+        description: number of namespace users
+      - name: is_product_qualified_lead
+        description: Whether or not the lead is a PQL. 
+      - name: propensity_to_purchase_insights
+        description: This field provides insights into the probability score of a record to purchase.
+      - name: is_ptp_contact
+        description: This field indicates if the record has a calculated propensity to purchase score.
+      - name: propensity_to_purchase_namespace_id
+        description: This field indicates the namespace ID that has been scored for propensity to purchase.
+      - name: propensity_to_purchase_past_insights
+        description: This field provides insights into the previous probability score of a record to purchase.
+      - name: propensity_to_purchase_past_score_group
+        description: This field indicates the previous propensity to purchase score a user had.
+      - name: propensity_to_purchase_days_since_trial_start
+        description: This field indicates the number of days that passed since this user started a trial.
+      - name: is_partner_recalled
+        description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
+
 
   - name: fct_saas_product_usage_metrics_monthly
     description: '{{ doc("fct_saas_product_usage_metrics_monthly") }}'
@@ -1805,6 +1832,38 @@ models:
           - dbt_utils.at_least_one
       - name: ci_internal_pipelines_28_days_event
         description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_builds_28_days_event
+        description: '{{ doc("ci_builds_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_features_28_days_user
+        description: '{{ doc("audit_features_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: groups_all_time_event
+        description: '{{ doc("groups_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: commit_ci_config_file_7_days_user
+        description: '{{ doc("commit_ci_config_file_7_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_pipeline_config_repository_all_time_user
+        description: '{{ doc("ci_pipeline_config_repository_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_pipeline_config_repository_all_time_event
+        description: '{{ doc("ci_pipeline_config_repository_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_all_time_event
+        description: '{{ doc("pipeline_schedules_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_all_time_user
+        description: '{{ doc("pipeline_schedules_all_time_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: is_missing_paid_seats
@@ -3005,6 +3064,8 @@ models:
         description: '{{ doc("is_smau") }}'
       - name: is_umau
         description: '{{ doc("is_umau") }}'
+      - name: is_health_score_metric
+        description: '{{ doc("is_health_score_metric") }}'
       - name: snapshot_date
         description: The date the data was extracted from metrics YAML files
       - name: uploaded_at
@@ -3936,6 +3997,38 @@ models:
         description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: ci_builds_28_days_event
+        description: '{{ doc("ci_builds_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_features_28_days_user
+        description: '{{ doc("audit_features_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: groups_all_time_event
+        description: '{{ doc("groups_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: commit_ci_config_file_7_days_user
+        description: '{{ doc("commit_ci_config_file_7_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_pipeline_config_repository_all_time_user
+        description: '{{ doc("ci_pipeline_config_repository_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_pipeline_config_repository_all_time_event
+        description: '{{ doc("ci_pipeline_config_repository_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_all_time_event
+        description: '{{ doc("pipeline_schedules_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_all_time_user
+        description: '{{ doc("pipeline_schedules_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
@@ -4633,6 +4726,32 @@ models:
         description: First month the ultimate parent CRM account has had ARR (Annual Recurrent Revenue).
       - name: parent_account_arr_cohort_quarter
         description: First fiscal quarter the ultimate parent CRM account has had ARR (Annual Recurrent Revenue).
+      - name: has_six_sense_6_qa
+        description: The 6QA status of the account for the product.
+      - name: risk_rate_guid
+        description: The globally unique ID (GUID) for the third party record in NavEx RiskRate.
+      - name: six_sense_account_profile_fit
+        description: A measure of how similar a company is to the ideal customer profile.
+      - name: six_sense_account_reach_score
+        description: A measure of current outreach activities against optimal quality.
+      - name: six_sense_account_profile_score
+        description: A measure of how similar a company is to the ideal customer profile.
+      - name: six_sense_account_buying_stage
+        description: The 6QA buting stage of the account
+      - name: six_sense_account_numerical_reach_score
+        description:  measure of current outreach activities against optimal quality.
+      - name: six_sense_account_update_date
+        description: The latest update date and time when 6sense Scores were updated.
+      - name: six_sense_account_6_qa_end_date
+        description: The date the account was disqualified from 6QA status 
+      - name: six_sense_account_6_qa_age_days
+        description: The age of the Account's 6QA data, in days. 
+      - name: six_sense_account_6_qa_start_date
+        description: The date the account qualified for 6QA status 
+      - name: six_sense_account_intent_score
+        description: A measure, between 0 and 100, of how much an account is behaving like accounts with which there is a history of previously opened opportunities.
+      - name: six_sense_segments
+        description: The Account's 6QA segment. 
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
@@ -5367,6 +5486,8 @@ models:
         description: '{{ doc("override_arr_basis_clari") }}'
       - name: vsa_start_date_net_arr
         description: '{{ doc("vsa_start_date_net_arr") }}'
+      - name: cycle_time_in_days
+        description: '{{ doc("cycle_time_in_days") }}' 
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'

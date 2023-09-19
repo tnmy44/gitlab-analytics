@@ -276,6 +276,9 @@ models:
           +schema: sensitive
           secure: true
 
+      nvd:
+        +schema: nvd
+
       oci_reports:
         +schema: oci_reports
 
