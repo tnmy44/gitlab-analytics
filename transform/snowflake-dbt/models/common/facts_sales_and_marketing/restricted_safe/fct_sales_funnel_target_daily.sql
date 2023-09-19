@@ -17,6 +17,7 @@
       {{ dbt_utils.star(from=ref('fct_sales_funnel_target'),
                         except=['CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE', 'MODEL_UPDATED_DATE', 'DBT_UPDATED_AT', 'DBT_CREATED_AT'],
                         relation_alias='fct_sales_funnel_target') }},
+      fct_sales_funnel_target.allocated_target                                          AS monthly_allocated_target,
       fct_sales_funnel_target.allocated_target / days_of_month                          AS daily_allocated_target
     FROM fct_sales_funnel_target
     INNER JOIN prep_date

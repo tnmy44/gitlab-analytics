@@ -14,7 +14,7 @@
       fct_sales_funnel_target.kpi_name,
       dim_crm_user_hierarchy.crm_user_sales_segment,
       dim_crm_user_hierarchy.crm_user_sales_segment_grouped,
-      dim_crm_user_hierarchy.crm_user_business_unit,
+      IFNULL(dim_crm_user_hierarchy.crm_user_business_unit, 'EMPTY') AS crm_user_business_unit,
       dim_crm_user_hierarchy.crm_user_geo,
       dim_crm_user_hierarchy.crm_user_region,
       dim_crm_user_hierarchy.crm_user_area,
