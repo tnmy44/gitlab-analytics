@@ -19,21 +19,6 @@
 
 ),
 
-division_department_info AS (
-
-  SELECT 
-    division, 
-    department,
-    MAX(effective_date)                                                                                                        AS effective_date
-  FROM job_info_source
-  LEFT JOIN team_member
-    ON job_info_source.employee_id = team_member.employee_id
-      AND termination_date IS NULL
-        AND job_info_source.effective_date >= team_member.valid_from AND job_info_source.effective_date <= team_member.valid_to
-  GROUP BY 1,2
-
-),
-
 team_info AS (
 
   SELECT 
@@ -53,16 +38,20 @@ team_info AS (
 job_info AS (
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['employee_id', 'job_role', 'job_grade']) }}                                                    AS unique_key,
+    {{ dbt_utils.surrogate_key(['employee_id', 'job_role', 'job_grade', 'jobtitle_speciality_single_select', 'jobtitle_speciality_single_select']) }}   
+                                                                                                                               AS unique_key,
     employee_id                                                                                                                AS employee_id, 
     job_role                                                                                                                   AS management_level,
     job_grade                                                                                                                  AS job_grade, 
     jobtitle_speciality_single_select                                                                                          AS job_specialty_single,
     jobtitle_speciality_single_select                                                                                          AS job_specialty_multi,
-    DATE_TRUNC('day', uploaded_at)                                                                                             AS effective_date
+    DATE_TRUNC('day', uploaded_at)                                                                                             AS effective_date,
+    LAG(unique_key, 1, NULL) OVER (PARTITION BY employee_id ORDER BY uploaded_at)                                              AS lag_unique_key,
+    CONDITIONAL_TRUE_EVENT(unique_key != lag_unique_key) OVER ( PARTITION BY employee_id ORDER BY uploaded_at)                 AS unique_key_group 
   FROM {{ref('blended_employee_mapping_source')}}
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date DESC) = 1
+  WHERE uploaded_at >= '2020-02-27'
 
+      
 ),
 
 
