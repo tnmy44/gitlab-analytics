@@ -4,7 +4,6 @@
         config(
           unique_key='team_id',
           strategy='check',
-          invalidate_hard_deletes=True,
           check_cols=[
             'team_hierarchy_level',
             'team_members_count',

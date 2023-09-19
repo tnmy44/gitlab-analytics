@@ -1,7 +1,6 @@
 WITH source AS (
   SELECT *
   FROM {{ source('snapshots','workday_employee_mapping_snapshots') }}
-  WHERE NOT _fivetran_deleted
   
 ),
 
