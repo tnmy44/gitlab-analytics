@@ -234,7 +234,7 @@
   --KPIs
     COUNT(DISTINCT saos) AS total_saos,
     SUM(sao_net_arr) AS total_sao_net_arr,
-    SUM(influenced_saos) AS attributed_saos
+    COUNT(DISTINCT influenced_saos) AS attributed_saos
   FROM sao_base
   {{dbt_utils.group_by(n=7)}}
 
@@ -297,7 +297,7 @@
   --KPIs
     COUNT(DISTINCT cw) AS total_cw,
     SUM(cw_net_arr) AS total_cw_net_arr,
-    SUM(influenced_cw) AS attributed_cw
+    COUNT(DISTINCT influenced_cw) AS attributed_cw
   FROM cw_base
   {{dbt_utils.group_by(n=7)}}
   
