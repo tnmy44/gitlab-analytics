@@ -258,12 +258,6 @@ models:
       linkedin_ads:
         +schema: linkedin_ads
 
-      mailgun:
-        +schema: mailgun
-        sensitive:
-          +schema: sensitive
-          secure: true
-
       marketo:
         +schema: marketo
         sensitive:
