@@ -70,6 +70,7 @@
     LEFT JOIN subscriptions ON charges.dim_subscription_id = subscriptions.dim_subscription_id
     WHERE charges.subscription_status IN ('Active','Cancelled')
       AND charges.product_tier_name != 'Storage'
+      AND charges.rate_plan_charge_name != 'Dedicated - Administration Fee [Large] - 1 Year'
     {{ dbt_utils.group_by(n = 2) }}
     
 ), action_active_users_project_repo_users AS (
