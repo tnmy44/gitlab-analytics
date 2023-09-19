@@ -143,7 +143,9 @@ tables:
       , entity_id
       , entity_type
       , CASE
-            WHEN details ilike '%custom_message: Added group%' THEN 'custom_message: Added group'
+            WHEN details ilike '%%custom_message: Added group%%' THEN 'custom_message: Added group'
+            WHEN details ilike '%%add: group%%' THEN 'add: group'
+            WHEN details ilike '%%remove: group%%' THEN 'remove: group'
             ELSE NULL
         END as details
       , created_at
