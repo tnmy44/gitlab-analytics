@@ -29,8 +29,7 @@ division_department_info AS (
   LEFT JOIN team_member
     ON job_info_source.employee_id = team_member.employee_id
       AND termination_date IS NULL
-        AND (team_member.valid_from <= job_info_source.effective_date
-            AND team_member.valid_to >= job_info_source.effective_date)
+        AND job_info_source.effective_date >= team_member.valid_from AND job_info_source.effective_date <= team_member.valid_to
   GROUP BY 1,2
 
 ),
