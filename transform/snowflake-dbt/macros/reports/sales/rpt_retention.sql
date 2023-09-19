@@ -33,7 +33,6 @@
       {% endfor %}
       rpt_arr.is_arr_month_finalized,
       rpt_arr.arr_month,
-      rpt_arr.arr_band_calc_detailed,
       DATEADD('year', 1, rpt_arr.arr_month)                     AS retention_month,
       SUM(ZEROIFNULL(rpt_arr.mrr))                              AS mrr_total,
       SUM(ZEROIFNULL(rpt_arr.arr))                              AS arr_total,
@@ -41,7 +40,7 @@
       ARRAY_AGG(rpt_arr.product_tier_name)                      AS product_category,
       MAX(rpt_arr.product_ranking)                              AS product_ranking
     FROM rpt_arr
-    {{ dbt_utils.group_by(n=4 + fields_length) }}
+    {{ dbt_utils.group_by(n=3 + fields_length) }}
 
 ), retention_subs AS (
 
@@ -52,7 +51,6 @@
       future_mrr.is_arr_month_finalized AS is_arr_month_finalized,
       current_mrr.arr_month             AS current_arr_month,
       current_mrr.retention_month,
-      current_mrr.arr_band_calc_detailed,
       current_mrr.mrr_total             AS current_mrr,
       future_mrr.mrr_total              AS future_mrr,
       current_mrr.arr_total             AS current_arr,
