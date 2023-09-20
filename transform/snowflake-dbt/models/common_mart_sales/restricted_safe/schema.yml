@@ -430,13 +430,15 @@ models:
             - unique
         tags: ["tdf", "mart", "sales_funnel"]
       - name: report_target_date
-        description: Target_Date + 1. This is used in Sisense when comparing QTD targets vs actuals for the current date.
+        description: '{{ doc("report_target_date") }}'
+      - name: wtd_allocated_target
+        description: '{{ doc("wtd_allocated_target") }}'
       - name: mtd_allocated_target
-        description: Month To Date allocated target.
+        description: '{{ doc("mtd_allocated_target") }}'
       - name: qtd_allocated_target
-        description: Quarter To Date allocated target.
+        description: '{{ doc("qtd_allocated_target") }}'
       - name: ytd_allocated_target
-        description: Year To Date allocated target.
+        description: '{{ doc("ytd_allocated_target") }}'
 
   - name: mart_sales_funnel_partner_alliance_target
     description: Model with Sales targets for partner and alliances used for planning the go to market Sales and Marketing motion.
@@ -456,13 +458,15 @@ models:
             - unique
         tags: ["tdf", "mart", "sales_funnel"]
       - name: report_target_date
-        description: Target_Date + 1. This is used in Sisense when comparing QTD targets vs actuals for the current date.
+        description: '{{ doc("report_target_date") }}'
+      - name: wtd_allocated_target
+        description: '{{ doc("wtd_allocated_target") }}'
       - name: mtd_allocated_target
-        description: Month To Date allocated target.
+        description: '{{ doc("mtd_allocated_target") }}'
       - name: qtd_allocated_target
-        description: Quarter To Date allocated target.
+        description: '{{ doc("qtd_allocated_target") }}'
       - name: ytd_allocated_target
-        description: Year To Date allocated target.
+        description: '{{ doc("ytd_allocated_target") }}'
 
   - name: mart_discount_arr
     description: Model with Invoiced ARR used to calculate discounts across various dimensions.
