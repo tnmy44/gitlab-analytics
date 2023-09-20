@@ -3,7 +3,7 @@
     ('prep_date','prep_date')
 ]) }}
 
-, monthly_targets_daily AS (
+, daily_targets AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['fct_sales_funnel_target.sales_funnel_target_id', 'prep_date.date_day']) }}
@@ -26,7 +26,7 @@
 ), qtd_mtd_target AS (
 
     SELECT
-      monthly_targets_daily.*,
+      daily_targets.*,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, dim_crm_user_hierarchy_sk, dim_order_type_id,
                               dim_sales_qualified_source_id, first_day_of_week ORDER BY target_date)    AS wtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, dim_crm_user_hierarchy_sk, dim_order_type_id,
@@ -35,7 +35,7 @@
                               dim_sales_qualified_source_id, fiscal_quarter_name ORDER BY target_date)  AS qtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, dim_crm_user_hierarchy_sk, dim_order_type_id,
                               dim_sales_qualified_source_id, fiscal_year ORDER BY target_date)          AS ytd_allocated_target
-    FROM monthly_targets_daily
+    FROM daily_targets
 
 )
 
