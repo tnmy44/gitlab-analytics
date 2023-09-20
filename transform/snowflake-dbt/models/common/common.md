@@ -449,9 +449,21 @@ Sales funnel targets set by the Finance team to measure performance of Partner a
 
 {% enddocs %}
 
+{% docs fct_sales_funnel_partner_alliance_target_daily %}
+
+Derived fact table from `fct_sales_funnel_partner_alliance_target` that transforms the monthly targets specified in the aforementioned model into daily targets. This transformation is achieved by dividing the monthly target by the number of days in the corresponding month.
+
+{% enddocs %}
+
 {% docs fct_sales_funnel_target %}
 
 Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.
+
+{% enddocs %}
+
+{% docs fct_sales_funnel_target_daily %}
+
+Derived fact table from `fct_sales_funnel_target` that transforms the monthly targets specified in the aforementioned model into daily targets. This transformation is achieved by dividing the monthly target by the number of days in the corresponding month.
 
 {% enddocs %}
 
