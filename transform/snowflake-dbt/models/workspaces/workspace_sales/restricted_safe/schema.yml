@@ -46,7 +46,7 @@ models:
             - field_name
 
   - name: wk_rpt_retention_parent_account
-    description: Report table to support retention analysis at the ultimate_parent_account. This models is built on top of rpt_delta_arr_parent_month_8th_calendar_day.
+    description: Report table to support retention analysis at the ultimate_parent_account. This model is built on top of rpt_delta_arr_parent_month_8th_calendar_day.
     columns:
       - name: primary_key
         tests:
@@ -54,7 +54,7 @@ models:
           - unique
 
   - name: wk_rpt_retention_parent_account_product
-    description: Report table to support retention analysis at the ultimate_parent_account || product level. This models is built on top of rpt_delta_arr_parent_month_8th_calendar_day.
+    description: Report table to support retention analysis at the ultimate_parent_account || product level. This model is built on top of rpt_delta_arr_parent_month_8th_calendar_day.
     columns:
       - name: primary_key
         tests:
@@ -62,7 +62,7 @@ models:
           - unique
 
   - name: wk_rpt_retention_parent_account_delivery_type
-    description: Report table to support retention analysis at the ultimate_parent_account || delivery_type. This models is built on top of rpt_delta_arr_parent_month_8th_calendar_day.
+    description: Report table to support retention analysis at the ultimate_parent_account || delivery_type. This model is built on top of rpt_delta_arr_parent_month_8th_calendar_day.
     columns:
       - name: primary_key
         tests:
