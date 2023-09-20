@@ -250,7 +250,7 @@ tables:
       , CASE 
             WHEN runner_type = 1 THEN description
             ELSE NULL
-        AS description 
+        END AS description 
       , contacted_at
       , active
       , version
