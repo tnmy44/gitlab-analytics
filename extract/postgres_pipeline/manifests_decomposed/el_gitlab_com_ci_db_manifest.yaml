@@ -247,7 +247,10 @@ tables:
       SELECT id
       , created_at
       , updated_at
-      , description
+      , CASE 
+            WHEN runner_type = 1 THEN description
+            ELSE NULL
+        AS description 
       , contacted_at
       , active
       , version
