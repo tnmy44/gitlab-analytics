@@ -6,7 +6,8 @@
 , daily_targets AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['fct_sales_funnel_partner_alliance_target.sales_funnel_partner_alliance_target_id', 'prep_date.date_day']) }}                     AS sales_funnel_target_daily_pk,
+      {{ dbt_utils.surrogate_key(['fct_sales_funnel_partner_alliance_target.sales_funnel_partner_alliance_target_id', 'prep_date.date_day']) }}
+                                                                                                                                  AS sales_funnel_partner_alliance_target_daily_pk,
       prep_date.date_day                                                                                                          AS target_date,
       DATEADD('day', 1, target_date)                                                                                              AS report_target_date,
       DATEDIFF('day', fct_sales_funnel_partner_alliance_target.first_day_of_month, prep_date.last_day_of_month) + 1               AS days_of_month,
