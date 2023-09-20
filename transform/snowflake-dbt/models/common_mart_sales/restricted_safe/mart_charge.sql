@@ -17,8 +17,7 @@
     ('dim_namespace', 'dim_namespace'),
     ('fct_charge','fct_charge'),
     ('prep_billing_account_user', 'prep_billing_account_user'),
-    ('fct_trial_latest', 'fct_trial_latest'),
-    ('fct_quote_item', 'fct_quote_item')
+    ('fct_trial_latest', 'fct_trial_latest')
 ]) }}
 
 , mart_charge AS (
@@ -98,9 +97,6 @@
       dim_billing_account.po_required                                                 AS po_required,
       dim_billing_account.auto_pay                                                    AS auto_pay,
       dim_billing_account.default_payment_method_type                                 AS default_payment_method_type,
-
-      -- opportunity info
-      fct_quote_item.dim_crm_opportunity_id                                           AS dim_crm_opportunity_id,
 
       -- namespace info
       dim_namespace.ultimate_parent_namespace_id                                      AS ultimate_parent_namespace_id,
@@ -242,10 +238,6 @@
       ON fct_charge.subscription_created_by_user_id = prep_billing_account_user.zuora_user_id
     LEFT JOIN fct_trial_latest
       ON dim_subscription.namespace_id = fct_trial_latest.dim_namespace_id
-    LEFT JOIN fct_quote_item
-      ON fct_charge.dim_charge_id = fct_quote_item.rate_plan_charge_id
-      AND fct_charge.dim_amendment_id_charge = fct_quote_item.quote_amendment_id
-      AND fct_charge.dim_product_detail_id = fct_quote_item.dim_product_detail_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,
