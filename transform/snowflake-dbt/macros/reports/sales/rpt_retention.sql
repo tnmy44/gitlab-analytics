@@ -7,20 +7,18 @@
     {% set new_field = 'retention_subs.' + field %}
     {% do surrogate_key_array.append(new_field) %}
 {% endfor %}
-{% do surrogate_key_array.append('retention_month') %}
+{% do surrogate_key_array.append('retention_subs.retention_month') %} -- This is the array that will be used to create the unique key of the table
+ -- It is made out of the fields passed to the macro. We also add to it the retention_month as that is part of the grain
+ -- We add the retention_subs. prefix to each field since this is the alias that will be used in the last CTE to indicate where the fields are coming.
 
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('dim_crm_account', 'dim_crm_account')
+    ('dim_crm_account', 'dim_crm_account'),
+    ('rpt_arr', 'rpt_arr_snapshot_combined_8th_calendar_day')
 ]) }}
 
-, rpt_arr AS (
-
-    SELECT *
-    FROM {{ ref('rpt_arr_snapshot_combined_8th_calendar_day') }}
-
-), finalized_arr_months AS (
+, finalized_arr_months AS (
 
     SELECT DISTINCT arr_month, is_arr_month_finalized
     FROM rpt_arr
@@ -63,6 +61,8 @@
       future_mrr.product_ranking        AS future_product_ranking
     FROM parent_account_mrrs AS current_mrr
     LEFT JOIN parent_account_mrrs AS future_mrr
+    -- We use the fields array created above. Since these fields define the grain of the table, we need to join on all of them
+    -- In the first iteration of the loop we use an ON condition, after we use the AND condition
       {% for field in fields %}
         {% if loop.first %} ON {% else %} AND {% endif %}
         current_mrr.{{field}} = future_mrr.{{field}}
@@ -72,7 +72,7 @@
 ), final AS (
 
     SELECT
-    {{ dbt_utils.surrogate_key(surrogate_key_array) }}                                AS primary_key,
+      {{ dbt_utils.surrogate_key(surrogate_key_array) }}                              AS primary_key,
       {% for field in fields %}
         retention_subs.{{field}}                                                      AS {{field}},
       {% endfor %}
