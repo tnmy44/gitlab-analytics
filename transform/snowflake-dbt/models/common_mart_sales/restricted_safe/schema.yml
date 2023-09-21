@@ -192,6 +192,12 @@ models:
       - name: is_first_order
         description: Boolean field indicating whether the charge relates to the first order made by that account. If two charges are processed on the same date, both will be true.
       - name: is_oss_or_edu_rate_plan
+      - name: days_since_trial_start_at_first_paid_subscription_start
+        description: The number of days between the start date of the latest trial and first paid subscription.
+      - name: days_since_namespace_creation_at_trial_start
+        description: The number of days between the start date of the latest trial and namespace creation.
+      - name: is_trial_started_on_namespace_creation_date
+        description: Boolean field indicating whether the namespace was created on the same date as the latest trial started.
 
   - name: mart_crm_account
     description: Model containing Salesforce crm accounts details for existing and historical customers.
