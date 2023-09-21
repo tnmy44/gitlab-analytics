@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 WITH prep_issue AS (
 
     SELECT 
@@ -54,6 +58,6 @@ WITH prep_issue AS (
     created_by="@mpeychet_",
     updated_by="@jpeguero",
     created_date="2021-06-17",
-    updated_date="2021-10-24"
+    updated_date="2023-09-21"
 ) }}
 
