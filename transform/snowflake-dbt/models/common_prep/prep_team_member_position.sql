@@ -1,7 +1,8 @@
 
 {{ simple_cte([
     ('job_info_source','blended_job_info_source'),
-    ('team_member','dim_team_member')
+    ('team_member','dim_team_member'),
+    ('employee_mapping','blended_employee_mapping_source')
 ]) }},
 
 
@@ -21,6 +22,9 @@
 
 team_info AS (
 
+  -- Get team, department, division info from the BambooHR data
+  -- Solve for gaps and islands problem in data
+
   SELECT 
     {{ dbt_utils.surrogate_key(['employee_id', 'job_title', 'department', 'division', 'reports_to','entity']) }}               AS unique_key,
     employee_id                                                                                                                AS employee_id, 
@@ -29,33 +33,125 @@ team_info AS (
     entity                                                                                                                     AS entity, 
     department                                                                                                                 AS department,
     division                                                                                                                   AS division,
-    effective_date                                                                                                             AS effective_date
+    effective_date                                                                                                             AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from)                               AS valid_to,
+    LAG(unique_key, 1, NULL) OVER (PARTITION BY employee_id ORDER BY effective_date)                                           AS lag_unique_key,
+    CONDITIONAL_TRUE_EVENT(unique_key != lag_unique_key) OVER ( PARTITION BY employee_id ORDER BY effective_date)              AS unique_key_group 
   FROM job_info_source
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date DESC) = 1
+
+),
+
+team_info_group AS (
+
+  -- Combine the team_info and job_profiles data to get some data that didn't exist in BHR 
+  -- Group by unique_key_group to clearly identify the different team change events
+
+  SELECT 
+    team_info.employee_id, 
+    job_profiles.job_code,
+    team_info.position,
+    team_info.manager,
+    team_info.entity, 
+    team_info.department,
+    team_info.division,
+    job_profiles.is_position_active,
+    job_profiles.job_family,
+    team_info.unique_key_group,
+    MIN(team_info.valid_from) AS valid_from,
+    MAX(team_info.valid_to) AS valid_to
+  FROM team_info
+  LEFT JOIN job_profiles
+    ON job_profiles.position = team_info.position
+  {{ dbt_utils.group_by(n=10)}}
+
+),
+
+job_info_clean AS (
+
+  -- There are a lot of data quality issues in the mapping data, this CTE cleans it up ahead of solving for gaps and islands
+  -- Otherwise we end up two islands for the same time period since there are so many NULLs in the data
+
+  SELECT
+    employee_id                                                                                                                AS employee_id, 
+    LAST_VALUE(job_role IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC ROWS UNBOUNDED PRECEDING)       AS management_level,
+    LAST_VALUE(job_grade IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC ROWS UNBOUNDED PRECEDING)      AS job_grade,
+    LAST_VALUE(jobtitle_speciality_single_select IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC ROWS UNBOUNDED PRECEDING)           
+                                                                                                                               AS job_specialty_single,
+              
+    LAST_VALUE(jobtitle_speciality_multi_select IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY uploaded_at ROWS UNBOUNDED PRECEDING) 
+                                                                                                                               AS job_specialty_multi,
+    uploaded_at                                                                                                                AS uploaded_at
+  FROM employee_mapping
 
 ),
 
 job_info AS (
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['employee_id', 'job_role', 'job_grade', 'jobtitle_speciality_single_select', 'jobtitle_speciality_single_select']) }}   
+    {{ dbt_utils.surrogate_key(['employee_id', 'management_level', 'job_grade', 'job_specialty_single', 'job_specialty_multi']) }}   
                                                                                                                                AS unique_key,
     employee_id                                                                                                                AS employee_id, 
-    job_role                                                                                                                   AS management_level,
+    management_level                                                                                                           AS management_level,
     job_grade                                                                                                                  AS job_grade, 
-    jobtitle_speciality_single_select                                                                                          AS job_specialty_single,
-    jobtitle_speciality_single_select                                                                                          AS job_specialty_multi,
-    DATE_TRUNC('day', uploaded_at)                                                                                             AS effective_date,
+    job_specialty_single                                                                                                       AS job_specialty_single,
+    job_specialty_multi                                                                                                        AS job_specialty_multi,
+    uploaded_at                                                                                                                AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from)                               AS valid_to,
     LAG(unique_key, 1, NULL) OVER (PARTITION BY employee_id ORDER BY uploaded_at)                                              AS lag_unique_key,
     CONDITIONAL_TRUE_EVENT(unique_key != lag_unique_key) OVER ( PARTITION BY employee_id ORDER BY uploaded_at)                 AS unique_key_group 
-  FROM {{ref('blended_employee_mapping_source')}}
-  WHERE uploaded_at >= '2020-02-27'
+  FROM job_info_clean
 
-      
 ),
 
+job_info_group AS (
 
-team_member_groups AS (
+  -- Group by unique_key_group to clearly identify the different job change events
+
+  SELECT 
+    employee_id, 
+    management_level,
+    job_grade,
+    job_specialty_single, 
+    job_specialty_multi,
+    unique_key_group,
+    MIN(valid_from) AS valid_from,
+    MAX(valid_to) AS valid_to
+  FROM job_info
+  {{ dbt_utils.group_by(n=6)}}
+
+),
+
+legacy_history AS (
+
+  -- Combine BHR tables to get the history of the team members before workday
+
+  SELECT 
+    job_info_group.employee_id                                                                                                 AS employee_id,
+    team_info_group.manager                                                                                                    AS manager,
+    team_info_group.job_code                                                                                                   AS job_code,
+    team_info_group.position                                                                                                   AS position,
+    team_info_group.job_family                                                                                                 AS job_family,
+    job_info_group.job_specialty_single                                                                                        AS job_specialty_single,
+    job_info_group.job_specialty_multi                                                                                         AS job_specialty_multi,
+    job_info_group.management_level                                                                                            AS management_level,
+    job_info_group.job_grade                                                                                                   AS job_grade,
+    team_info_group.department                                                                                                 AS department,
+    team_info_group.division                                                                                                   AS division,
+    team_info_group.entity                                                                                                     AS entity,
+    team_info_group.is_position_active                                                                                         AS is_position_active,
+    team_info_group.valid_from                                                                                                 AS valid_from,
+    team_info_group.valid_to                                                                                                   AS valid_to
+  FROM job_info_group
+  LEFT JOIN team_info_group
+    ON job_info_group.employee_id = team_info_group.employee_id
+      AND NOT (job_info_group.valid_to <= team_info_group.valid_from
+          OR job_info_group.valid_from >= team_info_group.valid_to)
+
+),
+
+staffing_history AS (
+
+  -- Combine workday tables to get an accurate picture of the team members info
 
   SELECT
     {{ dbt_utils.surrogate_key(['employee_id', 'team_id_current', 'manager_current','department_current','suporg_current','job_code_current', 'job_specialty_single_current', 'job_specialty_multi_current', 'entity_current']) }}
@@ -84,38 +180,41 @@ team_member_groups AS (
     job_specialty_single_current                                                                                               AS job_specialty_single,
     job_specialty_multi_current                                                                                                AS job_specialty_multi,
     entity_current                                                                                                             AS entity,
-    effective_date                                                                                                             AS effective_date
+    effective_date                                                                                                             AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY employee_id ORDER BY valid_from)                               AS valid_to
   FROM {{ref('staffing_history_approved_source')}}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY date_time_initiated DESC)  = 1 
 
 ),
 
-staffing_history AS (
+staffing_history_combined AS (
 
   SELECT 
-    team_member_groups.employee_id                                                                                             AS employee_id,
-    team_member_groups.team_id                                                                                                 AS team_id,
-    team_member_groups.manager                                                                                                 AS manager,
-    team_member_groups.department                                                                                              AS department,
-    team_member_groups.suporg                                                                                                  AS suporg,
-    team_member_groups.job_code                                                                                                AS job_code,
-    team_member_groups.job_specialty_single                                                                                    AS job_specialty_single,
-    team_member_groups.job_specialty_multi                                                                                     AS job_specialty_multi,
-    team_member_groups.entity                                                                                                  AS entity,   
-    team_info.division                                                                                                          AS division,
+    staffing_history.employee_id                                                                                             AS employee_id,
+    staffing_history.team_id                                                                                                 AS team_id,
+    staffing_history.manager                                                                                                 AS manager,
+    staffing_history.department                                                                                              AS department,
+    staffing_history.suporg                                                                                                  AS suporg,
+    staffing_history.job_code                                                                                                AS job_code,
+    staffing_history.job_specialty_single                                                                                    AS job_specialty_single,
+    staffing_history.job_specialty_multi                                                                                     AS job_specialty_multi,
+    staffing_history.entity                                                                                                  AS entity,   
+    team_info_group.division                                                                                                   AS division,
     job_profiles.position                                                                                                      AS position,
     job_profiles.job_family                                                                                                    AS job_family,
     job_profiles.management_level                                                                                              AS management_level,
     job_profiles.job_grade                                                                                                     AS job_grade,
     job_profiles.is_position_active                                                                                            AS is_position_active,
-    team_member_groups.effective_date                                                                                          AS effective_date
-  FROM team_member_groups
+    staffing_history.valid_from                                                                                              AS valid_from,
+    staffing_history.valid_to                                                                                                AS valid_to
+  FROM staffing_history
   --Temporary join while we add a key to join cost_centers to staffing_history
   LEFT JOIN job_profiles
-    ON job_profiles.job_code = team_member_groups.job_code
-  LEFT JOIN team_info
-    ON team_member_groups.employee_id = team_info.employee_id 
-      AND team_member_groups.effective_date = team_info.effective_date
+    ON job_profiles.job_code = staffing_history.job_code
+  LEFT JOIN team_info_group
+    ON staffing_history.employee_id = team_info_group.employee_id 
+      AND NOT (staffing_history.valid_to <= team_info_group.valid_from
+          OR staffing_history.valid_from >= team_info_group.valid_to)
   
 ),
 
@@ -124,67 +223,64 @@ final AS (
   SELECT 
 
     -- Surrogate keys
-    {{ dbt_utils.surrogate_key(['staffing_history.employee_id'])}}                                                             AS dim_team_member_sk,
-    {{ dbt_utils.surrogate_key(['staffing_history.team_id'])}}                                                                 AS dim_team_sk,
+    {{ dbt_utils.surrogate_key(['staffing_history_combined.employee_id'])}}                                                             AS dim_team_member_sk,
+    {{ dbt_utils.surrogate_key(['staffing_history_combined.team_id'])}}                                                                 AS dim_team_sk,
 
     -- Team member position attributes
-    staffing_history.employee_id                                                                                               AS employee_id,
-    staffing_history.team_id                                                                                                   AS team_id,
-    staffing_history.manager                                                                                                   AS manager,
-    staffing_history.suporg                                                                                                    AS suporg,
-    staffing_history.job_code                                                                                                  AS job_code,
-    staffing_history.position                                                                                                  AS position,
-    staffing_history.job_family                                                                                                AS job_family,
-    staffing_history.job_specialty_single                                                                                      AS job_specialty_single,
-    staffing_history.job_specialty_multi                                                                                       AS job_specialty_multi,
-    staffing_history.management_level                                                                                          AS management_level,
-    staffing_history.job_grade                                                                                                 AS job_grade,
-    staffing_history.department                                                                                                AS department,
-    staffing_history.division                                                                                                  AS division,
-    staffing_history.entity                                                                                                    AS entity,
-    staffing_history.is_position_active                                                                                        AS is_position_active,
-    staffing_history.effective_date                                                                                            AS effective_date
-  FROM staffing_history
-  WHERE staffing_history.effective_date >= '2022-06-16'
+    staffing_history_combined.employee_id                                                                                               AS employee_id,
+    staffing_history_combined.team_id                                                                                                   AS team_id,
+    staffing_history_combined.manager                                                                                                   AS manager,
+    staffing_history_combined.suporg                                                                                                    AS suporg,
+    staffing_history_combined.job_code                                                                                                  AS job_code,
+    staffing_history_combined.position                                                                                                  AS position,
+    staffing_history_combined.job_family                                                                                                AS job_family,
+    staffing_history_combined.job_specialty_single                                                                                      AS job_specialty_single,
+    staffing_history_combined.job_specialty_multi                                                                                       AS job_specialty_multi,
+    staffing_history_combined.management_level                                                                                          AS management_level,
+    staffing_history_combined.job_grade                                                                                                 AS job_grade,
+    staffing_history_combined.department                                                                                                AS department,
+    staffing_history_combined.division                                                                                                  AS division,
+    staffing_history_combined.entity                                                                                                    AS entity,
+    staffing_history_combined.is_position_active                                                                                        AS is_position_active,
+    staffing_history_combined.valid_from                                                                                                AS valid_from,
+    staffing_history_combined.valid_to                                                                                                  AS valid_to
+  FROM staffing_history_combined
+  WHERE staffing_history_combined.valid_from >= '2022-06-16'
 
   UNION
 
   SELECT 
     -- Surrogate keys
-    {{ dbt_utils.surrogate_key(['job_info.employee_id'])}}                                                                     AS dim_team_member_sk,                                                                                                              
+    {{ dbt_utils.surrogate_key(['legacy_history.employee_id'])}}                                                               AS dim_team_member_sk,                                                                                                              
     NULL                                                                                                                       AS dim_team_sk,
 
     -- Team member position attributes
-    job_info.employee_id                                                                                                       AS employee_id,
+    legacy_history.employee_id                                                                                                 AS employee_id,
     NULL                                                                                                                       AS team_id,
-    team_info.manager                                                                                                          AS manager,
+    legacy_history.manager                                                                                                    AS manager,
     NULL                                                                                                                       AS suporg,
-    NULL                                                                                                                       AS job_code,
-    team_info.position                                                                                                         AS position,
-    NULL                                                                                                                       AS job_family,
-    job_info.job_specialty_single                                                                                              AS job_specialty_single,
-    job_info.job_specialty_multi                                                                                               AS job_specialty_multi,
-    job_info.management_level                                                                                                  AS management_level,
-    job_info.job_grade                                                                                                         AS job_grade,
-    team_info.department                                                                                                       AS department,
-    team_info.division                                                                                                         AS division,
-    team_info.entity                                                                                                           AS entity,
-    NULL                                                                                                                       AS is_position_active,
-    team_info.effective_date                                                                                                   AS effective_date
-  FROM job_info
-  LEFT JOIN team_info
-    ON job_info.employee_id = team_info.employee_id
-      AND job_info.effective_date = team_info.effective_date
-  WHERE job_info.effective_date < '2022-06-16'
-  --Use data from blended source up to the transition from BHR to Workday
-  --Job profiles didn't exist in BHR
-
+    legacy_history.job_code                                                                                                   AS job_code,
+    legacy_history.position                                                                                                   AS position,
+    legacy_history.job_family                                                                                                 AS job_family,
+    legacy_history.job_specialty_single                                                                                        AS job_specialty_single,
+    legacy_history.job_specialty_multi                                                                                         AS job_specialty_multi,
+    legacy_history.management_level                                                                                            AS management_level,
+    legacy_history.job_grade                                                                                                   AS job_grade,
+    legacy_history.department                                                                                                 AS department,
+    legacy_history.division                                                                                                   AS division,
+    legacy_history.entity                                                                                                     AS entity,
+    legacy_history.is_position_active                                                                                         AS is_position_active,
+    legacy_history.valid_from                                                                                                 AS valid_from,
+    legacy_history.valid_to                                                                                                   AS valid_to
+  FROM legacy_history
+  WHERE legacy_history.valid_from < '2022-06-16'
+  
 )
 
 SELECT 
   *,
   CASE 
-    WHEN ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date DESC) = 1 
+    WHEN ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY valid_from DESC) = 1 
       THEN TRUE
     ELSE FALSE
   END                                                                                                                          AS is_current
