@@ -102,10 +102,17 @@
       dim_namespace.ultimate_parent_namespace_id                                      AS ultimate_parent_namespace_id,
       dim_subscription.namespace_id                                                   AS dim_namespace_id,
 
+
       -- customer db info
       fct_trial_latest.internal_customer_id                                           AS internal_customer_id,
       fct_trial_latest.is_trial_converted                                             AS is_trial_converted_namespace,
       fct_trial_latest.latest_trial_start_date                                        AS latest_trial_start_date,
+      CASE WHEN 
+        dim_namespace.created_at::DATE = fct_trial_latest.latest_trial_start_date
+      THEN TRUE
+      ELSE FALSE
+      END                                                                             AS is_trial_started_on_namespace_creation_date,
+
 
       -- crm account info
       dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
