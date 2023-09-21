@@ -7,12 +7,13 @@ import load_functions
 from utils import check_if_schema_changed
 
 
+def remove_suffix(input_string):
+    suffix = "_internal_only"
+    if suffix and input_string.endswith(suffix):
+        return input_string[: -len(suffix)]
+    return input_string
+
 class PostgresPipelineTable:
-    def remove_suffix(input_string):
-        suffix = "_internal_only"
-        if suffix and input_string.endswith(suffix):
-            return input_string[: -len(suffix)]
-        return input_string
 
     def __init__(self, table_config: Dict[str, str]):
         self.query = table_config["import_query"]
