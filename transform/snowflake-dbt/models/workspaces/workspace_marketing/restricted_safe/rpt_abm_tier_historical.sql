@@ -15,7 +15,6 @@
     ultimate_parent_id AS dim_crm_parent_account_id,
     abm_tier_1_date,
     abm_tier_2_date,
-    abm_tier_3_date,
     abm_tier,
     dbt_valid_from,
     dbt_valid_to
@@ -31,7 +30,6 @@
     dim_crm_parent_account_id,
     abm_tier_1_date,
     abm_tier_2_date,
-    abm_tier_3_date,
     abm_tier
   FROM account_history_source
                 
@@ -81,6 +79,8 @@
     mql_sum,
     influenced_opportunity_id
   FROM rpt_lead_to_revenue
+  WHERE true_inquiry_date >= '2022-02-01'
+    OR mql_date_latest_pt >= '2022-02-01'
  
 ), inquiry_base AS (
   
