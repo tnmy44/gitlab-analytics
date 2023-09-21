@@ -6,22 +6,13 @@ from sqlalchemy.engine.base import Engine
 import load_functions
 from utils import check_if_schema_changed
 
-
-def remove_suffix(input_string):
-    suffix = "_internal_only"
-    if suffix and input_string.endswith(suffix):
-        return input_string[: -len(suffix)]
-    return input_string
-
 class PostgresPipelineTable:
 
     def __init__(self, table_config: Dict[str, str]):
         self.query = table_config["import_query"]
         self.import_db = table_config["import_db"]
-        tmp_source_table_name = table_config["export_table"]
-        self.source_table_name = remove_suffix(
-            tmp_source_table_name,
-        )
+        suffix = "_internal_only"
+        self.source_table_name = table_config["export_table"][: -len(suffix)]
         self.source_table_primary_key = table_config["export_table_primary_key"]
         if "additional_filtering" in table_config:
             self.additional_filtering = table_config["additional_filtering"]
