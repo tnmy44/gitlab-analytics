@@ -12,6 +12,9 @@ class PostgresPipelineTable:
         self.query = table_config["import_query"]
         self.import_db = table_config["import_db"]
         self.source_table_name = table_config["export_table"]
+        suffix = "_internal_only"
+        if self.source_table_name.endswith(suffix):
+            self.source_table_name = table_config["export_table"][: -len(suffix)]
         self.source_table_primary_key = table_config["export_table_primary_key"]
         if "additional_filtering" in table_config:
             self.additional_filtering = table_config["additional_filtering"]
