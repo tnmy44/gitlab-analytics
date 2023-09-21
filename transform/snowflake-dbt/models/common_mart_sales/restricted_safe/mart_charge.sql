@@ -87,6 +87,8 @@
       dim_subscription.invoice_owner_account,
       dim_subscription.creator_account,
       dim_subscription.was_purchased_through_reseller,
+      DATEDIFF(days, fct_trial_latest.latest_trial_start_date, 
+                dim_subscription.subscription_start_date)                             AS days_since_trial_start_at_first_paid_subscription_start,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
@@ -101,7 +103,8 @@
       -- namespace info
       dim_namespace.ultimate_parent_namespace_id                                      AS ultimate_parent_namespace_id,
       dim_subscription.namespace_id                                                   AS dim_namespace_id,
-
+      DATEDIFF(days, dim_namespace.created_at, 
+                fct_trial_latest.latest_trial_start_date)                             AS days_since_namespace_creation_at_trial_start,
 
       -- customer db info
       fct_trial_latest.internal_customer_id                                           AS internal_customer_id,
