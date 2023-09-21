@@ -8,10 +8,19 @@ from utils import check_if_schema_changed
 
 
 class PostgresPipelineTable:
+    def remove_suffix(input_string):
+        suffix = "_internal_only"
+        if suffix and input_string.endswith(suffix):
+            return input_string[: -len(suffix)]
+        return input_string
+
     def __init__(self, table_config: Dict[str, str]):
         self.query = table_config["import_query"]
         self.import_db = table_config["import_db"]
-        self.source_table_name = table_config["export_table"].removesuffix('_internal_only')
+        tmp_source_table_name = table_config["export_table"]
+        self.source_table_name = remove_suffix(
+            tmp_source_table_name,
+        )
         self.source_table_primary_key = table_config["export_table_primary_key"]
         if "additional_filtering" in table_config:
             self.additional_filtering = table_config["additional_filtering"]
