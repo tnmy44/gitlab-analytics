@@ -190,6 +190,7 @@ models:
         description: '{{ doc("is_trial_converted") }}'
       - name: latest_trial_start_date
       - name: is_first_order
+        description: Boolean field indicating whether the charge relates to the first order made by that account. If two charges are processed on the same date, both will be true.
       - name: is_oss_or_edu_rate_plan
 
   - name: mart_crm_account
