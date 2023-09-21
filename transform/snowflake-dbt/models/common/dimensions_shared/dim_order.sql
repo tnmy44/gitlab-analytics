@@ -13,11 +13,6 @@ WITH base AS (
       order_date,
       order_number,
       state                 AS order_state,
-      CASE WHEN 
-        ROW_NUMBER() OVER (PARTITION BY account_id ORDER BY order_date, order_number) = 1 
-          THEN 1 
-          ELSE 0 
-      END::BOOLEAN          AS is_first_order,
       status                AS order_status,
       created_by_migration  AS is_created_by_migration
 
