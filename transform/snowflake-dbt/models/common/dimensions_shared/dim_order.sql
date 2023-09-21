@@ -30,7 +30,6 @@ WITH base AS (
       '9999-12-31 00:00:00.000 +0000'       AS order_date,
       'Missing order_number'                AS order_number,
       'Missing order_state'                 AS order_state,
-      NULL                                  AS is_first_order,
       'Missing order_status'                AS order_status,
       NULL                                  AS is_created_by_migration
 
