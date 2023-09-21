@@ -97,7 +97,7 @@ CASE
                                     , 'Training LMS Settlement Revenue'
                                     )
     THEN 'SaaS - Other'
-  WHEN TRIM({{product_column}}) IN ('Gitlab Storage 10GB', 'Dedicated - Storage 10GB - 1 Year')
+  WHEN TRIM({{product_column}}) IN ('Gitlab Storage 10GB')
     THEN 'Storage'
   ELSE 'Not Applicable'
 END AS {{output_column_name}}

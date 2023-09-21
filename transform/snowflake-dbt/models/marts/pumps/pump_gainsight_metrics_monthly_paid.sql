@@ -60,6 +60,8 @@
       AND charges.product_tier_name != 'Storage'
       AND charges.rate_plan_charge_name NOT IN (
         'Dedicated - Administration Fee [Large] - 1 Year',
+        'Dedicated - Administration Fee  [XLarge] - 1 Year',
+        'Dedicated - Administration Fee [2XLarge] - 1 Year',
         'Dedicated - Storage 10GB - 1 Year'
       )
     {{ dbt_utils.group_by(n = 2) }}
