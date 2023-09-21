@@ -6,13 +6,15 @@ from sqlalchemy.engine.base import Engine
 import load_functions
 from utils import check_if_schema_changed
 
-class PostgresPipelineTable:
 
+class PostgresPipelineTable:
     def __init__(self, table_config: Dict[str, str]):
         self.query = table_config["import_query"]
         self.import_db = table_config["import_db"]
+        self.source_table_name = table_config["export_table"]
         suffix = "_internal_only"
-        self.source_table_name = table_config["export_table"][: -len(suffix)]
+        if self.source_table_name.endswith(suffix):
+            self.source_table_name = table_config["export_table"][: -len(suffix)]
         self.source_table_primary_key = table_config["export_table_primary_key"]
         if "additional_filtering" in table_config:
             self.additional_filtering = table_config["additional_filtering"]
