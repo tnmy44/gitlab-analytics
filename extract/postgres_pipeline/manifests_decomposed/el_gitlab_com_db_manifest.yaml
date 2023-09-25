@@ -142,7 +142,12 @@ tables:
       , author_id
       , entity_id
       , entity_type
-      , details
+      , CASE
+            WHEN details ilike '%%custom_message: Added group%%' THEN 'custom_message: Added group'
+            WHEN details ilike '%%add: group%%' THEN 'add: group'
+            WHEN details ilike '%%remove: group%%' THEN 'remove: group'
+            ELSE NULL
+        END as details
       , created_at
       FROM audit_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -480,7 +485,7 @@ tables:
       , name
       , created_at
       , updated_at
-      , environment_type
+      , NULL AS environment_type
       , state
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
