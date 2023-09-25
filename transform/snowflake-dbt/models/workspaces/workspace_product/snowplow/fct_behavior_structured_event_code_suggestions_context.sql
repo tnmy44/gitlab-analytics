@@ -26,7 +26,7 @@ flattened AS (
     flat_contexts.value['data']['request_counts'][0]['lang']::VARCHAR           AS lang,
     flat_contexts.value['data']['request_counts'][0]['model_engine']::VARCHAR   AS model_engine,
     flat_contexts.value['data']['request_counts'][0]['model_name']::VARCHAR     AS model_name,
-    flat_contexts.value['data']['prefix_link']::INT                             AS prefix_link,
+    flat_contexts.value['data']['prefix_length']::INT                           AS prefix_length,
     flat_contexts.value['data']['suffix_length']::INT                           AS suffix_length,
     flat_contexts.value['data']['language']::VARCHAR                            AS language,
     flat_contexts.value['data']['user_agent']::VARCHAR                          AS user_agent,
