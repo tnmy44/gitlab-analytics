@@ -1,0 +1,201 @@
+{{ simple_cte([
+    ('fct_crm_opportunity', 'fct_crm_opportunity'),
+    ('fct_crm_person', 'fct_crm_person')
+]) }}
+
+, net_arr AS (
+
+  SELECT
+    close_date_id                               AS actual_date_id,
+    close_date                                  AS actual_date,
+    'Net ARR Company'                           AS kpi_name,
+
+    dim_crm_opportunity_id,
+    dim_crm_account_id,
+    NULL AS dim_crm_person_id,
+
+    dim_order_type_id,
+    dim_sales_qualified_source_id,
+
+    dim_crm_opp_owner_stamped_hierarchy_sk      AS dim_hierarchy_sk,
+    dim_crm_opp_owner_business_unit_stamped_id  AS dim_business_unit_id,
+    dim_crm_opp_owner_sales_segment_stamped_id  AS dim_sales_segment_id,
+    dim_crm_opp_owner_geo_stamped_id            AS dim_geo_id,
+    dim_crm_opp_owner_region_stamped_id         AS dim_region_id,
+    dim_crm_opp_owner_area_stamped_id           AS dim_area_id,
+
+    NULL AS email_hash,
+    new_logo_count,
+    net_arr
+
+  FROM fct_crm_opportunity
+  WHERE is_net_arr_closed_deal = TRUE
+
+), closed_deals AS (
+
+  SELECT
+    close_date_id                               AS actual_date_id,
+    close_date                                  AS actual_date,
+    'Deals'                                     AS kpi_name,
+
+    dim_crm_opportunity_id,
+    dim_crm_account_id,
+    NULL AS dim_crm_person_id,
+
+    dim_order_type_id,
+    dim_sales_qualified_source_id,
+
+    dim_crm_opp_owner_stamped_hierarchy_sk,
+    dim_crm_opp_owner_business_unit_stamped_id,
+    dim_crm_opp_owner_sales_segment_stamped_id,
+    dim_crm_opp_owner_geo_stamped_id,
+    dim_crm_opp_owner_region_stamped_id,
+    dim_crm_opp_owner_area_stamped_id,
+
+    NULL AS email_hash,
+    new_logo_count,
+    net_arr
+
+  FROM fct_crm_opportunity
+  WHERE is_net_arr_closed_deal = TRUE
+
+), new_logos AS (
+
+  SELECT
+    close_date_id                               AS actual_date_id,
+    close_date                                  AS actual_date,
+    'New Logos'                                 AS kpi_name,
+
+    dim_crm_opportunity_id,
+    dim_crm_account_id,
+    NULL AS dim_crm_person_id,
+
+    dim_order_type_id,
+    dim_sales_qualified_source_id,
+
+    dim_crm_user_hierarchy_live_sk,
+    dim_crm_user_business_unit_id,
+    dim_crm_user_sales_segment_id,
+    dim_crm_user_geo_id,
+    dim_crm_user_region_id,
+    dim_crm_user_area_id,
+
+    NULL AS email_hash,
+    new_logo_count,
+    net_arr
+
+  FROM fct_crm_opportunity
+  WHERE is_new_logo_first_order = TRUE
+
+), saos AS (
+
+  SELECT
+    sales_accepted_date_id                      AS actual_date_id,
+    sales_accepted_date                         AS actual_date,
+    'Stage 1 Opportunities'                     AS kpi_name,
+
+    dim_crm_opportunity_id,
+    dim_crm_account_id,
+    NULL AS dim_crm_person_id,
+
+    dim_order_type_id,
+    dim_sales_qualified_source_id,
+
+    dim_crm_opp_owner_stamped_hierarchy_sk,
+    dim_crm_opp_owner_business_unit_stamped_id,
+    dim_crm_opp_owner_sales_segment_stamped_id,
+    dim_crm_opp_owner_geo_stamped_id,
+    dim_crm_opp_owner_region_stamped_id,
+    dim_crm_opp_owner_area_stamped_id,
+
+    NULL AS email_hash,
+    new_logo_count,
+    net_arr
+  FROM fct_crm_opportunity
+  WHERE is_sao = TRUE
+
+), pipeline_created AS (
+
+  SELECT
+    arr_created_date_id                      AS actual_date_id,
+    arr_created_date                         AS actual_date,
+    'Net ARR Pipeline Created'               AS kpi_name,
+
+    dim_crm_opportunity_id,
+    dim_crm_account_id,
+    NULL AS dim_crm_person_id,
+
+    dim_order_type_id,
+    dim_sales_qualified_source_id,
+
+    dim_crm_user_hierarchy_live_sk,
+    dim_crm_user_business_unit_id,
+    dim_crm_user_sales_segment_id,
+    dim_crm_user_geo_id,
+    dim_crm_user_region_id,
+    dim_crm_user_area_id,
+
+    NULL AS email_hash,
+    new_logo_count,
+    net_arr
+  FROM fct_crm_opportunity
+  WHERE is_sao = TRUE
+
+)
+{# , mqls AS (
+
+  SELECT
+    mql_date_first_pt_id                      AS actual_date_id,
+    mql_date_first_pt                         AS actual_date,
+    'MQL'                                     AS kpi_name,
+
+    NULL AS dim_crm_opportunity_id,
+    dim_crm_account_id,
+    dim_crm_person_id,
+
+    dim_order_type_id,
+    dim_sales_qualified_source_id,
+
+    dim_crm_user_hierarchy_live_sk,
+    dim_crm_user_business_unit_id,
+    dim_crm_user_sales_segment_id,
+    dim_crm_user_geo_id,
+    dim_crm_user_region_id,
+    dim_crm_user_area_id,
+
+    email_hash,
+    NULL AS new_logo_count,
+    NULL AS net_arr
+  FROM fct_crm_person
+
+) #}
+, metrics AS (
+
+  SELECT *
+  FROM net_arr
+
+  UNION ALL
+
+  SELECT *
+  FROM closed_deals
+
+  UNION ALL
+
+  SELECT *
+  FROM new_logos
+
+  UNION ALL
+
+  SELECT *
+  FROM saos
+
+  UNION ALL
+
+  SELECT *
+  FROM pipeline_created
+
+)
+
+SELECT *
+FROM metrics
+
