@@ -20,7 +20,6 @@ edm_snapshot, Models which create snapshots on upper-layer portions of the EDM
 gainsight,Relates to Customer Product Usage data
 gitlab_dotcom,Relates to GitLab.com Database
 gitlab_ops,Relates to GitLab ops database
-license_db,Relates to License DB
 industry, Related to companies industry data
 invoice,Related to zuora invoice data
 mart,For data marts
