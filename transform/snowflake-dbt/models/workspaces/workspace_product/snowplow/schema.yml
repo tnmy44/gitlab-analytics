@@ -52,3 +52,46 @@ models:
         description: Name of the IDEs vendor, e.g. Microsoft
       - name: ide_version
         description: Version number of the IDE, e.g. 1.81.1
+
+  - name: fct_behavior_structured_event_code_suggestions_context
+    description: Derived fact table that parses out the code_suggestions_context context based on the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema) which can optionally be sent with an event.
+    columns:
+      - name: behavior_structured_event_pk
+        description: '{{ doc("behavior_structured_event_pk") }}'
+        tests:
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        - not_null
+      - name: behavior_at
+        description: ' {{ doc("behavior_at") }}'
+      - name: code_suggestions_context
+        description: Context related to the ide_extension_version, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
+      - name: requests
+        description: Count of completions requests
+      - name: errors
+        description: Count of failed completions requests
+      - name: accepts
+        description: Count of accepted completions requests
+      - name: lang
+        description: Programming language of the completions request
+      - name: model_engine
+        description: Model engine used for the completions
+      - name: model_name
+        description: Model name used for the completions
+      - name: prefix_link
+        description: Length of the prefix in characters
+      - name: suffix_length
+        description: Length of the suffix in characters
+      - name: language
+        description: Programming language of the completions request
+      - name: user_agent
+        description: User-agent string of the request (holds information about the origin of the request)
+      - name: delivery_type
+        description: ' {{ doc("product_delivery_type") }}'
+      - name: api_status_code
+        description: HTTP status code of GitLab API
+      - name: pre_pseudonymized_user_id
+        description: User identifier that is pre-pseudonymized for Self-Managed installations. Shoule be used to calculate distinct user counts.
+      - name: dim_instance_id
+        description: ' {{ doc("dim_instance_id") }}'
