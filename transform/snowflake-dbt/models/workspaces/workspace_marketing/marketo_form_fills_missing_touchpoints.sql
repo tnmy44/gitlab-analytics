@@ -78,7 +78,11 @@
   mart_crm_touchpoint_base.sfdc_record_id=marketo_form_fill.sfdc_record_id
     AND
   mart_crm_touchpoint_base.bizible_form_url=marketo_form_fill.form_url
-    AND mart_crm_touchpoint_base.bizible_touchpoint_date=marketo_form_fill.activity_date
+    AND (mart_crm_touchpoint_base.bizible_touchpoint_date+INTERVAL '1 Hour'=marketo_form_fill.activity_date+INTERVAL '1 Hour'
+         OR mart_crm_touchpoint_base.bizible_touchpoint_date+INTERVAL '1 Hour'=marketo_form_fill.activity_date-INTERVAL '1 Hour'
+         OR mart_crm_touchpoint_base.bizible_touchpoint_date-INTERVAL '1 Hour'=marketo_form_fill.activity_date-INTERVAL '1 Hour'
+         OR mart_crm_touchpoint_base.bizible_touchpoint_date-INTERVAL '1 Hour'=marketo_form_fill.activity_date+INTERVAL '1 Hour'
+        OR mart_crm_touchpoint_base.bizible_touchpoint_date=marketo_form_fill.activity_date)
   WHERE marketo_form_fill.activity_date IS NOT NULL
     AND dim_crm_touchpoint_id IS NULL
 
@@ -103,5 +107,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-12",
-    updated_date="2023-09-14",
+    updated_date="2023-09-26",
   ) }}
