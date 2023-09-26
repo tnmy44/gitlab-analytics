@@ -1184,3 +1184,11 @@ models:
       - name: product_tier_name 
         tests:
           - not_null
+
+  - name: rpt_invoice_items_detail
+    description: Report that provides details of Zuora invoices. The report also enriches invoice item details with crm customer information.
+    columns:
+      - name: invoice_item_id
+        tests:
+          - not_null
+          - unique

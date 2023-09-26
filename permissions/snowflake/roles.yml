@@ -514,7 +514,6 @@ roles:
             - google_analytics_360
             - google_search_console
             - netsuite
-            - mailgun
             - marketo
             - snowflake_db
             - zendesk
@@ -2054,22 +2053,6 @@ roles:
                     - prep.maxmind.*
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
-
-    - mailgun:
-        privileges:
-            databases:
-                read:
-                    - prep
-                    - raw
-            schemas:
-                read:
-                    - prep.mailgun
-                    - raw.mailgun
-            tables:
-                read:
-                    - prep.mailgun.*
-                    - raw.mailgun.*
-
 
     - marketo:
           privileges:
@@ -4161,7 +4144,6 @@ roles:
             - analyst_growth
             - customers_db
             - restricted_safe
-            - mailgun
         warehouses:
             - dev_xs
         owns:

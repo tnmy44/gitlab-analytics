@@ -142,7 +142,12 @@ tables:
       , author_id
       , entity_id
       , entity_type
-      , details
+      , CASE
+            WHEN details ilike '%%custom_message: Added group%%' THEN 'custom_message: Added group'
+            WHEN details ilike '%%add: group%%' THEN 'add: group'
+            WHEN details ilike '%%remove: group%%' THEN 'remove: group'
+            ELSE NULL
+        END as details
       , created_at
       FROM audit_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -480,7 +485,7 @@ tables:
       , name
       , created_at
       , updated_at
-      , environment_type
+      , NULL AS environment_type
       , state
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -739,6 +744,32 @@ tables:
       , sprint_id
       , health_status
       , work_item_type_id
+      FROM issues
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  issues_internal_only:
+    additional_filtering: |-
+      AND created_at NOT IN (
+        '0001-01-01 00:00:00+00'
+        , '1000-01-01 00:00:00+00'
+        , '10000-01-01 00:00:00+00'
+        , '4714-11-24 00:00:00+00 BC'
+        )
+      AND author_id NOT IN (8311087)
+      AND project_id in {INTERNAL_PROJECT_IDS}
+    dbt_snapshots: true
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'issues_internal_only'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , iid
+      , title
+      , description
+      , project_id
+      , updated_at
       FROM issues
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1506,6 +1537,26 @@ tables:
       FROM projects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  projects_internal_only:
+    additional_filtering: AND namespace_id in {INTERNAL_NAMESPACE_IDS}
+    dbt_snapshots: true
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'projects_internal_only'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , name
+      , path
+      , description
+      , created_at
+      , updated_at
+      , namespace_id
+      , import_url
+      FROM projects
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   prometheus_alerts:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1786,6 +1837,22 @@ tables:
   routes:
     export_schema: 'gitlab_com'
     export_table: 'routes'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , source_id
+      , source_type
+      , path
+      , created_at
+      , updated_at
+      FROM routes
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  routes_internal_only:
+    additional_filtering: AND path in {INTERNAL_PATHS}
+    export_schema: 'gitlab_com'
+    export_table: 'routes_internal_only'
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-

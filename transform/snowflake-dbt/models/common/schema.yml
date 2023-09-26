@@ -5749,6 +5749,29 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
+  - name: fct_sales_funnel_partner_alliance_target_daily
+    description: '{{ doc("fct_sales_funnel_partner_alliance_target_daily") }}'
+    columns:
+      - name: kpi_name
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: sales_funnel_partner_alliance_target_daily_pk
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: report_target_date
+        description: '{{ doc("report_target_date") }}'
+      - name: wtd_allocated_target
+        description: '{{ doc("wtd_allocated_target") }}'
+      - name: mtd_allocated_target
+        description: '{{ doc("mtd_allocated_target") }}'
+      - name: qtd_allocated_target
+        description: '{{ doc("qtd_allocated_target") }}'
+      - name: ytd_allocated_target
+        description: '{{ doc("ytd_allocated_target") }}'
+
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
     columns:
@@ -5761,6 +5784,29 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+
+  - name: fct_sales_funnel_target_daily
+    description: '{{ doc("fct_sales_funnel_target_daily") }}'
+    columns:
+      - name: kpi_name
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: sales_funnel_target_daily_pk
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: report_target_date
+        description: '{{ doc("report_target_date") }}'
+      - name: wtd_allocated_target
+        description: '{{ doc("wtd_allocated_target") }}'
+      - name: mtd_allocated_target
+        description: '{{ doc("mtd_allocated_target") }}'
+      - name: qtd_allocated_target
+        description: '{{ doc("qtd_allocated_target") }}'
+      - name: ytd_allocated_target
+        description: '{{ doc("ytd_allocated_target") }}'
 
   - name: fct_waterfall_summary
     description: '{{ doc("fct_waterfall_summary") }}'
