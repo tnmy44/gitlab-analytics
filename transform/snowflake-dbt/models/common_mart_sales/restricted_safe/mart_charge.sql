@@ -17,7 +17,8 @@
     ('dim_namespace', 'dim_namespace'),
     ('fct_charge','fct_charge'),
     ('prep_billing_account_user', 'prep_billing_account_user'),
-    ('fct_trial_latest', 'fct_trial_latest')
+    ('fct_trial_latest', 'fct_trial_latest'),
+    ('fct_trial_first', 'fct_trial_first')
 ]) }}
 
 , mart_charge AS (
@@ -87,8 +88,10 @@
       dim_subscription.invoice_owner_account,
       dim_subscription.creator_account,
       dim_subscription.was_purchased_through_reseller,
+      DATEDIFF(days, fct_trial_first.trial_start_date, 
+                dim_subscription.subscription_start_date)                             AS days_between_first_trial_and_subscription_start,
       DATEDIFF(days, fct_trial_latest.latest_trial_start_date, 
-                dim_subscription.subscription_start_date)                             AS days_since_trial_start_at_first_paid_subscription_start,
+                dim_subscription.subscription_start_date)                             AS days_between_latest_trial_and_subscription_start,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
@@ -256,6 +259,8 @@
       ON fct_charge.subscription_created_by_user_id = prep_billing_account_user.zuora_user_id
     LEFT JOIN fct_trial_latest
       ON dim_subscription.namespace_id = fct_trial_latest.dim_namespace_id
+    LEFT JOIN fct_trial_first
+      ON dim_subscription.namespace_id = fct_trial_first.dim_namespace_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,
