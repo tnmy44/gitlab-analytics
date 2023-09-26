@@ -6,7 +6,6 @@
 
 SELECT *
 FROM {{ source('gitlab_dotcom', 'issues') }}
-
 {% if is_incremental() %}
 
 WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})

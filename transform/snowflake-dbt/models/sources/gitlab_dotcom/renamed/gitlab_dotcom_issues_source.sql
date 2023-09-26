@@ -82,9 +82,9 @@ combined AS (
     state_id,
     duplicated_to_id,
     promoted_to_epic_id
-  FROM source
+  FROM all_issues
   LEFT JOIN internal_only 
-    ON internal_only.issue_id = all_issues.issue_id
+    ON internal_only.internal_issue_id = all_issues.issue_id
   
 )
 
