@@ -160,12 +160,14 @@
         ELSE NULL
       END                                                                             AS subscription_renewal_type,
       CASE WHEN
+        fct_charge.mrr > 0 
+        AND
         DENSE_RANK() OVER (
             PARTITION BY dim_billing_account.dim_billing_account_id 
             ORDER BY dim_charge.charge_created_date) = 1
       THEN true
       ELSE false 
-      END                                                                             AS is_first_order,
+      END                                                                             AS is_first_paid_order,
 
       --Cohort Information
       dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
