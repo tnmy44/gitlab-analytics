@@ -49,8 +49,8 @@ SELECT
     gahit.event_action AS event_action,
     gahit.event_label AS event_label,
     gahit.custom_dimensions AS hit_custom_dimensions
-FROM {{ ref('GA360_SESSION') }} gasession
-JOIN {{ ref('GA360_SESSION_HIT') }} gahit
+FROM {{ ref('ga360_session') }} gasession
+JOIN {{ ref('ga360_session_hit') }} gahit
     ON gasession.visitor_id = gahit.visitor_id
     AND gasession.visit_id = gahit.visit_id
 WHERE gasession.visit_start_time >= '2022-01-01'
