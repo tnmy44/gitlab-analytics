@@ -98,24 +98,24 @@ team_member AS (
 team_member_position AS (
 
   SELECT 
-    dim_team_member_sk,
-    dim_team_sk,
-    employee_id,
-    team_id,
-    manager,
+    dim_team_member_sk                                                                            AS dim_team_member_sk,
+    dim_team_sk                                                                                   AS dim_team_sk,
+    employee_id                                                                                   AS employee_id,
+    COALESCE(team_id,'Unknown Team ID')                                                           AS team_id,
+    manager                                                                                       AS manager,
     COALESCE(suporg,'Unknown Supervisory Organization')                                           AS suporg,
     COALESCE(job_code,'Unknown Job Code')                                                         AS job_code,
-    position,
+    position                                                                                      AS position,
     COALESCE(job_family,'Unknown Job Family')                                                     AS job_family,
-    job_specialty_single,
-    job_specialty_multi,
+    job_specialty_single                                                                          AS job_specialty_single,
+    job_specialty_multi                                                                           AS job_specialty_multi,
     COALESCE(management_level,'Unknown Management Level')                                         AS management_level,
     COALESCE(job_grade,'Unknown Job Grade')                                                       AS job_grade,
-    department,
-    division,
-    entity,
-    effective_date                                                                                AS valid_from,
-    LEAD(valid_from, 1, {{var('tomorrow')}})  OVER (PARTITION BY employee_id ORDER BY valid_from) AS valid_to
+    department                                                                                    AS department,
+    division                                                                                      AS division,
+    entity                                                                                        AS entity,
+    valid_from                                                                                    AS valid_from,
+    valid_to                                                                                      AS valid_to
   FROM {{ ref('fct_team_member_position') }}
 
 

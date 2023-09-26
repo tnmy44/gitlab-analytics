@@ -7745,7 +7745,7 @@ models:
             combination_of_columns:
               - employee_id
               - team_id
-              - effective_date
+              - valid_from
     columns:
       - name: team_member_position_pk
         description: Primary key for the table
@@ -7792,8 +7792,8 @@ models:
         description: Whether the team member's job position is active.
       - name: is_current
         description: Whether the team member's job position is the most current as of the date the query is run.
-      - name: position_effective_date
-        description: The date when the team member's position update becomes effective
+      - name: valid_from
+      - name: valid_to
 
   - name: fct_team_status
     description: '{{ doc("fct_team_status") }}'
