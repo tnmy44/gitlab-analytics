@@ -26,8 +26,7 @@ team_info AS (
   -- Solve for gaps and islands problem in data
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['employee_id', 'job_title', 'department', 'division', 'reports_to','entity']) }}               
-                                                                                                                               AS unique_key,
+    {{ dbt_utils.surrogate_key(['employee_id', 'job_title', 'department', 'division', 'reports_to','entity']) }}               AS unique_key,
     employee_id                                                                                                                AS employee_id, 
     job_title                                                                                                                  AS position,
     reports_to                                                                                                                 AS manager,
@@ -62,40 +61,20 @@ team_info_group AS (
 
 ),
 
-job_info_clean AS (
-
-  -- There are a lot of data quality issues in the mapping data, this CTE cleans it up ahead of solving for gaps and islands
-  -- Otherwise we end up two islands for the same time period since there are so many NULLs in the data
-
-  SELECT
-    employee_id                                                                                                                AS employee_id, 
-    LAST_VALUE(job_role IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC ROWS UNBOUNDED PRECEDING)       AS management_level,
-    LAST_VALUE(job_grade IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC ROWS UNBOUNDED PRECEDING)      AS job_grade,
-    LAST_VALUE(jobtitle_speciality_single_select IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC ROWS UNBOUNDED PRECEDING)           
-                                                                                                                               AS job_specialty_single,
-              
-    LAST_VALUE(jobtitle_speciality_multi_select IGNORE NULLS) OVER (PARTITION BY employee_id ORDER BY uploaded_at ROWS UNBOUNDED PRECEDING) 
-                                                                                                                               AS job_specialty_multi,
-    source_system                                                                                                              AS source_system,                                                                                                                           
-    uploaded_at                                                                                                                AS uploaded_at
-  FROM employee_mapping
-
-),
-
 job_info AS (
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['employee_id', 'management_level', 'job_grade', 'job_specialty_single', 'job_specialty_multi']) }}   
+    {{ dbt_utils.surrogate_key(['employee_id', 'job_role', 'job_grade', 'jobtitle_speciality_single_select', 'jobtitle_speciality_multi_select']) }}   
                                                                                                                                AS unique_key,
     employee_id                                                                                                                AS employee_id, 
-    management_level                                                                                                           AS management_level,
+    job_role                                                                                                                   AS management_level,
     job_grade                                                                                                                  AS job_grade, 
-    job_specialty_single                                                                                                       AS job_specialty_single,
-    job_specialty_multi                                                                                                        AS job_specialty_multi,
+    jobtitle_speciality_single_select                                                                                          AS job_specialty_single,
+    jobtitle_speciality_multi_select                                                                                           AS job_specialty_multi,
     DATE(uploaded_at)                                                                                                          AS effective_date,
     LAG(unique_key, 1, NULL) OVER (PARTITION BY employee_id ORDER BY uploaded_at)                                              AS lag_unique_key,
     CONDITIONAL_TRUE_EVENT(unique_key != lag_unique_key) OVER (PARTITION BY employee_id ORDER BY uploaded_at)                  AS unique_key_group 
-  FROM job_info_clean
+  FROM employee_mapping
   WHERE source_system = 'bamboohr'
     AND DATE(uploaded_at) < '2022-06-16'
 
@@ -157,25 +136,25 @@ legacy_clean AS (
 
   SELECT 
     legacy_data.employee_id                                                                                                   AS employee_id,
-    LAST_VALUE(legacy_data.manager IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date DESC ROWS UNBOUNDED FOLLOWING)              
+    LAST_VALUE(legacy_data.manager IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)              
                                                                                                                                AS manager,
-    LAST_VALUE(legacy_data.position IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date DESC ROWS UNBOUNDED FOLLOWING)                           
+    LAST_VALUE(legacy_data.position IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                           
                                                                                                                                AS position,
-    LAST_VALUE(legacy_data.job_specialty_single IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date DESC ROWS UNBOUNDED FOLLOWING)                           
+    LAST_VALUE(legacy_data.job_specialty_single IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                           
                                                                                                                                AS job_specialty_single,
-    LAST_VALUE(legacy_data.job_specialty_multi IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date DESC ROWS UNBOUNDED FOLLOWING)                           
+    LAST_VALUE(legacy_data.job_specialty_multi IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                           
                                                                                                                                AS job_specialty_multi,
-    LAST_VALUE(legacy_data.management_level IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date DESC ROWS UNBOUNDED FOLLOWING)                           
+    LAST_VALUE(legacy_data.management_level IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                           
                                                                                                                                AS management_level,
-    LAST_VALUE(legacy_data.job_grade IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date DESC ROWS UNBOUNDED FOLLOWING)                          
+    LAST_VALUE(legacy_data.job_grade IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                          
                                                                                                                                AS job_grade,
-    LAST_VALUE(legacy_data.department IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date DESC ROWS UNBOUNDED FOLLOWING)                          
+    LAST_VALUE(legacy_data.department IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                          
                                                                                                                                AS department,
-    LAST_VALUE(legacy_data.division IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date DESC ROWS UNBOUNDED FOLLOWING)                          
+    LAST_VALUE(legacy_data.division IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                          
                                                                                                                                AS division,
-    LAST_VALUE(legacy_data.entity IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date DESC ROWS UNBOUNDED FOLLOWING)                          
+    LAST_VALUE(legacy_data.entity IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                          
                                                                                                                                AS entity,
-    legacy_clean.effective_date
+    legacy_data.effective_date
   FROM legacy_data
 
 ),
