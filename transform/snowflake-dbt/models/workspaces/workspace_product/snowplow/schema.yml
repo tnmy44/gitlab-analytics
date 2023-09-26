@@ -92,6 +92,6 @@ models:
       - name: api_status_code
         description: HTTP status code of GitLab API
       - name: pre_pseudonymized_user_id
-        description: User identifier that is pre-pseudonymized for Self-Managed installations. Shoule be used to calculate distinct user counts.
+        description: User identifier that is pre-pseudonymized for Self-Managed installations. Should be used to calculate distinct user counts.
       - name: dim_instance_id
         description: ' {{ doc("dim_instance_id") }}'
