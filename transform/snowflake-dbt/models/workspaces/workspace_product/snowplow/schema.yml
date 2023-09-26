@@ -66,7 +66,7 @@ models:
       - name: behavior_at
         description: ' {{ doc("behavior_at") }}'
       - name: code_suggestions_context
-        description: Context related to the ide_extension_version, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
+        description: Context related to the code_suggestions_context, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
       - name: requests
         description: Count of completions requests
       - name: errors
