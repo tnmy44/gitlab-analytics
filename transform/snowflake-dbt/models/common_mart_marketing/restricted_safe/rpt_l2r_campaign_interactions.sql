@@ -760,7 +760,7 @@
       PARSE_URL(bizible_form_url_raw):parameters:utm_budget::VARCHAR        AS bizible_form_page_utm_budget,
       PARSE_URL(bizible_form_url_raw):parameters:utm_allptnr::VARCHAR       AS bizible_form_page_utm_allptnr,
       PARSE_URL(bizible_form_url_raw):parameters:utm_partnerid::VARCHAR     AS bizible_form_page_utm_partnerid,
-       PARSE_URL(bizible_form_url_raw):parameters:utm_asset_type::VARCHAR   AS bizible_landing_page_utm_asset_type,
+      PARSE_URL(bizible_form_url_raw):parameters:utm_asset_type::VARCHAR    AS bizible_form_page_utm_asset_type,
 
       PARSE_URL(bizible_landing_page_raw):parameters:utm_content::VARCHAR     AS bizible_landing_page_utm_content,
       PARSE_URL(bizible_landing_page_raw):parameters:utm_budget::VARCHAR      AS bizible_landing_page_utm_budget,
