@@ -97,24 +97,24 @@ bot_users AS (
 
 milestones AS (
 
-  SELECT *,
-  CASE
-        WHEN group_id=9970
+  SELECT
+    *,
+    CASE
+      WHEN group_id = 9970
         AND start_date <= DATEADD('month', 1, CURRENT_DATE)
-        and regexp_like(milestone_title, '\\d+\.\\d+') THEN 
+        AND REGEXP_LIKE(milestone_title, '\\d+\.\\d+') THEN
         DENSE_RANK() OVER (
-            PARTITION BY IFF(
-                group_id=9970
-        AND start_date <= DATEADD('month', 1, CURRENT_DATE)
-        and regexp_like(milestone_title, '\\d+\.\\d+'),
-                1,
-                0
+          PARTITION BY IFF(
+            group_id = 9970
+            AND start_date <= DATEADD('month', 1, CURRENT_DATE)
+            AND REGEXP_LIKE(milestone_title, '\\d+\.\\d+'),
+            1,
+            0
             )
-            ORDER BY
-                start_date DESC
+          ORDER BY
+            start_date DESC
         )
-        else null
-    END as milestone_recency
+    END AS milestone_recency
   FROM {{ ref('gitlab_dotcom_milestones') }}
 
 ),
@@ -125,19 +125,39 @@ workflow_labels AS (
 
 ),
 
-excluded_project_path as (
-select 'team-tasks' as project_path union
-select 'ux-research' union
-select 'design.gitlab.com' union
-select 'pajamas-adoption-scanner' union
-select 'gitlab-design' union 
-select 'technical-writing' union
-select 'fulfillment-meta'  union
-select 'verify-stage' union
-select 'team' union 
-select 'group-tasks' union 
-select 'discussion' union
-select 'vulnerability-research' 
+excluded_project_path AS (
+  SELECT 'team-tasks' AS project_path
+  UNION
+  SELECT 'ux-research'
+  UNION
+  SELECT 'design.gitlab.com'
+  UNION
+  SELECT 'pajamas-adoption-scanner'
+  UNION
+  SELECT 'gitlab-design'
+  UNION
+  SELECT 'technical-writing'
+  UNION
+  SELECT 'fulfillment-meta'
+  UNION
+  SELECT 'verify-stage'
+  UNION
+  SELECT 'team'
+  UNION
+  SELECT 'group-tasks'
+  UNION
+  SELECT 'discussion'
+  UNION
+  SELECT 'vulnerability-research'
+),
+
+issue_note_move AS (
+  SELECT *
+  FROM {{ ref('internal_notes') }}
+  WHERE noteable_type = 'Issue'
+    AND system = TRUE
+    AND note LIKE 'moved to gitlab-ee%'
+    AND note_author_id = 1786152
 ),
 
 final AS (
@@ -225,8 +245,10 @@ final AS (
       ELSE 'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/issues/' || internal_issues.issue_iid
     END                                                                                                                                                                                                                                                                                                 AS url,
     internal_issues.is_part_of_product,
-    milestones.milestone_recency AS milestone_recency,
-    coalesce(internal_issues.is_part_of_product and internal_issues.namespace_id in (6543,9970) and projects.project_path not in (select * from excluded_project_path) and masked_label_title not like '%type::ignore%' and is_part_of_product and group_label!='undefined', False) as is_milestone_issue_reporting --this logic comes from [issues_by_milestone] sisense snippet
+    milestones.milestone_recency                                                                                                                                                                                                                                                                        AS milestone_recency,
+    --this logic comes from [issues_by_milestone] sisense snippet
+    COALESCE(internal_issues.is_part_of_product AND internal_issues.namespace_id IN (6543, 9970) AND projects.project_path NOT IN (SELECT * FROM excluded_project_path) AND masked_label_title NOT LIKE '%type::ignore%' AND is_part_of_product AND group_label != 'undefined', FALSE)                  AS is_milestone_issue_reporting,
+    IFF(issue_note_move.note_id IS NOT NULL, TRUE, FALSE)                                                                                                                                                                                                                                               AS issue_is_moved
   FROM internal_issues
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_issues.project_id
@@ -236,6 +258,7 @@ final AS (
     ON ns.namespace_id = projects.dim_namespace_id
   LEFT JOIN milestones
     ON milestones.milestone_id = internal_issues.milestone_id
+  LEFT JOIN issue_note_move ON issue_note_move.noteable_id = internal_issues.issue_id
 )
 
 SELECT *
