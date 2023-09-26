@@ -21,7 +21,6 @@ WITH prep_crm_opportunity AS (
       -- logistical information
       prep_crm_opportunity.generated_source,
       prep_crm_opportunity.lead_source,
-      prep_crm_opportunity.source_buckets,
       prep_crm_opportunity.merged_opportunity_id,
       prep_crm_opportunity.duplicate_opportunity_id,
       prep_crm_opportunity.net_new_source_categories,
