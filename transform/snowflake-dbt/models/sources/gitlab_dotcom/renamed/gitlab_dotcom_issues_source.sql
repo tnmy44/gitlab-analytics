@@ -5,7 +5,7 @@ WITH all_issues AS (
     id::NUMBER                                               AS issue_id,
     iid::NUMBER                                              AS issue_iid,
     author_id::NUMBER                                        AS author_id,
-    source.project_id::NUMBER                                AS project_id,
+    project_id::NUMBER                                AS project_id,
     milestone_id::NUMBER                                     AS milestone_id,
     sprint_id::NUMBER                                        AS sprint_id,
     updated_by_id::NUMBER                                    AS updated_by_id,

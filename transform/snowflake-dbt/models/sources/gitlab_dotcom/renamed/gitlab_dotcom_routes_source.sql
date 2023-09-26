@@ -1,4 +1,4 @@
-WITH unioned AS (
+WITH all_routes AS (
 
   SELECT 
     id::NUMBER                    AS route_id,
@@ -18,8 +18,9 @@ internal_routes AS (
     path::VARCHAR                 AS internal_path
   FROM {{ ref('gitlab_dotcom_routes_internal_only_dedupe_source') }}
 
-)
+), 
 
+combined AS (
 
 SELECT
   COALESCE(route_id, internal_route_id)       AS route_id,
@@ -29,3 +30,8 @@ SELECT
 FROM all_routes
 LEFT JOIN internal_routes
   ON all_routes.route_id = internal_routes.internal_route_id
+
+)
+
+SELECT * 
+FROM combined
