@@ -33,12 +33,12 @@ team_info AS (
     entity                                                                                                                     AS entity, 
     department                                                                                                                 AS department,
     division                                                                                                                   AS division,
-    DATE(effective_date)                                                                                                       AS effective_date,
+    effective_date                                                                                                             AS effective_date,
     LAG(unique_key, 1, NULL) OVER (PARTITION BY employee_id ORDER BY effective_date)                                           AS lag_unique_key,
     CONDITIONAL_TRUE_EVENT(unique_key != lag_unique_key) OVER ( PARTITION BY employee_id ORDER BY effective_date)              AS unique_key_group 
   FROM job_info_source
   WHERE source_system = 'bamboohr'
-    AND DATE(effective_date) < '2022-06-16'
+    AND effective_date < '2022-06-16'
 
 ),
 
@@ -71,12 +71,12 @@ job_info AS (
     job_grade                                                                                                                  AS job_grade, 
     jobtitle_speciality_single_select                                                                                          AS job_specialty_single,
     jobtitle_speciality_multi_select                                                                                           AS job_specialty_multi,
-    DATE(uploaded_at)                                                                                                          AS effective_date,
+    uploaded_at                                                                                                                AS effective_date,
     LAG(unique_key, 1, NULL) OVER (PARTITION BY employee_id ORDER BY uploaded_at)                                              AS lag_unique_key,
     CONDITIONAL_TRUE_EVENT(unique_key != lag_unique_key) OVER (PARTITION BY employee_id ORDER BY uploaded_at)                  AS unique_key_group 
   FROM employee_mapping
   WHERE source_system = 'bamboohr'
-    AND DATE(uploaded_at) < '2022-06-16'
+    AND uploaded_at < '2022-06-16'
 
 ),
 
@@ -135,7 +135,7 @@ UNION
 legacy_clean AS (
 
   SELECT 
-    legacy_data.employee_id                                                                                                   AS employee_id,
+    legacy_data.employee_id                                                                                                    AS employee_id,
     LAST_VALUE(legacy_data.manager IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)              
                                                                                                                                AS manager,
     LAST_VALUE(legacy_data.position IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                           
@@ -203,22 +203,22 @@ position_history AS (
   UNION
 
   SELECT
-    legacy_clean.employee_id                                                                                                AS employee_id,
+    legacy_clean.employee_id                                                                                                   AS employee_id,
     NULL                                                                                                                       AS team_id,
-    legacy_clean.manager                                                                                                    AS manager,
-    legacy_clean.department                                                                                                 AS department,
-    legacy_clean.division                                                                                                   AS division,
+    legacy_clean.manager                                                                                                       AS manager,
+    legacy_clean.department                                                                                                    AS department,
+    legacy_clean.division                                                                                                      AS division,
     NULL                                                                                                                       AS suporg,
     NULL                                                                                                                       AS job_code,
     job_specialty_single                                                                                                       AS job_specialty_single,
     job_specialty_multi                                                                                                        AS job_specialty_multi,
-    legacy_clean.entity                                                                                                     AS entity,
-    legacy_clean.position                                                                                                   AS position,
+    legacy_clean.entity                                                                                                        AS entity,
+    legacy_clean.position                                                                                                      AS position,
     NULL                                                                                                                       AS job_family,
     management_level                                                                                                           AS management_level,
     job_grade                                                                                                                  AS job_grade,
     NULL                                                                                                                       AS is_position_active,
-    legacy_clean.effective_date                                                                                             AS effective_date
+    legacy_clean.effective_date                                                                                                AS effective_date
   FROM legacy_clean
   
 ),
@@ -228,24 +228,60 @@ union_clean AS (
   SELECT 
     position_history.employee_id                                                                                               AS employee_id,
     position_history.team_id                                                                                                   AS team_id,
-    manager,
+    position_history.manager                                                                                                   AS manager,
     position_history.suporg                                                                                                    AS suporg,
     position_history.job_code                                                                                                  AS job_code,
-    position,
+    position_history.position                                                                                                  AS position,
     position_history.job_family                                                                                                AS job_family,
-    job_specialty_single,
-    job_specialty_multi,
-    management_level,
-    job_grade,
-    department,
-    division,
-    entity,
+    position_history.job_specialty_single                                                                                      AS job_specialty_single,
+    position_history.job_specialty_multi                                                                                       AS job_specialty_multi,
+    position_history.management_level                                                                                          AS management_level,
+    position_history.job_grade                                                                                                 AS job_grade,
+    position_history.department                                                                                                AS department,
+    position_history.division                                                                                                  AS division,
+    position_history.entity                                                                                                    AS entity,
     position_history.is_position_active                                                                                        AS is_position_active,
     MIN(position_history.effective_date)                                                                                       AS effective_date
   FROM position_history
   {{ dbt_utils.group_by(n=15)}}
-  
+
+),
+
+final AS (
+
+  SELECT 
+    -- Surrogate keys
+    {{ dbt_utils.surrogate_key(['union_clean.employee_id'])}}                                                                  AS dim_team_member_sk,                                                                                                              
+    {{ dbt_utils.surrogate_key(['union_clean.team_id'])}}                                                                      AS dim_team_sk,
+
+    -- Team member position attributes
+    union_clean.employee_id                                                                                                    AS employee_id,
+    union_clean.team_id                                                                                                        AS team_id,
+    union_clean.manager                                                                                                        AS manager,
+    union_clean.suporg                                                                                                         AS suporg,
+    union_clean.job_code                                                                                                       AS job_code,
+    union_clean.position                                                                                                       AS position,
+    union_clean.job_family                                                                                                     AS job_family,
+    union_clean.job_specialty_single                                                                                           AS job_specialty_single,
+    union_clean.job_specialty_multi                                                                                            AS job_specialty_multi,
+    union_clean.management_level                                                                                               AS management_level,
+    union_clean.job_grade                                                                                                      AS job_grade,
+    union_clean.department                                                                                                     AS department,
+    union_clean.division                                                                                                       AS division,
+    union_clean.entity                                                                                                         AS entity,
+    union_clean.is_position_active                                                                                             AS is_position_active,
+    union_clean.effective_date                                                                                                 AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY union_clean.employee_id ORDER BY valid_from)                   AS valid_to
+  FROM union_clean
+
 )
 
-SELECT *
-FROM union_clean
+SELECT 
+  *,
+  CASE 
+    WHEN ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY valid_from DESC) = 1 
+      THEN TRUE
+    ELSE FALSE
+  END                                                                                                                          AS is_current
+FROM final
+QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, DATE(valid_from) ORDER BY valid_from DESC)  = 1 

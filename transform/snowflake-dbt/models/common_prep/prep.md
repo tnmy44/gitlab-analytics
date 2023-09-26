@@ -817,11 +817,9 @@ A surrogate key that uniquely identifes each row of the User table.  This is bui
 
 {% docs prep_team_member_position %}
 
-This table contains team members' job history, including any changes in their job profile.
+This table contains team members' job history, including any changes in manager, supervisory organization, job family, job specialty, department, division, entity, management level and job grade.
 
-The table joins the staffing_history_approved_source and job_profiles_source.
-
-Only team members who have had a job change, promotion, or hire event are included in the final table. We have also included a filter for edge cases so that whenever a job code for a team member changes, it is captured. 
+This table includes BambooHR and Workday data. There are some fields that don't exist in the BHR data that will show up as NULL prior to 2022-06-16: team_id, suporg, job_code, job_family, is_position_active.
 
 
 {% enddocs %}

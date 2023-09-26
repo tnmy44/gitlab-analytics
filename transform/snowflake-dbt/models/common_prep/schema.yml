@@ -2130,7 +2130,6 @@ models:
               - employee_id
               - team_id
               - valid_from
-              - valid_to
     columns:
       - name: dim_team_member_sk
         description: A unique ID for each team member.
