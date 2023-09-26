@@ -112,6 +112,7 @@
       -- customer db info
       fct_trial_latest.internal_customer_id                                           AS internal_customer_id,
       fct_trial_latest.is_trial_converted                                             AS is_trial_converted_namespace,
+      fct_trial_first.trial_start_date                                                AS first_trial_start_date,
       fct_trial_latest.latest_trial_start_date                                        AS latest_trial_start_date,
       CASE WHEN 
         dim_namespace.created_at::DATE = fct_trial_latest.latest_trial_start_date
@@ -168,8 +169,8 @@
         DENSE_RANK() OVER (
             PARTITION BY dim_billing_account.dim_billing_account_id 
             ORDER BY dim_charge.charge_created_date) = 1
-      THEN true
-      ELSE false 
+      THEN TRUE
+      ELSE FALSE 
       END                                                                             AS is_first_paid_order,
 
       --Cohort Information
