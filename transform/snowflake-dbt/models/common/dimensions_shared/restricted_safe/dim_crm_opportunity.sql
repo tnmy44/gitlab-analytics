@@ -21,6 +21,7 @@ WITH prep_crm_opportunity AS (
       -- logistical information
       prep_crm_opportunity.generated_source,
       prep_crm_opportunity.lead_source,
+      prep_crm_opportunity.source_buckets,
       prep_crm_opportunity.merged_opportunity_id,
       prep_crm_opportunity.duplicate_opportunity_id,
       prep_crm_opportunity.net_new_source_categories,
@@ -244,7 +245,7 @@ WITH prep_crm_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@jngCES",
+    updated_by="@rkohnke",
     created_date="2020-11-20",
-    updated_date="2023-07-19"
+    updated_date="2023-09-25"
 ) }}

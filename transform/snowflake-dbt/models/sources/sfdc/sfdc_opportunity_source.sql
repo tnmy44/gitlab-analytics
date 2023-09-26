@@ -42,6 +42,7 @@ WITH source AS (
         deployment_preference__c                        AS deployment_preference,
         sql_source__c                                   AS generated_source,
         leadsource                                      AS lead_source,
+        {{ sfdc_source_buckets('leadsource') }}
         merged_opportunity__c                           AS merged_opportunity_id,
         duplicate_opportunity__c                        AS duplicate_opportunity_id,
         account_owner__c                                AS account_owner,
