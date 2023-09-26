@@ -234,5 +234,5 @@ final AS (
     created_by="@lisvinueza",
     updated_by="@lisvinueza",
     created_date="2023-07-06",
-    updated_date="2023-07-24"
+    updated_date="2023-09-26"
 ) }}
