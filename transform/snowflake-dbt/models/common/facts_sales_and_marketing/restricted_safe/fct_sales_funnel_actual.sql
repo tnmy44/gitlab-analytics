@@ -160,6 +160,7 @@
     dim_crm_account_id,
     dim_crm_person_id,
 
+    -- we need to add the order_type key for first order because fct_sales_funnel_target has first order for all MQL targets
     first_order_key.dim_order_type_id,
     {{ get_keyed_nulls('NULL') }}             AS dim_sales_qualified_source_id,
 
@@ -190,6 +191,7 @@
     dim_crm_account_id,
     dim_crm_person_id,
 
+    -- we need to add the order_type key for first order because fct_sales_funnel_target has first order for all MQL targets
     first_order_key.dim_order_type_id,
     {{ get_keyed_nulls('NULL') }}             AS dim_sales_qualified_source_id,
 
@@ -247,7 +249,6 @@
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['actual_date_id', 'kpi_name', 'dim_crm_opportunity_id', 'dim_crm_person_id']) }}
-    AS sales_funnel_actual_sk,
+  {{ dbt_utils.surrogate_key(['actual_date_id', 'kpi_name', 'dim_crm_opportunity_id', 'dim_crm_person_id']) }} AS sales_funnel_actual_sk,
   *
 FROM metrics
