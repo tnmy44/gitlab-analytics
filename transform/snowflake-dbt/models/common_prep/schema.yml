@@ -2168,7 +2168,7 @@ models:
         meta:
           masking_policy: analyst_people
       - name: is_position_active
-        description: Whether the team member's job position is active.
+        description: Whether the team member's current job position is active in the job_profiles table
       - name: is_current
         description: Whether the team member's job position is the most current as of the date the query is run
       - name: valid_from
