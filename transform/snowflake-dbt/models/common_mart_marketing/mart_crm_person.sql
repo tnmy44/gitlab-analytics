@@ -51,6 +51,12 @@
                                                AS legacy_mql_month_latest,
       legacy_mql_date_latest_pt.first_day_of_month
                                                AS legacy_mql_month_latest_pt,
+      fct_crm_person.inferred_mql_date_first,
+      fct_crm_person.inferred_mql_datetime_first_pt,
+      fct_crm_person.inferred_mql_datetime_first,
+      fct_crm_person.inferred_mql_date_latest,
+      fct_crm_person.inferred_mql_datetime_latest_pt,
+      fct_crm_person.inferred_mql_datetime_latest,
       created_date.date_day                    AS created_date,
       created_date_pt.date_day                 AS created_date_pt,
       created_date.first_day_of_month          AS created_month,
@@ -202,6 +208,7 @@
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
         ELSE FALSE
       END                                                        AS is_lead_source_trial,
+      fct_crm_person.is_bdr_sdr_worked,
       dim_crm_person.person_first_country
     FROM fct_crm_person
     LEFT JOIN dim_crm_person

@@ -399,6 +399,7 @@ roles:
             - gitlab_dotcom
             - handbook
             - license_db
+            - nvd
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -512,7 +513,6 @@ roles:
             - google_analytics_360
             - google_search_console
             - netsuite
-            - mailgun
             - marketo
             - snowflake_db
             - zendesk
@@ -2051,22 +2051,6 @@ roles:
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
 
-    - mailgun:
-        privileges:
-            databases:
-                read:
-                    - prep
-                    - raw
-            schemas:
-                read:
-                    - prep.mailgun
-                    - raw.mailgun
-            tables:
-                read:
-                    - prep.mailgun.*
-                    - raw.mailgun.*
-
-
     - marketo:
           privileges:
               databases:
@@ -2103,7 +2087,18 @@ roles:
                     - prep.sensitive.netsuite_transaction_lines_pii
                     - prep.sensitive.netsuite_vendors_pii
                     - raw.netsuite_fivetran.*
-
+    
+    - nvd:
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.nvd
+            tables:
+                read:
+                    - prep.nvd.*
 
     - oci_reports:
         warehouses:
@@ -3999,6 +3994,14 @@ roles:
                     - lvinueza_prep.*.*
                     - lvinueza_prod.*.*
 
+    - manggara:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - marntz:
         member_of:
             - analyst_sales
@@ -4138,7 +4141,6 @@ roles:
             - analyst_growth
             - customers_db
             - restricted_safe
-            - mailgun
         warehouses:
             - dev_xs
         owns:
@@ -5078,7 +5080,6 @@ roles:
                     - svogel_prep.*.*
                     - svogel_prod.*.*
 
-
     - tableau:
         warehouses:
             - reporting
@@ -5164,8 +5165,12 @@ roles:
                     - tnguyen_prod.*.*
 
     - tscott:
-        member_of: []
-        warehouses: []
+        member_of:
+            - data_team_analyst
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
 
     - vagrawal:
         member_of:
@@ -5547,6 +5552,11 @@ users:
         member_of:
             - lvinueza
 
+    - manggara:
+        can_login: yes
+        member_of:
+            - manggara
+
     - marntz:
         can_login: yes
         member_of:
@@ -5801,8 +5811,9 @@ users:
             - tnguyen
 
     - tscott:
-        can_login: no 
-        member_of: []
+        can_login: yes
+        member_of:
+            - tscott
 
     - vagrawal:
         can_login: yes

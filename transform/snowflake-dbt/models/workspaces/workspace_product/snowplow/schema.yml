@@ -27,3 +27,28 @@ models:
             config:
               where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         - not_null
+
+  - name: fct_behavior_structured_event_ide_extension_version
+    description: Derived fact table that parses out the [ide_extension_version context](https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/issues/256#contexts) based on the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema) which can optionally be sent with an event.
+    columns:
+      - name: behavior_structured_event_pk
+        description: '{{ doc("behavior_structured_event_pk") }}'
+        tests:
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        - not_null
+      - name: behavior_at
+        description: ' {{ doc("behavior_at") }}'
+      - name: ide_extension_version_context
+        description: Context related to the ide_extension_version, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
+      - name: extension_name
+        description: Name of the IDE extension, e.g. GitLab Workflow
+      - name: extension_version
+        description: Version number of the IDE extension, e.g. 3.81.1
+      - name: ide_name
+        description: Name of the IDE, e.g. RubyMibe
+      - name: ide_vendor
+        description: Name of the IDEs vendor, e.g. Microsoft
+      - name: ide_version
+        description: Version number of the IDE, e.g. 1.81.1

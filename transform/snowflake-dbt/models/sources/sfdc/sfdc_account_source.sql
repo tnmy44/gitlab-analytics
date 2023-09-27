@@ -150,6 +150,21 @@ renamed AS (
     trending_offsite_intent__c AS demandbase_trending_offsite_intent,
     trending_onsite_engagement__c AS demandbase_trending_onsite_engagement,
 
+    --6 Sense Fields
+    x6sense_6qa__c::BOOLEAN AS has_six_sense_6_qa,
+    riskrate_third_party_guid__c AS risk_rate_guid,
+    x6sense_account_profile_fit__c AS six_sense_account_profile_fit,
+    x6sense_account_reach_score__c AS six_sense_account_reach_score,
+    x6sense_account_profile_score__c AS six_sense_account_profile_score,
+    x6sense_account_buying_stage__c AS six_sense_account_buying_stage,
+    x6sense_account_numerical_reach_score__c AS six_sense_account_numerical_reach_score,
+    x6sense_account_update_date__c::DATE AS six_sense_account_update_date,
+    x6sense_account_6qa_end_date__c::DATE AS six_sense_account_6_qa_end_date,
+    x6sense_account_6qa_age_in_days__c AS six_sense_account_6_qa_age_days,
+    x6sense_account_6qa_start_date__c::DATE AS six_sense_account_6_qa_start_date,
+    x6sense_account_intent_score__c AS six_sense_account_intent_score,
+    x6sense_segments__c AS six_sense_segments,
+
     -- sales segment fields
     account_demographics_sales_segment__c AS ultimate_parent_sales_segment,
     sales_segmentation_new__c AS division_sales_segment,

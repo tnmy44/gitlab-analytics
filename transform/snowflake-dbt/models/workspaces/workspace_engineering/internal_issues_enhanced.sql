@@ -97,7 +97,24 @@ bot_users AS (
 
 milestones AS (
 
-  SELECT *
+  SELECT
+    *,
+    CASE
+      WHEN group_id = 9970
+        AND start_date <= DATEADD('month', 1, CURRENT_DATE)
+        AND REGEXP_LIKE(milestone_title, '\\d+\.\\d+') THEN
+        DENSE_RANK() OVER (
+          PARTITION BY IFF(
+            group_id = 9970
+            AND start_date <= DATEADD('month', 1, CURRENT_DATE)
+            AND REGEXP_LIKE(milestone_title, '\\d+\.\\d+'),
+            1,
+            0
+            )
+          ORDER BY
+            start_date DESC
+        )
+    END AS milestone_recency
   FROM {{ ref('gitlab_dotcom_milestones') }}
 
 ),
@@ -106,6 +123,41 @@ workflow_labels AS (
 
   SELECT * FROM {{ ref('engineering_analytics_workflow_labels') }}
 
+),
+
+excluded_project_path AS (
+  SELECT 'team-tasks' AS project_path
+  UNION
+  SELECT 'ux-research'
+  UNION
+  SELECT 'design.gitlab.com'
+  UNION
+  SELECT 'pajamas-adoption-scanner'
+  UNION
+  SELECT 'gitlab-design'
+  UNION
+  SELECT 'technical-writing'
+  UNION
+  SELECT 'fulfillment-meta'
+  UNION
+  SELECT 'verify-stage'
+  UNION
+  SELECT 'team'
+  UNION
+  SELECT 'group-tasks'
+  UNION
+  SELECT 'discussion'
+  UNION
+  SELECT 'vulnerability-research'
+),
+
+issue_note_move AS (
+  SELECT *
+  FROM {{ ref('internal_notes') }}
+  WHERE noteable_type = 'Issue'
+    AND system = TRUE
+    AND note LIKE 'moved to gitlab-ee%'
+    AND note_author_id = 1786152
 ),
 
 final AS (
@@ -120,6 +172,7 @@ final AS (
     internal_issues.issue_created_at                                                                                                                                                                                                                                                                    AS created_at,
     internal_issues.issue_updated_at                                                                                                                                                                                                                                                                    AS updated_at,
     internal_issues.issue_closed_at                                                                                                                                                                                                                                                                     AS closed_at,
+    internal_issues.state,
     DATE_TRUNC('month', internal_issues.issue_created_at)::DATE                                                                                                                                                                                                                                         AS created_month,
     DATE_TRUNC('month', internal_issues.issue_closed_at)::DATE                                                                                                                                                                                                                                          AS closed_month,
     IFF(internal_issues.issue_closed_at > internal_issues.issue_created_at, ROUND(TIMESTAMPDIFF(HOURS, internal_issues.issue_created_at, internal_issues.issue_closed_at) / 24, 2), 0)                                                                                                                  AS days_to_close,
@@ -192,9 +245,11 @@ final AS (
       ELSE 'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/issues/' || internal_issues.issue_iid
     END                                                                                                                                                                                                                                                                                                 AS url,
     internal_issues.is_part_of_product,
-    CASE WHEN is_part_of_product AND milestone_start_date <= DATEADD('month', 1, CURRENT_DATE) THEN
-      DENSE_RANK() OVER (PARTITION BY IFF(is_part_of_product AND milestone_start_date <= DATEADD('month', 1, CURRENT_DATE), 1, 0)
-        ORDER BY milestone_start_date DESC) END                                                                                                                                                                                                                                                         AS milestone_recency
+    milestones.milestone_recency                                                                                                                                                                                                                                                                        AS milestone_recency,
+    --this logic comes from [issues_by_milestone] sisense snippet
+    COALESCE(internal_issues.is_part_of_product AND internal_issues.namespace_id IN (6543, 9970) AND projects.project_path NOT IN (SELECT * FROM excluded_project_path) AND masked_label_title NOT LIKE '%type::ignore%' AND is_part_of_product AND group_label != 'undefined', FALSE)                  AS is_milestone_issue_reporting,
+    IFF(issue_note_move.note_id IS NOT NULL, TRUE, FALSE)                                                                                                                                                                                                                                               AS issue_is_moved,
+    issue_note_move.created_at                                                                                                                                                                                                                                                                          AS issue_moved_at
   FROM internal_issues
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_issues.project_id
@@ -204,6 +259,7 @@ final AS (
     ON ns.namespace_id = projects.dim_namespace_id
   LEFT JOIN milestones
     ON milestones.milestone_id = internal_issues.milestone_id
+  LEFT JOIN issue_note_move ON issue_note_move.noteable_id = internal_issues.issue_id
 )
 
 SELECT *

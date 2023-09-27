@@ -1,5 +1,6 @@
 {{ config({
-    "post-hook": "{{ missing_member_column(primary_key = 'dim_epic_sk', not_null_test_cols = []) }}"
+     tags=["product"],
+     "post-hook": "{{ missing_member_column(primary_key = 'dim_epic_sk', not_null_test_cols = []) }}"
     })
 }}
 
@@ -58,5 +59,5 @@ WITH prep_epic AS (
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-22",
-    updated_date="2023-09-14"
+    updated_date="2023-09-27"
 ) }}
