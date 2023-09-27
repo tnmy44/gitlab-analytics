@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 WITH prep_epic AS (
 
     SELECT
@@ -44,7 +48,7 @@ WITH prep_epic AS (
 {{ dbt_audit(
     cte_ref="prep_epic",
     created_by="@mpeychet_",
-    updated_by="@michellecooper",
+    updated_by="@chrissharp",
     created_date="2021-06-22",
-    updated_date="2023-08-22"
+    updated_date="2023-09-27"
 ) }}
