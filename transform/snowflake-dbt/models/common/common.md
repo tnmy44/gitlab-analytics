@@ -135,6 +135,31 @@ Dimension table representing the sales hierarchy at the time of a closed opportu
 
 {% enddocs %}
 
+{% docs dim_crm_user_business_unit %}
+Dimension table representing the business unit of the sales hierarchy.
+
+{% enddocs %}
+
+{% docs dim_crm_user_sales_segment %}
+Dimension table representing the sales segment of the sales hierarchy.
+
+{% enddocs %}
+
+{% docs dim_crm_user_geo %}
+Dimension table representing the geo of the sales hierarchy.
+
+{% enddocs %}
+
+{% docs dim_crm_user_region %}
+Dimension table representing the region of the sales hierarchy.
+
+{% enddocs %}
+
+{% docs dim_crm_user_area %}
+Dimension table representing the area of the sales hierarchy.
+
+{% enddocs %}
+
 {% docs dim_billing_account %}
 Dimensional table representing each individual Zuora account with details of person to bill for the account.
 

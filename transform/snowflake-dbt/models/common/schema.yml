@@ -433,6 +433,52 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+  
+  - name: dim_crm_user_business_unit
+    description: '{{ doc("dim_crm_user_business_unit") }}'
+    columns:
+      - name: dim_crm_user_business_unit_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+
+  - name: dim_crm_user_sales_segment
+    description: '{{ doc("dim_crm_user_sales_segment") }}'
+    columns:
+      - name: dim_crm_user_sales_segment_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+
+  
+  - name: dim_crm_user_geo
+    description: '{{ doc("dim_crm_user_geo") }}'
+    columns:
+      - name: dim_crm_user_geo_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+
+  - name: dim_crm_user_region
+    description: '{{ doc("dim_crm_user_region") }}'
+    columns:
+      - name: dim_crm_user_region_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+    
+  - name: dim_crm_user_area
+    description: '{{ doc("dim_crm_user_area") }}'
+    columns:
+      - name: dim_crm_user_area_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: dim_crm_touchpoint
     description: '{{ doc("dim_crm_touchpoint") }}'
