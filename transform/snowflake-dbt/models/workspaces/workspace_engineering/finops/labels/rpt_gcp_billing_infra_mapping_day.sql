@@ -93,7 +93,8 @@ folder_labels AS (
 
   SELECT
     a.source_primary_key,
-    a.folder_id
+    a.folder_id,
+    a.folder_name
   FROM project_ancestory AS a
   INNER JOIN folder_pl_mapping AS b ON a.folder_id = b.folder_id
   WHERE a.has_project_to_exclude = 0 -- project to be excluded for folder_pl mapping
@@ -111,6 +112,7 @@ billing_base AS (
     env_labels.resource_label_value                            AS env_label,
     runner_labels.resource_label_value                         AS runner_label,
     IFF(export.project_id IS NULL, 1, folder_labels.folder_id) AS folder_label,
+    folder_labels.folder_name,
     export.usage_unit                                          AS usage_unit,
     export.pricing_unit                                        AS pricing_unit,
     SUM(export.usage_amount)                                   AS usage_amount,
@@ -133,7 +135,7 @@ billing_base AS (
       export.source_primary_key = runner_labels.source_primary_key
   LEFT JOIN
     folder_labels ON export.source_primary_key = folder_labels.source_primary_key
-  {{ dbt_utils.group_by(n=10) }}
+  {{ dbt_utils.group_by(n=11) }}
 
 )
 
@@ -146,6 +148,7 @@ SELECT
   bill.env_label                     AS env_label,
   bill.runner_label                  AS runner_label,
   bill.folder_label,
+  bill.folder_name,
   bill.usage_unit,
   bill.pricing_unit,
   bill.usage_amount                  AS usage_amount,
