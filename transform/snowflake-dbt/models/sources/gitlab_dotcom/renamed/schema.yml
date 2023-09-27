@@ -261,6 +261,23 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_ci_pipeline_artifacts_source
+    description: Base model for Gitlab.com ci_pipeline_artifacts
+    columns:
+      - name: ci_pipeline_artifact_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+      - name: updated_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_ci_pipeline_schedule_variables_source
     description: Base model for Gitlab.com ci_pipeline_schedule_variables
     columns:
@@ -691,7 +708,7 @@ models:
           - not_null
       - name: updated_at
         tags: ["tdf","gitlab_dotcom"]
-        tests: 
+        tests:
           - not_null
       - name: created_at
         tags: ["tdf","gitlab_dotcom"]
@@ -898,7 +915,7 @@ models:
       - name: severity
         tags: ["tdf","gitlab_dotcom"]
         tests:
-          - not_null 
+          - not_null
   - name: gitlab_dotcom_issue_assignees_source
     description: >-
       Base model for Gitlab.com issue assignees, duplicate rows have not been included.
@@ -1071,7 +1088,7 @@ models:
 
   - name: gitlab_dotcom_merge_request_blocks_source
     description: Base model for GitLab.com merge request blocks table
-    columns: 
+    columns:
       - name: merge_request_blocks_id
         tags: ["tdf", "gitlab_dotcom"]
         tests:
@@ -1260,7 +1277,7 @@ models:
         description: '{{ doc("visibility_documentation") }}'
       - name: visbility_level
         description: '{{ doc("visibility_documentation") }}'
-      - name: shared_runners_enabled 
+      - name: shared_runners_enabled
         description: Indicates whether or not a namespace has shared_runners_enabled
 
   - name: gitlab_dotcom_notes_source
@@ -1414,7 +1431,7 @@ models:
         tests:
           - not_null
           - unique
-  
+
   - name: gitlab_dotcom_project_features_source
     description: Base model for Gitlab.com project features
     columns:
@@ -1596,7 +1613,7 @@ models:
         tests:
           - not_null
           - unique
-  
+
   - name: gitlab_dotcom_protected_branch_push_access_levels_source
     description: A base model for Gitlab.com Gitlab.com protected_branch_push_access_levels.
     columns:
@@ -1673,7 +1690,7 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-  
+
   - name: gitlab_dotcom_resource_milestone_events_source
     columns:
       - name: resource_milestone_event_id
@@ -1724,7 +1741,7 @@ models:
   - name: gitlab_dotcom_integrations_source
     description: Base model for Gitlab.com integrations
     columns:
-      - name: service_id
+      - name: integration_id
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
@@ -1951,11 +1968,11 @@ models:
         tests:
           - accepted_values:
               values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 99]
-              
+
   - name: gitlab_dotcom_vulnerabilities_source
     description: >-
       Base model for Gitlab.com vulnerabilities.
-    columns: 
+    columns:
       - name: vulnerability_id
         tags: ["tdf","gitlab_dotcom"]
         tests:

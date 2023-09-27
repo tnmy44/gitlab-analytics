@@ -6,7 +6,9 @@
     ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_date','dim_date'),
-    ('dim_campaign', 'dim_campaign')
+    ('fct_campaign','fct_campaign'),
+    ('dim_campaign', 'dim_campaign'),
+    ('dim_crm_user', 'dim_crm_user')
 ]) }}
 
 , person_base_with_tp AS (
@@ -44,6 +46,8 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
+      person_base.partner_prospect_status,
+      person_base.prospect_share_status,
       dim_crm_account.is_first_order_available,
       person_base.sales_segment_name AS person_sales_segment_name,
       person_base.sales_segment_grouped AS person_sales_segment_grouped,
@@ -62,7 +66,8 @@
             THEN '1. New - First Order'
           ELSE '3. Growth'
       END AS person_order_type,
-
+      last_utm_campaign,
+      last_utm_content,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -134,6 +139,7 @@
       opp.primary_campaign_source_id AS opp_primary_campaign_source_id,
       opp.owner_id AS opp_owner_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
+      partner_account.crm_account_name AS partner_account_name,
 
 	--Opp Dates
       opp.created_date AS opp_created_date,
@@ -212,9 +218,15 @@
       opp.calculated_deal_count,
       opp.days_in_stage,
       opp.record_type_name,
+      CASE
+        WHEN opp.dr_deal_id IS NOT null
+          THEN TRUE
+        ELSE FALSE
+      END AS is_created_through_deal_registration,
 
     --Person Data
       person_base.dim_crm_person_id,
+      person_base.dim_crm_user_id,
       person_base.crm_partner_id,
       person_base.email_hash,
       person_base.email_domain,
@@ -254,6 +266,10 @@
             THEN '1. New - First Order'
           ELSE '3. Growth'
       END AS person_order_type,
+      last_utm_campaign,
+      last_utm_content,
+      person_base.prospect_share_status,
+      person_base.partner_prospect_status,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -285,7 +301,7 @@
       mart_crm_attribution_touchpoint.bizible_referrer_page_raw,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.bizible_salesforce_campaign,
-	  mart_crm_attribution_touchpoint.campaign_rep_role_name,
+	    mart_crm_attribution_touchpoint.campaign_rep_role_name,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.gtm_motion,
       mart_crm_attribution_touchpoint.pipe_name,
@@ -332,7 +348,9 @@
       ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=157)}}
+    LEFT JOIN dim_crm_account partner_account
+      ON opp.partner_account=partner_account.dim_crm_account_id
+  {{dbt_utils.group_by(n=164)}}
     
 ), cohort_base_combined AS (
   
@@ -341,6 +359,7 @@
       dim_crm_person_id,
       dim_crm_account_id,
       dim_parent_crm_account_id,
+      dim_crm_user_id,
       crm_partner_id,
       partner_prospect_id,
       dim_crm_touchpoint_id,
@@ -352,6 +371,7 @@
       null AS ssp_id,
       null AS opp_primary_campaign_source_id,
       null AS opp_owner_id,
+      null AS partner_account_name,
 
   --Person Data
       email_hash,
@@ -387,6 +407,10 @@
       inferred_employee_segment,
       geo_custom,
       inferred_geo,
+      last_utm_campaign,
+      last_utm_content,
+      prospect_share_status,
+      partner_prospect_status,
 
   --Person Dates
       true_inquiry_date,
@@ -433,6 +457,7 @@
       null AS critical_deal_flag,
       null AS is_public_sector_opp,
       null AS is_registration_from_portal,
+      null AS is_created_through_deal_registration,
 
     --Opp Data
       null AS new_logo_count,
@@ -528,6 +553,7 @@
       dim_crm_person_id,
       dim_crm_account_id,
       dim_parent_crm_account_id,
+      dim_crm_user_id,
       crm_partner_id,
       null AS partner_prospect_id,
       dim_crm_touchpoint_id,
@@ -539,6 +565,7 @@
       ssp_id,
       opp_primary_campaign_source_id,
       opp_owner_id,
+      partner_account_name,
 
     --Person Data
       email_hash,
@@ -574,6 +601,10 @@
       inferred_employee_segment,
       geo_custom,
       inferred_geo,
+      last_utm_campaign,
+      last_utm_content,
+      prospect_share_status,
+      partner_prospect_status,
     
     --Person Dates
       true_inquiry_date,
@@ -620,6 +651,7 @@
       critical_deal_flag,
       is_public_sector_opp,
       is_registration_from_portal,
+      is_created_through_deal_registration,
 
       --Opp Data
       new_logo_count,
@@ -751,6 +783,7 @@
           THEN 'Field Marketing'
         WHEN (LOWER(utm_campaign) LIKE '%abm%'
           OR LOWER(utm_content) LIKE '%abm%'
+          OR LOWER(bizible_ad_campaign_name) LIKE '%abm%'
           OR campaign_rep_role_name like '%ABM%'
           OR dim_campaign.budget_holder = 'abm'
           OR utm_budget = 'abm') THEN 'Account Based Marketing'
@@ -768,7 +801,33 @@
           THEN 'Digital Marketing'
         ELSE 'No Budget Holder' 
       END AS integrated_budget_holder,
+      fct_campaign.start_date AS campaign_start_date,
+      fct_campaign.region AS sfdc_campaign_region,
+      fct_campaign.sub_region AS sfdc_campaign_sub_region,
+      dim_campaign.type AS sfdc_campaign_type,
+      fct_campaign.budgeted_cost,
+      fct_campaign.actual_cost,
+      dim_campaign.is_a_channel_partner_involved,
+      CASE  
+        WHEN dim_campaign.will_there_be_mdf_funding = 'Yes'
+          THEN TRUE
+          ELSE FALSE
+      END AS is_mdf_campaign,
 
+      -- user
+      user.user_name        AS record_owner_name,
+      user.manager_name     AS record_owner_manager,
+      user.title            AS record_owner_title,
+      user.department       AS record_owner_department,
+      user.team             AS record_owner_team,
+      manager.manager_name  AS record_owner_sales_dev_leader,
+      
+      CASE
+        WHEN  record_owner_title LIKE '%Sales Development%' 
+          OR record_owner_title  LIKE '%Business Development%' 
+        THEN TRUE
+        ELSE FALSE
+      END AS is_sales_dev_owned_record,
 
      --inquiry_date fields
       inquiry_date.fiscal_year                     AS inquiry_date_range_year,
@@ -814,6 +873,12 @@
   FROM cohort_base_combined
   LEFT JOIN dim_campaign
     ON cohort_base_combined.dim_campaign_id = dim_campaign.dim_campaign_id
+  LEFT JOIN fct_campaign
+    ON cohort_base_combined.dim_campaign_id = fct_campaign.dim_campaign_id
+  LEFT JOIN dim_crm_user user
+    ON cohort_base_combined.dim_crm_user_id = user.dim_crm_user_id
+  LEFT JOIN dim_crm_user manager
+    ON user.manager_id = manager.dim_crm_user_id
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
@@ -840,5 +905,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-07-28",
+    updated_date="2023-09-12",
   ) }}

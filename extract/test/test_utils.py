@@ -94,9 +94,9 @@ def test_engine_factory(engine_factory):
 
 def test_engine_factory_processing_warehouse(engine_factory):
     """
-    Test Class properties - processing_warehouse
+    Test Class properties - processing_role
     """
-    assert engine_factory.processing_warehouse == "LOADER"
+    assert engine_factory.processing_role == "LOADER"
 
 
 def test_engine_factory_schema_name(engine_factory):

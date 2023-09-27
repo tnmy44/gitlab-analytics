@@ -48,7 +48,7 @@ dag = DAG(
     # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
     # FYI: on first run, data is backfilled thru 2022-03-01
-    start_date=datetime(2022, 3, 1),
+    start_date=datetime(2023, 8, 24),
     catchup=True,
     max_active_runs=1,  # due to API rate limiting
     concurrency=3,  # num of max_tasks, limit due to API rate limiting
@@ -84,9 +84,9 @@ for endpoint_class in endpoint_classes:
         ],
         env_vars={
             **pod_env_vars,
-            # remove time from execution_date, and convert to epoch timestamp
+            # remove time from logical_date, and convert to epoch timestamp
             "EPOCH_START_STR": (
-                "{{ execution_date.replace(hour=0, minute=0, second=0, microsecond=0)"
+                "{{ logical_date.replace(hour=0, minute=0, second=0, microsecond=0)"
                 ".int_timestamp }}"
             ),
             "EPOCH_END_STR": (

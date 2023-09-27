@@ -43,6 +43,9 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
+      person_base.traction_first_response_time,
+      person_base.traction_first_response_time_seconds,
+      person_base.traction_response_time_in_business_hours,
       mart_crm_account.is_first_order_available,
       CASE
         WHEN person_base.is_first_order_person = TRUE 
@@ -394,6 +397,9 @@
       inferred_employee_segment,
       geo_custom,
       inferred_geo,
+      traction_first_response_time,
+      traction_first_response_time_seconds,
+      traction_response_time_in_business_hours,
   
   --Opp Data
       opportunity_name,
@@ -593,5 +599,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2023-07-27",
+    updated_date="2023-08-03",
   ) }}

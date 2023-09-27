@@ -72,7 +72,6 @@ secrets_list = [
 ]
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -90,6 +89,7 @@ dag = DAG(
     description="This DAG runs weekly on sunday running full refresh of all the model",
     default_args=default_args,
     schedule_interval="45 8 * * SUN#1",
+    catchup=False,
 )
 
 dag.doc_md = __doc__

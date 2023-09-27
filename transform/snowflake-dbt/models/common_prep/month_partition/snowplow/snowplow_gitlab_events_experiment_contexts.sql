@@ -1,6 +1,6 @@
 {% set year_value = var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) %}
 {% set month_value = var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) %}
-{% set start_date = modules.datetime.date(year=year_value| int , month=month_value | int, day=01) %}
+{% set start_date = modules.datetime.date(year=year_value| int , month=month_value | int, day=1) %}
 {% set end_date = (start_date + modules.datetime.timedelta(days=31)).strftime('%Y-%m-01') %}
 
 WITH base AS (
@@ -25,6 +25,8 @@ WITH base AS (
     AND (
       (v_tracker LIKE 'js%' ) -- js frontend tracker
       OR (v_tracker LIKE 'rb%') -- ruby backend tracker
+        OR (v_tracker LIKE 'py%') -- python tracker
+          OR (v_tracker LIKE 'java%') -- java tracker
     )
     
 

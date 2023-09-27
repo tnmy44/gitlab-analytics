@@ -51,6 +51,12 @@
                                                AS legacy_mql_month_latest,
       legacy_mql_date_latest_pt.first_day_of_month
                                                AS legacy_mql_month_latest_pt,
+      fct_crm_person.inferred_mql_date_first,
+      fct_crm_person.inferred_mql_datetime_first_pt,
+      fct_crm_person.inferred_mql_datetime_first,
+      fct_crm_person.inferred_mql_date_latest,
+      fct_crm_person.inferred_mql_datetime_latest_pt,
+      fct_crm_person.inferred_mql_datetime_latest,
       created_date.date_day                    AS created_date,
       created_date_pt.date_day                 AS created_date_pt,
       created_date.first_day_of_month          AS created_month,
@@ -115,6 +121,7 @@
       dim_crm_person.email_hash,
       dim_crm_person.status,
       dim_crm_person.lead_source,
+      dim_crm_person.title,
       dim_crm_person.was_converted_lead,
       dim_crm_person.source_buckets,
       dim_crm_person.crm_partner_id,
@@ -123,6 +130,19 @@
       dim_crm_person.partner_prospect_status,
       dim_crm_person.partner_prospect_owner_name,
       dim_crm_person.partner_prospect_id,
+      dim_crm_person.propensity_to_purchase_score_group,
+      dim_crm_person.pql_namespace_creator_job_description,
+      dim_crm_person.pql_namespace_id,
+      dim_crm_person.pql_namespace_name,
+      dim_crm_person.pql_namespace_users,
+      dim_crm_person.is_product_qualified_lead,
+      dim_crm_person.propensity_to_purchase_insights,
+      dim_crm_person.is_ptp_contact,
+      dim_crm_person.propensity_to_purchase_namespace_id,
+      dim_crm_person.propensity_to_purchase_past_insights,
+      dim_crm_person.propensity_to_purchase_past_score_group,
+      fct_crm_person.propensity_to_purchase_score_date,
+      fct_crm_person.propensity_to_purchase_days_since_trial_start,
       fct_crm_person.ga_client_id,
       dim_crm_person.sequence_step_type,
       dim_crm_person.state,
@@ -177,6 +197,9 @@
       fct_crm_person.last_transfer_date_time,
       fct_crm_person.time_from_last_transfer_to_sequence,
       fct_crm_person.time_from_mql_to_last_transfer,
+      fct_crm_person.traction_first_response_time,
+      fct_crm_person.traction_first_response_time_seconds,
+      fct_crm_person.traction_response_time_in_business_hours,
       fct_crm_person.zoominfo_contact_id,
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
@@ -185,6 +208,7 @@
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
         ELSE FALSE
       END                                                        AS is_lead_source_trial,
+      fct_crm_person.is_bdr_sdr_worked,
       dim_crm_person.person_first_country
     FROM fct_crm_person
     LEFT JOIN dim_crm_person
@@ -271,5 +295,5 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-07-25",
+    updated_date="2023-08-24",
   ) }}  

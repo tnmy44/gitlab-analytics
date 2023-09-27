@@ -112,7 +112,7 @@ models:
               tests:
                   - not_null
                   -   accepted_values:
-                          values: ['1,000 CI Minutes', '1,000 CI Minutes Credit']
+                          values: ['1,000 CI Minutes', '1,000 CI Minutes Credit', '1,000 Compute Minutes']
     - name: zuora_base_trueups
       description: '{{ doc("zuora_base_trueups") }}'
       columns:

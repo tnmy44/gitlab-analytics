@@ -71,6 +71,7 @@ dag = DAG(
     "ds_namespace_segmentation",
     default_args=default_args,
     schedule_interval="0 4 3 * *",
+    catchup=False,
 )
 
 # Task 1

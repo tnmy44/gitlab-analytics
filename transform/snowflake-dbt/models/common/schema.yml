@@ -258,6 +258,10 @@ models:
       - name: ssp_channel
       - name: po_required
       - name: auto_pay
+      - name: billing_account_arr_cohort_month
+        description: First month the billing account has had ARR (Annual Recurrent Revenue).
+      - name: billing_account_arr_cohort_quarter
+        description: First fiscal quarter the billing account has had ARR (Annual Recurrent Revenue).
       - name: is_deleted
         description: The flag indicating if account has been deleted
       - name: batch
@@ -602,6 +606,39 @@ models:
 
       - name: days_in_month_count
         description: '{{ doc("date_days_in_month_count") }}'
+
+      - name: current_day_of_month
+        description: '{{ doc("current_day_of_month") }}'
+      
+      - name: current_day_of_fiscal_quarter
+        description: '{{ doc("current_day_of_fiscal_quarter") }}'
+      
+      - name: current_day_of_fiscal_year
+        description: '{{ doc("current_day_of_fiscal_year") }}'
+      
+      - name: is_fiscal_month_to_date
+        description: '{{ doc("is_fiscal_month_to_date") }}'
+      
+      - name: is_fiscal_quarter_to_date
+        description: '{{ doc("is_fiscal_quarter_to_date") }}'
+      
+      - name: is_fiscal_year_to_date
+        description: '{{ doc("is_fiscal_year_to_date") }}'
+      
+      - name: fiscal_days_ago
+        description: '{{ doc("fiscal_days_ago") }}'
+      
+      - name: fiscal_weeks_ago
+        description: '{{ doc("fiscal_weeks_ago") }}'
+      
+      - name: fiscal_months_ago
+        description: '{{ doc("fiscal_months_ago") }}'
+      
+      - name: fiscal_quarters_ago
+        description: '{{ doc("fiscal_quarters_ago") }}'
+
+      - name: fiscal_years_ago
+        description: '{{ doc("fiscal_years_ago") }}'
 
   - name: dim_dr_partner_engagement
     description: '{{ doc("dim_dr_partner_engagement") }}'
@@ -1338,6 +1375,41 @@ models:
         description: The most recent date a lead or contact was assigned a Marketo Qualified Lead Date.
       - name: is_mql
         description: a boolean field created in the warehouse to flag Marketing Qualified Leads.
+      - name: traction_first_response_time
+        description: The response time from Traction. 
+      - name: traction_first_response_time_seconds
+        description: The response time from Traction in seconds. 
+      - name: traction_response_time_in_business_hours
+        description: The response time from Traction, based only in working hours for the user/rep. 
+      - name: propensity_to_purchase_score_date
+        description: This field indicates the date when most recent probability to purchase score was calculated.
+      - name: propensity_to_purchase_score_group
+        description: This field indicates the propensity to purchase score, 5 being the highest probability to purchase.
+      - name: pql_namespace_creator_job_description
+        description: namespace creator self-described job description
+      - name: pql_namespace_id
+        description: ID of the PQL's namespace, from SFDC. 
+      - name: pql_namespace_name
+        description: Name of the PQL's namespace, from SFDC. 
+      - name: pql_namespace_users
+        description: number of namespace users
+      - name: is_product_qualified_lead
+        description: Whether or not the lead is a PQL. 
+      - name: propensity_to_purchase_insights
+        description: This field provides insights into the probability score of a record to purchase.
+      - name: is_ptp_contact
+        description: This field indicates if the record has a calculated propensity to purchase score.
+      - name: propensity_to_purchase_namespace_id
+        description: This field indicates the namespace ID that has been scored for propensity to purchase.
+      - name: propensity_to_purchase_past_insights
+        description: This field provides insights into the previous probability score of a record to purchase.
+      - name: propensity_to_purchase_past_score_group
+        description: This field indicates the previous propensity to purchase score a user had.
+      - name: propensity_to_purchase_days_since_trial_start
+        description: This field indicates the number of days that passed since this user started a trial.
+      - name: is_partner_recalled
+        description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
+
 
   - name: fct_saas_product_usage_metrics_monthly
     description: '{{ doc("fct_saas_product_usage_metrics_monthly") }}'
@@ -1760,6 +1832,38 @@ models:
           - dbt_utils.at_least_one
       - name: ci_internal_pipelines_28_days_event
         description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_builds_28_days_event
+        description: '{{ doc("ci_builds_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_features_28_days_user
+        description: '{{ doc("audit_features_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: groups_all_time_event
+        description: '{{ doc("groups_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: commit_ci_config_file_7_days_user
+        description: '{{ doc("commit_ci_config_file_7_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_pipeline_config_repository_all_time_user
+        description: '{{ doc("ci_pipeline_config_repository_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_pipeline_config_repository_all_time_event
+        description: '{{ doc("ci_pipeline_config_repository_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_all_time_event
+        description: '{{ doc("pipeline_schedules_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_all_time_user
+        description: '{{ doc("pipeline_schedules_all_time_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: is_missing_paid_seats
@@ -2663,9 +2767,12 @@ models:
           - not_null
           - unique
       - name: dim_project_id
-      - name: dim_plan_id
+      - name: dim_plan_id_at_creation
+        description: '{{ doc("dim_plan_id_at_creation") }}'
         tests:
           - not_null
+      - name: is_internal_epic
+        description: '{{ doc("is_internal_epic") }}'
 
   - name: dim_note
     description: '{{ doc("dim_note") }}'
@@ -2957,6 +3064,8 @@ models:
         description: '{{ doc("is_smau") }}'
       - name: is_umau
         description: '{{ doc("is_umau") }}'
+      - name: is_health_score_metric
+        description: '{{ doc("is_health_score_metric") }}'
       - name: snapshot_date
         description: The date the data was extracted from metrics YAML files
       - name: uploaded_at
@@ -3888,6 +3997,38 @@ models:
         description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: ci_builds_28_days_event
+        description: '{{ doc("ci_builds_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_features_28_days_user
+        description: '{{ doc("audit_features_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: groups_all_time_event
+        description: '{{ doc("groups_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: commit_ci_config_file_7_days_user
+        description: '{{ doc("commit_ci_config_file_7_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_pipeline_config_repository_all_time_user
+        description: '{{ doc("ci_pipeline_config_repository_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_pipeline_config_repository_all_time_event
+        description: '{{ doc("ci_pipeline_config_repository_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_all_time_event
+        description: '{{ doc("pipeline_schedules_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: pipeline_schedules_all_time_user
+        description: '{{ doc("pipeline_schedules_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
@@ -4577,6 +4718,40 @@ models:
       - name: zoominfo_account_phone
       - name: is_focus_partner
         description: A partner account on the focus partner list
+      - name: crm_account_arr_cohort_month
+        description: First month the CRM account has had ARR (Annual Recurrent Revenue).
+      - name: crm_account_arr_cohort_quarter
+        description: First fiscal quarter the CRM account has had ARR (Annual Recurrent Revenue).
+      - name: parent_account_arr_cohort_month
+        description: First month the ultimate parent CRM account has had ARR (Annual Recurrent Revenue).
+      - name: parent_account_arr_cohort_quarter
+        description: First fiscal quarter the ultimate parent CRM account has had ARR (Annual Recurrent Revenue).
+      - name: has_six_sense_6_qa
+        description: The 6QA status of the account for the product.
+      - name: risk_rate_guid
+        description: The globally unique ID (GUID) for the third party record in NavEx RiskRate.
+      - name: six_sense_account_profile_fit
+        description: A measure of how similar a company is to the ideal customer profile.
+      - name: six_sense_account_reach_score
+        description: A measure of current outreach activities against optimal quality.
+      - name: six_sense_account_profile_score
+        description: A measure of how similar a company is to the ideal customer profile.
+      - name: six_sense_account_buying_stage
+        description: The 6QA buting stage of the account
+      - name: six_sense_account_numerical_reach_score
+        description:  measure of current outreach activities against optimal quality.
+      - name: six_sense_account_update_date
+        description: The latest update date and time when 6sense Scores were updated.
+      - name: six_sense_account_6_qa_end_date
+        description: The date the account was disqualified from 6QA status 
+      - name: six_sense_account_6_qa_age_days
+        description: The age of the Account's 6QA data, in days. 
+      - name: six_sense_account_6_qa_start_date
+        description: The date the account qualified for 6QA status 
+      - name: six_sense_account_intent_score
+        description: A measure, between 0 and 100, of how much an account is behaving like accounts with which there is a history of previously opened opportunities.
+      - name: six_sense_segments
+        description: The Account's 6QA segment. 
 
   - name: dim_crm_account_daily_snapshot
     description: '{{ doc("dim_crm_account_daily_snapshot") }}'
@@ -5311,6 +5486,8 @@ models:
         description: '{{ doc("override_arr_basis_clari") }}'
       - name: vsa_start_date_net_arr
         description: '{{ doc("vsa_start_date_net_arr") }}'
+      - name: cycle_time_in_days
+        description: '{{ doc("cycle_time_in_days") }}' 
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'
@@ -5572,6 +5749,29 @@ models:
           - unique
         tags: ["tdf", "common", "sales_funnel"]
 
+  - name: fct_sales_funnel_partner_alliance_target_daily
+    description: '{{ doc("fct_sales_funnel_partner_alliance_target_daily") }}'
+    columns:
+      - name: kpi_name
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: sales_funnel_partner_alliance_target_daily_pk
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: report_target_date
+        description: '{{ doc("report_target_date") }}'
+      - name: wtd_allocated_target
+        description: '{{ doc("wtd_allocated_target") }}'
+      - name: mtd_allocated_target
+        description: '{{ doc("mtd_allocated_target") }}'
+      - name: qtd_allocated_target
+        description: '{{ doc("qtd_allocated_target") }}'
+      - name: ytd_allocated_target
+        description: '{{ doc("ytd_allocated_target") }}'
+
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
     columns:
@@ -5584,6 +5784,29 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+
+  - name: fct_sales_funnel_target_daily
+    description: '{{ doc("fct_sales_funnel_target_daily") }}'
+    columns:
+      - name: kpi_name
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: sales_funnel_target_daily_pk
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: report_target_date
+        description: '{{ doc("report_target_date") }}'
+      - name: wtd_allocated_target
+        description: '{{ doc("wtd_allocated_target") }}'
+      - name: mtd_allocated_target
+        description: '{{ doc("mtd_allocated_target") }}'
+      - name: qtd_allocated_target
+        description: '{{ doc("qtd_allocated_target") }}'
+      - name: ytd_allocated_target
+        description: '{{ doc("ytd_allocated_target") }}'
 
   - name: fct_waterfall_summary
     description: '{{ doc("fct_waterfall_summary") }}'
@@ -5602,6 +5825,180 @@ models:
           combination_of_columns:
             - metrics_path
             - redis_event
+
+  - name: fct_crm_event
+    description: The Events portion of Activities from SFDC. 
+    columns:
+      - name: dim_crm_event_sk
+        description: The utility-generated ID key, from the event_id. 
+        tests:
+          - unique
+          - not_null
+      - name: dim_crm_event_pk
+        description: Utility-generated primary key, from the event_id
+      - name: dim_crm_account_id
+        description: SFDC's Account ID related to the event
+      - name: dim_crm_user_id
+        description: SFDC's User ID related to the event
+      - name: dim_crm_person_id
+        description: Utility-generated string, from the SFDC Person's ID
+      - name: dim_crm_opportunity_id
+        description: SFDC's Opportunity ID related to the event
+      - name: sfdc_record_id
+        description: SFDC's Person ID related to the event
+      - name: event_date_id
+        description: ID of the event_Date field
+      - name: event_date
+        description: Date the event took place. 
+      - name: event_end_date_id
+        description: ID of event's end date field. 
+      - name: event_end_date
+        description: Day of the end of the Event. 
+      - name: reminder_date_id
+        description: ID of the reminder date
+      - name: reminder_date_time
+        description: Date/Time that a reminder was set for this event. 
+      - name: event_recurrence_end_date_id
+        description: ID of the Event's recurrence end date
+      - name: event_recurrence_end_date
+        description: The end date of the recurrence of this event
+      - name: event_recurrence_start_date_id
+        description: ID of the Event's recurrence start date
+      - name: event_recurrence_start_date_time
+        description: The start date/time of the recurrence of this event
+      - name: event_created_by_id
+        description: ID of the event's creator
+      - name: event_created_date_id
+        description: ID of the Event's created date
+      - name: event_created_date
+        description: The day that the Event was created
+      - name: last_modified_id
+        description: ID of the last user to modify the Event
+      - name: last_modified_date_id
+        description: ID of the last modified date
+
+  - name: dim_crm_event
+    description: The Events portion of Activities from SFDC. 
+    columns:
+      - name: dim_crm_event_sk
+        description: The utility-generated ID key, from the event_id. 
+      - name: dim_crm_event_sk
+        description: Utility-generated secondary key, from the event_id
+      - name: event_id
+        description: The SFDC ID for the Event. 
+      - name: event_subject
+        description: The Subject of the Event, from SFDC.
+      - name: event_source
+        description: The Event's Source, from SFDC
+      - name: outreach_meeting_type
+        description: The Outreach Meeting Type for the Event, from Outreach. 
+      - name: event_type
+        description: The Type of the Event, from SFDC
+      - name: event_disposition
+        description: The Disposition of the Event, from SFDC
+      - name: event_description
+        description: The Description of the Event, from SFDC
+      - name: event_subtype
+        description: The Subtype of the Event, from SFDC
+      - name: booked_by_employee_number
+        description: The Employee number of the Employee that booked the event/meeting. 
+      - name: sa_activity_type
+        description: The SA's Activity Type of the Event. 
+      - name: event_show_as
+        description: What the Event shows as in SFDC
+      - name: assigned_to_role
+        description: The SFDC Role, of the user assigned to the Event. 
+      - name: csm_activity_type
+        description: The CSM's Activity Type of the Event. 
+      - name: customer_interaction_sentiment
+        description: The Csutomer's sentiment/feedback on the Event
+      - name: google_doc_link
+        description: The link to a google doc related to the event. 
+      - name: comments
+        description: Comments left by the rep assigned to the event. 
+      - name: qualified_convo_or_meeting
+        description: Whether or not the meeting/event was a qualified conversation. 
+      - name: first_opportunity_event_created_date
+        description: The earliest event completion date, related to an opportunity. 
+      - name: event_start_date_time
+        description: The Start Date/Time of the Event. 
+      - name: reminder_date_time
+        description: The Date/Time of the reminder set for the Event. 
+      - name: event_end_date_time
+        description: The Event's End Date/Time. 
+      - name: event_date
+        description: The Date the Event took place. 
+      - name: event_datetime
+        description: The Date/Time the Event took place. 
+      - name: created_at
+        description: The Date the Event was created. 
+      - name: event_end_date
+        description: The End Date of the Event. 
+      - name: is_all_day_event
+        description: Boolean value - Whether or not the Event is an all day event. 
+      - name: is_archived
+        description: Boolean value -Whether or not the event is now archvied. 
+      - name: is_child_event
+        description: Boolean value - Whether or not the Event is the child of another Event. 
+      - name: is_group_event
+        description: Boolean value - Whether or not the Event was a Group event. 
+      - name: is_private_event
+        description: Boolean value - Whether or not the Event was a private event. 
+      - name: is_recurrence
+        description: Boolean value - Whether or not the Event is a recurring Event.  
+      - name: has_reminder_set
+        description: Boolean value - Whether or not there is a reminder set for this Event. 
+      - name: is_answered
+        description: Boolean value - Whether or not the prospect/customer answered/responded to the Event invite. 
+      - name: is_bad_number
+        description: Boolean value - Whether or not the number dialed was a bad/faulty number. 
+      - name: is_busy
+        description: Boolean value - Whether or not the recipient of the call was busy. 
+      - name: is_correct_contact
+        description: Boolean value - Whether or not the sales rep reached the correct contact.  
+      - name: is_left_message
+        description: Boolean value - Whether or not a VM message was left. 
+      - name: is_not_answered
+        description: Boolean value - Whether or not the recipient did not answer the phone. 
+      - name: is_meeting_canceled
+        description: Boolean value - Whether or not the meeting was cancelled. 
+      - name: is_closed_event
+        description: Boolean value - Whether or not the Event is closed. 
+      - name: is_activity
+        description: Boolean value - Whether or not this Event is tracked as an activity. 
+      - name: event_recurrence_activity_id
+        description: ID of the Event's recurring activity. 
+      - name: event_recurrence_day_of_week
+        description: Day of the week for the recurrence of this event. 
+      - name: event_recurrence_day_of_month
+        description: Day of the month for the recurrence of this event. 
+      - name: event_recurrence_end_date
+        description: The End Date for the recurrence of this event. 
+      - name: event_recurrence_instance
+        description: Whether or not the event is recurring. 
+      - name: event_recurrence_interval
+        description: The interval in which the event reoccurs. 
+      - name: event_recurrence_month_of_year
+        description: Month of the year for the recurrence of this event. 
+      - name: event_recurrence_start_date_time
+        description: The Starting date/time of the recurrence of this event. 
+      - name: event_recurrence_timezone_key
+        description: The Timezone key for the recurrence of this event's date/time fields. 
+      - name: event_recurrence_type
+        description: The type of recurring Event. 
+      - name: is_recurrence_2_exclusion
+        description: Boolean - Whether or not the recurrence is excluded. 
+      - name: is_recurrence_2
+        description: Boolean - Whether or not the recurrence is valid. 
+      - name: is_recurrence_2_exception
+        description: Boolean - Whether or not the recurrence is an exception. 
+      - name: last_modified_id
+        description: The ID of the last modifier of this event. 
+      - name: last_modified_date
+        description: The Date the event was last modified. 
+      - name: systemmodstamp
+        description: The time/date stamp from SFDC when this record was created. 
+
 
   - name: dim_crm_task
     description: '{{ doc("dim_crm_task") }}'
@@ -7750,6 +8147,10 @@ models:
         description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
       - name: dim_plan_id
         description: '{{ doc("dim_plan_id") }}'
+      - name: integration_type
+        description: '{{ doc("integration_type") }}'
+      - name: integration_category
+        description: '{{ doc("integration_category") }}'
       - name: is_active
         description: '{{ doc("integration_is_active") }}'
       - name: created_at
@@ -7806,6 +8207,8 @@ models:
         description: '{{ doc("dim_plan_id") }}'
       - name: snippet_type
         description: '{{ doc("snippet_type") }}'
+      - name: visibility_level
+        description: '{{ doc("visibility_level") }}'
       - name: created_at
         description: '{{ doc("snippet_created_at") }}'
       - name: updated_at

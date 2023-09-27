@@ -97,6 +97,21 @@ renamed AS (
     account_address_manual_source_admin__c AS admin_manual_source_account_address,
     focus_partner__c AS is_focus_partner,
 
+    --6 Sense Fields
+    x6sense_6qa__c::BOOLEAN AS has_six_sense_6_qa,
+    riskrate_third_party_guid__c AS risk_rate_guid,
+    x6sense_account_profile_fit__c AS six_sense_account_profile_fit,
+    x6sense_account_reach_score__c AS six_sense_account_reach_score,
+    x6sense_account_profile_score__c AS six_sense_account_profile_score,
+    x6sense_account_buying_stage__c AS six_sense_account_buying_stage,
+    x6sense_account_numerical_reach_score__c AS six_sense_account_numerical_reach_score,
+    x6sense_account_update_date__c::DATE AS six_sense_account_update_date,
+    x6sense_account_6qa_end_date__c::DATE AS six_sense_account_6_qa_end_date,
+    x6sense_account_6qa_age_in_days__c AS six_sense_account_6_qa_age_days,
+    x6sense_account_6qa_start_date__c::DATE AS six_sense_account_6_qa_start_date,
+    x6sense_account_intent_score__c AS six_sense_account_intent_score,
+    x6sense_segments__c AS six_sense_segments,
+
     -- account demographics fields
 
     -- Add sales_segment_cleaning macro to avoid duplication in downstream models

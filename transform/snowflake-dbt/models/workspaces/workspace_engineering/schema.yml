@@ -395,6 +395,16 @@ models:
 
     - name: namespace_pl_daily
       description: '{{ doc("finops_pipeline_desc_namespace_pl") }}'
+    
+    - name: nvd_cve_cpe_mapping
+      description: A model containing data for CVE's and it's associated CPE's from NVD website.
+      columns:
+        - name: published_date
+          description: The published date of the CVE
+        - name: cve_id
+          description: The CVE(Common Vulnerabilities and Exposures) ID. More at https://nvd.nist.gov/vuln
+        - name: cpe_id
+          description: The CPE(Common Platform Enumeration) associated with the CVE ID. More at https://nvd.nist.gov/products
 
     - name: projects_pl
       description: '{{ doc("finops_pipeline_desc_projects_pl") }}'
