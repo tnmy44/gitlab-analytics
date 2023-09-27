@@ -2,6 +2,11 @@
     tags=["mnpi_exception"]
 ) }}
 
+{{ config({
+    "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_user_hierarchy_sk') }}"
+    })
+}}
+
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('prep_crm_user_daily_snapshot', 'prep_crm_user_daily_snapshot'),
