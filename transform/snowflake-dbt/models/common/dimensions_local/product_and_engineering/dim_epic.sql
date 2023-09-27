@@ -1,5 +1,5 @@
 {{ config({
-     tags=["product"],
+     "tags":["product"],
      "post-hook": "{{ missing_member_column(primary_key = 'dim_epic_sk', not_null_test_cols = []) }}"
     })
 }}
