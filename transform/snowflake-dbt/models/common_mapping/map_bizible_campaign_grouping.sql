@@ -78,7 +78,7 @@ WITH bizible_touchpoints AS (
       bizible.bizible_medium,
       bizible.bizible_form_url_raw,
       CASE
-   WHEN campaign.campaign_parent_id = '7014M000001dowZQAQ' -- based on issue https://gitlab.com/gitlab-com/marketing/marketing-strategy-performance/-/issues/246
+   WHEN campaign.dim_parent_campaign_id = '7014M000001dowZQAQ' -- based on issue https://gitlab.com/gitlab-com/marketing/marketing-strategy-performance/-/issues/246
     OR (bizible_medium = 'sponsorship'
       AND bizible_touchpoint_source IN ('issa','stackoverflow','securityweekly-appsec','unix&linux','stackexchange'))
     THEN 'Publishers/Sponsorships' 
@@ -105,15 +105,15 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%simplifydevops%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%simplifydevops%'
       OR bizible_ad_campaign_name LIKE '%simplifydevops%'))
-      OR campaign.campaign_parent_id = '7014M000001doAGQAY'
-      OR campaign.campaign_id LIKE '7014M000001dn6z%'
+      OR campaign.dim_parent_campaign_id = '7014M000001doAGQAY'
+      OR campaign.dim_campaign_id LIKE '7014M000001dn6z%'
       THEN 'Simplify DevOps' 
     WHEN  (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_landing_page LIKE '%21q4-jp%' 
       OR bizible_form_url LIKE '%21q4-jp%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%21q4-jp%'
       OR bizible_ad_campaign_name LIKE '%21q4-jp%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND bizible_ad_campaign_name ='2021_Social_Japan_LinkedIn Lead Gen')
       THEN 'Japan-Digital Readiness' 
     WHEN  (bizible_touchpoint_type = 'Web Form' 
@@ -122,7 +122,7 @@ WITH bizible_touchpoints AS (
       OR BIZIBLE_REFERRER_PAGE LIKE '%lower-tco%'
       OR bizible_ad_campaign_name LIKE '%operationalefficiencies%'
       OR bizible_ad_campaign_name LIKE '%operationalefficiences%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name LIKE '%_Operational Efficiencies%'
           OR bizible_ad_campaign_name LIKE '%operationalefficiencies%'))
       THEN 'Increase Operational Efficiencies' 
@@ -131,7 +131,7 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%reduce-cycle-time%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%reduce-cycle-time%'
       OR bizible_ad_campaign_name LIKE '%betterproductsfaster%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name LIKE '%_Better Products Faster%'
           OR bizible_ad_campaign_name LIKE '%betterproductsfaster%'))
       THEN 'Deliver Better Products Faster'
@@ -140,7 +140,7 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%secure-apps%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%secure-apps%'
       OR bizible_ad_campaign_name LIKE '%reducesecurityrisk%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name LIKE '%_Reduce Security Risk%'
           OR bizible_ad_campaign_name LIKE '%reducesecurityrisk%'))
       THEN 'Reduce Security and Compliance Risk'
@@ -149,7 +149,7 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%jenkins-alternative%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%jenkins-alternative%'
       OR bizible_ad_campaign_name LIKE '%cicdcmp2%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ' 
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ' 
       AND (bizible_ad_campaign_name LIKE '%_Jenkins%'
           OR bizible_ad_campaign_name LIKE '%cicdcmp2%'))
       THEN 'Jenkins Take Out'
@@ -158,7 +158,7 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%single-application-ci%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%single-application-ci%'
       OR bizible_ad_campaign_name LIKE '%cicdcmp3%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ' 
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ' 
       AND bizible_ad_campaign_name LIKE '%cicdcmp3%')
       THEN 'CI Build & Test Auto'
   WHEN (bizible_touchpoint_type = 'Web Form' 
@@ -166,7 +166,7 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%github-actions-alternative%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%github-actions-alternative%'
       OR bizible_ad_campaign_name LIKE '%octocat%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND bizible_ad_campaign_name ILIKE '%_OctoCat%')
       OR  bizible_ad_campaign_name = '20200122_MakingCaseCICD'
       THEN 'OctoCat'
@@ -175,7 +175,7 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%integration-continue-pour-construire-et-tester-plus-rapidement%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%integration-continue-pour-construire-et-tester-plus-rapidement%'
       OR (bizible_ad_campaign_name LIKE '%singleappci%' and BIZIBLE_AD_CONTENT LIKE '%french%')))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND bizible_ad_campaign_name ILIKE '%Singleappci_French%')
       THEN 'CI Use Case - FR'
   WHEN (bizible_touchpoint_type = 'Web Form' 
@@ -183,7 +183,7 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%nutze-continuous-integration-fuer-schnelleres-bauen-und-testen%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%nutze-continuous-integration-fuer-schnelleres-bauen-und-testen%'
       OR (bizible_ad_campaign_name LIKE '%singleappci%' and BIZIBLE_AD_CONTENT LIKE '%paesslergerman%')))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND bizible_ad_campaign_name ILIKE '%Singleappci_German%')
       THEN 'CI Use Case - DE'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-11-22 MSandP: 585
@@ -209,7 +209,7 @@ WITH bizible_touchpoints AS (
     OR bizible_ad_campaign_name = '20211202_GitHubCompetitive'
     OR bizible_ad_campaign_name LIKE '%competegh%' --added 2022-04-06 Agnes O Demand Gen issue 2330
     OR bizible_ad_campaign_name = '20220713_GitHubtoGitLabMigration_AMER_EMEA' -- added 2022-04-06 Agnes O MS & P issue 874
-    OR (campaign.campaign_parent_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name ILIKE '%github%') --added 2022-09-28 Agnes O MS & P issue 897
+    OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name ILIKE '%github%') --added 2022-09-28 Agnes O MS & P issue 897
   THEN 'FY22 GitHub Competitive Campaign'
   WHEN (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_landing_page LIKE '%use-continuous-integration-to-build-and-test-faster%' 
@@ -217,10 +217,10 @@ WITH bizible_touchpoints AS (
       OR BIZIBLE_REFERRER_PAGE LIKE '%use-continuous-integration-to-build-and-test-faster%'
       OR bizible_ad_campaign_name LIKE '%singleappci%'))
       OR bizible_ad_campaign_name ='20201013_ActualTechMedia_DeepMonitoringCI'
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name LIKE '%_CI%'
           OR bizible_ad_campaign_name ILIKE '%singleappci%'))
-    OR (campaign.campaign_parent_id = '7014M000001vm9KQAQ' AND (bizible_ad_campaign_name LIKE '%_CI%'
+    OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ' AND (bizible_ad_campaign_name LIKE '%_CI%'
       OR bizible_ad_campaign_name ILIKE '%singleappci%'))
       THEN 'CI Use Case' --- Added by AO demand gen issue 2262
   WHEN (bizible_touchpoint_type = 'Web Form' 
@@ -234,11 +234,11 @@ WITH bizible_touchpoints AS (
       OR bizible_landing_page LIKE '%2022-devsecops-report%' -- Added by AO 2023-01-23
       OR BIZIBLE_REFERRER_PAGE LIKE '%2022-devsecops-report%' -- Added by AO 2023-01-23
       OR bizible_ad_campaign_name LIKE '%devsecopsusecase%'))
-      OR campaign.campaign_parent_id = '7014M000001dnVOQAY' -- GCP Partner campaign
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR campaign.dim_parent_campaign_id = '7014M000001dnVOQAY' -- GCP Partner campaign
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name ILIKE '%_DevSecOps%'
           OR bizible_ad_campaign_name LIKE '%devsecopsusecase%'))
-      OR (campaign.campaign_parent_id = '7014M000001vm9KQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ'
       AND (bizible_ad_campaign_name ILIKE '%DevSecOps%'
       OR bizible_ad_campaign_name LIKE '%Fuzzing%'))-- Added by AO demand gen issue 2262
       THEN 'DevSecOps Use Case'
@@ -248,7 +248,7 @@ WITH bizible_touchpoints AS (
       OR BIZIBLE_REFERRER_PAGE_RAW LIKE '%utm_campaign=autosd%'))
       OR bizible_ad_campaign_name = 'autosd'
       OR bizible_ad_campaign_name ILIKE '%AutomatedSoftwareDelivery%' -- added by AO MS & P issue 896
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ' AND bizible_ad_campaign_name LIKE '%autosd%') --- Added by AO MS&P issue 825
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ' AND bizible_ad_campaign_name LIKE '%autosd%') --- Added by AO MS&P issue 825
     THEN 'Automated Software Delivery' 
   WHEN (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_landing_page LIKE '%aws-gitlab-serverless%' 
@@ -257,7 +257,7 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%trek10-aws-cicd%'
       OR BIZIBLE_REFERRER_PAGE LIKE '%aws-gitlab-serverless%'
       OR bizible_ad_campaign_name LIKE '%awspartner%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND bizible_ad_campaign_name ILIKE '%_AWS%')
       THEN 'AWS'
   WHEN (bizible_touchpoint_type = 'Web Form' 
@@ -265,7 +265,7 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%simplify-collaboration-with-version-control%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%simplify-collaboration-with-version-control%'
       OR bizible_ad_campaign_name LIKE '%vccusecase%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name LIKE '%_VCC%'
           OR bizible_ad_campaign_name LIKE '%vccusecase%'))
       THEN 'VCC Use Case'
@@ -274,17 +274,17 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%gitops-infrastructure-automation%' 
       OR BIZIBLE_REFERRER_PAGE LIKE '%gitops-infrastructure-automation%'
       OR bizible_ad_campaign_name LIKE '%iacgitops%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name LIKE '%_GitOps%'
           OR bizible_ad_campaign_name LIKE '%iacgitops%'))
-      OR (campaign.campaign_parent_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name ILIKE '%GitOps_%') --- Added by AO demand gen issue 2327
+      OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name ILIKE '%GitOps_%') --- Added by AO demand gen issue 2327
       THEN 'GitOps Use Case'
   WHEN  (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_ad_campaign_name LIKE '%evergreen%'
       OR BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=evergreen%'
       OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=evergreen%'
       OR BIZIBLE_REFERRER_PAGE_RAW LIKE '%utm_campaign=evergreen%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND bizible_ad_campaign_name ILIKE '%_Evergreen%')
     Then 'Evergreen'
   WHEN (bizible_touchpoint_type = 'Web Form' 
@@ -293,7 +293,7 @@ WITH bizible_touchpoints AS (
       OR BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=brand%'
       OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=brand%'
       OR BIZIBLE_REFERRER_PAGE_RAW LIKE '%utm_campaign=brand%'))
-      OR (campaign.campaign_parent_id = '7014M000001dn8MQAQ'
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND bizible_ad_campaign_name ILIKE '%_Brand%')
     Then 'Brand'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 332
@@ -306,7 +306,7 @@ WITH bizible_touchpoints AS (
       AND ( BIZIBLE_FORM_URL_RAW LIKE '%webcast-gitops-multicloudapp%'
       OR BIZIBLE_LANDING_PAGE_RAW LIKE '%webcast-gitops-multicloudapp%'
       OR BIZIBLE_REFERRER_PAGE_RAW LIKE '%webcast-gitops-multicloudapp%'))
-      OR (campaign.campaign_parent_id LIKE '%7014M000001dpmf%')
+      OR (campaign.dim_parent_campaign_id LIKE '%7014M000001dpmf%')
     Then 'GitOps GTM webcast'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
       AND ( BIZIBLE_FORM_URL_RAW LIKE '%devopsgtm%'
@@ -315,11 +315,11 @@ WITH bizible_touchpoints AS (
       OR BIZIBLE_LANDING_PAGE_RAW LIKE '%events-pd-emea%'----Added by AO MSandP issue:811
       OR BIZIBLE_LANDING_PAGE_RAW LIKE '%events-pd-technical-apac%'---Added by AO MSandP issue:811
       OR BIZIBLE_REFERRER_PAGE_RAW LIKE '%devopsgtm%'))
-      OR campaign.campaign_parent_id LIKE '%7014M000001dpT9%'
-        -- OR campaign.campaign_parent_id LIKE '%7014M000001dn8M%')
-      OR campaign.campaign_id LIKE '%7014M000001vbtw%'
-      OR campaign.campaign_id LIKE '%7018X000001lmtN%' -- Added by AO MSandP issue 880
-      OR (campaign.campaign_parent_id = '7014M000001vm9KQAQ'
+      OR campaign.dim_parent_campaign_id LIKE '%7014M000001dpT9%'
+        -- OR campaign.dim_parent_campaign_id LIKE '%7014M000001dn8M%')
+      OR campaign.dim_campaign_id LIKE '%7014M000001vbtw%'
+      OR campaign.dim_campaign_id LIKE '%7018X000001lmtN%' -- Added by AO MSandP issue 880
+      OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ'
       AND (bizible_ad_campaign_name ILIKE '%MLOps%'
       OR bizible_ad_campaign_name ILIKE '%Dora%'
       OR bizible_ad_campaign_name ILIKE '%DevOps%'
@@ -334,9 +334,9 @@ WITH bizible_touchpoints AS (
         OR bizible_landing_page_raw LIKE '%cloud-credits-promo%'
         OR bizible_referrer_page_raw LIKE '%cloud-credits-promo%'
         )))
-      OR campaign.campaign_parent_id LIKE '%7014M000001vcDr%'
-        -- OR campaign.campaign_parent_id LIKE '%7014M000001dn8M%')
-      OR campaign.campaign_id LIKE '%7014M000001vcDr%'
+      OR campaign.dim_parent_campaign_id LIKE '%7014M000001vcDr%'
+        -- OR campaign.dim_parent_campaign_id LIKE '%7014M000001dn8M%')
+      OR campaign.dim_campaign_id LIKE '%7014M000001vcDr%'
     Then 'Cloud Partner Campaign'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
       AND (( bizible_form_url_raw LIKE '%utm_campaign=gitlab14%'
@@ -349,7 +349,7 @@ WITH bizible_touchpoints AS (
         )))
     Then 'GitLab 14 webcast'
   WHEN
-    campaign.campaign_id LIKE '%7014M000001drcQ%'
+    campaign.dim_campaign_id LIKE '%7014M000001drcQ%'
     Then '20210512_ISSAWebcast'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-0830 MSandP: 325
       AND (( bizible_form_url_raw LIKE '%psdigitaltransformation%'
@@ -365,7 +365,7 @@ WITH bizible_touchpoints AS (
       AND (BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=cdusecase%'
       OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=cdusecase%'
       OR BIZIBLE_REFERRER_PAGE_RAW LIKE '%utm_campaign=cdusecase%'))
-      OR (campaign.campaign_parent_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name LIKE '%CD_%') --- Added by AO demand gen issue 2262
+      OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name LIKE '%CD_%') --- Added by AO demand gen issue 2262
     THEN 'CD Use Case' 
   ELSE 'None' END AS bizible_integrated_campaign_grouping,
   CASE
