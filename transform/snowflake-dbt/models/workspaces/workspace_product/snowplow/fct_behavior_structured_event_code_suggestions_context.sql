@@ -38,9 +38,7 @@ flattened AS (
       WHEN flat_contexts.value['data']['gitlab_realm']::VARCHAR IS NULL THEN NULL
       ELSE flat_contexts.value['data']['gitlab_realm']::VARCHAR
     END                                                                             AS delivery_type,
-    flat_contexts.value['data']['api_status_code']::INT                             AS api_status_code,
-    flat_contexts.value['data']['gitlab_global_user_id']::VARCHAR                   AS pre_pseudonymized_user_id,
-    flat_contexts.value['data']['gitlab_instance_id']::VARCHAR                      AS dim_instance_id
+    flat_contexts.value['data']['api_status_code']::INT                             AS api_status_code
   FROM clicks,
   LATERAL FLATTEN(input => TRY_PARSE_JSON(clicks.contexts), path => 'data') AS flat_contexts
   WHERE flat_contexts.value['schema']::VARCHAR LIKE 'iglu:com.gitlab/code_suggestions_context/jsonschema/%'
