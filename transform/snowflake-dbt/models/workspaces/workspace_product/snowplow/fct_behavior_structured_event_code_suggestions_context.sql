@@ -19,21 +19,28 @@ flattened AS (
   SELECT
     clicks.behavior_structured_event_pk,
     clicks.behavior_at,
-    flat_contexts.value                                                         AS code_suggestions_context,
-    flat_contexts.value['data']['request_counts'][0]['requests']::INT           AS requests,
-    flat_contexts.value['data']['request_counts'][0]['errors']::INT             AS errors,
-    flat_contexts.value['data']['request_counts'][0]['accepts']::INT            AS accepts,
-    flat_contexts.value['data']['request_counts'][0]['lang']::VARCHAR           AS lang,
-    flat_contexts.value['data']['request_counts'][0]['model_engine']::VARCHAR   AS model_engine,
-    flat_contexts.value['data']['request_counts'][0]['model_name']::VARCHAR     AS model_name,
-    flat_contexts.value['data']['prefix_length']::INT                           AS prefix_length,
-    flat_contexts.value['data']['suffix_length']::INT                           AS suffix_length,
-    flat_contexts.value['data']['language']::VARCHAR                            AS language,
-    flat_contexts.value['data']['user_agent']::VARCHAR                          AS user_agent,
-    flat_contexts.value['data']['gitlab_realm']::VARCHAR                        AS delivery_type,
-    flat_contexts.value['data']['api_status_code']::INT                         AS api_status_code,
-    flat_contexts.value['data']['gitlab_global_user_id']::VARCHAR               AS pre_pseudonymized_user_id,
-    flat_contexts.value['data']['gitlab_instance_id']::VARCHAR                  AS dim_instance_id
+    flat_contexts.value                                                             AS code_suggestions_context,
+    flat_contexts.value['data']['model_engine']::INT                                AS model_engine,
+    flat_contexts.value['data']['model_name']::INT                                  AS model_name,
+    flat_contexts.value['data']['prefix_length']::INT                               AS prefix_length,
+    flat_contexts.value['data']['suffix_length']::INT                               AS suffix_length,
+    flat_contexts.value['data']['language']::VARCHAR                                AS language,
+    flat_contexts.value['data']['user_agent']::VARCHAR                              AS user_agent,
+    CASE
+      WHEN flat_contexts.value['data']['gitlab_realm']::VARCHAR IN (
+        'SaaS',
+        'saas'
+      ) THEN 'SaaS'
+      WHEN flat_contexts.value['data']['gitlab_realm']::VARCHAR IN (
+        'Self-Managed',
+        'self-managed'
+      ) THEN 'Self-Managed'
+      WHEN flat_contexts.value['data']['gitlab_realm']::VARCHAR IS NULL THEN NULL
+      ELSE 'Other'
+    END                                                                             AS delivery_type,
+    flat_contexts.value['data']['api_status_code']::INT                             AS api_status_code,
+    flat_contexts.value['data']['gitlab_global_user_id']::VARCHAR                   AS pre_pseudonymized_user_id,
+    flat_contexts.value['data']['gitlab_instance_id']::VARCHAR                      AS dim_instance_id
   FROM clicks,
   LATERAL FLATTEN(input => TRY_PARSE_JSON(clicks.contexts), path => 'data') AS flat_contexts
   WHERE flat_contexts.value['schema']::VARCHAR LIKE 'iglu:com.gitlab/code_suggestions_context/jsonschema/%'
@@ -49,5 +56,5 @@ flattened AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2023-09-25",
-    updated_date="2023-09-25"
+    updated_date="2023-09-27"
 ) }}
