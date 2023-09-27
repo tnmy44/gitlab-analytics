@@ -9,7 +9,7 @@
 
 , account_history_source AS (
  
-  SELECT DISTINCT
+  SELECT
     account_id_18 AS dim_crm_account_id,
     owner_id AS dim_crm_user_id,
     ultimate_parent_id AS dim_crm_parent_account_id,
@@ -58,7 +58,7 @@
   
 ), mart_crm_person_source AS (
 
-  SELECT DISTINCT
+  SELECT
   --IDs
     dim_crm_person_id,
     dim_crm_account_id,
@@ -386,5 +386,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-09-18",
+    updated_date="2023-09-27",
   ) }}
