@@ -81,6 +81,9 @@ models:
         description: User-agent string of the request (holds information about the origin of the request)
       - name: delivery_type
         description: ' {{ doc("product_delivery_type") }}'
+        tests:
+            - accepted_values:
+                values: ['Self-Managed', 'SaaS']
       - name: api_status_code
         description: HTTP status code of GitLab API
       - name: pre_pseudonymized_user_id

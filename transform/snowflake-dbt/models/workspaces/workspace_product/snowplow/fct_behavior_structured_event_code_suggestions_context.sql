@@ -36,7 +36,7 @@ flattened AS (
         'self-managed'
       ) THEN 'Self-Managed'
       WHEN flat_contexts.value['data']['gitlab_realm']::VARCHAR IS NULL THEN NULL
-      ELSE 'Other'
+      ELSE flat_contexts.value['data']['gitlab_realm']::VARCHAR
     END                                                                             AS delivery_type,
     flat_contexts.value['data']['api_status_code']::INT                             AS api_status_code,
     flat_contexts.value['data']['gitlab_global_user_id']::VARCHAR                   AS pre_pseudonymized_user_id,
