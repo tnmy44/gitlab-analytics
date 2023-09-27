@@ -1,18 +1,26 @@
 {{ simple_cte([
     ('fct_crm_opportunity', 'fct_crm_opportunity'),
-    ('fct_crm_person', 'fct_crm_person')
+    ('fct_crm_person', 'fct_crm_person'),
+    ('prep_date', 'prep_date'),
+    ('prep_order_type', 'prep_order_type') 
 ]) }}
 
-, net_arr AS (
+, first_order_key AS (
+
+  SELECT dim_order_type_id
+  FROM prep_order_type
+  WHERE order_type_name = '1. New - First Order'
+
+), net_arr AS (
 
   SELECT
     close_date_id                               AS actual_date_id,
-    close_date                                  AS actual_date,
+    close_date::DATE                            AS actual_date,
     'Net ARR Company'                           AS kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
-    NULL AS dim_crm_person_id,
+    {{ get_keyed_nulls('NULL') }}               AS dim_crm_person_id,
 
     dim_order_type_id,
     dim_sales_qualified_source_id,
@@ -24,7 +32,7 @@
     dim_crm_opp_owner_region_stamped_id         AS dim_region_id,
     dim_crm_opp_owner_area_stamped_id           AS dim_area_id,
 
-    NULL AS email_hash,
+    NULL                                        AS email_hash,
     new_logo_count,
     net_arr
 
@@ -35,12 +43,12 @@
 
   SELECT
     close_date_id                               AS actual_date_id,
-    close_date                                  AS actual_date,
+    close_date::DATE                            AS actual_date,
     'Deals'                                     AS kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
-    NULL AS dim_crm_person_id,
+    {{ get_keyed_nulls('NULL') }}               AS dim_crm_person_id,
 
     dim_order_type_id,
     dim_sales_qualified_source_id,
@@ -63,12 +71,12 @@
 
   SELECT
     close_date_id                               AS actual_date_id,
-    close_date                                  AS actual_date,
+    close_date::DATE                            AS actual_date,
     'New Logos'                                 AS kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
-    NULL AS dim_crm_person_id,
+    {{ get_keyed_nulls('NULL') }}               AS dim_crm_person_id,
 
     dim_order_type_id,
     dim_sales_qualified_source_id,
@@ -91,12 +99,12 @@
 
   SELECT
     sales_accepted_date_id                      AS actual_date_id,
-    sales_accepted_date                         AS actual_date,
+    sales_accepted_date::DATE                   AS actual_date,
     'Stage 1 Opportunities'                     AS kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
-    NULL AS dim_crm_person_id,
+    {{ get_keyed_nulls('NULL') }}               AS dim_crm_person_id,
 
     dim_order_type_id,
     dim_sales_qualified_source_id,
@@ -117,13 +125,13 @@
 ), pipeline_created AS (
 
   SELECT
-    arr_created_date_id                      AS actual_date_id,
-    arr_created_date                         AS actual_date,
-    'Net ARR Pipeline Created'               AS kpi_name,
+    arr_created_date_id                        AS actual_date_id,
+    arr_created_date::DATE                     AS actual_date,
+    'Net ARR Pipeline Created'                 AS kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
-    NULL AS dim_crm_person_id,
+    {{ get_keyed_nulls('NULL') }}              AS dim_crm_person_id,
 
     dim_order_type_id,
     dim_sales_qualified_source_id,
@@ -135,41 +143,73 @@
     dim_crm_user_region_id,
     dim_crm_user_area_id,
 
-    NULL AS email_hash,
+    NULL                                      AS email_hash,
     new_logo_count,
     net_arr
   FROM fct_crm_opportunity
-  WHERE is_sao = TRUE
+  WHERE is_net_arr_pipeline_created = TRUE
 
-)
-{# , mqls AS (
+), mqls AS (
 
   SELECT
     mql_date_first_pt_id                      AS actual_date_id,
-    mql_date_first_pt                         AS actual_date,
+    prep_date.date_actual                     AS actual_date,
     'MQL'                                     AS kpi_name,
 
-    NULL AS dim_crm_opportunity_id,
+    {{ get_keyed_nulls('NULL') }}             AS dim_crm_opportunity_id,
     dim_crm_account_id,
     dim_crm_person_id,
 
-    dim_order_type_id,
-    dim_sales_qualified_source_id,
+    first_order_key.dim_order_type_id,
+    {{ get_keyed_nulls('NULL') }}             AS dim_sales_qualified_source_id,
 
-    dim_crm_user_hierarchy_live_sk,
-    dim_crm_user_business_unit_id,
-    dim_crm_user_sales_segment_id,
-    dim_crm_user_geo_id,
-    dim_crm_user_region_id,
-    dim_crm_user_area_id,
+    dim_account_demographics_hierarchy_sk,
+    {{ get_keyed_nulls('NULL') }}             AS dim_crm_user_business_unit_id,
+    dim_account_demographics_sales_segment_id,
+    dim_account_demographics_geo_id,
+    dim_account_demographics_region_id,
+    dim_account_demographics_area_id,
 
     email_hash,
-    NULL AS new_logo_count,
-    NULL AS net_arr
+    NULL                                      AS new_logo_count,
+    NULL                                      AS net_arr
   FROM fct_crm_person
+  LEFT JOIN prep_date
+    ON fct_crm_person.mql_date_first_pt_id = prep_date.date_id
+  LEFT JOIN first_order_key
+  WHERE mql_date_first_pt_id IS NOT NULL
 
-) #}
-, metrics AS (
+), trials AS (
+
+  SELECT
+    created_date_pt_id                        AS actual_date_id,
+    prep_date.date_actual                     AS actual_date,
+    'Trials'                                  AS kpi_name,
+
+    {{ get_keyed_nulls('NULL') }}             AS dim_crm_opportunity_id,
+    dim_crm_account_id,
+    dim_crm_person_id,
+
+    first_order_key.dim_order_type_id,
+    {{ get_keyed_nulls('NULL') }}             AS dim_sales_qualified_source_id,
+
+    dim_account_demographics_hierarchy_sk,
+    {{ get_keyed_nulls('NULL') }}             AS dim_crm_user_business_unit_id,
+    dim_account_demographics_sales_segment_id,
+    dim_account_demographics_geo_id,
+    dim_account_demographics_region_id,
+    dim_account_demographics_area_id,
+
+    email_hash,
+    NULL                                      AS new_logo_count,
+    NULL                                      AS net_arr
+  FROM fct_crm_person
+  LEFT JOIN prep_date
+    ON fct_crm_person.created_date_pt_id = prep_date.date_id
+  LEFT JOIN first_order_key
+  WHERE is_lead_source_trial = TRUE
+
+), metrics AS (
 
   SELECT *
   FROM net_arr
@@ -194,8 +234,17 @@
   SELECT *
   FROM pipeline_created
 
+  UNION ALL
+
+  SELECT *
+  FROM mqls
+
+  UNION ALL
+
+  SELECT *
+  FROM trials
+
 )
 
 SELECT *
 FROM metrics
-

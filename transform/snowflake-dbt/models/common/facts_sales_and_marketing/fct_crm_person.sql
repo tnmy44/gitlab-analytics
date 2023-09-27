@@ -7,10 +7,47 @@ WITH account_dims_mapping AS (
   SELECT *
   FROM {{ ref('map_crm_account') }}
 
+), prep_date AS (
+
+    SELECT *
+    FROM {{ ref('prep_date') }}
+
+), prep_crm_user_hierarchy AS (
+
+    SELECT *
+    FROM {{ ref('prep_crm_user_hierarchy') }}
+
+), crm_user_sales_segment AS (
+
+    SELECT DISTINCT
+      crm_user_sales_segment,
+      dim_crm_user_sales_segment_id
+    FROM prep_crm_user_hierarchy
+
+), crm_user_region AS (
+
+    SELECT DISTINCT
+      crm_user_region,
+      dim_crm_user_region_id
+    FROM prep_crm_user_hierarchy
+
+), crm_user_geo AS (
+
+    SELECT DISTINCT
+      crm_user_geo,
+      dim_crm_user_geo_id
+    FROM prep_crm_user_hierarchy
+
+), crm_user_area AS (
+
+    SELECT DISTINCT
+      crm_user_area,
+      dim_crm_user_area_id
+    FROM prep_crm_user_hierarchy
+
 ), crm_person AS (
 
     SELECT
-
       dim_crm_person_id,
       sfdc_record_id,
       bizible_person_id,
@@ -21,6 +58,16 @@ WITH account_dims_mapping AS (
       last_utm_campaign,
       dim_crm_account_id,
       dim_crm_user_id,
+      account_demographics_sales_segment,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_area,
+      email_hash,
+      CASE
+        WHEN LOWER(lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
+        WHEN LOWER(lead_source) LIKE '%trial - enterprise%' THEN TRUE
+        ELSE FALSE
+      END AS is_lead_source_trial,
       ga_client_id,
       person_score,
       name_of_active_sequence,
@@ -273,6 +320,13 @@ WITH account_dims_mapping AS (
       {{ get_date_id('worked_date') }}                                                                          AS worked_date_id,
       {{ get_date_pt_id('worked_date') }}                                                                       AS worked_date_pt_id,
 
+     -- sales hierarchy
+      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk') }}                                AS dim_account_demographics_hierarchy_sk,
+      {{ get_keyed_nulls('crm_user_sales_segment.dim_crm_user_sales_segment_id') }}                             AS dim_account_demographics_sales_segment_id,
+      {{ get_keyed_nulls('crm_user_geo.dim_crm_user_geo_id') }}                                                 AS dim_account_demographics_geo_id,
+      {{ get_keyed_nulls('crm_user_region.dim_crm_user_region_id') }}                                           AS dim_account_demographics_region_id,
+      {{ get_keyed_nulls('crm_user_area.dim_crm_user_area_id') }}                                               AS dim_account_demographics_area_id,
+
      -- flags
       CASE
           WHEN mqls.first_mql_date IS NOT NULL THEN 1
@@ -284,8 +338,10 @@ WITH account_dims_mapping AS (
       END                                                                                                                 AS is_inquiry,
       crm_person.is_bdr_sdr_worked,
       crm_person.is_partner_recalled,
+      crm_person.is_lead_source_trial,
 
      -- information fields
+      crm_person.email_hash,
       crm_person.name_of_active_sequence,
       crm_person.sequence_task_due_date,
       crm_person.sequence_status,
@@ -328,13 +384,35 @@ WITH account_dims_mapping AS (
       ON crm_person.bizible_marketing_channel_path = bizible_marketing_channel_path_mapping.bizible_marketing_channel_path
     LEFT JOIN bizible_marketing_channel_path
       ON bizible_marketing_channel_path_mapping.bizible_marketing_channel_path_name_grouped = bizible_marketing_channel_path.bizible_marketing_channel_path_name
+    LEFT JOIN prep_date AS created_date
+      ON created_date.date_id = {{ get_date_id('COALESCE(sfdc_leads.created_date, sfdc_lead_converted.created_date, sfdc_contacts.created_date)') }}
+    LEFT JOIN prep_crm_user_hierarchy
+      ON prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk = CONCAT(
+        UPPER(crm_person.account_demographics_sales_segment),
+        '-',
+        UPPER(crm_person.account_demographics_geo),
+        '-',
+        UPPER(crm_person.account_demographics_region),
+        '-',
+        UPPER(crm_person.account_demographics_area),
+        '-',
+        created_date.fiscal_year
+      )
+    LEFT JOIN crm_user_sales_segment
+      ON UPPER(crm_user_sales_segment.crm_user_sales_segment) = UPPER(crm_person.account_demographics_sales_segment)
+    LEFT JOIN crm_user_geo
+      ON UPPER(crm_user_geo.crm_user_geo) = UPPER(crm_person.account_demographics_geo)
+    LEFT JOIN crm_user_region
+      ON UPPER(crm_user_region.crm_user_region) = UPPER(crm_person.account_demographics_region)
+    LEFT JOIN crm_user_area
+      ON UPPER(crm_user_area.crm_user_area) = UPPER(crm_person.account_demographics_area)
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@jpeguero",
     created_date="2020-12-01",
-    updated_date="2023-08-29"
+    updated_date="2023-09-25"
 ) }}
