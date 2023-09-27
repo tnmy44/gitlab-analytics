@@ -34,6 +34,15 @@
       dim_charge.rate_plan_charge_version                                             AS rate_plan_charge_version,
       dim_charge.rate_plan_charge_segment                                             AS rate_plan_charge_segment,
 
+      --Foreign keys
+      dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
+      dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
+      dim_subscription.namespace_id                                                   AS dim_namespace_id,
+      dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
+      dim_product_detail.dim_product_detail_id                                        AS dim_product_detail_id,
+      dim_crm_account.dim_crm_account_id                                              AS dim_crm_account_id,
+      fct_charge.dim_order_id                                                         AS dim_order_id,
+
       --Charge Information
       dim_charge.rate_plan_name                                                       AS rate_plan_name,
       dim_charge.rate_plan_charge_name                                                AS rate_plan_charge_name,
@@ -52,7 +61,6 @@
       dim_charge.charge_updated_date                                                  AS charge_updated_date,
 
       --Subscription Information
-      dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
       dim_subscription.dim_subscription_id_original                                   AS dim_subscription_id_original,
       dim_subscription.dim_subscription_id_previous                                   AS dim_subscription_id_previous,
       dim_subscription.created_by_id                                                  AS subscription_created_by_id,
@@ -94,7 +102,6 @@
                 dim_subscription.subscription_start_date)                             AS days_between_latest_trial_and_subscription_start,
 
       --billing account info
-      dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
       dim_billing_account.sold_to_country                                             AS sold_to_country,
       dim_billing_account.billing_account_name                                        AS billing_account_name,
       dim_billing_account.billing_account_number                                      AS billing_account_number,
@@ -105,7 +112,6 @@
 
       -- namespace info
       dim_namespace.ultimate_parent_namespace_id                                      AS ultimate_parent_namespace_id,
-      dim_subscription.namespace_id                                                   AS dim_namespace_id,
       DATEDIFF(days, dim_namespace.created_at, 
                 fct_trial_latest.latest_trial_start_date)                             AS days_since_namespace_creation_at_trial_start,
 
@@ -122,9 +128,7 @@
 
 
       -- crm account info
-      dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
       dim_crm_user.crm_user_sales_segment                                             AS crm_user_sales_segment,
-      dim_crm_account.dim_crm_account_id                                              AS dim_crm_account_id,
       dim_crm_account.crm_account_name                                                AS crm_account_name,
       dim_crm_account.dim_parent_crm_account_id                                       AS dim_parent_crm_account_id,
       dim_crm_account.parent_crm_account_name                                         AS parent_crm_account_name,
@@ -139,7 +143,6 @@
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
 
       -- order info
-      fct_charge.dim_order_id                                                         AS dim_order_id,
       CASE
         WHEN (dim_order_action.dim_order_action_id IS NOT NULL
         OR dim_amendment_subscription.amendment_type = 'Renewal')
@@ -190,7 +193,6 @@
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_quarter,
 
       --product info
-      dim_product_detail.dim_product_detail_id,
       dim_product_detail.product_tier_name                                            AS product_tier_name,
       dim_product_detail.product_delivery_type                                        AS product_delivery_type,
       dim_product_detail.product_ranking                                              AS product_ranking,
