@@ -246,5 +246,8 @@
 
 )
 
-SELECT *
+SELECT
+  {{ dbt_utils.surrogate_key(['actual_date_id', 'kpi_name', 'dim_crm_opportunity_id', 'dim_crm_person_id']) }}
+    AS sales_funnel_actual_sk,
+  *
 FROM metrics

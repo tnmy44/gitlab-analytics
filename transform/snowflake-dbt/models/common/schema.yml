@@ -5772,6 +5772,15 @@ models:
       - name: ytd_allocated_target
         description: '{{ doc("ytd_allocated_target") }}'
 
+  - name: fct_sales_funnel_actual
+    description: '{{ doc("fct_sales_funnel_actual") }}'
+    columns:
+      - name: sales_funnel_actual_sk
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
     columns:
