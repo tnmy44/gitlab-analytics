@@ -776,7 +776,7 @@
       COALESCE(bizible_landing_page_utm_content, bizible_form_page_utm_content)          AS utm_content,
       COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)          AS utm_allptnr,
       COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid)      AS utm_partnerid,
-      COALESCE(bizible_landing_page_utm_asset_type, bizible_landing_page_utm_asset_type) AS utm_asset_type,
+      COALESCE(bizible_landing_page_utm_asset_type, bizible_form_page_utm_asset_type) AS utm_asset_type,
 
       CASE 
         WHEN (LOWER(utm_content) LIKE '%field%'
