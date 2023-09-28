@@ -337,7 +337,7 @@ class PostgresPipelineTable:
         # check if mid-backfill first, must always check before schema_change
         # if not mid-backfill, returns start_pk=1, initial_load_start_date=None
         is_backfill_needed, initial_load_start_date, start_pk = is_resume_export(
-            metadata_engine, metadata_table, self.source_table_name
+            metadata_engine, metadata_table, self.get_target_table_name()
         )
         if is_backfill_needed:
             logging.info(
@@ -381,7 +381,9 @@ class PostgresPipelineTable:
             is_resume_export_needed,
             prev_initial_load_start_date,
             metadata_start_pk,
-        ) = is_resume_export(metadata_engine, metadata_table, self.source_table_name)
+        ) = is_resume_export(
+            metadata_engine, metadata_table, self.get_target_table_name()
+        )
         logging.info(
             f"Comparing metadata_start_pk {metadata_start_pk}"
             f" and target_start_pk {target_start_pk}..."

@@ -501,6 +501,40 @@ def seed_and_upload_snowflake(
     )
 
 
+def upload_to_snowflake_after_extraction(
+    chunk_df,
+    database_kwargs,
+    load_by_id_export_type,
+    initial_load_start_date,
+    advanced_metadata,
+):
+    # need to re-instantiate to avoid client session time-out
+    target_engine = snowflake_engine_factory(
+        os.environ.copy(), role="LOADER", schema="tap_postgres"
+    )
+
+    if load_by_id_export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
+        # upload directly to snowflake if incremental
+        upload_initial_load_prefix_to_snowflake(
+            target_engine,
+            database_kwargs,
+            load_by_id_export_type,
+            initial_load_start_date,
+        )
+    else:
+        # else need to create 'temp' table first
+        seed_and_upload_snowflake(
+            target_engine,
+            chunk_df,
+            database_kwargs,
+            load_by_id_export_type,
+            advanced_metadata,
+            initial_load_start_date,
+        )
+    database_kwargs["source_engine"].dispose()
+    target_engine.dispose()
+
+
 def chunk_and_upload_metadata(
     query: str,
     primary_key: str,
@@ -517,6 +551,13 @@ def chunk_and_upload_metadata(
     """
     rows_uploaded = 0
     is_export_completed = False
+    common_write_metadata_args = {
+        "metadata_engine": database_kwargs["metadata_engine"],
+        "metadata_table": database_kwargs["metadata_table"],
+        "database_name": database_kwargs["source_database"],
+        "table_name": database_kwargs["real_target_table"],
+        "max_id": max_source_id,
+    }
 
     with tempfile.TemporaryFile() as tmpfile:
         iter_csv = read_sql_tmpfile(
@@ -550,58 +591,31 @@ def chunk_and_upload_metadata(
                 logging.info(f"Uploaded {row_count} rows to GCS in {upload_file_name}")
 
                 write_metadata(
-                    database_kwargs["metadata_engine"],
-                    database_kwargs["metadata_table"],
-                    database_kwargs["source_database"],
-                    database_kwargs["source_table"],
-                    initial_load_start_date,
-                    upload_date,
-                    upload_file_name,
-                    last_extracted_id,
-                    max_source_id,
-                    is_export_completed,
-                    row_count,
+                    **common_write_metadata_args,
+                    initial_load_start_date=initial_load_start_date,
+                    upload_date=upload_date,
+                    upload_file_name=upload_file_name,
+                    last_extracted_id=last_extracted_id,
+                    is_export_completed=is_export_completed,
+                    chunk_row_count=row_count,
                 )
 
-    # need to re-instantiate to avoid client session time-out
-    target_engine = snowflake_engine_factory(
-        os.environ.copy(), role="LOADER", schema="tap_postgres"
+    upload_to_snowflake_after_extraction(
+        chunk_df,
+        database_kwargs,
+        load_by_id_export_type,
+        initial_load_start_date,
+        advanced_metadata,
     )
 
-    if load_by_id_export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
-        # upload directly to snowflake if incremental
-        upload_initial_load_prefix_to_snowflake(
-            target_engine,
-            database_kwargs,
-            load_by_id_export_type,
-            initial_load_start_date,
-        )
-    else:
-        # else need to create 'temp' table first
-        seed_and_upload_snowflake(
-            target_engine,
-            chunk_df,
-            database_kwargs,
-            load_by_id_export_type,
-            advanced_metadata,
-            initial_load_start_date,
-        )
-    database_kwargs["source_engine"].dispose()
-    target_engine.dispose()
-
-    is_export_completed = True
     write_metadata(
-        database_kwargs["metadata_engine"],
-        database_kwargs["metadata_table"],
-        database_kwargs["source_database"],
-        database_kwargs["source_table"],
-        initial_load_start_date,
-        datetime.now(),
-        upload_file_name,
-        last_extracted_id,
-        max_source_id,
-        is_export_completed,
-        row_count,
+        **common_write_metadata_args,
+        initial_load_start_date=initial_load_start_date,
+        upload_date=datetime.now(),
+        upload_file_name=upload_file_name,
+        last_extracted_id=last_extracted_id,
+        is_export_completed=True,
+        chunk_row_count=row_count,
     )
 
     # need to return in case it was first set here
@@ -771,7 +785,7 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
 
 
 def query_backfill_status(
-    metadata_engine: Engine, metadata_table: str, source_table: str
+    metadata_engine: Engine, metadata_table: str, target_table: str
 ) -> List[Tuple[Any, Any, Any, Any]]:
     """
     Query the most recent record in the table to get the state of the backfill
@@ -783,7 +797,7 @@ def query_backfill_status(
         "WHERE upload_date = ("
         "  SELECT MAX(upload_date)"
         f" FROM {METADATA_SCHEMA}.{metadata_table}"
-        f" WHERE table_name = '{source_table}');"
+        f" WHERE table_name = '{target_table}');"
     )
     logging.info(f"\nquery export status: {query}")
     results = query_executor(metadata_engine, query)
@@ -791,7 +805,7 @@ def query_backfill_status(
 
 
 def is_resume_export(
-    metadata_engine: Engine, metadata_table: str, source_table: str
+    metadata_engine: Engine, metadata_table: str, target_table: str
 ) -> Tuple[bool, Optional[Any], int]:
     """
     Determine if export should be resumed, for either 'backfill or 'delete'
@@ -805,7 +819,7 @@ def is_resume_export(
     start_pk = 1
     initial_load_start_date = None
 
-    results = query_backfill_status(metadata_engine, metadata_table, source_table)
+    results = query_backfill_status(metadata_engine, metadata_table, target_table)
 
     # if backfill metadata exists for table
     if results:
@@ -822,7 +836,7 @@ def is_resume_export(
             # if more than 24 HR since last upload, start backfill over,
             if time_since_last_upload > timedelta(hours=24):
                 logging.info(
-                    f"In middle of export for {source_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Discarding this export."
+                    f"In middle of export for {target_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Discarding this export."
                 )
 
             # else proceed with last extracted_id
