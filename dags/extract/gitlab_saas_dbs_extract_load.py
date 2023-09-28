@@ -233,8 +233,8 @@ def use_cloudsql_proxy(dag_name, operation, instance_name):
         {clone_repo_cmd} &&
         cd analytics/orchestration &&
         python ci_helpers.py use_proxy --instance_name {instance_name} --command " \
-            python ../extract/saas_postgres_pipeline/postgres_pipeline/main.py tap  \
-            ../extract/saas_postgres_pipeline/manifests_decomposed/{dag_name}_db_manifest.yaml {operation}
+            python ../extract/gitlab_saas_postgres_pipeline/postgres_pipeline/main.py tap  \
+            ../extract/gitlab_saas_postgres_pipeline/manifests_decomposed/{dag_name}_db_manifest.yaml {operation}
         "
     """
 
@@ -259,7 +259,7 @@ def generate_cmd(dag_name, operation, cloudsql_instance_name):
     if cloudsql_instance_name is None:
         return f"""
             {clone_repo_cmd} &&
-            cd analytics/extract/saas_postgres_pipeline/postgres_pipeline/ &&
+            cd analytics/extract/gitlab_saas_postgres_pipeline/postgres_pipeline/ &&
             python main.py tap ../manifests_decomposed/{dag_name}_db_manifest.yaml {operation}
         """
 
@@ -321,19 +321,19 @@ def get_check_replica_snapshot_command(dag_name):
         print("Checking CI DAG...")
         check_replica_snapshot_command = (
             f"{clone_and_setup_extraction_cmd} && "
-            f"python saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ci"
+            f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_ci"
         )
     elif dag_name == "el_saas_gitlab_com_scd":
         print("Checking gitlab_dotcom_scd DAG...")
         check_replica_snapshot_command = (
             f"{clone_and_setup_extraction_cmd} && "
-            f"python saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_gitlab_dotcom_scd"
+            f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_gitlab_dotcom_scd"
         )
     elif dag_name == "el_saas_gitlab_com":
         print("Checking gitlab_dotcom_incremental DAG...")
         check_replica_snapshot_command = (
             f"{clone_and_setup_extraction_cmd} && "
-            f"python saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
+            f"python gitlab_saas_postgres_pipeline/postgres_pipeline/check_snapshot.py check_snapshot_main_db_incremental"
         )
     return check_replica_snapshot_command
 
@@ -395,7 +395,7 @@ for source_name, config in config_dict.items():
             )
         with extract_dag:
             # Actual PGP extract
-            file_path = f"{REPO_BASE_PATH}/extract/saas_postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
 
@@ -448,7 +448,7 @@ for source_name, config in config_dict.items():
         )
 
         with incremental_backfill_dag:
-            file_path = f"{REPO_BASE_PATH}/extract/saas_postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             if has_replica_snapshot:
@@ -505,7 +505,7 @@ for source_name, config in config_dict.items():
 
         with sync_dag:
             # PGP Extract
-            file_path = f"{REPO_BASE_PATH}/extract/saas_postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
+            file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
             if has_replica_snapshot:

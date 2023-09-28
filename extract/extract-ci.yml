@@ -78,7 +78,8 @@ qualtrics_sheetload:
   <<: *extract_definition
   script:
     - echo $MANIFEST_NAME
-    - cd extract/saas_postgres_pipeline/postgres_pipeline/
+    - cd extract/gitlab_saas_postgres_pipeline/postgres_pipeline/
+     
     - python main.py tap ../manifests_decomposed/${MANIFEST_NAME}_db_manifest.yaml --load_type test
   only:
     - merge_requests
