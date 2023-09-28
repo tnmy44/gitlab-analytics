@@ -118,7 +118,7 @@
       orders.order_start_date,
       orders.order_end_date,
       orders.dim_namespace_id                                           AS namespace_id_order,
-      orders.order_is_trial,
+      orders.is_order_trial                                             AS order_is_trial,
       IFF(IFNULL(orders.order_end_date, CURRENT_DATE) >= CURRENT_DATE,
           TRUE, FALSE)                                                  AS is_order_active
     FROM orders
