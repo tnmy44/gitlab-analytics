@@ -25,7 +25,7 @@ WITH gitlab_issues AS (
       'Epic'   AS noteable_type,
       "{{this.database}}".{{target.schema}}.regexp_to_array(epic_description, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,
       "{{this.database}}".{{target.schema}}.regexp_to_array(epic_description, '(?<=gitlab.zendesk.com\/agent\/tickets\/)[0-9]{1,18}')      AS zendesk_link_array
-    FROM {{ ref('gitlab_dotcom_epics_xf')}}
+    FROM {{ ref('prep_epic')}}
     WHERE is_internal_epic
       AND epic_description IS NOT NULL
 

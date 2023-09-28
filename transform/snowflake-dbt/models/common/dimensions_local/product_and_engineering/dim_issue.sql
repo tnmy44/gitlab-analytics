@@ -1,13 +1,20 @@
 WITH prep_issue AS (
 
     SELECT 
+      -- Surrogate Key
+      dim_issue_sk,
+
+      -- Natural Key
+      issue_id,
+
+      -- Legacy Naming Convention for Natural Key
       dim_issue_id,
-            
+
       -- FOREIGN KEYS
       dim_project_id,
       dim_namespace_id,
       ultimate_parent_namespace_id,
-      dim_epic_id,
+      dim_epic_sk,
       created_date_id,
       dim_plan_id,
       author_id,
@@ -52,8 +59,8 @@ WITH prep_issue AS (
 {{ dbt_audit(
     cte_ref="prep_issue",
     created_by="@mpeychet_",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2021-10-24"
+    updated_date="2023-09-07"
 ) }}
 
