@@ -238,6 +238,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   ci_runners:
+    # We only extract ci_runners descriptions for runner_type=1 because they're hosted and managed by GitLab, and the other runner_types desciptions are classified as RED data, hence description is are not extracted. More here https://gitlab.com/gitlab-data/analytics/-/issues/18358#note_1563889597
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: ci_runners
@@ -247,7 +248,10 @@ tables:
       SELECT id
       , created_at
       , updated_at
-      , description
+      , CASE 
+            WHEN runner_type = 1 THEN description
+            ELSE NULL
+        END AS description
       , contacted_at
       , active
       , version

@@ -372,9 +372,9 @@
         WHEN is_multi_year_booking = TRUE THEN 'MYB'
         ELSE 'Non-MYB'
       END                             AS renewal_type,
-      is_single_fiscal_year_term_subscription,
       is_multi_year_booking,
       is_multi_year_booking_with_multi_subs,
+      is_single_fiscal_year_term_subscription,
       current_term,
       --charge_term,
       dim_charge_id,
