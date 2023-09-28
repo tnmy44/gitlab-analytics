@@ -74,6 +74,7 @@ def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
 
     return additional_filtering
 
+
 def load_incremental(
     source_engine: Engine,
     target_engine: Engine,
