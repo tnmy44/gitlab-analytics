@@ -516,6 +516,7 @@ def chunk_and_upload_metadata(
         - COPY to Snowflake after all files have been uploaded to GCS
     """
     rows_uploaded = 0
+    is_export_completed = False
 
     with tempfile.TemporaryFile() as tmpfile:
         iter_csv = read_sql_tmpfile(
@@ -546,35 +547,7 @@ def chunk_and_upload_metadata(
 
             if row_count > 0:
                 upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
-                logging.info(f"Uploaded {row_count} to GCS in {upload_file_name}")
-                is_export_completed = last_extracted_id >= max_source_id
-
-                if is_export_completed:
-                    # need to re-instantiate to avoid client session time-out
-                    target_engine = snowflake_engine_factory(
-                        os.environ.copy(), role="LOADER", schema="tap_postgres"
-                    )
-
-                    if load_by_id_export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
-                        # upload directly to snowflake if incremental
-                        upload_initial_load_prefix_to_snowflake(
-                            target_engine,
-                            database_kwargs,
-                            load_by_id_export_type,
-                            initial_load_start_date,
-                        )
-                    else:
-                        # else need to create 'temp' table first
-                        seed_and_upload_snowflake(
-                            target_engine,
-                            chunk_df,
-                            database_kwargs,
-                            load_by_id_export_type,
-                            advanced_metadata,
-                            initial_load_start_date,
-                        )
-                    database_kwargs["source_engine"].dispose()
-                    target_engine.dispose()
+                logging.info(f"Uploaded {row_count} rows to GCS in {upload_file_name}")
 
                 write_metadata(
                     database_kwargs["metadata_engine"],
@@ -589,9 +562,47 @@ def chunk_and_upload_metadata(
                     is_export_completed,
                     row_count,
                 )
-                # for loop should auto-terminate, but to be safe, avoid table overwrite
-                if is_export_completed:
-                    break
+
+    # need to re-instantiate to avoid client session time-out
+    target_engine = snowflake_engine_factory(
+        os.environ.copy(), role="LOADER", schema="tap_postgres"
+    )
+
+    if load_by_id_export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
+        # upload directly to snowflake if incremental
+        upload_initial_load_prefix_to_snowflake(
+            target_engine,
+            database_kwargs,
+            load_by_id_export_type,
+            initial_load_start_date,
+        )
+    else:
+        # else need to create 'temp' table first
+        seed_and_upload_snowflake(
+            target_engine,
+            chunk_df,
+            database_kwargs,
+            load_by_id_export_type,
+            advanced_metadata,
+            initial_load_start_date,
+        )
+    database_kwargs["source_engine"].dispose()
+    target_engine.dispose()
+
+    is_export_completed = True
+    write_metadata(
+        database_kwargs["metadata_engine"],
+        database_kwargs["metadata_table"],
+        database_kwargs["source_database"],
+        database_kwargs["source_table"],
+        initial_load_start_date,
+        datetime.now(),
+        upload_file_name,
+        last_extracted_id,
+        max_source_id,
+        is_export_completed,
+        row_count,
+    )
 
     # need to return in case it was first set here
     return initial_load_start_date
