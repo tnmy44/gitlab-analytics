@@ -11,7 +11,7 @@ WITH ci_lookback AS (
     NULL                                      AS folder_label,
     LOWER(ci_runners_pl_lookback.pl_category) AS pl_category,
     ci_runners_pl_lookback.pl_percent         AS pl_percent,
-    'continous_integration_lookback'          AS from_mapping
+    'continuous_integration_lookback'          AS from_mapping
   FROM {{ ref ('ci_runners_pl_lookback') }}
 
 ),
