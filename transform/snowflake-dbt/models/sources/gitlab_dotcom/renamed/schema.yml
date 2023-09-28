@@ -1528,8 +1528,12 @@ models:
           - unique
       - name: created_at
         tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
       - name: updated_at
         tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
       - name: has_avatar
         description: >-
           This field will try to find an avatar file, if none is available will
