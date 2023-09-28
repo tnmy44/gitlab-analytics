@@ -6,6 +6,7 @@
     ('rpt_lead_to_revenue','rpt_lead_to_revenue'),
     ('dim_quote','dim_quote'),
     ('dim_date', 'dim_date'), 
+    ('mart_crm_opportunity', 'mart_crm_opportunity'), 
     ('fct_quote_item','fct_quote_item')
 ]) }}
 
@@ -124,7 +125,7 @@ SELECT DISTINCT
   ROW_NUMBER() OVER(PARTITION BY mart_crm_opportunity.dim_parent_crm_account_id, lead_to_revenue.opp_order_type ORDER BY effective_start_date) AS subscription_order,
   IFF(subscription_order = 1 AND /*lead_to_revenue.opp_order_type = '1. New - First Order'*/lead_to_revenue.sales_type = 'New Business', TRUE, FALSE) AS is_first_subscription_institution
 FROM lead_to_revenue
-LEFT JOIN restricted_safe_common_mart_sales.mart_crm_opportunity
+LEFT JOIN mart_crm_opportunity
   ON lead_to_revenue.dim_crm_opportunity_id=mart_crm_opportunity.dim_crm_opportunity_id
 LEFT JOIN dim_quote_final
   ON lead_to_revenue.dim_crm_opportunity_id=dim_quote_final.dim_crm_opportunity_id
