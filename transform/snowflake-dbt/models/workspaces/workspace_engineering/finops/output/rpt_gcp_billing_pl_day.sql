@@ -26,7 +26,7 @@ overlaps AS (
     pl_combined.infra_label,
     pl_combined.env_label,
     pl_combined.runner_label,
-    pl_combined.folder_name,
+    pl_combined.full_path,
     COALESCE(lookback_pl_mappings.pl_category, pl_combined.pl_category)                      AS pl_category,
     pl_combined.usage_unit,
     pl_combined.pricing_unit,
@@ -77,7 +77,7 @@ grouping AS (
     infra_label,
     env_label,
     runner_label,
-    folder_name,
+    full_path,
     pl_category,
     usage_unit,
     pricing_unit,
@@ -97,7 +97,7 @@ grouping AS (
       infra_label,
       env_label,
       runner_label,
-      folder_name,
+      full_path,
       pl_category,
       usage_unit,
       pricing_unit,
@@ -108,5 +108,5 @@ grouping AS (
 
 SELECT
   *,
-  {{ dbt_utils.surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'folder_name', 'pl_category', 'from_mapping']) }} AS pl_pk
+  {{ dbt_utils.surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'full_path', 'pl_category', 'from_mapping']) }} AS pl_pk
 FROM grouping

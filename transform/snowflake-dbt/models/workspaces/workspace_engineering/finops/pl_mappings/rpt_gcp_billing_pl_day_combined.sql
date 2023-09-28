@@ -28,7 +28,7 @@ overlaps AS (
     service_base.env_label,
     service_base.runner_label,
     service_base.folder_label,
-    service_base.folder_name,
+    service_base.full_path,
     combined_pl_mapping.pl_category,
     service_base.usage_unit,
     service_base.pricing_unit,
