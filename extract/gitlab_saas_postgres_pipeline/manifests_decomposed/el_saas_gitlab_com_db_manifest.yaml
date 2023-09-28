@@ -80,3 +80,19 @@ tables:
       FROM container_expiration_policies
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  routes_internal_only:
+  additional_filtering: AND path in {INTERNAL_PATHS}
+  export_schema: 'gitlab_com'
+  export_table: 'routes_internal_only'
+  export_table_primary_key: id
+  import_db: GITLAB_DB
+  import_query: |-
+    SELECT id
+    , source_id
+    , source_type
+    , path
+    , created_at
+    , updated_at
+    FROM routes
+    WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+      AND '{END_TIMESTAMP}'::timestamp
