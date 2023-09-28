@@ -11,6 +11,7 @@ from gitlabdata.orchestration_utils import (
 from sqlalchemy.engine.base import Engine
 
 from postgres_utils import (
+    get_internal_identifier_keys,
     chunk_and_upload,
     chunk_and_upload_metadata,
     id_query_generator,
@@ -29,6 +30,50 @@ def get_last_load_time() -> Optional[datetime.datetime]:
     return None
 
 
+def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
+    """
+    get the additional filtering parameter from the manifest
+    and insert internal filtering keys where specified in manifest
+    """
+    additional_filtering = table_dict.get("additional_filtering", "")
+
+    if "INTERNAL_NAMESPACE_IDS" in additional_filtering:
+        identifiers = ["namespace_id"]
+        internal_namespace_ids_str = tuple(get_internal_identifier_keys(identifiers))
+        additional_filtering = additional_filtering.format(
+            INTERNAL_NAMESPACE_IDS=internal_namespace_ids_str
+        )
+
+    elif "INTERNAL_PROJECT_IDS" in additional_filtering:
+        identifiers = ["project_id"]
+        internal_project_ids_str = tuple(get_internal_identifier_keys(identifiers))
+        additional_filtering = additional_filtering.format(
+            INTERNAL_PROJECT_IDS=internal_project_ids_str
+        )
+
+    elif "INTERNAL_PROJECT_PATHS" in additional_filtering:
+        identifiers = ["project_path"]
+        internal_project_paths_str = tuple(get_internal_identifier_keys(identifiers))
+        additional_filtering = additional_filtering.format(
+            INTERNAL_PROJECT_PATHS=internal_project_paths_str
+        )
+
+    elif "INTERNAL_NAMESPACE_PATHS" in additional_filtering:
+        identifiers = ["namespace_path"]
+        internal_namespace_paths_str = tuple(get_internal_identifier_keys(identifiers))
+        additional_filtering = additional_filtering.format(
+            INTERNAL_NAMESPACE_PATHS=internal_namespace_paths_str
+        )
+
+    elif "INTERNAL_PATHS" in additional_filtering:
+        identifiers = ["namespace_path", "project_path"]
+        internal_paths_str = tuple(get_internal_identifier_keys(identifiers))
+        additional_filtering = additional_filtering.format(
+            INTERNAL_PATHS=internal_paths_str
+        )
+
+    return additional_filtering
+
 def load_incremental(
     source_engine: Engine,
     target_engine: Engine,
@@ -41,7 +86,7 @@ def load_incremental(
     """
 
     raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "")
+    additional_filtering = get_additional_filtering(table_dict)
 
     env = os.environ.copy()
 
@@ -125,7 +170,7 @@ def load_incremental(
             f"Table {source_table_name} needs to be backfilled due to schema change, aborting incremental load."
         )
         return False
-    query = f"{raw_query.format(**env)} {additional_filter}"
+    query = f"{raw_query.format(**env)} {additional_filtering}"
 
     chunk_and_upload(query, source_engine, target_engine, table_name, source_table_name)
 
@@ -144,11 +189,11 @@ def trusted_data_pgp(
     It is responsible for extracting from postgres and loading data in snowflake.
     """
     raw_query = table_dict["import_query"]
-    additional_filter = ""
+    additional_filtering = ""
     advanced_metadata = False
 
     logging.info(f"Processing table: {source_table_name}")
-    query = f"{raw_query} {additional_filter}"
+    query = f"{raw_query} {additional_filtering}"
     logging.info(query)
     chunk_and_upload(
         query,
@@ -184,11 +229,11 @@ def load_scd(
         backfill = False
 
     raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "")
+    additional_filtering = get_additional_filtering(table_dict)
     advanced_metadata = table_dict.get("advanced_metadata", False)
 
     logging.info(f"Processing table: {source_table_name}")
-    query = f"{raw_query} {additional_filter}"
+    query = f"{raw_query} {additional_filtering}"
 
     logging.info(query)
     chunk_and_upload(
@@ -222,7 +267,7 @@ def load_ids(
         return False
 
     raw_query = table_dict["import_query"]
-    additional_filtering = table_dict.get("additional_filtering", "")
+    additional_filtering = get_additional_filtering(table_dict)
     primary_key = table_dict["export_table_primary_key"]
 
     logging.info("Getting max id of Postgres source table...")
@@ -271,7 +316,7 @@ def check_new_tables(
     """
 
     raw_query = table_dict["import_query"].split("WHERE")[0]
-    additional_filtering = table_dict.get("additional_filtering", "")
+    additional_filtering = get_additional_filtering(table_dict)
     advanced_metadata = table_dict.get("advanced_metadata", False)
     primary_key = table_dict["export_table_primary_key"]
 
