@@ -1761,7 +1761,6 @@ roles:
                 read:
                     - prep.gitlab_dotcom.*
                     - prep.sensitive.gitlab_dotcom_audit_event_details
-                    - prep.sensitive.gitlab_dotcom_audit_event_details_pii
                     - prep.sensitive.gitlab_dotcom_environments
                     - prep.sensitive.gitlab_dotcom_epics
                     - prep.sensitive.gitlab_dotcom_identities

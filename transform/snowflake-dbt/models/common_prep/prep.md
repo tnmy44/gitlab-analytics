@@ -10,10 +10,6 @@ Creates base view with generated keys for application releaes.
 
 {% enddocs %}
 
-{% docs prep_audit_event_details_clean %}
-
-All GitLab audit event details, with pii replaced with hashes. Created by a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
-
 {% enddocs %}
 
 {% docs prep_dr_partner_engagement %}
