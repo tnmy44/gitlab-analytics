@@ -13,7 +13,7 @@
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
     ('dim_project', 'dim_project'),
     ('dim_issue', 'dim_issue'),
-    ('dim_epic', 'dim_epic')
+    ('prep_epic', 'prep_epic')
 ]) }}
 
 , milestones AS (
@@ -29,18 +29,18 @@
 ), joined AS (
 
     SELECT 
-      milestone_id                                                                      AS dim_milestone_id,
+      milestone_id                                                                                  AS dim_milestone_id,
       milestones.created_at,
       milestones.updated_at,
-      dim_date.date_id                                                                  AS created_date_id,
-      IFNULL(dim_project.dim_project_id, -1)                                            AS dim_project_id,
-      COALESCE(dim_project.ultimate_parent_namespace_id, milestones.group_id, -1)       AS ultimate_parent_namespace_id,
-      COALESCE(dim_namespace_plan_hist.dim_plan_id, dim_epic.dim_plan_id, 34)           AS dim_plan_id
+      dim_date.date_id                                                                              AS created_date_id,
+      IFNULL(dim_project.dim_project_id, -1)                                                        AS dim_project_id,
+      COALESCE(dim_project.ultimate_parent_namespace_id, milestones.group_id, -1)                   AS ultimate_parent_namespace_id,
+      COALESCE(dim_namespace_plan_hist.dim_plan_id, prep_epic.dim_plan_id_at_creation, 34)          AS dim_plan_id
     FROM milestones
     LEFT JOIN dim_project
       ON milestones.project_id = dim_project.dim_project_id
-    LEFT JOIN dim_epic
-      ON milestones.group_id = dim_epic.dim_epic_id
+    LEFT JOIN prep_epic
+      ON milestones.group_id = prep_epic.dim_epic_id
     LEFT JOIN dim_namespace_plan_hist 
       ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
       AND  milestones.created_at >= dim_namespace_plan_hist.valid_from
@@ -54,5 +54,5 @@
     created_by="@chrissharp",
     updated_by="@chrissharp",
     created_date="2022-04-01",
-    updated_date="2022-06-01"
+    updated_date="2022-08-22"
 ) }}

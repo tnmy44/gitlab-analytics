@@ -1,9 +1,8 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('mailgun_events_source_pii') }}
+    FROM {{ source('nvd', 'nvd_cve') }}
 
 )
-
 SELECT *
 FROM source

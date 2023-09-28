@@ -53,22 +53,25 @@ aggregated_base AS (
         report_opportunity_user_sub_business_unit,
         report_opportunity_user_division,
         report_opportunity_user_asm,
-        report_opportunity_user_role_type,
+        COALESCE(report_opportunity_user_role_type, 'NA')   AS report_opportunity_user_role_type,
 
-        deal_size_bin,
-        age_bin,
-        partner_category,
-        sales_qualified_source,
-        stage_name,
-        order_type_stamped,
-        deal_group,
-        sales_type,
-        forecast_category_name,
-        product_category_tier,
-        product_category_deployment,
-        industry,
+        COALESCE(deal_size_bin, 'NA')                       AS deal_size_bin,
+        COALESCE(age_bin, 'NA')                             AS age_bin,
+        COALESCE(partner_category, 'NA')                    AS partner_category,
+        COALESCE(sales_qualified_source, 'NA')              AS sales_qualified_source,
+        COALESCE(stage_name, 'NA')                          AS stage_name,
+        COALESCE(order_type_stamped, 'NA')                  AS order_type_stamped,
+        COALESCE(deal_group, 'NA')                          AS deal_group,
+        COALESCE(sales_type, 'NA')                          AS sales_type,
+        COALESCE(forecast_category_name, 'NA')              AS forecast_category_name,
+        COALESCE(product_category_tier, 'NA')               AS product_category_tier,
+        COALESCE(product_category_deployment, 'NA')         AS product_category_deployment,
+        COALESCE(industry, 'NA')                            AS industry,
+        COALESCE(lam_dev_count_bin, 'NA')                   AS lam_dev_count_bin,
+        COALESCE(pipeline_landing_quarter, 'NA')            AS pipeline_landing_quarter,
+        COALESCE(current_stage_age_bin, 'NA')               AS current_stage_age_bin,
 
-        parent_crm_account_upa_country_name,
+        COALESCE(parent_crm_account_upa_country_name, 'NA') AS parent_crm_account_upa_country_name,
 
         is_web_portal_purchase,
         is_open,
@@ -80,39 +83,28 @@ aggregated_base AS (
         -----------------------------------------------
         -- Date dimensions Aggregated
         pipeline_created_fiscal_quarter_date,
-        CASE
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 3
-                THEN 'CQ'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 6
-                THEN 'CQ+1'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 9
-                THEN 'CQ+2'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) < 12
-                THEN 'CQ+3'
-            WHEN DATEDIFF(MONTH, pipeline_created_fiscal_quarter_date, close_fiscal_quarter_date) >= 12
-                THEN 'CQ+4 >'
-        END                                         AS pipeline_landing_quarter,
+
         -----------------------------------------------
         -- Dimensions for Detail / Aggregated
 
-        SUM(net_arr)                                AS net_arr,
-        SUM(booked_net_arr)                         AS booked_net_arr,
-        SUM(open_1plus_net_arr)                     AS open_1plus_net_arr,
+        SUM(net_arr)                                        AS net_arr,
+        SUM(booked_net_arr)                                 AS booked_net_arr,
+        SUM(open_1plus_net_arr)                             AS open_1plus_net_arr,
 
-        SUM(calculated_deal_count)                  AS deal_count,
-        SUM(booked_deal_count)                      AS booked_deal_count,
-        AVG(cycle_time_in_days)                     AS age_in_days,
+        SUM(calculated_deal_count)                          AS deal_count,
+        SUM(booked_deal_count)                              AS booked_deal_count,
+        AVG(cycle_time_in_days)                             AS age_in_days,
 
-        SUM(total_professional_services_value)      AS total_professional_services_value,
-        SUM(total_book_professional_services_value) AS total_book_professional_services_value,
-        SUM(total_lost_professional_services_value) AS total_lost_professional_services_value,
-        SUM(total_open_professional_services_value) AS total_open_professional_services_value
+        SUM(total_professional_services_value)              AS total_professional_services_value,
+        SUM(total_book_professional_services_value)         AS total_book_professional_services_value,
+        SUM(total_lost_professional_services_value)         AS total_lost_professional_services_value,
+        SUM(total_open_professional_services_value)         AS total_open_professional_services_value
 
     FROM sfdc_opportunity_xf
     WHERE
         pipeline_created_fiscal_quarter_date IS NOT NULL
         AND is_eligible_created_pipeline_flag = 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
 ),
 
 eligible_dates AS (
@@ -150,7 +142,9 @@ base_key AS (
         a.product_category_tier,
         a.product_category_deployment,
         a.industry,
+        a.lam_dev_count_bin,
         a.pipeline_landing_quarter,
+        a.current_stage_age_bin,
 
         a.parent_crm_account_upa_country_name,
 
@@ -196,7 +190,9 @@ consolidated AS (
         base_key.product_category_tier,
         base_key.product_category_deployment,
         base_key.industry,
+        base_key.lam_dev_count_bin,
         base_key.pipeline_landing_quarter,
+        base_key.current_stage_age_bin,
 
         base_key.parent_crm_account_upa_country_name,
 
@@ -253,6 +249,8 @@ consolidated AS (
             AND base_key.report_date = aggregated_base.pipeline_created_fiscal_quarter_date
             AND base_key.industry = aggregated_base.industry
             AND base_key.pipeline_landing_quarter = aggregated_base.pipeline_landing_quarter
+            AND base_key.lam_dev_count_bin = aggregated_base.lam_dev_count_bin
+            AND base_key.current_stage_age_bin = aggregated_base.current_stage_age_bin
     LEFT JOIN aggregated_base AS previous_quarter
         ON
             base_key.owner_id = previous_quarter.owner_id
@@ -278,6 +276,8 @@ consolidated AS (
             AND base_key.report_date = DATEADD(MONTH, 3, previous_quarter.pipeline_created_fiscal_quarter_date)
             AND base_key.industry = previous_quarter.industry
             AND base_key.pipeline_landing_quarter = previous_quarter.pipeline_landing_quarter
+            AND base_key.lam_dev_count_bin = previous_quarter.lam_dev_count_bin
+            AND base_key.current_stage_age_bin = previous_quarter.current_stage_age_bin
     LEFT JOIN aggregated_base AS previous_year
         ON
             base_key.owner_id = previous_year.owner_id
@@ -303,6 +303,8 @@ consolidated AS (
             AND base_key.report_date = DATEADD(MONTH, 12, previous_year.pipeline_created_fiscal_quarter_date)
             AND base_key.industry = previous_year.industry
             AND base_key.pipeline_landing_quarter = previous_year.pipeline_landing_quarter
+            AND base_key.lam_dev_count_bin = previous_year.lam_dev_count_bin
+            AND base_key.current_stage_age_bin = previous_year.current_stage_age_bin
 
 ),
 
@@ -311,6 +313,7 @@ final AS (
     SELECT
         final.*,
 
+        COALESCE(pipe_gen_date.fiscal_year = report_date.current_fiscal_year, FALSE)                  AS is_cfy_flag,
         COALESCE(final.pipeline_created_date = current_fiscal_quarter_date, FALSE)                    AS is_cfq_flag,
 
         COALESCE(final.pipeline_created_date = DATEADD(MONTH, 3, current_fiscal_quarter_date), FALSE) AS is_cfq_plus_1_flag,
@@ -358,11 +361,8 @@ final AS (
         ON pipe_gen_date.date_actual = final.pipeline_created_date
     WHERE (
         net_arr != 0
-        OR booked_net_arr != 0
         OR prev_quarter_net_arr != 0
-        OR prev_quarter_booked_net_arr != 0
         OR prev_year_net_arr != 0
-        OR prev_year_booked_net_arr != 0
     )
     AND pipeline_created_date <= report_date.current_fiscal_quarter_date
 )

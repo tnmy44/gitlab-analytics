@@ -101,6 +101,8 @@ models:
         description: Red, Yellow, Green health rating based on the Net ARR field
       - name: renewal_ownership
         description: This field determines Rules of Engagement (ROE) and ownership for the Renewal between the Renewals Manager and the Account Executive
+      - name: cycle_time_in_days
+        description: '{{ doc("cycle_time_in_days") }}'
 
   - name: prep_quote
     description: '{{ doc("prep_quote") }}'
