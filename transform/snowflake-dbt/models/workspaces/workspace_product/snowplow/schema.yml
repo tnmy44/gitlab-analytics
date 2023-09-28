@@ -80,7 +80,7 @@ models:
       - name: user_agent
         description: User-agent string of the request (holds information about the origin of the request)
       - name: delivery_type
-        description: ' {{ doc("product_delivery_type") }}'
+        description: ' {{ doc("product_delivery_type") }}. In the raw Snowplow data, this field comes through as `gitlab_realm`.'
         tests:
             - accepted_values:
                 values: ['Self-Managed', 'SaaS']
