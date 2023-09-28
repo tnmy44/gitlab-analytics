@@ -58,7 +58,7 @@
     
   --Person Dates
     true_inquiry_date,
-    mql_date_latest_pt,
+    mql_date_latest_pt
   FROM rpt_lead_to_revenue
   WHERE true_inquiry_date >= '2022-02-01'
     OR mql_date_latest_pt >= '2022-02-01'
