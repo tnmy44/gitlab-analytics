@@ -47,10 +47,10 @@ dag = DAG(
     catchup=False,
 )
 
-# BambooHR Extract
+# tableau Extract
 tableau_workbook_migrate_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    python bamboohr/src/execute.py
+    python tableau_con_man_client/src/execute.py
 """
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
