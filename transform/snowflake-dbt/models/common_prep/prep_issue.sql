@@ -16,7 +16,7 @@
     ('prep_label_links', 'prep_label_links'),
     ('prep_labels', 'prep_labels'),
     ('prep_epic', 'prep_epic'),
-    ('prep_plan', 'prep_plan'),
+    ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan'),
     ('prep_user', 'prep_user'),
     ('prep_milestone', 'prep_milestone'),
     ('gitlab_dotcom_epic_issues_source', 'gitlab_dotcom_epic_issues_source'),
@@ -102,7 +102,7 @@
       namespace_prep.ultimate_parent_namespace_id,
       prep_epic.dim_epic_sk,
       prep_date.date_id                                                       AS created_date_id,
-      prep_plan.dim_plan_sk                                                   AS dim_plan_sk_at_creation,
+      prep_gitlab_dotcom_plan.dim_plan_sk                                     AS dim_plan_sk_at_creation,
       prep_milestone.dim_milestone_sk,
       gitlab_dotcom_issues_source.sprint_id,
       author.dim_user_sk                                                      AS dim_user_sk_author,
@@ -235,8 +235,8 @@
       ON gitlab_dotcom_issues_source.issue_id = first_events_weight.issue_id
     LEFT JOIN prep_epic
       ON gitlab_dotcom_epic_issues_source.epic_id = prep_epic.epic_id
-    LEFT JOIN prep_plan
-      ON IFNULL(prep_namespace_plan_hist.dim_plan_id, 34) = prep_plan.dim_plan_id
+    LEFT JOIN prep_gitlab_dotcom_plan
+      ON IFNULL(prep_namespace_plan_hist.dim_plan_id, 34) = prep_gitlab_dotcom_plan.dim_plan_id
     LEFT JOIN prep_user author
       ON gitlab_dotcom_issues_source.author_id = author.user_id
     LEFT JOIN prep_user updated_by

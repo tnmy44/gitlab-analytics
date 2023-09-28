@@ -153,7 +153,7 @@
     cte_ref="joined",
     created_by="@mpeychet_",
     updated_by="@michellecooper",
-    created_date="2021-06-17",
+    created_date="2021-03-17",
     updated_date="2023-09-27"
 ) }}
 
