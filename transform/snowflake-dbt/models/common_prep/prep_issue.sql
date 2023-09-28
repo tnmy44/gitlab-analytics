@@ -36,6 +36,11 @@
 
 ), issue_metrics AS (
 
+    /* In a very small number of cases there are duplicate records for some issues with a
+       created_at and updated_at time that varies by seconds from the otherwise identical record.
+       We have confirmed with Engineering Analytics this is likely an ETL issue and we can dedupe this data.
+    */
+
     SELECT *
     FROM {{ ref('gitlab_dotcom_issue_metrics_source') }}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY issue_id ORDER BY updated_at DESC) = 1
