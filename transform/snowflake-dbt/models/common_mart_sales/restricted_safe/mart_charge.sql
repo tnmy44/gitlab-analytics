@@ -126,7 +126,7 @@
       -- customer db info
       fct_trial_latest.internal_customer_id                                           AS internal_customer_id,
       fct_trial_latest.is_trial_converted                                             AS is_trial_converted_namespace,
-      unique_fct_trial_first.trial_start_date                                                AS first_trial_start_date,
+      unique_fct_trial_first.trial_start_date                                         AS first_trial_start_date,
       fct_trial_latest.latest_trial_start_date                                        AS latest_trial_start_date,
       CASE WHEN 
         dim_namespace.created_at::DATE = fct_trial_latest.latest_trial_start_date
@@ -178,7 +178,7 @@
         fct_charge.mrr > 0 
         AND
         DENSE_RANK() OVER (
-            PARTITION BY dim_billing_account.dim_billing_account_id 
+            PARTITION BY dim_namespace.ultimate_parent_namespace_id
             ORDER BY dim_charge.charge_created_date) = 1
       THEN TRUE
       ELSE FALSE 
