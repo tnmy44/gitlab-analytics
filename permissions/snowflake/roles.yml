@@ -194,6 +194,11 @@ databases:
     - nraisinghani_prep:
         shared: no
 
+    - nwingfield_prod:
+        shared: no
+    - nwingfield_prep:
+        shared: no
+
     - parmstrong_prod:
         shared: no
     - parmstrong_prep:
@@ -4496,6 +4501,52 @@ roles:
                     - nraisinghani_prep.*.*
                     - nraisinghani_prod.*.*
 
+    - nwingfield:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - data_team_analyst
+            - bi_tool_eval_read
+            - xactly
+            - sales_analytics
+            - data_science_readonly
+            - marketo
+            - static_sensitive
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - nwingfield_prep
+                - nwingfield_prod
+            schemas:
+                - nwingfield_prep.*
+                - nwingfield_prod.*
+            tables:
+                - nwingfield_prep.*.*
+                - nwingfield_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - nwingfield_prep
+                    - nwingfield_prod
+                write:
+                    - nwingfield_prep
+                    - nwingfield_prod
+            schemas:
+                read:
+                    - nwingfield_prep.*
+                    - nwingfield_prod.*
+                write:
+                    - nwingfield_prep.*
+                    - nwingfield_prod.*
+            tables:
+                read:
+                    - nwingfield_prep.*.*
+                    - nwingfield_prod.*.*
+                write:
+                    - nwingfield_prep.*.*
+                    - nwingfield_prod.*.*
+
     - ofalkenhof:
         member_of:
             - analyst_finance
@@ -5657,6 +5708,11 @@ users:
         can_login: yes
         member_of:
             - nraisinghani
+
+    - nwingfield:
+        can_login: yes
+        member_of:
+            - nwingfield
 
     - ofalkenhof:
         can_login: yes
