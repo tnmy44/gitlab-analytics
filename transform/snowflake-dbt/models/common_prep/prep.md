@@ -10,8 +10,6 @@ Creates base view with generated keys for application releaes.
 
 {% enddocs %}
 
-{% enddocs %}
-
 {% docs prep_dr_partner_engagement %}
 
 Creates a base view with generated keys for the dr partner engagement shared dimension and references in facts.
