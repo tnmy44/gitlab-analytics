@@ -23,10 +23,10 @@ internal_routes AS (
 combined AS (
 
 SELECT
-  COALESCE(route_id, internal_route_id)       AS route_id,
-  COALESCE(source_id, internal_source_id)     AS source_id,
-  COALESCE(source_type, internal_source_type) AS source_type,
-  COALESCE(path, internal_path)               AS path
+  all_routes.route_id                   AS route_id,
+  all_routes.source_id                  AS source_id,
+  internal_routes.internal_source_type  AS source_type,
+  internal_routes.internal_path         AS path
 FROM all_routes
 LEFT JOIN internal_routes
   ON all_routes.route_id = internal_routes.internal_route_id
