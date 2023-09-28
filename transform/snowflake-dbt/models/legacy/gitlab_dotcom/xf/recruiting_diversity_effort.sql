@@ -1,8 +1,8 @@
 WITH issues AS (
   
     SELECT *
-    FROM {{ ref ('gitlab_dotcom_issues_xf') }}
-    WHERE project_id =16492321 --Recruiting for Open Positions
+    FROM {{ ref ('prep_issue') }}
+    WHERE dim_project_id =16492321 --Recruiting for Open Positions
 
 ), users AS (
 
@@ -34,7 +34,7 @@ WITH issues AS (
       issues.issue_closed_at,
       DATE_TRUNC(week,issues.issue_closed_at)                           AS issue_closed_week,
       IFF(issue_closed_at IS NOT NULL,1,0)                              AS is_issue_closed,
-      issues.state                                                      AS issue_state,
+      issues.issue_state                                                AS issue_state,
       agg_assignee.assignee,
       issues.issue_description,
       SPLIT_PART(issue_description, '**Weekly Check-In Table**',2)      AS issue_description_split,

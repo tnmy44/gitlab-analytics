@@ -155,10 +155,10 @@
 
     SELECT
       dim_epic_id,
-      SUM(weight)                                                             AS epic_weight,
-      SUM(IFF(state_name = 'closed', weight, 0)) / NULLIFZERO(epic_weight)    AS epic_completeness,
-      SUM(IFF(state_name = 'closed', 1, 0)) / COUNT(*)                        AS epic_completeness_alternative,
-      COALESCE(epic_completeness, epic_completeness_alternative)              AS epic_status
+      SUM(weight)                                                               AS epic_weight,
+      SUM(IFF(issue_state = 'closed', weight, 0)) / NULLIFZERO(epic_weight)     AS epic_completeness,
+      SUM(IFF(issue_state = 'closed', 1, 0)) / COUNT(*)                         AS epic_completeness_alternative,
+      COALESCE(epic_completeness, epic_completeness_alternative)                AS epic_status
     FROM dim_issue
     GROUP BY 1
     
@@ -373,7 +373,7 @@
       dim_issue.created_at                                                        AS issue_epic_created_at,
       dim_issue.created_at::DATE                                                  AS issue_epic_created_date,
       DATE_TRUNC('month', dim_issue.created_at::DATE)                             AS issue_epic_created_month,
-      dim_issue.state_name                                                        AS issue_epic_state_name,
+      dim_issue.issue_state                                                       AS issue_epic_state_name,
       dim_issue.issue_closed_at                                                   AS issue_epic_closed_at,
       dim_issue.issue_closed_at::DATE                                             AS issue_epic_closed_date,
       DATE_TRUNC('month', dim_issue.issue_closed_at::DATE)                        AS issue_epic_closed_month,

@@ -25,7 +25,7 @@ WITH epic_issues AS (
 ), issues AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_issues_xf') }}
+    FROM {{ ref('prep_issue') }}
 
 ), projects AS (
 
@@ -59,7 +59,7 @@ WITH epic_issues AS (
       issues.issue_title         AS noteable_title,
       issues.issue_created_at    AS noteable_created_at,
       issues.milestone_id,
-      issues.state               AS noteable_state,
+      issues.issue_state         AS noteable_state,
       issues.weight,
       issues.labels,
       projects.project_name,
@@ -75,7 +75,7 @@ WITH epic_issues AS (
     INNER JOIN issues
       ON gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_id = issues.issue_id
     LEFT JOIN projects
-      ON issues.project_id = projects.project_id
+      ON issues.dim_project_id = projects.project_id
     LEFT JOIN namespaces
       ON projects.namespace_id = namespaces.namespace_id
     LEFT JOIN sfdc_accounts

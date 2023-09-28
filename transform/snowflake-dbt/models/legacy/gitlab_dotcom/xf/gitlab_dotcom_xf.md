@@ -87,19 +87,6 @@ It adds a few columns to the base `gitlab_dotcom_notes` model:
 {% enddocs %}
 
 
-{% docs gitlab_dotcom_issues_xf %}
-
-Adds associated labels for issues when these exist.
-
-In order to achieve that we first join issues to the `label links` relation table, and then use that to join to the labels table.
-
-This transformation also masks title/description based on privacy of the project that it is on and the confidentiality setting on the issue.  
-
-A CTE will find projects that don't have visibility set to public and then joined to the issues in order to build a CASE statement to mask the content.
-
-{% enddocs %}
-
-
 {% docs gitlab_dotcom_labels_xf %}
 
 Masks the label description based on privacy of the project that it is on.

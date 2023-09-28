@@ -32,7 +32,7 @@
       COALESCE(dim_issue.dim_project_id,
                 dim_merge_request.dim_project_id)                           AS dim_project_id,
       COALESCE(dim_epic.dim_plan_id_at_creation,
-                dim_issue.dim_plan_id,
+                dim_issue.dim_plan_id_at_creation,
                 dim_merge_request.dim_plan_id)                              AS dim_plan_id,
       COALESCE(dim_epic.group_id,
                 dim_issue.ultimate_parent_namespace_id,
@@ -58,7 +58,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@chrissharp",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2022-03-14",
-    updated_date="2022-08-22"
+    updated_date="2023-09-27"
 ) }}

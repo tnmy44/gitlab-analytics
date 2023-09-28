@@ -9,17 +9,18 @@
 }}
 
 {{ simple_cte([
-    ('dim_date', 'dim_date'),
-    ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
-    ('plans', 'gitlab_dotcom_plans_source'),
+    ('prep_date', 'prep_date'),
+    ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
     ('prep_project', 'prep_project'),
     ('prep_issue_severity', 'prep_issue_severity'),
     ('prep_label_links', 'prep_label_links'),
     ('prep_labels', 'prep_labels'),
+    ('prep_epic', 'prep_epic'),
+    ('prep_plan', 'prep_plan'),
+    ('prep_user', 'prep_user'),
+    ('prep_milestone', 'prep_milestone'),
     ('gitlab_dotcom_epic_issues_source', 'gitlab_dotcom_epic_issues_source'),
     ('gitlab_dotcom_routes_source', 'gitlab_dotcom_routes_source'),
-    ('gitlab_dotcom_projects_source', 'gitlab_dotcom_projects_source'),
-    ('gitlab_dotcom_milestones_source', 'gitlab_dotcom_milestones_source'),
     ('gitlab_dotcom_award_emoji_source', 'gitlab_dotcom_award_emoji_source')
 ]) }}
 
@@ -32,6 +33,26 @@
       WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
+
+), issue_metrics AS (
+
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_issue_metrics_source') }}
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY issue_id ORDER BY updated_at DESC) = 1
+
+), namespace_prep AS (
+
+    SELECT *
+    FROM {{ ('prep_namespace') }}
+    WHERE is_currently_valid = TRUE
+
+), first_events_weight AS (
+
+    SELECT
+      issue_id,
+      MIN(created_at) AS first_weight_set_at
+    FROM {{ ref('gitlab_dotcom_resource_weight_events_source') }}
+    GROUP BY 1
 
 ), upvote_count AS (
 
@@ -60,23 +81,34 @@
 ), renamed AS (
   
     SELECT
-      gitlab_dotcom_issues_source.issue_id                        AS dim_issue_id,
+
+      -- SURROGATE KEY
+      {{ dbt_utils.surrogate_key(['gitlab_dotcom_issues_source.issue_id']) }} AS dim_issue_sk,
+
+      -- NATURAL KEY
+      gitlab_dotcom_issues_source.issue_id                                    AS issue_id,
+
+      -- LEGACY NATURAL KEY
+      gitlab_dotcom_issues_source.issue_id                                    AS dim_issue_id,
       
       -- FOREIGN KEYS
-      gitlab_dotcom_issues_source.project_id                      AS dim_project_id,
-      prep_project.dim_namespace_id,
-      prep_project.ultimate_parent_namespace_id,
-      gitlab_dotcom_epic_issues_source.epic_id                    AS dim_epic_id,
-      dim_date.date_id                                            AS created_date_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
-      gitlab_dotcom_issues_source.author_id,
-      gitlab_dotcom_issues_source.milestone_id,
+      prep_project.dim_project_sk,
+      namespace_prep.dim_namespace_sk,
+      namespace_prep.ultimate_parent_namespace_id,
+      prep_epic.dim_epic_sk,
+      prep_date.date_id                                                       AS created_date_id,
+      prep_plan.dim_plan_sk                                                   AS dim_plan_sk_at_creation,
+      prep_milestone.dim_milestone_sk,
       gitlab_dotcom_issues_source.sprint_id,
+      author.dim_user_sk                                                      AS dim_user_sk_author,
+      updated_by.dim_user_sk                                                  AS dim_user_sk_updated_by,
+      last_edited_by.dim_user_sk                                              AS dim_user_sk_last_edited_by,
+      closed_by.dim_user_sk                                                   AS dim_user_sk_closed_by,
 
-      gitlab_dotcom_issues_source.issue_iid                       AS issue_internal_id,
-      gitlab_dotcom_issues_source.updated_by_id,
-      gitlab_dotcom_issues_source.last_edited_by_id,
       gitlab_dotcom_issues_source.moved_to_id,
+      gitlab_dotcom_issues_source.duplicated_to_id,
+      gitlab_dotcom_issues_source.promoted_to_epic_id,
+
       gitlab_dotcom_issues_source.created_at,
       gitlab_dotcom_issues_source.updated_at,
       gitlab_dotcom_issues_source.issue_last_edited_at,
@@ -84,72 +116,137 @@
       gitlab_dotcom_issues_source.is_confidential,
       gitlab_dotcom_issues_source.issue_title,
       gitlab_dotcom_issues_source.issue_description,
-
+      gitlab_dotcom_issues_source.issue_iid                                 AS issue_internal_id,
       gitlab_dotcom_issues_source.weight,
       gitlab_dotcom_issues_source.due_date,
       gitlab_dotcom_issues_source.lock_version,
       gitlab_dotcom_issues_source.time_estimate,
       gitlab_dotcom_issues_source.has_discussion_locked,
-      gitlab_dotcom_issues_source.closed_by_id,
       gitlab_dotcom_issues_source.relative_position,
       gitlab_dotcom_issues_source.service_desk_reply_to,
       gitlab_dotcom_issues_source.state_id,
-        {{ map_state_id('state_id') }}                            AS state_name,
-      gitlab_dotcom_issues_source.duplicated_to_id,
-      gitlab_dotcom_issues_source.promoted_to_epic_id,
+      {{ map_state_id('state_id') }}                                        AS issue_state,
       gitlab_dotcom_issues_source.issue_type,
       CASE 
-        WHEN prep_issue_severity.severity = 4 THEN 'S1'
-        WHEN ARRAY_CONTAINS('severity::1'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s1'::variant, agg_labels.labels) THEN 'S1'
-        WHEN prep_issue_severity.severity = 3 THEN 'S2'
-        WHEN ARRAY_CONTAINS('severity::2'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s2'::variant, agg_labels.labels) THEN 'S2'
-        WHEN prep_issue_severity.severity = 2 THEN 'S3'
-        WHEN ARRAY_CONTAINS('severity::3'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s3'::variant, agg_labels.labels) THEN 'S3'
-        WHEN prep_issue_severity.severity = 1 THEN 'S4'
-        WHEN ARRAY_CONTAINS('severity::4'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s4'::variant, agg_labels.labels) THEN 'S4'
+        WHEN prep_issue_severity.severity = 4
+          THEN 'S1'
+        WHEN ARRAY_CONTAINS('severity::1'::variant, agg_labels.labels)
+            OR ARRAY_CONTAINS('s1'::variant, agg_labels.labels)
+            THEN 'S1'
+        WHEN prep_issue_severity.severity = 3
+          THEN 'S2'
+        WHEN ARRAY_CONTAINS('severity::2'::variant, agg_labels.labels)
+            OR ARRAY_CONTAINS('s2'::variant, agg_labels.labels)
+            THEN 'S2'
+        WHEN prep_issue_severity.severity = 2
+          THEN 'S3'
+        WHEN ARRAY_CONTAINS('severity::3'::variant, agg_labels.labels)
+            OR ARRAY_CONTAINS('s3'::variant, agg_labels.labels)
+            THEN 'S3'
+        WHEN prep_issue_severity.severity = 1
+          THEN 'S4'
+        WHEN ARRAY_CONTAINS('severity::4'::variant, agg_labels.labels)
+            OR ARRAY_CONTAINS('s4'::variant, agg_labels.labels)
+            THEN 'S4'
         ELSE NULL
-      END AS severity,
-      IFF(gitlab_dotcom_projects_source.visibility_level = 'private',
+      END                                                                   AS severity,
+      IFF(prep_project.visibility_level = 'private',
         'private - masked',
         'https://gitlab.com/' || gitlab_dotcom_routes_source.path || '/issues/' || gitlab_dotcom_issues_source.issue_iid)
-         AS issue_url,
-      IFF(gitlab_dotcom_projects_source.visibility_level = 'private',
+                                                                            AS issue_url,
+      IFF(prep_project.visibility_level = 'private',
         'private - masked',
-        gitlab_dotcom_milestones_source.milestone_title)    AS milestone_title,
-      gitlab_dotcom_milestones_source.due_date              AS milestone_due_date,
+        prep_milestone.milestone_title)                                     AS milestone_title,
+      prep_milestone.due_date                                               AS milestone_due_date,
       agg_labels.labels,
-      IFNULL(upvote_count.upvote_count, 0)                  AS upvote_count
+      IFNULL(upvote_count.upvote_count, 0)                                  AS upvote_count,
+      issue_metrics.first_mentioned_in_commit_at,
+      issue_metrics.first_associated_with_milestone_at,
+      issue_metrics.first_added_to_board_at,
+      prep_namespace.is_internal                                            AS is_internal_issue,
+      first_events_weight.first_weight_set_at,
+      CASE
+      WHEN ARRAY_CONTAINS('priority::1'::variant, agg_labels.labels)
+        OR ARRAY_CONTAINS('P1'::variant, agg_labels.labels)
+        THEN 'priority 1'
+      WHEN ARRAY_CONTAINS('priority::2'::variant, agg_labels.labels)
+        OR ARRAY_CONTAINS('P2'::variant, agg_labels.labels)
+        THEN 'priority 2'
+      WHEN ARRAY_CONTAINS('priority::3'::variant, agg_labels.labels)
+        OR ARRAY_CONTAINS('P3'::variant, agg_labels.labels)
+        THEN 'priority 3'
+      WHEN ARRAY_CONTAINS('priority::4'::variant, agg_labels.labels)
+        OR ARRAY_CONTAINS('P4'::variant, agg_labels.labels)
+        THEN 'priority 4'
+      ELSE 'undefined'
+    END                                                                     AS priority,
+
+    CASE
+      WHEN projects.namespace_id = 9970
+        AND ARRAY_CONTAINS('security'::variant, agg_labels.labels)
+        THEN TRUE
+      ELSE FALSE
+    END                                                                     AS is_security_issue,
+
+    IFF(issues.project_id IN ({{is_project_included_in_engineering_metrics()}}),
+      TRUE, FALSE)                                                          AS is_included_in_engineering_metrics,
+    IFF(issues.project_id IN ({{is_project_part_of_product()}}),
+      TRUE, FALSE)                                                          AS is_part_of_product,
+    CASE
+      WHEN projects.namespace_id = 9970
+        AND ARRAY_CONTAINS('community contribution'::variant, agg_labels.labels)
+        THEN TRUE
+      ELSE FALSE
+      END                                                                   AS is_community_contributor_related
     FROM gitlab_dotcom_issues_source
     LEFT JOIN agg_labels
         ON gitlab_dotcom_issues_source.issue_id = agg_labels.dim_issue_id
     LEFT JOIN prep_project 
       ON gitlab_dotcom_issues_source.project_id = prep_project.dim_project_id
-    LEFT JOIN dim_namespace_plan_hist 
-      ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
-      AND gitlab_dotcom_issues_source.created_at >= dim_namespace_plan_hist.valid_from
-      AND gitlab_dotcom_issues_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
-    LEFT JOIN dim_date 
-      ON TO_DATE(gitlab_dotcom_issues_source.created_at) = dim_date.date_day
+    LEFT JOIN prep_namespace_plan_hist
+      ON prep_project.ultimate_parent_namespace_id = prep_namespace_plan_hist.dim_namespace_id
+      AND gitlab_dotcom_issues_source.created_at >= prep_namespace_plan_hist.valid_from
+      AND gitlab_dotcom_issues_source.created_at < COALESCE(prep_namespace_plan_hist.valid_to, '2099-01-01')
+    LEFT JOIN prep_date
+      ON TO_DATE(gitlab_dotcom_issues_source.created_at) = prep_date.date_day
     LEFT JOIN prep_issue_severity
       ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
     LEFT JOIN gitlab_dotcom_epic_issues_source
       ON gitlab_dotcom_issues_source.issue_id = gitlab_dotcom_epic_issues_source.issue_id
-    LEFT JOIN gitlab_dotcom_projects_source
-      ON gitlab_dotcom_projects_source.project_id = gitlab_dotcom_issues_source.project_id
+    LEFT JOIN prep_project
+      ON prep_project.project_id = gitlab_dotcom_issues_source.project_id
     LEFT JOIN gitlab_dotcom_routes_source
       ON gitlab_dotcom_routes_source.source_id = gitlab_dotcom_issues_source.project_id
       AND gitlab_dotcom_routes_source.source_type = 'Project'
-    LEFT JOIN gitlab_dotcom_milestones_source
-      ON gitlab_dotcom_milestones_source.milestone_id = gitlab_dotcom_issues_source.milestone_id
+    LEFT JOIN prep_milestone
+      ON prep_milestone.milestone_id = gitlab_dotcom_issues_source.milestone_id
     LEFT JOIN upvote_count
       ON upvote_count.dim_issue_id = gitlab_dotcom_issues_source.issue_id
+    LEFT JOIN issue_metrics
+      ON gitlab_dotcom_issues_source.issue_id = issue_metrics.issue_id
+    LEFT JOIN namespace_prep
+      ON dim_project.dim_namespace_id = namespace_prep.dim_namespace_id
+    LEFT JOIN first_events_weight
+      ON gitlab_dotcom_issues_source.issue_id = first_events_weight.issue_id
+    LEFT JOIN prep_epic
+      ON gitlab_dotcom_epic_issues_source.epic_id = prep_epic.epic_id
+    LEFT JOIN prep_plan
+      ON IFNULL(prep_namespace_plan_hist.dim_plan_id, 34) = prep_plan.dim_plan_id
+    LEFT JOIN prep_user author
+      ON gitlab_dotcom_issues_source.author_id = author.user_id
+    LEFT JOIN prep_user updated_by
+      ON gitlab_dotcom_issues_source.updated_by_id = updated_by.user_id
+    LEFT JOIN prep_user last_edited_by
+      ON gitlab_dotcom_issues_source.last_edited_by_id = last_edited_by.user_id
+    LEFT JOIN prep_user closed_by
+      ON gitlab_dotcom_issues_source.closed_by_id = closed_by.user_id
     WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
 )
 
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2022-06-01"
+    updated_date="2023-09-27"
 ) }}

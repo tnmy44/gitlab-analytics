@@ -30,7 +30,7 @@
       resource_milestone_events.resource_milestone_event_id                                 AS dim_resource_milestone_id,
       COALESCE(dim_issue.dim_project_id, 
                 dim_merge_request.dim_project_id)                                           AS dim_project_id,
-      COALESCE(dim_issue.dim_plan_id,
+      COALESCE(dim_issue.dim_plan_id_at_creation,
                 dim_merge_request.dim_plan_id)                                              AS dim_plan_id,
       COALESCE(dim_issue.ultimate_parent_namespace_id,
                 dim_merge_request.ultimate_parent_namespace_id)                             AS ultimate_parent_namespace_id,
@@ -52,7 +52,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@chrissharp",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2022-03-23",
-    updated_date="2022-06-01"
+    updated_date="2023-09-27"
 ) }}

@@ -12,7 +12,6 @@
     ('dim_date', 'dim_date'),
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
     ('dim_project', 'dim_project'),
-    ('dim_issue', 'dim_issue'),
     ('prep_epic', 'prep_epic')
 ]) }}
 
@@ -29,7 +28,16 @@
 ), joined AS (
 
     SELECT 
+
+      -- SURROGATE KEY
+     {{ dbt_utils.surrogate_key(['milestone_id']) }}                                                AS dim_milestone_sk,
+
+      -- NATURAL KEY
+      milestone_id                                                                                  AS milestone_id,
+
+      -- LEGACY NATURAL KEY
       milestone_id                                                                                  AS dim_milestone_id,
+
       milestones.created_at,
       milestones.updated_at,
       dim_date.date_id                                                                              AS created_date_id,
@@ -52,7 +60,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@chrissharp",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2022-04-01",
-    updated_date="2022-08-22"
+    updated_date="2023-09-27"
 ) }}

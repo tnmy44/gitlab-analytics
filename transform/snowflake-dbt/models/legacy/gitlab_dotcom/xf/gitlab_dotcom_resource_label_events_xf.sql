@@ -15,7 +15,7 @@ WITH resource_label_events AS (
 , issues AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_issues_xf') }} 
+    FROM {{ ref('prep_issue') }}
 
 )
 
