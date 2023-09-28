@@ -17,7 +17,7 @@ WITH prep_issue AS (
 
       -- LEGACY NATURAL KEY
       dim_issue_id,
-            
+
       -- FOREIGN KEYS
       dim_project_sk
       dim_namespace_sk,

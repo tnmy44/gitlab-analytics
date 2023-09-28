@@ -20,6 +20,7 @@
     ('prep_user', 'prep_user'),
     ('prep_milestone', 'prep_milestone'),
     ('gitlab_dotcom_epic_issues_source', 'gitlab_dotcom_epic_issues_source'),
+    ('prep_epic', 'prep_epic'),
     ('gitlab_dotcom_routes_source', 'gitlab_dotcom_routes_source'),
     ('gitlab_dotcom_award_emoji_source', 'gitlab_dotcom_award_emoji_source')
 ]) }}
