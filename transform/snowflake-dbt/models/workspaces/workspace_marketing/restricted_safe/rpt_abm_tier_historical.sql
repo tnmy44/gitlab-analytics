@@ -169,7 +169,7 @@
   AND (abm_tier_1_date IS NOT NULL
     OR abm_tier_2_date IS NOT NULL)
   
-), final AS (
+), unioned AS (
   
   SELECT
   inquiry_base.dim_crm_person_id,
@@ -207,6 +207,22 @@ SELECT
   is_abm_tier_closed_won
 FROM cw_base
   
+), final AS (
+
+  SELECT
+    dim_crm_person_id,
+    dim_crm_opportunity_id,
+    is_abm_tier_inquiry,
+    is_abm_tier_mql,
+    is_abm_tier_sao,
+    is_abm_tier_closed_won
+  FROM unioned
+  WHERE
+    is_abm_tier_inquiry = TRUE
+    OR is_abm_tier_mql = TRUE
+    OR is_abm_tier_sao = TRUE
+    OR is_abm_tier_closed_won = TRUE
+
 )
 
 {{ dbt_audit(
@@ -214,5 +230,5 @@ FROM cw_base
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-09-27",
+    updated_date="2023-09-28",
   ) }}
