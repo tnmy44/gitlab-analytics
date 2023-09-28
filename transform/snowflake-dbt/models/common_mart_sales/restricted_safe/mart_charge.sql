@@ -21,6 +21,14 @@
     ('fct_trial_first', 'fct_trial_first')
 ]) }}
 
+, unique_fct_trial_first AS (
+    SELECT
+      dim_namespace_id,
+      trial_start_date
+    FROM fct_trial_first
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY trial_start_date) = 1
+)
+
 , mart_charge AS (
 
     SELECT
@@ -96,7 +104,7 @@
       dim_subscription.invoice_owner_account,
       dim_subscription.creator_account,
       dim_subscription.was_purchased_through_reseller,
-      DATEDIFF(days, fct_trial_first.trial_start_date, 
+      DATEDIFF(days, unique_fct_trial_first.trial_start_date, 
                 dim_subscription.subscription_start_date)                             AS days_between_first_trial_and_subscription_start,
       DATEDIFF(days, fct_trial_latest.latest_trial_start_date, 
                 dim_subscription.subscription_start_date)                             AS days_between_latest_trial_and_subscription_start,
@@ -118,7 +126,7 @@
       -- customer db info
       fct_trial_latest.internal_customer_id                                           AS internal_customer_id,
       fct_trial_latest.is_trial_converted                                             AS is_trial_converted_namespace,
-      fct_trial_first.trial_start_date                                                AS first_trial_start_date,
+      unique_fct_trial_first.trial_start_date                                                AS first_trial_start_date,
       fct_trial_latest.latest_trial_start_date                                        AS latest_trial_start_date,
       CASE WHEN 
         dim_namespace.created_at::DATE = fct_trial_latest.latest_trial_start_date
@@ -262,8 +270,8 @@
       ON fct_charge.subscription_created_by_user_id = prep_billing_account_user.zuora_user_id
     LEFT JOIN fct_trial_latest
       ON dim_subscription.namespace_id = fct_trial_latest.dim_namespace_id
-    LEFT JOIN fct_trial_first
-      ON dim_subscription.namespace_id = fct_trial_first.dim_namespace_id
+    LEFT JOIN unique_fct_trial_first
+      ON dim_subscription.namespace_id = unique_fct_trial_first.dim_namespace_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,
