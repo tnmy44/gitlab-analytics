@@ -769,6 +769,7 @@ tables:
       , title
       , description
       , project_id
+      , service_desk_reply_to
       , updated_at
       FROM issues
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp

@@ -10,7 +10,7 @@ WITH epic_issues AS (
 ), epics AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_epics_xf') }}
+    FROM {{ ref('prep_epic') }}
 
 ), gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id AS (
 
@@ -35,7 +35,8 @@ WITH epic_issues AS (
 ), namespaces AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_namespaces_xf') }}
+    FROM {{ ref('prep_namespace') }}
+    WHERE is_currently_valid = TRUE
 
 ), sfdc_accounts AS (
 
@@ -91,12 +92,12 @@ WITH epic_issues AS (
     SELECT DISTINCT
       'Epic'                     AS noteable_type,
       'Note'                     AS mention_type,
-      epics.epic_id              AS noteable_id,
+      epics.epic_id          AS noteable_id,
       epics.epic_internal_id     AS noteable_iid,
       epics.epic_title           AS noteable_title,
       epics.created_at           AS noteable_created_at,
       NULL                       AS milestone_id,
-      epics.state                AS epic_state,
+      epics.epic_state           AS epic_state,
       NULL                       AS weight,
       epics.labels               AS labels,
       NULL                       AS project_name,
@@ -112,7 +113,7 @@ WITH epic_issues AS (
     INNER JOIN epics
       ON gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_id = epics.epic_id
     LEFT JOIN namespaces
-      ON epics.group_id = namespaces.namespace_id
+      ON epics.dim_namespace_sk = namespaces.dim_namespace_sk
     LEFT JOIN sfdc_accounts
       ON gitlab_dotcom_notes_linked_to_sfdc_account_id.sfdc_account_id = sfdc_accounts.account_id
     WHERE gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_type = 'Epic'
@@ -164,7 +165,7 @@ WITH epic_issues AS (
       epics.epic_title           AS noteable_title,
       epics.created_at           AS noteable_created_at,
       NULL                       AS milestone_id,
-      epics.state                AS epic_state,
+      epics.epic_state           AS epic_state,
       NULL                       AS weight,
       epics.labels               AS labels,
       NULL                       AS project_name,
@@ -181,7 +182,7 @@ WITH epic_issues AS (
       ON gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.noteable_id = epics.epic_id
       AND gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.noteable_type = 'Epic'
     LEFT JOIN namespaces
-      ON epics.group_id = namespaces.namespace_id
+      ON epics.dim_namespace_sk = namespaces.dim_namespace_sk
     LEFT JOIN sfdc_accounts
       ON gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.sfdc_account_id = sfdc_accounts.account_id
 

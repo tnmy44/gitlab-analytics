@@ -8,16 +8,15 @@
 WITH prep_issue AS (
 
     SELECT 
-
-      -- SURROGATE KEY
+      -- Surrogate Key
       dim_issue_sk,
 
-      -- NATURAL KEY
+      -- Natural Key
       issue_id,
 
-      -- LEGACY NATURAL KEY
+      -- Legacy Naming Convention for Natural Key
       dim_issue_id,
-            
+
       -- FOREIGN KEYS
       dim_project_sk
       dim_namespace_sk,
