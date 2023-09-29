@@ -1,6 +1,8 @@
 -- depends_on: {{ ref('engineering_productivity_metrics_projects_to_include') }}
 -- depends_on: {{ ref('projects_part_of_product') }}
 
+{% set fields_to_mask = ['issue_title', 'issue_description'] %}
+
 {{ config(
     tags=["product"]
 ) }}
@@ -52,7 +54,7 @@
 ), namespace_prep AS (
 
     SELECT *
-    FROM {{ ('prep_namespace') }}
+    FROM {{ ref('prep_namespace') }}
     WHERE is_currently_valid = TRUE
 
 ), first_events_weight AS (
@@ -123,8 +125,16 @@
       gitlab_dotcom_issues_source.issue_last_edited_at,
       gitlab_dotcom_issues_source.issue_closed_at,
       gitlab_dotcom_issues_source.is_confidential,
-      gitlab_dotcom_issues_source.issue_title,
-      gitlab_dotcom_issues_source.issue_description,
+      {% for field in fields_to_mask %}
+        CASE
+          WHEN gitlab_dotcom_issues_source.is_confidential = TRUE
+            THEN 'confidential - masked'
+          WHEN prep_project.visibility_level != 'public'
+            AND prep_namespace.namespace_is_internal = FALSE
+            THEN 'private/internal - masked'
+          ELSE {{field}}
+        END                                                                 AS {{field}},
+      {% endfor %}
       gitlab_dotcom_issues_source.issue_iid                                 AS issue_internal_id,
       gitlab_dotcom_issues_source.weight,
       gitlab_dotcom_issues_source.due_date,
@@ -172,7 +182,7 @@
       issue_metrics.first_mentioned_in_commit_at,
       issue_metrics.first_associated_with_milestone_at,
       issue_metrics.first_added_to_board_at,
-      prep_namespace.is_internal                                            AS is_internal_issue,
+      namespace_prep.is_internal                                            AS is_internal_issue,
       first_events_weight.first_weight_set_at,
       CASE
       WHEN ARRAY_CONTAINS('priority::1'::variant, agg_labels.labels)
@@ -222,8 +232,6 @@
       ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
     LEFT JOIN gitlab_dotcom_epic_issues_source
       ON gitlab_dotcom_issues_source.issue_id = gitlab_dotcom_epic_issues_source.issue_id
-    LEFT JOIN prep_project
-      ON prep_project.project_id = gitlab_dotcom_issues_source.project_id
     LEFT JOIN gitlab_dotcom_routes_source
       ON gitlab_dotcom_routes_source.source_id = gitlab_dotcom_issues_source.project_id
       AND gitlab_dotcom_routes_source.source_type = 'Project'
