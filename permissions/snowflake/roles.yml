@@ -391,6 +391,7 @@ roles:
             - snapshots
             - snowflake_db
             - static
+            - tableau_cloud
 
     - analyst_engineering:
         warehouses:
@@ -2465,6 +2466,18 @@ roles:
                 - static.*
             tables:
                 - static.*.*
+
+    - tableau_cloud:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tableau_cloud
+            tables:
+                read:
+                    - raw.tableau_cloud.*
 
     - version_db:
         privileges:
@@ -5177,6 +5190,32 @@ roles:
         warehouses:
             - reporting
 
+    - tableau_loader:
+        warehouses:
+            - loading
+            - loading_xl
+        owns:
+            schemas:
+                - raw.tableau_cloud
+            tables:
+                - raw.tableau_cloud.*
+        privileges:
+            databases:
+                read:
+                    - raw
+                write:
+                    - raw
+            schemas:
+                read:
+                    - raw.tableau_cloud
+                write:
+                    - raw.tableau_cloud
+            tables:
+                read:
+                    - raw.tableau_cloud.*
+                write:
+                    - raw.tableau_cloud.*
+
     - tableau_restricted_safe:
         member_of:
             - reporter
@@ -5900,6 +5939,11 @@ users:
         member_of:
             - tableau
             - reporter
+
+    - tableau_loader:
+        can_login: yes
+        member_of:
+            - tableau_loader
 
     - tableau_restricted_safe:
         can_login: yes
