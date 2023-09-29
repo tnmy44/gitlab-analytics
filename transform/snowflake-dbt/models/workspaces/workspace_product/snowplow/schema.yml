@@ -52,3 +52,37 @@ models:
         description: Name of the IDEs vendor, e.g. Microsoft
       - name: ide_version
         description: Version number of the IDE, e.g. 1.81.1
+
+  - name: fct_behavior_structured_event_code_suggestions_context
+    description: Derived fact table that parses out the code_suggestions_context context based on the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema) which can optionally be sent with an event.
+    columns:
+      - name: behavior_structured_event_pk
+        description: '{{ doc("behavior_structured_event_pk") }}'
+        tests:
+        - unique:
+            config:
+              where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
+        - not_null
+      - name: behavior_at
+        description: ' {{ doc("behavior_at") }}'
+      - name: code_suggestions_context
+        description: Context related to the code_suggestions_context, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
+      - name: model_engine
+        description: Model engine used for the completions
+      - name: model_name
+        description: Model name used for the completions
+      - name: prefix_link
+        description: Length of the prefix in characters
+      - name: suffix_length
+        description: Length of the suffix in characters
+      - name: language
+        description: Programming language of the completions request
+      - name: user_agent
+        description: User-agent string of the request (holds information about the origin of the request)
+      - name: delivery_type
+        description: ' {{ doc("product_delivery_type") }}. In the raw Snowplow data, this field comes through as `gitlab_realm`.'
+        tests:
+            - accepted_values:
+                values: ['Self-Managed', 'SaaS']
+      - name: api_status_code
+        description: HTTP status code of GitLab API
