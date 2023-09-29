@@ -346,7 +346,7 @@ class PostgresPipelineTable:
                 f"Resuming export with start_pk: {start_pk} and initial_load_start_date: {initial_load_start_date}"
             )
         else:
-            logging.info('Not in hanging backfill... checking if new schema/table...')
+            logging.info("Not in hanging backfill... checking if new schema/table...")
             is_backfill_needed = self.check_is_new_table_or_schema_addition(
                 source_engine, target_engine
             )
