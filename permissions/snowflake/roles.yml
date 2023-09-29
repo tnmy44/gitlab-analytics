@@ -3170,6 +3170,12 @@ roles:
                     - degan_prep.*.*
                     - degan_prod.*.*
 
+    - dfelton:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - dgupta:
         member_of:
             - adaptive
@@ -5415,6 +5421,11 @@ users:
         can_login: yes
         member_of:
             - degan
+
+    - dfelton:
+        can_login: yes
+        member_of:
+            - dfelton
 
     - dgupta:
         can_login: yes
