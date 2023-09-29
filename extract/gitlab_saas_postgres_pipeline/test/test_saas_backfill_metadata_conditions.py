@@ -47,7 +47,7 @@ def insert_into_metadata_db(metadata_engine, full_table_path, metadata):
     INSERT INTO {full_table_path}
     VALUES (
         '{metadata["database_name"]}',
-        '{metadata["source_table"]}',
+        '{metadata["real_target_table"]}',
         '{metadata["initial_load_start_date"]}',
         '{metadata["upload_date"]}',
         '{metadata["upload_file_name"]}',
@@ -56,6 +56,7 @@ def insert_into_metadata_db(metadata_engine, full_table_path, metadata):
         {metadata["is_export_completed"]},
         {metadata["chunk_row_count"]});
     """
+    print(f"\ninsert_query: {insert_query}")
     # Test when table is inserted into metadata
     with metadata_engine.connect() as connection:
         connection.execute(insert_query)
@@ -122,6 +123,7 @@ class TestCheckBackfill:
         }
         self.pipeline_table = PostgresPipelineTable(table_config)
 
+    '''
     def teardown(self):
         for table in [
             self.test_metadata_backfill_table_full_path,
@@ -131,6 +133,8 @@ class TestCheckBackfill:
 
             with self.metadata_engine.connect() as connection:
                 connection.execute(drop_query)
+
+    '''
 
     def test_check_is_new_table(self):
         """
@@ -236,7 +240,7 @@ class TestCheckBackfill:
 
         # Assert that remove_files_from_gcs was called with the correct arguments
         mock_remove_files_from_gcs.assert_called_once_with(
-            load_by_id_export_type, self.pipeline_table.source_table_name
+            load_by_id_export_type, self.pipeline_table.get_target_table_name()
         )
         assert initial_load_start_date is None
         assert start_pk == 1
@@ -260,7 +264,7 @@ class TestCheckBackfill:
         mock_check_is_new_table_or_schema_addition.return_value = False
 
         metadata = {
-            "source_table": "some_table",
+            "real_target_table": self.pipeline_table.get_target_table_name(),
             "database_name": "some_db",
             "initial_load_start_date": datetime(2023, 1, 2),
             "upload_date": datetime(2023, 1, 2),
@@ -310,7 +314,7 @@ class TestCheckBackfill:
 
         load_by_id_export_type = "backfill"
         metadata = {
-            "source_table": "some_table",
+            "real_target_table": self.pipeline_table.get_target_table_name(),
             "database_name": "some_db",
             "initial_load_start_date": datetime(2023, 1, 2),
             "upload_date": datetime(2023, 1, 2),
@@ -346,7 +350,7 @@ class TestCheckBackfill:
         assert initial_load_start_date is None
         assert start_pk == 1
         mock_remove_files_from_gcs.assert_called_once_with(
-            load_by_id_export_type, self.pipeline_table.source_table_name
+            load_by_id_export_type, self.pipeline_table.get_target_table_name()
         )
 
     @patch("postgres_pipeline_table.check_is_new_table_or_schema_addition")
@@ -369,7 +373,7 @@ class TestCheckBackfill:
         initial_load_start_date = datetime(2023, 2, 1)
         # Arrange metadata table
         metadata = {
-            "source_table": "some_table",
+            "real_target_table": self.pipeline_table.get_target_table_name(),
             "database_name": "some_db",
             "initial_load_start_date": initial_load_start_date,
             "upload_date": datetime.utcnow() - timedelta(hours=23, minutes=40),
@@ -423,7 +427,7 @@ class TestCheckBackfill:
         upload_date_less_than_24hr = datetime.utcnow() - timedelta(hours=23, minutes=40)
 
         metadata = {
-            "source_table": "some_table",
+            "real_target_table": self.pipeline_table.get_target_table_name(),
             "database_name": "some_db",
             "initial_load_start_date": datetime(2023, 2, 1),
             "upload_date": upload_date_less_than_24hr,
@@ -480,7 +484,7 @@ class TestCheckBackfill:
         target_start_pk = mock_get_min_or_max_id.return_value + 1
 
         metadata = {
-            "source_table": "some_table",
+            "real_target_table": self.pipeline_table.get_target_table_name(),
             "database_name": "some_db",
             "initial_load_start_date": datetime(2023, 2, 1),
             "upload_date": upload_date_less_than_24hr,
@@ -528,7 +532,7 @@ class TestCheckBackfill:
         assert metadata_start_pk == target_start_pk
 
         metadata = {
-            "source_table": "some_table",
+            "real_target_table": self.pipeline_table.get_target_table_name(),
             "database_name": "some_db",
             "initial_load_start_date": datetime(2023, 2, 1),
             "upload_date": upload_date_less_than_24hr,
@@ -578,7 +582,7 @@ class TestCheckBackfill:
         assert metadata_start_pk > target_start_pk
 
         metadata = {
-            "source_table": "some_table",
+            "real_target_table": self.pipeline_table.get_target_table_name(),
             "database_name": "some_db",
             "initial_load_start_date": prev_initial_load_start_date,
             "upload_date": upload_date_less_than_24hr,

@@ -109,7 +109,7 @@ class TestPostgresUtils:
         initial_load_start_date = datetime.now()
         database_kwargs = {
             "source_database": "some_db",
-            "source_table": "alerts",
+            "real_target_table": "alerts",
             "source_engine": some_engine,
             "metadata_engine": some_engine,
             "metadata_table": INCREMENTAL_METADATA_TABLE,
@@ -168,7 +168,7 @@ class TestPostgresUtils:
         initial_load_start_date = datetime.now()
         database_kwargs = {
             "source_database": "some_db",
-            "source_table": "alerts",
+            "real_target_table": "alerts",
             "source_engine": some_engine,
             "metadata_engine": some_engine,
             "metadata_table": INCREMENTAL_METADATA_TABLE,
@@ -229,7 +229,7 @@ class TestPostgresUtils:
         initial_load_start_date = datetime.now()
         database_kwargs = {
             "source_database": "some_db",
-            "source_table": "alerts",
+            "real_target_table": "alerts",
             "source_engine": some_engine,
             "metadata_engine": some_engine,
             "metadata_table": INCREMENTAL_METADATA_TABLE,
