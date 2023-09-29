@@ -11,7 +11,7 @@
   ('gitlab_dotcom_members_source', 'gitlab_dotcom_members_source'),
   ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
   ('customers_db_charges_xf', 'customers_db_charges_xf'),
-  ('customers_db_trials', 'customers_db_trials_source'),
+  ('fct_trial_first', 'fct_trial_first'),
   ('customers_db_leads', 'customers_db_leads_source'),
   ('fct_event_user_daily', 'fct_event_user_daily'),
   ('map_gitlab_dotcom_xmau_metrics', 'map_gitlab_dotcom_xmau_metrics'),
@@ -101,8 +101,8 @@
 ), latest_trial_by_user AS (
   
     SELECT *
-    FROM customers_db_trials
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY gitlab_user_id ORDER BY trial_start_date DESC) = 1
+    FROM fct_trial_first
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY trial_start_date DESC) = 1
 
 ), pqls AS (
   
@@ -127,7 +127,7 @@
       leads.product_interaction,
       leads.user_id,
       users.email,
-      latest_trial_by_user.gitlab_namespace_id    AS dim_namespace_id,
+      latest_trial_by_user.dim_namespace_id       AS dim_namespace_id,
       dim_namespace.namespace_name,
       latest_trial_by_user.trial_start_date::DATE AS trial_start_date,
       leads.created_at                            AS pql_event_created_at
@@ -135,7 +135,7 @@
     LEFT JOIN gitlab_dotcom_users_source AS users
       ON leads.user_id = users.user_id
     LEFT JOIN latest_trial_by_user
-      ON latest_trial_by_user.gitlab_user_id = leads.user_id
+      ON latest_trial_by_user.user_id = leads.user_id
     LEFT JOIN dim_namespace
       ON dim_namespace.dim_namespace_id = leads.namespace_id
     WHERE LOWER(leads.product_interaction) = 'saas trial'
