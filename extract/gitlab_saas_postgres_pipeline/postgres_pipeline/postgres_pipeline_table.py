@@ -350,7 +350,7 @@ class PostgresPipelineTable:
 
         # remove unprocessed files if backfill needed but not in middle of backfill
         if is_backfill_needed and initial_load_start_date is None:
-            remove_files_from_gcs(load_by_id_export_type, self.source_table_name)
+            remove_files_from_gcs(load_by_id_export_type, self.get_target_table_name())
 
         return is_backfill_needed, initial_load_start_date, start_pk
 

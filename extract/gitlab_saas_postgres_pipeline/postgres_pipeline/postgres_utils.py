@@ -438,7 +438,7 @@ def upload_initial_load_prefix_to_snowflake(
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
         load_by_id_export_type=load_by_id_export_type,
-        table=database_kwargs["source_table"],
+        table=database_kwargs["real_target_table"],
         initial_load_prefix=get_initial_load_prefix(initial_load_start_date),
     )
     logging.info(
@@ -573,7 +573,7 @@ def chunk_and_upload_metadata(
 
             upload_file_name = get_upload_file_name(
                 load_by_id_export_type,
-                database_kwargs["source_table"],
+                database_kwargs["real_target_table"],
                 initial_load_start_date,
                 upload_date,
             )
@@ -597,7 +597,7 @@ def chunk_and_upload_metadata(
                     database_kwargs["metadata_engine"],
                     database_kwargs["metadata_table"],
                     database_kwargs["source_database"],
-                    database_kwargs["source_table"],
+                    database_kwargs["real_target_table"],
                     initial_load_start_date,
                     upload_date,
                     upload_file_name,
@@ -839,7 +839,7 @@ def is_resume_export(
     return is_resume_export_needed, initial_load_start_date, start_pk
 
 
-def remove_files_from_gcs(load_by_id_export_type: str, source_table: str):
+def remove_files_from_gcs(load_by_id_export_type: str, target_table: str):
     """
     Prior to a fresh backfill/delete, remove all previously
     backfilled files that haven't been processed downstream
@@ -849,7 +849,7 @@ def remove_files_from_gcs(load_by_id_export_type: str, source_table: str):
     prefix = get_prefix_template().format(
         staging_or_processed="staging",
         load_by_id_export_type=load_by_id_export_type,
-        table=source_table,
+        table=target_table,
         initial_load_prefix="initial_load_start_",
     )
 
