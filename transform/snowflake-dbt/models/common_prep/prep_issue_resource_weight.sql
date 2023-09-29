@@ -10,7 +10,7 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('pprep_namespace_plan_hist', 'pprep_namespace_plan_hist'),
+    ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
     ('prep_project', 'prep_project'),
     ('prep_issue', 'prep_issue')
 ]) }}
