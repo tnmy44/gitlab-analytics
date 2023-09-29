@@ -760,20 +760,23 @@
       PARSE_URL(bizible_form_url_raw):parameters:utm_budget::VARCHAR        AS bizible_form_page_utm_budget,
       PARSE_URL(bizible_form_url_raw):parameters:utm_allptnr::VARCHAR       AS bizible_form_page_utm_allptnr,
       PARSE_URL(bizible_form_url_raw):parameters:utm_partnerid::VARCHAR     AS bizible_form_page_utm_partnerid,
+      PARSE_URL(bizible_form_url_raw):parameters:utm_asset_type::VARCHAR    AS bizible_form_page_utm_asset_type,
 
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_content::VARCHAR   AS bizible_landing_page_utm_content,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_budget::VARCHAR    AS bizible_landing_page_utm_budget,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr::VARCHAR   AS bizible_landing_page_utm_allptnr,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_partnerid::VARCHAR AS bizible_landing_page_utm_partnerid,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_content::VARCHAR     AS bizible_landing_page_utm_content,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_budget::VARCHAR      AS bizible_landing_page_utm_budget,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr::VARCHAR     AS bizible_landing_page_utm_allptnr,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_partnerid::VARCHAR   AS bizible_landing_page_utm_partnerid,
+       PARSE_URL(bizible_landing_page_raw):parameters:utm_asset_type::VARCHAR AS bizible_landing_page_utm_asset_type,
 
       COALESCE(bizible_landing_page_utm_campaign, bizible_form_page_utm_campaign)   AS utm_campaign,
       COALESCE(bizible_landing_page_utm_medium, bizible_form_page_utm_medium)       AS utm_medium,
       COALESCE(bizible_landing_page_utm_source, bizible_form_page_utm_source)       AS utm_source,
       
-      COALESCE(bizible_landing_page_utm_budget, bizible_form_page_utm_budget)       AS utm_budget,
-      COALESCE(bizible_landing_page_utm_content, bizible_form_page_utm_content)     AS utm_content,
-      COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)     AS utm_allptnr,
-      COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid) AS utm_partnerid,
+      COALESCE(bizible_landing_page_utm_budget, bizible_form_page_utm_budget)            AS utm_budget,
+      COALESCE(bizible_landing_page_utm_content, bizible_form_page_utm_content)          AS utm_content,
+      COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)          AS utm_allptnr,
+      COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid)      AS utm_partnerid,
+      COALESCE(bizible_landing_page_utm_asset_type, bizible_form_page_utm_asset_type) AS utm_asset_type,
 
       CASE 
         WHEN (LOWER(utm_content) LIKE '%field%'

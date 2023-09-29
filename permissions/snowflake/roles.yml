@@ -194,6 +194,11 @@ databases:
     - nraisinghani_prep:
         shared: no
 
+    - nwingfield_prod:
+        shared: no
+    - nwingfield_prep:
+        shared: no
+
     - parmstrong_prod:
         shared: no
     - parmstrong_prep:
@@ -451,7 +456,6 @@ roles:
                     - prep.sensitive
             tables:
                 read:
-                    - prep.sensitive.gitlab_dotcom_epics
                     - prep.sensitive.gitlab_dotcom_issues
                     - prep.sensitive.gitlab_dotcom_labels
                     - prep.sensitive.gitlab_dotcom_merge_requests
@@ -1072,7 +1076,6 @@ roles:
                     - prep.sensitive
             tables:
                 read:
-                    - prep.sensitive.gitlab_dotcom_epics
                     - prep.sensitive.gitlab_dotcom_issues
                     - prep.sensitive.gitlab_dotcom_labels
                     - prep.sensitive.gitlab_dotcom_merge_requests
@@ -1761,9 +1764,7 @@ roles:
                 read:
                     - prep.gitlab_dotcom.*
                     - prep.sensitive.gitlab_dotcom_audit_event_details
-                    - prep.sensitive.gitlab_dotcom_audit_event_details_pii
                     - prep.sensitive.gitlab_dotcom_environments
-                    - prep.sensitive.gitlab_dotcom_epics
                     - prep.sensitive.gitlab_dotcom_identities
                     - prep.sensitive.gitlab_dotcom_issues
                     - prep.sensitive.gitlab_dotcom_labels
@@ -3168,6 +3169,12 @@ roles:
                     - degan_prep.*.*
                     - degan_prod.*.*
 
+    - dfelton:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - dgupta:
         member_of:
             - adaptive
@@ -3493,6 +3500,7 @@ roles:
 
     - jonglee:
         member_of:
+            - gainsight
             - reporter
             - restricted_safe
             - salesforce
@@ -4130,8 +4138,8 @@ roles:
 
     - mgilgalindo:
         member_of:
-            - reporter
-            - salesforce
+            - analyst_sales
+            - restricted_safe
         warehouses:
             - dev_xs
 
@@ -4495,6 +4503,52 @@ roles:
                 write:
                     - nraisinghani_prep.*.*
                     - nraisinghani_prod.*.*
+
+    - nwingfield:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - data_team_analyst
+            - bi_tool_eval_read
+            - xactly
+            - sales_analytics
+            - data_science_readonly
+            - marketo
+            - static_sensitive
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - nwingfield_prep
+                - nwingfield_prod
+            schemas:
+                - nwingfield_prep.*
+                - nwingfield_prod.*
+            tables:
+                - nwingfield_prep.*.*
+                - nwingfield_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - nwingfield_prep
+                    - nwingfield_prod
+                write:
+                    - nwingfield_prep
+                    - nwingfield_prod
+            schemas:
+                read:
+                    - nwingfield_prep.*
+                    - nwingfield_prod.*
+                write:
+                    - nwingfield_prep.*
+                    - nwingfield_prod.*
+            tables:
+                read:
+                    - nwingfield_prep.*.*
+                    - nwingfield_prod.*.*
+                write:
+                    - nwingfield_prep.*.*
+                    - nwingfield_prod.*.*
 
     - ofalkenhof:
         member_of:
@@ -5368,6 +5422,11 @@ users:
         member_of:
             - degan
 
+    - dfelton:
+        can_login: yes
+        member_of:
+            - dfelton
+
     - dgupta:
         can_login: yes
         member_of:
@@ -5657,6 +5716,11 @@ users:
         can_login: yes
         member_of:
             - nraisinghani
+
+    - nwingfield:
+        can_login: yes
+        member_of:
+            - nwingfield
 
     - ofalkenhof:
         can_login: yes

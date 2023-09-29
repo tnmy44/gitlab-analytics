@@ -17,6 +17,7 @@
     ('prep_label_links', 'prep_label_links'),
     ('prep_labels', 'prep_labels'),
     ('gitlab_dotcom_epic_issues_source', 'gitlab_dotcom_epic_issues_source'),
+    ('prep_epic', 'prep_epic'),
     ('gitlab_dotcom_routes_source', 'gitlab_dotcom_routes_source'),
     ('gitlab_dotcom_projects_source', 'gitlab_dotcom_projects_source'),
     ('gitlab_dotcom_milestones_source', 'gitlab_dotcom_milestones_source'),
@@ -60,20 +61,27 @@
 ), renamed AS (
   
     SELECT
-      gitlab_dotcom_issues_source.issue_id                        AS dim_issue_id,
+      -- Surrogate key
+      {{ dbt_utils.surrogate_key(['gitlab_dotcom_issues_source.issue_id']) }} AS dim_issue_sk,
+
+      -- Natural Key
+      gitlab_dotcom_issues_source.issue_id                                    AS issue_id,
+
+      -- Legacy naming convention
+      gitlab_dotcom_issues_source.issue_id                                    AS dim_issue_id,
       
       -- FOREIGN KEYS
-      gitlab_dotcom_issues_source.project_id                      AS dim_project_id,
+      gitlab_dotcom_issues_source.project_id                                  AS dim_project_id,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
-      gitlab_dotcom_epic_issues_source.epic_id                    AS dim_epic_id,
-      dim_date.date_id                                            AS created_date_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
+      prep_epic.dim_epic_sk                                                   AS dim_epic_sk,
+      dim_date.date_id                                                        AS created_date_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                         AS dim_plan_id,
       gitlab_dotcom_issues_source.author_id,
       gitlab_dotcom_issues_source.milestone_id,
       gitlab_dotcom_issues_source.sprint_id,
 
-      gitlab_dotcom_issues_source.issue_iid                       AS issue_internal_id,
+      gitlab_dotcom_issues_source.issue_iid                                   AS issue_internal_id,
       gitlab_dotcom_issues_source.updated_by_id,
       gitlab_dotcom_issues_source.last_edited_by_id,
       gitlab_dotcom_issues_source.moved_to_id,
@@ -94,7 +102,7 @@
       gitlab_dotcom_issues_source.relative_position,
       gitlab_dotcom_issues_source.service_desk_reply_to,
       gitlab_dotcom_issues_source.state_id,
-        {{ map_state_id('state_id') }}                            AS state_name,
+      {{ map_state_id('gitlab_dotcom_issues_source.state_id') }}                            AS state_name,
       gitlab_dotcom_issues_source.duplicated_to_id,
       gitlab_dotcom_issues_source.promoted_to_epic_id,
       gitlab_dotcom_issues_source.issue_type,
@@ -134,6 +142,8 @@
       ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
     LEFT JOIN gitlab_dotcom_epic_issues_source
       ON gitlab_dotcom_issues_source.issue_id = gitlab_dotcom_epic_issues_source.issue_id
+    LEFT JOIN prep_epic
+      ON gitlab_dotcom_epic_issues_source.epic_id = prep_epic.epic_id
     LEFT JOIN gitlab_dotcom_projects_source
       ON gitlab_dotcom_projects_source.project_id = gitlab_dotcom_issues_source.project_id
     LEFT JOIN gitlab_dotcom_routes_source
@@ -149,7 +159,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2022-06-01"
+    updated_date="2023-09-07"
 ) }}
