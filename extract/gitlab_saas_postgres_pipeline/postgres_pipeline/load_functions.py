@@ -277,6 +277,7 @@ def load_ids(
         database_kwargs["source_engine"],
         database_kwargs["source_table"],
         "max",
+        additional_filtering,
     )
 
     # Create a generator for queries that are chunked by ID range

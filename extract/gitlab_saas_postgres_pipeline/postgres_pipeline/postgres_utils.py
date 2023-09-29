@@ -864,7 +864,11 @@ def remove_files_from_gcs(load_by_id_export_type: str, source_table: str):
 
 
 def get_min_or_max_id(
-    primary_key: str, engine: Engine, table: str, min_or_max: str
+    primary_key: str,
+    engine: Engine,
+    table: str,
+    min_or_max: str,
+    additional_filtering: str = "",
 ) -> int:
     """
     Retrieve the minimum or maximum value of the specified primary key column in the specified table.
@@ -878,9 +882,7 @@ def get_min_or_max_id(
     Returns:
     int: The minimum or maximum ID value.
     """
-    id_query = (
-        f"SELECT COALESCE({min_or_max}({primary_key}), 0) as {primary_key} FROM {table}"
-    )
+    id_query = f"SELECT COALESCE({min_or_max}({primary_key}), 0) as {primary_key} FROM {table} WHERE true {additional_filtering};"
     try:
         id_results = query_results(id_query, engine)
         id_value = id_results[primary_key].tolist()[0]
