@@ -68,9 +68,9 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_issue_id",
+    "primary_key": "dim_issue_sk",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id",
+    "plan_column_name": "dim_plan_id_at_creation",
     "created_date_name": "created_date_id"
   },
   {
@@ -475,9 +475,9 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_issue_id",
+    "primary_key": "dim_issue_sk",
     "stage_name": "monitor",
-    "plan_column_name": "dim_plan_id",
+    "plan_column_name": "dim_plan_id_at_creation",
     "created_date_name": "created_date_id"
   },
   {
@@ -629,7 +629,7 @@
 
     SELECT *
     FROM prep_resource_label
-    WHERE dim_issue_id IS NOT NULL
+    WHERE dim_issue_sk IS NOT NULL
 
 ), issue_resource_milestone AS (
 

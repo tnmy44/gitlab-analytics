@@ -165,16 +165,19 @@
 ), label_links_joined AS (
 
     SELECT
+      dim_issue.dim_issue_sk,
       prep_label_links.*,
       prep_labels.label_title
     FROM prep_label_links
     LEFT JOIN prep_labels
       ON prep_label_links.dim_label_id = prep_labels.dim_label_id
+    LEFT JOIN dim_issue
+      ON label_links_joined.issue_id = dim_issue.issue_id
 
 ), issue_labels AS (
 
     SELECT 
-      label_links_joined.dim_issue_id,
+      label_links_joined.dim_issue_sk,
       IFF(LOWER(label_links_joined.label_title) LIKE 'group::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)    AS group_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'devops::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)   AS devops_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'section::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)  AS section_label,
@@ -223,7 +226,7 @@
 ), issue_theme_labels AS (
 
     SELECT
-      dim_issue_id,
+      dim_issue_sk,
       ARRAY_AGG(theme_label) WITHIN GROUP (ORDER BY theme_label) AS theme_labels
     FROM issue_labels
     GROUP BY 1
@@ -239,56 +242,56 @@
 ), issue_group_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the group::* label
 
     SELECT
-      dim_issue_id,
+      dim_issue_sk,
       group_label
     FROM issue_labels
     WHERE group_label IS NOT NULL
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY group_label) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_sk ORDER BY group_label) = 1
 
 ), issue_group_extended_label AS (
 
     SELECT
-      dim_issue_id,
+      dim_issue_sk,
       product_group_extended
     FROM issue_labels
     WHERE product_group_extended IS NOT NULL
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY product_group_level DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_sk ORDER BY product_group_level DESC) = 1
 
 ), issue_category_dedup AS ( -- Since category: is not an scoped label, need to make sure I only pull one of them
   
     SELECT
-      dim_issue_id,
+      dim_issue_sk,
       category_label
     FROM issue_labels
     WHERE category_label IS NOT NULL
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY category_label DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_sk ORDER BY category_label DESC) = 1
   
 ), issue_type_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the type::* label
 
     SELECT
-      dim_issue_id,
+      dim_issue_sk,
       type_label
     FROM issue_labels
     WHERE type_label IS NOT NULL
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY type_label) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_sk ORDER BY type_label) = 1
 
 ), issue_devops_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the devops::* label
 
     SELECT
-      dim_issue_id,
+      dim_issue_sk,
       devops_label
     FROM issue_labels
     WHERE devops_label IS NOT NULL
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY devops_label) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_sk ORDER BY devops_label) = 1
 
 ), issue_status AS ( -- Some issues for some reason had two valid workflow labels, this dedup them
 
     SELECT
-      label_links_joined.dim_issue_id,
+      label_links_joined.dim_issue_sk,
       IFF(LOWER(label_links_joined.label_title) LIKE 'workflow::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)   AS workflow_label
     FROM label_links_joined
     WHERE workflow_label IS NOT NULL
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY workflow_label DESC) = 1 
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_sk ORDER BY workflow_label DESC) = 1
 
 ), epic_group_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the group::* label
 
@@ -347,7 +350,7 @@
 ), user_request AS (
 
     SELECT
-      bdg_issue_user_request.dim_issue_id                                         AS dim_issue_id,
+      bdg_issue_user_request.issue_id                                             AS issue_id,
       IFNULL(dim_epic.epic_id, -1)                                                AS epic_id,
       'Issue'                                                                     AS user_request_in,
 
@@ -405,28 +408,28 @@
 
     FROM bdg_issue_user_request
     LEFT JOIN dim_issue
-      ON dim_issue.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      ON dim_issue.dim_issue_sk = bdg_issue_user_request.dim_issue_sk
     LEFT JOIN issue_group_extended_label
-      ON issue_group_extended_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      ON issue_group_extended_label.dim_issue_sk = bdg_issue_user_request.dim_issue_sk
     LEFT JOIN issue_status
-      ON issue_status.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      ON issue_status.dim_issue_sk = bdg_issue_user_request.dim_issue_sk
     LEFT JOIN dim_epic
       ON dim_epic.dim_epic_sk = dim_issue.dim_epic_sk
     LEFT JOIN issue_category_dedup AS category_label
-      ON category_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      ON category_label.dim_issue_sk = bdg_issue_user_request.dim_issue_sk
     LEFT JOIN issue_group_label AS group_label
-      ON group_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      ON group_label.dim_issue_sk = bdg_issue_user_request.dim_issue_sk
     LEFT JOIN issue_devops_label AS devops_label
-      ON devops_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      ON devops_label.dim_issue_sk = bdg_issue_user_request.dim_issue_sk
     LEFT JOIN issue_type_label AS type_label
-      ON type_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      ON type_label.dim_issue_sk = bdg_issue_user_request.dim_issue_sk
     LEFT JOIN issue_theme_labels
-      ON issue_theme_labels.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      ON issue_theme_labels.dim_issue_sk = bdg_issue_user_request.dim_issue_sk
 
     UNION
 
     SELECT
-      -1                                                                          AS dim_issue_id,
+      -1                                                                          AS issue_id,
       dim_epic.epic_id                                                            AS epic_id,
       'Epic'                                                                      AS user_request_in,
       
@@ -509,7 +512,7 @@
 ), user_request_with_account_opp_attributes AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['user_request.dim_issue_id',
+      {{ dbt_utils.surrogate_key(['user_request.issue_id',
                                   'user_request.epic_id',
                                   'user_request.dim_crm_account_id',
                                   'user_request.dim_crm_opportunity_id',
@@ -716,5 +719,5 @@
     created_by="@jpeguero",
     updated_by="@michellecooper",
     created_date="2021-10-22",
-    updated_date="2023-09-08",
+    updated_date="2023-09-29",
   ) }}

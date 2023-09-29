@@ -29,7 +29,7 @@ models:
   - name: bdg_issue_user_request
     description: ' {{ doc("bdg_issue_user_request") }}'
     columns:
-      - name: dim_issue_id
+      - name: dim_issue_sk
         tests:
           - not_null
       - name: dim_crm_account_id
@@ -37,7 +37,7 @@ models:
           - not_null
       - name: is_user_request_only_in_collaboration_project
         description: Boolean flag that if TRUE indicates whether the user request was only done in a customer collaboration project.
-      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+      - name: CONCAT(dim_issue_sk, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
         tests:
           - not_null
           - unique
@@ -2571,7 +2571,7 @@ models:
   - name: dim_issue
     description: '{{ doc("dim_issue") }}'
     columns:
-      - name: dim_issue_id
+      - name: dim_issue_sk
         description: The unique identifier for each of the issues.
         tests:
           - not_null

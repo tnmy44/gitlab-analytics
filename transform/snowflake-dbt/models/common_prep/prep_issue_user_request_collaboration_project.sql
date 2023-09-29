@@ -30,8 +30,8 @@ WITH gitlab_dotcom_projects AS (
 ), gitlab_issues AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_issues_source') }}
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY project_id, issue_iid ORDER BY created_at DESC) = 1 
+    FROM {{ ref('prep_issue') }}
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_project_id, issue_internal_id ORDER BY created_at DESC) = 1
 
 ), collaboration_projects AS (
 
@@ -56,6 +56,7 @@ WITH gitlab_dotcom_projects AS (
       collaboration_projects.*,
       gitlab_dotcom_project_routes.project_id                              AS collaboration_project_id,
       gitlab_issues.issue_id,
+      gitlab_issues.dim_issue_sk,
       gitlab_issues.issue_description,
       IFNULL(gitlab_issues.issue_last_edited_at, gitlab_issues.created_at) AS updated_at
     FROM collaboration_projects
@@ -141,7 +142,8 @@ WITH gitlab_dotcom_projects AS (
 ), unioned_with_issue_links AS (
 
     SELECT
-      gitlab_issues.issue_id                                                AS dim_issue_id,
+      gitlab_issues.issue_id                                                AS issue_id,
+      gitlab_issues.dim_issue_sk,
       unioned_with_user_request_project_id.account_id                       AS dim_crm_account_id,
       unioned_with_user_request_project_id.collaboration_project_id         AS dim_collaboration_project_id,
       unioned_with_user_request_project_id.user_request_project_id          AS dim_project_id,
@@ -156,7 +158,8 @@ WITH gitlab_dotcom_projects AS (
     UNION
 
     SELECT
-      gitlab_issues.issue_id                                                AS dim_issue_id,
+      gitlab_issues.issue_id                                                AS issue_id,
+      gitlab_issues.dim_issue_sk,
       collaboration_projects_with_ids.account_id                            AS dim_crm_account_id,
       collaboration_projects_with_ids.collaboration_project_id              AS dim_collaboration_project_id,
       gitlab_issues.project_id                                              AS dim_project_id,
@@ -175,7 +178,8 @@ WITH gitlab_dotcom_projects AS (
 ), final AS ( -- In case there are various issues that merge to the same, dedup them by taking the latest updated link
 
     SELECT
-      map_moved_duplicated_issue.dim_issue_id,
+      map_moved_duplicated_issue.issue_id,
+      map_moved_duplicated_issue.dim_issue_sk,
       unioned_with_issue_links.dim_crm_account_id,
       unioned_with_issue_links.dim_collaboration_project_id,
       unioned_with_issue_links.dim_project_id                 AS dim_original_issue_project_id,
@@ -184,8 +188,8 @@ WITH gitlab_dotcom_projects AS (
       unioned_with_issue_links.link_last_updated_at           AS link_last_updated_at
     FROM unioned_with_issue_links
     INNER JOIN map_moved_duplicated_issue
-      ON map_moved_duplicated_issue.issue_id = unioned_with_issue_links.dim_issue_id
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY map_moved_duplicated_issue.dim_issue_id, unioned_with_issue_links.dim_crm_account_id
+      ON map_moved_duplicated_issue.issue_id = unioned_with_issue_links.dim_issue_sk
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY map_moved_duplicated_issue.dim_issue_sk, unioned_with_issue_links.dim_crm_account_id
       ORDER BY unioned_with_issue_links.link_last_updated_at DESC NULLS LAST) = 1
 
 )
@@ -193,8 +197,8 @@ WITH gitlab_dotcom_projects AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-10-12",
-    updated_date="2022-01-10"
+    updated_date="2023-09-29"
 ) }}
 

@@ -37,15 +37,17 @@ WITH RECURSIVE issues AS (
       issue_lineage[ARRAY_SIZE(issue_lineage) - 1]::NUMBER                 AS last_moved_duplicated_issue_id,
       IFF(last_moved_duplicated_issue_id != issue_id, TRUE, FALSE)         AS is_issue_moved_duplicated,
       --return final common dimension mapping,
-      last_moved_duplicated_issue_id                                       AS dim_issue_id
+      prep_issue.dim_issue_sk                                              AS dim_issue_sk
     FROM recursive_cte
+    LEFT JOIN {{ ref('prep_issue') }}
+      ON recursive_cte.last_moved_duplicated_issue_id = prep_issue.issue_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-10-12",
-    updated_date="2021-10-12",
+    updated_date="2023-09-29",
 ) }}

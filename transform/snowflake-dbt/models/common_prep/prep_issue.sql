@@ -109,6 +109,8 @@
       prep_epic.dim_epic_sk,
       prep_date.date_id                                                       AS created_date_id,
       prep_gitlab_dotcom_plan.dim_plan_sk                                     AS dim_plan_sk_at_creation,
+      -- maintained for to keep prep_event working until all of gitlab.com lineage has surrogate keys available
+      prep_gitlab_dotcom_plan.dim_plan_id                                     AS dim_plan_id_at_creation,
       prep_milestone.dim_milestone_sk,
       gitlab_dotcom_issues_source.sprint_id,
       author.dim_user_sk                                                      AS dim_user_sk_author,
@@ -229,7 +231,7 @@
     LEFT JOIN prep_date
       ON TO_DATE(gitlab_dotcom_issues_source.created_at) = prep_date.date_day
     LEFT JOIN prep_issue_severity
-      ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
+      ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.issue_id
     LEFT JOIN gitlab_dotcom_epic_issues_source
       ON gitlab_dotcom_issues_source.issue_id = gitlab_dotcom_epic_issues_source.issue_id
     LEFT JOIN gitlab_dotcom_routes_source

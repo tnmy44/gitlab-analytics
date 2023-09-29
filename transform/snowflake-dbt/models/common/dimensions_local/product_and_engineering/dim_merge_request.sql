@@ -5,10 +5,12 @@ WITH prep_merge_request AS (
           
       -- FOREIGN KEYS
       dim_project_id,
+      dim_project_sk,
       dim_namespace_id,
       ultimate_parent_namespace_id,
       created_date_id,
       dim_plan_id,
+      dim_plan_sk_at_creation,
       author_id,
       milestone_id,
       assignee_id,
@@ -43,8 +45,8 @@ WITH prep_merge_request AS (
 {{ dbt_audit(
     cte_ref="prep_merge_request",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2021-06-17"
+    updated_date="2023-09-29"
 ) }}
 

@@ -131,18 +131,18 @@ final AS (
     ON COALESCE(DATE_TRUNC('day', issues.created_at), dates.date_actual) <= dates.date_actual
       AND COALESCE(DATE_TRUNC('day', issues.closed_at), dates.date_actual) >= dates.min_date_actual
   LEFT JOIN assigend_users
-    ON issues.issue_id = assigend_users.dim_issue_id
+    ON issues.issue_id = assigend_users.issue_id
   LEFT JOIN label_groups AS severity
     ON severity.label_type = 'severity'
-      AND issues.issue_id = severity.dim_issue_id
+      AND issues.issue_id = severity.issue_id
       AND dates.date_actual BETWEEN DATE_TRUNC('day', severity.label_valid_from) AND DATE_TRUNC('day', severity.label_valid_to)
   LEFT JOIN label_groups AS team
     ON team.label_type = 'team'
-      AND issues.issue_id = team.dim_issue_id
+      AND issues.issue_id = team.issue_id
       AND dates.date_actual BETWEEN DATE_TRUNC('day', team.label_valid_from) AND DATE_TRUNC('day', team.label_valid_to)
   LEFT JOIN label_groups AS wf
     ON wf.label_type = 'workflow'
-      AND issues.issue_id = wf.dim_issue_id
+      AND issues.issue_id = wf.issue_id
       AND dates.date_actual BETWEEN DATE_TRUNC('day', wf.label_valid_from) AND DATE_TRUNC('day', wf.label_valid_to)
   LEFT JOIN workflow_labels AS wfl
     ON wf.workflow = wfl.workflow_label
