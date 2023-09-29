@@ -76,7 +76,9 @@ job_info AS (
     CONDITIONAL_TRUE_EVENT(unique_key != lag_unique_key) OVER (PARTITION BY employee_id ORDER BY uploaded_at)                  AS unique_key_group 
   FROM employee_mapping
   WHERE source_system = 'bamboohr'
+    --ensure we only get information from people after they have been hired and before Workday went live
     AND uploaded_at < '2022-06-16'
+      AND uploaded_at > hire_date
 
 ),
 
