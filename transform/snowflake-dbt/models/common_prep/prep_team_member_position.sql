@@ -1,10 +1,32 @@
+WITH job_info_source AS (
 
-{{ simple_cte([
-    ('job_info_source','blended_job_info_source'),
-    ('team_member','dim_team_member'),
-    ('employee_mapping','blended_employee_mapping_source'),
-    ('staffing_history','staffing_history_approved_source')
-]) }},
+  SELECT *
+  FROM {{ref('blended_job_info_source')}}
+  WHERE source_system = 'bamboohr'
+    AND effective_date < '2022-06-16'
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date DESC) = 1
+
+),
+
+employee_mapping AS (
+
+  SELECT *
+  FROM {{ref('blended_employee_mapping_source')}}
+  WHERE source_system = 'bamboohr'
+    --ensure we only get information from people after they have been hired and before Workday went live
+    AND uploaded_at < '2022-06-16'
+      AND uploaded_at > hire_date
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, uploaded_at ORDER BY uploaded_at DESC) = 1 
+
+),
+
+staffing_history AS (
+
+  SELECT *
+  FROM {{ref('staffing_history_approved_source')}}
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date DESC) = 1 
+
+),
 
 job_profiles AS (
 
@@ -37,8 +59,6 @@ team_info AS (
     LAG(unique_key, 1, NULL) OVER (PARTITION BY employee_id ORDER BY effective_date)                                           AS lag_unique_key,
     CONDITIONAL_TRUE_EVENT(unique_key != lag_unique_key) OVER ( PARTITION BY employee_id ORDER BY effective_date)              AS unique_key_group 
   FROM job_info_source
-  WHERE source_system = 'bamboohr'
-    AND effective_date < '2022-06-16'
 
 ),
 
@@ -64,21 +84,19 @@ team_info_group AS (
 job_info AS (
 
   SELECT 
-    {{ dbt_utils.surrogate_key(['employee_id', 'job_role', 'job_grade', 'jobtitle_speciality_single_select', 'jobtitle_speciality_multi_select']) }}   
+    {{ dbt_utils.surrogate_key(['employee_id', 'job_role', 'job_grade', 'jobtitle_speciality_single_select', 'jobtitle_speciality_multi_select','termination_date']) }}   
                                                                                                                                AS unique_key,
     employee_id                                                                                                                AS employee_id, 
     job_role                                                                                                                   AS management_level,
     job_grade                                                                                                                  AS job_grade, 
     jobtitle_speciality_single_select                                                                                          AS job_specialty_single,
     jobtitle_speciality_multi_select                                                                                           AS job_specialty_multi,
+    termination_date                                                                                                           AS termination_date,
     uploaded_at                                                                                                                AS effective_date,
     LAG(unique_key, 1, NULL) OVER (PARTITION BY employee_id ORDER BY uploaded_at)                                              AS lag_unique_key,
     CONDITIONAL_TRUE_EVENT(unique_key != lag_unique_key) OVER (PARTITION BY employee_id ORDER BY uploaded_at)                  AS unique_key_group 
   FROM employee_mapping
-  WHERE source_system = 'bamboohr'
-    --ensure we only get information from people after they have been hired and before Workday went live
-    AND uploaded_at < '2022-06-16'
-      AND uploaded_at > hire_date
+  
 
 ),
 
@@ -92,10 +110,11 @@ job_info_group AS (
     job_grade,
     job_specialty_single, 
     job_specialty_multi,
+    termination_date, 
     unique_key_group,
     MIN(effective_date) AS effective_date
   FROM job_info
-  {{ dbt_utils.group_by(n=6)}}
+  {{ dbt_utils.group_by(n=7)}}
   
 ),
 
@@ -113,6 +132,7 @@ SELECT
     team_info_group.position                                                                                                   AS position,
     NULL                                                                                                                       AS management_level,
     NULL                                                                                                                       AS job_grade,
+    NULL                                                                                                                       AS termination_date,
     team_info_group.effective_date                                                                                             AS effective_date
   FROM team_info_group
 
@@ -129,6 +149,7 @@ UNION
     NULL                                                                                                                       AS position,
     job_info_group.management_level                                                                                            AS management_level,
     job_info_group.job_grade                                                                                                   AS job_grade,
+    job_info_group.termination_date                                                                                            AS termination_date,
     job_info_group.effective_date                                                                                              AS effective_date
   FROM job_info_group
 
@@ -156,6 +177,8 @@ legacy_clean AS (
                                                                                                                                AS division,
     LAST_VALUE(legacy_data.entity IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                          
                                                                                                                                AS entity,
+    LAST_VALUE(legacy_data.termination_date IGNORE NULLS) OVER (PARTITION BY legacy_data.employee_id ORDER BY legacy_data.effective_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)                          
+                                                                                                                               AS termination_date,
     legacy_data.effective_date
   FROM legacy_data
 
@@ -191,6 +214,7 @@ position_history AS (
     staffing_history.job_specialty_single_current                                                                              AS job_specialty_single,
     staffing_history.job_specialty_multi_current                                                                               AS job_specialty_multi,
     staffing_history.entity_current                                                                                            AS entity,
+    staffing_history.termination_date                                                                                          AS termination_date,
     job_profiles.position                                                                                                      AS position,
     job_profiles.job_family                                                                                                    AS job_family,
     job_profiles.management_level                                                                                              AS management_level,
@@ -215,6 +239,7 @@ position_history AS (
     job_specialty_single                                                                                                       AS job_specialty_single,
     job_specialty_multi                                                                                                        AS job_specialty_multi,
     legacy_clean.entity                                                                                                        AS entity,
+    legacy_clean.termination_date                                                                                              AS termination_date,
     legacy_clean.position                                                                                                      AS position,
     NULL                                                                                                                       AS job_family,
     management_level                                                                                                           AS management_level,
@@ -242,10 +267,11 @@ union_clean AS (
     position_history.department                                                                                                AS department,
     position_history.division                                                                                                  AS division,
     position_history.entity                                                                                                    AS entity,
+    position_history.termination_date                                                                                          AS termination_date,
     position_history.is_position_active                                                                                        AS is_position_active,
     MIN(position_history.effective_date)                                                                                       AS effective_date
   FROM position_history
-  {{ dbt_utils.group_by(n=15)}}
+  {{ dbt_utils.group_by(n=16)}}
 
 ),
 
@@ -272,8 +298,8 @@ final AS (
     union_clean.division                                                                                                       AS division,
     union_clean.entity                                                                                                         AS entity,
     union_clean.is_position_active                                                                                             AS is_position_active,
-    union_clean.effective_date                                                                                                 AS valid_from,
-    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY union_clean.employee_id ORDER BY valid_from)                   AS valid_to
+    DATE(union_clean.effective_date)                                                                                           AS valid_from,
+    DATE(LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY union_clean.employee_id ORDER BY valid_from))             AS valid_to
   FROM union_clean
 
 )
