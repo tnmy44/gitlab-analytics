@@ -4132,8 +4132,8 @@ roles:
 
     - mgilgalindo:
         member_of:
-            - reporter
-            - salesforce
+            - analyst_sales
+            - restricted_safe
         warehouses:
             - dev_xs
 
