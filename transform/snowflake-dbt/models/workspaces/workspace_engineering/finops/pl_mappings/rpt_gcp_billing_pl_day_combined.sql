@@ -28,7 +28,6 @@ overlaps AS (
     service_base.env_label,
     service_base.runner_label,
     service_base.folder_label,
-    service_base.full_path,
     combined_pl_mapping.pl_category,
     service_base.usage_unit,
     service_base.pricing_unit,
@@ -69,8 +68,9 @@ overlaps AS (
 
 )
 
-SELECT *
-  EXCLUDE(priority)
-  ,{{ dbt_utils.surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'folder_label', 'pl_category', 'from_mapping']) }} AS combined_pk
+SELECT
+  *
+  EXCLUDE(priority),
+  {{ dbt_utils.surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'folder_label', 'pl_category', 'from_mapping']) }} AS combined_pk
 FROM overlaps
 WHERE priority = 1
