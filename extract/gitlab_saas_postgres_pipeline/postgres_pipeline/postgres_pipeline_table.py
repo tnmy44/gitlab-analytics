@@ -284,7 +284,7 @@ class PostgresPipelineTable:
         if is_schema_addition:
             logging.info(f"New table or schema addition: {self.target_table_name}.")
         else:
-            logging.info("Not new table/schema: {self.target_table_name}.")
+            logging.info("Not new table/schema")
         return is_schema_addition
 
     def check_and_handle_schema_removal(
