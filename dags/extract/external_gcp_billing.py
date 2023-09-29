@@ -12,6 +12,7 @@ from airflow_utils import (
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
+    REPO_BASE_PATH,
 )
 
 from kube_secrets import (
@@ -67,7 +68,6 @@ GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = gitlab_pod_env_vars
 
 default_args = {
-    "catchup": True,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -76,7 +76,7 @@ default_args = {
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
     # Only has data from March 2018
-    "start_date": datetime(2018, 3, 27),
+    "start_date": datetime(2023, 8, 24),
 }
 
 dag = DAG(
@@ -84,10 +84,8 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="0 10 * * *",
     concurrency=1,
+    catchup=True,
 )
-
-
-airflow_home = env["AIRFLOW_HOME"]
 
 external_table_run_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
@@ -108,7 +106,7 @@ dbt_external_table_run = KubernetesPodOperator(
 )
 
 with open(
-    f"{airflow_home}/analytics/extract/gcs_external/src/gcp_billing/gcs_external.yml",
+    f"{REPO_BASE_PATH}/extract/gcs_external/src/gcp_billing/gcs_external.yml",
     "r",
 ) as yaml_file:
     try:

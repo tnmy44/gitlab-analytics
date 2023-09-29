@@ -4,13 +4,14 @@
 
 {{ simple_cte([
     ('prep_crm_person', 'prep_crm_person'),
-    ('dim_date', 'dim_date')
+    ('dim_date', 'dim_date'),
+    ('sfdc_lead_source','sfdc_lead_source')
 ]) }}
-
+    
 , prep_crm_task AS (
 
   SELECT *
-  FROM {{ ref('prep_crm_task') }}
+  FROM {{ ref('prep_crm_task') }} 
   WHERE is_deleted = FALSE
 
 ), prep_crm_opportunity AS (
@@ -56,6 +57,19 @@
     AND prep_crm_task.task_date < account_opp_mapping.close_date
     AND prep_crm_task.task_date >= DATEADD('month', -9, dim_date.first_day_of_fiscal_quarter)
 WHERE prep_crm_task.SA_ACTIVITY_TYPE IS NOT NULL
+  ), 
+  
+converted_leads AS (
+-- Original CRM Task table would show null keyed id for dim_crm_person_id for leads that have been converted to contacts
+-- This CTE is pulling the most recent sfdc_record_id and dim_crm_person_id of a record so that they correspond to the values in the mart_crm_person model.
+  SELECT
+    sfdc_lead_source.converted_contact_id AS sfdc_record_id,
+    sfdc_lead_source.lead_id,
+    prep_crm_person.dim_crm_person_id
+  FROM sfdc_lead_source
+  LEFT JOIN prep_crm_person
+    ON sfdc_lead_source.converted_contact_id=prep_crm_person.sfdc_record_id
+  WHERE sfdc_lead_source.is_converted = TRUE
 
 ), final AS (
 
@@ -72,7 +86,8 @@ WHERE prep_crm_task.SA_ACTIVITY_TYPE IS NOT NULL
     {{ get_keyed_nulls('prep_crm_task.dim_crm_opportunity_id') }} AS dim_crm_opportunity_id,
     sub.dim_mapped_opportunity_id,
 
-    prep_crm_task.sfdc_record_id,
+    COALESCE(converted_leads.sfdc_record_id,prep_crm_task.sfdc_record_id) 
+                                                                  AS sfdc_record_id,
 
     -- Dates
     {{ get_date_id('prep_crm_task.task_date') }}                  AS task_date_id,
@@ -107,11 +122,14 @@ WHERE prep_crm_task.SA_ACTIVITY_TYPE IS NOT NULL
     {{ get_date_id('prep_crm_task.last_modified_date') }}         AS last_modified_date_id,
     prep_crm_task.last_modified_date
   FROM prep_crm_task
+  LEFT JOIN converted_leads
+    ON prep_crm_task.sfdc_record_id=converted_leads.lead_id
   LEFT JOIN prep_crm_person
-    ON prep_crm_task.sfdc_record_id = prep_crm_person.sfdc_record_id
+    ON COALESCE(converted_leads.sfdc_record_id,prep_crm_task.sfdc_record_id) = prep_crm_person.sfdc_record_id
   LEFT JOIN sub
     ON prep_crm_task.dim_crm_task_pk = sub.dim_crm_task_pk
     AND sub.rank_closest_opp = 1
+    
 
 )
 
@@ -120,5 +138,5 @@ WHERE prep_crm_task.SA_ACTIVITY_TYPE IS NOT NULL
     created_by="@michellecooper",
     updated_by="@jngCES",
     created_date="2022-12-05",
-    updated_date="2023-08-23"
+    updated_date="2023-08-29"
 ) }}

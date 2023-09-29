@@ -15,8 +15,8 @@
     fiscal_quarter_name,
     fiscal_year,
     CASE
-      WHEN kpi_name = 'Stage 1 Opportunities' THEN 'SAO'
-      WHEN kpi_name = 'MQL' THEN 'MQL'
+      WHEN kpi_name = 'Stage 1 Opportunities' THEN 'SAO_TARGET'
+      WHEN kpi_name = 'MQL' THEN 'MQL_TARGET'
       ELSE NULL
     END AS kpi_name, 
     crm_user_sales_segment,
@@ -404,8 +404,8 @@
     NULL AS bizible_marketing_channel,
     NULL AS bizible_marketing_channel_path,
     NULL AS bizible_medium,
-    kpi_name,
-    daily_allocated_target
+    kpi_name AS metric_type,
+    daily_allocated_target AS metric_value
   FROM targets
   
 )
@@ -413,8 +413,8 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2023-08-22",
-    updated_date="2023-08-22",
+    updated_date="2023-08-24",
   ) }}
 

@@ -10,7 +10,12 @@ WITH
 source AS (
 
   SELECT
-    OBJECT_DELETE(PARSE_JSON(value), 'gcs_export_time') AS value,
+    OBJECT_DELETE(PARSE_JSON(value), 'gcs_export_time') AS modified_value,
+    OBJECT_INSERT(modified_value,'credits', ARRAY_SORT(value['credits']::VARIANT),TRUE) AS sorted_credits,
+    OBJECT_INSERT(sorted_credits, 'labels',  ARRAY_SORT(value['labels']::VARIANT), TRUE) AS sorted_labels,
+    OBJECT_INSERT(sorted_labels, 'project::ancestors', ARRAY_SORT(value['project']['ancestors']::VARIANT), TRUE) AS sorted_project_ancestors,
+    OBJECT_INSERT(sorted_project_ancestors, 'project::labels', ARRAY_SORT(value['project']['labels']::VARIANT), TRUE) AS sorted_project_labels,
+    OBJECT_INSERT(sorted_project_labels, 'system_labels',  ARRAY_SORT(value['system_labels']::VARIANT), TRUE) AS sorted_system_labels,
     TO_TIMESTAMP(value['gcs_export_time']::INT, 6) AS gcs_export_time
   FROM {{ source('gcp_billing','detail_gcp_billing') }}
   {% if is_incremental() %}
@@ -30,7 +35,7 @@ source AS (
 grouped AS (
   
   SELECT
-    value,
+    sorted_system_labels AS value,
     gcs_export_time,
     count(*) AS occurrence_multiplier
   FROM source

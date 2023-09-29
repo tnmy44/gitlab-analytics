@@ -29,3 +29,9 @@ FROM PROD.restricted_safe_workspace_sales.rsa_tableau_asm_consolidated
 WHERE is_open = 1
 AND record_type = 'opportunity snapshot cq open closed agg'
 group by 1
+
+
+SELECT pipeline_created_date, sum(net_arr),sum(prev_quarter_net_arr),sum(prev_year_net_arr)
+FROM PROD.restricted_safe_workspace_sales.rsa_tableau_asm_consolidated
+WHERE record_type = 'opportunity snapshot cq open closed agg'
+GROUP BY 1

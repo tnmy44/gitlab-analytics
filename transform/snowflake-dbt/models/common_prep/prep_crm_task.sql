@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS(
 
     SELECT
-      task_id,
+      task_id, 
 
       --keys
       {{ dbt_utils.surrogate_key(['source.task_id']) }}             AS dim_crm_task_sk,

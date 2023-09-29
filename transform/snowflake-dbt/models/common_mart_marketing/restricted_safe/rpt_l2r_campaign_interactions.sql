@@ -46,6 +46,8 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
+      person_base.partner_prospect_status,
+      person_base.prospect_share_status,
       dim_crm_account.is_first_order_available,
       person_base.sales_segment_name AS person_sales_segment_name,
       person_base.sales_segment_grouped AS person_sales_segment_grouped,
@@ -66,7 +68,6 @@
       END AS person_order_type,
       last_utm_campaign,
       last_utm_content,
-
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -138,6 +139,7 @@
       opp.primary_campaign_source_id AS opp_primary_campaign_source_id,
       opp.owner_id AS opp_owner_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
+      partner_account.crm_account_name AS partner_account_name,
 
 	--Opp Dates
       opp.created_date AS opp_created_date,
@@ -216,6 +218,11 @@
       opp.calculated_deal_count,
       opp.days_in_stage,
       opp.record_type_name,
+      CASE
+        WHEN opp.dr_deal_id IS NOT null
+          THEN TRUE
+        ELSE FALSE
+      END AS is_created_through_deal_registration,
 
     --Person Data
       person_base.dim_crm_person_id,
@@ -261,6 +268,8 @@
       END AS person_order_type,
       last_utm_campaign,
       last_utm_content,
+      person_base.prospect_share_status,
+      person_base.partner_prospect_status,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -339,7 +348,9 @@
       ON person_base.dim_crm_person_id=map_alternative_lead_demographics.dim_crm_person_id
     LEFT JOIN dim_crm_account
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=160)}}
+    LEFT JOIN dim_crm_account partner_account
+      ON opp.partner_account=partner_account.dim_crm_account_id
+  {{dbt_utils.group_by(n=164)}}
     
 ), cohort_base_combined AS (
   
@@ -360,6 +371,7 @@
       null AS ssp_id,
       null AS opp_primary_campaign_source_id,
       null AS opp_owner_id,
+      null AS partner_account_name,
 
   --Person Data
       email_hash,
@@ -397,6 +409,8 @@
       inferred_geo,
       last_utm_campaign,
       last_utm_content,
+      prospect_share_status,
+      partner_prospect_status,
 
   --Person Dates
       true_inquiry_date,
@@ -443,6 +457,7 @@
       null AS critical_deal_flag,
       null AS is_public_sector_opp,
       null AS is_registration_from_portal,
+      null AS is_created_through_deal_registration,
 
     --Opp Data
       null AS new_logo_count,
@@ -550,6 +565,7 @@
       ssp_id,
       opp_primary_campaign_source_id,
       opp_owner_id,
+      partner_account_name,
 
     --Person Data
       email_hash,
@@ -587,6 +603,8 @@
       inferred_geo,
       last_utm_campaign,
       last_utm_content,
+      prospect_share_status,
+      partner_prospect_status,
     
     --Person Dates
       true_inquiry_date,
@@ -633,6 +651,7 @@
       critical_deal_flag,
       is_public_sector_opp,
       is_registration_from_portal,
+      is_created_through_deal_registration,
 
       --Opp Data
       new_logo_count,
@@ -741,20 +760,23 @@
       PARSE_URL(bizible_form_url_raw):parameters:utm_budget::VARCHAR        AS bizible_form_page_utm_budget,
       PARSE_URL(bizible_form_url_raw):parameters:utm_allptnr::VARCHAR       AS bizible_form_page_utm_allptnr,
       PARSE_URL(bizible_form_url_raw):parameters:utm_partnerid::VARCHAR     AS bizible_form_page_utm_partnerid,
+      PARSE_URL(bizible_form_url_raw):parameters:utm_asset_type::VARCHAR    AS bizible_form_page_utm_asset_type,
 
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_content::VARCHAR   AS bizible_landing_page_utm_content,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_budget::VARCHAR    AS bizible_landing_page_utm_budget,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr::VARCHAR   AS bizible_landing_page_utm_allptnr,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_partnerid::VARCHAR AS bizible_landing_page_utm_partnerid,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_content::VARCHAR     AS bizible_landing_page_utm_content,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_budget::VARCHAR      AS bizible_landing_page_utm_budget,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr::VARCHAR     AS bizible_landing_page_utm_allptnr,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_partnerid::VARCHAR   AS bizible_landing_page_utm_partnerid,
+       PARSE_URL(bizible_landing_page_raw):parameters:utm_asset_type::VARCHAR AS bizible_landing_page_utm_asset_type,
 
       COALESCE(bizible_landing_page_utm_campaign, bizible_form_page_utm_campaign)   AS utm_campaign,
       COALESCE(bizible_landing_page_utm_medium, bizible_form_page_utm_medium)       AS utm_medium,
       COALESCE(bizible_landing_page_utm_source, bizible_form_page_utm_source)       AS utm_source,
       
-      COALESCE(bizible_landing_page_utm_budget, bizible_form_page_utm_budget)       AS utm_budget,
-      COALESCE(bizible_landing_page_utm_content, bizible_form_page_utm_content)     AS utm_content,
-      COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)     AS utm_allptnr,
-      COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid) AS utm_partnerid,
+      COALESCE(bizible_landing_page_utm_budget, bizible_form_page_utm_budget)            AS utm_budget,
+      COALESCE(bizible_landing_page_utm_content, bizible_form_page_utm_content)          AS utm_content,
+      COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)          AS utm_allptnr,
+      COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid)      AS utm_partnerid,
+      COALESCE(bizible_landing_page_utm_asset_type, bizible_form_page_utm_asset_type) AS utm_asset_type,
 
       CASE 
         WHEN (LOWER(utm_content) LIKE '%field%'
@@ -788,6 +810,12 @@
       dim_campaign.type AS sfdc_campaign_type,
       fct_campaign.budgeted_cost,
       fct_campaign.actual_cost,
+      dim_campaign.is_a_channel_partner_involved,
+      CASE  
+        WHEN dim_campaign.will_there_be_mdf_funding = 'Yes'
+          THEN TRUE
+          ELSE FALSE
+      END AS is_mdf_campaign,
 
       -- user
       user.user_name        AS record_owner_name,
@@ -880,5 +908,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-08-07",
+    updated_date="2023-09-12",
   ) }}

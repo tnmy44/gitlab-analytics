@@ -143,12 +143,13 @@ clone_stop:
   stage: 🛑🐍 Python Critical
   image: registry.gitlab.com/gitlab-data/ci-python-image:v0.0.1
   before_script:
-    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
+    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py\|\.ipynb'$)
   tags:
     - analytics
   only:
     changes:
       - "**/*.py"
+      - "**/*.ipynb"
     refs:
       - merge_requests
   allow_failure: false
@@ -199,7 +200,7 @@ clone_stop:
   <<: *python_check
   script:
     - echo "Changed files are $CHANGED_FILES"
-    - pylint $CHANGED_FILES --ignore=analytics/dags --disable=line-too-long,E0401,E0611,W1203,W1202,C0103,R0801,R0902,W0212
+    - pylint $CHANGED_FILES --ignore=analytics/dags --disable=line-too-long,E0401,E0611,W1203,W1202,C0103,R0801,R0902,W0212,W0104,W0106,W0703
 
 🤔python_complexity:
   <<: *python_check

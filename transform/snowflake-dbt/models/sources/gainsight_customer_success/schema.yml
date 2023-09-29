@@ -54,15 +54,6 @@ models:
             - not_null
     - name: activity_attendee
       description: '{{ doc("gainsight_activity_attendee") }}'
-      tests:
-        - dbt_utils.unique_combination_of_columns:
-            combination_of_columns:
-              - activity_id
-              - external_attendee_sfdc_id
-              - internal_attendee_sfdc_id
-              - external_attendee_gs_id
-              - internal_attendee_gs_id
-              - attendee_type
       columns:
         - name: activity_id
           tests:

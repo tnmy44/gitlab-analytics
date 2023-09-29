@@ -338,7 +338,10 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , instance_url
+      , CASE
+            WHEN instance_url IS NOT NULL THEN TRUE
+            ELSE NULL
+        END as instance_url
       FROM jira_connect_installations
   keys:
     dbt_source_model: true
@@ -831,6 +834,8 @@ tables:
       , registration_objective
       , provisioned_by_group_id
       , NULL AS provisioned_by_group_at
+      , organization
+      , discord
       FROM user_details
   users_security_dashboard_projects:
     dbt_source_model: true

@@ -52,7 +52,6 @@ pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_hash }}" """
 
 # Default arguments for the DAG
 default_args = {
-    "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -94,6 +93,7 @@ dag = DAG(
     description="This DAG is responsible for doing incremental model refresh",
     default_args=default_args,
     schedule_interval="45 8 * * *",
+    catchup=False,
 )
 dag.doc_md = __doc__
 
@@ -252,7 +252,7 @@ dbt_workspaces_xl = KubernetesPodOperator(
     dag=dag,
 )
 
-# dbt-workspaces
+# dbt-workspaces-test
 dbt_workspaces_test_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&

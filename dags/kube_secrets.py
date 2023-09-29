@@ -1,6 +1,6 @@
 """ This file contains k8s secrets used in all DAGs """
 
-from airflow.contrib.kubernetes.secret import Secret
+from airflow.kubernetes.secret import Secret
 
 # BambooHR
 BAMBOOHR_API_TOKEN = Secret(
@@ -229,8 +229,6 @@ DORG_USERNAME = Secret("env", "DORG_USERNAME", "airflow", "DORG_USERNAME")
 DORG_PASSWORD = Secret("env", "DORG_PASSWORD", "airflow", "DORG_PASSWORD")
 GMAPS_API_KEY = Secret("env", "GMAPS_API_KEY", "airflow", "GMAPS_API_KEY")
 CLEARBIT_API_KEY = Secret("env", "CLEARBIT_API_KEY", "airflow", "CLEARBIT_API_KEY")
-
-MAILGUN_API_KEY = Secret("env", "MAILGUN_API_KEY", "airflow", "MAILGUN_API_KEY")
 
 # GitLab API
 GITLAB_COM_API_TOKEN = Secret(

@@ -19,6 +19,7 @@
   ('project', 'prep_project'),
   ('ptpt_scores_by_user', 'prep_ptpt_scores_by_user'),
   ('ptpf_scores_by_user', 'prep_ptpf_scores_by_user'),
+  ('ptpl_scores_by_user', 'prep_ptpl_scores_by_user'),
   ('ptp_scores_by_user', 'prep_ptp_scores_by_user'),
   ('namespace_details', 'gitlab_dotcom_namespace_details_source')
 ]) }}
@@ -848,13 +849,22 @@
       ptpf_scores_by_user.past_score_group        AS ptpf_past_score_group,
       ptpf_scores_by_user.past_score_date         AS ptpf_past_score_date,
 
+      -- Propensity to purchase Lead fields
+      IFF(ptpl_scores_by_user.lead_id IS NOT NULL, TRUE, FALSE)
+                                                  AS is_ptpl_contact,
+      ptpl_scores_by_user.score_group             AS ptpl_score_group,
+      ptpl_scores_by_user.score_date              AS ptpl_score_date,
+      ptpl_scores_by_user.past_score_group        AS ptpl_past_score_group,
+      ptpl_scores_by_user.past_score_date         AS ptpl_past_score_date,
+
       -- Propensity to purchase fields
-      IFF(ptp_scores_by_user.namespace_id IS NOT NULL, TRUE, FALSE)
+      IFF(ptp_scores_by_user.model_grain_id IS NOT NULL, TRUE, FALSE)
                                                   AS is_ptp_contact,
       IFF(is_ptp_contact = TRUE OR (is_ptp_contact = FALSE AND marketing_contact.is_ptp_contact_marketo = TRUE
         ), TRUE, FALSE)
                                                   AS is_ptp_contact_change,
-      ptp_scores_by_user.namespace_id             AS ptp_namespace_id,
+      IFF(ptp_scores_by_user.ptp_source IN ('Trial', 'Free'), ptp_scores_by_user.model_grain_id, NULL)
+                                                  AS ptp_namespace_id,
       ptp_scores_by_user.score_group              AS ptp_score_group,
       ptp_scores_by_user.score_date               AS ptp_score_date,
       ptp_scores_by_user.insights                 AS ptp_insights,
@@ -928,6 +938,8 @@
       ON ptpt_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN ptpf_scores_by_user
       ON ptpf_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
+    LEFT JOIN ptpl_scores_by_user
+      ON ptpl_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN ptp_scores_by_user
       ON ptp_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN namespace_notifications
@@ -1032,7 +1044,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2023-08-17"
+    updated_date="2023-09-04"
 ) }}

@@ -22,7 +22,7 @@ class EngineFactory:
         self.connected = False
         self.config_vars = env.copy()
         self.loader_engine = None
-        self.processing_warehouse = "LOADER"
+        self.processing_role = "LOADER"
         self.schema_name = "saas_usage_ping"
 
     def connect(self):
@@ -30,7 +30,7 @@ class EngineFactory:
         Connect to engine factory, return connection object
         """
         self.loader_engine = snowflake_engine_factory(
-            self.config_vars, self.processing_warehouse
+            self.config_vars, self.processing_role
         )
         self.connected = True
 

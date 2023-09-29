@@ -170,9 +170,7 @@ WITH filtered_source as (
           (
             -- js backend tracker
             v_tracker LIKE 'js%'
-            AND lower(page_url) NOT LIKE 'https://staging.gitlab.com/%'
-            AND lower(page_url) NOT LIKE 'https://customers.stg.gitlab.com/%'
-            AND lower(page_url) NOT LIKE 'http://localhost:%'
+            AND COALESCE(lower(page_url), '') NOT LIKE 'http://localhost:%'
           )
           
           OR
@@ -180,6 +178,20 @@ WITH filtered_source as (
           (
             -- ruby backend tracker
             v_tracker LIKE 'rb%'
+          )
+
+          OR 
+
+          (
+            -- code suggestions events
+            v_tracker LIKE 'py%'
+          )
+
+          OR
+
+          (
+            -- jetbrains plugin events
+            v_tracker LIKE 'java%'
           )
         )
         -- removing it after approval from @rparker2 in this issue: https://gitlab.com/gitlab-data/analytics/-/issues/9112
@@ -356,7 +368,12 @@ WITH filtered_source as (
       base.v_etl,
       base.v_tracker,
       base.uploaded_at,
-      base.infra_source
+      base.infra_source,
+      CASE
+        WHEN LOWER(page_url) LIKE 'https://staging.gitlab.com/%' THEN TRUE
+        WHEN LOWER(page_url) LIKE 'https://customers.stg.gitlab.com/%' THEN TRUE
+        ELSE FALSE
+      END AS is_staging_url
     FROM base
     LEFT JOIN events_with_web_page_id
       ON base.event_id = events_with_web_page_id.event_id

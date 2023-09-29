@@ -85,13 +85,13 @@ models:
   - name: prep_epic_user_request_collaboration_project
     description: ' {{ doc("prep_epic_user_request_collaboration_project") }} '
     columns:
-      - name: dim_epic_id
+      - name: epic_id
         tests:
           - not_null
       - name: dim_crm_account_id
         tests:
           - not_null
-      - name: CONCAT(dim_epic_id, dim_crm_account_id)
+      - name: CONCAT(epic_id, dim_crm_account_id)
         tests:
           - not_null
           - unique
@@ -99,13 +99,13 @@ models:
   - name: prep_epic_user_request
     description: ' {{ doc("prep_epic_user_request") }} '
     columns:
-      - name: dim_epic_id
+      - name: epic_id
         tests:
           - not_null
       - name: dim_crm_account_id
         tests:
           - not_null
-      - name: CONCAT(dim_epic_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+      - name: CONCAT(epic_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
         tests:
           - not_null
           - unique
@@ -143,6 +143,15 @@ models:
     columns:
       - name: dim_campaign_id
         description: Unique identifier of a marketing campaign
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_crm_person
+    description: '{{ doc("prep_crm_person") }}'
+    columns:
+      - name: dim_crm_person_id
+        description: Unique identifier of a Salesforce contact or lead
         tests:
           - not_null
           - unique
@@ -448,6 +457,15 @@ models:
 
   - name: prep_ptpf_scores_by_user
     description: '{{ doc("prep_ptpf_scores_by_user") }}'
+    columns:
+      - name: dim_marketing_contact_id
+        description: Unique identifier for the marketing contact.
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_ptpl_scores_by_user
+    description: '{{ doc("prep_ptpl_scores_by_user") }}'
     columns:
       - name: dim_marketing_contact_id
         description: Unique identifier for the marketing contact.
@@ -1108,10 +1126,14 @@ models:
   - name: prep_epic
     description: '{{ doc("prep_epic") }}'
     columns:
-      - name: dim_epic_id
+      - name: dim_epic_sk
         tests:
           - unique
           - not_null
+      - name: dim_plan_id_at_creation
+        description: '{{ doc("dim_plan_id_at_creation") }}'
+      - name: is_internal_epic
+        description: '{{ doc("is_internal_epic") }}'
 
   - name: prep_deployment
     description: '{{ doc("prep_deployment") }}'
