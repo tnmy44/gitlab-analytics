@@ -44,7 +44,6 @@ dbt_affinity = get_affinity_with_key_value("dbt", ["true"])
 dbt_tolerations = get_toleration_with_value("dbt")
 
 
-
 def is_local_test():
     return "NAMESPACE" in env and env["NAMESPACE"] == "testing"
 
