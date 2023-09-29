@@ -9,7 +9,7 @@ from datetime import datetime
 from postgres_utils import (
     BACKFILL_METADATA_TABLE,
     INCREMENTAL_METADATA_TABLE,
-    get_prefix_template,
+    get_prefix,
     get_initial_load_prefix,
     get_upload_file_name,
     seed_and_upload_snowflake,
@@ -24,22 +24,23 @@ class TestPostgresUtils:
     def setup(self):
         pass
 
-    def test_get_prefix_template(self):
+    def test_get_prefix(self):
         """
         Check that the prefix matches expected prefix
         """
         staging_or_processed = "staging"
         load_by_id_export_type = "backfill"
         table = "alerts"
+        table = table.upper()  # test when passed in table is UPPER
         initial_load_prefix = datetime(2023, 1, 1).strftime("%Y-%m-%d")
 
-        actual = get_prefix_template().format(
+        actual = get_prefix(
             staging_or_processed=staging_or_processed,
             load_by_id_export_type=load_by_id_export_type,
             table=table,
             initial_load_prefix=initial_load_prefix,
         )
-        expected = f"{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
+        expected = f"{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}".lower()
         assert actual == expected
 
     def test_get_initial_load_prefix(self):
@@ -56,6 +57,7 @@ class TestPostgresUtils:
     def test_get_upload_file_name(self):
         load_by_id_export_type = "backfill"
         table = "alerts"
+        table = table.upper()  # test when passed in table is UPPER
         initial_load_start_date = datetime.now()
         upload_date = datetime.now()
 
@@ -315,19 +317,26 @@ class TestPostgresUtils:
         """
         This is a tough function to test because the main logic involves running the min()/max()
         against the sql engine
+
+        Test the following:
+            - query_results() is called with the correct query (including additional filter)
+            - returns the first id in the dataframe
         """
         primary_key = "ID"
         engine = MagicMock(spec=Engine)
         table = "alerts"
-
         min_or_max = "min"
+        additional_filtering = "AND id = 50"
+
         dataframe = pd.DataFrame({"ID": [1]})
         mock_query_results.return_value = dataframe
-        min_id = get_min_or_max_id(primary_key, engine, table, min_or_max)
-        assert min_id == 1
 
-        min_or_max = "max"
-        dataframe = pd.DataFrame({"ID": [20]})
-        mock_query_results.return_value = dataframe
-        max_id = get_min_or_max_id(primary_key, engine, table, min_or_max)
-        assert max_id == 20
+        min_id = get_min_or_max_id(
+            primary_key, engine, table, min_or_max, additional_filtering
+        )
+        expected_id_query = (
+            "SELECT COALESCE(min(ID), 0) as ID FROM alerts WHERE true AND id = 50;"
+        )
+
+        mock_query_results.assert_called_once_with(expected_id_query, engine)
+        assert min_id == 1
