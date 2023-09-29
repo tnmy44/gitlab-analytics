@@ -550,14 +550,6 @@ def chunk_and_upload_metadata(
         - COPY to Snowflake after all files have been uploaded to GCS
     """
     rows_uploaded = 0
-    is_export_completed = False
-    common_write_metadata_args = {
-        "metadata_engine": database_kwargs["metadata_engine"],
-        "metadata_table": database_kwargs["metadata_table"],
-        "database_name": database_kwargs["source_database"],
-        "table_name": database_kwargs["real_target_table"],
-        "max_id": max_source_id,
-    }
 
     with tempfile.TemporaryFile() as tmpfile:
         iter_csv = read_sql_tmpfile(
@@ -589,34 +581,34 @@ def chunk_and_upload_metadata(
             if row_count > 0:
                 upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
                 logging.info(f"Uploaded {row_count} rows to GCS in {upload_file_name}")
+                is_export_completed = last_extracted_id >= max_source_id
+
+                # upload to Snowflake before writing metadata=complete for safety
+                if is_export_completed:
+                    upload_to_snowflake_after_extraction(
+                        chunk_df,
+                        database_kwargs,
+                        load_by_id_export_type,
+                        initial_load_start_date,
+                        advanced_metadata,
+                    )
 
                 write_metadata(
-                    **common_write_metadata_args,
-                    initial_load_start_date=initial_load_start_date,
-                    upload_date=upload_date,
-                    upload_file_name=upload_file_name,
-                    last_extracted_id=last_extracted_id,
-                    is_export_completed=is_export_completed,
-                    chunk_row_count=row_count,
+                    database_kwargs["metadata_engine"],
+                    database_kwargs["metadata_table"],
+                    database_kwargs["source_database"],
+                    database_kwargs["source_table"],
+                    initial_load_start_date,
+                    upload_date,
+                    upload_file_name,
+                    last_extracted_id,
+                    max_source_id,
+                    is_export_completed,
+                    row_count,
                 )
-
-    upload_to_snowflake_after_extraction(
-        chunk_df,
-        database_kwargs,
-        load_by_id_export_type,
-        initial_load_start_date,
-        advanced_metadata,
-    )
-
-    write_metadata(
-        **common_write_metadata_args,
-        initial_load_start_date=initial_load_start_date,
-        upload_date=datetime.now(),
-        upload_file_name=upload_file_name,
-        last_extracted_id=last_extracted_id,
-        is_export_completed=True,
-        chunk_row_count=row_count,
-    )
+                # for loop should auto-terminate, but to be safe, avoid table overwrite
+                if is_export_completed:
+                    break
 
     # need to return in case it was first set here
     return initial_load_start_date
