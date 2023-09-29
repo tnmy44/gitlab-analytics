@@ -355,14 +355,16 @@ def write_metadata(
     logging.info(f"Wrote to {metadata_table} table for: {upload_file_name}")
 
 
-def get_prefix_template() -> str:
+def get_prefix(
+    staging_or_processed, load_by_id_export_type, table, initial_load_prefix
+) -> str:
     """
     Returns something like this:
     staging/backfill_data/alert_management_http_integrations/initial_load_start_2023-04-07t16:50:28.132
     """
     return (
-        "{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
-    )
+        f"{staging_or_processed}/{load_by_id_export_type}/{table}/{initial_load_prefix}"
+    ).lower()
 
 
 def get_initial_load_prefix(initial_load_start_date):
@@ -378,7 +380,6 @@ def get_upload_file_name(
     version: str = None,
     filetype: str = "parquet",
     compression: str = "gzip",
-    prefix_template: str = get_prefix_template(),
     filename_template: str = "{timestamp}_{table}{version}.{filetype}.{compression}",
 ) -> str:
     """Generate a unique and descriptive filename for uploading data to cloud storage.
@@ -389,8 +390,7 @@ def get_upload_file_name(
         version (str, optional): The version of the data. Defaults to None.
         filetype (str, optional): The file format. Defaults to 'parquet'.
         compression (str, optional): The compression method. Defaults to 'gzip'.
-        prefix_template (str, optional): The prefix template for the folder structure.
-            Defaults to get_prefix_template()'s template
+            Defaults to get_prefix()'s template
         filename_template (str, optional): The filename template.
             Defaults to '{timestamp}_{table}_{version}.{filetype}.{compression}'.
 
@@ -399,7 +399,7 @@ def get_upload_file_name(
     """
     # Format folder structure
     initial_load_prefix = get_initial_load_prefix(initial_load_start_date)
-    prefix = prefix_template.format(
+    prefix = get_prefix(
         staging_or_processed="staging",
         load_by_id_export_type=load_by_id_export_type,
         table=table,
@@ -435,7 +435,7 @@ def upload_initial_load_prefix_to_snowflake(
     From GCS bucket, upload all files from a
     initial_load_start_date prefix -> Snowflake
     """
-    prefix = get_prefix_template().format(
+    prefix = get_prefix(
         staging_or_processed="staging",
         load_by_id_export_type=load_by_id_export_type,
         table=database_kwargs["real_target_table"],
@@ -846,7 +846,7 @@ def remove_files_from_gcs(load_by_id_export_type: str, target_table: str):
     """
     bucket = get_gcs_bucket()
 
-    prefix = get_prefix_template().format(
+    prefix = get_prefix(
         staging_or_processed="staging",
         load_by_id_export_type=load_by_id_export_type,
         table=target_table,
