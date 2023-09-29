@@ -11,7 +11,7 @@
   ('gitlab_dotcom_members_source', 'gitlab_dotcom_members_source'),
   ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
   ('customers_db_charges_xf', 'customers_db_charges_xf'),
-  ('customers_db_trials', 'customers_db_trials'),
+  ('customers_db_trials', 'customers_db_trials_source'),
   ('customers_db_leads', 'customers_db_leads_source'),
   ('fct_event_user_daily', 'fct_event_user_daily'),
   ('map_gitlab_dotcom_xmau_metrics', 'map_gitlab_dotcom_xmau_metrics'),
