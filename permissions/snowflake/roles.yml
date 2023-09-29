@@ -3501,6 +3501,7 @@ roles:
 
     - jonglee:
         member_of:
+            - gainsight
             - reporter
             - restricted_safe
             - salesforce
