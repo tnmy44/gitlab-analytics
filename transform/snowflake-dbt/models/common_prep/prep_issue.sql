@@ -132,7 +132,7 @@
           WHEN gitlab_dotcom_issues_source.is_confidential = TRUE
             THEN 'confidential - masked'
           WHEN prep_project.visibility_level != 'public'
-            AND prep_namespace.namespace_is_internal = FALSE
+            AND namespace_prep.namespace_is_internal = FALSE
             THEN 'private/internal - masked'
           ELSE {{field}}
         END                                                                 AS {{field}},
