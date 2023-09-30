@@ -34,7 +34,7 @@
       dim_date.date_id                                              AS created_date_id,
       IFNULL(prep_project.dim_project_id, -1)                       AS dim_project_id,
       IFNULL(prep_project.ultimate_parent_namespace_id, -1)         AS ultimate_parent_namespace_id,
-      IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)               AS dim_plan_id
+      IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)              AS dim_plan_id
     FROM resource_weight_events
     LEFT JOIN prep_issue
       ON resource_weight_events.issue_id = dim_issue.issue_id

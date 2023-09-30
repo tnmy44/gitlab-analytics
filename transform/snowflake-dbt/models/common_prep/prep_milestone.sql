@@ -44,7 +44,9 @@
       dim_date.date_id                                                                              AS created_date_id,
       IFNULL(dim_project.dim_project_id, -1)                                                        AS dim_project_id,
       COALESCE(dim_project.ultimate_parent_namespace_id, milestones.group_id, -1)                   AS ultimate_parent_namespace_id,
-  COALESCE(dim_namespace_plan_hist.dim_plan_id, prep_gitlab_dotcom_plan.dim_plan_id, 34)            AS dim_plan_id
+      COALESCE(dim_namespace_plan_hist.dim_plan_id, prep_gitlab_dotcom_plan.dim_plan_id, 34)        AS dim_plan_id,
+      milestones.milestone_title,
+      milestones.due_date                                                                           AS milestone_due_date
     FROM milestones
     LEFT JOIN dim_project
       ON milestones.project_id = dim_project.dim_project_id

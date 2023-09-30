@@ -68,7 +68,7 @@
 ), upvote_count AS (
 
     SELECT
-      awardable_id                                        AS dim_issue_id,
+      awardable_id                                        AS issue_id,
       SUM(IFF(award_emoji_name LIKE 'thumbsup%', 1, 0))   AS thumbsups_count,
       SUM(IFF(award_emoji_name LIKE 'thumbsdown%', 1, 0)) AS thumbsdowns_count,
       thumbsups_count - thumbsdowns_count                 AS upvote_count
@@ -79,11 +79,11 @@
 ), agg_labels AS (
 
     SELECT 
-      gitlab_dotcom_issues_source.issue_id                                                          AS dim_issue_id,
+      gitlab_dotcom_issues_source.issue_id                                                          AS issue_id,
       ARRAY_AGG(LOWER(prep_labels.label_title)) WITHIN GROUP (ORDER BY prep_labels.label_title ASC) AS labels
     FROM gitlab_dotcom_issues_source
     LEFT JOIN prep_label_links
-        ON gitlab_dotcom_issues_source.issue_id = prep_label_links.dim_issue_id
+        ON gitlab_dotcom_issues_source.issue_id = prep_label_links.issue_id
     LEFT JOIN prep_labels
         ON prep_label_links.dim_label_id = prep_labels.dim_label_id
     GROUP BY gitlab_dotcom_issues_source.issue_id  
@@ -132,7 +132,7 @@
           WHEN gitlab_dotcom_issues_source.is_confidential = TRUE
             THEN 'confidential - masked'
           WHEN prep_project.visibility_level != 'public'
-            AND namespace_prep.namespace_is_internal = FALSE
+          AND namespace_prep.namespace_is_internal = FALSE
             THEN 'private/internal - masked'
           ELSE {{field}}
         END                                                                 AS {{field}},
@@ -145,8 +145,8 @@
       gitlab_dotcom_issues_source.has_discussion_locked,
       gitlab_dotcom_issues_source.relative_position,
       gitlab_dotcom_issues_source.service_desk_reply_to,
-      gitlab_dotcom_issues_source.state_id,
-      {{ map_state_id('state_id') }}                                        AS issue_state,
+      gitlab_dotcom_issues_source.state_id                                 AS issue_state_id,
+      {{ map_state_id('gitlab_dotcom_issues_source.state_id') }}           AS issue_state,
       gitlab_dotcom_issues_source.issue_type,
       CASE 
         WHEN prep_issue_severity.severity = 4
@@ -178,13 +178,13 @@
       IFF(prep_project.visibility_level = 'private',
         'private - masked',
         prep_milestone.milestone_title)                                     AS milestone_title,
-      prep_milestone.due_date                                               AS milestone_due_date,
+      prep_milestone.milestone_due_date,
       agg_labels.labels,
       IFNULL(upvote_count.upvote_count, 0)                                  AS upvote_count,
       issue_metrics.first_mentioned_in_commit_at,
       issue_metrics.first_associated_with_milestone_at,
       issue_metrics.first_added_to_board_at,
-      namespace_prep.is_internal                                            AS is_internal_issue,
+      namespace_prep.namespace_is_internal                                  AS is_internal_issue,
       first_events_weight.first_weight_set_at,
       CASE
       WHEN ARRAY_CONTAINS('priority::1'::variant, agg_labels.labels)
@@ -203,27 +203,27 @@
     END                                                                     AS priority,
 
     CASE
-      WHEN projects.namespace_id = 9970
+      WHEN namespace_prep.namespace_id = 9970
         AND ARRAY_CONTAINS('security'::variant, agg_labels.labels)
         THEN TRUE
       ELSE FALSE
     END                                                                     AS is_security_issue,
 
-    IFF(issues.project_id IN ({{is_project_included_in_engineering_metrics()}}),
+    IFF(gitlab_dotcom_issues_source.project_id IN ({{is_project_included_in_engineering_metrics()}}),
       TRUE, FALSE)                                                          AS is_included_in_engineering_metrics,
-    IFF(issues.project_id IN ({{is_project_part_of_product()}}),
+    IFF(gitlab_dotcom_issues_source.project_id IN ({{is_project_part_of_product()}}),
       TRUE, FALSE)                                                          AS is_part_of_product,
     CASE
-      WHEN projects.namespace_id = 9970
+      WHEN namespace_prep.namespace_id = 9970
         AND ARRAY_CONTAINS('community contribution'::variant, agg_labels.labels)
         THEN TRUE
       ELSE FALSE
       END                                                                   AS is_community_contributor_related
     FROM gitlab_dotcom_issues_source
     LEFT JOIN agg_labels
-        ON gitlab_dotcom_issues_source.issue_id = agg_labels.dim_issue_id
+        ON gitlab_dotcom_issues_source.issue_id = agg_labels.issue_id
     LEFT JOIN prep_project 
-      ON gitlab_dotcom_issues_source.project_id = prep_project.dim_project_id
+      ON gitlab_dotcom_issues_source.project_id = prep_project.project_id
     LEFT JOIN prep_namespace_plan_hist
       ON prep_project.ultimate_parent_namespace_id = prep_namespace_plan_hist.dim_namespace_id
       AND gitlab_dotcom_issues_source.created_at >= prep_namespace_plan_hist.valid_from
@@ -240,11 +240,11 @@
     LEFT JOIN prep_milestone
       ON prep_milestone.milestone_id = gitlab_dotcom_issues_source.milestone_id
     LEFT JOIN upvote_count
-      ON upvote_count.dim_issue_id = gitlab_dotcom_issues_source.issue_id
+      ON upvote_count.issue_id = gitlab_dotcom_issues_source.issue_id
     LEFT JOIN issue_metrics
       ON gitlab_dotcom_issues_source.issue_id = issue_metrics.issue_id
     LEFT JOIN namespace_prep
-      ON dim_project.dim_namespace_id = namespace_prep.dim_namespace_id
+      ON prep_project.dim_namespace_sk = namespace_prep.dim_namespace_sk
     LEFT JOIN first_events_weight
       ON gitlab_dotcom_issues_source.issue_id = first_events_weight.issue_id
     LEFT JOIN prep_epic
