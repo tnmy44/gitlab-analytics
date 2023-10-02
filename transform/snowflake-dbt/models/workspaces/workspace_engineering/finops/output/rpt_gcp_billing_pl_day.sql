@@ -33,7 +33,7 @@ overlaps AS (
     pl_combined.infra_label,
     pl_combined.env_label,
     pl_combined.runner_label,
-    pl_combined.folder_label,
+    COALESCE(pl_combined.folder_label, 'null')                                               AS folder_label,
     COALESCE(lookback_pl_mappings.pl_category, pl_combined.pl_category)                      AS pl_category,
     pl_combined.usage_unit,
     pl_combined.pricing_unit,
