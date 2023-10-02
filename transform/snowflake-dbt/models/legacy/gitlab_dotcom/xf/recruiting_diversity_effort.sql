@@ -2,7 +2,9 @@ WITH issues AS (
   
     SELECT *
     FROM {{ ref ('prep_issue') }}
-    WHERE dim_project_id =16492321 --Recruiting for Open Positions
+    LEFT JOIN  {{ ref('prep_project') }}
+      ON prep_issue.dim_project_sk = prep_project.dim_project_sk
+    WHERE prep_project.project_id = 16492321 --Recruiting for Open Positions
 
 ), users AS (
 

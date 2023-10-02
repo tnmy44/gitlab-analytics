@@ -22,9 +22,9 @@
       valid_from
     FROM gitlab_dotcom_issue_links_source
     LEFT JOIN prep_issue source_issue
-      ON gitlab_dotcom_issue_links_source.source_id = prep_issue.issue_id
+      ON gitlab_dotcom_issue_links_source.source_id = source_issue.issue_id
     LEFT JOIN prep_issue target_issue
-      ON gitlab_dotcom_issue_links_source.target_id = prep_issue.issue_id
+      ON gitlab_dotcom_issue_links_source.target_id = target_issue.issue_id
 
 
 )

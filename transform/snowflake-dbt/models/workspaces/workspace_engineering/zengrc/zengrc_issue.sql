@@ -3,7 +3,7 @@
     ('prep_issue', 'zengrc_issue_source')
 ]) }}
 
-), joined AS (
+, joined AS (
 
   SELECT
     zengrc_issue_source.gitlab_dotcom_issue_id,

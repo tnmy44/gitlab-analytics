@@ -37,7 +37,7 @@
       IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)              AS dim_plan_id
     FROM resource_weight_events
     LEFT JOIN prep_issue
-      ON resource_weight_events.issue_id = dim_issue.issue_id
+      ON resource_weight_events.issue_id = prep_issue.issue_id
     LEFT JOIN prep_project
       ON prep_issue.dim_project_sk = prep_project.prep_project_sk
     LEFT JOIN prep_namespace_plan_hist

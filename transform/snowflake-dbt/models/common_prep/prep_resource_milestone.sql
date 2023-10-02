@@ -30,7 +30,7 @@
       resource_milestone_events.resource_milestone_event_id                                   AS dim_resource_milestone_id,
       COALESCE(prep_issue.dim_project_sk,
                 prep_merge_request.dim_project_sk)                                            AS dim_project_sk,
-      COALESCE(dim_issue.dim_plan_id_at_creation,
+      COALESCE(prep_issue.dim_plan_id_at_creation,
                 prep_merge_request.dim_plan_id)                                               AS dim_plan_id,
       COALESCE(prep_issue.ultimate_parent_namespace_id,
                 prep_merge_request.ultimate_parent_namespace_id)                              AS ultimate_parent_namespace_id,

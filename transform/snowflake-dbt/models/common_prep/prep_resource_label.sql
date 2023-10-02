@@ -13,7 +13,8 @@
     ('prep_epic', 'prep_epic'),
     ('prep_issue', 'prep_issue'),
     ('dim_merge_request', 'dim_merge_request'),
-    ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan')
+    ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan'),
+    ('prep_project', 'prep_project')
 ]) }}
 
 , resource_label_events AS (
@@ -36,7 +37,7 @@
 
     SELECT 
       resource_label_events.resource_label_event_id                         AS dim_issue_label_id,
-      COALESCE(prep_issue.dim_project_id,
+      COALESCE(issue_project.project_id,
                 dim_merge_request.dim_project_id)                           AS dim_project_id,
       COALESCE(prep_epic.dim_plan_id_at_creation,
                 prep_issue.dim_plan_id_at_creation,
@@ -63,6 +64,8 @@
       ON prep_epic.dim_namespace_sk = namespace_prep.dim_namespace_sk
     LEFT JOIN prep_gitlab_dotcom_plan
       ON prep_epic.dim_plan_sk_at_creation = prep_gitlab_dotcom_plan.dim_plan_sk
+    LEFT JOIN prep_project AS issue_project
+      ON prep_issue.dim_project_sk = issue_project.dim_project_sk
 
 )
 

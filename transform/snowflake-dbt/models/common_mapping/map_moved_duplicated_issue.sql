@@ -29,7 +29,7 @@ WITH RECURSIVE issues AS (
     INNER JOIN issues_moved_duplicated AS iter
       ON iter.moved_duplicated_to_id = anchor.issue_id
 
-), final AS (
+), mapping_results AS (
 
     SELECT
       issue_id                                                             AS issue_id,
@@ -37,10 +37,20 @@ WITH RECURSIVE issues AS (
       issue_lineage[ARRAY_SIZE(issue_lineage) - 1]::NUMBER                 AS last_moved_duplicated_issue_id,
       IFF(last_moved_duplicated_issue_id != issue_id, TRUE, FALSE)         AS is_issue_moved_duplicated,
       --return final common dimension mapping,
-      prep_issue.dim_issue_sk                                              AS dim_issue_sk
+      last_moved_duplicated_issue_id                                       AS dim_issue_id
     FROM recursive_cte
+
+), final AS (
+
+    SELECT
+      mapping_results.issue_id,
+      mapping_results.issue_lineage,
+      mapping_results.last_moved_duplicated_issue_id,
+      mapping_results.is_issue_moved_duplicated,
+      prep_issue.dim_issue_sk
+    FROM mapping_results
     LEFT JOIN {{ ref('prep_issue') }}
-      ON recursive_cte.last_moved_duplicated_issue_id = prep_issue.issue_id
+      ON mapping_results.last_moved_duplicated_issue_id = prep_issue.issue_id
 
 )
 
