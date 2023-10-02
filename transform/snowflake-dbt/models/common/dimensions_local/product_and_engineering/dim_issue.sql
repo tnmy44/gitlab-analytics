@@ -51,7 +51,7 @@ WITH prep_issue AS (
       has_discussion_locked,
       relative_position,
       service_desk_reply_to,
-      state_id,
+      issue_state_id,
       issue_state,
       issue_type,
       severity,

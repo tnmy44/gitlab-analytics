@@ -15,7 +15,7 @@ WITH resource_label_events AS (
 , issues AS (
 
     SELECT
-      prep_issue.*
+      prep_issue.*,
       prep_namespace.namespace_id
     FROM {{ ref('prep_issue') }}
     LEFT JOIN  {{ ref('prep_namespace') }}

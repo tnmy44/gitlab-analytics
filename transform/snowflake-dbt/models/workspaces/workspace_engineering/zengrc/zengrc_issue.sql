@@ -1,6 +1,6 @@
 {{ simple_cte([
     ('zengrc_issue_source', 'zengrc_issue_source'),
-    ('prep_issue', 'zengrc_issue_source')
+    ('prep_issue', 'prep_issue')
 ]) }}
 
 , joined AS (

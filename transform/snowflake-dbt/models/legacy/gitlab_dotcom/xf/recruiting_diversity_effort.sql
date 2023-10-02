@@ -30,7 +30,7 @@ WITH issues AS (
 
     SELECT 
       issues.issue_title,
-      issues.issue_iid,
+      issues.issue_internal_id,
       issues.issue_created_at,
       DATE_TRUNC(week,issue_created_at)                                 AS issue_created_week,
       issues.issue_closed_at,
@@ -81,7 +81,7 @@ WITH issues AS (
 
     SELECT
       issue_title,
-      issue_iid,
+      issue_internal_id AS issue_iid,
       issue_created_at,
       issue_created_week,
       issue_closed_at,

@@ -39,7 +39,7 @@
     LEFT JOIN prep_issue
       ON resource_weight_events.issue_id = prep_issue.issue_id
     LEFT JOIN prep_project
-      ON prep_issue.dim_project_sk = prep_project.prep_project_sk
+      ON prep_issue.dim_project_sk = prep_project.dim_project_sk
     LEFT JOIN prep_namespace_plan_hist
       ON prep_project.ultimate_parent_namespace_id = prep_namespace_plan_hist.dim_namespace_id
         AND resource_weight_events.created_at >= prep_namespace_plan_hist.valid_from

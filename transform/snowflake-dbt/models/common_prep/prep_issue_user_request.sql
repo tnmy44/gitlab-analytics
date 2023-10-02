@@ -6,7 +6,7 @@
     ('prep_issue', 'prep_issue'),
     ('map_namespace_internal', 'map_namespace_internal'),
     ('prep_namespace', 'prep_namespace'),
-    ('project', 'gitlab_dotcom_projects_source'),
+    ('project', 'prep_project'),
     ('zendesk_ticket', 'zendesk_tickets_source'),
     ('zendesk_organization', 'zendesk_organizations_source'),
     ('map_moved_duplicated_issue', 'map_moved_duplicated_issue'),
@@ -16,8 +16,8 @@
 , issue_notes AS (
 
     SELECT
-      noteable_id AS issue_id,
-      *
+      gitlab_dotcom_notes_source.noteable_id AS issue_id,
+      gitlab_dotcom_notes_source.*
     FROM {{ ref('gitlab_dotcom_notes_source') }}
     WHERE noteable_type = 'Issue'
       AND system = FALSE
@@ -29,9 +29,9 @@
       prep_issue.*
     FROM prep_issue
     INNER JOIN project
-      ON project.project_id = issue.project_id
+      ON project.dim_project_sk = prep_issue.dim_project_sk
     INNER JOIN prep_namespace
-      ON project.namespace_id = prep_namespace.dim_namespace_id
+      ON project.dim_namespace_sk = prep_namespace.dim_namespace_sk
     WHERE prep_namespace.ultimate_parent_namespace_id = 9970 -- Gitlab-org group namespace id
 
 ),  gitlab_issue_description_parsing AS (
@@ -49,7 +49,9 @@
 
 ), issue_notes_extended AS (
 
-    SELECT issue_notes.*
+    SELECT
+      issue_notes.*,
+      issue_extended.dim_issue_sk
     FROM issue_notes
     INNER JOIN issue_extended
       ON issue_notes.issue_id = issue_extended.issue_id

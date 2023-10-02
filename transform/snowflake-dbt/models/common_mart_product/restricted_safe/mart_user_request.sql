@@ -172,7 +172,7 @@
     LEFT JOIN prep_labels
       ON prep_label_links.dim_label_id = prep_labels.dim_label_id
     LEFT JOIN dim_issue
-      ON label_links_joined.issue_id = dim_issue.issue_id
+      ON prep_label_links.issue_id = dim_issue.issue_id
 
 ), issue_labels AS (
 

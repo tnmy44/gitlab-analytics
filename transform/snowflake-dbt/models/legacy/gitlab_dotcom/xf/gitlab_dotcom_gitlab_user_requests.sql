@@ -30,7 +30,7 @@ WITH epic_issues AS (
 ), projects AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_projects') }}
+    FROM {{ ref('prep_project') }}
 
 ), namespaces AS (
 
@@ -48,6 +48,11 @@ WITH epic_issues AS (
     SELECT *
     FROM {{ ref('sfdc_opportunity_xf') }}
 
+), milestones AS (
+
+    SELECT *
+    FROM {{ ref('prep_milestone') }}
+
 /* Created 4 Separate CTEs to be unioned */
 
 ), sfdc_accounts_from_issue_notes AS (
@@ -58,8 +63,8 @@ WITH epic_issues AS (
       issues.issue_id            AS noteable_id,
       issues.issue_internal_id   AS noteable_iid,
       issues.issue_title         AS noteable_title,
-      issues.issue_created_at    AS noteable_created_at,
-      issues.milestone_id,
+      issues.created_at          AS noteable_created_at,
+      milestones.milestone_id,
       issues.issue_state         AS noteable_state,
       issues.weight,
       issues.labels,
@@ -76,15 +81,17 @@ WITH epic_issues AS (
     INNER JOIN issues
       ON gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_id = issues.issue_id
     LEFT JOIN projects
-      ON issues.dim_project_id = projects.project_id
+      ON issues.dim_project_sk = projects.dim_project_sk
     LEFT JOIN namespaces
-      ON projects.namespace_id = namespaces.namespace_id
+      ON projects.dim_namespace_sk = namespaces.dim_namespace_sk
     LEFT JOIN sfdc_accounts
       ON gitlab_dotcom_notes_linked_to_sfdc_account_id.sfdc_account_id = sfdc_accounts.account_id
     LEFT JOIN epic_issues
       ON issues.issue_id = epic_issues.issue_id
     LEFT JOIN epics
       ON epic_issues.epic_id = epics.epic_id
+    LEFT JOIN milestones
+      ON issues.dim_milestone_sk = milestones.dim_milestone_sk
     WHERE gitlab_dotcom_notes_linked_to_sfdc_account_id.noteable_type = 'Issue'
 
 ), sfdc_accounts_from_epic_notes AS (
@@ -126,9 +133,9 @@ WITH epic_issues AS (
       issues.issue_id,
       issues.issue_internal_id,
       issues.issue_title,
-      issues.issue_created_at,
-      issues.milestone_id,
-      issues.state AS issue_state,
+      issues.created_at,
+      milestones.milestone_id,
+      issues.issue_state AS issue_state,
       issues.weight,
       issues.labels,
       projects.project_name,
@@ -145,15 +152,17 @@ WITH epic_issues AS (
       ON gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.noteable_id = issues.issue_id
       AND gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.noteable_type = 'Issue'
     LEFT JOIN projects
-      ON issues.project_id = projects.project_id
+      ON issues.dim_project_sk = projects.dim_project_sk
     LEFT JOIN namespaces
-      ON projects.namespace_id = namespaces.namespace_id
+      ON projects.dim_namespace_sk = namespaces.dim_namespace_sk
     LEFT JOIN sfdc_accounts
       ON gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id.sfdc_account_id = sfdc_accounts.account_id
     LEFT JOIN epic_issues
       ON issues.issue_id = epic_issues.issue_id
     LEFT JOIN epics
       ON epic_issues.epic_id = epics.epic_id
+    LEFT JOIN milestones
+      ON issues.dim_milestone_sk = milestones.dim_milestone_sk
 
 ), sfdc_accounts_from_epic_descriptions AS (
 
