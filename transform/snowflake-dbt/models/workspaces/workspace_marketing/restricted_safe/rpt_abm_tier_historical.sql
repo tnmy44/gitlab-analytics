@@ -3,7 +3,7 @@
 {{ simple_cte([
     ('sfdc_account_snapshots_source','sfdc_account_snapshots_source'),
     ('mart_crm_opportunity_stamped_hierarchy_hist','mart_crm_opportunity_stamped_hierarchy_hist'),
-    ('rpt_lead_to_revenue','rpt_lead_to_revenue'), 
+    ('fct_crm_person','fct_crm_person'), 
     ('dim_date','dim_date')
 ]) }}
 
@@ -58,8 +58,8 @@
     
   --Person Dates
     true_inquiry_date,
-    mql_date_latest_pt
-  FROM rpt_lead_to_revenue
+    mql_datetime_latest_pt::DATE AS mql_date_latest_pt
+  FROM fct_crm_person
   WHERE true_inquiry_date >= '2022-02-01'
     OR mql_date_latest_pt >= '2022-02-01'
  
