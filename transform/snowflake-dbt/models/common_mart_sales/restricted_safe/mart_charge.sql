@@ -14,9 +14,20 @@
     ('dim_crm_user','dim_crm_user'),
     ('dim_order', 'dim_order'),
     ('dim_order_action', 'dim_order_action'),
+    ('dim_namespace', 'dim_namespace'),
     ('fct_charge','fct_charge'),
-    ('prep_billing_account_user', 'prep_billing_account_user')
+    ('prep_billing_account_user', 'prep_billing_account_user'),
+    ('fct_trial_latest', 'fct_trial_latest'),
+    ('fct_trial_first', 'fct_trial_first')
 ]) }}
+
+, unique_fct_trial_first AS (
+    SELECT
+      dim_namespace_id,
+      trial_start_date
+    FROM fct_trial_first
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY trial_start_date) = 1
+)
 
 , mart_charge AS (
 
@@ -31,11 +42,22 @@
       dim_charge.rate_plan_charge_version                                             AS rate_plan_charge_version,
       dim_charge.rate_plan_charge_segment                                             AS rate_plan_charge_segment,
 
+      --Foreign keys
+      dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
+      dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
+      dim_subscription.namespace_id                                                   AS dim_namespace_id,
+      dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
+      dim_product_detail.dim_product_detail_id                                        AS dim_product_detail_id,
+      dim_crm_account.dim_crm_account_id                                              AS dim_crm_account_id,
+      fct_charge.dim_order_id                                                         AS dim_order_id,
+
       --Charge Information
       dim_charge.rate_plan_name                                                       AS rate_plan_name,
       dim_charge.rate_plan_charge_name                                                AS rate_plan_charge_name,
       dim_charge.rate_plan_charge_description                                         AS rate_plan_charge_description,
       dim_charge.charge_type                                                          AS charge_type,
+      dim_charge.unit_of_measure                                                      AS unit_of_measure,
+      dim_charge.charge_term                                                          AS charge_term,
       dim_charge.is_paid_in_full                                                      AS is_paid_in_full,
       dim_charge.is_last_segment                                                      AS is_last_segment,
       dim_charge.is_included_in_arr_calc                                              AS is_included_in_arr_calc,
@@ -47,7 +69,8 @@
       dim_charge.charge_updated_date                                                  AS charge_updated_date,
 
       --Subscription Information
-      dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
+      dim_subscription.dim_subscription_id_original                                   AS dim_subscription_id_original,
+      dim_subscription.dim_subscription_id_previous                                   AS dim_subscription_id_previous,
       dim_subscription.created_by_id                                                  AS subscription_created_by_id,
       dim_subscription.updated_by_id                                                  AS subscription_updated_by_id,
       dim_subscription.subscription_start_date                                        AS subscription_start_date,
@@ -74,14 +97,19 @@
       dim_subscription.contract_operational_metrics,
       dim_subscription.contract_auto_renewal,
       dim_subscription.turn_on_auto_renewal,
+      dim_subscription.renewal_term,
+      dim_subscription.renewal_term_period_type,
       dim_subscription.contract_seat_reconciliation,
       dim_subscription.turn_on_seat_reconciliation,
       dim_subscription.invoice_owner_account,
       dim_subscription.creator_account,
       dim_subscription.was_purchased_through_reseller,
+      DATEDIFF(days, unique_fct_trial_first.trial_start_date, 
+                dim_subscription.subscription_start_date)                             AS days_between_first_trial_and_subscription_start,
+      DATEDIFF(days, fct_trial_latest.latest_trial_start_date, 
+                dim_subscription.subscription_start_date)                             AS days_between_latest_trial_and_subscription_start,
 
       --billing account info
-      dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
       dim_billing_account.sold_to_country                                             AS sold_to_country,
       dim_billing_account.billing_account_name                                        AS billing_account_name,
       dim_billing_account.billing_account_number                                      AS billing_account_number,
@@ -90,10 +118,25 @@
       dim_billing_account.auto_pay                                                    AS auto_pay,
       dim_billing_account.default_payment_method_type                                 AS default_payment_method_type,
 
+      -- namespace info
+      dim_namespace.ultimate_parent_namespace_id                                      AS ultimate_parent_namespace_id,
+      DATEDIFF(days, dim_namespace.created_at, 
+                fct_trial_latest.latest_trial_start_date)                             AS days_since_namespace_creation_at_trial_start,
+
+      -- customer db info
+      fct_trial_latest.internal_customer_id                                           AS internal_customer_id,
+      fct_trial_latest.is_trial_converted                                             AS is_trial_converted_namespace,
+      unique_fct_trial_first.trial_start_date                                         AS first_trial_start_date,
+      fct_trial_latest.latest_trial_start_date                                        AS latest_trial_start_date,
+      CASE WHEN 
+        dim_namespace.created_at::DATE = fct_trial_latest.latest_trial_start_date
+      THEN TRUE
+      ELSE FALSE
+      END                                                                             AS is_trial_started_on_namespace_creation_date,
+
+
       -- crm account info
-      dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
       dim_crm_user.crm_user_sales_segment                                             AS crm_user_sales_segment,
-      dim_crm_account.dim_crm_account_id                                              AS dim_crm_account_id,
       dim_crm_account.crm_account_name                                                AS crm_account_name,
       dim_crm_account.dim_parent_crm_account_id                                       AS dim_parent_crm_account_id,
       dim_crm_account.parent_crm_account_name                                         AS parent_crm_account_name,
@@ -108,7 +151,6 @@
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
 
       -- order info
-      fct_charge.dim_order_id                                                         AS dim_order_id,
       CASE
         WHEN (dim_order_action.dim_order_action_id IS NOT NULL
         OR dim_amendment_subscription.amendment_type = 'Renewal')
@@ -132,6 +174,15 @@
             THEN 'Customer Portal'
         ELSE NULL
       END                                                                             AS subscription_renewal_type,
+      CASE WHEN
+        fct_charge.mrr > 0 
+        AND
+        DENSE_RANK() OVER (
+            PARTITION BY dim_namespace.ultimate_parent_namespace_id
+            ORDER BY dim_charge.charge_created_date) = 1
+      THEN TRUE
+      ELSE FALSE 
+      END                                                                             AS is_first_paid_order,
 
       --Cohort Information
       dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
@@ -150,7 +201,6 @@
           PARTITION BY dim_crm_account.dim_parent_crm_account_id)                     AS parent_account_cohort_quarter,
 
       --product info
-      dim_product_detail.dim_product_detail_id,
       dim_product_detail.product_tier_name                                            AS product_tier_name,
       dim_product_detail.product_delivery_type                                        AS product_delivery_type,
       dim_product_detail.product_ranking                                              AS product_ranking,
@@ -158,6 +208,7 @@
       dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
       dim_product_detail.is_licensed_user                                             AS is_licensed_user,
       dim_product_detail.is_arpu                                                      AS is_arpu,
+      dim_product_detail.is_oss_or_edu_rate_plan                                      AS is_oss_or_edu_rate_plan,
 
       --Amendment Information
       dim_subscription.dim_amendment_id_subscription,
@@ -213,8 +264,14 @@
     LEFT JOIN dim_order_action
       ON fct_charge.dim_order_id = dim_order_action.dim_order_id
       AND dim_order_action.order_action_type IN ('RenewSubscription', 'CancelSubscription')
+    LEFT JOIN dim_namespace
+      ON dim_subscription.namespace_id = dim_namespace.dim_namespace_id
     LEFT JOIN prep_billing_account_user
       ON fct_charge.subscription_created_by_user_id = prep_billing_account_user.zuora_user_id
+    LEFT JOIN fct_trial_latest
+      ON dim_subscription.namespace_id = fct_trial_latest.dim_namespace_id
+    LEFT JOIN unique_fct_trial_first
+      ON dim_subscription.namespace_id = unique_fct_trial_first.dim_namespace_id
     WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,
