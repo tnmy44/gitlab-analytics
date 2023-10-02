@@ -6,6 +6,7 @@
     ('rpt_lead_to_revenue','rpt_lead_to_revenue'),
     ('dim_quote','dim_quote'),
     ('dim_date', 'dim_date'), 
+    ('zuora_invoice_charges', 'zuora_invoice_charges'), 
     ('mart_crm_opportunity', 'mart_crm_opportunity'), 
     ('fct_quote_item','fct_quote_item')
 ]) }}
@@ -129,7 +130,7 @@ LEFT JOIN mart_crm_opportunity
   ON lead_to_revenue.dim_crm_opportunity_id=mart_crm_opportunity.dim_crm_opportunity_id
 LEFT JOIN dim_quote_final
   ON lead_to_revenue.dim_crm_opportunity_id=dim_quote_final.dim_crm_opportunity_id
-LEFT JOIN restricted_safe_legacy.zuora_invoice_charges
+LEFT JOIN zuora_invoice_charges
   ON dim_quote_final.dim_subscription_id=zuora_invoice_charges.subscription_id
 LEFT JOIN date_details opp_created_date
   ON lead_to_revenue.opp_created_date=opp_created_date.date_day
