@@ -5,7 +5,8 @@
     ('dim_order_type','dim_order_type'),
     ('dim_deal_path','dim_deal_path'),
     ('fct_crm_opportunity','fct_crm_opportunity'),
-    ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
+    ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'), 
+    ('rpt_abm_tier_historical','rpt_abm_tier_historical'), 
     ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date', 'dim_date'),
@@ -173,6 +174,8 @@
       fct_crm_opportunity.is_booked_net_arr,
       fct_crm_opportunity.is_downgrade,
       dim_crm_opportunity.critical_deal_flag,
+      rpt_abm_tier_historical.is_abm_tier_sao,
+      rpt_abm_tier_historical.is_abm_tier_closed_won,
 
       -- crm owner/sales rep live fields
       dim_crm_user_hierarchy_live.crm_user_sales_segment,
@@ -648,13 +651,15 @@
       ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id 
     LEFT JOIN dim_crm_account AS fulfillment_partner
       ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
+    LEFT JOIN rpt_abm_tier_historical
+      ON fct_crm_opportunity.dim_crm_opportunity_id=rpt_abm_tier_historical.dim_crm_opportunity_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jeanpeguero",
-    updated_by="@lisvinueza",
+    updated_by="@rkohnke",
     created_date="2022-02-28",
-    updated_date="2023-07-24"
+    updated_date="2023-10-02"
   ) }}

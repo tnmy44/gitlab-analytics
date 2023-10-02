@@ -8,7 +8,8 @@
     ('dim_sales_qualified_source','dim_sales_qualified_source'),
     ('dim_order_type','dim_order_type'),
     ('dim_deal_path','dim_deal_path'),
-    ('fct_crm_opportunity','fct_crm_opportunity'),
+    ('fct_crm_opportunity','fct_crm_opportunity'), 
+    ('rpt_abm_tier_historical','rpt_abm_tier_historical'), 
     ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
     ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
@@ -183,6 +184,8 @@
       fct_crm_opportunity.is_booked_net_arr,
       fct_crm_opportunity.is_downgrade,
       dim_crm_opportunity.critical_deal_flag,
+      rpt_abm_tier_historical.is_abm_tier_sao,
+      rpt_abm_tier_historical.is_abm_tier_closed_won,
 
       -- crm opp owner/account owner fields stamped at SAO date (only used for reporting on opps with close date < 2022-02-01)
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
@@ -577,15 +580,17 @@
       ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id 
     LEFT JOIN dim_crm_account AS fulfillment_partner
       ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
+    LEFT JOIN rpt_abm_tier_historical
+      ON fct_crm_opportunity.dim_crm_opportunity_id=rpt_abm_tier_historical.dim_crm_opportunity_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@kmagda1",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-09-01"
+    updated_date="2023-10-02"
   ) }}
 
 
