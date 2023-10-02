@@ -521,6 +521,23 @@ tables:
       FROM epics
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  epics_internal_only:
+    additional_filtering: AND group_id in {INTERNAL_NAMESPACE_IDS}
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'epics_internal_only'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , iid
+      , group_id
+      , updated_at
+      , title
+      , description
+      FROM epics
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   events:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -866,6 +883,21 @@ tables:
       FROM labels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  labels_internal_only:
+    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS}
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'labels_internal_only'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , title
+      , project_id
+      , updated_at
+      FROM labels
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ldap_group_links:
     export_schema: "gitlab_com"
     export_table: ldap_group_links
@@ -1078,6 +1110,24 @@ tables:
       FROM merge_requests
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  merge_requests_internal_only:
+    additional_filtering: AND target_project_id IN {INTERNAL_PROJECT_IDS}
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'merge_requests_internal_only'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , iid
+      , updated_at
+      , target_branch
+      , target_project_id
+      , title
+      , description
+      FROM merge_requests
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   merge_requests_closing_issues:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1111,6 +1161,22 @@ tables:
       , state
       , start_date
       , group_id
+      FROM milestones
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  milestones_internal_only:
+    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS}
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'milestones_internal_only'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , iid
+      , title
+      , project_id
+      , updated_at
       FROM milestones
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1232,6 +1298,22 @@ tables:
       FROM namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  namespaces_internal_only:
+    additional_filtering: AND id in {INTERNAL_NAMESPACE_IDS}
+    dbt_snapshots: true
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'namespaces_internal_only'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , name
+      , path
+      , updated_at
+      FROM namespaces
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   namespace_settings:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1310,6 +1392,25 @@ tables:
       , cached_markdown_version
       , change_position
       , resolved_by_push
+      FROM notes
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  notes_internal_only:
+    additional_filtering: |-
+      AND created_at NOT IN ( '2746-07-23 18:16:42.925+00 BC')
+      AND project_id in {INTERNAL_PROJECT_IDS}
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'notes_internal_only'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , updated_at
+      , project_id
+      , line_code
+      , note
+      , note_html
       FROM notes
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
