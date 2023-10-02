@@ -297,19 +297,39 @@ final AS (
     union_clean.department                                                                                                     AS department,
     union_clean.division                                                                                                       AS division,
     union_clean.entity                                                                                                         AS entity,
+    union_clean.termination_date                                                                                               AS termination_date,
     union_clean.is_position_active                                                                                             AS is_position_active,
-    DATE(union_clean.effective_date)                                                                                           AS valid_from,
-    DATE(LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY union_clean.employee_id ORDER BY valid_from))             AS valid_to
+    union_clean.effective_date                                                                                                 AS valid_from,
+    LEAD(valid_from, 1, {{var('tomorrow')}}) OVER (PARTITION BY union_clean.employee_id ORDER BY valid_from)                   AS valid_to
   FROM union_clean
 
 )
 
 SELECT 
-  *,
+  dim_team_member_sk,                                                                                                              
+  dim_team_sk,
+  employee_id,
+  team_id,
+  manager,
+  suporg,
+  job_code,
+  position,
+  job_family,
+  job_specialty_single,
+  job_specialty_multi,
+  management_level,
+  job_grade,
+  department,
+  division,
+  entity,
+  is_position_active,
+  DATE(valid_from)                                                                                                           AS valid_from,
+  DATE(valid_to)                                                                                                             AS valid_to,
   CASE 
     WHEN ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY valid_from DESC) = 1 
       THEN TRUE
     ELSE FALSE
   END                                                                                                                          AS is_current
 FROM final
+WHERE termination_date IS NULL
 QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, DATE(valid_from) ORDER BY valid_from DESC)  = 1 
