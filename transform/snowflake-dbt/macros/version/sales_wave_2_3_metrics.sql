@@ -63,6 +63,7 @@
     {{ null_negative_numbers("raw_usage_data_payload['counts']['remote_mirrors']") }}                                                                   AS remote_mirrors_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['create']['projects_enforcing_code_owner_approval']") }}        AS projects_enforcing_code_owner_approval_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['configure']['project_clusters_enabled']") }}                   AS project_clusters_enabled_28_days_user,
+    {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['analytics']['analytics_total_unique_counts_monthly']") }}                   AS analytics_28_days_user,
 
     -- 3.2 metrics
 
