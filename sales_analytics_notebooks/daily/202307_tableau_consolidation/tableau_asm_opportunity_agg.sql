@@ -26,8 +26,6 @@ sfdc_opportunity_xf AS (
         calculated_deal_size AS deal_size_bin
 
     FROM prod.restricted_safe_workspace_sales.sfdc_opportunity_xf AS opty
-    LEFT JOIN prod.restricted_safe_workspace_sales.sfdc_accounts_xf AS account
-        ON account.account_id = opty.account_id
     CROSS JOIN report_date
     WHERE
         opty.is_edu_oss = 0
@@ -55,25 +53,25 @@ aggregated_base AS (
         report_opportunity_user_sub_business_unit,
         report_opportunity_user_division,
         report_opportunity_user_asm,
-        report_opportunity_user_role_type,
+        COALESCE(report_opportunity_user_role_type, 'NA')   AS report_opportunity_user_role_type,
 
-        deal_size_bin,
-        age_bin,
-        partner_category,
-        sales_qualified_source,
-        stage_name,
-        order_type_stamped,
-        deal_group,
-        sales_type,
-        forecast_category_name,
-        product_category_tier,
-        product_category_deployment,
-        industry,
-        lam_dev_count_bin,
-        pipeline_landing_quarter,
-        current_stage_age_bin,
+        COALESCE(deal_size_bin, 'NA')                       AS deal_size_bin,
+        COALESCE(age_bin, 'NA')                             AS age_bin,
+        COALESCE(partner_category, 'NA')                    AS partner_category,
+        COALESCE(sales_qualified_source, 'NA')              AS sales_qualified_source,
+        COALESCE(stage_name, 'NA')                          AS stage_name,
+        COALESCE(order_type_stamped, 'NA')                  AS order_type_stamped,
+        COALESCE(deal_group, 'NA')                          AS deal_group,
+        COALESCE(sales_type, 'NA')                          AS sales_type,
+        COALESCE(forecast_category_name, 'NA')              AS forecast_category_name,
+        COALESCE(product_category_tier, 'NA')               AS product_category_tier,
+        COALESCE(product_category_deployment, 'NA')         AS product_category_deployment,
+        COALESCE(industry, 'NA')                            AS industry,
+        COALESCE(lam_dev_count_bin, 'NA')                   AS lam_dev_count_bin,
+        COALESCE(pipeline_landing_quarter, 'NA')            AS pipeline_landing_quarter,
+        COALESCE(current_stage_age_bin, 'NA')               AS current_stage_age_bin,
 
-        parent_crm_account_upa_country_name,
+        COALESCE(parent_crm_account_upa_country_name, 'NA') AS parent_crm_account_upa_country_name,
 
         is_web_portal_purchase,
         is_open,
@@ -83,31 +81,31 @@ aggregated_base AS (
 
         -----------------------------------------------
         -- Date dimensions Aggregated
-        close_fiscal_quarter_date                   AS report_date,
-
+        close_fiscal_quarter_date                           AS report_date,
+        close_fiscal_year,
         -----------------------------------------------
         -- Dimensions for Detail / Aggregated
 
-        SUM(net_arr)                                AS net_arr,
-        SUM(booked_net_arr)                         AS booked_net_arr,
-        SUM(open_1plus_net_arr)                     AS open_1plus_net_arr,
+        SUM(net_arr)                                        AS net_arr,
+        SUM(booked_net_arr)                                 AS booked_net_arr,
+        SUM(open_1plus_net_arr)                             AS open_1plus_net_arr,
 
-        SUM(calculated_deal_count)                  AS deal_count,
-        SUM(booked_deal_count)                      AS booked_deal_count,
-        AVG(cycle_time_in_days)                     AS age_in_days,
+        SUM(calculated_deal_count)                          AS deal_count,
+        SUM(booked_deal_count)                              AS booked_deal_count,
+        AVG(cycle_time_in_days)                             AS age_in_days,
 
-        SUM(total_professional_services_value)      AS total_professional_services_value,
-        SUM(total_book_professional_services_value) AS total_book_professional_services_value,
-        SUM(total_lost_professional_services_value) AS total_lost_professional_services_value,
-        SUM(total_open_professional_services_value) AS total_open_professional_services_value,
+        SUM(total_professional_services_value)              AS total_professional_services_value,
+        SUM(total_book_professional_services_value)         AS total_book_professional_services_value,
+        SUM(total_lost_professional_services_value)         AS total_lost_professional_services_value,
+        SUM(total_open_professional_services_value)         AS total_open_professional_services_value,
 
         -- Churn / Contraction
-        SUM(churned_contraction_net_arr)            AS churned_contraction_net_arr,
-        SUM(booked_churned_contraction_net_arr)     AS booked_churned_contraction_net_arr
+        SUM(churned_contraction_net_arr)                    AS churned_contraction_net_arr,
+        SUM(booked_churned_contraction_net_arr)             AS booked_churned_contraction_net_arr
 
 
     FROM sfdc_opportunity_xf
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
 
 ),
 
@@ -402,3 +400,10 @@ final AS (
 
 SELECT *
 FROM final
+/*
+-- TEST OVERALL BOOKINGS
+select sum(booked_net_arr)
+from final
+from sfdc_opportunity_xf --76045368.88000001
+where close_fiscal_year = 2024
+ */

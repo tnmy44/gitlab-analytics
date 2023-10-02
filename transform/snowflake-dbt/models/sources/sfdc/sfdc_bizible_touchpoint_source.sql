@@ -61,3 +61,6 @@ WITH source AS (
 
 SELECT *
 FROM renamed
+-- exclude records containing strings which cannot be parsed from the bizible_touchpoint lineage https://gitlab.com/gitlab-data/analytics/-/issues/18230 https://gitlab.com/gitlab-data/analytics/-/merge_requests/8744#note_1544239076
+WHERE (bizible_form_url_raw LIKE 'http%' OR bizible_form_url_raw IS NULL)
+  AND (bizible_landing_page_raw LIKE 'http%' OR bizible_landing_page_raw IS NULL)

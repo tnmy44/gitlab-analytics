@@ -88,4 +88,4 @@ SELECT
 FROM namespace_creator_ptpf_score
 LEFT JOIN namespace_creator_ptpf_score_last_2
   ON namespace_creator_ptpf_score.email_address = namespace_creator_ptpf_score_last_2.email_address
-WHERE namespace_creator_ptpf_score.score_group >= 4
+WHERE namespace_creator_ptpf_score.score_group >= 3

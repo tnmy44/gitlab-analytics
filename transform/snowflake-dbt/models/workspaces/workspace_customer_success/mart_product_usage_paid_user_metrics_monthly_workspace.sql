@@ -70,6 +70,12 @@
     LEFT JOIN subscriptions ON charges.dim_subscription_id = subscriptions.dim_subscription_id
     WHERE charges.subscription_status IN ('Active','Cancelled')
       AND charges.product_tier_name != 'Storage'
+      AND charges.rate_plan_charge_name NOT IN (
+        'Dedicated - Administration Fee [Large] - 1 Year',
+        'Dedicated - Administration Fee  [XLarge] - 1 Year',
+        'Dedicated - Administration Fee [2XLarge] - 1 Year',
+        'Dedicated - Storage 10GB - 1 Year'
+      )
     {{ dbt_utils.group_by(n = 2) }}
     
 ), action_active_users_project_repo_users AS (
@@ -162,6 +168,13 @@
       *
     FROM redis_metrics_28d_user
     WHERE metrics_path = 'redis_hll_counters.code_review.i_code_review_user_approve_mr_monthly'
+
+), audit_users AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'counts_monthly.aggregated_metrics.compliance_features_track_unique_visits_union'
 
 ), sm_paid_user_metrics AS (
 
@@ -395,6 +408,15 @@
       monthly_sm_metrics.pipeline_schedules_28_days_user,
       -- Wave 8
       monthly_sm_metrics.ci_internal_pipelines_28_days_event,
+      -- Wave 9
+      monthly_sm_metrics.ci_builds_28_days_event,
+      monthly_sm_metrics.audit_features_28_days_user,
+      monthly_sm_metrics.groups_all_time_event,
+      monthly_sm_metrics.commit_ci_config_file_7_days_user,
+      monthly_sm_metrics.ci_pipeline_config_repository_all_time_user,
+      monthly_sm_metrics.ci_pipeline_config_repository_all_time_event,
+      monthly_sm_metrics.pipeline_schedules_all_time_event,
+      monthly_sm_metrics.pipeline_schedules_all_time_user,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -642,6 +664,15 @@
       monthly_saas_metrics.pipeline_schedules_28_days_user,
       -- Wave 8
       monthly_saas_metrics.ci_internal_pipelines_28_days_event,
+      --Wave 9
+      monthly_saas_metrics.ci_builds_28_days_event,
+      COALESCE(audit_users.distinct_users_whole_month, 0) AS audit_features_28_days_user,
+      monthly_saas_metrics.groups_all_time_event,
+      monthly_saas_metrics.commit_ci_config_file_7_days_user,
+      monthly_saas_metrics.ci_pipeline_config_repository_all_time_user,
+      monthly_saas_metrics.ci_pipeline_config_repository_all_time_event,
+      monthly_saas_metrics.pipeline_schedules_all_time_event,
+      monthly_saas_metrics.pipeline_schedules_all_time_user,
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -695,6 +726,9 @@
     LEFT JOIN user_approve_mr
       ON user_approve_mr.date_month = monthly_saas_metrics.snapshot_month
       AND user_approve_mr.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN audit_users
+      ON audit_users.date_month = monthly_saas_metrics.snapshot_month
+      AND audit_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -727,7 +761,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mdrussell",
-    updated_by="@jpeguero",
+    updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2023-06-22"
+    updated_date="2023-09-11"
 ) }}

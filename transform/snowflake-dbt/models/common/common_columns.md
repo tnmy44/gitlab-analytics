@@ -2298,6 +2298,12 @@ The latest date a snippet was updated.
 
 {% enddocs %}
 
+{% docs is_trial_converted %}
+
+Boolean flag to indicate if the Trial order has been converted to Paid Order or not
+
+{% enddocs %}
+
 {% docs dim_plan_id_at_creation %}
 
 The GitLab plan id at the time of object creation.
@@ -2307,5 +2313,47 @@ The GitLab plan id at the time of object creation.
 {% docs is_internal_epic %}
 
 Boolean flag set to True if the epic's namespace is identified as an internal GitLab namespace.
+
+{% enddocs %}
+
+{% docs cycle_time_in_days %}
+
+Number of days since created date of opportunity till its closure. For renewal opportunities created date = ARR created date 
+
+{% enddocs %}
+
+{% docs is_health_score_metric %}
+
+ Boolean flag set to True if the metric is used in Gainsight for customer health scoring.
+
+{% enddocs %}
+
+{% docs report_target_date %}
+
+Target_Date + 1. This is used in Sisense when comparing QTD targets vs actuals for the current date.
+
+{% enddocs %}
+
+{% docs wtd_allocated_target %}
+
+Week To Date allocated target.
+
+{% enddocs %}
+
+{% docs mtd_allocated_target %}
+
+Month To Date allocated target.
+
+{% enddocs %}
+
+{% docs qtd_allocated_target %}
+
+Quarter To Date allocated target.
+
+{% enddocs %}
+
+{% docs ytd_allocated_target %}
+
+Year To Date allocated target.
 
 {% enddocs %}

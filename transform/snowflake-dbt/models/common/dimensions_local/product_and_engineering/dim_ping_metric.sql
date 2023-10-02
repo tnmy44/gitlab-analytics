@@ -37,6 +37,7 @@ WITH source AS (
       IFNULL(is_smau, FALSE)                                                  AS is_smau,
       IFNULL(is_paid_gmau, FALSE)                                             AS is_paid_gmau,
       IFNULL(is_umau, FALSE)                                                  AS is_umau,
+      IFNULL(is_health_score_metric, FALSE)                                   AS is_health_score_metric,  
       snapshot_date                                                           AS snapshot_date,
       uploaded_at                                                             AS uploaded_at,
       data_by_row
@@ -48,7 +49,7 @@ WITH source AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@chrissharp",
+    updated_by="@mdrussell",
     created_date="2022-04-14",
-    updated_date="2022-05-17"
+    updated_date="2022-09-13"
 ) }}
