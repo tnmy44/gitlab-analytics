@@ -118,7 +118,18 @@ add_path AS (
   SELECT
     grouping.*,
     project_full_path.full_path,
-    ROW_NUMBER() OVER (PARTITION BY grouping.gcp_project_id ORDER BY last_updated_at DESC, first_created_at DESC) AS rn
+    IFF(project_full_path.gcp_project_id IS NULL, 1, ROW_NUMBER() OVER (PARTITION BY
+      grouping.date_day,
+      grouping.gcp_project_id,
+      grouping.gcp_service_description,
+      grouping.gcp_sku_description,
+      grouping.infra_label,
+      grouping.env_label,
+      grouping.runner_label,
+      grouping.folder_label,
+      grouping.pl_category,
+      grouping.from_mapping
+      ORDER BY last_updated_at DESC, first_created_at DESC)) AS rn
   FROM grouping
   LEFT JOIN project_full_path ON grouping.gcp_project_id = project_full_path.gcp_project_id AND grouping.date_day <= DATE_TRUNC('day', project_full_path.last_updated_at)
 
