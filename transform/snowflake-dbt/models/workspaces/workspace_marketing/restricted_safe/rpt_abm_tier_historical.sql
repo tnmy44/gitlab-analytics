@@ -2,7 +2,7 @@
 
 {{ simple_cte([
     ('sfdc_account_snapshots_source','sfdc_account_snapshots_source'),
-    ('mart_crm_opportunity_stamped_hierarchy_hist','mart_crm_opportunity_stamped_hierarchy_hist'),
+    ('fct_crm_opportunity','fct_crm_opportunity'),
     ('fct_crm_person','fct_crm_person'), 
     ('dim_date','dim_date')
 ]) }}
@@ -40,7 +40,7 @@
     created_date,
     sales_accepted_date,
     close_date
-  FROM mart_crm_opportunity_stamped_hierarchy_hist
+  FROM fct_crm_opportunity
   WHERE created_date >= '2022-02-01'
     OR sales_accepted_date >= '2022-02-01'
     OR close_date >= '2022-02-01'
