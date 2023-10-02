@@ -7,6 +7,7 @@
     ('dim_bizible_marketing_channel_path','dim_bizible_marketing_channel_path'),
     ('dim_sales_segment','dim_sales_segment'),
     ('fct_crm_person','fct_crm_person'),
+    ('rpt_abm_tier_historical','rpt_abm_tier_historical'), 
     ('dim_date','dim_date'),
     ('dim_crm_user', 'dim_crm_user'),
     ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy')
@@ -204,7 +205,13 @@
       fct_crm_person.zoominfo_contact_id,
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
-      fct_crm_person.is_lead_source_trial,
+      rpt_abm_tier_historical.is_abm_tier_inquiry,
+      rpt_abm_tier_historical.is_abm_tier_mql,
+      CASE
+        WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
+        WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
+        ELSE FALSE
+      END                                                        AS is_lead_source_trial,
       fct_crm_person.is_bdr_sdr_worked,
       dim_crm_person.person_first_country
     FROM fct_crm_person
@@ -284,6 +291,8 @@
       ON fct_crm_person.worked_date_pt_id = worked_date_pt.date_id
     LEFT JOIN dim_crm_user 
       ON fct_crm_person.dim_crm_user_id = dim_crm_user.dim_crm_user_id
+    LEFT JOIN rpt_abm_tier_historical
+      ON fct_crm_person.dim_crm_person_id=rpt_abm_tier_historical.dim_crm_person_id
     LEFT JOIN dim_crm_user_hierarchy
       ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = fct_crm_person.dim_account_demographics_hierarchy_sk
 
@@ -292,7 +301,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-10-11",
+    updated_date="2023-11-15",
   ) }}  
