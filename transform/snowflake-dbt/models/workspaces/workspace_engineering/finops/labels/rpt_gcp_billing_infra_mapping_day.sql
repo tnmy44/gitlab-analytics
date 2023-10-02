@@ -93,12 +93,10 @@ folder_labels AS (
 
   SELECT
     a.source_primary_key,
-    max(iff(a.has_project_to_exclude=1, NULL, b.folder_id)) as folder_id,
-    listagg(a.folder_name,'/') within group (order by hierarchy_level desc) as full_path
+    a.folder_id
   FROM project_ancestory AS a
-  LEFT JOIN folder_pl_mapping AS b ON a.folder_id = b.folder_id
-  --WHERE a.has_project_to_exclude = 0 -- project to be excluded for folder_pl mapping
-  GROUP BY 1
+  INNER JOIN folder_pl_mapping AS b ON a.folder_id = b.folder_id
+  WHERE a.has_project_to_exclude = 0 -- project to be excluded for folder_pl mapping
 
 ),
 
@@ -113,7 +111,6 @@ billing_base AS (
     env_labels.resource_label_value                            AS env_label,
     runner_labels.resource_label_value                         AS runner_label,
     IFF(export.project_id IS NULL, 1, folder_labels.folder_id) AS folder_label,
-    folder_labels.full_path,
     export.usage_unit                                          AS usage_unit,
     export.pricing_unit                                        AS pricing_unit,
     SUM(export.usage_amount)                                   AS usage_amount,
@@ -136,7 +133,7 @@ billing_base AS (
       export.source_primary_key = runner_labels.source_primary_key
   LEFT JOIN
     folder_labels ON export.source_primary_key = folder_labels.source_primary_key
-  {{ dbt_utils.group_by(n=11) }}
+  {{ dbt_utils.group_by(n=10) }}
 
 )
 
@@ -148,8 +145,7 @@ SELECT
   bill.infra_label                   AS infra_label,
   bill.env_label                     AS env_label,
   bill.runner_label                  AS runner_label,
-  bill.folder_label::varchar as folder_label,
-  bill.full_path,
+  bill.folder_label::VARCHAR         AS folder_label,
   bill.usage_unit,
   bill.pricing_unit,
   bill.usage_amount                  AS usage_amount,

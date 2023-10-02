@@ -5,25 +5,9 @@ WITH pl_day AS (
 
 ),
 
-project_full_path AS (
-
-  SELECT *
-  FROM {{ ref('project_full_path') }}
-  WHERE most_recent = TRUE
-
-),
 /*
 For every new category breakout, a new cte is created to join with the previous one
 */
-join_path AS (
-
-  SELECT
-    pd.*,
-    pfp.full_path AS project_full_path
-  FROM pl_day AS pd
-  INNER JOIN project_full_path AS pfp ON pd.gcp_project_id = pfp.gcp_project_id
-
-),
 
 join_product_component AS (
 
@@ -45,7 +29,7 @@ join_product_component AS (
           WHEN gcp_project_id = 'gitlab-production' THEN 'WIP: Unallocated Production costs' END
       ELSE CONCAT(infra_label, '-', from_mapping)
     END AS product_component
-  FROM join_path
+  FROM pl_day
 
 ),
 
