@@ -17,6 +17,7 @@
     dim_crm_opportunity_id,
     net_arr,
     sales_accepted_date AS sales_accepted_date,
+    sales_accepted_fiscal_quarter_name,
     created_date AS opp_created_date,
     close_date,
     pipeline_created_date,
@@ -186,7 +187,7 @@
 
   SELECT * 
   FROM opp_to_lead 
-  WHERE waterfall_person_id IS NULL
+  WHERE waterfall_person_id IS NULL OR activity_to_sao_days >90 --adds back in the opps that are being discarded due to a too long delay from activity on the lead for that lead to be credited with SAO creation
 
 ), final AS (
 
@@ -226,6 +227,7 @@
     opp_to_lead.sdr_bdr_user_id,
     opp_to_lead.net_arr,
     opp_to_lead.sales_accepted_date,
+    opp_to_lead.sales_accepted_fiscal_quarter_name,
     opp_to_lead.opp_created_date,
     opp_to_lead.close_date,
     opp_to_lead.pipeline_created_date,
@@ -267,7 +269,7 @@
   ON COALESCE(opp_to_lead.sdr_bdr_user_id,activity_summarised.dim_crm_user_id) = sales_dev_hierarchy.sales_dev_rep_user_id
   WHERE activity_to_sao_days <= 90 OR activity_to_sao_days IS NULL 
   UNION 
-  SELECT
+  SELECT DISTINCT -- distinct is necessary in order to not duplicate rows as addition of the rule above of activity_to_sao_days >90 might create multiple rows if there are multiple leads that satisfy the condition per opp which is not ideal. 
     NULL AS dim_crm_person_id,
     NULL AS sfdc_record_id,
     opps_missing_link.dim_crm_account_id AS dim_crm_account_id,
@@ -291,6 +293,7 @@
     opps_missing_link.sdr_bdr_user_id,
     opps_missing_link.net_arr,
     opps_missing_link.sales_accepted_date,
+    opps_missing_link.sales_accepted_fiscal_quarter_name,
     opps_missing_link.opp_created_date,
     opps_missing_link.close_date,
     opps_missing_link.pipeline_created_date,

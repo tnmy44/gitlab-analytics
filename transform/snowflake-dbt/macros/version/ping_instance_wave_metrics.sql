@@ -62,6 +62,7 @@ MAX(CASE WHEN metrics_path = 'counts.protected_branches' THEN {{ null_negative_n
 MAX(CASE WHEN metrics_path = 'counts.remote_mirrors' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS remote_mirrors_all_time_event,
 MAX(CASE WHEN metrics_path = 'usage_activity_by_stage.create.projects_enforcing_code_owner_approval' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS projects_enforcing_code_owner_approval_28_days_user,
 MAX(CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.configure.project_clusters_enabled' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS project_clusters_enabled_28_days_user,
+MAX(CASE WHEN metrics_path = 'redis_hll_counters.analytics.analytics_total_unique_counts_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS analytics_28_days_user,
 
 
 -- 3.2 metrics
@@ -199,7 +200,6 @@ MAX(CASE WHEN metrics_path = 'usage_activity_by_stage.verify.ci_pipeline_schedul
 
 ---SMAU metrics
 MAX(CASE WHEN metrics_path = 'redis_hll_counters.terraform.p_terraform_state_api_unique_users_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS terraform_state_api_28_days_user,
-MAX(CASE WHEN metrics_path = 'ranalytics_unique_visits.analytics_unique_visits_for_any_target_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS analytics_28_days_user,
 MAX(CASE WHEN metrics_path = 'redis_hll_counters.incident_management.incident_management_total_unique_counts_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS incident_management_28_days_user,
 MAX(CASE WHEN metrics_path = 'redis_hll_counters.user_packages.user_packages_total_unique_counts_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS user_packages_28_days_user,
 MAX(CASE WHEN metrics_path = 'redis_hll_counters.issues_edit.issues_edit_total_unique_counts_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END ) AS issues_edit_28_days_user

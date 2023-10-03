@@ -412,9 +412,6 @@ models:
     - name: repo_storage_pl_daily
       description: '{{ doc("finops_pipeline_desc_repo_storage_pl_daily") }}'
 
-    - name: rpt_gcp_billing_skus_day
-      description: '{{ doc("finops_pipeline_desc_skus_day") }}'
-
     - name: internal_notes
       description: Table containing Gitlab.com notes from Epics, Issues and Merge Requests. It includes the namespace ID and the ultimate parent namespace ID.
       columns:

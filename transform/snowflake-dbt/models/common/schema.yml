@@ -13,7 +13,7 @@ models:
   - name: bdg_epic_user_request
     description: ' {{ doc("bdg_epic_user_request") }}'
     columns:
-      - name: dim_epic_id
+      - name: epic_id
         tests:
           - not_null
       - name: dim_crm_account_id
@@ -21,7 +21,7 @@ models:
           - not_null
       - name: is_user_request_only_in_collaboration_project
         description: Boolean flag that if TRUE indicates whether the user request was only done in a customer collaboration project.
-      - name: CONCAT(dim_epic_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+      - name: CONCAT(epic_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
         tests:
           - not_null
           - unique
@@ -2761,13 +2761,13 @@ models:
   - name: dim_epic
     description: '{{ doc("dim_epic") }}'
     columns:
-      - name: dim_epic_id
+      - name: dim_epic_sk
         description: The unique identifier for each of the events.
         tests:
           - not_null
           - unique
       - name: dim_project_id
-      - name: dim_plan_id_at_creation
+      - name: dim_plan_sk_at_creation
         description: '{{ doc("dim_plan_id_at_creation") }}'
         tests:
           - not_null
@@ -7990,7 +7990,7 @@ models:
       - name: namespace_type 
         description: '{{ doc("namespace_type") }}'
       - name: is_trial_converted
-        description: Boolean flag to indicate if the Trial order has been converted to Paid Order or not
+        description: '{{ doc("is_trial_converted") }}'
       - name: subscription_name
         description: The unique name of a subscription from Zuora. It can be used to join back to Zuora Subscriptions.
       - name: subscription_name_slugify
@@ -8048,7 +8048,7 @@ models:
       - name: company_size
         description: The size of the company as provided by the user during registration
       - name: is_trial_converted
-        description: Boolean flag to indicate if the Trial order(from CDot) has been converted to Paid Order or not
+        description: '{{ doc("is_trial_converted") }}'
       - name: order_created_at
         description: The date when the Order was first created in CDot
       - name: trial_start_date 
@@ -8088,7 +8088,7 @@ models:
       - name: namespace_type 
         description: '{{ doc("namespace_type") }}'
       - name: is_trial_converted
-        description: Boolean flag to indicate if the Trial order(from CDot) has been converted to Paid Order or not
+        description: '{{ doc("is_trial_converted") }}'
       - name: subscription_start_date
         description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term
       - name: country
