@@ -133,6 +133,7 @@ final AS (
         ELSE 0 END)
     END                                                                                                                                                              AS days_past_due,
     MAX(dates.date_actual) OVER ()                                                                                                                                   AS last_updated_at,
+    COALESCE(date_actual = last_updated_at, FALSE)                                                                                                                   AS most_recent,
     ROW_NUMBER() OVER (PARTITION BY daily_issue_id
       ORDER BY LEAST(COALESCE(severity_label_valid_to, CURRENT_DATE), COALESCE(team_label_valid_to, CURRENT_DATE)), COALESCE(workflow_label_valid_to, CURRENT_DATE)) AS rn
   FROM issues
