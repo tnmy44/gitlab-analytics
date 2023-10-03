@@ -88,7 +88,7 @@ class TestCheckBackfill:
         - Create test metdata table
         - Create a mock PostgresPipelineTable object
         """
-        manifest_file_path = "extract/gitlab_saas_postgres_pipeline/manifests_decomposed/el_saas_gitlab_com_db_manifest.yaml"
+        manifest_file_path = "extract/gitlab_saas_postgres_pipeline/manifests/el_saas_gitlab_com_db_manifest.yaml"
 
         manifest_dict = manifest_reader(manifest_file_path)
         env = os.environ.copy()
