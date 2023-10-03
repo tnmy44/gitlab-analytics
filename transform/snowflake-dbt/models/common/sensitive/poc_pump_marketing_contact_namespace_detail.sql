@@ -12,7 +12,7 @@
     ('gitlab_dotcom_namespace_details_source', 'gitlab_dotcom_namespace_details_source'),
     ('gitlab_dotcom_users_source', 'gitlab_dotcom_users_source'),
     ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
-    ('customers_db_trials', 'customers_db_trials'),
+    ('fct_trial_first', 'fct_trial_first'),
     ('customers_db_charges_xf', 'customers_db_charges_xf'),
     ('customers_db_leads', 'customers_db_leads_source'),
     ('map_gitlab_dotcom_xmau_metrics', 'map_gitlab_dotcom_xmau_metrics'),
@@ -144,8 +144,8 @@
 ), latest_trial_by_user AS (
   
     SELECT *
-    FROM customers_db_trials
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY gitlab_user_id ORDER BY trial_start_date DESC) = 1
+    FROM fct_trial_first
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY trial_start_date DESC) = 1
 
 ), pqls AS (
   
