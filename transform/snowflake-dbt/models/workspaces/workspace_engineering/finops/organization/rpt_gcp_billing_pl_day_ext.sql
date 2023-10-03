@@ -111,6 +111,21 @@ join_finance_component AS (
     END AS finance_sku_subtype
   FROM join_product_component
   
+),
+
+join_hierarchy_component AS (
+    SELECT jp.*,
+    level_0,
+    level_1,
+    level_2,
+    level_3,
+    level_4
+    FROM join_finance_component jp 
+    LEFT JOIN {{ ref('gcp_billing_hierarchy')}} hi
+    ON coalesce(jp.full_path, '') like coalesce(hi.full_path, '')
+      AND coalesce(jp.from_mapping, '') = coalesce(hi.from_mapping, '')
+      AND (coalesce(jp.infra_label, '') = coalesce(hi.infra_label, '') or hi.infra_label IS NULL)
+
 )
 
-SELECT * FROM join_finance_component
+SELECT * FROM join_hierarchy_component
