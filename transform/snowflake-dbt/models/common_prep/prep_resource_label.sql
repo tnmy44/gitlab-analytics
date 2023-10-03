@@ -48,7 +48,7 @@
       user_id                                                               AS dim_user_id,
       prep_issue.dim_issue_sk                                               AS dim_issue_sk,
       dim_merge_request.dim_merge_request_id                                AS dim_merge_request_id,
-      prep_epic.prep_epic_sk                                                AS prep_epic_sk,
+      prep_epic.dim_epic_sk                                                 AS dim_epic_sk,
       resource_label_events.created_at::TIMESTAMP                           AS created_at,
       dim_date.date_id                                                      AS created_date_id
     FROM resource_label_events

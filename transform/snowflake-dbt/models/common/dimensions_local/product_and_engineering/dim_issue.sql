@@ -19,7 +19,7 @@ WITH prep_issue AS (
       dim_issue_id,
 
       -- FOREIGN KEYS
-      dim_project_sk
+      dim_project_sk,
       dim_namespace_sk,
       ultimate_parent_namespace_id,
       dim_epic_sk,

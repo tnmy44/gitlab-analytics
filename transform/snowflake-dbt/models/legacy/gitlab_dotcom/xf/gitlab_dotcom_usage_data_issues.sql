@@ -95,7 +95,7 @@
 
     SELECT
       *,
-      issue_created_at AS created_at
+      created_at AS created_at
     FROM {{ ref('prep_issue') }}
     WHERE ARRAY_CONTAINS('incident'::variant, labels)
 
