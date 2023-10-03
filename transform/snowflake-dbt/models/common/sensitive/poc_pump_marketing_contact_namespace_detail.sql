@@ -8,10 +8,9 @@
     ('dim_namespace', 'dim_namespace'),
     ('ptpt_scores', 'ptpt_scores'),
     ('ptpf_scores', 'ptpf_scores'),
-    ('customers_db_trial_histories_source', 'customers_db_trial_histories_source'),
+    ('prep_namespace_order_trial', 'prep_namespace_order_trial'),
     ('gitlab_dotcom_namespace_details_source', 'gitlab_dotcom_namespace_details_source'),
     ('gitlab_dotcom_users_source', 'gitlab_dotcom_users_source'),
-
     ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
     ('customers_db_trials', 'customers_db_trials'),
     ('customers_db_charges_xf', 'customers_db_charges_xf'),
@@ -292,12 +291,12 @@
     dim_namespace.created_at                                                    AS created_at,
     dim_namespace.creator_id                                                    AS creator_user_id,
 
-    customers_db_trial_histories_source.start_date                              AS trial_start_date,
-    customers_db_trial_histories_source.expired_on                              AS trial_expired_date,
+    prep_namespace_order_trial.order_start_date                                 AS trial_start_date,
+    prep_namespace_order_trial.order_end_date                                   AS trial_expired_date,
     IFF(CURRENT_DATE() >= trial_start_date AND CURRENT_DATE() <= COALESCE(trial_expired_date, CURRENT_DATE()), TRUE, FALSE) 
                                                                                 AS is_active_trial,
-    customers_db_trial_histories_source.glm_content,
-    customers_db_trial_histories_source.glm_source,
+    prep_namespace_order_trial.glm_content,
+    prep_namespace_order_trial.glm_source,
 
     IFF(pqls_filtered.pql_namespace_id IS NOT NULL, TRUE, FALSE)                AS is_namespace_pql,
 
@@ -350,8 +349,8 @@
   LEFT JOIN ptpf_scores AS second_last_ptpf_scores
     ON second_last_ptpf_scores.namespace_id = namespace_user_mapping.namespace_id
     AND second_last_ptpf_scores.score_date = ptpf_last_dates.second_last_score_date
-  LEFT JOIN customers_db_trial_histories_source
-    ON customers_db_trial_histories_source.gl_namespace_id = namespace_user_mapping.namespace_id
+  LEFT JOIN prep_namespace_order_trial
+    ON prep_namespace_order_trial.dim_namespace_id = namespace_user_mapping.namespace_id
   LEFT JOIN gitlab_dotcom_namespace_details_source
     ON gitlab_dotcom_namespace_details_source.namespace_id = namespace_user_mapping.namespace_id
   LEFT JOIN stages_adopted_by_namespace
