@@ -12,7 +12,7 @@
   ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
   ('dim_subscription', 'dim_subscription'),
   ('dim_product_tier', 'dim_product_tier'),
-  ('fct_trial_first', 'fct_trial_first'),
+  ('fct_trial', 'fct_trial'),
   ('customers_db_leads', 'customers_db_leads_source'),
   ('fct_event_user_daily', 'fct_event_user_daily'),
   ('map_gitlab_dotcom_xmau_metrics', 'map_gitlab_dotcom_xmau_metrics'),
@@ -105,7 +105,7 @@
 ), latest_trial_by_user AS (
   
     SELECT *
-    FROM fct_trial_first
+    FROM fct_trial
     QUALIFY ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY trial_start_date DESC) = 1
 
 ), pqls AS (
