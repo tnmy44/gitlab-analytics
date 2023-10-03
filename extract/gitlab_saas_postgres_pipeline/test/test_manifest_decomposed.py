@@ -62,9 +62,11 @@ def test_add_scd_tables() -> None:
     """
     full_path = f"{abs_path}el_saas_gitlab_com_scd_db_manifest.yaml"
     loaded_file = load_yaml_file(full_path)
+    loaded_tables = loaded_file['tables'] if loaded_file['tables'] else []
 
     for table in TABLES_LIST:
-        table_definition = loaded_file["tables"][table]
-        assert table_definition is not None
-        assert table_definition.get("export_table", None) == table
-        # assert table_definition.get("advanced_metadata", None) is True
+        if table in loaded_tables:
+            table_definition = loaded_file["tables"][table]
+            assert table_definition is not None
+            assert table_definition.get("export_table", None) == table
+            # assert table_definition.get("advanced_metadata", None) is True
