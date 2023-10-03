@@ -120,7 +120,7 @@ join_hierarchy_component AS (
     level_2,
     level_3,
     level_4
-    FROM join_product_component jp 
+    FROM join_finance_component jp 
     LEFT JOIN {{ ref('gcp_billing_hierarchy')}} hi
     ON coalesce(jp.full_path, '') like coalesce(hi.full_path, '')
       AND coalesce(jp.from_mapping, '') = coalesce(hi.from_mapping, '')
