@@ -450,8 +450,6 @@ tables:
       SELECT milestone_id
       , release_id
       FROM milestone_releases
-
-
   namespace_limits:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -467,7 +465,6 @@ tables:
       , first_enforced_at
       , last_enforced_at 
       FROM namespace_limits
-
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true
