@@ -15,7 +15,7 @@
     ('fct_trial_first', 'fct_trial_first'),
     ('dim_subscription', 'dim_subscription'),
     ('dim_product_tier', 'dim_product_tier'),
-    ('customers_db_leads', 'customers_db_leads_source'),
+    ('prep_lead', 'prep_lead'),
     ('map_gitlab_dotcom_xmau_metrics', 'map_gitlab_dotcom_xmau_metrics'),
     ('services', 'gitlab_dotcom_integrations_source'),
     ('project', 'prep_project'),
@@ -75,6 +75,7 @@
     SELECT
       gitlab_dotcom_users_source.email,
       dim_namespace.dim_namespace_id,
+      dim_namespace.dim_product_tier_id,
       dim_namespace.namespace_name,
       dim_namespace.created_at              AS namespace_created_at,
       dim_namespace.created_at::DATE        AS namespace_created_at_date,
@@ -133,7 +134,7 @@
 ), subscriptions AS (
   
     SELECT 
-      dim_subscription.current_gitlab_namespace_id::INT                      AS namespace_id, 
+      dim_subscription.namespace_id::INT                                     AS namespace_id, 
       MIN(dim_subscription.subscription_start_date)                          AS min_subscription_start_date
     FROM dim_subscription
     INNER JOIN namespaces 
@@ -153,39 +154,39 @@
 ), pqls AS (
   
     SELECT DISTINCT
-      leads.product_interaction,
-      leads.user_id,
+      prep_lead.product_interaction,
+      prep_lead.user_id,
       users.email,
-      leads.namespace_id           AS dim_namespace_id,
+      prep_lead.dim_namespace_id            AS dim_namespace_id,
       dim_namespace.namespace_name,
-      leads.trial_start_date::DATE AS trial_start_date,
-      leads.created_at             AS pql_event_created_at
-    FROM customers_db_leads leads
+      prep_lead.trial_start_date::DATE      AS trial_start_date,
+      prep_lead.created_at                  AS pql_event_created_at
+    FROM  prep_lead
     LEFT JOIN gitlab_dotcom_users_source AS users
-      ON leads.user_id = users.user_id
+      ON prep_lead.user_id = users.user_id
     LEFT JOIN dim_namespace
-      ON dim_namespace.dim_namespace_id = leads.namespace_id
-    WHERE LOWER(leads.product_interaction) = 'hand raise pql'
+      ON dim_namespace.dim_namespace_id = prep_lead.dim_namespace_id
+    WHERE LOWER(prep_lead.product_interaction) = 'hand raise pql'
   
     UNION ALL
   
     SELECT DISTINCT 
-      leads.product_interaction,
-      leads.user_id,
+      prep_lead.product_interaction,
+      prep_lead.user_id,
       users.email,
-      latest_trial_by_user.gitlab_namespace_id    AS dim_namespace_id,
+      latest_trial_by_user.dim_namespace_id       AS dim_namespace_id,
       dim_namespace.namespace_name,
       latest_trial_by_user.trial_start_date::DATE AS trial_start_date,
-      leads.created_at                            AS pql_event_created_at
-    FROM customers_db_leads AS leads
+      prep_lead.created_at                            AS pql_event_created_at
+    FROM prep_lead
     LEFT JOIN gitlab_dotcom_users_source AS users
-      ON leads.user_id = users.user_id
+      ON prep_lead.user_id = users.user_id
     LEFT JOIN latest_trial_by_user
-      ON latest_trial_by_user.gitlab_user_id = leads.user_id
+      ON latest_trial_by_user.user_id = prep_lead.user_id
     LEFT JOIN dim_namespace
-      ON dim_namespace.dim_namespace_id = leads.namespace_id
-    WHERE LOWER(leads.product_interaction) = 'saas trial'
-      AND leads.is_for_business_use = 'True'
+      ON dim_namespace.dim_namespace_id = prep_lead.dim_namespace_id
+    WHERE LOWER(prep_lead.product_interaction) = 'saas trial'
+      AND prep_lead.is_for_business_use = 'True'
 
 ), stages_adopted AS (
   
