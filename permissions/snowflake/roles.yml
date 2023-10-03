@@ -239,7 +239,7 @@ databases:
     - schaturvedi_prep:
         shared: no  
 
-    - skahnprod:
+    - skahn_prod:
         shared: no
     - skahn_prep:
         shared: no        
