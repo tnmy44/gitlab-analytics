@@ -12,21 +12,6 @@ connection_info:
     port: GITLAB_METADATA_PG_PORT
     user: GITLAB_METADATA_DB_USER
 tables:
-  merge_request_diff_commits:
-    incremental_type: 'load_by_id'
-    export_schema: 'gitlab_com'
-    export_table: 'merge_request_diff_commits'
-    export_table_primary_key: merge_request_diff_id # real PK is composite key fyi
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT authored_date
-      , committed_date
-      , merge_request_diff_id
-      , relative_order
-      , sha
-      , commit_author_id
-      , committer_id
-      FROM merge_request_diff_commits
   alert_management_alerts:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -47,36 +32,24 @@ tables:
       FROM alert_management_alerts
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  alert_management_http_integrations:
+  analytics_cycle_analytics_group_stages:
     export_schema: "gitlab_com"
-    export_table: alert_management_http_integrations
+    export_table: analytics_cycle_analytics_group_stages
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
       , created_at
       , updated_at
-      , project_id
-      , active
-      FROM alert_management_http_integrations
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  container_expiration_policies:
-    export_schema: "gitlab_com"
-    export_table: container_expiration_policies
-    export_table_primary_key: project_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT created_at
-      , updated_at
-      , next_run_at
-      , project_id
-      , name_regex
-      , cadence
-      , older_than
-      , keep_n
-      , enabled
-      , name_regex_keep
-      FROM container_expiration_policies
+      , relative_position
+      , start_event_identifier
+      , end_event_identifier
+      , group_id
+      , start_event_label_id
+      , end_event_label_id
+      , hidden
+      , custom
+      , group_value_stream_id
+      FROM analytics_cycle_analytics_group_stages
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

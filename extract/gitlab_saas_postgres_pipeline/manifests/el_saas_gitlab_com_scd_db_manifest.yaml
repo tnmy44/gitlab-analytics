@@ -6,34 +6,3 @@ connection_info:
     port: GITLAB_COM_SCD_PG_PORT
     user: GITLAB_COM_DB_USER
 tables:
-  alert_management_alert_assignees:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'alert_management_alert_assignees'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , user_id
-      , alert_id
-      FROM alert_management_alert_assignees
-  approval_merge_request_rule_sources:
-    export_schema: "gitlab_com"
-    export_table: approval_merge_request_rule_sources
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , approval_merge_request_rule_id
-      , approval_project_rule_id
-      FROM approval_merge_request_rule_sources
-  approval_project_rules_groups:
-    export_schema: "gitlab_com"
-    export_table: approval_project_rules_groups
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , approval_project_rule_id
-      , group_id
-      FROM approval_project_rules_groups

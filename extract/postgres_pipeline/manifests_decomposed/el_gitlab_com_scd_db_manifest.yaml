@@ -5,6 +5,37 @@ connection_info:
   port: GITLAB_COM_SCD_PG_PORT
   user: GITLAB_COM_DB_USER
 tables:
+  alert_management_alert_assignees:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'alert_management_alert_assignees'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , user_id
+      , alert_id
+      FROM alert_management_alert_assignees
+  approval_merge_request_rule_sources:
+    export_schema: "gitlab_com"
+    export_table: approval_merge_request_rule_sources
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , approval_merge_request_rule_id
+      , approval_project_rule_id
+      FROM approval_merge_request_rule_sources
+  approval_project_rules_groups:
+    export_schema: "gitlab_com"
+    export_table: approval_project_rules_groups
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , approval_project_rule_id
+      , group_id
+      FROM approval_project_rules_groups
   approval_project_rules_protected_branches:
     export_schema: "gitlab_com"
     export_table: approval_project_rules_protected_branches
@@ -419,6 +450,21 @@ tables:
       SELECT milestone_id
       , release_id
       FROM milestone_releases
+  namespace_limits:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'namespace_limits'
+    export_table_primary_key: namespace_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT additional_purchased_storage_size
+      , additional_purchased_storage_ends_on
+      , namespace_id
+      , temporary_storage_increase_ends_on
+      , pre_enforcement_notification_at
+      , first_enforced_at
+      , last_enforced_at
+      FROM namespace_limits
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true
