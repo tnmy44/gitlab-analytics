@@ -4958,7 +4958,7 @@ roles:
         warehouses:
             - reporting
 
-   - skhan:
+    - skhan:
         member_of:
             - analyst_sales
             - restricted_safe
