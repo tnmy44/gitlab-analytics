@@ -239,9 +239,9 @@ databases:
     - schaturvedi_prep:
         shared: no  
 
-    - skahn_prod:
+    - skhan_prod:
         shared: no
-    - skahn_prep:
+    - skhan_prep:
         shared: no        
 
     - snalamaru_analytics:
