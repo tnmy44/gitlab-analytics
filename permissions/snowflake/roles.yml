@@ -239,6 +239,11 @@ databases:
     - schaturvedi_prep:
         shared: no  
 
+    - skahnprod:
+        shared: no
+    - skahn_prep:
+        shared: no        
+
     - snalamaru_analytics:
         shared: no
     - snalamaru_prod:
@@ -4953,6 +4958,45 @@ roles:
         warehouses:
             - reporting
 
+   - skhan:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - skhan_prep
+                - skhan_prod
+            schemas:
+                - skhan_prep.*
+                - skhan_prod.*
+            tables:
+                - skhan_prep.*.*
+                - skhan_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - skhan_prep
+                    - skhan_prod
+                write:
+                    - skhan_prep
+                    - skhan_prod
+            schemas:
+                read:
+                    - skhan_prep.*
+                    - skhan_prod.*
+                write:
+                    - skhan_prep.*
+                    - skhan_prod.*
+            tables:
+                read:
+                    - skhan_prep.*.*
+                    - skhan_prod.*.*
+                write:
+                    - skhan_prep.*.*
+                    - skhan_prod.*.*
+
     - smccormack:
         member_of:
             - analyst_people
@@ -5816,6 +5860,11 @@ users:
         can_login: yes
         member_of:
             - sisense_restricted_safe
+
+    - skhan:
+        can_login: yes
+        member_of:
+            - skhan
 
     - smccormack:
         can_login: yes
