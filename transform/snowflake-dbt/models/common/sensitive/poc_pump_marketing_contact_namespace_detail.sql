@@ -13,7 +13,8 @@
     ('gitlab_dotcom_users_source', 'gitlab_dotcom_users_source'),
     ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
     ('fct_trial_first', 'fct_trial_first'),
-    ('customers_db_charges_xf', 'customers_db_charges_xf'),
+    ('dim_subscription', 'dim_subscription'),
+    ('dim_product_tier', 'dim_product_tier'),
     ('customers_db_leads', 'customers_db_leads_source'),
     ('map_gitlab_dotcom_xmau_metrics', 'map_gitlab_dotcom_xmau_metrics'),
     ('services', 'gitlab_dotcom_integrations_source'),
@@ -132,13 +133,15 @@
 ), subscriptions AS (
   
     SELECT 
-      charges.current_gitlab_namespace_id::INT                      AS namespace_id, 
-      MIN(charges.subscription_start_date)                          AS min_subscription_start_date
-    FROM customers_db_charges_xf charges
+      dim_subscription.current_gitlab_namespace_id::INT                      AS namespace_id, 
+      MIN(dim_subscription.subscription_start_date)                          AS min_subscription_start_date
+    FROM dim_subscription
     INNER JOIN namespaces 
-      ON charges.current_gitlab_namespace_id = namespaces.dim_namespace_id
-    WHERE charges.current_gitlab_namespace_id IS NOT NULL
-      AND charges.product_category IN ('SaaS - Ultimate','SaaS - Premium') -- changing to product category field, used by the charges table
+      ON dim_subscription.namespace_id = namespaces.dim_namespace_id
+    INNER JOIN dim_product_tier
+      ON namespaces.dim_product_tier_id = dim_product_tier.dim_product_tier_id
+    WHERE dim_subscription.namespace_id IS NOT NULL
+      AND dim_product_tier.product_tier_name IN ('SaaS - Ultimate','SaaS - Premium') -- changing to product category field, used by the charges table
     GROUP BY 1
   
 ), latest_trial_by_user AS (
