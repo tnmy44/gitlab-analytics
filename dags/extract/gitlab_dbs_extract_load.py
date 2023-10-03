@@ -246,7 +246,7 @@ def extract_manifest(manifest_file_path):
 
 def extract_table_list_from_manifest(manifest_contents):
     """Extract table from the manifest file for which extraction needs to be done"""
-    return manifest_contents["tables"].keys()
+    return manifest_contents['tables'] if manifest_contents.get('tables') else []
 
 
 # Sync DAG
