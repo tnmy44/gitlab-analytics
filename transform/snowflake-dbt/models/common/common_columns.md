@@ -2357,3 +2357,17 @@ Quarter To Date allocated target.
 Year To Date allocated target.
 
 {% enddocs %}
+
+{% docs dim_cloud_activation_sk %}
+
+The surrogate key of `dim_cloud_activation` model. Currently identified by hashing the `cloud_activation_id` field that is being sourced from customers portal at gitlab.com.
+
+{% enddocs %}
+
+{% docs dim_cloud_activation_id %}
+
+The unique identifier that identifies a cloud activation.
+
+{% enddocs %}
+
+
