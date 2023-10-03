@@ -62,7 +62,7 @@ def test_add_scd_tables() -> None:
     """
     full_path = f"{abs_path}el_saas_gitlab_com_scd_db_manifest.yaml"
     loaded_file = load_yaml_file(full_path)
-    loaded_tables = loaded_file['tables'] if loaded_file['tables'] else []
+    loaded_tables = loaded_file["tables"] if loaded_file["tables"] else []
 
     for table in TABLES_LIST:
         if table in loaded_tables:
