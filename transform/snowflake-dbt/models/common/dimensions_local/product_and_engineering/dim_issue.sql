@@ -1,4 +1,3 @@
-
 {{ config({
      "tags":["product"],
      "post-hook": "{{ missing_member_column(primary_key = 'dim_issue_sk', not_null_test_cols = []) }}"
@@ -77,8 +76,8 @@ WITH prep_issue AS (
 {{ dbt_audit(
     cte_ref="prep_issue",
     created_by="@mpeychet_",
-    updated_by="@michellecooper",
+    updated_by="@michellcooper",
     created_date="2021-06-17",
-    updated_date="2023-09-27"
+    updated_date="2023-10-03"
 ) }}
 

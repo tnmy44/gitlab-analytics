@@ -239,6 +239,11 @@ databases:
     - schaturvedi_prep:
         shared: no  
 
+    - skhan_prod:
+        shared: no
+    - skhan_prep:
+        shared: no        
+
     - snalamaru_analytics:
         shared: no
     - snalamaru_prod:
@@ -1762,7 +1767,6 @@ roles:
                 read:
                     - prep.gitlab_dotcom.*
                     - prep.sensitive.gitlab_dotcom_audit_event_details
-                    - prep.sensitive.gitlab_dotcom_audit_event_details_pii
                     - prep.sensitive.gitlab_dotcom_environments
                     - prep.sensitive.gitlab_dotcom_identities
                     - prep.sensitive.gitlab_dotcom_labels
@@ -3167,6 +3171,12 @@ roles:
                     - degan_prep.*.*
                     - degan_prod.*.*
 
+    - dfelton:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - dgupta:
         member_of:
             - adaptive
@@ -3492,6 +3502,7 @@ roles:
 
     - jonglee:
         member_of:
+            - gainsight
             - reporter
             - restricted_safe
             - salesforce
@@ -4129,8 +4140,8 @@ roles:
 
     - mgilgalindo:
         member_of:
-            - reporter
-            - salesforce
+            - analyst_sales
+            - restricted_safe
         warehouses:
             - dev_xs
 
@@ -4944,6 +4955,45 @@ roles:
         warehouses:
             - reporting
 
+    - skhan:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - skhan_prep
+                - skhan_prod
+            schemas:
+                - skhan_prep.*
+                - skhan_prod.*
+            tables:
+                - skhan_prep.*.*
+                - skhan_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - skhan_prep
+                    - skhan_prod
+                write:
+                    - skhan_prep
+                    - skhan_prod
+            schemas:
+                read:
+                    - skhan_prep.*
+                    - skhan_prod.*
+                write:
+                    - skhan_prep.*
+                    - skhan_prod.*
+            tables:
+                read:
+                    - skhan_prep.*.*
+                    - skhan_prod.*.*
+                write:
+                    - skhan_prep.*.*
+                    - skhan_prod.*.*
+
     - smccormack:
         member_of:
             - analyst_people
@@ -5413,6 +5463,11 @@ users:
         member_of:
             - degan
 
+    - dfelton:
+        can_login: yes
+        member_of:
+            - dfelton
+
     - dgupta:
         can_login: yes
         member_of:
@@ -5802,6 +5857,11 @@ users:
         can_login: yes
         member_of:
             - sisense_restricted_safe
+
+    - skhan:
+        can_login: yes
+        member_of:
+            - skhan
 
     - smccormack:
         can_login: yes
