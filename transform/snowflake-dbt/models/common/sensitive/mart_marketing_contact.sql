@@ -99,7 +99,7 @@
     INNER JOIN dim_product_tier
       ON namespaces.dim_product_tier_id = dim_product_tier.dim_product_tier_id
     WHERE dim_subscription.namespace_id IS NOT NULL
-      AND dim_product_tier.product_tier_name IN ('SaaS - Ultimate','SaaS - Premium') -- changing to product category field, used by the charges table
+      AND dim_product_tier.product_tier_name IN ('SaaS - Ultimate','SaaS - Premium')
     GROUP BY 1
   
 ), latest_trial_by_user AS (
