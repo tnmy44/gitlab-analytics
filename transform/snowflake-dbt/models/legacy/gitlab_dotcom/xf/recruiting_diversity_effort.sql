@@ -1,6 +1,6 @@
 WITH issues AS (
   
-    SELECT *
+    SELECT prep_issue.*
     FROM {{ ref ('prep_issue') }}
     LEFT JOIN  {{ ref('prep_project') }}
       ON prep_issue.dim_project_sk = prep_project.dim_project_sk

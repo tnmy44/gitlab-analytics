@@ -94,8 +94,7 @@
 , incident_labeled_issues_source AS (
 
     SELECT
-      *,
-      created_at AS created_at
+      *
     FROM {{ ref('prep_issue') }}
     WHERE ARRAY_CONTAINS('incident'::variant, labels)
 
