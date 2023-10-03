@@ -67,8 +67,8 @@
     "source_cte_name": "issue_creation_other_source",
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
-    "project_column_name": "dim_project_sk",
-    "primary_key": "dim_issue_sk",
+    "project_column_name": "project_id",
+    "primary_key": "issue_id",
     "stage_name": "plan",
     "plan_column_name": "dim_plan_id_at_creation",
     "created_date_name": "created_date_id"
@@ -474,8 +474,8 @@
     "source_cte_name": "incident_labeled_issues_source",
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
-    "project_column_name": "dim_project_sk",
-    "primary_key": "dim_issue_sk",
+    "project_column_name": "project_id",
+    "primary_key": "issue_id",
     "stage_name": "monitor",
     "plan_column_name": "dim_plan_id_at_creation",
     "created_date_name": "created_date_id"
