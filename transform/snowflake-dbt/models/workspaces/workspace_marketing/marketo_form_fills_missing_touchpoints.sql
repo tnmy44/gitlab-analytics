@@ -31,6 +31,7 @@
     ON wk_marketo_activity_fill_out_form.lead_id=mart_crm_person.marketo_lead_id
   WHERE LOWER(wk_marketo_activity_fill_out_form.primary_attribute_value) NOT LIKE '%unsubscribe%'
   AND wk_marketo_activity_fill_out_form.primary_attribute_value NOT LIKE 'PathFactory Webhook'
+  AND wk_marketo_activity_fill_out_form.primary_attribute_value NOT LIKE '%EmailSubscription%'
   AND form_url IS NOT null
   AND activity_date <= CURRENT_DATE - 2
   AND activity_date >= CURRENT_DATE - 3
