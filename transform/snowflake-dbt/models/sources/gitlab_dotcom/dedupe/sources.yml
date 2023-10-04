@@ -247,6 +247,8 @@ sources:
         identifier: gitlab_db_milestone_releases
       - name: milestones
         identifier: gitlab_db_milestones
+      - name: milestones_internal_only
+        identifier: gitlab_db_milestones_internal_only
       - name: ml_candidates
         identifier: gitlab_db_ml_candidates
       - name: ml_experiments
