@@ -53,9 +53,7 @@ combined AS (
       all_notes.commit_id                                   AS commit_id,
       all_notes.noteable_id                                 AS noteable_id,
       all_notes.system                                      AS system,
-      --st_diff (hidden because not relevant to our current analytics needs)
       internal_notes.internal_note_updated_by_id            AS note_updated_by_id,
-      --type (hidden because legacy and can be easily confused with noteable_type)
       all_notes.position                                    AS position,
       all_notes.original_position                           AS original_position,
       all_notes.resolved_at                                 AS resolved_at,
