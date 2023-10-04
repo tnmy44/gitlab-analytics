@@ -60,7 +60,7 @@ combined AS (
     all_issues.issue_id                                      AS issue_id,
     all_issues.issue_iid                                     AS issue_iid,
     all_issues.author_id                                     AS author_id,
-    internal_only.internal_project_id                        AS project_id,
+    all_issues.project_id                                    AS project_id,
     all_issues.milestone_id                                  AS milestone_id,
     all_issues.sprint_id                                     AS sprint_id,
     all_issues.updated_by_id                                 AS updated_by_id,
