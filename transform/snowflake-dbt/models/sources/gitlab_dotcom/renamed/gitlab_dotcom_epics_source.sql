@@ -55,7 +55,7 @@ joined AS (
     all_epics.epic_last_edited_at                    AS epic_last_edited_at,
     all_epics.created_at                             AS created_at,
     all_epics.updated_at                             AS updated_at,
-    interal_epics.internal_title                     AS epic_title,
+    interal_epics.internal_epic_title                AS epic_title,
     interal_epics.internal_epic_description          AS epic_description,
     all_epics.closed_at                              AS closed_at,
     all_epics.state_id                               AS state_id,
@@ -65,10 +65,10 @@ joined AS (
     all_epics.is_confidential                        AS is_confidential,
     all_epics.state                                  AS state,
     all_epics.epic_title_length                      AS epic_title_length,
-    all_epics.epic_description_lengt                 AS epic_description_length
+    all_epics.epic_description_length                AS epic_description_length
   FROM all_epics
   LEFT JOIN interal_epics
-    ON all_epics.epic_id = interal_epics.epic_id
+    ON all_epics.epic_id = interal_epics.internal_epic_id
 
 )
 SELECT *
