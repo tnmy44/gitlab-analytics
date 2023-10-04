@@ -53,3 +53,18 @@ tables:
       FROM analytics_cycle_analytics_group_stages
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  merge_request_diff_commits:
+    incremental_type: 'load_by_id'
+    export_schema: 'gitlab_com'
+    export_table: 'merge_request_diff_commits'
+    export_table_primary_key: merge_request_diff_id # real PK is composite key fyi
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT authored_date
+      , committed_date
+      , merge_request_diff_id
+      , relative_order
+      , sha
+      , commit_author_id
+      , committer_id
+      FROM merge_request_diff_commits
