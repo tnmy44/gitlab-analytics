@@ -1,0 +1,55 @@
+connection_info:
+  postgres_source_connection:
+    database: GITLAB_COM_DB_NAME
+    host: GITLAB_COM_DB_HOST
+    pass: GITLAB_COM_DB_PASS
+    port: GITLAB_COM_PG_PORT
+    user: GITLAB_COM_DB_USER
+  postgres_metadata_connection:
+    database: GITLAB_METADATA_DB_NAME
+    host: GITLAB_METADATA_DB_HOST
+    pass: GITLAB_METADATA_DB_PASS
+    port: GITLAB_METADATA_PG_PORT
+    user: GITLAB_METADATA_DB_USER
+tables:
+  alert_management_alerts:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'alert_management_alerts'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , started_at
+      , ended_at
+      , events
+      , iid
+      , status
+      , issue_id
+      , project_id
+      FROM alert_management_alerts
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  analytics_cycle_analytics_group_stages:
+    export_schema: "gitlab_com"
+    export_table: analytics_cycle_analytics_group_stages
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , relative_position
+      , start_event_identifier
+      , end_event_identifier
+      , group_id
+      , start_event_label_id
+      , end_event_label_id
+      , hidden
+      , custom
+      , group_value_stream_id
+      FROM analytics_cycle_analytics_group_stages
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
