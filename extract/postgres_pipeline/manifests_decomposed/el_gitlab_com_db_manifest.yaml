@@ -1143,7 +1143,7 @@ tables:
       FROM merge_requests_closing_issues
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  milestones: 
+  milestones:
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'milestones'
