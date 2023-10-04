@@ -1298,7 +1298,7 @@ tables:
       FROM namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  namespaces_internal_only:
+  namespaces_internal_only: #
     additional_filtering: AND id in {INTERNAL_NAMESPACE_IDS}
     dbt_snapshots: true
     dbt_source_model: true
