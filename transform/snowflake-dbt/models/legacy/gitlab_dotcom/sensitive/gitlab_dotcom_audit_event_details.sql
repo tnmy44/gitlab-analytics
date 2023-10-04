@@ -16,7 +16,7 @@ WITH source AS (
     SELECT
       audit_event_id,
       REGEXP_SUBSTR(audit_event_details, '(.*):(.*)', 1, 1 ,'c',1) AS key_name,
-      REGEXP_SUBSTR(audit_event_details, '(.*):(.*)', 1, 1 ,'c',2) AS key_value, 
+      REGEXP_SUBSTR(audit_event_details, '(.*): (.*)', 1, 1 ,'c',2) AS key_value, 
       created_at
     FROM source
     WHERE key_name IS NOT NULL
