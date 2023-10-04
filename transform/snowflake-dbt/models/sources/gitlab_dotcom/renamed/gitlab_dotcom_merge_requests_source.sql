@@ -86,7 +86,7 @@ joined AS (
       all_merge_requests.does_allow_maintainer_to_push              AS does_allow_maintainer_to_push,
       all_merge_requests.created_at                                 AS created_at,
       all_merge_requests.updated_at                                 AS updated_at,
-      all_merge_requests.merge_request_last_edited_at               AS merge_request_last_edited_at,
+      all_merge_requests.merge_request_last_edited_at               AS merge_request_last_edited_at
 
 )
 
