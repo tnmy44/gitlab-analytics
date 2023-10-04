@@ -34,7 +34,7 @@ interal_epics AS (
     id::NUMBER                                     AS internal_epic_id,
     iid::NUMBER                                    AS internal_epic_iid,
     title::VARCHAR                                 AS internal_epic_title,
-    description::VARCHAR                           AS internal_epic_description
+    description::VARCHAR                           AS internal_epic_description -- has this bneen nullifed?
   FROM {{ ref('gitlab_dotcom_epics_internal_only_dedupe_source')}}
 
 ),
