@@ -442,7 +442,7 @@ tables:
       , iid
       , project_id
       , environment_id
-      , ref
+      , NULL AS ref
       , tag
       , user_id
       , deployable_id
@@ -482,7 +482,7 @@ tables:
     import_query: |-
       SELECT id
       , project_id
-      , name
+      , NULL AS name
       , created_at
       , updated_at
       , NULL AS environment_type
@@ -511,7 +511,7 @@ tables:
       , created_at
       , updated_at
       , title
-      , description
+      , NULL AS description
       , state_id
       , closed_at
       , parent_id
@@ -580,7 +580,7 @@ tables:
       , project_id
       , created_at
       , updated_at
-      , grafana_url
+      , NULL AS grafana_url
       , enabled
       FROM grafana_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -2105,9 +2105,9 @@ tables:
       , group_id
       , iid
       , cached_markdown_version
-      , title
+      , NULL AS title
       , NULL AS title_html
-      , description
+      , NULL AS description
       , NULL AS description_html
       , state_enum
       FROM sprints
@@ -2409,7 +2409,7 @@ tables:
       , scanner_id
       , primary_identifier_id
       , NULL AS uuid
-      , name
+      , NULL AS name
       , metadata_version
       , NULL AS raw_metadata
       , vulnerability_id
@@ -2485,4 +2485,3 @@ tables:
       FROM zoom_meetings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
- 
