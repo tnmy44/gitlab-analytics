@@ -5,7 +5,7 @@ connection_info:
   port: GITLAB_COM_CI_DB_PORT
   user: GITLAB_COM_CI_DB_USER
 tables:
-  ci_builds:
+  ci_builds: #
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: ci_builds
