@@ -2,6 +2,7 @@
 WITH all_epics AS (
 
     SELECT
+      id::NUMBER                                   AS epic_id,
       group_id::NUMBER                             AS group_id,
       author_id::NUMBER                            AS author_id,
       assignee_id::NUMBER                          AS assignee_id,
