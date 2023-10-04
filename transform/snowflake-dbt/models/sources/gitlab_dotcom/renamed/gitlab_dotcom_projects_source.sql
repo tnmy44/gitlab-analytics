@@ -94,7 +94,7 @@ combined AS (
     all_projects.created_at                                                     AS created_at,
     all_projects.updated_at                                                     AS updated_at,
     all_projects.creator_id                                                     AS creator_id,
-    internal_projects.internal_namespace_id                                     AS namespace_id,
+    all_projects.namespace_id                                                   AS namespace_id,
     all_projects.last_activity_at                                               AS last_activity_at,
     all_projects.visibility_level                                               AS visibility_level,
     all_projects.archived                                                       AS archived,
