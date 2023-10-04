@@ -2353,8 +2353,8 @@ tables:
       , managing_group_id
       , "role"
       , username
-      , first_name
-      , last_name
+      , NULL AS first_name
+      , NULL AS last_name
       , user_type
       , otp_required_for_login
       FROM users
