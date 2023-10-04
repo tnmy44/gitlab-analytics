@@ -105,6 +105,7 @@
       {{ map_state_id('gitlab_dotcom_issues_source.state_id') }}                            AS state_name,
       gitlab_dotcom_issues_source.duplicated_to_id,
       gitlab_dotcom_issues_source.promoted_to_epic_id,
+      gitlab_dotcom_issues_source.issue_type,
       CASE 
         WHEN prep_issue_severity.severity = 4 THEN 'S1'
         WHEN ARRAY_CONTAINS('severity::1'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s1'::variant, agg_labels.labels) THEN 'S1'

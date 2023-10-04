@@ -176,6 +176,7 @@ joined AS (
     issues.service_desk_reply_to,
     issues.duplicated_to_id,
     issues.promoted_to_epic_id,
+    issues.issue_type,
     agg_labels.labels,
     ARRAY_TO_STRING(agg_labels.labels, '|')                                            AS masked_label_title,
     issue_metrics.first_mentioned_in_commit_at,

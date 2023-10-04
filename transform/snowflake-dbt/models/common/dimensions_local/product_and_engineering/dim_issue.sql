@@ -45,6 +45,7 @@ WITH prep_issue AS (
       state_name,
       duplicated_to_id,
       promoted_to_epic_id,
+      issue_type,
       severity,
       issue_url,
       milestone_title,
