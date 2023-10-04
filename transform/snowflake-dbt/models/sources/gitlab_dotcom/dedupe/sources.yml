@@ -239,6 +239,8 @@ sources:
         identifier: gitlab_db_merge_request_predictions
       - name: merge_requests
         identifier: gitlab_db_merge_requests
+      - name: merge_requests_internal_only
+        identifier: gitlab_db_merge_requests_internal_only
       - name: merge_requests_closing_issues
         identifier: gitlab_db_merge_requests_closing_issues
       - name: merge_request_reviewers

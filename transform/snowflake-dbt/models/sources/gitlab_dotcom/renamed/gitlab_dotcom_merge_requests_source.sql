@@ -1,18 +1,13 @@
-WITH source AS (
-
-  SELECT *
-  FROM {{ ref('gitlab_dotcom_merge_requests_dedupe_source') }}
-
-), renamed AS (
+WITH all_merge_requests AS (
 
     SELECT
 
       id::NUMBER                                                AS merge_request_id,
       iid::NUMBER                                               AS merge_request_iid,
-      title::VARCHAR                                             AS merge_request_title,
+      title::VARCHAR                                            AS merge_request_title,
 
-      IFF(lower(target_branch) = 'master', TRUE, FALSE)          AS is_merge_to_master,
-      IFF(lower(merge_error) = 'nan', NULL, merge_error)         AS merge_error,
+      IFF(lower(target_branch) = 'master', TRUE, FALSE)         AS is_merge_to_master,
+      IFF(lower(merge_error) = 'nan', NULL, merge_error)        AS merge_error,
       assignee_id::NUMBER                                       AS assignee_id,
       updated_by_id::NUMBER                                     AS updated_by_id,
       merge_user_id::NUMBER                                     AS merge_user_id,
@@ -28,22 +23,72 @@ WITH source AS (
       author_id::NUMBER                                         AS author_id,
       state_id::NUMBER                                          AS merge_request_state_id,
       -- Override state by mapping state_id. See issue #3556.
-      {{ map_state_id('state_id') }}                             AS merge_request_state,
-      merge_status                                               AS merge_request_status,
-      merge_when_pipeline_succeeds::BOOLEAN                      AS does_merge_when_pipeline_succeeds,
-      squash::BOOLEAN                                            AS does_squash,
-      discussion_locked::BOOLEAN                                 AS is_discussion_locked,
-      allow_maintainer_to_push::BOOLEAN                          AS does_allow_maintainer_to_push,
-      created_at::TIMESTAMP                                      AS created_at,
-      updated_at::TIMESTAMP                                      AS updated_at,
-      last_edited_at::TIMESTAMP                                  AS merge_request_last_edited_at,
-      description::VARCHAR                                       AS merge_request_description
+      {{ map_state_id('state_id') }}                            AS merge_request_state,
+      merge_status                                              AS merge_request_status,
+      merge_when_pipeline_succeeds::BOOLEAN                     AS does_merge_when_pipeline_succeeds,
+      squash::BOOLEAN                                           AS does_squash,
+      discussion_locked::BOOLEAN                                AS is_discussion_locked,
+      allow_maintainer_to_push::BOOLEAN                         AS does_allow_maintainer_to_push,
+      created_at::TIMESTAMP                                     AS created_at,
+      updated_at::TIMESTAMP                                     AS updated_at,
+      last_edited_at::TIMESTAMP                                 AS merge_request_last_edited_at,
+      description::VARCHAR                                      AS merge_request_description
 
       --merge_params // hidden for privacy
 
-    FROM source
+    FROM {{ ref('gitlab_dotcom_merge_requests_dedupe_source') }}
+
+),
+
+internal_merge_requests AS (
+
+    SELECT
+
+      id::NUMBER                                                AS internal_merge_request_id,
+      iid::NUMBER                                               AS internal_merge_request_iid,
+      title::VARCHAR                                            AS internal_merge_request_title,
+      description::VARCHAR                                      AS internal_merge_request_description,
+      target_branch::VARCHAR                                    AS internal_target_branch
+
+    FROM {{ ref('gitlab_dotcom_merge_requests_internal_only_dedupe_source') }}
+),
+
+joined AS (
+
+    SELECT
+
+      all_merge_requests.merge_request_id                           AS merge_request_id,
+      all_merge_requests.merge_request_iid                          AS merge_request_iid,
+      internal_merge_requests.internal_merge_request_title          AS title,
+      internal_merge_requests.internal_merge_request_description    AS description,
+      internal_merge_requests.internal_target_branch                AS target_branch,
+      all_merge_requests.is_merge_to_master                         AS is_merge_to_master,
+      all_merge_requests.merge_error                                AS merge_error,
+      all_merge_requests.assignee_id                                AS assignee_id,
+      all_merge_requests.updated_by_id                              AS updated_by_id,
+      all_merge_requests.merge_user_id                              AS merge_user_id,
+      all_merge_requests.last_edited_by_id                          AS last_edited_by_id,
+      all_merge_requests.milestone_id                               AS milestone_id,
+      all_merge_requests.head_pipeline_id                           AS head_pipeline_id,
+      all_merge_requests.latest_merge_request_diff_id               AS latest_merge_request_diff_id,
+      all_merge_requests.approvals_before_merge                     AS approvals_before_merge,
+      all_merge_requests.lock_version                               AS lock_version,
+      all_merge_requests.time_estimate                              AS time_estimate,
+      all_merge_requests.project_id                                 AS project_id,
+      all_merge_requests.target_project_id                          AS target_project_id,
+      all_merge_requests.author_id                                  AS author_id,
+      all_merge_requests.merge_request_state_id                     AS merge_request_state_id,
+      all_merge_requests.merge_request_state                        AS merge_request_state,
+      all_merge_requests.merge_request_status                       AS merge_request_status,
+      all_merge_requests.does_merge_when_pipeline_succeeds          AS does_merge_when_pipeline_succeeds,
+      all_merge_requests.does_squash                                AS does_squash,
+      all_merge_requests.is_discussion_locked                       AS is_discussion_locked,
+      all_merge_requests.does_allow_maintainer_to_push              AS does_allow_maintainer_to_push,
+      all_merge_requests.created_at                                 AS created_at,
+      all_merge_requests.updated_at                                 AS updated_at,
+      all_merge_requests.merge_request_last_edited_at               AS merge_request_last_edited_at,
 
 )
 
 SELECT  *
-FROM renamed
+FROM joined
