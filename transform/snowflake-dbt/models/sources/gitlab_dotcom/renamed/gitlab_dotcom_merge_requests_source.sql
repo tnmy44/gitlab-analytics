@@ -45,7 +45,6 @@ internal_merge_requests AS (
     SELECT
 
       id::NUMBER                                                AS internal_merge_request_id,
-      iid::NUMBER                                               AS internal_merge_request_iid,
       title::VARCHAR                                            AS internal_merge_request_title,
       description::VARCHAR                                      AS internal_merge_request_description,
       target_branch::VARCHAR                                    AS internal_target_branch
@@ -87,6 +86,10 @@ joined AS (
       all_merge_requests.created_at                                 AS created_at,
       all_merge_requests.updated_at                                 AS updated_at,
       all_merge_requests.merge_request_last_edited_at               AS merge_request_last_edited_at
+    
+    FROM all_merge_requests
+    LEFT JOIN internal_merge_requests
+      ON all_merge_requests.merge_request_id = internal_merge_requests.internal_merge_request_id
 
 )
 
