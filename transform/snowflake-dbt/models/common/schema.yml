@@ -8214,11 +8214,11 @@ models:
       - name: updated_at
         description: '{{ doc("snippet_updated_at") }}'
 
-  - name: dim_cloud_activation
-    description: '{{ doc("customers_db_cloud_activations_source") }}'  
+  - name: fct_cloud_activation
+    description: '{{ doc("fct_cloud_activation") }}'  
     columns:
-      - name: dim_cloud_activation_sk
-        description: '{{ doc("dim_plan_sk") }}'
+      - name: cloud_activation_pk
+        description: '{{ doc("cloud_activation_pk") }}'
         tests:
           - not_null
           - unique

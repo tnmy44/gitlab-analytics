@@ -9,8 +9,8 @@
 , final AS (
 
      SELECT 
-      -- Surrogate Key
-      {{ dbt_utils.surrogate_key(['cloud_activation.cloud_activation_id']) }}  AS dim_cloud_activation_sk,
+      -- Primary Key
+      {{ dbt_utils.surrogate_key(['cloud_activation.cloud_activation_id']) }}  AS cloud_activation_pk,
 
       -- Natural Key
       cloud_activation_id                                                      AS dim_cloud_activation_id,
@@ -19,13 +19,13 @@
       customer_id                                                              AS internal_customer_id, --Specific to Customer Dot Customers and can only be joined to CDot Customers,
       billing_account_id                                                       AS dim_billing_account_id,
       subscription_name,
+      cloud_activation_created_at,
+      cloud_activation_updated_at,
 
       --Other Attributes
       cloud_activation_code,
       is_super_sonics_aware_subscription,
-      seat_utilization_reminder_sent_at,
-      cloud_activation_created_at,
-      cloud_activation_updated_at
+      seat_utilization_reminder_sent_at
 
     FROM cloud_activation
 

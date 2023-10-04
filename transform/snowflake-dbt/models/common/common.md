@@ -1916,10 +1916,10 @@ This dimension model holds all requirement records and provides dimensional data
 
 {% enddocs %}
 
-{% docs dim_cloud_activation %}
+{% docs fct_cloud_activation %}
 
 This model contains data for the cloud activations sourced from tap-postgres table from customers.gitlab.com. It stores information about all the activation codes that were generated for Cloud licenses. Customers use this code after the installation of their GitLab instance. 
 
-This model contains other join keys like `billing_account_id`, `subscription_name` etc.. to be able to join back to Salesforce and Zuora data respectively.
+This model contains other join keys like `billing_account_id`, `subscription_name` etc.. to be able to join back to Salesforce, Zuora, dimdate data respectively.
 
 {% enddocs %}
