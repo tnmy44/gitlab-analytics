@@ -92,7 +92,7 @@ combined AS (
     internal_projects.internal_project_import_url                               AS project_import_url,
     all_projects.project_merge_requests_template                                AS project_merge_requests_template,
     all_projects.created_at                                                     AS created_at,
-    all_projects.created_at                                                     AS created_at,
+    all_projects.updated_at                                                     AS updated_at,
     all_projects.creator_id                                                     AS creator_id,
     internal_projects.internal_namespace_id                                     AS namespace_id,
     all_projects.last_activity_at                                               AS last_activity_at,
