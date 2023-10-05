@@ -39,7 +39,7 @@ combined AS (
       all_milestones.group_id                               AS group_id,
       all_milestones.start_date                             AS start_date,
       all_milestones.due_date                               AS due_date,
-      all_milestones.state                                  AS milestone_status,
+      all_milestones.milestone_status                       AS milestone_status,
       all_milestones.created_at                             AS created_at,
       all_milestones.updated_at                             AS updated_at
 
