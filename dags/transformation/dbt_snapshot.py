@@ -44,6 +44,8 @@ from kube_secrets import (
     SNOWFLAKE_STATIC_DATABASE,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
@@ -113,6 +115,8 @@ dbt_snapshot = KubernetesPodOperator(
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_snapshot_cmd],
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     dag=dag,
 )
 
@@ -130,6 +134,8 @@ dbt_commit_hash_setter = KubernetesPodOperator(
         """
     ],
     do_xcom_push=True,
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     dag=dag,
 )
 
@@ -168,6 +174,8 @@ dbt_snapshot_models_run = KubernetesPodOperator(
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_snapshot_models_command],
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     dag=dag,
 )
 
@@ -188,6 +196,8 @@ dbt_test_snapshot_models = KubernetesPodOperator(
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_test_snapshots_cmd],
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     dag=dag,
 )
 
