@@ -51,7 +51,7 @@
     ON prep_crm_task.account_or_opportunity_id = account_opp_mapping.dim_crm_account_id
     AND prep_crm_task.task_date < account_opp_mapping.close_date
     AND prep_crm_task.task_date >= DATEADD('month', -9, dim_date.first_day_of_fiscal_quarter)
-WHERE prep_crm_task.SA_ACTIVITY_TYPE IS NOT NULL
+  WHERE prep_crm_task.sa_activity_type IS NOT NULL
   ), 
   
 converted_leads AS (
