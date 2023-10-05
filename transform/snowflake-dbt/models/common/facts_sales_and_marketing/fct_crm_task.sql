@@ -25,12 +25,7 @@
   SELECT DISTINCT
     prep_crm_task.dim_crm_task_pk as dim_crm_task_pk,
 
-    CASE
-        WHEN prep_crm_opportunity.dim_crm_opportunity_id IS NOT NULL
-          THEN prep_crm_task.dim_crm_opportunity_id
-        WHEN account_opp_mapping.dim_crm_opportunity_id IS NOT NULL
-          THEN account_opp_mapping.dim_crm_opportunity_id
-        END AS dim_mapped_opportunity_id,
+     COALESCE(prep_crm_opportunity.dim_crm_opportunity_id, account_opp_mapping.dim_crm_opportunity_id) AS dim_mapped_opportunity_id,
 
     CASE 
         WHEN prep_crm_opportunity.dim_crm_opportunity_id IS NOT NULL 
