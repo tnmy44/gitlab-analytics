@@ -23,7 +23,6 @@
       cloud_activation_updated_at,
 
       --Other Attributes
-      cloud_activation_code,
       is_super_sonics_aware_subscription,
       seat_utilization_reminder_sent_at
 

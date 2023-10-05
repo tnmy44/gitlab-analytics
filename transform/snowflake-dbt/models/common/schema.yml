@@ -8235,8 +8235,6 @@ models:
         description: Membership Account ID. Join key between Customers and billings_accounts.
       - name: subscription_name
         description: The Subscription name associated with a Subscription
-      - name: cloud_activation_code
-        description: Auto generated code that is sent to the customer in order to activate their instance.
       - name: is_super_sonics_aware_subscription
         description: Indiactor field to identify Super Sonics subscriptions. 
       - name: seat_utilization_reminder_sent_at
