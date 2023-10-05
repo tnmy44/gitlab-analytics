@@ -94,8 +94,8 @@ for endpoint_class in endpoint_classes:
                 ".int_timestamp }}"
             ),
         },
-        affinity=get_affinity("production"),
-        tolerations=get_toleration("production"),
+        affinity=get_affinity("extraction"),
+        tolerations=get_toleration("extraction"),
         arguments=[extract_command],
         dag=dag,
     )
