@@ -40,10 +40,10 @@ WITH all_namespaces AS (
 internal_namespaces AS (
 
     SELECT 
-      id AS internal_namespace_id,
-      name AS internal_namespace_name,
-      path AS internal_namespace_path,
-      updated_id AS internal_namespace_updated_at
+      id         AS internal_namespace_id,
+      name       AS internal_namespace_name,
+      path       AS internal_namespace_path,
+      updated_at AS internal_namespace_updated_at
     FROM {{ ref('gitlab_dotcom_namespaces_internal_only_dedupe_source') }} 
 ),
 
