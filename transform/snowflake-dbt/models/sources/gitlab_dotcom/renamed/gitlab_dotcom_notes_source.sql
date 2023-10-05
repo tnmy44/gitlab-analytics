@@ -31,7 +31,7 @@ WITH all_notes AS (
 internal_notes AS (
     SELECT
       id::NUMBER                                            AS internal_note_id,
-      updated_at::NUMBER                                    AS internal_note_updated_at,
+      updated_at::TIMESTAMP                                 AS internal_note_updated_at,
       project_id::NUMBER                                    AS internal_note_project_id,
       line_code::VARCHAR                                    AS internal_line_code,
       note::VARCHAR                                         AS internal_note,
