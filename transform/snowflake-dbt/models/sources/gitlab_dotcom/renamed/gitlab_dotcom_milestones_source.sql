@@ -34,7 +34,7 @@ combined AS (
 
       all_milestones.milestone_id                           AS milestone_id,
       internal_milestones.internal_milestone_title          AS milestone_title,
-      all_milestones.description                            AS milestone_description,
+      all_milestones.milestone_description                  AS milestone_description,
       all_milestones.project_id                             AS project_id,
       all_milestones.group_id                               AS group_id,
       all_milestones.start_date                             AS start_date,
