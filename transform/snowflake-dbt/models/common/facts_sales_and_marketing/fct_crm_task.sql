@@ -23,7 +23,7 @@
 ), sub as (
 
   SELECT DISTINCT
-    prep_crm_task.dim_crm_task_pk as dim_crm_task_pk,
+    prep_crm_task.dim_crm_task_pk AS dim_crm_task_pk,
 
      COALESCE(prep_crm_opportunity.dim_crm_opportunity_id, account_opp_mapping.dim_crm_opportunity_id) AS dim_mapped_opportunity_id,
 
