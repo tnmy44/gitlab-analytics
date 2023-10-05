@@ -1,0 +1,51 @@
+
+name: public sync
+operation: sync
+target: 
+  name: gitlabpublic
+  type: server
+  secrete_prefix: TABLEAU_API_PUBLIC
+reference: 
+  name: gitlab
+  type: server
+  secrete_prefix: TABLEAU_API
+target_selection_rules:
+  - field: ProjectName
+    operator: Equals
+    value: Public
+reference_selection_rules:
+  - field: Tags
+    operator: Equals
+    value: Public
+assets:
+  workbooks:
+    options:
+      include_published_datasources: True
+      project_type: target
+      use_reference_permissions: False
+      update_extract_connection: False
+      archive_on_delete: True
+      archive_project_path: Archive
+      archive_suffix: True
+    mapping:
+      project_filter:
+        - field: Name
+          operator: Equals
+          value: Public
+  datasources:
+    options:
+      project_type: target
+      use_reference_permissions: False
+      update_extract_connection: False
+    mapping:
+      project_filter:
+        - field: Name
+          operator: Equals
+          value: Public
+connections:
+  - name: snowflake_tableau
+    type: snowflake
+    secrete_prefix: SNOWFLAKE_TABLEAU
+
+
+    

@@ -1,0 +1,23 @@
+
+name: provision
+target: 
+  name: gitlabsandbox
+  type: server
+  secrete_prefix: TABLEAU_API_SANDBOX
+reference: 
+  name: gitlab
+  type: spec
+  file_path: "../tests/test_spec.yaml"
+assets:
+  users:
+    options:
+      foo: bar
+  groups:
+    options:
+      foo: bar
+  projects:
+    options:
+      archive_on_delete: True
+      archive_project_path: Archive
+      update_permissions: True
+    
