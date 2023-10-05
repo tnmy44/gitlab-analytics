@@ -20,7 +20,7 @@
   FROM {{ ref('prep_crm_opportunity') }}
   WHERE is_deleted = FALSE
 
-), sub as (
+), sub AS (
 
   SELECT DISTINCT
     prep_crm_task.dim_crm_task_pk AS dim_crm_task_pk,
