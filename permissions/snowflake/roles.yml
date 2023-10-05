@@ -3509,6 +3509,8 @@ roles:
             - reporter
             - restricted_safe
             - salesforce
+            - zuora_api_sandbox_stitch
+            - zuora_central_sandbox
         warehouses:
             - dev_xs
         owns:
