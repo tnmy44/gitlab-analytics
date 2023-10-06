@@ -2357,3 +2357,87 @@ Quarter To Date allocated target.
 Year To Date allocated target.
 
 {% enddocs %}
+
+{% docs code_suggestions_context %}
+
+Context related to the code_suggestions_context, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
+
+{% enddocs %}
+
+{% docs code_suggestions_model_engine %}
+
+Model engine used for the completions. Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_model_name %}
+
+Model name used for the completions. Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_prefix_length %}
+
+Length of the prefix in characters. Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_suffix_length %}
+
+Length of the suffix in characters. Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_language %}
+
+Programming language of the completions request. Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_user_agent %}
+
+User-agent string of the request (holds information about the origin of the request). Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_api_status_code %}
+
+HTTP status code of GitLab API
+
+{% enddocs %}
+
+{% docs ide_extension_version_context %}
+
+Context related to the ide_extension_version, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
+
+{% enddocs %}
+
+{% docs ide_extension_name %}
+
+Name of the IDE extension, e.g. GitLab Workflow. Appears in the `ide_extension_version` context
+
+{% enddocs %}
+
+{% docs ide_extension_version %}
+
+Version number of the IDE extension, e.g. 3.81.1. Appears in the `ide_extension_version` context
+
+{% enddocs %}
+
+{% docs ide_extension_ide_name %}
+
+Name of the IDE, e.g. RubyMibe. Appears in the `ide_extension_version` context
+
+{% enddocs %}
+
+{% docs ide_extension_ide_vendor %}
+
+Name of the IDEs vendor, e.g. Microsoft. Appears in the `ide_extension_version` context
+
+{% enddocs %}
+
+{% docs ide_extension_ide_version %}
+
+Version number of the IDE, e.g. 1.81.1. Appears in the `ide_extension_version` context
+
+{% enddocs %}

@@ -41,17 +41,17 @@ models:
       - name: behavior_at
         description: ' {{ doc("behavior_at") }}'
       - name: ide_extension_version_context
-        description: Context related to the ide_extension_version, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
+        description: '{{ doc("ide_extension_version_context") }}'
       - name: extension_name
-        description: Name of the IDE extension, e.g. GitLab Workflow
+        description: '{{ doc("ide_extension_name") }}'
       - name: extension_version
-        description: Version number of the IDE extension, e.g. 3.81.1
+        description: '{{ doc("ide_extension_version") }}'
       - name: ide_name
-        description: Name of the IDE, e.g. RubyMibe
+        description: '{{ doc("ide_extension_ide_name") }}'
       - name: ide_vendor
-        description: Name of the IDEs vendor, e.g. Microsoft
+        description: '{{ doc("ide_extension_ide_vendor") }}'
       - name: ide_version
-        description: Version number of the IDE, e.g. 1.81.1
+        description: '{{ doc("ide_extension_ide_version") }}'
 
   - name: fct_behavior_structured_event_code_suggestions_context
     description: Derived fact table that parses out the code_suggestions_context context based on the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema) which can optionally be sent with an event.
@@ -64,25 +64,26 @@ models:
               where: "behavior_at >= DATEADD('day',-3,CURRENT_DATE())"
         - not_null
       - name: behavior_at
-        description: ' {{ doc("behavior_at") }}'
+        description: '{{ doc("behavior_at") }}'
       - name: code_suggestions_context
-        description: Context related to the code_suggestions_context, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
+        description: '{{ doc("code_suggestions_context") }}'
       - name: model_engine
-        description: Model engine used for the completions
+        description: '{{ doc("code_suggestions_model_engine") }}'
       - name: model_name
-        description: Model name used for the completions
-      - name: prefix_link
-        description: Length of the prefix in characters
+        description: '{{ doc("code_suggestions_model_name") }}'
+      - name: prefix_length
+        description: '{{ doc("code_suggestions_prefix_length") }}'
       - name: suffix_length
-        description: Length of the suffix in characters
+        description: '{{ doc("code_suggestions_suffix_length") }}'
       - name: language
-        description: Programming language of the completions request
+        description: '{{ doc("code_suggestions_language") }}'
       - name: user_agent
-        description: User-agent string of the request (holds information about the origin of the request)
+        description: '{{ doc("code_suggestions_user_agent") }}'
       - name: delivery_type
-        description: ' {{ doc("product_delivery_type") }}. In the raw Snowplow data, this field comes through as `gitlab_realm`.'
+        description: ' {{ doc("product_delivery_type") }}. In the raw Snowplow data, this field comes through as `gitlab_realm`. Appears in the `code_suggestions_context`'
         tests:
             - accepted_values:
                 values: ['Self-Managed', 'SaaS']
       - name: api_status_code
-        description: HTTP status code of GitLab API
+        description: '{{ doc("code_suggestions_api_status_code") }}'
+      
