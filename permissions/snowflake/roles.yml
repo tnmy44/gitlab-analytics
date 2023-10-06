@@ -2932,8 +2932,11 @@ roles:
         warehouses: []
 
     - bvandre:
-        member_of: []
-        warehouses: []  
+        member_of:
+            - analyst_sales
+            - restricted_safe
+        warehouses:
+            - dev_xs   
 
     - caitlin:
         member_of: []
@@ -3506,6 +3509,8 @@ roles:
             - reporter
             - restricted_safe
             - salesforce
+            - zuora_api_sandbox_stitch
+            - zuora_central_sandbox
         warehouses:
             - dev_xs
         owns:
@@ -5417,8 +5422,9 @@ users:
         member_of: []
             
     - bvandre:
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of:
+            - bvandre
 
     - caitlin:
         can_login: no
