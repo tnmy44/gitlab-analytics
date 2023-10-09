@@ -90,6 +90,7 @@ class Utils:
         "usage_activity_by_stage.configure.clusters_platforms_eks",
         "usage_activity_by_stage_monthly.configure.clusters_platforms_gke",
         "usage_activity_by_stage_monthly.configure.clusters_platforms_eks",
+        "counts_weekly.batched_background_migration_count_failed_jobs_metric",
     )
 
     def __init__(self):
