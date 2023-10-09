@@ -5346,6 +5346,12 @@ roles:
         member_of: []
         warehouses: []
 
+    - wleidheiser:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
 # ==========================================
 # Users
 # ==========================================
@@ -5957,6 +5963,11 @@ users:
     - webrahim:
         can_login: no
         member_of: []
+
+    - wleidheiser:
+        can_login: yes
+        member_of:
+            - wleidheiser
 
     - workato:
         can_login: yes
