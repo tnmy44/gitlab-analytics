@@ -409,7 +409,6 @@ roles:
             - gitlab_dotcom
             - handbook
             - license_db
-            - nvd
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -2096,18 +2095,6 @@ roles:
                     - prep.sensitive.netsuite_transaction_lines_pii
                     - prep.sensitive.netsuite_vendors_pii
                     - raw.netsuite_fivetran.*
-    
-    - nvd:
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.nvd
-            tables:
-                read:
-                    - prep.nvd.*
 
     - oci_reports:
         warehouses:
