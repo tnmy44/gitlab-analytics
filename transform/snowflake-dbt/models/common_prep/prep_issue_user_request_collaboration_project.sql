@@ -35,11 +35,8 @@ WITH gitlab_dotcom_projects AS (
 ), gitlab_issues AS (
 
     SELECT
-      prep_issue.*,
-      prep_project.project_id
+      prep_issue.*
     FROM {{ ref('prep_issue') }}
-    LEFT JOIN prep_project
-      ON prep_issue.dim_project_sk = prep_project.dim_project_sk
     QUALIFY ROW_NUMBER() OVER(PARTITION BY prep_issue.dim_project_sk, prep_issue.issue_internal_id ORDER BY prep_issue.created_at DESC) = 1
 
 ), collaboration_projects AS (
