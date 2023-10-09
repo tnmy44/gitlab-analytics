@@ -1,6 +1,6 @@
 {{ config(alias='report_metrics_summary_upa_year') }}
 
-WITH report_metrics_summary_account_year AS (
+WITH consolidated_accounts AS (
 
     SELECT *
     --FROM  prod.workspace_sales.report_metrics_summary_account_year
@@ -488,7 +488,7 @@ FROM selected_hierarchy_virtual_upa final
     SUM(acc.fy_sao_net_arr)                             AS fy_sao_net_arr,
     SUM(acc.fy_sao_booked_net_arr)                      AS fy_sao_booked_net_arr
     
-  FROM report_metrics_summary_account_year acc
+  FROM consolidated_accounts acc
     LEFT JOIN final_virtual_upa new_upa
         ON new_upa.account_id = acc.account_id
         AND new_upa.report_fiscal_year = acc.report_fiscal_year
