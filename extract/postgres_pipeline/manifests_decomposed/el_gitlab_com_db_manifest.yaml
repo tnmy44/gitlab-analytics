@@ -226,6 +226,7 @@ tables:
       , updated_at
       , agent_id
       , status
+      , last_used_at
       FROM cluster_agent_tokens
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
