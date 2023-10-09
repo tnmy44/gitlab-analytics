@@ -998,7 +998,7 @@ WITH date_details AS (
     ON sao_fy.account_id = ak.account_id
     AND sao_fy.report_fiscal_year = ak.report_fiscal_year
 
-    -----------------------
+-----------------------
 -- Adjust for hierarchies split between different geos
 ), upa_virtual_cte AS (
 
