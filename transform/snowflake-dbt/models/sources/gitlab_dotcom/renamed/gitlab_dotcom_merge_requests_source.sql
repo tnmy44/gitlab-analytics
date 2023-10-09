@@ -59,7 +59,7 @@ joined AS (
       all_merge_requests.merge_request_id                           AS merge_request_id,
       all_merge_requests.merge_request_iid                          AS merge_request_iid,
       internal_merge_requests.internal_merge_request_title          AS title,
-      internal_merge_requests.internal_merge_request_description    AS description,
+      internal_merge_requests.internal_merge_request_description    AS merge_request_description,
       internal_merge_requests.internal_target_branch                AS target_branch,
       all_merge_requests.is_merge_to_master                         AS is_merge_to_master,
       all_merge_requests.merge_error                                AS merge_error,
