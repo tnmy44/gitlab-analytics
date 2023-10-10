@@ -20,6 +20,7 @@ project_full_path AS (
 
   SELECT *
   FROM {{ ref('project_full_path') }}
+  WHERE most_recent = True
 
 ),
 
@@ -122,29 +123,15 @@ add_path AS (
 
   SELECT
     grouping.*,
-    project_full_path.full_path,
-    IFF(project_full_path.gcp_project_id IS NULL, 1, ROW_NUMBER() OVER (PARTITION BY
-      grouping.date_day,
-      grouping.gcp_project_id,
-      grouping.gcp_service_description,
-      grouping.gcp_sku_description,
-      grouping.infra_label,
-      grouping.env_label,
-      grouping.runner_label,
-      grouping.folder_label,
-      grouping.pl_category,
-      grouping.from_mapping
-      ORDER BY last_updated_at DESC, first_created_at DESC)) AS rn
+    project_full_path.full_path
   FROM grouping
-  LEFT JOIN project_full_path ON grouping.gcp_project_id = project_full_path.gcp_project_id AND grouping.date_day BETWEEN DATE_TRUNC('day', project_full_path.first_created_at)
-  AND DATE_TRUNC('day', project_full_path.last_updated_at)
+  LEFT JOIN project_full_path ON (grouping.gcp_project_id = project_full_path.gcp_project_id 
+  AND grouping.date_day BETWEEN DATE_TRUNC('day', project_full_path.first_created_at) AND DATE_TRUNC('day', project_full_path.last_updated_at))
 
 )
 
 SELECT
-  * EXCLUDE (rn),
+  *,
   {{ dbt_utils.surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'folder_label', 'pl_category', 'from_mapping']) }} AS pl_pk
 FROM add_path
-WHERE rn = 1
 
-{# SELECT * FROM grouping #}
