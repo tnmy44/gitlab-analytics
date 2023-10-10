@@ -518,9 +518,9 @@ report_opportunity_metrics_qtd AS (
 
         CASE
             WHEN pipe_gen_total.minus_1_year_total_pipe_gen_net_arr > 0
-                THEN COALESCE(ROUND(pipe_gen_yoy.minus_1_year_pipe_gen_net_arr / pipe_gen_total.minus_1_year_total_pipe_gen_net_arr,2),0)
+                THEN COALESCE(ROUND(pipe_gen_yoy.minus_1_year_pipe_gen_net_arr / pipe_gen_total.minus_1_year_total_pipe_gen_net_arr, 2), 0)
             ELSE 0
-        END AS minus_1_year_pipe_gen_pacing,
+        END                                                              AS minus_1_year_pipe_gen_pacing,
 
         -- standard reporting keys
         COALESCE(agg_demo_keys.key_sqs, 'other')                         AS key_sqs,

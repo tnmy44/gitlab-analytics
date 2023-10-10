@@ -88,8 +88,8 @@ for notebook, task_name in notebooks.items():
             GITLAB_ANALYTICS_PRIVATE_TOKEN,
         ],
         env_vars=pod_env_vars,
-        affinity=get_affinity("scd"),
-        tolerations=get_toleration("scd"),
+        affinity=get_affinity("sales_analytics"),
+        tolerations=get_toleration("sales_analytics"),
         arguments=[container_cmd_load],
         dag=dag,
     )

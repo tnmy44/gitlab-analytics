@@ -13,7 +13,7 @@
     ('members_source', 'gitlab_dotcom_members_source'),
     ('projects_source', 'gitlab_dotcom_projects_source'),
     ('audit_events', 'gitlab_dotcom_audit_events_source'),
-    ('audit_event_details_clean', 'prep_audit_event_details_clean'),
+    ('audit_event_details', 'gitlab_dotcom_audit_event_details'),
     ('users', 'prep_user')
 ]) }},
 
@@ -46,13 +46,13 @@ creators AS (
     audit_events.author_id AS creator_id,
     audit_events.entity_id AS group_id
   FROM audit_events
-  INNER JOIN audit_event_details_clean
-    ON audit_events.audit_event_id = audit_event_details_clean.audit_event_id
+  INNER JOIN audit_event_details
+    ON audit_events.audit_event_id = audit_event_details.audit_event_id
   WHERE audit_events.entity_type = 'Group'
     AND (
-      (audit_event_details_clean.key_name = 'add' AND audit_event_details_clean.key_value = 'group')
+      (audit_event_details.key_name = 'add' AND audit_event_details.key_value = 'group')
       OR
-      (audit_event_details_clean.key_name = 'custom_message' AND audit_event_details_clean.key_value = 'Added group')
+      (audit_event_details.key_name = 'custom_message' AND audit_event_details.key_value = 'Added group')
     )
   GROUP BY 1, 2
 
