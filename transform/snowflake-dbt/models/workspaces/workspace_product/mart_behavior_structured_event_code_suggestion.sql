@@ -43,12 +43,12 @@ joined_code_suggestions_contexts AS (
 
   SELECT
     code_suggestions_context.*,
-    ide_extension_version_context,
-    extension_name,
-    extension_version,
-    ide_name,
-    ide_vendor,
-    ide_version
+    ide_extension_version_context.ide_extension_version_context,
+    ide_extension_version_context.extension_name,
+    ide_extension_version_context.extension_version,
+    ide_extension_version_context.ide_name,
+    ide_extension_version_context.ide_vendor,
+    ide_extension_version_context.ide_version
   FROM code_suggestions_context
   LEFT JOIN ide_extension_version_context
     ON code_suggestions_context.behavior_structured_event_pk = ide_extension_version_context.behavior_structured_event_pk
@@ -102,8 +102,7 @@ filtered_code_suggestion_events AS (
     code_suggestions_context,
     ide_extension_version_context
   FROM code_suggestions_joined_to_fact_and_dim
-  WHERE app_id IN ('gitlab_ai_gateway', --"official" Code Suggestions app_ids
-                   'gitlab_ide_extension')
+  WHERE app_id IN ('gitlab_ai_gateway', 'gitlab_ide_extension') --"official" Code Suggestions app_ids
     --Need to exclude VS Code 3.76.0 (which sent duplicate events)
     AND user_agent NOT LIKE '%3.76.0 VSCode%' --exclude events which carry the version in user_agent from the code_suggestions_context
     AND IFF(ide_name = 'Visual Studio Code', extension_version != '3.76.0')--exclude events from with version from the ide_extension_version context
