@@ -105,7 +105,7 @@ filtered_code_suggestion_events AS (
   WHERE app_id IN ('gitlab_ai_gateway', 'gitlab_ide_extension') --"official" Code Suggestions app_ids
     --Need to exclude VS Code 3.76.0 (which sent duplicate events)
     AND user_agent NOT LIKE '%3.76.0 VSCode%' --exclude events which carry the version in user_agent from the code_suggestions_context
-    AND IFF(ide_name = 'Visual Studio Code', extension_version != '3.76.0')--exclude events from with version from the ide_extension_version context
+    AND IFF(ide_name = 'Visual Studio Code', extension_version != '3.76.0', TRUE)--exclude events from with version from the ide_extension_version context
 
 )
 
