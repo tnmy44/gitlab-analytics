@@ -80,7 +80,7 @@ models:
       - name: user_agent
         description: '{{ doc("code_suggestions_user_agent") }}'
       - name: delivery_type
-        description: ' {{ doc("product_delivery_type") }}. In the raw Snowplow data, this field comes through as `gitlab_realm`. Appears in the `code_suggestions_context`'
+        description: ' {{ doc("product_delivery_type") }} In the raw Snowplow data, this field comes through as `gitlab_realm`.'
         tests:
             - accepted_values:
                 values: ['Self-Managed', 'SaaS']
@@ -100,7 +100,7 @@ models:
       - name: behavior_at
         description: '{{ doc("behavior_at") }}'
       - name: behavior_date
-        description: '{{ doc("behavior_at") }}'
+        description: '{{ doc("behavior_date") }}'
       - name: app_id
         description: '{{ doc("app_id") }}'
       - name: event_action
@@ -110,11 +110,14 @@ models:
       - name: event_property
         description: '{{ doc("event_property") }}'
       - name: event_label
-        description: '{{ doc("event_label") }}'
+        description: '{{ doc("event_label") }} On Code Suggestions events, this field is the unique identifier for the suggestion and can be used to join across events. This suggestion identifier is present on events from `app_id = gitlab_ide_extension`, but not `app_id = gitlab_ai_gateway`.'
       - name: language
         description: '{{ doc("code_suggestions_language") }}'
       - name: delivery_type
-        description: ' {{ doc("product_delivery_type") }}. In the raw Snowplow data, this field comes through as `gitlab_realm`. Appears in the `code_suggestions_context`'
+        description: ' {{ doc("product_delivery_type") }} In the raw Snowplow data, this field comes through as `gitlab_realm`. Appears in the `code_suggestions_context`.'
+        tests:
+            - accepted_values:
+                values: ['Self-Managed', 'SaaS']
       - name: model_engine
         description: '{{ doc("code_suggestions_model_engine") }}'
       - name: model_name

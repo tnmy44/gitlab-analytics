@@ -9,12 +9,22 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 **Filters Applied to Model:**
 - Include events containing the `code_suggestions_context`
 - Include events from the following app_ids: `gitlab_ai_gateway`, `gitlab_ide_extension`
-- Exclude events from VS Code extension version 3.76.0
+- Exclude events from VS Code extension version 3.76.0. These are excluded by using both `user_agent` and `ide_name`+`extension_version` values.
 - `Inherited` - This model only includes Structured events (when `event=struct` from `dim_behavior_event`)
 
 **Tips for use:**
 - There is a cluster key on `behavior_at::DATE`. Using `behavior_at` in a WHERE clause or INNER JOIN will improve query performance.
 - All events will carry the `code_suggestions_context`, but only a subset will contain the `ide_extension_version` context
+- `app_id = 'gitlab_ai_gateway'` 
+  - These events originate from the AI gateway and cannot be blocked
+  - There is only one event per suggestion (upon the request), which carries `event_action = 'suggestions_requested'`. Therefore these events can only be used to get a counts of users, etc, not acceptance rate.
+  - These events do not carry the suggestion identifier in `event_label`
+  - These events carry the `code_suggestions_context`, but not the `ide_extension_version` context
+- `app_id = 'gitlab_ide_extension'`
+  - These events originate from the IDEs, but can be blocked by the user (e.g. via disabling tracking)
+  - There can be multiple events per suggestion, all with different `event_action` values (ex: `suggestion_requested`, `suggestion_loaded`, `suggestion_shown`, etc. Therefore these events can be used to calculate acceptance rate, etc.
+  - These events carry a unique suggestion identifier in `event_label`. This can be joined across multiple events to calculate acceptance rate, etc.
+  - These events carry both the `code_suggestions_context` and the `ide_extension_version` context
 
 **Other Comments:**
 - Schema for `code_suggestions_context` [here](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context)

@@ -1417,7 +1417,7 @@ Timestamp for when the event actually happened. This appears as `derived_tstamp`
 
 {% docs behavior_date %}
 
-The date when the event happened (YYYY-MM-DD)
+The date when the event happened (YYYY-MM-DD). This is based on the `derived_tstamp` field in the raw Snowplow data.
 
 {% enddocs %}
 
@@ -1441,7 +1441,7 @@ The environment of the event - Production, Staging OR Development. To only inclu
 
 {% docs session_id %}
 
-Unique idenfitier for each user session. Note: session_id is NULL for back-end events (`tracker_version LIKE '%rb%'`)
+Unique identifier for each user session. Note: session_id is NULL for back-end events (`tracker_version LIKE '%rb%'`)
 
 {% enddocs %}
 
@@ -1483,7 +1483,7 @@ Host/Domain information
 
 {% docs gsc_pseudonymized_user_id %}
 
-User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user susccessfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL in the following situations:
+User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user successfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL in the following situations:
 
 - The event occurred before `2021-09-29` (when the collection of this data started)
 - A user is not logged in
@@ -1513,7 +1513,7 @@ Name of the plan for the namespace, such as free, premium, or ultimate. Automati
 
 {% docs gsc_source %}
 
-Name of the source application/ event tracker, such as gitlab-rails or gitlab-javascript. This field can be used to distinguish front-end events V/S back-end events. When `gsc_source = 'gitlab-rails'` THEN back-end event i.e. event was tracked using Ruby. When `gsc_source = 'gitlab-javascrip'` THEN front-end event i.e. event was tracked using Javascript.
+Name of the source application/ event tracker, such as gitlab-rails or gitlab-javascript. This field can be used to distinguish front-end events V/S back-end events. When `gsc_source = 'gitlab-rails'` THEN back-end event i.e. event was tracked using Ruby. When `gsc_source = 'gitlab-javascript'` THEN front-end event i.e. event was tracked using Javascript.
 
 {% enddocs %}
 
@@ -1609,7 +1609,7 @@ The unique identifier of the project passed in the URL. This field is only popul
 
 {% docs url_path_category %}
 
-This field groups different clean_url_path values into distinct categorises. Please refer to Code section on this page for logic behind this categorization.
+This field groups different `clean_url_path`` values into distinct categories. Please refer to Code section on this page for logic behind this categorization.
 
 {% enddocs %}
 
@@ -1681,7 +1681,7 @@ It is the number of the page views per user per session.
 
 {% docs event_id_behavior_model %}
 
-Unique idenfitier for each event. 
+Unique identifier for each event. 
 
 {% enddocs %}
 
