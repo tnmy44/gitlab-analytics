@@ -4,21 +4,20 @@ import os
 from typing import Dict, Any, Optional
 import pytz
 
-utc = pytz.UTC
-
 from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
     query_executor,
     append_to_xcom_file,
 )
 from sqlalchemy.engine.base import Engine
 
 from postgres_utils import (
+    get_internal_identifier_keys,
     chunk_and_upload,
-    get_engines,
+    chunk_and_upload_metadata,
     id_query_generator,
-    manifest_reader,
     get_min_or_max_id,
+    BACKFILL_EXTRACT_CHUNKSIZE,
+    INCREMENTAL_LOAD_TYPE_BY_ID,
 )
 
 
@@ -28,8 +27,52 @@ def get_last_load_time() -> Optional[datetime.datetime]:
 
     if last_load_tstamp != "":
         return datetime.datetime.strptime(last_load_tstamp, "%Y-%m-%dT%H:%M:%S%z")
-    else:
-        return None
+    return None
+
+
+def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
+    """
+    get the additional filtering parameter from the manifest
+    and insert internal filtering keys where specified in manifest
+    """
+    additional_filtering = table_dict.get("additional_filtering", "")
+
+    if "INTERNAL_NAMESPACE_IDS" in additional_filtering:
+        identifiers = ["namespace_id"]
+        internal_namespace_ids_str = tuple(get_internal_identifier_keys(identifiers))
+        additional_filtering = additional_filtering.format(
+            INTERNAL_NAMESPACE_IDS=internal_namespace_ids_str
+        )
+
+    elif "INTERNAL_PROJECT_IDS" in additional_filtering:
+        identifiers = ["project_id"]
+        internal_project_ids_str = tuple(get_internal_identifier_keys(identifiers))
+        additional_filtering = additional_filtering.format(
+            INTERNAL_PROJECT_IDS=internal_project_ids_str
+        )
+
+    elif "INTERNAL_PROJECT_PATHS" in additional_filtering:
+        identifiers = ["project_path"]
+        internal_project_paths_str = tuple(get_internal_identifier_keys(identifiers))
+        additional_filtering = additional_filtering.format(
+            INTERNAL_PROJECT_PATHS=internal_project_paths_str
+        )
+
+    elif "INTERNAL_NAMESPACE_PATHS" in additional_filtering:
+        identifiers = ["namespace_path"]
+        internal_namespace_paths_str = tuple(get_internal_identifier_keys(identifiers))
+        additional_filtering = additional_filtering.format(
+            INTERNAL_NAMESPACE_PATHS=internal_namespace_paths_str
+        )
+
+    elif "INTERNAL_PATHS" in additional_filtering:
+        identifiers = ["namespace_path", "project_path"]
+        internal_paths_str = tuple(get_internal_identifier_keys(identifiers))
+        additional_filtering = additional_filtering.format(
+            INTERNAL_PATHS=internal_paths_str
+        )
+
+    return additional_filtering
 
 
 def load_incremental(
@@ -44,9 +87,10 @@ def load_incremental(
     """
 
     raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "")
+    additional_filtering = get_additional_filtering(table_dict)
 
     env = os.environ.copy()
+
     """
       If postgres replication is too far behind for gitlab_com, then data will not be replicated in this DAGRun that
       will not be replicated in future DAGruns -- thus forcing the DE team to backfill.
@@ -71,7 +115,7 @@ def load_incremental(
         )
         logging.info(f"Timestamp from the database is : {replication_timestamp_value}")
 
-        replication_timestamp = utc.localize(replication_timestamp_value)
+        replication_timestamp = pytz.UTC.localize(replication_timestamp_value)
 
         last_load_time = get_last_load_time()
 
@@ -91,7 +135,7 @@ def load_incremental(
                 minutes=30
             )  # Allow for 30 minute overlap to ensure late arriving data is not skipped
         else:
-            logging.warn(
+            logging.warning(
                 "No last load time found, using the earliest of the replication timestamp and execution date."
             )
             this_run_beginning_timestamp = min(
@@ -127,7 +171,7 @@ def load_incremental(
             f"Table {source_table_name} needs to be backfilled due to schema change, aborting incremental load."
         )
         return False
-    query = f"{raw_query.format(**env)} {additional_filter}"
+    query = f"{raw_query.format(**env)} {additional_filtering}"
 
     chunk_and_upload(query, source_engine, target_engine, table_name, source_table_name)
 
@@ -146,12 +190,11 @@ def trusted_data_pgp(
     It is responsible for extracting from postgres and loading data in snowflake.
     """
     raw_query = table_dict["import_query"]
-    additional_filter = ""
+    additional_filtering = ""
     advanced_metadata = False
 
     logging.info(f"Processing table: {source_table_name}")
-    query = f"{raw_query} {additional_filter}"
-    env = os.environ.copy()
+    query = f"{raw_query} {additional_filtering}"
     logging.info(query)
     chunk_and_upload(
         query,
@@ -166,57 +209,12 @@ def trusted_data_pgp(
     return True
 
 
-'''
-def sync_incremental_ids(
-    source_engine: Engine,
-    target_engine: Engine,
-    source_database: str,
-    source_table: str,
-    table_dict: Dict[Any, Any],
-    target_table: str,
-    metadata_engine: Engine,
-    metadata_table: str,
-    start_pk: int,
-    initial_load_start_date: datetime.datetime,
-) -> bool:
-    """
-    Sync incrementally-loaded tables based on their IDs.
-    """
-
-    # If temp isn't in the name, we don't need to full sync.
-    # If a temp table exists, we know the sync didn't complete successfully
-    """
-    if "_TEMP" != table_name[-5:]:
-        logging.info(f"Table {table} doesn't need a full sync.")
-        return False
-    """
-
-    load_ids(
-        additional_filtering,
-        primary_key,
-        raw_query,
-        source_engine,
-        source_database,
-        source_table,
-        target_table,
-        target_engine,
-        metadata_engine,
-        metadata_table,
-        start_pk,
-        initial_load_start_date,
-    )
-    return True
-'''
-
-
-'''
 def load_scd(
     source_engine: Engine,
     target_engine: Engine,
     source_table_name: str,
     table_dict: Dict[Any, Any],
     table_name: str,
-    is_append_only: bool = False,
 ) -> bool:
     """
     Load tables that are slow-changing dimensions.
@@ -232,24 +230,11 @@ def load_scd(
         backfill = False
 
     raw_query = table_dict["import_query"]
-    additional_filter = table_dict.get("additional_filtering", "")
+    additional_filtering = get_additional_filtering(table_dict)
     advanced_metadata = table_dict.get("advanced_metadata", False)
 
     logging.info(f"Processing table: {source_table_name}")
-    query = f"{raw_query} {additional_filter}"
-
-    if is_append_only:
-        load_ids(
-            additional_filter,
-            table_dict["export_table_primary_key"],
-            raw_query,
-            source_engine,
-            source_table_name,
-            table_name,
-            target_engine,
-            backfill=backfill,
-        )
-        return True
+    query = f"{raw_query} {additional_filtering}"
 
     logging.info(query)
     chunk_and_upload(
@@ -262,27 +247,37 @@ def load_scd(
         backfill,
     )
     return True
-'''
 
 
 def load_ids(
+    database_kwargs: Dict[Any, Any],
+    table_dict: Dict[Any, Any],
     initial_load_start_date: datetime.datetime,
     start_pk: int,
-    table_dict: Dict[Any, Any],
-    database_kwargs: Dict[Any, Any],
-) -> None:
+    load_by_id_export_type,
+) -> bool:
     """Load a query by chunks of IDs instead of all at once."""
 
+    if (
+        "_TEMP" != database_kwargs["target_table"][-5:]
+        and load_by_id_export_type != INCREMENTAL_LOAD_TYPE_BY_ID
+    ):
+        logging.info(
+            f"Table {database_kwargs['source_table']} doesn't need a full sync."
+        )
+        return False
+
     raw_query = table_dict["import_query"]
-    additional_filtering = table_dict.get("additional_filtering", "")
+    additional_filtering = get_additional_filtering(table_dict)
     primary_key = table_dict["export_table_primary_key"]
 
+    logging.info("Getting max id of Postgres source table...")
     max_pk = get_min_or_max_id(
         primary_key,
         database_kwargs["source_engine"],
         database_kwargs["source_table"],
         "max",
-        database_kwargs["chunksize"],
+        additional_filtering,
     )
 
     # Create a generator for queries that are chunked by ID range
@@ -291,7 +286,7 @@ def load_ids(
         raw_query,
         start_pk,
         max_pk,
-        database_kwargs["chunksize"],
+        BACKFILL_EXTRACT_CHUNKSIZE,
     )
 
     # Iterate through the generated queries
@@ -299,13 +294,15 @@ def load_ids(
         filtered_query = f"{query} {additional_filtering}"
         logging.info(f"\nfiltered_query: {filtered_query}")
         # if no original load_start, need to preserve it for subsequent calls
-        initial_load_start_date = chunk_and_upload(
+        initial_load_start_date = chunk_and_upload_metadata(
             filtered_query,
             primary_key,
             max_pk,
             initial_load_start_date,
             database_kwargs,
+            load_by_id_export_type,
         )
+    return True
 
 
 def check_new_tables(
@@ -321,7 +318,7 @@ def check_new_tables(
     """
 
     raw_query = table_dict["import_query"].split("WHERE")[0]
-    additional_filtering = table_dict.get("additional_filtering", "")
+    additional_filtering = get_additional_filtering(table_dict)
     advanced_metadata = table_dict.get("advanced_metadata", False)
     primary_key = table_dict["export_table_primary_key"]
 

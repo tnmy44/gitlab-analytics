@@ -71,7 +71,7 @@ WITH biz_person AS (
     FROM biz_touchpoints
     JOIN biz_person
       ON biz_touchpoints.bizible_person_id = biz_person.person_id
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY bizible_lead_id ORDER BY bizible_touchpoint_date DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY bizible_lead_id,bizible_contact_id ORDER BY bizible_touchpoint_date DESC) = 1
 
 ), sfdc_contacts AS (
 
@@ -104,7 +104,7 @@ WITH biz_person AS (
       sfdc_lead_id,
       sfdc_contact_id
     FROM {{ ref('marketo_lead_source') }}
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY sfdc_contact_id ORDER BY updated_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY sfdc_lead_id,sfdc_contact_id  ORDER BY updated_at DESC) = 1
 
 ),  crm_person_final AS (
 
@@ -403,5 +403,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-08-24"
+    updated_date="2023-10-02"
 ) }}

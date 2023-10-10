@@ -579,6 +579,18 @@ models:
           description: The dim_date date_range_week, when joined to the bizible_touchpoint_date.           
         - name: touchpoint_date_range_id
           description: The dim_date date_range_id when joined to the bizible_touchpoint_date. 
+        - name: is_bdr_sdr_worked
+          description: A flag that shows whether or not a person was worked after MQLing. 
+        - name: touchpoint_offer_type_grouped
+          description: A custom grouping of TP Offers
+        - name: touchpoint_offer_type
+          description: A custom subset of TP Offers
+        - name: is_eligible_age_analysis
+          description: A flag that indicates if an Opp is eligible for date-based comaprisons. 
+        - name: opp_lead_source
+          description: The Opp's Lead Source from SFDC
+        - name: opp_source_buckets
+          description: The custom bucketing of the Opps' Lead Source
 
     - name: rpt_l2r_campaign_interactions
       description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 

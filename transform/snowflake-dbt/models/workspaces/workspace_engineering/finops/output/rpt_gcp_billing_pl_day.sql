@@ -8,12 +8,18 @@ WITH pl_combined AS (
 
   SELECT * FROM {{ ref('rpt_gcp_billing_pl_day_combined') }}
 
-
 ),
 
 lookback_pl_mappings AS (
 
   SELECT * FROM {{ ref('lookback_pl_mappings') }}
+
+),
+
+project_full_path AS (
+
+  SELECT *
+  FROM {{ ref('project_full_path') }}
 
 ),
 
@@ -27,7 +33,7 @@ overlaps AS (
     pl_combined.infra_label,
     pl_combined.env_label,
     pl_combined.runner_label,
-    pl_combined.folder_label,
+    COALESCE(pl_combined.folder_label, 0)                                                    AS folder_label,
     COALESCE(lookback_pl_mappings.pl_category, pl_combined.pl_category)                      AS pl_category,
     pl_combined.usage_unit,
     pl_combined.pricing_unit,
@@ -54,7 +60,7 @@ overlaps AS (
         (CASE WHEN lookback_pl_mappings.env_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN lookback_pl_mappings.runner_label IS NOT NULL THEN 1 ELSE 0 END) DESC,
         (CASE WHEN lookback_pl_mappings.gcp_project_id IS NOT NULL THEN 1 ELSE 0 END) DESC
-    )                                                                                         AS priority
+    )                                                                                        AS priority
   FROM
     pl_combined
   LEFT JOIN lookback_pl_mappings ON lookback_pl_mappings.date_day = pl_combined.date_day
@@ -66,9 +72,71 @@ overlaps AS (
     AND COALESCE(lookback_pl_mappings.runner_label, COALESCE(pl_combined.runner_label, '')) = COALESCE(pl_combined.runner_label, '')
     AND COALESCE(lookback_pl_mappings.folder_label, COALESCE(pl_combined.folder_label, 0)) = COALESCE(pl_combined.folder_label, 0)
 
+),
+
+grouping AS (
+
+  SELECT
+    date_day,
+    gcp_project_id,
+    gcp_service_description,
+    gcp_sku_description,
+    infra_label,
+    env_label,
+    runner_label,
+    folder_label,
+    pl_category,
+    usage_unit,
+    pricing_unit,
+    SUM(usage_amount)                  AS usage_amount,
+    SUM(usage_amount_in_pricing_units) AS usage_amount_in_pricing_units,
+    SUM(cost_before_credits)           AS cost_before_credits,
+    SUM(net_cost)                      AS net_cost,
+    usage_standard_unit,
+    usage_amount_in_standard_unit,
+    from_mapping
+  FROM overlaps
+  WHERE priority = 1
+  GROUP BY date_day,
+    gcp_project_id,
+    gcp_service_description,
+    gcp_sku_description,
+    infra_label,
+    env_label,
+    runner_label,
+    folder_label,
+    pl_category,
+    usage_unit,
+    pricing_unit,
+    usage_standard_unit,
+    usage_amount_in_standard_unit,
+    from_mapping
+),
+
+add_path AS (
+
+  SELECT
+    grouping.*,
+    project_full_path.full_path,
+    IFF(project_full_path.gcp_project_id IS NULL, 1, ROW_NUMBER() OVER (PARTITION BY
+      grouping.date_day,
+      grouping.gcp_project_id,
+      grouping.gcp_service_description,
+      grouping.gcp_sku_description,
+      grouping.infra_label,
+      grouping.env_label,
+      grouping.runner_label,
+      grouping.folder_label,
+      grouping.pl_category,
+      grouping.from_mapping
+      ORDER BY last_updated_at DESC, first_created_at DESC)) AS rn
+  FROM grouping
+  LEFT JOIN project_full_path ON grouping.gcp_project_id = project_full_path.gcp_project_id AND grouping.date_day <= DATE_TRUNC('day', project_full_path.last_updated_at)
+
 )
 
-SELECT *
-  EXCLUDE(priority)
-FROM overlaps
-WHERE priority = 1
+SELECT
+  * EXCLUDE (rn),
+  {{ dbt_utils.surrogate_key([ 'date_day', 'gcp_project_id', 'gcp_service_description', 'gcp_sku_description', 'infra_label', 'env_label', 'runner_label', 'folder_label', 'pl_category', 'from_mapping']) }} AS pl_pk
+FROM add_path
+WHERE rn = 1

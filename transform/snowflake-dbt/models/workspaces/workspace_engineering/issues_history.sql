@@ -1,6 +1,4 @@
-{{ simple_cte([
-    ('assigend_users','infradev_current_issue_users')
-])}},
+{{ simple_cte([('assigend_users','infradev_current_issue_users')])}},
 
 issues AS (
   SELECT *
@@ -81,6 +79,17 @@ final AS (
     issues.is_corrective_action,
     issues.is_sus_impacting,
     issues.is_part_of_product,
+    CASE WHEN issues.is_security THEN (CASE severity.severity
+      WHEN 'S1' THEN 30
+      WHEN 'S2' THEN 30
+      WHEN 'S3' THEN 90
+      WHEN 'S4' THEN 180 END)
+      ELSE (CASE severity.severity
+        WHEN 'S1' THEN 30
+        WHEN 'S2' THEN 60
+        WHEN 'S3' THEN 90
+        WHEN 'S4' THEN 120 END)
+    END                                                                                                                                                              AS slo,
     CASE WHEN issues.is_security THEN (CASE
       WHEN severity_label_age_in_days > 30
         AND severity.severity = 'S1' THEN 1
@@ -124,6 +133,7 @@ final AS (
         ELSE 0 END)
     END                                                                                                                                                              AS days_past_due,
     MAX(dates.date_actual) OVER ()                                                                                                                                   AS last_updated_at,
+    COALESCE(date_actual = last_updated_at, FALSE)                                                                                                                   AS most_recent,
     ROW_NUMBER() OVER (PARTITION BY daily_issue_id
       ORDER BY LEAST(COALESCE(severity_label_valid_to, CURRENT_DATE), COALESCE(team_label_valid_to, CURRENT_DATE)), COALESCE(workflow_label_valid_to, CURRENT_DATE)) AS rn
   FROM issues

@@ -21,7 +21,7 @@
     SELECT
 
       --primary key
-      fct_crm_opportunity.dim_crm_opportunity_id,
+      fct_crm_opportunity.dim_crm_opportunity_id, 
       
       --surrogate keys
       dim_crm_account.dim_parent_crm_account_id,

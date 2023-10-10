@@ -248,7 +248,7 @@ tables:
       SELECT id
       , created_at
       , updated_at
-      , CASE 
+      , CASE
             WHEN runner_type = 1 THEN description
             ELSE NULL
         END AS description
