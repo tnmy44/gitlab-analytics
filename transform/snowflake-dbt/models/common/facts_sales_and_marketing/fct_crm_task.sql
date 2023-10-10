@@ -4,7 +4,6 @@
 
 {{ simple_cte([
     ('prep_crm_person', 'prep_crm_person'),
-    ('dim_date', 'dim_date'),
     ('sfdc_lead_source','sfdc_lead_source')
 ]) }}
     
@@ -21,7 +20,8 @@
   WHERE is_deleted = FALSE
 
 ), sub AS (
-
+-- This CTE maps opportunities to tasks based on the account of task (account_opp_mapping) where prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id fails
+-- It uses the opp chronologically closest to the task date (rank_closest_opp) between three quarters prior to the (opp) close date and the (opp) close date.
   SELECT DISTINCT
     prep_crm_task.dim_crm_task_pk AS dim_crm_task_pk,
 
@@ -43,14 +43,12 @@
   FROM prep_crm_task
   LEFT JOIN prep_crm_person
     ON prep_crm_task.sfdc_record_id = prep_crm_person.sfdc_record_id
-  LEFT JOIN dim_date
-    ON {{ get_date_id('prep_crm_task.task_date') }} = dim_date.date_id
   LEFT JOIN prep_crm_opportunity ON
       prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
   LEFT JOIN prep_crm_opportunity AS account_opp_mapping 
-    ON prep_crm_task.account_or_opportunity_id = account_opp_mapping.dim_crm_account_id
+  ON prep_crm_task.account_or_opportunity_id = account_opp_mapping.dim_crm_account_id
     AND prep_crm_task.task_date < account_opp_mapping.close_date
-    AND prep_crm_task.task_date >= DATEADD('month', -9, dim_date.first_day_of_fiscal_quarter)
+    AND prep_crm_task.task_date >= DATEADD('month', -9, account_opp_mapping.close_fiscal_quarter_date)
   WHERE prep_crm_task.sa_activity_type IS NOT NULL
   ), 
   
