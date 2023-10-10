@@ -23,6 +23,7 @@ from kube_secrets import (
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -95,5 +96,7 @@ KubernetesPodOperator(
     ],
     env_vars=pod_env_vars,
     arguments=[pte_scoring_command],
+    affinity=get_affinity("data_science"),
+    tolerations=get_toleration("data_science"),
     dag=dag,
 )
