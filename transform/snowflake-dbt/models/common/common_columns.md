@@ -1609,7 +1609,7 @@ The unique identifier of the project passed in the URL. This field is only popul
 
 {% docs url_path_category %}
 
-This field groups different `clean_url_path`` values into distinct categories. Please refer to Code section on this page for logic behind this categorization.
+This field groups different `clean_url_path` values into distinct categories. Please refer to Code section on this page for logic behind this categorization.
 
 {% enddocs %}
 
