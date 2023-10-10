@@ -87,8 +87,8 @@ models:
       - name: api_status_code
         description: '{{ doc("code_suggestions_api_status_code") }}'
 
-  - name: mart_behavior_structured_event_code_suggestion
-    description: '{{ doc("mart_behavior_structured_event_code_suggestion") }}'
+  - name: wk_mart_behavior_structured_event_code_suggestion
+    description: '{{ doc("wk_mart_behavior_structured_event_code_suggestion") }}'
     columns:
       - name: behavior_structured_event_pk
         description: '{{ doc("behavior_structured_event_pk") }}'

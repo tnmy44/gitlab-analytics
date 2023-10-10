@@ -1,4 +1,4 @@
-{% docs mart_behavior_structured_event_code_suggestion %}
+{% docs wk_mart_behavior_structured_event_code_suggestion %}
 
 **Description:** Enriched Snowplow table for the analysis of Code Suggestions-related structured events. This model is limited to events carrying the `code_suggestions_context`, in addition to other filters (listed below). It enhances `fct_behavior_structured_event` and includes fields from the `code_suggestions_context` and `ide_extension_version` contexts.
 
