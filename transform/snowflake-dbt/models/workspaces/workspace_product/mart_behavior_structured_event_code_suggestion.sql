@@ -104,10 +104,9 @@ filtered_code_suggestion_events AS (
   FROM code_suggestions_joined_to_fact_and_dim
   WHERE app_id IN ('gitlab_ai_gateway', --"official" Code Suggestions app_ids
                    'gitlab_ide_extension')
-    AND user_agent NOT LIKE '%3.76.0 VSCode%' --exclude VS Code 3.76.0 (which sent duplicate events)
-    AND ((extension_version != '3.76.0'
-          AND ide_name != 'Visual Studio Code')
-        OR extension_version IS NULL)
+    --Need to exclude VS Code 3.76.0 (which sent duplicate events)
+    AND user_agent NOT LIKE '%3.76.0 VSCode%' --exclude events which carry the version in user_agent from the code_suggestions_context
+    AND IFF(ide_name = 'Visual Studio Code', extension_version != '3.76.0')--exclude events from with version from the ide_extension_version context
 
 )
 
@@ -115,6 +114,6 @@ filtered_code_suggestion_events AS (
     cte_ref="filtered_code_suggestion_events",
     created_by="@cbraza",
     updated_by="@cbraza",
-    created_date="2023-10-06",
-    updated_date="2023-10-06"
+    created_date="2023-10-09",
+    updated_date="2023-10-09"
 ) }}
