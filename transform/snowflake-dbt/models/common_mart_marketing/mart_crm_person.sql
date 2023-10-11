@@ -204,11 +204,7 @@
       fct_crm_person.zoominfo_contact_id,
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
-      CASE
-        WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
-        WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
-        ELSE FALSE
-      END                                                        AS is_lead_source_trial,
+      fct_crm_person.is_lead_source_trial,
       fct_crm_person.is_bdr_sdr_worked,
       dim_crm_person.person_first_country
     FROM fct_crm_person
@@ -296,7 +292,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2023-08-24",
+    updated_date="2023-10-11",
   ) }}  
