@@ -551,7 +551,7 @@ haproxy_isp AS (
     NULL                                                          AS folder_label,
     haproxy_pl.type                                               AS pl_category,
     haproxy_usage.percent_backend_ratio * haproxy_pl.allocation   AS pl_percent,
-    CONCAT('haproxy-', haproxy_usage.backend_category)            AS from_mapping
+    CONCAT('haproxy-cpn-', haproxy_usage.backend_category)            AS from_mapping
   FROM haproxy_usage
   INNER JOIN haproxy_pl
     ON haproxy_usage.backend_category = haproxy_pl.metric_backend
@@ -571,7 +571,7 @@ haproxy_inter AS (
     NULL                                                        AS folder_label,
     haproxy_pl.type                                             AS pl_category,
     haproxy_usage.percent_backend_ratio * haproxy_pl.allocation AS pl_percent,
-    CONCAT('haproxy-', haproxy_usage.backend_category)          AS from_mapping
+    CONCAT('haproxy-inter-egress-', haproxy_usage.backend_category)          AS from_mapping
   FROM haproxy_usage
   INNER JOIN haproxy_pl
     ON haproxy_usage.backend_category = haproxy_pl.metric_backend
@@ -609,7 +609,7 @@ haproxy_cdn AS (
     NULL                                                        AS folder_label,
     haproxy_pl.type                                             AS pl_category,
     haproxy_usage.percent_backend_ratio * haproxy_pl.allocation AS pl_percent,
-    CONCAT('haproxy-', haproxy_usage.backend_category)          AS from_mapping
+    CONCAT('haproxy-cdn-', haproxy_usage.backend_category)          AS from_mapping
   FROM haproxy_usage
   INNER JOIN haproxy_pl
     ON haproxy_usage.backend_category = haproxy_pl.metric_backend
