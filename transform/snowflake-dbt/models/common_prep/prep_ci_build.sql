@@ -22,7 +22,7 @@
     FROM {{ ref('gitlab_dotcom_ci_builds_source')}}
     {% if is_incremental() %}
 
-      WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+      WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
 
@@ -109,7 +109,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2021-06-17",
-    updated_date="2023-07-21"
+    updated_date="2023-10-11"
 ) }}
