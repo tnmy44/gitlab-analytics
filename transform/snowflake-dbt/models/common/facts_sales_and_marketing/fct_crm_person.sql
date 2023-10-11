@@ -38,6 +38,12 @@ WITH account_dims_mapping AS (
       is_partner_recalled,
       propensity_to_purchase_days_since_trial_start,
       propensity_to_purchase_score_date,
+      email_hash,
+      CASE
+        WHEN LOWER(lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
+        WHEN LOWER(lead_source) LIKE '%trial - enterprise%' THEN TRUE
+        ELSE FALSE
+      END                                                        AS is_lead_source_trial,
       dim_account_demographics_hierarchy_sk
 
     FROM {{ref('prep_crm_person')}}
@@ -296,6 +302,7 @@ WITH account_dims_mapping AS (
       END                                                                                                                 AS is_inquiry,
       crm_person.is_bdr_sdr_worked,
       crm_person.is_partner_recalled,
+      crm_person.is_lead_source_trial,
 
      -- information fields
       crm_person.name_of_active_sequence,
@@ -312,6 +319,7 @@ WITH account_dims_mapping AS (
       crm_person.traction_response_time_in_business_hours,
       crm_person.propensity_to_purchase_score_date,
       crm_person.propensity_to_purchase_days_since_trial_start,
+      crm_person.email_hash,
 
      -- additive fields
 
@@ -348,7 +356,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@jpeguero",
     created_date="2020-12-01",
-    updated_date="2023-08-29"
+    updated_date="2023-10-11"
 ) }}
