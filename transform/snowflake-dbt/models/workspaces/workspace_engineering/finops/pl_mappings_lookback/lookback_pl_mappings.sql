@@ -72,7 +72,8 @@ cte_append AS (SELECT *
   SELECT *
   FROM flex_cud
   UNION ALL
-  SELECT * FROM t2d_cud
+  SELECT * 
+  FROM t2d_cud
 )
 
 SELECT
