@@ -193,6 +193,7 @@ WITH campaign_details AS (
       combined_touchpoints.utm_medium,
       combined_touchpoints.utm_source,
       combined_touchpoints.utm_content,
+      combined_touchpoints.utm_budget,
       combined_touchpoints.utm_allptnr,
       combined_touchpoints.utm_partnerid,
       combined_touchpoints.bizible_marketing_channel,
