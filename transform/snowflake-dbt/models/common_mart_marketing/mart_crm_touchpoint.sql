@@ -228,7 +228,7 @@
       WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'dmp' THEN 'Digital Marketing'
       WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'corp' THEN 'Corporate Events'
       WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'abm' THEN 'Account Based Marketing'
-      WHEN LOWER(dim_crm_touchpoint.utm_budget) LIKE '%ptnr%' OR LOWER(utm_budget) LIKE '%chnl%' THEN 'Partner Marketing'
+      WHEN LOWER(dim_crm_touchpoint.utm_budget) LIKE '%ptnr%' OR LOWER(dim_crm_touchpoint.utm_budget) LIKE '%chnl%' THEN 'Partner Marketing'
       WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%abm%' THEN 'Account Based Marketing'
       WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%pmg%' THEN 'Digital Marketing'
       WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%fmm%' THEN 'Field Marketing'
