@@ -1,4 +1,4 @@
-{{ config(alias='report_pipeline_fy_metrics_per_day') }}
+{{ config(alias='report_ssot_pipeline_fy_metrics_per_day') }}
 
 WITH date_details AS (
 
