@@ -2577,7 +2577,7 @@ models:
           - not_null
           - unique
       - name: dim_project_id
-      - name: dim_plan_id
+      - name: dim_plan_sk_at_creation
         tests:
           - not_null
 
@@ -2796,11 +2796,11 @@ models:
         description: The identifier for an issue relationship
         tests:
           - not_null
-      - name: dim_source_issue_id
+      - name: dim_issue_sk_source
         description: The identifier for source issue of an issue link
         tests:
           - not_null
-      - name: dim_target_issue_id
+      - name: dim_issue_sk_target
         description: The identifier for target issue of an issue link
         tests:
           - not_null
