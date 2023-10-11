@@ -8,7 +8,8 @@
     ('dim_sales_segment','dim_sales_segment'),
     ('fct_crm_person','fct_crm_person'),
     ('dim_date','dim_date'),
-    ('dim_crm_user', 'dim_crm_user')
+    ('dim_crm_user', 'dim_crm_user'),
+    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy')
 ]) }}
 
 , final AS (
@@ -171,12 +172,12 @@
       dim_crm_person.is_first_order_initial_mql,
       dim_crm_person.is_first_order_mql,
       dim_crm_person.is_first_order_person,
-      dim_crm_person.account_demographics_sales_segment,
-      dim_crm_person.account_demographics_sales_segment_grouped,
-      dim_crm_person.account_demographics_geo,
-      dim_crm_person.account_demographics_region,
-      dim_crm_person.account_demographics_area,
-      dim_crm_person.account_demographics_segment_region_grouped,
+      dim_crm_user_hierarchy.crm_user_sales_segment                       AS account_demographics_sales_segment,
+      dim_crm_user_hierarchy.crm_user_sales_segment_grouped               AS account_demographics_sales_segment_grouped,
+      dim_crm_user_hierarchy.crm_user_geo                                 AS account_demographics_geo,
+      dim_crm_user_hierarchy.crm_user_region                              AS account_demographics_region,
+      dim_crm_user_hierarchy.crm_user_area                                AS account_demographics_area,
+      dim_crm_user_hierarchy.crm_user_sales_segment_region_grouped        AS account_demographics_segment_region_grouped,
       dim_crm_person.account_demographics_territory,
       dim_crm_person.account_demographics_employee_count,
       dim_crm_person.account_demographics_max_family_employee,
@@ -287,6 +288,8 @@
       ON fct_crm_person.worked_date_pt_id = worked_date_pt.date_id
     LEFT JOIN dim_crm_user 
       ON fct_crm_person.dim_crm_user_id = dim_crm_user.dim_crm_user_id
+    LEFT JOIN dim_crm_user_hierarchy
+      ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = fct_crm_person.dim_account_demographics_hierarchy_sk
 
 )
 

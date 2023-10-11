@@ -11,6 +11,11 @@ WITH biz_person AS (
     WHERE bizible_touchpoint_position LIKE '%FT%'
      AND is_deleted = 'FALSE'
 
+), prep_date AS (
+
+    SELECT *
+    FROM {{ ref('prep_date') }}
+
 ), crm_tasks AS (
 
     SELECT 
@@ -172,11 +177,27 @@ WITH biz_person AS (
       mailing_state                                 AS state,
       last_activity_date,
       NULL                                          AS employee_bucket,
-      account_demographics_sales_segment,
+      CASE
+        WHEN account_demographics_sales_segment IS NULL OR UPPER(account_demographics_sales_segment) LIKE '%NOT FOUND%'
+          THEN 'UNKNOWN'
+        ELSE account_demographics_sales_segment
+      END AS account_demographics_sales_segment,
       account_demographics_sales_segment_grouped,
-      account_demographics_geo,
-      account_demographics_region,
-      account_demographics_area,
+      CASE
+        WHEN account_demographics_geo IS NULL OR UPPER(account_demographics_geo) LIKE '%NOT FOUND%'
+          THEN 'UNKNOWN'
+        ELSE account_demographics_geo
+      END AS account_demographics_geo,
+      CASE
+        WHEN account_demographics_region IS NULL OR UPPER(account_demographics_region) LIKE '%NOT FOUND%'
+          THEN 'UNKNOWN'
+        ELSE account_demographics_region
+      END AS account_demographics_region,
+      CASE
+        WHEN account_demographics_area IS NULL OR UPPER(account_demographics_area) LIKE '%NOT FOUND%'
+          THEN 'UNKNOWN'
+        ELSE account_demographics_area
+      END AS account_demographics_area,
       account_demographics_segment_region_grouped,
       account_demographics_territory,
       account_demographics_employee_count,
@@ -236,7 +257,8 @@ WITH biz_person AS (
         WHEN crm_activity.min_task_completed_date_by_bdr_sdr IS NOT NULL
           THEN TRUE
         ELSE FALSE
-      END AS is_bdr_sdr_worked
+      END AS is_bdr_sdr_worked,
+      created_date
 
 
     FROM sfdc_contacts
@@ -315,11 +337,27 @@ WITH biz_person AS (
       state,
       last_activity_date,
       employee_bucket,
-      account_demographics_sales_segment,
+      CASE
+        WHEN account_demographics_sales_segment IS NULL OR UPPER(account_demographics_sales_segment) LIKE '%NOT FOUND%'
+          THEN 'UNKNOWN'
+        ELSE account_demographics_sales_segment
+      END AS account_demographics_sales_segment,
       account_demographics_sales_segment_grouped,
-      account_demographics_geo,
-      account_demographics_region,
-      account_demographics_area,
+      CASE
+        WHEN account_demographics_geo IS NULL OR UPPER(account_demographics_geo) LIKE '%NOT FOUND%'
+          THEN 'UNKNOWN'
+        ELSE account_demographics_geo
+      END AS account_demographics_geo,
+      CASE
+        WHEN account_demographics_region IS NULL OR UPPER(account_demographics_region) LIKE '%NOT FOUND%'
+          THEN 'UNKNOWN'
+        ELSE account_demographics_region
+      END AS account_demographics_region,
+      CASE
+        WHEN account_demographics_area IS NULL OR UPPER(account_demographics_area) LIKE '%NOT FOUND%'
+          THEN 'UNKNOWN'
+        ELSE account_demographics_area
+      END AS account_demographics_area,
       account_demographics_segment_region_grouped,
       account_demographics_territory,
       account_demographics_employee_count,
@@ -379,7 +417,8 @@ WITH biz_person AS (
         WHEN crm_tasks.min_task_completed_date_by_bdr_sdr IS NOT NULL
           THEN TRUE
         ELSE FALSE
-      END AS is_bdr_sdr_worked
+      END AS is_bdr_sdr_worked,
+      created_date
 
     FROM sfdc_leads
     LEFT JOIN biz_person_with_touchpoints
@@ -392,8 +431,24 @@ WITH biz_person AS (
 
 ), final AS (
 
-    SELECT *
+    SELECT
+      crm_person_final.*,
+      prep_date.fiscal_year  AS created_date_fiscal_year,
+      CONCAT(
+        UPPER(crm_person_final.account_demographics_sales_segment),
+        '-',
+        UPPER(crm_person_final.account_demographics_geo),
+        '-',
+        UPPER(crm_person_final.account_demographics_region),
+        '-',
+        UPPER(crm_person_final.account_demographics_area),
+        '-',
+        prep_date.fiscal_year
+      ) AS dim_account_demographics_hierarchy_sk
+
     FROM crm_person_final
+    LEFT JOIN prep_date
+      ON prep_date.date_actual = crm_person_final.created_date::DATE
     WHERE sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
 
 )
@@ -401,7 +456,7 @@ WITH biz_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@jpeguero",
     created_date="2020-12-08",
-    updated_date="2023-08-24"
+    updated_date="2023-10-11"
 ) }}
