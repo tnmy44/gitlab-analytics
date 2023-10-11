@@ -49,7 +49,7 @@ WITH RECURSIVE issues AS (
       mapping_results.is_issue_moved_duplicated,
       prep_issue.dim_issue_sk
     FROM mapping_results
-    LEFT JOIN {{ ref('prep_issue') }}
+    INNER JOIN {{ ref('prep_issue') }}
       ON mapping_results.last_moved_duplicated_issue_id = prep_issue.issue_id
 
 )
@@ -59,5 +59,5 @@ WITH RECURSIVE issues AS (
     created_by="@jpeguero",
     updated_by="@michellecooper",
     created_date="2021-10-12",
-    updated_date="2023-09-29",
+    updated_date="2023-10-11",
 ) }}
