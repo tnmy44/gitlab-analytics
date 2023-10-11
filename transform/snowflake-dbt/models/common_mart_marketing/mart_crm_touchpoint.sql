@@ -46,6 +46,13 @@
       dim_crm_touchpoint.bizible_landing_page_utm_budget,
       dim_crm_touchpoint.bizible_landing_page_utm_allptnr,
       dim_crm_touchpoint.bizible_landing_page_utm_partnerid,
+      dim_crm_touchpoint.utm_campaign,
+      dim_crm_touchpoint.utm_source,
+      dim_crm_touchpoint.utm_medium,
+      dim_crm_touchpoint.utm_content,
+      dim_crm_touchpoint.utm_budget,
+      dim_crm_touchpoint.utm_allptnr,
+      dim_crm_touchpoint.utm_partnerid,
       dim_crm_touchpoint.bizible_salesforce_campaign,
       dim_crm_touchpoint.bizible_integrated_campaign_grouping,
       dim_crm_touchpoint.touchpoint_segment,
@@ -209,6 +216,30 @@
           THEN 1
         ELSE 0
       END AS is_fmm_sourced,
+
+    --budget holder
+    CASE 
+      WHEN LOWER(dim_campaign.budget_holder) = 'fmm' THEN 'Field Marketing'
+      WHEN LOWER(dim_campaign.budget_holder) = 'dmp' THEN 'Digital Marketing'
+      WHEN LOWER(dim_campaign.budget_holder) = 'corp' THEN 'Corporate Events'
+      WHEN LOWER(dim_campaign.budget_holder) = 'abm' THEN 'Account Based Marketing'
+      WHEN LOWER(dim_campaign.budget_holder) LIKE '%ptnr%' OR LOWER(budget_holder) LIKE '%chnl%'  THEN 'Partner Marketing'
+      WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'fmm' THEN 'Field Marketing'
+      WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'dmp' THEN 'Digital Marketing'
+      WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'corp' THEN 'Corporate Events'
+      WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'abm' THEN 'Account Based Marketing'
+      WHEN LOWER(dim_crm_touchpoint.utm_budget) LIKE '%ptnr%' OR LOWER(utm_budget) LIKE '%chnl%' THEN 'Partner Marketing'
+      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%abm%' THEN 'Account Based Marketing'
+      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%pmg%' THEN 'Digital Marketing'
+      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%fmm%' THEN 'Field Marketing'
+      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%dmp%' THEN 'Digital Marketing'
+      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%partner%' THEN 'Partner Marketing'
+      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%mdf%' THEN 'Partner Marketing'
+      WHEN LOWER(dim_crm_touchpoint.utm_medium) IN ('paidsocial','cpc') THEN 'Digital Marketing'
+      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%devopsgtm_' THEN 'Digital Marketing'
+      WHEN campaign_owner.user_role_name LIKE '%Field Marketing%' THEN 'Field Marketing'
+      WHEN campaign_owner.user_role_name LIKE '%ABM%' THEN 'Account Based Marketing'
+    END AS integrated_budget_holder,
 
     -- counts
      CASE
