@@ -272,7 +272,7 @@
           AND is_fmm_influenced = 1 
           THEN 1
         ELSE 0
-      END AS is_fmm_sourced
+      END AS is_fmm_sourced,
     --budget holder
     CASE 
       WHEN LOWER(dim_campaign.budget_holder) = 'fmm' THEN 'Field Marketing'
