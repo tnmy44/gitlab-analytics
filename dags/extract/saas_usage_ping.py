@@ -147,8 +147,8 @@ def generate_namespace_task(
         arguments=[namespace_command],
         dag=dag,
         retries=2,
-        affinity=get_affinity("scd"),
-        tolerations=get_toleration("scd"),
+        affinity=get_affinity("extraction_highmem"),
+        tolerations=get_toleration("extraction_highmem"),
     )
 
 

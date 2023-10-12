@@ -158,8 +158,8 @@ def generate_task(run_date: date) -> None:
         secrets=secrets,
         env_vars=env_vars,
         arguments=[command],
-        affinity=get_affinity("extraction"),
-        tolerations=get_toleration("extraction"),
+        affinity=get_affinity("extraction_highmem"),
+        tolerations=get_toleration("extraction_highmem"),
         dag=dag,
     )
 
