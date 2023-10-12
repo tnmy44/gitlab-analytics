@@ -138,8 +138,8 @@ for export in stream["exports"]:
             **pod_env_vars,
             "EXPORT_DATE": "{{ yesterday_ds }}",
         },
-        affinity=get_affinity("dbt"),
-        tolerations=get_toleration("dbt"),
+        affinity=get_affinity("extraction"),
+        tolerations=get_toleration("extraction"),
         arguments=[billing_extract_command],
         dag=dag,
     )
