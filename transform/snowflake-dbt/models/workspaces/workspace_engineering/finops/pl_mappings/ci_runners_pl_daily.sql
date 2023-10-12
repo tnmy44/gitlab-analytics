@@ -82,8 +82,8 @@ SELECT
 
   END                                                                                   AS mapping,
   pl,
-  TRUNC(SUM(ci_build_minutes))                                                          AS total_ci_minutes,
-  TRUNC(RATIO_TO_REPORT(total_ci_minutes) OVER(PARTITION BY reporting_day, mapping), 2) AS pct_ci_minutes
+  SUM(ci_build_minutes)                                                                 AS total_ci_minutes,
+  RATIO_TO_REPORT(total_ci_minutes) OVER(PARTITION BY reporting_day, mapping)           AS pct_ci_minutes
 FROM ci_minutes
 WHERE mapping IS NOT NULL
 GROUP BY 1, 2, 3
