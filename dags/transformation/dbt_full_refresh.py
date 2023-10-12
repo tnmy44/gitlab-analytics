@@ -41,6 +41,8 @@ from kube_secrets import (
     SNOWFLAKE_STATIC_DATABASE,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
@@ -117,5 +119,7 @@ dbt_full_refresh = KubernetesPodOperator(
     ],
     env_vars=pod_env_vars,
     arguments=[dbt_full_refresh_cmd],
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     dag=dag,
 )
