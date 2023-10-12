@@ -183,7 +183,7 @@ runner_shared_gitlab_org AS (
   -- shared gitlab org runner
   SELECT DISTINCT
     reporting_day                      AS date_day,
-    'gitlab-ci-155816'                 AS gcp_project_id,
+    NULL                               AS gcp_project_id,
     NULL                               AS gcp_service_description,
     NULL                               AS gcp_sku_description,
     NULL                               AS infra_label,
@@ -551,7 +551,7 @@ haproxy_isp AS (
     NULL                                                          AS folder_label,
     haproxy_pl.type                                               AS pl_category,
     haproxy_usage.percent_backend_ratio * haproxy_pl.allocation   AS pl_percent,
-    CONCAT('haproxy-', haproxy_usage.backend_category)            AS from_mapping
+    CONCAT('haproxy-cpn-', haproxy_usage.backend_category)            AS from_mapping
   FROM haproxy_usage
   INNER JOIN haproxy_pl
     ON haproxy_usage.backend_category = haproxy_pl.metric_backend
@@ -571,7 +571,7 @@ haproxy_inter AS (
     NULL                                                        AS folder_label,
     haproxy_pl.type                                             AS pl_category,
     haproxy_usage.percent_backend_ratio * haproxy_pl.allocation AS pl_percent,
-    CONCAT('haproxy-', haproxy_usage.backend_category)          AS from_mapping
+    CONCAT('haproxy-inter-egress-', haproxy_usage.backend_category)          AS from_mapping
   FROM haproxy_usage
   INNER JOIN haproxy_pl
     ON haproxy_usage.backend_category = haproxy_pl.metric_backend
@@ -609,7 +609,7 @@ haproxy_cdn AS (
     NULL                                                        AS folder_label,
     haproxy_pl.type                                             AS pl_category,
     haproxy_usage.percent_backend_ratio * haproxy_pl.allocation AS pl_percent,
-    CONCAT('haproxy-', haproxy_usage.backend_category)          AS from_mapping
+    CONCAT('haproxy-cdn-', haproxy_usage.backend_category)          AS from_mapping
   FROM haproxy_usage
   INNER JOIN haproxy_pl
     ON haproxy_usage.backend_category = haproxy_pl.metric_backend

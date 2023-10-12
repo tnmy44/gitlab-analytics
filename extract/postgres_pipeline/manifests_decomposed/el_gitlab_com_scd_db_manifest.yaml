@@ -450,6 +450,21 @@ tables:
       SELECT milestone_id
       , release_id
       FROM milestone_releases
+  namespace_limits:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'namespace_limits'
+    export_table_primary_key: namespace_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT additional_purchased_storage_size
+      , additional_purchased_storage_ends_on
+      , namespace_id
+      , temporary_storage_increase_ends_on
+      , pre_enforcement_notification_at
+      , first_enforced_at
+      , last_enforced_at
+      FROM namespace_limits
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true

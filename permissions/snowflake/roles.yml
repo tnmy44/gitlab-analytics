@@ -239,6 +239,11 @@ databases:
     - schaturvedi_prep:
         shared: no  
 
+    - skhan_prod:
+        shared: no
+    - skhan_prep:
+        shared: no        
+
     - snalamaru_analytics:
         shared: no
     - snalamaru_prod:
@@ -404,7 +409,6 @@ roles:
             - gitlab_dotcom
             - handbook
             - license_db
-            - nvd
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -2091,18 +2095,6 @@ roles:
                     - prep.sensitive.netsuite_transaction_lines_pii
                     - prep.sensitive.netsuite_vendors_pii
                     - raw.netsuite_fivetran.*
-    
-    - nvd:
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.nvd
-            tables:
-                read:
-                    - prep.nvd.*
 
     - oci_reports:
         warehouses:
@@ -2930,8 +2922,11 @@ roles:
         warehouses: []
 
     - bvandre:
-        member_of: []
-        warehouses: []  
+        member_of:
+            - analyst_sales
+            - restricted_safe
+        warehouses:
+            - dev_xs   
 
     - caitlin:
         member_of: []
@@ -3504,6 +3499,8 @@ roles:
             - reporter
             - restricted_safe
             - salesforce
+            - zuora_api_sandbox_stitch
+            - zuora_central_sandbox
         warehouses:
             - dev_xs
         owns:
@@ -4953,6 +4950,45 @@ roles:
         warehouses:
             - reporting
 
+    - skhan:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - skhan_prep
+                - skhan_prod
+            schemas:
+                - skhan_prep.*
+                - skhan_prod.*
+            tables:
+                - skhan_prep.*.*
+                - skhan_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - skhan_prep
+                    - skhan_prod
+                write:
+                    - skhan_prep
+                    - skhan_prod
+            schemas:
+                read:
+                    - skhan_prep.*
+                    - skhan_prod.*
+                write:
+                    - skhan_prep.*
+                    - skhan_prod.*
+            tables:
+                read:
+                    - skhan_prep.*.*
+                    - skhan_prod.*.*
+                write:
+                    - skhan_prep.*.*
+                    - skhan_prod.*.*
+
     - smccormack:
         member_of:
             - analyst_people
@@ -5297,6 +5333,12 @@ roles:
         member_of: []
         warehouses: []
 
+    - wleidheiser:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
 # ==========================================
 # Users
 # ==========================================
@@ -5376,8 +5418,9 @@ users:
         member_of: []
             
     - bvandre:
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of:
+            - bvandre
 
     - caitlin:
         can_login: no
@@ -5817,6 +5860,11 @@ users:
         member_of:
             - sisense_restricted_safe
 
+    - skhan:
+        can_login: yes
+        member_of:
+            - skhan
+
     - smccormack:
         can_login: yes
         member_of:
@@ -5902,6 +5950,11 @@ users:
     - webrahim:
         can_login: no
         member_of: []
+
+    - wleidheiser:
+        can_login: yes
+        member_of:
+            - wleidheiser
 
     - workato:
         can_login: yes

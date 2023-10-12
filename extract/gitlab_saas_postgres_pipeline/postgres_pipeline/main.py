@@ -3,36 +3,18 @@ from typing import Dict
 
 from fire import Fire
 from gitlabdata.orchestration_utils import (
+    snowflake_engine_factory,
     query_executor,
     append_to_xcom_file,
 )
 from sqlalchemy.engine.base import Engine
 from postgres_pipeline_table import PostgresPipelineTable
 from postgres_utils import (
+    chunk_and_upload,
     get_engines,
+    id_query_generator,
     manifest_reader,
 )
-
-
-def swap_temp_table(engine: Engine, real_table: str, temp_table: str) -> None:
-    """
-    Drop the real table and rename the temp table to take the place of the
-    real table.
-    """
-
-    if engine.has_table(real_table):
-        logging.info(
-            f"Swapping the temp table: {temp_table} with the real table: {real_table}"
-        )
-        swap_query = f"ALTER TABLE IF EXISTS tap_postgres.{temp_table} SWAP WITH tap_postgres.{real_table}"
-        query_executor(engine, swap_query)
-    else:
-        logging.info(f"Renaming the temp table: {temp_table} to {real_table}")
-        rename_query = f"ALTER TABLE IF EXISTS tap_postgres.{temp_table} RENAME TO tap_postgres.{real_table}"
-        query_executor(engine, rename_query)
-
-    drop_query = f"DROP TABLE IF EXISTS tap_postgres.{temp_table}"
-    query_executor(engine, drop_query)
 
 
 def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> None:
@@ -53,10 +35,8 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
     manifest_dict = manifest_reader(file_path)
     # When load_only_table specified reduce manifest to keep only relevant table config
     filter_manifest(manifest_dict, load_only_table)
-    logging.info(f"\nmanifest_dict: {manifest_dict}")
 
-    # REVERT
-    source_engine, metadata_engine, snowflake_engine = get_engines(
+    postgres_engine, snowflake_engine, metadata_engine = get_engines(
         manifest_dict["connection_info"]
     )
     logging.info(snowflake_engine)
@@ -66,23 +46,13 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         table_dict = manifest_dict["tables"][table]
         current_table = PostgresPipelineTable(table_dict)
 
-        """
-        # Check if the schema has changed or the table is new
-        schema_changed = current_table.check_if_schema_changed(
-            postgres_engine, snowflake_engine
-        )
-        """
-
         # Call the correct function based on the load_type
         loaded = current_table.do_load(
-            load_type,
-            source_engine,
-            snowflake_engine,
-            metadata_engine,
+            load_type, postgres_engine, snowflake_engine, metadata_engine
         )
-        logging.info(f"Finished upload for table: {table}")
+        if loaded:
+            logging.info(f"Finished upload for table: {table}")
 
-        """
         count_query = f"SELECT COUNT(*) FROM {current_table.get_target_table_name()}"
         count = 0
 
@@ -94,7 +64,6 @@ def main(file_path: str, load_type: str, load_only_table: str = None) -> None:
         append_to_xcom_file(
             {current_table.get_target_table_name(): count, "load_ran": loaded}
         )
-        """
 
 
 if __name__ == "__main__":

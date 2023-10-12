@@ -510,3 +510,9 @@ sources:
         identifier: gitlab_db_merge_request_diff_commit_users
       - name: merge_request_diff_commits
         identifier: gitlab_db_merge_request_diff_commits
+      - name: routes_internal_only
+        identifier: gitlab_db_routes_internal_only
+      - name: projects_internal_only
+        identifier: gitlab_db_projects_internal_only
+      - name: issues_internal_only
+        identifier: gitlab_db_issues_internal_only
