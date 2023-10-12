@@ -268,7 +268,6 @@ class InstanceNamespaceMetrics:
 
         for instance_namespace_query in queries:
             if metrics_filter(instance_namespace_query):
-
                 self.process_namespace_ping(
                     query_dict=instance_namespace_query, connection=connection
                 )
@@ -294,7 +293,6 @@ class InstanceNamespaceMetrics:
         info(f"number_of_tasks: {self.number_of_tasks}, chunk_no: {self.chunk_no}")
 
         if self.chunk_no != 0:
-
             namespace_queries = self.get_meta_data_from_file(
                 file_name=self.utils.NAMESPACE_FILE
             )

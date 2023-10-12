@@ -41,6 +41,7 @@ CASE
                                       'GitLab Service Package'
                                     , 'Implementation Services Quick Start'
                                     , 'Implementation Support'
+                                    , 'Implementation Quick Start'
                                     , 'Support Package'
                                     , 'Admin Training'
                                     , 'CI/CD Training'
