@@ -93,6 +93,8 @@ instance_combined_metrics_ping = KubernetesPodOperator(
     secrets=secrets,
     env_vars=pod_env_vars,
     arguments=[instance_combined_metrics_cmd],
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
     dag=dag,
 )
 
