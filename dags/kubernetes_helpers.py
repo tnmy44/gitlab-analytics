@@ -44,7 +44,9 @@ dbt_tolerations = get_toleration_with_value("dbt")
 sales_analytics_affinity = get_affinity_with_key_value("sales_analytics", ["true"])
 sales_analytics_tolerations = get_toleration_with_value("sales_analytics")
 
-extraction_highmem_affinity = get_affinity_with_key_value("extraction_highmem", ["true"])
+extraction_highmem_affinity = get_affinity_with_key_value(
+    "extraction_highmem", ["true"]
+)
 extraction_highmem_tolerations = get_toleration_with_value("extraction_highmem")
 
 
