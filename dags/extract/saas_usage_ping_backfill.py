@@ -34,6 +34,7 @@ from kube_secrets import (
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
+
 env = os.environ.copy()
 
 DAG_NAME = "saas_usage_ping_backfill"
