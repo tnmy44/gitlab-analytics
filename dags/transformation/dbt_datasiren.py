@@ -93,8 +93,8 @@ datasiren_operator = KubernetesPodOperator(
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_datasiren_command],
-    affinity=get_affinity("data_science"),
-    tolerations=get_toleration("data_science"),
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     dag=dag,
 )
 
