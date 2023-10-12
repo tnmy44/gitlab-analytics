@@ -541,8 +541,8 @@ for source_name, config in config_dict.items():
                             "task_id": task_identifier,
                         },
                         arguments=[scd_cmd],
-                        affinity=get_affinity("scd"),
-                        tolerations=get_toleration("scd"),
+                        affinity=get_affinity("extraction_highmem"),
+                        tolerations=get_toleration("extraction_highmem"),
                         do_xcom_push=True,
                     )
                     if has_replica_snapshot:
