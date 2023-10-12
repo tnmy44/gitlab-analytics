@@ -148,8 +148,8 @@ def dbt_tasks(dbt_module_name, dbt_task_name):
         secrets=dbt_secrets,
         env_vars=gitlab_pod_env_vars,
         arguments=[model_run_cmd],
-        affinity=get_affinity("extraction_highmem"),
-        tolerations=get_toleration("extraction_highmem"),
+        affinity=get_affinity("dbt"),
+        tolerations=get_toleration("dbt"),
     )
 
     # Test all source models
