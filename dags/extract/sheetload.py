@@ -147,8 +147,8 @@ dbt_sheetload = KubernetesPodOperator(
         SNOWFLAKE_STATIC_DATABASE,
     ],
     env_vars=pod_env_vars,
-    affinity=get_affinity("production"),
-    tolerations=get_toleration("production"),
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     arguments=[dbt_sheetload_cmd],
     dag=dag,
 )
