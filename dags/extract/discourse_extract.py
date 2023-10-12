@@ -47,8 +47,8 @@ dag = DAG(
 )
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
-extract_command = f"""{clone_and_setup_extraction_cmd} && 
-    cd discourse/ && 
+extract_command = f"""{clone_and_setup_extraction_cmd} &&
+    cd discourse/ &&
     python src/execute.py --reports_yml reports.yml --start_date $START_DATE --end_date $END_DATE --months_ago 1"""
 logging.info(extract_command)
 
