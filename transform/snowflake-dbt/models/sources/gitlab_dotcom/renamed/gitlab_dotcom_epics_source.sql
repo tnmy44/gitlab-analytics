@@ -46,7 +46,6 @@ joined AS (
     all_epics.group_id                             AS group_id,
     all_epics.author_id                            AS author_id,
     all_epics.assignee_id                          AS assignee_id,
-    all_epics.epic_internal_id                     AS epic_internal_id,
     all_epics.updated_by_id                        AS updated_by_id,
     all_epics.last_edited_by_id                    AS last_edited_by_id,
     all_epics.lock_version                         AS lock_version,
