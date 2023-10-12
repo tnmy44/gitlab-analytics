@@ -33,6 +33,7 @@ from kube_secrets import (
     SNOWFLAKE_USER,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
 env = os.environ.copy()
 
 DAG_NAME = "saas_usage_ping_backfill"
@@ -156,6 +157,8 @@ def generate_task(run_date: date) -> None:
         secrets=secrets,
         env_vars=env_vars,
         arguments=[command],
+        affinity=get_affinity("extraction_highmem"),
+        tolerations=get_toleration("extraction_highmem"),
         dag=dag,
     )
 
