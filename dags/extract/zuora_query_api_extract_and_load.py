@@ -82,8 +82,8 @@ for table_name in tables:
             ZUORA_API_CLIENT_SECRET,
         ],
         env_vars=pod_env_vars,
-        affinity=get_affinity("production"),
-        tolerations=get_toleration("production"),
+        affinity=get_affinity("extraction"),
+        tolerations=get_toleration("extraction"),
         arguments=[extract_command],
         dag=dag,
     )

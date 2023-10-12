@@ -80,8 +80,8 @@ oci_operator = KubernetesPodOperator(
             "END": "{{ next_execution_date.isoformat() }}",
         },
     },  # merge the dictionaries into one
-    affinity=get_affinity("production"),
-    tolerations=get_toleration("production"),
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
     arguments=[container_cmd],
     dag=dag,
 )
