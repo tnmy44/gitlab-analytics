@@ -18,6 +18,8 @@ from airflow_utils import (
     slack_failed_task,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_CONFIG,
@@ -145,6 +147,8 @@ dbt_diffs_task = KubernetesPodOperator(
     secrets=dbt_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_models_diffs_cmd],
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     dag=dag,
 )
 
@@ -178,6 +182,8 @@ for chunk in range(CHUNKS):
         secrets=dbt_secrets,
         env_vars=pod_env_vars,
         arguments=[dbt_models_commits_cmd],
+        affinity=get_affinity("dbt"),
+        tolerations=get_toleration("dbt"),
         dag=dag,
     )
     dbt_commits_tasks.append(dbt_commits_task)

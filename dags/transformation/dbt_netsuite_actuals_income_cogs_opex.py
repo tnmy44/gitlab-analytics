@@ -15,6 +15,9 @@ from airflow_utils import (
     number_of_dbt_threads_argument,
     slack_failed_task,
 )
+
+from kubernetes_helpers import get_affinity, get_toleration
+
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_CONFIG,
@@ -125,6 +128,8 @@ dbt_poc = KubernetesPodOperator(
     ],
     env_vars=pod_env_vars,
     arguments=[dbt_cmd],
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     dag=dag,
 )
 

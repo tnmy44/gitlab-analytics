@@ -62,6 +62,8 @@ dbt_secrets = [
     SNOWFLAKE_USER,
 ]
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 env = os.environ.copy()
 
 GIT_BRANCH = env["GIT_BRANCH"]
@@ -102,6 +104,8 @@ dbt_external_table_run = KubernetesPodOperator(
     secrets=dbt_secrets,
     env_vars=gitlab_pod_env_vars,
     arguments=[external_table_run_cmd],
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     dag=dag,
 )
 
@@ -118,7 +122,7 @@ for export in stream["exports"]:
     export_name = export["name"]
 
     billing_extract_command = f"""
-    {clone_and_setup_extraction_cmd} && 
+    {clone_and_setup_extraction_cmd} &&
     python gcs_external/src/gcp_billing/gcs_external.py --export_name={export_name}
     """
 
@@ -134,8 +138,8 @@ for export in stream["exports"]:
             **pod_env_vars,
             "EXPORT_DATE": "{{ yesterday_ds }}",
         },
-        affinity=get_affinity("production"),
-        tolerations=get_toleration("production"),
+        affinity=get_affinity("extraction"),
+        tolerations=get_toleration("extraction"),
         arguments=[billing_extract_command],
         dag=dag,
     )

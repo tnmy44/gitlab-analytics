@@ -70,8 +70,8 @@ run_load = KubernetesPodOperator(
         SNOWFLAKE_LOAD_PASSWORD,
     ],
     env_vars={**gitlab_pod_env_vars, "PATH_DATE": "{{ yesterday_ds }}"},
-    affinity=get_affinity("production"),
-    tolerations=get_toleration("production"),
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
     arguments=[run_load_command],
     dag=dag,
 )
