@@ -11,12 +11,12 @@
 , renamed AS (
   
     SELECT
-      gitlab_dotcom_issue_links_source.issue_link_id  AS dim_issue_link_id,
+      gitlab_dotcom_issue_links_source.issue_link_id    AS dim_issue_link_id,
       -- FOREIGN KEYS
-      gitlab_dotcom_issue_links_source.source_id      AS issue_id_source,
-      source_issue.dim_issue_sk                       AS dim_issue_sk_source,
-      gitlab_dotcom_issue_links_source.target_id      AS issue_id_target,
-      target_issue.dim_issue_sk                       AS dim_issue_sk_target,
+      gitlab_dotcom_issue_links_source.source_id        AS issue_id_source,
+      {{ get_keyed_nulls('source_issue.dim_issue_sk')   AS dim_issue_sk_source,
+      gitlab_dotcom_issue_links_source.target_id        AS issue_id_target,
+      {{ get_keyed_nulls('target_issue.dim_issue_sk')   AS dim_issue_sk_target,
       gitlab_dotcom_issue_links_source.created_at,
       gitlab_dotcom_issue_links_source.updated_at,
       valid_from
@@ -34,5 +34,5 @@
     created_by="@dtownsend",
     updated_by="@michellecooper",
     created_date="2021-08-04",
-    updated_date="2029-09-29"
+    updated_date="2029-10-13"
 ) }}
