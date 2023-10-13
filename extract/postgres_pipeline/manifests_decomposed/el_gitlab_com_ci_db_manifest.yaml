@@ -34,7 +34,7 @@ tables:
             WHEN name = '%%apifuzzer_fuzz_dnd%%' THEN 'apifuzzer_fuzz_dnd'
             ELSE NULL
         END as name -- https://gitlab.com/gitlab-data/analytics/-/issues/18231#note_1529996846
-      , options
+      , NULL AS options
       , allow_failure
       , NULL AS stage
       , trigger_request_id
