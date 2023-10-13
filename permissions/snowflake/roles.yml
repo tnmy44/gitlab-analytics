@@ -3020,11 +3020,15 @@ roles:
             - analytics_engineer_core
             - analyst_engineering
             - analyst_growth
+            - bi_tool_eval_read
             - coupa
             - customers_db
-            - restricted_safe
-            - bi_tool_eval_read
+            - data_science_readonly
+            - gitlab_dotcom
+            - hightouch_role
             - marketo
+            - postgres_pipeline
+            - restricted_safe            
             - salesforce
             - zuora_api_sandbox_stitch            
             - zuora_stitch_rest_api
@@ -3598,8 +3602,12 @@ roles:
             - data_team_analyst
             - data_science_sensitive
             - data_science
+            - data_science_readonly
             - gainsight
+            - gitlab_dotcom
+            - hightouch_role
             - netsuite
+            - postgres_pipeline
             - restricted_safe
             - snowplow
             - static_admin
@@ -5017,6 +5025,10 @@ roles:
             - analyst_engineering
             - analyst_growth
             - customers_db
+            - data_science_readonly
+            - gitlab_dotcom
+            - hightouch_role
+            - postgres_pipeline
             - restricted_safe
             - zuora
             - zuora_api_sandbox_stitch
