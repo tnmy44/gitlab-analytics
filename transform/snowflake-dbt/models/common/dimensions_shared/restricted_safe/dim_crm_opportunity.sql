@@ -2,6 +2,11 @@
     tags=["six_hourly"]
 ) }}
 
+{{ config({
+    "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_opportunity_id') }}"
+    })
+}}
+
 WITH prep_crm_opportunity AS (
 
     SELECT *
@@ -244,7 +249,7 @@ WITH prep_crm_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@jngCES",
+    updated_by="@jpeguero",
     created_date="2020-11-20",
-    updated_date="2023-07-19"
+    updated_date="2023-10-13"
 ) }}
