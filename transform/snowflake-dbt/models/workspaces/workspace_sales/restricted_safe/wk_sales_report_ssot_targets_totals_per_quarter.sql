@@ -22,7 +22,7 @@ WITH date_details AS (
 ), mart_sales_funnel_target AS (
   
   SELECT *
-  FROM {{ref('wk_sales_mart_sales_funnel_target')}}
+  FROM {{ref('wk_sales_mart_sales_funnel_target_ssot')}}
 
 ), today_date AS (
 

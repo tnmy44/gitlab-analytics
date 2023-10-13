@@ -319,8 +319,6 @@ WITH date_details AS (
       agg_demo_keys.key_segment_geo_region_area_sqs,
       agg_demo_keys.key_segment_geo_region_area_ot,
 
-      agg_demo_keys.report_user_segment_geo_region_area,
-
       ---------------------------------------------------
       -- current fiscal year
       COALESCE(current_fiscal_year.cfy_deal_count,0)                     AS cfy_deal_count,
