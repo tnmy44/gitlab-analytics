@@ -146,6 +146,10 @@ models:
         description: '{{ doc("code_suggestions_context") }}'
       - name: ide_extension_version_context
         description: '{{ doc("ide_extension_version_context") }}'
+      - name: has_code_suggestions_context
+        description: '{{ doc("has_code_suggestions_context") }}'
+      - name: has_ide_extension_version_context
+        description: '{{ doc("has_ide_extension_version_context") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by

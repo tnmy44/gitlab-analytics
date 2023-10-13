@@ -2441,3 +2441,15 @@ Name of the IDEs vendor, e.g. Microsoft. Appears in the `ide_extension_version` 
 Version number of the IDE, e.g. 1.81.1. Appears in the `ide_extension_version` context
 
 {% enddocs %}
+
+{% docs has_code_suggestions_context %}
+
+A flag to indicate if the event has additional information in the context field related to `code_suggestions_context`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema)
+
+{% enddocs %}
+
+{% docs has_ide_extension_version_context %}
+
+A flag to indicate if the event has additional information in the context field related to `ide_extension_version`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema)
+
+{% enddocs %}

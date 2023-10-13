@@ -61,6 +61,8 @@ code_suggestions_joined_to_fact_and_dim AS (
     joined_code_suggestions_contexts.*,
     fct_behavior_structured_event.app_id,
     fct_behavior_structured_event.contexts,
+    fct_behavior_structured_event.has_code_suggestions_context,
+    fct_behavior_structured_event.has_ide_extension_version_context,
     dim_behavior_event.event_category,
     dim_behavior_event.event_action,
     dim_behavior_event.event_label,
@@ -71,6 +73,7 @@ code_suggestions_joined_to_fact_and_dim AS (
   LEFT JOIN dim_behavior_event
     ON fct_behavior_structured_event.dim_behavior_event_sk = dim_behavior_event.dim_behavior_event_sk
   WHERE fct_behavior_structured_event.behavior_at >= '2023-08-28' --first day with events
+    AND fct_behavior_structured_event.has_code_suggestions_context = TRUE
 
 ),
 
@@ -100,7 +103,9 @@ filtered_code_suggestion_events AS (
     ide_version,
     contexts,
     code_suggestions_context,
-    ide_extension_version_context
+    ide_extension_version_context,
+    has_code_suggestions_context,
+    has_ide_extension_version_context
   FROM code_suggestions_joined_to_fact_and_dim
   WHERE app_id IN ('gitlab_ai_gateway', 'gitlab_ide_extension') --"official" Code Suggestions app_ids
     --Need to exclude VS Code 3.76.0 (which sent duplicate events)
@@ -114,5 +119,5 @@ filtered_code_suggestion_events AS (
     created_by="@cbraza",
     updated_by="@cbraza",
     created_date="2023-10-09",
-    updated_date="2023-10-10"
+    updated_date="2023-10-11"
 ) }}
