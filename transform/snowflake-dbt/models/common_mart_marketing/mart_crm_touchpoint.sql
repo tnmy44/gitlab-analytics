@@ -222,7 +222,10 @@
       dim_campaign.budget_holder,
       dim_crm_touchpoint.utm_budget,
       dim_crm_touchpoint.bizible_ad_campaign_name,
-      dim_crm_touchpoint.utm_medium,campaign_owner.user_role_name) %},
+      dim_crm_touchpoint.utm_medium,
+      campaign_owner.user_role_name
+      ) 
+    %},
 
     -- counts
      CASE
