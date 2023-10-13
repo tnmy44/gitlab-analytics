@@ -3602,8 +3602,12 @@ roles:
             - data_team_analyst
             - data_science_sensitive
             - data_science
+            - data_science_readonly
             - gainsight
+            - gitlab_dotcom
+            - hightouch_role
             - netsuite
+            - postgres_pipeline
             - restricted_safe
             - snowplow
             - static_admin
