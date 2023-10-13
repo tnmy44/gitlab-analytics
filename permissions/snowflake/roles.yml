@@ -3023,7 +3023,11 @@ roles:
             - bi_tool_eval_read
             - coupa
             - customers_db
+            - data_science_readonly
+            - gitlab_dotcom
+            - hightouch_role
             - marketo
+            - postgres_pipeline
             - restricted_safe            
             - salesforce
             - zuora_api_sandbox_stitch            
