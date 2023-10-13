@@ -3020,11 +3020,11 @@ roles:
             - analytics_engineer_core
             - analyst_engineering
             - analyst_growth
+            - bi_tool_eval_read
             - coupa
             - customers_db
-            - restricted_safe
-            - bi_tool_eval_read
             - marketo
+            - restricted_safe            
             - salesforce
             - zuora_api_sandbox_stitch            
             - zuora_stitch_rest_api
