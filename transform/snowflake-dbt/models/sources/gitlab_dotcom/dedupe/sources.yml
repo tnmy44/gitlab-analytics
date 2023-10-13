@@ -175,6 +175,8 @@ sources:
         identifier: gitlab_db_epic_issues
       - name: epics
         identifier: gitlab_db_epics
+      - name: epics_internal_only
+        identifier: gitlab_db_epics_internal_only
       - name: events
         identifier: gitlab_db_events
       - name: experiment_subjects
