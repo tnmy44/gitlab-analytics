@@ -74,7 +74,7 @@ WITH date_details AS (
     SELECT 
       -------------------------------------
       -- report keys
-      opp_snapshot.report_user_segment_geo_region_area_sqs_ot,
+      opp_snapshot.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
        
       -------------------------------------
       
@@ -138,7 +138,7 @@ WITH date_details AS (
       
       -------------------
       -- report keys
-      pipeline_snapshot.report_user_segment_geo_region_area_sqs_ot,
+      pipeline_snapshot.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
       -------------------
 
       SUM(pipeline_snapshot.deal_count)                           AS cfy_deal_count,
@@ -178,7 +178,7 @@ WITH date_details AS (
       
       -------------------
       -- report keys
-      pipeline_snapshot.report_user_segment_geo_region_area_sqs_ot,
+      pipeline_snapshot.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
       -------------------
 
       SUM(pipeline_snapshot.deal_count)                           AS nfy_deal_count,
@@ -216,7 +216,7 @@ WITH date_details AS (
 
       -------------------
       -- report keys
-      opp_history.report_user_segment_geo_region_area_sqs_ot,
+      opp_history.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
       -------------------
 
       SUM(opp_history.created_in_snapshot_quarter_deal_count)     AS pipe_gen_count,
@@ -239,7 +239,7 @@ WITH date_details AS (
 
       -------------------
       -- report keys
-      opp_history.report_user_segment_geo_region_area_sqs_ot,
+      opp_history.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
       -------------------
 
       SUM(opp_history.calculated_deal_count)     AS sao_deal_count,
@@ -258,17 +258,17 @@ WITH date_details AS (
 ), key_fields AS (
   
  SELECT
-     report_user_segment_geo_region_area_sqs_ot,
+     report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
      close_fiscal_year
   FROM current_fiscal_year
   UNION
    SELECT
-     report_user_segment_geo_region_area_sqs_ot,
+     report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
      close_fiscal_year
   FROM next_fiscal_year
    UNION
    SELECT
-     report_user_segment_geo_region_area_sqs_ot,
+     report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
      close_fiscal_year
   FROM sao_gen
 
@@ -286,7 +286,7 @@ WITH date_details AS (
     SELECT 
       -----------------------------
       -- keys
-      base_fields.report_user_segment_geo_region_area_sqs_ot,
+      base_fields.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
 
       base_fields.close_fiscal_year,
       base_fields.close_day_of_fiscal_year_normalised,
@@ -377,37 +377,37 @@ WITH date_details AS (
     FROM base_fields
     -- base keys dictionary
     LEFT JOIN agg_demo_keys
-      ON base_fields.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
+      ON base_fields.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
     -- historical quarter
     LEFT JOIN current_fiscal_year
       ON base_fields.close_day_of_fiscal_year_normalised = current_fiscal_year.close_day_of_fiscal_year_normalised
       AND base_fields.close_fiscal_year = current_fiscal_year.close_fiscal_year   
-      AND base_fields.report_user_segment_geo_region_area_sqs_ot = current_fiscal_year.report_user_segment_geo_region_area_sqs_ot
+      AND base_fields.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = current_fiscal_year.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
     -- next quarter in relation to the considered reported quarter
     LEFT JOIN  next_fiscal_year
       ON base_fields.close_day_of_fiscal_year_normalised = next_fiscal_year.close_day_of_fiscal_year_normalised
         AND base_fields.close_fiscal_year = next_fiscal_year.close_fiscal_year   
-        AND base_fields.report_user_segment_geo_region_area_sqs_ot = next_fiscal_year.report_user_segment_geo_region_area_sqs_ot    
+        AND base_fields.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = next_fiscal_year.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot    
     -- Pipe generation piece
     LEFT JOIN pipeline_gen 
       ON base_fields.close_day_of_fiscal_year_normalised = pipeline_gen.close_day_of_fiscal_year_normalised
         AND base_fields.close_fiscal_year = pipeline_gen.close_fiscal_year   
-        AND base_fields.report_user_segment_geo_region_area_sqs_ot = pipeline_gen.report_user_segment_geo_region_area_sqs_ot
+        AND base_fields.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = pipeline_gen.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
     -- Sales Accepted Opportunity Generation
     LEFT JOIN sao_gen
        ON base_fields.close_day_of_fiscal_year_normalised = sao_gen.close_day_of_fiscal_year_normalised
         AND base_fields.close_fiscal_year = sao_gen.close_fiscal_year   
-        AND base_fields.report_user_segment_geo_region_area_sqs_ot = sao_gen.report_user_segment_geo_region_area_sqs_ot
+        AND base_fields.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = sao_gen.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
     -- One Year Ago  pipeline generation
     LEFT JOIN pipeline_gen  minus_1_year_pipe_gen
       ON minus_1_year_pipe_gen.close_day_of_fiscal_year_normalised = base_fields.close_day_of_fiscal_year_normalised
         AND minus_1_year_pipe_gen.close_fiscal_year = base_fields.close_fiscal_year - 1
-        AND minus_1_year_pipe_gen.report_user_segment_geo_region_area_sqs_ot = base_fields.report_user_segment_geo_region_area_sqs_ot
+        AND minus_1_year_pipe_gen.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = base_fields.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
     -- One Year Ago Sales Accepted Opportunity Generation
     LEFT JOIN sao_gen minus_1_year_sao_gen
       ON minus_1_year_sao_gen.close_day_of_fiscal_year_normalised = base_fields.close_day_of_fiscal_year_normalised
         AND minus_1_year_sao_gen.close_fiscal_year = base_fields.close_fiscal_year - 1
-        AND minus_1_year_sao_gen.report_user_segment_geo_region_area_sqs_ot = base_fields.report_user_segment_geo_region_area_sqs_ot
+        AND minus_1_year_sao_gen.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = base_fields.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
 
 )
 
