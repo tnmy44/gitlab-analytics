@@ -62,7 +62,7 @@
   FROM mart_crm_touchpoint
   LEFT JOIN mart_crm_person
     ON mart_crm_touchpoint.dim_crm_person_id=mart_crm_person.dim_crm_person_id
-  WHERE bizible_touchpoint_type IN ('Web Form')
+  WHERE bizible_touchpoint_type = 'Web Form'
   
 ), intermediate AS (
 
