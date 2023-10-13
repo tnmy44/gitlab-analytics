@@ -274,30 +274,11 @@
         ELSE 0
       END AS is_fmm_sourced,
     --budget holder
-    CASE 
-      WHEN LOWER(dim_campaign.budget_holder) = 'fmm' THEN 'Field Marketing'
-      WHEN LOWER(dim_campaign.budget_holder) = 'dmp' THEN 'Digital Marketing'
-      WHEN LOWER(dim_campaign.budget_holder) = 'corp' THEN 'Corporate Events'
-      WHEN LOWER(dim_campaign.budget_holder) = 'abm' THEN 'Account Based Marketing'
-      WHEN LOWER(dim_campaign.budget_holder) LIKE '%ptnr%' OR LOWER(budget_holder) LIKE '%chnl%'  THEN 'Partner Marketing'
-      WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'fmm' THEN 'Field Marketing'
-      WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'dmp' THEN 'Digital Marketing'
-      WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'corp' THEN 'Corporate Events'
-      WHEN LOWER(dim_crm_touchpoint.utm_budget) = 'abm' THEN 'Account Based Marketing'
-      WHEN LOWER(dim_crm_touchpoint.utm_budget) LIKE '%ptnr%' OR LOWER(dim_crm_touchpoint.utm_budget) LIKE '%chnl%' THEN 'Partner Marketing'
-      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%abm%' THEN 'Account Based Marketing'
-      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%pmg%' THEN 'Digital Marketing'
-      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%fmm%' THEN 'Field Marketing'
-      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%dmp%' THEN 'Digital Marketing'
-      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%partner%' THEN 'Partner Marketing'
-      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%mdf%' THEN 'Partner Marketing'
-      WHEN LOWER(dim_crm_touchpoint.utm_medium) IN ('paidsocial','cpc') THEN 'Digital Marketing'
-      WHEN LOWER(dim_crm_touchpoint.bizible_ad_campaign_name) LIKE '%devopsgtm_' THEN 'Digital Marketing'
-      WHEN campaign_owner.user_role_name LIKE '%Field Marketing%' THEN 'Field Marketing'
-      WHEN campaign_owner.user_role_name LIKE '%ABM%' THEN 'Account Based Marketing'
-    END AS integrated_budget_holder
-
-
+    {% call integrated_budget_holder(
+      dim_campaign.budget_holder,
+      dim_crm_touchpoint.utm_budget,
+      dim_crm_touchpoint.bizible_ad_campaign_name,
+      dim_crm_touchpoint.utm_medium,campaign_owner.user_role_name) %}
     FROM fct_crm_attribution_touchpoint
     LEFT JOIN dim_crm_touchpoint
       ON fct_crm_attribution_touchpoint.dim_crm_touchpoint_id = dim_crm_touchpoint.dim_crm_touchpoint_id
