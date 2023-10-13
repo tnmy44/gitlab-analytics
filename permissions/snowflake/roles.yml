@@ -5021,6 +5021,10 @@ roles:
             - analyst_engineering
             - analyst_growth
             - customers_db
+            - data_science_readonly
+            - gitlab_dotcom
+            - hightouch_role
+            - postgres_pipeline
             - restricted_safe
             - zuora
             - zuora_api_sandbox_stitch
