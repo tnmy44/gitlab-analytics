@@ -271,6 +271,8 @@ sources:
         identifier: gitlab_db_namespaces
       - name: notes
         identifier: gitlab_db_notes
+      - name: notes_internal_only
+        identifier: gitlab_db_notes_internal_only
       - name: notification_settings
         identifier: gitlab_db_notification_settings
       - name: oauth_access_tokens
