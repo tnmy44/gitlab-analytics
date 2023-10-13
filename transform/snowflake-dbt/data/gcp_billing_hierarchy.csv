@@ -1,6 +1,6 @@
 level_0,level_1,level_2,level_3,level_4,FULL_PATH,FROM_MAPPING,INFRA_LABEL
-GitLab Infrastructure,Gitaly,Repository Storage,,,gitlab.com/Infrastructure/Environments/Production,repo_storage_pl_daily,gitaly
-GitLab Infrastructure,Gitaly,LFS,,,gitlab.com/Infrastructure/Environments/Production,infralabel_pl,git_lfs
+GitLab Infrastructure,Gitaly,Repository Storage,,,gitlab.com/Infrastructure/Environments%,repo_storage_pl_daily,gitaly
+GitLab Infrastructure,Gitaly,LFS,,,gitlab.com/Infrastructure/Environments,infralabel_pl,git_lfs
 GitLab Infrastructure,Gitaly,Staging,,,gitlab.com/Infrastructure/Environments/Staging,folder_pl,gitaly
 GitLab Infrastructure,Gitaly,Staging,,,gitlab.com/Infrastructure/Environments/Staging,t2d_cud_lookback,gitaly
 GitLab Infrastructure,Gitaly,Staging,,,gitlab.com/Infrastructure/Environments/Staging/Staging Gitaly,t2d_cud_lookback,gitaly
@@ -8,7 +8,7 @@ GitLab Infrastructure,Gitaly,Staging,,,gitlab.com/Infrastructure/Environments/St
 GitLab Infrastructure,Gitaly,Staging,,,gitlab.com/Infrastructure/Environments/Staging Gitaly,folder_pl,gitaly
 GitLab Infrastructure,Gitaly,Staging,,,gitlab.com/Infrastructure/Environments/Staging/Staging Gitaly,folder_pl,gitaly
 GitLab Infrastructure,Gitaly,wip,,,gitlab.com/Infrastructure/Environments/&,t2d_cud_lookback,gitaly
-GitLab Infrastructure,Gitaly,wip,,,gitlab.com/Infrastructure/Environments/Production,infralabel_pl,gitaly
+GitLab Infrastructure,Gitaly,wip,,,gitlab.com/Infrastructure/Environments,infralabel_pl,gitaly
 GitLab Infrastructure,Gitaly,DR Testing,,,gitlab.com/Infrastructure/Environments/DR Testing/DR Testing Gitaly/&,folder_pl,
 GitLab Infrastructure,CI/CD,Runners,SaaS,linux small ,gitlab.com/Infrastructure,ci_runner_pl_daily - 2,
 GitLab Infrastructure,CI/CD,Runners,SaaS,linux medium,gitlab.com/Infrastructure,ci_runner_pl_daily - 3,
@@ -23,31 +23,31 @@ GitLab Infrastructure,CI/CD,Runners,SaaS,windows,gitlab.com/Infrastructure,ci_ru
 GitLab Infrastructure,CI/CD,Runners,Internal,linux private internal,gitlab.com/Infrastructure,ci_runner_pl_daily - 6,
 GitLab Infrastructure,CI/CD,Runners,Shared org,linux small ,gitlab.com/Infrastructure,ci_runner_pl_daily - 1,
 GitLab Infrastructure,CI/CD,Runners,Omnibus,,gitlab.com/Distribution,folder_pl,
-GitLab Infrastructure,CI/CD,Container Registry,,,gitlab.com/Infrastructure/Environments/Production,t2d_cud_lookback,registry
-GitLab Infrastructure,CI/CD,Container Registry,,,gitlab.com/Infrastructure/Environments/Production,folder_pl,registry
-GitLab Infrastructure,CI/CD,Container Registry,,,gitlab.com/Infrastructure/Environments/Production,infralabel_pl,registry
-GitLab Infrastructure,CI/CD,Container Registry,,,gitlab.com/Infrastructure/Environments/Production,container_registry_pl_daily,registry
-GitLab Infrastructure,CI/CD,Build Artifacts,,,gitlab.com/Infrastructure/Environments/Production,build_artifacts_pl_daily,build_artifacts
-GitLab Infrastructure,CI/CD,Build Artifacts,,,gitlab.com/Infrastructure/Environments/Production,build_artifacts_pl_dev_daily,build_artifacts
-GitLab Infrastructure,CI/CD,Build Artifacts,,,gitlab.com/Infrastructure/Environments/Production,folder_pl,build_artifacts
-GitLab Infrastructure,CI/CD,Other costs,,,gitlab.com/Infrastructure/Environments/Production,continous_integration_lookback,continuous_integration
+GitLab Infrastructure,CI/CD,Container Registry,,,gitlab.com/Infrastructure/Environments,t2d_cud_lookback,registry
+GitLab Infrastructure,CI/CD,Container Registry,,,gitlab.com/Infrastructure/Environments,folder_pl,registry
+GitLab Infrastructure,CI/CD,Container Registry,,,gitlab.com/Infrastructure/Environments,infralabel_pl,registry
+GitLab Infrastructure,CI/CD,Container Registry,,,gitlab.com/Infrastructure/Environments,container_registry_pl_daily,registry
+GitLab Infrastructure,CI/CD,Build Artifacts,,,gitlab.com/Infrastructure/Environments,build_artifacts_pl_daily,build_artifacts
+GitLab Infrastructure,CI/CD,Build Artifacts,,,gitlab.com/Infrastructure/Environments,build_artifacts_pl_dev_daily,build_artifacts
+GitLab Infrastructure,CI/CD,Build Artifacts,,,gitlab.com/Infrastructure/Environments,folder_pl,build_artifacts
+GitLab Infrastructure,CI/CD,Other costs,,,gitlab.com/Infrastructure/Environments,continous_integration_lookback,continuous_integration
 GitLab Infrastructure,CI/CD,Staging,,,gitlab.com/Infrastructure/Environments/Staging,continous_integration_lookback,continuous_integration
-GitLab Infrastructure,CI/CD,Other costs,,,gitlab.com/Infrastructure/Environments/Production,t2d_cud_lookback,continuous_integration
-GitLab Infrastructure,HAProxy,HTTPs Git Data Transfer,,,gitlab.com/Infrastructure/Environments/Production,haproxy-HTTPs Git Data Transfer,
-GitLab Infrastructure,HAProxy,SSH Data Transfer,,,gitlab.com/Infrastructure/Environments/Production,haproxy-SSH Data Transfer,
-GitLab Infrastructure,HAProxy,API Data Transfer,,,gitlab.com/Infrastructure/Environments/Production,haproxy-API Data Transfer,
-GitLab Infrastructure,HAProxy,Web Data Transfer,,,gitlab.com/Infrastructure/Environments/Production,haproxy-Web Data Transfer,
-GitLab Infrastructure,HAProxy,Pages Data Transfer,,,gitlab.com/Infrastructure/Environments/Production,haproxy-Pages Data Transfer,
-GitLab Infrastructure,HAProxy,WebSockets Data Transfer,,,gitlab.com/Infrastructure/Environments/Production,haproxy-WebSockets Data Transfer,
-GitLab Infrastructure,HAProxy,Registry Data Transfer,,,gitlab.com/Infrastructure/Environments/Production,haproxy-Registry Data Transfer,
-GitLab Infrastructure,Pages,,,,gitlab.com/Infrastructure/Environments/Production,infralabel_pl,pages
-GitLab Infrastructure,Pages,,,,gitlab.com/Infrastructure/Environments/Production,folder_pl,pages
-GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments/Production,flex_cud_lookback,shared
-GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments/Production,t2d_cud_lookback,shared
-GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments/Production,infralabel_pl,shared
+GitLab Infrastructure,CI/CD,Other costs,,,gitlab.com/Infrastructure/Environments,t2d_cud_lookback,continuous_integration
+GitLab Infrastructure,HAProxy,HTTPs Git Data Transfer,,,gitlab.com/Infrastructure/Environments,haproxy-HTTPs Git Data Transfer,
+GitLab Infrastructure,HAProxy,SSH Data Transfer,,,gitlab.com/Infrastructure/Environments,haproxy-SSH Data Transfer,
+GitLab Infrastructure,HAProxy,API Data Transfer,,,gitlab.com/Infrastructure/Environments,haproxy-API Data Transfer,
+GitLab Infrastructure,HAProxy,Web Data Transfer,,,gitlab.com/Infrastructure/Environments,haproxy-Web Data Transfer,
+GitLab Infrastructure,HAProxy,Pages Data Transfer,,,gitlab.com/Infrastructure/Environments,haproxy-Pages Data Transfer,
+GitLab Infrastructure,HAProxy,WebSockets Data Transfer,,,gitlab.com/Infrastructure/Environments,haproxy-WebSockets Data Transfer,
+GitLab Infrastructure,HAProxy,Registry Data Transfer,,,gitlab.com/Infrastructure/Environments,haproxy-Registry Data Transfer,
+GitLab Infrastructure,Pages,,,,gitlab.com/Infrastructure/Environments,infralabel_pl,pages
+GitLab Infrastructure,Pages,,,,gitlab.com/Infrastructure/Environments,folder_pl,pages
+GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments,flex_cud_lookback,shared
+GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments,t2d_cud_lookback,shared
+GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments,infralabel_pl,shared
 GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments/Staging,folder_pl,shared
-GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments/Production,infralabel_pl,infrastructure
-GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments/Production,,
+GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments,infralabel_pl,infrastructure
+GitLab Infrastructure,Shared,,,,gitlab.com/Infrastructure/Environments,,
 Marketing,Strategic,,,,gitlab.com/cloud-realms/sandbox-realm-639e27ff/mktg-strategic-7973a752,folder_pl,
 Marketing,Product,,,,gitlab.com/cloud-realms/sandbox-realm-639e27ff/mktg-product-6ded5c84,folder_pl,
 Marketing,Inbound,,,,gitlab.com/cloud-realms/sandbox-realm-639e27ff/mktg-inbound-b47bf2fd,folder_pl,
