@@ -21,7 +21,19 @@ tables:
       , runner_id
       , coverage
       , commit_id
-      , name
+      , CASE
+            WHEN name = '%%container_scanning%%' THEN 'container_scanning'
+            WHEN name = '%%dast%%' THEN 'dast'
+            WHEN name = '%%dependency_scanning%%' THEN 'dependency_scanning'
+            WHEN name = '%%license_management%%' THEN 'license_management'
+            WHEN name = '%%license_scanning%%' THEN 'license_scanning'
+            WHEN name = '%%sast%%' THEN 'sast'
+            WHEN name = '%%secret_detection%%' THEN 'secret_detection'
+            WHEN name = '%%coverage_fuzzing%%' THEN 'coverage_fuzzing'
+            WHEN name = '%%apifuzzer_fuzz%%' THEN 'apifuzzer_fuzz'
+            WHEN name = '%%apifuzzer_fuzz_dnd%%' THEN 'apifuzzer_fuzz_dnd'
+            ELSE NULL
+        END as name -- https://gitlab.com/gitlab-data/analytics/-/issues/18231#note_1529996846
       , NULL AS options
       , allow_failure
       , NULL AS stage
