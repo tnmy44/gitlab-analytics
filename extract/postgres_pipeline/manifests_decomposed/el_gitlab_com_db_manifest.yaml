@@ -5,26 +5,6 @@ connection_info:
   port: GITLAB_COM_PG_PORT
   user: GITLAB_COM_DB_USER
 tables:
-  alert_management_alerts:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'alert_management_alerts'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , started_at
-      , ended_at
-      , events
-      , iid
-      , status
-      , issue_id
-      , project_id
-      FROM alert_management_alerts
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   alert_management_http_integrations:
     export_schema: "gitlab_com"
     export_table: alert_management_http_integrations
@@ -37,27 +17,6 @@ tables:
       , project_id
       , active
       FROM alert_management_http_integrations
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  analytics_cycle_analytics_group_stages:
-    export_schema: "gitlab_com"
-    export_table: analytics_cycle_analytics_group_stages
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , relative_position
-      , start_event_identifier
-      , end_event_identifier
-      , group_id
-      , start_event_label_id
-      , end_event_label_id
-      , hidden
-      , custom
-      , group_value_stream_id
-      FROM analytics_cycle_analytics_group_stages
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   application_settings:
@@ -267,6 +226,7 @@ tables:
       , updated_at
       , agent_id
       , status
+      , last_used_at
       FROM cluster_agent_tokens
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -442,7 +402,7 @@ tables:
       , iid
       , project_id
       , environment_id
-      , ref
+      , NULL AS ref
       , tag
       , user_id
       , deployable_id
@@ -482,7 +442,7 @@ tables:
     import_query: |-
       SELECT id
       , project_id
-      , name
+      , NULL AS name
       , created_at
       , updated_at
       , NULL AS environment_type
@@ -511,7 +471,7 @@ tables:
       , created_at
       , updated_at
       , title
-      , description
+      , NULL AS description
       , state_id
       , closed_at
       , parent_id
@@ -580,7 +540,7 @@ tables:
       , project_id
       , created_at
       , updated_at
-      , grafana_url
+      , NULL AS grafana_url
       , enabled
       FROM grafana_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -2105,9 +2065,9 @@ tables:
       , group_id
       , iid
       , cached_markdown_version
-      , title
+      , NULL AS title
       , NULL AS title_html
-      , description
+      , NULL AS description
       , NULL AS description_html
       , state_enum
       FROM sprints
@@ -2353,8 +2313,8 @@ tables:
       , managing_group_id
       , "role"
       , username
-      , first_name
-      , last_name
+      , NULL AS first_name
+      , NULL AS last_name
       , user_type
       , otp_required_for_login
       FROM users
@@ -2409,7 +2369,7 @@ tables:
       , scanner_id
       , primary_identifier_id
       , NULL AS uuid
-      , name
+      , NULL AS name
       , metadata_version
       , NULL AS raw_metadata
       , vulnerability_id

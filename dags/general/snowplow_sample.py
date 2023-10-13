@@ -12,6 +12,8 @@ from kube_secrets import (
     SNOWFLAKE_USER,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 pod_env_vars = {
@@ -58,5 +60,7 @@ clean_clones = KubernetesPodOperator(
     ],
     env_vars=pod_env_vars,
     arguments=[drop_cmd],
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
     dag=dag,
 )

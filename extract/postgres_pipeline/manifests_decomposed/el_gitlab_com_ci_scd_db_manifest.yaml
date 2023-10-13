@@ -5,17 +5,6 @@ connection_info:
   port: GITLAB_COM_CI_DB_PORT
   user: GITLAB_COM_CI_DB_USER
 tables:
-  ci_build_trace_chunks:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: ci_build_trace_chunks
-    export_table_primary_key: build_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT build_id
-      , chunk_index
-      , data_store
-      FROM ci_build_trace_chunks
   ci_builds_runner_session:
     export_schema: 'gitlab_com'
     export_table: ci_builds_runner_session

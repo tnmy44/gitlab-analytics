@@ -73,8 +73,8 @@ adaptive_task = KubernetesPodOperator(
     env_vars={
         **pod_env_vars,
     },
-    affinity=get_affinity("production"),
-    tolerations=get_toleration("production"),
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
     arguments=[adaptive_extract_command],
     dag=dag,
 )
