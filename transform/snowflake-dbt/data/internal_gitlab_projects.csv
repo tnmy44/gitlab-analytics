@@ -1,8 +1,9 @@
 project_path,project_id
-gitlab-visual-studio-extension,46231956
-data-quality,45393508
-analytics,4409640
-ux-research,2890326
-resume-and-cover-letter-latex-plain,38465396
-team-tasks,4492386
-infrastructure,42547967
+gitlab-org/editor-extensions/gitlab-visual-studio-extension,46231956
+gitlab-org/data-quality,45393508
+gitlab-data/analytics,4409640
+gitlab-org/ux-research,2890326
+dot-private/resume-and-cover-letter-latex-plain,38465396
+gitlab-org/distribution/team-tasks,4492386
+gitlab-org/developer-relations/contributor-success/contributor-success-dashboard,51223094
+gitlab-com/gl-security/security-assurance/field-security-team/customer-assurance-activities/caa-servicedesk,26487887
