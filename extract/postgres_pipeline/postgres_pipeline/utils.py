@@ -56,7 +56,7 @@ def get_internal_identifier_keys(identifiers: list) -> list:
         "project_id": [
             "projects_part_of_product_ops.csv",
             "projects_part_of_product.csv",
-            "internal_gitlab_projects.csv"
+            "internal_gitlab_projects.csv",
         ],
         "project_path": [
             "projects_part_of_product_ops.csv",
