@@ -3,7 +3,6 @@
     materialized='incremental',
     unique_key='behavior_structured_event_pk',
     tags=['product'],
-    full_refresh= only_force_full_refresh(),
     on_schema_change='sync_all_columns',
     post_hook=["{{ rolling_window_delete('behavior_at','month',25) }}"],
     cluster_by=['behavior_at::DATE']
