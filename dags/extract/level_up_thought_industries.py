@@ -48,7 +48,7 @@ dag = DAG(
     # daily 1:00 UTC: wait one hour as buffer before running previous day
     schedule_interval="0 1 * * *",
     # FYI: on first run, data is backfilled thru 2022-03-01
-    start_date=datetime(2023, 8, 24),
+    start_date=datetime(2022, 3, 1),
     catchup=True,
     max_active_runs=1,  # due to API rate limiting
     concurrency=3,  # num of max_tasks, limit due to API rate limiting
