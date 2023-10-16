@@ -49,6 +49,13 @@
       dim_crm_touchpoint.bizible_landing_page_utm_budget,
       dim_crm_touchpoint.bizible_landing_page_utm_allptnr,
       dim_crm_touchpoint.bizible_landing_page_utm_partnerid,
+      dim_crm_touchpoint.utm_campaign,
+      dim_crm_touchpoint.utm_source,
+      dim_crm_touchpoint.utm_medium,
+      dim_crm_touchpoint.utm_content,
+      dim_crm_touchpoint.utm_budget,
+      dim_crm_touchpoint.utm_allptnr,
+      dim_crm_touchpoint.utm_partnerid,
       dim_crm_touchpoint.bizible_salesforce_campaign,
       dim_crm_touchpoint.bizible_integrated_campaign_grouping,
       dim_crm_touchpoint.touchpoint_segment,
@@ -265,8 +272,16 @@
           AND is_fmm_influenced = 1 
           THEN 1
         ELSE 0
-      END AS is_fmm_sourced
-
+      END AS is_fmm_sourced,
+    --budget holder
+    {{integrated_budget_holder(
+      'dim_campaign.budget_holder',
+      'dim_crm_touchpoint.utm_budget',
+      'dim_crm_touchpoint.bizible_ad_campaign_name',
+      'dim_crm_touchpoint.utm_medium',
+      'campaign_owner.user_role_name'
+      ) 
+    }}
     FROM fct_crm_attribution_touchpoint
     LEFT JOIN dim_crm_touchpoint
       ON fct_crm_attribution_touchpoint.dim_crm_touchpoint_id = dim_crm_touchpoint.dim_crm_touchpoint_id

@@ -464,6 +464,20 @@ models:
         description: The `utm_allptnr` (alliance/partner) parameter of the `bizible_landing_page`
       - name: bizible_landing_page_utm_partnerid
         description: The `utm_partnerid` parameter of the `bizible_landing_page`
+      - name: utm_campaign 
+        description: First non-null value of `utm_campaign` parameter between `bizible_landing_page` and `bizible_form_url`
+      - name: utm_source
+        description: First non-null value of `utm_source` parameter between `bizible_landing_page` and `bizible_form_url`
+      - name: utm_medium
+        description: First non-null value of `utm_medium` parameter between `bizible_landing_page` and `bizible_form_url`
+      - name: utm_content
+        description: First non-null value of `utm_content` parameter between `bizible_landing_page` and `bizible_form_url`
+      - name: utm_budget
+        description: First non-null value of `utm_budget` parameter between `bizible_landing_page` and `bizible_form_url`
+      - name: utm_allptnr
+        description: First non-null value of `utm_allptnr` parameter between `bizible_landing_page` and `bizible_form_url`
+      - name: utm_partnerid
+        description: First non-null value of `utm_partnerid` parameter between `bizible_landing_page` and `bizible_form_url`
         
   - name: dim_date
     description: '{{ doc("dim_date") }}'
