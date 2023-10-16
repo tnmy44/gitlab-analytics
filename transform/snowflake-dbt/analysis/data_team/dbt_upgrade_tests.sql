@@ -25,7 +25,7 @@ tests:
   {% set tests_yml -%}
 
 
-target_prefix: "16576-UPDATE-DBT-1-4_"
+target_prefix: "DBT_1_6_UPGRADE_"
 
 tests:
   - name: compare_dim_date
@@ -266,11 +266,11 @@ tests:
     old_etl_relation,
     new_etl_relation,
     exclude_columns= test.exclude_columns
-) | trim | replace('
-
-      ,
-
-
+) | trim | replace(' 
+    
+      , 
+     
+   
     ', ',')  }}
 ;
 
