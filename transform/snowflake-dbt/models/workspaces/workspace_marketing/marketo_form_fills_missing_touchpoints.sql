@@ -14,7 +14,7 @@
   
   SELECT DISTINCT
     wk_marketo_activity_fill_out_form.lead_id::VARCHAR AS marketo_lead_id,
-    wk_marketo_activity_fill_out_form.activity_date::DATE AS activity_date,
+    wk_marketo_activity_fill_out_form.activity_date,
     wk_marketo_activity_fill_out_form.primary_attribute_value AS marketo_form_name,
     CASE 
       WHEN referrer_url LIKE '%free-trial/index%' THEN 'https://about.gitlab.com/free-trial/.html'
@@ -43,7 +43,7 @@
   SELECT 
     mart_crm_touchpoint.marketo_lead_id::VARCHAR AS marketo_lead_id,
     dim_crm_touchpoint_id,
-    bizible_touchpoint_date::DATE AS bizible_touchpoint_date,
+    bizible_touchpoint_date,
     CASE
       WHEN bizible_form_url_raw IS NULL 
         THEN bizible_landing_page_raw
@@ -92,7 +92,7 @@
   SELECT
     marketo_lead_id,
     sfdc_record_id,
-    activity_date,
+    activity_date::DATE AS activity_date,
     marketo_form_name,
     form_url,
     full_url,
@@ -108,5 +108,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-12",
-    updated_date="2023-09-26",
+    updated_date="2023-10-16",
   ) }}
