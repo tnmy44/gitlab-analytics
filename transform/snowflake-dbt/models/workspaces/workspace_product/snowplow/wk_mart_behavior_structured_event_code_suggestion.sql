@@ -72,7 +72,7 @@ code_suggestions_joined_to_fact_and_dim AS (
     ON joined_code_suggestions_contexts.behavior_structured_event_pk = fct_behavior_structured_event.behavior_structured_event_pk
   LEFT JOIN dim_behavior_event
     ON fct_behavior_structured_event.dim_behavior_event_sk = dim_behavior_event.dim_behavior_event_sk
-  WHERE fct_behavior_structured_event.behavior_at >= '2023-08-28' --first day with events
+  WHERE fct_behavior_structured_event.behavior_at >= '2023-08-25' --first day with events
     AND fct_behavior_structured_event.has_code_suggestions_context = TRUE
 
 ),
@@ -109,8 +109,8 @@ filtered_code_suggestion_events AS (
   FROM code_suggestions_joined_to_fact_and_dim
   WHERE app_id IN ('gitlab_ai_gateway', 'gitlab_ide_extension') --"official" Code Suggestions app_ids
     --Need to exclude VS Code 3.76.0 (which sent duplicate events)
-    AND user_agent NOT LIKE '%3.76.0 VSCode%' --exclude events which carry the version in user_agent from the code_suggestions_context
-    AND IFF(ide_name = 'Visual Studio Code', extension_version != '3.76.0', TRUE)--exclude events from with version from the ide_extension_version context
+    AND (user_agent NOT LIKE '%3.76.0 VSCode%' OR user_agent IS NULL) --exclude events which carry the version in user_agent from the code_suggestions_context
+    AND IFF(ide_name = 'Visual Studio Code', extension_version != '3.76.0' OR extension_version IS NULL, TRUE) --exclude events from with version from the ide_extension_version context
 
 )
 
