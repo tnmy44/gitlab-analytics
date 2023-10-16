@@ -2358,9 +2358,9 @@ Year To Date allocated target.
 
 {% enddocs %}
 
-{% docs cloud_activation_pk %}
+{% docs dim_cloud_activation_sk %}
 
-The primary key of `fct_cloud_activation` model. Currently identified by hashing the `cloud_activation_id` field that is being sourced from customers portal at gitlab.com.
+The surrogate key of `prep_cloud_activation` model. Currently identified by hashing the `cloud_activation_id` field that is being sourced from customers portal at gitlab.com.
 
 {% enddocs %}
 

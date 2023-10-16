@@ -9,8 +9,8 @@
 , final AS (
 
      SELECT 
-      -- Primary Key
-      {{ dbt_utils.surrogate_key(['cloud_activation.cloud_activation_id']) }}  AS cloud_activation_pk,
+      -- Surrogate Key
+      {{ dbt_utils.surrogate_key(['cloud_activation.cloud_activation_id']) }}  AS dim_cloud_activation_sk,
 
       -- Natural Key
       cloud_activation_id                                                      AS dim_cloud_activation_id,

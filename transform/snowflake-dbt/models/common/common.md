@@ -1915,11 +1915,3 @@ With requirements, you can set criteria to check your products against. They can
 This dimension model holds all requirement records and provides dimensional data around their state, creation dates, etc.
 
 {% enddocs %}
-
-{% docs fct_cloud_activation %}
-
-This model contains data for the cloud activations sourced from tap-postgres table from customers.gitlab.com. It stores information about all the activation codes that were generated for Cloud licenses. Customers use this code after the installation of their GitLab instance. 
-
-This model contains other join keys like `billing_account_id`, `subscription_name` etc.. to be able to join back to Salesforce, Zuora, dimdate data respectively.
-
-{% enddocs %}
