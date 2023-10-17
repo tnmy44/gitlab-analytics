@@ -31,6 +31,7 @@ from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
 
 
+GIT_BRANCH = os.environ.get("GIT_BRANCH")
 METADATA_SCHEMA = os.environ.get("GITLAB_METADATA_SCHEMA")
 BUCKET_NAME = os.environ.get("GITLAB_BACKFILL_BUCKET")
 BACKFILL_METADATA_TABLE = "backfill_metadata"

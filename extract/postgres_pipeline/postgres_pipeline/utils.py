@@ -33,8 +33,9 @@ from sqlalchemy import (
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
 
-SCHEMA = "tap_postgres"
 
+GIT_BRANCH = os.environ.get("GIT_BRANCH")
+SCHEMA = "tap_postgres"
 
 def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
     """Do the auth and return a usable gcs bucket object."""
