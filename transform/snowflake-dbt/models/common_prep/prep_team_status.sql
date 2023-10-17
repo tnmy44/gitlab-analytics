@@ -20,8 +20,7 @@ team_member_position AS (
     management_level,
     job_grade,
     entity,
-    is_position_active,
-    effective_date                                                                                          AS position_valid_from,
+    is_position_active                                                                                    AS position_valid_from,
     LEAD(position_valid_from, 1, {{ var('tomorrow') }}) OVER (PARTITION BY employee_id ORDER BY position_valid_from) AS position_valid_to
   FROM team_member_position_dup
   WHERE position_valid_from <= CURRENT_DATE()
