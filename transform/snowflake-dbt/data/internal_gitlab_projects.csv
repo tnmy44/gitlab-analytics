@@ -137,3 +137,8 @@ gitlab-org/ci-cd/shared-runners/images/gcp/windows-containers,13815397
 gitlab-org/ci-cd/shared-runners/images/macstadium/orka,19922160
 charts/gitlab-omnibus,6329603
 gitlab-org/quality/engineering-productivity/triage-ops-playground,36072369
+gitlab-com/www-gitlab-com,7764
+gitlab-com/latinx-tmrg,23857973
+gitlab-org/gitlab,278964
+gitlab-org/terraform-provider-gitlab,40916776
+gitlab-cookbooks/cookbook-omnibus-gitlab,95156
