@@ -49,7 +49,6 @@ gitlab-org/container-registry,13831684
 gitlab-org/gitlab-omnibus-builder,145205
 gitlab-org/omnibus-gitlab,20699
 gitlab-org/gitlab-mattermost,387896
-gitlab-org/ux-research,2890326
 gitlab-org/gitlab-workhorse,554859
 gitlab-org/gitlab-selenium-server,4262096
 gitlab-org/analytics-section/analytics-instrumentation/internal,12051824
@@ -138,3 +137,17 @@ gitlab-org/quality/engineering-productivity/triage-ops-playground,36072369
 gitlab-com/www-gitlab-com,7764
 gitlab-org/gitlab,278964
 gitlab-cookbooks/cookbook-omnibus-gitlab,95156
+gitlab-org/plan,13453461
+gitlab-org/gitlab-ci,14288
+gitlab-org/trello-power-up,3466815
+gitlab-org/gitlab-ci-yml,1209837
+gitlab-org/cookbook-gitlab,16648
+gitlab-org/release/tasks,5064907
+gitlab-org/security-products/advisories,5417931
+gitlab-org/gitlab-core-team/general,7783667
+gitlab-org/cloud-connector-team/team-tasks,13017990
+gitlab-org/plan-stage/okr-sandbox,23862566
+gitlab-org/editor-extensions/gitlab-language-server-for-code-suggestions,46519181
+gitlab-org/professional-services-automation/tools/migration/congregate,30561867
+gitlab-org/ci-cd/release-group/release,16302012
+gitlab-org/analytics-section/analytics-instrumentation,12051824
