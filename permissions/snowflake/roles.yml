@@ -391,6 +391,7 @@ roles:
             - snapshots
             - snowflake_db
             - static
+            - tableau_cloud
 
     - analyst_engineering:
         warehouses:
@@ -409,7 +410,6 @@ roles:
             - gitlab_dotcom
             - handbook
             - license_db
-            - nvd
             - postgres_pipeline
             - salesforce
             - sheetload
@@ -2096,18 +2096,6 @@ roles:
                     - prep.sensitive.netsuite_transaction_lines_pii
                     - prep.sensitive.netsuite_vendors_pii
                     - raw.netsuite_fivetran.*
-    
-    - nvd:
-        privileges:
-            databases:
-                read:
-                    - prep
-            schemas:
-                read:
-                    - prep.nvd
-            tables:
-                read:
-                    - prep.nvd.*
 
     - oci_reports:
         warehouses:
@@ -2478,6 +2466,18 @@ roles:
                 - static.*
             tables:
                 - static.*.*
+
+    - tableau_cloud:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.tableau_cloud
+            tables:
+                read:
+                    - raw.tableau_cloud.*
 
     - version_db:
         privileges:
@@ -3033,11 +3033,15 @@ roles:
             - analytics_engineer_core
             - analyst_engineering
             - analyst_growth
+            - bi_tool_eval_read
             - coupa
             - customers_db
-            - restricted_safe
-            - bi_tool_eval_read
+            - data_science_readonly
+            - gitlab_dotcom
+            - hightouch_role
             - marketo
+            - postgres_pipeline
+            - restricted_safe            
             - salesforce
             - zuora_api_sandbox_stitch            
             - zuora_stitch_rest_api
@@ -3611,8 +3615,12 @@ roles:
             - data_team_analyst
             - data_science_sensitive
             - data_science
+            - data_science_readonly
             - gainsight
+            - gitlab_dotcom
+            - hightouch_role
             - netsuite
+            - postgres_pipeline
             - restricted_safe
             - snowplow
             - static_admin
@@ -5030,6 +5038,10 @@ roles:
             - analyst_engineering
             - analyst_growth
             - customers_db
+            - data_science_readonly
+            - gitlab_dotcom
+            - hightouch_role
+            - postgres_pipeline
             - restricted_safe
             - zuora
             - zuora_api_sandbox_stitch
@@ -5190,6 +5202,32 @@ roles:
         warehouses:
             - reporting
 
+    - tableau_loader:
+        warehouses:
+            - loading
+            - loading_xl
+        owns:
+            schemas:
+                - raw.tableau_cloud
+            tables:
+                - raw.tableau_cloud.*
+        privileges:
+            databases:
+                read:
+                    - raw
+                write:
+                    - raw
+            schemas:
+                read:
+                    - raw.tableau_cloud
+                write:
+                    - raw.tableau_cloud
+            tables:
+                read:
+                    - raw.tableau_cloud.*
+                write:
+                    - raw.tableau_cloud.*
+
     - tableau_restricted_safe:
         member_of:
             - reporter
@@ -5345,6 +5383,12 @@ roles:
     - webrahim:
         member_of: []
         warehouses: []
+
+    - wleidheiser:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
 # ==========================================
 # Users
@@ -5908,6 +5952,11 @@ users:
             - tableau
             - reporter
 
+    - tableau_loader:
+        can_login: yes
+        member_of:
+            - tableau_loader
+
     - tableau_restricted_safe:
         can_login: yes
         member_of:
@@ -5957,6 +6006,11 @@ users:
     - webrahim:
         can_login: no
         member_of: []
+
+    - wleidheiser:
+        can_login: yes
+        member_of:
+            - wleidheiser
 
     - workato:
         can_login: yes

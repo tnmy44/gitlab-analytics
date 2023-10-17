@@ -22,6 +22,8 @@ from kube_secrets import (
     SNOWFLAKE_USER,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 # Load the env vars into a dict and set env vars
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
@@ -88,7 +90,7 @@ for config in clone_table_config:
         {clone_repo_cmd} &&
         export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
         cd analytics/orchestration/ &&
-    
+
     python3 manage_snowflake.py create-table-clone  \
         --source_database {config.get('source_database')}  \
         --source_schema {config.get('source_schema')}  \
@@ -105,5 +107,7 @@ for config in clone_table_config:
         secrets=secrets,
         env_vars=pod_env_vars,
         arguments=[container_cmd],
+        affinity=get_affinity("extraction"),
+        tolerations=get_toleration("extraction"),
         dag=dag,
     )

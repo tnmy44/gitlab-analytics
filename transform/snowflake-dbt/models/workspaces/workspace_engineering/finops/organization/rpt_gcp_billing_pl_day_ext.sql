@@ -114,17 +114,17 @@ join_finance_component AS (
 ),
 
 join_hierarchy_component AS (
-    SELECT jp.*,
+    SELECT jf.*,
     level_0,
     level_1,
     level_2,
     level_3,
     level_4
-    FROM join_finance_component jp 
+    FROM join_finance_component jf
     LEFT JOIN {{ ref('gcp_billing_hierarchy')}} hi
-    ON coalesce(jp.full_path, '') like coalesce(hi.full_path, '')
-      AND coalesce(jp.from_mapping, '') = coalesce(hi.from_mapping, '')
-      AND (coalesce(jp.infra_label, '') = coalesce(hi.infra_label, '') or hi.infra_label IS NULL)
+    ON coalesce(jf.full_path, '') like coalesce(hi.full_path, '')
+      AND coalesce(jf.from_mapping, '') = coalesce(hi.from_mapping, '')
+      AND (coalesce(jf.infra_label, '') = coalesce(hi.infra_label, '') or hi.infra_label IS NULL)
 
 )
 
