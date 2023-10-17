@@ -31,4 +31,4 @@ SELECT
     AND ci_build_finished_at IS NOT NULL
     AND namespace_is_internal = FALSE
     AND namespace_creator_is_blocked = FALSE
-  {{ dbt_utils.group_by(n=8) }}
+  {{ dbt_utils.group_by(n=9) }}
