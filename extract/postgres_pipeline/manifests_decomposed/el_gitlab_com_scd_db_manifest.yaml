@@ -785,7 +785,7 @@ tables:
       , group_id
       , enabled
       , NULL AS certificate_fingerprint
-      , sso_url
+      , NULL AS sso_url
       , enforced_sso
       , enforced_group_managed_accounts
       , prohibited_outer_forks

@@ -38,7 +38,7 @@ WITH trial_histories AS (
       AND gitlab_namespace_id IS NOT NULL
         AND gitlab_namespace_id 
           NOT IN 
-            (SELECT gl_namespace_id FROM PROD.legacy.customers_db_trial_histories)
+            (SELECT gl_namespace_id FROM {{ ref('customers_db_trial_histories_source') }})
     QUALIFY ROW_NUMBER() OVER (PARTITION BY TRY_TO_NUMBER(gitlab_namespace_id) ORDER BY Order_updated_at DESC) = 1
 
 
@@ -72,7 +72,7 @@ WITH trial_histories AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@snalamaru",
+    updated_by="@chrissharp",
     created_date="2023-06-19",
-    updated_date="2023-07-05"
+    updated_date="2023-09-29"
 ) }}

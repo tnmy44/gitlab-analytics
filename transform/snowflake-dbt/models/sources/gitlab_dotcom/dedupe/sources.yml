@@ -175,6 +175,8 @@ sources:
         identifier: gitlab_db_epic_issues
       - name: epics
         identifier: gitlab_db_epics
+      - name: epics_internal_only
+        identifier: gitlab_db_epics_internal_only
       - name: events
         identifier: gitlab_db_events
       - name: experiment_subjects
@@ -221,6 +223,8 @@ sources:
         identifier: gitlab_db_label_priorities
       - name: labels
         identifier: gitlab_db_labels
+      - name: labels_internal_only
+        identifier: gitlab_db_labels_internal_only
       - name: lfs_objects_projects
         identifier: gitlab_db_lfs_objects_projects
       - name: lists
@@ -239,6 +243,8 @@ sources:
         identifier: gitlab_db_merge_request_predictions
       - name: merge_requests
         identifier: gitlab_db_merge_requests
+      - name: merge_requests_internal_only
+        identifier: gitlab_db_merge_requests_internal_only
       - name: merge_requests_closing_issues
         identifier: gitlab_db_merge_requests_closing_issues
       - name: merge_request_reviewers
@@ -247,6 +253,8 @@ sources:
         identifier: gitlab_db_milestone_releases
       - name: milestones
         identifier: gitlab_db_milestones
+      - name: milestones_internal_only
+        identifier: gitlab_db_milestones_internal_only
       - name: ml_candidates
         identifier: gitlab_db_ml_candidates
       - name: ml_experiments
@@ -261,8 +269,12 @@ sources:
         identifier: gitlab_db_namespace_statistics
       - name: namespaces
         identifier: gitlab_db_namespaces
+      - name: namespaces_internal_only
+        identifier: gitlab_db_namespaces_internal_only
       - name: notes
         identifier: gitlab_db_notes
+      - name: notes_internal_only
+        identifier: gitlab_db_notes_internal_only
       - name: notification_settings
         identifier: gitlab_db_notification_settings
       - name: oauth_access_tokens
