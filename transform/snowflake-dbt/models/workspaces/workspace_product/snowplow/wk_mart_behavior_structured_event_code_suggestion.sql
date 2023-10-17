@@ -3,7 +3,6 @@
     materialized='incremental',
     unique_key='behavior_structured_event_pk',
     tags=['product'],
-    full_refresh= only_force_full_refresh(),
     on_schema_change='sync_all_columns',
     cluster_by=['behavior_at::DATE']
   ) 
