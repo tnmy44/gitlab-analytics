@@ -17,7 +17,6 @@ gitlab-org/license-gitlab-com,6457868
 gitlab-org/gitlab-environment-toolkit,14292404
 gitlab-org/git,13284652
 gitlab-org/product-feedback,17429946
-gitlab-com/www-gitlab-com,7764
 gitlab-org/gitlab-shell,14022
 gitlab-org/gitlab-ui,7071551
 gitlab-org/customers-gitlab-com,2670515
@@ -51,7 +50,6 @@ gitlab-org/gitlab-omnibus-builder,145205
 gitlab-org/omnibus-gitlab,20699
 gitlab-org/gitlab-mattermost,387896
 gitlab-org/ux-research,2890326
-gitlab-org/gitlab,278964
 gitlab-org/gitlab-workhorse,554859
 gitlab-org/gitlab-selenium-server,4262096
 gitlab-org/analytics-section/analytics-instrumentation/internal,12051824
@@ -138,7 +136,5 @@ gitlab-org/ci-cd/shared-runners/images/macstadium/orka,19922160
 charts/gitlab-omnibus,6329603
 gitlab-org/quality/engineering-productivity/triage-ops-playground,36072369
 gitlab-com/www-gitlab-com,7764
-gitlab-com/latinx-tmrg,23857973
 gitlab-org/gitlab,278964
-gitlab-org/terraform-provider-gitlab,40916776
 gitlab-cookbooks/cookbook-omnibus-gitlab,95156
