@@ -317,4 +317,42 @@ models:
       - name: valid_to
 
 
+  - name: customers_db_cloud_activations_snapshots_base
+    description: This is the base model for snapshotted cloud activations data from the customers.gitlab.com database. 
+    columns:
+      - name: cloud_activation_snapshot_id
+        description: Auto-generated primary key when building the snapshot with dbt
+        tests:
+          - not_null
+          - unique
+      - name: cloud_activation_id
+        description: A system-generated unique ID for Cloud activations in CDot
+        tests:
+          - not_null
+      - name: customer_id
+        description: Membership Customer ID
+        tests:
+          - not_null
+      - name: billing_account_id
+        description: Membership Account ID. Join key between Customers and billings_accounts.
+      - name: subscription_name
+        description: Zuora Subscription name
+      - name: is_super_sonics_aware_subscription
+        description: Identifies Super Sonics subscriptions.
+      - name: seat_utilization_reminder_sent_at
+        description: Timestamp when reminder email to submit seat utilization data was sent.
+      - name: cloud_activation_created_at
+        tests:
+          - not_null
+      - name: cloud_activation_updated_at
+        tests:
+          - not_null
+      - name: valid_from
+        tests:
+          - not_null
+      - name: valid_to
+
+
+
+
 

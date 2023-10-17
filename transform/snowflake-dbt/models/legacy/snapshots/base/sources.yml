@@ -73,3 +73,4 @@ sources:
       - name: customers_db_billing_accounts_snapshots
       - name: job_profiles_snapshots
       - name: customers_db_billing_account_contacts_snapshots
+      - name: customers_db_cloud_activations_snapshots
