@@ -33,8 +33,6 @@ from sqlalchemy import (
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.schema import CreateTable, DropTable
 
-
-GIT_BRANCH = os.environ.get("GIT_BRANCH")
 SCHEMA = "tap_postgres"
 
 def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
@@ -51,7 +49,7 @@ def get_internal_identifier_keys(identifiers: list) -> list:
     """
     Get a list of current internal GitLab project or namespace keys from dbt seed files
     """
-    dbt_seed_data_path = "https://gitlab.com/gitlab-data/analytics/-/raw/add-internal-only-projects-file/transform/snowflake-dbt/data"
+    dbt_seed_data_path = "https://gitlab.com/gitlab-data/analytics/-/raw/master/transform/snowflake-dbt/data"
 
     internal_identifiers = {
         "project_id": [
