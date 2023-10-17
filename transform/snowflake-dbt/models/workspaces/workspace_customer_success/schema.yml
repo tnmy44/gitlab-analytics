@@ -42,6 +42,7 @@ models:
           - not_null
 
   - name: mart_product_usage_health_score
+    descrption: '{{ doc("workspace_customer_success") }}'
     columns:
       - name: snapshot_month
         tests:
