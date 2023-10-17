@@ -36,6 +36,8 @@ from kube_secrets import (
     SNOWFLAKE_STATIC_DATABASE,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
@@ -106,6 +108,8 @@ def generate_dbt_command(vars_dict):
         secrets=task_secrets,
         env_vars=pod_env_vars,
         arguments=[dbt_generate_command],
+        affinity=get_affinity("dbt"),
+        tolerations=get_toleration("dbt"),
         dag=dag,
     )
 
@@ -126,6 +130,8 @@ dbt_snowplow_combined = KubernetesPodOperator(
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_snowplow_combined_cmd],
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
     dag=dag,
 )
 

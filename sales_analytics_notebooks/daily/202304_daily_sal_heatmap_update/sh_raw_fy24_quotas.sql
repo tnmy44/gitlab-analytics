@@ -10,9 +10,28 @@ WITH sfdc_users AS (
 
 quotas AS (
 
-    SELECT *
+    SELECT
+        *,
+        CASE
+            WHEN hc_type = 'SAL' THEN dateadd('month', 9, start_date)
+            WHEN hc_type LIKE 'MM AE%' THEN dateadd('month', 6, start_date)
+            WHEN hc_type LIKE 'SMB AE%' THEN dateadd('month', 3, start_date)
+        END AS ramped_month,
+
+        -- Static logic is used to keep reps that were assigned to a ramping schedule
+        -- in the same group and avoid comparing them, performance wise, with reps that are
+        -- already ramped.
+        CASE
+            WHEN ramped_month <= '2023-08-15' THEN 'Ramped'
+            ELSE 'Ramping'
+        END AS ramp_status_static,
+        CASE
+            WHEN ramped_month <= current_date THEN 'Ramped'
+            ELSE 'Ramping'
+        END AS ramp_status_dynamic
     FROM raw.sales_analytics.ae_quotas_unpivoted
     WHERE hc_type IN ('SAL', 'SAL - FO', 'MM AE', 'MM AE - FO', 'SMB AE')
+
 ),
 
 final AS (
@@ -25,25 +44,17 @@ final AS (
         quotas.start_date,
         sfdc_users.role_type                                          AS role_type,
 
-        LOWER(
+        lower(
             sfdc_users.key_bu_subbu_division_asm
-            || '_' || sfdc_users.role_type || '_' || TO_VARCHAR(sfdc_users.employee_number)
+            || '_' || sfdc_users.role_type || '_' || to_varchar(sfdc_users.employee_number)
         )                                                             AS sal_heatmap_key,
-        LOWER(sfdc_users.key_bu_subbu)                                AS sal_region_key,
-        LOWER(sfdc_users.business_unit)                               AS business_unit,
-        LOWER(sfdc_users.sub_business_unit)                           AS sub_business_unit,
-        LOWER(sfdc_users.division)                                    AS division,
-        LOWER(sfdc_users.asm)                                         AS asm,
+        lower(sfdc_users.key_bu_subbu)                                AS sal_region_key,
+        lower(sfdc_users.business_unit)                               AS business_unit,
+        lower(sfdc_users.sub_business_unit)                           AS sub_business_unit,
+        lower(sfdc_users.division)                                    AS division,
+        lower(sfdc_users.asm)                                         AS asm,
 
-        CASE
-            WHEN LOWER(sfdc_users.title) LIKE '%strategic account%' AND DATEADD(MONTH, 9, quotas.start_date) <= '2022-08-15'
-                THEN 'Ramped'
-            WHEN LOWER(sfdc_users.title) LIKE '%account executive%mid market%' AND DATEADD(MONTH, 4, quotas.start_date) <= '2022-06-15'
-                THEN 'Ramped'
-            WHEN LOWER(sfdc_users.title) LIKE '%smb account executive%' AND DATEADD(MONTH, 3, quotas.start_date) <= '2022-05-15'
-                THEN 'Ramped'
-            ELSE 'Ramping'
-        END                                                           AS ramp_status,
+        ramp_status_dynamic                                           AS ramp_status,
 
         quotas.cfy_q1,
         quotas.cfy_q2,

@@ -96,8 +96,8 @@ for table in table_list:
             SNOWFLAKE_LOAD_PASSWORD,
         ],
         env_vars=pod_env_vars,
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
+        affinity=get_affinity("extraction"),
+        tolerations=get_toleration("extraction"),
         arguments=[container_cmd_load],
         dag=dag,
     )
