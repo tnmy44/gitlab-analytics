@@ -233,7 +233,7 @@
         'Inquiry' AS metric_type,
         COUNT(DISTINCT actual_inquiry) AS metric_value
     FROM inquiry_prep
-    {{ dbt_utils.group_by(n=20) }}
+    {{ dbt_utils.group_by(n=19) }}
   
 ), mqls AS (
 
@@ -260,7 +260,7 @@
         'MQL' AS metric_type,
         COUNT(DISTINCT mqls) AS metric_value
     FROM mql_prep
-    {{ dbt_utils.group_by(n=20) }}
+    {{ dbt_utils.group_by(n=19) }}
     
  ), saos AS (
   
@@ -287,7 +287,7 @@
         'SAO' AS metric_type,
         COUNT(DISTINCT saos) AS metric_value
     FROM sao_prep
-    {{ dbt_utils.group_by(n=20) }}
+    {{ dbt_utils.group_by(n=19) }}
     
   ), intermediate AS (
 
