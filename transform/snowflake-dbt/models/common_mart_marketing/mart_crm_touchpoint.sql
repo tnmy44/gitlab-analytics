@@ -46,6 +46,13 @@
       dim_crm_touchpoint.bizible_landing_page_utm_budget,
       dim_crm_touchpoint.bizible_landing_page_utm_allptnr,
       dim_crm_touchpoint.bizible_landing_page_utm_partnerid,
+      dim_crm_touchpoint.utm_campaign,
+      dim_crm_touchpoint.utm_source,
+      dim_crm_touchpoint.utm_medium,
+      dim_crm_touchpoint.utm_content,
+      dim_crm_touchpoint.utm_budget,
+      dim_crm_touchpoint.utm_allptnr,
+      dim_crm_touchpoint.utm_partnerid,
       dim_crm_touchpoint.bizible_salesforce_campaign,
       dim_crm_touchpoint.bizible_integrated_campaign_grouping,
       dim_crm_touchpoint.touchpoint_segment,
@@ -209,6 +216,16 @@
           THEN 1
         ELSE 0
       END AS is_fmm_sourced,
+
+    --budget holder
+    {{integrated_budget_holder(
+      'dim_campaign.budget_holder',
+      'dim_crm_touchpoint.utm_budget',
+      'dim_crm_touchpoint.bizible_ad_campaign_name',
+      'dim_crm_touchpoint.utm_medium',
+      'campaign_owner.user_role_name'
+      ) 
+    }},
 
     -- counts
      CASE

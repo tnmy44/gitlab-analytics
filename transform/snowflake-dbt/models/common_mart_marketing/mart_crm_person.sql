@@ -9,7 +9,8 @@
     ('fct_crm_person','fct_crm_person'),
     ('rpt_abm_tier_historical_person','rpt_abm_tier_historical_person'), 
     ('dim_date','dim_date'),
-    ('dim_crm_user', 'dim_crm_user')
+    ('dim_crm_user', 'dim_crm_user'),
+    ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy')
 ]) }}
 
 , final AS (
@@ -52,6 +53,12 @@
                                                AS legacy_mql_month_latest,
       legacy_mql_date_latest_pt.first_day_of_month
                                                AS legacy_mql_month_latest_pt,
+      fct_crm_person.inferred_mql_date_first,
+      fct_crm_person.inferred_mql_datetime_first_pt,
+      fct_crm_person.inferred_mql_datetime_first,
+      fct_crm_person.inferred_mql_date_latest,
+      fct_crm_person.inferred_mql_datetime_latest_pt,
+      fct_crm_person.inferred_mql_datetime_latest,
       created_date.date_day                    AS created_date,
       created_date_pt.date_day                 AS created_date_pt,
       created_date.first_day_of_month          AS created_month,
@@ -166,12 +173,12 @@
       dim_crm_person.is_first_order_initial_mql,
       dim_crm_person.is_first_order_mql,
       dim_crm_person.is_first_order_person,
-      dim_crm_person.account_demographics_sales_segment,
-      dim_crm_person.account_demographics_sales_segment_grouped,
-      dim_crm_person.account_demographics_geo,
-      dim_crm_person.account_demographics_region,
-      dim_crm_person.account_demographics_area,
-      dim_crm_person.account_demographics_segment_region_grouped,
+      dim_crm_user_hierarchy.crm_user_sales_segment                       AS account_demographics_sales_segment,
+      dim_crm_user_hierarchy.crm_user_sales_segment_grouped               AS account_demographics_sales_segment_grouped,
+      dim_crm_user_hierarchy.crm_user_geo                                 AS account_demographics_geo,
+      dim_crm_user_hierarchy.crm_user_region                              AS account_demographics_region,
+      dim_crm_user_hierarchy.crm_user_area                                AS account_demographics_area,
+      dim_crm_user_hierarchy.crm_user_sales_segment_region_grouped        AS account_demographics_segment_region_grouped,
       dim_crm_person.account_demographics_territory,
       dim_crm_person.account_demographics_employee_count,
       dim_crm_person.account_demographics_max_family_employee,
@@ -291,7 +298,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@jpeguero",
     created_date="2020-12-07",
     updated_date="2023-10-18",
   ) }}  

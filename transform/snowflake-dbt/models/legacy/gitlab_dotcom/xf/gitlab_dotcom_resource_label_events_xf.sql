@@ -8,7 +8,7 @@ WITH resource_label_events AS (
 , epics AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_epics') }} 
+    FROM {{ ref('gitlab_dotcom_epics_source') }}
 
 )
 

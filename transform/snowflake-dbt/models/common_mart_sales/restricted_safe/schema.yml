@@ -176,6 +176,146 @@ models:
         description: Calculated field that indicates how a subscription renewal was made. Can be one of 'Auto-Renewal', 'Customer Portal', 'Sales-Assisted' or null when the charge is not related to a subscription renewal.
       - name: dim_order_id
         description: Unique identifier for an order. Can be used to join to dim_order.
+      - name: unit_of_measure
+      - name: charge_term
+      - name: dim_subscription_id_original
+      - name: dim_subscription_id_previous
+      - name: renewal_term
+      - name: renewal_term_period_type
+      - name: ultimate_parent_namespace_id
+      - name: dim_namespace_id
+      - name: internal_customer_id
+        description: Unique identifier of a customer taken from the Customers DB.
+      - name: is_trial_converted
+        description: '{{ doc("is_trial_converted") }}'
+      - name: latest_trial_start_date
+      - name: is_first_paid_order
+        description: Boolean field indicating whether the charge relates to the first order made by that ultimate_parent_namespace_id. If two charges are processed on the same date, both will be true.
+      - name: is_oss_or_edu_rate_plan
+      - name: days_since_trial_start_at_first_paid_subscription_start
+        description: The number of days between the start date of the latest trial and first paid subscription.
+      - name: days_since_namespace_creation_at_trial_start
+        description: The number of days between the start date of the latest trial and namespace creation.
+      - name: is_trial_started_on_namespace_creation_date
+        description: Boolean field indicating whether the namespace was created on the same date as the latest trial started.
+      - name: days_between_first_trial_and_subscription_start
+        description: Calculated field showing the number of days between the start of the first trial and the start of the first subscription.
+      - name: days_between_latest_trial_and_subscription_start
+        description: Calculated field showing the number of days between the start of the latest trial and the start of the first subscription.
+      - name: subscription_name
+      - name: subscription_version
+      - name: rate_plan_charge_number
+      - name: rate_plan_charge_version
+      - name: rate_plan_charge_segment
+      - name: rate_plan_name
+      - name: rate_plan_charge_name
+      - name: rate_plan_charge_description
+      - name: charge_type
+      - name: is_paid_in_full
+      - name: is_last_segment
+      - name: is_included_in_arr_calc
+      - name: effective_start_date
+      - name: effective_end_date
+      - name: effective_start_month
+      - name: effective_end_month
+      - name: charge_created_date
+      - name: charge_updated_date
+      - name: dim_subscription_id
+      - name: subscription_created_by_id
+      - name: subscription_updated_by_id
+      - name: subscription_start_date
+      - name: subscription_end_date
+      - name: subscription_start_month
+      - name: subscription_end_month
+      - name: subscription_end_fiscal_year
+      - name: subscription_created_date
+      - name: subscription_updated_date
+      - name: second_active_renewal_month
+      - name: term_start_date
+      - name: term_end_date
+      - name: term_start_month
+      - name: term_end_month
+      - name: subscription_status
+      - name: subscription_sales_type
+      - name: subscription_name_slugify
+      - name: oldest_subscription_in_cohort
+      - name: subscription_lineage
+      - name: auto_renew_native_hist
+      - name: auto_renew_customerdot_hist
+      - name: turn_on_cloud_licensing
+      - name: turn_on_operational_metrics
+      - name: contract_operational_metrics
+      - name: contract_auto_renewal
+      - name: turn_on_auto_renewal
+      - name: contract_seat_reconciliation
+      - name: turn_on_seat_reconciliation
+      - name: invoice_owner_account
+      - name: creator_account
+      - name: dim_billing_account_id
+      - name: sold_to_country
+      - name: billing_account_name
+      - name: billing_account_number
+      - name: ssp_channel
+      - name: po_required
+      - name: auto_pay
+      - name: default_payment_method_type
+      - name: dim_crm_user_id
+      - name: crm_user_sales_segment
+      - name: dim_crm_account_id
+        description: '{{ doc("dim_crm_account_id") }}'
+      - name: crm_account_name
+        description: '{{ doc("crm_account_name") }}'
+      - name: dim_parent_crm_account_id
+        description: '{{ doc("dim_parent_crm_account_id") }}'
+      - name: parent_crm_account_name
+        description: '{{ doc("parent_crm_account_name") }}'
+      - name: parent_crm_account_upa_country
+      - name: parent_crm_account_sales_segment
+      - name: parent_crm_account_industry
+      - name: parent_crm_account_territory
+      - name: parent_crm_account_region
+      - name: parent_crm_account_area
+      - name: health_score_color
+      - name: health_number
+      - name: is_jihu_account
+      - name: subscription_cohort_month
+      - name: subscription_cohort_quarter
+      - name: billing_account_cohort_month
+      - name: billing_account_cohort_quarter
+      - name: crm_account_cohort_month
+      - name: crm_account_cohort_quarter
+      - name: parent_account_cohort_month
+      - name: parent_account_cohort_quarter
+      - name: dim_product_detail_id
+      - name: product_tier_name
+        description: '{{ doc("product_tier_name") }}'
+      - name: product_delivery_type
+        description: '{{ doc("product_delivery_type") }}'
+      - name: product_ranking
+        description: '{{ doc("product_ranking") }}'
+      - name: service_type
+      - name: product_rate_plan_name
+      - name: is_licensed_user
+      - name: is_arpu
+      - name: dim_amendment_id_subscription
+      - name: dim_amendment_id_charge
+      - name: subscription_amendment_effective_date
+      - name: subscription_amendment_type
+      - name: subscription_amendment_name
+      - name: charge_amendment_type
+      - name: type_of_arr_change
+        description: '{{ doc("type_of_arr_change") }}'
+      - name: mrr
+      - name: previous_mrr
+      - name: delta_mrr
+      - name: arr
+      - name: previous_arr
+      - name: delta_arr
+      - name: quantity
+      - name: previous_quantity
+      - name: delta_quantity
+      - name: delta_tcv
+      - name: estimated_total_future_billings
 
   - name: mart_crm_account
     description: Model containing Salesforce crm accounts details for existing and historical customers.
@@ -204,6 +344,32 @@ models:
         description: ' {{ doc("last_at_risk_update_comments") }} '
       - name: bdr_prospecting_status
         description: Indicates whether the account is actively being prospected by a BDR.
+      - name: six_sense_6_qa
+        description: The 6QA status of the account for the product.
+      - name: risk_rate_guid
+        description: The globally unique ID (GUID) for the third party record in NavEx RiskRate.
+      - name: six_sense_account_profile_fit
+        description: A measure of how similar a company is to the ideal customer profile.
+      - name: six_sense_account_reach_score
+        description: A measure of current outreach activities against optimal quality.
+      - name: six_sense_account_profile_score
+        description: A measure of how similar a company is to the ideal customer profile.
+      - name: six_sense_account_buying_stage
+        description: The 6QA buting stage of the account
+      - name: six_sense_account_numerical_reach_score
+        description:  measure of current outreach activities against optimal quality.
+      - name: six_sense_account_update_date
+        description: The latest update date and time when 6sense Scores were updated.
+      - name: six_sense_account_6_qa_end_date
+        description: The date the account was disqualified from 6QA status 
+      - name: six_sense_account_6_qa_age_days
+        description: The age of the Account's 6QA data, in days. 
+      - name: six_sense_account_6_qa_start_date
+        description: The date the account qualified for 6QA status 
+      - name: six_sense_account_intent_score
+        description: A measure, between 0 and 100, of how much an account is behaving like accounts with which there is a history of previously opened opportunities.
+      - name: six_sense_segments
+        description: The Account's 6QA segment. 
 
   - name: mart_crm_opportunity
     description:  >-
@@ -404,13 +570,15 @@ models:
             - unique
         tags: ["tdf", "mart", "sales_funnel"]
       - name: report_target_date
-        description: Target_Date + 1. This is used in Sisense when comparing QTD targets vs actuals for the current date.
+        description: '{{ doc("report_target_date") }}'
+      - name: wtd_allocated_target
+        description: '{{ doc("wtd_allocated_target") }}'
       - name: mtd_allocated_target
-        description: Month To Date allocated target.
+        description: '{{ doc("mtd_allocated_target") }}'
       - name: qtd_allocated_target
-        description: Quarter To Date allocated target.
+        description: '{{ doc("qtd_allocated_target") }}'
       - name: ytd_allocated_target
-        description: Year To Date allocated target.
+        description: '{{ doc("ytd_allocated_target") }}'
 
   - name: mart_sales_funnel_partner_alliance_target
     description: Model with Sales targets for partner and alliances used for planning the go to market Sales and Marketing motion.
@@ -430,13 +598,15 @@ models:
             - unique
         tags: ["tdf", "mart", "sales_funnel"]
       - name: report_target_date
-        description: Target_Date + 1. This is used in Sisense when comparing QTD targets vs actuals for the current date.
+        description: '{{ doc("report_target_date") }}'
+      - name: wtd_allocated_target
+        description: '{{ doc("wtd_allocated_target") }}'
       - name: mtd_allocated_target
-        description: Month To Date allocated target.
+        description: '{{ doc("mtd_allocated_target") }}'
       - name: qtd_allocated_target
-        description: Quarter To Date allocated target.
+        description: '{{ doc("qtd_allocated_target") }}'
       - name: ytd_allocated_target
-        description: Year To Date allocated target.
+        description: '{{ doc("ytd_allocated_target") }}'
 
   - name: mart_discount_arr
     description: Model with Invoiced ARR used to calculate discounts across various dimensions.

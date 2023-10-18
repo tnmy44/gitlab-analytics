@@ -125,6 +125,8 @@ SELECT
   COALESCE(CONTAINS(contexts, 'iglu:com.gitlab/secure_scan/'), FALSE)::BOOLEAN                                      AS has_secure_scan_context,
   COALESCE(CONTAINS(contexts, 'iglu:com.gitlab/gitlab_experiment/'), FALSE)::BOOLEAN                                AS has_gitlab_experiment_context,
   COALESCE(CONTAINS(contexts, 'iglu:com.gitlab/subscription_auto_renew/'), FALSE)::BOOLEAN                          AS has_subscription_auto_renew_context,
+  COALESCE(CONTAINS(contexts, 'iglu:com.gitlab/code_suggestions_context/'), FALSE)::BOOLEAN                         AS has_code_suggestions_context,
+  COALESCE(CONTAINS(contexts, 'iglu:com.gitlab/ide_extension_version/'), FALSE)::BOOLEAN                            AS has_ide_extension_version_context,
   {{ dbt_utils.surrogate_key([
     'has_performance_timing_context', 
     'has_web_page_context',
@@ -137,6 +139,8 @@ SELECT
     'has_customer_standard_context',
     'has_secure_scan_context',
     'has_gitlab_experiment_context', 
-    'has_subscription_auto_renew_context'
+    'has_subscription_auto_renew_context',
+    'has_code_suggestions_context',
+    'has_ide_extension_version_context'
     ]) }}                                                                                                           AS dim_behavior_contexts_sk
 FROM unioned_view

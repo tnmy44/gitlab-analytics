@@ -10,12 +10,6 @@ Creates base view with generated keys for application releaes.
 
 {% enddocs %}
 
-{% docs prep_audit_event_details_clean %}
-
-All GitLab audit event details, with pii replaced with hashes. Created by a union of audit event keys from `gitlab_dotcom_audit_event_details` and `gitlab_dotcom_audit_event_details_pii`.
-
-{% enddocs %}
-
 {% docs prep_dr_partner_engagement %}
 
 Creates a base view with generated keys for the dr partner engagement shared dimension and references in facts.
@@ -120,6 +114,12 @@ Cleaning operations vary across columns, depending on the nature of the source d
 {% docs prep_campaign %}
 
 Creates a base view with generated keys for the campaign shared dimension and fact and references in facts.
+
+{% enddocs %}
+
+{% docs prep_crm_person %}
+
+Creates a base table containing contacts and leads from Salesforce joined to bizible and marketo data.
 
 {% enddocs %}
 
@@ -811,11 +811,9 @@ A surrogate key that uniquely identifes each row of the User table.  This is bui
 
 {% docs prep_team_member_position %}
 
-This table contains team members' job history, including any changes in their job profile.
+This table contains team members' job history, including any changes in manager, supervisory organization, job family, job specialty, department, division, entity, management level and job grade.
 
-The table joins the staffing_history_approved_source and job_profiles_source.
-
-Only team members who have had a job change, promotion, or hire event are included in the final table. We have also included a filter for edge cases so that whenever a job code for a team member changes, it is captured. 
+This table includes BambooHR and Workday data. There are some fields that don't exist in the BHR data that will show up as NULL prior to 2022-06-16: team_id, suporg, job_code, job_family, is_position_active.
 
 
 {% enddocs %}
@@ -829,5 +827,13 @@ This model contains data for all trial orders for each namespace from CDot trial
 {% docs prep_order %}
 
 This table stores information about the subscription purchased by the customer plus some additional details used for syncing purposes with GitLab.com. The data is sourced from tap-postgres from the orders table from customers.gitlab.com.
+
+{% enddocs %}
+
+{% docs prep_cloud_activation %}
+
+This model contains data for the cloud activations sourced from tap-postgres table from customers.gitlab.com. It stores information about all the activation codes that were generated for Cloud licenses. Customers use this code after the installation of their GitLab instance. 
+
+This model contains other join keys like `billing_account_id`, `subscription_name` etc.. to be able to join back to Salesforce, Zuora, dimdate data respectively.
 
 {% enddocs %}

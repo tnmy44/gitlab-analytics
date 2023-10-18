@@ -46,6 +46,39 @@ def get_gcs_bucket(gapi_keyfile: str, bucket_name: str) -> Bucket:
     return storage_client.get_bucket(bucket_name)
 
 
+def get_internal_identifier_keys(identifiers: list) -> list:
+    """
+    Get a list of current internal GitLab project or namespace keys from dbt seed files
+    """
+    dbt_seed_data_path = "https://gitlab.com/gitlab-data/analytics/-/raw/master/transform/snowflake-dbt/data"
+
+    internal_identifiers = {
+        "project_id": [
+            "projects_part_of_product_ops.csv",
+            "projects_part_of_product.csv",
+            "internal_gitlab_projects.csv",
+        ],
+        "project_path": [
+            "projects_part_of_product_ops.csv",
+            "projects_part_of_product.csv",
+        ],
+        "namespace_id": ["internal_gitlab_namespaces.csv"],
+        "namespace_path": ["internal_gitlab_namespaces.csv"],
+    }
+
+    internal_identifier_keys = []
+
+    for identifier in identifiers:
+        seed_files = internal_identifiers[identifier]
+
+        for seed_file in seed_files:
+            file_location = f"{dbt_seed_data_path}/{seed_file}"
+            df = pd.read_csv(file_location)
+            internal_identifier_keys.extend(list(df[identifier]))
+
+    return internal_identifier_keys
+
+
 def upload_to_gcs(
     advanced_metadata: bool, upload_df: pd.DataFrame, upload_file_name: str
 ) -> bool:

@@ -66,7 +66,7 @@ with open(
 dag = DAG(
     "zuora_revenue_load_snow",
     default_args=default_args,
-    schedule_interval="0 13 * * *",
+    schedule_interval="0 17 * * *",
     concurrency=1,
     catchup=False,
 )
@@ -96,8 +96,8 @@ for table_name in table_name_list:
             SNOWFLAKE_LOAD_PASSWORD,
         ],
         env_vars=pod_env_vars,
-        affinity=get_affinity("production"),
-        tolerations=get_toleration("production"),
+        affinity=get_affinity("extraction"),
+        tolerations=get_toleration("extraction"),
         arguments=[container_cmd_load],
         dag=dag,
     )

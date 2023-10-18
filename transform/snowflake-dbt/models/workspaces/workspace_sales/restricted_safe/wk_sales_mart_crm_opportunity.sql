@@ -590,8 +590,15 @@ you are grabbing the segment off of the account instead so you'll show some as M
         ELSE opportunity_owner.division
     END                                                       AS report_opportunity_user_division,
     CASE 
+        -- NF: see comment above on hybrid reps
+        WHEN account_owner.is_hybrid_flag = 1 
+            THEN account.parent_crm_account_area
         WHEN edm_opty.close_date < today.current_fiscal_year_date
           THEN account_owner.asm
+        -- NF: 20230818 VPs might temporary hold opportunities of territories without reps. As their AREA is ALL it needs to 
+        -- be adjusted to the account AREA
+        WHEN UPPER(opportunity_owner.user_area) = 'ALL'
+           THEN account.parent_crm_account_area         
         ELSE opportunity_owner.asm
     END                                                       AS report_opportunity_user_asm,
     CASE 

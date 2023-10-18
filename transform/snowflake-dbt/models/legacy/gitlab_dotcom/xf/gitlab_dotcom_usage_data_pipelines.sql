@@ -121,7 +121,7 @@
   },
   {
     "event_name": "epics",
-    "source_table_name": "gitlab_dotcom_epics",
+    "source_table_name": "gitlab_dotcom_epics_source",
     "user_column_name": "author_id",
     "key_to_parent_group": "group_id",
     "primary_key": "epic_id",

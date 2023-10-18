@@ -258,12 +258,6 @@ models:
       linkedin_ads:
         +schema: linkedin_ads
 
-      mailgun:
-        +schema: mailgun
-        sensitive:
-          +schema: sensitive
-          secure: true
-
       marketo:
         +schema: marketo
         sensitive:
@@ -595,11 +589,6 @@ models:
           restricted_safe:
             +schema: restricted_safe_workspace_marketing
             +tags: ["safe"]
-            secure: true
-        mailgun:
-          restricted_safe:
-            +schema: restricted_safe_workspace_marketing
-            +tags: [ "safe" ]
             secure: true
         marketo:
           restricted_safe:
