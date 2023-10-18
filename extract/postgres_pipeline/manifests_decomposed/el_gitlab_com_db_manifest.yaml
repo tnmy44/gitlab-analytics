@@ -1539,15 +1539,15 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , name
-      , path
-      , description
+      , NULL AS name
+      , NULL AS path
+      , NULL AS description
       , created_at
       , updated_at
       , creator_id
       , namespace_id
       , last_activity_at
-      , import_url
+      , NULL AS import_url
       , visibility_level
       , archived
       , NULL AS avatar
