@@ -2,12 +2,18 @@
     tags=["mnpi_exception"]
 ) }}
 
+{{ config({
+    "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_user_hierarchy_sk') }}"
+    })
+}}
+
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('prep_crm_user_daily_snapshot', 'prep_crm_user_daily_snapshot'),
     ('prep_crm_opportunity', 'prep_crm_opportunity'),
     ('prep_sales_funnel_target', 'prep_sales_funnel_target'),
-    ('prep_sales_funnel_partner_alliance_target', 'prep_sales_funnel_partner_alliance_target')
+    ('prep_sales_funnel_partner_alliance_target', 'prep_sales_funnel_partner_alliance_target'),
+    ('prep_crm_person', 'prep_crm_person')
 ]) }}
 
 , fiscal_months AS (
@@ -30,6 +36,18 @@
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.*
     FROM {{ ref('sheetload_sales_funnel_partner_alliance_targets_matrix_source') }}
   
+), account_demographics_hierarchy AS (
+
+    SELECT DISTINCT
+      created_date_fiscal_year                  AS fiscal_year,
+      UPPER(account_demographics_sales_segment) AS account_demographics_sales_segment,
+      UPPER(account_demographics_geo)           AS account_demographics_geo,
+      UPPER(account_demographics_region)        AS account_demographics_region,
+      UPPER(account_demographics_area)          AS account_demographics_area,
+      NULL                                      AS user_business_unit,
+      dim_account_demographics_hierarchy_sk
+    FROM prep_crm_person 
+
 ), user_hierarchy_source AS (
 
     SELECT 
@@ -128,6 +146,11 @@
     SELECT *
     FROM user_hierarchy_stamped_opportunity
 
+    UNION
+
+    SELECT *
+    FROM account_demographics_hierarchy
+
 ), pre_fy24_hierarchy AS (
 
 /*
@@ -213,7 +236,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2021-01-05",
-    updated_date="2023-05-02"
+    updated_date="2023-10-10"
 ) }}

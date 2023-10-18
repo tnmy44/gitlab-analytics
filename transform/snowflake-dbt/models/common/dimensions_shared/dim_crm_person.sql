@@ -1,3 +1,8 @@
+{{ config({
+    "post-hook": "{{ missing_member_column(primary_key = 'dim_crm_person_id') }}"
+    })
+}}
+
 WITH crm_person AS (
 
     SELECT *
@@ -125,7 +130,7 @@ WITH crm_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jjstark",
-    updated_by="@rkohnke",
+    updated_by="@jpeguero",
     created_date="2020-09-10",
-    updated_date="2023-08-24"
+    updated_date="2023-10-13"
 ) }}
