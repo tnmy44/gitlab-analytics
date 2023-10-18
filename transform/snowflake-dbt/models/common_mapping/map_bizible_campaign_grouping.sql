@@ -160,7 +160,7 @@ WITH bizible_touchpoints AS (
       OR bizible_ad_campaign_name LIKE '%cicdcmp3%'))
       OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ' 
       AND bizible_ad_campaign_name LIKE '%cicdcmp3%')
-      THEN 'CI Build & Test Auto'
+      THEN 'Automated Software Delivery'
   WHEN (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_landing_page LIKE '%github-actions-alternative%' 
       OR bizible_form_url LIKE '%github-actions-alternative%' 
@@ -177,7 +177,7 @@ WITH bizible_touchpoints AS (
       OR (bizible_ad_campaign_name LIKE '%singleappci%' AND BIZIBLE_AD_CONTENT LIKE '%french%')))
       OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND bizible_ad_campaign_name ILIKE '%Singleappci_French%')
-      THEN 'CI Use Case - FR'
+      THEN 'Automated Software Delivery - FR'
   WHEN (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_landing_page LIKE '%nutze-continuous-integration-fuer-schnelleres-bauen-und-testen%' 
       OR bizible_form_url LIKE '%nutze-continuous-integration-fuer-schnelleres-bauen-und-testen%' 
@@ -185,7 +185,7 @@ WITH bizible_touchpoints AS (
       OR (bizible_ad_campaign_name LIKE '%singleappci%' AND BIZIBLE_AD_CONTENT LIKE '%paesslergerman%')))
       OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND bizible_ad_campaign_name ILIKE '%Singleappci_German%')
-      THEN 'CI Use Case - DE'
+      THEN 'Automated Software Delivery - DE'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-11-22 MSandP: 585
       AND ( bizible_form_url_raw LIKE '%whygitlabdevopsplatform-apac%'
       OR bizible_landing_page_raw LIKE '%whygitlabdevopsplatform-apac%'
@@ -222,7 +222,7 @@ WITH bizible_touchpoints AS (
           OR bizible_ad_campaign_name ILIKE '%singleappci%'))
     OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ' AND (bizible_ad_campaign_name LIKE '%_CI%'
       OR bizible_ad_campaign_name ILIKE '%singleappci%'))
-      THEN 'CI Use Case' --- Added by AO demAND gen issue 2262
+      THEN 'Automated Software Delivery' --- Added by AO demAND gen issue 2262
   WHEN (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_landing_page LIKE '%shift-your-security-scanning-left%' 
       OR bizible_form_url LIKE '%shift-your-security-scanning-left%' 
@@ -278,7 +278,7 @@ WITH bizible_touchpoints AS (
       AND (bizible_ad_campaign_name LIKE '%_GitOps%'
           OR bizible_ad_campaign_name LIKE '%iacgitops%'))
       OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name ILIKE '%GitOps_%') --- Added by AO demAND gen issue 2327
-      THEN 'GitOps Use Case'
+      THEN 'Automated Software Delivery'
   WHEN  (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_ad_campaign_name LIKE '%evergreen%'
       OR bizible_form_url_raw LIKE '%utm_campaign=evergreen%'
@@ -307,13 +307,14 @@ WITH bizible_touchpoints AS (
       OR bizible_landing_page_raw LIKE '%webcast-gitops-multicloudapp%'
       OR bizible_referrer_page_RAW LIKE '%webcast-gitops-multicloudapp%'))
       OR (campaign.dim_parent_campaign_id LIKE '%7014M000001dpmf%')
-    Then 'GitOps GTM webcast'
+    Then 'Automated Software Delivery'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
       AND ( bizible_form_url_raw LIKE '%devopsgtm%'
       OR bizible_landing_page_raw LIKE '%devopsgtm%'
       OR bizible_landing_page_raw LIKE '%events-amer-enterprise%'---Added by AO MSandP issue:811
       OR bizible_landing_page_raw LIKE '%events-pd-emea%'----Added by AO MSandP issue:811
       OR bizible_landing_page_raw LIKE '%events-pd-technical-apac%'---Added by AO MSandP issue:811
+      OR bizible_referrer_page_raw LIKE '%devsecopsplat%'
       OR bizible_referrer_page_RAW LIKE '%devopsgtm%'))
       OR campaign.dim_parent_campaign_id LIKE '%7014M000001dpT9%'
         -- OR campaign.dim_parent_campaign_id LIKE '%7014M000001dn8M%')
@@ -366,7 +367,7 @@ WITH bizible_touchpoints AS (
       OR bizible_landing_page_raw LIKE '%utm_campaign=cdusecase%'
       OR bizible_referrer_page_RAW LIKE '%utm_campaign=cdusecase%'))
       OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name LIKE '%CD_%') --- Added by AO demAND gen issue 2262
-    THEN 'CD Use Case' 
+    THEN 'Automated Software Delivery' 
   ELSE 'None' END AS bizible_integrated_campaign_grouping,
   CASE
     -- if content syndication, use SFDC value dirrectly
@@ -434,5 +435,5 @@ WITH bizible_touchpoints AS (
     created_by="@mcooperDD",
     updated_by="@degan",
     created_date="2021-03-02",
-    updated_date="2023-09-27"
+    updated_date="2023-10-18"
 ) }}
