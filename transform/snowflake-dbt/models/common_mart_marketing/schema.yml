@@ -35,6 +35,8 @@ models:
           description: Flag indicating a touchpoint is influenced by Demand Gen based on its segment being Demand Gen.
         - name: is_dg_sourced
           description: Flag indicating a touchpoint is sourced from Demand Gen based on its segment being Demand Gen as well as its position being first touch.
+        - name: integrated_budget_holder
+          description: Categorisation field used to group campaigns by the team that is responsible for its budget. It considers `budget_holder` field from the campaigns object, `utm_budget` from the landing page/form URL, `bizible_ad_campaign_name` and `campaign_rep_user_role_name` to derive the accurate budget holder.     
         - name: opps_per_touchpoint
           description: Count of opportunities associated with a touchpoint.
         - name: bizible_count_first_touch

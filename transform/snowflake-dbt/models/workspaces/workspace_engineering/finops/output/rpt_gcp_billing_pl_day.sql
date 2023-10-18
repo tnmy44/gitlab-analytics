@@ -20,7 +20,6 @@ project_full_path AS (
 
   SELECT *
   FROM {{ ref('project_full_path') }}
-  WHERE most_recent = True
 
 ),
 
@@ -126,7 +125,8 @@ add_path AS (
     project_full_path.full_path
   FROM grouping
   LEFT JOIN project_full_path ON (grouping.gcp_project_id = project_full_path.gcp_project_id 
-  AND grouping.date_day BETWEEN DATE_TRUNC('day', project_full_path.first_created_at) AND DATE_TRUNC('day', project_full_path.last_updated_at))
+  AND DATE_TRUNC('day', grouping.date_day) >= DATE_TRUNC('day', project_full_path.first_created_at) 
+  AND DATE_TRUNC('day', grouping.date_day) < DATE_TRUNC('day', project_full_path.last_updated_at))
 
 )
 
