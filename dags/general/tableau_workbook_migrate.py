@@ -72,4 +72,5 @@ tableau_workbook_migrate = KubernetesPodOperator(
     arguments=[tableau_workbook_migrate_cmd],
     do_xcom_push=True,
     dag=dag,
+    imagePullPolicy="Always"
 )
