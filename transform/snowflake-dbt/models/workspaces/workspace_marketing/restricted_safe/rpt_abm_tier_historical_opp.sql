@@ -66,8 +66,6 @@
   FROM opp_history_final
   LEFT JOIN account_history_final
     ON opp_history_final.dim_crm_account_id=account_history_final.dim_crm_account_id
-  LEFT JOIN mart_crm_person_source
-    ON opp_history_final.dim_crm_account_id=mart_crm_person_source.dim_crm_account_id
   WHERE abm_tier IS NOT NULL
   AND sales_accepted_date IS NOT NULL
   AND (abm_tier_1_date IS NOT NULL
@@ -93,8 +91,6 @@
   FROM opp_history_final
   LEFT JOIN account_history_final
     ON opp_history_final.dim_crm_account_id=account_history_final.dim_crm_account_id
-  LEFT JOIN mart_crm_person_source
-    ON opp_history_final.dim_crm_account_id=mart_crm_person_source.dim_crm_account_id
   WHERE abm_tier IS NOT NULL
   AND close_date IS NOT NULL
   AND (abm_tier_1_date IS NOT NULL
