@@ -205,6 +205,7 @@
       fct_crm_person.zoominfo_contact_id,
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
+      fct_crm_person.is_bdr_sdr_worked,
       rpt_abm_tier_historical_person.is_abm_tier_inquiry,
       rpt_abm_tier_historical_person.is_abm_tier_mql,
       CASE
@@ -292,6 +293,8 @@
       ON fct_crm_person.dim_crm_user_id = dim_crm_user.dim_crm_user_id
     LEFT JOIN rpt_abm_tier_historical_person
       ON fct_crm_person.dim_crm_person_id=rpt_abm_tier_historical_person.dim_crm_person_id
+    LEFT JOIN dim_crm_user_hierarchy
+ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = fct_crm_person.dim_account_demographics_hierarchy_sk
 
 )
 
