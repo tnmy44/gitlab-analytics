@@ -59,64 +59,43 @@
     mart_crm_attribution_touchpoint.campaign_sub_region,
     mart_crm_attribution_touchpoint.budgeted_cost,
     mart_crm_attribution_touchpoint.actual_cost,
-    -- pulling dirrectly from the URL
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_campaign::VARCHAR  AS bizible_landing_page_utm_campaign,
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_medium::VARCHAR    AS bizible_landing_page_utm_medium,
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_source::VARCHAR    AS bizible_landing_page_utm_source,
-
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_campaign::VARCHAR     AS bizible_form_page_utm_campaign,
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_medium::VARCHAR       AS bizible_form_page_utm_medium,
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_source::VARCHAR       AS bizible_form_page_utm_source,
-
-
-    --UTMs not captured by the Bizible
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_content::VARCHAR       AS bizible_form_page_utm_content,
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_budget::VARCHAR        AS bizible_form_page_utm_budget,
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_allptnr::VARCHAR       AS bizible_form_page_utm_allptnr,
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_form_url_raw):parameters:utm_partnerid::VARCHAR     AS bizible_form_page_utm_partnerid,
-
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_content::VARCHAR   AS bizible_landing_page_utm_content,
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_budget::VARCHAR    AS bizible_landing_page_utm_budget,
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_allptnr::VARCHAR   AS bizible_landing_page_utm_allptnr,
-    PARSE_URL(mart_crm_attribution_touchpoint.bizible_landing_page_raw):parameters:utm_partnerid::VARCHAR AS bizible_landing_page_utm_partnerid,
-
-    COALESCE(bizible_landing_page_utm_campaign, bizible_form_page_utm_campaign)   AS utm_campaign,
-    COALESCE(bizible_landing_page_utm_medium, bizible_form_page_utm_medium)       AS utm_medium,
-    COALESCE(bizible_landing_page_utm_source, bizible_form_page_utm_source)       AS utm_source,
+    mart_crm_attribution_touchpoint.utm_campaign,
+    mart_crm_attribution_touchpoint.utm_medium,
+    mart_crm_attribution_touchpoint.utm_source,
       
-    COALESCE(bizible_landing_page_utm_budget, bizible_form_page_utm_budget)       AS utm_budget,
-    COALESCE(bizible_landing_page_utm_content, bizible_form_page_utm_content)     AS utm_content,
-    COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)     AS utm_allptnr,
-    COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid) AS utm_partnerid,
+    mart_crm_attribution_touchpoint.utm_budget,
+    mart_crm_attribution_touchpoint.utm_content,
+    mart_crm_attribution_touchpoint.utm_allptnr,
+    mart_crm_attribution_touchpoint.utm_partnerid,
 
     CASE 
-      WHEN (LOWER(utm_content) LIKE '%field%'
-        OR campaign_rep_role_name LIKE '%Field Marketing%'
-        OR budget_holder = 'fmm'
-        OR utm_budget = 'fmm') 
+      WHEN (LOWER(mart_crm_attribution_touchpoint.utm_content) LIKE '%field%'
+        OR mart_crm_attribution_touchpoint.campaign_rep_role_name LIKE '%Field Marketing%'
+        OR mart_crm_attribution_touchpoint.budget_holder = 'fmm'
+        OR mart_crm_attribution_touchpoint.utm_budget = 'fmm') 
       THEN 'Field Marketing'
-      WHEN (LOWER(utm_campaign) LIKE '%abm%'
-        OR LOWER(utm_content) LIKE '%abm%'
+      WHEN (LOWER(mart_crm_attribution_touchpoint.utm_campaign) LIKE '%abm%'
+        OR LOWER(mart_crm_attribution_touchpoint.utm_content) LIKE '%abm%'
         OR LOWER(mart_crm_attribution_touchpoint.bizible_ad_campaign_name) LIKE '%abm%'
-        OR campaign_rep_role_name like '%ABM%'
-        OR budget_holder = 'abm'
-        OR utm_budget = 'abm') 
+        OR mart_crm_attribution_touchpoint.campaign_rep_role_name like '%ABM%'
+        OR mart_crm_attribution_touchpoint.budget_holder = 'abm'
+        OR mart_crm_attribution_touchpoint.utm_budget = 'abm') 
       THEN 'Account Based Marketing'
 
-      WHEN (LOWER(utm_budget) LIKE '%ptnr%' 
-        OR LOWER(utm_budget) LIKE '%chnl%')
-        OR (LOWER(budget_holder) LIKE '%ptnr%' 
-        OR LOWER(budget_holder) LIKE '%chnl%')
+      WHEN (LOWER(mart_crm_attribution_touchpoint.utm_budget) LIKE '%ptnr%' 
+        OR LOWER(mart_crm_attribution_touchpoint.utm_budget) LIKE '%chnl%')
+        OR (LOWER(mart_crm_attribution_touchpoint.budget_holder) LIKE '%ptnr%' 
+        OR LOWER(mart_crm_attribution_touchpoint.budget_holder) LIKE '%chnl%')
       THEN 'Partner Marketing'
-      WHEN (LOWER(budget_holder) LIKE '%corp%' 
-        OR LOWER(utm_budget) LIKE '%corp%')
+      WHEN (LOWER(mart_crm_attribution_touchpoint.budget_holder) LIKE '%corp%' 
+        OR LOWER(mart_crm_attribution_touchpoint.utm_budget) LIKE '%corp%')
       THEN 'Corporate Events'
-      WHEN (LOWER(budget_holder) LIKE '%dmp%' 
-        OR LOWER(utm_budget) LIKE '%dmp%')
+      WHEN (LOWER(mart_crm_attribution_touchpoint.budget_holder) LIKE '%dmp%' 
+        OR LOWER(mart_crm_attribution_touchpoint.utm_budget) LIKE '%dmp%')
         THEN 'Digital Marketing'
       ELSE 'No Budget Holder' 
       END AS integrated_budget_holder,
-    mart_crm_attribution_touchpoint.type as sfdc_campaign_type,
+    mart_crm_attribution_touchpoint.type AS sfdc_campaign_type,
     mart_crm_attribution_touchpoint.gtm_motion,
     mart_crm_attribution_touchpoint.account_demographics_sales_segment AS person_sales_segment,
     attribution_touchpoint_offer_type.touchpoint_offer_type,
@@ -480,7 +459,7 @@ combined_models AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@dmicovic",
+    updated_by="@chrissharp",
     created_date="2023-04-11",
-    updated_date="2023-08-29",
+    updated_date="2023-10-18",
   ) }}
