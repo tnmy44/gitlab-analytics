@@ -205,6 +205,7 @@
       fct_crm_person.zoominfo_contact_id,
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
+      fct_crm_person.is_bdr_sdr_worked,
       rpt_abm_tier_historical_person.is_abm_tier_inquiry,
       rpt_abm_tier_historical_person.is_abm_tier_mql,
       CASE
