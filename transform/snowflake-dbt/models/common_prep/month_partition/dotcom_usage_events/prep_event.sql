@@ -15,7 +15,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id",
     "stage_name": "manage",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "dast_build_run",
@@ -25,7 +26,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id",
     "stage_name": "secure",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "dependency_scanning_build_run",
@@ -35,7 +37,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id",
     "stage_name": "secure",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "deployment_creation",
@@ -45,7 +48,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_deployment_id",
     "stage_name": "release",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "epic_creation",
@@ -53,9 +57,10 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "NULL",
-    "primary_key": "dim_epic_id",
+    "primary_key": "epic_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id_at_creation"
+    "plan_column_name": "dim_plan_id_at_creation",
+    "created_date_name": "dim_created_date_id"
   },
   {
     "event_name": "issue_creation_other",
@@ -65,7 +70,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_issue_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "issue_note_creation",
@@ -75,7 +81,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_note_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "license_scanning_build_run",
@@ -85,7 +92,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id",
     "stage_name": "secure",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "merge_request_creation",
@@ -95,7 +103,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_merge_request_id",
     "stage_name": "create",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "merge_request_note_creation",
@@ -105,7 +114,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_note_id",
     "stage_name": "create",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "ci_pipeline_creation",
@@ -115,7 +125,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_pipeline_id",
     "stage_name": "verify",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "package_creation",
@@ -125,7 +136,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "package_id",
     "stage_name": "package",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "container_scanning_build_run",
@@ -135,7 +147,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id",
     "stage_name": "protect",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "push_action",
@@ -145,7 +158,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id",
     "stage_name": "create",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "release_creation",
@@ -155,7 +169,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_release_id",
     "stage_name": "release",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "requirement_creation",
@@ -165,7 +180,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "requirement_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "sast_build_run",
@@ -175,7 +191,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id",
     "stage_name": "secure",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "secret_detection_build_run",
@@ -185,7 +202,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id",
     "stage_name": "secure",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "other_ci_build_creation",
@@ -195,7 +213,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id",
     "stage_name": "verify",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "successful_ci_pipeline_creation",
@@ -205,7 +224,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_pipeline_id",
     "stage_name": "verify",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "action_monthly_active_users_project_repo",
@@ -215,7 +235,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id",
     "stage_name": "create",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "ci_stages",
@@ -225,7 +246,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_stage_id",
     "stage_name": "configure",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "notes_other",
@@ -235,7 +257,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_note_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "todos",
@@ -245,7 +268,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_todo_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "issue_resource_label_events",
@@ -255,7 +279,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_issue_label_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "environments",
@@ -265,7 +290,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_environment_id",
     "stage_name": "release",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "issue_resource_milestone_events",
@@ -275,7 +301,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_resource_milestone_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "labels",
@@ -285,7 +312,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_label_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "terraform_reports",
@@ -295,7 +323,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_job_artifact_id",
     "stage_name": "configure",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "users_created",
@@ -305,7 +334,8 @@
     "project_column_name": "NULL",
     "primary_key": "dim_user_id",
     "stage_name": "manage",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "action_monthly_active_users_wiki_repo",
@@ -315,7 +345,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id",
     "stage_name": "create",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "epic_notes",
@@ -325,7 +356,8 @@
     "project_column_name": "NULL",
     "primary_key": "dim_note_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "boards",
@@ -335,7 +367,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_board_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "project_auto_devops",
@@ -345,7 +378,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_auto_devops_id",
     "stage_name": "configure",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "integrations",
@@ -355,7 +389,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "integration_id",
     "stage_name": "create",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "issue_resource_weight_events",
@@ -365,7 +400,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_resource_weight_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "milestones",
@@ -375,7 +411,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_milestone_id",
     "stage_name": "plan",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "action_monthly_active_users_design_management",
@@ -385,7 +422,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id",
     "stage_name": "create",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "ci_pipeline_schedules",
@@ -395,7 +433,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_pipeline_schedule_id",
     "stage_name": "verify",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "snippets",
@@ -405,7 +444,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "snippet_id",
     "stage_name": "create",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "projects_prometheus_active",
@@ -415,7 +455,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_project_id",
     "stage_name": "monitor",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "ci_triggers",
@@ -425,7 +466,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_trigger_id",
     "stage_name": "verify",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "incident_labeled_issues",
@@ -435,7 +477,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_issue_id",
     "stage_name": "monitor",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "api_fuzzing_build_run",
@@ -445,7 +488,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id",
     "stage_name": "secure",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   },
   {
     "event_name": "kubernetes_with_agent",
@@ -455,7 +499,8 @@
     "project_column_name": "dim_project_id",
     "primary_key": "cluster_agent_id",
     "stage_name": "configure",
-    "plan_column_name": "dim_plan_id"
+    "plan_column_name": "dim_plan_id",
+    "created_date_name": "created_date_id"
   }
 ]
 
@@ -655,7 +700,7 @@
       '{{ event_cte.event_name }}'                                                                             AS event_name,
       '{{ event_cte.stage_name }}'                                                                             AS stage_name,
       {{ event_cte.source_cte_name}}.created_at                                                                AS event_created_at,
-      {{ event_cte.source_cte_name}}.created_date_id                                                           AS created_date_id,
+      {{ event_cte.source_cte_name}}.{{ event_cte.created_date_name }}                                         AS created_date_id,
       {%- if event_cte.project_column_name != 'NULL' %}
         {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                     AS dim_project_id,
         'project'                                                                                              AS parent_type,

@@ -246,7 +246,7 @@ def extract_manifest(manifest_file_path):
 
 def extract_table_list_from_manifest(manifest_contents):
     """Extract table from the manifest file for which extraction needs to be done"""
-    return manifest_contents["tables"].keys()
+    return manifest_contents["tables"] if manifest_contents.get("tables") else []
 
 
 # Sync DAG
@@ -334,8 +334,8 @@ def get_check_replica_snapshot_task(dag_name, dag_obj):
             GITLAB_COM_SCD_PG_PORT,
         ],
         env_vars={**gitlab_pod_env_vars, **config["env_vars"]},
-        affinity=get_affinity("production"),
-        tolerations=get_toleration("production"),
+        affinity=get_affinity("extraction"),
+        tolerations=get_toleration("extraction"),
         arguments=[get_check_replica_snapshot_command(dag_name)],
         retries=2,
         retry_delay=timedelta(seconds=300),
@@ -401,8 +401,8 @@ for source_name, config in config_dict.items():
                         "TASK_INSTANCE": "{{ task_instance_key_str }}",
                         "LAST_LOADED": get_last_loaded(config["dag_name"]),
                     },
-                    affinity=get_affinity("production"),
-                    tolerations=get_toleration("production"),
+                    affinity=get_affinity("extraction"),
+                    tolerations=get_toleration("extraction"),
                     arguments=[incremental_cmd],
                     do_xcom_push=True,
                 )
@@ -453,8 +453,8 @@ for source_name, config in config_dict.items():
                             **config["env_vars"],
                             "TASK_INSTANCE": "{{ task_instance_key_str }}",
                         },
-                        affinity=get_affinity("production"),
-                        tolerations=get_toleration("production"),
+                        affinity=get_affinity("extraction"),
+                        tolerations=get_toleration("extraction"),
                         arguments=[sync_cmd],
                         do_xcom_push=True,
                     )
@@ -511,8 +511,8 @@ for source_name, config in config_dict.items():
                             "task_id": task_identifier,
                         },
                         arguments=[scd_cmd],
-                        affinity=get_affinity("scd"),
-                        tolerations=get_toleration("scd"),
+                        affinity=get_affinity("extraction_highmem"),
+                        tolerations=get_toleration("extraction_highmem"),
                         do_xcom_push=True,
                     )
                     if has_replica_snapshot:

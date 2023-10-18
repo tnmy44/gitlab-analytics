@@ -19,6 +19,8 @@ from kube_secrets import (
     PERMISSION_BOT_WAREHOUSE,
 )
 
+from kubernetes_helpers import get_affinity, get_toleration
+
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
@@ -64,5 +66,7 @@ snowflake_load = KubernetesPodOperator(
     ],
     env_vars=pod_env_vars,
     arguments=[container_cmd],
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
     dag=dag,
 )

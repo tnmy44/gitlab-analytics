@@ -93,6 +93,8 @@ instance_combined_metrics_ping = KubernetesPodOperator(
     secrets=secrets,
     env_vars=pod_env_vars,
     arguments=[instance_combined_metrics_cmd],
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
     dag=dag,
 )
 
@@ -145,8 +147,8 @@ def generate_namespace_task(
         arguments=[namespace_command],
         dag=dag,
         retries=2,
-        affinity=get_affinity("scd"),
-        tolerations=get_toleration("scd"),
+        affinity=get_affinity("extraction_highmem"),
+        tolerations=get_toleration("extraction_highmem"),
     )
 
 

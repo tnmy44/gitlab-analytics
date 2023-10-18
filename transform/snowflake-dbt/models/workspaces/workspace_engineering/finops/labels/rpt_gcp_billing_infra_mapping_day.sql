@@ -145,7 +145,7 @@ SELECT
   bill.infra_label                   AS infra_label,
   bill.env_label                     AS env_label,
   bill.runner_label                  AS runner_label,
-  bill.folder_label,
+  bill.folder_label::VARCHAR         AS folder_label,
   bill.usage_unit,
   bill.pricing_unit,
   bill.usage_amount                  AS usage_amount,

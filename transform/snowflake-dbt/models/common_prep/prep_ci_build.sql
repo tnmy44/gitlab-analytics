@@ -22,7 +22,7 @@
     FROM {{ ref('gitlab_dotcom_ci_builds_source')}}
     {% if is_incremental() %}
 
-      WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+      WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
 
@@ -37,9 +37,9 @@
       prep_project.ultimate_parent_namespace_id,
       dim_date.date_id                                            AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
-      ci_build_runner_id                                          AS dim_ci_runner_id,
-      ci_build_user_id                                            AS dim_user_id,
-      ci_build_stage_id                                           AS dim_ci_stage_id,
+      gitlab_dotcom_ci_builds_source.ci_build_runner_id           AS dim_ci_runner_id,
+      prep_user.dim_user_id                                       AS dim_user_id,
+      gitlab_dotcom_ci_builds_source.ci_build_stage_id            AS dim_ci_stage_id,
 
       prep_project.namespace_is_internal,
       gitlab_dotcom_ci_builds_source.status                       AS ci_build_status,
@@ -109,7 +109,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2021-06-17",
-    updated_date="2023-07-21"
+    updated_date="2023-10-11"
 ) }}
