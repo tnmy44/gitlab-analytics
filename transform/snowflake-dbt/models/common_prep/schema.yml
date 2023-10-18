@@ -1927,6 +1927,10 @@ models:
         description: '{{ doc("has_gitlab_experiment_context") }}'
       - name: has_subscription_auto_renew_context
         description: '{{ doc("has_subscription_auto_renew_context") }}'
+      - name: has_code_suggestions_context
+        description: '{{ doc("has_code_suggestions_context") }}'
+      - name: has_ide_extension_version_context
+        description: '{{ doc("has_ide_extension_version_context") }}'
       - name: dim_behavior_contexts_sk
         description: '{{ doc("dim_behavior_contexts_sk") }}'
       - name: user_city
