@@ -770,6 +770,7 @@ roles:
     - loader:
         warehouses:
             - loading
+            - loading_m
             - loading_xl
             - usage_ping
         owns:
@@ -6053,6 +6054,9 @@ warehouses:
 
     - loading:
         size: x-small
+         
+    - loading_m:
+        size: medium
 
     - loading_xl:
         size: x-large
