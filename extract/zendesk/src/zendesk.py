@@ -65,6 +65,7 @@ def upload_to_snowflake(output_df):
             loader_engine,
             table_name="ticket_audits",
             schema="tap_zendesk",
+            if_exists="append",
             add_uploaded_at=False,
         )
     print(f"\nUploaded 'ticket_audits'")
