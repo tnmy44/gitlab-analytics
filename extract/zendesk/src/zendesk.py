@@ -1,11 +1,13 @@
 """
-Extracts data and loads it to snowflake
+Extracts data from GCP bucket, refactors ticket_audits and uploads it snowflake.
 """
+import sys
 import os
 import logging
 import pandas as pd
 import json
 import fire
+from logging import info, error, basicConfig, getLogger
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -73,8 +75,7 @@ def main():
     refactor_ticket_audits()
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    logging.getLogger("snowflake.connector.cursor").disabled = True
-    logging.getLogger("snowflake.connector.connection").disabled = True
+    basicConfig(stream=sys.stdout, level=20)
+    getLogger("snowflake.connector.cursor").disabled = True
     fire.Fire(main)
-    logging.info("Complete.")
+    info("Complete.")
