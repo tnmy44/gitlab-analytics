@@ -50,7 +50,7 @@ def get_internal_identifier_keys(identifiers: list) -> list:
     """
     Get a list of current internal GitLab project or namespace keys from dbt seed files
     """
-    dbt_seed_data_path = "https://gitlab.com/gitlab-data/analytics/-/raw/master/transform/snowflake-dbt/data"
+    dbt_seed_data_path = "https://gitlab.com/gitlab-data/analytics/-/raw/ddeng-add-internal-projects/transform/snowflake-dbt/data"
 
     internal_identifiers = {
         "project_id": [
