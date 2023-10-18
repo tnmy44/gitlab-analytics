@@ -66,7 +66,7 @@
         crm_opp_owner_area_stamped,
         sales_qualified_source_name,
         opp_lead_source,
-        opp_lead_source_bucket,
+        opp_source_buckets,
 
     --Opportunity Dates
         sales_accepted_date,
@@ -186,7 +186,7 @@
         crm_opp_owner_geo_stamped,
         email_domain_type,
         opp_lead_source,
-        opp_lead_source_bucket,
+        opp_source_buckets,
         sales_qualified_source_name,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
@@ -420,6 +420,6 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-10-05",
+    updated_date="2023-10-18",
   ) }}
 
