@@ -169,51 +169,18 @@ extra_keys AS (
                 THEN key_bu_subbu_division
             WHEN
                 level_depth = 2
-                AND LOWER(key_bu_subbu) IN ('entg_emea')
+                AND (LOWER(key_bu_subbu) IN ('entg_emea','entg_apac')
+                OR LOWER(key_bu_subbu_division) = 'entg_pubsec_sled')
                 THEN key_bu_subbu_division
             WHEN
                 LOWER(key_bu_subbu_division_asm) NOT LIKE ('%other%')
                 AND LOWER(key_bu_subbu_division_asm) NOT LIKE ('%all%')
                 THEN key_bu_subbu_division_asm
-        /*
-            WHEN
-                level_depth = 2
-                AND LOWER(key_bu) NOT IN ('japan', 'comm')
-                AND LOWER(key_bu_subbu) IN ('entg_amer')
-                THEN key_bu_subbu_division
-            WHEN
-                level_depth = 3
-                AND LOWER(key_bu) NOT IN ('japan', 'comm')
-                AND LOWER(key_bu_subbu) NOT IN ('entg_amer')
-                THEN key_bu_subbu_division
-            WHEN
-                level_depth = 3
-                AND LOWER(key_bu) NOT IN ('japan', 'comm')
-                AND LOWER(key_bu_subbu) IN ('entg_amer')
-                THEN key_bu_subbu_division_asm
-            WHEN
-                level_depth = 4
-                AND LOWER(key_bu) NOT IN ('japan', 'comm')
-                AND LOWER(key_bu_subbu) NOT IN ('entg_amer')
-                THEN key_bu_subbu_division_asm
-            WHEN
-                level_depth = 2
-                AND LOWER(key_bu) IN ('comm')
-                AND LOWER(key_bu_subbu) NOT IN ('comm_emea', 'comm_mm first orders')
-                THEN key_bu_subbu_division_asm
-            WHEN
-                level_depth = 2
-                AND LOWER(key_bu_subbu) IN ('comm_emea', 'comm_mm first orders')
-                THEN key_bu_subbu
-            WHEN
-                level_depth = 3
-                AND LOWER(key_bu_subbu) IN ('comm_emea')
-                THEN key_bu_subbu_division_asm */
-        END AS key_value
+            END AS key_value
     FROM forecast_and_hierarchy
-    WHERE
-        role_name NOT LIKE '%AE%'
-        AND role_name NOT LIKE '%TL%'
+     WHERE
+        role_name NOT LIKE 'AE_%'
+        AND role_name NOT LIKE 'TL_%'
 
 )
 
