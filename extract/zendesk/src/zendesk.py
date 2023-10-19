@@ -9,6 +9,9 @@ import fire
 from logging import info, error, basicConfig, getLogger
 import io
 from google.cloud import storage
+from os import environ as env
+from yaml import load, FullLoader
+from google.oauth2 import service_account
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -21,11 +24,18 @@ def read_file_from_gcp_bucket():
     """
     Read file from GCP bucket for ticket_audits
     """
-    ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get("ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS")
-    storage_client = storage.Client.from_service_account_json(ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS)
+    # ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get("ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS")
+    # storage_client = storage.Client.from_service_account_json(ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS)
     bucket_name = 'meltano_data_ops'
-    BUCKET = storage_client.get_bucket(bucket_name)
+    # BUCKET = storage_client.get_bucket(bucket_name)
     
+    scope = ["https://www.googleapis.com/auth/cloud-platform"]
+    keyfile = load(env["ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS"], Loader=FullLoader)
+    credentials = service_account.Credentials.from_service_account_info(keyfile)
+    scoped_credentials = credentials.with_scopes(scope)
+    storage_client = storage.Client(credentials=scoped_credentials)
+    BUCKET = storage_client.get_bucket(bucket_name)
+
     # load all.jsonl files in bucket one by one
     for blob in BUCKET.list_blobs(prefix='meltano/tap_zendesk__sensitive/ticket_audits/'):
         info(f"Reading file {blob.name}")
