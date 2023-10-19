@@ -69,8 +69,16 @@ final AS (
         quotas.nfy_q3,
         quotas.nfy_q4,
 
-        quotas.nfy_q1 + quotas.nfy_q2 + quotas.nfy_q3 + quotas.nfy_q4 AS nfy_total
-
+        quotas.nfy_q1 + quotas.nfy_q2 + quotas.nfy_q3 + quotas.nfy_q4 AS nfy_total,
+        quotas.cfy_ytd_target,
+        quotas.cfy_ytd_closed,
+        quotas.cfy_ytd_attainment,
+        quotas.fy23_quota,
+        quotas.fy23_credits,
+        quotas.fy23_attainment,
+        quotas.fy22_quota,
+        quotas.fy22_credits,
+        quotas.fy22_attainment
     FROM quotas
     INNER JOIN sfdc_users
         ON quotas.employee_id = sfdc_users.employee_number

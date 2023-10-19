@@ -223,8 +223,6 @@ sources:
         identifier: gitlab_db_label_priorities
       - name: labels
         identifier: gitlab_db_labels
-      - name: labels_internal_only
-        identifier: gitlab_db_labels_internal_only
       - name: lfs_objects_projects
         identifier: gitlab_db_lfs_objects_projects
       - name: lists
@@ -253,8 +251,6 @@ sources:
         identifier: gitlab_db_milestone_releases
       - name: milestones
         identifier: gitlab_db_milestones
-      - name: milestones_internal_only
-        identifier: gitlab_db_milestones_internal_only
       - name: ml_candidates
         identifier: gitlab_db_ml_candidates
       - name: ml_experiments

@@ -64,7 +64,9 @@ structured_event_renamed AS (
       has_customer_standard_context,
       has_secure_scan_context,
       has_gitlab_experiment_context, 
-      has_subscription_auto_renew_context
+      has_subscription_auto_renew_context,
+      has_code_suggestions_context,
+      has_ide_extension_version_context
 
     FROM {{ ref('prep_snowplow_unnested_events_all') }}
     WHERE event = 'struct'
@@ -150,7 +152,9 @@ structured_events_w_dim AS (
       events_with_plan.has_customer_standard_context,
       events_with_plan.has_secure_scan_context,
       events_with_plan.has_gitlab_experiment_context, 
-      events_with_plan.has_subscription_auto_renew_context
+      events_with_plan.has_subscription_auto_renew_context,
+      events_with_plan.has_code_suggestions_context,
+      events_with_plan.has_ide_extension_version_context
 
     FROM events_with_plan
 
@@ -159,7 +163,7 @@ structured_events_w_dim AS (
 {{ dbt_audit(
     cte_ref="structured_events_w_dim",
     created_by="@michellecooper",
-    updated_by="@pempey",
+    updated_by="@cbraza",
     created_date="2022-09-01",
-    updated_date="2023-03-27"
+    updated_date="2023-10-11"
 ) }}

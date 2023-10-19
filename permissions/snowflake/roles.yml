@@ -461,7 +461,6 @@ roles:
                     - prep.sensitive
             tables:
                 read:
-                    - prep.sensitive.gitlab_dotcom_issues
                     - prep.sensitive.gitlab_dotcom_labels
                     - prep.sensitive.gitlab_dotcom_merge_requests
                     - prep.sensitive.gitlab_dotcom_milestones
@@ -770,6 +769,7 @@ roles:
     - loader:
         warehouses:
             - loading
+            - loading_m
             - loading_xl
             - usage_ping
         owns:
@@ -1081,7 +1081,6 @@ roles:
                     - prep.sensitive
             tables:
                 read:
-                    - prep.sensitive.gitlab_dotcom_issues
                     - prep.sensitive.gitlab_dotcom_labels
                     - prep.sensitive.gitlab_dotcom_merge_requests
                     - prep.sensitive.gitlab_dotcom_milestones
@@ -1771,7 +1770,6 @@ roles:
                     - prep.sensitive.gitlab_dotcom_audit_event_details
                     - prep.sensitive.gitlab_dotcom_environments
                     - prep.sensitive.gitlab_dotcom_identities
-                    - prep.sensitive.gitlab_dotcom_issues
                     - prep.sensitive.gitlab_dotcom_labels
                     - prep.sensitive.gitlab_dotcom_merge_requests
                     - prep.sensitive.gitlab_dotcom_milestones
@@ -6053,6 +6051,9 @@ warehouses:
 
     - loading:
         size: x-small
+         
+    - loading_m:
+        size: medium
 
     - loading_xl:
         size: x-large

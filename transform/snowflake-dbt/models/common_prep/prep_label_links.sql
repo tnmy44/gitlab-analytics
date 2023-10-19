@@ -18,7 +18,7 @@ WITH gitlab_dotcom_label_links_source AS (
         WHEN gitlab_dotcom_label_links_source.target_type = 'Issue' 
         THEN gitlab_dotcom_label_links_source.target_id
         ELSE NULL
-      END AS dim_issue_id,
+      END AS issue_id,
       CASE
         WHEN gitlab_dotcom_label_links_source.target_type = 'MergeRequest' 
         THEN gitlab_dotcom_label_links_source.target_id
@@ -49,5 +49,5 @@ WITH gitlab_dotcom_label_links_source AS (
     created_by="@dtownsend",
     updated_by="@michellecooper",
     created_date="2021-08-04",
-    updated_date="2023-09-05"
+    updated_date="2023-09-29"
 ) }}

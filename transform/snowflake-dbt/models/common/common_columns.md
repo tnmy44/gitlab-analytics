@@ -1429,7 +1429,7 @@ Timestamp for when the event actually happened. This appears as `derived_tstamp`
 
 {% docs behavior_date %}
 
-The date when the event happened (YYYY-MM-DD)
+The date when the event happened (YYYY-MM-DD). This is based on the `derived_tstamp` field in the raw Snowplow data.
 
 {% enddocs %}
 
@@ -1453,7 +1453,7 @@ The environment of the event - Production, Staging OR Development. To only inclu
 
 {% docs session_id %}
 
-Unique idenfitier for each user session. Note: session_id is NULL for back-end events (`tracker_version LIKE '%rb%'`)
+Unique identifier for each user session. Note: session_id is NULL for back-end events (`tracker_version LIKE '%rb%'`)
 
 {% enddocs %}
 
@@ -1495,7 +1495,7 @@ Host/Domain information
 
 {% docs gsc_pseudonymized_user_id %}
 
-User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user susccessfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL in the following situations:
+User database record ID attribute. This value undergoes a pseudonymization process at the collector level. Note: This field is only populated after a user successfully registers on GitLab.com i.e. they verify their e-mail and log-in for the first time. This value will be NULL in the following situations:
 
 - The event occurred before `2021-09-29` (when the collection of this data started)
 - A user is not logged in
@@ -1525,7 +1525,7 @@ Name of the plan for the namespace, such as free, premium, or ultimate. Automati
 
 {% docs gsc_source %}
 
-Name of the source application/ event tracker, such as gitlab-rails or gitlab-javascript. This field can be used to distinguish front-end events V/S back-end events. When `gsc_source = 'gitlab-rails'` THEN back-end event i.e. event was tracked using Ruby. When `gsc_source = 'gitlab-javascrip'` THEN front-end event i.e. event was tracked using Javascript.
+Name of the source application/ event tracker, such as gitlab-rails or gitlab-javascript. This field can be used to distinguish front-end events V/S back-end events. When `gsc_source = 'gitlab-rails'` THEN back-end event i.e. event was tracked using Ruby. When `gsc_source = 'gitlab-javascript'` THEN front-end event i.e. event was tracked using Javascript.
 
 {% enddocs %}
 
@@ -1621,7 +1621,7 @@ The unique identifier of the project passed in the URL. This field is only popul
 
 {% docs url_path_category %}
 
-This field groups different clean_url_path values into distinct categorises. Please refer to Code section on this page for logic behind this categorization.
+This field groups different `clean_url_path` values into distinct categories. Please refer to Code section on this page for logic behind this categorization.
 
 {% enddocs %}
 
@@ -1693,7 +1693,7 @@ It is the number of the page views per user per session.
 
 {% docs event_id_behavior_model %}
 
-Unique idenfitier for each event. 
+Unique identifier for each event. 
 
 {% enddocs %}
 
@@ -2370,6 +2370,102 @@ Year To Date allocated target.
 
 {% enddocs %}
 
+{% docs code_suggestions_context %}
+
+Context related to the code_suggestions_context, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema).
+
+{% enddocs %}
+
+{% docs code_suggestions_model_engine %}
+
+Model engine used for the completions. Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_model_name %}
+
+Model name used for the completions. Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_prefix_length %}
+
+Length of the prefix in characters. Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_suffix_length %}
+
+Length of the suffix in characters. Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_language %}
+
+Programming language of the completions request. Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_user_agent %}
+
+User-agent string of the request (holds information about the origin of the request). Appears in the `code_suggestions_context`
+
+{% enddocs %}
+
+{% docs code_suggestions_api_status_code %}
+
+HTTP status code of GitLab API
+
+{% enddocs %}
+
+{% docs ide_extension_version_context %}
+
+Context related to the ide_extension_version, filtered by the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema).
+
+{% enddocs %}
+
+{% docs ide_extension_name %}
+
+Name of the IDE extension, e.g. GitLab Workflow. Appears in the `ide_extension_version` context
+
+{% enddocs %}
+
+{% docs ide_extension_version %}
+
+Version number of the IDE extension, e.g. 3.81.1. Appears in the `ide_extension_version` context
+
+{% enddocs %}
+
+{% docs ide_extension_ide_name %}
+
+Name of the IDE, e.g. RubyMibe. Appears in the `ide_extension_version` context
+
+{% enddocs %}
+
+{% docs ide_extension_ide_vendor %}
+
+Name of the IDEs vendor, e.g. Microsoft. Appears in the `ide_extension_version` context
+
+{% enddocs %}
+
+{% docs ide_extension_ide_version %}
+
+Version number of the IDE, e.g. 1.81.1. Appears in the `ide_extension_version` context
+
+{% enddocs %}
+
+{% docs has_code_suggestions_context %}
+
+A flag to indicate if the event has additional information in the context field related to `code_suggestions_context`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema)
+
+{% enddocs %}
+
+{% docs has_ide_extension_version_context %}
+
+A flag to indicate if the event has additional information in the context field related to `ide_extension_version`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema)
+
+{% enddocs %}
+
 {% docs dim_cloud_activation_sk %}
 
 The surrogate key of `prep_cloud_activation` model. Currently identified by hashing the `cloud_activation_id` field that is being sourced from customers portal at gitlab.com.
@@ -2381,5 +2477,3 @@ The surrogate key of `prep_cloud_activation` model. Currently identified by hash
 The unique identifier that identifies a cloud activation.
 
 {% enddocs %}
-
-

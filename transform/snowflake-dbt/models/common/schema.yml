@@ -29,7 +29,7 @@ models:
   - name: bdg_issue_user_request
     description: ' {{ doc("bdg_issue_user_request") }}'
     columns:
-      - name: dim_issue_id
+      - name: dim_issue_sk
         tests:
           - not_null
       - name: dim_crm_account_id
@@ -37,7 +37,7 @@ models:
           - not_null
       - name: is_user_request_only_in_collaboration_project
         description: Boolean flag that if TRUE indicates whether the user request was only done in a customer collaboration project.
-      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+      - name: CONCAT(issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
         tests:
           - not_null
           - unique
@@ -433,7 +433,7 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
-
+  
   - name: dim_crm_touchpoint
     description: '{{ doc("dim_crm_touchpoint") }}'
     columns:
@@ -2585,13 +2585,13 @@ models:
   - name: dim_issue
     description: '{{ doc("dim_issue") }}'
     columns:
-      - name: dim_issue_id
+      - name: dim_issue_sk
         description: The unique identifier for each of the issues.
         tests:
           - not_null
           - unique
       - name: dim_project_id
-      - name: dim_plan_id
+      - name: dim_plan_sk_at_creation
         tests:
           - not_null
 
@@ -2810,11 +2810,11 @@ models:
         description: The identifier for an issue relationship
         tests:
           - not_null
-      - name: dim_source_issue_id
+      - name: dim_issue_sk_source
         description: The identifier for source issue of an issue link
         tests:
           - not_null
-      - name: dim_target_issue_id
+      - name: dim_issue_sk_target
         description: The identifier for target issue of an issue link
         tests:
           - not_null
@@ -5786,6 +5786,15 @@ models:
       - name: ytd_allocated_target
         description: '{{ doc("ytd_allocated_target") }}'
 
+  - name: fct_sales_funnel_actual
+    description: '{{ doc("fct_sales_funnel_actual") }}'
+    columns:
+      - name: sales_funnel_actual_sk
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "sales_funnel"]
+
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
     columns:
@@ -6363,6 +6372,10 @@ models:
         description: '{{ doc("has_gitlab_experiment_context") }}'
       - name: has_subscription_auto_renew_context
         description: '{{ doc("has_subscription_auto_renew_context") }}'
+      - name: has_code_suggestions_context
+        description: '{{ doc("has_code_suggestions_context") }}'
+      - name: has_ide_extension_version_context
+        description: '{{ doc("has_ide_extension_version_context") }}'
 
   - name: fct_behavior_structured_event_experiment
     description:  '{{ doc("fct_behavior_structured_event_experiment") }}'
