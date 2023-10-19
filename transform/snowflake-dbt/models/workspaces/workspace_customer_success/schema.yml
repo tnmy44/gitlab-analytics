@@ -47,11 +47,11 @@ models:
       - name: snapshot_month
         tests:
           - not_null
-        description: The first day of the month for when the usage ping was recieved
+        description: Month in which the product usage was reported.
       - name: primary_key
         tests:
           - unique
-          - not_nul
+          - not_null
         description: Unique ID for the common_mart_product.mart_product_usage_paid_user_metrics_monthly table for each row of usage data. This field can be used to join to the common_mart_product.mart_product_usage_paid_user_metrics_monthly table to pull in additional usage metrics that are not used for use case adoption scoring
       - name: crm_account_name
         description: The name of the account as it appears in Salseforce
@@ -126,7 +126,7 @@ models:
       - name: license_utilization_color
         description: The color of the score for License Utilization either Red, Yellow, or Green. This color will match what is displayed in Gainsight. The criteria for how this score is calculated can be found here https://about.gitlab.com/handbook/customer-success/product-usage-data/use-case-adoption/#license-utilization
       - name: last_activity_28_days_user
-        description: Users that have a last_activity_on date within the past 28 days. This metric is used to calculate User Engagement (user_engagement). The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20220621085114_unique_active_users_monthly.yml
+        description: '{{ doc("last_activity_28_days_user_desc") }}'
       - name: user_engagement
         description: The percentage of billable users who have performed an activity within the past 28 days (last_activity_28_days_user divided by billable_user_count)
       - name: user_engagement_score
@@ -142,7 +142,7 @@ models:
       - name: scm_color
         description: The color of the score for the SCM Use Case Adoption Score either Red, Yellow, or Green. This color will match what is displayed in Gainsight. The criteria for how this score is calculated can be found here https://about.gitlab.com/handbook/customer-success/product-usage-data/use-case-adoption/#source-code-management-scm
       - name: ci_pipelines_28_days_user
-        description: Distinct users triggering pipelines in a month. This metric is used to calculate ci_pipeline_utilization for the CI Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216175554_ci_pipelines.yml
+        description: '{{ doc("ci_pipelines_28_days_user_desc") }}'
       - name: ci_pipeline_utilization
         description: The percentage of billable users who have triggered a pipeline within the past 28 days (ci_pipelines_28_days_user divided by billable_user_count)
       - name: ci_pipeline_utilization_score
@@ -158,9 +158,9 @@ models:
       - name: deployments_28_days_event
         description: Total deployments count for recent 28 days. This metric is used to calculate deployments_per_user_l28d for the CD Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210201124930_deployments.yml
       - name: successful_deployments_28_days_event
-        description: Total successful deployments in the past 28 days. This metric is used to calculate successful_deployments_pct for the CD Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216181923_successful_deployments.yml
+        description: '{{ doc("successful_deployments_28_days_event_desc") }}'
       - name: failed_deployments_28_days_event
-        description: Total failed deployments in the past 28 days. This metric is used to calculate successful_deployments_pct for the CD Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216181924_failed_deployments.yml
+        description: '{{ doc("failed_deployments_28_days_event_desc") }}'
       - name: completed_deployments_l28d
         description: The number of deployments completed in the past 28 days (successful_deployments_28_days_event plus failed_deployments_28_days_event). This metric is used to calculate successful_deployments_pct for the CD Use Case Adoption Score. 
       - name: deployments_utilization
@@ -190,21 +190,21 @@ models:
       - name: user_unique_users_all_secure_scanners_28_days_user
         description: The count of users creating secure scanners ci builds. This metric is used to calculate secure_scanners_utilization for the Security Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216181956_user_unique_users_all_secure_scanners.yml
       - name: ci_internal_pipelines_28_days_event
-        description: The total monthly (28D) pipelines in GitLab repositories for all project and project types. This metric is used to calculate average_scans_per_pipeline for the Security Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20230217215050_ci_internal_pipelines.yml
+        description: '{{ doc("ci_internal_pipelines_28_days_event_desc") }}'
       - name: secret_detection_scans_28_days_event
-        description: The number of Secret Detection security scans run in the past 28 days. This metric is used to calculate sum_of_all_scans_l28d, secret_detection_scan_percentage, and number_of_scanner_types for the Security Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210830231956_secret_detection_scans.yml
+        description: '{{ doc("secret_detection_scans_28_days_event_desc") }}'
       - name: dependency_scanning_scans_28_days_event
-        description: The number of Dependency Scanning security scans run in the past 28 days. This metric is used to calculate sum_of_all_scans_l28d, dependency_scanning_scan_percentage, and number_of_scanner_types for the Security Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183828_dependency_scanning_scans.yml
+        description: '{{ doc("dependency_scanning_scans_28_days_event_desc") }}'
       - name: container_scanning_scans_28_days_event
-        description: The number of Container Scanning security scans run in the past 28 days. This metric is used to calculate sum_of_all_scans_l28d, container_scanning_scan_percentage, and number_of_scanner_types for the Security Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210830231849_container_scanning_scans.yml
+        description: '{{ doc("container_scanning_scans_28_days_event_desc") }}'
       - name: dast_scans_28_days_event
-        description: The number of DAST security scans run in the past 28 days. This metric is used to calculate sum_of_all_scans_l28d, dast_scan_percentage, and number_of_scanner_types for the Security Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183832_dast_scans.yml
+        description: '{{ doc("dast_scans_28_days_event_desc") }}'
       - name: sast_scans_28_days_event
-        description: The number of SAST security scans run in the past 28 days. This metric is used to calculate sum_of_all_scans_l28d, sast_scan_percentage, and number_of_scanner_types for the Security Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210830231329_sast_scans.yml
+        description: '{{ doc("sast_scans_28_days_event_desc") }}'
       - name: coverage_fuzzing_scans_28_days_event
-        description: The number of Coverage Guided Fuzz Test security scans run in the past 28 days. This metric is used to calculate sum_of_all_scans_l28d, coverage_fuzzing_scan_percentage, and number_of_scanner_types for the Security Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183836_coverage_fuzzing_scans.yml
+        description: '{{ doc("coverage_fuzzing_scans_28_days_event_desc") }}'
       - name: api_fuzzing_scans_28_days_event
-        description: The number of API Fuzz Test security scans run in the past 28 days. This metric is used to calculate sum_of_all_scans_l28d, api_fuzzing_scan_percentage, and number_of_scanner_types for the Security Use Case Adoption Score. The Metrics Dictionary page for this metric is https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183838_api_fuzzing_scans.yml
+        description: '{{ doc("api_fuzzing_scans_28_days_event_desc") }}'
       - name: sum_of_all_scans_l28d
         description: The sum of security scans run in the past 28 days that are either Secret Detection, Dependency Scanning, Container Scanning, DAST, SAST, Coverage Fuzzing, or API Fuzzing. This metric is used to calculate average_scans_per_pipeline for the Security Use Case Adoption Score
       - name: secret_detection_scan_percentage
