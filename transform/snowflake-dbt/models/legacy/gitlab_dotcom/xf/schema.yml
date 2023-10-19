@@ -167,24 +167,6 @@ models:
           - accepted_values:
                       values: ['Commit', 'Epic', 'Issue', 'MergeRequest', 'Snippet', 'Wiki', 'DesignManagement::Design']
 
-  - name: gitlab_dotcom_issues_xf
-    description: '{{ doc("gitlab_dotcom_issues_xf") }}'
-    columns:
-      - name: issue_id
-        tests:
-          - not_null
-      - name: state
-        tests:
-          - not_null
-          - accepted_values:
-              values: ['opened', 'closed', 'merged', 'locked']
-      - name: issue_title
-        description: '{{ doc("xf_visibility_documentation") }}'
-      - name: issue_description
-        description: '{{ doc("xf_visibility_documentation") }}'
-      - name: namespace_plan_id_at_issue_creation
-        description: '{{ doc("namespace_plan_id_at_creation") }}'
-
   - name: gitlab_dotcom_label_states_xf
     description: Represents the latest state (added or removed) for each label on Epics/Issues/Merge Requests. Should be phased out in favor of `label_links`.
     columns:

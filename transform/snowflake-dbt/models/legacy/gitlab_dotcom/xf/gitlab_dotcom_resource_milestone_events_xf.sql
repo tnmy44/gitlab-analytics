@@ -8,7 +8,7 @@ WITH gitlab_dotcom_resource_milestone_events AS (
 , issues AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_issues') }} 
+    FROM {{ ref('gitlab_dotcom_issues_source') }}
 
 )
 
