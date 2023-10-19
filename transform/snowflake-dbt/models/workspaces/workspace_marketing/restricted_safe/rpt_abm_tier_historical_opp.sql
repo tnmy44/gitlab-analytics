@@ -112,7 +112,7 @@ FROM cw_base
   
 ), final AS (
 
-  SELECT
+  SELECT DISTINCT
     dim_crm_opportunity_id,
     is_abm_tier_sao,
     is_abm_tier_closed_won
@@ -128,5 +128,5 @@ FROM cw_base
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-10-18",
+    updated_date="2023-10-19",
   ) }}

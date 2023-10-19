@@ -106,7 +106,7 @@ FROM mql_base
   
 ), final AS (
 
-  SELECT
+  SELECT DISTINCT
     dim_crm_person_id,
     is_abm_tier_inquiry,
     is_abm_tier_mql
@@ -122,5 +122,5 @@ FROM mql_base
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-10-18",
+    updated_date="2023-10-19",
   ) }}
