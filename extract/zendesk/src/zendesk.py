@@ -28,13 +28,13 @@ def read_file_from_gcp_bucket():
     
     # load all.jsonl files in bucket one by one
     for blob in BUCKET.list_blobs(prefix='meltano/tap_zendesk__sensitive/ticket_audits/'):
-        logging.info(f"Reading file {blob.name}")
+        info(f"Reading file {blob.name}")
         if blob.name.endswith('.jsonl'):
             # download this .jsonl blob and store it in pandas dataframe
             df = pd.read_json(io.BytesIO(blob.download_as_string()), lines=True)
             refactor_ticket_audits(df)
         else:
-            logging.error(f"No file found!")
+            error(f"No file found!")
             sys.exit(1)
 
 def refactor_ticket_audits(df):
@@ -42,7 +42,7 @@ def refactor_ticket_audits(df):
     This function will refactor the ticket audits table where it flattens the events object and extracts field_name,type,value,id out of it
     """
     output_list=[]
-
+    info(f"Transforming file...")
     for ind in df.index:
         # _sdc_batched_at = df['_sdc_batched_at'][ind]
         # _sdc_deleted_at = df['_sdc_deleted_at'][ind]
