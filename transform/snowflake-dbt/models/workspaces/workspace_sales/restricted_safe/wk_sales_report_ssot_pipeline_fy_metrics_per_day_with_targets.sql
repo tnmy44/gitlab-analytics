@@ -35,7 +35,7 @@ WITH date_details AS (
     SELECT 
         ---------------------------
         -- Keys
-        report_user_segment_geo_region_area_sqs_ot,
+        report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
         -----------------------------
 
         close_fiscal_year,
@@ -77,7 +77,7 @@ WITH date_details AS (
   SELECT 
         ---------------------------
         -- Keys
-        report_user_segment_geo_region_area_sqs_ot,
+        report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
         close_fiscal_year,
         -----------------------------
 
@@ -106,7 +106,7 @@ WITH date_details AS (
     SELECT
         ---------------------------
         -- Keys
-        report_user_segment_geo_region_area_sqs_ot,
+        report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
         -----------------------------
 
         close_fiscal_year,
@@ -123,12 +123,12 @@ WITH date_details AS (
 
   SELECT DISTINCT 
     close_fiscal_year,
-    report_user_segment_geo_region_area_sqs_ot
+    report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
   FROM fy_targets
   UNION
   SELECT DISTINCT 
     close_fiscal_year,
-    report_user_segment_geo_region_area_sqs_ot
+    report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
   FROM source_targets
 
 
@@ -137,7 +137,7 @@ WITH date_details AS (
         
       SELECT
         targets_key.close_fiscal_year,
-        targets_key.report_user_segment_geo_region_area_sqs_ot,
+        targets_key.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
 
         -----------------------------------------------------------
         source_targets.target_net_arr,
@@ -179,10 +179,10 @@ WITH date_details AS (
       FROM targets_key
       CROSS JOIN today_date 
       LEFT JOIN source_targets
-        ON targets_key.report_user_segment_geo_region_area_sqs_ot = source_targets.report_user_segment_geo_region_area_sqs_ot
+        ON targets_key.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = source_targets.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
         AND targets_key.close_fiscal_year = source_targets.close_fiscal_year
       LEFT JOIN fy_targets
-        ON targets_key.report_user_segment_geo_region_area_sqs_ot = fy_targets.report_user_segment_geo_region_area_sqs_ot
+        ON targets_key.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = fy_targets.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
         AND targets_key.close_fiscal_year = fy_targets.close_fiscal_year
 
 ), consolidated_targets_per_day AS (
@@ -199,12 +199,12 @@ WITH date_details AS (
 ), key_fields AS (
     
   SELECT         
-      report_user_segment_geo_region_area_sqs_ot,
+      report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
       close_fiscal_year
   FROM consolidated_targets
   UNION
   SELECT         
-      report_user_segment_geo_region_area_sqs_ot,
+      report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
       close_fiscal_year
   FROM consolidated_metrics
   
@@ -223,7 +223,7 @@ WITH date_details AS (
 
         --------------------------
         -- keys
-        base.report_user_segment_geo_region_area_sqs_ot,
+        base.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
         --------------------------
 
         base.close_fiscal_year,
@@ -265,8 +265,6 @@ WITH date_details AS (
         agg_demo_keys.key_segment_geo_region_area_ot,
 
         agg_demo_keys.key_segment_geo_area,
-
-        agg_demo_keys.report_user_segment_geo_region_area,
         ----------------------------------------
 
         COALESCE(metrics.cfy_deal_count,0)                           AS cfy_deal_count,
@@ -328,16 +326,16 @@ WITH date_details AS (
     FROM base_fields base 
     -- base keys dictionary
     LEFT JOIN agg_demo_keys
-      ON base.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
+      ON base.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
     LEFT JOIN consolidated_metrics metrics
       ON metrics.close_fiscal_year = base.close_fiscal_year
       AND metrics.close_day_of_fiscal_year_normalised = base.close_day_of_fiscal_year_normalised
-      AND metrics.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
+      AND metrics.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = base.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
     -- current quarter
     LEFT JOIN consolidated_targets_per_day targets 
       ON targets.close_fiscal_year = base.close_fiscal_year
         AND targets.close_day_of_fiscal_year_normalised = base.close_day_of_fiscal_year_normalised
-        AND targets.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
+        AND targets.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = base.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
 
 )
  SELECT *
