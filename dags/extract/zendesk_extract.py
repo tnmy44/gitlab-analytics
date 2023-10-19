@@ -21,6 +21,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS,
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
@@ -65,6 +66,7 @@ zendesk_task = KubernetesPodOperator(
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
+        ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS,
     ],
     env_vars={
         **pod_env_vars,
