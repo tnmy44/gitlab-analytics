@@ -46,13 +46,16 @@ def read_file_from_gcp_bucket():
         info(f"Reading file {blob.name}")
         if blob.name.endswith(".jsonl"):
             # download this .jsonl blob and store it in pandas dataframe
-            info(f"Reading the file {blob.name} and uploading it to dataframe")
+            info(f"Reading the file {blob.name}")
             try:
                 chunks = pd.read_json(
                     io.BytesIO(blob.download_as_string()), lines=True, chunksize=10000
                 )
+                count = 1
                 for chunk in chunks:
+                    info(f"Uploading to dataframe, batch:{count}")
                     df = pd.concat([df, chunk])
+                    count = count + 1
             except:
                 error(f"Error reading {blob.name}")
             refactor_ticket_audits(df)
