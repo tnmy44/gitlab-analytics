@@ -238,6 +238,21 @@ tables:
       FROM ci_pipelines
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  ci_pipelines_internal_only:
+    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS}
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'ci_pipelines_internal_only'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , updated_at
+      , ref
+      , project_id
+      FROM ci_pipelines
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_platform_metrics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
