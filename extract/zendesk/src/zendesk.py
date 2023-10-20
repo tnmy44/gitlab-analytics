@@ -37,6 +37,8 @@ def read_file_from_gcp_bucket():
     storage_client = storage.Client(credentials=scoped_credentials)
     BUCKET = storage_client.get_bucket(bucket_name)
 
+    df=pd.DataFrame()
+
     # load all.jsonl files in bucket one by one
     for blob in BUCKET.list_blobs(
         prefix="meltano/tap_zendesk__sensitive/ticket_audits/"
@@ -45,7 +47,10 @@ def read_file_from_gcp_bucket():
         if blob.name.endswith(".jsonl"):
             # download this .jsonl blob and store it in pandas dataframe
             info(f"Reading the file {blob.name} and uploading it to dataframe")
-            df = pd.read_json(io.BytesIO(blob.download_as_string()), lines=True)
+            try:
+                df = pd.read_json(io.BytesIO(blob.download_as_string()), lines=True)
+            except:
+                error(f"Error reading {blob.name}")
             refactor_ticket_audits(df)
         else:
             error(f"No file found!")
