@@ -39,7 +39,7 @@ def read_file_from_gcp_bucket():
     # keyfile = load(
     #     env["ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS"], Loader=FullLoader
     # )
-    keyfile = json.loads(ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS)
+    keyfile = json.loads(ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS, strict=False)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
