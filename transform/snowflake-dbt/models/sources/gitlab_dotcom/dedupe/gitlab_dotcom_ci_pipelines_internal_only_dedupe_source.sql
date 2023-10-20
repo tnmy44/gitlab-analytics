@@ -29,7 +29,6 @@ WITH source AS (
       updated_at               AS updated_at,
       ref                      AS ref,
       project_id               AS project_id,
-      merge_request_id::NUMBER AS merge_request_id,
       _uploaded_at             AS _uploaded_at
     FROM partitioned
 

@@ -1,13 +1,13 @@
 WITH all_rows_source AS (
 
   SELECT *
-  FROM {{ source('gitlab_ops', 'ci_builds') }}
+  FROM {{ ref('gitlab_dotcom_ci_builds_dedupe_source') }}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1
 
 ), internal_rows_source AS (
 
   SELECT *
-  FROM {{ source('gitlab_ops', 'ci_builds_internal_only') }}
+  FROM {{ ref('gitlab_dotcom_ci_builds_internal_only_dedupe_source') }}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY _uploaded_at DESC) = 1
 
 ), all_rows_renamed AS (
@@ -48,6 +48,7 @@ WITH all_rows_source AS (
     failure_reason::VARCHAR           AS failure_reason,
     scheduled_at::TIMESTAMP           AS ci_build_scheduled_at,
     upstream_pipeline_id::NUMBER      AS upstream_pipeline_id
+
   FROM all_rows_source
 
 ), internal_rows_renamed AS (
@@ -55,7 +56,7 @@ WITH all_rows_source AS (
   SELECT
     id::NUMBER                        AS internal_ci_build_id,
     updated_at::TIMESTAMP             AS internal_updated_at,
-    name::VARCHAR                     AS internal_name,
+    name::VARCHAR                     AS internal_ci_build_name,
     stage::VARCHAR                    AS internal_stage,
     ref::VARCHAR                      AS internal_ref,
     description::VARCHAR              AS internal_description,
@@ -66,40 +67,40 @@ WITH all_rows_source AS (
 
   SELECT
 
-    id                                AS ci_build_id,
+    ci_build_id                       AS ci_build_id,
     status                            AS status,
     finished_at                       AS finished_at,
     created_at                        AS created_at,
     updated_at                        AS updated_at,
     started_at                        AS started_at,
-    runner_id                         AS ci_build_runner_id,
+    ci_build_runner_id                AS ci_build_runner_id,
     coverage                          AS coverage,
-    commit_id                         AS ci_build_commit_id,
-    internal_name                     AS ci_build_name,
+    ci_build_commit_id                AS ci_build_commit_id,
+    internal_ci_build_name            AS ci_build_name,
     options                           AS options,
     allow_failure                     AS allow_failure,
     internal_stage                    AS stage,
-    trigger_request_id                AS ci_build_trigger_request_id,
+    ci_build_trigger_request_id       AS ci_build_trigger_request_id,
     stage_idx                         AS stage_idx,
     tag                               AS tag,
     internal_ref                      AS ref,
-    user_id                           AS ci_build_user_id,
+    ci_build_user_id                  AS ci_build_user_id,
     type                              AS type,
     internal_description              AS description,
-    project_id                        AS ci_build_project_id,
-    erased_by_id                      AS ci_build_erased_by_id,
-    erased_at                         AS ci_build_erased_at,
-    artifacts_expire_at               AS ci_build_artifacts_expire_at,
+    ci_build_project_id               AS ci_build_project_id,
+    ci_build_erased_by_id             AS ci_build_erased_by_id,
+    ci_build_erased_at                AS ci_build_erased_at,
+    ci_build_artifacts_expire_at      AS ci_build_artifacts_expire_at,
     environment                       AS environment,
-    queued_at                         AS ci_build_queued_at,
+    ci_build_queued_at                AS ci_build_queued_at,
     lock_version                      AS lock_version,
     coverage_regex                    AS coverage_regex,
-    auto_canceled_by_id               AS ci_build_auto_canceled_by_id,
+    ci_build_auto_canceled_by_id      AS ci_build_auto_canceled_by_id,
     retried                           AS retried,
-    stage_id                          AS ci_build_stage_id,
+    ci_build_stage_id                 AS ci_build_stage_id,
     protected                         AS protected,
     failure_reason                    AS failure_reason,
-    scheduled_at                      AS ci_build_scheduled_at,
+    ci_build_scheduled_at             AS ci_build_scheduled_at,
     upstream_pipeline_id              AS upstream_pipeline_id
 
   FROM all_rows_renamed
@@ -108,17 +109,6 @@ WITH all_rows_source AS (
 
 )
 
-
 SELECT *
-FROM renamed
+FROM joined
 ORDER BY updated_at
-
-
-
-id
-updated_at
-name
-stage
-ref
-description
-project_id
