@@ -29,16 +29,8 @@ def read_file_from_gcp_bucket():
     ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get(
         "ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS"
     )
-    # storage_client = storage.Client.from_service_account_json(
-    #     ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS
-    # )
     bucket_name = "meltano_data_ops"
-    # BUCKET = storage_client.get_bucket(bucket_name)
-
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    # keyfile = load(
-    #     env["ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS"], Loader=FullLoader
-    # )
     keyfile = json.loads(ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS, strict=False)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
@@ -59,7 +51,7 @@ def read_file_from_gcp_bucket():
             sys.exit(1)
 
 
-def refactor_ticket_audits(df):
+def refactor_ticket_audits(df: pd.DataFrame):
     """
     This function will refactor the ticket audits table where it flattens the events object and extracts field_name,type,value,id out of it
     """
@@ -121,6 +113,7 @@ def refactor_ticket_audits(df):
             "via",
         ],
     )
+    info(f"Output uploaded to dataframe, uploading to snowflake...")
     upload_to_snowflake(output_df)
 
 
