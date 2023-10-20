@@ -1,0 +1,40 @@
+version: 2
+
+sources:
+  - name: tableau_cloud
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: tableau_cloud
+    loader: Tableau
+    loaded_at_field: UPLOADED_AT
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    tables:
+      - name: events
+        description: >
+          TS Events functions as a primary audit data source. It contains data about various events happening on your site, including sign-ins, publishes, and accessed views.
+          Each row of data correlates with a single event that occurs on the Tableau Online site.
+          [Datasource](https://10az.online.tableau.com/#/site/gitlab/datasources/51236814)
+      - name: groups
+        description: >
+          Groups identifies the group membership of users. Groups without members, and users not in a group, will be included as a row of data with null values represented as “NULL“.
+          There is one row of data for each unique combination of group and user pairing.
+          [Datasource](https://10az.online.tableau.com/#/site/gitlab/datasources/51250281)
+      - name: permissions
+        description: > 
+          Permissions contains the effective permissions for all users and content on the site. 
+          Each row of data corresponds to a combination of user, content item, and permission capability. 
+          [Datasource](https://10az.online.tableau.com/#/site/gitlab/datasources/51246803)
+      - name: site_content
+        description: > 
+          Site Content provides essential governance information about the projects, data sources, workbooks, and views on a site. The data provided about a content item may be unique to its item type. Item types with unique fields are in folders with titles that correspond to their Item Type.
+          Each row of data corresponds to a unique content item. Item LUID is the unique identifier for content items on a Tableau Online pod.
+          [Datasource](https://10az.online.tableau.com/#/site/gitlab/datasources/51244312)
+      - name: users
+        description: >
+          TS Users contains data about your users such as remaining licenses, site roles, and content ownership metrics.
+          Each row of data corresponds to a unique User on your Tableau Online site.
+          [Datasource](https://10az.online.tableau.com/#/site/gitlab/datasources/51240750)

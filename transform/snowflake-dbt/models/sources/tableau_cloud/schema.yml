@@ -1,0 +1,8 @@
+version: 2
+
+models:
+    - name: tableau_cloud_events_source
+    - name: tableau_cloud_groups_source
+    - name: tableau_cloud_permissions_source
+    - name: tableau_cloud_site_content_source
+    - name: tableau_cloud_users_source
