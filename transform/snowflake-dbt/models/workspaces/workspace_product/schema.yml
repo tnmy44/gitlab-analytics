@@ -218,3 +218,81 @@ models:
         description: '{{ doc("wk_usage_ping_geo_node_usage_uploaded_at") }}'
         tests:
           - not_null
+
+  - name: wk_rpt_behavior_code_suggestion
+    description: '{{ doc("wk_rpt_behavior_code_suggestion") }}'
+    columns:
+      - name: suggestion_id
+        description: The unique identifier for the code suggestion. Appears as `event_label` on the Snowplow events
+        tests:
+          - not_null
+          - unique
+      - name: language
+        description: '{{ doc("code_suggestions_language") }}'
+      - name: delivery_type
+        description: ' {{ doc("product_delivery_type") }} In the raw Snowplow data, this field comes through as `gitlab_realm`. Appears in the `code_suggestions_context`.'
+        tests:
+            - accepted_values:
+                values: ['Self-Managed', 'SaaS']
+      - name: model_engine
+        description: '{{ doc("code_suggestions_model_engine") }}'
+      - name: model_name
+        description: '{{ doc("code_suggestions_model_name") }}'
+      - name: prefix_length
+        description: '{{ doc("code_suggestions_prefix_length") }}'
+      - name: suffix_length
+        description: '{{ doc("code_suggestions_suffix_length") }}'
+      - name: extension_name
+        description: '{{ doc("ide_extension_name") }}'
+      - name: extension_version
+        description: '{{ doc("ide_extension_version") }}'
+      - name: ide_name
+        description: '{{ doc("ide_extension_ide_name") }}'
+      - name: ide_vendor
+        description: '{{ doc("ide_extension_ide_vendor") }}'
+      - name: ide_version
+        description: '{{ doc("ide_extension_ide_version") }}'
+      - name: requested_at
+        description: Timestamp of the `suggestion_requested` event
+      - name: loaded_at
+        description: Timestamp of the `suggestion_loaded` event
+      - name: shown_at
+        description: Timestamp of the `suggestion_shown` event
+      - name: accepted_at
+        description: Timestamp of the `suggestion_accepted` event 
+      - name: rejected_at
+        description: Timestamp of the `suggestion_rejected` event
+      - name: cancelled_at
+        description: Timestamp of the `suggestion_cancelled` event
+      - name: not_provided_at
+        description: Timestamp of the `suggestion_not_provided` event
+      - name: error_at
+        description: Timestamp of the `suggestion_error` event
+      - name: load_time_in_ms
+        description: The difference (in ms) between the `suggestion_requested` and `suggestion_loaded` events
+      - name: display_time_in_ms
+        description: The difference (in ms) between the `suggestion_shown` and `suggestion_accepted` or `suggestion_rejected` events
+      - name: suggestion_outcome
+        description: The outcome of the suggestion (ex. `suggestion_accepted`, `suggestion_rejected`, `suggestion_cancelled`, `suggestion_error`, etc)
+      - name: was_loaded
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_loaded` event
+      - name: was_shown
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_shown` event
+      - name: was_accepted
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_accepted` event
+      - name: was_rejected
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_rejected` event
+      - name: was_cancelled
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_cancelled` event
+      - name: was_not_provided
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_not_provided` event
+      - name: was_error
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_error` event
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
