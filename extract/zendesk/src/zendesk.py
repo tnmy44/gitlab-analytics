@@ -144,8 +144,10 @@ def upload_to_snowflake(output_df):
     )
     info(f"\nUploaded 'ticket_audits_test' to Snowflake")
 
+
 def main():
     read_file_from_gcp_bucket()
+
 
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
