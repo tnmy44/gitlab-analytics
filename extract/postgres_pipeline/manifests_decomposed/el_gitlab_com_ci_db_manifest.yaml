@@ -62,6 +62,24 @@ tables:
       FROM p_ci_builds
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  ci_builds_internal_only:
+    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS}
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: ci_builds
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , updated_at
+      , name
+      , stage
+      , ref
+      , description
+      , project_id
+      FROM p_ci_builds
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_editor_ai_conversation_messages:
     dbt_source_model: true
     export_schema: 'gitlab_com'
