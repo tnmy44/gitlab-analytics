@@ -66,7 +66,7 @@ tables:
     additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS}
     dbt_source_model: true
     export_schema: 'gitlab_com'
-    export_table: ci_builds
+    export_table: ci_builds_internal_only
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
