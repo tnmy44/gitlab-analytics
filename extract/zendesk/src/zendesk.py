@@ -48,7 +48,11 @@ def read_file_from_gcp_bucket():
             # download this .jsonl blob and store it in pandas dataframe
             info(f"Reading the file {blob.name} and uploading it to dataframe")
             try:
-                df = pd.read_json(io.BytesIO(blob.download_as_string()), lines=True)
+                chunks = pd.read_json(
+                    io.BytesIO(blob.download_as_string()), lines=True, chunksize=1000
+                )
+                for chunk in chunks:
+                    df = pd.concat([df, chunk])
             except:
                 error(f"Error reading {blob.name}")
             refactor_ticket_audits(df)
