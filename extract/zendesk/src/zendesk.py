@@ -43,7 +43,6 @@ def read_file_from_gcp_bucket():
     for blob in BUCKET.list_blobs(
         prefix="meltano/tap_zendesk__sensitive/ticket_audits/"
     ):
-        info(f"Reading file {blob.name}")
         if blob.name.endswith(".jsonl"):
             # download this .jsonl blob and store it in pandas dataframe
             info(f"Reading the file {blob.name}")
@@ -126,7 +125,7 @@ def refactor_ticket_audits(df: pd.DataFrame):
             "via",
         ],
     )
-    info(f"Output uploaded to dataframe, uploading to snowflake...")
+    info(f"Transformation complete, uploading records to snowflake...")
     upload_to_snowflake(output_df)
 
 
@@ -143,12 +142,10 @@ def upload_to_snowflake(output_df):
         if_exists="append",
         add_uploaded_at=True,
     )
-    print(f"\nUploaded 'ticket_audits' to Snowflake")
-
+    info(f"\nUploaded 'ticket_audits_test' to Snowflake")
 
 def main():
     read_file_from_gcp_bucket()
-
 
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
