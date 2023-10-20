@@ -49,7 +49,7 @@ def read_file_from_gcp_bucket():
             info(f"Reading the file {blob.name} and uploading it to dataframe")
             try:
                 chunks = pd.read_json(
-                    io.BytesIO(blob.download_as_string()), lines=True, chunksize=1000
+                    io.BytesIO(blob.download_as_string()), lines=True, chunksize=10000
                 )
                 for chunk in chunks:
                     df = pd.concat([df, chunk])
