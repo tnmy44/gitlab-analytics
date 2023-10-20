@@ -12,6 +12,7 @@ SELECT
     ultimate_parent_namespace_id,
     dim_project_id, 
     plan_name_at_event_month,
+    plan_name_list,
     CASE
       WHEN ci_runner_type_summary = 'shared' THEN 'Shared Runners'
       ELSE 'Self-Managed Runners'
