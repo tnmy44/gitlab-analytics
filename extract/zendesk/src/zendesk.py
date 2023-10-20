@@ -37,7 +37,7 @@ def read_file_from_gcp_bucket():
     storage_client = storage.Client(credentials=scoped_credentials)
     BUCKET = storage_client.get_bucket(bucket_name)
 
-    df=pd.DataFrame()
+    df = pd.DataFrame()
 
     # load all.jsonl files in bucket one by one
     for blob in BUCKET.list_blobs(
