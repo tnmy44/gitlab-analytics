@@ -85,6 +85,8 @@ sources:
         identifier: gitlab_db_ci_pipeline_schedules
       - name: ci_pipelines
         identifier: gitlab_db_ci_pipelines
+      - name: ci_pipelines_internal_only
+        identifier: gitlab_db_ci_pipelines_internal_only
       - name: ci_platform_metrics
         identifier: gitlab_db_ci_platform_metrics
       - name: ci_project_monthly_usages
