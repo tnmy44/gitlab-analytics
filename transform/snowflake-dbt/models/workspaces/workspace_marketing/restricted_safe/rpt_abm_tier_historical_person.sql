@@ -95,14 +95,10 @@
   SELECT
   inquiry_base.dim_crm_person_id,
   is_abm_tier_inquiry,
-  NULL AS is_abm_tier_mql
-FROM inquiry_base
-UNION ALL
-SELECT
-  mql_base.dim_crm_person_id,
-  NULL AS is_abm_tier_inquiry,
   is_abm_tier_mql
-FROM mql_base
+FROM inquiry_base
+LEFT JOIN mql_base
+  ON inquiry_base.dim_crm_person_id=mql_base.dim_crm_person_id
   
 ), final AS (
 
@@ -122,5 +118,5 @@ FROM mql_base
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-10-19",
+    updated_date="2023-10-23",
   ) }}

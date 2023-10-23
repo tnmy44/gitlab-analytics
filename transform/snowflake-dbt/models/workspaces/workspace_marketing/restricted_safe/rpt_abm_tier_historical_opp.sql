@@ -99,16 +99,12 @@
 ), unioned AS (
   
 SELECT
-  dim_crm_opportunity_id,
+  sao_base.dim_crm_opportunity_id,
   is_abm_tier_sao,
-  NULL AS is_abm_tier_closed_won
-FROM sao_base
-UNION ALL
-SELECT
-  dim_crm_opportunity_id,
-  NULL AS is_abm_tier_sao,
   is_abm_tier_closed_won
-FROM cw_base
+FROM sao_base
+LEFT JOIN cw_base
+  ON sao_base.dim_crm_opportunity_id=cw_base.dim_crm_opportunity_id
   
 ), final AS (
 
@@ -128,5 +124,5 @@ FROM cw_base
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-06",
-    updated_date="2023-10-19",
+    updated_date="2023-10-23",
   ) }}
