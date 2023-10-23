@@ -70,6 +70,7 @@
   AND sales_accepted_date IS NOT NULL
   AND (abm_tier_1_date IS NOT NULL
     OR abm_tier_2_date IS NOT NULL)
+  AND is_abm_tier_sao = TRUE
 
 ), cw_base AS (
   
@@ -95,6 +96,7 @@
   AND close_date IS NOT NULL
   AND (abm_tier_1_date IS NOT NULL
     OR abm_tier_2_date IS NOT NULL)
+  AND is_abm_tier_closed_won = TRUE
   
 ), unioned AS (
   

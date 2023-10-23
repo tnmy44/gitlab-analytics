@@ -64,6 +64,7 @@
   AND true_inquiry_date IS NOT NULL
   AND (abm_tier_1_date IS NOT NULL
     OR abm_tier_2_date IS NOT NULL)
+  AND is_abm_tier_inquiry = TRUE
   
 ), mql_base AS (
   
@@ -89,6 +90,7 @@
   AND mql_date_latest_pt IS NOT NULL
   AND (abm_tier_1_date IS NOT NULL
     OR abm_tier_2_date IS NOT NULL)
+  AND is_abm_tier_mql = TRUE
   
 ), unioned AS (
   
