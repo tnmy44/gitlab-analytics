@@ -17,18 +17,20 @@ WITH gitlab_ide_extension_events AS (
   WHERE app_id = 'gitlab_ide_extension' --events that can be used to calculate suggestion outcome
     AND event_label IS NOT NULL --required field in order to stitch the events together
 
+  --TBD/NEEDS BUSINESS VALIDATION: In the event that there are multiple events per event_label and event_action, use the first one
+  
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label, event_action --remove duplicate events
+      ORDER BY behavior_at ASC) = 1
+
 ),
 
 --Visual with event sequence here: https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/issues/256#note_1549346766
---TBD/NEEDS BUSINESS VALIDATION: In the event that there are multiple events per event_label and event_action, use the first one
 
 requested AS (
 
   SELECT *
   FROM gitlab_ide_extension_events
   WHERE event_action = 'suggestion_requested'
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label --remove duplicate events
-      ORDER BY behavior_at ASC) = 1
 
 ),
 
@@ -37,8 +39,6 @@ loaded AS (
   SELECT *
   FROM gitlab_ide_extension_events
   WHERE event_action = 'suggestion_loaded'
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label --remove duplicate events
-      ORDER BY behavior_at ASC) = 1
 
 ),
 
@@ -47,8 +47,6 @@ shown AS (
   SELECT *
   FROM gitlab_ide_extension_events
   WHERE event_action = 'suggestion_shown'
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label --remove duplicate events
-      ORDER BY behavior_at ASC) = 1
 
 ),
 
@@ -57,8 +55,6 @@ accepted AS (
   SELECT *
   FROM gitlab_ide_extension_events
   WHERE event_action = 'suggestion_accepted'
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label --remove duplicate events
-      ORDER BY behavior_at ASC) = 1
 
 ),
 
@@ -70,8 +66,6 @@ rejected AS (
     ON gitlab_ide_extension_events.event_label = accepted.event_label
   WHERE gitlab_ide_extension_events.event_action = 'suggestion_rejected'
     AND accepted.event_label IS NULL --suggestion cannot be accepted and rejected, default to accepted if both present: https://gitlab.com/gitlab-data/product-analytics/-/issues/1410#note_1581747408
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY accepted.event_label --remove duplicate events
-      ORDER BY accepted.behavior_at ASC) = 1
 
 ),
 
@@ -80,8 +74,6 @@ cancelled AS (
   SELECT *
   FROM gitlab_ide_extension_events
   WHERE event_action = 'suggestion_cancelled'
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label --remove duplicate events
-      ORDER BY behavior_at ASC) = 1
 
 ),
 
@@ -90,8 +82,6 @@ not_provided AS (
   SELECT *
   FROM gitlab_ide_extension_events
   WHERE event_action = 'suggestion_not_provided'
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label --remove duplicate events
-      ORDER BY behavior_at ASC) = 1
 
 ),
 
@@ -100,8 +90,6 @@ error AS (
   SELECT *
   FROM gitlab_ide_extension_events
   WHERE event_action = 'suggestion_error'
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label --remove duplicate events
-      ORDER BY behavior_at ASC) = 1
 
 ),
 
