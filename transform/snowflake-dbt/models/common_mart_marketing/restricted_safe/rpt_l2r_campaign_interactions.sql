@@ -370,7 +370,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=164)}}
+  {{dbt_utils.group_by(n=172)}}
     
 ), cohort_base_combined AS (
   
