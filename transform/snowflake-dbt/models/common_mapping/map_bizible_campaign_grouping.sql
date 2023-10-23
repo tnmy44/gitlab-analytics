@@ -241,7 +241,7 @@ WITH bizible_touchpoints AS (
       OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ'
       AND (bizible_ad_campaign_name ILIKE '%DevSecOps%'
       OR bizible_ad_campaign_name LIKE '%Fuzzing%'))-- Added by AO demAND gen issue 2262
-      THEN 'DevSecOps Use Case'
+      THEN 'DevSecOps Platform'
   WHEN (bizible_touchpoint_type = 'Web Form'
       AND (bizible_form_url_raw LIKE '%utm_campaign=autosd%'
       OR bizible_landing_page_raw LIKE '%utm_campaign=autosd%'
@@ -315,6 +315,7 @@ WITH bizible_touchpoints AS (
       OR bizible_landing_page_raw LIKE '%events-pd-emea%'----Added by AO MSandP issue:811
       OR bizible_landing_page_raw LIKE '%events-pd-technical-apac%'---Added by AO MSandP issue:811
       OR bizible_referrer_page_raw LIKE '%devsecopsplat%'
+      OR bizible_landing_page_raw LIKE '%devsecopsplat%'
       OR bizible_referrer_page_RAW LIKE '%devopsgtm%'))
       OR campaign.dim_parent_campaign_id LIKE '%7014M000001dpT9%'
         -- OR campaign.dim_parent_campaign_id LIKE '%7014M000001dn8M%')
@@ -325,7 +326,7 @@ WITH bizible_touchpoints AS (
       OR bizible_ad_campaign_name ILIKE '%Dora%'
       OR bizible_ad_campaign_name ILIKE '%DevOps%'
       OR bizible_ad_campaign_name ILIKE '%DOP%'))-- Added by AO demAND gen issue 2262
-    Then 'DevOps GTM'
+    Then 'DevSecOps Platform'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
       AND (( bizible_form_url_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_form_url_raw LIKE '%utm_content=partnercredit%' 
       OR bizible_landing_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_landing_page_raw LIKE '%utm_content=partnercredit%'
@@ -374,21 +375,19 @@ WITH bizible_touchpoints AS (
     WHEN lower(campaign.type) = 'content syndication'
       THEN
        campaign.gtm_motion
-    WHEN bizible_integrated_campaign_grouping IN ('CI Build & Test Auto','CI Use Case','CI Use Case - FR','CI Use Case - DE','CI/CD Seeing is Believing','Jenkins Take Out','OctoCat','Premium to Ultimate','20210512_ISSAWebcast') 
-      THEN 'CI/CD'
-    WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion = 'CI (CI/CD)' -- override for TechDemo Series
-      THEN 'CI/CD'
-    WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','DevSecOps Use Case','Reduce Security AND Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast','DOI Webcast','FY22 GitHub Competitive Campaign') 
-      THEN 'DevOps'
-    WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion = 'DevOps Platform' -- override for TechDemo Series
-      THEN 'DevOps'
-    WHEN bizible_integrated_campaign_grouping IN ('GitOps Use Case','GitOps GTM webcast')  
-      THEN 'GitOps'
-    WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion = 'GITOPS' -- override for TechDemo Series
-      THEN 'GitOps'
+    WHEN bizible_integrated_campaign_grouping IN ('Automated Software Deliver','Jenkins Take Out','OctoCat','Premium to Ultimate','20210512_ISSAWebcast', 'GitOps Use Case','GitOps GTM webcast') 
+        THEN 'Automated Software Delivery'
+    WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion IN ('CI (CI/CD)',  'GITOPS', `Automated Software Delivery`) -- override for TechDemo Series
+        THEN 'Automated Software Delivery'
+    WHEN bizible_integrated_campaign_grouping = `DevSecOps Platform` 
+        THEN `DevSecOps Platform`
+    WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','Reduce Security AND Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast','DOI Webcast','FY22 GitHub Competitive Campaign') 
+        THEN 'DevSecOps Platform'
+    WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion IN ('DevOps Platform', 'DevSecOps Platform') -- override for TechDemo Series
+        THEN 'DevSecOps Platform'
     ELSE NULL
-    END    
-                                                                                             AS gtm_motion,
+        END                                                                                               AS gtm_motion
+
   IFF(bizible_integrated_campaign_grouping <> 'None' or dim_parent_campaign_id = '7014M000001vm9KQAQ','DemAND Gen','Other') -- override for TechDemo Series
                                                                                                         AS touchpoint_segment,
   CASE
