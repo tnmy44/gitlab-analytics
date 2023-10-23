@@ -50,7 +50,7 @@ dag = DAG(
 # tableau Extract
 tableau_workbook_migrate_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    python tableau_con_man_client/src/execute.py
+    TableauConMan migrate-content --yaml_path='./tableau_con_man_config/src/public_sync_plan.yaml'
 """
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
