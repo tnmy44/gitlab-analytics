@@ -30,7 +30,7 @@
 
     SELECT fiscal_year
     FROM dim_date
-    WHERE date_actual = CURRENT_DATE
+    WHERE date_actual = CURRENT_DATE - 1
 
 ), sheetload_sales_funnel_targets_matrix_source AS (
 
@@ -253,13 +253,6 @@
 
     SELECT *
     FROM fy24_and_beyond_hierarchy
-
-), current_fiscal_year AS(
-
-    SELECT DISTINCT
-      fiscal_year
-    FROM dim_date
-    WHERE date_actual = CURRENT_DATE()
 
 ), final AS (
 
