@@ -58,6 +58,7 @@ def read_file_from_gcp_bucket():
             except:
                 error(f"Error reading {blob.name}")
             refactor_ticket_audits(df)
+            # blob.delete() # delete the file after successfull upload to the table, commentiong it for now for testing purposes
         else:
             error(f"No file found!")
             sys.exit(1)
