@@ -149,7 +149,7 @@
   
     SELECT *
     FROM fct_trial_first
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY trial_start_date DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY trial_start_date DESC, namespace_created_at DESC) = 1
 
 ), pqls AS (
   
@@ -177,7 +177,7 @@
       latest_trial_by_user.dim_namespace_id       AS dim_namespace_id,
       dim_namespace.namespace_name,
       latest_trial_by_user.trial_start_date::DATE AS trial_start_date,
-      prep_lead.created_at                            AS pql_event_created_at
+      prep_lead.created_at                        AS pql_event_created_at
     FROM prep_lead
     LEFT JOIN gitlab_dotcom_users_source AS users
       ON prep_lead.user_id = users.user_id
