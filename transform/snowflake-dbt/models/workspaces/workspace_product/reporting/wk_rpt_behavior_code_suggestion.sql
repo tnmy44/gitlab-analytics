@@ -17,7 +17,7 @@ WITH gitlab_ide_extension_events AS (
   WHERE app_id = 'gitlab_ide_extension' --events that can be used to calculate suggestion outcome
     AND event_label IS NOT NULL --required field in order to stitch the events together
 
-  --TBD/NEEDS BUSINESS VALIDATION: In the event that there are multiple events per event_label and event_action, use the first one
+  --Limit to 1 event per event_label and event_action. In the case of multiple, use the first one
 
   QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label, event_action --remove duplicate events
       ORDER BY behavior_at ASC) = 1
