@@ -18,7 +18,7 @@ WITH gitlab_ide_extension_events AS (
     AND event_label IS NOT NULL --required field in order to stitch the events together
 
   --TBD/NEEDS BUSINESS VALIDATION: In the event that there are multiple events per event_label and event_action, use the first one
-  
+
   QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label, event_action --remove duplicate events
       ORDER BY behavior_at ASC) = 1
 
@@ -96,7 +96,7 @@ error AS (
 suggestion_level AS (
 
   SELECT
-    requested.event_label AS suggestion_id,
+    requested.event_label                                                                           AS suggestion_id,
     --Edge cases where language on the requested event is NULL or '', fall back to loaded event
     IFF(requested.language IS NULL OR requested.language = '', loaded.language, requested.language) AS language,
     requested.delivery_type,
@@ -108,30 +108,30 @@ suggestion_level AS (
     requested.ide_vendor,
     requested.ide_version,
     --model_engine and model_name not available on requested event. Default to loaded event, fall back to cancelled to cover a handful of edge cases
-    COALESCE(loaded.model_engine, cancelled.model_engine) AS model_engine,
-    COALESCE(loaded.model_name, cancelled.model_engine) AS model_name,
-    requested.behavior_at AS requested_at,
-    loaded.behavior_at AS loaded_at,
-    shown.behavior_at AS shown_at,
-    accepted.behavior_at AS accepted_at,
-    rejected.behavior_at AS rejected_at,
-    cancelled.behavior_at AS cancelled_at,
-    not_provided.behavior_at AS not_provided_at,
-    error.behavior_at AS error_at,
-    DATEDIFF('milliseconds', requested_at, loaded_at) AS load_time_in_ms,
-    DATEDIFF('milliseconds', shown_at, IFNULL(accepted_at, rejected_at)) AS display_time_in_ms,
+    COALESCE(loaded.model_engine, cancelled.model_engine)                                           AS model_engine,
+    COALESCE(loaded.model_name, cancelled.model_engine)                                             AS model_name,
+    requested.behavior_at                                                                           AS requested_at,
+    loaded.behavior_at                                                                              AS loaded_at,
+    shown.behavior_at                                                                               AS shown_at,
+    accepted.behavior_at                                                                            AS accepted_at,
+    rejected.behavior_at                                                                            AS rejected_at,
+    cancelled.behavior_at                                                                           AS cancelled_at,
+    not_provided.behavior_at                                                                        AS not_provided_at,
+    error.behavior_at                                                                               AS error_at,
+    DATEDIFF('milliseconds', requested_at, loaded_at)                                               AS load_time_in_ms,
+    DATEDIFF('milliseconds', shown_at, COALESCE(accepted_at, rejected_at))                          AS display_time_in_ms,
     --Outcome order: accepted, rejected, cancelled, not_provided, shown, loaded, error, requested
-    COALESCE(accepted.event_action, rejected.event_action, 
-             cancelled.event_action, not_provided.event_action, 
-             shown.event_action, loaded.event_action,  
-             error.event_action, requested.event_action) AS suggestion_outcome,
-    IFF(loaded.event_label IS NOT NULL, TRUE, FALSE) AS was_loaded,
-    IFF(shown.event_label IS NOT NULL, TRUE, FALSE) AS was_shown,
-    IFF(accepted.event_label IS NOT NULL, TRUE, FALSE) AS was_accepted,
-    IFF(rejected.event_label IS NOT NULL, TRUE, FALSE) AS was_rejected,
-    IFF(cancelled.event_label IS NOT NULL, TRUE, FALSE) AS was_cancelled,
-    IFF(not_provided.event_label IS NOT NULL, TRUE, FALSE) AS was_not_provided,
-    IFF(error.event_label IS NOT NULL, TRUE, FALSE) AS was_error
+    COALESCE(accepted.event_action, rejected.event_action,
+      cancelled.event_action, not_provided.event_action,
+      shown.event_action, loaded.event_action,
+      error.event_action, requested.event_action)                                                   AS suggestion_outcome,
+    IFF(loaded.event_label IS NOT NULL, TRUE, FALSE)                                                AS was_loaded,
+    IFF(shown.event_label IS NOT NULL, TRUE, FALSE)                                                 AS was_shown,
+    IFF(accepted.event_label IS NOT NULL, TRUE, FALSE)                                              AS was_accepted,
+    IFF(rejected.event_label IS NOT NULL, TRUE, FALSE)                                              AS was_rejected,
+    IFF(cancelled.event_label IS NOT NULL, TRUE, FALSE)                                             AS was_cancelled,
+    IFF(not_provided.event_label IS NOT NULL, TRUE, FALSE)                                          AS was_not_provided,
+    IFF(error.event_label IS NOT NULL, TRUE, FALSE)                                                 AS was_error
   FROM requested
   LEFT JOIN loaded
     ON requested.event_label = loaded.event_label
@@ -148,9 +148,9 @@ suggestion_level AS (
   LEFT JOIN error
     ON requested.event_label = error.event_label
   {% if is_incremental() %}
-    
-  WHERE requested.behavior_at >= (SELECT MAX(requested_at) FROM {{ this }})
-    
+
+    WHERE requested.behavior_at >= (SELECT MAX(requested_at) FROM {{ this }})
+
   {% endif %}
 
 )
