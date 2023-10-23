@@ -68,33 +68,7 @@
     mart_crm_attribution_touchpoint.utm_allptnr,
     mart_crm_attribution_touchpoint.utm_partnerid,
 
-    CASE 
-      WHEN (LOWER(mart_crm_attribution_touchpoint.utm_content) LIKE '%field%'
-        OR mart_crm_attribution_touchpoint.campaign_rep_role_name LIKE '%Field Marketing%'
-        OR mart_crm_attribution_touchpoint.budget_holder = 'fmm'
-        OR mart_crm_attribution_touchpoint.utm_budget = 'fmm') 
-      THEN 'Field Marketing'
-      WHEN (LOWER(mart_crm_attribution_touchpoint.utm_campaign) LIKE '%abm%'
-        OR LOWER(mart_crm_attribution_touchpoint.utm_content) LIKE '%abm%'
-        OR LOWER(mart_crm_attribution_touchpoint.bizible_ad_campaign_name) LIKE '%abm%'
-        OR mart_crm_attribution_touchpoint.campaign_rep_role_name like '%ABM%'
-        OR mart_crm_attribution_touchpoint.budget_holder = 'abm'
-        OR mart_crm_attribution_touchpoint.utm_budget = 'abm') 
-      THEN 'Account Based Marketing'
-
-      WHEN (LOWER(mart_crm_attribution_touchpoint.utm_budget) LIKE '%ptnr%' 
-        OR LOWER(mart_crm_attribution_touchpoint.utm_budget) LIKE '%chnl%')
-        OR (LOWER(mart_crm_attribution_touchpoint.budget_holder) LIKE '%ptnr%' 
-        OR LOWER(mart_crm_attribution_touchpoint.budget_holder) LIKE '%chnl%')
-      THEN 'Partner Marketing'
-      WHEN (LOWER(mart_crm_attribution_touchpoint.budget_holder) LIKE '%corp%' 
-        OR LOWER(mart_crm_attribution_touchpoint.utm_budget) LIKE '%corp%')
-      THEN 'Corporate Events'
-      WHEN (LOWER(mart_crm_attribution_touchpoint.budget_holder) LIKE '%dmp%' 
-        OR LOWER(mart_crm_attribution_touchpoint.utm_budget) LIKE '%dmp%')
-        THEN 'Digital Marketing'
-      ELSE 'No Budget Holder' 
-      END AS integrated_budget_holder,
+    mart_crm_attribution_touchpoint.integrated_budget_holder,
     mart_crm_attribution_touchpoint.type AS sfdc_campaign_type,
     mart_crm_attribution_touchpoint.gtm_motion,
     mart_crm_attribution_touchpoint.account_demographics_sales_segment AS person_sales_segment,
@@ -459,7 +433,7 @@ combined_models AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@chrissharp",
+    updated_by="@dmicovic",
     created_date="2023-04-11",
-    updated_date="2023-10-18",
+    updated_date="2023-10-23",
   ) }}
