@@ -375,7 +375,7 @@ WITH bizible_touchpoints AS (
     WHEN lower(campaign.type) = 'content syndication'
       THEN campaign.gtm_motion
     WHEN bizible_integrated_campaign_grouping LIKE '%Automated Software Delivery%'
-        THEN `'Automated Software Delivery'
+        THEN 'Automated Software Delivery'
     WHEN bizible_integrated_campaign_grouping IN ('CI/CD Seeing is Believing','Jenkins Take Out','OctoCat','Premium to Ultimate','20210512_ISSAWebcast', 'GitOps Use Case','GitOps GTM webcast','VCC Use Case') 
         THEN 'Automated Software Delivery'
     WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion IN ('CI (CI/CD)',  'GITOPS', 'Automated Software Delivery') -- override for TechDemo Series
