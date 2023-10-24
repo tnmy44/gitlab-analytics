@@ -33,3 +33,5 @@ seeds:
     description: CSV containing the resource names for AI resources in unreview-poc project
   - name: snowflake_non_team_member_user_types
     description: A categorization of non GitLab team member snowflake users
+  - name: test_employee_ids
+    description: Employee IDs that were created as test accounts in BambooHR or employees that were not migrated to BambooHR. 
