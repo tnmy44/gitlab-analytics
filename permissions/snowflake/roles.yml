@@ -2002,6 +2002,8 @@ roles:
                     - raw.handbook.*
 
     - hightouch_role:
+        member_of:
+            - workato
         warehouses:
             - reporting
         privileges:
@@ -4045,6 +4047,7 @@ roles:
             - marketo
             - analyst_marketing
             - customers_db
+            - workato
         warehouses:
             - dev_xs
 
