@@ -4045,6 +4045,7 @@ roles:
             - marketo
             - analyst_marketing
             - customers_db
+            - workato
         warehouses:
             - dev_xs
 
@@ -5581,6 +5582,7 @@ users:
         can_login: yes
         member_of:
             - hightouch_role
+            - workato
 
     - hkacmarski:
         can_login: yes
