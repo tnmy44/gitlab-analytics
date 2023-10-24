@@ -3,6 +3,7 @@ operation: sync
 target: 
   name: gitlabsandbox
   type: server
+  secrete_prefix: TABLEAU_API_SANDBOX
   site_name: '{{ envvar('TABLEAU_API_SANDBOX_SITE_NAME') }}'
   token_name: '{{ envvar('TABLEAU_API_SANDBOX_TOKEN_NAME') }}' 
   token_secret: '{{ envvar('TABLEAU_API_SANDBOX_TOKEN_SECRET') }}'
