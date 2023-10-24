@@ -1,14 +1,20 @@
-
-name: public sync
+name: Test sync
 operation: sync
 target: 
-  name: gitlabpublic
+  name: gitlabsandbox
   type: server
-  secrete_prefix: TABLEAU_API_PUBLIC
+  site_name: '{{ envvar('TABLEAU_API_SANDBOX_SITE_NAME') }}'
+  token_name: '{{ envvar('TABLEAU_API_SANDBOX_TOKEN_NAME') }}' 
+  token_secret: '{{ envvar('TABLEAU_API_SANDBOX_TOKEN_SECRET') }}'
+  server_url: '{{ envvar('TABLEAU_API_SANDBOX_URL') }}'
 reference: 
   name: gitlab
   type: server
   secrete_prefix: TABLEAU_API
+  site_name: '{{ envvar('TABLEAU_API_SITE_NAME') }}'
+  token_name: '{{ envvar('TABLEAU_API_TOKEN_NAME') }}' 
+  token_secret: '{{ envvar('TABLEAU_API_TOKEN_SECRET') }}'
+  server_url: '{{ envvar('TABLEAU_API_URL') }}'
 target_selection_rules:
   - field: ProjectName
     operator: Equals
@@ -16,7 +22,7 @@ target_selection_rules:
 reference_selection_rules:
   - field: Tags
     operator: Equals
-    value: Public
+    value: SyncTest
 assets:
   workbooks:
     options:
@@ -46,6 +52,5 @@ connections:
   - name: snowflake_tableau
     type: snowflake
     secrete_prefix: SNOWFLAKE_TABLEAU
-
-
-    
+    username: '{{ envvar('SNOWFLAKE_TABLEAU_USERNAME') }}'
+    password: '{{ envvar('SNOWFLAKE_TABLEAU_PASSWORD') }}'
