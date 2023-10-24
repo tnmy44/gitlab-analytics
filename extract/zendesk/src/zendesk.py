@@ -22,7 +22,7 @@ from gitlabdata.orchestration_utils import (
 config_dict = os.environ.copy()
 
 
-def read_file_from_gcp_bucket():
+def refactor_ticket_audits_read_gcp():
     """
     Read file from GCP bucket for ticket_audits
     """
@@ -147,8 +147,7 @@ def upload_to_snowflake(output_df):
 
 
 def main():
-    read_file_from_gcp_bucket()
-
+    refactor_ticket_audits_read_gcp()
 
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)

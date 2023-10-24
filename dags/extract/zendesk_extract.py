@@ -51,15 +51,19 @@ dag = DAG(
     max_active_runs=1,
 )
 
-zendesk_extract_command = (
+zendesk_ticket_audits_extract_command = (
     f"{clone_and_setup_extraction_cmd} && " f"python zendesk/src/zendesk.py"
 )
 
-zendesk_task = KubernetesPodOperator(
+zendesk_tickets_extract_command = (
+    f"{clone_and_setup_extraction_cmd} && " f"python zendesk/src/zendesk_tickets_refactor.py"
+)
+
+zendesk_extract_ticket_audits_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id=f"zendesk-extract-{TASK_SCHEDULE}",
-    name=f"zendesk-extract-{TASK_SCHEDULE}",
+    task_id=f"zendesk-ticket-audits-extract-{TASK_SCHEDULE}",
+    name=f"zendesk-ticket-audits-extract-{TASK_SCHEDULE}",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
@@ -75,8 +79,33 @@ zendesk_task = KubernetesPodOperator(
     },
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
-    arguments=[zendesk_extract_command],
+    arguments=[zendesk_ticket_audits_extract_command],
     dag=dag,
 )
 
-zendesk_task
+zendesk_extract_tickets_task = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DATA_IMAGE,
+    task_id=f"zendesk-tickets-extract-{TASK_SCHEDULE}",
+    name=f"zendesk-tickets-extract-{TASK_SCHEDULE}",
+    secrets=[
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_LOAD_PASSWORD,
+        ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS,
+    ],
+    env_vars={
+        **pod_env_vars,
+        "logical_date": "{{ logical_date }}",
+        "task_schedule": TASK_SCHEDULE,
+    },
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
+    arguments=[zendesk_tickets_extract_command],
+    dag=dag,
+)
+
+zendesk_extract_ticket_audits_task
+zendesk_extract_tickets_task
