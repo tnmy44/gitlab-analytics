@@ -2002,6 +2002,8 @@ roles:
                     - raw.handbook.*
 
     - hightouch_role:
+        member_of:
+            - workato
         warehouses:
             - reporting
         privileges:
@@ -5582,7 +5584,6 @@ users:
         can_login: yes
         member_of:
             - hightouch_role
-            - workato
 
     - hkacmarski:
         can_login: yes
