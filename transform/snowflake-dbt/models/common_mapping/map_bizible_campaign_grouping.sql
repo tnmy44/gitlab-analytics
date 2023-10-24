@@ -374,13 +374,15 @@ WITH bizible_touchpoints AS (
     -- if content syndication, use SFDC value dirrectly
     WHEN lower(campaign.type) = 'content syndication'
       THEN campaign.gtm_motion
-    WHEN bizible_integrated_campaign_grouping IN ('Automated Software Delivery','Jenkins Take Out','OctoCat','Premium to Ultimate','20210512_ISSAWebcast', 'GitOps Use Case','GitOps GTM webcast') 
+    WHEN bizible_integrated_campaign_grouping LIKE '%Automated Software Delivery%'
+        THEN `'Automated Software Delivery'
+    WHEN bizible_integrated_campaign_grouping IN ('CI/CD Seeing is Believing','Jenkins Take Out','OctoCat','Premium to Ultimate','20210512_ISSAWebcast', 'GitOps Use Case','GitOps GTM webcast','VCC Use Case') 
         THEN 'Automated Software Delivery'
     WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion IN ('CI (CI/CD)',  'GITOPS', 'Automated Software Delivery') -- override for TechDemo Series
         THEN 'Automated Software Delivery'
     WHEN bizible_integrated_campaign_grouping = 'DevSecOps Platform'
         THEN 'DevSecOps Platform'
-    WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','Reduce Security AND Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast','DOI Webcast','FY22 GitHub Competitive Campaign') 
+    WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','Reduce Security AND Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast','DOI Webcast','FY22 GitHub Competitive Campaign', 'FY22 GitHub Competitive Campaign - APAC') 
         THEN 'DevSecOps Platform'
     WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion IN ('DevOps Platform', 'DevSecOps Platform') -- override for TechDemo Series
         THEN 'DevSecOps Platform'
