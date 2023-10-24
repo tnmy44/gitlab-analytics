@@ -80,6 +80,7 @@ for table in tables_to_rollup:
     # Set the command for the container
     container_cmd = f"""
         {clone_and_setup_extraction_cmd} &&
+        printenv && 
         cd rollup_table_clones/src &&
         python3 execute.py rollup_full_table_clones --table_name {table}
     """
