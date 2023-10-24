@@ -5,7 +5,7 @@
 }}
 
 SELECT *
-FROM {{ source('gitlab_dotcom', 'milestones_internal_only') }}
+FROM {{ source('gitlab_dotcom', 'namespaces_internal_only') }}
 {% if is_incremental() %}
 
 WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})

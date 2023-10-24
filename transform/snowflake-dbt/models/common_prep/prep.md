@@ -829,3 +829,11 @@ This model contains data for all trial orders for each namespace from CDot trial
 This table stores information about the subscription purchased by the customer plus some additional details used for syncing purposes with GitLab.com. The data is sourced from tap-postgres from the orders table from customers.gitlab.com.
 
 {% enddocs %}
+
+{% docs prep_cloud_activation %}
+
+This model contains data for the cloud activations sourced from tap-postgres table from customers.gitlab.com. It stores information about all the activation codes that were generated for Cloud licenses. Customers use this code after the installation of their GitLab instance. 
+
+This model contains other join keys like `billing_account_id`, `subscription_name` etc.. to be able to join back to Salesforce, Zuora, dimdate data respectively.
+
+{% enddocs %}

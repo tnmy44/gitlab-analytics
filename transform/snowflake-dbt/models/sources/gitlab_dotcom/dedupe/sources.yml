@@ -63,6 +63,8 @@ sources:
         freshness: null
       - name: ci_builds
         identifier: gitlab_db_ci_builds
+      - name: ci_builds_internal_only
+        identifier: gitlab_db_ci_builds_internal_only
       - name: ci_builds_runner_session
         identifier: gitlab_db_ci_builds_runner_session
       - name: ci_editor_ai_conversation_messages
@@ -85,6 +87,8 @@ sources:
         identifier: gitlab_db_ci_pipeline_schedules
       - name: ci_pipelines
         identifier: gitlab_db_ci_pipelines
+      - name: ci_pipelines_internal_only
+        identifier: gitlab_db_ci_pipelines_internal_only
       - name: ci_platform_metrics
         identifier: gitlab_db_ci_platform_metrics
       - name: ci_project_monthly_usages
@@ -223,8 +227,6 @@ sources:
         identifier: gitlab_db_label_priorities
       - name: labels
         identifier: gitlab_db_labels
-      - name: labels_internal_only
-        identifier: gitlab_db_labels_internal_only
       - name: lfs_objects_projects
         identifier: gitlab_db_lfs_objects_projects
       - name: lists
@@ -253,8 +255,6 @@ sources:
         identifier: gitlab_db_milestone_releases
       - name: milestones
         identifier: gitlab_db_milestones
-      - name: milestones_internal_only
-        identifier: gitlab_db_milestones_internal_only
       - name: ml_candidates
         identifier: gitlab_db_ml_candidates
       - name: ml_experiments
@@ -269,6 +269,8 @@ sources:
         identifier: gitlab_db_namespace_statistics
       - name: namespaces
         identifier: gitlab_db_namespaces
+      - name: namespaces_internal_only
+        identifier: gitlab_db_namespaces_internal_only
       - name: notes
         identifier: gitlab_db_notes
       - name: notes_internal_only

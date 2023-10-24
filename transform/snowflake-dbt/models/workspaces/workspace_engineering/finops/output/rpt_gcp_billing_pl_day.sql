@@ -126,7 +126,7 @@ add_path AS (
   FROM grouping
   LEFT JOIN project_full_path ON (grouping.gcp_project_id = project_full_path.gcp_project_id 
   AND DATE_TRUNC('day', grouping.date_day) >= DATE_TRUNC('day', project_full_path.first_created_at) 
-  AND DATE_TRUNC('day', grouping.date_day) < DATE_TRUNC('day', project_full_path.last_updated_at))
+  AND DATE_TRUNC('day', grouping.date_day) <= DATEADD('day', -1, DATE_TRUNC('day', project_full_path.last_updated_at)))
 
 )
 
