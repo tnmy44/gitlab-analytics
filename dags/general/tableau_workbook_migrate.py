@@ -13,11 +13,14 @@ from airflow_utils import (
     gitlab_pod_env_vars,
 )
 from kube_secrets import (
-    SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_PASSWORD,
-    SNOWFLAKE_LOAD_ROLE,
-    SNOWFLAKE_LOAD_USER,
-    SNOWFLAKE_LOAD_WAREHOUSE,
+    TABLEAU_API_SANDBOX_SITE_NAME,
+    TABLEAU_API_SANDBOX_TOKEN_NAME,
+    TABLEAU_API_SANDBOX_TOKEN_SECRET,
+    TABLEAU_API_SANDBOX_URL,
+    TABLEAU_API_TOKEN_NAME,
+    TABLEAU_API_TOKEN_SECRET,
+    TABLEAU_API_URL,
+    TABLEAU_API_SITE_NAME,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -60,11 +63,14 @@ tableau_workbook_migrate = KubernetesPodOperator(
     task_id="tableau-workbook-migrate",
     name="tableau-workbook-migrate",
     secrets=[
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-        SNOWFLAKE_LOAD_PASSWORD,
+        TABLEAU_API_SANDBOX_SITE_NAME,
+        TABLEAU_API_SANDBOX_TOKEN_NAME,
+        TABLEAU_API_SANDBOX_TOKEN_SECRET,
+        TABLEAU_API_SANDBOX_URL,
+        TABLEAU_API_TOKEN_NAME,
+        TABLEAU_API_TOKEN_SECRET,
+        TABLEAU_API_URL,
+        TABLEAU_API_SITE_NAME,
     ],
     env_vars=pod_env_vars,
     affinity=get_affinity("production"),
