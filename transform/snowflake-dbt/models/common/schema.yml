@@ -5306,6 +5306,18 @@ models:
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_crm_person_id
         description: A surrogate key for use when joining to `dim_crm_person`. Created from the contact_id where there is a contact and a lead_id where there isn't.
+      - name: dim_crm_current_account_set_hierarchy_sk
+        description: '{{ doc("dim_crm_current_account_set_hierarchy_sk") }}'
+      - name: dim_crm_current_account_set_sales_segment_id
+        description: '{{ doc("dim_crm_current_account_set_sales_segment_id") }}'
+      - name: dim_crm_current_account_set_geo_id
+        description: '{{ doc("dim_crm_current_account_set_geo_id") }}'
+      - name: dim_crm_current_account_set_region_id
+        description: '{{ doc("dim_crm_current_account_set_region_id") }}'
+      - name: dim_crm_current_account_set_area_id
+        description: '{{ doc("dim_crm_current_account_set_area_id") }}'
+      - name: dim_crm_current_account_set_business_unit_id
+        description: '{{ doc("dim_crm_current_account_set_business_unit_id") }}'
       - name: sfdc_contact_id
         description: the contact id from the fist contact by opportunity contact role created date for the given opportunity record
       - name: created_date
