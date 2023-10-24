@@ -54,9 +54,8 @@ def refactor_tickets_read_gcp():
                 for chunk in chunks:
                     info(f"Uploading to dataframe, batch:{count}")
                     df_tickets = pd.concat([df_tickets, chunk])
-                    if not df_tickets.empty:
-                        refactor_tickets(df_tickets)
                     count = count + 1
+                refactor_tickets(df_tickets)
             except:
                 error(f"Error reading {blob.name}")
             # blob.delete() # delete the file after successfull upload to the table, commentiong it for now for testing purposes
