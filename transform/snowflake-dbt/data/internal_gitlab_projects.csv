@@ -8,7 +8,6 @@ gitlab-org/distribution/team-tasks,4492386
 gitlab-org/developer-relations/contributor-success/contributor-success-dashboard,51223094
 gitlab-com/gl-security/security-assurance/field-security-team/customer-assurance-activities/caa-servicedesk,26487887
 gitlab-data/tableau,43945584
-gitlab-data/analytics,4409640
 gitlab-org/plan,13453461
 gitlab-org/gitlab-design,443787
 gitlab-org/gitlab-runner-docker-cleanup,444821
@@ -36,7 +35,6 @@ gitlab-org/gitlab-foss,13083
 gitlab-org/fulfillment-group/meta,10619765
 gitlab-org/gitlab-runner,250833
 gitlab-org/terraform-provider-gitlab,40916776
-gitlab-org/data-quality,45393508
 gitlab-org/gitlab-pages,734943
 gitlab-org/gitlabktl,11080193
 gitlab-com/Product,1641463
@@ -67,7 +65,6 @@ gitlab-org/security-products/gemnasium-db,12006272
 gitlab-org/security-products/release,5994307
 gitlab-org/security-products/advisories,5417931
 gitlab-com/support/support-team-meta,1083469
-gitlab-org/distribution/team-tasks,4492386
 gitlab-org/quality/triage-reports,16233736
 gitlab-org/quality/testcases,11229385
 gitlab-org/quality/testcase-sessions,20083979
@@ -137,20 +134,15 @@ gitlab-org/quality/engineering-productivity/triage-ops-playground,36072369
 gitlab-com/www-gitlab-com,7764
 gitlab-org/gitlab,278964
 gitlab-cookbooks/cookbook-omnibus-gitlab,95156
-gitlab-org/plan,13453461
 gitlab-org/gitlab-ci,14288
 gitlab-org/trello-power-up,3466815
 gitlab-org/gitlab-ci-yml,1209837
 gitlab-org/cookbook-gitlab,16648
-gitlab-org/release/tasks,5064907
-gitlab-org/security-products/advisories,5417931
 gitlab-org/gitlab-core-team/general,7783667
 gitlab-org/cloud-connector-team/team-tasks,13017990
 gitlab-org/plan-stage/okr-sandbox,23862566
 gitlab-org/editor-extensions/gitlab-language-server-for-code-suggestions,46519181
-gitlab-org/professional-services-automation/tools/migration/congregate,30561867
 gitlab-org/ci-cd/release-group/release,16302012
-gitlab-org/analytics-section/analytics-instrumentation,12051824
 gitlab-com/gl-security/security-department-meta,4501968
 gitlab-com/gl-security/security-operations/infrastructure-security/projects/infrastructure-vulnerability-management,17192788
 gitlab-com/gl-infra/third-party-container-images,37020816
