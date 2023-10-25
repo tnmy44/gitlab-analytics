@@ -16,6 +16,11 @@ WITH gitlab_ide_extension_events AS (
   FROM {{ ref('wk_mart_behavior_structured_event_code_suggestion') }}
   WHERE app_id = 'gitlab_ide_extension' --events that can be used to calculate suggestion outcome
     AND event_label IS NOT NULL --required field in order to stitch the events together
+    {% if is_incremental() %}
+
+      AND behavior_at >= (SELECT MAX(requested_at) FROM {{ this }})
+
+    {% endif %}
 
 ),
 
@@ -174,11 +179,6 @@ suggestion_level AS (
   LEFT JOIN suggestions_with_duplicate_events
     ON requested.event_label = suggestions_with_duplicate_events.event_label
   WHERE suggestions_with_duplicate_events.event_label IS NULL --exclude suggestions with duplicate events
-    {% if is_incremental() %}
-
-      AND requested.behavior_at >= (SELECT MAX(requested_at) FROM {{ this }})
-
-    {% endif %}
 
 )
 
