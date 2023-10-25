@@ -80,6 +80,7 @@ def refactor_ticket_audits(df: pd.DataFrame):
         author_id = df["author_id"][ind]
         ticket_id = df["ticket_id"][ind]
         events = df["events"][ind]
+        EVENTS_OUT = []
         # iterate through all keys in events object
         for key in events:
             if "field_name" in key:
@@ -97,20 +98,25 @@ def refactor_ticket_audits(df: pd.DataFrame):
                     else:
                         value = key["value"]
                     if key["id"] is None:
-                        id = "null"
+                        field_id = "null"
                     else:
-                        id = key["id"]
-                    row_list = [
-                        author_id,
-                        created_at,
-                        field_name,
-                        type,
-                        value,
-                        id,
-                        ticket_id,
-                        via,
-                    ]
-                    output_list.append(row_list)
+                        field_id = key["id"]
+                    EVENTS_DICT_REC = {
+                        "id": field_id,
+                        "value": value,
+                        "type": type,
+                        "field_name": field_name,
+                    }
+                    EVENTS_OUT.append(EVENTS_DICT_REC)
+        row_list = [
+            author_id,
+            created_at,
+            EVENTS_OUT,
+            id,
+            ticket_id,
+            via,
+        ]
+        output_list.append(row_list)
 
     # add output_list to output_df
     output_df = pd.DataFrame(
@@ -138,7 +144,7 @@ def upload_to_snowflake(output_df):
     dataframe_uploader(
         output_df,
         loader_engine,
-        table_name="ticket_audits_test",
+        table_name="ticket_audits",
         schema="tap_zendesk",
         if_exists="append",
         add_uploaded_at=True,
@@ -148,6 +154,7 @@ def upload_to_snowflake(output_df):
 
 def main():
     refactor_ticket_audits_read_gcp()
+
 
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)

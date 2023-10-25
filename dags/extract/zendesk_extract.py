@@ -39,11 +39,12 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
+    "description": "This DAG is extracts and transforms sensitive zendesk tickets and tickets_audits tables",
 }
 
 # Define the DAG
 dag = DAG(
-    f"zendesk_extract_{TASK_SCHEDULE}",
+    f"zendesk_sensitive_extract",
     default_args=default_args,
     schedule_interval="0 5 * * *",
     start_date=datetime(2023, 10, 16),
@@ -52,11 +53,13 @@ dag = DAG(
 )
 
 zendesk_ticket_audits_extract_command = (
-    f"{clone_and_setup_extraction_cmd} && " f"python zendesk/src/zendesk.py"
+    f"{clone_and_setup_extraction_cmd} && "
+    f"python zendesk/src/zendesk_ticket_audits_refactor.py"
 )
 
 zendesk_tickets_extract_command = (
-    f"{clone_and_setup_extraction_cmd} && " f"python zendesk/src/zendesk_tickets_refactor.py"
+    f"{clone_and_setup_extraction_cmd} && "
+    f"python zendesk/src/zendesk_tickets_refactor.py"
 )
 
 zendesk_extract_ticket_audits_task = KubernetesPodOperator(
