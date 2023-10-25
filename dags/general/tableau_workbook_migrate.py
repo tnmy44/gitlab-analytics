@@ -54,6 +54,7 @@ dag = DAG(
 tableau_workbook_migrate_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     echo $TABLEAU_API_SANDBOX_SITE_NAME && 
+    echo $TABLEAU_API_SITE_NAME && 
     TableauConMan migrate-content --yaml_path='./tableau_con_man_config/src/public_sync_plan.yaml'
 """
 
