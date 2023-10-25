@@ -253,21 +253,21 @@ models:
       - name: ide_version
         description: '{{ doc("ide_extension_ide_version") }}'
       - name: requested_at
-        description: Timestamp of the `suggestion_requested` event
+        description: Timestamp of the `suggestion_requested` event. This event is sent when the IDE extension requests a suggestion from the backend.
       - name: loaded_at
-        description: Timestamp of the `suggestion_loaded` event
+        description: Timestamp of the `suggestion_loaded` event. This event is sent when the suggestion request returns without error.
       - name: shown_at
-        description: Timestamp of the `suggestion_shown` event
+        description: Timestamp of the `suggestion_shown` event. This event is sent when the suggestion is shown to the user.
       - name: accepted_at
-        description: Timestamp of the `suggestion_accepted` event 
+        description: Timestamp of the `suggestion_accepted` event. This event is sent when the suggestion was shown and then accepted by the user.
       - name: rejected_at
-        description: Timestamp of the `suggestion_rejected` event
+        description: Timestamp of the `suggestion_rejected` event. This event is sent when the suggestion was shown and then rejected by the user.
       - name: cancelled_at
-        description: Timestamp of the `suggestion_cancelled` event
+        description: Timestamp of the `suggestion_cancelled` event. This event is sent when the suggestion request was canceled and not shown. For example, the user starts typing again before the suggestion is shown.
       - name: not_provided_at
-        description: Timestamp of the `suggestion_not_provided` event
+        description: Timestamp of the `suggestion_not_provided` event. This event is sent when no suggestion was provided that could be shown to the user. This can happen if the suggestion does not meet a rule designed to limit poor suggestions from being shown. For example, the suggestion is all whitespace characters.
       - name: error_at
-        description: Timestamp of the `suggestion_error` event
+        description: Timestamp of the `suggestion_error` event. This event is sent when the suggestion request leads to an error.
       - name: load_time_in_ms
         description: The difference (in ms) between the `suggestion_requested` and `suggestion_loaded` events
       - name: display_time_in_ms
@@ -275,19 +275,19 @@ models:
       - name: suggestion_outcome
         description: The outcome of the suggestion (ex. `suggestion_accepted`, `suggestion_rejected`, `suggestion_cancelled`, `suggestion_error`, etc)
       - name: was_loaded
-        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_loaded` event
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_loaded` event. This event is sent when the suggestion request returns without error.
       - name: was_shown
-        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_shown` event
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_shown` event. This event is sent when the suggestion is shown to the user.
       - name: was_accepted
-        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_accepted` event
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_accepted` event. This event is sent when the suggestion was shown and then accepted by the user.
       - name: was_rejected
-        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_rejected` event
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_rejected` event. This event is sent when the suggestion was shown and then rejected by the user.
       - name: was_cancelled
-        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_cancelled` event
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_cancelled` event. This event is sent when the suggestion request was canceled and not shown. For example, the user starts typing again before the suggestion is shown.
       - name: was_not_provided
-        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_not_provided` event
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_not_provided` event. This event is sent when no suggestion was provided that could be shown to the user. This can happen if the suggestion does not meet a rule designed to limit poor suggestions from being shown. For example, the suggestion is all whitespace characters.
       - name: was_error
-        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_error` event
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_error` event. This event is sent when the suggestion request leads to an error.
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -296,3 +296,4 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+

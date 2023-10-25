@@ -17,14 +17,9 @@ WITH gitlab_ide_extension_events AS (
   WHERE app_id = 'gitlab_ide_extension' --events that can be used to calculate suggestion outcome
     AND event_label IS NOT NULL --required field in order to stitch the events together
 
-  --Limit to 1 event per event_label and event_action. In the case of multiple, use the first one
-
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY event_label, event_action --remove duplicate events
-      ORDER BY behavior_at ASC) = 1
-
 ),
 
---Visual with event sequence here: https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/issues/256#note_1549346766
+--Visual with event sequence here: https://gitlab.com/gitlab-org/editor-extensions/gitlab-language-server-for-code-suggestions/-/blob/main/docs/telemetry.md
 
 requested AS (
 
@@ -93,9 +88,31 @@ error AS (
 
 ),
 
+event_count_per_action AS (
+
+  --get a count of events per suggestion (event_label) and event_action - there should only be one
+  SELECT
+    event_label,
+    event_action,
+    COUNT(*) AS suggestion_action_event_count
+  FROM gitlab_ide_extension_events
+  GROUP BY 1, 2
+
+),
+
+suggestions_with_duplicate_events AS (
+
+  SELECT DISTINCT event_label
+  FROM event_count_per_action
+  WHERE suggestion_action_event_count > 1 --more than 1 event per event_action (which should not happen)
+
+),
+
 suggestion_level AS (
 
   SELECT
+
+    --Suggestion attributes
     requested.event_label                                                                           AS suggestion_id,
     --Edge cases where language on the requested event is NULL or '', fall back to loaded event
     IFF(requested.language IS NULL OR requested.language = '', loaded.language, requested.language) AS language,
@@ -110,6 +127,8 @@ suggestion_level AS (
     --model_engine and model_name not available on requested event. Default to loaded event, fall back to cancelled to cover a handful of edge cases
     COALESCE(loaded.model_engine, cancelled.model_engine)                                           AS model_engine,
     COALESCE(loaded.model_name, cancelled.model_engine)                                             AS model_name,
+
+    --Timestamps
     requested.behavior_at                                                                           AS requested_at,
     loaded.behavior_at                                                                              AS loaded_at,
     shown.behavior_at                                                                               AS shown_at,
@@ -118,13 +137,18 @@ suggestion_level AS (
     cancelled.behavior_at                                                                           AS cancelled_at,
     not_provided.behavior_at                                                                        AS not_provided_at,
     error.behavior_at                                                                               AS error_at,
+
+    --Time calculations
     DATEDIFF('milliseconds', requested_at, loaded_at)                                               AS load_time_in_ms,
     DATEDIFF('milliseconds', shown_at, COALESCE(accepted_at, rejected_at))                          AS display_time_in_ms,
+
     --Outcome order: accepted, rejected, cancelled, not_provided, shown, loaded, error, requested
     COALESCE(accepted.event_action, rejected.event_action,
       cancelled.event_action, not_provided.event_action,
       shown.event_action, loaded.event_action,
       error.event_action, requested.event_action)                                                   AS suggestion_outcome,
+
+    --Junk dimensions
     IFF(loaded.event_label IS NOT NULL, TRUE, FALSE)                                                AS was_loaded,
     IFF(shown.event_label IS NOT NULL, TRUE, FALSE)                                                 AS was_shown,
     IFF(accepted.event_label IS NOT NULL, TRUE, FALSE)                                              AS was_accepted,
@@ -147,11 +171,14 @@ suggestion_level AS (
     ON requested.event_label = not_provided.event_label
   LEFT JOIN error
     ON requested.event_label = error.event_label
-  {% if is_incremental() %}
+  LEFT JOIN suggestions_with_duplicate_events
+    ON requested.event_label = suggestions_with_duplicate_events.event_label
+  WHERE suggestions_with_duplicate_events.event_label IS NULL --exclude suggestions with duplicate events
+    {% if is_incremental() %}
 
-    WHERE requested.behavior_at >= (SELECT MAX(requested_at) FROM {{ this }})
+      AND requested.behavior_at >= (SELECT MAX(requested_at) FROM {{ this }})
 
-  {% endif %}
+    {% endif %}
 
 )
 
@@ -162,3 +189,4 @@ suggestion_level AS (
     created_date="2023-10-20",
     updated_date="2023-10-20"
 ) }}
+
