@@ -39,6 +39,7 @@ default_args = {
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
+    "retries": 2,
     "description": "This DAG is extracts and transforms sensitive zendesk tickets and tickets_audits tables",
 }
 
