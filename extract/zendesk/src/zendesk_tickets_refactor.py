@@ -54,6 +54,7 @@ def refactor_tickets_read_gcp():
                     df_tickets = pd.concat([df_tickets, chunk])
                     count = count + 1
                 refactor_tickets(df_tickets)
+                # blob.delete() # delete the file after successfull upload to the table, commentiong it for now for testing purposes
             except:
                 error(f"Error reading {blob.name}")
             # blob.delete() # delete the file after successfull upload to the table, commentiong it for now for testing purposes

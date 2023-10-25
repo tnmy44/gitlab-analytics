@@ -55,9 +55,9 @@ def refactor_ticket_audits_read_gcp():
                     info(f"Uploading to dataframe, batch:{count}")
                     df = pd.concat([df, chunk])
                     count = count + 1
+                refactor_ticket_audits(df)
             except:
                 error(f"Error reading {blob.name}")
-            refactor_ticket_audits(df)
             # blob.delete() # delete the file after successfull upload to the table, commentiong it for now for testing purposes
         else:
             error(f"No file found!")
@@ -72,7 +72,7 @@ def refactor_ticket_audits(df: pd.DataFrame):
     info(f"Transforming file...")
     for ind in df.index:
         via = df["via"][ind]
-        id = df["events"][ind]
+        id = df["id"][ind]
         created_at = df["created_at"][ind]
         author_id = df["author_id"][ind]
         ticket_id = df["ticket_id"][ind]
@@ -121,9 +121,7 @@ def refactor_ticket_audits(df: pd.DataFrame):
         columns=[
             "author_id",
             "created_at",
-            "field_name",
-            "type",
-            "value",
+            "events",
             "id",
             "ticket_id",
             "via",
