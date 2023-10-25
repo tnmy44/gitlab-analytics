@@ -110,5 +110,4 @@ zendesk_extract_tickets_task = KubernetesPodOperator(
     dag=dag,
 )
 
-zendesk_extract_ticket_audits_task
-zendesk_extract_tickets_task
+zendesk_extract_ticket_audits_task >> zendesk_extract_tickets_task

@@ -48,7 +48,7 @@ def refactor_ticket_audits_read_gcp():
             info(f"Reading the file {blob.name}")
             try:
                 chunks = pd.read_json(
-                    io.BytesIO(blob.download_as_string()), lines=True, chunksize=10000
+                    io.BytesIO(blob.download_as_string()), lines=True, chunksize=20000
                 )
                 count = 1
                 for chunk in chunks:
@@ -71,9 +71,6 @@ def refactor_ticket_audits(df: pd.DataFrame):
     output_list = []
     info(f"Transforming file...")
     for ind in df.index:
-        # _sdc_batched_at = df['_sdc_batched_at'][ind]
-        # _sdc_deleted_at = df['_sdc_deleted_at'][ind]
-        # _sdc_extracted_at = df['_sdc_extracted_at'][ind]
         via = df["via"][ind]
         id = df["events"][ind]
         created_at = df["created_at"][ind]

@@ -46,7 +46,7 @@ def refactor_tickets_read_gcp():
             info(f"Reading the file {blob.name}")
             try:
                 chunks = pd.read_json(
-                    io.BytesIO(blob.download_as_string()), lines=True, chunksize=10000
+                    io.BytesIO(blob.download_as_string()), lines=True, chunksize=20000
                 )
                 count = 1
                 for chunk in chunks:
@@ -81,7 +81,7 @@ def refactor_tickets(df_tickets: pd.DataFrame):
     for blob in BUCKET.list_blobs(
         prefix="meltano/tap_zendesk__sensitive/ticket_fields/"
     ):
-        print(blob.name)
+        info(f"Reading the file {blob.name}")
         if blob.name.endswith(".jsonl"):
             # open a csv file and put contents of it in dataframe
             df_ticket_fields_extracted = pd.read_json(
@@ -111,6 +111,7 @@ def refactor_tickets(df_tickets: pd.DataFrame):
 
     output_list = []
     # print(df_tickets)
+    info(f"Tranformation in progress...")
     for ind in df_tickets.index:
         ALLOW_ATTACHMENTS = df_tickets["ALLOW_ATTACHMENTS"][ind]
         ALLOW_CHANNELBACK = df_tickets["ALLOW_CHANNELBACK"][ind]
