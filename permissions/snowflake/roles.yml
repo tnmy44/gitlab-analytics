@@ -4780,6 +4780,7 @@ roles:
             - data_science_readonly
             - facebook_ads
             - linkedin_ads
+            - zuora_order
         warehouses:
             - dev_xs
         owns:
