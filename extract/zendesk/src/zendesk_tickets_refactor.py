@@ -265,7 +265,7 @@ def upload_to_snowflake(output_df):
     dataframe_uploader(
         output_df,
         loader_engine,
-        table_name="tickets",
+        table_name="tickets_test",
         schema="tap_zendesk",
         if_exists="append",
         add_uploaded_at=True,
