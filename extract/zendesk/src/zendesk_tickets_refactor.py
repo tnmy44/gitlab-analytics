@@ -168,6 +168,8 @@ def refactor_tickets(df_tickets: pd.DataFrame):
                         }
                         CUSTOM_FIELDS_OUT.append(CUSTOM_FIELDS_DICT_REC)
 
+        if CUSTOM_FIELDS_OUT == "[]":
+            CUSTOM_FIELDS_OUT = None
         # append all the columns along with ticket_custom_field_id, ticket_custom_field_value in output list
         row_list = [
             ALLOW_ATTACHMENTS,
@@ -207,9 +209,9 @@ def refactor_tickets(df_tickets: pd.DataFrame):
             VIA,
         ]
         # replace the value of description with null in row_list
-        row_list[7] = "null"
+        row_list[7] = None
         # replace the value of subject with null in row_list
-        row_list[27] = "null"
+        row_list[27] = None
         output_list.append(row_list)
 
     output_df = pd.DataFrame(
@@ -261,16 +263,20 @@ def upload_to_snowflake(output_df):
     """
     This function will upload the dataframe to snowflake
     """
-    loader_engine = snowflake_engine_factory(config_dict, "LOADER")
-    dataframe_uploader(
-        output_df,
-        loader_engine,
-        table_name="tickets_test",
-        schema="tap_zendesk",
-        if_exists="append",
-        add_uploaded_at=True,
-    )
-    info(f"\nUploaded 'tickets_test' to Snowflake")
+    try:
+        loader_engine = snowflake_engine_factory(config_dict, "LOADER")
+        dataframe_uploader(
+            output_df,
+            loader_engine,
+            table_name="tickets_test",
+            schema="tap_zendesk",
+            if_exists="append",
+            add_uploaded_at=True,
+        )
+        info(f"\nUploaded 'tickets_test' to Snowflake")
+    except Exception as e:
+        error(f"Error uploading to snowflake: {e}")
+        sys.exit(1)
 
 
 def main():

@@ -105,6 +105,8 @@ def refactor_ticket_audits(df: pd.DataFrame):
                         "field_name": field_name,
                     }
                     EVENTS_OUT.append(EVENTS_DICT_REC)
+        if EVENTS_OUT == "[]":
+            EVENTS_OUT = None
         row_list = [
             author_id,
             created_at,
@@ -135,16 +137,20 @@ def upload_to_snowflake(output_df):
     """
     This function will upload the dataframe to snowflake
     """
-    loader_engine = snowflake_engine_factory(config_dict, "LOADER")
-    dataframe_uploader(
-        output_df,
-        loader_engine,
-        table_name="ticket_audits_test",
-        schema="tap_zendesk",
-        if_exists="append",
-        add_uploaded_at=True,
-    )
-    info(f"\nUploaded 'ticket_audits_test' to Snowflake")
+    try:
+        loader_engine = snowflake_engine_factory(config_dict, "LOADER")
+        dataframe_uploader(
+            output_df,
+            loader_engine,
+            table_name="ticket_audits_test",
+            schema="tap_zendesk",
+            if_exists="append",
+            add_uploaded_at=True,
+        )
+        info(f"\nUploaded 'ticket_audits_test' to Snowflake")
+    except Exception as e:
+        error(f"Error uploading to snowflake: {e}")
+        sys.exit(1)
 
 
 def main():
