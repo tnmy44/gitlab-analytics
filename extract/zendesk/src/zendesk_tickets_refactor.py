@@ -168,7 +168,7 @@ def refactor_tickets(df_tickets: pd.DataFrame):
                         }
                         CUSTOM_FIELDS_OUT.append(CUSTOM_FIELDS_DICT_REC)
 
-        if CUSTOM_FIELDS_OUT == "[]":
+        if len(CUSTOM_FIELDS_OUT) == 0:
             CUSTOM_FIELDS_OUT = None
         # append all the columns along with ticket_custom_field_id, ticket_custom_field_value in output list
         row_list = [

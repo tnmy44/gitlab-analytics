@@ -105,7 +105,7 @@ def refactor_ticket_audits(df: pd.DataFrame):
                         "field_name": field_name,
                     }
                     EVENTS_OUT.append(EVENTS_DICT_REC)
-        if EVENTS_OUT == "[]":
+        if len(EVENTS_OUT) == 0:
             EVENTS_OUT = None
         row_list = [
             author_id,
