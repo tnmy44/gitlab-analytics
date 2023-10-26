@@ -3,7 +3,8 @@
     materialized='incremental',
     unique_key='suggestion_id',
     tags=['product'],
-    on_schema_change='sync_all_columns'
+    on_schema_change='sync_all_columns',
+    cluster_by=['requested_at::DATE']
   ) 
 
 }}
@@ -119,8 +120,14 @@ suggestion_level AS (
 
     --Suggestion attributes
     requested.event_label                                                                           AS suggestion_id,
-    --Edge cases where language on the requested event is NULL or '', fall back to loaded event
-    IFF(requested.language IS NULL OR requested.language = '', loaded.language, requested.language) AS language,
+    --Edge cases where language on the requested event is NULL or blank (''), fall back to other events to maximize coverage
+    CASE
+      WHEN requested.language != '' THEN requested.language
+      WHEN loaded.language != '' THEN loaded.language
+      WHEN accepted.language != '' THEN accepted.language
+      WHEN rejected.language != '' THEN rejected.language
+      WHEN cancelled.language != '' THEN cancelled.language
+    END                                                                                             AS language,
     requested.delivery_type,
     requested.prefix_length,
     requested.suffix_length,
@@ -129,9 +136,13 @@ suggestion_level AS (
     requested.ide_name,
     requested.ide_vendor,
     requested.ide_version,
-    --model_engine and model_name not available on requested event. Default to loaded event, fall back to cancelled to cover a handful of edge cases
-    COALESCE(loaded.model_engine, cancelled.model_engine)                                           AS model_engine,
-    COALESCE(loaded.model_name, cancelled.model_engine)                                             AS model_name,
+    --model_engine and model_name not available on requested event. Default to loaded event, fall back to others to maximize coverage
+    COALESCE(loaded.model_engine, shown.model_engine, 
+      accepted.model_engine, rejected.model_engine, 
+      cancelled.model_engine)                                                                       AS model_engine,
+    COALESCE(loaded.model_name, shown.model_name, 
+      accepted.model_name, rejected.model_name, 
+      cancelled.model_name)                                                                         AS model_name,
 
     --Timestamps
     requested.behavior_at                                                                           AS requested_at,
@@ -147,13 +158,14 @@ suggestion_level AS (
     DATEDIFF('milliseconds', requested_at, loaded_at)                                               AS load_time_in_ms,
     DATEDIFF('milliseconds', shown_at, COALESCE(accepted_at, rejected_at))                          AS display_time_in_ms,
 
-    --Outcome order: accepted, rejected, cancelled, not_provided, shown, loaded, error, requested
+    --Outcome/end result of suggestion
     COALESCE(accepted.event_action, rejected.event_action,
       cancelled.event_action, not_provided.event_action,
       shown.event_action, loaded.event_action,
       error.event_action, requested.event_action)                                                   AS suggestion_outcome,
 
     --Junk dimensions
+    IFF(requested.event_label IS NOT NULL, TRUE, FALSE)                                             AS was_requested,
     IFF(loaded.event_label IS NOT NULL, TRUE, FALSE)                                                AS was_loaded,
     IFF(shown.event_label IS NOT NULL, TRUE, FALSE)                                                 AS was_shown,
     IFF(accepted.event_label IS NOT NULL, TRUE, FALSE)                                              AS was_accepted,

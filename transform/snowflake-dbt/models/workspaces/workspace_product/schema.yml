@@ -274,6 +274,8 @@ models:
         description: The difference (in ms) between the `suggestion_shown` and `suggestion_accepted` or `suggestion_rejected` events
       - name: suggestion_outcome
         description: The outcome of the suggestion (ex. `suggestion_accepted`, `suggestion_rejected`, `suggestion_cancelled`, `suggestion_error`, etc)
+      - name: was_requested
+        description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_requested` event. This event is sent when the IDE extension requests a suggestion from the backend. This field will always be TRUE.
       - name: was_loaded
         description: Boolean flag set to `TRUE` if the suggestion had a `suggestion_loaded` event. This event is sent when the suggestion request returns without error.
       - name: was_shown
