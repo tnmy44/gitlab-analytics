@@ -2471,12 +2471,15 @@ roles:
         privileges:
             databases:
                 read:
+                    - prep
                     - raw
             schemas:
                 read:
+                    - prep.tableau_cloud
                     - raw.tableau_cloud
             tables:
                 read:
+                    - prep.tableau_cloud.*
                     - raw.tableau_cloud.*
 
     - version_db:
