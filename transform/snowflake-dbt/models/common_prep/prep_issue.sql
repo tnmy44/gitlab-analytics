@@ -9,7 +9,8 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_issue_id"
+    "unique_key": "dim_issue_sk",
+    "on_schema_change": "sync_all_columns"
     })
 }}
 
