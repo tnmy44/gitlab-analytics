@@ -238,6 +238,9 @@ tests:
     exclude_columns:
       - dbt_updated_at
       - dbt_created_at
+      - project_updated_at
+      - last_activity_at
+      - last_repository_updated_at
 
 
   {%- endset %}
