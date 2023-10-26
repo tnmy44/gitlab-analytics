@@ -61,7 +61,7 @@ default_args = {
 dag = DAG(
     "dbt_full_refresh",
     default_args=default_args,
-    schedule_interval=None,
+    schedule_interval="45 8 * * *",
     description="Adhoc DBT FULL Refresh",
     catchup=False,
 )
