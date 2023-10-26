@@ -30,7 +30,6 @@ if __name__ == "__main__":
         infrastructure_department_pi="infrastructure_department",
         marketing_pi="marketing",
         people_success_pi="people_success",
-        quality_department_pi="quality_department",
         ux_department_pi="ux_department",
     )
 
