@@ -2594,6 +2594,8 @@ models:
       - name: dim_plan_sk_at_creation
         tests:
           - not_null
+      - name: masked_label_title
+        description: '{{ doc("label_title") }}'
 
   - name: dim_ci_pipeline
     description: '{{ doc("dim_ci_pipeline") }}'
