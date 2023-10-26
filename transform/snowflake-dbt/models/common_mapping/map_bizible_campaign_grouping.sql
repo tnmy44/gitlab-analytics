@@ -237,7 +237,8 @@ WITH bizible_touchpoints AS (
       OR campaign.dim_parent_campaign_id = '7014M000001dnVOQAY' -- GCP Partner campaign
       OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name ILIKE '%_DevSecOps%'
-          OR bizible_ad_campaign_name LIKE '%devsecopsusecase%'))
+          OR bizible_ad_campaign_name LIKE '%devsecopsusecase%'
+          OR bizible_ad_campaign_name LIKE '%seccomp%')) --Added by AO 2023-10-26 to include new Security & Compliance utm
       OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ'
       AND (bizible_ad_campaign_name ILIKE '%DevSecOps%'
       OR bizible_ad_campaign_name LIKE '%Fuzzing%')) -- Added by AO demAND gen issue 2262
@@ -272,7 +273,7 @@ WITH bizible_touchpoints AS (
       OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name LIKE '%_VCC%'
           OR bizible_ad_campaign_name LIKE '%vccusecase%'))
-      THEN 'VCC Use Case'
+      THEN 'Automated Software Delivery' -- Updated by AO 2023-10-23 to align with 1HFY24 campaigns structure
   WHEN (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_landing_page LIKE '%gitops-infrastructure-automation%' 
       OR bizible_form_url LIKE '%gitops-infrastructure-automation%' 
@@ -322,7 +323,9 @@ WITH bizible_touchpoints AS (
       OR bizible_landing_page_raw LIKE '%devsecopsplat%'
       OR bizible_referrer_page_RAW LIKE '%devopsgtm%'))
       OR campaign.dim_parent_campaign_id LIKE '%7014M000001dpT9%'
-        -- OR campaign.dim_parent_campaign_id LIKE '%7014M000001dn8M%')
+      OR (campaign.dim_parent_campaign_id LIKE '%7014M000001dn8M%'
+      AND (bizible_ad_campaign_name LIKE '%devopsgtm%' 
+            OR bizible_ad_campaign_name LIKE '%devsecopsplat%')) -- Added by AO 2023-10-26 to include LI DevOps campaign
       OR campaign.dim_campaign_id LIKE '%7014M000001vbtw%'
       OR campaign.dim_campaign_id LIKE '%7018X000001lmtN%' -- Added by AO MSandP issue 880
       OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ'
