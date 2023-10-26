@@ -233,7 +233,9 @@ WITH bizible_touchpoints AS (
       OR bizible_form_url LIKE '%2022-devsecops-report%' -- Added by AO 2023-01-23
       OR bizible_landing_page LIKE '%2022-devsecops-report%' -- Added by AO 2023-01-23
       OR bizible_referrer_page LIKE '%2022-devsecops-report%' -- Added by AO 2023-01-23
-      OR bizible_ad_campaign_name LIKE '%devsecopsusecase%'))
+      OR bizible_ad_campaign_name LIKE '%devsecopsusecase%'
+      OR bizible_ad_campaign_name ILIKE '%devsecopstechdemo%' -- Added by AO 2023-10-23 to fix wrongly named campaign utm
+      OR bizible_ad_campaign_name LIKE '%seccomp%')) -- Added by AO 2023-10-23 to include newer Sec & Comp utm
       OR campaign.dim_parent_campaign_id = '7014M000001dnVOQAY' -- GCP Partner campaign
       OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name ILIKE '%_DevSecOps%'
@@ -241,7 +243,8 @@ WITH bizible_touchpoints AS (
           OR bizible_ad_campaign_name LIKE '%seccomp%')) --Added by AO 2023-10-26 to include new Security & Compliance utm
       OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ'
       AND (bizible_ad_campaign_name ILIKE '%DevSecOps%'
-      OR bizible_ad_campaign_name LIKE '%Fuzzing%')) -- Added by AO demAND gen issue 2262
+      OR bizible_ad_campaign_name LIKE '%Fuzzing%' -- Added by AO demand gen issue 2262
+      OR bizible_ad_campaign_name LIKE '%SecComp%' )) -- Added by AO 2023-10-23 to include newer Sec & Comp tech demo
       OR (lower(campaign.type) = 'content syndication'
       AND campaign.gtm_motion = 'Security & Compliance') --Added by AO 2023-10-26
       THEN 'DevSecOps Platform'
@@ -251,7 +254,10 @@ WITH bizible_touchpoints AS (
       OR bizible_referrer_page_RAW LIKE '%utm_campaign=autosd%'))
       OR bizible_ad_campaign_name = 'autosd'
       OR bizible_ad_campaign_name ILIKE '%AutomatedSoftwareDelivery%' -- added by AO MS & P issue 896
-      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ' AND bizible_ad_campaign_name LIKE '%autosd%') --- Added by AO MS&P issue 825
+      OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ' 
+      AND bizible_ad_campaign_name ILIKE '%autosd%') --- Added by AO MS&P issue 825
+      OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ'
+      AND (bizible_ad_campaign_name ILIKE '%AutoSD%')) --- Added by AO 2023-10-23 to include Auto SD tech demo
       OR (lower(campaign.type) = 'content syndication'
       AND campaign.gtm_motion = 'Automated Software Delivery') -- Added by AO 2023-10-26
     THEN 'Automated Software Delivery' 
@@ -282,7 +288,7 @@ WITH bizible_touchpoints AS (
       OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ'
       AND (bizible_ad_campaign_name LIKE '%_GitOps%'
           OR bizible_ad_campaign_name LIKE '%iacgitops%'))
-      OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name ILIKE '%GitOps_%') --- Added by AO demAND gen issue 2327
+      OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ' AND bizible_ad_campaign_name ILIKE '%GitOps%') --- Added by AO demAND gen issue 2327
       THEN 'Automated Software Delivery'
   WHEN  (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_ad_campaign_name LIKE '%evergreen%'
