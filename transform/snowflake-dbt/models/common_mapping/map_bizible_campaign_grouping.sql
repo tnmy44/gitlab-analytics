@@ -244,7 +244,8 @@ WITH bizible_touchpoints AS (
       OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ'
       AND (bizible_ad_campaign_name ILIKE '%DevSecOps%'
       OR bizible_ad_campaign_name LIKE '%Fuzzing%' -- Added by AO demand gen issue 2262
-      OR bizible_ad_campaign_name LIKE '%SecComp%' )) -- Added by AO 2023-10-23 to include newer Sec & Comp tech demo
+      OR bizible_ad_campaign_name LIKE '%SecComp%'
+      OR campaign.gtm_motion = 'Security & Compliance')) -- Added by AO 2023-10-23 to include newer Sec & Comp tech demo
       OR (lower(campaign.type) = 'content syndication'
       AND campaign.gtm_motion = 'Security & Compliance') --Added by AO 2023-10-26
       THEN 'DevSecOps Platform'
@@ -257,7 +258,8 @@ WITH bizible_touchpoints AS (
       OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ' 
       AND bizible_ad_campaign_name ILIKE '%autosd%') --- Added by AO MS&P issue 825
       OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ'
-      AND (bizible_ad_campaign_name ILIKE '%AutoSD%')) --- Added by AO 2023-10-23 to include Auto SD tech demo
+      AND (bizible_ad_campaign_name ILIKE '%AutoSD%'
+      OR campaign.gtm_motion = 'Automated Software Delivery')) --- Added by AO 2023-10-23 to include Auto SD tech demo
       OR (lower(campaign.type) = 'content syndication'
       AND campaign.gtm_motion = 'Automated Software Delivery') -- Added by AO 2023-10-26
     THEN 'Automated Software Delivery' 
@@ -338,7 +340,8 @@ WITH bizible_touchpoints AS (
       AND (bizible_ad_campaign_name ILIKE '%MLOps%'
       OR bizible_ad_campaign_name ILIKE '%Dora%'
       OR bizible_ad_campaign_name ILIKE '%DevOps%'
-      OR bizible_ad_campaign_name ILIKE '%DOP%'))-- Added by AO demAND gen issue 2262
+      OR bizible_ad_campaign_name ILIKE '%DOP%' -- Added by AO demAND gen issue 2262
+      OR campaign.gtm_motion = 'DevSecOps Platform'))-- Added by AO 2023-10-26 to include newer DevSecOps platform tech demo
       OR (lower(campaign.type) = 'content syndication'
       AND campaign.gtm_motion = 'DevSecOps Platform') -- Added by AO 2023-10-26
     Then 'DevSecOps Platform'
