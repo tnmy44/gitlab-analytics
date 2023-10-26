@@ -12,7 +12,6 @@
     ('dim_date', 'dim_date'),
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
     ('dim_project', 'dim_project'),
-    ('dim_issue', 'dim_issue'),
     ('prep_epic', 'prep_epic'),
     ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan')
 ]) }}
@@ -30,13 +29,24 @@
 ), joined AS (
 
     SELECT 
+
+      -- SURROGATE KEY
+     {{ dbt_utils.surrogate_key(['milestone_id']) }}                                                AS dim_milestone_sk,
+
+      -- NATURAL KEY
+      milestone_id                                                                                  AS milestone_id,
+
+      -- LEGACY NATURAL KEY
       milestone_id                                                                                  AS dim_milestone_id,
+
       milestones.created_at,
       milestones.updated_at,
       dim_date.date_id                                                                              AS created_date_id,
       IFNULL(dim_project.dim_project_id, -1)                                                        AS dim_project_id,
       COALESCE(dim_project.ultimate_parent_namespace_id, milestones.group_id, -1)                   AS ultimate_parent_namespace_id,
-  COALESCE(dim_namespace_plan_hist.dim_plan_id, prep_gitlab_dotcom_plan.dim_plan_id, 34)            AS dim_plan_id
+      COALESCE(dim_namespace_plan_hist.dim_plan_id, prep_gitlab_dotcom_plan.dim_plan_id, 34)        AS dim_plan_id,
+      milestones.milestone_title,
+      milestones.due_date                                                                           AS milestone_due_date
     FROM milestones
     LEFT JOIN dim_project
       ON milestones.project_id = dim_project.dim_project_id
@@ -58,5 +68,5 @@
     created_by="@chrissharp",
     updated_by="@michellecooper",
     created_date="2022-04-01",
-    updated_date="2022-09-05"
+    updated_date="2023-09-27"
 ) }}

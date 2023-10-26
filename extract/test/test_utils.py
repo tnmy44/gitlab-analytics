@@ -74,12 +74,17 @@ def test_static_variables(utils):
     assert utils.REDIS_KEY == "redis"
 
 
-def test_exluded_sql_metrics(utils):
+def test_excluded_sql_metrics(utils):
     """
     Test content of excluded metrics
     """
     actual = (
-        1 if "clusters_platforms" in x else 0
+        1
+        if (
+            "clusters_platforms" in x
+            or "batched_background_migration_count_failed_jobs_metric" in x
+        )
+        else 0
         for x in utils.METRICS_EXCEPTION_INSTANCE_SQL
     )
     assert all(actual)

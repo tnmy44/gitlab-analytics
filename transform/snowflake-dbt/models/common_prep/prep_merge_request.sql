@@ -10,9 +10,10 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
+    ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
     ('plans', 'gitlab_dotcom_plans_source'),
-    ('prep_project', 'prep_project')
+    ('prep_project', 'prep_project'),
+    ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan')
 ]) }}
 
 , gitlab_dotcom_merge_requests_source AS (
@@ -32,10 +33,12 @@
       
       -- FOREIGN KEYS
       gitlab_dotcom_merge_requests_source.target_project_id       AS dim_project_id,
+      prep_project.dim_project_sk,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
       dim_date.date_id                                            AS created_date_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)             AS dim_plan_id,
+      IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)            AS dim_plan_id,
+      prep_gitlab_dotcom_plan.dim_plan_sk                         AS dim_plan_sk_at_creation,
       gitlab_dotcom_merge_requests_source.author_id,
       gitlab_dotcom_merge_requests_source.milestone_id,
       gitlab_dotcom_merge_requests_source.assignee_id,
@@ -67,12 +70,14 @@
     FROM gitlab_dotcom_merge_requests_source
     LEFT JOIN prep_project 
       ON gitlab_dotcom_merge_requests_source.target_project_id = prep_project.dim_project_id
-    LEFT JOIN dim_namespace_plan_hist 
-      ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
-      AND gitlab_dotcom_merge_requests_source.created_at >= dim_namespace_plan_hist.valid_from
-      AND gitlab_dotcom_merge_requests_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
+    LEFT JOIN prep_namespace_plan_hist
+      ON prep_project.ultimate_parent_namespace_id = prep_namespace_plan_hist.dim_namespace_id
+      AND gitlab_dotcom_merge_requests_source.created_at >= prep_namespace_plan_hist.valid_from
+      AND gitlab_dotcom_merge_requests_source.created_at < COALESCE(prep_namespace_plan_hist.valid_to, '2099-01-01')
     LEFT JOIN dim_date 
       ON TO_DATE(gitlab_dotcom_merge_requests_source.created_at) = dim_date.date_day
+    LEFT JOIN prep_gitlab_dotcom_plan
+      ON IFNULL(prep_namespace_plan_hist.dim_plan_id, 34) = prep_gitlab_dotcom_plan.dim_plan_id
     WHERE gitlab_dotcom_merge_requests_source.project_id IS NOT NULL
 
 )
@@ -80,7 +85,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@chrisharp",
+    updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2022-06-01"
+    updated_date="2023-09-29"
 ) }}

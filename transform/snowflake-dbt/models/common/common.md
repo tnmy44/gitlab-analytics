@@ -449,6 +449,14 @@ Sales funnel targets set by the Finance team to measure performance of Partner a
 
 {% enddocs %}
 
+{% docs fct_sales_funnel_actual %}
+
+Actual sales funnel values are presented in the following table, designed to conform to the format of fct_sales_funnel_target, where the format is defined as `target_date || kpi_name`.
+
+This table is derived from the data in both `fct_crm_person` and `fct_crm_opportunity`, with each metric associated with its corresponding date and sales hierarchy. For instance, when dealing with the KPI `Net ARR`, we use the `close_date` as the date field, employ the stamped user hierarchy for the sales hierarchy, and apply a filter based on the `is_net_arr_closed_deal` flag, selecting only opportunities related to Net ARR.
+
+{% enddocs %}
+
 {% docs fct_sales_funnel_partner_alliance_target_daily %}
 
 Derived fact table from `fct_sales_funnel_partner_alliance_target` that transforms the monthly targets specified in the aforementioned model into daily targets. This transformation is achieved by dividing the monthly target by the number of days in the corresponding month.
@@ -979,7 +987,7 @@ Issue Links are created when relationships are defined between issues. This tabl
 
 The grain of the table is the `dim_issue_link_id`. This table is easily joinable with:
 
-- `dim_issue` through `dim_issue_id` on `dim_source_issue_id` & `dim_target_issue_id`
+- `dim_issue` through `dim_issue_sk` on `dim_issue_sk_source` & `dim_issue_sk_target`
 {% enddocs %}
 
 {% docs dim_locality %}

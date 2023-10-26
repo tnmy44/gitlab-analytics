@@ -51,7 +51,7 @@
         lead_source,
         source_buckets,
         inquiry_sum,
-        mql_sum,
+        mql_sum, 
 
     --Person Dates
         true_inquiry_date,
@@ -65,6 +65,8 @@
         crm_opp_owner_region_stamped,
         crm_opp_owner_area_stamped,
         sales_qualified_source_name,
+        opp_lead_source,
+        opp_source_buckets,
 
     --Opportunity Dates
         sales_accepted_date,
@@ -77,6 +79,10 @@
         bizible_marketing_channel,
         bizible_marketing_channel_path,
         bizible_medium,
+        opp_touchpoint_offer_type_grouped,
+        opp_touchpoint_offer_type,
+        opp_bizible_marketing_channel,
+        opp_bizible_marketing_channel_path,
 
     --Flags
         is_mql,
@@ -178,15 +184,13 @@
             ELSE crm_opp_owner_sales_segment_stamped
         END AS crm_opp_owner_sales_segment_stamped_clean,
         crm_opp_owner_geo_stamped,
-        email_domain_type,
-        lead_source,
-        source_buckets,
+        opp_lead_source,
+        opp_source_buckets,
         sales_qualified_source_name,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
-        bizible_medium,
+        opp_bizible_marketing_channel,
+        opp_bizible_marketing_channel_path,
         crm_opp_owner_region_stamped,
         crm_opp_owner_area_stamped,
         CASE 
@@ -219,16 +223,15 @@
         sales_qualified_source_name,
         lead_source,
         source_buckets,
-        email_domain_type,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
-        bizible_medium,
+        -- bizible_medium,
         'Inquiry' AS metric_type,
         COUNT(DISTINCT actual_inquiry) AS metric_value
     FROM inquiry_prep
-    {{ dbt_utils.group_by(n=20) }}
+    {{ dbt_utils.group_by(n=18) }}
   
 ), mqls AS (
 
@@ -246,16 +249,15 @@
         sales_qualified_source_name,
         lead_source,
         source_buckets,
-        email_domain_type,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
-        bizible_medium,
+        -- bizible_medium,
         'MQL' AS metric_type,
         COUNT(DISTINCT mqls) AS metric_value
     FROM mql_prep
-    {{ dbt_utils.group_by(n=20) }}
+    {{ dbt_utils.group_by(n=18) }}
     
  ), saos AS (
   
@@ -271,18 +273,17 @@
         crm_opp_owner_area_stamped AS area,
         sales_qualified_source_name,
         opp_order_type AS order_type,
-        lead_source,
-        source_buckets,
-        email_domain_type,
+        opp_lead_source,
+        opp_source_buckets,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
-        bizible_medium,
+        opp_bizible_marketing_channel,
+        opp_bizible_marketing_channel_path,
+        -- bizible_medium,
         'SAO' AS metric_type,
         COUNT(DISTINCT saos) AS metric_value
     FROM sao_prep
-    {{ dbt_utils.group_by(n=20) }}
+    {{ dbt_utils.group_by(n=18) }}
     
   ), intermediate AS (
 
@@ -300,12 +301,11 @@
         sales_qualified_source_name,
         lead_source,
         source_buckets,
-        email_domain_type,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
-        bizible_medium,
+        -- bizible_medium,
         metric_type,
         metric_value
     FROM inquiries
@@ -324,12 +324,11 @@
         sales_qualified_source_name,
         lead_source,
         source_buckets,
-        email_domain_type,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         bizible_marketing_channel,
         bizible_marketing_channel_path,
-        bizible_medium,
+        -- bizible_medium,
         metric_type,
         metric_value
     FROM mqls
@@ -346,14 +345,13 @@
         area,
         region,
         sales_qualified_source_name,
-        lead_source,
-        source_buckets,
-        email_domain_type,
+        opp_lead_source,
+        opp_source_buckets,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
-        bizible_medium,
+        opp_bizible_marketing_channel,
+        opp_bizible_marketing_channel_path,
+        -- bizible_medium,
         metric_type,
         metric_value
     FROM saos
@@ -374,12 +372,11 @@
     sales_qualified_source_name,
     lead_source,
     source_buckets,
-    email_domain_type,
     parent_crm_account_lam,
     parent_crm_account_lam_dev_count,
     bizible_marketing_channel,
     bizible_marketing_channel_path,
-    bizible_medium,
+    -- bizible_medium,
     metric_type,
     metric_value
   FROM intermediate
@@ -398,12 +395,11 @@
     sales_qualified_source_name,
     NULL AS lead_source,
     NULL AS source_buckets,
-    NULL AS email_domain_type,
     NULL AS parent_crm_account_lam,
     NULL AS parent_crm_account_lam_dev_count,
     NULL AS bizible_marketing_channel,
     NULL AS bizible_marketing_channel_path,
-    NULL AS bizible_medium,
+    -- NULL AS bizible_medium,
     kpi_name AS metric_type,
     daily_allocated_target AS metric_value
   FROM targets
@@ -413,8 +409,8 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-08-24",
+    updated_date="2023-10-26",
   ) }}
 

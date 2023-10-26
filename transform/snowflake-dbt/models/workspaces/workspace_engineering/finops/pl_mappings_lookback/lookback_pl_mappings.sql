@@ -21,12 +21,6 @@ t2d_cud AS (
     SELECT 'Commitment v1: T2D AMD Cpu in Americas for 3 Year' AS sku
     UNION ALL
     SELECT 'Commitment v1: T2D AMD Ram in Americas for 3 Year'
-  ),
-
-  infra_labels AS (
-    SELECT 'shared' AS label
-    UNION ALL
-    SELECT NULL
   )
 
   SELECT
@@ -34,7 +28,7 @@ t2d_cud AS (
     t2d_cud_lookback.gcp_project_id     AS gcp_project_id,
     NULL                                AS gcp_service_description,
     sku_list.sku                        AS gcp_sku_description,
-    infra_labels.label                  AS infra_label,
+    'shared'                            AS infra_label,
     NULL                                AS env_label,
     NULL                                AS runner_label,
     NULL                                AS folder_label,
@@ -43,7 +37,6 @@ t2d_cud AS (
     't2d_cud_lookback'                  AS from_mapping
   FROM {{ ref ('t2d_cud_lookback') }}
   CROSS JOIN sku_list
-  CROSS JOIN infra_labels
 
 ),
 

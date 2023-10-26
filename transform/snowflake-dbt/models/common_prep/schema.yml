@@ -97,13 +97,13 @@ models:
   - name: prep_issue_user_request_collaboration_project
     description: ' {{ doc("prep_issue_user_request_collaboration_project") }} '
     columns:
-      - name: dim_issue_id
+      - name: dim_issue_sk
         tests:
           - not_null
       - name: dim_crm_account_id
         tests:
           - not_null
-      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_original_issue_project_id, original_issue_internal_id)
+      - name: CONCAT(issue_id, dim_crm_account_id, dim_original_issue_project_id, original_issue_internal_id)
         tests:
           - not_null
           - unique
@@ -111,13 +111,13 @@ models:
   - name: prep_issue_user_request
     description: ' {{ doc("prep_issue_user_request") }} '
     columns:
-      - name: dim_issue_id
+      - name: dim_issue_sk
         tests:
           - not_null
       - name: dim_crm_account_id
         tests:
           - not_null
-      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+      - name: CONCAT(issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
         tests:
           - not_null
           - unique
@@ -1086,10 +1086,12 @@ models:
   - name: prep_issue
     description: '{{ doc("prep_issue") }}'
     columns:
-      - name: dim_issue_id
+      - name: dim_issue_sk
         tests:
           - unique
           - not_null
+      - name: masked_label_title
+        description: '{{ doc("label_title") }}'
 
   - name: prep_note
     description: '{{ doc("prep_note") }}'
@@ -1133,7 +1135,7 @@ models:
         tests:
           - not_null
           - unique
-      - name: dim_issue_id
+      - name: issue_id
         tests:
           - not_null
           - unique
@@ -1160,10 +1162,10 @@ models:
       - name: dim_issue_link_id
         tests:
           - not_null
-      - name: dim_source_issue_id
+      - name: dim_issue_sk_source
         tests:
           - not_null
-      - name: dim_target_issue_id
+      - name: dim_issue_sk_target
         tests:
           - not_null
 
@@ -1927,6 +1929,10 @@ models:
         description: '{{ doc("has_gitlab_experiment_context") }}'
       - name: has_subscription_auto_renew_context
         description: '{{ doc("has_subscription_auto_renew_context") }}'
+      - name: has_code_suggestions_context
+        description: '{{ doc("has_code_suggestions_context") }}'
+      - name: has_ide_extension_version_context
+        description: '{{ doc("has_ide_extension_version_context") }}'
       - name: dim_behavior_contexts_sk
         description: '{{ doc("dim_behavior_contexts_sk") }}'
       - name: user_city
@@ -2311,3 +2317,38 @@ models:
       - name: order_source
         description: Source where the order originates
       - name: task_instance
+
+
+  - name: prep_cloud_activation
+    description: '{{ doc("prep_cloud_activation") }}'  
+    columns:
+      - name: dim_cloud_activation_sk
+        description: '{{ doc("dim_cloud_activation_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: dim_cloud_activation_id
+        description: '{{ doc("dim_plan_id") }}'
+        tests:
+          - not_null
+          - unique
+      - name: internal_customer_id
+        description: Membership Customer ID. This is internal to a Customer in CDot and can only be joined back to Customers db data.
+        tests:
+          - not_null
+      - name: dim_billing_account_id
+        description: Membership Account ID. Join key between Customers and billings_accounts.
+      - name: subscription_name
+        description: The Subscription name associated with a Subscription
+      - name: is_super_sonics_aware_subscription
+        description: Indiactor field to identify Super Sonics subscriptions. 
+      - name: seat_utilization_reminder_sent_at
+        description: Timestamp when reminder email to submit seat utilization data was sent.
+      - name: cloud_activation_created_at
+        description: The date when the cloud licensing was activated/created on customer's instance
+        tests:
+          - not_null
+      - name: cloud_activation_updated_at
+        description: The date when the cloud activation/licensing was updated on customer's instance
+        tests:
+          - not_null

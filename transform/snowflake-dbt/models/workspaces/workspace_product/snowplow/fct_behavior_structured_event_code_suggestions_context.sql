@@ -13,6 +13,7 @@ WITH clicks AS (
     contexts
   FROM {{ ref('fct_behavior_structured_event') }}
   WHERE behavior_at >= '2023-08-01' -- no events added to context before Aug 2023
+    AND has_code_suggestions_context = TRUE
 ),
 
 flattened AS (

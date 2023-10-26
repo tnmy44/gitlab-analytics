@@ -14,8 +14,13 @@ WITH resource_label_events AS (
 
 , issues AS (
 
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_issues_xf') }} 
+    SELECT
+      prep_issue.*,
+      prep_namespace.namespace_id
+    FROM {{ ref('prep_issue') }}
+    LEFT JOIN  {{ ref('prep_namespace') }}
+      ON prep_issue.dim_namespace_sk = prep_namespace.dim_namespace_sk
+    WHERE prep_namespace.is_currently_valid = TRUE
 
 )
 
