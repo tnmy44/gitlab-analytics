@@ -240,7 +240,9 @@ WITH bizible_touchpoints AS (
           OR bizible_ad_campaign_name LIKE '%devsecopsusecase%'))
       OR (campaign.dim_parent_campaign_id = '7014M000001vm9KQAQ'
       AND (bizible_ad_campaign_name ILIKE '%DevSecOps%'
-      OR bizible_ad_campaign_name LIKE '%Fuzzing%'))-- Added by AO demAND gen issue 2262
+      OR bizible_ad_campaign_name LIKE '%Fuzzing%')) -- Added by AO demAND gen issue 2262
+      OR (lower(campaign.type) = 'content syndication'
+      AND campaign.gtm_motion = 'Security & Compliance') --Added by AO 2023-10-26
       THEN 'DevSecOps Platform'
   WHEN (bizible_touchpoint_type = 'Web Form'
       AND (bizible_form_url_raw LIKE '%utm_campaign=autosd%'
@@ -249,6 +251,8 @@ WITH bizible_touchpoints AS (
       OR bizible_ad_campaign_name = 'autosd'
       OR bizible_ad_campaign_name ILIKE '%AutomatedSoftwareDelivery%' -- added by AO MS & P issue 896
       OR (campaign.dim_parent_campaign_id = '7014M000001dn8MQAQ' AND bizible_ad_campaign_name LIKE '%autosd%') --- Added by AO MS&P issue 825
+      OR (lower(campaign.type) = 'content syndication'
+      AND campaign.gtm_motion = 'Automated Software Delivery') -- Added by AO 2023-10-26
     THEN 'Automated Software Delivery' 
   WHEN (bizible_touchpoint_type = 'Web Form' 
       AND (bizible_landing_page LIKE '%aws-gitlab-serverless%' 
@@ -326,6 +330,8 @@ WITH bizible_touchpoints AS (
       OR bizible_ad_campaign_name ILIKE '%Dora%'
       OR bizible_ad_campaign_name ILIKE '%DevOps%'
       OR bizible_ad_campaign_name ILIKE '%DOP%'))-- Added by AO demAND gen issue 2262
+      OR (lower(campaign.type) = 'content syndication'
+      AND campaign.gtm_motion = 'DevSecOps Platform') -- Added by AO 2023-10-26
     Then 'DevSecOps Platform'
   WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
       AND (( bizible_form_url_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_form_url_raw LIKE '%utm_content=partnercredit%' 
