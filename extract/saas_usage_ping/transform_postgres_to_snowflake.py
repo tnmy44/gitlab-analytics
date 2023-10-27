@@ -195,7 +195,9 @@ def get_snowflake_query(
 
     tokenized.insert(
         select_index + 1,
-        " '" + metrics_name + "' AS counter_name, ",
+        " '"
+        + utils.get_metric_table_name(table_name=metrics_name)
+        + "' AS counter_name, ",
     )
 
     return tokenized
@@ -296,7 +298,7 @@ def get_renamed_table_name(
                 f"prep.gitlab_dotcom.gitlab_dotcom_"
                 f"{metric_table_name}"
                 f"_dedupe_source AS "
-                f"{metric_table_name}"
+                f"{next_token}"
             )
 
 
