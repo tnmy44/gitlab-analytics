@@ -49,9 +49,3 @@ assets:
         - field: Name
           operator: Equals
           value: Public
-connections:
-  - name: snowflake_tableau
-    type: snowflake
-    secrete_prefix: SNOWFLAKE_TABLEAU
-    username: '{{ envvar('SNOWFLAKE_TABLEAU_USERNAME') }}'
-    password: '{{ envvar('SNOWFLAKE_TABLEAU_PASSWORD') }}'
