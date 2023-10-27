@@ -4,10 +4,11 @@ Utils unit for Automated Service ping
 
 import datetime
 import json
+import os
 import re
 from hashlib import md5
 from os import environ as env
-
+import yaml
 import pandas as pd
 import requests
 from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
@@ -92,6 +93,10 @@ class Utils:
         "usage_activity_by_stage_monthly.configure.clusters_platforms_eks",
         "counts_weekly.batched_background_migration_count_failed_jobs_metric",
     )
+
+    # Map table which are renamed on the source side
+
+    RENAMED_TABLE_MAPPING = {"p_ci_builds": "ci_builds"}
 
     def __init__(self):
         config_dict = env.copy()
@@ -190,3 +195,10 @@ class Utils:
         timestamp_encoded = str(input_timestamp).encode(encoding=self.ENCODING)
 
         return md5(timestamp_encoded).hexdigest()
+
+    def get_metric_table_name(self, table_name:str) -> str:
+        """
+        Return table name from dict.
+        If table name is not in dict, return the original name
+        """
+        return self.RENAMED_TABLE_MAPPING.get(table_name, table_name)

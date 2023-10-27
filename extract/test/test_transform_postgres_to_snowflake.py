@@ -406,7 +406,7 @@ def test_nested_structure():
         "active_user_count": 'SELECT COUNT("users"."id") FROM "users" WHERE ("users"."state" IN (\'active\')) AND ("users"."user_type" IS NULL OR "users"."user_type" IN (6, 4))',
         "counts": {
             "assignee_lists": 'SELECT COUNT("lists"."id") FROM "lists" WHERE "lists"."list_type" = 3',
-            "ci_builds": 'SELECT COUNT("ci_builds"."id") FROM "ci_builds" WHERE "ci_builds"."type" = \'Ci::Build\'',
+            "ci_builds": 'SELECT COUNT("ci_builds"."id") FROM "p_ci_builds" WHERE "ci_builds"."type" = \'Ci::Build\'',
             "ci_triggers": {
                 "arbitrary_key": 'SELECT COUNT("ci_triggers"."id") FROM "ci_triggers"'
             },
