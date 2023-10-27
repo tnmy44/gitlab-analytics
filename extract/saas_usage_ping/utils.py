@@ -4,11 +4,10 @@ Utils unit for Automated Service ping
 
 import datetime
 import json
-import os
 import re
 from hashlib import md5
 from os import environ as env
-import yaml
+
 import pandas as pd
 import requests
 from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
@@ -196,7 +195,7 @@ class Utils:
 
         return md5(timestamp_encoded).hexdigest()
 
-    def get_metric_table_name(self, table_name:str) -> str:
+    def get_metric_table_name(self, table_name: str) -> str:
         """
         Return table name from dict.
         If table name is not in dict, return the original name

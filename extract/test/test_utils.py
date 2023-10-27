@@ -10,7 +10,6 @@ from unittest import mock
 import pytest
 import requests
 import responses
-
 from extract.saas_usage_ping.utils import EngineFactory, Utils
 
 
@@ -265,8 +264,9 @@ def test_get_md5(utils):
 
 
 @pytest.mark.parametrize(
-    "test_value, expected_value",[
-        ("non_mapped_table", "non_mapped_table"),("p_ci_builds","ci_builds")])
+    "test_value, expected_value",
+    [("non_mapped_table", "non_mapped_table"), ("p_ci_builds", "ci_builds")],
+)
 def test_get_metric_table_name(utils, test_value, expected_value):
     """
     Test mapping dict for tables

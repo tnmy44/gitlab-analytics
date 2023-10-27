@@ -9,7 +9,6 @@ from sqlparse.sql import Token, TokenList
 from sqlparse.tokens import Whitespace
 from utils import Utils
 
-
 utils = Utils()
 
 
