@@ -350,52 +350,6 @@
         metric_value
     FROM saos
     
-), final AS (
-
-  SELECT DISTINCT
-    date_day,
-    date_range_week,
-    date_range_month,
-    date_range_quarter,
-    date_range_year,
-    order_type,
-    sales_segment,
-    geo,
-    area,
-    region,
-    sales_qualified_source_name,
-    lead_source,
-    source_buckets,
-    parent_crm_account_lam,
-    parent_crm_account_lam_dev_count,
-    bizible_marketing_channel,
-    bizible_marketing_channel_path, 
-    metric_type,
-    metric_value
-  FROM intermediate
-  UNION ALL
-  SELECT
-    target_date,
-    first_day_of_week,
-    target_month,
-    fiscal_quarter_name,
-    fiscal_year, 
-    order_type_name,
-    crm_user_sales_segment,
-    crm_user_geo,
-    crm_user_area,
-    crm_user_region,
-    sales_qualified_source_name,
-    NULL AS lead_source,
-    NULL AS source_buckets,
-    NULL AS parent_crm_account_lam,
-    NULL AS parent_crm_account_lam_dev_count,
-    NULL AS bizible_marketing_channel,
-    NULL AS bizible_marketing_channel_path,
-    kpi_name AS metric_type,
-    daily_allocated_target AS metric_value
-  FROM targets
-    
 ), combined AS (
 
   SELECT DISTINCT
@@ -412,7 +366,6 @@
     sales_qualified_source_name,
     lead_source,
     source_buckets,
-    email_domain_type,
     parent_crm_account_lam,
     parent_crm_account_lam_dev_count,
     bizible_marketing_channel,
@@ -435,7 +388,6 @@
     sales_qualified_source_name,
     NULL AS lead_source,
     NULL AS source_buckets,
-    NULL AS email_domain_type,
     NULL AS parent_crm_account_lam,
     NULL AS parent_crm_account_lam_dev_count,
     NULL AS bizible_marketing_channel,
@@ -557,6 +509,6 @@ FROM regroup_targets
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-10-26",
+    updated_date="2023-10-27",
   ) }}
 
