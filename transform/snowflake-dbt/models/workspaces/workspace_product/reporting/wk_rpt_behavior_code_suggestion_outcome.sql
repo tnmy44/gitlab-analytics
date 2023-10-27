@@ -3,8 +3,7 @@
     materialized='incremental',
     unique_key='suggestion_id',
     tags=['product'],
-    on_schema_change='sync_all_columns',
-    cluster_by=['requested_at::DATE']
+    on_schema_change='sync_all_columns'
   ) 
 
 }}

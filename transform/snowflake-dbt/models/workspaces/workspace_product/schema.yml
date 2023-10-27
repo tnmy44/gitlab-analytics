@@ -219,8 +219,8 @@ models:
         tests:
           - not_null
 
-  - name: wk_rpt_behavior_code_suggestion
-    description: '{{ doc("wk_rpt_behavior_code_suggestion") }}'
+  - name: wk_rpt_behavior_code_suggestion_outcome
+    description: '{{ doc("wk_rpt_behavior_code_suggestion_outcome") }}'
     columns:
       - name: suggestion_id
         description: The unique identifier for the code suggestion. Appears as `event_label` on the Snowplow events

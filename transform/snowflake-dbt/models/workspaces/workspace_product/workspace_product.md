@@ -56,7 +56,7 @@ This model is intended to be used as a reporting model for the Growth Section an
 
 {% enddocs %}
 
-{% docs wk_rpt_behavior_code_suggestion %}
+{% docs wk_rpt_behavior_code_suggestion_outcome %}
 
 **Description:** Reporting model to enable Code Suggestion analysis and reporting at the grain of one record per suggestion. This model uses Snowplow events and can be used to calculate metrics like Acceptance Rate. Read more about how the Code Suggestions events work [here](https://gitlab.com/gitlab-org/editor-extensions/gitlab-language-server-for-code-suggestions/-/blob/main/docs/telemetry.md).
 
@@ -76,7 +76,7 @@ This is an alias of `event_label` from the Snowplow data
 
 **Intended Usage**
 
-This model is intended to enable reporting and analysis using the "outcome" of a suggestion. It 
+This model is intended to enable reporting and analysis on the "outcome" of a suggestion. It 
 can be used to calculate Acceptance Rate, Load Time, etc.
 
 **Other Comments:**
