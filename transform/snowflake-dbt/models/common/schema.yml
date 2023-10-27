@@ -2594,6 +2594,8 @@ models:
       - name: dim_plan_sk_at_creation
         tests:
           - not_null
+      - name: masked_label_title
+        description: '{{ doc("label_title") }}'
 
   - name: dim_ci_pipeline
     description: '{{ doc("dim_ci_pipeline") }}'
@@ -5306,6 +5308,18 @@ models:
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_crm_person_id
         description: A surrogate key for use when joining to `dim_crm_person`. Created from the contact_id where there is a contact and a lead_id where there isn't.
+      - name: dim_crm_current_account_set_hierarchy_sk
+        description: '{{ doc("dim_crm_current_account_set_hierarchy_sk") }}'
+      - name: dim_crm_current_account_set_sales_segment_id
+        description: '{{ doc("dim_crm_current_account_set_sales_segment_id") }}'
+      - name: dim_crm_current_account_set_geo_id
+        description: '{{ doc("dim_crm_current_account_set_geo_id") }}'
+      - name: dim_crm_current_account_set_region_id
+        description: '{{ doc("dim_crm_current_account_set_region_id") }}'
+      - name: dim_crm_current_account_set_area_id
+        description: '{{ doc("dim_crm_current_account_set_area_id") }}'
+      - name: dim_crm_current_account_set_business_unit_id
+        description: '{{ doc("dim_crm_current_account_set_business_unit_id") }}'
       - name: sfdc_contact_id
         description: the contact id from the fist contact by opportunity contact role created date for the given opportunity record
       - name: created_date
@@ -5559,6 +5573,8 @@ models:
         description: The invoice amount excluding tax
       - name: invoice_item_charge_amount
         description: The amount being charged for the invoice item. This amount doesn't include taxes regardless if the charge's tax mode is inclusive or exclusive.
+      - name: annual_billing_invoice_price
+        description: This is a calculated field which takes the invoice_item_unit_price and calculates the yearly price. For example, if it's a monthly charge it will multiply by 12 and a 2 year price will be divided by 2.
       - name: invoice_item_unit_price
         description: The per-unit price of the invoice item. Calculated from multiple fields in Product Rate Plan Charge and Product Rate Plan Charge Tier objects.
 

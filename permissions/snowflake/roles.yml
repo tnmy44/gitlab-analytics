@@ -256,11 +256,6 @@ databases:
     - srehm_prep:
         shared: no
 
-    - svogel_prod:
-        shared: no
-    - svogel_prep:
-        shared: no
-
     - tnguyen_prod:
         shared: no
     - tnguyen_prep:
@@ -2002,6 +1997,8 @@ roles:
                     - raw.handbook.*
 
     - hightouch_role:
+        member_of:
+            - workato
         warehouses:
             - reporting
         privileges:
@@ -2469,12 +2466,15 @@ roles:
         privileges:
             databases:
                 read:
+                    - prep
                     - raw
             schemas:
                 read:
+                    - prep.tableau_cloud
                     - raw.tableau_cloud
             tables:
                 read:
+                    - prep.tableau_cloud.*
                     - raw.tableau_cloud.*
 
     - version_db:
@@ -4045,6 +4045,7 @@ roles:
             - marketo
             - analyst_marketing
             - customers_db
+            - workato
         warehouses:
             - dev_xs
 
@@ -4777,6 +4778,7 @@ roles:
             - data_science_readonly
             - facebook_ads
             - linkedin_ads
+            - zuora_order
         warehouses:
             - dev_xs
         owns:
@@ -5152,50 +5154,6 @@ roles:
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
                     - raw.zuora_stitch.*
-
-    - svogel:
-        member_of:
-         - analytics_engineer_core
-         - analyst_engineering
-         - analyst_growth
-         - data_team_analyst
-         - restricted_safe
-         - bi_tool_eval_read
-         - zuora
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - svogel_prep
-                - svogel_prod
-            schemas:
-                - svogel_prep.*
-                - svogel_prod.*
-            tables:
-                - svogel_prep.*.*
-                - svogel_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - svogel_prep
-                    - svogel_prod
-                write:
-                    - svogel_prep
-                    - svogel_prod
-            schemas:
-                read:
-                    - svogel_prep.*
-                    - svogel_prod.*
-                write:
-                    - svogel_prep.*
-                    - svogel_prod.*
-            tables:
-                read:
-                    - svogel_prep.*.*
-                    - svogel_prod.*.*
-                write:
-                    - svogel_prep.*.*
-                    - svogel_prod.*.*
 
     - tableau:
         warehouses:
@@ -5939,11 +5897,6 @@ users:
         can_login: yes
         member_of:
             - stitch
-
-    - svogel:
-        can_login: yes
-        member_of:
-            - svogel
 
     - tableau:
         can_login: yes

@@ -50,6 +50,19 @@ tables:
       , created_at
       , updated_at
       FROM billing_account_memberships
+  cloud_activation_license_mappings:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'cloud_activation_license_mappings'
+    export_table_primary_key: id
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT cloud_activation_id
+      , license_id
+      , created_at
+      , updated_at
+      FROM cloud_activation_license_mappings
   cloud_activations:
     advanced_metadata: true
     export_db: EXPORT_DB

@@ -2477,3 +2477,60 @@ The surrogate key of `prep_cloud_activation` model. Currently identified by hash
 The unique identifier that identifies a cloud activation.
 
 {% enddocs %}
+
+{% docs dim_crm_current_account_set_hierarchy_sk %}
+
+Sales hierarchy surrogate key that accounts for yearly changes in the sales hierarchy. Views all hierarchies through the lens of the current year hierarchy, and it reflects how the sales hierarchy is applied in practice. It choose between the opportunity owner stamped hierarchy, the live user hierarchy and the account hierarchy based on the following rules:
+
+1. If the fiscal year of the close_date of the opportunity is less than the current fiscal year AND the opp owner is NOT an hybrid user THEN `live user hierarchy`
+2. If the fiscal year of the close_date of the opportunity is less than the current fiscal year AND the opp owner IS an hybrid user THEN `account hierarchy`
+3. Any other case, use `opp owner stamped hierarchy`
+
+{% enddocs %}
+
+{% docs dim_crm_current_account_set_sales_segment_id %}
+
+Sales segment key that accounts for yearly changes in the sales hierarchy.
+
+Follows the same rules as the field `dim_crm_current_account_set_hierarchy_sk`
+
+{% enddocs %}
+
+{% docs dim_crm_current_account_set_geo_id %}
+
+Geo key that accounts for yearly changes in the sales hierarchy.
+
+Follows the same rules as the field `dim_crm_current_account_set_hierarchy_sk`
+
+{% enddocs %}
+
+{% docs dim_crm_current_account_set_region_id %}
+
+Region key that accounts for yearly changes in the sales hierarchy.
+
+Follows the same rules as the field `dim_crm_current_account_set_hierarchy_sk`
+
+{% enddocs %}
+
+{% docs dim_crm_current_account_set_area_id %}
+
+Area key that accounts for yearly changes in the sales hierarchy.
+
+Follows the same rules as the field `dim_crm_current_account_set_hierarchy_sk`
+
+{% enddocs %}
+
+{% docs dim_crm_current_account_set_business_unit_id %}
+
+Business Unit key that accounts for yearly changes in the sales hierarchy.
+
+Follows the same rules as the field `dim_crm_current_account_set_hierarchy_sk`
+
+{% enddocs %}
+
+{% docs label_title %}
+
+String of labels associated with a GitLab object (issue, merge request, epic, etc.).
+
+{% enddocs %}
+

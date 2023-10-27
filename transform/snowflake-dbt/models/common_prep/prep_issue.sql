@@ -9,7 +9,8 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_issue_id"
+    "unique_key": "dim_issue_sk",
+    "on_schema_change": "sync_all_columns"
     })
 }}
 
@@ -182,6 +183,7 @@
         prep_milestone.milestone_title)                                     AS milestone_title,
       prep_milestone.milestone_due_date,
       agg_labels.labels,
+      ARRAY_TO_STRING(agg_labels.labels,',')                           AS masked_label_title,
       IFNULL(upvote_count.upvote_count, 0)                                  AS upvote_count,
       issue_metrics.first_mentioned_in_commit_at,
       issue_metrics.first_associated_with_milestone_at,
@@ -269,5 +271,5 @@
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2023-10-03"
+    updated_date="2023-10-25"
 ) }}

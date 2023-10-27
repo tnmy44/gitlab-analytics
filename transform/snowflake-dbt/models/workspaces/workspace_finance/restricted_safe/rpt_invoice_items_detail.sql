@@ -10,7 +10,7 @@ invoice_detail AS (
   SELECT
     fct_invoice_item.invoice_number,
     fct_invoice_item.invoice_item_id,
-    dim_crm_account_id_invoice,
+    fct_invoice_item.dim_crm_account_id_invoice,
     dim_crm_account.crm_account_name,
     dim_crm_account.crm_account_type,
     fct_invoice_item.invoice_date,
@@ -20,6 +20,7 @@ invoice_detail AS (
     fct_invoice_item.quantity,
     fct_invoice_item.invoice_item_unit_price,
     fct_invoice_item.invoice_item_charge_amount,
+    fct_invoice_item.annual_billing_invoice_price,
     fct_invoice_item.arr,
     dim_crm_account.parent_crm_account_sales_segment,
     dim_date.first_day_of_month                         AS invoice_month,
