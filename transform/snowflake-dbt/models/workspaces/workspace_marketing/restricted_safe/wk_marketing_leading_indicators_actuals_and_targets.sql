@@ -428,7 +428,7 @@ SELECT
 FROM base
 WHERE 1=1 
     AND NOT CONTAINS(METRIC_TYPE, 'TARGET')
-{{ dbt_utils.group_by(n=16) }}
+{{ dbt_utils.group_by(n=15) }}
 
 ), regroup_targets AS (
 
@@ -456,7 +456,7 @@ SELECT
 FROM base
 WHERE 1=1 
     AND CONTAINS(METRIC_TYPE, 'TARGET')
-{{ dbt_utils.group_by(n=16) }}
+{{ dbt_utils.group_by(n=15) }}
 
 ), final AS (
 
@@ -505,6 +505,6 @@ FROM regroup_targets
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-10-27",
+    updated_date="2023-10-30",
   ) }}
 
