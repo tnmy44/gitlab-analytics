@@ -552,25 +552,14 @@ WITH date_details AS (
           AND opp_snapshot.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
           AND (opp_snapshot.net_arr > 0
             OR opp_snapshot.opportunity_category = 'Credit')
+          -- exclude vision opps from FY21-Q2
+          AND (opp_snapshot.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
+                OR vision_opps.opportunity_id IS NULL)
           -- 20220128 Updated to remove webdirect SQS deals
           AND opp_snapshot.sales_qualified_source  != 'Web Direct Generated'
               THEN 1
          ELSE 0
       END                                                      AS is_eligible_created_pipeline_flag,
-
-      CASE
-        WHEN opp_snapshot.snapshot_order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
-          AND opp_snapshot.snapshot_is_edu_oss = 0
-          AND opp_snapshot.pipeline_created_fiscal_quarter_date IS NOT NULL
-          AND opp_snapshot.snapshot_opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')
-          AND opp_snapshot.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
-          AND (opp_snapshot.net_arr > 0
-            OR opp_snapshot.snapshot_opportunity_category = 'Credit')
-          -- 20220128 Updated to remove webdirect SQS deals
-          AND opp_snapshot.snapshot_sales_qualified_source  != 'Web Direct Generated'
-              THEN 1
-         ELSE 0
-      END                                                      AS is_eligible_created_pipeline_all_snapshot_flag,
 
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
       CASE 
