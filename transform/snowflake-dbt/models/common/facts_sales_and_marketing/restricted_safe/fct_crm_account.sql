@@ -1,9 +1,4 @@
-{{ simple_cte([
-    ('prep_crm_account', 'prep_crm_account'),
-    ('prep_crm_user_hierarchy', 'prep_crm_user_hierarchy')
-    ])
-
-}}, final AS (
+WITH final AS (
 
     SELECT 
       --primary key
@@ -19,12 +14,6 @@
       prep_crm_account.technical_account_manager_id,
       prep_crm_account.master_record_id,
       prep_crm_account.dim_crm_person_primary_contact_id,
-      prep_crm_account.dim_crm_parent_account_hierarchy_sk,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_business_unit_id') }} AS dim_crm_parent_account_business_unit_id,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_sales_segment_id') }} AS dim_crm_parent_account_sales_segment_id,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_geo_id') }}           AS dim_crm_parent_account_geo_id,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_region_id') }}        AS dim_crm_parent_account_region_id,
-      {{ get_keyed_nulls('prep_crm_user_hierarchy.dim_crm_user_area_id') }}          AS dim_crm_parent_account_area_id,
 
       --dates
       prep_crm_account.crm_account_created_date_id,
@@ -73,16 +62,14 @@
       prep_crm_account.last_modified_date_id,
       prep_crm_account.last_activity_date_id,
       prep_crm_account.is_deleted
-    FROM prep_crm_account
-    LEFT JOIN prep_crm_user_hierarchy
-      ON prep_crm_user_hierarchy.dim_crm_user_hierarchy_sk = prep_crm_account.dim_crm_parent_account_hierarchy_sk
+    FROM {{ ref('prep_crm_account') }}
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@jpeguero",
+    updated_by="@lisvinueza",
     created_date="2022-08-10",
-    updated_date="2023-10-19"
+    updated_date="2023-05-21"
 ) }}
