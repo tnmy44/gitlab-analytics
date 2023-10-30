@@ -906,6 +906,16 @@ models:
           - unique
         tags: [ "tdf", "order_type", "common", "sales_funnel" ]
 
+  - name: dim_sales_funnel_kpi
+    description: '{{ doc("dim_sales_funnel_kpi") }}'
+    columns:
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
+      - name: sales_funnel_kpi_name
+        description: '{{ doc("sales_funnel_kpi_name") }}'
+
   - name: dim_host_instance_type
     description: '{{ doc("dim_host_instance_type") }}'
     columns:
@@ -5774,6 +5784,11 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: fct_sales_funnel_partner_alliance_target_daily
     description: '{{ doc("fct_sales_funnel_partner_alliance_target_daily") }}'
@@ -5786,6 +5801,11 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
         tags: ["tdf", "common", "sales_funnel"]
       - name: report_target_date
         description: '{{ doc("report_target_date") }}'
@@ -5806,6 +5826,11 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
@@ -5819,6 +5844,11 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: fct_sales_funnel_target_daily
     description: '{{ doc("fct_sales_funnel_target_daily") }}'
@@ -5831,6 +5861,11 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
         tags: ["tdf", "common", "sales_funnel"]
       - name: report_target_date
         description: '{{ doc("report_target_date") }}'

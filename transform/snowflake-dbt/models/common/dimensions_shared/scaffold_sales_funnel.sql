@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('fct_sales_funnel_target_daily', 'fct_sales_funnel_target_daily'),
     ('fct_sales_funnel_actual', 'fct_sales_funnel_actual')

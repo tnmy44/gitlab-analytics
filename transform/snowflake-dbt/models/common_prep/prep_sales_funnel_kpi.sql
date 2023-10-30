@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH prep_sales_funnel_target AS (
 
     SELECT kpi_name
