@@ -4,7 +4,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_merge_request_id",
+    "unique_key": "dim_merge_request_sk",
     "on_schema_change": "sync_all_columns"
     })
 }}
@@ -62,7 +62,6 @@
 
       -- maintained for prep_event until we have fully migrated all gitlab_dotcom data and can redo prep_event entirely
       prep_project.project_id                                                                   AS project_id,
-      --target_project.project_id                                                                 AS project_id_target,
       IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)                                          AS dim_plan_id_at_creation,
       gitlab_dotcom_merge_requests_source.author_id,
 

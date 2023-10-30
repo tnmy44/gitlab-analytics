@@ -47,7 +47,7 @@
                 dim_merge_request.ultimate_parent_namespace_id)             AS ultimate_parent_namespace_id,
       user_id                                                               AS dim_user_id,
       prep_issue.dim_issue_sk                                               AS dim_issue_sk,
-      dim_merge_request.dim_merge_request_id                                AS dim_merge_request_id,
+      dim_merge_request.dim_merge_request_sk                                AS dim_merge_request_sk,
       prep_epic.dim_epic_sk                                                 AS dim_epic_sk,
       resource_label_events.created_at::TIMESTAMP                           AS created_at,
       dim_date.date_id                                                      AS created_date_id
@@ -57,7 +57,7 @@
     LEFT JOIN prep_issue
       ON resource_label_events.issue_id = prep_issue.issue_id
     LEFT JOIN dim_merge_request
-      ON resource_label_events.merge_request_id = dim_merge_request.dim_merge_request_id
+      ON resource_label_events.merge_request_id = dim_merge_request.merge_request_id
     INNER JOIN dim_date 
       ON TO_DATE(resource_label_events.created_at) = dim_date.date_day
     LEFT JOIN namespace_prep
@@ -74,5 +74,5 @@
     created_by="@chrissharp",
     updated_by="@michellecooper",
     created_date="2022-03-14",
-    updated_date="2023-09-27"
+    updated_date="2023-10-30"
 ) }}
