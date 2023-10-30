@@ -61,6 +61,7 @@ def get_internal_identifier_keys(identifiers: list) -> list:
         "project_path": [
             "projects_part_of_product_ops.csv",
             "projects_part_of_product.csv",
+            "internal_gitlab_projects.csv",
         ],
         "namespace_id": ["internal_gitlab_namespaces.csv"],
         "namespace_path": ["internal_gitlab_namespaces.csv"],
@@ -79,6 +80,7 @@ def get_internal_identifier_keys(identifiers: list) -> list:
     internal_identifier_keys = str(tuple(internal_identifier_keys))
 
     return internal_identifier_keys
+
 
 
 def upload_to_gcs(
