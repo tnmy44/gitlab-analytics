@@ -82,7 +82,6 @@ def get_internal_identifier_keys(identifiers: list) -> list:
     return internal_identifier_keys
 
 
-
 def upload_to_gcs(
     advanced_metadata: bool, upload_df: pd.DataFrame, upload_file_name: str
 ) -> bool:
