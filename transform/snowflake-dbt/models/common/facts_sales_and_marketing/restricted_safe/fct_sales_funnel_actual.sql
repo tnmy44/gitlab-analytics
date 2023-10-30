@@ -149,6 +149,7 @@
     net_arr
   FROM fct_crm_opportunity
   WHERE is_net_arr_pipeline_created = TRUE
+    AND arr_created_date IS NOT NULL
 
 ), mqls AS (
 
