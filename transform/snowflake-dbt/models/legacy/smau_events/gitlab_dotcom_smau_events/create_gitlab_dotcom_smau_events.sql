@@ -27,14 +27,16 @@ WITH mr_comment_added AS (
 , mr_created AS (
 
   SELECT
-    author_id                         AS user_id,
-    TO_DATE(created_at) AS event_date,
-    'mr_created'                      AS event_type,
+    prep_user.user_id                         AS user_id,
+    TO_DATE(prep_merge_request.created_at)    AS event_date,
+    'mr_created'                              AS event_type,
     {{ dbt_utils.surrogate_key(['event_date', 'event_type', 'merge_request_id']) }}
-                                      AS event_surrogate_key
+                                              AS event_surrogate_key
     
-  FROM {{ref('gitlab_dotcom_merge_requests_xf')}}
-  WHERE created_at >= '2015-01-01'
+  FROM {{ ref('prep_merge_request') }}
+  LEFT JOIN {{ ref('prep_user') }}
+    ON prep_merge_request.dim_user_sk_author = prep_user.dim_user_sk
+  WHERE prep_merge_request.created_at >= '2015-01-01'
 
 )
 
