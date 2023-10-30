@@ -35,6 +35,10 @@ def get_last_load_time() -> Optional[datetime.datetime]:
 
 
 def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
+    """
+    get the additional filtering parameter from the manifest
+    and insert internal filtering keys where specified in manifest
+    """
 
     additional_filtering = table_dict.get("additional_filtering", "")
 
