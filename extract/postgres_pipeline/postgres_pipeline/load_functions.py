@@ -35,46 +35,21 @@ def get_last_load_time() -> Optional[datetime.datetime]:
 
 
 def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
-    """
-    get the additional filtering parameter from the manifest
-    and insert internal filtering keys where specified in manifest
-    """
+
     additional_filtering = table_dict.get("additional_filtering", "")
 
-    if "INTERNAL_NAMESPACE_IDS" in additional_filtering:
-        identifiers = ["namespace_id"]
-        internal_namespace_ids_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filtering = additional_filtering.format(
-            INTERNAL_NAMESPACE_IDS=internal_namespace_ids_str
-        )
+    key_mappings = {
+        "{INTERNAL_NAMESPACE_IDS}": get_internal_identifier_keys(["namespace_id"]),
+        "{INTERNAL_PROJECT_IDS}": get_internal_identifier_keys(["project_id"]),
+        "{INTERNAL_PROJECT_PATHS}": get_internal_identifier_keys(["project_path"]),
+        "{INTERNAL_NAMESPACE_PATHS}": get_internal_identifier_keys(["namespace_path"]),
+        "{INTERNAL_PATHS}": get_internal_identifier_keys(
+            ["namespace_path", "project_path"]
+        ),
+    }
 
-    elif "INTERNAL_PROJECT_IDS" in additional_filtering:
-        identifiers = ["project_id"]
-        internal_project_ids_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filtering = additional_filtering.format(
-            INTERNAL_PROJECT_IDS=internal_project_ids_str
-        )
-
-    elif "INTERNAL_PROJECT_PATHS" in additional_filtering:
-        identifiers = ["project_path"]
-        internal_project_paths_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filtering = additional_filtering.format(
-            INTERNAL_PROJECT_PATHS=internal_project_paths_str
-        )
-
-    elif "INTERNAL_NAMESPACE_PATHS" in additional_filtering:
-        identifiers = ["namespace_path"]
-        internal_namespace_paths_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filtering = additional_filtering.format(
-            INTERNAL_NAMESPACE_PATHS=internal_namespace_paths_str
-        )
-
-    elif "INTERNAL_PATHS" in additional_filtering:
-        identifiers = ["namespace_path", "project_path"]
-        internal_paths_str = tuple(get_internal_identifier_keys(identifiers))
-        additional_filtering = additional_filtering.format(
-            INTERNAL_PATHS=internal_paths_str
-        )
+    for key_ref, keys in key_mappings.items():
+        additional_filtering = additional_filtering.replace(key_ref, keys)
 
     return additional_filtering
 
