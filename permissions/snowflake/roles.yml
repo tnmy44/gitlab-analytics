@@ -3600,6 +3600,7 @@ roles:
         member_of:
             - reporter
             - restricted_safe
+            - salesforce
         warehouses:
             - dev_xs
 
