@@ -42,17 +42,16 @@ def get_additional_filtering(table_dict: Dict[Any, Any]) -> str:
     additional_filtering = table_dict.get("additional_filtering", "")
 
     key_mappings = {
-        "{INTERNAL_NAMESPACE_IDS}": get_internal_identifier_keys(["namespace_id"]),
-        "{INTERNAL_PROJECT_IDS}": get_internal_identifier_keys(["project_id"]),
-        "{INTERNAL_PROJECT_PATHS}": get_internal_identifier_keys(["project_path"]),
-        "{INTERNAL_NAMESPACE_PATHS}": get_internal_identifier_keys(["namespace_path"]),
-        "{INTERNAL_PATHS}": get_internal_identifier_keys(
+        "INTERNAL_NAMESPACE_IDS": get_internal_identifier_keys(["namespace_id"]),
+        "INTERNAL_PROJECT_IDS": get_internal_identifier_keys(["project_id"]),
+        "INTERNAL_PROJECT_PATHS": get_internal_identifier_keys(["project_path"]),
+        "INTERNAL_NAMESPACE_PATHS": get_internal_identifier_keys(["namespace_path"]),
+        "INTERNAL_PATHS": get_internal_identifier_keys(
             ["namespace_path", "project_path"]
         ),
     }
 
-    for key_ref, keys in key_mappings.items():
-        additional_filtering = additional_filtering.replace(key_ref, keys)
+    additional_filtering = additional_filtering.format(**key_mappings)
 
     return additional_filtering
 
