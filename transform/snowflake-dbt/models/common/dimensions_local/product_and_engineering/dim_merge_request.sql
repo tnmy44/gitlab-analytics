@@ -34,7 +34,8 @@ WITH prep_merge_request AS (
       latest_merge_request_diff_id,
 
       merge_request_internal_id,
-      -- merge_request_title, sensitive masked
+      merge_request_title,
+      merge_request_description,
       is_merge_to_master,
       merge_error,
       approvals_before_merge,
@@ -49,7 +50,12 @@ WITH prep_merge_request AS (
       does_allow_maintainer_to_push,
       created_at,
       updated_at,
+      labels,
+      masked_label_title,
       merge_request_last_edited_at,
+      is_community_contributor_related,
+      is_included_in_engineering_metrics,
+      is_part_of_product,
 
       merged_at,
       first_comment_at,
@@ -60,7 +66,8 @@ WITH prep_merge_request AS (
       added_lines,
       modified_paths_size,
       diff_size,
-      commits_count
+      commits_count,
+      hours_to_merged_status
 
     FROM {{ ref('prep_merge_request') }}
 
@@ -71,5 +78,5 @@ WITH prep_merge_request AS (
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2023-10-26"
+    updated_date="2023-10-31"
 ) }}

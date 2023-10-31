@@ -82,7 +82,10 @@
 
       -- merge request attributes
       gitlab_dotcom_merge_requests_source.merge_request_iid                                     AS merge_request_internal_id,
-      gitlab_dotcom_merge_requests_source.merge_request_title,
+      IFF(target_project.visibility_level != 'public' AND target_project.namespace_is_internal = FALSE,
+        'content masked', gitlab_dotcom_merge_requests_source.merge_request_title)              AS merge_request_title,
+      IFF(target_project.visibility_level != 'public' AND target_project.namespace_is_internal = FALSE,
+        'content masked', gitlab_dotcom_merge_requests_source.merge_request_description)        AS merge_request_description,
       gitlab_dotcom_merge_requests_source.is_merge_to_master,
       gitlab_dotcom_merge_requests_source.merge_error,
       gitlab_dotcom_merge_requests_source.approvals_before_merge,
@@ -101,6 +104,15 @@
       agg_labels.labels,
       ARRAY_TO_STRING(agg_labels.labels,',')                                                    AS masked_label_title,
 
+      IFF(gitlab_dotcom_merge_requests_source.target_project_id IN ({{is_project_included_in_engineering_metrics()}}),
+        TRUE, FALSE)                                                                            AS is_included_in_engineering_metrics,
+      IFF(gitlab_dotcom_merge_requests_source.target_project_id IN ({{is_project_part_of_product()}}),
+        TRUE, FALSE)                                                                            AS is_part_of_product,
+      IFF(target_project.namespace_is_internal IS NOT NULL
+          AND ARRAY_CONTAINS('community contribution'::variant, agg_labels.labels),
+        TRUE, FALSE)                                                                            AS is_community_contributor_related,
+      target_project.namespace_is_internal,
+
       -- merge request metrics
       gitlab_dotcom_merge_request_metrics_source.merged_at,
       gitlab_dotcom_merge_request_metrics_source.first_comment_at,
@@ -111,7 +123,9 @@
       gitlab_dotcom_merge_request_metrics_source.added_lines,
       gitlab_dotcom_merge_request_metrics_source.modified_paths_size,
       gitlab_dotcom_merge_request_metrics_source.diff_size,
-      gitlab_dotcom_merge_request_metrics_source.commits_count
+      gitlab_dotcom_merge_request_metrics_source.commits_count,
+      TIMESTAMPDIFF(HOURS, gitlab_dotcom_merge_request_metrics_source.created_at,
+        gitlab_dotcom_merge_request_metrics_source.merged_at)                                   AS hours_to_merged_status,
 
     FROM gitlab_dotcom_merge_requests_source
     LEFT JOIN prep_project
@@ -157,5 +171,5 @@
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2023-10-26"
+    updated_date="2023-10-31"
 ) }}

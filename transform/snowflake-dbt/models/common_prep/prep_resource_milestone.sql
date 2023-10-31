@@ -50,7 +50,7 @@
     LEFT JOIN prep_project issue_project
       ON prep_issue.dim_project_sk = issue_project.dim_project_sk
     LEFT JOIN prep_project merge_request_project
-      ON merge_request_issue.dim_project_sk = merge_request_project.dim_project_sk
+      ON prep_merge_request.dim_project_sk = merge_request_project.dim_project_sk
 
 
 )

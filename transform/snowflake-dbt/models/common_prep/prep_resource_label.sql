@@ -12,7 +12,7 @@
     ('dim_date', 'dim_date'),
     ('prep_epic', 'prep_epic'),
     ('prep_issue', 'prep_issue'),
-    ('dim_merge_request', 'dim_merge_request'),
+    ('prep_merge_request', 'prep_merge_request'),
     ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan'),
     ('prep_project', 'prep_project')
 ]) }}
@@ -41,13 +41,13 @@
                 mr_project.project_id)                                      AS dim_project_id,
       COALESCE(prep_epic.dim_plan_id_at_creation,
                 prep_issue.dim_plan_id_at_creation,
-                dim_merge_request.dim_plan_id_at_creation)                  AS dim_plan_id,
+                prep_merge_request.dim_plan_id_at_creation)                 AS dim_plan_id,
       COALESCE(namespace_prep.namespace_id,
                 prep_issue.ultimate_parent_namespace_id,
-                dim_merge_request.ultimate_parent_namespace_id)             AS ultimate_parent_namespace_id,
+                prep_merge_request.ultimate_parent_namespace_id)            AS ultimate_parent_namespace_id,
       user_id                                                               AS dim_user_id,
       prep_issue.dim_issue_sk                                               AS dim_issue_sk,
-      dim_merge_request.dim_merge_request_sk                                AS dim_merge_request_sk,
+      prep_merge_request.dim_merge_request_sk                               AS dim_merge_request_sk,
       prep_epic.dim_epic_sk                                                 AS dim_epic_sk,
       resource_label_events.created_at::TIMESTAMP                           AS created_at,
       dim_date.date_id                                                      AS created_date_id
@@ -56,8 +56,8 @@
       ON resource_label_events.epic_id = prep_epic.epic_id
     LEFT JOIN prep_issue
       ON resource_label_events.issue_id = prep_issue.issue_id
-    LEFT JOIN dim_merge_request
-      ON resource_label_events.merge_request_id = dim_merge_request.merge_request_id
+    LEFT JOIN prep_merge_request
+      ON resource_label_events.merge_request_id = prep_merge_request.merge_request_id
     INNER JOIN dim_date 
       ON TO_DATE(resource_label_events.created_at) = dim_date.date_day
     LEFT JOIN namespace_prep

@@ -5,7 +5,7 @@ WITH source AS (
 
 ), mr_information AS (
 
-    SELECT *
+    SELECT prep_merge_request.*
     FROM {{ ref('prep_merge_request') }}
     LEFT JOIN {{ ref('prep_project') }}
       ON prep_merge_request.dim_project_sk = prep_project.dim_project_sk
