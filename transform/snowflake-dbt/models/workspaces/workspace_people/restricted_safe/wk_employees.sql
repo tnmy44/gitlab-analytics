@@ -20,7 +20,7 @@ email AS (
 
   SELECT 
     employee_id,
-		last_work_email
+	  last_work_email
   FROM {{ref('employee_directory')}}
   GROUP BY 1, 2 
   QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY last_work_email DESC) = 1
@@ -31,8 +31,8 @@ dob AS (
 
   SELECT 
     employee_id,
-	  gitlab_username,
-	  date_of_birth
+    gitlab_username,
+    date_of_birth
   FROM {{ref('workday_employee_mapping_source')}}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC) = 1
 

@@ -90,7 +90,7 @@ dr AS (
   SELECT     
     uploaded_at AS uploaded_at,
     supervisor,
-    count(DISTINCT blend.employee_id) AS dr_total_direct_reports
+    COUNT(DISTINCT blend.employee_id) AS dr_total_direct_reports
   FROM blended_directory_source blend
   INNER JOIN eda_stage edi
   ON blend.employee_id = edi.employee_id
@@ -114,13 +114,13 @@ sup AS (
   LEFT JOIN eda_sup
     ON sup_name = eda_sup.full_name
     AND sup_date = eda_sup.uploaded_at
-    AND 1 = ldr_rank
+    AND ldr_rank = 1
   LEFT JOIN dr
   ON dr_name = dr.supervisor
   AND sup_date = dr.uploaded_at
   WHERE sup_date >= cutover_date
   AND source_system = 'workday'
-  ORDER BY  2 DESC, 3
+  ORDER BY 2 DESC, 3
 
 ),
 
@@ -447,10 +447,8 @@ hist_stage AS (
       WHEN COALESCE(cur_job_grade, '1') != COALESCE(pr_job_grade, '1') THEN 1
       WHEN COALESCE(cur_employee_type, '1') != COALESCE(pr_employee_type, '1') THEN 1
       WHEN cur_is_promotion = 'TRUE' THEN 1
-      WHEN cur_is_transfer = 'TRUE'
-      AND COALESCE(cur_job_title, '1') != COALESCE(pr_job_title, '1') THEN 1
-      WHEN cur_is_transfer = 'TRUE'
-      AND cur_transfer_job_change = 'TRUE' THEN 1
+      WHEN cur_is_transfer = 'TRUE' AND COALESCE(cur_job_title, '1') != COALESCE(pr_job_title, '1') THEN 1
+      WHEN cur_is_transfer = 'TRUE' AND cur_transfer_job_change = 'TRUE' THEN 1
       WHEN total_discretionary_bonuses >= 1 THEN 1
       ELSE 0
     END AS filter
