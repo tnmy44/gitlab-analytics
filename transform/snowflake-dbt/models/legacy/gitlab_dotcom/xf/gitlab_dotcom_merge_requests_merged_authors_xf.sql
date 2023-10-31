@@ -6,11 +6,8 @@ WITH merge_requests AS (
 
     SELECT
       prep_merge_request.*,
-      prep_project.project_id,
       prep_namespace.namespace_id
     FROM {{ ref('prep_merge_request') }}
-    LEFT JOIN {{ ref('prep_project') }}
-      ON prep_merge_request.dim_project_sk = prep_project.dim_project_sk
     LEFT JOIN {{ ref('prep_namespace') }}
       ON prep_merge_request.dim_namespace_sk = prep_namespace.dim_namespace_sk
     WHERE prep_namespace.is_currently_valid = TRUE

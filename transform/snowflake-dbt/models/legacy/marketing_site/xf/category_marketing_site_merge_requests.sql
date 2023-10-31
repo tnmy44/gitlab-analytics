@@ -29,7 +29,7 @@ WITH merge_requests AS (
       merge_requests.created_at                                        AS merge_request_created_at,
       merge_requests.merge_request_last_edited_at                      AS merge_request_last_edited_at,
       merge_requests.merged_at                                         AS merge_request_merged_at,
-      mr_files.merge_request_internal_id                               AS merge_request_iid,
+      mr_files.merge_request_id                                        AS merge_request_iid,
       mr_files.marketing_site_file_edited                              AS merge_request_path,
       IFNULL(file_classifications.file_classification, 'unclassified') AS file_classification
     FROM mr_files

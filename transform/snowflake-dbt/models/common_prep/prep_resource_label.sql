@@ -38,10 +38,10 @@
     SELECT 
       resource_label_events.resource_label_event_id                         AS dim_issue_label_id,
       COALESCE(issue_project.project_id,
-                dim_merge_request.dim_project_id)                           AS dim_project_id,
+                mr_project.project_id)                                      AS dim_project_id,
       COALESCE(prep_epic.dim_plan_id_at_creation,
                 prep_issue.dim_plan_id_at_creation,
-                dim_merge_request.dim_plan_id)                              AS dim_plan_id,
+                dim_merge_request.dim_plan_id_at_creation)                  AS dim_plan_id,
       COALESCE(namespace_prep.namespace_id,
                 prep_issue.ultimate_parent_namespace_id,
                 dim_merge_request.ultimate_parent_namespace_id)             AS ultimate_parent_namespace_id,
@@ -66,6 +66,8 @@
       ON prep_epic.dim_plan_sk_at_creation = prep_gitlab_dotcom_plan.dim_plan_sk
     LEFT JOIN prep_project AS issue_project
       ON prep_issue.dim_project_sk = issue_project.dim_project_sk
+    LEFT JOIN prep_project AS mr_project
+      ON prep_merge_request.dim_project_sk = mr_project.dim_project_sk
 
 )
 

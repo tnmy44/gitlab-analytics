@@ -18,7 +18,9 @@
     ('gitlab_dotcom_merge_request_metrics_source', 'gitlab_dotcom_merge_request_metrics_source'),
     ('prep_user', 'prep_user'),
     ('prep_milestone', 'prep_milestone'),
-    ('prep_ci_pipeline', 'prep_ci_pipeline')
+    ('prep_ci_pipeline', 'prep_ci_pipeline'),
+    ('prep_label_links', 'prep_label_links'),
+    ('prep_labels', 'prep_labels')
 ]) }}
 
 , gitlab_dotcom_merge_requests_source AS (
@@ -30,6 +32,18 @@
       WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
+
+), agg_labels AS (
+
+    SELECT
+      gitlab_dotcom_merge_requests_source.merge_request_id                                          AS merge_request_id,
+      ARRAY_AGG(LOWER(prep_labels.label_title)) WITHIN GROUP (ORDER BY prep_labels.label_title ASC) AS labels
+    FROM gitlab_dotcom_merge_requests_source
+    LEFT JOIN prep_label_links
+        ON gitlab_dotcom_issues_source.merge_request_id = prep_label_links.merge_request_id
+    LEFT JOIN prep_labels
+        ON prep_label_links.dim_label_id = prep_labels.dim_label_id
+    GROUP BY gitlab_dotcom_merge_requests_source.merge_request_id
 
 ), renamed AS (
 
@@ -84,6 +98,8 @@
       gitlab_dotcom_merge_requests_source.created_at,
       gitlab_dotcom_merge_requests_source.updated_at,
       gitlab_dotcom_merge_requests_source.merge_request_last_edited_at,
+      agg_labels.labels,
+      ARRAY_TO_STRING(agg_labels, ,',')                                                       AS masked_label_title,
 
       -- merge request metrics
       gitlab_dotcom_merge_request_metrics_source.merged_at,
@@ -130,6 +146,8 @@
       ON gitlab_dotcom_merge_request_metrics_source.latest_closed_by_id = latest_closed_by.user_id
     LEFT JOIN prep_ci_pipeline
       ON gitlab_dotcom_merge_requests_source.head_pipeline_id = prep_ci_pipeline.ci_pipeline_id
+    LEFT JOIN agg_labels
+        ON gitlab_dotcom_merge_requests_source.merge_request_id = agg_labels.merge_request_id
     WHERE gitlab_dotcom_merge_requests_source.project_id IS NOT NULL
 
 )

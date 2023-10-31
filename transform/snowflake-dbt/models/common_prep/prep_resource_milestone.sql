@@ -32,7 +32,7 @@
       COALESCE(issue_project.project_id,
                 merge_request_project.project_id)                                             AS dim_project_id,
       COALESCE(prep_issue.dim_plan_id_at_creation,
-                prep_merge_request.dim_plan_id)                                               AS dim_plan_id,
+                prep_merge_request.dim_plan_id_at_creation)                                   AS dim_plan_id,
       COALESCE(prep_issue.ultimate_parent_namespace_id,
                 prep_merge_request.ultimate_parent_namespace_id)                              AS ultimate_parent_namespace_id,
       user_id                                                                                 AS dim_user_id,
