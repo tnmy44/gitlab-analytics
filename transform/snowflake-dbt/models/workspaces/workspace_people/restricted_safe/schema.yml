@@ -1,0 +1,6 @@
+version: 2
+
+models:
+  - name: wk_employees
+  - name: wk_department
+  - name: wk_job_history

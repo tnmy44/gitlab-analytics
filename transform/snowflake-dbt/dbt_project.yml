@@ -639,6 +639,11 @@ models:
       workspace_people:
         +schema: workspace_people
         +tags: ["people"]
+        restricted_safe:
+          +materialized: view
+          +schema: restricted_safe_workspace_people
+          +tags: ["safe"]
+          secure: true
 
     # ------------------
     # Marts
