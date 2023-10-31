@@ -1241,6 +1241,25 @@ roles:
                 write:
                     - raw.sales_analytics.*
 
+     - sales_analytics_read:
+        warehouses:
+            - dev_xs
+        member_of:
+            - restricted_safe
+        owns:
+            schemas:
+                - raw.sales_analytics
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.sales_analytics
+            tables:
+                read:
+                    - raw.sales_analytics.*
+               
     - sales_systems_snowflake_api_role:
         warehouses:
             - reporting
