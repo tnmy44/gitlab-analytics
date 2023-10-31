@@ -372,7 +372,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=172)}}
+  {{dbt_utils.group_by(n=173)}}
     
 ), cohort_base_combined AS (
   
@@ -893,7 +893,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-10-23",
+    updated_date="2023-10-31",
   ) }}
