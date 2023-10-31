@@ -40,7 +40,7 @@
       ARRAY_AGG(LOWER(prep_labels.label_title)) WITHIN GROUP (ORDER BY prep_labels.label_title ASC) AS labels
     FROM gitlab_dotcom_merge_requests_source
     LEFT JOIN prep_label_links
-        ON gitlab_dotcom_issues_source.merge_request_id = prep_label_links.merge_request_id
+        ON gitlab_dotcom_merge_requests_source.merge_request_id = prep_label_links.merge_request_id
     LEFT JOIN prep_labels
         ON prep_label_links.dim_label_id = prep_labels.dim_label_id
     GROUP BY gitlab_dotcom_merge_requests_source.merge_request_id
@@ -99,7 +99,7 @@
       gitlab_dotcom_merge_requests_source.updated_at,
       gitlab_dotcom_merge_requests_source.merge_request_last_edited_at,
       agg_labels.labels,
-      ARRAY_TO_STRING(agg_labels, ,',')                                                       AS masked_label_title,
+      ARRAY_TO_STRING(agg_labels.labels,',')                                                    AS masked_label_title,
 
       -- merge request metrics
       gitlab_dotcom_merge_request_metrics_source.merged_at,
