@@ -4591,6 +4591,7 @@ roles:
         member_of:
             - analyst_finance
             - restricted_safe
+            - sales_analytics_read
         warehouses:
             - dev_xs
 
