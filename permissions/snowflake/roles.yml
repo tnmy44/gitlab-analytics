@@ -1241,7 +1241,7 @@ roles:
                 write:
                     - raw.sales_analytics.*
 
-     - sales_analytics_read:
+    - sales_analytics_read:
         warehouses:
             - dev_xs
         member_of:
