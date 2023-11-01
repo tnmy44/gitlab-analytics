@@ -565,6 +565,7 @@ roles:
             - zendesk_community_relations
             - zuora
             - zuora_central_sandbox
+            - restricted_workspace_people
 
     - analyst_sales:
         warehouses:
@@ -815,6 +816,7 @@ roles:
                     - prod.legacy
                     - prod.workspace_data_science
                     - prod.restricted_safe_workspace_sales
+                    - prod.restricted_workspace_people
                     - prod.restricted_safe_common_mart_sales
                     - prod.common_mart_product
                     - prod.common_mart_marketing
@@ -834,6 +836,7 @@ roles:
                     - prod.workspace_data_science.*
                     - prod.restricted_safe_workspace_sales.*
                     - prod.restricted_safe_common_mart_sales.*
+                    - prod.restricted_workspace_people.*
                     - prod.common_mart_product.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_people.*
@@ -2251,6 +2254,20 @@ roles:
                     - prod.workspace_data_science.*
                     - prod.workspace_sales.*
 
+    - restricted_workspace_people:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    -prod
+            schemas:
+                read:
+                    - prod.restricted_workspace_people
+            tables:
+                read:
+                    - prep.restricted_workspace_people.*
+                    
     - salesforce:
         warehouses:
             - dev_xs
@@ -3999,7 +4016,6 @@ roles:
             - analyst_finance
             - analyst_people
             - analytics_engineer_core
-            - analyst_people
             - analyst_engineering
             - bamboohr
             - bamboohr_analytics
