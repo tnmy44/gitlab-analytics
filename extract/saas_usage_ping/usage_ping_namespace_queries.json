@@ -1129,7 +1129,7 @@
   },
   {
     "counter_name": "counts.projects_jira_active",
-    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(services.id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_services_dedupe_source AS services  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = services.project_id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE services.active = TRUE AND services.project_id IS NOT NULL AND services.type = 'JiraService' GROUP BY 1",
+    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(integrations.id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_integrations_dedupe_source AS integrations ON integrations.project_id = projects.id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.common.dim_namespace AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE integrations.type_new = 'Integrations::Jira' AND integrations.active = TRUE GROUP BY 1",
     "time_window_query": false,
     "level": "namespace"
   },
@@ -2533,7 +2533,7 @@
   },
   {
     "counter_name": "usage_activity_by_stage.plan.projects_jira_active",
-    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(DISTINCT projects.creator_id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_services_dedupe_source AS services ON services.project_id = projects.id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id  LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE services.type = 'JiraService' AND services.active = TRUE GROUP BY 1",
+    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id, COUNT(DISTINCT projects.creator_id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_integrations_dedupe_source AS integrations ON services.project_id = projects.id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id  LEFT JOIN prod.common.dim_namespace AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE integrations.type_new = 'Integrations::Jira' AND integrations.active = TRUE GROUP BY 1",
     "time_window_query": false,
     "level": "namespace"
   },
@@ -3091,7 +3091,7 @@
   },
   {
     "counter_name": "usage_activity_by_stage_monthly.plan.projects_jira_active",
-    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(DISTINCT projects.creator_id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_services_dedupe_source AS services ON services.project_id = projects.id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id  LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE services.type = 'JiraService' AND services.active = TRUE AND projects.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
+    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(DISTINCT projects.creator_id) AS counter_value FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_integrations_dedupe_source AS integrations ON integrations.project_id = projects.id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.common.dim_namespace AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE integrations.type_new = 'Integrations::Jira' AND integrations.active = TRUE AND projects.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
     "time_window_query": true,
     "level": "namespace"
   },
