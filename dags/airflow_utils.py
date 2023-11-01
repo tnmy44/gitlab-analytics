@@ -17,7 +17,7 @@ else:
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.29"
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.2"
+DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:python_upgrade"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
 
