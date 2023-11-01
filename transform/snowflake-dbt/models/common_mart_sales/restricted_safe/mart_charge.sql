@@ -163,14 +163,12 @@
             THEN 'Customer Portal'
         WHEN (dim_order_action.dim_order_action_id IS NOT NULL
         OR dim_amendment_subscription.amendment_type = 'Renewal')
-          AND (prep_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
-          OR dim_subscription.subscription_sales_type = 'Sales-Assisted')
+          AND prep_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
             THEN 'Sales-Assisted'
         WHEN (dim_order_action.dim_order_action_id IS NOT NULL
         OR dim_amendment_subscription.amendment_type = 'Renewal')
           AND (dim_order.order_description = 'AutoRenew by CustomersDot'
-          OR dim_amendment_subscription.amendment_name = 'AutoRenew by CustomersDot'
-          OR dim_amendment_subscription.amendment_type = 'Composite')
+          OR dim_amendment_subscription.amendment_name = 'AutoRenew by CustomersDot')
             THEN 'Auto-Renewal'
         ELSE NULL
       END                                                                             AS subscription_renewal_type,
@@ -263,7 +261,7 @@
       ON fct_charge.dim_order_id = dim_order.dim_order_id
     LEFT JOIN dim_order_action
       ON fct_charge.dim_order_id = dim_order_action.dim_order_id
-      AND dim_order_action.order_action_type IN ('RenewSubscription', 'CancelSubscription')
+      AND dim_order_action.order_action_type = 'RenewSubscription'
     LEFT JOIN dim_namespace
       ON dim_subscription.namespace_id = dim_namespace.dim_namespace_id
     LEFT JOIN prep_billing_account_user
