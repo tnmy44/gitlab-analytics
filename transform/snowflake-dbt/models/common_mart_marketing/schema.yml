@@ -184,13 +184,6 @@ models:
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
 
-    - name: rpt_crm_touchpoint_combined
-      description: Model containing both Bizible attribution touchpoints and non-attribution touchpoints along with contact, lead, account, and campaign details.
-      columns:
-        - name: dim_crm_touchpoint_id
-          tests:
-              - not_null
-              - unique
     - name: rpt_l2r_leading_indicators
       description: Tableau-specific table that is used to aggregate top KPIS; Inquiries, MQLs, and SAOs, by date and a few dimensions from Lead to Revenue
       columns:
