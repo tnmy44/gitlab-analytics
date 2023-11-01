@@ -128,7 +128,7 @@
       gitlab_dotcom_merge_request_metrics_source.diff_size,
       gitlab_dotcom_merge_request_metrics_source.commits_count,
       TIMESTAMPDIFF(HOURS, gitlab_dotcom_merge_request_metrics_source.created_at,
-        gitlab_dotcom_merge_request_metrics_source.merged_at)                                   AS hours_to_merged_status,
+        gitlab_dotcom_merge_request_metrics_source.merged_at)                                   AS hours_to_merged_status
 
     FROM gitlab_dotcom_merge_requests_source
     LEFT JOIN prep_project
