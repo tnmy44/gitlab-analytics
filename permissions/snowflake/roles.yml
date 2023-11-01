@@ -2997,6 +2997,12 @@ roles:
                 - cdeleon_prep.*.*
                 - cdeleon_prod.*.*
 
+    - cdewit:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - cleroux:
         member_of:
             - analyst_engineering
@@ -5307,6 +5313,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - vmairet:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - vprakash:
         member_of:
             - engineer
@@ -5459,6 +5471,11 @@ users:
         can_login: yes
         member_of:
             - cbraza
+
+    - cdewit:
+        can_login: yes
+        member_of:
+            - aarts
 
     - cleroux:
         can_login: yes
@@ -5963,6 +5980,11 @@ users:
         can_login: yes
         member_of:
             - vagrawal
+
+    - vmairet:
+        can_login: yes
+        member_of:
+            - vmairet
 
     - vprakash:
         can_login: yes
