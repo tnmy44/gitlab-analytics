@@ -5313,6 +5313,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - vmairet:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - vprakash:
         member_of:
             - engineer
@@ -5974,6 +5980,11 @@ users:
         can_login: yes
         member_of:
             - vagrawal
+
+    - vmairet:
+        can_login: yes
+        member_of:
+            - vmairet
 
     - vprakash:
         can_login: yes
