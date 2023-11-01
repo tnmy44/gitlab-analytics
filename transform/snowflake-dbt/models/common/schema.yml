@@ -906,14 +906,6 @@ models:
           - unique
         tags: [ "tdf", "order_type", "common", "sales_funnel" ]
 
-  - name: scaffold_sales_funnel
-    description: Scaffold table that provides a foundational structure between fct_sales_funnel_actual and fct_sales_funnel_target_daily to support the visualization layer. # When merged, add linked to handbook page documentation on scaffold tables
-    columns:
-      - name: CONCAT(date_id, dim_sales_funnel_kpi_sk, dim_hierarchy_sk, dim_order_type_id, dim_sales_qualified_source_id)
-        tests:
-          - not_null
-          - unique
-
   - name: dim_sales_funnel_kpi
     description: '{{ doc("dim_sales_funnel_kpi") }}'
     columns:
