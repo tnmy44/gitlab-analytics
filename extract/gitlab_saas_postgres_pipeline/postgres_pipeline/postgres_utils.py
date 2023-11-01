@@ -85,7 +85,7 @@ def upload_to_gcs(
     return True
 
 
-def get_internal_identifier_keys(identifiers: list) -> list:
+def get_internal_identifier_keys(identifiers: list) -> str:
     """
     Get a list of current internal GitLab project or namespace keys from dbt seed files
     """
@@ -116,7 +116,9 @@ def get_internal_identifier_keys(identifiers: list) -> list:
             df = pd.read_csv(file_location)
             internal_identifier_keys.extend(list(df[identifier]))
 
-    return internal_identifier_keys
+    internal_identifier_keys_str = str(tuple(internal_identifier_keys))
+
+    return internal_identifier_keys_str
 
 
 def trigger_snowflake_upload(
