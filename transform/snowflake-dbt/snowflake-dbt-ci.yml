@@ -205,7 +205,7 @@ specify_dbt_parameters:
     - dbt build $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --selector $DBT_SELECTOR || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
-✈️preflight:
+🛫preflight:
   <<: *snowflake_dbt_jobs
   script:
     - *xs_warehouse
@@ -215,10 +215,21 @@ specify_dbt_parameters:
     - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/defer_manifest/manifest.json https://dbt.gitlabdata.com/manifest.json
     - dbt deps $CI_PROFILE_TARGET
     - dbt parse $CI_PROFILE_TARGET || FAILED=true
-    - dbt --no-write-json --warn-error run-operation tag_validation --profiles-dir profile --target ci --defer --state defer_manifest || FAILED=true
-    - python3 macro_name_check.py
+    - dbt --no-write-json --warn-error run-operation tag_validation --profiles-dir profile --target ci || FAILED=true
+    - python3 macro_name_check.py || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
   when: always
+  cache:
+    key:
+      files:
+        - manifest.json
+    paths:
+      - transform/snowflake-dbt/defer_manifest
+    key:
+      files:
+        - manifest.json
+    paths:
+      - transform/snowflake-dbt/target 
 
 # ======
 # DBT cloning
