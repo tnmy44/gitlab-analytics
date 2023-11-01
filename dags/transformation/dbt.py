@@ -44,7 +44,6 @@ from kube_secrets import (
 from kubernetes_helpers import get_affinity, get_toleration
 
 
-DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:python_upgrade"
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
