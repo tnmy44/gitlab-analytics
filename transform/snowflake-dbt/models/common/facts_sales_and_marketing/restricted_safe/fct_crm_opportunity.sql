@@ -158,6 +158,8 @@
       sfdc_opportunity.is_booked_net_arr,
       sales_rep.is_hybrid_user AS is_hybrid_opp_owner_opp,
       sales_rep_account.is_hybrid_user AS is_hybrid_account_owner_opp,
+      sfdc_opportunity.is_abm_tier_sao,
+      sfdc_opportunity.is_abm_tier_closed_won,
 
       sfdc_opportunity.primary_solution_architect,
       sfdc_opportunity.product_details,
