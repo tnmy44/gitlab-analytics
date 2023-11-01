@@ -345,7 +345,6 @@
   
   --Opp Data  
 
-    sfdc_opportunity.is_sao,
     sfdc_opportunity.sales_accepted_date,
     account_history_final.abm_tier_1_date,
     account_history_final.abm_tier_2_date,
