@@ -220,16 +220,20 @@ specify_dbt_parameters:
     - if [ $FAILED ]; then exit 1; fi
   when: always
   cache:
-    key:
-      files:
-        - manifest.json
+    key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
     paths:
+      - transform/snowflake-dbt/target
       - transform/snowflake-dbt/defer_manifest
-    key:
-      files:
-        - manifest.json
-    paths:
-      - transform/snowflake-dbt/target 
+      - transform/snowflake-dbt/dbt_packages
+
+🫸test_defer:
+  <<: *snowflake_dbt_jobs
+  script:
+    - *xs_warehouse
+    - *set_snapshot
+    - *clone_raw # Reads from raw clone
+    - dbt build dim_team --profiles-dir profile --target ci --defer --state defer_manifest || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
 
 # ======
 # DBT cloning
