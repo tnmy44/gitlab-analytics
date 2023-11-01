@@ -351,8 +351,9 @@
     account_history_final.abm_tier_2_date,
     account_history_final.abm_tier,
     CASE 
-      WHEN is_sao = TRUE
-        AND sales_accepted_date BETWEEN valid_from AND valid_to
+      WHEN sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity.stage_name != '10-Duplicate'
+          AND sales_accepted_date BETWEEN valid_from AND valid_to
         THEN TRUE
       ELSE FALSE
     END AS is_abm_tier_sao  
@@ -378,7 +379,7 @@
     account_history_final.abm_tier_2_date,
     account_history_final.abm_tier,
     CASE 
-      WHEN is_won = TRUE
+      WHEN stage_name = 'Closed Won'
         AND close_date BETWEEN valid_from AND valid_to
         THEN TRUE
       ELSE FALSE
