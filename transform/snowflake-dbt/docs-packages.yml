@@ -6,10 +6,10 @@ packages:
   - package: dbt-labs/audit_helper
     version: 0.9.0
   - package: dbt-labs/dbt_utils
-    version: 0.8.5
+    version: 0.9.6
   - package: dbt-labs/snowplow
-    version: 0.14.0
+    version: 0.15.1
   - package: dbt-labs/dbt_external_tables
     version: 0.8.7
   - package: brooklyn-data/dbt_artifacts
-    version: 2.1.1
+    version: 2.6.1
