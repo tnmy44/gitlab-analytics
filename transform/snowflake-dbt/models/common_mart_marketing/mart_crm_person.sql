@@ -7,7 +7,6 @@
     ('dim_bizible_marketing_channel_path','dim_bizible_marketing_channel_path'),
     ('dim_sales_segment','dim_sales_segment'),
     ('fct_crm_person','fct_crm_person'),
-    ('rpt_abm_tier_historical_person','rpt_abm_tier_historical_person'), 
     ('dim_date','dim_date'),
     ('dim_crm_user', 'dim_crm_user'),
     ('dim_crm_user_hierarchy', 'dim_crm_user_hierarchy')
@@ -206,8 +205,8 @@
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
       fct_crm_person.is_bdr_sdr_worked,
-      rpt_abm_tier_historical_person.is_abm_tier_inquiry,
-      rpt_abm_tier_historical_person.is_abm_tier_mql,
+      fct_crm_person.is_abm_tier_inquiry,
+      fct_crm_person.is_abm_tier_mql,
       CASE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
@@ -292,8 +291,6 @@
       ON fct_crm_person.worked_date_pt_id = worked_date_pt.date_id
     LEFT JOIN dim_crm_user 
       ON fct_crm_person.dim_crm_user_id = dim_crm_user.dim_crm_user_id
-    LEFT JOIN rpt_abm_tier_historical_person
-      ON fct_crm_person.dim_crm_person_id=rpt_abm_tier_historical_person.dim_crm_person_id
     LEFT JOIN dim_crm_user_hierarchy
       ON dim_crm_user_hierarchy.dim_crm_user_hierarchy_sk = fct_crm_person.dim_account_demographics_hierarchy_sk
 
