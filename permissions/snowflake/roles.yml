@@ -565,7 +565,7 @@ roles:
             - zendesk_community_relations
             - zuora
             - zuora_central_sandbox
-            - restricted_safe_people
+            - restricted_people
 
     - analyst_sales:
         warehouses:
@@ -2254,7 +2254,7 @@ roles:
                     - prod.workspace_data_science.*
                     - prod.workspace_sales.*
 
-    - restricted_safe_people:
+    - restricted_people:
         warehouses:
             - reporting
         privileges:
