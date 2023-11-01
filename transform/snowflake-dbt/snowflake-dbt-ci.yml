@@ -34,9 +34,13 @@
     - merge_requests
   when: manual
   artifacts:
-    name: "dbt Compiled Files"
+    untracked: true
+    when: always
+    name: "dbt target Files"
     paths:
-      - public
+      - transform/snowflake-dbt/target
+      - transform/snowflake-dbt/logs
+
     expire_in: 1 week
     when: always
 
@@ -200,6 +204,19 @@ specify_dbt_parameters:
     - echo $DBT_SELECTOR
     - dbt build $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --selector $DBT_SELECTOR || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
+
+🐘🏭preflight:
+  <<: *snowflake_dbt_jobs
+  script:
+    - *xs_warehouse
+    - *set_snapshot
+    - *clone_raw # Reads from raw clone
+    - dbt deps $CI_PROFILE_TARGET
+    - dbt compile $CI_PROFILE_TARGET || FAILED=true
+    - dbt --no-write-json --warn-error run-operation tag_validation --profiles-dir profile --target ci
+    - python3 macro_name_check.py
+    - if [ $FAILED ]; then exit 1; fi
+  when: always
 
 # ======
 # DBT cloning
