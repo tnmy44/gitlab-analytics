@@ -65,3 +65,4 @@ WITH all_rows_source AS (
 
 SELECT *
 FROM joined
+WHERE created_at IS NOT NULL

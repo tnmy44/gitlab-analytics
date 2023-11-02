@@ -1103,6 +1103,8 @@ models:
         tests:
           - unique
           - not_null
+      - name: masked_label_title
+        description: '{{ doc("label_title") }}'
 
   - name: prep_note
     description: '{{ doc("prep_note") }}'

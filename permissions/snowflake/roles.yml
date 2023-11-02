@@ -256,11 +256,6 @@ databases:
     - srehm_prep:
         shared: no
 
-    - svogel_prod:
-        shared: no
-    - svogel_prep:
-        shared: no
-
     - tnguyen_prod:
         shared: no
     - tnguyen_prep:
@@ -570,6 +565,7 @@ roles:
             - zendesk_community_relations
             - zuora
             - zuora_central_sandbox
+            - restricted_workspace_people
 
     - analyst_sales:
         warehouses:
@@ -820,6 +816,7 @@ roles:
                     - prod.legacy
                     - prod.workspace_data_science
                     - prod.restricted_safe_workspace_sales
+                    - prod.restricted_workspace_people
                     - prod.restricted_safe_common_mart_sales
                     - prod.common_mart_product
                     - prod.common_mart_marketing
@@ -839,6 +836,7 @@ roles:
                     - prod.workspace_data_science.*
                     - prod.restricted_safe_workspace_sales.*
                     - prod.restricted_safe_common_mart_sales.*
+                    - prod.restricted_workspace_people.*
                     - prod.common_mart_product.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_people.*
@@ -1246,6 +1244,25 @@ roles:
                 write:
                     - raw.sales_analytics.*
 
+    - sales_analytics_read:
+        warehouses:
+            - dev_xs
+        member_of:
+            - restricted_safe
+        owns:
+            schemas:
+                - raw.sales_analytics
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.sales_analytics
+            tables:
+                read:
+                    - raw.sales_analytics.*
+               
     - sales_systems_snowflake_api_role:
         warehouses:
             - reporting
@@ -2237,6 +2254,20 @@ roles:
                     - prod.workspace_data_science.*
                     - prod.workspace_sales.*
 
+    - restricted_workspace_people:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    -prod
+            schemas:
+                read:
+                    - prod.restricted_workspace_people
+            tables:
+                read:
+                    - prep.restricted_workspace_people.*
+                    
     - salesforce:
         warehouses:
             - dev_xs
@@ -2471,12 +2502,15 @@ roles:
         privileges:
             databases:
                 read:
+                    - prep
                     - raw
             schemas:
                 read:
+                    - prep.tableau_cloud
                     - raw.tableau_cloud
             tables:
                 read:
+                    - prep.tableau_cloud.*
                     - raw.tableau_cloud.*
 
     - version_db:
@@ -2979,6 +3013,12 @@ roles:
             tables:
                 - cdeleon_prep.*.*
                 - cdeleon_prod.*.*
+
+    - cdewit:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - cleroux:
         member_of:
@@ -3602,6 +3642,7 @@ roles:
         member_of:
             - reporter
             - restricted_safe
+            - salesforce
         warehouses:
             - dev_xs
 
@@ -3975,7 +4016,6 @@ roles:
             - analyst_finance
             - analyst_people
             - analytics_engineer_core
-            - analyst_people
             - analyst_engineering
             - bamboohr
             - bamboohr_analytics
@@ -4574,6 +4614,7 @@ roles:
         member_of:
             - analyst_finance
             - restricted_safe
+            - sales_analytics_read
         warehouses:
             - dev_xs
 
@@ -5157,50 +5198,6 @@ roles:
                     - raw.stitch_google_sheets.*
                     - raw.zuora_stitch.*
 
-    - svogel:
-        member_of:
-         - analytics_engineer_core
-         - analyst_engineering
-         - analyst_growth
-         - data_team_analyst
-         - restricted_safe
-         - bi_tool_eval_read
-         - zuora
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - svogel_prep
-                - svogel_prod
-            schemas:
-                - svogel_prep.*
-                - svogel_prod.*
-            tables:
-                - svogel_prep.*.*
-                - svogel_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - svogel_prep
-                    - svogel_prod
-                write:
-                    - svogel_prep
-                    - svogel_prod
-            schemas:
-                read:
-                    - svogel_prep.*
-                    - svogel_prod.*
-                write:
-                    - svogel_prep.*
-                    - svogel_prod.*
-            tables:
-                read:
-                    - svogel_prep.*.*
-                    - svogel_prod.*.*
-                write:
-                    - svogel_prep.*.*
-                    - svogel_prod.*.*
-
     - tableau:
         warehouses:
             - reporting
@@ -5329,6 +5326,12 @@ roles:
             - data_team_analyst
             - restricted_safe
             - xactly
+        warehouses:
+            - dev_xs
+
+    - vmairet:
+        member_of:
+            - reporter
         warehouses:
             - dev_xs
 
@@ -5484,6 +5487,11 @@ users:
         can_login: yes
         member_of:
             - cbraza
+
+    - cdewit:
+        can_login: yes
+        member_of:
+            - aarts
 
     - cleroux:
         can_login: yes
@@ -5944,11 +5952,6 @@ users:
         member_of:
             - stitch
 
-    - svogel:
-        can_login: yes
-        member_of:
-            - svogel
-
     - tableau:
         can_login: yes
         member_of:
@@ -5993,6 +5996,11 @@ users:
         can_login: yes
         member_of:
             - vagrawal
+
+    - vmairet:
+        can_login: yes
+        member_of:
+            - vmairet
 
     - vprakash:
         can_login: yes

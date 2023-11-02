@@ -2604,6 +2604,8 @@ models:
       - name: dim_plan_sk_at_creation
         tests:
           - not_null
+      - name: masked_label_title
+        description: '{{ doc("label_title") }}'
 
   - name: dim_ci_pipeline
     description: '{{ doc("dim_ci_pipeline") }}'
@@ -5581,6 +5583,8 @@ models:
         description: The invoice amount excluding tax
       - name: invoice_item_charge_amount
         description: The amount being charged for the invoice item. This amount doesn't include taxes regardless if the charge's tax mode is inclusive or exclusive.
+      - name: annual_billing_invoice_price
+        description: This is a calculated field which takes the invoice_item_unit_price and calculates the yearly price. For example, if it's a monthly charge it will multiply by 12 and a 2 year price will be divided by 2.
       - name: invoice_item_unit_price
         description: The per-unit price of the invoice item. Calculated from multiple fields in Product Rate Plan Charge and Product Rate Plan Charge Tier objects.
 

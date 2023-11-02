@@ -46,6 +46,7 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
+      person_base.person_first_country,
       person_base.partner_prospect_status,
       person_base.prospect_share_status,
       dim_crm_account.is_first_order_available,
@@ -258,6 +259,7 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
+      person_base.person_first_country,
       dim_crm_account.is_first_order_available,
       person_base.sales_segment_name AS person_sales_segment_name,
       person_base.sales_segment_grouped AS person_sales_segment_grouped,
@@ -370,7 +372,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=172)}}
+  {{dbt_utils.group_by(n=173)}}
     
 ), cohort_base_combined AS (
   
@@ -414,6 +416,7 @@
       account_demographics_area,
       account_demographics_upa_country,
       account_demographics_territory,
+      person_first_country,
       is_first_order_available,
       person_order_type,
       person_sales_segment_name,
@@ -618,6 +621,7 @@
       account_demographics_area,
       account_demographics_upa_country,
       account_demographics_territory,
+      person_first_country,
       is_first_order_available,
       person_order_type,
       person_sales_segment_name,
@@ -889,7 +893,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@dmicovic",
+    updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-10-23",
+    updated_date="2023-10-31",
   ) }}

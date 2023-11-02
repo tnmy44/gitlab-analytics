@@ -2539,3 +2539,10 @@ Business Unit key that accounts for yearly changes in the sales hierarchy.
 Follows the same rules as the field `dim_crm_current_account_set_hierarchy_sk`
 
 {% enddocs %}
+
+{% docs label_title %}
+
+String of labels associated with a GitLab object (issue, merge request, epic, etc.).
+
+{% enddocs %}
+
