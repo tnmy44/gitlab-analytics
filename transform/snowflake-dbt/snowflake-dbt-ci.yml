@@ -237,7 +237,7 @@ specify_dbt_parameters:
     - dbt deps $CI_PROFILE_TARGET
     - 'export DBT_VARS="--vars ''{\"runner\": \"${CI_MERGE_REQUEST_ID}\"}''"'
     - echo $DBT_VARS
-    - dbt build --select dim_team $CI_PROFILE_TARGET --defer --state defer_manifest  $DBT_VARS || FAILED=true
+    - dbt build $DBT_VARS --select dim_team $CI_PROFILE_TARGET --defer --state defer_manifest || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
 # ======
