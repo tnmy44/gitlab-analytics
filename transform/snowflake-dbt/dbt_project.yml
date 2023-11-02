@@ -75,6 +75,7 @@ vars:
   tomorrow: DATEADD('day',1,CURRENT_DATE())
   sample_suffix: __sample
   local_data: sample
+  runner: "{{ env_var('DBT_RUNNER','development') }}"
 
 
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
