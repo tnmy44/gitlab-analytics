@@ -1270,6 +1270,7 @@ tables:
           FROM projects 
           WHERE id IN {INTERNAL_PROJECT_IDS}
           )
+        )
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
