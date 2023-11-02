@@ -844,7 +844,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   labels_internal_only:
-    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS} OR group_id in {INTERNAL_NAMESPACE_IDS}
+    additional_filtering: AND (project_id in {INTERNAL_PROJECT_IDS} OR group_id in {INTERNAL_NAMESPACE_IDS})
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'labels_internal_only'
@@ -1126,7 +1126,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   milestones_internal_only:
-    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS} OR group_id in {INTERNAL_NAMESPACE_IDS}
+    additional_filtering: AND (project_id in {INTERNAL_PROJECT_IDS} OR group_id in {INTERNAL_NAMESPACE_IDS})
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'milestones_internal_only'
