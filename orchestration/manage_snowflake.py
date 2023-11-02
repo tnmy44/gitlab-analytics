@@ -423,8 +423,9 @@ class SnowflakeManager:
 
         for r in res:
             output_query = f""" 
-                CREATE SCHEMA {self.raw_database}.{res['TABLE_SCHEMA']}
-                CLONE {database}.{res['TABLE_SCHEMA']} COPY GRANTS;"""
+                CREATE SCHEMA {self.raw_database}.{r['TABLE_SCHEMA']}
+                CLONE {database}.{r['TABLE_SCHEMA']} COPY GRANTS;
+                """
             logging.info("output_query")
             logging.info(output_query)
 
