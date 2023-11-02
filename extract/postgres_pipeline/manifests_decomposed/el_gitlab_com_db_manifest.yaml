@@ -1263,7 +1263,7 @@ tables:
   namespaces_internal_only:
     additional_filtering: |-
       AND (
-        id in {INTERNAL_NAMESPACE_IDS} 
+        id IN {INTERNAL_NAMESPACE_IDS} 
         OR parent_id IN {INTERNAL_NAMESPACE_IDS} 
         OR id IN (
           SELECT namespace_id 
