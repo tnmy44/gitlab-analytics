@@ -235,7 +235,7 @@ specify_dbt_parameters:
     - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/defer_manifest/
     - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/defer_manifest/manifest.json https://dbt.gitlabdata.com/manifest.json
     - dbt deps $CI_PROFILE_TARGET
-    - "export DBT_VARS=--vars {runner: ${CI_MERGE_REQUEST_ID}}"
+    - "export DBT_VARS=--vars '{runner: ${CI_MERGE_REQUEST_ID}}'"
     - echo $DBT_VARS
     - dbt build --select dim_team $CI_PROFILE_TARGET --defer --state defer_manifest  $DBT_VARS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
