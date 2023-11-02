@@ -2260,7 +2260,7 @@ roles:
         privileges:
             databases:
                 read:
-                    -prod
+                    - prod
             schemas:
                 read:
                     - prod.restricted_workspace_people
