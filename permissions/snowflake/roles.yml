@@ -837,6 +837,7 @@ roles:
                     - prod.restricted_safe_workspace_sales.*
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.restricted_workspace_people.*
+                    - prod.common.dim_namespace
                     - prod.common_mart_product.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_people.*
