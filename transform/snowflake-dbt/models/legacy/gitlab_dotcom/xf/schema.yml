@@ -259,7 +259,7 @@ models:
     columns:
       - name: project_id
       - name: namespace_id
-      - name: merge_request_iid
+      - name: merge_request_internal_id
         tests: 
           - not_null
       - name: merge_request_id

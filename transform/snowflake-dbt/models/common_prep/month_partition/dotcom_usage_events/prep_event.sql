@@ -635,7 +635,7 @@
 
     SELECT *
     FROM prep_resource_milestone
-    WHERE issue_id IS NOT NULL
+    WHERE dim_issue_sk IS NOT NULL
 
 ), terraform_reports_events AS (
 
