@@ -106,6 +106,20 @@ first_events_weight AS (
 
 ),
 
+epic_to_issue AS (
+
+    SELECT * 
+    FROM {{ ref('gitlab_dotcom_epic_issues_source') }}
+
+), 
+
+prep_epic AS (
+
+    SELECT * 
+    FROM {{ ref('prep_epic') }}
+
+),
+
 joined AS (
 
   SELECT
@@ -182,7 +196,9 @@ joined AS (
     issue_metrics.first_mentioned_in_commit_at,
     issue_metrics.first_associated_with_milestone_at,
     issue_metrics.first_added_to_board_at,
-    first_events_weight.first_weight_set_at
+    first_events_weight.first_weight_set_at,
+    prep_epic.epic_id,
+    prep_epic.epic_title
   FROM issues
   LEFT JOIN agg_labels
     ON issues.issue_id = agg_labels.issue_id
@@ -194,6 +210,8 @@ joined AS (
     ON issues.issue_id = close_moved_date.issue_id
   LEFT JOIN derived_close_date
     ON issues.issue_id = derived_close_date.issue_id
+  LEFT JOIN epic_to_issue on issues.issue_id = epic_to_issue.issue_id
+  LEFT JOIN prep_epic on epic_to_issue.epic_id = prep_epic.epic_id
    
 )
 

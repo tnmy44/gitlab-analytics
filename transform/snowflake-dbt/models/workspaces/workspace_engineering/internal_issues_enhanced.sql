@@ -249,7 +249,9 @@ final AS (
     --this logic comes from [issues_by_milestone] sisense snippet
     COALESCE(internal_issues.is_part_of_product AND internal_issues.namespace_id IN (6543, 9970) AND projects.project_path NOT IN (SELECT * FROM excluded_project_path) AND masked_label_title NOT LIKE '%type::ignore%' AND is_part_of_product AND group_label != 'undefined', FALSE)                  AS is_milestone_issue_reporting,
     IFF(issue_note_move.note_id IS NOT NULL, TRUE, FALSE)                                                                                                                                                                                                                                               AS issue_is_moved,
-    issue_note_move.created_at                                                                                                                                                                                                                                                                          AS issue_moved_at
+    issue_note_move.created_at                                                                                                                                                                                                                                                                          AS issue_moved_at,
+    internal_issues.epic_id,
+    internal_issues.epic_title
   FROM internal_issues
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_issues.project_id
