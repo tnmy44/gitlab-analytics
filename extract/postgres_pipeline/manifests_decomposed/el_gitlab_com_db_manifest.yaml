@@ -854,6 +854,7 @@ tables:
       SELECT id
       , title
       , project_id
+      , group_id
       , updated_at
       FROM labels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -1136,6 +1137,7 @@ tables:
       , iid
       , title
       , project_id
+      , group_id
       , updated_at
       FROM milestones
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
