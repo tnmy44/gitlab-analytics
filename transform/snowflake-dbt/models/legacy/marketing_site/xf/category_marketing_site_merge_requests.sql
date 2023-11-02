@@ -31,7 +31,7 @@ WITH merge_requests AS (
       IFNULL(file_classifications.file_classification, 'unclassified') AS file_classification
     FROM mr_files
     INNER JOIN merge_requests
-      ON mr_files.merge_request_iid = merge_requests.merge_request_iid
+      ON mr_files.merge_request_iid = merge_requests.merge_request_internal_id
         AND merge_requests.project_id = 7764 --marketing site project
     LEFT JOIN file_classifications
       ON LOWER(mr_files.marketing_site_file_edited) LIKE '%' || file_classifications.marketing_site_path || '%'
