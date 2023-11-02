@@ -112,7 +112,7 @@ include:
 clone_raw_by_schema:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py clone_raw_by_schemas --database raw --include_stages
+    - manage_snowflake.py clone_raw_by_schemas --database RAW --include_stages
 
 👥force_clone_both:
   <<: *snowflake_start_clone
