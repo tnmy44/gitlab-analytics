@@ -425,12 +425,17 @@ class SnowflakeManager:
         logging.info(res[0])
         for r in res:
             output_query = f""" 
-                CREATE SCHEMA {self.raw_database}.{r['table_schema']}
-                CLONE {database}.{r['table_schema']} COPY GRANTS;
+                CREATE SCHEMA "{self.raw_database}"."{r['table_schema']}"
+                CLONE "{database}"."{r['table_schema']}" COPY GRANTS;
                 """
-            logging.info("Running")
-            logging.info(output_query)
-            query_executor(self.engine, schema_query)
+            try:
+                logging.info(f"Getting schemas {output_query}")
+                nres = query_executor(self.engine, output_query)
+                logging.info(nres[0])
+            except ProgrammingError as prg:
+                # Catches permissions errors
+                logging.error(prg._sql_message(as_unicode=False))
+
 
 
 
