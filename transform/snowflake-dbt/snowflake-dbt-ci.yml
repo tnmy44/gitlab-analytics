@@ -38,7 +38,7 @@
     when: always
     name: "dbt target Files"
     paths:
-      - transform/snowflake-dbt/target
+      - public/dbt/
       - transform/snowflake-dbt/logs
 
     expire_in: 1 week
@@ -232,6 +232,7 @@ specify_dbt_parameters:
     - *xs_warehouse
     - *set_snapshot
     - *clone_raw # Reads from raw clone
+    - find transform/snowflake-dbt/dbt_packages -type f -printf "%f\n"
     - dbt build --select dim_team $CI_PROFILE_TARGET --defer --state defer_manifest || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
