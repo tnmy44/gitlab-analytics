@@ -413,7 +413,7 @@ class SnowflakeManager:
         database: str,
         include_stages: bool = False,
                              ):
-        schema_query = f'SELECT DISTINCT TABLE_SCHEMA AS TABLE_SCHEMA FROM {database}.INFORMATION_SCHEMA.TABLES'
+        schema_query = f'SELECT DISTINCT table_schema AS table_schema FROM {database}.INFORMATION_SCHEMA.TABLES'
         try:
             logging.info(f"Getting schemas {schema_query}")
             res = query_executor(self.engine, schema_query)
@@ -421,10 +421,12 @@ class SnowflakeManager:
             # Catches permissions errors
             logging.error(prg._sql_message(as_unicode=False))
 
+        logging.info(res)
+        logging.info(res[0])
         for r in res:
             output_query = f""" 
-                CREATE SCHEMA {self.raw_database}.{r['TABLE_SCHEMA']}
-                CLONE {database}.{r['TABLE_SCHEMA']} COPY GRANTS;
+                CREATE SCHEMA {self.raw_database}.{r['table_schema']}
+                CLONE {database}.{r['table_schema']} COPY GRANTS;
                 """
             logging.info("output_query")
             logging.info(output_query)
