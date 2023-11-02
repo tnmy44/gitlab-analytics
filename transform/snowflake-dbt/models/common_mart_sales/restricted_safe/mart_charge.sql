@@ -153,7 +153,7 @@
       -- order info
       CASE
         WHEN (dim_order_action.dim_order_action_id IS NOT NULL
-        OR dim_amendment_subscription.amendment_type IN ('Renewal', 'Composite'))
+        OR dim_amendment_subscription.amendment_type = 'Renewal')
           AND (dim_order.order_description NOT IN 
             ('AutoRenew by CustomersDot', 'Automated seat reconciliation')
             OR dim_order.order_description IS NULL)
