@@ -428,8 +428,9 @@ class SnowflakeManager:
                 CREATE SCHEMA {self.raw_database}.{r['table_schema']}
                 CLONE {database}.{r['table_schema']} COPY GRANTS;
                 """
-            logging.info("output_query")
+            logging.info("Running")
             logging.info(output_query)
+            query_executor(self.engine, schema_query)
 
 
 
