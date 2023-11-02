@@ -218,7 +218,7 @@ specify_dbt_parameters:
     - dbt --no-write-json --warn-error run-operation tag_validation $CI_PROFILE_TARGET || FAILED=true
     - python3 macro_name_check.py || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
-  when: always
+  # when: always
   cache:
     key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
     paths:
@@ -232,7 +232,9 @@ specify_dbt_parameters:
     - *xs_warehouse
     - *set_snapshot
     - *clone_raw # Reads from raw clone
-    - find transform/snowflake-dbt/dbt_packages -type f -printf "%f\n"
+    - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/defer_manifest/
+    - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/defer_manifest/manifest.json https://dbt.gitlabdata.com/manifest.json
+    - dbt deps $CI_PROFILE_TARGET
     - dbt build --select dim_team $CI_PROFILE_TARGET --defer --state defer_manifest || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
