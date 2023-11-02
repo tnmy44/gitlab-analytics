@@ -2266,7 +2266,7 @@ roles:
                     - prod.restricted_workspace_people
             tables:
                 read:
-                    - prep.restricted_workspace_people.*
+                    - prod.restricted_workspace_people.*
                     
     - salesforce:
         warehouses:
