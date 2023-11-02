@@ -409,6 +409,26 @@ class SnowflakeManager:
                 # Catches permissions errors
                 logging.error(prg._sql_message(as_unicode=False))
 
+    def clone_raw_by_schemas(self,
+        database: str,
+        include_stages: bool = False,
+                             ):
+        schema_query = f'SELECT DISTINCT TABLE_SCHEMA FROM {database}.INFORMATION_SCHEMA.TABLES'
+        try:
+            logging.info(f"Getting schemas {schema_query}")
+            res = query_executor(self.engine, schema_query)
+        except ProgrammingError as prg:
+            # Catches permissions errors
+            logging.error(prg._sql_message(as_unicode=False))
+
+        for r in res:
+            output_query = f""" 
+                CREATE SCHEMA {self.raw_database}.{res['TABLE_SCHEMA']}
+                CLONE {database}.{res['TABLE_SCHEMA']} COPY GRANTS"""
+            logging.info("output_query")
+            logging.info(output_query)
+
+
 
 if __name__ == "__main__":
     snowflake_manager = SnowflakeManager(env.copy())
