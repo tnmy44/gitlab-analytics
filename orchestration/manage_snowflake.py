@@ -409,11 +409,12 @@ class SnowflakeManager:
                 # Catches permissions errors
                 logging.error(prg._sql_message(as_unicode=False))
 
-    def clone_raw_by_schemas(self,
+    def clone_raw_by_schemas(
+        self,
         database: str,
         include_stages: bool = False,
-                             ):
-        schema_query = f'SELECT DISTINCT table_schema AS table_schema FROM {database}.INFORMATION_SCHEMA.TABLES'
+    ):
+        schema_query = f"SELECT DISTINCT table_schema AS table_schema FROM {database}.INFORMATION_SCHEMA.TABLES"
         try:
             logging.info(f"Getting schemas {schema_query}")
             res = query_executor(self.engine, schema_query)
@@ -452,7 +453,93 @@ class SnowflakeManager:
                 # Catches permissions errors
                 logging.error(prg._sql_message(as_unicode=False))
 
+    def clone_prod_by_schemas(
+        self,
+        database: str,
+        include_stages: bool = False,
+    ):
+        schema_query = f"SELECT DISTINCT table_schema AS table_schema FROM {database}.INFORMATION_SCHEMA.TABLES"
+        try:
+            logging.info(f"Getting schemas {schema_query}")
+            res = query_executor(self.engine, schema_query)
+        except ProgrammingError as prg:
+            # Catches permissions errors
+            logging.error(prg._sql_message(as_unicode=False))
 
+        usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
+
+        logging.info(res)
+        logging.info(res[0])
+        for r in res:
+            output_query = f""" 
+                CREATE SCHEMA "{self.prod_database}"."{r['table_schema']}"
+                CLONE "{database}"."{r['table_schema']}";
+                """
+            try:
+                logging.info(f"Getting schemas {output_query}")
+                nres = query_executor(self.engine, output_query)
+                logging.info(nres[0])
+
+                grant_on_schema_query_with_params = f"""
+                    grant create table, usage on schema "{self.prod_database}"."{r['table_schema']}" to LOADER;
+                    """
+                query_executor(self.engine, grant_on_schema_query_with_params)
+                grant_on_schema_query_with_params = f"""
+                                    grant create table, usage on schema "{self.prod_database}"."{r['table_schema']}" to TRANSFORMER;
+                                    """
+                query_executor(self.engine, grant_on_schema_query_with_params)
+                grant_on_schema_query_with_params = f"""
+                                    grant create table, usage on schema "{self.prod_database}"."{r['table_schema']}" to ENGINEER;
+                                    """
+                query_executor(self.engine, grant_on_schema_query_with_params)
+
+            except ProgrammingError as prg:
+                # Catches permissions errors
+                logging.error(prg._sql_message(as_unicode=False))
+
+    def clone_prep_by_schemas(
+        self,
+        database: str,
+        include_stages: bool = False,
+    ):
+        schema_query = f"SELECT DISTINCT table_schema AS table_schema FROM {database}.INFORMATION_SCHEMA.TABLES"
+        try:
+            logging.info(f"Getting schemas {schema_query}")
+            res = query_executor(self.engine, schema_query)
+        except ProgrammingError as prg:
+            # Catches permissions errors
+            logging.error(prg._sql_message(as_unicode=False))
+
+        usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
+
+        logging.info(res)
+        logging.info(res[0])
+        for r in res:
+            output_query = f""" 
+                CREATE SCHEMA "{self.prep_database}"."{r['table_schema']}"
+                CLONE "{database}"."{r['table_schema']}";
+                """
+            try:
+                logging.info(f"Getting schemas {output_query}")
+                nres = query_executor(self.engine, output_query)
+                logging.info(nres[0])
+
+                grant_on_schema_query_with_params = f"""
+                    grant create table, usage on schema "{self.prep_database}"."{r['table_schema']}" to LOADER;
+                    """
+                query_executor(self.engine, grant_on_schema_query_with_params)
+                grant_on_schema_query_with_params = f"""
+                                    grant create table, usage on schema "{self.prep_database}"."{r['table_schema']}" to TRANSFORMER;
+                                    """
+                query_executor(self.engine, grant_on_schema_query_with_params)
+                grant_on_schema_query_with_params = f"""
+                                    grant create table, usage on schema "{self.prep_database}"."{r['table_schema']}" to ENGINEER;
+                                    """
+                query_executor(self.engine, grant_on_schema_query_with_params)
+
+            except ProgrammingError as prg:
+                # Catches permissions errors
+                logging.error(prg._sql_message(as_unicode=False))
 
 
 if __name__ == "__main__":
