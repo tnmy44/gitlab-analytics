@@ -74,7 +74,7 @@ SELECT DISTINCT
   lead_to_revenue.opp_account_demographics_geo,
   lead_to_revenue.opp_account_demographics_territory,
   SPLIT_PART(TRIM(SPLIT_PART(mart_crm_opportunity.opportunity_name, '-', -1)), ' ', '1') AS seats_,
-  TRY_TO_NUMERIC(trim(REPLACE(seats_, ',', ''))) AS seats,
+  TRY_TO_NUMERIC(TRIM(REPLACE(seats_, ',', ''))) AS seats,
   mart_crm_opportunity.product_category,
   CASE
     WHEN product_rate_plan_id IN ('2c92a00f76f0d5140176f2e349ee0a5a','2c92a00e76f0c6930176f2adada50acd','2c92a00f76f0d5180176f29f64092221','2c92a0fe76f0c6ab0176f2f671111254','2c92a0087a528186017a54696c1a762e','2c92a00f76f0d5140176f2e349ee0a5a','2c92a00f76f0d5180176f29f64092221')
