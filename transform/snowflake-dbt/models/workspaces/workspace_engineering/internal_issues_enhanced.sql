@@ -263,7 +263,8 @@ final AS (
     ON ns.namespace_id = projects.dim_namespace_id
   LEFT JOIN milestones
     ON milestones.milestone_id = internal_issues.milestone_id
-  LEFT JOIN issue_note_move ON issue_note_move.noteable_id = internal_issues.issue_id
+  LEFT JOIN issue_note_move
+    ON issue_note_move.noteable_id = internal_issues.issue_id
 )
 
 SELECT *
