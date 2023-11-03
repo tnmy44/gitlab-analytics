@@ -1192,3 +1192,6 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: wk_rpt_retention_parent_account_2
+    description: Report table to support Net Dollar Retention analysis at the ultimate_parent_account level. This model is built on top of rpt_delta_arr_parent_month_8th_calendar_day.
