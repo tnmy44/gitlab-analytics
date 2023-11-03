@@ -153,25 +153,24 @@
       -- order info
       CASE
         WHEN dim_charge.charge_created_date >= '2023-01-01'
-        AND ((dim_order_action.dim_order_action_id IS NOT NULL
-        OR dim_amendment_subscription.amendment_type = 'Renewal')
+          AND (dim_order_action.dim_order_action_id IS NOT NULL
+          OR dim_amendment_subscription.amendment_type = 'Renewal')
           AND (dim_order.order_description NOT IN 
             ('AutoRenew by CustomersDot', 'Automated seat reconciliation')
             OR LENGTH(dim_order.order_description) = 0)
           AND prep_billing_account_user.user_name IN (
             'svc_zuora_fulfillment_int@gitlab.com',
-            'ruben_APIproduction@gitlab.com'))
+            'ruben_APIproduction@gitlab.com')
             THEN 'Customer Portal'
         WHEN dim_charge.charge_created_date >= '2023-01-01'
-        AND ((dim_order_action.dim_order_action_id IS NOT NULL
-        OR dim_amendment_subscription.amendment_type = 'Renewal')
-          AND prep_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com')
+          AND (dim_order_action.dim_order_action_id IS NOT NULL
+          OR dim_amendment_subscription.amendment_type = 'Renewal')
+          AND prep_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
             THEN 'Sales-Assisted'
         WHEN dim_charge.charge_created_date >= '2023-01-01'
-        AND ((dim_order_action.dim_order_action_id IS NOT NULL
-        OR dim_amendment_subscription.amendment_type = 'Renewal')
-          AND (dim_order.order_description = 'AutoRenew by CustomersDot'
-          OR dim_amendment_subscription.amendment_name = 'AutoRenew by CustomersDot'))
+          AND (dim_order_action.dim_order_action_id IS NOT NULL
+          OR dim_amendment_subscription.amendment_type = 'Renewal')
+          AND dim_order.order_description = 'AutoRenew by CustomersDot'
             THEN 'Auto-Renewal'
         ELSE NULL
       END                                                                             AS subscription_renewal_type,
