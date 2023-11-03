@@ -156,7 +156,7 @@
         OR dim_amendment_subscription.amendment_type = 'Renewal')
           AND (dim_order.order_description NOT IN 
             ('AutoRenew by CustomersDot', 'Automated seat reconciliation')
-            OR dim_order.order_description IS NULL)
+            OR LENGTH(dim_order.order_description) = 0)
           AND prep_billing_account_user.user_name IN (
             'svc_zuora_fulfillment_int@gitlab.com',
             'ruben_APIproduction@gitlab.com')
