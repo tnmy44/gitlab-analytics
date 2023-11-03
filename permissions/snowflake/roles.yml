@@ -2953,7 +2953,7 @@ roles:
                     - anelson_prep.*.*
                     - anelson_prod.*.*
 
-   - apiaseczna:
+    - apiaseczna:
         member_of:
          - analyst_engineering
         warehouses:
