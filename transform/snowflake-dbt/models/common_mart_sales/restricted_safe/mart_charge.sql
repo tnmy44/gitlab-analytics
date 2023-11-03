@@ -153,8 +153,7 @@
       -- order info
       CASE
         WHEN dim_charge.charge_created_date >= '2023-01-01'
-          AND (dim_order_action.dim_order_action_id IS NOT NULL
-          OR dim_amendment_subscription.amendment_type = 'Renewal')
+          AND dim_order_action.dim_order_action_id IS NOT NULL
           AND (dim_order.order_description NOT IN 
             ('AutoRenew by CustomersDot', 'Automated seat reconciliation')
             OR LENGTH(dim_order.order_description) = 0)
