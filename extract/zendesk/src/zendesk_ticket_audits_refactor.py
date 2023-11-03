@@ -107,10 +107,11 @@ def refactor_ticket_audits(df: pd.DataFrame):
                     EVENTS_OUT.append(EVENTS_DICT_REC)
         if len(EVENTS_OUT) == 0:
             EVENTS_OUT = None
+        events_out_json_obj=json.dumps(EVENTS_OUT)
         row_list = [
             author_id,
             created_at,
-            EVENTS_OUT,
+            events_out_json_obj,
             id,
             ticket_id,
             via,
