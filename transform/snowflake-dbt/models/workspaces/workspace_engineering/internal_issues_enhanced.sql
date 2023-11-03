@@ -251,7 +251,8 @@ final AS (
     IFF(issue_note_move.note_id IS NOT NULL, TRUE, FALSE)                                                                                                                                                                                                                                               AS issue_is_moved,
     issue_note_move.created_at                                                                                                                                                                                                                                                                          AS issue_moved_at,
     internal_issues.epic_id,
-    internal_issues.epic_title
+    internal_issues.epic_title,
+    internal_issues.epic_labels
   FROM internal_issues
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_issues.project_id

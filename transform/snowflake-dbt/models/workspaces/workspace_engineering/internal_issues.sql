@@ -198,7 +198,8 @@ joined AS (
     issue_metrics.first_added_to_board_at,
     first_events_weight.first_weight_set_at,
     prep_epic.epic_id,
-    prep_epic.epic_title
+    prep_epic.epic_title,
+    prep_epic.labels as epic_labels
   FROM issues
   LEFT JOIN agg_labels
     ON issues.issue_id = agg_labels.issue_id
