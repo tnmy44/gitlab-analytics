@@ -26,12 +26,12 @@ def refactor_tickets_read_gcp():
     """
     Read file from GCP bucket for tickets
     """
-    ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get("GCP_SERVICE_CREDS")
+    GCP_SERVICE_CREDS = config_dict.get("GCP_SERVICE_CREDS")
     ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = config_dict.get(
         "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME"
     )
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    keyfile = json.loads(ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS, strict=False)
+    keyfile = json.loads(GCP_SERVICE_CREDS, strict=False)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
@@ -69,12 +69,12 @@ def refactor_tickets(df_tickets: pd.DataFrame):
     """
     df_ticket_fields_extracted = pd.DataFrame()
 
-    ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get("GCP_SERVICE_CREDS")
+    GCP_SERVICE_CREDS = config_dict.get("GCP_SERVICE_CREDS")
     ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = config_dict.get(
         "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME"
     )
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    keyfile = json.loads(ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS, strict=False)
+    keyfile = json.loads(GCP_SERVICE_CREDS, strict=False)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
@@ -277,10 +277,3 @@ def upload_to_snowflake(output_df):
     except Exception as e:
         error(f"Error uploading to snowflake: {e}")
         sys.exit(1)
-
-
-if __name__ == "__main__":
-    basicConfig(stream=sys.stdout, level=20)
-    getLogger("snowflake.connector.cursor").disabled = True
-    fire.Fire(refactor_tickets_read_gcp)
-    info("Complete.")

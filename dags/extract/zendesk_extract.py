@@ -56,12 +56,12 @@ dag = DAG(
 
 zendesk_ticket_audits_extract_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    f"python zendesk/src/zendesk_ticket_audits_refactor.py"
+    f"python zendesk/src/zendesk_sensitive_refactor.py refactor_ticket_audits"
 )
 
 zendesk_tickets_extract_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    f"python zendesk/src/zendesk_tickets_refactor.py"
+    f"python zendesk/src/zendesk_sensitive_refactor.py refactor_tickets"
 )
 
 zendesk_extract_ticket_audits_task = KubernetesPodOperator(
