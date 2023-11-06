@@ -738,6 +738,12 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 
 {% enddocs %}
 
+{% docs dim_sales_funnel_kpi %}
+
+Sales funnel KPI dimension, based on the sales funnel target file KPI name data.
+
+{% enddocs %}
+
 {% docs dim_namespace_hist %}
 
 Table containing GitLab namespace snapshots.
@@ -987,7 +993,7 @@ Issue Links are created when relationships are defined between issues. This tabl
 
 The grain of the table is the `dim_issue_link_id`. This table is easily joinable with:
 
-- `dim_issue` through `dim_issue_id` on `dim_source_issue_id` & `dim_target_issue_id`
+- `dim_issue` through `dim_issue_sk` on `dim_issue_sk_source` & `dim_issue_sk_target`
 {% enddocs %}
 
 {% docs dim_locality %}

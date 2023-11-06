@@ -51,6 +51,8 @@ models:
     description: This table pipeline is deprecated and won't be refreshed, Ref MR https://gitlab.com/gitlab-data/analytics/-/merge_requests/5334.
   - name: gitlab_dotcom_ci_builds_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_ci_builds_internal_only_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_editor_ai_conversation_messages_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_group_variables_dedupe_source
@@ -68,6 +70,8 @@ models:
   - name: gitlab_dotcom_ci_pipeline_schedules_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_pipelines_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_ci_pipelines_internal_only_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_platform_metrics_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -212,8 +216,6 @@ models:
   - name: gitlab_dotcom_milestone_releases_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_milestones_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_milestones_internal_only_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ml_candidates_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'

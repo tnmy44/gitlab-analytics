@@ -8,15 +8,15 @@ Closes
 
 * Run the ❄️`Snowflake` -> [clone_raw_postgres_pipeline](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#clone_raw_postgres_pipeline) CI job
 * Run one of this pipeline. Depends on the file you changed, you should run either:
-    * [ ] 🚂`Extract` -> [pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#pgp_test) if one of this file(s) is changed:
-        * `el_customers_scd_db_manifest.yaml`
-        * `el_gitlab_com_ci_db_manifest.yaml`
-        * `el_gitlab_com_ci_scd_db_manifest.yaml`
-        * `el_gitlab_com_db_manifest.yaml`
-        * `el_gitlab_com_scd_db_manifest.yaml` 
+    * [ ] 🚂`Extract` -> [pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#pgp_test)/[saas_pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#saas_pgp_test) if one of this file(s) is changed:
+        * [ ] `el_saas_customers_scd_db_manifest.yaml`
+        * [ ] `el_saas_gitlab_com_ci_db_manifest.yaml`
+        * [ ] `el_saas_gitlab_com_ci_scd_db_manifest.yaml`
+        * [ ] `el_saas_gitlab_com_db_manifest.yaml`
+        * [ ] `el_saas_gitlab_com_scd_db_manifest.yaml` 
     * [ ] 🚂`Extract` -> [gitlab_ops_pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#gitlab_ops_pgp_test) if one of this file(s) is changed: 
-        * `el_gitlab_ops_db_manifest.yaml`
-        * `el_gitlab_ops_scd_db_manifest.yaml`
+        * [ ] `el_saas_gitlab_ops_db_manifest.yaml`
+        * [ ] `el_saas_gitlab_ops_scd_db_manifest.yaml`
  
 It should pass properly to move forward. 
 
@@ -29,7 +29,7 @@ Determine if there is downstream impact. I.e. additional changes to downstream m
    - [ ] changes to the manifest have downstream impact and
       - [ ] is handled in this MR.
       - [ ] new MR and or issue is opened.
-      - 
+
 ## Submitter Checklist
 
 * [ ] Any >200M row table is **modified**? If yes, please refer to the page [Large table backfilling](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#large-tables-backfilling) and follow the steps
@@ -49,6 +49,6 @@ Determine if there is downstream impact. I.e. additional changes to downstream m
 
 ## Further changes requested
 * [ ] **AUTHOR**: Uncheck all boxes before taking further action.
-* [ ] If any of `huge` table is modified? If yes, please refer to the page [Large table backfilling](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#large-tables-backfilling) and follow the steps to deploy MR avoiding work days. Be sure to send out an outage notification in slack before-hand so that the business stakeholders are aware of the changes being made.
+* [ ] If any of `huge` table is modified? If yes, please refer to the page [Large table backfilling](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/SAAS-Gitlab-com/#large-tables-backfilling) and follow the steps to deploy MR avoiding work days. Be sure to send out an outage notification in slack before-hand so that the business stakeholders are aware of the changes being made.
 
 /label ~"postgres pipeline (pgp)" ~Python

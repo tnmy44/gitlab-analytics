@@ -2,7 +2,8 @@
     ('fct_crm_opportunity', 'fct_crm_opportunity'),
     ('fct_crm_person', 'fct_crm_person'),
     ('prep_date', 'prep_date'),
-    ('prep_order_type', 'prep_order_type') 
+    ('prep_order_type', 'prep_order_type'),
+    ('prep_sales_funnel_kpi', 'prep_sales_funnel_kpi')
 ]) }}
 
 , first_order_key AS (
@@ -16,7 +17,7 @@
   SELECT
     close_date_id                               AS actual_date_id,
     close_date::DATE                            AS actual_date,
-    'Net ARR Company'                           AS kpi_name,
+    'Net ARR Company'                           AS sales_funnel_kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
@@ -25,12 +26,12 @@
     dim_order_type_id,
     dim_sales_qualified_source_id,
 
-    dim_crm_opp_owner_stamped_hierarchy_sk      AS dim_hierarchy_sk,
-    dim_crm_opp_owner_business_unit_stamped_id  AS dim_business_unit_id,
-    dim_crm_opp_owner_sales_segment_stamped_id  AS dim_sales_segment_id,
-    dim_crm_opp_owner_geo_stamped_id            AS dim_geo_id,
-    dim_crm_opp_owner_region_stamped_id         AS dim_region_id,
-    dim_crm_opp_owner_area_stamped_id           AS dim_area_id,
+    dim_crm_current_account_set_hierarchy_sk      AS dim_hierarchy_sk,
+    dim_crm_current_account_set_business_unit_id  AS dim_business_unit_id,
+    dim_crm_current_account_set_sales_segment_id  AS dim_sales_segment_id,
+    dim_crm_current_account_set_geo_id            AS dim_geo_id,
+    dim_crm_current_account_set_region_id         AS dim_region_id,
+    dim_crm_current_account_set_area_id           AS dim_area_id,
 
     NULL                                        AS email_hash,
     new_logo_count,
@@ -44,7 +45,7 @@
   SELECT
     close_date_id                               AS actual_date_id,
     close_date::DATE                            AS actual_date,
-    'Deals'                                     AS kpi_name,
+    'Deals'                                     AS sales_funnel_kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
@@ -53,12 +54,12 @@
     dim_order_type_id,
     dim_sales_qualified_source_id,
 
-    dim_crm_opp_owner_stamped_hierarchy_sk,
-    dim_crm_opp_owner_business_unit_stamped_id,
-    dim_crm_opp_owner_sales_segment_stamped_id,
-    dim_crm_opp_owner_geo_stamped_id,
-    dim_crm_opp_owner_region_stamped_id,
-    dim_crm_opp_owner_area_stamped_id,
+    dim_crm_current_account_set_hierarchy_sk,
+    dim_crm_current_account_set_business_unit_id,
+    dim_crm_current_account_set_sales_segment_id,
+    dim_crm_current_account_set_geo_id,
+    dim_crm_current_account_set_region_id,
+    dim_crm_current_account_set_area_id,
 
     NULL AS email_hash,
     new_logo_count,
@@ -72,7 +73,7 @@
   SELECT
     close_date_id                               AS actual_date_id,
     close_date::DATE                            AS actual_date,
-    'New Logos'                                 AS kpi_name,
+    'New Logos'                                 AS sales_funnel_kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
@@ -100,7 +101,7 @@
   SELECT
     sales_accepted_date_id                      AS actual_date_id,
     sales_accepted_date::DATE                   AS actual_date,
-    'Stage 1 Opportunities'                     AS kpi_name,
+    'Stage 1 Opportunities'                     AS sales_funnel_kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
@@ -109,12 +110,12 @@
     dim_order_type_id,
     dim_sales_qualified_source_id,
 
-    dim_crm_opp_owner_stamped_hierarchy_sk,
-    dim_crm_opp_owner_business_unit_stamped_id,
-    dim_crm_opp_owner_sales_segment_stamped_id,
-    dim_crm_opp_owner_geo_stamped_id,
-    dim_crm_opp_owner_region_stamped_id,
-    dim_crm_opp_owner_area_stamped_id,
+    dim_crm_current_account_set_hierarchy_sk,
+    dim_crm_current_account_set_business_unit_id,
+    dim_crm_current_account_set_sales_segment_id,
+    dim_crm_current_account_set_geo_id,
+    dim_crm_current_account_set_region_id,
+    dim_crm_current_account_set_area_id,
 
     NULL AS email_hash,
     new_logo_count,
@@ -127,7 +128,7 @@
   SELECT
     arr_created_date_id                        AS actual_date_id,
     arr_created_date::DATE                     AS actual_date,
-    'Net ARR Pipeline Created'                 AS kpi_name,
+    'Net ARR Pipeline Created'                 AS sales_funnel_kpi_name,
 
     dim_crm_opportunity_id,
     dim_crm_account_id,
@@ -148,13 +149,14 @@
     net_arr
   FROM fct_crm_opportunity
   WHERE is_net_arr_pipeline_created = TRUE
+    AND arr_created_date IS NOT NULL
 
 ), mqls AS (
 
   SELECT
     mql_date_first_pt_id                      AS actual_date_id,
     prep_date.date_actual                     AS actual_date,
-    'MQL'                                     AS kpi_name,
+    'MQL'                                     AS sales_funnel_kpi_name,
 
     {{ get_keyed_nulls('NULL') }}             AS dim_crm_opportunity_id,
     dim_crm_account_id,
@@ -185,7 +187,7 @@
   SELECT
     created_date_pt_id                        AS actual_date_id,
     prep_date.date_actual                     AS actual_date,
-    'Trials'                                  AS kpi_name,
+    'Trials'                                  AS sales_funnel_kpi_name,
 
     {{ get_keyed_nulls('NULL') }}             AS dim_crm_opportunity_id,
     dim_crm_account_id,
@@ -249,6 +251,9 @@
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['actual_date_id', 'kpi_name', 'dim_crm_opportunity_id', 'dim_crm_person_id']) }} AS sales_funnel_actual_sk,
-  *
+  {{ dbt_utils.surrogate_key(['metrics.actual_date_id', 'metrics.sales_funnel_kpi_name', 'metrics.dim_crm_opportunity_id', 'metrics.dim_crm_person_id']) }} AS sales_funnel_actual_sk,
+  prep_sales_funnel_kpi.dim_sales_funnel_kpi_sk,
+  metrics.*
 FROM metrics
+LEFT JOIN prep_sales_funnel_kpi
+  ON prep_sales_funnel_kpi.sales_funnel_kpi_name = metrics.sales_funnel_kpi_name
