@@ -162,13 +162,11 @@
             'ruben_APIproduction@gitlab.com')
             THEN 'Customer Portal'
         WHEN dim_charge.charge_created_date >= '2023-01-01'
-          AND (dim_order_action.dim_order_action_id IS NOT NULL
-          OR dim_amendment_subscription.amendment_type = 'Renewal')
+          AND dim_order_action.dim_order_action_id IS NOT NULL
           AND prep_billing_account_user.user_name = 'svc_ZuoraSFDC_integration@gitlab.com'
             THEN 'Sales-Assisted'
         WHEN dim_charge.charge_created_date >= '2023-01-01'
-          AND (dim_order_action.dim_order_action_id IS NOT NULL
-          OR dim_amendment_subscription.amendment_type = 'Renewal')
+          AND dim_order_action.dim_order_action_id IS NOT NULL
           AND dim_order.order_description = 'AutoRenew by CustomersDot'
             THEN 'Auto-Renewal'
         ELSE NULL
