@@ -48,8 +48,8 @@ default_args = {
 dag = DAG(
     f"zendesk_sensitive_extract",
     default_args=default_args,
-    schedule_interval="0 5 * * *",
-    start_date=datetime(2023, 10, 16),
+    schedule_interval="0 7 * * *",
+    start_date=datetime(2023, 11, 6),
     catchup=False,
     max_active_runs=1,
 )
