@@ -13,6 +13,7 @@ from os import environ as env
 from yaml import load, FullLoader
 from google.oauth2 import service_account
 import json
+from zendesk_sensitive_extraction import get_bucket_details
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -26,16 +27,7 @@ def refactor_tickets_read_gcp():
     """
     Read file from GCP bucket for tickets
     """
-    GCP_SERVICE_CREDS = config_dict.get("GCP_SERVICE_CREDS")
-    ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = config_dict.get(
-        "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME"
-    )
-    scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    keyfile = json.loads(GCP_SERVICE_CREDS, strict=False)
-    credentials = service_account.Credentials.from_service_account_info(keyfile)
-    scoped_credentials = credentials.with_scopes(scope)
-    storage_client = storage.Client(credentials=scoped_credentials)
-    BUCKET = storage_client.get_bucket(ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME)
+    BUCKET = get_bucket_details()
 
     df_tickets = pd.DataFrame()
 
