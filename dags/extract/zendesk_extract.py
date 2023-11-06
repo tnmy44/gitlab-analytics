@@ -66,8 +66,8 @@ zendesk_tickets_extract_command = (
 zendesk_extract_ticket_audits_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id=f"zendesk-ticket-audits-extract-daily",
-    name=f"zendesk-ticket-audits-extract-daily",
+    task_id=f"tl-zendesk-ticket-audits-extract-daily",
+    name=f"tl-zendesk-ticket-audits-extract-daily",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
@@ -90,8 +90,8 @@ zendesk_extract_ticket_audits_task = KubernetesPodOperator(
 zendesk_extract_tickets_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id=f"zendesk-tickets-extract-{TASK_SCHEDULE}",
-    name=f"zendesk-tickets-extract-{TASK_SCHEDULE}",
+    task_id=f"tl-zendesk-tickets-extract-daily",
+    name=f"tl-zendesk-tickets-extract-daily",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
