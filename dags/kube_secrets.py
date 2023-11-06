@@ -312,7 +312,7 @@ SNOWFLAKE_SALES_ANALYTICS_LOAD_ROLE = Secret(
 )
 
 CLARI_API_KEY = Secret("env", "CLARI_API_KEY", "airflow", "CLARI_API_KEY")
-
+# Zendesk GCP service account and bucket details.
 ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = Secret(
     "env",
     "ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS",
