@@ -53,32 +53,22 @@ def refactor_tickets_read_gcp():
                     info(f"Uploading to dataframe, batch:{count}")
                     df_tickets = pd.concat([df_tickets, chunk])
                     count = count + 1
-                refactor_tickets(df_tickets)
-                # blob.delete() # delete the file after successfull upload to the table, commentiong it for now for testing purposes
+                refactor_tickets(df_tickets,BUCKET)
+                # blob.delete() # delete the file after successful upload to the table, commenting it for now for testing purposes
             except:
                 error(f"Error reading {blob.name}")
-            # blob.delete() # delete the file after successfull upload to the table, commentiong it for now for testing purposes
+            # blob.delete() # delete the file after successful upload to the table, commenting it for now for testing purposes
         else:
             error(f"No file found!")
             sys.exit(1)
 
 
-def refactor_tickets(df_tickets: pd.DataFrame):
+def refactor_tickets(df_tickets: pd.DataFrame,BUCKET):
     """
     This function will refactor the tickets table
     """
     df_ticket_fields_extracted = pd.DataFrame()
 
-    GCP_SERVICE_CREDS = config_dict.get("GCP_SERVICE_CREDS")
-    ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = config_dict.get(
-        "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME"
-    )
-    scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    keyfile = json.loads(GCP_SERVICE_CREDS, strict=False)
-    credentials = service_account.Credentials.from_service_account_info(keyfile)
-    scoped_credentials = credentials.with_scopes(scope)
-    storage_client = storage.Client(credentials=scoped_credentials)
-    BUCKET = storage_client.get_bucket(ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME)
     for blob in BUCKET.list_blobs(
         prefix="meltano/tap_zendesk__sensitive/ticket_fields/"
     ):
@@ -112,7 +102,7 @@ def refactor_tickets(df_tickets: pd.DataFrame):
 
     output_list = []
     # print(df_tickets)
-    info(f"Tranformation in progress...")
+    info(f"Transformation in progress...")
     for ind in df_tickets.index:
         ALLOW_ATTACHMENTS = df_tickets["ALLOW_ATTACHMENTS"][ind]
         ALLOW_CHANNELBACK = df_tickets["ALLOW_CHANNELBACK"][ind]
@@ -169,7 +159,7 @@ def refactor_tickets(df_tickets: pd.DataFrame):
                         CUSTOM_FIELDS_OUT.append(CUSTOM_FIELDS_DICT_REC)
 
         if len(CUSTOM_FIELDS_OUT) == 0:
-            CUSTOM_FIELDS_OUT = None
+            CUSTOM_FIELDS_OUT = [{}]
         # append all the columns along with ticket_custom_field_id, ticket_custom_field_value in output list
         row_list = [
             ALLOW_ATTACHMENTS,

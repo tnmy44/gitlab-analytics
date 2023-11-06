@@ -58,7 +58,7 @@ def refactor_ticket_audits_read_gcp():
                 refactor_ticket_audits(df)
             except:
                 error(f"Error reading {blob.name}")
-            # blob.delete() # delete the file after successfull upload to the table, commentiong it for now for testing purposes
+            # blob.delete() # delete the file after successful upload to the table, commenting it for now for testing purposes
         else:
             error(f"No file found!")
             sys.exit(1)
@@ -106,7 +106,7 @@ def refactor_ticket_audits(df: pd.DataFrame):
                     }
                     EVENTS_OUT.append(EVENTS_DICT_REC)
         if len(EVENTS_OUT) == 0:
-            EVENTS_OUT = None
+            EVENTS_OUT = [{}]
         events_out_json_obj = json.dumps(EVENTS_OUT)
         row_list = [
             author_id,
