@@ -18,6 +18,8 @@
     - echo $ENVIRONMENT
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
+    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
+    - echo $DBT_RUNNER
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa
     - chmod 700 ~/.ssh
@@ -249,6 +251,8 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export ENVIRONMENT="CI"
     - echo $ENVIRONMENT
+    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
+    - echo $DBT_RUNNER
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
     - mkdir -p ~/.ssh
@@ -351,6 +355,8 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
+    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
+    - echo $DBT_RUNNER
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa
     - chmod 700 ~/.ssh
@@ -458,6 +464,8 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
+    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
+    - echo $DBT_RUNNER
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa
     - chmod 700 ~/.ssh
