@@ -1,12 +1,14 @@
-import fire
-import sys
+"""
+ This is main code base to kick of the ticket and ticket_audit transformation.
+"""
 import os
-from logging import info, error, basicConfig, getLogger
+import sys
+from logging import basicConfig, getLogger, info
+
+import fire
+
 from zendesk_ticket_audits_refactor import refactor_ticket_audits_read_gcp
 from zendesk_tickets_refactor import refactor_tickets_read_gcp
-import json
-from google.cloud import storage
-from google.oauth2 import service_account
 
 config_dict = os.environ.copy()
 

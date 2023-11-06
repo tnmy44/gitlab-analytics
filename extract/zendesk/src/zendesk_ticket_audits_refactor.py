@@ -1,23 +1,16 @@
 """
 Extracts data from GCP bucket, refactors ticket_audits and uploads it snowflake.
 """
-import sys
-import os
-import logging
-import pandas as pd
-import fire
-from logging import info, error, basicConfig, getLogger
 import io
-from google.cloud import storage
-from os import environ as env
-from yaml import load, FullLoader
-from google.oauth2 import service_account
 import json
+import os
+import sys
+from logging import error, info
 
-from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
-    dataframe_uploader,
-)
+import pandas as pd
+from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
+from google.cloud import storage
+from google.oauth2 import service_account
 
 config_dict = os.environ.copy()
 
@@ -60,7 +53,7 @@ def refactor_ticket_audits_read_gcp():
                 error(f"Error reading {blob.name}")
             # blob.delete() # delete the file after successful upload to the table, commenting it for now for testing purposes
         else:
-            error(f"No file found!")
+            error("No file found!")
             sys.exit(1)
 
 
@@ -69,7 +62,7 @@ def refactor_ticket_audits(df: pd.DataFrame):
     This function will refactor the ticket audits table where it flattens the events object and extracts field_name,type,value,id out of it
     """
     output_list = []
-    info(f"Transforming file...")
+    info("Transforming file...")
     for ind in df.index:
         via = df["via"][ind]
         id = df["id"][ind]
@@ -130,7 +123,7 @@ def refactor_ticket_audits(df: pd.DataFrame):
             "via",
         ],
     )
-    info(f"Transformation complete, uploading records to snowflake...")
+    info("Transformation complete, uploading records to snowflake...")
     upload_to_snowflake(output_df)
 
 
@@ -148,7 +141,7 @@ def upload_to_snowflake(output_df):
             if_exists="append",
             add_uploaded_at=True,
         )
-        info(f"\nUploaded 'ticket_audits_test' to Snowflake")
+        info("Uploaded 'ticket_audits_test' to Snowflake")
     except Exception as e:
         error(f"Error uploading to snowflake: {e}")
         sys.exit(1)

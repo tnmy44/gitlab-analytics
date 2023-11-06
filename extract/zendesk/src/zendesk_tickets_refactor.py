@@ -1,23 +1,16 @@
 """
 Extracts data from GCP bucket, refactors tickets and uploads it snowflake.
 """
-import sys
-import os
-import logging
-import pandas as pd
-import fire
-from logging import info, error, basicConfig, getLogger
 import io
-from google.cloud import storage
-from os import environ as env
-from yaml import load, FullLoader
-from google.oauth2 import service_account
 import json
+import os
+import sys
+from logging import error, info
 
-from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
-    dataframe_uploader,
-)
+import pandas as pd
+from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
+from google.cloud import storage
+from google.oauth2 import service_account
 
 config_dict = os.environ.copy()
 
@@ -53,17 +46,17 @@ def refactor_tickets_read_gcp():
                     info(f"Uploading to dataframe, batch:{count}")
                     df_tickets = pd.concat([df_tickets, chunk])
                     count = count + 1
-                refactor_tickets(df_tickets,BUCKET)
+                refactor_tickets(df_tickets, BUCKET)
                 # blob.delete() # delete the file after successful upload to the table, commenting it for now for testing purposes
             except:
                 error(f"Error reading {blob.name}")
             # blob.delete() # delete the file after successful upload to the table, commenting it for now for testing purposes
         else:
-            error(f"No file found!")
+            error("No file found!")
             sys.exit(1)
 
 
-def refactor_tickets(df_tickets: pd.DataFrame,BUCKET):
+def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
     """
     This function will refactor the tickets table
     """
@@ -102,7 +95,7 @@ def refactor_tickets(df_tickets: pd.DataFrame,BUCKET):
 
     output_list = []
     # print(df_tickets)
-    info(f"Transformation in progress...")
+    info("Transformation in progress...")
     for ind in df_tickets.index:
         ALLOW_ATTACHMENTS = df_tickets["ALLOW_ATTACHMENTS"][ind]
         ALLOW_CHANNELBACK = df_tickets["ALLOW_CHANNELBACK"][ind]
@@ -245,7 +238,7 @@ def refactor_tickets(df_tickets: pd.DataFrame,BUCKET):
         ],
     )
 
-    info(f"Transformation complete, uploading records to snowflake...")
+    info("Transformation complete, uploading records to snowflake...")
     upload_to_snowflake(output_df)
 
 
@@ -263,7 +256,7 @@ def upload_to_snowflake(output_df):
             if_exists="append",
             add_uploaded_at=True,
         )
-        info(f"\nUploaded 'tickets_test' to Snowflake")
+        info("Uploaded 'tickets_test' to Snowflake")
     except Exception as e:
         error(f"Error uploading to snowflake: {e}")
         sys.exit(1)
