@@ -51,6 +51,7 @@ dag = DAG(
     start_date=datetime(2023, 11, 6),
     catchup=False,
     max_active_runs=1,
+    concurrency=1,
 )
 
 zendesk_ticket_audits_extract_command = (
@@ -111,4 +112,5 @@ zendesk_extract_tickets_task = KubernetesPodOperator(
     dag=dag,
 )
 
-zendesk_extract_ticket_audits_task >> zendesk_extract_tickets_task
+zendesk_extract_ticket_audits_task
+zendesk_extract_tickets_task
