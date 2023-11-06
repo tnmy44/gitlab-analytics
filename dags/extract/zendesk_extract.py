@@ -45,7 +45,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    f"zendesk_sensitive_extract",
+    f"tl_zendesk_sensitive",
     default_args=default_args,
     schedule_interval="0 7 * * *",
     start_date=datetime(2023, 11, 6),
