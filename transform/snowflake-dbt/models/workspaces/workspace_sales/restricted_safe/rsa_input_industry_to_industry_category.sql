@@ -7,7 +7,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('rsa_ae_credits_source') }}
+    FROM {{ ref('rsa_input_industry_to_industry_category_source') }}
 
 )
 SELECT *
