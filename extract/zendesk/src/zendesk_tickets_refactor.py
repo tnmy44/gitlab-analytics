@@ -157,8 +157,8 @@ def refactor_tickets(df_tickets: pd.DataFrame):
         CUSTOM_FIELDS_OUT = []
         for key in CUSTOM_FIELDS:
             if key["id"] is None and key["value"] is None:
-                ticket_custom_field_id = "null"
-                ticket_custom_field_value = "null"
+                ticket_custom_field_id = None
+                ticket_custom_field_value = None
             else:
                 # iterate through each field in output_list_ticket_field
                 for item in output_list_ticket_field:
