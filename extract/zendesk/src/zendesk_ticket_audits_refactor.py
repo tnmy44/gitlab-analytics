@@ -154,12 +154,8 @@ def upload_to_snowflake(output_df):
         sys.exit(1)
 
 
-def main():
-    refactor_ticket_audits_read_gcp()
-
-
 if __name__ == "__main__":
     basicConfig(stream=sys.stdout, level=20)
     getLogger("snowflake.connector.cursor").disabled = True
-    fire.Fire(main)
+    fire.Fire(refactor_ticket_audits_read_gcp)
     info("Complete.")
