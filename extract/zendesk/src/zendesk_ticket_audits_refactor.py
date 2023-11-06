@@ -29,13 +29,15 @@ def refactor_ticket_audits_read_gcp():
     ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get(
         "ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS"
     )
-    bucket_name = "meltano_data_ops"
+    ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = config_dict.get(
+        "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME"
+    )
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
     keyfile = json.loads(ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS, strict=False)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
-    BUCKET = storage_client.get_bucket(bucket_name)
+    BUCKET = storage_client.get_bucket(ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME)
 
     df = pd.DataFrame()
 

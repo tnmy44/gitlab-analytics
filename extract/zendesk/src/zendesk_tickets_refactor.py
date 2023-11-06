@@ -72,6 +72,9 @@ def refactor_tickets(df_tickets: pd.DataFrame):
     ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get(
         "ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS"
     )
+    ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = config_dict.get(
+        "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME"
+    )
     bucket_name = "meltano_data_ops"
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
     keyfile = json.loads(ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS, strict=False)

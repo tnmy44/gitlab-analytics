@@ -1,5 +1,5 @@
 """
-Run daily Zendesk extract
+Run daily Zendesk extract for tickets and ticket_audits tables
 """
 import os
 from datetime import datetime, timedelta
@@ -22,6 +22,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
     ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS,
+    ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME,
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
@@ -75,6 +76,7 @@ zendesk_extract_ticket_audits_task = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
         ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS,
+        ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME,
     ],
     env_vars={
         **pod_env_vars,
@@ -99,6 +101,7 @@ zendesk_extract_tickets_task = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
         ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS,
+        ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME,
     ],
     env_vars={
         **pod_env_vars,
