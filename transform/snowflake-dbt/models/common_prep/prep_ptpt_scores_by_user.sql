@@ -1,21 +1,9 @@
-
-
-WITH ptpt_scores AS (
-
-    SELECT * 
-    FROM "PREP".data_science.ptpt_scores_source
-
-), prep_namespace AS (
-
-    SELECT * 
-    FROM "PROD".common_prep.prep_namespace
-
-), gitlab_dotcom_users_source AS (
-
-    SELECT * 
-    FROM "PREP".gitlab_dotcom.gitlab_dotcom_users_source
-
-)
+{{ simple_cte([
+    ('ptpt_scores', 'ptpt_scores_source'),
+    ('prep_namespace', 'prep_namespace'),
+    ('gitlab_dotcom_users_source', 'gitlab_dotcom_users_source')
+    ])
+}}
 
 , score_dates AS (
     
@@ -75,11 +63,7 @@ WITH ptpt_scores AS (
 )
 
 SELECT
-  md5(cast(coalesce(cast(namespace_creator_ptpt_score.email_address as 
-    varchar
-), '') as 
-    varchar
-)) AS dim_marketing_contact_id,
+  {{ dbt_utils.surrogate_key(['namespace_creator_ptpt_score.email_address']) }} AS dim_marketing_contact_id,
   namespace_creator_ptpt_score.namespace_id,
   namespace_creator_ptpt_score.score,
   namespace_creator_ptpt_score.score_group,
