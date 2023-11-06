@@ -12,11 +12,13 @@
 
     SELECT dim_marketing_contact_id
     FROM prep_ptpf_scores_by_user
+    WHERE score_group >= 3
 
     UNION 
 
     SELECT dim_marketing_contact_id
     FROM prep_ptpl_scores_by_user
+    WHERE score_group >= 3
 
     UNION
 
