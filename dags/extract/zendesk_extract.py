@@ -30,7 +30,6 @@ from kubernetes_helpers import get_affinity, get_toleration
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
-TASK_SCHEDULE = "daily"
 
 # Define the default arguments for the DAG
 default_args = {
@@ -67,8 +66,8 @@ zendesk_tickets_extract_command = (
 zendesk_extract_ticket_audits_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id=f"zendesk-ticket-audits-extract-{TASK_SCHEDULE}",
-    name=f"zendesk-ticket-audits-extract-{TASK_SCHEDULE}",
+    task_id=f"zendesk-ticket-audits-extract-daily",
+    name=f"zendesk-ticket-audits-extract-daily",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
@@ -81,7 +80,6 @@ zendesk_extract_ticket_audits_task = KubernetesPodOperator(
     env_vars={
         **pod_env_vars,
         "logical_date": "{{ logical_date }}",
-        "task_schedule": TASK_SCHEDULE,
     },
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
@@ -106,7 +104,6 @@ zendesk_extract_tickets_task = KubernetesPodOperator(
     env_vars={
         **pod_env_vars,
         "logical_date": "{{ logical_date }}",
-        "task_schedule": TASK_SCHEDULE,
     },
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
