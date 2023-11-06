@@ -27,7 +27,7 @@ def refactor_tickets_read_gcp():
     Read file from GCP bucket for tickets
     """
     ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get(
-        "ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS"
+        "GCP_SERVICE_CREDS"
     )
     ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = config_dict.get(
         "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME"
@@ -72,7 +72,7 @@ def refactor_tickets(df_tickets: pd.DataFrame):
     df_ticket_fields_extracted = pd.DataFrame()
 
     ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get(
-        "ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS"
+        "GCP_SERVICE_CREDS"
     )
     ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = config_dict.get(
         "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME"
