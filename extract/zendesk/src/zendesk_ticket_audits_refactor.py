@@ -26,9 +26,7 @@ def refactor_ticket_audits_read_gcp():
     """
     Read file from GCP bucket for ticket_audits
     """
-    ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get(
-        "GCP_SERVICE_CREDS"
-    )
+    ZENDESK_SENSITIVE_SERVICE_ACCOUNT_CREDENTIALS = config_dict.get("GCP_SERVICE_CREDS")
     ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = config_dict.get(
         "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME"
     )
