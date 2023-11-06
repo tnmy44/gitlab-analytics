@@ -831,7 +831,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , title
+      , NULL AS title
       , color
       , project_id
       , created_at
