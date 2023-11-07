@@ -51,7 +51,8 @@ def refactor_ticket_audits_read_gcp():
                 refactor_ticket_audits(df)
             except:
                 error(f"Error reading {blob.name}")
-            # blob.delete() # delete the file after successful upload to the table, commenting it for now for testing purposes
+                sys.exit(1)
+            blob.delete()  # delete the file after successful upload to the table
         else:
             error("No file found!")
             sys.exit(1)
@@ -74,7 +75,11 @@ def refactor_ticket_audits(df: pd.DataFrame):
         # iterate through all keys in events object
         for key in events:
             if "field_name" in key:
-                if key["field_name"] in ("sla_policy", "priority", "is_public"):
+                if key["field_name"] in (
+                    "sla_policy",
+                    "priority",
+                    "is_public",
+                ):  # Only bring the currently scoped fields "sla_policy", "priority", "is_public"
                     if key["field_name"] is None:
                         field_name = "null"
                     else:
@@ -136,12 +141,12 @@ def upload_to_snowflake(output_df):
         dataframe_uploader(
             output_df,
             loader_engine,
-            table_name="ticket_audits_test",
+            table_name="ticket_audits",
             schema="tap_zendesk",
             if_exists="append",
             add_uploaded_at=True,
         )
-        info("Uploaded 'ticket_audits_test' to Snowflake")
+        info("Uploaded 'ticket_audits' to Snowflake")
     except Exception as e:
         error(f"Error uploading to snowflake: {e}")
         sys.exit(1)

@@ -47,10 +47,11 @@ def refactor_tickets_read_gcp():
                     df_tickets = pd.concat([df_tickets, chunk])
                     count = count + 1
                 refactor_tickets(df_tickets, BUCKET)
-                # blob.delete() # delete the file after successful upload to the table, commenting it for now for testing purposes
             except:
                 error(f"Error reading {blob.name}")
-            # blob.delete() # delete the file after successful upload to the table, commenting it for now for testing purposes
+                sys.exit(1)
+            info(f"Deleting file {blob.name}")
+            blob.delete()  # delete the file after successful upload to the table
         else:
             error("No file found!")
             sys.exit(1)
@@ -83,7 +84,9 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
         ):  # When the data is null CUSTOM_FIELD_OPTIONS is a float
             for key in CUSTOM_FIELD_OPTIONS:
                 # print(key['value'])
-                if id == 360020421853:
+                if (
+                    id == 360020421853
+                ):  # We are only bringing the values related to this id which is the Transaction issue type custom field id(more here https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.zendesk_tickets_xf)
                     ticket_field_value = key["value"]
                     output_list_ticket_field.append(ticket_field_value)
         else:
@@ -239,10 +242,10 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
     )
 
     info("Transformation complete, uploading records to snowflake...")
-    upload_to_snowflake(output_df)
+    upload_to_snowflake(output_df, BUCKET)
 
 
-def upload_to_snowflake(output_df):
+def upload_to_snowflake(output_df, BUCKET):
     """
     This function will upload the dataframe to snowflake
     """
@@ -251,12 +254,17 @@ def upload_to_snowflake(output_df):
         dataframe_uploader(
             output_df,
             loader_engine,
-            table_name="tickets_test",
+            table_name="tickets",
             schema="tap_zendesk",
             if_exists="append",
             add_uploaded_at=True,
         )
-        info("Uploaded 'tickets_test' to Snowflake")
+        info("Uploaded 'tickets' to Snowflake")
+        for blob in BUCKET.list_blobs(
+            prefix="meltano/tap_zendesk__sensitive/ticket_fields/"
+        ):
+            info(f"Deleting {blob.name}")
+            blob.delete()
     except Exception as e:
         error(f"Error uploading to snowflake: {e}")
         sys.exit(1)

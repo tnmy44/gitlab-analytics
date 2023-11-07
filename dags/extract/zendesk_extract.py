@@ -48,7 +48,7 @@ dag = DAG(
     f"tl_zendesk_sensitive",
     default_args=default_args,
     schedule_interval="0 7 * * *",
-    start_date=datetime(2023, 11, 6),
+    start_date=datetime(2023, 11, 7),
     catchup=False,
     max_active_runs=1,
     concurrency=1,
