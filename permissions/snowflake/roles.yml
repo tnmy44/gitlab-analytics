@@ -2259,7 +2259,7 @@ roles:
                     - prod.workspace_data_science.*
                     - prod.workspace_sales.*
 
-                       - restricted_workspace_people:
+    - restricted_workspace_people:
         warehouses:
             - reporting
         privileges:
