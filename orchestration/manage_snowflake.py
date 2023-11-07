@@ -47,7 +47,7 @@ class SnowflakeManager:
 
         # Queries for database cloning and permissions
         check_db_exists_query = """use database "{0}";"""
-        create_query = """create or replace database "{0}" {1};"""
+        create_query = """CREATE DATABASE IF NOT EXISTS "{0}" {1};"""
         grant_query = """grant ownership on database "{0}" to TRANSFORMER;"""
 
         clone_schema_query = """create schema "{0}"."{1}" clone "{2}"."{1}"; """
