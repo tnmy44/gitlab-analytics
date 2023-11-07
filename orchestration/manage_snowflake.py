@@ -427,10 +427,14 @@ class SnowflakeManager:
         logging.info(res)
         logging.info(res[0])
         for r in res:
-            self.manage_clones(database="raw",
-                               force=True,
-                               schema=r['table_schema'],
-                               include_stages=True)
+            try:
+                self.manage_clones(database="raw",
+                                   force=True,
+                                   schema=r['table_schema'],
+                                   include_stages=True)
+            except Exception as exc:
+                logging.info(f"{r['schema']} didn't work")
+                logging.info(exc)
 
     def clone_prod_by_schemas(
         self,
