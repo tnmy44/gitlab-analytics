@@ -7,8 +7,8 @@ from logging import basicConfig, getLogger, info
 
 import fire
 
-from zendesk_ticket_audits_refactor import refactor_ticket_audits_read_gcp
-from zendesk_tickets_refactor import refactor_tickets_read_gcp
+from zendesk_ticket_audits_refactor import refactor_ticket_audits_read_gcs
+from zendesk_tickets_refactor import refactor_tickets_read_gcs
 
 config_dict = os.environ.copy()
 
