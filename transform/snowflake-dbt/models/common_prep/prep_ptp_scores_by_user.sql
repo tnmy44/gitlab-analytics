@@ -9,14 +9,14 @@
 
  , base AS (
     SELECT dim_marketing_contact_id, ptp_source, last_score_date as score_date, score_group
-    FROM "PROD".common_prep.prep_ptp_scores_by_user_historical
+    FROM {{ ref('prep_ptp_scores_by_user_historical') }} 
     WHERE valid_to IS NULL -- Only most recent score has a NULL value for valid_to
         AND (ptp_source = 'Trial' OR score_group >=3) -- All Trial accounts and only Free and Trials >= 3
     
 ), prior_score_dates AS (
     
     SELECT dim_marketing_contact_id, ptp_source, last_score_date as past_score_date, score_group
-    FROM "PROD".common_prep.prep_ptp_scores_by_user_historical
+    FROM {{ ref('prep_ptp_scores_by_user_historical') }} 
     WHERE valid_to IS NOT NULL -- NOT NULL to remove most recent score
     QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_marketing_contact_id ORDER BY valid_to DESC) = 1
 
