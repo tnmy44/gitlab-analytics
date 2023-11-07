@@ -3586,6 +3586,14 @@ roles:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
 
+    - jcolyer:
+        member_of:
+	        - gitlab_dotcom
+            - reporter
+	        - zendesk
+        warehouses:
+            - dev_xs
+
     - jhope:
         member_of:
             - gitlab_dotcom
@@ -5675,6 +5683,11 @@ users:
         can_login: yes
         member_of:
             - jcaine
+
+    - jcolyer:
+        can_login: yes
+        member_of:
+            - jcolyer
 
     - jhope:
         can_login: yes
