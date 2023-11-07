@@ -3477,9 +3477,9 @@ roles:
 
     - ikosenko:
         member_of:
-	        - gitlab_dotcom
+            - gitlab_dotcom
             - reporter
-	        - zendesk
+            - zendesk
         warehouses:
             - dev_xs
 
@@ -3596,9 +3596,9 @@ roles:
 
     - jcolyer:
         member_of:
-	        - gitlab_dotcom
+            - gitlab_dotcom
             - reporter
-	        - zendesk
+            - zendesk
         warehouses:
             - dev_xs
 
@@ -4020,12 +4020,12 @@ roles:
             - reporter
         warehouses:
             - dev_xs
-
-   - lkozloff:
+            
+    - lkozloff:
         member_of:
-	        - gitlab_dotcom
+            - gitlab_dotcom
             - reporter
-	        - zendesk
+            - zendesk
         warehouses:
             - dev_xs
 
