@@ -1,4 +1,4 @@
-{% set columns = ["dim_marketing_contact_id", "score_group", "ptp_source", "valid_from", "valid_to"] %}
+{% set columns = ["dim_marketing_contact_id", "score_group", "ptp_source", "last_score_date", "valid_from", "valid_to"] %}
 
 {{ simple_cte([
     ('prep_ptpf_scores_by_user', 'prep_ptpf_scores_by_user'),
@@ -8,7 +8,7 @@
 }}
 
 
---Pull in the last score per that record received so we can determine if a score is still "active" or not.
+--Pull in the last score that marketing_id received so we can determine if a score is still "active" or not.
 , latest_score_date AS (
 
     WITH combined_score_dates AS (
@@ -25,7 +25,6 @@
     SELECT dim_marketing_contact_id, max(score_date) as latest_score_date
     FROM combined_score_dates
     GROUP BY dim_marketing_contact_id
-
 
 ), combined_historic_scores AS (
 
@@ -45,13 +44,14 @@ select COALESCE(prep_ptpt_scores_by_user.dim_marketing_contact_id, prep_ptpf_sco
     , COALESCE(prep_ptpl_scores_by_user.score_group, LAG(prep_ptpl_scores_by_user.score_group, 1,NULL) IGNORE NULLS OVER (PARTITION BY dim_marketing_contact_id_combined ORDER BY score_date_combined)) as latest_ptpl
     , prep_ptpf_scores_by_user.score_group as ptpf_score_group
     , prep_ptpl_scores_by_user.score_group as ptpl_score_group
+    , COALESCE(prep_ptpt_scores_by_user.score_date, LAG(prep_ptpt_scores_by_user.score_date, 1,NULL) IGNORE NULLS OVER (PARTITION BY dim_marketing_contact_id_combined ORDER BY score_date_combined))  as latest_ptpt_score_date
     , COALESCE(prep_ptpf_scores_by_user.score_date, LAG(prep_ptpf_scores_by_user.score_date, 1,NULL) IGNORE NULLS OVER (PARTITION BY dim_marketing_contact_id_combined ORDER BY score_date_combined)) as latest_ptpf_score_date
     , COALESCE(prep_ptpl_scores_by_user.score_date, LAG(prep_ptpl_scores_by_user.score_date, 1,NULL) IGNORE NULLS OVER (PARTITION BY dim_marketing_contact_id_combined ORDER BY score_date_combined)) as latest_ptpl_score_date
     
     
     --Create Logic for which score source to use
     , CASE
-        WHEN latest_ptpt >= 4
+        WHEN latest_ptpt >= 4 AND DATEDIFF('DAY', latest_ptpt_score_date, score_date_combined) <= 5  -- Only use if score has been updated in last 5 days
           THEN 'Trial'
         WHEN latest_ptpf = 5 AND DATEDIFF('DAY', latest_ptpf_score_date, score_date_combined) <= 45 -- Only use if score has been updated in last 45 days
           THEN 'Free'
@@ -77,6 +77,16 @@ select COALESCE(prep_ptpt_scores_by_user.dim_marketing_contact_id, prep_ptpf_sco
         WHEN ptp_source = 'Lead'
           THEN latest_ptpl
       END AS score_group
+
+   ,CASE
+        WHEN ptp_source = 'Trial'
+          THEN latest_ptpt_score_date
+        WHEN ptp_source = 'Free'
+          THEN latest_ptpf_score_date
+        WHEN ptp_source = 'Lead'
+          THEN latest_ptpl_score_date
+      END AS last_score_date 
+    
 FROM prep_ptpt_scores_by_user
 FULL JOIN prep_ptpf_scores_by_user 
     ON prep_ptpt_scores_by_user.dim_marketing_contact_id = prep_ptpf_scores_by_user.dim_marketing_contact_id
@@ -99,16 +109,16 @@ ORDER BY dim_marketing_contact_id_combined, score_date_combined
 
 
 
-), final_histroic_table AS (
+), valid_to_from AS (
     select dim_marketing_contact_id_combined    as dim_marketing_contact_id
          , score_group
          , ptp_source
          , score_date_combined                  as score_date
+         , last_score_date
          , next_score_date
          , latest_score_date
          , prev_group
          , score_group_rank
-         --,LAG(score_date_combined,-1,NULL) IGNORE NULLS OVER (PARTITION BY dim_marketing_contact_id_combined ORDER BY score_date_combined) as next_score_group_rank
          --Determine the first date the score occured within the "rank"
          , FIRST_VALUE(score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank, ptp_source ORDER BY score_date) as valid_from
          --Determine the last time the score occured within the "rank"
@@ -121,6 +131,13 @@ ORDER BY dim_marketing_contact_id_combined, score_date_combined
 
 )
 
-SELECT DISTINCT dim_marketing_contact_id, score_group, ptp_source, valid_from, valid_to
-FROM final_histroic_table
+SELECT dim_marketing_contact_id
+    , score_group
+    , ptp_source
+    , last_score_date
+    , valid_from
+    , valid_to
+FROM valid_to_from
+QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_marketing_contact_id, valid_from, valid_to ORDER BY last_score_date DESC) = 1
 ORDER BY dim_marketing_contact_id, valid_from
+
