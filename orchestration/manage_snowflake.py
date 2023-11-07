@@ -427,31 +427,10 @@ class SnowflakeManager:
         logging.info(res)
         logging.info(res[0])
         for r in res:
-            output_query = f""" 
-                CREATE SCHEMA "{self.raw_database}"."{r['table_schema']}"
-                CLONE "{database}"."{r['table_schema']}";
-                """
-            try:
-                logging.info(f"Getting schemas {output_query}")
-                nres = query_executor(self.engine, output_query)
-                logging.info(nres[0])
-
-                grant_on_schema_query_with_params = f"""
-                    grant create table, usage on schema "{self.raw_database}"."{r['table_schema']}" to LOADER;
-                    """
-                query_executor(self.engine, grant_on_schema_query_with_params)
-                grant_on_schema_query_with_params = f"""
-                                    grant create table, usage on schema "{self.raw_database}"."{r['table_schema']}" to TRANSFORMER;
-                                    """
-                query_executor(self.engine, grant_on_schema_query_with_params)
-                grant_on_schema_query_with_params = f"""
-                                    grant create table, usage on schema "{self.raw_database}"."{r['table_schema']}" to ENGINEER;
-                                    """
-                query_executor(self.engine, grant_on_schema_query_with_params)
-
-            except ProgrammingError as prg:
-                # Catches permissions errors
-                logging.error(prg._sql_message(as_unicode=False))
+            self.manage_clones(database=self.raw_database,
+                               force=True,
+                               schema=r['table_schema'],
+                               include_stages=True)
 
     def clone_prod_by_schemas(
         self,
