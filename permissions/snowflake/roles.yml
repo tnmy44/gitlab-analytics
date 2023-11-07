@@ -3475,6 +3475,14 @@ roles:
         warehouses:
             - dev_xs
 
+    - ikosenko:
+        member_of:
+	        - gitlab_dotcom
+            - reporter
+	        - zendesk
+        warehouses:
+            - dev_xs
+
     - iweeks:
         member_of:
             - adaptive
@@ -5659,6 +5667,11 @@ users:
         can_login: yes
         member_of:
             - hselim
+
+    - ikosenko:
+        can_login: yes
+        member_of:
+            - ikosenko
 
     - iweeks:
         can_login: yes
