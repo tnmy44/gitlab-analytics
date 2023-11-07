@@ -15,7 +15,7 @@ from google.oauth2 import service_account
 config_dict = os.environ.copy()
 
 
-def refactor_ticket_audits_read_gcp():
+def refactor_ticket_audits_read_gcs():
     """
     Read file from GCP bucket for ticket_audits
     """
