@@ -1,8 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('zendesk_tickets_dedupe_source') }}
-    
+    FROM {{ source('zendesk', 'tickets') }}
 ),
 
 renamed AS (

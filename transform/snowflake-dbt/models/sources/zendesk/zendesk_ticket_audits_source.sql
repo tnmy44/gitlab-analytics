@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('zendesk_ticket_audits_dedupe_source') }}
+    FROM {{ source('zendesk', 'ticket_audits') }}
     
 ),
 
