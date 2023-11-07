@@ -50,7 +50,7 @@ class SnowflakeManager:
         create_query = """CREATE DATABASE IF NOT EXISTS "{0}" {1};"""
         grant_query = """grant ownership on database "{0}" to TRANSFORMER;"""
 
-        clone_schema_query = """create schema "{0}"."{1}" clone "{2}"."{1}"; """
+        clone_schema_query = """create schema IF NOT EXISTS "{0}"."{1}" clone "{2}"."{1}"; """
 
         usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
         usage_grant_query_with_params = (
