@@ -414,7 +414,14 @@ class SnowflakeManager:
         database: str,
         include_stages: bool = False,
     ):
-        schema_query = f"SELECT DISTINCT table_schema AS table_schema FROM {database}.INFORMATION_SCHEMA.TABLES"
+        schema_query = f""" 
+            SELECT DISTINCT table_schema AS table_schema  
+            FROM {database}.INFORMATION_SCHEMA.TABLES 
+            WHERE TABLE_SCHEMA NOT IN ( 
+                SELECT DISTINCT table_schema FROM FROM {self.raw_database}.INFORMATION_SCHEMA.TABLES
+            )
+            AND TABLE_SCHEMA != 'INFORMATION_SCHEMA'
+            """
         try:
             logging.info(f"Getting schemas {schema_query}")
             res = query_executor(self.engine, schema_query)
