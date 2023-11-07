@@ -462,7 +462,6 @@ roles:
             tables:
                 read:
                     - prep.sensitive.gitlab_dotcom_labels
-                    - prep.sensitive.gitlab_dotcom_merge_requests
                     - prep.sensitive.gitlab_dotcom_milestones
                     - prep.sensitive.gitlab_dotcom_namespaces
                     - prep.sensitive.gitlab_dotcom_projects
@@ -1082,7 +1081,6 @@ roles:
             tables:
                 read:
                     - prep.sensitive.gitlab_dotcom_labels
-                    - prep.sensitive.gitlab_dotcom_merge_requests
                     - prep.sensitive.gitlab_dotcom_milestones
                     - prep.sensitive.gitlab_dotcom_namespaces
                     - prep.sensitive.gitlab_dotcom_projects
@@ -1771,7 +1769,6 @@ roles:
                     - prep.sensitive.gitlab_dotcom_environments
                     - prep.sensitive.gitlab_dotcom_identities
                     - prep.sensitive.gitlab_dotcom_labels
-                    - prep.sensitive.gitlab_dotcom_merge_requests
                     - prep.sensitive.gitlab_dotcom_milestones
                     - prep.sensitive.gitlab_dotcom_namespaces
                     - prep.sensitive.gitlab_dotcom_notes
