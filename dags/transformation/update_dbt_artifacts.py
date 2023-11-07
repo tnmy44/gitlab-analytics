@@ -92,7 +92,7 @@ secrets_list = [
 
 # Create the DAG
 dag = DAG(
-    "dbt",
+    "update_dbt_artifacts",
     description="This DAG is responsible for doing incremental model refresh",
     default_args=default_args,
     schedule_interval=None,
