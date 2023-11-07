@@ -247,7 +247,8 @@ specify_dbt_parameters:
     - export DBT_FAIL_FAST=""
     - if [ -z $FAIL_FAST ]; then DBT_FAIL_FAST="--fail-fast"; fi
     - echo $DBT_FAIL_FAST
-    - export if [ -z $EXCLUDE ]; then DBT_EXCLUDE=""; else DBT_EXCLUDE="--exclude $EXCLUDE"; fi
+    - export DBT_EXCLUDE=""
+    - if [ ! -z $EXCLUDE ]; then DBT_EXCLUDE="--exclude $EXCLUDE"; fi
     - echo $DBT_EXCLUDE
     # - dbt clone --select $DBT_SELECTION $CI_PROFILE_TARGET $DBT_DEFER || FAILED=true
     - echo "dbt build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET $DBT_DEFER $DBT_FAIL_FAST || FAILED=true"
