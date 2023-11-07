@@ -233,15 +233,15 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"
     - echo $SNOWFLAKE_LOAD_DATABASE
-    - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/defer_manifest/
-    - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/defer_manifest/manifest.json https://dbt.gitlabdata.com/manifest.json
+    - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/
+    - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/manifest.json https://dbt.gitlabdata.com/manifest.json
     # - dbt deps $CI_PROFILE_TARGET
     - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
     - echo $DBT_RUNNER
     - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XS_WAREHOUSE}
     - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
-    - export DBT_DEFER="--defer --state defer_manifest"
-    - echo $DBT_DEFER
+    - export DBT_STATE="--state reference_state"
+    - echo $DBT_STATE
     - export DBT_SELECTION="state:modified."${STATE_MODIFIED:-"body"}${DOWNSTREAM:-""}
     - echo $DBT_SELECTION
     - export DBT_FAIL_FAST=""
@@ -250,8 +250,8 @@ specify_dbt_parameters:
     - export DBT_EXCLUDE=""
     - if [ ! -z $EXCLUDE ]; then DBT_EXCLUDE="--exclude $EXCLUDE"; fi
     - echo $DBT_EXCLUDE
-    # - dbt clone --select $DBT_SELECTION $CI_PROFILE_TARGET $DBT_DEFER || FAILED=true
-    - echo "dbt build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET $DBT_DEFER $DBT_FAIL_FAST || FAILED=true"
+    - echo "dbt clone --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET $DBT_STATE $DBT_FAIL_FAST || FAILED=true"
+    - echo "dbt build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE $DBT_FAIL_FAST || FAILED=true"
     - if [ $FAILED ]; then exit 1; fi
 
 # ======
