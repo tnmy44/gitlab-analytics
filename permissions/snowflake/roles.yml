@@ -4021,6 +4021,14 @@ roles:
         warehouses:
             - dev_xs
 
+   - lkozloff:
+        member_of:
+	        - gitlab_dotcom
+            - reporter
+	        - zendesk
+        warehouses:
+            - dev_xs
+
     - lmai:
         member_of:
             - analyst_engineering
@@ -5777,6 +5785,11 @@ users:
         can_login: yes
         member_of:
             - lchilamakuru
+
+    - lkozloff:
+        can_login: yes
+        member_of:
+            - lkozloff
 
     - lmai:
         can_login: yes
