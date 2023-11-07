@@ -446,7 +446,6 @@ models:
         tests:
           - not_null
           
-          
   - name: prep_ptp_scores_by_user_historical
     description: '{{ doc("prep_ptp_scores_by_user_historical") }}'
     columns:
