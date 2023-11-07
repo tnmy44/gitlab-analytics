@@ -50,7 +50,9 @@ class SnowflakeManager:
         create_query = """CREATE DATABASE IF NOT EXISTS "{0}" {1};"""
         grant_query = """grant ownership on database "{0}" to TRANSFORMER;"""
 
-        clone_schema_query = """create schema IF NOT EXISTS "{0}"."{1}" clone "{2}"."{1}"; """
+        clone_schema_query = (
+            """create schema IF NOT EXISTS "{0}"."{1}" clone "{2}"."{1}"; """
+        )
 
         usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
         usage_grant_query_with_params = (
@@ -435,10 +437,12 @@ class SnowflakeManager:
         logging.info(res[0])
         for r in res:
             try:
-                self.manage_clones(database="raw",
-                                   force=True,
-                                   schema=r['table_schema'],
-                                   include_stages=True)
+                self.manage_clones(
+                    database="raw",
+                    force=True,
+                    schema=r["table_schema"],
+                    include_stages=True,
+                )
             except Exception as exc:
                 logging.info(f"{r['schema']} didn't work")
                 logging.info(exc)
