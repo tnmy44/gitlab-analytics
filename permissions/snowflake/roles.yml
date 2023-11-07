@@ -3475,6 +3475,14 @@ roles:
         warehouses:
             - dev_xs
 
+    - ikosenko:
+        member_of:
+            - gitlab_dotcom
+            - reporter
+            - zendesk
+        warehouses:
+            - dev_xs
+
     - iweeks:
         member_of:
             - adaptive
@@ -3585,6 +3593,14 @@ roles:
                 write:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
+
+    - jcolyer:
+        member_of:
+            - gitlab_dotcom
+            - reporter
+            - zendesk
+        warehouses:
+            - dev_xs
 
     - jhope:
         member_of:
@@ -4002,6 +4018,14 @@ roles:
     - lchilamakuru:
         member_of:
             - reporter
+        warehouses:
+            - dev_xs
+            
+    - lkozloff:
+        member_of:
+            - gitlab_dotcom
+            - reporter
+            - zendesk
         warehouses:
             - dev_xs
 
@@ -5652,6 +5676,11 @@ users:
         member_of:
             - hselim
 
+    - ikosenko:
+        can_login: yes
+        member_of:
+            - ikosenko
+
     - iweeks:
         can_login: yes
         member_of:
@@ -5675,6 +5704,11 @@ users:
         can_login: yes
         member_of:
             - jcaine
+
+    - jcolyer:
+        can_login: yes
+        member_of:
+            - jcolyer
 
     - jhope:
         can_login: yes
@@ -5751,6 +5785,11 @@ users:
         can_login: yes
         member_of:
             - lchilamakuru
+
+    - lkozloff:
+        can_login: yes
+        member_of:
+            - lkozloff
 
     - lmai:
         can_login: yes
