@@ -235,7 +235,7 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_LOAD_DATABASE
     - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/defer_manifest/
     - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/defer_manifest/manifest.json https://dbt.gitlabdata.com/manifest.json
-    - dbt deps $CI_PROFILE_TARGET
+    # - dbt deps $CI_PROFILE_TARGET
     - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
     - echo $DBT_RUNNER
     - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XS_WAREHOUSE}
@@ -244,7 +244,8 @@ specify_dbt_parameters:
     - echo $DBT_DEFER
     - export DBT_SELECTION="state:modified."${STATE_MODIFIED:-"body"}${DOWNSTREAM:-""}
     - echo $DBT_SELECTION
-    - export if [ -z $FAIL_FAST ]; then DBT_FAIL_FAST="--fail-fast"; else DBT_FAIL_FAST=""; fi
+    - export DBT_FAIL_FAST=""
+    - if [ -z $FAIL_FAST ]; then DBT_FAIL_FAST="--fail-fast"; fi
     - echo $DBT_FAIL_FAST
     - export if [ -z $EXCLUDE ]; then DBT_EXCLUDE=""; else DBT_EXCLUDE="--exclude $EXCLUDE"; fi
     - echo $DBT_EXCLUDE
