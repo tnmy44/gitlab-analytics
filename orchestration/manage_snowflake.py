@@ -427,7 +427,7 @@ class SnowflakeManager:
         logging.info(res)
         logging.info(res[0])
         for r in res:
-            self.manage_clones(database=self.raw_database,
+            self.manage_clones(database="raw",
                                force=True,
                                schema=r['table_schema'],
                                include_stages=True)
