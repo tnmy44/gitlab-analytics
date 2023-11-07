@@ -454,7 +454,12 @@ models:
         description: Unique identifier for the marketing contact.
         tests:
           - not_null
-          - unique
+      - name: valid_from
+        description: First date score_group and ptp_source combo is valid from for the marketing contact
+        tests:
+          - not_null
+      - name: valid_to
+        description: Last date score_group and ptp_source combo is valid from for the marketin contact
 
   - name: prep_ptpt_scores_by_user
     description: '{{ doc("prep_ptpt_scores_by_user") }}'

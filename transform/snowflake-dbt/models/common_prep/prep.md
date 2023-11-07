@@ -96,7 +96,6 @@ A new row is added for each dim_marketing_contact_id whenever:
 - Their star rating changes
 - Their model source (Trial, Free, Lead) changes
 
-
 {% enddocs %}
 
 {% docs prep_ptpt_scores_by_user %}
