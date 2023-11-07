@@ -418,9 +418,9 @@ class SnowflakeManager:
             SELECT DISTINCT table_schema AS table_schema  
             FROM {database}.INFORMATION_SCHEMA.TABLES 
             WHERE TABLE_SCHEMA NOT IN ( 
-                SELECT DISTINCT table_schema FROM FROM {self.raw_database}.INFORMATION_SCHEMA.TABLES
+                SELECT DISTINCT table_schema FROM "{self.raw_database}".INFORMATION_SCHEMA.TABLES
             )
-            AND TABLE_SCHEMA != 'INFORMATION_SCHEMA'
+            AND TABLE_SCHEMA NOT IN ('INFORMATION_SCHEMA', 'PUBLIC')
             """
         try:
             logging.info(f"Getting schemas {schema_query}")
