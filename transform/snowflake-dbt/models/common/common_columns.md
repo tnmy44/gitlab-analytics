@@ -1257,6 +1257,18 @@ An attribute of an opportunity to designate what type or order it is. This is st
 
 {% enddocs %}
 
+{% docs dim_sales_funnel_kpi_sk %}
+
+Surrogate key associated with the sales funnel KPIs.
+
+{% enddocs %}
+
+{% docs sales_funnel_kpi_name %}
+
+The name of the associated sales funnel KPI.
+
+{% enddocs %}
+
 {% docs order_type_live %}
 
 The current Order Type of an opportunity, potentially after it has been stamped on its close date. Per the [documentation in Salesforce](https://gitlab.my.salesforce.com/00N4M00000Ib8Ok?setupid=OpportunityFields), This field is used to track movement of values post deal close and is for analysis purposes only.

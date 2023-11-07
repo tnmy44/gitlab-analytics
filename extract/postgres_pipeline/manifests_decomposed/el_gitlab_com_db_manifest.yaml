@@ -844,7 +844,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   labels_internal_only:
-    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS} OR group_id in {INTERNAL_NAMESPACE_IDS}
+    additional_filtering: AND (project_id in {INTERNAL_PROJECT_IDS} OR group_id in {INTERNAL_NAMESPACE_IDS})
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'labels_internal_only'
@@ -854,6 +854,7 @@ tables:
       SELECT id
       , title
       , project_id
+      , group_id
       , updated_at
       FROM labels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -1125,7 +1126,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   milestones_internal_only:
-    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS} OR group_id in {INTERNAL_NAMESPACE_IDS}
+    additional_filtering: AND (project_id in {INTERNAL_PROJECT_IDS} OR group_id in {INTERNAL_NAMESPACE_IDS})
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'milestones_internal_only'
@@ -1136,6 +1137,7 @@ tables:
       , iid
       , title
       , project_id
+      , group_id
       , updated_at
       FROM milestones
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -1259,7 +1261,16 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   namespaces_internal_only:
-    additional_filtering: AND id in {INTERNAL_NAMESPACE_IDS}
+    additional_filtering: |-
+      AND (
+        id IN {INTERNAL_NAMESPACE_IDS} 
+        OR parent_id IN {INTERNAL_NAMESPACE_IDS} 
+        OR id IN (
+          SELECT namespace_id 
+          FROM projects 
+          WHERE id IN {INTERNAL_PROJECT_IDS}
+          )
+        )
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1268,6 +1279,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
+      , parent_id
       , name
       , path
       , updated_at
@@ -1604,7 +1616,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   projects_internal_only:
-    additional_filtering: AND namespace_id in {INTERNAL_NAMESPACE_IDS}
+    additional_filtering: AND (namespace_id in {INTERNAL_NAMESPACE_IDS} OR id in {INTERNAL_PROJECT_IDS})
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'

@@ -738,6 +738,12 @@ Order type dimension, based off of salesforce opportunity data, using the `gener
 
 {% enddocs %}
 
+{% docs dim_sales_funnel_kpi %}
+
+Sales funnel KPI dimension, based on the sales funnel target file KPI name data.
+
+{% enddocs %}
+
 {% docs dim_namespace_hist %}
 
 Table containing GitLab namespace snapshots.
