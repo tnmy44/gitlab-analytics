@@ -338,6 +338,19 @@ models:
           - not_null
           - unique
 
+  - name: prep_sales_funnel_kpi
+    description: '{{ doc("prep_sales_funnel_kpi") }}'
+    columns:
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
+          - unique
+      - name: sales_funnel_kpi_name
+        description: '{{ doc("sales_funnel_kpi_name") }}'
+        tests:
+          - not_null
+
   - name: prep_deal_path
     description: '{{ doc("prep_deal_path") }}'
     columns:
