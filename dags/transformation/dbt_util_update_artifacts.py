@@ -92,7 +92,7 @@ secrets_list = [
 
 # Create the DAG
 dag = DAG(
-    "update_dbt_artifacts",
+    "dbt_util_update_artifacts",
     description="This DAG is responsible for updating the dbt_artifacts tables",
     default_args=default_args,
     schedule_interval=None,
@@ -111,8 +111,8 @@ dbt_non_product_models_command = f"""
 update_dbt_artifacts = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="update_dbt_artifacts",
-    name="update_dbt_artifacts",
+    task_id="dbt_util_update_artifacts",
+    name="dbt_util_update_artifacts",
     secrets=secrets_list,
     env_vars=pod_env_vars,
     arguments=[dbt_non_product_models_command],
