@@ -248,10 +248,7 @@ class InstanceNamespaceMetrics:
 
         info(f"...Start loading metrics: {metric_name}")
 
-        if (
-            "namespace_ultimate_parent_id" not in metric_query
-            or "ultimate_parent_namespace_id" not in metric_query
-        ):
+        if "namespace_ultimate_parent_id" not in metric_query:
             info(f"Skipping ping {metric_name} due to no namespace information.")
             return
 
