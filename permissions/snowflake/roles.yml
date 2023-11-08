@@ -821,7 +821,6 @@ roles:
                     - prod.legacy
                     - prod.workspace_data_science
                     - prod.restricted_safe_workspace_sales
-                    - prod.restricted_workspace_people
                     - prod.restricted_safe_common_mart_sales
                     - prod.common_mart_product
                     - prod.common_mart_marketing
@@ -842,6 +841,7 @@ roles:
                     - prod.restricted_safe_workspace_sales.*
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.restricted_workspace_people.*
+                    - prod.common.dim_namespace
                     - prod.common_mart_product.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_people.*
@@ -1267,7 +1267,7 @@ roles:
             tables:
                 read:
                     - raw.sales_analytics.*
-               
+
     - sales_systems_snowflake_api_role:
         warehouses:
             - reporting
@@ -1951,7 +1951,7 @@ roles:
             tables:
                 read:
                     - prep.google_search_console.*
-                    - raw.google_search_console.* 
+                    - raw.google_search_console.*
 
     - grafana:
         warehouses:
@@ -2203,7 +2203,7 @@ roles:
                 read:
                     - raw.prometheus.*
                     - prep.prometheus.*
-    
+
     - pumps_sensitive:
         warehouses:
             - dev_xs
@@ -3016,7 +3016,7 @@ roles:
             - analyst_sales
             - restricted_safe
         warehouses:
-            - dev_xs   
+            - dev_xs
 
     - caitlin:
         member_of: []
@@ -3124,9 +3124,9 @@ roles:
             - hightouch_role
             - marketo
             - postgres_pipeline
-            - restricted_safe            
+            - restricted_safe
             - salesforce
-            - zuora_api_sandbox_stitch            
+            - zuora_api_sandbox_stitch
             - zuora_stitch_rest_api
             - zuora
         warehouses:
@@ -3170,7 +3170,7 @@ roles:
     - david:
         member_of: []
         warehouses: []
-  
+
     - dcharukulvanich:
         member_of:
             - reporter
@@ -3475,6 +3475,14 @@ roles:
         warehouses:
             - dev_xs
 
+    - ikosenko:
+        member_of:
+            - gitlab_dotcom
+            - reporter
+            - zendesk
+        warehouses:
+            - dev_xs
+
     - iweeks:
         member_of:
             - adaptive
@@ -3585,6 +3593,14 @@ roles:
                 write:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
+
+    - jcolyer:
+        member_of:
+            - gitlab_dotcom
+            - reporter
+            - zendesk
+        warehouses:
+            - dev_xs
 
     - jhope:
         member_of:
@@ -4004,6 +4020,14 @@ roles:
             - reporter
         warehouses:
             - dev_xs
+            
+    - lkozloff:
+        member_of:
+            - gitlab_dotcom
+            - reporter
+            - zendesk
+        warehouses:
+            - dev_xs
 
     - lmai:
         member_of:
@@ -4059,6 +4083,7 @@ roles:
             - analyst_finance
             - analyst_people
             - analytics_engineer_core
+            - analyst_people
             - analyst_engineering
             - bamboohr
             - bamboohr_analytics
@@ -4069,7 +4094,7 @@ roles:
             - prometheus
             - restricted_safe
             - salesforce_sandbox
-            - workday 
+            - workday
             - zengrc
         warehouses:
             - dev_xs
@@ -5521,7 +5546,7 @@ users:
     - bnguyen:
         can_login: no
         member_of: []
-            
+
     - bvandre:
         can_login: yes
         member_of:
@@ -5652,6 +5677,11 @@ users:
         member_of:
             - hselim
 
+    - ikosenko:
+        can_login: yes
+        member_of:
+            - ikosenko
+
     - iweeks:
         can_login: yes
         member_of:
@@ -5669,12 +5699,17 @@ users:
     - jburrows:
         can_login: yes
         member_of:
-            - jburrows     
+            - jburrows
 
     - jcaine:
         can_login: yes
         member_of:
             - jcaine
+
+    - jcolyer:
+        can_login: yes
+        member_of:
+            - jcolyer
 
     - jhope:
         can_login: yes
@@ -5727,7 +5762,7 @@ users:
         member_of:
             - kdietz
 
-    - kgliksman: 
+    - kgliksman:
         can_login: yes
         member_of:
             - kgliksman
@@ -5751,6 +5786,11 @@ users:
         can_login: yes
         member_of:
             - lchilamakuru
+
+    - lkozloff:
+        can_login: yes
+        member_of:
+            - lkozloff
 
     - lmai:
         can_login: yes
@@ -5834,7 +5874,7 @@ users:
     - mxiao:
         can_login: yes
         member_of:
-            - mxiao           
+            - mxiao
 
     - nbelokolodov:
         can_login: yes
