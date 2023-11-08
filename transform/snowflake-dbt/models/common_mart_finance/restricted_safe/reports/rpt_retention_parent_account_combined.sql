@@ -4,17 +4,18 @@
 ]) }},
 
 final AS (
+
     SELECT
       primary_key,
       dim_parent_crm_account_id,
-      parent_crm_account_name,
+      parent_crm_account_name                   AS parent_crm_account_name_live,
       is_arr_month_finalized,
       retention_month,
       retention_fiscal_quarter_name_fy,
       retention_fiscal_year,
-      parent_crm_account_sales_segment,
-      parent_crm_account_sales_segment_grouped,
-      parent_crm_account_geo,
+      parent_crm_account_sales_segment          AS parent_crm_account_sales_segment_live,
+      parent_crm_account_sales_segment_grouped  AS parent_crm_account_sales_segment_grouped_live,
+      parent_crm_account_geo                    AS parent_crm_account_geo_live,
       retention_arr_band,
       prior_year_arr,
       NULL AS prior_year_mrr,
@@ -36,14 +37,14 @@ final AS (
     SELECT
       primary_key,
       dim_parent_crm_account_id,
-      NULL AS parent_crm_account_name,
+      parent_crm_account_name_live,
       is_arr_month_finalized,
       retention_month,
       retention_fiscal_quarter_name_fy,
       retention_fiscal_year,
-      parent_crm_account_sales_segment,
-      parent_crm_account_sales_segment_grouped,
-      parent_crm_account_geo,
+      parent_crm_account_sales_segment_live,
+      parent_crm_account_sales_segment_grouped_live,
+      parent_crm_account_geo_live,
       retention_arr_band,
       prior_year_arr,
       prior_year_mrr,
@@ -59,6 +60,7 @@ final AS (
       NULL AS prior_year_product_ranking
     FROM rpt_retention_future_parent_account
     WHERE retention_month >= '2023-08-01'
+    
 )
 
 {{ dbt_audit(
