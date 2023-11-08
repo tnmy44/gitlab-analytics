@@ -1,6 +1,6 @@
 {{ simple_cte([
-    ('ptpf_scores', 'ptpf_scores_source')
-    ('prep_namespace', 'ptpf_scores_source'),
+    ('ptpf_scores', 'ptpf_scores_source'),
+    ('prep_namespace', 'prep_namespace'),
     ('gitlab_dotcom_users_source', 'gitlab_dotcom_users_source')
     ])
 }}

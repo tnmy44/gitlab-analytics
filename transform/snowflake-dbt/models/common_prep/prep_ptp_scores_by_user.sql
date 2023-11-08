@@ -73,14 +73,6 @@ SELECT base.ptp_source
     , prior_scores.past_insights
     , prior_scores.past_score_group
     , prior_scores.past_score_date
-    , CASE 
-        WHEN base.ptp_source = 'Trial'
-            THEN prep_ptpt_scores_by_user.insights
-        WHEN base.ptp_source = 'Free'
-            THEN prep_ptpf_scores_by_user.insights
-        WHEN base.ptp_source = 'Lead'
-            THEN prep_ptpl_scores_by_user.insights
-        END AS insights
     , CASE
         WHEN base.ptp_source = 'Trial'
           THEN 'Namespace'
