@@ -346,9 +346,9 @@
   --Opp Data  
 
     sfdc_opportunity.sales_accepted_date,
-    account_history_final.abm_tier_1_date,
-    account_history_final.abm_tier_2_date,
-    account_history_final.abm_tier,
+    -- account_history_final.abm_tier_1_date,
+    -- account_history_final.abm_tier_2_date,
+    -- account_history_final.abm_tier,
     CASE 
       WHEN sfdc_opportunity.is_edu_oss = 0
           AND sfdc_opportunity.stage_name != '10-Duplicate'
@@ -374,9 +374,9 @@
   
   --Opp Data  
     sfdc_opportunity.close_date,
-    account_history_final.abm_tier_1_date,
-    account_history_final.abm_tier_2_date,
-    account_history_final.abm_tier,
+    -- account_history_final.abm_tier_1_date,
+    -- account_history_final.abm_tier_2_date,
+    -- account_history_final.abm_tier,
     CASE 
       WHEN stage_name = 'Closed Won'
         AND close_date BETWEEN valid_from AND valid_to
@@ -393,15 +393,33 @@
     OR abm_tier_2_date IS NOT NULL)
   AND is_abm_tier_closed_won = TRUE
   
+), abm_tier_id AS (
+
+    SELECT
+        dim_crm_opportunity_id
+    FROM sao_base
+    UNION ALL
+    SELECT
+        dim_crm_opportunity_id
+    FROM cw_base
+
+), abm_tier_id_final AS (
+
+    SELECT DISTINCT
+        dim_crm_opportunity_id
+    FROM abm_tier_id
+
 ), abm_tier_unioned AS (
   
 SELECT
-  sao_base.dim_crm_opportunity_id,
+  abm_tier_id_final.dim_crm_opportunity_id,
   is_abm_tier_sao,
   is_abm_tier_closed_won
-FROM sao_base
+FROM abm_tier_id_final
+LEFT JOIN sao_base
+  ON abm_tier_id_final.dim_crm_opportunity_id=sao_base.dim_crm_opportunity_id  
 LEFT JOIN cw_base
-  ON sao_base.dim_crm_opportunity_id=cw_base.dim_crm_opportunity_id    
+  ON abm_tier_id_final.dim_crm_opportunity_id=cw_base.dim_crm_opportunity_id    
 
 ), final AS (
 
@@ -1327,5 +1345,5 @@ LEFT JOIN cw_base
     created_by="@michellecooper",
     updated_by="@rkohnke",
     created_date="2022-02-23",
-    updated_date="2023-11-01"
+    updated_date="2023-11-08"
 ) }}
