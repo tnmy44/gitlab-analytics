@@ -312,6 +312,13 @@ SNOWFLAKE_SALES_ANALYTICS_LOAD_ROLE = Secret(
 )
 
 CLARI_API_KEY = Secret("env", "CLARI_API_KEY", "airflow", "CLARI_API_KEY")
+# Zendesk GCP bucket details.
+ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME = Secret(
+    "env",
+    "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME",
+    "airflow",
+    "ZENDESK_SENSITIVE_EXTRACTION_BUCKET_NAME",
+)
 
 # Writing to GSheets from Jupyter notebooks
 GSHEETS_SERVICE_ACCOUNT_CREDENTIALS = Secret(

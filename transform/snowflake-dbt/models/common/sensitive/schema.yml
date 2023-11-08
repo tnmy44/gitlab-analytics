@@ -423,7 +423,7 @@ models:
       - name: user_limit_enforcement_at
         description: Date time indicating when the marketing contact user_limit_namespace_id entered the user limit enforcement state. More information about this field can be seen [HERE](https://gitlab.com/gitlab-org/gitlab/-/issues/375748)
 
-  - name: poc_pump_marketing_contact_namespace_detail
+  - name: pump_marketing_contact_namespace_detail
     description: >-
       This table contains information of the marketing contact (email address) and namespace information for Gitlab.com users. The grain of the table is one row per email address, the namespace details are then stored in an array
       of JSON objects. 

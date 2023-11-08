@@ -9,6 +9,7 @@
       {{ dbt_utils.surrogate_key(['fct_sales_funnel_partner_alliance_target.sales_funnel_partner_alliance_target_id', 'prep_date.date_day']) }}
                                                                                                                                   AS sales_funnel_partner_alliance_target_daily_pk,
       prep_date.date_day                                                                                                          AS target_date,
+      prep_date.date_id                                                                                                           AS target_date_id,
       DATEADD('day', 1, target_date)                                                                                              AS report_target_date,
       DATEDIFF('day', fct_sales_funnel_partner_alliance_target.first_day_of_month, prep_date.last_day_of_month) + 1               AS days_of_month,
       prep_date.first_day_of_week,
@@ -44,5 +45,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2023-09-20",
-    updated_date="2023-09-20"
+    updated_date="2023-10-27"
 ) }}
