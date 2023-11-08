@@ -2037,7 +2037,7 @@ roles:
                     - prep.sensitive
             tables:
                 read:
-                    - prep.sensitive.poc_pump_marketing_contact_namespace_detail
+                    - prep.sensitive.pump_marketing_contact_namespace_detail
 
     - license_db:
         privileges:
