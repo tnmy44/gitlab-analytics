@@ -441,10 +441,10 @@ models:
         description: Unique identifier for the marketing contact.
         tests:
           - not_null
-    - name: valid_from
+      - name: valid_from
         description: Date that the score is valid from.
         tests:
-          - not_null
+        - not_null
           
   - name: prep_ptp_scores_by_user_historical
     description: '{{ doc("prep_ptp_scores_by_user_historical") }}'
