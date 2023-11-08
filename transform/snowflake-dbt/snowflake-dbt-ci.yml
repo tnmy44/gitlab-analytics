@@ -234,7 +234,7 @@ specify_dbt_parameters:
     - ../../orchestration/clone_dbt_models_select.py $INPUT
 
 📚✏️generate_dbt_docs:
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.2
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.3
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
