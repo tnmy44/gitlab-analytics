@@ -1,6 +1,6 @@
 """
 ## Info about DAG
-This DAG is responsible for doing incremental model refresh for both product, non product model,workspace model followed by dbt-test and dbt-result from Monday to Saturday.
+This DAG is responsible for doing a model refresh for the tables build by the dbt_atifacts package.  This DAG needs to be run when ever table structure changes are introduced in the package and before any other DAGs are run to prevent errors.
 """
 
 import os
@@ -93,7 +93,7 @@ secrets_list = [
 # Create the DAG
 dag = DAG(
     "update_dbt_artifacts",
-    description="This DAG is responsible for doing incremental model refresh",
+    description="This DAG is responsible for updating the dbt_artifacts tables",
     default_args=default_args,
     schedule_interval=None,
     catchup=False,
@@ -104,7 +104,7 @@ dag.doc_md = __doc__
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --select dbt_artifacts; ret=$?;
+    dbt --no-use-colors run --profiles-dir profile --target prod --select package:dbt_artifacts; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
