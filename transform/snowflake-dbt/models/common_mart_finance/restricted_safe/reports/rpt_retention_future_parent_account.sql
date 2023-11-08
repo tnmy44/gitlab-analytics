@@ -59,6 +59,7 @@ final AS (
     COALESCE(cy_arr_with_cy_parent.parent_account_id, py_arr_with_cy_parent.parent_account_id_in_retention_month) AS dim_parent_crm_account_id,
     finalized_arr_months.is_arr_month_finalized                                                                   AS is_arr_month_finalized,
     DATEADD('year', 1, py_arr_with_cy_parent.py_arr_month)                                                        AS retention_month,
+    {{ dbt_utils.surrogate_key(['dim_parent_crm_account_id', 'retention_month']) }}                               AS primary_key,
     IFF(dim_date.is_first_day_of_last_month_of_fiscal_quarter, dim_date.fiscal_quarter_name_fy, NULL)             AS retention_fiscal_quarter_name_fy,
     IFF(dim_date.is_first_day_of_last_month_of_fiscal_year, dim_date.fiscal_year, NULL)                           AS retention_fiscal_year,
     NULL                                                                                                          AS parent_crm_account_sales_segment,
