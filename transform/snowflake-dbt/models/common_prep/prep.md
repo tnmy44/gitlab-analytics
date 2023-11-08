@@ -70,7 +70,7 @@ The scores of this model are then used in mart_marketing_contact and the marketi
 
 {% docs prep_ptp_scores_by_user_historical %}
 
-Takes scores from ptpt_scores, ptpf_scores, ptpl_scores and combines using the following logic to consturct each user's score over time.
+Takes scores from ptpt_scores, ptpf_scores, ptpl_scores and combines using the following logic to construct each user's score over time.
 
 The rules for de-duplication of scores are:
 
