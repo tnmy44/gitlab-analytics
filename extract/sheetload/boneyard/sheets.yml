@@ -3,6 +3,10 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - bronze_sus_responders_fy22q1
+  - name: case_creation_data
+    owner: '@sglad'
+    tabs:
+      - case_data
   - name: country_lat_long
     owner: '@nicolegalang'
     tabs:
