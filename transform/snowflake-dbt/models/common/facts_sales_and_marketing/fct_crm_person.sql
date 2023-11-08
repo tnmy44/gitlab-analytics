@@ -319,8 +319,6 @@ WITH account_dims_mapping AS (
       crm_person.is_bdr_sdr_worked,
       crm_person.is_partner_recalled,
       crm_person.is_lead_source_trial,
-      inquiry_base.is_abm_tier_inquiry,
-      mql_base.is_abm_tier_mql,
 
      -- information fields
       crm_person.name_of_active_sequence,
@@ -377,9 +375,9 @@ WITH account_dims_mapping AS (
 
   --Person Data
     person_final.true_inquiry_date,
-    account_history_final.abm_tier_1_date,
-    account_history_final.abm_tier_2_date,
-    account_history_final.abm_tier,
+    -- account_history_final.abm_tier_1_date,
+    -- account_history_final.abm_tier_2_date,
+    -- account_history_final.abm_tier,
     CASE 
       WHEN true_inquiry_date IS NOT NULL
         AND true_inquiry_date BETWEEN valid_from AND valid_to
@@ -404,9 +402,9 @@ WITH account_dims_mapping AS (
   
   --Person Data
     person_final.mql_datetime_latest_pt,
-    account_history_final.abm_tier_1_date,
-    account_history_final.abm_tier_2_date,
-    account_history_final.abm_tier,
+    -- account_history_final.abm_tier_1_date,
+    -- account_history_final.abm_tier_2_date,
+    -- account_history_final.abm_tier,
     CASE 
       WHEN mql_datetime_latest_pt IS NOT NULL
         AND mql_datetime_latest_pt BETWEEN valid_from AND valid_to
@@ -423,17 +421,44 @@ WITH account_dims_mapping AS (
     OR abm_tier_2_date IS NOT NULL)
   AND is_abm_tier_mql = TRUE
 
+), abm_tier_id AS (
+
+    SELECT
+        dim_crm_person_id
+    FROM inquiry_base
+    UNION ALL
+    SELECT
+        dim_crm_person_id
+    FROM mql_base
+
+), abm_tier_id_final AS (
+
+    SELECT DISTINCT
+        dim_crm_person_id
+    FROM abm_tier_id
+
+), abm_tier_final AS (
+  
+  SELECT DISTINCT
+    abm_tier_id_final.dim_crm_person_id,
+    inquiry_base.is_abm_tier_inquiry,
+    mql_base.is_abm_tier_mql
+  FROM abm_tier_id_final
+  LEFT JOIN inquiry_base
+      ON abm_tier_id_final.dim_crm_person_id=inquiry_base.dim_crm_person_id
+  LEFT JOIN mql_base
+    ON abm_tier_id_final.dim_crm_person_id=mql_base.dim_crm_person_id
+
 ), final AS (
 
   SELECT
     person_final.*,
-    inquiry_base.is_abm_tier_inquiry,
-    mql_base.is_abm_tier_mql
+    abm_tier_final.is_abm_tier_inquiry,
+    abm_tier_final.is_abm_tier_mql
   FROM person_final
-  LEFT JOIN inquiry_base
-      ON person_final.dim_crm_person_id=inquiry_base.dim_crm_person_id
-  LEFT JOIN mql_base
-    ON person_final.dim_crm_person_id=mql_base.dim_crm_person_id
+  LEFT JOIN abm_tier_final
+    ON person_final.dim_crm_person_id=abm_tier_final.dim_crm_person_id
+  
 
 )
 
@@ -442,5 +467,5 @@ WITH account_dims_mapping AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2023-11-01"
+    updated_date="2023-11-08"
 ) }}
