@@ -47,12 +47,10 @@ class SnowflakeManager:
 
         # Queries for database cloning and permissions
         check_db_exists_query = """use database "{0}";"""
-        create_query = """CREATE DATABASE IF NOT EXISTS "{0}" {1};"""
+        create_query = """create or replace database "{0}" {1};"""
         grant_query = """grant ownership on database "{0}" to TRANSFORMER;"""
 
-        clone_schema_query = (
-            """create schema IF NOT EXISTS "{0}"."{1}" clone "{2}"."{1}"; """
-        )
+        clone_schema_query = """create schema "{0}"."{1}" clone "{2}"."{1}"; """
 
         usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
         usage_grant_query_with_params = (
@@ -406,130 +404,6 @@ class SnowflakeManager:
                 logging.info("Granting rights on stage to LOADER")
                 res = query_executor(self.engine, grants_query)
                 logging.info(res[0])
-
-            except ProgrammingError as prg:
-                # Catches permissions errors
-                logging.error(prg._sql_message(as_unicode=False))
-
-    def clone_raw_by_schemas(
-        self,
-        database: str,
-        include_stages: bool = False,
-    ):
-        schema_query = f""" 
-            SELECT DISTINCT table_schema AS table_schema  
-            FROM {database}.INFORMATION_SCHEMA.TABLES 
-            WHERE TABLE_SCHEMA NOT IN ( 
-                SELECT DISTINCT table_schema FROM "{self.raw_database}".INFORMATION_SCHEMA.TABLES
-            )
-            AND TABLE_SCHEMA NOT IN ('INFORMATION_SCHEMA', 'PUBLIC')
-            """
-        try:
-            logging.info(f"Getting schemas {schema_query}")
-            res = query_executor(self.engine, schema_query)
-        except ProgrammingError as prg:
-            # Catches permissions errors
-            logging.error(prg._sql_message(as_unicode=False))
-
-        usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
-
-        logging.info(res)
-        logging.info(res[0])
-        for r in res:
-            try:
-                self.manage_clones(
-                    database="raw",
-                    force=True,
-                    schema=r["table_schema"],
-                    include_stages=True,
-                )
-            except Exception as exc:
-                logging.info(f"{r['schema']} didn't work")
-                logging.info(exc)
-
-    def clone_prod_by_schemas(
-        self,
-        database: str,
-        include_stages: bool = False,
-    ):
-        schema_query = f"SELECT DISTINCT table_schema AS table_schema FROM {database}.INFORMATION_SCHEMA.TABLES"
-        try:
-            logging.info(f"Getting schemas {schema_query}")
-            res = query_executor(self.engine, schema_query)
-        except ProgrammingError as prg:
-            # Catches permissions errors
-            logging.error(prg._sql_message(as_unicode=False))
-
-        usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
-
-        logging.info(res)
-        logging.info(res[0])
-        for r in res:
-            output_query = f""" 
-                CREATE SCHEMA "{self.prod_database}"."{r['table_schema']}"
-                CLONE "{database}"."{r['table_schema']}";
-                """
-            try:
-                logging.info(f"Getting schemas {output_query}")
-                nres = query_executor(self.engine, output_query)
-                logging.info(nres[0])
-
-                grant_on_schema_query_with_params = f"""
-                    grant create table, usage on schema "{self.prod_database}"."{r['table_schema']}" to LOADER;
-                    """
-                query_executor(self.engine, grant_on_schema_query_with_params)
-                grant_on_schema_query_with_params = f"""
-                                    grant create table, usage on schema "{self.prod_database}"."{r['table_schema']}" to TRANSFORMER;
-                                    """
-                query_executor(self.engine, grant_on_schema_query_with_params)
-                grant_on_schema_query_with_params = f"""
-                                    grant create table, usage on schema "{self.prod_database}"."{r['table_schema']}" to ENGINEER;
-                                    """
-                query_executor(self.engine, grant_on_schema_query_with_params)
-
-            except ProgrammingError as prg:
-                # Catches permissions errors
-                logging.error(prg._sql_message(as_unicode=False))
-
-    def clone_prep_by_schemas(
-        self,
-        database: str,
-        include_stages: bool = False,
-    ):
-        schema_query = f"SELECT DISTINCT table_schema AS table_schema FROM {database}.INFORMATION_SCHEMA.TABLES"
-        try:
-            logging.info(f"Getting schemas {schema_query}")
-            res = query_executor(self.engine, schema_query)
-        except ProgrammingError as prg:
-            # Catches permissions errors
-            logging.error(prg._sql_message(as_unicode=False))
-
-        usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
-
-        logging.info(res)
-        logging.info(res[0])
-        for r in res:
-            output_query = f""" 
-                CREATE SCHEMA "{self.prep_database}"."{r['table_schema']}"
-                CLONE "{database}"."{r['table_schema']}";
-                """
-            try:
-                logging.info(f"Getting schemas {output_query}")
-                nres = query_executor(self.engine, output_query)
-                logging.info(nres[0])
-
-                grant_on_schema_query_with_params = f"""
-                    grant create table, usage on schema "{self.prep_database}"."{r['table_schema']}" to LOADER;
-                    """
-                query_executor(self.engine, grant_on_schema_query_with_params)
-                grant_on_schema_query_with_params = f"""
-                                    grant create table, usage on schema "{self.prep_database}"."{r['table_schema']}" to TRANSFORMER;
-                                    """
-                query_executor(self.engine, grant_on_schema_query_with_params)
-                grant_on_schema_query_with_params = f"""
-                                    grant create table, usage on schema "{self.prep_database}"."{r['table_schema']}" to ENGINEER;
-                                    """
-                query_executor(self.engine, grant_on_schema_query_with_params)
 
             except ProgrammingError as prg:
                 # Catches permissions errors
