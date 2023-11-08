@@ -1,22 +1,22 @@
 {{ config(
     materialized='table',
-    tags=["mnpi_exception", "product"]
+    tags=["mnpi", "product"]
 ) }}
 
 {{ simple_cte([
-    ('dim_namespace','dim_namespace'),
-    ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan'),
+  ('dim_namespace','dim_namespace'),
+  ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan'),
 	('dim_user', 'dim_user'),
 	('customers_db_leads', 'customers_db_leads'),
 	('gitlab_dotcom_members', 'gitlab_dotcom_members'),
 	('customers_db_trial_histories', 'customers_db_trial_histories'),
 	('customers_db_charges_xf', 'customers_db_charges_xf'),
 	('mart_event_namespace_daily', 'mart_event_namespace_daily'),
-    ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
+  ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
 	('mart_event_valid', 'mart_event_valid'),
 	('fct_usage_storage', 'fct_usage_storage'),
-    ('dim_marketing_contact_no_pii', 'dim_marketing_contact_no_pii'),
-    ('dim_crm_person', 'dim_crm_person')
+  ('dim_marketing_contact_no_pii', 'dim_marketing_contact_no_pii'),
+  ('dim_crm_person', 'dim_crm_person')
     ])
 }},
 
