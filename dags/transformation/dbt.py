@@ -43,7 +43,6 @@ from kube_secrets import (
 
 from kubernetes_helpers import get_affinity, get_toleration
 
-
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
