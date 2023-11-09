@@ -251,7 +251,7 @@ specify_dbt_parameters:
     - if [ ! -z $EXCLUDE ]; then DBT_EXCLUDE="--exclude $EXCLUDE"; fi
     - echo $DBT_EXCLUDE
     - 'export VARS="key: value"'
-    - export DBT_VARS="--vars '{ $VARS }'
+    - export DBT_VARS="--vars '{ $VARS }'"
     - echo $DBT_VARS
     # - dbt deps $CI_PROFILE_TARGET
     - echo "dbt clone --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET $DBT_STATE $DBT_FAIL_FAST || FAILED=true"
