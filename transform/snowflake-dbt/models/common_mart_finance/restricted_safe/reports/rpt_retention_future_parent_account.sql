@@ -32,13 +32,13 @@ child_account_arrs AS (
     dim_crm_account_id                      AS child_account_id,
     dim_parent_crm_account_id               AS parent_account_id,
     arr_month,
+    product_tier_name                       AS product_category,
+    product_ranking                         AS product_ranking,
     SUM(ZEROIFNULL(mrr))                    AS mrr,
     SUM(ZEROIFNULL(arr))                    AS arr,
-    SUM(ZEROIFNULL(quantity))               AS quantity,
-    ARRAY_AGG(product_tier_name)            AS product_category,
-    MAX(product_ranking)                    AS product_ranking
+    SUM(ZEROIFNULL(quantity))               AS quantity
   FROM rpt_arr
-  {{ dbt_utils.group_by(n=3) }}
+  {{ dbt_utils.group_by(n=5) }}
 
 ),
 
