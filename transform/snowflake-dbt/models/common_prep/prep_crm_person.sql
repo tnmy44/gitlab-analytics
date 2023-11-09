@@ -443,14 +443,14 @@ WITH biz_person AS (
         -- remove a few case where value is only numbers
         WHEN (TRY_TO_NUMBER(two_letter_person_first_country)) IS NOT NULL THEN
              NULL
-        WHEN len(two_letter_person_first_country) = 2 AND country_codes.name IS NOT NULL THEN
+        WHEN LEN(two_letter_person_first_country) = 2 AND country_codes.name IS NOT NULL THEN
             INITCAP(country_codes.name)
-        WHEN len(two_letter_person_first_country) = 2 THEN
+        WHEN LEN(two_letter_person_first_country) = 2 THEN
             -- This condition would be for a country code that isn't on the model
             UPPER(two_letter_person_first_country)
         ELSE
             INITCAP(two_letter_person_first_country)
-      END as person_first_country,
+      END AS person_first_country,
       name,
       prep_date.fiscal_year  AS created_date_fiscal_year,
       CONCAT(
