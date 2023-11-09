@@ -252,7 +252,7 @@ final AS (
     issue_note_move.created_at                                                                                                                                                                                                                                                                          AS issue_moved_at,
     internal_issues.epic_id,
     internal_issues.epic_title,
-    internal_issues.epic_labels,
+    ARRAY_TO_STRING(internal_issues.epic_labels, '|')                                                                                                                                                                                                                                                   AS epic_labels,
     internal_issues.epic_state
   FROM internal_issues
   LEFT JOIN {{ ref('dim_project') }} AS projects
