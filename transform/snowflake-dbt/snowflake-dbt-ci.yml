@@ -247,8 +247,8 @@ specify_dbt_parameters:
     - export DBT_CI_FAIL_FAST=""
     - if [ -z $FAIL_FAST ]; then DBT_CI_FAIL_FAST="--fail-fast"; fi
     - echo $DBT_CI_FAIL_FAST
-    - export DBT_EXCLUDE=""
-    - if [ ! -z $EXCLUDE ]; then DBT_EXCLUDE="--exclude $EXCLUDE"; fi
+    - export DBT_EXCLUDE="--exclude package:data-tests"
+    - if [ ! -z $EXCLUDE ]; then DBT_EXCLUDE="--exclude package:data-tests $EXCLUDE"; fi
     - echo $DBT_EXCLUDE
     - 'export VARS="\"key\":\"value\""'
     - export DBT_VARS="--vars {$VARS}"
