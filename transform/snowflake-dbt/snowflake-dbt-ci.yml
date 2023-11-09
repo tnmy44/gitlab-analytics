@@ -250,8 +250,8 @@ specify_dbt_parameters:
     - export DBT_EXCLUDE=""
     - if [ ! -z $EXCLUDE ]; then DBT_EXCLUDE="--exclude $EXCLUDE"; fi
     - echo $DBT_EXCLUDE
-    - 'export VARS="\"key\": \"value\""'
-    - export DBT_VARS="--vars \"{$VARS}\""
+    - 'export VARS="\"key\":\"value\""'
+    - export DBT_VARS="--vars '{$VARS}'"
     - echo $DBT_VARS
     - echo "dbt deps $CI_PROFILE_TARGET"
     - dbt deps $CI_PROFILE_TARGET
