@@ -237,9 +237,7 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_LOAD_DATABASE
     - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/
     - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/manifest.json https://dbt.gitlabdata.com/manifest.json
-    # - dbt deps $CI_PROFILE_TARGET
-    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
-    - echo $DBT_RUNNER
+    
     - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XS_WAREHOUSE}
     - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     - export DBT_STATE="--state reference_state"
@@ -252,8 +250,11 @@ specify_dbt_parameters:
     - export DBT_EXCLUDE=""
     - if [ ! -z $EXCLUDE ]; then DBT_EXCLUDE="--exclude $EXCLUDE"; fi
     - echo $DBT_EXCLUDE
+    - 'export DBT_VARS="key: value"'
+    - echo $DBT_VARS
+    # - dbt deps $CI_PROFILE_TARGET
     - echo "dbt clone --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET $DBT_STATE $DBT_FAIL_FAST || FAILED=true"
-    - echo "dbt build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE $DBT_FAIL_FAST || FAILED=true"
+    - echo "dbt build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE $DBT_FAIL_FAST  --vars '{' $DBT_VARS '}' || FAILED=true"
     - if [ $FAILED ]; then exit 1; fi
 
 # ======
