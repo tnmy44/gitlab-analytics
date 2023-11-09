@@ -250,11 +250,12 @@ specify_dbt_parameters:
     - export DBT_EXCLUDE=""
     - if [ ! -z $EXCLUDE ]; then DBT_EXCLUDE="--exclude $EXCLUDE"; fi
     - echo $DBT_EXCLUDE
-    - 'export DBT_VARS="key: value"'
+    - 'export VARS="key: value"'
+    - export DBT_VARS="--vars '{ $VARS }'
     - echo $DBT_VARS
     # - dbt deps $CI_PROFILE_TARGET
     - echo "dbt clone --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET $DBT_STATE $DBT_FAIL_FAST || FAILED=true"
-    - echo "dbt build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE $DBT_FAIL_FAST  --vars '{' $DBT_VARS '}' || FAILED=true"
+    - echo "dbt build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE $DBT_FAIL_FAST $DBT_VARS || FAILED=true"
     - if [ $FAILED ]; then exit 1; fi
 
 # ======
