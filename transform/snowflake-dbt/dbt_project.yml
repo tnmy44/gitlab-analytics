@@ -56,10 +56,6 @@ seeds:
     - "{{ mask_model() }}"
   +query_tag: dbt
 
-  data_tests:
-    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
-    +schema: tdf
-
   gitlab_snowflake:
     director_location_factors:
       +column_types:
