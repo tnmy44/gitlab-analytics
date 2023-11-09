@@ -76,7 +76,7 @@ code_suggestions_joined_to_fact_and_dim AS (
     CASE
       WHEN user_agent LIKE '%3.76.0 VSCode%' THEN TRUE --exclude events which carry the version in user_agent from the code_suggestions_context
       WHEN ide_name = 'Visual Studio Code' AND extension_version = '3.76.0' THEN TRUE --exclude events from with version from the ide_extension_version context
-      ELSE TRUE
+      ELSE FALSE
     END AS is_event_to_exclude
   FROM joined_code_suggestions_contexts
   INNER JOIN fct_behavior_structured_event
