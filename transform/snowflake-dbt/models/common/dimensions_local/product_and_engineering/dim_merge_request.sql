@@ -18,6 +18,7 @@ WITH prep_merge_request AS (
 
       -- FOREIGN KEYS
       dim_project_sk,
+      dim_project_sk_target,
       dim_namespace_sk,
       ultimate_parent_namespace_id,
       created_date_id,
@@ -56,6 +57,7 @@ WITH prep_merge_request AS (
       is_community_contributor_related,
       is_included_in_engineering_metrics,
       is_part_of_product,
+      namespace_is_internal,
 
       merged_at,
       first_comment_at,
@@ -78,5 +80,5 @@ WITH prep_merge_request AS (
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2023-10-31"
+    updated_date="2023-11-09"
 ) }}
