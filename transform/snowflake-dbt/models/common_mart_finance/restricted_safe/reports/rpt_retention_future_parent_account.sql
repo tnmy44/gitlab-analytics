@@ -34,7 +34,9 @@ child_account_arrs AS (
     arr_month,
     SUM(ZEROIFNULL(mrr))                    AS mrr,
     SUM(ZEROIFNULL(arr))                    AS arr,
-    SUM(ZEROIFNULL(quantity))               AS quantity
+    SUM(ZEROIFNULL(quantity))               AS quantity,
+    ARRAY_AGG(product_tier_name)            AS product_category,
+    MAX(product_ranking)                    AS product_ranking
   FROM rpt_arr
   {{ dbt_utils.group_by(n=3) }}
 
@@ -47,6 +49,8 @@ py_arr_with_cy_parent AS (
     DATEADD('year', 1, child_account_arrs.arr_month)            AS retention_month,
     dim_crm_account_daily_snapshot.dim_parent_crm_account_id    AS parent_account_id_in_retention_month,
     DATEADD('year', 1, dim_date.snapshot_date_fpa)              AS retention_period_snapshot_date,
+    ARRAY_AGG(product_category)                                 AS py_product_category,
+    MAX(product_ranking)                                        AS py_product_ranking,
     SUM(ZEROIFNULL(child_account_arrs.mrr))                     AS py_mrr,
     SUM(ZEROIFNULL(child_account_arrs.arr))                     AS py_arr,
     SUM(ZEROIFNULL(child_account_arrs.quantity))                AS py_quantity
@@ -67,9 +71,11 @@ cy_arr_with_cy_parent AS (
   SELECT
     parent_account_id,
     arr_month,
-    SUM(ZEROIFNULL(mrr))      AS retained_mrr,
-    SUM(ZEROIFNULL(arr))      AS retained_arr,
-    SUM(ZEROIFNULL(quantity)) AS retained_quantity
+    SUM(ZEROIFNULL(mrr))            AS retained_mrr,
+    SUM(ZEROIFNULL(arr))            AS retained_arr,
+    SUM(ZEROIFNULL(quantity))       AS retained_quantity,
+    ARRAY_AGG(product_category)     AS retained_product_category,
+    MAX(product_ranking)            AS retained_product_ranking
   FROM child_account_arrs
   {{ dbt_utils.group_by(n=2) }}
 
@@ -88,6 +94,10 @@ final AS (
     dim_crm_account_live.parent_crm_account_sales_segment_live                                                    AS parent_crm_account_sales_segment_live,
     dim_crm_account_live.parent_crm_account_sales_segment_grouped_live                                            AS parent_crm_account_sales_segment_grouped_live,
     dim_crm_account_live.parent_crm_account_geo_live                                                              AS parent_crm_account_geo_live,
+    cy_arr_with_cy_parent.retained_product_category                                                               AS net_retention_product_category,
+    py_arr_with_cy_parent.py_product_category                                                                     AS prior_year_product_category,
+    cy_arr_with_cy_parent.retained_product_ranking                                                                AS net_retention_product_ranking,
+    py_arr_with_cy_parent.py_product_ranking                                                                      AS prior_year_product_ranking,
     CASE
       WHEN SUM(ZEROIFNULL(py_arr_with_cy_parent.py_arr)) > 100000 THEN '1. ARR > $100K'
       WHEN SUM(ZEROIFNULL(py_arr_with_cy_parent.py_arr)) <= 100000 AND SUM(ZEROIFNULL(py_arr_with_cy_parent.py_arr)) > 5000 THEN '2. ARR $5K-100K'
@@ -119,7 +129,7 @@ final AS (
   LEFT JOIN dim_crm_account_live
     ON dim_crm_account_live.dim_crm_account_id_live = dim_parent_crm_account_id
 
-  {{ dbt_utils.group_by(n=10) }}
+  {{ dbt_utils.group_by(n=14) }}
 
 )
 

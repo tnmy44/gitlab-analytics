@@ -18,9 +18,9 @@ final AS (
       parent_crm_account_geo                    AS parent_crm_account_geo_live,
       retention_arr_band,
       prior_year_arr,
-      NULL AS prior_year_mrr,
+      prior_year_mrr,
       net_retention_arr,
-      NULL AS net_retention_mrr,
+      net_retention_mrr,
       churn_arr,
       gross_retention_arr,
       prior_year_quantity,
@@ -54,10 +54,10 @@ final AS (
       gross_retention_arr,
       prior_year_quantity,
       net_retention_quantity,
-      NULL AS net_retention_product_category,
-      NULL AS prior_year_product_category,
-      NULL AS net_retention_product_ranking,
-      NULL AS prior_year_product_ranking
+      net_retention_product_category,
+      prior_year_product_category,
+      net_retention_product_ranking,
+      prior_year_product_ranking
     FROM rpt_retention_future_parent_account
     WHERE retention_month >= '2023-08-01'
     
