@@ -52,6 +52,8 @@ models:
         description: '{{ doc("ide_extension_ide_vendor") }}'
       - name: ide_version
         description: '{{ doc("ide_extension_ide_version") }}'
+      - name: language_server_version
+        description: '{{ doc("ide_extension_language_server_version") }}'
 
   - name: fct_behavior_structured_event_code_suggestions_context
     description: Derived fact table that parses out the code_suggestions_context context based on the [schema](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema) which can optionally be sent with an event.
@@ -140,6 +142,8 @@ models:
         description: '{{ doc("ide_extension_ide_vendor") }}'
       - name: ide_version
         description: '{{ doc("ide_extension_ide_version") }}'
+      - name: language_server_version
+        description: '{{ doc("ide_extension_language_server_version") }}'
       - name: contexts
         description: '{{ doc("contexts") }}'
       - name: code_suggestions_context

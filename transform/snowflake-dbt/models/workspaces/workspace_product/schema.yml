@@ -252,6 +252,8 @@ models:
         description: '{{ doc("ide_extension_ide_vendor") }}'
       - name: ide_version
         description: '{{ doc("ide_extension_ide_version") }}'
+      - name: language_server_version
+        description: '{{ doc("ide_extension_language_server_version") }}'
       - name: requested_at
         description: Timestamp of the `suggestion_requested` event. This event is sent when the IDE extension requests a suggestion from the backend.
       - name: loaded_at
