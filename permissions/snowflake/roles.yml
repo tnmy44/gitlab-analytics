@@ -1404,6 +1404,23 @@ roles:
                 read:
                     - prod.boneyard.*
 
+    - bizible:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.bizible
+                    - raw.bizible
+            tables:
+                read:
+                    - prep.bizible.*
+                    - raw.bizible.*
+
     - bi_tool_eval_db:
         warehouses:
             - reporting
