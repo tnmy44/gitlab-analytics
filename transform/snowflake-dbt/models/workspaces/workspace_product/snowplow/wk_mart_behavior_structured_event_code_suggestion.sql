@@ -36,7 +36,7 @@ ide_extension_version_context AS (
 joined_code_suggestions_contexts AS (
 
   /*
-  All Code Suggestions-related events have the code_suggestions_context, but only a subset 
+  All Code Suggestions-related events have the code_suggestions_context, but only a subset
   have the ide_extension_version_context.
   */
 
@@ -51,6 +51,11 @@ joined_code_suggestions_contexts AS (
   FROM code_suggestions_context
   LEFT JOIN ide_extension_version_context
     ON code_suggestions_context.behavior_structured_event_pk = ide_extension_version_context.behavior_structured_event_pk
+  {% if is_incremental() %}
+
+    WHERE code_suggestions_context.behavior_at >= (SELECT MAX(behavior_at) FROM {{ this }})
+
+  {% endif %}
 
 ),
 

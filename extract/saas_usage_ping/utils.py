@@ -93,6 +93,10 @@ class Utils:
         "counts_weekly.batched_background_migration_count_failed_jobs_metric",
     )
 
+    # Map table which are renamed on the source side
+
+    RENAMED_TABLE_MAPPING = {"p_ci_builds": "ci_builds"}
+
     def __init__(self):
         config_dict = env.copy()
 
@@ -190,3 +194,10 @@ class Utils:
         timestamp_encoded = str(input_timestamp).encode(encoding=self.ENCODING)
 
         return md5(timestamp_encoded).hexdigest()
+
+    def get_metric_table_name(self, table_name: str) -> str:
+        """
+        Return table name from dict.
+        If table name is not in dict, return the original name
+        """
+        return self.RENAMED_TABLE_MAPPING.get(table_name, table_name)
