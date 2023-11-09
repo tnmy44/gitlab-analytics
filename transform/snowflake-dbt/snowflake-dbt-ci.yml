@@ -10,7 +10,7 @@
     - echo $SNOWFLAKE_PROD_DATABASE
     - export SNOWFLAKE_LOAD_DATABASE="RAW" # dbt pulls from RAW
     - echo $SNOWFLAKE_LOAD_DATABASE
-    - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_XS_WAREHOUSE
+    - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XS_WAREHOUSE}
     - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     - export SNOWFLAKE_SNAPSHOT_DATABASE="SNOWFLAKE"
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
@@ -20,6 +20,8 @@
     - echo $CI_PROFILE_TARGET
     - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
     - echo $DBT_RUNNER
+    - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/
+    - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/manifest.json https://dbt.gitlabdata.com/manifest.json
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa
     - chmod 700 ~/.ssh
@@ -228,36 +230,37 @@ specify_dbt_parameters:
       - transform/snowflake-dbt/defer_manifest
       - transform/snowflake-dbt/dbt_packages
 
-🫸test_defer:
+🏗️🏭build_changes:
   <<: *snowflake_dbt_jobs
   script:
     - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"
     - echo $SNOWFLAKE_LOAD_DATABASE
-    - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/
-    - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/manifest.json https://dbt.gitlabdata.com/manifest.json
+    # - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/
+    # - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/manifest.json https://dbt.gitlabdata.com/manifest.json
     
-    - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XS_WAREHOUSE}
-    - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
-    - export DBT_STATE="--state reference_state"
-    - echo $DBT_STATE
-    - export DBT_SELECTION="state:modified."${STATE_MODIFIED:-"body"}${DOWNSTREAM:-""}
-    - echo $DBT_SELECTION
+    # - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XS_WAREHOUSE}
+    # - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
+    - export DBT_CI_STATE="--state reference_state"
+    - echo $DBT_CI_STATE
+    - export DBT_CI_SELECTION="state:modified."${STATE_MODIFIED:-"body"}${DOWNSTREAM:-""}
+    - echo $DBT_CI_SELECTION
     - export DBT_CI_FAIL_FAST=""
     - if [ -z $FAIL_FAST ]; then DBT_CI_FAIL_FAST="--fail-fast"; fi
     - echo $DBT_CI_FAIL_FAST
-    - export DBT_EXCLUDE="--exclude package:data_tests"
-    - if [ ! -z $EXCLUDE ]; then DBT_EXCLUDE="--exclude package:data_tests $EXCLUDE"; fi
-    - echo $DBT_EXCLUDE
-    - 'export VARS="\"key\":\"value\""'
-    - export DBT_VARS="--vars {$VARS}"
-    - echo $DBT_VARS
-    - echo "dbt deps $CI_PROFILE_TARGET"
+    - export DBT_CI_EXCLUDE="--exclude package:data_tests"
+    - if [ ! -z $EXCLUDE ]; then DBT_CI_EXCLUDE="--exclude package:data_tests $EXCLUDE"; fi
+    - echo $DBT_CI_EXCLUDE
+    # VARS format "key":"value","key":"value"
+    - export DBT_CI_VARS=""
+    - if [ ! -z $VARS ]; then DBT_CI_VARS="--vars {$VARS}"; fi
+    - echo $DBT_CI_VARS
+    # - echo "dbt deps $CI_PROFILE_TARGET"
     - dbt deps $CI_PROFILE_TARGET
-    - echo "dbt clone --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET $DBT_STATE $DBT_CI_FAIL_FAST || FAILED=true"
-    - echo "dbt build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE $DBT_CI_FAIL_FAST $DBT_VARS || FAILED=true"
-    - dbt $DBT_CI_FAIL_FAST build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE  $DBT_VARS || FAILED=true
+    - dbt clone --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET $DBT_CI_STATE $DBT_CI_FAIL_FAST || FAILED=true
+    # - echo "dbt build --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_CI_STATE $DBT_CI_FAIL_FAST $DBT_CI_VARS || FAILED=true"
+    - dbt $DBT_CI_FAIL_FAST build --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_CI_STATE  $DBT_CI_VARS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
 # ======
