@@ -258,7 +258,7 @@ specify_dbt_parameters:
     - echo $DBT_CI_VARS
     # - echo "dbt deps $CI_PROFILE_TARGET"
     - dbt deps $CI_PROFILE_TARGET
-    - dbt clone --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET $DBT_CI_STATE $DBT_CI_FAIL_FAST || FAILED=true
+    - dbt $DBT_CI_FAIL_FAST clone --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET $DBT_CI_STATE || FAILED=true
     # - echo "dbt build --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_CI_STATE $DBT_CI_FAIL_FAST $DBT_CI_VARS || FAILED=true"
     - dbt $DBT_CI_FAIL_FAST build --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_CI_STATE  $DBT_CI_VARS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
