@@ -244,9 +244,9 @@ specify_dbt_parameters:
     - echo $DBT_STATE
     - export DBT_SELECTION="state:modified."${STATE_MODIFIED:-"body"}${DOWNSTREAM:-""}
     - echo $DBT_SELECTION
-    - export DBT_FAIL_FAST=""
-    - if [ -z $FAIL_FAST ]; then DBT_FAIL_FAST="--fail-fast"; fi
-    - echo $DBT_FAIL_FAST
+    - export DBT_CI_FAIL_FAST=""
+    - if [ -z $FAIL_FAST ]; then DBT_CI_FAIL_FAST="--fail-fast"; fi
+    - echo $DBT_CI_FAIL_FAST
     - export DBT_EXCLUDE=""
     - if [ ! -z $EXCLUDE ]; then DBT_EXCLUDE="--exclude $EXCLUDE"; fi
     - echo $DBT_EXCLUDE
@@ -255,9 +255,9 @@ specify_dbt_parameters:
     - echo $DBT_VARS
     - echo "dbt deps $CI_PROFILE_TARGET"
     - dbt deps $CI_PROFILE_TARGET
-    - echo "dbt clone --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET $DBT_STATE $DBT_FAIL_FAST || FAILED=true"
-    - echo "dbt build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE $DBT_FAIL_FAST $DBT_VARS || FAILED=true"
-    - dbt $DBT_FAIL_FAST build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE  $DBT_VARS || FAILED=true
+    - echo "dbt clone --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET $DBT_STATE $DBT_CI_FAIL_FAST || FAILED=true"
+    - echo "dbt build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE $DBT_CI_FAIL_FAST $DBT_VARS || FAILED=true"
+    - dbt $DBT_CI_FAIL_FAST build --select $DBT_SELECTION $DBT_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_STATE  $DBT_VARS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
 # ======
