@@ -230,23 +230,7 @@ Below checklist of activities would be run once for quarter to validate security
    - [ ] SAFE Intermediate Space
 
 ## TRUSTED DATA
-1. [ ] Review all Golden Record TD tests and make sure they're passing.
-
-    <details>
-
-    * [ ] Run below SQL script to perform the check.
-
-     ```sql
-
-    SELECT *  
-    FROM "PROD"."WORKSPACE_DATA"."DBT_TEST_RESULTS" 
-    WHERE test_unique_id LIKE '%raw_golden_data%' 
-    AND test_status <>'pass' 
-    ORDER BY results_generated_at DESC ;				
-				
-    ```
-
-2.  [ ] Review Data Siren to confirm known existence of RED data.
+1.  [ ] Review Data Siren to confirm known existence of RED data.
 
     <details>
     
