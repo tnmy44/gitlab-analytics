@@ -5287,6 +5287,8 @@ roles:
     - tableau:
         warehouses:
             - reporting
+        member_of:
+            - reporter
 
     - tableau_loader:
         warehouses:
@@ -6062,7 +6064,6 @@ users:
         can_login: yes
         member_of:
             - tableau
-            - reporter
 
     - tableau_loader:
         can_login: yes
