@@ -23,6 +23,7 @@ gitlab-qa-sandbox-group,4909902
 gitlab-sirt,52999839
 gitlab-internal/trust-and-safety,8737881
 gitlab-com/gl-security/security-operations/sirt,8614184
+gitlab-com/gl-security/security-operations/trust-and-safety,8614186
 gitlab-com/gl-security/security-operations/gitlab-sirt-public,71873865
 gitlab-com/gl-security/security-operations/managers,13207547
 gitlab-com/gl-security/security-operations/infrastructure-security-public,12369013
