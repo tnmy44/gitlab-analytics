@@ -62,7 +62,6 @@ models:
           - unique
 
   - name: rpt_retention_parent_account_combined
-    description:
     columns:
       - name: primary_key
         tests:
