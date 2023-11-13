@@ -467,6 +467,13 @@ models:
         description: Unique identifier for the marketing contact.
         tests:
           - not_null
+      - name: score_date
+        description: Date of the score.
+        tests:
+          - not_null
+      - name: CONCAT(dim_marketing_contact_id, score_date)
+        tests:
+          - not_null
           - unique
 
   - name: prep_ptpf_scores_by_user
@@ -476,6 +483,13 @@ models:
         description: Unique identifier for the marketing contact.
         tests:
           - not_null
+      - name: score_date
+        description: Date of the score.
+        tests:
+          - not_null
+      - name: CONCAT(dim_marketing_contact_id, score_date)
+        tests:
+          - not_null
           - unique
 
   - name: prep_ptpl_scores_by_user
@@ -483,6 +497,13 @@ models:
     columns:
       - name: dim_marketing_contact_id
         description: Unique identifier for the marketing contact.
+        tests:
+          - not_null
+      - name: score_date
+        description: Date of the score.
+        tests:
+          - not_null
+      - name: CONCAT(dim_marketing_contact_id, score_date)
         tests:
           - not_null
           - unique
