@@ -233,6 +233,7 @@ specify_dbt_parameters:
 🏗️🏭build_changes:
   <<: *snowflake_dbt_jobs
   script:
+    - set +e
     - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"
@@ -248,8 +249,8 @@ specify_dbt_parameters:
     - export DBT_CI_FAIL_FAST=""
     - if [ -z $FAIL_FAST ]; then DBT_CI_FAIL_FAST="--fail-fast"; fi
     - echo $DBT_CI_FAIL_FAST
-    - export DBT_CI_EXCLUDE="--exclude package:data_tests"
-    - if [ ! -z $EXCLUDE ]; then DBT_CI_EXCLUDE="--exclude package:data_tests $EXCLUDE"; fi
+    - export DBT_CI_EXCLUDE=""
+    - if [ ! -z $EXCLUDE ]; then DBT_CI_EXCLUDE="--exclude $EXCLUDE"; fi
     - echo $DBT_CI_EXCLUDE
     # VARS format "key":"value","key":"value"
     - export DBT_CI_VARS=""
