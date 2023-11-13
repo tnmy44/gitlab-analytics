@@ -44,7 +44,7 @@
   SELECT
     COALESCE(prep_ptpt_scores_by_user.dim_marketing_contact_id,
       prep_ptpf_scores_by_user.dim_marketing_contact_id,
-      prep_ptpt_scores_by_user.dim_marketing_contact_id)                  AS dim_marketing_contact_id_combined,
+      prep_ptpl_scores_by_user.dim_marketing_contact_id)                  AS dim_marketing_contact_id_combined,
     COALESCE(prep_ptpt_scores_by_user.score_date,
       prep_ptpf_scores_by_user.score_date,
       prep_ptpl_scores_by_user.score_date)                                AS score_date_combined,
