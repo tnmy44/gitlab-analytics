@@ -240,12 +240,14 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_LOAD_DATABASE
     - export DBT_CI_STATE="--state reference_state"
     - echo $DBT_CI_STATE
-    - DBT_CI_SELECTION=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/.sql/$DOWNSTREAM/g" )
+    - DBT_CI_CHANGES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/.sql/$DOWNSTREAM/g" )
     # Getting the most current reference state will include any changes from other merged branches
     # If we can get the reference from the HEAD of the branch this could be solved.
     # - export DBT_CI_SELECTION="state:modified."${STATE_MODIFIED:-"body"}${DOWNSTREAM:-""}
+    - export DBT_CI_SELECTION=""
+    - if [ -z $SELECTION ]; then DBT_CI_SELECTION=$DBT_CI_CHANGES; else DBT_CI_SELECTION=$SELECTION; fi
     - echo $DBT_CI_SELECTION
-    - if [ -z $DBT_CI_SELECTION ]; then echo "Can not find changes models for selection." && exit 3; fi 
+    - if [ -z $DBT_CI_SELECTION ]; then echo "No models selected." && exit 3; fi 
     - export DBT_CI_FAIL_FAST=""
     - if [ -z $FAIL_FAST ]; then DBT_CI_FAIL_FAST="--fail-fast"; fi
     - echo $DBT_CI_FAIL_FAST
