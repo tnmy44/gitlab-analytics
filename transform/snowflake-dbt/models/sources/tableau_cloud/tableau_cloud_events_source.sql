@@ -33,5 +33,6 @@ renamed AS (
   FROM source
 )
 
-SELECT *
+SELECT 
+  *
 FROM renamed
