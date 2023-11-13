@@ -237,15 +237,14 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"
     - echo $SNOWFLAKE_LOAD_DATABASE
-    # - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/
-    # - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/manifest.json https://dbt.gitlabdata.com/manifest.json
-    
-    # - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XS_WAREHOUSE}
-    # - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     - export DBT_CI_STATE="--state reference_state"
     - echo $DBT_CI_STATE
-    - export DBT_CI_SELECTION="state:modified."${STATE_MODIFIED:-"body"}${DOWNSTREAM:-""}
+    - DBT_CI_SELECTION=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/.sql/$DOWNSTREAM/g" )
+    # Getting the most current reference state will include any changes from other merged branches
+    # If we can get the reference from the HEAD of the branch this could be solved.
+    # - export DBT_CI_SELECTION="state:modified."${STATE_MODIFIED:-"body"}${DOWNSTREAM:-""}
     - echo $DBT_CI_SELECTION
+    - if [ -z $DBT_CI_SELECTION ]; then exit 3; fi && echo "Can not find changes models for selection."
     - export DBT_CI_FAIL_FAST=""
     - if [ -z $FAIL_FAST ]; then DBT_CI_FAIL_FAST="--fail-fast"; fi
     - echo $DBT_CI_FAIL_FAST
