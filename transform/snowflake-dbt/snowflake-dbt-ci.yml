@@ -245,7 +245,7 @@ specify_dbt_parameters:
     # If we can get the reference from the HEAD of the branch this could be solved.
     # - export DBT_CI_SELECTION="state:modified."${STATE_MODIFIED:-"body"}${DOWNSTREAM:-""}
     - echo $DBT_CI_SELECTION
-    - if [ -z $DBT_CI_SELECTION ]; then exit 3; fi && echo "Can not find changes models for selection."
+    - if [ -z $DBT_CI_SELECTION ]; then echo "Can not find changes models for selection." && exit 3; fi 
     - export DBT_CI_FAIL_FAST=""
     - if [ -z $FAIL_FAST ]; then DBT_CI_FAIL_FAST="--fail-fast"; fi
     - echo $DBT_CI_FAIL_FAST
