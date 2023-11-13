@@ -2774,13 +2774,13 @@ models:
   - name: dim_merge_request
     description: '{{ doc("dim_merge_request") }}'
     columns:
-      - name: dim_merge_request_id
+      - name: dim_merge_request_sk
         description: The unique identifier for each of the merge requets.
         tests:
           - not_null
           - unique
-      - name: dim_project_id
-      - name: dim_plan_id
+      - name: dim_project_sk
+      - name: dim_plan_sk_at_creation
         tests:
           - not_null
 
