@@ -7,10 +7,11 @@
   ('dim_namespace','dim_namespace'),
   ('prep_gitlab_dotcom_plan', 'prep_gitlab_dotcom_plan'),
 	('dim_user', 'dim_user'),
-	('customers_db_leads', 'customers_db_leads'),
+	('prep_lead', 'prep_lead'),
 	('gitlab_dotcom_members', 'gitlab_dotcom_members'),
-	('customers_db_trial_histories', 'customers_db_trial_histories'),
-	('customers_db_charges_xf', 'customers_db_charges_xf'),
+	('prep_namespace_order_trial', 'prep_namespace_order_trial'),
+  ('mart_charge', 'mart_charge'),
+  ('dim_product_tier', 'dim_product_tier'),
 	('mart_event_namespace_daily', 'mart_event_namespace_daily'),
   ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
 	('mart_event_valid', 'mart_event_valid'),
@@ -40,8 +41,8 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     FROM dim_namespace
     INNER JOIN prep_gitlab_dotcom_plan plan
       ON dim_namespace.gitlab_plan_id = plan.dim_plan_id
-    LEFT JOIN customers_db_leads AS pql -- legacy schema
-      ON pql.namespace_id = dim_namespace.dim_namespace_id
+    LEFT JOIN prep_lead AS pql 
+      ON pql.dim_namespace_id = dim_namespace.dim_namespace_id
       AND pql.product_interaction = 'Hand Raise PQL' 
     LEFT JOIN dim_user 
       ON dim_user.dim_user_id = dim_namespace.creator_id
@@ -59,8 +60,8 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       trials.start_date::DATE                                      AS trial_start_date, 
       DATEDIFF('days', namespace_created_date, trial_start_date)   AS days_since_namespace_creation_at_trial
     FROM namespaces
-    INNER JOIN customers_db_trial_histories AS trials -- legacy schema
-      ON namespaces.ultimate_parent_namespace_id = trials.gl_namespace_id
+    INNER JOIN prep_namespace_order_trial AS trials
+      ON namespaces.ultimate_parent_namespace_id = trials.dim_namespace_id
 
 ), charges AS ( --First paid subscription for ultimate namespace
 
@@ -69,14 +70,17 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
       charges.subscription_start_date                              AS first_paid_subscription_start_date,
       DATEDIFF('days', namespace_created_date, charges.subscription_start_date)   
                                                                    AS days_since_namespace_creation_at_first_paid_subscription,
-      SPLIT_PART(charges.product_category, ' - ', 2)               AS first_paid_plan_name, --product_category: SaaS - Premium, SaaS - Ultimate, etc
-      charges.is_purchased_through_subscription_portal             AS first_paid_plan_purchased_through_subscription_portal
+      SPLIT_PART(product_tier.product_tier_name, ' - ', 2)         AS first_paid_plan_name, --product_category: SaaS - Premium, SaaS - Ultimate, etc
+      IFF(charges.subscription_created_by_id IN ('2c92a0fd55822b4d015593ac264767f2','2c92a0107bde3653017bf00cd8a86d5a'),
+           TRUE, FALSE)                                            AS first_paid_plan_purchased_through_subscription_portal -- logic to be moved to fact_charge model
     FROM namespaces
-    INNER JOIN customers_db_charges_xf AS charges -- legacy schema
-      ON namespaces.ultimate_parent_namespace_id = charges.current_gitlab_namespace_id::INT
-    WHERE charges.product_category != 'Storage' --exclude storage payments
-      AND charges.product_category NOT LIKE 'Self-Managed%' --exclude SM plans
-      AND charges.current_gitlab_namespace_id IS NOT NULL
+    INNER JOIN mart_charge charges
+      ON namespaces.ultimate_parent_namespace_id = charges.ultimate_parent_namespace_id
+    INNER JOIN product_tier
+      ON namespaces.dim_product_tier_id = product_tier.dim_product_tier_id
+    WHERE product_tier.product_tier_name != 'Storage' --exclude storage payments
+      AND product_tier.product_tier_name NOT LIKE 'Self-Managed%' --exclude SM plans
+      AND charges.dim_namespace_id IS NOT NULL
       AND charges.mrr > 0
     QUALIFY ROW_NUMBER() OVER(PARTITION BY namespaces.ultimate_parent_namespace_id ORDER BY charges.subscription_start_date)  = 1
 
@@ -370,8 +374,8 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
 
 {{ dbt_audit(
     cte_ref="base",
-    created_by="@eneuberger",
-    updated_by="@eneuberger",
-    created_date="2023-02-14",
-    updated_date="2023-08-18"
+    created_by="@snalamaru",
+    updated_by="@snalamaru",
+    created_date="2023-11-10",
+    updated_date="2023-11-10"
 ) }}
