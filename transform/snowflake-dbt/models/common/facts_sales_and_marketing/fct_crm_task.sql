@@ -46,10 +46,10 @@
   LEFT JOIN prep_crm_opportunity ON
       prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
   LEFT JOIN prep_crm_opportunity AS account_opp_mapping 
-  ON prep_crm_task.account_or_opportunity_id = account_opp_mapping.dim_crm_account_id
+  ON NVL(prep_crm_task.dim_crm_account_id, prep_crm_task.account_or_opportunity_id) = account_opp_mapping.dim_crm_account_id
     AND prep_crm_task.task_date < account_opp_mapping.close_date
     AND prep_crm_task.task_date >= DATEADD('month', -9, account_opp_mapping.close_fiscal_quarter_date)
-  WHERE prep_crm_task.sa_activity_type IS NOT NULL
+WHERE prep_crm_task.sa_activity_type IS NOT NULL
   ), 
   
 converted_leads AS (
