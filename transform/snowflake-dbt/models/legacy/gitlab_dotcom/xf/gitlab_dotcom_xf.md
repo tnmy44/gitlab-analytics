@@ -157,30 +157,6 @@ This model contains the history of assignments, unassignments, and reassignments
 {% enddocs %}
 
 
-{% docs gitlab_dotcom_merge_requests_xf%}
-
-Adds associated labels for Merge Requests when these exist.
-
-In order to achieve that we first join issues to the `label links` relation table, and then use that to join to the labels
-table.
-
-The labels are filtered in a CTE to only include `target_type = MergeRequest` as the labels table contains both Issue and Merge Request information and misattribution can happen.
-
-In order to also add Metrics data for a Merge Request, we want to get only the last available record from the `gitlab_dotcom_merge_request_metrics` table.   
-First a CTE will get the ID of the latest Merge Request Metrics snapshot, then in the following CTE we inner join to that in order to ensure we only get the latest data.
-
-We also need to know if a MR is related to our community contributor project, there are two conditions to know if this is true:
-
-* The label for the MR needs to be set to `community contribution`
-* the namespace for the target project of the MR needs to be Gitlab.org (namespace_id = 9970)
-
-In order to achieve this we will build a CTE from the project table that contains only project from the Gitlab.org space, then we will use this as a logical condition in a case statement.
-
-Information about the merge request's namespace (`namespace_id`) and ultimate parent namespace (`ultimate_parent_id`, `namespace_is_internal`) is found through the **project** that the merge request is associated with. 
-
-{% enddocs %}
-
-
 {% docs gitlab_dotcom_namespaces_xf %}
 
 Includes all columns from the namespaces base model.  

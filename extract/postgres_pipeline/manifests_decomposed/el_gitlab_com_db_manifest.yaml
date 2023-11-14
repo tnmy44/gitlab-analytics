@@ -1113,7 +1113,7 @@ tables:
     import_query: |-
       SELECT id
       , iid
-      , title
+      , NULL AS title
       , NULL AS description
       , project_id
       , due_date
