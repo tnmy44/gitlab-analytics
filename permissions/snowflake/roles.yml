@@ -462,7 +462,6 @@ roles:
             tables:
                 read:
                     - prep.sensitive.gitlab_dotcom_labels
-                    - prep.sensitive.gitlab_dotcom_merge_requests
                     - prep.sensitive.gitlab_dotcom_milestones
                     - prep.sensitive.gitlab_dotcom_namespaces
                     - prep.sensitive.gitlab_dotcom_projects
@@ -1085,7 +1084,6 @@ roles:
             tables:
                 read:
                     - prep.sensitive.gitlab_dotcom_labels
-                    - prep.sensitive.gitlab_dotcom_merge_requests
                     - prep.sensitive.gitlab_dotcom_milestones
                     - prep.sensitive.gitlab_dotcom_namespaces
                     - prep.sensitive.gitlab_dotcom_projects
@@ -1403,6 +1401,23 @@ roles:
             tables:
                 read:
                     - prod.boneyard.*
+
+    - bizible:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.bizible
+                    - raw.bizible
+            tables:
+                read:
+                    - prep.bizible.*
+                    - raw.bizible.*
 
     - bi_tool_eval_db:
         warehouses:
@@ -1793,7 +1808,6 @@ roles:
                     - prep.sensitive.gitlab_dotcom_environments
                     - prep.sensitive.gitlab_dotcom_identities
                     - prep.sensitive.gitlab_dotcom_labels
-                    - prep.sensitive.gitlab_dotcom_merge_requests
                     - prep.sensitive.gitlab_dotcom_milestones
                     - prep.sensitive.gitlab_dotcom_namespaces
                     - prep.sensitive.gitlab_dotcom_notes
@@ -2032,12 +2046,28 @@ roles:
             databases:
                 read:
                     - prep
+                    - prod
             schemas:
                 read:
                     - prep.sensitive
+                    - prep.marketo
+                    - prep.gitlab_dotcom
+                    - prod.common
+                    - prod.legacy
+                    - prod.workspace_marketing
+                    - prod.workspace_product
             tables:
                 read:
+                    - prep.gitlab_dotcom.gitlab_dotcom_users_source
+                    - prep.gitlab_dotcom.gitlab_dotcom_members_source
+                    - prep.marketo.marketo_lead_source 
                     - prep.sensitive.pump_marketing_contact_namespace_detail
+                    - prod.common.dim_namespace
+                    - prod.legacy.latest_trial_per_namespace_xf
+                    - prod.legacy.customers_db_trial_histories
+                    - prod.legacy.gitlab_dotcom_memberships
+                    - prod.workspace_marketing.marketo_form_fills_missing_touchpoints
+                    - prod.workspace_product.wk_rpt_namespace_onboarding
 
     - license_db:
         privileges:
@@ -4151,10 +4181,11 @@ roles:
 
     - mconteanu:
         member_of:
-            - reporter
-            - marketo
             - analyst_marketing
             - customers_db
+            - hightouch_role
+            - marketo
+            - reporter
             - workato
         warehouses:
             - dev_xs
@@ -4881,14 +4912,15 @@ roles:
 
     - rkohnke:
         member_of:
-            - reporter
             - analyst_marketing
-            - restricted_safe
+            - bizible
             - bi_tool_eval_read
             - data_team_analyst
             - data_science_readonly
             - facebook_ads
             - linkedin_ads
+            - reporter
+            - restricted_safe
             - zuora_order
         warehouses:
             - dev_xs
@@ -5269,6 +5301,8 @@ roles:
     - tableau:
         warehouses:
             - reporting
+        member_of:
+            - reporter
 
     - tableau_loader:
         warehouses:
@@ -5836,6 +5870,7 @@ users:
         can_login: yes
         member_of:
             - meltano
+            - target_snowflake
 
     - mfleisher:
         can_login: yes
@@ -6044,7 +6079,6 @@ users:
         can_login: yes
         member_of:
             - tableau
-            - reporter
 
     - tableau_loader:
         can_login: yes
