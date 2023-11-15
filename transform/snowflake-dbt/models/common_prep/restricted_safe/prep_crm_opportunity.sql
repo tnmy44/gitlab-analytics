@@ -1337,6 +1337,7 @@ LEFT JOIN cw_base
       ON sfdc_opportunity.record_type_id = sfdc_record_type_source.record_type_id
     LEFT JOIN abm_tier_unioned
       ON sfdc_opportunity.dim_crm_opportunity_id=abm_tier_unioned.dim_crm_opportunity_id
+        AND sfdc_opportunity.is_live = 1
 
 )
 
@@ -1345,5 +1346,5 @@ LEFT JOIN cw_base
     created_by="@michellecooper",
     updated_by="@rkohnke",
     created_date="2022-02-23",
-    updated_date="2023-11-08"
+    updated_date="2023-11-15"
 ) }}
