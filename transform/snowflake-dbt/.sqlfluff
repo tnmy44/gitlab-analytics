@@ -24,8 +24,8 @@ align_scope = bracketed
 [sqlfluff:rules]
 tab_space_size = 2
 
-[sqlfluff:rules:L003]
-hanging_indents = False
+; [sqlfluff:rules:L003]
+; hanging_indents = False
 
 [sqlfluff:rules:L010]
 # Keywords Capitalization

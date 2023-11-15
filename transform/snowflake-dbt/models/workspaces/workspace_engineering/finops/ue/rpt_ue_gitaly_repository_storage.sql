@@ -1,3 +1,9 @@
+
+{{ config(
+    materialized='table',
+    )
+}}
+
 with cloud_data as (
 
     SELECT date_day,
