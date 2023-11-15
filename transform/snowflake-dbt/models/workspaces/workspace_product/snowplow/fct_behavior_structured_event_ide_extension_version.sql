@@ -25,7 +25,8 @@ flattened AS (
     flat_contexts.value['data']['extension_version']::VARCHAR       AS extension_version,
     flat_contexts.value['data']['ide_name']::VARCHAR                AS ide_name,
     flat_contexts.value['data']['ide_vendor']::VARCHAR              AS ide_vendor,
-    flat_contexts.value['data']['ide_version']::VARCHAR             AS ide_version
+    flat_contexts.value['data']['ide_version']::VARCHAR             AS ide_version,
+    flat_contexts.value['data']['language_server_version']::VARCHAR AS language_server_version
   FROM clicks,
   LATERAL FLATTEN(input => TRY_PARSE_JSON(clicks.contexts), path => 'data') AS flat_contexts
   WHERE flat_contexts.value['schema']::VARCHAR LIKE 'iglu:com.gitlab/ide_extension_version/jsonschema/%'
