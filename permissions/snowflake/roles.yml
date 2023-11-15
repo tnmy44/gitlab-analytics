@@ -5338,6 +5338,13 @@ roles:
         warehouses:
             - reporting
 
+    - tableau_restricted_people_data:
+        member_of:
+            - reporter
+            - snowflake_account_usage
+        warehouses:
+            - reporting
+
     - target_snowflake:
         warehouses:
             - loading
@@ -6089,6 +6096,11 @@ users:
         can_login: yes
         member_of:
             - tableau_restricted_safe
+
+    - tableau_restricted_people_data:
+        can_login: yes
+        member_of:
+            - tableau_restricted_people_data            
 
     - target_snowflake:
         can_login: yes
