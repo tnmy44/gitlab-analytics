@@ -1,6 +1,10 @@
-{{ simple_cte([
-    ('blended_directory_source','blended_directory_source')
-]) }},
+WITH blended_directory_source AS (
+
+    SELECT *,
+      uploaded_at::date                                                     AS uploaded_date
+    FROM {{ ref('blended_directory_source') }}
+
+),
 
 eda_stage AS (
     
@@ -77,10 +81,10 @@ term_reason AS (
 eda_sup AS (
 
   SELECT   
-    uploaded_at,
+    uploaded_date,
     full_name,
     employee_id,
-    ROW_NUMBER() over ( PARTITION BY full_name,uploaded_at ORDER BY uploaded_at DESC ) AS ldr_rank
+    ROW_NUMBER() over ( PARTITION BY full_name,uploaded_date ORDER BY uploaded_date DESC, employee_id DESC ) AS ldr_rank
   FROM blended_directory_source
 
 ),
@@ -88,13 +92,13 @@ eda_sup AS (
 dr AS (
 
   SELECT     
-    uploaded_at AS uploaded_at,
+    uploaded_date,
     supervisor,
     COUNT(DISTINCT blend.employee_id) AS dr_total_direct_reports
   FROM blended_directory_source blend
   INNER JOIN eda_stage edi
   ON blend.employee_id = edi.employee_id
-  AND blend.uploaded_at = edi.date_actual
+  AND blend.uploaded_date = edi.date_actual
   WHERE source_system = 'workday'
   GROUP BY 1, 2 
 
@@ -104,7 +108,7 @@ sup AS (
 
   SELECT    
     '2022-06-16'                    AS cutover_date,
-    sup.uploaded_at                 AS sup_date,
+    sup.uploaded_date               AS sup_date,
     sup.supervisor                  AS sup_name,
     eda_sup.employee_id             AS sup_id,
     sup.employee_id                 AS dr_id,
@@ -113,11 +117,11 @@ sup AS (
   FROM blended_directory_source sup
   LEFT JOIN eda_sup
     ON sup_name = eda_sup.full_name
-    AND sup_date = eda_sup.uploaded_at
-    AND ldr_rank = 1
+    AND sup_date = eda_sup.uploaded_date
+    AND 1 = ldr_rank
   LEFT JOIN dr
   ON dr_name = dr.supervisor
-  AND sup_date = dr.uploaded_at
+  AND sup_date = dr.uploaded_date
   WHERE sup_date >= cutover_date
   AND source_system = 'workday'
   ORDER BY 2 DESC, 3
@@ -400,7 +404,7 @@ hist_stage AS (
     END AS employment_status,
     CASE
       WHEN employment_status = 'T' THEN cur_date_actual
-      ELSE COALESCE(LAG(cur_date_actual) OVER ( PARTITION BY employee_id ORDER BY cur_date_actual DESC ) - 1, CURRENT_DATE())
+      ELSE COALESCE(LAG(cur_date_actual) OVER ( PARTITION BY employee_id ORDER BY cur_date_actual DESC, hire_rank DESC ) - 1, CURRENT_DATE())
     END                  AS end_date,
     reports_to           AS cur_reports_to,
     reports_to_id        AS cur_reports_to_id,

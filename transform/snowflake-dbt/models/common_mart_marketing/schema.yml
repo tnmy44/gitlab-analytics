@@ -621,3 +621,91 @@ models:
           description: Boolean value for being created through the deal reg process. 
         - name: is_mdf_campaign
           description: Boolean value for whether or not this is from a channel partner effort.  
+
+    - name: rpt_l2r_community_data
+      description: Tableau-specific table that joins Zuora, Opportunity, and Lead To Revenue data to hone in on the community-owned opportunities and their related data points. 
+      columns:
+        - name: dim_crm_opportunity_id
+          description: The Salesforce Opportunity ID.
+        - name: dim_crm_account_id
+          description: The Salesforce Account ID.
+        - name: dim_parent_crm_account_id
+          description: The Salesforce Parent Account ID.
+        - name: dim_subscription_id
+          description: The Zuora Quote's Subscription ID.
+        - name: opportunity_owner_id
+          description: The Opportunity Owner's Salesforce User ID.
+        - name: opportunity_name
+          description: The Salesforce Opportunity Name.
+        - name: crm_account_name
+          description: The Salesforce Account Name. 
+        - name: opp_order_type
+          description: The Salesforce Opportunity Order Type. 
+        - name: sales_qualified_source_name
+          description: The Salesforce Sales Qualified Source field. 
+        - name: sales_type
+          description: The Salesforce Opportunity Type. 
+        - name: opp_account_demographics_sales_segment
+          description: The Sales Demographics Sales Segment. 
+        - name: opp_account_demographics_region
+          description: The Sales Demographics Region.
+        - name: opp_account_demographics_area
+          description: The Sales Demographics Area.
+        - name: opp_account_demographics_geo
+          description: The Sales Demographics Geo.
+        - name: opp_account_demographics_territory
+          description: The Sales Demographics Territory.
+        - name: number_of_seats
+          description: The calculated number of seats from a given quote. 
+        - name: product_category
+          description: The Salesforce Product Category from the Opportunity. 
+        - name: community_data_type
+          description: A grouping of the data set by Community program based on opporunity quote SKUs.
+        - name: opportunity_created_date_range_year
+          description: The Year of the Opportunity's Created Date. 
+        - name: opportunity_created_date_range_quarter
+          description: The Quarter of the Opportunity's Created Date. 
+        - name: opportunity_created_date_range_month
+          description: The Month of the Opportunity's Created Date. 
+        - name: opportunity_created_date_range_week
+          description: The Week of the Opportunity's Created Date. 
+        - name: opportunity_created_date_range_day
+          description: The Day of the Opportunity's Created Date. 
+        - name: opportunity_created_date_range_id
+          description: The ID of the Opportunity's Created Date. 
+        - name: sales_accepted_date_range_year
+          description: The Year of the Opportunity's Sales Accepted Date. 
+        - name: sales_accepted_date_range_quarter
+          description: The Quarter of the Opportunity's Sales Accepted Date. 
+        - name: sales_accepted_date_range_month
+          description: The Month of the Opportunity's Sales Accepted Date. 
+        - name: sales_accepted_date_range_week
+          description: The Week of the Opportunity's Sales Accepted Date. 
+        - name: sales_accepted_date_range_day
+          description: The Day of the Opportunity's Sales Accepted Date. 
+        - name: sales_accepted_date_range_id
+          description: The ID of the Opportunity's Sales Accepted Date. 
+        - name: opportunity_closed_date_range_year
+          description: The Year of the Opportunity's Close Date. 
+        - name: opportunity_closed_date_range_quarter
+          description: The Quarter of the Opportunity's Close Date. 
+        - name: opportunity_closed_date_range_month
+          description: The Month of the Opportunity's Close Date. 
+        - name: opportunity_closed_date_range_week
+          description: The Week of the Opportunity's Close Date. 
+        - name: opportunity_closed_date_range_day
+          description: The Day of the Opportunity's Close Date. 
+        - name: opportunity_closed_date_range_id
+          description: The ID of the Opportunity's Close Date. 
+        - name: is_sao
+          description: T/F Flag to indicate if an Opportunity is an SAO
+        - name: is_won
+          description: T/F Flag to indicate if an Opportunity is a Won Opportunity. 
+        - name: is_net_arr_closed_deal
+          description: T/F Flag to indicate if an Opportunity is a closed deal. 
+        - name: is_net_arr_pipeline_created
+          description: T/F Flag to indicate if an Opportunity is qualified net arr for pipeline. 
+        - name: is_last_segment_version
+          description: T/F Flag to indicate if a Quote is the final version on the Opportunity. 
+        - name: is_first_subscription_institution
+          description: T/F Flag to indicate if an Opportunity is the first subscription for a given account hierarchy. 
