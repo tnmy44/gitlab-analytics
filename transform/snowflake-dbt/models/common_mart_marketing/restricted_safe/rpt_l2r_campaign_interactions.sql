@@ -46,6 +46,7 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
+      person_base.person_first_country,
       person_base.partner_prospect_status,
       person_base.prospect_share_status,
       dim_crm_account.is_first_order_available,
@@ -91,6 +92,16 @@
       mart_crm_touchpoint.bizible_landing_page,
       mart_crm_touchpoint.bizible_form_url_raw,
       mart_crm_touchpoint.bizible_landing_page_raw,
+      -- UTM Parameters 
+      mart_crm_touchpoint.utm_campaign,
+      mart_crm_touchpoint.utm_medium,
+      mart_crm_touchpoint.utm_source,
+      mart_crm_touchpoint.utm_budget,
+      mart_crm_touchpoint.utm_content,
+      mart_crm_touchpoint.utm_allptnr,
+      mart_crm_touchpoint.utm_partnerid,
+      mart_crm_touchpoint.integrated_budget_holder,
+      -- Touchpoint Data Cont.
       mart_crm_touchpoint.bizible_marketing_channel,
       mart_crm_touchpoint.bizible_marketing_channel_path,
       mart_crm_touchpoint.bizible_medium,
@@ -248,6 +259,7 @@
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
+      person_base.person_first_country,
       dim_crm_account.is_first_order_available,
       person_base.sales_segment_name AS person_sales_segment_name,
       person_base.sales_segment_grouped AS person_sales_segment_grouped,
@@ -294,6 +306,16 @@
       mart_crm_attribution_touchpoint.bizible_landing_page,
       mart_crm_attribution_touchpoint.bizible_form_url_raw,
       mart_crm_attribution_touchpoint.bizible_landing_page_raw,
+    -- UTM Parameters 
+      mart_crm_attribution_touchpoint.utm_campaign,
+      mart_crm_attribution_touchpoint.utm_medium,
+      mart_crm_attribution_touchpoint.utm_source,
+      mart_crm_attribution_touchpoint.utm_budget,
+      mart_crm_attribution_touchpoint.utm_content,
+      mart_crm_attribution_touchpoint.utm_allptnr,
+      mart_crm_attribution_touchpoint.utm_partnerid,
+      mart_crm_attribution_touchpoint.integrated_budget_holder,
+      -- Touchpoint Data Cont.
       mart_crm_attribution_touchpoint.bizible_marketing_channel,
       mart_crm_attribution_touchpoint.bizible_marketing_channel_path,
       mart_crm_attribution_touchpoint.bizible_medium,
@@ -350,7 +372,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=164)}}
+  {{dbt_utils.group_by(n=173)}}
     
 ), cohort_base_combined AS (
   
@@ -394,6 +416,7 @@
       account_demographics_area,
       account_demographics_upa_country,
       account_demographics_territory,
+      person_first_country,
       is_first_order_available,
       person_order_type,
       person_sales_segment_name,
@@ -513,6 +536,16 @@
       bizible_landing_page,
       bizible_form_url_raw,
       bizible_landing_page_raw,
+      -- UTM Parameters 
+      utm_campaign,
+      utm_medium,
+      utm_source,
+      utm_budget,
+      utm_content,
+      utm_allptnr,
+      utm_partnerid,
+      integrated_budget_holder,
+      -- Touchpoint Data Cont.
       bizible_marketing_channel,
       bizible_marketing_channel_path,
       bizible_medium,
@@ -588,6 +621,7 @@
       account_demographics_area,
       account_demographics_upa_country,
       account_demographics_territory,
+      person_first_country,
       is_first_order_available,
       person_order_type,
       person_sales_segment_name,
@@ -707,6 +741,16 @@
       bizible_landing_page,
       bizible_form_url_raw,
       bizible_landing_page_raw,
+      -- UTM Parameters 
+      utm_campaign,
+      utm_medium,
+      utm_source,
+      utm_budget,
+      utm_content,
+      utm_allptnr,
+      utm_partnerid,
+      integrated_budget_holder,
+      -- Touchpoint Data Cont.
       bizible_marketing_channel,
       bizible_marketing_channel_path,
       bizible_medium,
@@ -744,66 +788,9 @@
   
     SELECT 
       cohort_base_combined.*,
-
-    -- pulling dirrectly from the URL
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_campaign::VARCHAR  AS bizible_landing_page_utm_campaign,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_medium::VARCHAR    AS bizible_landing_page_utm_medium,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_source::VARCHAR    AS bizible_landing_page_utm_source,
-
-      PARSE_URL(bizible_form_url_raw):parameters:utm_campaign::VARCHAR     AS bizible_form_page_utm_campaign,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_medium::VARCHAR       AS bizible_form_page_utm_medium,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_source::VARCHAR       AS bizible_form_page_utm_source,
-
-
-    --UTMs not captured by the Bizible
-      PARSE_URL(bizible_form_url_raw):parameters:utm_content::VARCHAR       AS bizible_form_page_utm_content,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_budget::VARCHAR        AS bizible_form_page_utm_budget,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_allptnr::VARCHAR       AS bizible_form_page_utm_allptnr,
-      PARSE_URL(bizible_form_url_raw):parameters:utm_partnerid::VARCHAR     AS bizible_form_page_utm_partnerid,
       PARSE_URL(bizible_form_url_raw):parameters:utm_asset_type::VARCHAR    AS bizible_form_page_utm_asset_type,
-
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_content::VARCHAR     AS bizible_landing_page_utm_content,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_budget::VARCHAR      AS bizible_landing_page_utm_budget,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_allptnr::VARCHAR     AS bizible_landing_page_utm_allptnr,
-      PARSE_URL(bizible_landing_page_raw):parameters:utm_partnerid::VARCHAR   AS bizible_landing_page_utm_partnerid,
-       PARSE_URL(bizible_landing_page_raw):parameters:utm_asset_type::VARCHAR AS bizible_landing_page_utm_asset_type,
-
-      COALESCE(bizible_landing_page_utm_campaign, bizible_form_page_utm_campaign)   AS utm_campaign,
-      COALESCE(bizible_landing_page_utm_medium, bizible_form_page_utm_medium)       AS utm_medium,
-      COALESCE(bizible_landing_page_utm_source, bizible_form_page_utm_source)       AS utm_source,
-      
-      COALESCE(bizible_landing_page_utm_budget, bizible_form_page_utm_budget)            AS utm_budget,
-      COALESCE(bizible_landing_page_utm_content, bizible_form_page_utm_content)          AS utm_content,
-      COALESCE(bizible_landing_page_utm_allptnr, bizible_form_page_utm_allptnr)          AS utm_allptnr,
-      COALESCE(bizible_landing_page_utm_partnerid, bizible_form_page_utm_partnerid)      AS utm_partnerid,
+      PARSE_URL(bizible_landing_page_raw):parameters:utm_asset_type::VARCHAR AS bizible_landing_page_utm_asset_type,
       COALESCE(bizible_landing_page_utm_asset_type, bizible_form_page_utm_asset_type) AS utm_asset_type,
-
-      CASE 
-        WHEN (LOWER(utm_content) LIKE '%field%'
-          OR campaign_rep_role_name LIKE '%Field Marketing%'
-          OR budget_holder = 'fmm'
-          OR utm_budget = 'fmm') 
-          THEN 'Field Marketing'
-        WHEN (LOWER(utm_campaign) LIKE '%abm%'
-          OR LOWER(utm_content) LIKE '%abm%'
-          OR LOWER(bizible_ad_campaign_name) LIKE '%abm%'
-          OR campaign_rep_role_name like '%ABM%'
-          OR dim_campaign.budget_holder = 'abm'
-          OR utm_budget = 'abm') THEN 'Account Based Marketing'
-
-        WHEN (LOWER(utm_budget) LIKE '%ptnr%' 
-          OR LOWER(utm_budget) LIKE '%chnl%')
-          OR (LOWER(budget_holder) LIKE '%ptnr%' 
-          OR LOWER(budget_holder) LIKE '%chnl%')
-          THEN 'Partner Marketing'
-        WHEN (LOWER(budget_holder) LIKE '%corp%' 
-          OR LOWER(utm_budget) LIKE '%corp%')
-          THEN 'Corporate Events'
-        WHEN (LOWER(budget_holder) LIKE '%dmp%' 
-          OR LOWER(utm_budget) LIKE '%dmp%')
-          THEN 'Digital Marketing'
-        ELSE 'No Budget Holder' 
-      END AS integrated_budget_holder,
       fct_campaign.start_date AS campaign_start_date,
       fct_campaign.region AS sfdc_campaign_region,
       fct_campaign.sub_region AS sfdc_campaign_sub_region,
@@ -908,5 +895,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-09-12",
+    updated_date="2023-10-31",
   ) }}

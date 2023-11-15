@@ -91,11 +91,6 @@ models:
       - name: project_id
         tests:
           - not_null
-      - name: environment_name
-        tests:
-          - not_null:
-              config:
-                error_if: ">5"
                 
   - name: gitlab_dotcom_gitlab_internal_sprints
     description: '{{ doc("gitlab_dotcom_gitlab_internal_sprints") }}'
@@ -171,24 +166,6 @@ models:
         tests:
           - accepted_values:
                       values: ['Commit', 'Epic', 'Issue', 'MergeRequest', 'Snippet', 'Wiki', 'DesignManagement::Design']
-
-  - name: gitlab_dotcom_issues_xf
-    description: '{{ doc("gitlab_dotcom_issues_xf") }}'
-    columns:
-      - name: issue_id
-        tests:
-          - not_null
-      - name: state
-        tests:
-          - not_null
-          - accepted_values:
-              values: ['opened', 'closed', 'merged', 'locked']
-      - name: issue_title
-        description: '{{ doc("xf_visibility_documentation") }}'
-      - name: issue_description
-        description: '{{ doc("xf_visibility_documentation") }}'
-      - name: namespace_plan_id_at_issue_creation
-        description: '{{ doc("namespace_plan_id_at_creation") }}'
 
   - name: gitlab_dotcom_label_states_xf
     description: Represents the latest state (added or removed) for each label on Epics/Issues/Merge Requests. Should be phased out in favor of `label_links`.
@@ -282,7 +259,7 @@ models:
     columns:
       - name: project_id
       - name: namespace_id
-      - name: merge_request_iid
+      - name: merge_request_internal_id
         tests: 
           - not_null
       - name: merge_request_id
@@ -294,21 +271,6 @@ models:
       - name: user_name
         tests: 
           - not_null
-
-  - name: gitlab_dotcom_merge_requests_xf
-    description: '{{ doc("gitlab_dotcom_merge_requests_xf") }}'
-    columns:
-      - name: merge_request_id
-        tests:
-          - not_null
-      - name: is_community_contributor_related
-        description: Merge Request has 'community contribution' tag, and is on a project in the gitlab.org namespace.
-      - name: namespace_plan_id_at_merge_request_creation
-        description: '{{ doc("namespace_plan_id_at_creation") }}'
-      - name: total_checkboxes
-        description: The number of checkbox tasks included in the description of the Merge Request
-      - name: completed_checkboxes
-        description: The number of checkbox tasks marked as completed in the description of the Merge Request
 
   - name: gitlab_dotcom_monthly_stage_active_users
     description: '{{ doc("gitlab_dotcom_monthly_stage_active_users") }}'

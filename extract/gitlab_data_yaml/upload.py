@@ -30,8 +30,6 @@ if __name__ == "__main__":
         infrastructure_department_pi="infrastructure_department",
         marketing_pi="marketing",
         people_success_pi="people_success",
-        quality_department_pi="quality_department",
-        security_department_pi="security_department",
         ux_department_pi="ux_department",
     )
 
@@ -41,6 +39,7 @@ if __name__ == "__main__":
         ops_section_pi="ops_section",
         product_pi="product",
         sales_pi="sales",
+        security_department_pi="security_division",
         # recruiting_pi="recruiting",
         # secure_and_protect_section_pi="secure_and_protect_section",
         # corporate_finance_pi="corporate_finance",

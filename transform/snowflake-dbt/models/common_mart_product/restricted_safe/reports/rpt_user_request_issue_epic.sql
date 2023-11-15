@@ -6,7 +6,7 @@ WITH mart_user_request AS (
 ), issue_account_summary AS ( -- First we summarise at the issue/epic - crm_account grain
     
     SELECT
-        dim_issue_id,
+        issue_id,
         epic_id,
         user_request_in,
         dim_crm_account_id,
@@ -76,7 +76,7 @@ WITH mart_user_request AS (
 ), prep_issue_summary AS ( -- Then we summarise at the issue/epic grain
 
     SELECT
-        dim_issue_id,
+        issue_id,
         epic_id,
         user_request_in,
 
@@ -152,7 +152,7 @@ WITH mart_user_request AS (
 ), prep_issue_opp_zendesk_links AS (
 
     SELECT
-        dim_issue_id,
+        issue_id,
         epic_id,
         COUNT(DISTINCT dim_crm_opportunity_id)                                              AS unique_opportunities,
         COUNT(DISTINCT IFF(crm_opp_is_closed = FALSE, dim_crm_opportunity_id, NULL))        AS unique_open_opportunities,
@@ -167,7 +167,7 @@ WITH mart_user_request AS (
 ), issue_summary AS (
     
     SELECT
-        {{ dbt_utils.surrogate_key(['prep_issue_summary.dim_issue_id', 'prep_issue_summary.epic_id']) }}
+        {{ dbt_utils.surrogate_key(['prep_issue_summary.issue_id', 'prep_issue_summary.epic_id']) }}
                                                                                             AS primary_key,
         prep_issue_summary.*,
         prep_issue_opp_zendesk_links.unique_opportunities,
@@ -176,9 +176,9 @@ WITH mart_user_request AS (
         prep_issue_opp_zendesk_links.zendesk_ticket_id_array
     FROM prep_issue_summary
     LEFT JOIN prep_issue_opp_zendesk_links
-      ON prep_issue_opp_zendesk_links.dim_issue_id = prep_issue_summary.dim_issue_id
+      ON prep_issue_opp_zendesk_links.issue_id = prep_issue_summary.issue_id
       AND prep_issue_opp_zendesk_links.epic_id = prep_issue_summary.epic_id
-    --QUALIFY COUNT(*) OVER(PARTITION BY dim_issue_id, epic_id, dim_crm_account_id) > 1
+    --QUALIFY COUNT(*) OVER(PARTITION BY issue_id, epic_id, dim_crm_account_id) > 1
 
 )
 
@@ -188,5 +188,5 @@ WITH mart_user_request AS (
     created_by="@jpeguero",
     updated_by="@michellecooper",
     created_date="2021-12-15",
-    updated_date="2023-09-05",
+    updated_date="2023-09-29",
   ) }}

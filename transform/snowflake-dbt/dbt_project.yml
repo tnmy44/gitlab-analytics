@@ -311,6 +311,9 @@ models:
         +tags: ["product"]
         +schema: snowplow
 
+      tableau_cloud:
+        +schema: tableau_cloud
+
       thanos:
         +materialized: table
         +schema: prometheus
@@ -636,6 +639,9 @@ models:
       workspace_people:
         +schema: workspace_people
         +tags: ["people"]
+        restricted:
+          +materialized: view
+          +schema: restricted_workspace_people
 
     # ------------------
     # Marts

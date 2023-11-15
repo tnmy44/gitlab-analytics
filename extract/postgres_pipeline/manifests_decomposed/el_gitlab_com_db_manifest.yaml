@@ -470,7 +470,7 @@ tables:
       , last_edited_at
       , created_at
       , updated_at
-      , title
+      , NULL AS title
       , NULL AS description
       , state_id
       , closed_at
@@ -656,51 +656,13 @@ tables:
     import_query: |-
       SELECT id
       , iid
-      , CASE WHEN project_id IN
-          (13154706
-          , 14859125
-          , 15532587
-          , 16492321
-          , 26555111
-          , 26567411
-          , 26599489
-          , 26906211
-          , 28821822
-          , 30296511
-          , 30297111
-          , 30297823
-          , 34169285
-          , 35858823
-          , 40363072
-          , 40694272
-          , 41458091
-          , 42961472
-          , 44356021 ) THEN '**MASKED**' ELSE title END AS title --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
+      , NULL AS title
       , author_id
       , project_id
       , created_at
       , updated_at
       , confidential
-      , CASE WHEN project_id IN
-          (13154706
-          , 14859125
-          , 15532587
-          , 16492321
-          , 26555111
-          , 26567411
-          , 26599489
-          , 26906211
-          , 28821822
-          , 30296511
-          , 30297111
-          , 30297823
-          , 34169285
-          , 35858823
-          , 40363072
-          , 40694272
-          , 41458091
-          , 42961472
-          , 44356021 ) THEN '**MASKED**' ELSE description END AS description --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
+      , NULL AS description
       , milestone_id
       , updated_by_id
       , weight
@@ -714,7 +676,7 @@ tables:
       , closed_at
       , closed_by_id
       , relative_position
-      , service_desk_reply_to
+      , NULL AS service_desk_reply_to
       , state_id
       , duplicated_to_id
       , promoted_to_epic_id
@@ -743,8 +705,46 @@ tables:
     import_query: |-
       SELECT id
       , iid
-      , title
-      , description
+      , CASE WHEN project_id IN
+          (13154706
+          , 14859125
+          , 15532587
+          , 16492321
+          , 26555111
+          , 26567411
+          , 26599489
+          , 26906211
+          , 28821822
+          , 30296511
+          , 30297111
+          , 30297823
+          , 34169285
+          , 35858823
+          , 40363072
+          , 40694272
+          , 41458091
+          , 42961472
+          , 44356021 ) THEN '**MASKED**' ELSE title END AS title --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
+      , CASE WHEN project_id IN
+          (13154706
+          , 14859125
+          , 15532587
+          , 16492321
+          , 26555111
+          , 26567411
+          , 26599489
+          , 26906211
+          , 28821822
+          , 30296511
+          , 30297111
+          , 30297823
+          , 34169285
+          , 35858823
+          , 40363072
+          , 40694272
+          , 41458091
+          , 42961472
+          , 44356021 ) THEN '**MASKED**' ELSE description END AS description --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
       , project_id
       , service_desk_reply_to
       , updated_at
@@ -831,7 +831,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , title
+      , NULL AS title
       , color
       , project_id
       , created_at
@@ -844,7 +844,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   labels_internal_only:
-    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS}
+    additional_filtering: AND (project_id in {INTERNAL_PROJECT_IDS} OR group_id in {INTERNAL_NAMESPACE_IDS})
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'labels_internal_only'
@@ -854,6 +854,7 @@ tables:
       SELECT id
       , title
       , project_id
+      , group_id
       , updated_at
       FROM labels
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -1039,12 +1040,12 @@ tables:
     import_query: |-
       SELECT id
       , iid
-      , target_branch
+      , NULL AS target_branch
       , NULL AS source_branch
       , source_project_id
       , author_id
       , assignee_id
-      , title
+      , NULL AS title
       , created_at
       , updated_at
       , milestone_id
@@ -1066,7 +1067,7 @@ tables:
       , discussion_locked
       , latest_merge_request_diff_id
       , allow_maintainer_to_push
-      , description
+      , NULL AS description
       FROM merge_requests
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1112,7 +1113,7 @@ tables:
     import_query: |-
       SELECT id
       , iid
-      , title
+      , NULL AS title
       , NULL AS description
       , project_id
       , due_date
@@ -1125,7 +1126,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   milestones_internal_only:
-    additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS}
+    additional_filtering: AND (project_id in {INTERNAL_PROJECT_IDS} OR group_id in {INTERNAL_NAMESPACE_IDS})
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'milestones_internal_only'
@@ -1136,6 +1137,7 @@ tables:
       , iid
       , title
       , project_id
+      , group_id
       , updated_at
       FROM milestones
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -1227,8 +1229,8 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , name
-      , path
+      , NULL AS name
+      , NULL AS path
       , owner_id
       , created_at
       , updated_at
@@ -1259,7 +1261,16 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   namespaces_internal_only:
-    additional_filtering: AND id in {INTERNAL_NAMESPACE_IDS}
+    additional_filtering: |-
+      AND (
+        id IN {INTERNAL_NAMESPACE_IDS} 
+        OR parent_id IN {INTERNAL_NAMESPACE_IDS} 
+        OR id IN (
+          SELECT namespace_id 
+          FROM projects 
+          WHERE id IN {INTERNAL_PROJECT_IDS}
+          )
+        )
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1268,6 +1279,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
+      , parent_id
       , name
       , path
       , updated_at
@@ -1310,33 +1322,14 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , CASE WHEN project_id IN
-          (13154706
-          , 14859125
-          , 15532587
-          , 16492321
-          , 26555111
-          , 26567411
-          , 26599489
-          , 26906211
-          , 28821822
-          , 30296511
-          , 30297111
-          , 30297823
-          , 34169285
-          , 35858823
-          , 40363072
-          , 40694272
-          , 41458091
-          , 42961472
-          , 44356021 ) THEN '**MASKED**' ELSE note END AS note --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
+      , NULL AS note
       , noteable_type
       , author_id
       , created_at
       , updated_at
       , project_id
       , NULL AS attachment
-      , line_code
+      , NULL AS line_code
       , commit_id
       , noteable_id
       , system
@@ -1348,7 +1341,7 @@ tables:
       , resolved_at
       , resolved_by_id
       , discussion_id
-      , note_html
+      , NULL AS note_html
       , cached_markdown_version
       , change_position
       , resolved_by_push
@@ -1369,7 +1362,26 @@ tables:
       , updated_at
       , project_id
       , line_code
-      , note
+      , CASE WHEN project_id IN
+          (13154706
+          , 14859125
+          , 15532587
+          , 16492321
+          , 26555111
+          , 26567411
+          , 26599489
+          , 26906211
+          , 28821822
+          , 30296511
+          , 30297111
+          , 30297823
+          , 34169285
+          , 35858823
+          , 40363072
+          , 40694272
+          , 41458091
+          , 42961472
+          , 44356021 ) THEN '**MASKED**' ELSE note END AS note --NULL values for internal sensitive projects - https://gitlab.com/gitlab-data/analytics/-/issues/18239
       , note_html
       FROM notes
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -1414,6 +1426,10 @@ tables:
       , issue_auto_closed_at
       , repository_imported_at
       , repository_mirrored_at
+      , issue_created_at
+      , license_scanning_run_at
+      , secure_dependency_scanning_run_at
+      , secure_dast_run_at
       FROM onboarding_progresses
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1539,15 +1555,15 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , name
-      , path
-      , description
+      , NULL AS name
+      , NULL AS path
+      , NULL AS description
       , created_at
       , updated_at
       , creator_id
       , namespace_id
       , last_activity_at
-      , import_url
+      , NULL AS import_url
       , visibility_level
       , archived
       , NULL AS avatar
@@ -1600,7 +1616,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   projects_internal_only:
-    additional_filtering: AND namespace_id in {INTERNAL_NAMESPACE_IDS}
+    additional_filtering: AND (namespace_id in {INTERNAL_NAMESPACE_IDS} OR id in {INTERNAL_PROJECT_IDS})
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1905,7 +1921,7 @@ tables:
       SELECT id
       , source_id
       , source_type
-      , path
+      , NULL AS path
       , created_at
       , updated_at
       FROM routes
@@ -2301,9 +2317,9 @@ tables:
       , last_activity_on
       , notified_of_own_activity
       , preferred_language
-      , email_opted_in
-      , email_opted_in_source_id
-      , email_opted_in_at
+      , NULL AS email_opted_in
+      , NULL AS email_opted_in_source_id
+      , NULL AS email_opted_in_at
       , theme_id
       , accepted_term_id
       , private_profile
@@ -2414,6 +2430,7 @@ tables:
       , updated_at
       , issue_id
       , NULL AS progress
+      , reminder_frequency
       FROM work_item_progresses
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

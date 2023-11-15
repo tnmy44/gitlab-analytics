@@ -87,19 +87,6 @@ It adds a few columns to the base `gitlab_dotcom_notes` model:
 {% enddocs %}
 
 
-{% docs gitlab_dotcom_issues_xf %}
-
-Adds associated labels for issues when these exist.
-
-In order to achieve that we first join issues to the `label links` relation table, and then use that to join to the labels table.
-
-This transformation also masks title/description based on privacy of the project that it is on and the confidentiality setting on the issue.  
-
-A CTE will find projects that don't have visibility set to public and then joined to the issues in order to build a CASE statement to mask the content.
-
-{% enddocs %}
-
-
 {% docs gitlab_dotcom_labels_xf %}
 
 Masks the label description based on privacy of the project that it is on.
@@ -166,30 +153,6 @@ This model includes one row for every day, but MAU for a given month will typica
 {% docs gitlab_dotcom_merge_request_assignment_events %}
 
 This model contains the history of assignments, unassignments, and reassignments for merge requests within internal namespaces. From `gitlab_dotcom_internal_notes_xf`, notes of type `MergeRequest` are queried. Notes are stemmed down to referenced usernames, tokenized, and flattened so that for each event (assign, unassign, reassign) a row is created for each referenced username in the order it appears in the note. Finally, usernames are replaced with user id's by joining to `gitlab_dotcom_users`. Usernames that do not have an associated user_id (if the user was deleted or changed usernames) are not included in this model so as to not misattribute assignee changes.
-
-{% enddocs %}
-
-
-{% docs gitlab_dotcom_merge_requests_xf%}
-
-Adds associated labels for Merge Requests when these exist.
-
-In order to achieve that we first join issues to the `label links` relation table, and then use that to join to the labels
-table.
-
-The labels are filtered in a CTE to only include `target_type = MergeRequest` as the labels table contains both Issue and Merge Request information and misattribution can happen.
-
-In order to also add Metrics data for a Merge Request, we want to get only the last available record from the `gitlab_dotcom_merge_request_metrics` table.   
-First a CTE will get the ID of the latest Merge Request Metrics snapshot, then in the following CTE we inner join to that in order to ensure we only get the latest data.
-
-We also need to know if a MR is related to our community contributor project, there are two conditions to know if this is true:
-
-* The label for the MR needs to be set to `community contribution`
-* the namespace for the target project of the MR needs to be Gitlab.org (namespace_id = 9970)
-
-In order to achieve this we will build a CTE from the project table that contains only project from the Gitlab.org space, then we will use this as a logical condition in a case statement.
-
-Information about the merge request's namespace (`namespace_id`) and ultimate parent namespace (`ultimate_parent_id`, `namespace_is_internal`) is found through the **project** that the merge request is associated with. 
 
 {% enddocs %}
 

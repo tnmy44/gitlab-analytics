@@ -45,8 +45,19 @@
 ), joined AS (
 
     SELECT
+
+      -- SURROGATE KEY
+      {{ ('projects_source.project_id') }}                           AS dim_project_sk,
+
+      -- NATURAL KEY
+      projects_source.project_id                                     AS project_id,
+
+      -- LEGACY NATURAL KEY
       projects_source.project_id                                     AS dim_project_id,
+
+      -- FOREIGN KEYS
       projects_source.namespace_id                                   AS dim_namespace_id,
+      prep_namespace.dim_namespace_sk,
       namespace_lineage.ultimate_parent_id                           AS ultimate_parent_namespace_id,
       projects_source.creator_id                                     AS dim_user_id_creator,
       dim_date.date_id                                               AS dim_date_id,
@@ -135,9 +146,15 @@
         AND projects_source.created_at >= gitlab_subscriptions.valid_from AND projects_source.created_at < {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
     LEFT JOIN active_services
       ON projects_source.project_id = active_services.project_id
-    {{ dbt_utils.group_by(n=63) }}
+    {{ dbt_utils.group_by(n=66) }}
 
 )
 
-SELECT *
-FROM joined
+{{ dbt_audit(
+    cte_ref="joined",
+    created_by="@mpeychet_",
+    updated_by="@michellecooper",
+    created_date="2021-03-17",
+    updated_date="2023-09-27"
+) }}
+

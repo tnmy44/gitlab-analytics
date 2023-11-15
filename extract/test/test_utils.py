@@ -10,7 +10,6 @@ from unittest import mock
 import pytest
 import requests
 import responses
-
 from extract.saas_usage_ping.utils import EngineFactory, Utils
 
 
@@ -74,12 +73,17 @@ def test_static_variables(utils):
     assert utils.REDIS_KEY == "redis"
 
 
-def test_exluded_sql_metrics(utils):
+def test_excluded_sql_metrics(utils):
     """
     Test content of excluded metrics
     """
     actual = (
-        1 if "clusters_platforms" in x else 0
+        1
+        if (
+            "clusters_platforms" in x
+            or "batched_background_migration_count_failed_jobs_metric" in x
+        )
+        else 0
         for x in utils.METRICS_EXCEPTION_INSTANCE_SQL
     )
     assert all(actual)
@@ -257,3 +261,14 @@ def test_get_md5(utils):
         # can't test it with many things
         # let see to we have all details with various inputs
         assert res is not None
+
+
+@pytest.mark.parametrize(
+    "test_value, expected_value",
+    [("non_mapped_table", "non_mapped_table"), ("p_ci_builds", "ci_builds")],
+)
+def test_get_metric_table_name(utils, test_value, expected_value):
+    """
+    Test mapping dict for tables
+    """
+    assert utils.get_metric_table_name(test_value) == expected_value

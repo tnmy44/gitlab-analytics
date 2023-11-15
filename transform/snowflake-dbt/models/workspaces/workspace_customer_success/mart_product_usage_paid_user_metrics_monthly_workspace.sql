@@ -176,6 +176,27 @@
     FROM redis_metrics_28d_user
     WHERE metrics_path = 'counts_monthly.aggregated_metrics.compliance_features_track_unique_visits_union'
 
+), epics_users AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'redis_hll_counters.epics_usage.epics_usage_total_unique_counts_monthly'
+
+), iterations_users AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'redis_hll_counters.issues_edit.g_project_management_issue_iteration_changed_monthly'
+
+), issues_edit_users AS (
+
+    SELECT
+      *
+    FROM redis_metrics_28d_user
+    WHERE metrics_path = 'redis_hll_counters.issues_edit.issues_edit_total_unique_counts_monthly'
+
 ), sm_paid_user_metrics AS (
 
     SELECT
@@ -545,7 +566,7 @@
       monthly_saas_metrics.projects_enforcing_code_owner_approval_28_days_user,
       monthly_saas_metrics.project_clusters_enabled_28_days_user,
       monthly_saas_metrics.analytics_28_days_user,
-      monthly_saas_metrics.issues_edit_28_days_user,
+      COALESCE(issues_edit_users.distinct_users_whole_month, 0) AS issues_edit_28_days_user,
       COALESCE(user_packages.distinct_users_whole_month, 0) AS user_packages_28_days_user,
       COALESCE(p_terraform_state_api_unique_users.distinct_users, 0) AS terraform_state_api_28_days_user,
       monthly_saas_metrics.incident_management_28_days_user,
@@ -570,10 +591,10 @@
       monthly_saas_metrics.merge_requests_with_required_code_owners_28_days_user,
       COALESCE(analytics_valuestream.distinct_users_whole_month, 0) AS analytics_value_stream_28_days_event,
       COALESCE(user_approve_mr.distinct_users_whole_month, 0) AS code_review_user_approve_mr_28_days_user,
-      monthly_saas_metrics.epics_usage_28_days_user,
+      COALESCE(epics_users.distinct_users_whole_month, 0) AS epics_usage_28_days_user,
       COALESCE(ci_templates.distinct_users_whole_month, 0) AS ci_templates_usage_28_days_event,
       monthly_saas_metrics.project_management_issue_milestone_changed_28_days_user,
-      monthly_saas_metrics.project_management_issue_iteration_changed_28_days_user,
+      COALESCE(iterations_users.distinct_users_whole_month, 0) AS project_management_issue_iteration_changed_28_days_user,
       -- Wave 5.1
       monthly_saas_metrics.protected_branches_28_days_user,
       monthly_saas_metrics.ci_cd_lead_time_usage_28_days_event,
@@ -729,6 +750,15 @@
     LEFT JOIN audit_users
       ON audit_users.date_month = monthly_saas_metrics.snapshot_month
       AND audit_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN epics_users
+      ON epics_users.date_month = monthly_saas_metrics.snapshot_month
+      AND epics_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN iterations_users
+      ON iterations_users.date_month = monthly_saas_metrics.snapshot_month
+      AND iterations_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN issues_edit_users
+      ON issues_edit_users.date_month = monthly_saas_metrics.snapshot_month
+      AND issues_edit_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -763,5 +793,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2023-09-11"
+    updated_date="2023-11-13"
 ) }}
