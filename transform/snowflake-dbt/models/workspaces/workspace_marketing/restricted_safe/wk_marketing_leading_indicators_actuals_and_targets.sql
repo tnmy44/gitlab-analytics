@@ -81,7 +81,7 @@
     FROM rpt_lead_to_revenue
     WHERE (account_demographics_geo != 'JIHU'
      OR account_demographics_geo IS null) 
-     AND (crm_opp_owner_geo_stamped != 'JIHU'
+     OR (crm_opp_owner_geo_stamped != 'JIHU'
      OR crm_opp_owner_geo_stamped IS null)
 
 ), date_base AS (
@@ -340,7 +340,8 @@
     parent_crm_account_lam,
     parent_crm_account_lam_dev_count,
     metric_type,
-    metric_value
+    metric_value,
+    'Actual' AS metric_type_flag
   FROM intermediate
   UNION ALL
   SELECT
@@ -360,7 +361,8 @@
     NULL AS parent_crm_account_lam,
     NULL AS parent_crm_account_lam_dev_count,
     kpi_name AS metric_type,
-    daily_allocated_target AS metric_value
+    daily_allocated_target AS metric_value,
+    'Target' AS metric_type_flag
   FROM targets
 
 ), base AS (
@@ -383,7 +385,7 @@ SELECT
     source_buckets AS lead_source_buckets,
     lead_source, 
     sales_qualified_source_name, 
-    'Actual' AS metric_type_flag,
+    metric_type_flag,
     metric_type,
     CASE 
         WHEN CONTAINS(METRIC_TYPE, 'Inquiry') THEN 'INQs'
@@ -393,7 +395,7 @@ SELECT
     SUM(metric_value) AS metric_value
 FROM base
 WHERE 1=1 
-    AND NOT CONTAINS(METRIC_TYPE, 'TARGET')
+    AND NOT CONTAINS(metric_type_flag, 'Target')
 {{ dbt_utils.group_by(n=14) }}
 
 ), regroup_targets AS (
@@ -410,7 +412,7 @@ SELECT
     null AS lead_source_buckets,
     null AS lead_source, 
     sales_qualified_source_name, 
-    'Target' AS metric_type_flag,
+    metric_type_flag,
     metric_type,
     CASE 
         WHEN CONTAINS(METRIC_TYPE, 'Inquiry') THEN 'INQs'
@@ -420,7 +422,7 @@ SELECT
     SUM(metric_value) AS metric_value
 FROM base
 WHERE 1=1 
-    AND CONTAINS(METRIC_TYPE, 'TARGET')
+    AND CONTAINS(metric_type_flag, 'Target')
 {{ dbt_utils.group_by(n=14) }}
 
 ), final AS (
@@ -468,6 +470,6 @@ FROM regroup_targets
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-11-08",
+    updated_date="2023-11-15",
   ) }}
 
