@@ -25,6 +25,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
 
     SELECT DISTINCT
       dim_namespace.ultimate_parent_namespace_id, -- Keeping this id naming convention for clarity
+      dim_product_tier_id,
       dim_namespace.created_at                                    AS namespace_created_at, --timestamp is useful for relative calculations - ex) file created win 1 minute of namespace creation
       dim_namespace.created_at::DATE                              AS namespace_created_date,
       dim_namespace.creator_id,
@@ -57,8 +58,8 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     
     SELECT DISTINCT
       namespaces.ultimate_parent_namespace_id,
-      trials.start_date::DATE                                      AS trial_start_date, 
-      DATEDIFF('days', namespace_created_date, trial_start_date)   AS days_since_namespace_creation_at_trial
+      trials.order_start_date::DATE                                      AS trial_start_date, 
+      DATEDIFF('days', namespace_created_date, trial_start_date)         AS days_since_namespace_creation_at_trial
     FROM namespaces
     INNER JOIN prep_namespace_order_trial AS trials
       ON namespaces.ultimate_parent_namespace_id = trials.dim_namespace_id
@@ -76,7 +77,7 @@ namespaces AS ( --All currently existing namespaces within Gitlab.com. Filters o
     FROM namespaces
     INNER JOIN mart_charge charges
       ON namespaces.ultimate_parent_namespace_id = charges.ultimate_parent_namespace_id
-    INNER JOIN product_tier
+    INNER JOIN dim_product_tier product_tier
       ON namespaces.dim_product_tier_id = product_tier.dim_product_tier_id
     WHERE product_tier.product_tier_name != 'Storage' --exclude storage payments
       AND product_tier.product_tier_name NOT LIKE 'Self-Managed%' --exclude SM plans
