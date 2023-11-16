@@ -147,14 +147,13 @@
       dim_crm_account.six_sense_account_intent_score,
       dim_crm_account.six_sense_segments,
 
-      --ptc fields
-
-      dim_crm_acount.pte_score,
-      dim_crm_acount.pte_decile,
-      dim_crm_acount.pte_score_group,
-      dim_crm_acount.ptc_score,
-      dim_crm_acount.ptc_decile,
-      dim_crm_acount.ptc_score_group,
+      --ptc & pte fields
+      dim_crm_account.pte_score,
+      dim_crm_account.pte_decile,
+      dim_crm_account.pte_score_group,
+      dim_crm_account.ptc_score,
+      dim_crm_account.ptc_decile,
+      dim_crm_account.ptc_score_group,
 
       --degenerative dimensions
       dim_crm_account.is_sdr_target_account,
