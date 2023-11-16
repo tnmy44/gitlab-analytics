@@ -28,6 +28,7 @@
       dim_crm_account.account_owner,
       dim_crm_account.proposed_crm_account_owner,
       dim_crm_account.technical_account_manager,
+      dim_crm_account.tam_manager,
       dim_crm_account.owner_role,
       dim_crm_account.user_role_type,
 
@@ -122,6 +123,7 @@
       dim_crm_account.gs_health_devsecops,
       dim_crm_account.gs_health_ci,
       dim_crm_account.gs_health_scm,
+      dim_crm_account.gs_health_csm_sentiment,
       dim_crm_account.risk_impact,
       dim_crm_account.risk_reason,
       dim_crm_account.last_timeline_at_risk_update,
@@ -144,6 +146,15 @@
       dim_crm_account.six_sense_account_6_qa_start_date,
       dim_crm_account.six_sense_account_intent_score,
       dim_crm_account.six_sense_segments,
+
+      --ptc fields
+
+      dim_crm_acount.pte_score,
+      dim_crm_acount.pte_decile,
+      dim_crm_acount.pte_score_group,
+      dim_crm_acount.ptc_score,
+      dim_crm_acount.ptc_decile,
+      dim_crm_acount.ptc_score_group,
 
       --degenerative dimensions
       dim_crm_account.is_sdr_target_account,

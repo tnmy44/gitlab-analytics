@@ -370,6 +370,19 @@ models:
         description: A measure, between 0 and 100, of how much an account is behaving like accounts with which there is a history of previously opened opportunities.
       - name: six_sense_segments
         description: The Account's 6QA segment. 
+      - name: pte_score
+        description: 
+      - name: pte_decile
+      - name: pte_score_group
+      - name: ptc_score
+        description: 
+      - name: ptc_decile
+      - name: ptc_score_group
+      - name: tam_manager
+        description: The name of the manager for technical account manager who manages the account
+      - name: gs_health_csm_sentiment
+        description: This is what the TAM thinks the health of this account should be - Formerly was just Health Score - Gainsight is the SSOT for this field and its value can only be updated in Gainsight.
+
 
   - name: mart_crm_opportunity
     description:  >-
