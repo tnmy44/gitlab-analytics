@@ -10,7 +10,7 @@
     - echo $SNOWFLAKE_PROD_DATABASE
     - export SNOWFLAKE_LOAD_DATABASE="RAW" # dbt pulls from RAW
     - echo $SNOWFLAKE_LOAD_DATABASE
-    - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XS_WAREHOUSE}
+    - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_XS_WAREHOUSE
     - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     - export SNOWFLAKE_SNAPSHOT_DATABASE="SNOWFLAKE"
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
@@ -41,7 +41,7 @@
     name: "dbt Compiled Files and logs"
     untracked: true    
     paths:
-      - public/dbt/
+      - public
       - transform/snowflake-dbt/logs
     expire_in: 1 week
     when: always
@@ -212,6 +212,8 @@ specify_dbt_parameters:
   <<: *snowflake_dbt_jobs
   script:
     - set +e
+    - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XL_WAREHOUSE}
+    - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Defer will select from RAW for anything not built
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"
@@ -241,6 +243,25 @@ specify_dbt_parameters:
     - if [ $FAILED ]; then echo "Cloning process failed" && exit 4; fi
     - dbt $DBT_CI_FAIL_FAST build --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_CI_STATE  $DBT_CI_VARS || FAILED=true
     - if [ $FAILED ]; echo "Build process failed" && then exit 5; fi
+
+🎛️custom_invocation:
+  <<: *snowflake_dbt_jobs
+  script:
+    - set +e
+    - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Snapshot should never run in RAW
+    - if [ -z $WAREHOUSE ]; then echo "No Warehouse selected." && exit 7; else SNOWFLAKE_TRANSFORM_WAREHOUSE=$WAREHOUSE; fi
+    - echo $DBT_CI_STATEMENT
+    - export DBT_CI_STATEMENT=""
+    - if [ -z $STATEMENT ]; then echo "No models selected." && exit 3; else DBT_CI_STATEMENT=$STATEMENT; fi
+    - echo $DBT_CI_STATEMENT
+    - if [[ $DBT_CI_STATEMENT==*"--defer"* ]]; SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"; fi
+    - echo $SNOWFLAKE_LOAD_DATABASE
+    - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - dbt deps $CI_PROFILE_TARGET
+    - dbt $DBT_CI_STATEMENT || FAILED=true
+    - if [ $FAILED ]; echo "Invocation process failed" && then exit 5; fi
+  
+
 
 # ======
 # DBT cloning
