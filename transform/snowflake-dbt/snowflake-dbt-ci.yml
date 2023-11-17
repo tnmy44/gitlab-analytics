@@ -234,15 +234,17 @@ specify_dbt_parameters:
     - export DBT_CI_EXCLUDE=""
     - if [ ! -z $EXCLUDE ]; then DBT_CI_EXCLUDE="--exclude $EXCLUDE"; fi
     - echo $DBT_CI_EXCLUDE
+    - export DBT_CI_FULL_REFRESH=""
+    - if [ ! -z $FULL_REFRESH ]; then DBT_CI_FULL_REFRESH="--full-refresh"; fi
     # VARS format "key":"value","key":"value"
     - export DBT_CI_VARS=""
     - if [ ! -z $VARS ]; then DBT_CI_VARS="--vars {$VARS}"; fi
     - echo $DBT_CI_VARS
     - dbt deps $CI_PROFILE_TARGET
-    - dbt $DBT_CI_FAIL_FAST clone --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET $DBT_CI_STATE || FAILED=true
+    - dbt $DBT_CI_FAIL_FAST clone --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET $DBT_CI_FULL_REFRESH $DBT_CI_STATE || FAILED=true
     - if [ $FAILED ]; then echo "Cloning process failed" && exit 4; fi
-    - dbt $DBT_CI_FAIL_FAST build --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_CI_STATE  $DBT_CI_VARS || FAILED=true
-    - if [ $FAILED ]; echo "Build process failed" && exit 5; fi
+    - dbt $DBT_CI_FAIL_FAST build --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET $DBT_CI_FULL_REFRESH --defer $DBT_CI_STATE  $DBT_CI_VARS || FAILED=true
+    - if [ $FAILED ]; then echo "Build process failed" && exit 5; fi
 
 🎛️custom_invocation:
   <<: *snowflake_dbt_jobs
