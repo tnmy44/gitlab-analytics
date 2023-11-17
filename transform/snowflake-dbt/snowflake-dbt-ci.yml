@@ -242,7 +242,7 @@ specify_dbt_parameters:
     - dbt $DBT_CI_FAIL_FAST clone --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET $DBT_CI_STATE || FAILED=true
     - if [ $FAILED ]; then echo "Cloning process failed" && exit 4; fi
     - dbt $DBT_CI_FAIL_FAST build --select $DBT_CI_SELECTION $DBT_CI_EXCLUDE $CI_PROFILE_TARGET --defer $DBT_CI_STATE  $DBT_CI_VARS || FAILED=true
-    - if [ $FAILED ]; echo "Build process failed" && then exit 5; fi
+    - if [ $FAILED ]; echo "Build process failed" && exit 5; fi
 
 🎛️custom_invocation:
   <<: *snowflake_dbt_jobs
