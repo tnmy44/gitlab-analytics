@@ -77,6 +77,7 @@ models:
       - name: tam_manager
         description: The name of the manager for the tehchnical account manager who manages the account
 
+
   - name: prep_crm_opportunity
     description: '{{ doc("prep_crm_opportunity") }}'
     tests:

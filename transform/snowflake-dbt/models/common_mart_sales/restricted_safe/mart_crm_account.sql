@@ -33,6 +33,7 @@
       dim_crm_account.user_role_type,
 
       --crm account owner attributes
+      crm_account_owner.manager_name as crm_account_owner_manager,
       crm_account_owner.crm_user_geo AS crm_account_owner_geo,
       crm_account_owner.crm_user_region AS crm_account_owner_region,
       crm_account_owner.crm_user_area AS crm_account_owner_area,
