@@ -214,10 +214,8 @@ specify_dbt_parameters:
     - set +e
     - export SNOWFLAKE_TRANSFORM_WAREHOUSE=${WAREHOUSE:-$SNOWFLAKE_MR_XL_WAREHOUSE}
     - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
-    - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Defer will select from RAW for anything not built
+    - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Build can execute snapshots
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
-    #- export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"
-    # - echo $SNOWFLAKE_LOAD_DATABASE
     - export DBT_CI_STATE="--state reference_state"
     - echo $DBT_CI_STATE
     - DBT_CI_CHANGES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$DOWNSTREAM/g" )
@@ -236,6 +234,7 @@ specify_dbt_parameters:
     - echo $DBT_CI_EXCLUDE
     - export DBT_CI_FULL_REFRESH=""
     - if [ ! -z $FULL_REFRESH ]; then DBT_CI_FULL_REFRESH="--full-refresh"; fi
+    - echo $DBT_CI_FULL_REFRESH
     # VARS format "key":"value","key":"value"
     - export DBT_CI_VARS=""
     - if [ ! -z $VARS ]; then DBT_CI_VARS="--vars {$VARS}"; fi
@@ -256,12 +255,10 @@ specify_dbt_parameters:
     - export DBT_CI_STATEMENT=""
     - if [ -z $STATEMENT ]; then echo "No models selected." && exit 3; else DBT_CI_STATEMENT=$STATEMENT; fi
     - echo $DBT_CI_STATEMENT
-    - if [[ $DBT_CI_STATEMENT==*"--defer"* ]]; SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"; fi
-    - echo $SNOWFLAKE_LOAD_DATABASE
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - dbt deps $CI_PROFILE_TARGET
     - dbt $DBT_CI_STATEMENT || FAILED=true
-    - if [ $FAILED ]; echo "Invocation process failed" && then exit 5; fi
+    - if [ $FAILED ]; then echo "Invocation process failed" && exit 5; fi
   
 
 
