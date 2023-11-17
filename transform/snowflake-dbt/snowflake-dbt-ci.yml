@@ -216,8 +216,8 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Defer will select from RAW for anything not built
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
-    - export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"
-    - echo $SNOWFLAKE_LOAD_DATABASE
+    #- export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"
+    # - echo $SNOWFLAKE_LOAD_DATABASE
     - export DBT_CI_STATE="--state reference_state"
     - echo $DBT_CI_STATE
     - DBT_CI_CHANGES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql\|\.csv'  | sed -E "s/(.sql|.csv)/$DOWNSTREAM/g" )
