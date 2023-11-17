@@ -38,8 +38,7 @@
     - merge_requests
   when: manual
   artifacts:
-    name: "dbt Compiled Files and logs"
-    untracked: true    
+    name: "dbt Compiled Files and logs"  
     paths:
       - public
       - transform/snowflake-dbt/logs
@@ -251,13 +250,13 @@ specify_dbt_parameters:
     - set +e
     - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Snapshot should never run in RAW
     - if [ -z $WAREHOUSE ]; then echo "No Warehouse selected." && exit 7; else SNOWFLAKE_TRANSFORM_WAREHOUSE=$WAREHOUSE; fi
-    - echo $DBT_CI_STATEMENT
+    - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     - export DBT_CI_STATEMENT=""
     - if [ -z $STATEMENT ]; then echo "No models selected." && exit 3; else DBT_CI_STATEMENT=$STATEMENT; fi
     - echo $DBT_CI_STATEMENT
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - dbt deps $CI_PROFILE_TARGET
-    - dbt $DBT_CI_STATEMENT || FAILED=true
+    - dbt $DBT_CI_STATEMENT $CI_PROFILE_TARGET || FAILED=true
     - if [ $FAILED ]; then echo "Invocation process failed" && exit 5; fi
   
 
