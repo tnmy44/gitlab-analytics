@@ -52,7 +52,7 @@ joined as (
 
     SELECT c.date_day,
     c.level_3,
-    CASE WHEN c.level_4 = 'linux xlarge gpu' then 'linux xlarge',
+    CASE WHEN c.level_4 = 'linux xlarge gpu' then 'linux xlarge' else level_4 end as level_4,
     'minutes' as unit,
     c.usage_amount_in_pricing_units as cloud_compute_minutes,
     c.net_cost,
