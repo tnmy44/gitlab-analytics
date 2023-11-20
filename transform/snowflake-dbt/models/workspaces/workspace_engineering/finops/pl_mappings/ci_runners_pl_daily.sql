@@ -51,40 +51,54 @@ WITH ci_minutes AS (
     AND namespace_creator_is_blocked = FALSE
   {{ dbt_utils.group_by(n=5) }}
 
-)
+),
+
+mapped as (
 
 SELECT
   reporting_day,
-
   CASE
     WHEN runner_type = 'Self-Managed Runners' AND ci_runner_manager = 'private-runner-mgr' THEN '6 - private internal runners'
     WHEN runner_type = 'Self-Managed Runners' AND is_paid_by_gitlab = TRUE THEN '6 - private internal runners'
-
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'shared-gitlab-org-runner-mgr' THEN '1 - shared gitlab org runners'
-
     WHEN ci_runner_manager LIKE '%gpu%' THEN
       CASE WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64-gpu' THEN '8 - shared saas runners gpu - medium'
 
         WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64-gpu' THEN '9 - shared saas runners gpu - large'
       END
-
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%.saas-linux-small-amd64' THEN '2 - shared saas runners - small'
-
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64' THEN '3 - shared saas runners - medium'
-
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64' THEN '4 - shared saas runners - large'
-
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%.saas-linux-xlarge-amd64' THEN '10 - shared saas runners - xlarge'
-
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'macos shared runners' THEN '5 - shared saas macos runners'
-
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'windows-runner-mgr' THEN '7 - shared saas windows runners'
-
   END                                                                                   AS mapping,
   pl,
-  SUM(ci_build_minutes)                                                                 AS total_ci_minutes,
-  RATIO_TO_REPORT(total_ci_minutes) OVER(PARTITION BY reporting_day, mapping)           AS pct_ci_minutes
+  SUM(ci_build_minutes)                                                                 AS ci_build_minutes
 FROM ci_minutes
 WHERE mapping IS NOT NULL
 GROUP BY 1, 2, 3
 ORDER BY 1, mapping DESC
+
+)
+
+SELECT 
+reporting_day,
+mapping,
+pl,
+    CASE
+    WHEN mapping = '6 - private internal runners' THEN SUM(ci_build_minutes) 
+    WHEN mapping = '1 - shared gitlab org runners' THEN SUM(ci_build_minutes) 
+    WHEN mapping = '8 - shared saas runners gpu - medium' THEN SUM(ci_build_minutes) * 7
+    WHEN mapping = '2 - shared saas runners - small' THEN SUM(ci_build_minutes) 
+    WHEN mapping = '3 - shared saas runners - medium' THEN SUM(ci_build_minutes) * 2
+    WHEN mapping = '4 - shared saas runners - large' THEN SUM(ci_build_minutes) * 3
+    WHEN mapping = '10 - shared saas runners - xlarge' THEN SUM(ci_build_minutes) * 6
+    WHEN mapping = '5 - shared saas macos runners' THEN SUM(ci_build_minutes) * 6
+    WHEN mapping = '7 - shared saas windows runners' THEN SUM(ci_build_minutes)
+  END
+  AS total_ci_minutes,
+  RATIO_TO_REPORT(total_ci_minutes) OVER(PARTITION BY reporting_day, mapping)           AS pct_ci_minutes
+  FROM mapped
+  group by 1,2,3
+
