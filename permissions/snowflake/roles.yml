@@ -5307,7 +5307,6 @@ roles:
     - tableau_loader:
         warehouses:
             - loading
-            - loading_xl
         owns:
             schemas:
                 - raw.tableau_cloud
