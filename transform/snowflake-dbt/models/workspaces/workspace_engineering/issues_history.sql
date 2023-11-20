@@ -62,7 +62,7 @@ final AS (
     wf.label_valid_to                                                                                                                                                AS workflow_label_valid_to,
     wf.workflow                                                                                                                                                      AS workflow_label,
     wfl.cycle,
-    IFF(dates.date_actual > DATE_TRUNC('day', issues.closed_at), NULL,
+    IFF(dates.date_actual > DATE_TRUNC('day', issues.closed_at), DATEDIFF('day', issues.created_at, issues.closed_at),
       DATEDIFF('day', issues.created_at, dates.date_actual))                                                                                                         AS issue_open_age_in_days,
     DATEDIFF('day', severity.label_added_at, dates.date_actual)                                                                                                      AS severity_label_age_in_days,
     assigend_users.assigned_usernames,
@@ -90,7 +90,12 @@ final AS (
         WHEN 'S3' THEN 90
         WHEN 'S4' THEN 120 END)
     END                                                                                                                                                              AS slo,
+/*
+Request to have 'risk treatment::operational requirement' exempt from past-due KPI metrics
+https://gitlab.com/gitlab-org/quality/engineering-analytics/team-tasks/-/issues/335
+*/
     CASE WHEN issues.is_security THEN (CASE
+    WHEN ARRAY_CONTAINS('risk treatment::operational requirement'::variant, issues.labels) THEN 0
       WHEN severity_label_age_in_days > 30
         AND severity.severity = 'S1' THEN 1
       WHEN severity_label_age_in_days > 30
@@ -101,6 +106,7 @@ final AS (
         AND severity.severity = 'S4' THEN 1
       ELSE 0
       END) ELSE (CASE
+    WHEN ARRAY_CONTAINS('risk treatment::operational requirement'::variant, issues.labels) THEN 0
         WHEN severity_label_age_in_days > 30
           AND severity.severity = 'S1' THEN 1
         WHEN severity_label_age_in_days > 60

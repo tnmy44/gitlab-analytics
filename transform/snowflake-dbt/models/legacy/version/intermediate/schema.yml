@@ -41,16 +41,6 @@ models:
             tests:
                 - not_null
 
-    - name: version_version_checks
-      columns:
-          - name: id
-            tests: 
-                - not_null
-                - unique       
-          - name: host_id
-            tests:
-                - not_null
-
     - name: version_versions
       columns:
           - name: id

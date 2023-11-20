@@ -197,6 +197,12 @@ Creates a base view with generated keys for the order type shared dimension and 
 
 {% enddocs %}
 
+{% docs prep_sales_funnel_kpi %}
+
+Creates a base view with generated keys for the sales funnel kpi dimension and references in facts.
+
+{% enddocs %}
+
 {% docs prep_deal_path %}
 
 Creates a base view with generated keys for the deal path shared dimension and references in facts.

@@ -36,7 +36,7 @@ ide_extension_version_context AS (
 joined_code_suggestions_contexts AS (
 
   /*
-  All Code Suggestions-related events have the code_suggestions_context, but only a subset 
+  All Code Suggestions-related events have the code_suggestions_context, but only a subset
   have the ide_extension_version_context.
   */
 
@@ -47,10 +47,16 @@ joined_code_suggestions_contexts AS (
     ide_extension_version_context.extension_version,
     ide_extension_version_context.ide_name,
     ide_extension_version_context.ide_vendor,
-    ide_extension_version_context.ide_version
+    ide_extension_version_context.ide_version,
+    ide_extension_version_context.language_server_version
   FROM code_suggestions_context
   LEFT JOIN ide_extension_version_context
     ON code_suggestions_context.behavior_structured_event_pk = ide_extension_version_context.behavior_structured_event_pk
+  {% if is_incremental() %}
+
+    WHERE code_suggestions_context.behavior_at >= (SELECT MAX(behavior_at) FROM {{ this }})
+
+  {% endif %}
 
 ),
 
@@ -65,7 +71,13 @@ code_suggestions_joined_to_fact_and_dim AS (
     dim_behavior_event.event_category,
     dim_behavior_event.event_action,
     dim_behavior_event.event_label,
-    dim_behavior_event.event_property
+    dim_behavior_event.event_property,
+    --Need to exclude VS Code 3.76.0 (which sent duplicate events)
+    CASE
+      WHEN user_agent LIKE '%3.76.0 VSCode%' THEN TRUE --exclude events which carry the version in user_agent from the code_suggestions_context
+      WHEN ide_name = 'Visual Studio Code' AND extension_version = '3.76.0' THEN TRUE --exclude events from with version from the ide_extension_version context
+      ELSE FALSE
+    END AS is_event_to_exclude
   FROM joined_code_suggestions_contexts
   INNER JOIN fct_behavior_structured_event
     ON joined_code_suggestions_contexts.behavior_structured_event_pk = fct_behavior_structured_event.behavior_structured_event_pk
@@ -100,6 +112,7 @@ filtered_code_suggestion_events AS (
     ide_name,
     ide_vendor,
     ide_version,
+    language_server_version,
     contexts,
     code_suggestions_context,
     ide_extension_version_context,
@@ -107,9 +120,7 @@ filtered_code_suggestion_events AS (
     has_ide_extension_version_context
   FROM code_suggestions_joined_to_fact_and_dim
   WHERE app_id IN ('gitlab_ai_gateway', 'gitlab_ide_extension') --"official" Code Suggestions app_ids
-    --Need to exclude VS Code 3.76.0 (which sent duplicate events)
-    AND (user_agent NOT LIKE '%3.76.0 VSCode%' OR user_agent IS NULL) --exclude events which carry the version in user_agent from the code_suggestions_context
-    AND IFF(ide_name = 'Visual Studio Code', extension_version != '3.76.0' OR extension_version IS NULL, TRUE) --exclude events from with version from the ide_extension_version context
+    AND is_event_to_exclude = FALSE --only include the good events
 
 )
 

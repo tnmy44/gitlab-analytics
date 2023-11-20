@@ -150,7 +150,7 @@ transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armst
 
 /transform/snowflake-dbt/models/workspaces/workspace_people/         @pempey @iweeks @aperez349
 
-/transform/snowflake-dbt/models/workspaces/workspace_customer_success/  @mdrussell @snalamaru @chrissharp
+/transform/snowflake-dbt/models/workspaces/workspace_customer_success/  @mdrussell @snalamaru @chrissharp @michellecooper
 
 /transform/snowflake-dbt/models/workspaces/workspace_product/           @cbraza @matthewpetersen @eneuberger @nraisinghani @mdrussell @snalamaru @jeanpeguero @dpeterson1 @nhervas @michellecooper
 

@@ -1257,6 +1257,18 @@ An attribute of an opportunity to designate what type or order it is. This is st
 
 {% enddocs %}
 
+{% docs dim_sales_funnel_kpi_sk %}
+
+Surrogate key associated with the sales funnel KPIs.
+
+{% enddocs %}
+
+{% docs sales_funnel_kpi_name %}
+
+The name of the associated sales funnel KPI.
+
+{% enddocs %}
+
 {% docs order_type_live %}
 
 The current Order Type of an opportunity, potentially after it has been stamped on its close date. Per the [documentation in Salesforce](https://gitlab.my.salesforce.com/00N4M00000Ib8Ok?setupid=OpportunityFields), This field is used to track movement of values post deal close and is for analysis purposes only.
@@ -2454,6 +2466,12 @@ Version number of the IDE, e.g. 1.81.1. Appears in the `ide_extension_version` c
 
 {% enddocs %}
 
+{% docs ide_extension_language_server_version %}
+
+Version number of the Language Server, e.g. 3.9.0. Appears in the `ide_extension_version` context
+
+{% enddocs %}
+
 {% docs has_code_suggestions_context %}
 
 A flag to indicate if the event has additional information in the context field related to `code_suggestions_context`.  This context is defined in the Gitlab [iglu project](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema)
@@ -2527,3 +2545,10 @@ Business Unit key that accounts for yearly changes in the sales hierarchy.
 Follows the same rules as the field `dim_crm_current_account_set_hierarchy_sk`
 
 {% enddocs %}
+
+{% docs label_title %}
+
+String of labels associated with a GitLab object (issue, merge request, epic, etc.).
+
+{% enddocs %}
+

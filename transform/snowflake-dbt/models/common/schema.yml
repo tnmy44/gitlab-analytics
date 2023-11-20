@@ -906,6 +906,16 @@ models:
           - unique
         tags: [ "tdf", "order_type", "common", "sales_funnel" ]
 
+  - name: dim_sales_funnel_kpi
+    description: '{{ doc("dim_sales_funnel_kpi") }}'
+    columns:
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
+      - name: sales_funnel_kpi_name
+        description: '{{ doc("sales_funnel_kpi_name") }}'
+
   - name: dim_host_instance_type
     description: '{{ doc("dim_host_instance_type") }}'
     columns:
@@ -2594,6 +2604,8 @@ models:
       - name: dim_plan_sk_at_creation
         tests:
           - not_null
+      - name: masked_label_title
+        description: '{{ doc("label_title") }}'
 
   - name: dim_ci_pipeline
     description: '{{ doc("dim_ci_pipeline") }}'
@@ -2762,13 +2774,13 @@ models:
   - name: dim_merge_request
     description: '{{ doc("dim_merge_request") }}'
     columns:
-      - name: dim_merge_request_id
+      - name: dim_merge_request_sk
         description: The unique identifier for each of the merge requets.
         tests:
           - not_null
           - unique
-      - name: dim_project_id
-      - name: dim_plan_id
+      - name: dim_project_sk
+      - name: dim_plan_sk_at_creation
         tests:
           - not_null
 
@@ -5571,6 +5583,8 @@ models:
         description: The invoice amount excluding tax
       - name: invoice_item_charge_amount
         description: The amount being charged for the invoice item. This amount doesn't include taxes regardless if the charge's tax mode is inclusive or exclusive.
+      - name: annual_billing_invoice_price
+        description: This is a calculated field which takes the invoice_item_unit_price and calculates the yearly price. For example, if it's a monthly charge it will multiply by 12 and a 2 year price will be divided by 2.
       - name: invoice_item_unit_price
         description: The per-unit price of the invoice item. Calculated from multiple fields in Product Rate Plan Charge and Product Rate Plan Charge Tier objects.
 
@@ -5774,6 +5788,11 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: fct_sales_funnel_partner_alliance_target_daily
     description: '{{ doc("fct_sales_funnel_partner_alliance_target_daily") }}'
@@ -5786,6 +5805,11 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
         tags: ["tdf", "common", "sales_funnel"]
       - name: report_target_date
         description: '{{ doc("report_target_date") }}'
@@ -5806,6 +5830,11 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: fct_sales_funnel_target
     description: '{{ doc("fct_sales_funnel_target") }}'
@@ -5819,6 +5848,11 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
+        tags: ["tdf", "common", "sales_funnel"]
 
   - name: fct_sales_funnel_target_daily
     description: '{{ doc("fct_sales_funnel_target_daily") }}'
@@ -5831,6 +5865,11 @@ models:
         tests:
           - not_null
           - unique
+        tags: ["tdf", "common", "sales_funnel"]
+      - name: dim_sales_funnel_kpi_sk
+        description: '{{ doc("dim_sales_funnel_kpi_sk") }}'
+        tests:
+          - not_null
         tags: ["tdf", "common", "sales_funnel"]
       - name: report_target_date
         description: '{{ doc("report_target_date") }}'

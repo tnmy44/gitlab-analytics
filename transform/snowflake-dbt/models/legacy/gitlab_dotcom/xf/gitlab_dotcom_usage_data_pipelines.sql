@@ -148,7 +148,7 @@
   },
   {
     "event_name": "merge_requests",
-    "source_table_name": "gitlab_dotcom_merge_requests",
+    "source_table_name": "gitlab_dotcom_merge_requests_source",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "merge_request_id",
@@ -537,8 +537,8 @@ joins AS (
 
       LEFT JOIN gitlab_subscriptions
         ON ultimate_namespace.namespace_id = gitlab_subscriptions.namespace_id
-        AND data.event_created_at >= TO_DATE(gitlab_subscriptions.valid_from)
-        AND data.event_created_at < {{ coalesce_to_infinity("TO_DATE(gitlab_subscriptions.valid_to)") }}
+        AND TO_DATE(data.event_created_at) >= TO_DATE(gitlab_subscriptions.valid_from)
+        AND TO_DATE(data.event_created_at) < {{ coalesce_to_infinity("TO_DATE(gitlab_subscriptions.valid_to)") }}
       LEFT JOIN plans
         ON gitlab_subscriptions.plan_id = plans.plan_id
       LEFT JOIN blocked_users

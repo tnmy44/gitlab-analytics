@@ -134,14 +134,11 @@ team_hierarchy AS (
       Add the superior_id_group (one of the keys used to group the 
       hierarchy changes in team_superior_change) to make the grouping unique
     */
-    recursive_hierarchy.superior_id_group 										AS superior_id_group,
-    MAX(from_list.value::TIMESTAMP)                                             AS hierarchy_valid_from,
-    MIN(to_list.value::TIMESTAMP)                                               AS hierarchy_valid_to
+    recursive_hierarchy.superior_id_group                                       AS superior_id_group,
+    ARRAY_MAX(recursive_hierarchy.valid_from_list)                              AS hierarchy_valid_from,
+    ARRAY_MIN(recursive_hierarchy.valid_to_list)                                AS hierarchy_valid_to
   FROM recursive_hierarchy
-  INNER JOIN LATERAL FLATTEN(INPUT => recursive_hierarchy.valid_from_list)      AS from_list
-  INNER JOIN LATERAL FLATTEN(INPUT => recursive_hierarchy.valid_to_list)        AS to_list
-  {{ dbt_utils.group_by(n=22) }}
-  HAVING hierarchy_valid_to > hierarchy_valid_from
+  WHERE hierarchy_valid_to > hierarchy_valid_from
 
 ),
 
@@ -194,7 +191,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@lisvinueza",
-    updated_by="@lisvinueza",
+    updated_by="@michellecooper",
     created_date="2023-01-17",
-    updated_date="2023-06-30",
+    updated_date="2023-10-18",
  	) }}

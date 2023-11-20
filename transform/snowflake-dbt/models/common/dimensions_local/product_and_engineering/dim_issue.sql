@@ -58,6 +58,7 @@ WITH prep_issue AS (
       milestone_title,
       milestone_due_date,
       labels,
+      masked_label_title,
       upvote_count,
       first_mentioned_in_commit_at,
       first_associated_with_milestone_at,
@@ -78,6 +79,6 @@ WITH prep_issue AS (
     created_by="@mpeychet_",
     updated_by="@michellcooper",
     created_date="2021-06-17",
-    updated_date="2023-10-03"
+    updated_date="2023-10-25"
 ) }}
 

@@ -17,7 +17,7 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 - All events will carry the `code_suggestions_context`, but only a subset will contain the `ide_extension_version` context
 - `app_id = 'gitlab_ai_gateway'` 
   - These events originate from the AI gateway and cannot be blocked
-  - There is only one event per suggestion (upon the request), which carries `event_action = 'suggestions_requested'`. Therefore these events can only be used to get a counts of users, etc, not acceptance rate.
+  - There is only one event per suggestion (upon the request), which carries an `event_action` of `suggestions_requested` or `suggestion_requested`. Therefore these events can only be used to get a counts of users, etc, not acceptance rate.
   - These events do not carry the suggestion identifier in `event_label`
   - These events carry the `code_suggestions_context`, but not the `ide_extension_version` context
 - `app_id = 'gitlab_ide_extension'`
@@ -29,6 +29,7 @@ This ID is generated using `event_id` from [prep_snowplow_unnested_events_all](h
 **Other Comments:**
 - Schema for `code_suggestions_context` [here](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context)
 - Schema for `ide_extension_version` context [here](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version)
+- A visual representation of the different Snowplow events coming from the IDE extension can be found [here](https://gitlab.com/gitlab-org/editor-extensions/gitlab-lsp/-/blob/main/docs/telemetry.md)
 - Structured events are custom events implemented with five parameters: event_category, event_action, event_label, event_property and event_value. Snowplow documentation on [types of events](https://docs.snowplow.io/docs/understanding-tracking-design/out-of-the-box-vs-custom-events-and-entities/).
 - There is information on some Snowplow structured events in the [Snowplow event dictionary](https://metrics.gitlab.com/snowplow)
 
