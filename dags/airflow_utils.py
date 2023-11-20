@@ -18,7 +18,9 @@ SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.29"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.3"
-PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:upgrade_docker_python_version"
+PERMIFROST_IMAGE = (
+    "registry.gitlab.com/gitlab-data/permifrost:upgrade_docker_python_version"
+)
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
 
 SALES_ANALYTICS_NOTEBOOKS_PATH = f"analytics/sales_analytics_notebooks"
