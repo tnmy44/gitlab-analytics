@@ -59,8 +59,7 @@ joined as (
     g.total_ci_minutes as gitlab_ci_minutes,
     c.usage_amount_in_pricing_units - g.total_ci_minutes  as overhead_compute_minutes,
     c.usage_amount_in_pricing_units/g.total_ci_minutes as compute_efficiency,
-    CASE WHEN (level_4 = 'linux large' or level_4 = 'linux xlarge gpu') THEN c.net_cost/(g.total_ci_minutes*(3/4)/1000)
-    else c.net_cost/(g.total_ci_minutes/1000) END as dollar_efficency_cost_for_1000_ci_minutes
+    c.net_cost/(g.total_ci_minutes/1000) as dollar_efficency_cost_for_1000_ci_minutes
     FROM cloud_data c
     LEFT JOIN gitlab_data g
     ON c.date_day = g.date_day
