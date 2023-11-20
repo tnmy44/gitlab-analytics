@@ -23,33 +23,34 @@
 -- This CTE maps opportunities to tasks based on the account of task (account_opp_mapping) where prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id fails
 -- It uses the opp chronologically closest to the task date (rank_closest_opp) between three quarters prior to the (opp) close date and the (opp) close date.
   SELECT DISTINCT
+  *
+  FROM
+  (
+  SELECT 
     prep_crm_task.dim_crm_task_pk AS dim_crm_task_pk,
 
-     COALESCE(prep_crm_opportunity.dim_crm_opportunity_id, account_opp_mapping.dim_crm_opportunity_id) AS dim_mapped_opportunity_id,
+     COALESCE(prep_crm_task.dim_crm_opportunity_id, prep_crm_opportunity.dim_crm_opportunity_id) AS dim_mapped_opportunity_id,
 
     CASE 
-        WHEN prep_crm_opportunity.dim_crm_opportunity_id IS NOT NULL 
+        WHEN prep_crm_task.dim_crm_opportunity_id IS NOT NULL 
           THEN 'Opportunity'
-        WHEN account_opp_mapping.dim_crm_opportunity_id IS NOT NULL 
+        WHEN prep_crm_task.dim_crm_opportunity_id IS NULL 
           THEN 'Account'
         ELSE 'Not Mappable'
         END AS task_mapped_to,
 
     ROW_NUMBER() OVER(PARTITION BY prep_crm_task.dim_crm_task_pk 
-      ORDER BY DATEDIFF('day', prep_crm_task.task_date, account_opp_mapping.close_date) ASC
-      , account_opp_mapping.net_arr DESC) 
+      ORDER BY DATEDIFF('day', prep_crm_task.task_date, prep_crm_opportunity.close_date) ASC
+      , prep_crm_opportunity.net_arr DESC) 
     AS rank_closest_opp
   
-  FROM prep_crm_task
-  LEFT JOIN prep_crm_person
-    ON prep_crm_task.sfdc_record_id = prep_crm_person.sfdc_record_id
-  LEFT JOIN prep_crm_opportunity ON
-      prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
-  LEFT JOIN prep_crm_opportunity AS account_opp_mapping 
-  ON NVL(prep_crm_task.dim_crm_account_id, prep_crm_task.account_or_opportunity_id) = account_opp_mapping.dim_crm_account_id
-    AND prep_crm_task.task_date < account_opp_mapping.close_date
-    AND prep_crm_task.task_date >= DATEADD('month', -9, account_opp_mapping.close_fiscal_quarter_date)
+  FROM prep_crm_opportunity
+  JOIN prep_crm_task ON 
+      prep_crm_task.dim_crm_account_id = prep_crm_opportunity.dim_crm_account_id
 WHERE prep_crm_task.sa_activity_type IS NOT NULL
+  AND DATE_TRUNC('day',prep_crm_task.task_date) <= prep_crm_opportunity.close_date
+    )
+WHERE rank_closest_opp = 1
   ), 
   
 converted_leads AS (
@@ -121,8 +122,6 @@ converted_leads AS (
     ON COALESCE(converted_leads.sfdc_record_id,prep_crm_task.sfdc_record_id) = prep_crm_person.sfdc_record_id
   LEFT JOIN sub
     ON prep_crm_task.dim_crm_task_pk = sub.dim_crm_task_pk
-    AND sub.rank_closest_opp = 1
-    
 
 )
 
@@ -131,5 +130,5 @@ converted_leads AS (
     created_by="@michellecooper",
     updated_by="@jngCES",
     created_date="2022-12-05",
-    updated_date="2023-08-29"
+    updated_date="2023-11-20"
 ) }}
