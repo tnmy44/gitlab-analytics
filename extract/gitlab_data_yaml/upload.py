@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     pi_internal_hb_file_dict = dict(
         dev_section_pi="dev_section",
-        # enablement_section_pi="enablement_section",
+        core_platform_section_pi="core_platform_section",
         ops_section_pi="ops_section",
         product_pi="product",
         sales_pi="sales",
