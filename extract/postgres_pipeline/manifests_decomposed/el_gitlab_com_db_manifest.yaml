@@ -412,7 +412,7 @@ tables:
       , on_stop
       , status
       , finished_at
-      , cluster_id
+      , NULL AS cluster_id
       FROM deployments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
