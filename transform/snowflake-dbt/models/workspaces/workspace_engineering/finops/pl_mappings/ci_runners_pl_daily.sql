@@ -63,8 +63,7 @@ SELECT
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'shared-gitlab-org-runner-mgr' THEN '1 - shared gitlab org runners'
     WHEN ci_runner_manager LIKE '%gpu%' THEN
       CASE WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64-gpu' THEN '8 - shared saas runners gpu - medium'
-
-        WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64-gpu' THEN '9 - shared saas runners gpu - large'
+           WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64-gpu' THEN '9 - shared saas runners gpu - large'
       END
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%.saas-linux-small-amd64' THEN '2 - shared saas runners - small'
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64' THEN '3 - shared saas runners - medium'
