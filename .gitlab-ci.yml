@@ -260,6 +260,7 @@ clone_stop:
 🧊⚙permifrost_run:
   <<: *permifrost
   script:
+    - pip install snowflake-connector-python[secure-local-storage]==2.9.0
     - permifrost run permissions/snowflake/roles.yml --diff --dry
   when: manual
 
