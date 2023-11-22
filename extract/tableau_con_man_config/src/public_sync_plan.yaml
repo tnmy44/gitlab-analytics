@@ -1,0 +1,51 @@
+name: Test sync
+operation: sync
+target:
+  name: gitlabsandbox
+  type: server
+  secrete_prefix: TABLEAU_API_SANDBOX
+  site_name: TABLEAU_API_SANDBOX_SITE_NAME
+  token_name: TABLEAU_API_SANDBOX_TOKEN_NAME
+  token_secret: TABLEAU_API_SANDBOX_TOKEN_SECRET
+  server_url: TABLEAU_API_SANDBOX_URL
+reference:
+  name: gitlab
+  type: server
+  secrete_prefix: TABLEAU_API
+  site_name: TABLEAU_API_SITE_NAME
+  token_name: TABLEAU_API_TOKEN_NAME
+  token_secret: TABLEAU_API_TOKEN_SECRET
+  server_url: TABLEAU_API_URL
+target_selection_rules:
+  - field: ProjectName
+    operator: Equals
+    value: Public
+reference_selection_rules:
+  - field: Tags
+    operator: Equals
+    value: SyncTest
+assets:
+  workbooks:
+    options:
+      include_published_datasources: True
+      project_type: target
+      use_reference_permissions: False
+      update_extract_connection: False
+      archive_on_delete: True
+      archive_project_path: Archive
+      archive_suffix: True
+    mapping:
+      project_filter:
+        - field: Name
+          operator: Equals
+          value: Public
+  datasources:
+    options:
+      project_type: target
+      use_reference_permissions: False
+      update_extract_connection: False
+    mapping:
+      project_filter:
+        - field: Name
+          operator: Equals
+          value: Public
