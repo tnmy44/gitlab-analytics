@@ -249,9 +249,7 @@ clone_stop:
   
 .permifrost: &permifrost
   stage: 🐍 Python
-  image:
-    name: registry.gitlab.com/gitlab-data/permifrost:upgrade_docker_python_version
-    pull_policy: always
+  image: registry.gitlab.com/gitlab-data/permifrost:upgrade_docker_python_version
   tags:
     - analytics
   only:
