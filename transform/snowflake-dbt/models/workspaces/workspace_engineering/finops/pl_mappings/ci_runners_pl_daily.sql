@@ -31,6 +31,7 @@ WITH ci_minutes AS (
       WHEN LOWER(ci_runner_description) LIKE '%-_.saas-linux-large-amd64%' THEN '%-_.saas-linux-large-amd64'
       WHEN LOWER(ci_runner_description) LIKE '%.saas-linux-small-amd64%' THEN '%.saas-linux-small-amd64'
       WHEN LOWER(ci_runner_description) LIKE '%.saas-linux-xlarge-amd64%' THEN '%.saas-linux-xlarge-amd64'
+      WHEN LOWER(ci_runner_description) LIKE '%.saas-linux-2xlarge-amd64%' THEN '%.saas-linux-2xlarge-amd64'
       WHEN LOWER(ci_runner_description) LIKE 'macos shared%' OR LOWER(ci_runner_description) LIKE '%.saas-macos-medium-m1.runners-manager%' THEN 'macos shared runners'
       ELSE ci_runner_manager
     END                                          AS ci_runner_manager,
@@ -69,6 +70,7 @@ SELECT
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-medium-amd64' THEN '3 - shared saas runners - medium'
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%-_.saas-linux-large-amd64' THEN '4 - shared saas runners - large'
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%.saas-linux-xlarge-amd64' THEN '10 - shared saas runners - xlarge'
+    WHEN runner_type = 'Shared Runners' AND ci_runner_manager = '%.saas-linux-2xlarge-amd64' THEN '11 - shared saas runners - 2xlarge'
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'macos shared runners' THEN '5 - shared saas macos runners'
     WHEN runner_type = 'Shared Runners' AND ci_runner_manager = 'windows-runner-mgr' THEN '7 - shared saas windows runners'
   END                                                                                   AS mapping,
@@ -86,18 +88,18 @@ reporting_day,
 mapping,
 pl,
     CASE
-    WHEN mapping = '6 - private internal runners' THEN SUM(ci_build_minutes) 
     WHEN mapping = '1 - shared gitlab org runners' THEN SUM(ci_build_minutes) 
-    WHEN mapping = '8 - shared saas runners gpu - medium' THEN SUM(ci_build_minutes) * 7
     WHEN mapping = '2 - shared saas runners - small' THEN SUM(ci_build_minutes) 
     WHEN mapping = '3 - shared saas runners - medium' THEN SUM(ci_build_minutes) * 2
     WHEN mapping = '4 - shared saas runners - large' THEN SUM(ci_build_minutes) * 3
-    WHEN mapping = '10 - shared saas runners - xlarge' THEN SUM(ci_build_minutes) * 6
     WHEN mapping = '5 - shared saas macos runners' THEN SUM(ci_build_minutes) * 6
+    WHEN mapping = '6 - private internal runners' THEN SUM(ci_build_minutes) 
     WHEN mapping = '7 - shared saas windows runners' THEN SUM(ci_build_minutes)
+    WHEN mapping = '8 - shared saas runners gpu - medium' THEN SUM(ci_build_minutes) * 7
+    WHEN mapping = '10 - shared saas runners - xlarge' THEN SUM(ci_build_minutes) * 6
+    WHEN mapping = '11 - shared saas runners - 2xlarge' THEN SUM(ci_build_minutes) * 12
   END
   AS total_ci_minutes,
   RATIO_TO_REPORT(total_ci_minutes) OVER(PARTITION BY reporting_day, mapping)           AS pct_ci_minutes
   FROM mapped
   group by 1,2,3
-
