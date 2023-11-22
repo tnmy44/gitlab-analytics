@@ -18,9 +18,6 @@
   ('map_gitlab_dotcom_xmau_metrics', 'map_gitlab_dotcom_xmau_metrics'),
   ('services', 'gitlab_dotcom_integrations_source'),
   ('project', 'prep_project'),
-  ('ptpt_scores_by_user', 'prep_ptpt_scores_by_user'),
-  ('ptpf_scores_by_user', 'prep_ptpf_scores_by_user'),
-  ('ptpl_scores_by_user', 'prep_ptpl_scores_by_user'),
   ('ptp_scores_by_user', 'prep_ptp_scores_by_user'),
   ('namespace_details', 'gitlab_dotcom_namespace_details_source')
 ]) }}
@@ -832,35 +829,6 @@
       marketing_contact.wip_is_valid_email_address,
       marketing_contact.wip_invalid_email_address_reason,
 
-      -- Propensity to purchase trials fields
-      IFF(ptpt_scores_by_user.namespace_id IS NOT NULL, TRUE, FALSE)
-                                                  AS is_ptpt_contact,
-      IFF(is_ptpt_contact = TRUE OR (is_ptpt_contact = FALSE AND marketing_contact.is_ptpt_contact_marketo = TRUE), TRUE, FALSE)
-                                                  AS is_ptpt_contact_change,
-      ptpt_scores_by_user.namespace_id            AS ptpt_namespace_id,
-      ptpt_scores_by_user.score_group             AS ptpt_score_group,
-      ptpt_scores_by_user.insights                AS ptpt_insights,
-      ptpt_scores_by_user.score_date              AS ptpt_score_date,
-      ptpt_scores_by_user.past_score_group        AS ptpt_past_score_group,
-      ptpt_scores_by_user.past_score_date         AS ptpt_past_score_date,
-
-      -- Propensity to purchase Free fields
-      IFF(ptpf_scores_by_user.namespace_id IS NOT NULL, TRUE, FALSE)
-                                                  AS is_ptpf_contact,
-      ptpf_scores_by_user.namespace_id            AS ptpf_namespace_id,
-      ptpf_scores_by_user.score_group             AS ptpf_score_group,
-      ptpf_scores_by_user.score_date              AS ptpf_score_date,
-      ptpf_scores_by_user.past_score_group        AS ptpf_past_score_group,
-      ptpf_scores_by_user.past_score_date         AS ptpf_past_score_date,
-
-      -- Propensity to purchase Lead fields
-      IFF(ptpl_scores_by_user.lead_id IS NOT NULL, TRUE, FALSE)
-                                                  AS is_ptpl_contact,
-      ptpl_scores_by_user.score_group             AS ptpl_score_group,
-      ptpl_scores_by_user.score_date              AS ptpl_score_date,
-      ptpl_scores_by_user.past_score_group        AS ptpl_past_score_group,
-      ptpl_scores_by_user.past_score_date         AS ptpl_past_score_date,
-
       -- Propensity to purchase fields
       IFF(ptp_scores_by_user.model_grain_id IS NOT NULL, TRUE, FALSE)
                                                   AS is_ptp_contact,
@@ -938,12 +906,6 @@
       ON services_by_email.email = marketing_contact.email_address
     LEFT JOIN users_role_by_email
       ON users_role_by_email.email = marketing_contact.email_address
-    LEFT JOIN ptpt_scores_by_user
-      ON ptpt_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
-    LEFT JOIN ptpf_scores_by_user
-      ON ptpf_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
-    LEFT JOIN ptpl_scores_by_user
-      ON ptpl_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN ptp_scores_by_user
       ON ptp_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN namespace_notifications
@@ -1016,13 +978,6 @@
       'is_paid_tier',
       'is_pql_change',
       'is_paid_tier_change',
-      'is_ptpt_contact',
-      'is_ptpt_contact_change',
-      'ptpt_namespace_id',
-      'ptpt_score_group',
-      'ptpt_insights',
-      'ptpt_score_date',
-      'ptpt_past_score_group',
       'is_member_of_public_ultimate_parent_namespace',
       'is_member_of_private_ultimate_parent_namespace',
       'user_limit_notification_at',
@@ -1048,7 +1003,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@chrissharp",
+    updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2023-10-02"
+    updated_date="2023-11-22"
 ) }}

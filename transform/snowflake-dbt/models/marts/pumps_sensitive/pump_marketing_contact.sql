@@ -73,14 +73,6 @@ SELECT
   is_member_of_public_ultimate_parent_namespace,
   is_member_of_private_ultimate_parent_namespace,
 
-  --Ptpt fields
-  is_ptpt_contact,
-  ptpt_namespace_id,
-  ptpt_score_group,
-  ptpt_insights,
-  ptpt_score_date,
-  ptpt_past_score_group,
-
   -- Namespace notification dates
   user_limit_notification_at,
   user_limit_enforcement_at,
@@ -88,13 +80,6 @@ SELECT
   user_limit_namespace_id,
 
   marketo_lead_id,
-
-  --Ptpf fields
-  is_ptpf_contact,
-  ptpf_namespace_id,
-  ptpf_score_group,
-  ptpf_score_date,
-  ptpf_past_score_group,
 
     --Ptp fields
   is_ptp_contact,
@@ -117,7 +102,6 @@ WHERE rlike(email_address, '^[A-Z0-9.+_%-]+@[A-Z0-9.-]+\\.[A-Z]+$','i')
     OR ( is_paid_tier_change = TRUE
       AND sfdc_record_id IS NOT NULL
     )
-    OR is_ptpt_contact_change = TRUE
     OR is_impacted_by_user_limit_change = TRUE
     OR is_ptp_contact_change = TRUE
   )

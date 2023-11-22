@@ -102,23 +102,17 @@ A new row is added for each dim_marketing_contact_id whenever:
 
 Takes the scores from ptpt_scores, transforms it to user / email address grain and uses the latest score date available.
 
-The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
-
 {% enddocs %}
 
 {% docs prep_ptpf_scores_by_user %}
 
 Takes the scores from ptpf_scores, transforms it to user / email address grain and uses the latest score date available. It only syncs contacts with a `score_group >= 3`.
 
-The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
-
 {% enddocs %}
 
 {% docs prep_ptpl_scores_by_user %}
 
 Takes the scores from ptpl_scores (Propensity to Purchase: Leads), transforms it to user / email address grain and uses the latest score date available. It only syncs contacts with a `score_group >= 3`.
-
-The scores of this model are then used in mart_marketing_contact and the marketing pump to later be synced with Marketo and SFDC.
 
 {% enddocs %}
 
