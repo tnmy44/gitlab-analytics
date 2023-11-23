@@ -162,9 +162,11 @@ class DbtModelClone:
         """
 
         sorted_list = self.clean_dbt_input(model_input)
+        
         # Total number of models to process
         total_models = len(sorted_list)
         current_model = 0  # Initializing the current model counter
+
         for i in sorted_list:
             current_model += 1
             database_name = i.get("database").upper()
