@@ -97,7 +97,7 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/feature_flags_yaml_latest.sql      @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/feature_flags_yaml_historical.sql  @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
 
-/transform/snowflake-dbt/models/sources/gitlab_data_yaml/flaky_tests_source.sql            @jjstark @paul_armstrong @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
+/transform/snowflake-dbt/models/sources/gitlab_data_yaml/flaky_tests_source.sql            @chrissharp @snalamaru @mdrussell @iweeks @michellecooper 
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_latest.sql        @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_historical.sql    @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
 
