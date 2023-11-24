@@ -90,7 +90,7 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
 /transform/snowflake-dbt/models/sources/gainsight_customer_success/ @jjstark @rbacovic @mdrussell @iweeks @michellecooper
 
-/transform/snowflake-dbt/models/sources/gitlab_data_yaml/   @jjstark @paul_armstrong @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
+/transform/snowflake-dbt/models/sources/gitlab_data_yaml/ @chrissharp @snalamaru @mdrussell @iweeks @michellecooper 
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/    @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
 
 /transform/snowflake-dbt/models/sources/gitlab_data_yaml/feature_flags_source.sql          @jjstark @paul_armstrong @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
