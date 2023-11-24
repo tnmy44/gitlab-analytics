@@ -789,7 +789,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@annapiaseczna",
     created_date="2022-01-14",
-    updated_date="2023-11-13"
+    updated_date="2023-11-24"
 ) }}
