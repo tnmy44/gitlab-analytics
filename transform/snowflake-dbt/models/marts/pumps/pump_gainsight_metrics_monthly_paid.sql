@@ -332,7 +332,6 @@
       monthly_sm_metrics.projects_with_repositories_enabled_all_time_user,
       monthly_sm_metrics.api_fuzzing_jobs_usage_28_days_user,
       monthly_sm_metrics.coverage_fuzzing_pipeline_usage_28_days_event,
-      monthly_sm_metrics.api_fuzzing_pipeline_usage_28_days_event,
       monthly_sm_metrics.container_scanning_pipeline_usage_28_days_event,
       monthly_sm_metrics.dependency_scanning_pipeline_usage_28_days_event,
       monthly_sm_metrics.sast_pipeline_usage_28_days_event,
@@ -586,7 +585,6 @@
       monthly_saas_metrics.projects_with_repositories_enabled_all_time_user,
       monthly_saas_metrics.api_fuzzing_jobs_usage_28_days_user,
       monthly_saas_metrics.coverage_fuzzing_pipeline_usage_28_days_event,
-      monthly_saas_metrics.api_fuzzing_pipeline_usage_28_days_event,
       monthly_saas_metrics.container_scanning_pipeline_usage_28_days_event,
       monthly_saas_metrics.dependency_scanning_pipeline_usage_28_days_event,
       monthly_saas_metrics.sast_pipeline_usage_28_days_event,
@@ -774,7 +772,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@annapiaseczna",
     created_date="2022-10-12",
-    updated_date="2023-11-14"
+    updated_date="2023-11-24"
 ) }}
