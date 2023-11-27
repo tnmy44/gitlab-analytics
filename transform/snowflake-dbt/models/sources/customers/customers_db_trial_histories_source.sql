@@ -2,6 +2,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ source('customers', 'customers_db_trial_histories') }}
+    WHERE gl_namespace_id NOT LIKE '%x%'
     QUALIFY ROW_NUMBER() OVER (PARTITION BY gl_namespace_id ORDER BY updated_at DESC) = 1
 
 ), renamed AS (
@@ -16,6 +17,7 @@ WITH source AS (
       glm_content::VARCHAR     AS glm_content,
       trial_entity::VARCHAR    AS trial_entity
     FROM source
+
     
 )
 
