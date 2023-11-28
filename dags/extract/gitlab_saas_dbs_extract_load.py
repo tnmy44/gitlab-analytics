@@ -467,8 +467,8 @@ for source_name, config in config_dict.items():
                             "TASK_INSTANCE": "{{ task_instance_key_str }}",
                             "LAST_LOADED": get_last_loaded(config["dag_name"]),
                         },
-                        affinity=get_affinity("production"),
-                        tolerations=get_toleration("production"),
+                        affinity=get_affinity("extraction_highmem"),
+                        tolerations=get_toleration("extraction_highmem"),
                         arguments=[deletes_cmd],
                         do_xcom_push=True,
                     )
