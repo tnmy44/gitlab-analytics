@@ -685,7 +685,7 @@ def get_source_and_target_columns(
         pd.read_sql(sql=target_query.format(target_table), con=target_engine)
         .drop(
             axis=1,
-            columns=["_uploaded_at", "_task_instance", "is_deleted"],
+            columns=["_uploaded_at", "_task_instance", "pgp_is_deleted"],
             errors="ignore",
         )
         .columns
@@ -1012,10 +1012,10 @@ def update_import_query_for_delete_export(import_query: str, primary_key: str):
 
 def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: str):
     """
-    Run a series of sql statements to update the target table's is_deleted' field:
+    Run a series of sql statements to update the target table's pgp_is_deleted' field:
         - Check if deletes table exists, abort if not exists
-        - Add is_deleted field to target table if not exists
-        - Run UPDATE on target table 'is_deleted' field
+        - Add pgp_is_deleted field to target table if not exists
+        - Run UPDATE on target table 'pgp_is_deleted' field
         - Run DROP table on deletes table
 
     """
@@ -1034,29 +1034,29 @@ def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: 
         target_engine, deletes_table, TARGET_DELETES_SCHEMA
     )
     if is_new_table:
-        logging.info("No deletes table, aborting UPDATE for 'is_deleted' field")
+        logging.info("No deletes table, aborting UPDATE for 'pgp_is_deleted' field")
         target_engine.dispose()
         return
 
-    # Add is_deleted field to target table if not exists
+    # Add pgp_is_deleted field to target table if not exists
     # Snowflake has a 'add column IF NOT EXISTS' clause but it doesn't work with DEFAULT
     add_is_deleted_field_query = (
-        f"ALTER TABLE {target_table_path} ADD COLUMN is_deleted boolean default false;"
+        f"ALTER TABLE {target_table_path} ADD COLUMN pgp_is_deleted boolean default false;"
     )
     try:
         alter_query_results = query_executor(target_engine, add_is_deleted_field_query)
-        logging.info(f"is_deleted add column, {alter_query_results[0][0]}")
+        logging.info(f"pgp_is_deleted add column, {alter_query_results[0][0]}")
     except sqlalchemy.exc.ProgrammingError as e:
         # 'ambiguous column name' msg means is_delete column already exists, continue
         if "ambiguous column name" not in str(e):
             raise
 
-    logging.info("Running update query for is_deleted column...")
-    # Run UPDATE on target table 'is_deleted' field
+    logging.info("Running update query for pgp_is_deleted column...")
+    # Run UPDATE on target table 'pgp_is_deleted' field
     update_query = f"""
     UPDATE {target_table_path} t
     SET
-      t.is_deleted = TRUE
+      t.pgp_is_deleted = TRUE
     WHERE
       NOT EXISTS (
         SELECT *
@@ -1065,12 +1065,12 @@ def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: 
         WHERE
           {deletes_table_path}.{primary_key} = t.{primary_key}
       )
-      AND t.is_deleted = FALSE;
+      AND t.pgp_is_deleted = FALSE;
       """
 
     update_query_results = query_executor(target_engine, update_query)
     logging.info(
-        f"{update_query_results[0][0]} records were updated for 'is_deleted' field."
+        f"{update_query_results[0][0]} records were updated for 'pgp_is_deleted' field."
     )
 
     # Run DROP table on deletes table
