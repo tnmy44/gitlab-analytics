@@ -274,6 +274,10 @@ models:
         description: '{{ doc("coverage_fuzzing_pipeline_usage_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: api_fuzzing_pipeline_usage_28_days_event
+        description: '{{ doc("api_fuzzing_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: container_scanning_pipeline_usage_28_days_event
         description: '{{ doc("container_scanning_pipeline_usage_28_days_event_desc") }}'
         tests:
@@ -880,6 +884,10 @@ models:
           - dbt_utils.at_least_one
       - name: coverage_fuzzing_pipeline_usage_28_days_event
         description: '{{ doc("coverage_fuzzing_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: api_fuzzing_pipeline_usage_28_days_event
+        description: '{{ doc("api_fuzzing_pipeline_usage_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: container_scanning_pipeline_usage_28_days_event
