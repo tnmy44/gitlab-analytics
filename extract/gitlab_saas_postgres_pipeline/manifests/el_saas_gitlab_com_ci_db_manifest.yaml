@@ -12,3 +12,23 @@ connection_info:
     port: GITLAB_METADATA_PG_PORT
     user: GITLAB_METADATA_DB_USER
 tables:
+  ci_stages:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: ci_stages
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , pipeline_id
+      , created_at
+      , updated_at
+      , NULL AS name
+      , status
+      , lock_version
+      , position
+      FROM ci_stages
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+

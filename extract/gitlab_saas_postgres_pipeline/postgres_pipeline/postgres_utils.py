@@ -5,6 +5,7 @@ import tempfile
 from datetime import datetime, timedelta
 from typing import Dict, List, Generator, Any, Tuple, Optional
 import yaml
+from croniter import croniter
 
 from gitlabdata.orchestration_utils import (
     dataframe_enricher,
@@ -33,12 +34,14 @@ from sqlalchemy.schema import CreateTable, DropTable
 
 METADATA_SCHEMA = os.environ.get("GITLAB_METADATA_SCHEMA")
 BUCKET_NAME = os.environ.get("GITLAB_BACKFILL_BUCKET")
+
+TARGET_EXTRACT_SCHEMA = "tap_postgres"
+TARGET_DELETES_SCHEMA = "deletes_tap_postgres"
+
 BACKFILL_METADATA_TABLE = "backfill_metadata"
 INCREMENTAL_METADATA_TABLE = "incremental_metadata"
 DELETE_METADATA_TABLE = "delete_metadata"
-BACKFILL_EXTRACT_CHUNKSIZE = 15_000_000
-CSV_CHUNKSIZE_BACKFILL = 5_000_000
-CSV_CHUNKSIZE_REGULAR = 1_000_000
+
 INCREMENTAL_LOAD_TYPE_BY_ID = "load_by_id"
 
 
@@ -279,10 +282,11 @@ def chunk_and_upload(
     rows_uploaded = 0
     prefix = f"staging/regular/{target_table}/{target_table}_chunk".lower()
     extension = ".parquet.gzip"
+    regular_csv_chunksize = 1_000_000
 
     with tempfile.TemporaryFile() as tmpfile:
         iter_csv = read_sql_tmpfile(
-            query, source_engine, tmpfile, CSV_CHUNKSIZE_REGULAR
+            query, source_engine, tmpfile, regular_csv_chunksize
         )
 
         for idx, chunk_df in enumerate(iter_csv):
@@ -493,16 +497,17 @@ def seed_and_upload_snowflake(
         target_engine, database_kwargs, load_by_id_export_type, initial_load_start_date
     )
 
-    # We do the swap here because snowflake engine instantiated here
-    swap_temp_table(
-        target_engine,
-        database_kwargs["real_target_table"],
-        database_kwargs["target_table"],
-    )
+    if load_by_id_export_type == "backfill":
+        # We do the swap here because snowflake engine instantiated here
+        swap_temp_table(
+            target_engine,
+            database_kwargs["real_target_table"],
+            database_kwargs["target_table"],
+        )
 
-    logging.info(
-        f"Finished swapping tables to Snowflake table '{database_kwargs['real_target_table']}'"
-    )
+        logging.info(
+            f"Finished swapping tables to Snowflake table '{database_kwargs['real_target_table']}'"
+        )
 
 
 def upload_to_snowflake_after_extraction(
@@ -512,9 +517,17 @@ def upload_to_snowflake_after_extraction(
     initial_load_start_date,
     advanced_metadata,
 ):
+    schema = (
+        TARGET_DELETES_SCHEMA
+        if load_by_id_export_type == "deletes"
+        else TARGET_EXTRACT_SCHEMA
+    )
+
     # need to re-instantiate to avoid client session time-out
     target_engine = snowflake_engine_factory(
-        os.environ.copy(), role="LOADER", schema="tap_postgres"
+        os.environ.copy(),
+        role="LOADER",
+        schema=schema,
     )
 
     if load_by_id_export_type == INCREMENTAL_LOAD_TYPE_BY_ID:
@@ -545,6 +558,7 @@ def chunk_and_upload_metadata(
     max_source_id: int,
     initial_load_start_date: datetime,
     database_kwargs: Dict[Any, Any],
+    csv_chunksize: int,
     load_by_id_export_type: str,
     advanced_metadata: bool = False,
 ) -> datetime:
@@ -560,7 +574,7 @@ def chunk_and_upload_metadata(
             query,
             database_kwargs["source_engine"],
             tmpfile,
-            CSV_CHUNKSIZE_BACKFILL,
+            csv_chunksize,
         )
 
         for chunk_df in iter_csv:
@@ -571,7 +585,7 @@ def chunk_and_upload_metadata(
                 f"\nlast_extracted_id for current Postgres chunk: {last_extracted_id}"
             )
 
-            upload_date = datetime.now()
+            upload_date = datetime.utcnow()
             if initial_load_start_date is None:
                 initial_load_start_date = upload_date
 
@@ -669,13 +683,17 @@ def get_source_and_target_columns(
     target_query = "select * from {0} limit 1"
     target_columns = (
         pd.read_sql(sql=target_query.format(target_table), con=target_engine)
-        .drop(axis=1, columns=["_uploaded_at", "_task_instance"], errors="ignore")
+        .drop(
+            axis=1,
+            columns=["_uploaded_at", "_task_instance", "is_deleted"],
+            errors="ignore",
+        )
         .columns
     )
     return source_columns, target_columns
 
 
-def check_is_new_table(engine: Engine, table: Engine, schema=None) -> bool:
+def check_is_new_table(engine: Engine, table: str, schema=None) -> bool:
     return not engine.has_table(table, schema=schema)
 
 
@@ -768,7 +786,9 @@ def get_engines(connection_dict: Dict[Any, Any]) -> Tuple[Engine, Engine, Engine
     )
 
     snowflake_engine = snowflake_engine_factory(
-        env, role="LOADER", schema="tap_postgres"
+        env,
+        role="LOADER",
+        schema=TARGET_EXTRACT_SCHEMA,
     )
 
     if connection_dict.get("postgres_metadata_connection"):
@@ -825,12 +845,12 @@ def is_resume_export(
             last_extracted_id,
             last_upload_date,
         ) = results[0]
-        time_since_last_upload = datetime.now() - last_upload_date
+        time_since_last_upload = datetime.utcnow() - last_upload_date
 
         if not is_export_completed:
             is_resume_export_needed = True
-            # if more than 24 HR since last upload, start backfill over,
-            if time_since_last_upload > timedelta(hours=24):
+            # if more than 24 HR (plus some wiggle room) since last upload, start backfill over
+            if time_since_last_upload > timedelta(hours=26):
                 logging.info(
                     f"In middle of export for {target_table}, but more than 24 HR has elapsed since last upload: {time_since_last_upload}. Discarding this export."
                 )
@@ -841,6 +861,62 @@ def is_resume_export(
                 initial_load_start_date = prev_initial_load_start_date
 
     return is_resume_export_needed, initial_load_start_date, start_pk
+
+
+def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
+    """
+    Checks if deletes process is due, i.e needs to be run
+    Get the next dbt monthly refresh datetime
+
+    If today() is within 2 days of the next dbt refresh run
+    and prev_initial_load_start_date has not been updated yet,
+    it means that deletes needs to be run
+    """
+    dbt_full_refresh_monthly_schedule = "* * * * SUN#1"
+    next_monthly_full_refresh_run = croniter(
+        dbt_full_refresh_monthly_schedule
+    ).get_next(datetime)
+
+    days_till_refresh_threshold = 2
+    date_threshold = next_monthly_full_refresh_run - timedelta(
+        days_till_refresh_threshold
+    )
+    is_past_due = (prev_initial_load_start_date < date_threshold) and (
+        datetime.utcnow() > date_threshold
+    )
+    logging.info(
+        f"\ndeletes date_threshold: {date_threshold}, is_past_due: {is_past_due}"
+    )
+
+    return is_past_due
+
+
+def is_delete_export_needed(
+    metadata_engine: Engine, metadata_table: str, target_table: str
+):
+    """
+     Check if delete backfill is needed based on:
+         - last export status
+         - date of last export's intiial load start date,
+         in comparison to the next monthly dbt run
+
+    Export needed if last run wasn't successful
+    OR the next run is due, which is based on
+    how soon it is to next monthly dbt full refresh
+    """
+    results = query_backfill_status(metadata_engine, metadata_table, target_table)
+    if results:
+        (
+            is_export_completed,
+            prev_initial_load_start_date,
+            last_extracted_id,
+            last_upload_date,
+        ) = results[0]
+
+        is_past_due = get_is_past_due_deletes(prev_initial_load_start_date)
+        if is_export_completed and not is_past_due:
+            return False
+    return True
 
 
 def remove_files_from_gcs(load_by_id_export_type: str, target_table: str):
@@ -911,12 +987,94 @@ def swap_temp_table(engine: Engine, real_table: str, temp_table: str) -> None:
         logging.info(
             f"Swapping the temp table: {temp_table} with the real table: {real_table}"
         )
-        swap_query = f"ALTER TABLE IF EXISTS tap_postgres.{temp_table} SWAP WITH tap_postgres.{real_table}"
+        swap_query = f"ALTER TABLE IF EXISTS {TARGET_EXTRACT_SCHEMA}.{temp_table} SWAP WITH {TARGET_EXTRACT_SCHEMA}.{real_table}"
         query_executor(engine, swap_query)
     else:
         logging.info(f"Renaming the temp table: {temp_table} to {real_table}")
         rename_query = f"ALTER TABLE IF EXISTS tap_postgres.{temp_table} RENAME TO tap_postgres.{real_table}"
         query_executor(engine, rename_query)
 
-    drop_query = f"DROP TABLE IF EXISTS tap_postgres.{temp_table}"
+    drop_query = f"DROP TABLE IF EXISTS {TARGET_EXTRACT_SCHEMA}.{temp_table}"
     query_executor(engine, drop_query)
+
+
+def update_import_query_for_delete_export(import_query: str, primary_key: str):
+    """
+    Take the original query and just query the primary / composite key
+    Need to take original query because it may include a WHERE clause
+    """
+    select_part, from_part = import_query.split("FROM")
+    new_select_part = f"SELECT {primary_key}"
+    # Combine the new SELECT part with the original FROM part
+    updated_query = f"{new_select_part} FROM {from_part}"
+    return updated_query
+
+
+def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: str):
+    """
+    Run a series of sql statements to update the target table's is_deleted' field:
+        - Check if deletes table exists, abort if not exists
+        - Add is_deleted field to target table if not exists
+        - Run UPDATE on target table 'is_deleted' field
+        - Run DROP table on deletes table
+
+    """
+    deletes_table_path = f"{TARGET_DELETES_SCHEMA}.{deletes_table}"
+    target_table_path = f"{TARGET_EXTRACT_SCHEMA}.{target_table}"
+
+    target_engine = snowflake_engine_factory(
+        os.environ.copy(),
+        role="LOADER",
+        schema=TARGET_DELETES_SCHEMA,
+        load_warehouse="SNOWFLAKE_LOAD_WAREHOUSE_MEDIUM",
+    )
+
+    # Check if deletes table exists, abort if not exists
+    is_new_table = check_is_new_table(
+        target_engine, deletes_table, TARGET_DELETES_SCHEMA
+    )
+    if is_new_table:
+        logging.info("No deletes table, aborting UPDATE for 'is_deleted' field")
+        target_engine.dispose()
+        return
+
+    # Add is_deleted field to target table if not exists
+    # Snowflake has a 'add column IF NOT EXISTS' clause but it doesn't work with DEFAULT
+    add_is_deleted_field_query = (
+        f"ALTER TABLE {target_table_path} ADD COLUMN is_deleted boolean default false;"
+    )
+    try:
+        alter_query_results = query_executor(target_engine, add_is_deleted_field_query)
+        logging.info(f"is_deleted add column, {alter_query_results[0][0]}")
+    except sqlalchemy.exc.ProgrammingError as e:
+        # 'ambiguous column name' msg means is_delete column already exists, continue
+        if "ambiguous column name" not in str(e):
+            raise
+
+    logging.info("Running update query for is_deleted column...")
+    # Run UPDATE on target table 'is_deleted' field
+    update_query = f"""
+    UPDATE {target_table_path} t
+    SET
+      t.is_deleted = TRUE
+    WHERE
+      NOT EXISTS (
+        SELECT *
+        FROM
+          {deletes_table_path}
+        WHERE
+          {deletes_table_path}.{primary_key} = t.{primary_key}
+      )
+      AND t.is_deleted = FALSE;
+      """
+
+    update_query_results = query_executor(target_engine, update_query)
+    logging.info(
+        f"{update_query_results[0][0]} records were updated for 'is_deleted' field."
+    )
+
+    # Run DROP table on deletes table
+    drop_query = f" drop table {deletes_table_path};"
+    drop_query_results = query_executor(target_engine, drop_query)
+    logging.info(f"Table {deletes_table_path}.{drop_query_results[0][0]}")
+    target_engine.dispose()

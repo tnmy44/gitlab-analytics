@@ -133,7 +133,6 @@ class TestCheckBackfill:
 
             with self.metadata_engine.connect() as connection:
                 connection.execute(drop_query)
-
     '''
 
     def test_check_is_new_table(self):
