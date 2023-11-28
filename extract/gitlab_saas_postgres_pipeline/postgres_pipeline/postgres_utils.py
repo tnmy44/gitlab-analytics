@@ -1040,9 +1040,7 @@ def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: 
 
     # Add pgp_is_deleted field to target table if not exists
     # Snowflake has a 'add column IF NOT EXISTS' clause but it doesn't work with DEFAULT
-    add_is_deleted_field_query = (
-        f"ALTER TABLE {target_table_path} ADD COLUMN pgp_is_deleted boolean default false;"
-    )
+    add_is_deleted_field_query = f"ALTER TABLE {target_table_path} ADD COLUMN pgp_is_deleted boolean default false;"
     try:
         alter_query_results = query_executor(target_engine, add_is_deleted_field_query)
         logging.info(f"pgp_is_deleted add column, {alter_query_results[0][0]}")
