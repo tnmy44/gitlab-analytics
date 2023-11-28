@@ -423,7 +423,7 @@ LEFT JOIN cw_base
 
 ), final AS (
 
-    SELECT
+    SELECT DISTINCT
       -- opportunity information
       sfdc_opportunity.*,
       sfdc_opportunity.crm_opportunity_snapshot_id||'-'||sfdc_opportunity.is_live                  AS primary_key,
@@ -1346,5 +1346,5 @@ LEFT JOIN cw_base
     created_by="@michellecooper",
     updated_by="@rkohnke",
     created_date="2022-02-23",
-    updated_date="2023-11-15"
+    updated_date="2023-11-28"
 ) }}
