@@ -357,6 +357,44 @@ runner_saas_xlarge_ext AS (
 
 ),
 
+runner_saas_2xlarge AS (
+
+  SELECT
+    reporting_day                       AS date_day,
+    NULL                                AS gcp_project_id,
+    NULL                                AS gcp_service_description,
+    NULL                                AS gcp_sku_description,
+    NULL                                AS infra_label,
+    NULL                                AS env_label,
+    '11 - shared saas runners - 2xlarge' AS runner_label,
+    NULL                                AS folder_label,
+    ci_runners_pl_daily.pl              AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes  AS pl_percent,
+    'ci_runner_pl_daily - 11'           AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '11 - shared saas runners - 2xlarge'
+
+),
+
+runner_saas_2xlarge_ext AS (
+
+  SELECT DISTINCT
+    reporting_day                      AS date_day,
+    'gitlab-r-saas-l-2xl-amd64-_'       AS gcp_project_id,
+    NULL                               AS gcp_service_description,
+    NULL                               AS gcp_sku_description,
+    NULL                               AS infra_label,
+    NULL                               AS env_label,
+    NULL                               AS runner_label,
+    NULL                               AS folder_label,
+    ci_runners_pl_daily.pl             AS pl_category,
+    ci_runners_pl_daily.pct_ci_minutes AS pl_percent,
+    'ci_runner_pl_daily - 11'          AS from_mapping
+  FROM {{ ref ('ci_runners_pl_daily') }}
+  WHERE mapping = '11 - shared saas runners - 2xlarge'
+
+),
+
 runner_saas_medium_gpu AS (
 
   SELECT
@@ -670,6 +708,12 @@ cte_append AS (SELECT *
   UNION ALL
   SELECT *
   FROM runner_saas_xlarge_ext
+  UNION ALL
+  SELECT *
+  FROM runner_saas_2xlarge
+  UNION ALL
+  SELECT *
+  FROM runner_saas_2xlarge_ext
   UNION ALL
   SELECT *
   FROM runner_saas_medium_gpu
