@@ -16,7 +16,6 @@ from postgres_utils import (
     chunk_and_upload_metadata,
     id_query_generator,
     get_min_or_max_id,
-    BACKFILL_EXTRACT_CHUNKSIZE,
     INCREMENTAL_LOAD_TYPE_BY_ID,
 )
 
@@ -232,6 +231,8 @@ def load_ids(
     initial_load_start_date: datetime.datetime,
     start_pk: int,
     load_by_id_export_type,
+    extract_chunksize,
+    csv_chunksize,
 ) -> bool:
     """Load a query by chunks of IDs instead of all at once."""
 
@@ -263,7 +264,7 @@ def load_ids(
         raw_query,
         start_pk,
         max_pk,
-        BACKFILL_EXTRACT_CHUNKSIZE,
+        extract_chunksize,
     )
 
     # Iterate through the generated queries
@@ -277,6 +278,7 @@ def load_ids(
             max_pk,
             initial_load_start_date,
             database_kwargs,
+            csv_chunksize,
             load_by_id_export_type,
         )
     return True
