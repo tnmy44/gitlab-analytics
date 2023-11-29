@@ -28,10 +28,10 @@ renamed AS (
       type                                    AS ticket_type,
       -- added ':score'
       satisfaction_rating['id']::VARCHAR      AS satisfaction_rating_id,
-      satisfaction_rating['score']::VARCHAR     AS satisfaction_rating_score,
+      satisfaction_rating['score']::VARCHAR   AS satisfaction_rating_score,
       via['channel']::VARCHAR                 AS submission_channel,
-      custom_fields::VARIANT                  AS ticket_custom_field_values,
-
+      --IFF(custom_fields='[{}]','',custom_fields) AS ticket_custom_field_values,
+      --custom_fields::VARCHAR                  AS ticket_custom_field_values,
       --dates
       updated_at::DATE                        AS date_updated,
       created_at                              AS ticket_created_at
