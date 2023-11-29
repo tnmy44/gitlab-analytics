@@ -74,15 +74,6 @@
     --Account Data
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        
-    --Bizible Fields
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
-        bizible_medium,
-        opp_touchpoint_offer_type_grouped,
-        opp_touchpoint_offer_type,
-        opp_bizible_marketing_channel,
-        opp_bizible_marketing_channel_path,
 
     --Flags
         is_mql,
@@ -90,7 +81,7 @@
     FROM rpt_lead_to_revenue
     WHERE (account_demographics_geo != 'JIHU'
      OR account_demographics_geo IS null) 
-     AND (crm_opp_owner_geo_stamped != 'JIHU'
+     OR (crm_opp_owner_geo_stamped != 'JIHU'
      OR crm_opp_owner_geo_stamped IS null)
 
 ), date_base AS (
@@ -121,9 +112,6 @@
         source_buckets,
         sales_qualified_source_name,
         inquiry_sum,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
-        bizible_medium,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         account_demographics_area,
@@ -152,9 +140,6 @@
         source_buckets,
         sales_qualified_source_name,
         inquiry_sum,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
-        bizible_medium,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         account_demographics_area,
@@ -189,8 +174,6 @@
         sales_qualified_source_name,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        opp_bizible_marketing_channel,
-        opp_bizible_marketing_channel_path,
         crm_opp_owner_region_stamped,
         crm_opp_owner_area_stamped,
         CASE 
@@ -225,12 +208,10 @@
         source_buckets,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
         'Inquiry' AS metric_type,
         COUNT(DISTINCT actual_inquiry) AS metric_value
     FROM inquiry_prep
-    {{ dbt_utils.group_by(n=18) }}
+    {{ dbt_utils.group_by(n=16) }}
   
 ), mqls AS (
 
@@ -250,12 +231,10 @@
         source_buckets,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
         'MQL' AS metric_type,
         COUNT(DISTINCT mqls) AS metric_value
     FROM mql_prep
-    {{ dbt_utils.group_by(n=18) }}
+    {{ dbt_utils.group_by(n=16) }}
     
  ), saos AS (
   
@@ -275,12 +254,10 @@
         opp_source_buckets,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        opp_bizible_marketing_channel,
-        opp_bizible_marketing_channel_path,
         'SAO' AS metric_type,
         COUNT(DISTINCT saos) AS metric_value
     FROM sao_prep
-    {{ dbt_utils.group_by(n=18) }}
+    {{ dbt_utils.group_by(n=16) }}
     
   ), intermediate AS (
 
@@ -300,8 +277,6 @@
         source_buckets,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
         metric_type,
         metric_value
     FROM inquiries
@@ -322,8 +297,6 @@
         source_buckets,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        bizible_marketing_channel,
-        bizible_marketing_channel_path,
         metric_type,
         metric_value
     FROM mqls
@@ -344,8 +317,6 @@
         opp_source_buckets,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
-        opp_bizible_marketing_channel,
-        opp_bizible_marketing_channel_path,
         metric_type,
         metric_value
     FROM saos
@@ -368,10 +339,9 @@
     source_buckets,
     parent_crm_account_lam,
     parent_crm_account_lam_dev_count,
-    bizible_marketing_channel,
-    bizible_marketing_channel_path,
     metric_type,
-    metric_value
+    metric_value,
+    'Actual' AS metric_type_flag
   FROM intermediate
   UNION ALL
   SELECT
@@ -390,10 +360,9 @@
     NULL AS source_buckets,
     NULL AS parent_crm_account_lam,
     NULL AS parent_crm_account_lam_dev_count,
-    NULL AS bizible_marketing_channel,
-    NULL AS bizible_marketing_channel_path,
     kpi_name AS metric_type,
-    daily_allocated_target AS metric_value
+    daily_allocated_target AS metric_value,
+    'Target' AS metric_type_flag
   FROM targets
 
 ), base AS (
@@ -416,8 +385,7 @@ SELECT
     source_buckets AS lead_source_buckets,
     lead_source, 
     sales_qualified_source_name, 
-    bizible_marketing_channel,
-    'Actual' AS metric_type_flag,
+    metric_type_flag,
     metric_type,
     CASE 
         WHEN CONTAINS(METRIC_TYPE, 'Inquiry') THEN 'INQs'
@@ -427,8 +395,8 @@ SELECT
     SUM(metric_value) AS metric_value
 FROM base
 WHERE 1=1 
-    AND NOT CONTAINS(METRIC_TYPE, 'TARGET')
-{{ dbt_utils.group_by(n=15) }}
+    AND NOT CONTAINS(metric_type_flag, 'Target')
+{{ dbt_utils.group_by(n=14) }}
 
 ), regroup_targets AS (
 
@@ -444,8 +412,7 @@ SELECT
     null AS lead_source_buckets,
     null AS lead_source, 
     sales_qualified_source_name, 
-    NULL AS bizible_marketing_channel,
-    'Target' AS metric_type_flag,
+    metric_type_flag,
     metric_type,
     CASE 
         WHEN CONTAINS(METRIC_TYPE, 'Inquiry') THEN 'INQs'
@@ -455,8 +422,8 @@ SELECT
     SUM(metric_value) AS metric_value
 FROM base
 WHERE 1=1 
-    AND CONTAINS(METRIC_TYPE, 'TARGET')
-{{ dbt_utils.group_by(n=15) }}
+    AND CONTAINS(metric_type_flag, 'Target')
+{{ dbt_utils.group_by(n=14) }}
 
 ), final AS (
 
@@ -472,7 +439,6 @@ SELECT
     lead_source_buckets,
     lead_source,
     sales_qualified_source_name,
-    bizible_marketing_channel,
     metric_type_flag,
     metric_type,
     metric_name,
@@ -491,7 +457,6 @@ SELECT
     lead_source_buckets,
     lead_source,
     sales_qualified_source_name,
-    bizible_marketing_channel,
     metric_type_flag,
     metric_type,
     metric_name,
@@ -505,6 +470,6 @@ FROM regroup_targets
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-10-30",
+    updated_date="2023-11-15",
   ) }}
 

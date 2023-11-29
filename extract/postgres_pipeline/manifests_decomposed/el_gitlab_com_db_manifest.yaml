@@ -412,7 +412,7 @@ tables:
       , on_stop
       , status
       , finished_at
-      , cluster_id
+      , NULL AS cluster_id
       FROM deployments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1113,7 +1113,7 @@ tables:
     import_query: |-
       SELECT id
       , iid
-      , title
+      , NULL AS title
       , NULL AS description
       , project_id
       , due_date

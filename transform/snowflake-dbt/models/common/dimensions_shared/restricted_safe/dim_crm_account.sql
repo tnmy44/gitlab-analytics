@@ -54,6 +54,7 @@
       prep_crm_account.proposed_crm_account_owner,
       prep_crm_account.account_owner,
       prep_crm_account.technical_account_manager,
+      prep_crm_account.tam_manager,
       prep_crm_account.owner_role,
       prep_crm_account.user_role_type,
 
@@ -151,6 +152,7 @@
       prep_crm_account.last_at_risk_update_comments,
       prep_crm_account.bdr_prospecting_status,
       prep_crm_account.is_focus_partner,
+      prep_crm_account.gs_health_csm_sentiment,
 
       --measures (maintain for now to not break reporting)
       prep_crm_account.parent_crm_account_lam,
@@ -238,9 +240,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@snalamaru",
     created_date="2020-06-01",
-    updated_date="2023-08-14"
+    updated_date="2023-11-16"
 ) }}
 
 

@@ -58,7 +58,7 @@ This model is intended to be used as a reporting model for the Growth Section an
 
 {% docs wk_rpt_behavior_code_suggestion_outcome %}
 
-**Description:** Reporting model to enable Code Suggestion analysis and reporting at the grain of one record per suggestion. This model uses Snowplow events and can be used to calculate metrics like Acceptance Rate. Read more about how the Code Suggestions events work [here](https://gitlab.com/gitlab-org/editor-extensions/gitlab-language-server-for-code-suggestions/-/blob/main/docs/telemetry.md).
+**Description:** Reporting model to enable Code Suggestion analysis and reporting at the grain of one record per suggestion. This model uses Snowplow events and can be used to calculate metrics like Acceptance Rate. Read more about how the Code Suggestions events work [here](https://gitlab.com/gitlab-org/editor-extensions/gitlab-lsp/-/blob/main/docs/telemetry.md).
 
 **Data Grain:** suggestion_id
 
@@ -84,7 +84,7 @@ can be used to calculate Acceptance Rate, Load Time, etc.
 - A suggestion cannot be both accepted and rejected, but it can have both `suggestion_accepted` 
 and `suggestion_rejected` events. The explanation is in [this issue comment](https://gitlab.com/gitlab-data/product-analytics/-/issues/1410#note_1581747408)
 - A visual representation of the different Snowplow events associated with the single suggestion 
-can be found [here](https://gitlab.com/gitlab-org/editor-extensions/gitlab-language-server-for-code-suggestions/-/blob/main/docs/telemetry.md)
+can be found [here](https://gitlab.com/gitlab-org/editor-extensions/gitlab-lsp/-/blob/main/docs/telemetry.md)
 
 {% enddocs %}
 

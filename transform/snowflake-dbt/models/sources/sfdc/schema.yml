@@ -171,6 +171,9 @@ models:
       - name: last_at_risk_update_comments
       - name: bdr_prospecting_status
         description: Indicates whether the account is actively being prospected by a BDR.
+      - name: gs_health_csm_sentiment
+        description: This is what the TAM thinks the health of this account should be - Formerly was just Health Score - Gainsight is the SSOT for this field and its value can only be updated in Gainsight.
+
         
   - name: sfdc_account_history_source
     description: Source model for SFDC Account History

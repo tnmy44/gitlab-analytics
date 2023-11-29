@@ -1,5 +1,5 @@
 .snowflake_dbt_jobs: &snowflake_dbt_jobs
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.1
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.3
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -18,6 +18,8 @@
     - echo $ENVIRONMENT
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
+    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
+    - echo $DBT_RUNNER
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa
     - chmod 700 ~/.ssh
@@ -234,7 +236,7 @@ specify_dbt_parameters:
     - ../../orchestration/clone_dbt_models_select.py $INPUT
 
 📚✏️generate_dbt_docs:
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.1
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.3
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -249,6 +251,8 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export ENVIRONMENT="CI"
     - echo $ENVIRONMENT
+    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
+    - echo $DBT_RUNNER
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
     - mkdir -p ~/.ssh
@@ -335,7 +339,7 @@ specify_dbt_parameters:
 
 .safe_models_check: &safe_models_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.1
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.3
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -351,6 +355,8 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
+    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
+    - echo $DBT_RUNNER
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa
     - chmod 700 ~/.ssh
@@ -394,7 +400,7 @@ specify_dbt_parameters:
 
 .dbt_macro_check: &dbt_macro_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.1
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.3
   before_script:
     - cd transform/snowflake-dbt/
   tags:
@@ -442,7 +448,7 @@ specify_dbt_parameters:
 # ======
 .dbt_sql_lint: &dbt_sql_lint
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.1
+  image: registry.gitlab.com/gitlab-data/dbt-image:v0.0.3
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -458,6 +464,8 @@ specify_dbt_parameters:
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
+    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
+    - echo $DBT_RUNNER
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa
     - chmod 700 ~/.ssh

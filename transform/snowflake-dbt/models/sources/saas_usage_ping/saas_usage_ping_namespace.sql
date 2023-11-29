@@ -1,6 +1,7 @@
 {{ config({
     "materialized": "incremental",
-    "unique_key": "saas_usage_ping_gitlab_dotcom_namespace_id"
+    "unique_key": "saas_usage_ping_gitlab_dotcom_namespace_id",
+    "tmp_relation_type": "table"
     })
 }}
 

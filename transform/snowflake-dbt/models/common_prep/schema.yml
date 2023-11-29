@@ -1117,7 +1117,7 @@ models:
   - name: prep_merge_request
     description: '{{ doc("prep_merge_request") }}'
     columns:
-      - name: dim_merge_request_id
+      - name: dim_merge_request_sk
         tests:
           - unique
           - not_null

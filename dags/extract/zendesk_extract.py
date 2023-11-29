@@ -82,8 +82,8 @@ zendesk_extract_ticket_audits_task = KubernetesPodOperator(
         **pod_env_vars,
         "logical_date": "{{ logical_date }}",
     },
-    affinity=get_affinity("extraction"),
-    tolerations=get_toleration("extraction"),
+    affinity=get_affinity("extraction_highmem"),
+    tolerations=get_toleration("extraction_highmem"),
     arguments=[zendesk_ticket_audits_extract_command],
     dag=dag,
 )
@@ -106,8 +106,8 @@ zendesk_extract_tickets_task = KubernetesPodOperator(
         **pod_env_vars,
         "logical_date": "{{ logical_date }}",
     },
-    affinity=get_affinity("extraction"),
-    tolerations=get_toleration("extraction"),
+    affinity=get_affinity("extraction_highmem"),
+    tolerations=get_toleration("extraction_highmem"),
     arguments=[zendesk_tickets_extract_command],
     dag=dag,
 )
