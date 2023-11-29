@@ -47,7 +47,7 @@ internal_merge_requests AS (
     title::VARCHAR                                     AS internal_merge_request_title,
     description::VARCHAR                               AS internal_merge_request_description,
     target_branch::VARCHAR                             AS internal_target_branch,
-    IFF(LOWER(target_branch) = 'master', TRUE, FALSE)  AS is_merge_to_master
+    IFF(LOWER(target_branch) IN ('master', 'main'), TRUE, FALSE)  AS is_merge_to_master
 
   FROM {{ ref('gitlab_dotcom_merge_requests_internal_only_dedupe_source') }}
 ),
