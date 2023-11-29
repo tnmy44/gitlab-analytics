@@ -1229,7 +1229,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , NULL AS name
+      , CASE WHEN traversal_ids[1] = id THEN name ELSE NULL END AS name --Logic to only extract the Top level namespace name 
       , NULL AS path
       , owner_id
       , created_at
