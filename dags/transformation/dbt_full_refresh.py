@@ -67,18 +67,25 @@ dag = DAG(
 )
 dag.doc_md = __doc__
 
-# read model for full-refresh from Airflow Variable
-dbt_model_to_full_refresh = Variable.get(
-    "DBT_MODEL_TO_FULL_REFRESH", default_var="test"
-)
 
-# Read the warehouse from the Airflow variable if passed else use XL warehouse for full refresh.
-dbt_warehouse_for_full_refresh = Variable.get(
-    "DBT_WAREHOUSE_FOR_FULL_REFRESH", default_var="TRANSFORMING_XL"
-)
+def get_parameters(self, **kwargs):
+    dag_run = kwargs.get("dag_run")
+    parameters = dag_run.conf["key"]
+
+    return parameters
+
+
+# read model for full-refresh from input json file
+dbt_model_to_full_refresh = Variable.get("DBT_MODEL_TO_FULL_REFRESH")
+
+# Read the warehouse from the input json file
+dbt_warehouse_for_full_refresh = Variable.get("DBT_WAREHOUSE_FOR_FULL_REFRESH")
+
+# Read the type from the input json file, values are either full-refresh or incremental
+dbt_type_for_full_refresh = Variable.get("DBT_TYPE_FOR_FULL_REFRESH")
 
 logging.info(
-    f"Running full refresh for {dbt_model_to_full_refresh} on warehouse {dbt_warehouse_for_full_refresh}"
+    f"Running  refresh for {dbt_model_to_full_refresh} on warehouse {dbt_warehouse_for_full_refresh} with type: {dbt_type_for_full_refresh}"
 )
 
 # dbt-full-refresh
