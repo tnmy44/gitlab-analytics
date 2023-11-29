@@ -6,7 +6,6 @@ WITH all_merge_requests AS (
     iid::NUMBER                                        AS merge_request_iid,
     title::VARCHAR                                     AS merge_request_title,
 
-    IFF(LOWER(target_branch) = 'master', TRUE, FALSE)  AS is_merge_to_master,
     IFF(LOWER(merge_error) = 'nan', NULL, merge_error) AS merge_error,
     assignee_id::NUMBER                                AS assignee_id,
     updated_by_id::NUMBER                              AS updated_by_id,
