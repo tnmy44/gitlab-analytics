@@ -252,7 +252,7 @@ specify_dbt_parameters:
     - if [ -z $WAREHOUSE ]; then echo "No Warehouse selected." && exit 7; else SNOWFLAKE_TRANSFORM_WAREHOUSE=$WAREHOUSE; fi
     - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     - export DBT_CI_STATEMENT=""
-    - if [ -z $STATEMENT ]; then echo "No models selected." && exit 3; else DBT_CI_STATEMENT=$STATEMENT; fi
+    - if [ -z "$STATEMENT" ]; then echo "No models selected." && exit 3; else DBT_CI_STATEMENT=$STATEMENT; fi
     - echo $DBT_CI_STATEMENT
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - dbt deps $CI_PROFILE_TARGET
