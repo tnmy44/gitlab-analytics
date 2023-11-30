@@ -392,6 +392,7 @@ roles:
             - snowflake_db
             - static
             - tableau_cloud
+            - airflow_stitch
 
     - analyst_engineering:
         warehouses:
@@ -1301,6 +1302,23 @@ roles:
 # ==========================================
 # Object Roles
 # ==========================================
+    - airflow_stitch:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.airflow_stitch
+                    - prep.airflow
+            tables:
+                read:
+                    - raw.airflow_stitch.*
+                    - prep.airflow.*
+    
     - adaptive:
         warehouses:
             - dev_xs
