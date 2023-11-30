@@ -119,23 +119,7 @@ class SnowflakeManager:
         clone_db = f"clone {database}" if not empty else ""
         queries = self.generate_db_queries(create_db, clone_db, schema, database)
 
-        # if force is false, check if the database exists
-        if force:
-            logging.info("Forcing a create or replace...")
-            db_exists = False
-        else:
-            try:
-                logging.info("Checking if DB exists...")
-                connection = self.engine.connect()
-                connection.execute(queries[0])
-                logging.info("DBs exist...")
-                db_exists = True
-            except:
-                logging.info("DB does not exist...")
-                db_exists = False
-            finally:
-                connection.close()
-                self.engine.dispose()
+        db_exists = self.check_if_db_exists(create_db, force)
 
         # If the DB doesn't exist or --force is true, create or replace the db
         if not db_exists:
@@ -425,7 +409,7 @@ class SnowflakeManager:
                 # Catches permissions errors
                 logging.error(prg._sql_message(as_unicode=False))
 
-    def check_if_db_exists(self, force, database):
+    def check_if_db_exists(self, database, force):
         # if force is false, check if the database exists
         check_db_exists_query = f"""use database "{database}";"""
         if force:
@@ -460,7 +444,7 @@ class SnowflakeManager:
 
         create_db = databases[database]
 
-        db_exists = self.check_if_db_exists(force=False, database=create_db)
+        db_exists = self.check_if_db_exists(database=create_db, force=False,)
 
         schema_query = f""" 
                         SELECT DISTINCT table_schema AS table_schema  
