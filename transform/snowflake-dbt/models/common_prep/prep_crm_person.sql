@@ -438,10 +438,11 @@ WITH biz_person AS (
 
     SELECT
       crm_person_final.*,
-      LOWER(COALESCE(zoominfo_company_country, 
-                     zoominfo_contact_country,
-                     cognism_company_office_country,
-                     cognism_country)
+      LOWER(COALESCE(
+                     account_demographics_upa_country,
+                     zoominfo_company_country,
+                     country
+                    )
        ) AS two_letter_person_first_country,
       CASE
         -- remove a few case where value is only numbers
