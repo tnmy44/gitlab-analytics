@@ -55,7 +55,9 @@ default_args = {
     "start_date": datetime(2019, 1, 1, 0, 0, 0),
 }
 params = {
-    "DBT_MODEL_TO_FULL_REFRESH": Param("", type="string", min_length=3),
+    "DBT_MODEL_TO_FULL_REFRESH": Param(
+        "{FILL YOU MODEL(s) NAME}", type="string", min_length=3, max_length=500
+    ),
     "DBT_WAREHOUSE_FOR_FULL_REFRESH": Param(
         "TRANSFORMING_XS",
         type="string",
@@ -87,8 +89,8 @@ dag = DAG(
 )
 dag.doc_md = __doc__
 
-DBT_WAREHOUSE_FOR_FULL_REFRESH = "{{params.DBT_WAREHOUSE_FOR_FULL_REFRESH}}"
 DBT_MODEL_TO_FULL_REFRESH = "{{params.DBT_MODEL_TO_FULL_REFRESH}}"
+DBT_WAREHOUSE_FOR_FULL_REFRESH = "{{params.DBT_WAREHOUSE_FOR_FULL_REFRESH}}"
 DBT_TYPE_FOR_FULL_REFRESH = "{{params.DBT_TYPE_FOR_FULL_REFRESH}}"
 
 dbt_full_refresh_cmd = f"""
