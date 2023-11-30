@@ -141,7 +141,7 @@ clone_stop:
 
 .python_critical_check: &python_critical_check
   stage: 🛑🐍 Python Critical
-  image: registry.gitlab.com/gitlab-data/ci-python-image:v0.0.1
+  image: registry.gitlab.com/gitlab-data/ci-python-image:v0.0.4
   before_script:
     - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py\|\.ipynb'$)
   tags:
@@ -156,7 +156,7 @@ clone_stop:
 
 .python_check: &python_check
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/ci-python-image:v0.0.1
+  image: registry.gitlab.com/gitlab-data/ci-python-image:v0.0.4
   before_script:
     - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
   tags:
@@ -172,7 +172,7 @@ clone_stop:
   stage: 🐍 Python
   tags:
     - analytics
-  image: registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.27
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.31
   only:
     changes:
       - "**/*.py"

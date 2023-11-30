@@ -52,6 +52,13 @@ def refactor_ticket_audits_read_gcs():
             except:
                 error(f"Error reading {blob.name}")
                 sys.exit(1)
+            info(f"Archiving file {blob.name}")
+            BUCKET.copy_blob(
+                blob,
+                BUCKET,
+                "meltano/tap_zendesk__sensitive/archive/ticket_audits/" + blob.name,
+            )
+            info(f"Deleting file {blob.name}")
             blob.delete()  # delete the file after successful upload to the table
         else:
             error("No file found!")

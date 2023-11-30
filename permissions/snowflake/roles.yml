@@ -968,6 +968,7 @@ roles:
                       - raw
               schemas:
                   read:
+                      - prod.workspace_sales
                       - prod.workspace_data_science
                       - prod.common
                       - prod.common_prep
@@ -992,6 +993,7 @@ roles:
                       - prod.workspace_data_science
               tables:
                   read:
+                      - prod.workspace_sales.*
                       - prod.workspace_data_science.*
                       - prep.snowplow_*.*
                       - prep.snowplow_*.*
