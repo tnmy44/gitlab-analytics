@@ -93,22 +93,22 @@ include:
 🥩clone_raw_full:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --database raw --include_stages --force
+    - manage_snowflake.py manage_clones --database raw --include_stages
 
 🥩📜clone_raw_sheetload:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --database raw --schema sheetload --force
+    - manage_snowflake.py manage_clones --database raw --schema sheetload
 
 🥩🛢clone_raw_postgres_pipeline:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --database raw --schema tap_postgres --force
+    - manage_snowflake.py manage_clones --database raw --schema tap_postgres
 
 🥩⚙clone_raw_specific_schema:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --database raw --schema $SCHEMA_NAME --include_stages --force
+    - manage_snowflake.py manage_clones --database raw --schema $SCHEMA_NAME --include_stages
 
 👥force_clone_both:
   <<: *snowflake_start_clone
