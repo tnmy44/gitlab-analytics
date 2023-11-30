@@ -139,8 +139,8 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
         CUSTOM_FIELDS_OUT = []
         for key in CUSTOM_FIELDS:
             if key["id"] is None and key["value"] is None:
-                ticket_custom_field_id = None
-                ticket_custom_field_value = None
+                ticket_custom_field_id = ""
+                ticket_custom_field_value = ""
             else:
                 # iterate through each field in output_list_ticket_field
                 for item in output_list_ticket_field:
@@ -240,6 +240,24 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
             "VIA",
         ],
     )
+
+    # Transform None to Null in all dictionaries(satisfaction ratings and via) of the dataframe
+    for index, row in output_df.iterrows():
+        rating = row['SATISFACTION_RATING']
+        # iterate through all keys in rating
+
+        for key in rating:
+            # if value for this key is None replace it with string "unknown"
+            if rating[key] is None:
+                rating[key] = "null"
+        
+        output_df.at[index, 'SATISFACTION_RATING'] = rating
+
+        via = row['VIA']
+        via = str(via)
+        via = via.replace('None', "\'null\'")
+
+        output_df.at[index, 'VIA'] = via
 
     info("Transformation complete, uploading records to snowflake...")
     upload_to_snowflake(output_df, BUCKET)
