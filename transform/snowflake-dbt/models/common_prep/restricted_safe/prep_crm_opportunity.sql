@@ -179,6 +179,7 @@
         AND snapshot_dates.date_id = sfdc_account_snapshot.snapshot_id
     WHERE sfdc_opportunity_snapshots_source.account_id IS NOT NULL
       AND sfdc_opportunity_snapshots_source.is_deleted = FALSE
+      AND snapshot_dates.date_actual < CURRENT_DATE
      {% if is_incremental() %}
 
        AND snapshot_dates.date_actual > (SELECT MAX(snapshot_date) FROM {{this}} WHERE is_live = 0)
