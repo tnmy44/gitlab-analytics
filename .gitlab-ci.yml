@@ -116,6 +116,11 @@ include:
     - manage_snowflake.py manage_clones --force --database prod --empty
     - manage_snowflake.py manage_clones --force --database raw --include_stages
 
+clone_raw_by_schema:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py clone_database_by_schemas --database raw --include_stages
+
 clone_stop:
   <<: *snowflake_clone_template
   stage: 🛑 Snowflake Stop
