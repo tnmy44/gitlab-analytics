@@ -439,12 +439,15 @@ class SnowflakeManager:
         databases = {
             "prep": self.prep_database,
             "prod": self.prod_database,
-            "raw" : self.raw_database,
+            "raw": self.raw_database,
         }
 
         create_db = databases[database]
 
-        db_exists = self.check_if_db_exists(database=create_db, force=False,)
+        db_exists = self.check_if_db_exists(
+            database=create_db,
+            force=False,
+        )
 
         schema_query = f""" 
                         SELECT DISTINCT table_schema AS table_schema  
@@ -474,6 +477,7 @@ class SnowflakeManager:
             except Exception as exc:
                 logging.info(f"{r['schema']} didn't work")
                 logging.info(exc)
+
 
 if __name__ == "__main__":
     snowflake_manager = SnowflakeManager(env.copy())
