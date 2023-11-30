@@ -153,6 +153,22 @@ class SnowflakeManager:
             if include_stages:
                 self.clone_stages(create_db, database, schema)
 
+        else:
+            logging.info("DB exists, running clone queries")
+
+            for query in queries[3:]:
+                try:
+                    logging.info("Executing Query: {}".format(query))
+                    connection = self.engine.connect()
+                    [result] = connection.execute(query).fetchone()
+                    logging.info("Query Result: {}".format(result))
+                finally:
+                    connection.close()
+                    self.engine.dispose()
+
+            if include_stages:
+                self.clone_stages(create_db, database, schema)
+
     def grant_clones(self, role, database):
         """
         Grant privileges on a clone.
@@ -409,6 +425,49 @@ class SnowflakeManager:
                 # Catches permissions errors
                 logging.error(prg._sql_message(as_unicode=False))
 
+
+    def clone_database_by_schemas(
+        self,
+        database: str,
+        include_stages: bool = False,
+    ):
+
+        databases = {
+            "prep": self.prep_database,
+            "prod": self.prod_database,
+            "raw" : self.raw_database,
+        }
+
+        create_db = databases[database]
+
+        schema_query = f""" 
+            SELECT DISTINCT table_schema AS table_schema  
+            FROM {database}.INFORMATION_SCHEMA.TABLES 
+            WHERE TABLE_SCHEMA NOT IN ( 
+                SELECT DISTINCT table_schema FROM "{create_db}".INFORMATION_SCHEMA.TABLES
+            )
+            AND TABLE_SCHEMA NOT IN ('INFORMATION_SCHEMA', 'PUBLIC')
+            """
+        try:
+            logging.info(f"Getting schemas {schema_query}")
+            res = query_executor(self.engine, schema_query)
+        except ProgrammingError as prg:
+            # Catches permissions errors
+            logging.error(prg._sql_message(as_unicode=False))
+
+        usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
+
+        for r in res:
+            try:
+                self.manage_clones(
+                    database=database,
+                    force=True,
+                    schema=r["table_schema"],
+                    include_stages=include_stages,
+                )
+            except Exception as exc:
+                logging.info(f"{r['schema']} didn't work")
+                logging.info(exc)
 
 if __name__ == "__main__":
     snowflake_manager = SnowflakeManager(env.copy())
