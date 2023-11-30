@@ -6,15 +6,13 @@ Before running this DAG fill the variables for the refresh:
 - DBT_WAREHOUSE_FOR_FULL_REFRESH
 - DBT_TYPE_FOR_FULL_REFRESH
 
-All variables should be populated, or job will not start.
+**All variables should be populated, or job will not start.**
 """
-import os
 from datetime import datetime
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow.models.param import Param
-from airflow.operators.bash import BashOperator
 from airflow_utils import (
     DBT_IMAGE,
     dbt_install_deps_and_seed_nosha_cmd,
@@ -46,8 +44,6 @@ from kube_secrets import (
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
-# Load the env vars into a dict and set Secrets
-env = os.environ.copy()
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # Default arguments for the DAG
@@ -85,28 +81,23 @@ dag = DAG(
     "dbt_full_refresh",
     default_args=default_args,
     schedule_interval=None,
-    description="Adhoc DBT full or incremental refresh",
+    description="Ad-hoc dbt full or incremental refresh (depends on parameters)",
     catchup=False,
     params=params,
 )
 dag.doc_md = __doc__
 
+DBT_WAREHOUSE_FOR_FULL_REFRESH = "{{params.DBT_WAREHOUSE_FOR_FULL_REFRESH}}"
+DBT_MODEL_TO_FULL_REFRESH = "{{params.DBT_MODEL_TO_FULL_REFRESH}}"
+DBT_TYPE_FOR_FULL_REFRESH = "{{params.DBT_TYPE_FOR_FULL_REFRESH}}"
 
 dbt_full_refresh_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE='{{ params.DBT_WAREHOUSE_FOR_FULL_REFRESH }}' &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --models '{{ params.DBT_MODEL_TO_FULL_REFRESH }}' '{{ params.DBT_TYPE_FOR_FULL_REFRESH }}' ; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE={DBT_WAREHOUSE_FOR_FULL_REFRESH} &&
+    dbt --no-use-colors run --profiles-dir profile --target prod --models {DBT_MODEL_TO_FULL_REFRESH} {DBT_TYPE_FOR_FULL_REFRESH} ; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
-
-
-check_parameters = BashOperator(
-    dag=dag,
-    task_id="check_parameters",
-    bash_command="echo {{ params }}",
-)
-
 
 dbt_full_refresh = KubernetesPodOperator(
     **gitlab_defaults,
@@ -143,4 +134,4 @@ dbt_full_refresh = KubernetesPodOperator(
     dag=dag,
 )
 
-check_parameters >> dbt_full_refresh
+dbt_full_refresh
