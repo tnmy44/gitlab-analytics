@@ -182,9 +182,7 @@
       ping_instance_wave_sm.ci_cd_lead_time_usage_28_days_event,
       ping_instance_wave_sm.ci_cd_deployment_frequency_usage_28_days_event,
       ping_instance_wave_sm.projects_with_repositories_enabled_all_time_user,
-      ping_instance_wave_sm.api_fuzzing_jobs_usage_28_days_user,
       ping_instance_wave_sm.coverage_fuzzing_pipeline_usage_28_days_event,
-      ping_instance_wave_sm.api_fuzzing_pipeline_usage_28_days_event,
       ping_instance_wave_sm.container_scanning_pipeline_usage_28_days_event,
       ping_instance_wave_sm.dependency_scanning_pipeline_usage_28_days_event,
       ping_instance_wave_sm.sast_pipeline_usage_28_days_event,
@@ -323,7 +321,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@annapiaseczna",
     created_date="2022-10-12",
-    updated_date="2023-09-07"
+    updated_date="2023-11-30"
 ) }}
