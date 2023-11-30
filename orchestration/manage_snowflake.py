@@ -425,6 +425,26 @@ class SnowflakeManager:
                 # Catches permissions errors
                 logging.error(prg._sql_message(as_unicode=False))
 
+    def check_if_db_exists(self, force, database):
+        # if force is false, check if the database exists
+        check_db_exists_query = f"""use database "{database}";"""
+        if force:
+            logging.info("Forcing a create or replace...")
+            db_exists = False
+        else:
+            try:
+                logging.info("Checking if DB exists...")
+                connection = self.engine.connect()
+                connection.execute(check_db_exists_query)
+                logging.info("DBs exist...")
+                db_exists = True
+            except:
+                logging.info("DB does not exist...")
+                db_exists = False
+            finally:
+                connection.close()
+                self.engine.dispose()
+        return db_exists
 
     def clone_database_by_schemas(
         self,
@@ -440,14 +460,16 @@ class SnowflakeManager:
 
         create_db = databases[database]
 
+        db_exists = self.check_if_db_exists(force=False, database=create_db)
+
         schema_query = f""" 
-            SELECT DISTINCT table_schema AS table_schema  
-            FROM {database}.INFORMATION_SCHEMA.TABLES 
-            WHERE TABLE_SCHEMA NOT IN ( 
-                SELECT DISTINCT table_schema FROM "{create_db}".INFORMATION_SCHEMA.TABLES
-            )
-            AND TABLE_SCHEMA NOT IN ('INFORMATION_SCHEMA', 'PUBLIC')
-            """
+                        SELECT DISTINCT table_schema AS table_schema  
+                        FROM {database}.INFORMATION_SCHEMA.TABLES 
+                        WHERE TABLE_SCHEMA NOT IN ('INFORMATION_SCHEMA', 'PUBLIC')
+                        {' AND TABLE_SCHEMA NOT IN ( SELECT DISTINCT table_schema FROM "{create_db}".INFORMATION_SCHEMA.TABLES)' 
+                        if db_exists else ''} 
+                        """
+
         try:
             logging.info(f"Getting schemas {schema_query}")
             res = query_executor(self.engine, schema_query)
