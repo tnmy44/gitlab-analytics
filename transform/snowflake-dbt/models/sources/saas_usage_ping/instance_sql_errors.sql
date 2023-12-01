@@ -1,16 +1,8 @@
-{{ config({
-    "materialized": "incremental"
-    })
-}}
 WITH base AS (
 
     SELECT *
     FROM {{ source('saas_usage_ping', 'instance_sql_errors') }}
-    {% if is_incremental() %}
 
-    WHERE DATEADD('s', _uploaded_at, '1970-01-01') >= (SELECT MAX(uploaded_at) FROM {{this}})
-
-    {% endif %}
 ), partitioned AS (
 
     SELECT 
