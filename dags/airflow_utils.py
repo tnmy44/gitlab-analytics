@@ -301,6 +301,9 @@ gitlab_pod_env_vars = {
     "SNOWFLAKE_PROD_DATABASE": "PROD"
     if GIT_BRANCH == "master"
     else f"{GIT_BRANCH.upper()}_PROD",
+    "DBT_RUNNER": f"{env["AIRFLOW_CTX_DAG_ID"]}|{env["AIRFLOW_CTX_TASK_ID"]}|{env["AIRFLOW_CTX_DAG_RUN_ID"]}|{env["AIRFLOW_CTX_TRY_NUMBER"]}" 
+    if GIT_BRANCH == "master"
+    else f"{GIT_BRANCH.upper()}", 
 }
 
 # git commands
