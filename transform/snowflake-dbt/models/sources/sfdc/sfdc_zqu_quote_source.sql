@@ -252,8 +252,6 @@ WITH source AS (
       lastmodifiedbyid::VARCHAR                              AS last_modified_by_id,
       lastactivitydate::TIMESTAMP_TZ                         AS last_activity_date,
       lastmodifieddate::TIMESTAMP_TZ                         AS last_modified_date,
-      lastvieweddate::TIMESTAMP_TZ                           AS last_viewed_date,
-      lastreferenceddate::TIMESTAMP_TZ                       AS last_referenced_date,
       isdeleted::BOOLEAN                                     AS is_deleted,
       _sdc_extracted_at::TIMESTAMP_TZ                        AS sdc_extracted_at,
       _sdc_received_at::TIMESTAMP_TZ                         AS sdc_received_at,
