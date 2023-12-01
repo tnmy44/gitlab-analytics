@@ -2,9 +2,9 @@
 ## Info about DAG
 This DAG is designed to perform adhoc full refresh of any required number of models.
 Before running this DAG fill the variables for the refresh:
-- DBT_MODEL_TO_FULL_REFRESH
-- DBT_WAREHOUSE_FOR_FULL_REFRESH
-- DBT_TYPE_FOR_FULL_REFRESH
+- DBT_MODEL_TO_REFRESH: add your model(s) name, if you have more of them, put a white space among them (ie. MODEL_1 MODEL_2)
+- SNOWFLAKE_WAREHOUSE_FOR_REFRESH: Allowed values are ["TRANSFORMING_XS", "TRANSFORMING_S","TRANSFORMING_L","TRANSFORMING_XL","TRANSFORMING_4XL",]
+- DBT_TYPE_FOR_REFRESH: The refresh will be full refresh or incremental. Allowed values are [--full-refresh, '']
 
 **All variables should be populated, or job will not start.**
 """
@@ -55,10 +55,10 @@ default_args = {
     "start_date": datetime(2019, 1, 1, 0, 0, 0),
 }
 params = {
-    "DBT_MODEL_TO_FULL_REFRESH": Param(
+    "DBT_MODEL_TO_REFRESH": Param(
         "{FILL YOU MODEL(s) NAME}", type="string", min_length=3, max_length=500
     ),
-    "DBT_WAREHOUSE_FOR_FULL_REFRESH": Param(
+    "SNOWFLAKE_WAREHOUSE_FOR_REFRESH": Param(
         "TRANSFORMING_XS",
         type="string",
         enum=[
@@ -69,7 +69,7 @@ params = {
             "TRANSFORMING_4XL",
         ],
     ),
-    "DBT_TYPE_FOR_FULL_REFRESH": Param(
+    "DBT_TYPE_FOR_REFRESH": Param(
         "--full-refresh",
         type="string",
         enum=["--full-refresh", ""],
@@ -89,14 +89,14 @@ dag = DAG(
 )
 dag.doc_md = __doc__
 
-DBT_MODEL_TO_FULL_REFRESH = "{{params.DBT_MODEL_TO_FULL_REFRESH}}"
-DBT_WAREHOUSE_FOR_FULL_REFRESH = "{{params.DBT_WAREHOUSE_FOR_FULL_REFRESH}}"
-DBT_TYPE_FOR_FULL_REFRESH = "{{params.DBT_TYPE_FOR_FULL_REFRESH}}"
+DBT_MODEL_TO_REFRESH = "{{params.DBT_MODEL_TO_REFRESH}}"
+SNOWFLAKE_WAREHOUSE_FOR_REFRESH = "{{params.SNOWFLAKE_WAREHOUSE_FOR_REFRESH}}"
+DBT_TYPE_FOR_REFRESH = "{{params.DBT_TYPE_FOR_REFRESH}}"
 
 dbt_full_refresh_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE={DBT_WAREHOUSE_FOR_FULL_REFRESH} &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --models {DBT_MODEL_TO_FULL_REFRESH} {DBT_TYPE_FOR_FULL_REFRESH} ; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE={SNOWFLAKE_WAREHOUSE_FOR_REFRESH} &&
+    dbt --no-use-colors run --profiles-dir profile --target prod --models {DBT_MODEL_TO_REFRESH} {DBT_TYPE_FOR_REFRESH} ; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
