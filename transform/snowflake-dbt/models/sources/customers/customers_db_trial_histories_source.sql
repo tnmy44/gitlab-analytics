@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ source('customers', 'customers_db_trial_histories') }}
-    WHERE gl_namespace_id NOT LIKE '%x%'
+    WHERE gl_namespace_id NOT LIKE '%x%' -- https://gitlab.com/gitlab-data/analytics/-/issues/19027
     QUALIFY ROW_NUMBER() OVER (PARTITION BY gl_namespace_id ORDER BY updated_at DESC) = 1
 
 ), renamed AS (
