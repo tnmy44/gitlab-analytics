@@ -141,7 +141,7 @@ models:
           - unique
       - name: person_first_country
         description: >
-          Selects the first country contact enhanmenet services using available data. Following the order:  Account Demographics UPA Country, Zoominfo Company Country, Persons Country.
+          Selects the first country contact enhancement services using available data. Following the order:  Account Demographics UPA Country, Zoominfo Company Country, Persons Country.
 
   - name: prep_crm_user
     description: '{{ doc("prep_crm_user") }}'
