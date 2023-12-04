@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('namespace_segmentation_scores_source') }}
+    FROM {{ ref('opportunity_forecasting_scores_source') }}
 
 )
 
