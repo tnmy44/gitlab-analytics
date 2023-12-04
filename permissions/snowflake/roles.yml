@@ -94,6 +94,12 @@ databases:
     - iweeks_prep:
         shared: no
 
+    - jbare_prod:
+        shared: no
+    - jbare_prep:
+        shared: no
+
+
     - jcaine_prod:
         shared: no
     - jcaine_prep:
@@ -3601,6 +3607,49 @@ roles:
         warehouses:
             - dev_xs
 
+    - jbare:
+        member_of:
+            - analytics_engineer_growth
+            - analytics_engineer_finance
+            - analytics_engineer_sales
+            - analytics_engineer_marketing
+            - reporter
+            - restricted_safe
+	warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - jbare_prep
+                - jbare_prod
+            schemas:
+                - jbare_prep.*
+                - jbare_prod.*
+            tables:
+                - jbare_prep.*.*
+                - jbare_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jbare_prep
+                    - jbare_prod
+                write:
+                    - jbare_prep
+                    - jbare_prod
+            schemas:
+                read:
+                    - jbare_prep.*
+                    - jbare_prod.*
+                write:
+                    - jbare_prep.*
+                    - jbare_prod.*
+            tables:
+                read:
+                    - jbare_prep.*.*
+                    - jbare_prod.*.*
+                write:
+                    - jbare_prep.*.*
+                    - jbare_prod.*.*
+
     - jbudreski:
         member_of: []
         warehouses: []
@@ -5802,6 +5851,11 @@ users:
         can_login: yes
         member_of:
             - jahye
+
+    - jbare:
+        can_login: yes
+        member_of:
+            - jbare
 
     - jbudreski:
         can_login: no
