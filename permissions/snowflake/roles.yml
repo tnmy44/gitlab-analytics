@@ -3613,10 +3613,11 @@ roles:
 
     - jbare:
         member_of:
-            - analytics_engineer_growth
-            - analytics_engineer_finance
-            - analytics_engineer_sales
-            - analytics_engineer_marketing
+            - analyst_growth
+            - analyst_finance
+            - analyst_sales
+            - analyst_marketing
+            - analytics_engineer_core
             - reporter
             - restricted_safe
         warehouses:
@@ -3706,10 +3707,11 @@ roles:
 
     - jclapper:
         member_of:
-            - analytics_engineer_growth
-            - analytics_engineer_finance
-            - analytics_engineer_sales
-            - analytics_engineer_marketing
+            - analyst_growth
+            - analyst_finance
+            - analyst_sales
+            - analyst_marketing
+            - analytics_engineer_core
             - reporter
             - restricted_safe
         warehouses:
@@ -4176,10 +4178,11 @@ roles:
 
     - lhatakeda:
         member_of:
-            - analytics_engineer_growth
-            - analytics_engineer_finance
-            - analytics_engineer_sales
-            - analytics_engineer_marketing
+            - analyst_growth
+            - analyst_finance
+            - analyst_sales
+            - analyst_marketing
+            - analytics_engineer_core
             - reporter
             - restricted_safe
         warehouses:
