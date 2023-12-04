@@ -120,6 +120,13 @@ prep_epic AS (
 
 ),
 
+issue_to_assignee AS (
+
+  select *
+  from {{ ref('gitlab_dotocm_issue_assignees_source') }}
+
+),
+
 joined AS (
 
   SELECT
@@ -200,7 +207,8 @@ joined AS (
     prep_epic.epic_id,
     prep_epic.epic_title,
     prep_epic.labels                                                                                                                                                 AS epic_labels,
-    prep_epic.epic_state
+    prep_epic.epic_state,
+    issue_to_assignee.user_id as issue_assignee
   FROM issues
   LEFT JOIN agg_labels
     ON issues.issue_id = agg_labels.issue_id
@@ -216,6 +224,8 @@ joined AS (
     ON issues.issue_id = epic_to_issue.issue_id
   LEFT JOIN prep_epic
     ON epic_to_issue.epic_id = prep_epic.epic_id
+  left join issue_to_assignee 
+  on issues.issue_id = issue_to_assignee.issue_id
 
 )
 

@@ -253,7 +253,8 @@ final AS (
     internal_issues.epic_id,
     internal_issues.epic_title,
     ARRAY_TO_STRING(internal_issues.epic_labels, '|')                                                                                                                                                                                                                                                   AS epic_labels,
-    internal_issues.epic_state
+    internal_issues.epic_state,
+    internal_issues.issue_assignee
   FROM internal_issues
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_issues.project_id
