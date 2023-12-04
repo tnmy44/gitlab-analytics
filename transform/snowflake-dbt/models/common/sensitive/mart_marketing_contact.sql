@@ -19,7 +19,8 @@
   ('services', 'gitlab_dotcom_integrations_source'),
   ('project', 'prep_project'),
   ('ptp_scores_by_user', 'prep_ptp_scores_by_user'),
-  ('namespace_details', 'gitlab_dotcom_namespace_details_source')
+  ('namespace_details', 'gitlab_dotcom_namespace_details_source'),
+  ('prep_ptpt_scores_by_user', 'prep_ptpt_scores_by_user')
 ]) }}
 
 -------------------------- Start of PQL logic: --------------------------
@@ -361,6 +362,12 @@
       SUM(usage_historical_max_users_not_aligned)                                                   AS usage_historical_max_users_not_aligned
     FROM distinct_contact_subscription
     GROUP BY dim_marketing_contact_id
+
+), last_ptpt_scores AS (
+
+    SELECT *
+    FROM prep_ptpt_scores_by_user
+    QUALIFY score_date = MAX(score_date) OVER(PARTITION BY 1)
 
 ), prep AS (
   
@@ -851,6 +858,28 @@
       END                                         AS ptp_days_since_trial_start,
       ptp_scores_by_user.ptp_source               AS ptp_source,
 
+       -- Propensity to purchase fields
+      IFF(last_ptpt_scores.dim_marketing_contact_id IS NOT NULL, TRUE, FALSE)
+                                                  AS is_ptpt_contact,
+      IFF(is_ptpt_contact = TRUE OR (is_ptpt_contact = FALSE AND marketing_contact.is_ptpt_contact_marketo = TRUE
+        ), TRUE, FALSE)
+                                                  AS is_ptpt_contact_change,
+      last_ptpt_scores.namespace_id               AS ptpt_namespace_id,
+      last_ptpt_scores.score_group                AS ptpt_score_group,
+      last_ptpt_scores.score_date                 AS ptpt_score_date,
+      last_ptpt_scores.insights                   AS ptpt_insights,
+      NULL                                        AS ptpt_past_insights,
+      NULL                                        AS ptpt_past_score_group,
+      NULL                                        AS ptpt_past_score_date,
+
+      -- Propensity to purchase fields
+      NULL                                        AS is_ptpf_contact,
+      NULL                                        AS is_ptpf_contact_change,
+      NULL                                        AS ptpf_namespace_id,
+      NULL                                        AS ptpf_score_group,
+      NULL                                        AS ptpf_score_date,
+      NULL                                        AS ptpf_past_score_group,
+
       -- Namespace notification dates
       namespace_notifications.user_limit_namespace_id,
       namespace_notifications.user_limit_notification_at,
@@ -908,6 +937,8 @@
       ON users_role_by_email.email = marketing_contact.email_address
     LEFT JOIN ptp_scores_by_user
       ON ptp_scores_by_user.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
+    LEFT JOIN last_ptpt_scores
+      ON last_ptpt_scores.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN namespace_notifications
       ON namespace_notifications.email_address = marketing_contact.email_address
 )
@@ -978,6 +1009,12 @@
       'is_paid_tier',
       'is_pql_change',
       'is_paid_tier_change',
+      'is_ptpt_contact',
+      'is_ptpt_contact_change',
+      'ptpt_namespace_id',
+      'ptpt_score_group',
+      'ptpt_insights',
+      'ptpt_score_date',
       'is_member_of_public_ultimate_parent_namespace',
       'is_member_of_private_ultimate_parent_namespace',
       'user_limit_notification_at',
@@ -1005,5 +1042,5 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2023-11-22"
+    updated_date="2023-12-04"
 ) }}
