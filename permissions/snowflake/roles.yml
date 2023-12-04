@@ -3059,8 +3059,17 @@ roles:
             - dev_xs
 
     - bnguyen:
-        member_of: []
-        warehouses: []
+        member_of:
+            - adaptive
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+            - xactly
+        warehouses:
+            - dev_xs
 
     - bvandre:
         member_of:
@@ -5394,8 +5403,17 @@ roles:
             - dev_xs
 
     - tliu:
-        member_of: []
-        warehouses: []
+        member_of:
+            - adaptive
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+            - xactly
+        warehouses:
+            - dev_xs
 
     - tnguyen:
         member_of:
@@ -5527,6 +5545,19 @@ roles:
         warehouses:
             - dev_xs
 
+    - wlin:
+        member_of:
+            - adaptive
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+            - xactly
+        warehouses:
+            - dev_xs
+
 # ==========================================
 # Users
 # ==========================================
@@ -5608,7 +5639,8 @@ users:
 
     - bnguyen:
         can_login: no
-        member_of: []
+        member_of:
+            - bnguyen
 
     - bvandre:
         can_login: yes
@@ -6136,7 +6168,8 @@ users:
 
     - tliu:
         can_login: no
-        member_of: []
+        member_of:
+            - tliu
 
     - tnguyen:
         can_login: yes
@@ -6178,6 +6211,11 @@ users:
         can_login: yes
         member_of:
             - wleidheiser
+
+    - wlin:
+        can_login: yes
+        member_of:
+            - wlin
 
     - workato:
         can_login: yes
