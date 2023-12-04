@@ -7,7 +7,7 @@ The below query will pull ARR by month. You can add additional dimensions to the
 SELECT
   arr_month,
   SUM(arr)  AS arr
-FROM "PROD"."LEGACY"."MART_ARR"
+FROM FROM PROD.restricted_safe_common_mart_sales.mart_arr
 WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 DESC
@@ -75,7 +75,7 @@ The below query will pull ARR by month. You can add additional dimensions to the
 SELECT
   arr_month,
   SUM(arr)  AS arr
-FROM "PROD"."LEGACY"."MART_ARR"
+FROM PROD.restricted_safe_common_mart_sales.mart_arr_with_zero_dollar_charges
 WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
 GROUP BY 1
 ORDER BY 1 DESC
