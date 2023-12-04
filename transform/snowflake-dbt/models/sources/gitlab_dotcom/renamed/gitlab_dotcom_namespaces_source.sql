@@ -50,7 +50,7 @@ combined AS (
 
   SELECT
     all_namespaces.namespace_id                           AS namespace_id,
-    internal_namespaces.internal_namespace_name           AS namespace_name,
+    COALESCE(all_namespaces.namespace_name,internal_namespaces.internal_namespace_name) AS namespace_name,
     internal_namespaces.internal_namespace_path           AS namespace_path,
     all_namespaces.owner_id                               AS owner_id,
     all_namespaces.namespace_type                         AS namespace_type,
