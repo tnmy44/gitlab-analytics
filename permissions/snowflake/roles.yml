@@ -3712,7 +3712,7 @@ roles:
             - analytics_engineer_marketing
             - reporter
             - restricted_safe
-	    warehouses:
+        warehouses:
             - dev_xs
         owns:
             databases:
@@ -4173,8 +4173,8 @@ roles:
             - reporter
         warehouses:
             - dev_xs
-            
-   - lhatakeda:
+
+    - lhatakeda:
         member_of:
             - analytics_engineer_growth
             - analytics_engineer_finance
@@ -4216,7 +4216,7 @@ roles:
                 write:
                     - lhatakeda_prep.*.*
                     - lhatakeda_prod.*.*
-
+                    
     - lkozloff:
         member_of:
             - gitlab_dotcom
