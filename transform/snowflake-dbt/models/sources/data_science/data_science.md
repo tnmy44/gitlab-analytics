@@ -26,6 +26,6 @@ Propensity to churn on subscription/opportunity level.
 Propensity to purchase leads.
 {% enddocs %}
 
-{% docs opportunity_forecast_source %}
-TO BE EDITED
+{% docs opportunity_forecasting_scores_source %}
+TO BE COMPLETED
 {% enddocs %}
