@@ -5545,9 +5545,15 @@ users:
             - reporter
             - sysadmin
             - transformer
-            - data_science_loader
+            - data_science_loader # We keep this until all models have been migrated to run on GitLab CI
             - sales_analytics
             - reporter
+
+    - data_science_loader:
+        can_login: yes
+        member_of:
+            - data_science_loader
+            - loader
 
     - abhaskar:
         can_login: yes
