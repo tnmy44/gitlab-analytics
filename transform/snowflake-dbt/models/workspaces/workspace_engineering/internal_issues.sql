@@ -123,7 +123,7 @@ prep_epic AS (
 issue_to_assignee AS (
 
   select *
-  from {{ ref('gitlab_dotocm_issue_assignees_source') }}
+  from {{ ref('gitlab_dotcom_issue_assignees_source') }}
 
 ),
 
