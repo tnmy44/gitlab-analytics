@@ -134,7 +134,7 @@ clone-dbt-select-local-user:
 	export ENVIRONMENT="LOCAL_USER" && export GIT_BRANCH=$(GIT_BRANCH) && poetry run ../../orchestration/clone_dbt_models_select.py $$INPUT;
 
 clone-dbt-select-local-user-noscript:
-	cd transform/snowflake-dbt/ && curl https://dbt.gitlabdata.com/manifest.json -o manifest.json && dbt clone --select $(DBT_MODELS) --state . --target-path ~/.dbt;
+	cd transform/snowflake-dbt/ && curl https://dbt.gitlabdata.com/manifest.json -o reference_state/manifest.json && dbt clone --select $(DBT_MODELS) --state reference_state;
 
 dbt-deps:
 	"$(DBT_DEPS)"
