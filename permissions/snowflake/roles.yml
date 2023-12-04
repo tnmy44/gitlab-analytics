@@ -3317,6 +3317,7 @@ roles:
     - dfelton:
         member_of:
             - reporter
+            - restricted_safe
         warehouses:
             - dev_xs
 
