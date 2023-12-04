@@ -42,7 +42,7 @@ dag = DAG(
 pvc_monitor_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     cd ./pvc_monitor && 
-    bin/bash get_pvc_values.sh > pvc_values.csv
+    bash get_pvc_values.sh > pvc_values.csv
     python3 pvc_check.py
 """
 
