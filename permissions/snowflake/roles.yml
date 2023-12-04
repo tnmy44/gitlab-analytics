@@ -3006,6 +3006,7 @@ roles:
     - apiaseczna:
         member_of:
          - analyst_engineering
+         - restricted_safe
         warehouses:
             - dev_xs
         owns:
