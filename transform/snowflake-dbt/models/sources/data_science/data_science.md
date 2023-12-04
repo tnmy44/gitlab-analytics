@@ -27,5 +27,5 @@ Propensity to purchase leads.
 {% enddocs %}
 
 {% docs opportunity_forecasting_scores_source %}
-TO BE COMPLETED
+Forecasted days until an opportunity becomes close won
 {% enddocs %}
