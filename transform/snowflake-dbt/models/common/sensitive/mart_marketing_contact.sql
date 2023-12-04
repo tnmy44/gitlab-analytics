@@ -1010,7 +1010,7 @@
       'is_pql_change',
       'is_paid_tier_change',
       'is_ptpt_contact',
-      'is_ptpt_contact_change',
+      'is_ptpt_contact_change', 
       'ptpt_namespace_id',
       'ptpt_score_group',
       'ptpt_insights',
