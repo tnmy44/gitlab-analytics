@@ -99,10 +99,14 @@ databases:
     - jbare_prep:
         shared: no
 
-
     - jcaine_prod:
         shared: no
     - jcaine_prep:
+        shared: no
+
+    - jclapper_prod:
+        shared: no
+    - jclapper_prep:
         shared: no
 
     - jng_prod:
@@ -3700,6 +3704,49 @@ roles:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
 
+    - jclapper:
+        member_of:
+            - analytics_engineer_growth
+            - analytics_engineer_finance
+            - analytics_engineer_sales
+            - analytics_engineer_marketing
+            - reporter
+            - restricted_safe
+	warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - jclapper_prep
+                - jclapper_prod
+            schemas:
+                - jclapper_prep.*
+                - jclapper_prod.*
+            tables:
+                - jclapper_prep.*.*
+                - jclapper_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jclapper_prep
+                    - jclapper_prod
+                write:
+                    - jclapper_prep
+                    - jclapper_prod
+            schemas:
+                read:
+                    - jclapper_prep.*
+                    - jclapper_prod.*
+                write:
+                    - jclapper_prep.*
+                    - jclapper_prod.*
+            tables:
+                read:
+                    - jclapper_prep.*.*
+                    - jclapper_prod.*.*
+                write:
+                    - jclapper_prep.*.*
+                    - jclapper_prod.*.*
+
     - jcolyer:
         member_of:
             - gitlab_dotcom
@@ -5870,6 +5917,11 @@ users:
         can_login: yes
         member_of:
             - jcaine
+
+    - jclapper:
+        can_login: yes
+        member_of:
+            - jclapper
 
     - jcolyer:
         can_login: yes
