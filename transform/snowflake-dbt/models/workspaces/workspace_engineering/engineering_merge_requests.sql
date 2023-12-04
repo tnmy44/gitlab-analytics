@@ -111,7 +111,8 @@ WITH internal_merge_requests AS (
         WHEN ns_1.dim_namespace_id IS NOT NULL 
             THEN ns_1.namespace_path || '/' || ns.namespace_path
         ELSE  ns.namespace_path END                                                                                             AS full_group_path,
-    'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/merge_requests/' || internal_merge_requests.merge_request_iid  AS url
+    'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/merge_requests/' || internal_merge_requests.merge_request_iid  AS url,
+    IFF(ARRAY_CONTAINS('infradev'::VARIANT, internal_merge_requests.labels), TRUE, FALSE)                                                                                                                                                                                                                       AS is_infradev,
   FROM internal_merge_requests
   LEFT JOIN {{ ref('dim_project') }} AS projects
     ON projects.dim_project_id = internal_merge_requests.target_project_id
