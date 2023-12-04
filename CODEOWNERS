@@ -55,28 +55,28 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /transform/snowflake-dbt/models/legacy/bamboohr/    @pempey @iweeks
 /transform/snowflake-dbt/models/legacy/covid19/     @pempey @iweeks
 
-/transform/snowflake-dbt/models/common/bridge/  @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
+/transform/snowflake-dbt/models/common/bridge/  @chrissharp @snalamaru @mdrussell @michellecooper @pempey @iweeks
 /transform/snowflake-dbt/models/common/dimensions_local/financial/                   @chrissharp @michellecooper @iweeks @snalamaru
 /transform/snowflake-dbt/models/common/dimensions_local/general_and_administrative/  @pempey @iweeks @lisvinueza
-/transform/snowflake-dbt/models/common/dimensions_local/product_and_engineering/     @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks @michellecooper
+/transform/snowflake-dbt/models/common/dimensions_local/product_and_engineering/     @chrissharp @snalamaru @mdrussell @pempey @iweeks @michellecooper
 /transform/snowflake-dbt/models/common/dimensions_local/sales_and_marketing/         @chrissharp @michellecooper @iweeks @snalamaru
-/transform/snowflake-dbt/models/common/dimensions_shared/   @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
+/transform/snowflake-dbt/models/common/dimensions_shared/   @chrissharp @snalamaru @mdrussell @michellecooper @pempey @iweeks
 /transform/snowflake-dbt/models/common/facts_general_and_administrative/             @pempey @iweeks @lisvinueza
-/transform/snowflake-dbt/models/common/facts_product_and_engineering/                @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks @michellecooper
+/transform/snowflake-dbt/models/common/facts_product_and_engineering/                @chrissharp @snalamaru @mdrussell @pempey @iweeks @michellecooper
 /transform/snowflake-dbt/models/common/facts_sales_and_marketing/                    @chrissharp @michellecooper @iweeks @snalamaru
 /transform/snowflake-dbt/models/common/facts_financial/                              @chrissharp @michellecooper @iweeks @snalamaru
 
-/transform/snowflake-dbt/models/common_mapping/     @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
-/transform/snowflake-dbt/models/common_prep/        @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
+/transform/snowflake-dbt/models/common_mapping/     @chrissharp @snalamaru @mdrussell @michellecooper @pempey @iweeks
+/transform/snowflake-dbt/models/common_prep/        @chrissharp @snalamaru @mdrussell @michellecooper @pempey @iweeks
 
-/transform/snowflake-dbt/models/common_mart/            @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
+/transform/snowflake-dbt/models/common_mart/            @chrissharp @snalamaru @mdrussell @michellecooper @pempey @iweeks
 /transform/snowflake-dbt/models/common_mart_finance/    @chrissharp @michellecooper @iweeks @snalamaru
 /transform/snowflake-dbt/models/common_mart_marketing/  @chrissharp @michellecooper @iweeks @snalamaru
-/transform/snowflake-dbt/models/common_mart_product/    @chrissharp @snalamaru @mdrussell @jeanpeguero @pempey @iweeks @michellecooper
+/transform/snowflake-dbt/models/common_mart_product/    @chrissharp @snalamaru @mdrussell @pempey @iweeks @michellecooper
 /transform/snowflake-dbt/models/common_mart_sales/      @chrissharp @michellecooper @iweeks @snalamaru
 
 /transform/snowflake-dbt/models/legacy/smau_events/ @chrissharp @snalamaru @mdrussell @iweeks  @michellecooper
-/transform/snowflake-dbt/models/legacy/snapshots/   @chrissharp @snalamaru @mdrussell @jeanpeguero @michellecooper @pempey @iweeks
+/transform/snowflake-dbt/models/legacy/snapshots/   @chrissharp @snalamaru @mdrussell @michellecooper @pempey @iweeks
 /transform/snowflake-dbt/models/legacy/snowplow/    @chrissharp @snalamaru @mdrussell @pempey @iweeks  @michellecooper
 
 /transform/snowflake-dbt/models/sources/customers/  @vedprakash2021 @rbacovic @chrissharp @snalamaru @mdrussell @iweeks
@@ -101,8 +101,8 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_latest.sql        @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_historical.sql    @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
 
-/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @vedprakash2021 @rbacovic @jjstark @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks @michellecooper
-/transform/snowflake-dbt/models/legacy/gitlab_dotcom/       @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks @michellecooper
+/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @vedprakash2021 @rbacovic @jjstark @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
+/transform/snowflake-dbt/models/legacy/gitlab_dotcom/       @chrissharp @snalamaru @mdrussell @iweeks @michellecooper
 
 /transform/snowflake-dbt/models/sources/greenhouse/         @jjstark @rigerta @paul_armstrong @pempey @iweeks @lisvinueza
 /transform/snowflake-dbt/models/legacy/greenhouse/          @pempey @iweeks @lisvinueza
@@ -110,19 +110,19 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /transform/snowflake-dbt/models/sources/handbook/           @pempey @iweeks @jjstark @paul_armstrong
 /transform/snowflake-dbt/models/legacy/handbook/            @pempey @iweeks @jjstark @paul_armstrong
 
-/transform/snowflake-dbt/models/sources/license/            @rbacovic @jjstark @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks
-/transform/snowflake-dbt/models/legacy/license/             @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks
+/transform/snowflake-dbt/models/sources/license/            @rbacovic @jjstark @chrissharp @snalamaru @mdrussell @iweeks
+/transform/snowflake-dbt/models/legacy/license/             @chrissharp @snalamaru @mdrussell @iweeks
 
 /transform/snowflake-dbt/models/sources/netsuite/           @jjstark @paul_armstrong @iweeks @chrissharp @michellecooper
 /transform/snowflake-dbt/models/legacy/netsuite/            @iweeks @chrissharp @michellecooper
 
-/transform/snowflake-dbt/models/sources/qualtrics           @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks
-/transform/snowflake-dbt/models/legacy/qualtrics            @michellecooper @jeanpeguero @iweeks
+/transform/snowflake-dbt/models/sources/qualtrics           @jjstark @paul_armstrong @michellecooper @iweeks
+/transform/snowflake-dbt/models/legacy/qualtrics            @michellecooper @iweeks
 
 /transform/snowflake-dbt/models/sources/saas_usage_ping     @vedprakash @rbacovic @jjstark
 
-/transform/snowflake-dbt/models/sources/sfdc/               @jjstark @paul_armstrong @michellecooper @jeanpeguero @iweeks @chrissharp @snalamaru
-/transform/snowflake-dbt/models/legacy/sfdc/                @michellecooper @jeanpeguero @iweeks @chrissharp @snalamaru
+/transform/snowflake-dbt/models/sources/sfdc/               @jjstark @paul_armstrong @michellecooper @iweeks @chrissharp @snalamaru
+/transform/snowflake-dbt/models/legacy/sfdc/                @michellecooper @iweeks @chrissharp @snalamaru
 
 /transform/snowflake-dbt/models/sources/snowflake/          @jjstark @paul_armstrong @pempey @iweeks
 /transform/snowflake-dbt/models/legacy/snowflake/           @pempey @iweeks
@@ -130,14 +130,14 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /transform/snowflake-dbt/models/sources/version/            @jjstark @paul_armstrong @chrissharp @snalamaru @mdrussell @iweeks
 /transform/snowflake-dbt/models/legacy/version/             @chrissharp @snalamaru @mdrussell @iweeks
 
-/transform/snowflake-dbt/models/sources/zendesk             @rigerta @vedprakash2021 @jeanpeguero @iweeks
-/transform/snowflake-dbt/models/legacy/zendesk              @jeanpeguero @iweeks
+/transform/snowflake-dbt/models/sources/zendesk             @rigerta @vedprakash2021 @iweeks
+/transform/snowflake-dbt/models/legacy/zendesk              @iweeks @mdrussell @snalamaru @michellecooper
 
-/transform/snowflake-dbt/models/sources/zuora               @rigerta @vedprakash2021 @michellecooper @jeanpeguero @iweeks @snalamaru
-/transform/snowflake-dbt/models/legacy/zuora                @michellecooper @jeanpeguero @iweeks @snalamaru
+/transform/snowflake-dbt/models/sources/zuora               @rigerta @vedprakash2021 @michellecooper @iweeks @snalamaru
+/transform/snowflake-dbt/models/legacy/zuora                @michellecooper @iweeks @snalamaru
 
-/transform/snowflake-dbt/models/marts/arr                   @jeanpeguero @paul_armstrong @iweeks @michellecooper @snalamaru
-/transform/snowflake-dbt/models/marts/sales_funnel          @jeanpeguero @iweeks @michellecooper @snalamaru
+/transform/snowflake-dbt/models/marts/arr                   @paul_armstrong @iweeks @michellecooper @snalamaru
+/transform/snowflake-dbt/models/marts/sales_funnel          @iweeks @michellecooper @snalamaru
 
 transform/snowflake-dbt/models/marts/pumps/                 @jjstark @paul_armstrong @dparker @Karuna16
 transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armstrong @dparker @Karuna16
@@ -152,7 +152,7 @@ transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armst
 
 /transform/snowflake-dbt/models/workspaces/workspace_customer_success/  @mdrussell @snalamaru @chrissharp @michellecooper
 
-/transform/snowflake-dbt/models/workspaces/workspace_product/           @cbraza @matthewpetersen @eneuberger @nraisinghani @mdrussell @snalamaru @jeanpeguero @dpeterson1 @nhervas @michellecooper
+/transform/snowflake-dbt/models/workspaces/workspace_product/           @cbraza @matthewpetersen @eneuberger @nraisinghani @mdrussell @snalamaru @dpeterson1 @nhervas @michellecooper
 
 # ======
 # dbt data file Overwrites
