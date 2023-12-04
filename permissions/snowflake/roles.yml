@@ -3712,7 +3712,7 @@ roles:
             - analytics_engineer_marketing
             - reporter
             - restricted_safe
-	warehouses:
+	    warehouses:
             - dev_xs
         owns:
             databases:
