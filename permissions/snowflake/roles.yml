@@ -139,6 +139,11 @@ databases:
     - kmagda_prep:
         shared: no
 
+    - lhatakeda_prod:
+        shared: no
+    - lhatakeda_prep:
+        shared: no
+
     - lmai_prod:
         shared: no
     - lmai_prep:
@@ -4073,6 +4078,49 @@ roles:
         warehouses:
             - dev_xs
             
+   - lhatakeda:
+        member_of:
+            - analytics_engineer_growth
+            - analytics_engineer_finance
+            - analytics_engineer_sales
+            - analytics_engineer_marketing
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - lhatakeda_prep
+                - lhatakeda_prod
+            schemas:
+                - lhatakeda_prep.*
+                - lhatakeda_prod.*
+            tables:
+                - lhatakeda_prep.*.*
+                - lhatakeda_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - lhatakeda_prep
+                    - lhatakeda_prod
+                write:
+                    - lhatakeda_prep
+                    - lhatakeda_prod
+            schemas:
+                read:
+                    - lhatakeda_prep.*
+                    - lhatakeda_prod.*
+                write:
+                    - lhatakeda_prep.*
+                    - lhatakeda_prod.*
+            tables:
+                read:
+                    - lhatakeda_prep.*.*
+                    - lhatakeda_prod.*.*
+                write:
+                    - lhatakeda_prep.*.*
+                    - lhatakeda_prod.*.*
+
     - lkozloff:
         member_of:
             - gitlab_dotcom
@@ -5849,6 +5897,11 @@ users:
         can_login: yes
         member_of:
             - lchilamakuru
+
+    - lhatakeda:
+        can_login: yes
+        member_of:
+            - lhatakeda
 
     - lkozloff:
         can_login: yes
