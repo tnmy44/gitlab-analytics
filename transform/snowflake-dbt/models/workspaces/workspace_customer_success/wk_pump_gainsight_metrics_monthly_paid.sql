@@ -330,7 +330,6 @@
       monthly_sm_metrics.ci_cd_lead_time_usage_28_days_event,
       monthly_sm_metrics.ci_cd_deployment_frequency_usage_28_days_event,
       monthly_sm_metrics.projects_with_repositories_enabled_all_time_user,
-      monthly_sm_metrics.api_fuzzing_jobs_usage_28_days_user,
       monthly_sm_metrics.coverage_fuzzing_pipeline_usage_28_days_event,
       monthly_sm_metrics.api_fuzzing_pipeline_usage_28_days_event,
       monthly_sm_metrics.container_scanning_pipeline_usage_28_days_event,
@@ -584,7 +583,6 @@
       monthly_saas_metrics.ci_cd_lead_time_usage_28_days_event,
       monthly_saas_metrics.ci_cd_deployment_frequency_usage_28_days_event,
       monthly_saas_metrics.projects_with_repositories_enabled_all_time_user,
-      monthly_saas_metrics.api_fuzzing_jobs_usage_28_days_user,
       monthly_saas_metrics.coverage_fuzzing_pipeline_usage_28_days_event,
       monthly_saas_metrics.api_fuzzing_pipeline_usage_28_days_event,
       monthly_saas_metrics.container_scanning_pipeline_usage_28_days_event,
@@ -776,5 +774,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-09-09",
-    updated_date="2023-11-13"
+    updated_date="2023-11-21"
 ) }}
