@@ -5731,7 +5731,6 @@ users:
         can_login: yes
         member_of:
             - data_science_loader
-            - loader
 
     - abhaskar:
         can_login: yes
