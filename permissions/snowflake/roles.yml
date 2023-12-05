@@ -5790,7 +5790,7 @@ users:
             - bmandavia
 
     - bnguyen:
-        can_login: no
+        can_login: yes
         member_of:
             - bnguyen
 
@@ -6334,7 +6334,7 @@ users:
             - tjayaramaraju
 
     - tliu:
-        can_login: no
+        can_login: yes
         member_of:
             - tliu
 
