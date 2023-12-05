@@ -14,7 +14,7 @@ cte_ns_explode AS (
     s.value AS lineage_namespace,
     s.index AS rn
   FROM {{ ref('gitlab_dotcom_namespace_lineage_scd') }},
-    LATERAL FLATTEN(upstream_lineage, OUTER=>TRUE) AS s
+    LATERAL FLATTEN(upstream_lineage, OUTER => TRUE) AS s
   WHERE is_current
 
 ),
@@ -41,7 +41,8 @@ cte_ns_restructure AS (
     upstream_lineage,
     ARRAY_AGG(namespace_path) WITHIN GROUP (ORDER BY rn) AS regroup
   FROM cte_ns_get_path
-  GROUP BY namespace_id,
+  GROUP BY
+    namespace_id,
     ultimate_parent_id,
     upstream_lineage
 
@@ -104,12 +105,13 @@ milestones AS (
         AND start_date <= DATEADD('month', 1, CURRENT_DATE)
         AND REGEXP_LIKE(milestone_title, '\\d+\.\\d+') THEN
         DENSE_RANK() OVER (
-          PARTITION BY IFF(
-            group_id = 9970
-            AND start_date <= DATEADD('month', 1, CURRENT_DATE)
-            AND REGEXP_LIKE(milestone_title, '\\d+\.\\d+'),
-            1,
-            0
+          PARTITION BY
+            IFF(
+              group_id = 9970
+              AND start_date <= DATEADD('month', 1, CURRENT_DATE)
+              AND REGEXP_LIKE(milestone_title, '\\d+\.\\d+'),
+              1,
+              0
             )
           ORDER BY
             start_date DESC
@@ -166,8 +168,10 @@ final AS (
     internal_issues.issue_id                                                                                                                                                                                                                                                                            AS issue_id,
     internal_issues.issue_iid                                                                                                                                                                                                                                                                           AS issue_iid,
     internal_issues.author_id                                                                                                                                                                                                                                                                           AS author_id,
-    IFF(bots.dim_user_id IS NOT NULL OR internal_issues.author_id = 1786152 OR ARRAY_CONTAINS('automation:bot-authored'::VARIANT, internal_issues.labels),
-      TRUE, FALSE)                                                                                                                                                                                                                                                                                      AS is_created_by_bot,
+    IFF(
+      bots.dim_user_id IS NOT NULL OR internal_issues.author_id = 1786152 OR ARRAY_CONTAINS('automation:bot-authored'::VARIANT, internal_issues.labels),
+      TRUE, FALSE
+    )                                                                                                                                                                                                                                                                                                   AS is_created_by_bot,
     internal_issues.project_id                                                                                                                                                                                                                                                                          AS project_id,
     internal_issues.issue_created_at                                                                                                                                                                                                                                                                    AS created_at,
     internal_issues.issue_updated_at                                                                                                                                                                                                                                                                    AS updated_at,
@@ -190,8 +194,7 @@ final AS (
     ARRAY_TO_STRING(internal_issues.labels, '|')                                                                                                                                                                                                                                                        AS masked_label_title,
     ARRAY_CONTAINS('community contribution'::VARIANT, internal_issues.labels)                                                                                                                                                                                                                           AS is_community_contribution,
     ARRAY_CONTAINS('sus::impacting'::VARIANT, internal_issues.labels)                                                                                                                                                                                                                                   AS is_sus_impacting,
-    ARRAY_CONTAINS('corrective action'::VARIANT, internal_issues.
-      labels)                                                                                                                                                                                                                                                                                           AS is_corrective_action,
+    ARRAY_CONTAINS('corrective action'::VARIANT, internal_issues.labels)                                                                                                                                                                                                                                AS is_corrective_action,
     internal_issues.priority_tag                                                                                                                                                                                                                                                                        AS priority_label,
     internal_issues.severity_tag                                                                                                                                                                                                                                                                        AS severity_label,
     CASE
@@ -206,11 +209,12 @@ final AS (
       WHEN ARRAY_CONTAINS('group::distribution::operate'::VARIANT, internal_issues.labels)
         THEN 'distribution::operate'
       ELSE
-        IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''), 'undefined') END   AS group_label,
+        IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', '') IN (SELECT group_name FROM product_categories_yml), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bgroup::*([^,]*)'), 'group::', ''), 'undefined')
+    END                                                                                                                                                                                                                                                                                                 AS group_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bsection::*([^,]*)'), 'section::', '') IN (SELECT section_name FROM product_categories_yml), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bsection::*([^,]*)'), 'section::', ''), 'undefined') AS section_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bdevops::*([^,]*)'), 'devops::', '') IN (SELECT stage_name FROM product_categories_yml), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bdevops::*([^,]*)'), 'devops::', ''), 'undefined')       AS stage_label,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\btype::*([^,]*)'), 'type::', '') IN ('bug', 'feature', 'maintenance'), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\btype::*([^,]*)'), 'type::', ''), 'undefined')
-    AS type_label,
+      AS type_label,
     CASE
       WHEN type_label = 'bug'
         THEN COALESCE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bbug::*([^,]*)'), 'undefined')
@@ -218,8 +222,10 @@ final AS (
         THEN COALESCE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bmaintenance::*([^,]*)'), 'undefined')
       WHEN type_label = 'feature'
         THEN COALESCE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bfeature::*([^,]*)'), 'undefined')
-      ELSE 'undefined' END                                                                                                                                                                                                                                                                              AS subtype_label,
-    COALESCE(subtype_label = 'bug::vulnerability' --change requested by James & Darva correct way to label vulnerability issues
+      ELSE 'undefined'
+    END                                                                                                                                                                                                                                                                                                 AS subtype_label,
+    COALESCE(
+      subtype_label = 'bug::vulnerability' --change requested by James & Darva correct way to label vulnerability issues
       AND internal_issues.namespace_id NOT IN (5821789, 1819570, 1986712, 2139148, 4955423, 3786502)
       AND NOT ARRAY_CONTAINS('feature'::VARIANT, internal_issues.labels)
       AND NOT ARRAY_CONTAINS('test'::VARIANT, internal_issues.labels)
@@ -231,7 +237,8 @@ final AS (
       AND NOT ARRAY_CONTAINS('vulnerability::vendor package::fix unavailable'::VARIANT, internal_issues.labels)
       AND NOT ARRAY_CONTAINS('vulnerability::vendor base container::will not be fixed'::VARIANT, internal_issues.labels)
       AND NOT ARRAY_CONTAINS('vulnerability::vendor base container::fix unavailable'::VARIANT, internal_issues.labels)
-      AND NOT ARRAY_CONTAINS('featureflag::disabled'::VARIANT, internal_issues.labels), FALSE)                                                                                                                                                                                                          AS is_security,
+      AND NOT ARRAY_CONTAINS('featureflag::disabled'::VARIANT, internal_issues.labels), FALSE
+    )                                                                                                                                                                                                                                                                                                   AS is_security,
     IFF(REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bworkflow::*([^,]*)'), 'workflow::', '') IN (SELECT workflow_label FROM workflow_labels), REPLACE(REGEXP_SUBSTR(ARRAY_TO_STRING(internal_issues.labels, ','), '\\bworkflow::*([^,]*)'), 'workflow::', ''), 'undefined')  AS workflow_label,
     IFF(ARRAY_CONTAINS('infradev'::VARIANT, internal_issues.labels), TRUE, FALSE)                                                                                                                                                                                                                       AS is_infradev,
     IFF(ARRAY_CONTAINS('fedramp::vulnerability'::VARIANT, internal_issues.labels), TRUE, FALSE)                                                                                                                                                                                                         AS fedramp_vulnerability,
@@ -257,15 +264,15 @@ final AS (
     internal_issues.issue_assignee
   FROM internal_issues
   LEFT JOIN {{ ref('dim_project') }} AS projects
-    ON projects.dim_project_id = internal_issues.project_id
+    ON internal_issues.project_id = projects.dim_project_id
   LEFT JOIN bot_users AS bots
-    ON bots.dim_user_id = internal_issues.author_id
+    ON internal_issues.author_id = bots.dim_user_id
   LEFT JOIN namespaces AS ns
-    ON ns.namespace_id = projects.dim_namespace_id
+    ON projects.dim_namespace_id = ns.namespace_id
   LEFT JOIN milestones
-    ON milestones.milestone_id = internal_issues.milestone_id
+    ON internal_issues.milestone_id = milestones.milestone_id
   LEFT JOIN issue_note_move
-    ON issue_note_move.noteable_id = internal_issues.issue_id
+    ON internal_issues.issue_id = issue_note_move.noteable_id
 )
 
 SELECT *
