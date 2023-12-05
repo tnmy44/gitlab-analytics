@@ -71,6 +71,7 @@ include:
   script:
     - manage_snowflake.py manage_clones --database prod --empty
     - manage_snowflake.py manage_clones --database prep --empty
+    - manage_snowflake.py manage_clones --database raw --empty
   when: always
 
 📈❗️clone_prod_real:
