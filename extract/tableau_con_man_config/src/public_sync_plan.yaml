@@ -3,11 +3,11 @@ operation: sync
 target:
   name: gitlabsandbox
   type: server
-  secrete_prefix: TABLEAU_API_SANDBOX
-  site_name: TABLEAU_API_SANDBOX_SITE_NAME
-  token_name: TABLEAU_API_SANDBOX_TOKEN_NAME
-  token_secret: TABLEAU_API_SANDBOX_TOKEN_SECRET
-  server_url: TABLEAU_API_SANDBOX_URL
+  secrete_prefix: TABLEAU_API_PUBLIC
+  site_name: TABLEAU_API_PUBLIC_SITE_NAME
+  token_name: TABLEAU_API_PUBLIC_TOKEN_NAME
+  token_secret: TABLEAU_API_PUBLIC_TOKEN_SECRET
+  server_url: TABLEAU_API_PUBLIC_URL
 reference:
   name: gitlab
   type: server
@@ -23,7 +23,7 @@ target_selection_rules:
 reference_selection_rules:
   - field: Tags
     operator: Equals
-    value: SyncTest
+    value: Public
 assets:
   workbooks:
     options:
