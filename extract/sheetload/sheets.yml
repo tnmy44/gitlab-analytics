@@ -330,3 +330,10 @@ sheets:
     owner: '@dmicovic'
     tabs: 
       - abm_key_account_list
+
+  - name: devrel_campaigns
+    owner: '@degan'
+    tabs: 
+      - devrel_influenced_campaings
+      - youtube_views_gitlab
+      - devrel_blog_posts_views

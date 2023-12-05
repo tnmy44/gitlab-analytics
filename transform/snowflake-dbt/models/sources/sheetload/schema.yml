@@ -613,3 +613,9 @@ models:
       tests:
         - not_null
         - unique
+- name: sheetload_devrel_influenced_campaings
+  description: A list updated by the DelRel team of campaigns they have worked on.
+- name: sheetload_devrel_blog_posts_views
+  description: A list updated by the DevRel team of Youtube videos they worked on.
+- name: sheetload_youtube_views_gitlab
+  description: A list updated by the DevRel team of blog posts they worked on.

@@ -123,3 +123,6 @@ sources:
       - name: values_certificate
       - name: yc_companies
       - name: xactly_credit_sheetload
+      - name: devrel_influenced_campaings
+      - name: devrel_blog_posts_views
+      - name: youtube_views_gitlab
