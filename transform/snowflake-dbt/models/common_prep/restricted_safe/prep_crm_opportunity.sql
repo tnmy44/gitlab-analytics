@@ -168,8 +168,8 @@
       0 AS is_live
     FROM sfdc_opportunity_snapshots_source
     INNER JOIN snapshot_dates
-      ON sfdc_opportunity_snapshots_source.dbt_valid_from::DATE <= snapshot_dates.date_actual
-        AND (sfdc_opportunity_snapshots_source.dbt_valid_to::DATE > snapshot_dates.date_actual OR sfdc_opportunity_snapshots_source.dbt_valid_to IS NULL)
+      ON sfdc_opportunity_snapshots_source.dbt_valid_from <= snapshot_dates.date_actual
+        AND {{ coalesce_to_infinity('sfdc_opportunity_snapshots_source.dbt_valid_to') }} > snapshot_dates.date_actual
     LEFT JOIN sfdc_account_snapshot AS fulfillment_partner
       ON sfdc_opportunity_snapshots_source.fulfillment_partner = fulfillment_partner.dim_crm_account_id
         AND snapshot_dates.date_id = fulfillment_partner.snapshot_id
