@@ -15,6 +15,9 @@ models:
       description: '{{ doc("churn_forecasting_scores_source") }}'
     - name: ptpl_scores_source
       description: '{{ doc("ptpl_scores_source") }}'
+    - name: opportunity_forecasting_scores_source
+      description: '{{ doc("opportunity_forecasting_scores_source") }}'
+
 
 
 

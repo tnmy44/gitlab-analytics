@@ -94,9 +94,19 @@ databases:
     - iweeks_prep:
         shared: no
 
+    - jbare_prod:
+        shared: no
+    - jbare_prep:
+        shared: no
+
     - jcaine_prod:
         shared: no
     - jcaine_prep:
+        shared: no
+
+    - jclapper_prod:
+        shared: no
+    - jclapper_prep:
         shared: no
 
     - jng_prod:
@@ -137,6 +147,11 @@ databases:
     - kmagda_prod:
         shared: no
     - kmagda_prep:
+        shared: no
+
+    - lhatakeda_prod:
+        shared: no
+    - lhatakeda_prep:
         shared: no
 
     - lmai_prod:
@@ -3059,8 +3074,17 @@ roles:
             - dev_xs
 
     - bnguyen:
-        member_of: []
-        warehouses: []
+        member_of:
+            - adaptive
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+            - xactly
+        warehouses:
+            - dev_xs
 
     - bvandre:
         member_of:
@@ -3596,6 +3620,50 @@ roles:
         warehouses:
             - dev_xs
 
+    - jbare:
+        member_of:
+            - analyst_growth
+            - analyst_finance
+            - analyst_sales
+            - analyst_marketing
+            - analytics_engineer_core
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - jbare_prep
+                - jbare_prod
+            schemas:
+                - jbare_prep.*
+                - jbare_prod.*
+            tables:
+                - jbare_prep.*.*
+                - jbare_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jbare_prep
+                    - jbare_prod
+                write:
+                    - jbare_prep
+                    - jbare_prod
+            schemas:
+                read:
+                    - jbare_prep.*
+                    - jbare_prod.*
+                write:
+                    - jbare_prep.*
+                    - jbare_prod.*
+            tables:
+                read:
+                    - jbare_prep.*.*
+                    - jbare_prod.*.*
+                write:
+                    - jbare_prep.*.*
+                    - jbare_prod.*.*
+
     - jbudreski:
         member_of: []
         warehouses: []
@@ -3645,6 +3713,50 @@ roles:
                 write:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
+
+    - jclapper:
+        member_of:
+            - analyst_growth
+            - analyst_finance
+            - analyst_sales
+            - analyst_marketing
+            - analytics_engineer_core
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - jclapper_prep
+                - jclapper_prod
+            schemas:
+                - jclapper_prep.*
+                - jclapper_prod.*
+            tables:
+                - jclapper_prep.*.*
+                - jclapper_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jclapper_prep
+                    - jclapper_prod
+                write:
+                    - jclapper_prep
+                    - jclapper_prod
+            schemas:
+                read:
+                    - jclapper_prep.*
+                    - jclapper_prod.*
+                write:
+                    - jclapper_prep.*
+                    - jclapper_prod.*
+            tables:
+                read:
+                    - jclapper_prep.*.*
+                    - jclapper_prod.*.*
+                write:
+                    - jclapper_prep.*.*
+                    - jclapper_prod.*.*
 
     - jcolyer:
         member_of:
@@ -4072,7 +4184,51 @@ roles:
             - reporter
         warehouses:
             - dev_xs
-            
+
+    - lhatakeda:
+        member_of:
+            - analyst_growth
+            - analyst_finance
+            - analyst_sales
+            - analyst_marketing
+            - analytics_engineer_core
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - lhatakeda_prep
+                - lhatakeda_prod
+            schemas:
+                - lhatakeda_prep.*
+                - lhatakeda_prod.*
+            tables:
+                - lhatakeda_prep.*.*
+                - lhatakeda_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - lhatakeda_prep
+                    - lhatakeda_prod
+                write:
+                    - lhatakeda_prep
+                    - lhatakeda_prod
+            schemas:
+                read:
+                    - lhatakeda_prep.*
+                    - lhatakeda_prod.*
+                write:
+                    - lhatakeda_prep.*
+                    - lhatakeda_prod.*
+            tables:
+                read:
+                    - lhatakeda_prep.*.*
+                    - lhatakeda_prod.*.*
+                write:
+                    - lhatakeda_prep.*.*
+                    - lhatakeda_prod.*.*
+                    
     - lkozloff:
         member_of:
             - gitlab_dotcom
@@ -5394,8 +5550,17 @@ roles:
             - dev_xs
 
     - tliu:
-        member_of: []
-        warehouses: []
+        member_of:
+            - adaptive
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+            - xactly
+        warehouses:
+            - dev_xs
 
     - tnguyen:
         member_of:
@@ -5527,6 +5692,19 @@ roles:
         warehouses:
             - dev_xs
 
+    - wlin:
+        member_of:
+            - adaptive
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+            - xactly
+        warehouses:
+            - dev_xs
+
 # ==========================================
 # Users
 # ==========================================
@@ -5614,7 +5792,8 @@ users:
 
     - bnguyen:
         can_login: no
-        member_of: []
+        member_of:
+            - bnguyen
 
     - bvandre:
         can_login: yes
@@ -5761,6 +5940,11 @@ users:
         member_of:
             - jahye
 
+    - jbare:
+        can_login: yes
+        member_of:
+            - jbare
+
     - jbudreski:
         can_login: no
         member_of: []
@@ -5774,6 +5958,11 @@ users:
         can_login: yes
         member_of:
             - jcaine
+
+    - jclapper:
+        can_login: yes
+        member_of:
+            - jclapper
 
     - jcolyer:
         can_login: yes
@@ -5855,6 +6044,11 @@ users:
         can_login: yes
         member_of:
             - lchilamakuru
+
+    - lhatakeda:
+        can_login: yes
+        member_of:
+            - lhatakeda
 
     - lkozloff:
         can_login: yes
@@ -6142,7 +6336,8 @@ users:
 
     - tliu:
         can_login: no
-        member_of: []
+        member_of:
+            - tliu
 
     - tnguyen:
         can_login: yes
@@ -6184,6 +6379,11 @@ users:
         can_login: yes
         member_of:
             - wleidheiser
+
+    - wlin:
+        can_login: yes
+        member_of:
+            - wlin
 
     - workato:
         can_login: yes
