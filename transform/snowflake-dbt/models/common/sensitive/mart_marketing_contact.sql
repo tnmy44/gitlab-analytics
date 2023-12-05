@@ -868,17 +868,6 @@
       last_ptpt_scores.score_group                AS ptpt_score_group,
       last_ptpt_scores.score_date                 AS ptpt_score_date,
       last_ptpt_scores.insights                   AS ptpt_insights,
-      NULL                                        AS ptpt_past_insights,
-      NULL                                        AS ptpt_past_score_group,
-      NULL                                        AS ptpt_past_score_date,
-
-      -- Propensity to purchase fields
-      NULL                                        AS is_ptpf_contact,
-      NULL                                        AS is_ptpf_contact_change,
-      NULL                                        AS ptpf_namespace_id,
-      NULL                                        AS ptpf_score_group,
-      NULL                                        AS ptpf_score_date,
-      NULL                                        AS ptpf_past_score_group,
 
       -- Namespace notification dates
       namespace_notifications.user_limit_namespace_id,
