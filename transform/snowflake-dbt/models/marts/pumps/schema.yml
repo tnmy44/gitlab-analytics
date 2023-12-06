@@ -166,8 +166,6 @@ models:
         description: All-time count of License Management CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countslicense_management_jobs))
       - name: secret_detection_jobs_all_time_event
         description: All-time count of Secret Detection’ CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countssecret_detection_jobs))
-      - name: container_scanning_jobs_all_time_event
-        description: All-time count of Container Scanning CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countscontainer_scanning_jobs))
       - name: projects_jenkins_active_all_time_event
         description: All-time count of projects with active integrations for Jenkins ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jenkins_active))
       - name: projects_bamboo_active_all_time_event
@@ -272,10 +270,6 @@ models:
           - dbt_utils.at_least_one
       - name: api_fuzzing_pipeline_usage_28_days_event
         description: '{{ doc("api_fuzzing_pipeline_usage_28_days_event_desc") }}'
-        tests:
-          - dbt_utils.at_least_one
-      - name: container_scanning_pipeline_usage_28_days_event
-        description: '{{ doc("container_scanning_pipeline_usage_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: dependency_scanning_pipeline_usage_28_days_event
