@@ -28,6 +28,11 @@ databases:
     - abright_prep:
         shared: no
 
+    - akapungu_prod:
+        shared: no
+    - akapungu_prep:
+        shared: no
+
     - anelson_prod:
         shared: no
     - anelson_prep:
@@ -2943,6 +2948,47 @@ roles:
                     - abright_prep.*.*
                     - abright_prod.*.*
 
+    - akapungu:
+        member_of:
+            - analyst_sales
+            - xactly
+            - restricted_safe
+            - bi_tool_eval_read
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - akapungu_prep
+                - akapungu_prod
+            schemas:
+                - akapungu_prep.*
+                - akapungu_prod.*
+            tables:
+                - akapungu_prep.*.*
+                - akapungu_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - akapungu_prep
+                    - akapungu_prod
+                write:
+                    - akapungu_prep
+                    - akapungu_prod
+            schemas:
+                read:
+                    - akapungu_prep.*
+                    - akapungu_prod.*
+                write:
+                    - akapungu_prep.*
+                    - akapungu_prod.*
+            tables:
+                read:
+                    - akapungu_prep.*.*
+                    - akapungu_prod.*.*
+                write:
+                    - akapungu_prep.*.*
+                    - akapungu_prod.*.*
+
     - akramer:
         member_of:
             - reporter
@@ -5743,6 +5789,11 @@ users:
             - abright
             - accountadmin
             - securityadmin
+
+    - akapungu:
+        can_login: yes
+        member_of:
+            - akapungu
 
     - akramer:
         can_login: yes
