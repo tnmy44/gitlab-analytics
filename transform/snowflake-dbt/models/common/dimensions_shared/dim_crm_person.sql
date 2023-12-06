@@ -118,11 +118,7 @@ WITH crm_person AS (
       propensity_to_purchase_namespace_id,
       propensity_to_purchase_past_insights,
       propensity_to_purchase_past_score_group,
-      LOWER(COALESCE(zoominfo_company_country, 
-                     zoominfo_contact_country,
-                     cognism_company_office_country,
-                     cognism_country)
-       ) AS person_first_country
+      person_first_country
 
     FROM crm_person
 )
