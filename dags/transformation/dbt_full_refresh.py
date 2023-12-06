@@ -125,4 +125,5 @@ dbt_full_refresh = KubernetesPodOperator(
     affinity=get_affinity("dbt"),
     tolerations=get_toleration("dbt"),
     dag=dag,
+    provide_context=True,
 )
