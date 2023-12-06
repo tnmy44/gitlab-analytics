@@ -8,6 +8,7 @@ WITH source AS (
         score_group,
         insights,
         submodel,
+        model_version,
         uploaded_at::TIMESTAMP as uploaded_at
     FROM {{ source('data_science', 'ptpl_scores') }}
 )
