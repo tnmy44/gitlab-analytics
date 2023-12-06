@@ -28,7 +28,8 @@
     ('gitlab_dotcom_epic_issues_source', 'gitlab_dotcom_epic_issues_source'),
     ('prep_epic', 'prep_epic'),
     ('gitlab_dotcom_routes_source', 'gitlab_dotcom_routes_source'),
-    ('gitlab_dotcom_award_emoji_source', 'gitlab_dotcom_award_emoji_source')
+    ('gitlab_dotcom_award_emoji_source', 'gitlab_dotcom_award_emoji_source'),
+    ('gitlab_dotcom_work_item_type_source', 'gitlab_dotcom_work_item_type_source')
 ]) }}
 
 , gitlab_dotcom_issues_source AS (
@@ -150,7 +151,7 @@
       gitlab_dotcom_issues_source.service_desk_reply_to,
       gitlab_dotcom_issues_source.state_id                                 AS issue_state_id,
       {{ map_state_id('gitlab_dotcom_issues_source.state_id') }}           AS issue_state,
-      gitlab_dotcom_issues_source.issue_type,
+      gitlab_dotcom_work_item_type_source.work_item_type                   AS issue_type,
       CASE 
         WHEN prep_issue_severity.severity = 4
           THEN 'S1'
@@ -263,6 +264,8 @@
       ON gitlab_dotcom_issues_source.last_edited_by_id = last_edited_by.user_id
     LEFT JOIN prep_user closed_by
       ON gitlab_dotcom_issues_source.closed_by_id = closed_by.user_id
+    LEFT JOIN gitlab_dotcom_work_item_type_source
+      ON gitlab_dotcom_issues_source.work_item_type_id = gitlab_dotcom_work_item_type_source.work_item_type_id
     WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
 )
 
@@ -271,5 +274,5 @@
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-17",
-    updated_date="2023-10-25"
+    updated_date="2023-12-05"
 ) }}
