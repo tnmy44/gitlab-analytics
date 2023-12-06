@@ -1,6 +1,6 @@
 """
 ## Info about DAG
-This DAG is designed to perform adhoc full refresh of any required number of models.
+This DAG is designed to perform adhoc full or incremental refresh of any required number of models.
 Before running this DAG fill the variables for the refresh:
 - DBT_MODEL_TO_REFRESH: add your model(s) name, if you have more of them, put a white space among them (ie. MODEL_1 MODEL_2)
 - SNOWFLAKE_WAREHOUSE_FOR_REFRESH: Allowed values are ["TRANSFORMING_XS", "TRANSFORMING_S","TRANSFORMING_L","TRANSFORMING_XL","TRANSFORMING_4XL",]
@@ -93,7 +93,7 @@ DBT_MODEL_TO_REFRESH = "{{params.DBT_MODEL_TO_REFRESH}}"
 SNOWFLAKE_WAREHOUSE_FOR_REFRESH = "{{params.SNOWFLAKE_WAREHOUSE_FOR_REFRESH}}"
 DBT_TYPE_FOR_REFRESH = "{{params.DBT_TYPE_FOR_REFRESH}}"
 
-dbt_full_refresh_cmd = f"""
+dbt_manual_refresh_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE={SNOWFLAKE_WAREHOUSE_FOR_REFRESH} &&
     dbt --no-use-colors run --profiles-dir profile --target prod --models {DBT_MODEL_TO_REFRESH} {DBT_TYPE_FOR_REFRESH} ; ret=$?;
@@ -101,11 +101,11 @@ dbt_full_refresh_cmd = f"""
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
-dbt_full_refresh = KubernetesPodOperator(
+dbt_manual_refresh = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="dbt-full-refresh",
-    name="dbt-full-refresh",
+    task_id="dbt-manual-refresh",
+    name="dbt-manual-refresh",
     secrets=[
         GIT_DATA_TESTS_PRIVATE_KEY,
         GIT_DATA_TESTS_CONFIG,
@@ -130,10 +130,10 @@ dbt_full_refresh = KubernetesPodOperator(
         SNOWFLAKE_STATIC_DATABASE,
     ],
     env_vars=pod_env_vars,
-    arguments=[dbt_full_refresh_cmd],
+    arguments=[dbt_manual_refresh_cmd],
     affinity=get_affinity("dbt"),
     tolerations=get_toleration("dbt"),
     dag=dag,
 )
 
-dbt_full_refresh
+dbt_manual_refresh
