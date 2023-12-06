@@ -43,14 +43,9 @@ from kube_secrets import (
 
 from kubernetes_helpers import get_affinity, get_toleration
 
-# Load the env vars into a dict and set Secrets
-env = os.environ.copy()
-GIT_BRANCH = env["GIT_BRANCH"]
-pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # This value is set based on the commit hash setter task in dbt_snapshot
 pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_hash }}" """
-
 
 # Default arguments for the DAG
 default_args = {
