@@ -60,6 +60,8 @@ dag = DAG(
     schedule_interval=None,
     description="Adhoc DBT FULL Refresh",
     catchup=False,
+    params={"param1": "$AIRFLOW_CTX_DAG_ID",
+            "param2": "AIRFLOW_CTX_DAG_ID"},
 )
 dag.doc_md = __doc__
 
@@ -127,6 +129,4 @@ dbt_full_refresh = KubernetesPodOperator(
     affinity=get_affinity("dbt"),
     tolerations=get_toleration("dbt"),
     dag=dag,
-    params={"param1": "$AIRFLOW_CTX_DAG_ID",
-            "param2": "AIRFLOW_CTX_DAG_ID"}
 )
