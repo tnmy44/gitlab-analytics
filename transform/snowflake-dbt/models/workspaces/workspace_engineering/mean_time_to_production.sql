@@ -73,12 +73,25 @@ base AS (
 )
 
 SELECT
-  DATE_TRUNC(base."month", base.mr_deployed_at) AS deploy_date,
+  DATE_TRUNC('month', base.mr_deployed_at) AS deploy_date,
+  'monthly'                                AS date_aggregation,
   base.application,
   base.environment,
-  AVG(base.merge_to_deploy_time_in_hours)       AS mttp_in_hours,
-  AVG(base.create_to_merge_time_in_hours)       AS mttm_in_hours,
-  COUNT(base.mr_deployed_at)                    AS mr_batch_size,
-  COUNT(DISTINCT base.deployment_id)            AS deployments
+  AVG(base.merge_to_deploy_time_in_hours)  AS mttp_in_hours,
+  AVG(base.create_to_merge_time_in_hours)  AS mttm_in_hours,
+  COUNT(base.mr_deployed_at)               AS mr_batch_size,
+  COUNT(DISTINCT base.deployment_id)       AS deployments
 FROM base
-GROUP BY 1, 2, 3
+GROUP BY 1, 3, 4
+UNION ALL
+SELECT
+  DATE_TRUNC('day', base.mr_deployed_at)  AS deploy_date,
+  'daily'                                 AS date_aggregation,
+  base.application,
+  base.environment,
+  AVG(base.merge_to_deploy_time_in_hours) AS mttp_in_hours,
+  AVG(base.create_to_merge_time_in_hours) AS mttm_in_hours,
+  COUNT(base.mr_deployed_at)              AS mr_batch_size,
+  COUNT(DISTINCT base.deployment_id)      AS deployments
+FROM base
+GROUP BY 1, 3, 4
