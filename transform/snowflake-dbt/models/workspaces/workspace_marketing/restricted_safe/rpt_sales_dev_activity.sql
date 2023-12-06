@@ -218,7 +218,7 @@
   SELECT
     mart_crm_person.dim_crm_person_id,
     mart_crm_person.sfdc_record_id,
-    COALESCE(opp_to_lead.dim_crm_account_id,MART_CRM_TASK.EVENT_DATE.dim_crm_account_id) AS dim_crm_account_id,
+    COALESCE(opp_to_lead.dim_crm_account_id,mart_crm_person.dim_crm_account_id) AS dim_crm_account_id,
     mart_crm_person.mql_date_latest,
     dim_mql_date.day_of_fiscal_quarter as mql_day_of_fiscal_quarter,
     dim_mql_date.fiscal_quarter_name_fy as mql_fiscal_quarter_name,
