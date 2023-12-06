@@ -46,7 +46,7 @@ def get_sales_analytics_notebooks(frequency: str) -> Dict:
 
 analytics_pipelines_dag = [
     "dbt",
-    "dbt_full_refresh",
+    "dbt_manual_refresh",
     "dbt_full_refresh_weekly",
     "dbt_netsuite_actuals_income_cogs_opex",
     "dbt_snowplow_backfill",

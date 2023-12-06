@@ -80,7 +80,7 @@ params = {
 
 # Create the DAG
 dag = DAG(
-    "dbt_full_refresh",
+    "dbt_manual_refresh",
     default_args=default_args,
     schedule_interval=None,
     description="Ad-hoc dbt full or incremental refresh (depends on parameters)",
