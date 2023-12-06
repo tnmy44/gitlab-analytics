@@ -55,7 +55,7 @@
 
     {% if is_incremental() %}
 
-      AND snapshot_date > (SELECT MAX(snapshot_date) FROM {{ this }} WHERE is_live = 0)
+      AND date_actual > (SELECT MAX(snapshot_date) FROM {{ this }} WHERE is_live = 0)
 
     {% endif %}
 
