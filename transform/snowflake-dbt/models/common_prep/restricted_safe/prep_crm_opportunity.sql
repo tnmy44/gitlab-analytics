@@ -68,27 +68,29 @@
     SELECT *
     FROM dim_date
     WHERE date_actual::DATE >= '2020-02-01' -- Restricting snapshot model to only have data from this date forward. More information https://gitlab.com/gitlab-data/analytics/-/issues/14418#note_1134521216
-      AND date_actual <= CURRENT_DATE
+      AND date_actual < CURRENT_DATE
+
+    {% if is_incremental() %}
+
+      AND date_actual > (SELECT MAX(snapshot_date) FROM {{ this }} WHERE is_live = 0)
+
+    {% endif %}
+
+), live_date AS (
+
+    SELECT *
+    FROM dim_date
+    WHERE date_actual = CURRENT_DATE
 
 ), sfdc_account_snapshot AS (
 
     SELECT *
     FROM {{ ref('prep_crm_account_daily_snapshot') }}
-    {% if is_incremental() %}
-
-       WHERE snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
-
-    {% endif %}
 
 ), sfdc_user_snapshot AS (
 
     SELECT *
     FROM {{ ref('prep_crm_user_daily_snapshot') }}
-    {% if is_incremental() %}
-
-    WHERE snapshot_date > (SELECT MAX(snapshot_date) FROM {{this}})
-
-    {% endif %}
 
 ), sfdc_account AS (
 
@@ -196,18 +198,6 @@
         AND snapshot_dates.date_id = sfdc_account_snapshot.snapshot_id
     WHERE sfdc_opportunity_snapshots_source.account_id IS NOT NULL
       AND sfdc_opportunity_snapshots_source.is_deleted = FALSE
-     {% if is_incremental() %}
-
-       AND snapshot_dates.date_actual > (SELECT MAX(snapshot_date) FROM {{this}})
-
-    {% endif %}
-
-    QUALIFY ROW_NUMBER() OVER (
-    PARTITION BY 
-        snapshot_dates.date_id, 
-        sfdc_opportunity_snapshots_source.opportunity_id 
-    ORDER BY sfdc_opportunity_snapshots_source.dbt_valid_from DESC
-    ) = 1
 
 ), sfdc_opportunity_live AS (
 
@@ -231,13 +221,13 @@
       sfdc_opportunity_source.net_arr                                                                       AS raw_net_arr,
       {{ dbt_utils.surrogate_key(['sfdc_opportunity_source.opportunity_id',"'99991231'"])}}                 AS crm_opportunity_snapshot_id,
       '99991231'                                                                                            AS snapshot_id,
-      snapshot_dates.date_actual                                                                            AS snapshot_date,
-      snapshot_dates.first_day_of_month                                                                     AS snapshot_month,
-      snapshot_dates.fiscal_year                                                                            AS snapshot_fiscal_year,
-      snapshot_dates.fiscal_quarter_name_fy                                                                 AS snapshot_fiscal_quarter_name,
-      snapshot_dates.first_day_of_fiscal_quarter                                                            AS snapshot_fiscal_quarter_date,
-      snapshot_dates.day_of_fiscal_quarter_normalised                                                       AS snapshot_day_of_fiscal_quarter_normalised,
-      snapshot_dates.day_of_fiscal_year_normalised                                                          AS snapshot_day_of_fiscal_year_normalised,
+      live_date.date_actual                                                                                 AS snapshot_date,
+      live_date.first_day_of_month                                                                          AS snapshot_month,
+      live_date.fiscal_year                                                                                 AS snapshot_fiscal_year,
+      live_date.fiscal_quarter_name_fy                                                                      AS snapshot_fiscal_quarter_name,
+      live_date.first_day_of_fiscal_quarter                                                                 AS snapshot_fiscal_quarter_date,
+      live_date.day_of_fiscal_quarter_normalised                                                            AS snapshot_day_of_fiscal_quarter_normalised,
+      live_date.day_of_fiscal_year_normalised                                                               AS snapshot_day_of_fiscal_year_normalised,
       account_owner.user_segment                                                                            AS crm_account_owner_sales_segment_segment,
       account_owner.user_geo                                                                                AS crm_account_owner_geo,
       account_owner.user_region                                                                             AS crm_account_owner_region,
@@ -291,8 +281,8 @@
       CURRENT_DATE()                                                                                        AS dbt_valid_to,
       1                                                                                                     AS is_live
     FROM sfdc_opportunity_source
-    LEFT JOIN snapshot_dates
-      ON CURRENT_DATE() = snapshot_dates.date_actual
+    LEFT JOIN live_date
+      ON CURRENT_DATE() = live_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
       ON sfdc_opportunity_source.fulfillment_partner = fulfillment_partner.account_id
     LEFT JOIN sfdc_account AS partner_account
@@ -1344,7 +1334,7 @@ LEFT JOIN cw_base
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@rkohnke",
+    updated_by="@chrisharp",
     created_date="2022-02-23",
-    updated_date="2023-11-28"
+    updated_date="2023-12-06"
 ) }}

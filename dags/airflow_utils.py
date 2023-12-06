@@ -22,7 +22,7 @@ DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.3"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
 
-SALES_ANALYTICS_NOTEBOOKS_PATH = f"analytics/sales_analytics_notebooks"
+SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
 # Needed to find the correct drives as the path when running in cloud in the latest Airflow is different
 AIRFLOW_SALES_ANALYTICS_NOTEBOOKS_PATH = f"{REPO_BASE_PATH}/sales_analytics_notebooks"
 
@@ -46,7 +46,7 @@ def get_sales_analytics_notebooks(frequency: str) -> Dict:
 
 analytics_pipelines_dag = [
     "dbt",
-    "dbt_full_refresh",
+    "dbt_manual_refresh",
     "dbt_full_refresh_weekly",
     "dbt_netsuite_actuals_income_cogs_opex",
     "dbt_snowplow_backfill",

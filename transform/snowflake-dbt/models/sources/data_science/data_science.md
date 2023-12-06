@@ -25,3 +25,7 @@ Propensity to churn on subscription/opportunity level.
 {% docs ptpl_scores_source %}
 Propensity to purchase leads.
 {% enddocs %}
+
+{% docs opportunity_forecasting_scores_source %}
+Forecasted days until an opportunity becomes close won
+{% enddocs %}

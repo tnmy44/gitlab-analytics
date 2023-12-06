@@ -14,7 +14,8 @@
     ('plans', 'gitlab_dotcom_plans_source'),
     ('prep_project', 'prep_project'),
     ('dim_epic', 'dim_epic'),
-    ('dim_namespace', 'dim_namespace')
+    ('dim_namespace', 'dim_namespace'),
+    ('gitlab_dotcom_system_note_metadata_source', 'gitlab_dotcom_system_note_metadata_source')
 ]) }}
 
 , gitlab_dotcom_notes_dedupe_source AS (
@@ -53,7 +54,8 @@
       gitlab_dotcom_notes_dedupe_source.resolved_by_id::NUMBER                                AS resolved_by_id,
       gitlab_dotcom_notes_dedupe_source.discussion_id::VARCHAR                                AS discussion_id,
       gitlab_dotcom_notes_dedupe_source.cached_markdown_version::NUMBER                       AS cached_markdown_version,
-      gitlab_dotcom_notes_dedupe_source.resolved_by_push::BOOLEAN                             AS resolved_by_push
+      gitlab_dotcom_notes_dedupe_source.resolved_by_push::BOOLEAN                             AS resolved_by_push,
+      gitlab_dotcom_system_note_metadata_source.action_type::VARCHAR                          AS action_type
     FROM gitlab_dotcom_notes_dedupe_source
     LEFT JOIN prep_project ON gitlab_dotcom_notes_dedupe_source.project_id = prep_project.dim_project_id
     LEFT JOIN dim_epic ON gitlab_dotcom_notes_dedupe_source.noteable_id = dim_epic.epic_id
@@ -63,6 +65,8 @@
         AND gitlab_dotcom_notes_dedupe_source.created_at >= dim_namespace_plan_hist.valid_from
         AND gitlab_dotcom_notes_dedupe_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
     INNER JOIN dim_date ON TO_DATE(gitlab_dotcom_notes_dedupe_source.created_at) = dim_date.date_day
+    LEFT JOIN gitlab_dotcom_system_note_metadata_source
+      ON gitlab_dotcom_notes_dedupe_source.id = gitlab_dotcom_system_note_metadata_source.note_id
 
 )
 
@@ -71,5 +75,5 @@
     created_by="@mpeychet_",
     updated_by="@michellecooper",
     created_date="2021-06-22",
-    updated_date="2022-09-06"
+    updated_date="2023-11-22"
 ) }}

@@ -8,14 +8,24 @@ import load_functions
 from postgres_utils import (
     BACKFILL_METADATA_TABLE,
     INCREMENTAL_METADATA_TABLE,
+    DELETE_METADATA_TABLE,
     INCREMENTAL_LOAD_TYPE_BY_ID,
     check_is_new_table_or_schema_addition,
     check_and_handle_schema_removal,
     is_resume_export,
+    is_delete_export_needed,
     remove_files_from_gcs,
     swap_temp_table,
     get_min_or_max_id,
+    update_import_query_for_delete_export,
+    update_is_deleted_field,
 )
+
+BACKFILL_EXTRACT_CHUNKSIZE = 15_000_000
+DELETES_EXTRACT_CHUNKSIZE = 300_000_000
+
+BACKFILL_CSV_CHUNKSIZE = 5_000_000
+DELETES_CSV_CHUNKSIZE = 100_000_000
 
 
 class PostgresPipelineTable:
@@ -122,8 +132,10 @@ class PostgresPipelineTable:
         target_table: str,
         metadata_table: str,
         load_by_id_export_type: Optional[str],
-        initial_load_start_date,
-        start_pk,
+        initial_load_start_date: datetime,
+        start_pk: int,
+        extract_chunksize: int,
+        csv_chunksize: int,
     ) -> bool:
         """Extract by id rather than by date
         Used always for backfills
@@ -149,6 +161,8 @@ class PostgresPipelineTable:
             initial_load_start_date,
             start_pk,
             load_by_id_export_type,
+            extract_chunksize,
+            csv_chunksize,
         )
         return loaded
 
@@ -182,6 +196,8 @@ class PostgresPipelineTable:
             load_by_id_export_type,
             initial_load_start_date,
             start_pk,
+            BACKFILL_EXTRACT_CHUNKSIZE,
+            BACKFILL_CSV_CHUNKSIZE,
         )
 
     def do_incremental_load_by_id(
@@ -197,17 +213,67 @@ class PostgresPipelineTable:
         initial_load_start_date, start_pk = self.check_incremental_load_by_id_metadata(
             target_engine, metadata_engine, INCREMENTAL_METADATA_TABLE
         )
-        target_table = self.get_target_table_name()
         return self._do_load_by_id(
             source_engine,
             target_engine,
             metadata_engine,
-            target_table,
+            self.get_target_table_name(),
             INCREMENTAL_METADATA_TABLE,
             load_by_id_export_type,
             initial_load_start_date,
             start_pk,
+            BACKFILL_EXTRACT_CHUNKSIZE,
+            BACKFILL_CSV_CHUNKSIZE,
         )
+
+    def do_deletes(
+        self,
+        source_engine: Engine,
+        target_engine: Engine,
+        metadata_engine: Engine,
+        is_schema_addition: bool,
+    ) -> bool:
+        """Incrementally load delete data which is the PK of the table"""
+
+        if is_schema_addition or not self.is_incremental():
+            logging.info("Aborting... because schema_change OR non_incremental_load")
+            return False
+
+        self.table_dict["import_query"] = update_import_query_for_delete_export(
+            self.query, self.source_table_primary_key
+        )
+
+        load_by_id_export_type = "deletes"
+        deletes_table = self.get_temp_target_table_name()
+
+        is_delete_export_needed, initial_load_start_date, start_pk = self.check_deletes(
+            metadata_engine, DELETE_METADATA_TABLE
+        )
+
+        if is_delete_export_needed:
+            logging.info("Starting delete export...")
+            loaded = self._do_load_by_id(
+                source_engine,
+                target_engine,
+                metadata_engine,
+                deletes_table,
+                DELETE_METADATA_TABLE,
+                load_by_id_export_type,
+                initial_load_start_date,
+                start_pk,
+                DELETES_EXTRACT_CHUNKSIZE,
+                DELETES_CSV_CHUNKSIZE,
+            )
+
+            update_is_deleted_field(
+                deletes_table, self.target_table_name, self.source_table_primary_key
+            )
+
+        else:
+            logging.info("Delete export not needed as recent load already succeeded.")
+            loaded = False
+
+        return loaded
 
     def do_test(
         self, source_engine: Engine, target_engine: Engine, is_schema_addition: bool
@@ -254,10 +320,15 @@ class PostgresPipelineTable:
         if not is_schema_addition:
             self.check_and_handle_schema_removal(source_engine, target_engine)
 
-        if load_type == "incremental":
-            loaded = self.do_incremental(
+        if load_type in ("incremental", "deletes"):
+            load_types = {
+                "incremental": self.do_incremental,
+                "deletes": self.do_deletes,
+            }
+            loaded = load_types[load_type](
                 source_engine, target_engine, metadata_engine, is_schema_addition
             )
+
         else:
             remaining_load_types = {
                 "scd": self.do_scd,
@@ -268,7 +339,7 @@ class PostgresPipelineTable:
                 source_engine, target_engine, is_schema_addition
             )
 
-        # If temp table, swap it, for scd schema change
+        # If temp table, swap it, for SCD schema change
         self.swap_temp_table_on_schema_change(is_schema_addition, loaded, target_engine)
         return loaded
 
@@ -410,3 +481,36 @@ class PostgresPipelineTable:
             )
 
         return initial_load_start_date, start_pk
+
+    def check_deletes(self, metadata_engine: Engine, delete_metadata_table: str):
+        """
+        Check if in hanging-delete state,
+        if so start there.
+
+        Else, check if delete backfill is needed based on:
+            - last export status
+            - date of last export's intiial load start date
+        """
+        start_pk, initial_load_start_date = 1, None
+        (
+            is_resume_export_needed,
+            prev_initial_load_start_date,
+            metadata_start_pk,
+        ) = is_resume_export(
+            metadata_engine, delete_metadata_table, self.get_target_table_name()
+        )
+
+        # need to resume previous export and less than 24 hr has elapsed
+        if is_resume_export_needed and prev_initial_load_start_date is not None:
+            start_pk = metadata_start_pk
+            initial_load_start_date = prev_initial_load_start_date
+            is_export_needed = is_resume_export_needed
+            logging.info(
+                f"Resuming export with start_pk: {start_pk} and initial_load_start_date: {initial_load_start_date}"
+            )
+        # else check if delete export is needed at all depending on the last load
+        else:
+            is_export_needed = is_delete_export_needed(
+                metadata_engine, delete_metadata_table, self.get_target_table_name()
+            )
+        return is_export_needed, initial_load_start_date, start_pk
