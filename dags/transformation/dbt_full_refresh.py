@@ -81,6 +81,7 @@ logging.info(
 dbt_full_refresh_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE={dbt_warehouse_for_full_refresh} &&
+    export DBT_RUNNER=$AIRFLOW_CTX_DAG_ID|$AIRFLOW_CTX_TASK_ID|$AIRFLOW_CTX_DAG_RUN_ID'|$AIRFLOW_CTX_TRY_NUMBER'
     echo $DBT_RUNNER
     dbt --no-use-colors run --profiles-dir profile --target prod --models {dbt_model_to_full_refresh} --full-refresh ; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
