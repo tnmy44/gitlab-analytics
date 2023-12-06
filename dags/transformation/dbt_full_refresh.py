@@ -81,7 +81,7 @@ logging.info(
 
 # dbt-full-refresh
 dbt_full_refresh_cmd = f"""
-    echo $PARAM1
+    printenv
     echo $PARAM2
     echo $AIRFLOW_CTX_DAG_ID
     echo $AIRFLOW_CTX_TASK_ID
