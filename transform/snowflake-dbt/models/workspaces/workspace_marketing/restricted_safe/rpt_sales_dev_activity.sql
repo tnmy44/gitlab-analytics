@@ -7,7 +7,8 @@
     ('sfdc_lead','sfdc_lead'),
     ('mart_crm_event','mart_crm_event'),
     ('mart_crm_task','mart_crm_task'),
-    ('bdg_crm_opportunity_contact_role','bdg_crm_opportunity_contact_role')
+    ('bdg_crm_opportunity_contact_role','bdg_crm_opportunity_contact_role'),
+    ('dim_date','dim_date')
 ]) }}
 
 , sales_dev_opps AS (
@@ -18,6 +19,15 @@
     net_arr,
     sales_accepted_date AS sales_accepted_date,
     sales_accepted_fiscal_quarter_name,
+    dim_date.day_of_fiscal_quarter AS sao_day_of_fiscal_quarter,
+    days_in_1_discovery,
+    days_in_sao,
+    days_since_last_activity,
+    report_opportunity_user_segment,
+    report_opportunity_user_geo,
+    report_opportunity_user_region,
+    report_opportunity_user_area,
+    report_user_segment_geo_region_area,
     created_date AS opp_created_date,
     close_date,
     pipeline_created_date,
@@ -34,6 +44,8 @@
     is_eligible_open_pipeline,
     coalesce(opportunity_business_development_representative,opportunity_sales_development_representative) AS sdr_bdr_user_id
     FROM mart_crm_opportunity_stamped_hierarchy_hist
+    LEFT JOIN dim_date 
+      ON mart_crm_opportunity_stamped_hierarchy_hist.sales_accepted_date = dim_date.date_day
     WHERE sales_qualified_source_name = 'SDR Generated' 
       AND sales_accepted_date >= '2022-02-01' 
 
@@ -108,11 +120,15 @@
     mart_crm_event.dim_crm_person_id,
     dim_crm_user.dim_crm_user_id AS booked_by_user_id,
     mart_crm_event.event_date AS activity_date,
+    dim_date.day_of_fiscal_quarter as activity_day_of_fiscal_quarter,
+    dim_date.fiscal_quarter_name_fy as activity_fiscal_quarter_name,
     'Event' AS activity_type,
     mart_crm_event.event_type AS activity_subtype
   FROM mart_crm_event
   LEFT JOIN dim_crm_user 
     ON booked_by_employee_number = dim_crm_user.employee_number 
+    LEFT JOIN dim_date 
+    ON mart_crm_task.event_date = dim_date.date_day
   INNER JOIN sales_dev_hierarchy 
     ON mart_crm_event.dim_crm_user_id = sales_dev_hierarchy.sales_dev_rep_user_id 
       OR booked_by_user_id = sales_dev_hierarchy.sales_dev_rep_user_id 
@@ -127,11 +143,15 @@
     mart_crm_task.dim_crm_person_id,
     NULL AS booked_by_user_id,
     mart_crm_task.task_completed_date AS activity_date,
+    dim_date.day_of_fiscal_quarter as activity_day_of_fiscal_quarter,
+    dim_date.fiscal_quarter_name_fy as activity_fiscal_quarter_name,
     mart_crm_task.task_type AS activity_type,
     mart_crm_task.task_subtype AS activity_subtype
   FROM mart_crm_task
   INNER JOIN sales_dev_hierarchy 
     ON mart_crm_task.dim_crm_user_id = sales_dev_hierarchy.sales_dev_rep_user_id
+  LEFT JOIN dim_date 
+    ON mart_crm_task.task_completed_date = dim_date.date_day
   WHERE activity_date >= '2022-01-01'
 
 ), activity_final AS (
@@ -143,6 +163,8 @@
     COALESCE(mart_crm_person.sfdc_record_id, activity_base.sfdc_record_id) AS sfdc_record_id,
     COALESCE(mart_crm_person.dim_crm_account_id, activity_base.dim_crm_account_id) AS dim_crm_account_id,
     activity_base.activity_date::DATE AS activity_date,
+    activity_base.activity_day_of_fiscal_quarter,
+    activity_base.activity_fiscal_quarter_name,
     activity_base.activity_type,
     activity_base.activity_subtype
   FROM activity_base
@@ -159,11 +181,13 @@
     activity_final.dim_crm_account_id,
     activity_final.sfdc_record_id,
     activity_final.activity_date,
+    activity_final.activity_day_of_fiscal_quarter,
+    activity_final.activity_fiscal_quarter_name,
     activity_final.activity_type,
     activity_final.activity_subtype,
     COUNT(DISTINCT activity_id) AS tasks_completed
   FROM activity_final
-  {{dbt_utils.group_by(n=7)}}
+  {{dbt_utils.group_by(n=9)}}
 
 ), opp_to_lead AS (
 
@@ -196,7 +220,11 @@
     mart_crm_person.sfdc_record_id,
     COALESCE(opp_to_lead.dim_crm_account_id,mart_crm_person.dim_crm_account_id) AS dim_crm_account_id,
     mart_crm_person.mql_date_latest,
+    dim_mql_date.day_of_fiscal_quarter as mql_day_of_fiscal_quarter,
+    dim_mql_date.fiscal_quarter_name_fy as mql_fiscal_quarter_name,
     mart_crm_person.inquiry_date_pt,
+    dim_inquiry_date.day_of_fiscal_quarter as inquiry_day_of_fiscal_quarter,
+    dim_inquiry_date.fiscal_quarter_name_fy as inquiry_fiscal_quarter_name,
     mart_crm_person.account_demographics_sales_segment AS person_sales_segment,
     mart_crm_person.account_demographics_sales_segment_grouped AS person_sales_segment_grouped,
     mart_crm_person.is_mql,
@@ -228,6 +256,15 @@
     opp_to_lead.net_arr,
     opp_to_lead.sales_accepted_date,
     opp_to_lead.sales_accepted_fiscal_quarter_name,
+    opp_to_lead.sao_day_of_fiscal_quarter,
+    opp_to_lead.days_in_1_discovery,
+    opp_to_lead.days_in_sao,
+    opp_to_lead.days_since_last_activity,
+    opp_to_lead.report_opportunity_user_segment,
+    opp_to_lead.report_opportunity_user_geo,
+    opp_to_lead.report_opportunity_user_region,
+    opp_to_lead.report_opportunity_user_area,
+    opp_to_lead.report_user_segment_geo_region_area,
     opp_to_lead.opp_created_date,
     opp_to_lead.close_date,
     opp_to_lead.pipeline_created_date,
@@ -261,6 +298,10 @@
     sales_dev_hierarchy.sales_dev_rep_manager_id,
     sales_dev_hierarchy.sales_dev_rep_manager_name
   FROM mart_crm_person
+  LEFT JOIN dim_date dim_mql_date
+   ON mart_crm_person.mql_date_latest = dim_date.date_day 
+  LEFT JOIN dim_date dim_inquiry_date
+   ON mart_crm_person.true_inquiry_date = dim_date.date_day 
   LEFT JOIN activity_summarised
     ON mart_crm_person.dim_crm_person_id = activity_summarised.dim_crm_person_id 
   LEFT JOIN opp_to_lead 
@@ -294,6 +335,15 @@
     opps_missing_link.net_arr,
     opps_missing_link.sales_accepted_date,
     opps_missing_link.sales_accepted_fiscal_quarter_name,
+    opps_missing_link.sao_day_of_fiscal_quarter,
+    opps_missing_link.days_in_1_discovery,
+    opps_missing_link.days_in_sao,
+    opps_missing_link.days_since_last_activity,
+    opps_missing_link.report_opportunity_user_segment,
+    opps_missing_link.report_opportunity_user_geo,
+    opps_missing_link.report_opportunity_user_region,
+    opps_missing_link.report_opportunity_user_area,
+    opps_missing_link.report_user_segment_geo_region_area,
     opps_missing_link.opp_created_date,
     opps_missing_link.close_date,
     opps_missing_link.pipeline_created_date,
