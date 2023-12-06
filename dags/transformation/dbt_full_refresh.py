@@ -79,6 +79,8 @@ logging.info(
 
 # dbt-full-refresh
 dbt_full_refresh_cmd = f"""
+    echo $PARAM1
+    echo $PARAM2
     echo $AIRFLOW_CTX_DAG_ID
     echo $AIRFLOW_CTX_TASK_ID
     echo $AIRFLOW_CTX_DAG_RUN_ID
@@ -125,5 +127,6 @@ dbt_full_refresh = KubernetesPodOperator(
     affinity=get_affinity("dbt"),
     tolerations=get_toleration("dbt"),
     dag=dag,
-    provide_context=True,
+    params={"param1": "$AIRFLOW_CTX_DAG_ID",
+            "param2": "AIRFLOW_CTX_DAG_ID"}
 )
