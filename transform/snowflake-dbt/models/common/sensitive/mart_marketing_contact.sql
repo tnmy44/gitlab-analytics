@@ -367,7 +367,7 @@
 
     SELECT *
     FROM prep_ptpt_scores_by_user
-    QUALIFY score_date = MAX(score_date) OVER(PARTITION BY 1)
+    WHERE score_date = (SELECT MAX(score_date) from prep_ptpt_scores_by_user)
 
 ), prep AS (
   
