@@ -128,7 +128,7 @@
   LEFT JOIN dim_crm_user 
     ON booked_by_employee_number = dim_crm_user.employee_number 
     LEFT JOIN dim_date 
-    ON mart_crm_task.event_date = dim_date.date_day
+    ON mart_crm_event.event_date = dim_date.date_day
   INNER JOIN sales_dev_hierarchy 
     ON mart_crm_event.dim_crm_user_id = sales_dev_hierarchy.sales_dev_rep_user_id 
       OR booked_by_user_id = sales_dev_hierarchy.sales_dev_rep_user_id 
@@ -218,7 +218,7 @@
   SELECT
     mart_crm_person.dim_crm_person_id,
     mart_crm_person.sfdc_record_id,
-    COALESCE(opp_to_lead.dim_crm_account_id,mart_crm_person.dim_crm_account_id) AS dim_crm_account_id,
+    COALESCE(opp_to_lead.dim_crm_account_id,MART_CRM_TASK.EVENT_DATE.dim_crm_account_id) AS dim_crm_account_id,
     mart_crm_person.mql_date_latest,
     dim_mql_date.day_of_fiscal_quarter as mql_day_of_fiscal_quarter,
     dim_mql_date.fiscal_quarter_name_fy as mql_fiscal_quarter_name,
