@@ -582,7 +582,7 @@ models:
     - name: role
       tests:
         - not_null
-- name: sheetload_sales_analytics_tableau_rls_roles_source
+- name: sheetload__source
   description: User roles for SS&A Tableau row-level-security
   columns:
     - name: role
@@ -619,5 +619,5 @@ models:
     - name: discount_percent
       tests:
         - dbt_utils.accepted_range:
-          min_value: 0
-          max_value: 1
+            min_value: 0
+            max_value: 1
