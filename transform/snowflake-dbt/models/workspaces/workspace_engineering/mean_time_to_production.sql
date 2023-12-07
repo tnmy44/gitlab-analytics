@@ -70,28 +70,59 @@ base AS (
   INNER JOIN environments
     ON deployments.environment_id = environments.environment_id
 
+),
+
+grouped AS (
+
+  SELECT
+    DATE_TRUNC('month', base.mr_deployed_at) AS deploy_date,
+    'monthly'                                AS date_aggregation,
+    base.application,
+    base.environment,
+    AVG(base.merge_to_deploy_time_in_hours)  AS mttp_in_hours,
+    AVG(base.create_to_merge_time_in_hours)  AS mttm_in_hours,
+    COUNT(DISTINCT base.mr_iid)              AS mr_batch_size,
+    COUNT(DISTINCT base.deployment_id)       AS deployments
+  FROM base
+  GROUP BY 1, 3, 4
+  UNION ALL
+  SELECT
+    DATE_TRUNC('day', base.mr_deployed_at)  AS deploy_date,
+    'daily'                                 AS date_aggregation,
+    base.application,
+    base.environment,
+    AVG(base.merge_to_deploy_time_in_hours) AS mttp_in_hours,
+    AVG(base.create_to_merge_time_in_hours) AS mttm_in_hours,
+    COUNT(DISTINCT base.mr_iid)             AS mr_batch_size,
+    COUNT(DISTINCT base.deployment_id)      AS deployments
+  FROM base
+  GROUP BY 1, 3, 4
+
 )
 
-SELECT
-  DATE_TRUNC('month', base.mr_deployed_at) AS deploy_date,
-  'monthly'                                AS date_aggregation,
-  base.application,
-  base.environment,
-  AVG(base.merge_to_deploy_time_in_hours)  AS mttp_in_hours,
-  AVG(base.create_to_merge_time_in_hours)  AS mttm_in_hours,
-  COUNT(base.mr_deployed_at)               AS mr_batch_size,
-  COUNT(DISTINCT base.deployment_id)       AS deployments
-FROM base
-GROUP BY 1, 3, 4
+SELECT DISTINCT
+  DATE_TRUNC('month', dates.date_actual) AS date_actual,
+  COALESCE(date_aggregation, 'monthly')  AS date_aggregation,
+  application,
+  environment,
+  deployments,
+  mttp_in_hours,
+  mttm_in_hours,
+  mr_batch_size
+FROM dates
+LEFT JOIN grouped
+  ON grouped.date_aggregation = 'monthly'
+    AND DATE_TRUNC('month', dates.date_actual) = grouped.deploy_date
 UNION ALL
 SELECT
-  DATE_TRUNC('day', base.mr_deployed_at)  AS deploy_date,
-  'daily'                                 AS date_aggregation,
-  base.application,
-  base.environment,
-  AVG(base.merge_to_deploy_time_in_hours) AS mttp_in_hours,
-  AVG(base.create_to_merge_time_in_hours) AS mttm_in_hours,
-  COUNT(base.mr_deployed_at)              AS mr_batch_size,
-  COUNT(DISTINCT base.deployment_id)      AS deployments
-FROM base
-GROUP BY 1, 3, 4
+  DATE_TRUNC('day', dates.date_actual) AS date_actual,
+  COALESCE(date_aggregation, 'daily')  AS date_aggregation,
+  application,
+  environment,
+  deployments,
+  mttp_in_hours,
+  mttm_in_hours,
+  mr_batch_size
+FROM dates
+LEFT JOIN grouped ON grouped.date_aggregation = 'daily'
+  AND DATE_TRUNC('day', dates.date_actual) = grouped.deploy_date
