@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('sheetload', 'summary_partner_discount') }}
+    FROM {{ source('sheetload', 'partner_discount_summary') }}
 
 ), renamed AS (
 

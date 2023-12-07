@@ -334,5 +334,5 @@ sheets:
   - name: partner_discount_summary
     owner: '@vagrawalg'
     tabs: 
-      - summary_partner_discount
+      - partner_discount_summary
   
