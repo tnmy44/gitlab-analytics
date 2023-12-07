@@ -217,7 +217,18 @@ group_labels AS (
     SUBSTRING(REPLACE(value, '"', ''), 8) AS group_
   FROM committed_issues_v2, LATERAL FLATTEN(input => labels)
   WHERE value LIKE 'group::%'
+),
+
+milestones_info AS (
+  SELECT
+    mh.issue_id,
+    mc.milestone
+  FROM milestone_history mh
+  JOIN milestones_cte mc
+    ON mh.valid_from BETWEEN mc.iteration_start_date AND mc.iteration_end_date
+    OR (mh.valid_to IS NOT NULL AND mh.valid_to BETWEEN mc.iteration_start_date AND mc.iteration_end_date)
 )
+
 
 SELECT DISTINCT
   ci.issue_id,
@@ -230,9 +241,9 @@ SELECT DISTINCT
   TRIM(stage_labels.stage)         AS stage,
   TRIM(group_labels.group_)        AS group_,
   MAX(ci.removed) AS removed,
-  mhn.note
+  milestones_info.milestone         AS milestone
 FROM committed_issues_v2 ci
 LEFT JOIN stage_labels ON ci.issue_id = stage_labels.issue_id
 LEFT JOIN group_labels ON ci.issue_id = group_labels.issue_id
-LEFT JOIN milestone_history_notes mhn ON ci.issue_id = mhn.issue_id
-GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, mhn.note
+LEFT JOIN milestones_info ON ci.issue_id = milestones_info.issue_id
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, milestone
