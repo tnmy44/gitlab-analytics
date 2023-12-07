@@ -89,3 +89,46 @@ tables:
         ,UpdatedById
         ,UpdatedDate
       FROM rampintervalmetrics
+  chargecontractualvalue:
+    query: |-
+      SELECT 
+        amount
+        ,createdBy
+        ,createdOn
+        ,currency
+        ,elp
+        ,elpTaxAmount
+        ,estimatedEvergreenEndDate
+        ,id
+        ,ratePlanChargeId
+        ,reason
+        ,subscriptionId
+        ,taxAmount
+        ,updatedBy
+        ,updatedOn
+      FROM chargecontractualvalue
+  chargemetricsdiscountallocationdetail:
+    query: |-
+      SELECT
+      Id
+      ,ChargeMetricsId
+      ,DiscountChargeNumber
+      ,DiscountMrr
+      ,DiscountTcv
+      ,CreatedDate
+      ,UpdatedDate
+      ,deleted
+      ,SubscriptionOwnerAccountNumber
+      ,InvoiceOwnerAccountNumber
+      ,SubscriptionName
+      ,ChargeNumber
+      ,RatePlanChargeId
+      ,ProductId
+      ,ProductRatePlanId
+      ,ProductRatePlanChargeId
+      ,AmendmentId
+      ,AmendmentType
+      ,StartDate
+      ,EndDate
+      ,Currency
+    FROM chargemetricsdiscountallocationdetail
