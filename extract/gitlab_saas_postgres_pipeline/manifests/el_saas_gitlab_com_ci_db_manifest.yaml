@@ -14,6 +14,7 @@ connection_info:
 tables:
   ci_builds:
     dbt_source_model: true
+    deletes_exempt: True
     export_schema: 'gitlab_com'
     export_table: ci_builds
     export_table_primary_key: id
@@ -72,6 +73,7 @@ tables:
   ci_builds_internal_only:
     additional_filtering: AND project_id in {INTERNAL_PROJECT_IDS}
     dbt_source_model: true
+    deletes_exempt: True
     export_schema: 'gitlab_com'
     export_table: ci_builds_internal_only
     export_table_primary_key: id
@@ -104,6 +106,22 @@ tables:
       , lock_version
       , position
       FROM ci_stages
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  ci_trigger_requests:
+    dbt_source_model: true
+    deletes_exempt: True
+    export_schema: 'gitlab_com'
+    export_table: ci_trigger_requests
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , trigger_id
+      , created_at
+      , updated_at
+      , commit_id
+      FROM ci_trigger_requests
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
 
