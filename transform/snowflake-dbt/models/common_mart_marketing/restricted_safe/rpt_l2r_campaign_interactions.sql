@@ -791,18 +791,30 @@
       PARSE_URL(bizible_form_url_raw):parameters:utm_asset_type::VARCHAR    AS bizible_form_page_utm_asset_type,
       PARSE_URL(bizible_landing_page_raw):parameters:utm_asset_type::VARCHAR AS bizible_landing_page_utm_asset_type,
       COALESCE(bizible_landing_page_utm_asset_type, bizible_form_page_utm_asset_type) AS utm_asset_type,
-      fct_campaign.start_date AS campaign_start_date,
-      fct_campaign.region AS sfdc_campaign_region,
-      fct_campaign.sub_region AS sfdc_campaign_sub_region,
-      dim_campaign.type AS sfdc_campaign_type,
+      
+      -- campaign
+      fct_campaign.start_date  AS campaign_start_date,
+      fct_campaign.region.     AS sfdc_campaign_region,
+      fct_campaign.sub_region  AS sfdc_campaign_sub_region,
+      dim_campaign.type        AS sfdc_campaign_type,
       fct_campaign.budgeted_cost,
       fct_campaign.actual_cost,
       dim_campaign.is_a_channel_partner_involved,
+      campaign_owner.user_name AS campaign_owner,
       CASE  
         WHEN dim_campaign.will_there_be_mdf_funding = 'Yes'
           THEN TRUE
           ELSE FALSE
       END AS is_mdf_campaign,
+
+      -- acount
+      dim_crm_account.abm_tier,
+      dim_crm_account.health_number,
+
+     -- Opportunity Report Fields
+     sfdc_opportunity_xf.report_opportunity_user_asm,
+     sfdc_opportunity_xf.report_opportunity_user_business_unit
+     sfdc_opportunity_xf.report_opportunity_user_sub_business_unit
 
       -- user
       user.user_name        AS record_owner_name,
@@ -869,6 +881,13 @@
     ON cohort_base_combined.dim_crm_user_id = user.dim_crm_user_id
   LEFT JOIN dim_crm_user manager
     ON user.manager_id = manager.dim_crm_user_id
+  LEFT JOIN dim_crm_user campaign_owner
+    ON fct_campaign.campaign_owner_id = campaign_owner.dim_crm_user_id
+  LEFT JOIN dim_crm_account
+    ON cohort_base_combined.dim_crm_account_id=dim_crm_account.dim_crm_account_id
+  -- Joining for report_opportunity_* fields.
+  LEFT JOIN restricted_safe_workspace_sales.sfdc_opportunity_xf 
+    ON cohort_base_combined.dim_crm_opportunity_id = sfdc_opportunity_xf.opportunity_id
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
