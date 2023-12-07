@@ -613,3 +613,11 @@ models:
       tests:
         - not_null
         - unique
+- name: sheetload_partner_discount_summary_source
+  description: Temporary method for recording discount applied to opportunities. Supported until the end of FY25-Q1 after which we should be able to remove it.
+  columns:
+    - name: discount_percent
+      tests:
+        - dbt_utils.accepted_range:
+          min_value: 0
+          max_value: 1
