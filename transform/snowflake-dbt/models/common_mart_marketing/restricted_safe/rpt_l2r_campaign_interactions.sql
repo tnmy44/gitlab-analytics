@@ -795,7 +795,7 @@
       
       -- campaign
       fct_campaign.start_date  AS campaign_start_date,
-      fct_campaign.region.     AS sfdc_campaign_region,
+      fct_campaign.region     AS sfdc_campaign_region,
       fct_campaign.sub_region  AS sfdc_campaign_sub_region,
       dim_campaign.type        AS sfdc_campaign_type,
       fct_campaign.budgeted_cost,
@@ -808,7 +808,7 @@
           ELSE FALSE
       END AS is_mdf_campaign,
 
-      -- acount
+      -- Account
       dim_crm_account.abm_tier,
       dim_crm_account.health_number,
 
