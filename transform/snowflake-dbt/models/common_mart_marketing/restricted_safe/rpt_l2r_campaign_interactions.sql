@@ -8,7 +8,8 @@
     ('dim_date','dim_date'),
     ('fct_campaign','fct_campaign'),
     ('dim_campaign', 'dim_campaign'),
-    ('dim_crm_user', 'dim_crm_user')
+    ('dim_crm_user', 'dim_crm_user'),
+    ('sfdc_opportunity_xf', 'wk_sales_sfdc_opportunity_xf')
 ]) }}
 
 , person_base_with_tp AS (
@@ -886,7 +887,7 @@
   LEFT JOIN dim_crm_account
     ON cohort_base_combined.dim_crm_account_id=dim_crm_account.dim_crm_account_id
   -- Joining for report_opportunity_* fields.
-  LEFT JOIN restricted_safe_workspace_sales.sfdc_opportunity_xf 
+  LEFT JOIN sfdc_opportunity_xf 
     ON cohort_base_combined.dim_crm_opportunity_id = sfdc_opportunity_xf.opportunity_id
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
