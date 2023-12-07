@@ -49,3 +49,8 @@ assets:
         - field: Name
           operator: Equals
           value: Public
+connections:
+  - name: snowflake_tableau
+    type: snowflake
+    username: SNOWFLAKE_TABLEAU_USERNAME
+    password: SNOWFLAKE_TABLEAU_PASSWORD
