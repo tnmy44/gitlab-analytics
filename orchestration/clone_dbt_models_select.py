@@ -162,7 +162,13 @@ class DbtModelClone:
         """
 
         sorted_list = self.clean_dbt_input(model_input)
+
+        # Total number of models to process
+        total_models = len(sorted_list)
+        current_model = 0  # Initializing the current model counter
+
         for i in sorted_list:
+            current_model += 1
             database_name = i.get("database").upper()
             schema_name = i.get("schema").upper()
             table_name = i.get("name").upper()
@@ -182,7 +188,9 @@ class DbtModelClone:
             output_table_name = f""""{self.branch_name}_{full_name[1:]}"""
             output_schema_name = output_table_name.replace(f'."{table_name}"', "")
 
-            logger.info(f"Processing {output_table_name}")
+            logger.info(
+                f"Processing {output_table_name}: {current_model}/{total_models} (current/total)"
+            )
 
             query = f"""
                 SELECT

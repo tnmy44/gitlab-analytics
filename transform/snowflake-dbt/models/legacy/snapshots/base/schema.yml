@@ -183,6 +183,10 @@ models:
         description: A measure, between 0 and 100, of how much an account is behaving like accounts with which there is a history of previously opened opportunities.
       - name: six_sense_segments
         description: The Account's 6QA segment. 
+      - name: gs_health_csm_sentiment
+        description: This is what the TAM thinks the health of this account should be - Formerly was just Health Score - Gainsight is the SSOT for this field and its value can only be updated in Gainsight.
+
+
   - name: sfdc_bizible_attribution_touchpoint_snapshots_source
     description: Attribution touchpoints from Bizible loaded into Salesforce.
   - name: sfdc_bizible_touchpoint_snapshots_source

@@ -50,6 +50,15 @@ def refactor_tickets_read_gcs():
             except:
                 error(f"Error reading {blob.name}")
                 sys.exit(1)
+            # transfer data from bucket folder meltano/tap_zendesk__sensitive/tickets/ to meltano/tap_zendesk__sensitive/archive/tickets/
+
+            info(f"Archiving file {blob.name}")
+            BUCKET.copy_blob(
+                blob,
+                BUCKET,
+                "meltano/tap_zendesk__sensitive/archive/tickets/" + blob.name,
+            )
+
             info(f"Deleting file {blob.name}")
             blob.delete()  # delete the file after successful upload to the table
         else:
@@ -139,8 +148,8 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
         CUSTOM_FIELDS_OUT = []
         for key in CUSTOM_FIELDS:
             if key["id"] is None and key["value"] is None:
-                ticket_custom_field_id = None
-                ticket_custom_field_value = None
+                ticket_custom_field_id = ""
+                ticket_custom_field_value = ""
             else:
                 # iterate through each field in output_list_ticket_field
                 for item in output_list_ticket_field:
@@ -241,6 +250,24 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
         ],
     )
 
+    # Transform None to Null in all dictionaries(satisfaction ratings and via) of the dataframe
+    for index, row in output_df.iterrows():
+        rating = row["SATISFACTION_RATING"]
+        # iterate through all keys in rating
+
+        for key in rating:
+            # if value for this key is None replace it with string "unknown"
+            if rating[key] is None:
+                rating[key] = "null"
+
+        output_df.at[index, "SATISFACTION_RATING"] = rating
+
+        via = row["VIA"]
+        via = str(via)
+        via = via.replace("None", "'null'")
+
+        output_df.at[index, "VIA"] = via
+
     info("Transformation complete, uploading records to snowflake...")
     upload_to_snowflake(output_df, BUCKET)
 
@@ -263,6 +290,12 @@ def upload_to_snowflake(output_df, BUCKET):
         for blob in BUCKET.list_blobs(
             prefix="meltano/tap_zendesk__sensitive/ticket_fields/"
         ):
+            info(f"Archiving file {blob.name}")
+            BUCKET.copy_blob(
+                blob,
+                BUCKET,
+                "meltano/tap_zendesk__sensitive/archive/ticket_fields/" + blob.name,
+            )
             info(f"Deleting {blob.name}")
             blob.delete()
     except Exception as e:

@@ -72,6 +72,11 @@ models:
         description: for deleted accounts this is the SFDC account they were merged to
       - name: crm_account_created_date
         description: The date on which the CRM account was created in SFDC
+      - name: gs_health_csm_sentiment 
+        description: This is what the TAM thinks the health of this account should be - Formerly was just Health Score - Gainsight is the SSOT for this field and its value can only be updated in Gainsight.
+      - name: tam_manager
+        description: The name of the manager for the tehchnical account manager who manages the account
+
 
   - name: prep_crm_opportunity
     description: '{{ doc("prep_crm_opportunity") }}'
