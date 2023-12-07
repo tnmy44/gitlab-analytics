@@ -72,7 +72,7 @@ engineers AS (
 final AS (
 
   SELECT
-    date_details.date_actual AS Date,
+    date_details.date_actual AS date,
     engineers.backend,
     engineers.frontend,
     yaml_counts.backend_maintainer,
