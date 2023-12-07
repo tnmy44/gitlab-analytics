@@ -814,8 +814,8 @@
 
      -- Opportunity Report Fields
      sfdc_opportunity_xf.report_opportunity_user_asm,
-     sfdc_opportunity_xf.report_opportunity_user_business_unit
-     sfdc_opportunity_xf.report_opportunity_user_sub_business_unit
+     sfdc_opportunity_xf.report_opportunity_user_business_unit,
+     sfdc_opportunity_xf.report_opportunity_user_sub_business_unit,
 
       -- user
       user.user_name        AS record_owner_name,
