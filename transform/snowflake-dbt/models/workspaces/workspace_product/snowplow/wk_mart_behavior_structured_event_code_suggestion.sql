@@ -127,5 +127,5 @@ filtered_code_suggestion_events AS (
     created_by="@cbraza",
     updated_by="@cbraza",
     created_date="2023-10-09",
-    updated_date="2023-11-22"
+    updated_date="2023-12-07"
 ) }}
