@@ -56,7 +56,7 @@ dag = DAG(
 # tableau Extract
 tableau_workbook_migrate_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    TableauConMan provision-users --yaml_path='./tableau_con_man_config/src/provision_plan.yaml'
+    TableauConMan provision-settings --yaml_path='./tableau_con_man_config/src/provision_plan.yaml'
 """
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
