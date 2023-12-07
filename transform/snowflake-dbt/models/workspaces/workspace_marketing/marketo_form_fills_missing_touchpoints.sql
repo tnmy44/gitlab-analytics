@@ -96,9 +96,9 @@
     marketo_form_name,
     form_url,
     full_url,
-    PARSE_URL(full_url)['parameters']['utm_campaign']::VARCHAR AS utm_campaign,
-    PARSE_URL(full_url)['parameters']['utm_channel']::VARCHAR AS utm_channel,
-    PARSE_URL(full_url)['parameters']['utm_medium']::VARCHAR AS utm_medium
+    {{ dbt_utils.get_url_parameter(field='full_url', url_parameter='utm_campaign') }} AS utm_campaign,
+    {{ dbt_utils.get_url_parameter(field='full_url', url_parameter='utm_channel') }} AS utm_channel,
+    {{ dbt_utils.get_url_parameter(field='full_url', url_parameter='utm_medium') }} AS utm_medium
   FROM intermediate
 
 )
@@ -108,5 +108,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-09-12",
-    updated_date="2023-10-16",
+    updated_date="2023-12-05",
   ) }}
