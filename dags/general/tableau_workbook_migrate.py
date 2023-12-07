@@ -5,7 +5,7 @@ from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from kubernetes_helpers import get_affinity, get_toleration
 from airflow_utils import (
-    DATA_IMAGE_3_10,
+    TABLEAU_CONFIG_IMAGE,
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
@@ -61,7 +61,7 @@ tableau_workbook_migrate_cmd = f"""
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
 tableau_workbook_migrate = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DATA_IMAGE_3_10,
+    image=TABLEAU_CONFIG_IMAGE,
     task_id="tableau-workbook-migrate",
     name="tableau-workbook-migrate",
     secrets=[
