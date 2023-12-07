@@ -106,7 +106,7 @@ tables:
         ,taxAmount
         ,updatedBy
         ,updatedOn
-      FROM chargecontractualvalue
+      FROM chargecontractualvalue limit 10
   chargemetricsdiscountallocationdetail:
     query: |-
       SELECT
