@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      FY AS fiscal_year_name_fy,
+      "FY"::VARCHAR                     AS fiscal_year_name_fy,
       "Opportunity ID"::VARCHAR         AS dim_crm_opportunity_id,
       "Close Date"::DATE                AS close_date,
       "Lessor of Discounts"::NUMBER     AS discount_percent,
