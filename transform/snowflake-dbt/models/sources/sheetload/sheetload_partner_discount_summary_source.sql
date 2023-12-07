@@ -6,11 +6,11 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
-      "FY"::VARCHAR                     AS fiscal_year_name_fy,
-      "Opportunity ID"::VARCHAR         AS dim_crm_opportunity_id,
-      "Close Date"::DATE                AS close_date,
-      "Lessor of Discounts"::NUMBER     AS discount_percent,
-      "Partner Type"::VARCHAR           AS partner_type
+      fy::VARCHAR                     AS fiscal_year_name_fy,
+      opportunity_id::VARCHAR         AS dim_crm_opportunity_id,
+      close_date::DATE                AS close_date,
+      lessor_of_discounts::NUMBER     AS discount_percent,
+      partner_type::VARCHAR           AS partner_type
     FROM source
 
 )
