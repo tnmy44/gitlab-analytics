@@ -8,8 +8,9 @@
     ('mart_crm_event','mart_crm_event'),
     ('mart_crm_task','mart_crm_task'),
     ('bdg_crm_opportunity_contact_role','bdg_crm_opportunity_contact_role'),
-    ('dim_date','dim_date')
-]) }}
+    ('dim_date', 'dim_date')
+  ]) 
+}}
 
 , sales_dev_opps AS (
 
@@ -229,6 +230,7 @@
     mart_crm_person.account_demographics_sales_segment_grouped AS person_sales_segment_grouped,
     mart_crm_person.is_mql,
     mart_crm_person.is_first_order_person,
+    mart_crm_person.person_first_country,
     CASE 
       WHEN mart_crm_person.propensity_to_purchase_score_group IS NULL 
         THEN 'No PTP Score' 
@@ -299,9 +301,9 @@
     sales_dev_hierarchy.sales_dev_rep_manager_name
   FROM mart_crm_person
   LEFT JOIN dim_date dim_mql_date
-   ON mart_crm_person.mql_date_latest = dim_date.date_day 
+   ON mart_crm_person.mql_date_latest = dim_mql_date.date_day 
   LEFT JOIN dim_date dim_inquiry_date
-   ON mart_crm_person.true_inquiry_date = dim_date.date_day 
+   ON mart_crm_person.true_inquiry_date = dim_inquiry_date.date_day 
   LEFT JOIN activity_summarised
     ON mart_crm_person.dim_crm_person_id = activity_summarised.dim_crm_person_id 
   LEFT JOIN opp_to_lead 
@@ -385,7 +387,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@dmicovic",
     created_date="2023-09-06",
-    updated_date="2023-09-08",
+    updated_date="2023-12-07",
   ) }}
