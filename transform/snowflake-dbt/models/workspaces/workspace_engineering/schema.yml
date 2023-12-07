@@ -376,6 +376,35 @@ models:
         description: The group path in the issue URL
       - name: url
         description: Issue URL
+  - name: maintainer_ratios
+    description: A model calculating engineer per maintainer ratios.
+    columns:
+      - name: date
+        description: Date
+      - name: backend
+        description: Count of backend engineers
+      - name: frontend
+        description: Count of frontend engineers
+      - name: backend_maintainer
+        description: Count of backend maintainers
+      - name: frontend_maintainer
+        description: Count of frontend maintainers 
+      - name: database_maintainer
+        description: Count of database maintainers 
+      - name: backend_trainee
+        description: Count of backend trainee
+      - name: frontend_trainee
+        description: Count of frontend trainee
+      - name: database_trainee
+        description: Count of database trainee
+      - name: engineers_per_maintainer_backend
+        description: Total engineers divided by count of backend maintainers
+      - name: engineers_per_maintainer_frontend
+        description: Total engineers divided by count of frontend maintainers
+      - name: engineers_per_trainee_backend
+        description: Total engineers divided by count of backend trainees
+      - name: engineers_per_trainee_frontend
+        description: Total engineers divided by count of frontend trainees
   - name: merge_request_rate
     description: A model containing merge request rate by department and group.
     columns:
