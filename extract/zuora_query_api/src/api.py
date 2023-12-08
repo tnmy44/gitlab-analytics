@@ -137,7 +137,7 @@ class ZuoraQueriesAPI:
         job = self.get_job_data(job_id)
 
         job_status = job.get("queryStatus")
-        time.sleep(60)
+
         info(f" Job status {job_status}")
         if job_status in ["failed", "cancelled"]:
             raise ValueError(f"Job {job_status}")
@@ -149,8 +149,8 @@ class ZuoraQueriesAPI:
             job = self.get_job_data(job_id)
 
             job_status = job.get("queryStatus")
-            info("Waiting for report to complete")
-
+            info(f"Waiting for report to complete, current status {job_status}")
+        
         if job_status == "completed":
             info("File ready")
             file_url = job["dataFile"]
@@ -159,3 +159,8 @@ class ZuoraQueriesAPI:
             df = pd.read_csv(StringIO(response.text))
             info("File downloaded")
             return df
+        else:
+            job = self.get_job_data(job_id)
+            job_status = job.get("queryStatus")
+            raise ValueError(f'the job has failed or has been killed: {job_status}')
+        
