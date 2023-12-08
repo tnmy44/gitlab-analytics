@@ -33,6 +33,13 @@ ci_pipelines AS (
   
 ),
 
+date_details AS (
+
+  SELECT *
+  FROM {{ ref('prep_date') }}
+
+),
+
 failed_mr_pipelines AS (
   SELECT 
     dim_ci_pipeline_id AS ci_pipeline_id,
@@ -160,7 +167,7 @@ final AS (
   SELECT
     DATE_TRUNC('month', date_actual) AS month,
     base.*
-  FROM legacy.date_details
+  FROM date_details
   JOIN base ON DATE_TRUNC('month', date_actual) = base.pipeline_month
   WHERE DATE_TRUNC('month', date_actual) <= DATE_TRUNC('month', CURRENT_DATE)
   AND DATE_TRUNC('month', date_actual) > DATEADD('month', -24, DATE_TRUNC('month', CURRENT_DATE))
