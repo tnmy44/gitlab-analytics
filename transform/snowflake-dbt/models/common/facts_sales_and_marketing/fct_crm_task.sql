@@ -19,13 +19,9 @@
   FROM {{ ref('prep_crm_opportunity') }}
   WHERE is_deleted = FALSE
 
-), sub AS (
--- This CTE maps opportunities to tasks based on the account of task (account_opp_mapping) where prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id fails
+), account_opp_mapping AS (
+-- Maps opportunities to tasks based on the account of task (account_opp_mapping) where prep_crm_task.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id fails
 -- It uses the opp chronologically closest to the task date (rank_closest_opp) between three quarters prior to the (opp) close date and the (opp) close date.
-  SELECT DISTINCT
-  *
-  FROM
-  (
   SELECT 
     prep_crm_task.dim_crm_task_pk AS dim_crm_task_pk,
 
@@ -49,11 +45,18 @@
       prep_crm_task.dim_crm_account_id = prep_crm_opportunity.dim_crm_account_id
 WHERE prep_crm_task.sa_activity_type IS NOT NULL
   AND DATE_TRUNC('day',prep_crm_task.task_date) <= prep_crm_opportunity.close_date
-    )
-WHERE rank_closest_opp = 1
-  ), 
-  
-converted_leads AS (
+
+  ), opps_ranked AS (
+
+    SELECT DISTINCT
+      dim_crm_task_pk,
+      dim_mapped_opportunity_id,
+      task_mapped_to
+
+    FROM account_opp_mapping
+    WHERE rank_closest_opp = 1
+
+  ), converted_leads AS (
 -- Original CRM Task table would show null keyed id for dim_crm_person_id for leads that have been converted to contacts
 -- This CTE is pulling the most recent sfdc_record_id and dim_crm_person_id of a record so that they correspond to the values in the mart_crm_person model.
   SELECT
@@ -78,7 +81,7 @@ converted_leads AS (
     {{ get_keyed_nulls('prep_crm_task.sfdc_record_type_id') }}    AS sfdc_record_type_id,
     {{ get_keyed_nulls('prep_crm_person.dim_crm_person_id') }}    AS dim_crm_person_id,
     {{ get_keyed_nulls('prep_crm_task.dim_crm_opportunity_id') }} AS dim_crm_opportunity_id,
-    sub.dim_mapped_opportunity_id,
+    opps_ranked.dim_mapped_opportunity_id,
 
     COALESCE(converted_leads.sfdc_record_id,prep_crm_task.sfdc_record_id) 
                                                                   AS sfdc_record_id,
@@ -96,7 +99,7 @@ converted_leads AS (
     prep_crm_task.task_recurrence_start_date,
 
     -- Logic
-    sub.task_mapped_to,
+    opps_ranked.task_mapped_to,
 
     -- Counts
     prep_crm_task.account_or_opportunity_count,
@@ -120,8 +123,8 @@ converted_leads AS (
     ON prep_crm_task.sfdc_record_id=converted_leads.lead_id
   LEFT JOIN prep_crm_person
     ON COALESCE(converted_leads.sfdc_record_id,prep_crm_task.sfdc_record_id) = prep_crm_person.sfdc_record_id
-  LEFT JOIN sub
-    ON prep_crm_task.dim_crm_task_pk = sub.dim_crm_task_pk
+  LEFT JOIN opps_ranked
+    ON prep_crm_task.dim_crm_task_pk = opps_ranked.dim_crm_task_pk
 
 )
 
