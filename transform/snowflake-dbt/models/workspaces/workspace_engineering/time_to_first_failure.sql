@@ -8,7 +8,7 @@ WITH pipelines AS (
 ci_stages AS (
 
   SELECT *
-  FROM {{ ref('GITLAB_DOTCOM_CI_STAGES') }}
+  FROM {{ ref('gitlab_dotcom_ci_stages') }}
 
 ),
 
