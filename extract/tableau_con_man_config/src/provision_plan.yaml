@@ -17,7 +17,7 @@ target:
 reference:
   name: gitlab
   type: spec
-  file_path: "./tests/assets/test_spec.yaml"
+  file_path: "./test_spec.yaml"
 assets:
   projects:
     options:
