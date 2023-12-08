@@ -110,7 +110,7 @@
         account_demographics_geo,
         lead_source,
         source_buckets,
-        sales_qualified_source_name,
+        NULL AS sales_qualified_source_name,
         inquiry_sum,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
@@ -138,8 +138,7 @@
         account_demographics_geo,
         lead_source,
         source_buckets,
-        sales_qualified_source_name,
-        inquiry_sum,
+        NULL AS sales_qualified_source_name,
         parent_crm_account_lam,
         parent_crm_account_lam_dev_count,
         account_demographics_area,
@@ -470,6 +469,6 @@ FROM regroup_targets
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2023-08-22",
-    updated_date="2023-11-15",
+    updated_date="2023-12-05",
   ) }}
 

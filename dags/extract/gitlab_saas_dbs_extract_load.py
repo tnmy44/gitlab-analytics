@@ -7,6 +7,7 @@ import yaml
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.operators.dummy_operator import DummyOperator
 
 from airflow_utils import (
     DATA_IMAGE,
@@ -49,6 +50,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    SNOWFLAKE_LOAD_WAREHOUSE_MEDIUM,
     GITLAB_METADATA_DB_NAME,
     GITLAB_METADATA_DB_HOST,
     GITLAB_METADATA_DB_PASS,
@@ -67,6 +69,7 @@ standard_secrets = [
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    SNOWFLAKE_LOAD_WAREHOUSE_MEDIUM,
     SNOWFLAKE_LOAD_ROLE,
     GITLAB_BACKFILL_BUCKET,
 ]
@@ -217,6 +220,11 @@ config_dict: Dict[Any, Any] = {
 def get_task_pool(task_name) -> str:
     """Return airflow pool name"""
     return f"{task_name}-pool"
+
+
+def is_deletes_exempt(table_dict):
+    """Determine if table is exempt from the deletes process"""
+    return table_dict.get("deletes_exempt", False)
 
 
 def is_incremental(table_dict):
@@ -389,6 +397,8 @@ for source_name, config in config_dict.items():
             description=config["description"],
             catchup=True,
         )
+        dummy_operator = DummyOperator(task_id="dummy_operator", dag=extract_dag)
+
         if has_replica_snapshot:
             check_replica_snapshot = get_check_replica_snapshot_task(
                 config["dag_name"], extract_dag
@@ -398,6 +408,8 @@ for source_name, config in config_dict.items():
             file_path = f"{REPO_BASE_PATH}/extract/gitlab_saas_postgres_pipeline/manifests/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
+            incremental_extracts = []
+            deletes_extracts = []
 
             for table in table_list:
                 # tables that aren't incremental won't be processed by the incremental dag
@@ -433,8 +445,39 @@ for source_name, config in config_dict.items():
                     arguments=[incremental_cmd],
                     do_xcom_push=True,
                 )
-                if has_replica_snapshot:
-                    check_replica_snapshot >> incremental_extract
+                incremental_extracts.append(incremental_extract)
+
+                if not is_deletes_exempt(manifest["tables"][table]):
+                    deletes_cmd = generate_cmd(
+                        config["dag_name"],
+                        f"--load_type deletes --load_only_table {table}",
+                        config["cloudsql_instance_name"],
+                    )
+
+                    deletes_extract = KubernetesPodOperator(
+                        **gitlab_defaults,
+                        image=DATA_IMAGE,
+                        task_id=f"{task_identifier}-pgp-extract-deletes",
+                        name=f"{task_identifier}-pgp-extract-deletes",
+                        pool=get_task_pool(config["task_name"]),
+                        secrets=standard_secrets + config["secrets"],
+                        env_vars={
+                            **gitlab_pod_env_vars,
+                            **config["env_vars"],
+                            "TASK_INSTANCE": "{{ task_instance_key_str }}",
+                            "LAST_LOADED": get_last_loaded(config["dag_name"]),
+                        },
+                        affinity=get_affinity("extraction_highmem"),
+                        tolerations=get_toleration("extraction_highmem"),
+                        arguments=[deletes_cmd],
+                        do_xcom_push=True,
+                    )
+
+                    deletes_extracts.append(deletes_extract)
+
+            incremental_extracts >> dummy_operator >> deletes_extracts
+            if has_replica_snapshot:
+                check_replica_snapshot >> incremental_extracts
 
         globals()[f"{config['dag_name']}_db_extract"] = extract_dag
 

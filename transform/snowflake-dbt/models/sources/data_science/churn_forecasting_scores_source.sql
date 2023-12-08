@@ -19,11 +19,12 @@ WITH source AS (
       data_by_row['dim_crm_opportunity_id_current_open_renewal']::VARCHAR  AS dim_crm_opportunity_id_current_open_renewal,
       data_by_row['score_date']::TIMESTAMP                                 AS score_date,
       data_by_row['renewal_date']::TIMESTAMP                               AS renewal_date,
-      data_by_row['current_arr']::NUMBER(38,2)                              AS current_arr,
+      data_by_row['current_arr']::NUMBER(38,2)                             AS current_arr,
       data_by_row['churn_score']::NUMBER(38,4)                             AS churn_score,
       data_by_row['contraction_score']::NUMBER(38,0)                       AS contraction_score,
       data_by_row['outcome']::VARCHAR                                      AS outcome,
       data_by_row['arr_expected_to_renew']::NUMBER(38,2)                   AS arr_expected_to_renew,
+      data_by_row['model_version']::FLOAT                                  AS model_version,
       uploaded_at::TIMESTAMP                                               AS uploaded_at
 
     FROM intermediate
