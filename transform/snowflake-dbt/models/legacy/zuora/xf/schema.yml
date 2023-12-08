@@ -103,9 +103,7 @@ models:
           - name: delivery
             description: delivery is based on the product category name.
             tests:
-                - not_null:
-                    config:
-                      severity: warn
+                - not_null
     - name: zuora_base_invoice_details
       description: '{{ doc("zuora_base_invoice_details") }}'
     - name: zuora_base_ci_minutes
@@ -206,9 +204,7 @@ models:
           - name: product_category
           - name: delivery
             tests:
-                - not_null:
-                    config:
-                      severity: warn
+                - not_null
           - name: unit_of_measure
           - name: mrr
             description: '{{ doc("zuora_mrr_totals_col_mrr") }}'
