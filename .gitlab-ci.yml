@@ -255,7 +255,7 @@ clone_stop:
   
 .permifrost: &permifrost
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/permifrost:v0.13.1
+  image: registry.gitlab.com/gitlab-data/permifrost:v0.15.4
   tags:
     - analytics
   only:

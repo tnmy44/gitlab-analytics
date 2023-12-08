@@ -6384,7 +6384,7 @@ users:
     - tableau_restricted_people_data:
         can_login: yes
         member_of:
-            - tableau_restricted_people_data            
+            - tableau_restricted_people_data
 
     - target_snowflake:
         can_login: yes
