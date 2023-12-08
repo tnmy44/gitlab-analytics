@@ -17,7 +17,7 @@ WITH structured_events AS (
         CASE 
         WHEN event_action IN ('pull_package', 'push_package', 'delete_package', 'npm_request_forward', 'list_package', 'register_package',
         'docker_container_retention_and_expiration_policies', 'delete_repository', 'delete_tag', 'delete_tag_bulk', 'list_repositories', 
-        'list_tags', 'pull_manifest', 'pull_manifest_from_cache', 'pull_blob', 'pull_blob_from_cache')
+        'list_tags', 'pull_manifest', 'pull_manifest_from_cache', 'pull_blob', 'pull_blob_from_cache', 'pypi_request_forward')
         THEN event_action
         WHEN event_action = 'delete_package_file' or event_action = 'delete_package_files'
         THEN 'delete_package_files'
@@ -40,7 +40,7 @@ WITH structured_events AS (
     FROM {{ ref('mart_behavior_structured_event') }}
     WHERE metric IS NOT NULL
     --- filter out any internal namespaces
-      AND namespace_is_internal = FALSE
+      AND (namespace_is_internal = FALSE OR gsc_namespace_id IS NULL)
   {{ dbt_utils.group_by(n=7) }}
 
 ), pageviews AS (
@@ -55,7 +55,7 @@ WITH structured_events AS (
         CASE 
             WHEN page_url_path LIKE '%container_regist%'
             THEN 'page_view_container_registry'
-            WHEN page_url_path LIKE '%/package'
+            WHEN page_url_path LIKE '%package%'
             THEN 'page_view_package'
             WHEN page_url_path LIKE '%/groups%'
                 AND page_url_path LIKE '%container_regist%'

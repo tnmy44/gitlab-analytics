@@ -47,7 +47,7 @@ default_args = {
 dag = DAG(
     "tableau_workbook_migrate",
     default_args=default_args,
-    schedule_interval="0 2 * * *",
+    schedule_interval="0 6 * * *",
     concurrency=1,
     catchup=False,
 )

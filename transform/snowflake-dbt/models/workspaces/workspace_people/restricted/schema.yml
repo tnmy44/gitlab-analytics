@@ -72,3 +72,30 @@ models:
       - name: job_start_date
       - name: job_end_date
       - name: discretionary_bonus_count
+  - name: wk_talent_flow
+    columns: 
+      - name: employee_id
+      - name: full_name
+      - name: employment_status
+      - name: min_date
+      - name: max_date
+      - name: job_change_reason
+      - name: country
+      - name: region
+      - name: cost_center
+      - name: division
+      - name: department
+      - name: job_title
+      - name: job_role
+      - name: reports_to
+      - name: hire_date
+      - name: hire_rank
+      - name: last_date
+      - name: termination_date
+      - name: term_rank
+      - name: termination_type
+      - name: termination_reason
+      - name: exit_impact
+      - name: termination_initiated_at
+      - name: employee_type
+      - name: discretionary_bonus_count

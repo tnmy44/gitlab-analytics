@@ -16,6 +16,11 @@ WITH biz_person AS (
     SELECT *
     FROM {{ ref('prep_date') }}
 
+), prep_location_country AS (
+
+    SELECT *
+    FROM {{ ref('prep_location_country') }}
+
 ), crm_tasks AS (
 
     SELECT 
@@ -433,6 +438,24 @@ WITH biz_person AS (
 
     SELECT
       crm_person_final.*,
+      LOWER(COALESCE(
+                     account_demographics_upa_country,
+                     zoominfo_company_country,
+                     country
+                    )
+       ) AS two_letter_person_first_country,
+      CASE
+        -- remove a few case where value is only numbers
+        WHEN (TRY_TO_NUMBER(two_letter_person_first_country)) IS NOT NULL THEN
+             NULL
+        WHEN LEN(two_letter_person_first_country) = 2 AND prep_location_country.country_name IS NOT NULL THEN
+            INITCAP(prep_location_country.country_name)
+        WHEN LEN(two_letter_person_first_country) = 2 THEN
+            -- This condition would be for a country code that isn't on the model
+            UPPER(two_letter_person_first_country)
+        ELSE
+            INITCAP(two_letter_person_first_country)
+      END AS person_first_country,
       prep_date.fiscal_year  AS created_date_fiscal_year,
       CONCAT(
         UPPER(crm_person_final.account_demographics_sales_segment),
@@ -449,6 +472,10 @@ WITH biz_person AS (
     FROM crm_person_final
     LEFT JOIN prep_date
       ON prep_date.date_actual = crm_person_final.created_date::DATE
+    LEFT JOIN prep_location_country
+      ON two_letter_person_first_country = LOWER(prep_location_country.iso_2_country_code)
+      -- Only join when the value is 2 letters
+      AND LEN(two_letter_person_first_country) = 2
     WHERE sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
 
 )
