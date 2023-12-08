@@ -101,13 +101,6 @@
     FROM redis_metrics_28d_user
     WHERE metrics_path = 'redis_hll_counters.analytics.g_analytics_valuestream_monthly'
 
-), ci_templates AS (
-
-    SELECT
-      *
-    FROM redis_metrics_28d_user
-    WHERE metrics_path = 'redis_hll_counters.ci_templates.ci_templates_total_unique_counts_monthly'
-
 ), packages_pushed AS (
 
     SELECT
@@ -671,9 +664,6 @@
     LEFT JOIN analytics_valuestream
       ON analytics_valuestream.date_month = monthly_saas_metrics.snapshot_month
       AND analytics_valuestream.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
-    LEFT JOIN ci_templates
-      ON ci_templates.date_month = monthly_saas_metrics.snapshot_month
-      AND ci_templates.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
     LEFT JOIN packages_pushed
       ON packages_pushed.month = monthly_saas_metrics.snapshot_month
       AND packages_pushed.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
