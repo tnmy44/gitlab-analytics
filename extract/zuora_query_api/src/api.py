@@ -137,7 +137,8 @@ class ZuoraQueriesAPI:
         job = self.get_job_data(job_id)
 
         job_status = job.get("queryStatus")
-
+        time.sleep(60)
+        info(f" Job status {job_status}")
         if job_status in ["failed", "cancelled"]:
             raise ValueError(f"Job {job_status}")
 
