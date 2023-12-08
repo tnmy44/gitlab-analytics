@@ -3629,7 +3629,7 @@ models:
         description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira)). This metric has been deprecated but we are keeping the field around for history.
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
-       - name: projects_jira_dvcs_cloud_active_all_time_event
+      - name: projects_jira_dvcs_cloud_active_all_time_event
         description: All-time count of active integrations with Jira Cloud (DVCS Connector) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_dvcs_cloud_active))
       - name: projects_with_repositories_enabled_all_time_event
         description: All-time count of projects with repositories enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_with_repositories_enabled))
