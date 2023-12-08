@@ -16,7 +16,7 @@ target:
         - datasources
 reference:
   name: gitlab
-  type: specification
+  type: spec
   file_path: "./tests/assets/test_spec.yaml"
 assets:
   projects:
