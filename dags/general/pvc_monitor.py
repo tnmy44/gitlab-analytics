@@ -44,6 +44,9 @@ pvc_monitor_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     apt-get update && 
     apt-get install jq -y && 
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.26.4/bin/linux/amd64/kubectl
+    chmod +x ./kubectl
+    mv ./kubectl /usr/local/bin/kubectl
     cd ./pvc_monitor && 
     bash get_pvc_values.sh > pvc_values.csv
     python3 pvc_check.py
