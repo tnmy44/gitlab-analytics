@@ -334,7 +334,7 @@ final AS (
         ----------------------------------------------------------------------
         ----------------------------------------------------------------------
         -- keys
-        user.key_sal_heatmap                                                            AS key_owner_name,
+        user.key_sal_heatmap                                                                     AS key_owner_name,
         user.employee_number,
         user.key_bu_subbu,
         user.user_role_type,
@@ -345,66 +345,66 @@ final AS (
         base_fields.close_day_of_fiscal_quarter_normalised,
         base_fields.rq_plus_1_close_fiscal_quarter_name,
         base_fields.rq_plus_2_close_fiscal_quarter_name,
-        opp.qtd_booked_net_arr,
-        opp.qtd_open_1plus_net_arr,
+        COALESCE(opp.qtd_booked_net_arr, 0)                                                      AS qtd_booked_net_arr,
+        COALESCE(opp.qtd_open_1plus_net_arr, 0)                                                  AS qtd_open_1plus_net_arr,
 
         ----------------------------------------------------------------------
         ----------------------------------------------------------------------
         -- Net ARR
-        opp.qtd_open_3plus_net_arr,
-        opp.qtd_open_4plus_net_arr,
-        rq_plus_1.rq_plus_1_open_1plus_net_arr,
-        rq_plus_1.rq_plus_1_open_3plus_net_arr,
+        COALESCE(opp.qtd_open_3plus_net_arr, 0)                                                  AS qtd_open_3plus_net_arr,
+        COALESCE(opp.qtd_open_4plus_net_arr, 0)                                                  AS qtd_open_4plus_net_arr,
+        COALESCE(rq_plus_1.rq_plus_1_open_1plus_net_arr, 0)                                      AS rq_plus_1_open_1plus_net_arr,
+        COALESCE(rq_plus_1.rq_plus_1_open_3plus_net_arr, 0)                                      AS rq_plus_1_open_3plus_net_arr,
 
         -- next quarter
-        rq_plus_2.rq_plus_2_open_1plus_net_arr,
-        ytd_metrics.ytd_booked_net_arr,
+        COALESCE(rq_plus_2.rq_plus_2_open_1plus_net_arr, 0)                                      AS rq_plus_2_open_1plus_net_arr,
+        COALESCE(ytd_metrics.ytd_booked_net_arr, 0)                                              AS ytd_booked_net_arr,
         --rq_plus_1.rq_plus_1_open_4plus_net_arr,
 
         -- quarter plus 2
-        ytd_metrics.fy_open_1plus_net_arr,
+        COALESCE(ytd_metrics.fy_open_1plus_net_arr, 0)                                           AS fy_open_1plus_net_arr,
         --rq_plus_2.rq_plus_2_open_3plus_net_arr,
         --rq_plus_2.rq_plus_2_open_4plus_net_arr,
 
         -- fiscal year metrics
-        ytd_metrics.fy_open_3plus_net_arr,
-        ytd_metrics.fy_open_1plus_on_key_account_net_arr,
-        ytd_metrics.fy_open_1plus_over_1m_net_arr,
+        COALESCE(ytd_metrics.fy_open_3plus_net_arr, 0)                                           AS fy_open_3plus_net_arr,
+        COALESCE(ytd_metrics.fy_open_1plus_on_key_account_net_arr, 0)                            AS fy_open_1plus_on_key_account_net_arr,
+        COALESCE(ytd_metrics.fy_open_1plus_over_1m_net_arr, 0)                                   AS fy_open_1plus_over_1m_net_arr,
         --ytd_metrics.fy_open_4plus_net_arr,
 
-        ytd_metrics.fy_open_1plus_between_500k_1m_net_arr,
+        COALESCE(ytd_metrics.fy_open_1plus_between_500k_1m_net_arr, 0)                           AS fy_open_1plus_between_500k_1m_net_arr,
 
-        opp.qtd_created_and_won_same_quarter_net_arr,
-        pipeline_created.qtd_pipeline_generated_net_arr,
+        COALESCE(opp.qtd_created_and_won_same_quarter_net_arr, 0)                                AS qtd_created_and_won_same_quarter_net_arr,
+        COALESCE(pipeline_created.qtd_pipeline_generated_net_arr, 0)                             AS qtd_pipeline_generated_net_arr,
 
-        pipeline_created.qtd_pipeline_created_cq_to_close_on_cq_net_arr,
+        COALESCE(pipeline_created.qtd_pipeline_created_cq_to_close_on_cq_net_arr, 0)             AS qtd_pipeline_created_cq_to_close_on_cq_net_arr,
 
         -- generated pipeline in quarter
-        pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_1_net_arr,
+        COALESCE(pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_1_net_arr, 0)      AS qtd_pipeline_created_cq_to_close_on_rq_plus_1_net_arr,
 
         -- extended pipeline metrics
-        pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_2_net_arr,
-        pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_3_plus_net_arr,
-        pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_1_plus_net_arr,
-        opp.qtd_booked_deal_count,
-        opp.qtd_open_1plus_deal_count,
+        COALESCE(pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_2_net_arr, 0)      AS qtd_pipeline_created_cq_to_close_on_rq_plus_2_net_arr,
+        COALESCE(pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_3_plus_net_arr, 0) AS qtd_pipeline_created_cq_to_close_on_rq_plus_3_plus_net_arr,
+        COALESCE(pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_1_plus_net_arr, 0) AS qtd_pipeline_created_cq_to_close_on_rq_plus_1_plus_net_arr,
+        COALESCE(opp.qtd_booked_deal_count, 0)                                                   AS qtd_booked_deal_count,
+        COALESCE(opp.qtd_open_1plus_deal_count, 0)                                               AS qtd_open_1plus_deal_count,
 
-        opp.qtd_open_3plus_deal_count,
-        opp.qtd_open_4plus_deal_count,
-        rq_plus_1.rq_plus_1_open_1plus_deal_count,
-        rq_plus_1.rq_plus_1_open_3plus_deal_count,
+        COALESCE(opp.qtd_open_3plus_deal_count, 0)                                               AS qtd_open_3plus_deal_count,
+        COALESCE(opp.qtd_open_4plus_deal_count, 0)                                               AS qtd_open_4plus_deal_count,
+        COALESCE(rq_plus_1.rq_plus_1_open_1plus_deal_count, 0)                                   AS rq_plus_1_open_1plus_deal_count,
+        COALESCE(rq_plus_1.rq_plus_1_open_3plus_deal_count, 0)                                   AS rq_plus_1_open_3plus_deal_count,
 
 
         -- calculate % of created pipeline that lands on which quarter
-        rq_plus_2.rq_plus_2_open_1plus_deal_count,
-        pipeline_created.qtd_pipeline_generated_count,
-        ytd_metrics.ytd_booked_deal_count,
-        ytd_metrics.fy_open_1plus_deal_count,
+        COALESCE(rq_plus_2.rq_plus_2_open_1plus_deal_count, 0)                                   AS rq_plus_2_open_1plus_deal_count,
+        COALESCE(pipeline_created.qtd_pipeline_generated_count, 0)                               AS qtd_pipeline_generated_count,
+        COALESCE(ytd_metrics.ytd_booked_deal_count, 0)                                           AS ytd_booked_deal_count,
+        COALESCE(ytd_metrics.fy_open_1plus_deal_count, 0)                                        AS fy_open_1plus_deal_count,
 
         -- calculate the % of created pipeline that was generated by SQS
-        ytd_metrics.fy_open_3plus_deal_count,
-        ytd_metrics.fy_open_1plus_over_1m_deal_count,
-        ytd_metrics.fy_open_1plus_between_500k_1m_deal_count,
+        COALESCE(ytd_metrics.fy_open_3plus_deal_count, 0)                                        AS fy_open_3plus_deal_count,
+        COALESCE(ytd_metrics.fy_open_1plus_over_1m_deal_count, 0)                                AS fy_open_1plus_over_1m_deal_count,
+        COALESCE(ytd_metrics.fy_open_1plus_between_500k_1m_deal_count, 0)                        AS fy_open_1plus_between_500k_1m_deal_count,
 
 
         ----------------------------------------------------------------------
@@ -412,18 +412,17 @@ final AS (
         -- Count of deals
 
         -- current quarter at snapshot day
-        ytd_metrics.fy_open_1plus_between_100k_500k_deal_count,
-        LOWER(user.business_unit)                                                       AS user_business_unit,
-        LOWER(user.user_area)                                                           AS user_area,
-        COALESCE(pipeline_created.qtd_pipeline_created_by_ae_generated_net_arr, 0)      AS qtd_pipeline_created_by_ae_generated_net_arr,
+        LOWER(user.business_unit)                                                                AS user_business_unit,
+        LOWER(user.user_area)                                                                    AS user_area,
+        COALESCE(pipeline_created.qtd_pipeline_created_by_ae_generated_net_arr, 0)               AS qtd_pipeline_created_by_ae_generated_net_arr,
 
         -- next quarter
-        COALESCE(pipeline_created.qtd_pipeline_created_by_sdr_generated_net_arr, 0)     AS qtd_pipeline_created_by_sdr_generated_net_arr,
-        COALESCE(pipeline_created.qtd_pipeline_created_by_channel_generated_net_arr, 0) AS qtd_pipeline_created_by_channel_generated_net_arr,
+        COALESCE(pipeline_created.qtd_pipeline_created_by_sdr_generated_net_arr, 0)              AS qtd_pipeline_created_by_sdr_generated_net_arr,
+        COALESCE(pipeline_created.qtd_pipeline_created_by_channel_generated_net_arr, 0)          AS qtd_pipeline_created_by_channel_generated_net_arr,
         --rq_plus_1.rq_plus_1_open_4plus_deal_count,
 
         -- quarter plus 2
-        COALESCE(pipeline_created.qtd_pipeline_created_by_web_generated_net_arr, 0)     AS qtd_pipeline_created_by_web_generated_net_arr,
+        COALESCE(pipeline_created.qtd_pipeline_created_by_web_generated_net_arr, 0)              AS qtd_pipeline_created_by_web_generated_net_arr,
         --rq_plus_2.rq_plus_2_open_3plus_deal_count,
         --rq_plus_2.rq_plus_2_open_4plus_deal_count,
 
@@ -431,43 +430,43 @@ final AS (
             WHEN pipeline_created.qtd_pipeline_generated_net_arr > 0
                 THEN COALESCE(pipeline_created.qtd_pipeline_created_cq_to_close_on_cq_net_arr, 0) / pipeline_created.qtd_pipeline_generated_net_arr
             ELSE 0
-        END                                                                             AS qtd_pipeline_created_cq_to_close_on_cq_perc,
+        END                                                                                      AS qtd_pipeline_created_cq_to_close_on_cq_perc,
 
         -- fiscal year metrics
         CASE
             WHEN pipeline_created.qtd_pipeline_generated_net_arr > 0
                 THEN COALESCE(pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_1_net_arr, 0) / pipeline_created.qtd_pipeline_generated_net_arr
             ELSE 0
-        END                                                                             AS qtd_pipeline_created_cq_to_close_on_rq_plus_1_perc,
+        END                                                                                      AS qtd_pipeline_created_cq_to_close_on_rq_plus_1_perc,
         CASE
             WHEN pipeline_created.qtd_pipeline_generated_net_arr > 0
                 THEN COALESCE(pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_2_net_arr, 0) / pipeline_created.qtd_pipeline_generated_net_arr
             ELSE 0
-        END                                                                             AS qtd_pipeline_created_cq_to_close_on_rq_plus_2_perc,
+        END                                                                                      AS qtd_pipeline_created_cq_to_close_on_rq_plus_2_perc,
         CASE
             WHEN pipeline_created.qtd_pipeline_generated_net_arr > 0
                 THEN COALESCE(pipeline_created.qtd_pipeline_created_cq_to_close_on_rq_plus_3_plus_net_arr, 0) / pipeline_created.qtd_pipeline_generated_net_arr
             ELSE 0
-        END                                                                             AS qtd_pipeline_created_cq_to_close_on_rq_plus_3_plus_perc,
+        END                                                                                      AS qtd_pipeline_created_cq_to_close_on_rq_plus_3_plus_perc,
         --ytd_metrics.fy_open_4plus_deal_count,
         CASE
             WHEN pipeline_created.qtd_pipeline_generated_net_arr > 0
                 THEN COALESCE(pipeline_created.qtd_pipeline_created_by_ae_generated_net_arr, 0) / pipeline_created.qtd_pipeline_generated_net_arr
             ELSE 0
-        END                                                                             AS qtd_pipeline_created_by_ae_generated_perc,
+        END                                                                                      AS qtd_pipeline_created_by_ae_generated_perc,
         CASE
             WHEN pipeline_created.qtd_pipeline_generated_net_arr > 0
                 THEN COALESCE(pipeline_created.qtd_pipeline_created_by_sdr_generated_net_arr, 0) / pipeline_created.qtd_pipeline_generated_net_arr
             ELSE 0
-        END                                                                             AS qtd_pipeline_created_by_sdr_generated_perc,
+        END                                                                                      AS qtd_pipeline_created_by_sdr_generated_perc,
         CASE
             WHEN pipeline_created.qtd_pipeline_generated_net_arr > 0
                 THEN COALESCE(pipeline_created.qtd_pipeline_created_by_channel_generated_net_arr, 0) / pipeline_created.qtd_pipeline_generated_net_arr
             ELSE 0
-        END                                                                             AS qtd_pipeline_created_by_channel_generated_perc,
+        END                                                                                      AS qtd_pipeline_created_by_channel_generated_perc,
 
         -- last updated timestamp
-        CURRENT_TIMESTAMP                                                               AS last_updated_at
+        CURRENT_TIMESTAMP                                                                        AS last_updated_at
 
     FROM base_fields
     INNER JOIN dim_users AS user
@@ -493,3 +492,4 @@ final AS (
 
 SELECT final.*
 FROM final
+--WHERE key_owner_name = 'entg_emea_neur_norben_str_12878'

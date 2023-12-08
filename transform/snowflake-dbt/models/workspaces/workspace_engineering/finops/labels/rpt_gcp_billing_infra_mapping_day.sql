@@ -37,14 +37,18 @@ runner_labels AS (
         END
       WHEN resource_label_value LIKE '%runners-manager-shared-blue-%' THEN '2 - shared saas runners - small' --ok
       WHEN resource_label_value LIKE '%runners-manager-shared-green-%' THEN '2 - shared saas runners - small' --ok
+      WHEN resource_label_value LIKE '%gitlab-shared-runners-manager-%' THEN '1 - shared gitlab org runners' --ok
+      WHEN resource_label_value LIKE '%shared-runners-manager-%' THEN '2 - shared saas runners - small' --ok
       WHEN resource_label_value LIKE '%runners-manager-saas-linux-small-amd64-%' THEN '2 - shared saas runners - small'
       WHEN resource_label_value LIKE '%runners-manager-saas-linux-medium-amd64-%' THEN '3 - shared saas runners - medium' --ok
       WHEN resource_label_value LIKE '%runners-manager-saas-linux-large-amd64-%' THEN '4 - shared saas runners - large' --ok
       WHEN resource_label_value LIKE '%runners-manager-saas-linux-xlarge-amd64-%' THEN '10 - shared saas runners - xlarge'
+      WHEN resource_label_value LIKE '%runners-manager-saas-linux-2xlarge-amd64-%' THEN '11 - shared saas runners - 2xlarge'
       WHEN resource_label_value LIKE '%runners-manager-saas-macos-staging-%' THEN 'runners-manager-saas-macos-staging-'
       WHEN resource_label_value LIKE '%runners-manager-saas-macos%-m1-%' THEN '5 - shared saas macos runners'
-      WHEN resource_label_value LIKE '%runners-manager-shared-gitlab-org-%' THEN '1 - shared gitlab org runners' --ok
+      WHEN resource_label_value LIKE '%runners-manager-shared-gitlab-org-%' THEN '1 - shared gitlab org runners' --'1 - shared gitlab org runners' --ok
       WHEN resource_label_value LIKE '%runners-manager-private-%' THEN '6 - private internal runners' --ok, project_pl internal
+      WHEN resource_label_value LIKE '%private-runners-manager-%' THEN '6 - private internal runners' --ok, project_pl internal
       WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%shared-gitlab-org-%') THEN '1 - shared gitlab org runners' --ok
       WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%amd64%') THEN 'runners-saas'
       WHEN (resource_label_value LIKE '%instances/runner-%' AND resource_label_value LIKE '%s-shared-%') THEN '2 - shared saas runners - small' --ok

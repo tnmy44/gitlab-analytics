@@ -17,9 +17,7 @@ from gitlabdata.orchestration_utils import (
 
 
 if __name__ == "__main__":
-    handbook_dict = dict(
-        categories="categories", stages="stages", release_managers="release_managers"
-    )
+    handbook_dict = dict(categories="categories", stages="stages")
 
     pi_file_dict = dict(
         chief_of_staff_team_pi="chief_of_staff_team",
@@ -35,7 +33,7 @@ if __name__ == "__main__":
 
     pi_internal_hb_file_dict = dict(
         dev_section_pi="dev_section",
-        enablement_section_pi="enablement_section",
+        core_platform_section_pi="core_platform_section",
         ops_section_pi="ops_section",
         product_pi="product",
         sales_pi="sales",
@@ -55,7 +53,7 @@ if __name__ == "__main__":
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
     gitlab_in_hb_token = env.get("GITLAB_INTERNAL_HANDBOOK_TOKEN")
 
-    HANDBOOK_URL = "https://gitlab.com/gitlab-com/www-gitlab-com/raw/master/data/"
+    HANDBOOK_URL = "https://gitlab.com/gitlab-com/www-gitlab-com/-/raw/master/data/"
     pi_url = f"{HANDBOOK_URL}performance_indicators/"
 
     # Internal handbook url

@@ -208,6 +208,9 @@ WITH map_merged_crm_account AS (
       ----ultimate parent crm account info
        sfdc_account.ultimate_parent_account_name                          AS parent_crm_account_name,
 
+      --technical account manager attributes
+      technical_account_manager.manager_name AS tam_manager,
+
       --6 sense fields
       sfdc_account.has_six_sense_6_qa,
       sfdc_account.risk_rate_guid,
@@ -463,6 +466,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.last_timeline_at_risk_update,
       sfdc_account.last_at_risk_update_comments,
       sfdc_account.bdr_prospecting_status,
+      sfdc_account.gs_health_csm_sentiment,
 
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,

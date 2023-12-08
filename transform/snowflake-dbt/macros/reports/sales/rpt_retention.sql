@@ -92,7 +92,9 @@
         WHEN retention_subs.current_arr <= 5000 THEN '3. ARR <= $5K'
       END                                                                             AS retention_arr_band,
       retention_subs.current_arr                                                      AS prior_year_arr,
+      retention_subs.current_mrr                                                      AS prior_year_mrr,
       COALESCE(retention_subs.future_arr, 0)                                          AS net_retention_arr,
+      COALESCE(retention_subs.future_mrr, 0)                                          AS net_retention_mrr,
       CASE 
         WHEN net_retention_arr = 0
           THEN prior_year_arr

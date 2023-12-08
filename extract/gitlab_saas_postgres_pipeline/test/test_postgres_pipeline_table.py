@@ -115,7 +115,7 @@ class TestPostgresPipelineTable:
         load_type = "backfill"
         source_engine = target_engine = metadata_engine = self.engine
 
-        mock_check_backfill_metadata.return_value = True, datetime.now(), -1
+        mock_check_backfill_metadata.return_value = True, datetime.utcnow(), -1
         self.pipeline_table.do_load(
             load_type, source_engine, target_engine, metadata_engine
         )

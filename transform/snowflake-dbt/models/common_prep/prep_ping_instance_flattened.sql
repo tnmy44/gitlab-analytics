@@ -1,7 +1,8 @@
 {{ config(
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
-    unique_key = "ping_instance_flattened_id"
+    unique_key = "ping_instance_flattened_id",
+    tmp_relation_type = "table"
 ) }}
 
 
@@ -49,7 +50,7 @@ WITH source AS (
   {{ dbt_audit(
       cte_ref="flattened_high_level",
       created_by="@icooper-acp",
-      updated_by="@michellecooper",
+      updated_by="@chrissharp",
       created_date="2022-03-17",
-      updated_date="2023-06-30"
+      updated_date="2023-11-17"
   ) }}

@@ -231,6 +231,7 @@ renamed AS (
     gs_health_devsecops__c AS gs_health_devsecops,
     gs_health_ci__c AS gs_health_ci,
     gs_health_scm__c AS gs_health_scm,
+    health__c AS gs_health_csm_sentiment,
 
     -- Risk Fields
     risk_impact__c AS risk_impact,

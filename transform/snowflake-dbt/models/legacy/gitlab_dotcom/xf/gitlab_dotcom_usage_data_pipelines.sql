@@ -148,7 +148,7 @@
   },
   {
     "event_name": "merge_requests",
-    "source_table_name": "gitlab_dotcom_merge_requests",
+    "source_table_name": "gitlab_dotcom_merge_requests_source",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "merge_request_id",

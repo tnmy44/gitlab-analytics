@@ -6,7 +6,7 @@
 {{ simple_cte([
     ('dim_namespace','dim_namespace'),
     ('snowplow_sessions_all', 'snowplow_sessions_all'),
-	('wk_rpt_namespace_onboarding', 'wk_rpt_namespace_onboarding'),
+	('rpt_namespace_onboarding', 'rpt_namespace_onboarding'),
 	('mart_crm_touchpoint', 'mart_crm_touchpoint'),
     ('dim_date', 'dim_date')
     ])
@@ -71,7 +71,7 @@ snowplow_sessions as (
         --need activation data
         days_since_namespace_creation_at_trial
     from
-        wk_rpt_namespace_onboarding 
+        rpt_namespace_onboarding 
     where 1=1
         and namespace_created_at > '2022-01-01'
         and trial_start_date is null
@@ -90,7 +90,7 @@ snowplow_sessions as (
         --need activation data
         days_since_namespace_creation_at_trial
     from
-        wk_rpt_namespace_onboarding 
+        rpt_namespace_onboarding 
     where 1=1
         and namespace_created_at > '2022-01-01'
         and trial_start_date is not null
@@ -110,7 +110,7 @@ snowplow_sessions as (
         --need activation data
         days_since_namespace_creation_at_trial
     from
-        wk_rpt_namespace_onboarding 
+        rpt_namespace_onboarding 
     where 1=1
         and namespace_created_at > '2022-01-01'
         and first_paid_subscription_start_date is not null

@@ -1,6 +1,10 @@
-{{ simple_cte([
-    ('blended_directory_source','blended_directory_source')
-]) }},
+WITH blended_directory_source AS (
+
+    SELECT *,
+      uploaded_at::date                                                     AS uploaded_date
+    FROM {{ ref('blended_directory_source') }}
+
+),
 
 eda_stage AS (
     
@@ -77,10 +81,10 @@ term_reason AS (
 eda_sup AS (
 
   SELECT   
-    uploaded_at,
+    uploaded_date,
     full_name,
     employee_id,
-    ROW_NUMBER() over ( PARTITION BY full_name,uploaded_at ORDER BY uploaded_at DESC ) AS ldr_rank
+    ROW_NUMBER() over ( PARTITION BY full_name,uploaded_date ORDER BY uploaded_date DESC, employee_id DESC ) AS ldr_rank
   FROM blended_directory_source
 
 ),
@@ -88,13 +92,13 @@ eda_sup AS (
 dr AS (
 
   SELECT     
-    uploaded_at AS uploaded_at,
+    uploaded_date,
     supervisor,
     COUNT(DISTINCT blend.employee_id) AS dr_total_direct_reports
   FROM blended_directory_source blend
   INNER JOIN eda_stage edi
   ON blend.employee_id = edi.employee_id
-  AND blend.uploaded_at = edi.date_actual
+  AND blend.uploaded_date = edi.date_actual
   WHERE source_system = 'workday'
   GROUP BY 1, 2 
 
@@ -104,7 +108,7 @@ sup AS (
 
   SELECT    
     '2022-06-16'                    AS cutover_date,
-    sup.uploaded_at                 AS sup_date,
+    sup.uploaded_date               AS sup_date,
     sup.supervisor                  AS sup_name,
     eda_sup.employee_id             AS sup_id,
     sup.employee_id                 AS dr_id,
@@ -113,11 +117,11 @@ sup AS (
   FROM blended_directory_source sup
   LEFT JOIN eda_sup
     ON sup_name = eda_sup.full_name
-    AND sup_date = eda_sup.uploaded_at
-    AND ldr_rank = 1
+    AND sup_date = eda_sup.uploaded_date
+    AND 1 = ldr_rank
   LEFT JOIN dr
   ON dr_name = dr.supervisor
-  AND sup_date = dr.uploaded_at
+  AND sup_date = dr.uploaded_date
   WHERE sup_date >= cutover_date
   AND source_system = 'workday'
   ORDER BY 2 DESC, 3
@@ -213,10 +217,10 @@ eda AS (
     location_factor,
     is_hire_date,
     is_termination_date,
-    iff(staff_hist_promo.business_process_type = 'Promote Employee Inbound', 'TRUE', eda_stage.is_promotion) AS is_promotion,
-    iff(transfer.business_process_type = 'Transfer Employee Inbound', 'TRUE', 'FALSE')                       AS is_transfer,
-    COALESCE(transfer.transfer_job_change, 'FALSE')                                                          AS transfer_job_change,
-    staff_hist.employee_type_current                                                                         AS employee_type,
+    UPPER(IFF(staff_hist_promo.business_process_type = 'Promote Employee Inbound', 'TRUE', eda_stage.is_promotion)) AS is_promotion,
+    IFF(transfer.business_process_type = 'Transfer Employee Inbound', 'TRUE', 'FALSE')                              AS is_transfer,
+    COALESCE(transfer.transfer_job_change, 'FALSE')                                                                 AS transfer_job_change,
+    staff_hist.employee_type_current                                                                                AS employee_type,
     cost_center,
     job_title,
     jobtitle_speciality,
@@ -294,10 +298,10 @@ eda AS (
     location_factor,
     is_hire_date,
     is_termination_date,
-    iff(staff_hist_promo.business_process_type = 'Promote Employee Inbound', 'TRUE', eda_stage.is_promotion) AS is_promotion,
-    iff(transfer.business_process_type = 'Transfer Employee Inbound', 'TRUE', 'FALSE')                       AS is_transfer,
-    COALESCE(transfer.transfer_job_change, 'FALSE')                                                          AS transfer_job_change,
-    staff_hist.employee_type_current                                                                         AS employee_type,
+    UPPER(IFF(staff_hist_promo.business_process_type = 'Promote Employee Inbound', 'TRUE', eda_stage.is_promotion)) AS is_promotion,
+    IFF(transfer.business_process_type = 'Transfer Employee Inbound', 'TRUE', 'FALSE')                              AS is_transfer,
+    COALESCE(transfer.transfer_job_change, 'FALSE')                                                                 AS transfer_job_change,
+    staff_hist.employee_type_current                                                                                AS employee_type,
     cost_center,
     job_title,
     jobtitle_speciality,
@@ -373,7 +377,7 @@ pr AS (
     reports_to                  AS pr_reports_to,
     reports_to_id               AS pr_reports_to_id,
     country                     AS pr_country,
-    regiON                      AS pr_region,
+    region                      AS pr_region,
     location_factor             AS pr_location_factor,
     cost_center                 AS pr_cost_center,
     employee_type               AS pr_employee_type,
@@ -382,7 +386,7 @@ pr AS (
     job_role                    AS pr_job_role,
     job_grade                   AS pr_job_grade,
     department                  AS pr_department,
-    divisiON                    AS pr_division,
+    division                    AS pr_division,
     total_direct_reports        AS pr_total_direct_reports
   FROM eda 
 
@@ -400,7 +404,7 @@ hist_stage AS (
     END AS employment_status,
     CASE
       WHEN employment_status = 'T' THEN cur_date_actual
-      ELSE COALESCE(LAG(cur_date_actual) OVER ( PARTITION BY employee_id ORDER BY cur_date_actual DESC ) - 1, CURRENT_DATE())
+      ELSE COALESCE(LAG(cur_date_actual) OVER ( PARTITION BY employee_id ORDER BY cur_date_actual DESC, hire_rank DESC ) - 1, CURRENT_DATE())
     END                  AS end_date,
     reports_to           AS cur_reports_to,
     reports_to_id        AS cur_reports_to_id,
@@ -409,7 +413,7 @@ hist_stage AS (
     location_factor      AS cur_location_factor,
     cost_center          AS cur_cost_center,
     employee_type        AS cur_employee_type,
-    is_promotiON         AS cur_is_promotion,
+    is_promotion         AS cur_is_promotion,
     is_transfer          AS cur_is_transfer,
     transfer_job_change  AS cur_transfer_job_change,
     job_role             AS cur_job_role,
@@ -417,7 +421,7 @@ hist_stage AS (
     job_title            AS cur_job_title,
     jobtitle_speciality  AS cur_jobtitle_speciality,
     department           AS cur_department,
-    divisiON             AS cur_division,
+    division             AS cur_division,
     total_direct_reports AS cur_total_direct_reports,
     hire_date,
     hire_rank,
@@ -520,10 +524,10 @@ SELECT
     ELSE NULL
   END                                AS job_change_reason,
   hist_stage.cur_country             AS country,
-  hist_stage.cur_regiON              AS region,
+  hist_stage.cur_region              AS region,
   hist_stage.cur_location_factor     AS location_factor,
   hist_stage.cur_cost_center         AS cost_center,
-  hist_stage.cur_divisiON            AS division,
+  hist_stage.cur_division            AS division,
   hist_stage.cur_department          AS department,
   hist_stage.cur_job_role            AS job_role,
   hist_stage.cur_job_grade           AS job_grade,

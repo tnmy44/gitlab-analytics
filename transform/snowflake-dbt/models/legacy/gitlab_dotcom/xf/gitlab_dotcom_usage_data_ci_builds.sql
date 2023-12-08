@@ -5,7 +5,8 @@
 {{ config({
         "materialized": "incremental",
         "unique_key": "event_primary_key",
-        "automatic_clustering": true
+        "automatic_clustering": true,
+        "tmp_relation_type": "table"
     })
 }}
 

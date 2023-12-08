@@ -4,7 +4,8 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "user_snapshot_id"
+    "unique_key": "user_snapshot_id",
+    "tmp_relation_type": "table"
     })
 }}
 

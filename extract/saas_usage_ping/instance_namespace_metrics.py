@@ -292,25 +292,20 @@ class InstanceNamespaceMetrics:
         info("<<<START PROCESSING>>>")
         info(f"number_of_tasks: {self.number_of_tasks}, chunk_no: {self.chunk_no}")
 
-        if self.chunk_no != 0:
-            namespace_queries = self.get_meta_data_from_file(
-                file_name=self.utils.NAMESPACE_FILE
-            )
+        namespace_queries = self.get_meta_data_from_file(
+            file_name=self.utils.NAMESPACE_FILE
+        )
 
-            start_slice, end_slice = self.chunk_list(
-                namespace_size=len(namespace_queries)
-            )
-            namespace_queries = namespace_queries[start_slice:end_slice]
+        start_slice, end_slice = self.chunk_list(namespace_size=len(namespace_queries))
+        namespace_queries = namespace_queries[start_slice:end_slice]
 
-            info(f"Will process: {len(namespace_queries)} queries")
+        info(f"Will process: {len(namespace_queries)} queries")
 
-            self.calculate_namespace_metrics(
-                queries=namespace_queries, metrics_filter=metrics_filter
-            )
+        self.calculate_namespace_metrics(
+            queries=namespace_queries, metrics_filter=metrics_filter
+        )
 
-            info("<<<END2 PROCESSING>>>")
-        else:
-            raise ValueError("Invalid error for chunk_no, should be greater than 0")
+        info("<<<END2 PROCESSING>>>")
 
     def backfill(self):
         """

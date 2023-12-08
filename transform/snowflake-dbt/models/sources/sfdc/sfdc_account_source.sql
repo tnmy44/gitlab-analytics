@@ -218,12 +218,14 @@ renamed AS (
     gs_health_devsecops__c AS gs_health_devsecops,
     gs_health_ci__c AS gs_health_ci,
     gs_health_scm__c AS gs_health_scm,
+    health__c AS gs_health_csm_sentiment,
 
     -- Risk Fields
     risk_impact__c AS risk_impact,
     risk_reason__c AS risk_reason,
     last_timeline_at_risk_update__c AS last_timeline_at_risk_update,
     last_at_risk_update_comments__c AS last_at_risk_update_comments,
+
 
     -- metadata
     createdbyid AS created_by_id,

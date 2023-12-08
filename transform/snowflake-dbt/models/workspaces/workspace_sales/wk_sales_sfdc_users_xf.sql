@@ -123,6 +123,7 @@ WITH source_user AS (
            OR LOWER(title) LIKE '%account executive%'
            OR LOWER(title) LIKE '%country manager%'
            OR LOWER(title) LIKE '%public sector channel manager%'
+           OR LOWER(role_name) LIKE '%ae_%'
         THEN 1
         ELSE 0
       END                                                                                          AS is_rep_flag

@@ -135,6 +135,7 @@ suggestion_level AS (
     requested.ide_name,
     requested.ide_vendor,
     requested.ide_version,
+    requested.language_server_version,
     --model_engine and model_name not available on requested event. Default to loaded event, fall back to others to maximize coverage
     COALESCE(loaded.model_engine, shown.model_engine, 
       accepted.model_engine, rejected.model_engine, 

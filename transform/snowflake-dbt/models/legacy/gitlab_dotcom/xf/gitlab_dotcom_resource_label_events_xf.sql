@@ -26,8 +26,13 @@ WITH resource_label_events AS (
 
 , mrs AS (
 
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_merge_requests_xf') }} 
+    SELECT
+      prep_merge_request.*,
+      prep_namespace.namespace_id
+    FROM {{ ref('prep_merge_request') }}
+    LEFT JOIN  {{ ref('prep_namespace') }}
+      ON prep_merge_request.dim_namespace_sk = prep_namespace.dim_namespace_sk
+    WHERE prep_namespace.is_currently_valid = TRUE
 
 )
 

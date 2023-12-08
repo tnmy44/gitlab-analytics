@@ -739,12 +739,12 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , created_at
-      , updated_at
+      , NULL AS created_at
+      , NULL AS updated_at
       , project_id
-      , author_id
+      , NULL AS author_id
       , iid
-      , state
+      , NULL AS state
       FROM requirements
 #  resource_state_events:
 #    export_schema: 'gitlab_com'

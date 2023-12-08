@@ -32,8 +32,8 @@ WITH mr_comment_added AS (
     'mr_created'                      AS event_type,
     {{ dbt_utils.surrogate_key(['event_date', 'event_type', 'merge_request_id']) }}
                                       AS event_surrogate_key
-    
-  FROM {{ref('gitlab_dotcom_merge_requests_xf')}}
+
+  FROM {{ref('gitlab_dotcom_merge_requests_source')}}
   WHERE created_at >= '2015-01-01'
 
 )

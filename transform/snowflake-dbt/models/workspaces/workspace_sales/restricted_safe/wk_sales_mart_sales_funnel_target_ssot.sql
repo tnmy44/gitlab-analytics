@@ -119,7 +119,7 @@
     -- FROM prod.restricted_safe_common_mart_sales.mart_sales_funnel_target
     GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
 
-  ), mart_sales_funnel_target_expanded AS (
+    ), mart_sales_funnel_target_expanded AS (
 
     SELECT
       funnel_target.*,
@@ -149,7 +149,7 @@
 
     FROM mart_sales_funnel_target_prep AS funnel_target
 
-  ), final AS (
+  ), fy24_targets AS (
 
     SELECT
       funnel_target.*,
@@ -198,6 +198,93 @@
       ON funnel_target.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot
     WHERE LOWER(funnel_target.deal_group) LIKE ANY ('%growth%','%new%')
 
+), fy25_placeholders AS (
+
+      SELECT fy24_targets.sales_funnel_target_id,
+             DATEADD(month,12,fy24_targets.target_month) AS target_month,
+             fy24_targets.kpi_name,
+             fy24_targets.crm_user_business_unit,
+             fy24_targets.crm_user_sub_business_unit,
+             fy24_targets.crm_user_division,
+             fy24_targets.crm_user_asm,
+             fy24_targets.crm_user_sales_segment,
+             fy24_targets.crm_user_sales_segment_grouped,
+             fy24_targets.crm_user_geo,
+             fy24_targets.crm_user_region,
+             fy24_targets.crm_user_area,
+             fy24_targets.crm_user_sales_segment_region_grouped,
+             fy24_targets.order_type_name,
+             fy24_targets.order_type_grouped,
+             fy24_targets.sales_qualified_source_name,
+             fy24_targets.sales_qualified_source_grouped,
+             fy24_targets.created_by,
+             fy24_targets.updated_by,
+             fy24_targets.model_created_date,
+             fy24_targets.model_updated_date,
+             fy24_targets.dbt_updated_at,
+             fy24_targets.dbt_created_at,
+             CASE
+                WHEN LOWER(fy24_targets.crm_user_business_unit) = 'entg'
+                    THEN fy24_targets.allocated_target * 1.35
+                WHEN LOWER(fy24_targets.crm_user_business_unit) = 'comm'
+                    THEN fy24_targets.allocated_target * 1.35
+                 ELSE fy24_targets.allocated_target * 1.35
+             END                                                 AS allocated_target,
+             fy24_targets.deal_group,
+             fy24_targets.sales_qualified_source,
+             fy24_targets.report_bu_subbu_division_asm_user_segment_geo_region_area_sqs_ot,
+
+             fy25_date.fiscal_quarter_name_fy  AS target_fiscal_quarter_name,
+             DATEADD(month,3,fy24_targets.target_fiscal_quarter_date) AS target_fiscal_quarter_date,
+             2025 AS target_fiscal_year,
+
+             -- FY23 keys
+             fy24_targets.key_segment,
+             fy24_targets.key_segment_sqs,
+             fy24_targets.key_segment_ot,
+             fy24_targets.key_segment_geo,
+             fy24_targets.key_segment_geo_sqs,
+             fy24_targets.key_segment_geo_ot,
+             fy24_targets.key_segment_geo_region,
+             fy24_targets.key_segment_geo_region_sqs,
+             fy24_targets.key_segment_geo_region_ot,
+             fy24_targets.key_segment_geo_region_area,
+             fy24_targets.key_segment_geo_region_area_sqs,
+             fy24_targets.key_segment_geo_region_area_ot,
+             fy24_targets.key_segment_geo_area,
+             fy24_targets.sales_team_cro_level,
+             fy24_targets.sales_team_rd_asm_level,
+             fy24_targets.sales_team_vp_level,
+             fy24_targets.sales_team_avp_rd_level,
+             fy24_targets.sales_team_asm_level,
+
+             -- JK 2023-02-06: FY24 keys
+             fy24_targets.key_sqs,
+             fy24_targets.key_ot,
+             fy24_targets.key_bu,
+             fy24_targets.key_bu_ot,
+             fy24_targets.key_bu_sqs,
+             fy24_targets.key_bu_subbu,
+             fy24_targets.key_bu_subbu_ot,
+             fy24_targets.key_bu_subbu_sqs,
+             fy24_targets.key_bu_subbu_division,
+             fy24_targets.key_bu_subbu_division_ot,
+             fy24_targets.key_bu_subbu_division_sqs,
+             fy24_targets.key_bu_subbu_division_asm
+      FROM fy24_targets
+      LEFT JOIN date_details fy25_date
+        ON fy25_date.date_actual = DATEADD(month,12,fy24_targets.target_month)
+      WHERE kpi_name IN ('Net ARR','Net ARR Company')
+        AND target_fiscal_year = 2024
+
+), final AS (
+
+    SELECT *
+    FROM fy24_targets
+    UNION
+    SELECT *
+    FROM fy25_placeholders
+    
 )
 
 SELECT *

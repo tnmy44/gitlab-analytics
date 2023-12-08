@@ -35,7 +35,7 @@
   
   SELECT 
     *
-  FROM {{ ref('zuora_rate_plan') }}
+  FROM {{ ref('zuora_rate_plan_source') }}
   WHERE rate_plan_name IN ('1,000 CI Minutes', '1,000 Compute Minutes')
 
   

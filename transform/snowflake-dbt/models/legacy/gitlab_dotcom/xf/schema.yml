@@ -259,7 +259,7 @@ models:
     columns:
       - name: project_id
       - name: namespace_id
-      - name: merge_request_iid
+      - name: merge_request_internal_id
         tests: 
           - not_null
       - name: merge_request_id
@@ -271,21 +271,6 @@ models:
       - name: user_name
         tests: 
           - not_null
-
-  - name: gitlab_dotcom_merge_requests_xf
-    description: '{{ doc("gitlab_dotcom_merge_requests_xf") }}'
-    columns:
-      - name: merge_request_id
-        tests:
-          - not_null
-      - name: is_community_contributor_related
-        description: Merge Request has 'community contribution' tag, and is on a project in the gitlab.org namespace.
-      - name: namespace_plan_id_at_merge_request_creation
-        description: '{{ doc("namespace_plan_id_at_creation") }}'
-      - name: total_checkboxes
-        description: The number of checkbox tasks included in the description of the Merge Request
-      - name: completed_checkboxes
-        description: The number of checkbox tasks marked as completed in the description of the Merge Request
 
   - name: gitlab_dotcom_monthly_stage_active_users
     description: '{{ doc("gitlab_dotcom_monthly_stage_active_users") }}'

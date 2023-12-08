@@ -35,3 +35,4 @@ renamed AS (
 
 SELECT *
 FROM renamed
+QUALIFY ROW_NUMBER() OVER (PARTITION BY site_luid, event_id ORDER BY admin_insights_published_at DESC) = 1

@@ -15,7 +15,7 @@ WITH gitlab_dotcom_resource_milestone_events AS (
 , mrs AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_merge_requests') }} 
+    FROM {{ ref('gitlab_dotcom_merge_requests_source') }}
 
 )
 

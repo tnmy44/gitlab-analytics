@@ -4,7 +4,8 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_ci_build_id"
+    "unique_key": "dim_ci_build_id",
+    "tmp_relation_type": "table"
     })
 }}
 

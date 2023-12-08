@@ -3,7 +3,6 @@ from typing import Dict
 
 from fire import Fire
 from gitlabdata.orchestration_utils import (
-    snowflake_engine_factory,
     query_executor,
     append_to_xcom_file,
 )
