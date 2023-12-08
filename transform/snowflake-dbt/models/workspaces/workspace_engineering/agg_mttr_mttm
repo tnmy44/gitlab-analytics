@@ -86,6 +86,7 @@ final AS (
     DATE_TRUNC('month', created_at) AS date,
     SUM(is_incident) AS incidents,
     SUM(is_resolved_incident) AS resolved_incidents,
+    SUM(is_mitigated_incident) AS mitigated_incidents,
     AVG(time_to_mitigate_resolved) AS mttr,
     AVG(time_to_mitigate_mitigated) AS mttm
   FROM incidents
@@ -98,6 +99,7 @@ final AS (
     DATE_TRUNC('day', created_at) AS date,
     SUM(is_incident) AS incidents,
     SUM(is_resolved_incident) AS resolved_incidents,
+    SUM(is_mitigated_incident) AS mitigated_incidents,
     AVG(time_to_mitigate_resolved) AS mttr,
     AVG(time_to_mitigate_mitigated) AS mttm
   FROM incidents
