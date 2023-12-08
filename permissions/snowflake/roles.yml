@@ -124,6 +124,11 @@ databases:
     - jpeguero_prep:
         shared: no
 
+    - jsingh_prod:
+        shared: no
+    - jsingh_prep:
+        shared: no
+
     - jstark_prod:
         shared: no
     - jstark_prep:
@@ -3984,6 +3989,45 @@ roles:
         warehouses:
             - dev_xs
 
+    - jsingh:
+        member_of:
+            - engineer
+            - restricted_safe
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - jsingh_prep
+                - jsingh_prod
+            schemas:
+                - jsingh_prep.*
+                - jsingh_prod.*
+            tables:
+                - jsingh_prep.*.*
+                - jsingh_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jsingh_prep
+                    - jsingh_prod
+                write:
+                    - jsingh_prep
+                    - jsingh_prod
+            schemas:
+                read:
+                    - jsingh_prep.*
+                    - jsingh_prod.*
+                write:
+                    - jsingh_prep.*
+                    - jsingh_prod.*
+            tables:
+                read:
+                    - jsingh_prep.*.*
+                    - jsingh_prod.*.*
+                write:
+                    - jsingh_prep.*.*
+                    - jsingh_prod.*.*
+
     - jstark:
         member_of:
             - analyst_core
@@ -6055,6 +6099,11 @@ users:
         can_login: yes
         member_of:
             - jpetr
+
+    - jsingh:
+        can_login: yes
+        member_of:
+            - jsingh
 
     - jstark:
         can_login: yes
