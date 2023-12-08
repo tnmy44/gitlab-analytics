@@ -41,11 +41,10 @@ dag = DAG(
 
 # tableau Extract
 pvc_monitor_cmd = f"""
-    {clone_and_setup_extraction_cmd} &&
-    
+    export USE_GKE_GCLOUD_AUTH_PLUGIN=True &&
+    kubectl get pods && 
     apt-get update && 
-    apt-get install jq -y && 
-    export USE_GKE_GCLOUD_AUTH_PLUGIN=True && 
+    apt-get install jq -y &&  
     cd ./pvc_monitor && 1
     bash get_pvc_values.sh > pvc_values.csv
     python3 pvc_check.py
