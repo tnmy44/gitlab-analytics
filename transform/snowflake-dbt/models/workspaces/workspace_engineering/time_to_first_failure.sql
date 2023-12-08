@@ -164,7 +164,7 @@ base AS (
 
 final AS (
 
-  SELECT
+  SELECT DISTINCT
     DATE_TRUNC('month', date_actual) AS month,
     base.*
   FROM date_details
