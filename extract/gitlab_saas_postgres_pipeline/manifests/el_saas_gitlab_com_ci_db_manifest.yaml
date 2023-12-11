@@ -135,6 +135,6 @@ tables:
       SELECT id
       , name
       FROM p_ci_builds
-      WHERE updated_at BETWEEN '{2023-10-12T00:00:00}'::timestamp
+      WHERE updated_at BETWEEN '2023-10-12T00:00:00'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
 
