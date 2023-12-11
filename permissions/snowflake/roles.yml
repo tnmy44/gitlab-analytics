@@ -5284,7 +5284,7 @@ roles:
         member_of: []
         warehouses: []
 
-   - sawezec:
+    - sawezec:
         member_of:
             - analyst_growth
             - restricted_safe
