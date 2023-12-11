@@ -122,10 +122,10 @@ prep_epic AS (
 
 ),
 
-gitlab_user as (
+gitlab_user AS (
 
-  select *
-  from {{ref('dim_gitlab_dotcom_gitlab_emails')}}
+  SELECT *
+  FROM {{ ref('dim_gitlab_dotcom_gitlab_emails') }}
 
 ),
 
@@ -136,13 +136,14 @@ issue_to_assignee AS (
 
 ),
 
-list_assignees as (
+list_assignees AS (
 
-  select issue_id,
-  listagg(gitlab_dotcom_user_name,' | ') as issue_assignee_user_name
-  from issue_to_assignee as a
-  join gitlab_user as b on a.user_id = b.gitlab_dotcom_user_id
-  group by 1
+  SELECT
+    issue_id,
+    LISTAGG(gitlab_dotcom_user_name, ' | ') AS issue_assignee_user_name
+  FROM issue_to_assignee AS a
+  INNER JOIN gitlab_user AS b ON a.user_id = b.gitlab_dotcom_user_id
+  GROUP BY 1
 
 ),
 
