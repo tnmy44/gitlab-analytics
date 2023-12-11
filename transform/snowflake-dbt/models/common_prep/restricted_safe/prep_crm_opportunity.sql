@@ -2,7 +2,7 @@
     tags=["six_hourly"],
     materialized="incremental",
     unique_key="primary_key",
-    on_schema_change: "sync_all_columns"
+    on_schema_change="sync_all_columns"
 ) }}
 
 {{ simple_cte([
