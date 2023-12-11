@@ -128,7 +128,7 @@ tables:
     dbt_source_model: true
     deletes_exempt: True
     export_schema: 'gitlab_com'
-    export_table: ci_builds
+    export_table: ci_builds_v2
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
