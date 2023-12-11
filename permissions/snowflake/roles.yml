@@ -5284,6 +5284,15 @@ roles:
         member_of: []
         warehouses: []
 
+   - sawezec:
+        member_of:
+            - analyst_growth
+            - restricted_safe
+            - data_team_analyst
+            - bi_tool_eval_read
+        warehouses:
+            - dev_xs
+
     - sbalasani:
         member_of:
          - analytics_engineer_core
@@ -6364,6 +6373,11 @@ users:
         can_login: yes
         member_of:
             - sbalasani
+
+    - sawezec:
+        can_login: yes
+        member_of:
+            - sawezec
 
     - schaturvedi:
         can_login: yes
