@@ -235,7 +235,7 @@ joined AS (
     prep_epic.epic_title,
     prep_epic.labels                                                                                                                                                 AS epic_labels,
     prep_epic.epic_state,
-    issue_to_assignee.user_id                                                                                                                                        AS issue_assignee
+    issue_to_assignee.issue_assignee_user_name
   FROM issues
   LEFT JOIN agg_labels
     ON issues.issue_id = agg_labels.issue_id
