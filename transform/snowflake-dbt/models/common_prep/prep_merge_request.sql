@@ -67,13 +67,13 @@
       prep_milestone.dim_milestone_sk,
       prep_date.date_id                                                                         AS created_date_id,
       prep_gitlab_dotcom_plan.dim_plan_sk                                                       AS dim_plan_sk_at_creation,
-      author.dim_user_sk                                                                        AS dim_user_sk_author,
-      assignee.dim_user_sk                                                                      AS dim_user_sk_assignee,
-      merge_user.dim_user_sk                                                                    AS dim_user_sk_merge_user,
-      updated_by.dim_user_sk                                                                    AS dim_user_sk_updated_by,
-      last_edited_by.dim_user_sk                                                                AS dim_user_sk_last_edited_by,
-      merged_by.dim_user_sk                                                                     AS dim_user_sk_merged_by,
-      latest_closed_by.dim_user_sk                                                              AS dim_user_sk_latest_closed_by,
+      author.dim_user_sk                                                                        AS dim_user_author_sk,
+      assignee.dim_user_sk                                                                      AS dim_user_assignee_sk,
+      merge_user.dim_user_sk                                                                    AS dim_user_merge_user_sk,
+      updated_by.dim_user_sk                                                                    AS dim_user_updated_by_sk,
+      last_edited_by.dim_user_sk                                                                AS dim_user_last_edited_by_sk,
+      merged_by.dim_user_sk                                                                     AS dim_user_merged_by_sk,
+      latest_closed_by.dim_user_sk                                                              AS dim_user_latest_closed_by_sk,
       prep_ci_pipeline.dim_ci_pipeline_sk                                                       AS dim_ci_pipeline_sk_head,
       gitlab_dotcom_merge_requests_source.latest_merge_request_diff_id, -- currently no common model, surrogate key can be added when this is created
 
@@ -172,7 +172,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@michellecooper",
+    updated_by="@annapiaseczna",
     created_date="2021-06-17",
-    updated_date="2023-10-31"
+    updated_date="2023-12-11"
 ) }}
