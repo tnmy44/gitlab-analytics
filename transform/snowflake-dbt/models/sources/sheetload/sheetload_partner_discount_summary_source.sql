@@ -9,7 +9,7 @@ WITH source AS (
       fy::VARCHAR                     AS fiscal_year_name_fy,
       opportunity_id::VARCHAR         AS dim_crm_opportunity_id,
       close_date::VARCHAR             AS close_date,
-      lessor_of_discounts::NUMBER     AS discount_percent,
+      lessor_of_discounts::FLOAT      AS discount_percent,
       partner_type::VARCHAR           AS partner_type
     FROM source
 
