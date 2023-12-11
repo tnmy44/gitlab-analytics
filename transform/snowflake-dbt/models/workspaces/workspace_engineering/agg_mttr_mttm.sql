@@ -1,7 +1,7 @@
 WITH issues AS (
 
   SELECT *
-  FROM {{ ref('internal_issues') }}
+  FROM {{ ref('engineering_issues') }}
 
 ),
 
