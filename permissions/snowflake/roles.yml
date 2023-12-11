@@ -2112,7 +2112,7 @@ roles:
                     - prod.legacy.customers_db_trial_histories
                     - prod.legacy.gitlab_dotcom_memberships
                     - prod.workspace_marketing.marketo_form_fills_missing_touchpoints
-                    - prod.workspace_product.wk_rpt_namespace_onboarding
+                    - prod.common_mart_product.rpt_namespace_onboarding
 
     - license_db:
         privileges:
