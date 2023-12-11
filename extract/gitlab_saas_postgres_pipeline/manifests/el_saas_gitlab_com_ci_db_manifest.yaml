@@ -124,4 +124,30 @@ tables:
       FROM ci_trigger_requests
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  ci_builds_v2:
+    dbt_source_model: true
+    deletes_exempt: True
+    export_schema: 'gitlab_com'
+    export_table: ci_builds_v2
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , updated_at
+      , CASE
+            WHEN name ilike '%%container_scanning%%' THEN 'container_scanning'
+            WHEN name ilike '%%dast%%' THEN 'dast'
+            WHEN name ilike '%%dependency_scanning%%' THEN 'dependency_scanning'
+            WHEN name ilike '%%license_management%%' THEN 'license_management'
+            WHEN name ilike '%%license_scanning%%' THEN 'license_scanning'
+            WHEN name ilike '%%sast%%' THEN 'sast'
+            WHEN name ilike '%%secret_detection%%' THEN 'secret_detection'
+            WHEN name ilike '%%coverage_fuzzing%%' THEN 'coverage_fuzzing'
+            WHEN name ilike '%%apifuzzer_fuzz%%' THEN 'apifuzzer_fuzz'
+            WHEN name ilike '%%apifuzzer_fuzz_dnd%%' THEN 'apifuzzer_fuzz_dnd'
+            ELSE NULL
+        END as name -- https://gitlab.com/gitlab-data/analytics/-/issues/18231#note_1529996846
+      FROM p_ci_builds
+      WHERE updated_at BETWEEN '{2023-10-12T00:00:00}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
 
