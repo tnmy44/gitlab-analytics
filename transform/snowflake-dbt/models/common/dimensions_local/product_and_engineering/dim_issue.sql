@@ -26,10 +26,10 @@ WITH prep_issue AS (
       dim_plan_sk_at_creation,
       dim_milestone_sk,
       sprint_id,
-      dim_user_sk_author,
-      dim_user_sk_updated_by,
-      dim_user_sk_last_edited_by,
-      dim_user_sk_closed_by,
+      dim_user_author_sk,
+      dim_user_updated_by_sk,
+      dim_user_last_edited_by_sk,
+      dim_user_closed_by_sk,
 
       issue_internal_id,
       moved_to_id,
@@ -77,8 +77,8 @@ WITH prep_issue AS (
 {{ dbt_audit(
     cte_ref="prep_issue",
     created_by="@mpeychet_",
-    updated_by="@michellcooper",
+    updated_by="@annapiaseczna",
     created_date="2021-06-17",
-    updated_date="2023-10-25"
+    updated_date="2023-12-11"
 ) }}
 
