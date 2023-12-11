@@ -72,7 +72,7 @@ This is an alias of `event_label` from the Snowplow data
 - Exclude suggestions that have more than one event for a given `event_action`
 - Exclude `suggestion_rejected` events if the suggestion also has a `suggestion_accepted` event (see "Other Comments" below)
 - `Inherited` - Include events containing the `code_suggestions_context`
-- `Inherited` - Exclude events from VS Code extension version 3.76.0. These are excluded by using both `user_agent` and `ide_name`+`extension_version` values.
+- `Inherited` - Exclude IDE events from VS Code extension version 3.76.0. These are excluded by using both `ide_name` and `extension_version` values.
 
 **Intended Usage**
 
