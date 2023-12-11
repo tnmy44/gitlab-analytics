@@ -133,7 +133,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , updated_at
       , name
       FROM p_ci_builds
       WHERE updated_at BETWEEN '{2023-10-12T00:00:00}'::timestamp
