@@ -77,10 +77,10 @@
       prep_date.date_id::NUMBER                                                              AS dim_created_date_id,
       prep_gitlab_dotcom_plan.dim_plan_sk                                                    AS dim_plan_sk_at_creation,
       prep_gitlab_dotcom_plan.dim_plan_id                                                    AS dim_plan_id_at_creation,
-      author.dim_user_sk                                                                     AS dim_user_sk_author,
-      assignee.dim_user_sk                                                                   AS dim_user_sk_assignee,
-      updated_by.dim_user_sk                                                                 AS dim_user_sk_updated_by,
-      last_edited_by.dim_user_sk                                                             AS dim_user_sk_last_edited_by,
+      author.dim_user_sk                                                                     AS dim_user_author_sk,
+      assignee.dim_user_sk                                                                   AS dim_user_assignee_sk,
+      updated_by.dim_user_sk                                                                 AS dim_user_updated_by_sk,
+      last_edited_by.dim_user_sk                                                             AS dim_user_last_edited_by_sk,
       gitlab_dotcom_epics_dedupe_source.author_id,
 
 
@@ -149,7 +149,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mpeychet_",
-    updated_by="@michellecooper",
+    updated_by="@annapiaseczna",
     created_date="2021-06-22",
-    updated_date="2023-09-14"
+    updated_date="2023-12-11"
 ) }}
