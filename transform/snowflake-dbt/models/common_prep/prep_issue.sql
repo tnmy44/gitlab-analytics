@@ -151,7 +151,7 @@
       gitlab_dotcom_issues_source.service_desk_reply_to,
       gitlab_dotcom_issues_source.state_id                                 AS issue_state_id,
       {{ map_state_id('gitlab_dotcom_issues_source.state_id') }}           AS issue_state,
-      gitlab_dotcom_work_item_type_source.work_item_type                   AS issue_type,
+      gitlab_dotcom_work_item_type_source.work_item_type_name              AS issue_type,
       CASE 
         WHEN prep_issue_severity.severity = 4
           THEN 'S1'
