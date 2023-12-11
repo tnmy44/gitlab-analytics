@@ -113,10 +113,10 @@
       prep_gitlab_dotcom_plan.dim_plan_sk                                     AS dim_plan_sk_at_creation,
       prep_milestone.dim_milestone_sk,
       gitlab_dotcom_issues_source.sprint_id,
-      author.dim_user_sk                                                      AS dim_user_sk_author,
-      updated_by.dim_user_sk                                                  AS dim_user_sk_updated_by,
-      last_edited_by.dim_user_sk                                              AS dim_user_sk_last_edited_by,
-      closed_by.dim_user_sk                                                   AS dim_user_sk_closed_by,
+      author.dim_user_sk                                                      AS dim_user_author_sk,
+      updated_by.dim_user_sk                                                  AS dim_user_updated_by_sk,
+      last_edited_by.dim_user_sk                                              AS dim_user_last_edited_by_sk,
+      closed_by.dim_user_sk                                                   AS dim_user_closed_by_sk,
       -- maintained to keep prep_event working until all of gitlab.com lineage has surrogate keys available for all event sources
       prep_gitlab_dotcom_plan.dim_plan_id                                     AS dim_plan_id_at_creation,
       prep_project.project_id,
@@ -272,7 +272,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@michellecooper",
+    updated_by="@annapiaseczna",
     created_date="2021-06-17",
-    updated_date="2023-12-05"
+    updated_date="2023-12-11"
 ) }}
