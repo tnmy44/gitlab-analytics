@@ -81,13 +81,6 @@ logging.info(
 
 # dbt-full-refresh
 dbt_full_refresh_cmd = f"""
-    printenv
-    echo $PARAM2
-    echo $AIRFLOW_CTX_DAG_ID
-    echo $AIRFLOW_CTX_TASK_ID
-    echo $AIRFLOW_CTX_DAG_RUN_ID
-    echo $AIRFLOW_CTX_TRY_NUMBER
-    export DBT_RUNNER=$AIRFLOW_CTX_DAG_ID|$AIRFLOW_CTX_TASK_ID|$AIRFLOW_CTX_DAG_RUN_ID|$AIRFLOW_CTX_TRY_NUMBER
     echo $DBT_RUNNER
     {dbt_install_deps_and_seed_nosha_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE={dbt_warehouse_for_full_refresh} &&
