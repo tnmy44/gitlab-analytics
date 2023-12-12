@@ -139,6 +139,10 @@ renamed AS (
     abm_tier_2_date__c AS abm_tier_2_date,
     abm_tier_3_date__c AS abm_tier_3_date,
 
+    --demandbase fields
+    NULL AS demandbase_trending_offsite_intent,
+    NULL AS demandbase_trending_onsite_engagement,
+
     --6 Sense Fields
     x6sense_6qa__c::BOOLEAN AS has_six_sense_6_qa,
     riskrate_third_party_guid__c AS risk_rate_guid,
@@ -193,6 +197,9 @@ renamed AS (
     zi_ultimate_parent_company_name__c AS zoom_info_ultimate_parent_company_name,
     zi_number_of_developers__c AS zoom_info_number_of_developers,
     zi_total_funding__c AS zoom_info_total_funding,
+
+    -- NF: Added on 20220427 to support EMEA reporting
+    NULL                     AS is_key_account,
 
     -- Gainsight Fields
     gs_first_value_date__c AS gs_first_value_date,
