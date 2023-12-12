@@ -66,11 +66,12 @@ def main(file_path: str, load_only_table: str = None) -> None:
 
         if table_spec == "chargecontractualvalue":
             date_interval_list = zq.date_range()
+            logging.info(f"The date list : {date_interval_list}")
             for start_end_date in date_interval_list:
                 logging.info(
                     f"The date range for extraction is between start_date= {start_end_date['start_date']} to end_date= {start_end_date['end_date']}"
                 )
-                query_string = f'{manifest_dict.get("tables", {}).get(table_spec, {}).get("query")}  WHERE updatedOn > {start_end_date["start_date"]} and updatedOn <= {start_end_date["end_date"]}'
+                query_string = f'{manifest_dict.get("tables", {}).get(table_spec, {}).get("query")}  WHERE date(updatedOn) > date "{start_end_date["start_date"]}" and date(updatedOn) <= date "{start_end_date["end_date"]}"'
                 logging.info(f"Query string prepared : {query_string}")
                 fetch_data_query_upload(zq, table_spec, query_string)
 

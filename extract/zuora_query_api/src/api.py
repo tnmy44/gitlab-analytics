@@ -178,11 +178,9 @@ class ZuoraQueriesAPI:
                 )
             }
         )
-        print(date_list)
         convert_interval_to_list = []
         for _, row in date_list.iterrows():
             convert_interval_to_list.append(str(row._get_value("Date")))
-            print(convert_interval_to_list)
         return convert_interval_to_list
 
     def get_start_end_date_value(self, date_interval_list: str) -> tuple:
@@ -202,7 +200,7 @@ class ZuoraQueriesAPI:
         end_date is always set to now.
         """
         if not start_date:
-            start_date_default = "2019-07-25"
+            start_date_default = "2020-01-01"
 
         start_date = pd.to_datetime(start_date_default)
         end_date = pd.to_datetime(datetime.now().strftime("%Y-%m-%d"))
