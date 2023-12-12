@@ -74,9 +74,9 @@ def main(file_path: str, load_only_table: str = None) -> None:
                 query_string = f"{manifest_dict.get('tables', {}).get(table_spec, {}).get('query')}  WHERE date(updatedOn) > date '{start_end_date['start_date']}' and date(updatedOn) <= date '{start_end_date['end_date']}'"
                 logging.info(f"Query string prepared : {query_string}")
                 fetch_data_query_upload(zq, table_spec, query_string)
-
-        query_string = manifest_dict.get("tables", {}).get(table_spec, {}).get("query")
-        fetch_data_query_upload(zq, table_spec, query_string)
+        else:        
+            query_string = manifest_dict.get("tables", {}).get(table_spec, {}).get("query")
+            fetch_data_query_upload(zq, table_spec, query_string)
 
 
 if __name__ == "__main__":
