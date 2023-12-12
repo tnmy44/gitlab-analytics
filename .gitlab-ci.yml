@@ -71,6 +71,7 @@ include:
   script:
     - manage_snowflake.py manage_clones --database prod --empty
     - manage_snowflake.py manage_clones --database prep --empty
+    - manage_snowflake.py manage_clones --database raw --empty
   when: always
 
 📈❗️clone_prod_real:
@@ -254,7 +255,7 @@ clone_stop:
   
 .permifrost: &permifrost
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/permifrost:v0.13.1
+  image: registry.gitlab.com/gitlab-data/permifrost:v0.15.4
   tags:
     - analytics
   only:

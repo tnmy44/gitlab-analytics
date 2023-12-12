@@ -435,7 +435,6 @@ class SnowflakeManager:
         database: str,
         include_stages: bool = False,
     ):
-
         databases = {
             "prep": self.prep_database,
             "prod": self.prod_database,

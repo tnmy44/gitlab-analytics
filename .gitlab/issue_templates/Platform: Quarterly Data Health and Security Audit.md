@@ -439,6 +439,13 @@ Below checklist of activities would be run once for quarter to validate security
     ```
 2. [ ] Clean up old log files, following [this runbook](https://gitlab.com/gitlab-data/runbooks/-/blob/main/airflow_infrastructure/archival_pvc_volume/delete_pvc_volume.md). 
 
+
+## Package version inventory
+
+1. [ ] Go to [/package_inventory](https://gitlab.com/gitlab-data/package_inventory/-/blob/main/README.md) repo, and run application and generate reports using guidelines from the `README.md` file
+1. [ ] Once you generate the reports, analyze the libraries manually, and propose the candidates for upgrading 
+1. [ ] If we agree on candidates for upgrading, create a new issue in the `/analytics` repo with the list of libraries we should upgrade and proceed further
+
 <!-- DO NOT EDIT BELOW THIS LINE -->
 /label ~"Team::Data Platform" ~Snowflake ~TDF ~"Data Team" ~"Priority::1-Ops" ~"workflow::4 - scheduled" ~"Quarterly Data Health and Security Audit" ~"Periscope / Sisense"
 /confidential 
