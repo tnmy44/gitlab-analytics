@@ -58,7 +58,7 @@ WITH pipeline_activity AS (
 ), final AS (
 
 SELECT 
-  {{ dbt_utils.surrogate_key(['reporting_month', 'ultimate_parent_namespace_id']) }} as namespace_reporting_month_pk
+  {{ dbt_utils.surrogate_key(['reporting_month', 'ultimate_parent_namespace_id']) }} as namespace_reporting_month_pk,
   pipeline_activity.reporting_month, 
   pipeline_activity.ultimate_parent_namespace_id, 
   dim_project_id, 
@@ -80,6 +80,7 @@ SELECT
   LEFT JOIN purchased_minutes
     ON pipeline_activity.ultimate_parent_namespace_id = purchased_minutes.ultimate_parent_namespace_id
     AND pipeline_activity.reporting_month = purchased_minutes.reporting_month
+  
 
 )
 
