@@ -19,6 +19,7 @@ from io import StringIO
 from logging import info
 from os import environ as env
 from typing import Dict
+from datetime import datetime
 
 import pandas as pd
 import requests
@@ -150,7 +151,7 @@ class ZuoraQueriesAPI:
 
             job_status = job.get("queryStatus")
             info(f"Waiting for report to complete, current status {job_status}")
-        
+
         if job_status == "completed":
             info("File ready")
             file_url = job["dataFile"]
@@ -162,5 +163,57 @@ class ZuoraQueriesAPI:
         else:
             job = self.get_job_data(job_id)
             job_status = job.get("queryStatus")
-            raise ValueError(f'the job has failed or has been killed: {job_status}')
-        
+            raise ValueError(f"The job has failed or has been killed: {job_status}")
+
+    def get_date_interval_list(self, start_date, end_date):
+        """Generate time interval range with end_date of one interval overlapping the other, and extract value from dataframe
+        and generate list of interval."""
+        date_list = pd.DataFrame(
+            {
+                "Date": pd.interval_range(
+                    pd.Timestamp(start_date),
+                    pd.Timestamp(end_date),
+                    freq="180D",
+                    closed="neither",
+                )
+            }
+        )
+        print(date_list)
+        convert_interval_to_list = []
+        for _, row in date_list.iterrows():
+            convert_interval_to_list.append(str(row._get_value("Date")))
+            print(convert_interval_to_list)
+        return convert_interval_to_list
+
+    def get_start_end_date_value(self, date_interval_list: str) -> tuple:
+        """
+        Take a string value separated by comma, first it split it and make it a list and then
+        replace the open and close bracket to form a proper start date and end date tuple.
+        """
+        split_date_list = date_interval_list.split(sep=",")
+        start_date_value = split_date_list[0].replace("(", "").replace(")", "").strip()
+        end_date_value = split_date_list[1].replace("(", "").replace(")", "").strip()
+        return start_date_value, end_date_value
+
+    def date_range(self, start_date: str = None):
+        """
+        This function will return start_date and end_date for  querying the zuora revenue BI view or table_name.
+        If start_date is not passed then it sets itself to zuora default start_date.
+        end_date is always set to now.
+        """
+        if not start_date:
+            start_date_default = "2019-07-25"
+
+        start_date = pd.to_datetime(start_date_default)
+        end_date = pd.to_datetime(datetime.now().strftime("%Y-%m-%d"))
+        final_date_list = []
+        date_interval_list = self.get_date_interval_list(start_date, end_date)
+        for date_list in date_interval_list:
+            start_date_value, end_date_value = self.get_start_end_date_value(date_list)
+            date_range_dict = {
+                "start_date": start_date_value,
+                "end_date": end_date_value,
+            }
+            final_date_list.append(date_range_dict)
+
+        return final_date_list
