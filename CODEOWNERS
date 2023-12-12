@@ -19,12 +19,13 @@ LICENSE.md         @iweeks @dvanrooijen2 @nmcavinue @amiebright
 README.md          @iweeks @dvanrooijen2 @nmcavinue @amiebright
 
 [Data Engineering]
-/dags/              @paul_armstrong @vedprakash2021 @rbacovic @jjstark
-/extract/           @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/load/              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/orchestration/     @jjstark @paul_armstrong @vedprakash2021 @rbacovic
-/permissions/       @dvanrooijen2 @paul_armstrong @jjstark
-/pump/              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/dags/                              @paul_armstrong @vedprakash2021 @rbacovic @jjstark
+/extract/                           @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/extract/tableau_con_man_config     @pempey @iweeks @ttnguyen28 @nmcavinue
+/load/                              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/orchestration/                     @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/permissions/                       @dvanrooijen2 @paul_armstrong @jjstark
+/pump/                              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 
 [Data Science]
 /dags/data_science/ @paul_armstrong @rigerta
