@@ -39,6 +39,13 @@ WITH source AS (
       bizible2__referrer_page__c              AS bizible_referrer_page,
       bizible2__referrer_page_raw__c          AS bizible_referrer_page_raw,
       bizible2__sf_campaign__c                AS bizible_salesforce_campaign,
+      null                           AS utm_budget,
+      null                     AS utm_offersubtype,
+      null                        AS utm_offertype,
+      null                     AS utm_targetregion,
+      null                  AS utm_targetsubregion,
+      null                  AS utm_targetterritory,
+      null                          AS utm_usecase,
       CASE
         WHEN SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_content=',2),'&',1)IS null
           THEN SPLIT_PART(SPLIT_PART(bizible_landing_page_raw,'utm_content=',2),'&',1)

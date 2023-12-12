@@ -126,6 +126,8 @@ renamed AS (
     count_of_products_purchased__c AS count_products_purchased,
     count_of_won_opportunities__c AS count_won_opportunities,
     concurrent_ee_subscriptions__c AS count_concurrent_ee_subscriptions,
+    NULL AS count_ce_instances,
+    NULL AS count_active_ce_users,
     number_of_open_opportunities__c AS count_open_opportunities,
     using_ce__c AS count_using_ce,
 
@@ -140,6 +142,11 @@ renamed AS (
     abm_tier_3_date__c AS abm_tier_3_date,
 
     --demandbase fields
+    NULL AS demandbase_account_list,
+    NULL AS demandbase_intent,
+    NULL AS demandbase_page_views,
+    NULL AS demandbase_score,
+    NULL AS demandbase_sessions,
     NULL AS demandbase_trending_offsite_intent,
     NULL AS demandbase_trending_onsite_engagement,
 
@@ -165,6 +172,7 @@ renamed AS (
     ultimate_parent_sales_segment_employees__c AS sales_segment,
     sales_segmentation_new__c AS account_segment,
 
+    NULL AS is_locally_managed_account,
     strategic__c AS is_strategic_account,
 
     -- ************************************

@@ -50,6 +50,8 @@ WITH source AS (
         sales_market__c                                 AS opportunity_owner_department,
         SDR_LU__c                                       AS opportunity_sales_development_representative,
         business_development_representative__c          AS opportunity_business_development_representative,
+        null                                       AS opportunity_business_development_representative_lookup,
+        null                                      AS opportunity_development_representative,
 
 
         account_owner_team_o__c                         AS account_owner_team_stamped,
@@ -111,9 +113,11 @@ WITH source AS (
         upside_swing_deal_iacv__c                       AS upside_swing_deal_iacv,
         web_portal_purchase__c                          AS is_web_portal_purchase,
         opportunity_term_new__c                         AS opportunity_term,
+        null                                          AS partner_initiated_opportunity,
         user_segment_o__c                               AS user_segment,
         start_date__c::DATE                             AS subscription_start_date,
         end_date__c::DATE                               AS subscription_end_date,
+        null                                AS true_up_value,
         order_type_live__c                              AS order_type_live,
         order_type_test__c                              AS order_type_stamped,
         CASE
@@ -158,6 +162,7 @@ WITH source AS (
         sao_opportunity_owner__c                        AS sao_crm_opp_owner_stamped_name,
         sao_account_owner__c                            AS sao_crm_account_owner_stamped_name,
         sao_user_segment__c                             AS sao_crm_opp_owner_sales_segment_stamped,
+        null        AS sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
         CASE
           WHEN sao_crm_opp_owner_sales_segment_stamped IN ('Large', 'PubSec') THEN 'Large'
           ELSE sao_crm_opp_owner_sales_segment_stamped
@@ -169,6 +174,8 @@ WITH source AS (
                                                         AS sao_crm_opp_owner_segment_region_stamped_grouped,
         opportunity_category__c                         AS opportunity_category,
         opportunity_health__c                           AS opportunity_health,
+        null                                    AS risk_type,
+        null                                 AS risk_reasons,
         tam_notes__c                                    AS tam_notes,
         solution_architect__c                           AS primary_solution_architect,
         product_details__c                              AS product_details,
@@ -252,6 +259,7 @@ WITH source AS (
         calculated_discount__c                          AS calculated_discount,
         partner_discount__c                             AS partner_discount,
         partner_discount_calc__c                        AS partner_discount_calc,
+        null                         AS comp_channel_neutral,
 
         -- command plan fields
         fm_champion__c                                  AS cp_champion,
