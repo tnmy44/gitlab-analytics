@@ -5,8 +5,11 @@ WITH source AS (
 ), renamed AS (
   SELECT 
     campaign_name::VARCHAR  as campaign_name,
+    campaign_type::VARCHAR  as campaign_type,
     description::VARCHAR    as description,
     influence_type::VARCHAR as influence_type
+    url::VARCHAR  as url,
+    dri::VARCHAR  as dri,
 
   FROM source
 )
