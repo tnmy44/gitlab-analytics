@@ -60,8 +60,6 @@ dag = DAG(
     schedule_interval=None,
     description="Adhoc DBT FULL Refresh",
     catchup=False,
-    params={"param1": "$AIRFLOW_CTX_DAG_ID",
-            "param2": "AIRFLOW_CTX_DAG_ID"},
 )
 dag.doc_md = __doc__
 
@@ -84,7 +82,6 @@ dbt_full_refresh_cmd = f"""
     echo $DBT_RUNNER
     {dbt_install_deps_and_seed_nosha_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE={dbt_warehouse_for_full_refresh} &&
-    echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
     dbt --no-use-colors run --profiles-dir profile --target prod --models {dbt_model_to_full_refresh} --full-refresh ; ret=$?;
     montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
