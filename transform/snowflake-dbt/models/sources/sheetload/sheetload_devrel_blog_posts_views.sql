@@ -6,6 +6,7 @@ WITH source AS (
   SELECT 
     publication_date::VARCHAR            as publication_date,
     gitLab_publication_quarter::VARCHAR  as gitLab_publication_quarter,
+    blog_title::VARCHAR                  as blog_title,
     url::VARCHAR     as url,
     author::VARCHAR  as author,
     team::VARCHAR    as team
