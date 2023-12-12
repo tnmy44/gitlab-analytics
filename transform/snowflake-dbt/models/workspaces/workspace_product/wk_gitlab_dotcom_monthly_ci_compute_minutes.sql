@@ -55,7 +55,7 @@ WITH pipeline_activity AS (
     AND rate_plan_name IN ('1,000 CI Minutes','1,000 Compute Minutes')
 {{ dbt_utils.group_by(n=2) }}
 
-)
+), final AS (
 
 SELECT 
   {{ dbt_utils.surrogate_key(['reporting_month', 'ultimate_parent_namespace_id']) }} as namespace_reporting_month_pk
@@ -80,3 +80,14 @@ SELECT
   LEFT JOIN purchased_minutes
     ON pipeline_activity.ultimate_parent_namespace_id = purchased_minutes.ultimate_parent_namespace_id
     AND pipeline_activity.reporting_month = purchased_minutes.reporting_month
+
+)
+
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@nhervas",
+    updated_by="@nhervas",
+    created_date="2023-12-12",
+    updated_date="2023-12-12"
+) }}
+
