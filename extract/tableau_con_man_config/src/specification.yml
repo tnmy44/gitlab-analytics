@@ -6,7 +6,6 @@ version: "1.0"
 
 site:
   admin_mode: ContentAndUsers
-  id: 2ae725b5-5a7b-40ba-a05c-35b7aa9ab731
   num_users: null
   state: Active
   status_reason: null
