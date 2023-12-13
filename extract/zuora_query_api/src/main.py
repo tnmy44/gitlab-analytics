@@ -37,7 +37,9 @@ def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> Dict:
     return manifest_dict
 
 
-def fetch_data_query_upload(zq: Dict, table_spec: str, query_string: str, if_exists_parameter:str = "append"):
+def fetch_data_query_upload(
+    zq: Dict, table_spec: str, query_string: str, if_exists_parameter: str = "append"
+):
     """
     This function is responsible for executing the passed query_string in data query download the file and upload it to snowflake using dataframe uploader.
     """
@@ -71,11 +73,13 @@ def main(file_path: str, load_only_table: str = None) -> None:
                 logging.info(
                     f"The date range for extraction is between start_date= {start_end_date['start_date']} to end_date= {start_end_date['end_date']}"
                 )
-                query_string = f"{manifest_dict.get('tables', {}).get(table_spec, {}).get('query')}  WHERE updatedOn >  '{start_end_date['start_date']}' and updatedOn <= '{start_end_date['end_date']}'"
+                query_string = f"{manifest_dict.get('tables', {}).get(table_spec, {}).get('query')}  WHERE updatedOn > timestamp '{start_end_date['start_date']}' and updatedOn <= timestamp '{start_end_date['end_date']}'"
                 logging.info(f"Query string prepared : {query_string}")
                 fetch_data_query_upload(zq, table_spec, query_string, "append")
-        else:        
-            query_string = manifest_dict.get("tables", {}).get(table_spec, {}).get("query")
+        else:
+            query_string = (
+                manifest_dict.get("tables", {}).get(table_spec, {}).get("query")
+            )
             fetch_data_query_upload(zq, table_spec, query_string)
 
 

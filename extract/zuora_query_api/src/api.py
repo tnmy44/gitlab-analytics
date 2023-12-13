@@ -193,7 +193,7 @@ class ZuoraQueriesAPI:
         end_date_value = split_date_list[1].replace("(", "").replace(")", "").strip()
         return start_date_value, end_date_value
 
-    def get_datetime_format(self,date_value: str, length_start_date: int) -> str:
+    def get_datetime_format(self, date_value: str, length_start_date: int) -> str:
         """
         Check if the length of the date is greater than the standard start date defined, then it generated date
         range is having extra number over seconds hence it needs to be stripped to meet the date format of the API call.
@@ -209,7 +209,7 @@ class ZuoraQueriesAPI:
         return (datetime.strptime(date_value, "%Y-%m-%d %H:%M:%S")).strftime(
             "%Y-%m-%d %H:%M:%S"
         )
-        
+
     def date_range(self, start_date: str = None):
         """
         This function will return start_date and end_date for  querying the zuora revenue BI view or table_name.
@@ -226,8 +226,7 @@ class ZuoraQueriesAPI:
         final_date_list = []
         date_interval_list = self.get_date_interval_list(start_date, end_date)
         for date_list in date_interval_list:
-            start_date_value, end_date_value = self.get_start_end_date_value(
-                date_list)
+            start_date_value, end_date_value = self.get_start_end_date_value(date_list)
             date_range_dict = {
                 "start_date": self.get_datetime_format(
                     start_date_value, length_start_date
