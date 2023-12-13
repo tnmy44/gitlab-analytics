@@ -24,3 +24,5 @@ sources:
       - name: ramp
       - name: rampinterval
       - name: rampintervalmetrics
+      - name: chargecontractualvalue
+      - name: chargemetricsdiscountallocationdetail

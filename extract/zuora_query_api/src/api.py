@@ -173,7 +173,7 @@ class ZuoraQueriesAPI:
                 "Date": pd.interval_range(
                     pd.Timestamp(start_date),
                     pd.Timestamp(end_date),
-                    freq="180D",
+                    periods=10,
                     closed="neither",
                 )
             }
