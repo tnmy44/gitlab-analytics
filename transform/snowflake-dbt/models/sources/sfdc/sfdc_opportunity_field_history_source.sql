@@ -15,11 +15,11 @@ WITH base AS (
       createddate           AS field_modified_at,
       LOWER(field)          AS opportunity_field,
       newvalue__fl          AS new_value_float,
-      newvalue          AS new_value_string,
+      newvalue              AS new_value_string,
       newvalue__bo          AS new_value_boolean,
       newvalue__de          AS new_value_decimal,
       oldvalue__fl          AS old_value_float,
-      oldvalue          AS old_value_string,
+      oldvalue              AS old_value_string,
       oldvalue__bo          AS old_value_boolean,
       oldvalue__de          AS old_value_decimal,
       COALESCE(
