@@ -178,6 +178,7 @@ class ZuoraQueriesAPI:
                 )
             }
         )
+        info(date_list)
         convert_interval_to_list = []
         for _, row in date_list.iterrows():
             convert_interval_to_list.append(str(row._get_value("Date")))
