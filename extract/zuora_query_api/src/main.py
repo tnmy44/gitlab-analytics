@@ -37,7 +37,7 @@ def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> Dict:
     return manifest_dict
 
 
-def fetch_data_query_upload(zq: Dict, table_spec: str, query_string: str):
+def fetch_data_query_upload(zq: Dict, table_spec: str, query_string: str, if_exists_parameter:str = "append"):
     """
     This function is responsible for executing the passed query_string in data query download the file and upload it to snowflake using dataframe uploader.
     """
@@ -48,7 +48,7 @@ def fetch_data_query_upload(zq: Dict, table_spec: str, query_string: str):
         zq.snowflake_engine,
         table_spec,
         schema="ZUORA_QUERY_API",
-        if_exists="replace",
+        if_exists=if_exists_parameter,
     )
     logging.info(f"Processed {table_spec}")
 
@@ -73,7 +73,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
                 )
                 query_string = f"{manifest_dict.get('tables', {}).get(table_spec, {}).get('query')}  WHERE date(updatedOn) > date '{start_end_date['start_date']}' and date(updatedOn) <= date '{start_end_date['end_date']}'"
                 logging.info(f"Query string prepared : {query_string}")
-                fetch_data_query_upload(zq, table_spec, query_string)
+                fetch_data_query_upload(zq, table_spec, query_string, "append")
         else:        
             query_string = manifest_dict.get("tables", {}).get(table_spec, {}).get("query")
             fetch_data_query_upload(zq, table_spec, query_string)
