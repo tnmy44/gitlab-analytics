@@ -266,7 +266,12 @@
                 IFF(cd_adopted = 1, 'CD', NULL),
                 IFF(security_adopted = 1, 'Security', NULL)
             ) AS adopted_use_case_names_array,
-        ARRAY_TO_STRING(adopted_use_case_names_array, ', ') AS adopted_use_case_names_string
+        ARRAY_TO_STRING(adopted_use_case_names_array, ', ') AS adopted_use_case_names_string,
+        CASE WHEN ROW_NUMBER() OVER (PARTITION BY snapshot_month, paid_user_metrics.dim_subscription_id_original, delivery_type ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1 
+             THEN True 
+             ELSE False 
+        END AS is_primary_instance 
+
 FROM paid_user_metrics
 LEFT JOIN dim_crm_account
     ON paid_user_metrics.dim_crm_account_id = dim_crm_account.dim_crm_account_id
@@ -281,8 +286,8 @@ qualify row_number() OVER (PARTITION BY paid_user_metrics.snapshot_month, instan
 
 {{ dbt_audit(
     cte_ref="joined",
-    created_by="@jngCES",
-    updated_by="@bbutterfield",
-    created_date="2023-03-30",
-    updated_date="2023-08-05"
+    created_by="@snalamaru",
+    updated_by="@snalamaru",
+    created_date="2023-12-10",
+    updated_date="2023-12-10"
 ) }}
