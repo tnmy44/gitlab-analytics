@@ -8,8 +8,7 @@
     ('dim_date','dim_date'),
     ('fct_campaign','fct_campaign'),
     ('dim_campaign', 'dim_campaign'),
-    ('dim_crm_user', 'dim_crm_user'),
-    ('sfdc_opportunity_xf', 'wk_sales_sfdc_opportunity_xf')
+    ('dim_crm_user', 'dim_crm_user')
 ]) }}
 
 , person_base_with_tp AS (
@@ -785,6 +784,14 @@
       won_custom_net_arr
     FROM opp_base_with_batp
 
+), today AS (
+
+  SELECT DISTINCT
+    fiscal_year               AS current_fiscal_year,
+    first_day_of_fiscal_year  AS current_fiscal_year_date
+  FROM dim_date
+  WHERE date_actual = CURRENT_DATE
+
 ), intermediate AS (
   
     SELECT 
@@ -813,9 +820,25 @@
       dim_crm_account.health_number,
 
      -- Opportunity Report Fields
-     sfdc_opportunity_xf.report_opportunity_user_asm,
-     sfdc_opportunity_xf.report_opportunity_user_business_unit,
-     sfdc_opportunity_xf.report_opportunity_user_sub_business_unit,
+     CASE 
+        WHEN cohort_base_combined.close_date < today.current_fiscal_year_date
+          THEN account_owner.business_unit
+        ELSE opportunity_owner.business_unit
+    END                                                       AS report_opportunity_user_business_unit,
+    CASE 
+        WHEN cohort_base_combined.close_date < today.current_fiscal_year_date
+          THEN account_owner.sub_business_unit
+        ELSE opportunity_owner.sub_business_unit
+    END                                                       AS report_opportunity_user_sub_business_unit,
+    CASE 
+        WHEN account_owner.is_hybrid_flag = 1 
+            THEN dim_crm_account.parent_crm_account_area
+        WHEN cohort_base_combined.close_date < today.current_fiscal_year_date
+          THEN account_owner.asm
+        WHEN UPPER(opportunity_owner.user_area) = 'ALL'
+           THEN dim_crm_account.parent_crm_account_area         
+        ELSE opportunity_owner.asm
+    END                                                       AS report_opportunity_user_asm,
 
       -- user
       user.user_name        AS record_owner_name,
@@ -874,6 +897,7 @@
       bizible_date.first_day_of_week               AS bizible_date_range_week,
       bizible_date.date_id                         AS bizible_date_range_id
   FROM cohort_base_combined
+  CROSS JOIN today
   LEFT JOIN dim_campaign
     ON cohort_base_combined.dim_campaign_id = dim_campaign.dim_campaign_id
   LEFT JOIN fct_campaign
@@ -886,9 +910,10 @@
     ON fct_campaign.campaign_owner_id = campaign_owner.dim_crm_user_id
   LEFT JOIN dim_crm_account
     ON cohort_base_combined.dim_crm_account_id=dim_crm_account.dim_crm_account_id
-  -- Joining for report_opportunity_* fields.
-  LEFT JOIN sfdc_opportunity_xf 
-    ON cohort_base_combined.dim_crm_opportunity_id = sfdc_opportunity_xf.opportunity_id
+  LEFT JOIN dim_crm_user account_owner
+    ON dim_crm_account.dim_crm_user_id = account_owner.dim_crm_user_id
+  LEFT JOIN dim_crm_user opportunity_owner
+    ON cohort_base_combined.opp_dim_crm_user_id = opportunity_owner.dim_crm_user_id
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
@@ -913,7 +938,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2023-12-06",
+    updated_date="2023-12-13",
   ) }}
