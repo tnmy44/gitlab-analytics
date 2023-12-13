@@ -123,5 +123,5 @@ For example: to retrieve analytics on Program Participant Activities through Rep
 {% enddocs %}
 
 {% docs wk_gs_persona_healthy_activity %}	 
-This object is used capture healthy activity counts for gainsight personas. 
+This object is used to calculate healthy activity counts for gainsight personas. 
 {% enddocs %}

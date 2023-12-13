@@ -1058,6 +1058,7 @@ models:
           meta:
             sensitive: true
         - name: _fivetran_synced
+        
     - name: wk_gs_persona_healthy_activity
       description: '{{ doc("wk_gs_persona_healthy_activity") }}'
       columns:
