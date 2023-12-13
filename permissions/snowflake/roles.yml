@@ -3108,6 +3108,14 @@ roles:
                     - apiaseczna_prep.*.*
                     - apiaseczna_prod.*.*
 
+    - asalimi:
+        member_of:
+            - analyst_finance
+            - restricted_safe
+            - sales_analytics_read
+        warehouses:
+            - dev_xs
+
     - bbutterfield:
         member_of:
             - analyst_sales
@@ -5885,6 +5893,11 @@ users:
         can_login: yes
         member_of:
             - apiaseczna
+
+    - asalimi:
+        can_login: yes
+        member_of:
+            - asalimi
 
     - bi_tool_eval:
         can_login: yes
