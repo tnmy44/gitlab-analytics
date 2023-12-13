@@ -71,7 +71,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
                 logging.info(
                     f"The date range for extraction is between start_date= {start_end_date['start_date']} to end_date= {start_end_date['end_date']}"
                 )
-                query_string = f"{manifest_dict.get('tables', {}).get(table_spec, {}).get('query')}  WHERE date(updatedOn) > date '{start_end_date['start_date']}' and date(updatedOn) <= date '{start_end_date['end_date']}'"
+                query_string = f"{manifest_dict.get('tables', {}).get(table_spec, {}).get('query')}  WHERE updatedOn >  '{start_end_date['start_date']}' and updatedOn <= '{start_end_date['end_date']}'"
                 logging.info(f"Query string prepared : {query_string}")
                 fetch_data_query_upload(zq, table_spec, query_string, "append")
         else:        
