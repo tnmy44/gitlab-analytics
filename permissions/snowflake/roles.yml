@@ -901,7 +901,7 @@ roles:
                       - prep.preparation
                       - prep.customers
                       - raw.data_science
-                      - raw.salesforce_stitch
+                      - raw.salesforce_v2_stitch
                       - raw.snapshots
               tables:
                   read:
@@ -919,7 +919,7 @@ roles:
                       - prod.restricted_safe_common.*
                       - prod.restricted_safe_workspace_sales.*
                       - prod.common_mart_marketing.*
-                      - raw.salesforce_stitch.*
+                      - raw.salesforce_v2_stitch.*
                       - raw.snapshots.*
                       - raw.data_science.*
 
@@ -952,7 +952,7 @@ roles:
                       - prep.preparation
                       - prep.customers
                       - raw.data_science
-                      - raw.salesforce_stitch
+                      - raw.salesforce_v2_stitch
                       - raw.snapshots
 
               tables:
@@ -972,7 +972,7 @@ roles:
                       - prod.restricted_safe_workspace_sales.*
                       - prod.common_mart_marketing.*
                       - prod.pumps_sensitive.*
-                      - raw.salesforce_stitch.*
+                      - raw.salesforce_v2_stitch.*
                       - raw.snapshots.*
                       - raw.data_science.*
 
@@ -1012,7 +1012,7 @@ roles:
                       - prep.customers
                       - prep.sfdc
                       - raw.data_science
-                      - raw.salesforce_stitch
+                      - raw.salesforce_v2_stitch
                       - raw.snapshots
                   write:
                       - raw.data_science
@@ -1037,7 +1037,7 @@ roles:
                       - prod.restricted_safe_workspace_sales.*
                       - prod.common_mart_marketing.*
                       - prod.pumps_sensitive.*
-                      - raw.salesforce_stitch.*
+                      - raw.salesforce_v2_stitch.*
                       - raw.snapshots.*
                   write:
                       - raw.data_science.*
@@ -2359,11 +2359,11 @@ roles:
             schemas:
                 read:
                     - prep.sfdc
-                    - raw.salesforce_stitch
+                    - raw.salesforce_v2_stitch
             tables:
                 read:
                     - prep.sfdc.*
-                    - raw.salesforce_stitch.*
+                    - raw.salesforce_v2_stitch.*
 
     - salesforce_sandbox:
         warehouses:
@@ -5565,20 +5565,20 @@ roles:
                     - raw
             schemas:
                 read:
-                    - raw.salesforce_stitch
+                    - raw.salesforce_v2_stitch
                     - raw.stitch_google_sheets
                     - raw.zuora_stitch
                 write:
-                    - raw.salesforce_stitch
+                    - raw.salesforce_v2_stitch
                     - raw.stitch_google_sheets
                     - raw.zuora_stitch
             tables:
                 read:
-                    - raw.salesforce_stitch.*
+                    - raw.salesforce_v2_stitch.*
                     - raw.stitch_google_sheets.*
                     - raw.zuora_stitch.*
                 write:
-                    - raw.salesforce_stitch.*
+                    - raw.salesforce_v2_stitch.*
                     - raw.stitch_google_sheets.*
                     - raw.zuora_stitch.*
 
