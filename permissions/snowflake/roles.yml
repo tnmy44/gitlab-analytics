@@ -3392,6 +3392,7 @@ roles:
 
     - dfelton:
         member_of:
+            - analyst_sales_sensitive
             - reporter
             - restricted_safe
         warehouses:
