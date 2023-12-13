@@ -178,11 +178,11 @@ class ZuoraQueriesAPI:
                 )
             }
         )
-        info(date_list)
+
         convert_interval_to_list = []
         for _, row in date_list.iterrows():
             convert_interval_to_list.append(str(row._get_value("Date")))
-        info(convert_interval_to_list)
+
         return convert_interval_to_list
 
     def get_start_end_date_value(self, date_interval_list: str) -> tuple:
@@ -229,12 +229,13 @@ class ZuoraQueriesAPI:
         date_interval_list = self.get_date_interval_list(start_date, end_date)
         for date_list in date_interval_list:
             start_date_value, end_date_value = self.get_start_end_date_value(date_list)
+
             date_range_dict = {
                 "start_date": self.get_datetime_format(
                     start_date_value, length_start_date
                 ),
                 "end_date": self.get_datetime_format(end_date_value, length_start_date),
             }
-        final_date_list.append(date_range_dict)
+            final_date_list.append(date_range_dict)
 
         return final_date_list
