@@ -301,10 +301,9 @@ gitlab_pod_env_vars = {
     "SNOWFLAKE_PROD_DATABASE": "PROD"
     if GIT_BRANCH == "master"
     else f"{GIT_BRANCH.upper()}_PROD",
-
     "DBT_RUNNER": f"{GIT_BRANCH.upper()}"
     if GIT_BRANCH == "master"
-    else "{{ task_instance_key_str }}__{{ run_id }}",
+    else "{{ task_instance_key_str }}__{{ run_id }}__{{ task_instance.try_number }}",
 }
 
 # git commands
