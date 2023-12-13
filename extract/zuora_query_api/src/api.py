@@ -182,6 +182,7 @@ class ZuoraQueriesAPI:
         convert_interval_to_list = []
         for _, row in date_list.iterrows():
             convert_interval_to_list.append(str(row._get_value("Date")))
+        info(convert_interval_to_list)
         return convert_interval_to_list
 
     def get_start_end_date_value(self, date_interval_list: str) -> tuple:
