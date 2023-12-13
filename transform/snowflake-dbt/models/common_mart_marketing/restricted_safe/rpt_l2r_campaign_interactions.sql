@@ -822,20 +822,20 @@
      -- Opportunity Report Fields
      CASE 
         WHEN cohort_base_combined.close_date < today.current_fiscal_year_date
-          THEN account_owner.business_unit
-        ELSE opportunity_owner.business_unit
+          THEN account_owner.crm_user_business_unit
+        ELSE opportunity_owner.crm_user_business_unit
     END                                                       AS report_opportunity_user_business_unit,
     CASE 
         WHEN cohort_base_combined.close_date < today.current_fiscal_year_date
-          THEN account_owner.sub_business_unit
-        ELSE opportunity_owner.sub_business_unit
+          THEN account_owner.crm_user_sub_business_unit
+        ELSE opportunity_owner.crm_user_sub_business_unit
     END                                                       AS report_opportunity_user_sub_business_unit,
     CASE 
-        WHEN account_owner.is_hybrid_flag = 1 
+        WHEN account_owner.is_hybrid_user = 1 
             THEN dim_crm_account.parent_crm_account_area
         WHEN cohort_base_combined.close_date < today.current_fiscal_year_date
           THEN account_owner.asm
-        WHEN UPPER(opportunity_owner.user_area) = 'ALL'
+        WHEN UPPER(opportunity_owner.crm_user_area) = 'ALL'
            THEN dim_crm_account.parent_crm_account_area         
         ELSE opportunity_owner.asm
     END                                                       AS report_opportunity_user_asm,
