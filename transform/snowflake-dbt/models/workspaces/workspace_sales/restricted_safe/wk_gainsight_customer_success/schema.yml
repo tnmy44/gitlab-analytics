@@ -47,7 +47,6 @@ models:
         - name: created_date
         - name: modified_by_id_gc
         - name: _fivetran_synced
-
     - name: wk_gs_activity_attendee
       description: '{{ doc("wk_gainsight_activity_attendee") }}'
       columns:
@@ -59,7 +58,6 @@ models:
         - name: external_attendee_gs_id
         - name: internal_attendee_gs_id
         - name: _fivetran_synced
-
     - name: wk_gs_activity_comments
       description: '{{ doc("wk_gainsight_activity_comments") }}'
       columns:
@@ -72,7 +70,6 @@ models:
         - name: modified_by_user_id
         - name: modified_date
         - name: _fivetran_synced
-
     - name: wk_gs_activity_timeline
       description: '{{ doc("wk_gainsight_activity_timeline") }}'
       columns:
@@ -127,7 +124,6 @@ models:
         - name: ant_sentiment_c
         - name: context_name
         - name: _fivetran_synced
-
     - name: wk_gs_advanced_outreach_cta
       description: '{{ doc("wk_gainsight_advanced_outreach_cta") }}'
       columns:
@@ -145,7 +141,6 @@ models:
         - name: deleted
         - name: ctaid
         - name: _fivetran_synced
-
     - name: wk_gs_advanced_outreach_emails
       description: '{{ doc("wk_gainsight_advanced_outreach_emails") }}'
       columns:
@@ -220,7 +215,6 @@ models:
         - name: gs_participant_id
         - name: gs_advanced_outreach_id
         - name: _fivetran_synced
-
     - name: wk_gs_advanced_outreach_participants
       description: '{{ doc("wk_gainsight_advanced_outreach_participants") }}'
       columns:
@@ -289,7 +283,6 @@ models:
             sensitive: true
         - name: last_email_link_clicked
         - name: _fivetran_synced
-
     - name: wk_gs_ao_advanced_outreach_company
       description: '{{ doc("wk_gainsight_ao_advanced_outreach_company") }}'
       columns:
@@ -310,7 +303,6 @@ models:
         - name: advanced_outreach_model_name
         - name: created_by
         - name: _fivetran_synced
-
     - name: wk_gs_call_to_action
       description: '{{ doc("wk_gainsight_call_to_action") }}'
       columns:
@@ -368,7 +360,6 @@ models:
         - name: percent_complete
         - name: closed_date
         - name: _fivetran_synced
-
     - name: wk_gs_comments
       description: '{{ doc("wk_gainsight_comments") }}'
       columns:
@@ -1067,7 +1058,6 @@ models:
           meta:
             sensitive: true
         - name: _fivetran_synced
-
     - name: wk_gs_persona_healthy_activity
       description: '{{ doc("wk_gs_persona_healthy_activity") }}'
       columns:
