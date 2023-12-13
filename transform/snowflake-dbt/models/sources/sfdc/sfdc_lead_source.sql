@@ -201,10 +201,10 @@ renamed AS (
     cognism_number_of_employees__c AS cognism_employee_count,
 
     --LeanData
-    null as leandata_matched_account_billing_state,
-    null as leandata_matched_account_billing_postal_code,
-    null as leandata_matched_account_billing_country,
-    null AS leandata_matched_account_employee_count,
+    NULL AS leandata_matched_account_billing_state,
+    NULL AS leandata_matched_account_billing_postal_code,
+    NULL AS leandata_matched_account_billing_country,
+    NULL AS leandata_matched_account_employee_count,
     lean_data_matched_account_sales_segment__c AS leandata_matched_account_sales_segment,
 
 
