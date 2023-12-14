@@ -5,10 +5,57 @@ WITH internal_merge_requests AS (
 
 ),
 
+cte_ns_explode AS (
+
+  SELECT
+    namespace_id,
+    ultimate_parent_id,
+    upstream_lineage,
+    s.value AS lineage_namespace,
+    s.index AS rn
+  FROM {{ ref('gitlab_dotcom_namespace_lineage_scd') }},
+    LATERAL FLATTEN(upstream_lineage, OUTER => TRUE) AS s
+  WHERE is_current
+
+),
+
+cte_ns_get_path AS (
+
+  SELECT
+    a.namespace_id,
+    a.ultimate_parent_id,
+    a.upstream_lineage,
+    lineage_namespace,
+    rn,
+    b.namespace_path
+  FROM cte_ns_explode AS a
+  LEFT JOIN {{ ref('dim_namespace') }} AS b ON a.lineage_namespace = b.dim_namespace_id
+
+),
+
+cte_ns_restructure AS (
+
+  SELECT
+    namespace_id,
+    ultimate_parent_id,
+    upstream_lineage,
+    ARRAY_AGG(namespace_path) WITHIN GROUP (ORDER BY rn) AS regroup
+  FROM cte_ns_get_path
+  GROUP BY
+    namespace_id,
+    ultimate_parent_id,
+    upstream_lineage
+
+),
+
 namespaces AS (
 
-  SELECT *
-  FROM {{ ref('dim_namespace') }}
+  SELECT
+    namespace_id,
+    ultimate_parent_id,
+    upstream_lineage,
+    ARRAY_TO_STRING(regroup, '/') AS full_group_path
+  FROM cte_ns_restructure
 
 ),
 
@@ -119,18 +166,9 @@ engineering_merge_requests AS (
       ELSE 'undefined'
     END                                                                                                                                                                                                                                                                                                                 AS subtype_label,
     projects.visibility_level                                                                                                                                                                                                                                                                                           AS visibility_level,
-    CASE
-      WHEN ns_4.dim_namespace_id IS NOT NULL
-        THEN ns_4.namespace_path || '/' || ns_3.namespace_path || '/' || ns_2.namespace_path || '/' || ns_1.namespace_path || '/' || ns.namespace_path
-      WHEN ns_3.dim_namespace_id IS NOT NULL
-        THEN ns_3.namespace_path || '/' || ns_2.namespace_path || '/' || ns_1.namespace_path || '/' || ns.namespace_path
-      WHEN ns_2.dim_namespace_id IS NOT NULL
-        THEN ns_2.namespace_path || '/' || ns_1.namespace_path || '/' || ns.namespace_path
-      WHEN ns_1.dim_namespace_id IS NOT NULL
-        THEN ns_1.namespace_path || '/' || ns.namespace_path
-      ELSE ns.namespace_path
-    END                                                                                                                                                                                                                                                                                                                 AS full_group_path,
-    'https://gitlab.com/' || full_group_path || '/' || projects.project_path || '/-/merge_requests/' || internal_merge_requests.merge_request_iid                                                                                                                                                                       AS url,
+    projects.project_path,
+    ns.full_group_path,
+    'https://gitlab.com/' || ns.full_group_path || '/' || projects.project_path || '/-/merge_requests/' || internal_merge_requests.merge_request_iid                                                                                                                                                                       AS url,
     IFF(ARRAY_CONTAINS('infradev'::VARIANT, internal_merge_requests.labels), TRUE, FALSE)                                                                                                                                                                                                                               AS is_infradev,
     ARRAY_CONTAINS('customer'::VARIANT, internal_merge_requests.labels)                                                                                                                                                                                                                                                 AS is_customer_related
   FROM internal_merge_requests
@@ -139,15 +177,7 @@ engineering_merge_requests AS (
   LEFT JOIN bot_users AS bots
     ON internal_merge_requests.author_id = bots.dim_user_id
   LEFT JOIN namespaces AS ns
-    ON projects.dim_namespace_id = ns.dim_namespace_id
-  LEFT JOIN namespaces AS ns_1
-    ON ns.parent_id = ns_1.dim_namespace_id AND ns.namespace_is_ultimate_parent = FALSE
-  LEFT JOIN namespaces AS ns_2
-    ON ns_1.parent_id = ns_2.dim_namespace_id AND ns_1.namespace_is_ultimate_parent = FALSE
-  LEFT JOIN namespaces AS ns_3
-    ON ns_2.parent_id = ns_3.dim_namespace_id AND ns_2.namespace_is_ultimate_parent = FALSE
-  LEFT JOIN namespaces AS ns_4
-    ON ns_3.parent_id = ns_4.dim_namespace_id AND ns_3.namespace_is_ultimate_parent = FALSE
+    ON projects.dim_namespace_id = ns.namespace_id
   LEFT JOIN milestones
     ON internal_merge_requests.milestone_id = milestones.milestone_id
   WHERE is_part_of_product = TRUE
