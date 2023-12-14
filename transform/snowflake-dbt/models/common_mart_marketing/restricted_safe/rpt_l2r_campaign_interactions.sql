@@ -833,9 +833,9 @@
   SELECT
   person_history_base.*,
   person_history_base.old_value_string || ' -> ' || person_history_base.new_value_string as person_status_change,
-  CASE WHEN status_change IS NULL THEN
+  CASE WHEN person_status_change IS NULL THEN
     '[No Update]' 
-    ELSE status_change
+    ELSE person_status_change
   END AS person_status_update,
   row_number() OVER (PARTITION BY sfdc_record_id, dim_crm_touchpoint_id ORDER BY field_modified_at ASC) AS history_update_rank
   FROM
