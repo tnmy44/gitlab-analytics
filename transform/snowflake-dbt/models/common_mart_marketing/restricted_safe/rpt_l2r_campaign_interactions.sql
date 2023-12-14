@@ -8,7 +8,9 @@
     ('dim_date','dim_date'),
     ('fct_campaign','fct_campaign'),
     ('dim_campaign', 'dim_campaign'),
-    ('dim_crm_user', 'dim_crm_user')
+    ('dim_crm_user', 'dim_crm_user'),
+    ('sfdc_lead_history', 'sfdc_lead_history_source'),
+    ('sfdc_contact_history', 'sfdc_contact_history_source')
 ]) }}
 
 , person_base_with_tp AS (
@@ -21,6 +23,7 @@
       person_base.dim_crm_user_id,
       person_base.crm_partner_id,
       person_base.partner_prospect_id,
+      person_base.sfddc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
       mart_crm_touchpoint.dim_campaign_id,
 
@@ -151,6 +154,7 @@
       opp.owner_id AS opp_owner_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
       partner_account.crm_account_name AS partner_account_name,
+      partner_account.dim_crm_account_id AS opp_partner_dim_crm_account_id,
 
 	--Opp Dates
       opp.created_date AS opp_created_date,
@@ -372,7 +376,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=173)}}
+  {{dbt_utils.group_by(n=174)}}
     
 ), cohort_base_combined AS (
   
@@ -384,6 +388,7 @@
       dim_crm_user_id,
       crm_partner_id,
       partner_prospect_id,
+      sfdc_record_id,
       dim_crm_touchpoint_id,
       dim_campaign_id,
       null AS dim_crm_opportunity_id,
@@ -589,6 +594,7 @@
       dim_crm_user_id,
       crm_partner_id,
       null AS partner_prospect_id,
+      sfdc_record_id,
       dim_crm_touchpoint_id,
       dim_campaign_id,
       dim_crm_opportunity_id,
@@ -784,6 +790,60 @@
       won_custom_net_arr
     FROM opp_base_with_batp
 
+), person_history_base AS (
+    SELECT
+      sfdc_lead_history.lead_id AS sfdc_record_id,
+      cohort_base_combined.dim_crm_touchpoint_id,
+      sfdc_lead_history.field_modified_at,
+      cohort_base_combined.bizible_touchpoint_date,
+      datediff(DAY, 
+        cohort_base_combined.bizible_touchpoint_date,
+        sfdc_lead_history.field_modified_at
+      ) AS date_difference,
+      sfdc_lead_history.old_value_string,
+      sfdc_lead_history.new_value_string,
+      'Lead' AS record_type
+    FROM sfdc_lead_history
+      INNER JOIN cohort_base_combined
+        ON cohort_base_combined.sfdc_record_id = sfdc_contact_history.sfdc_record_id
+    WHERE 
+    lead_field = 'status'
+    
+    UNION ALL 
+
+    SELECT
+      sfdc_contact_history.contact_id AS sfdc_record_id,
+      cohort_base_combined.dim_crm_touchpoint_id,
+      sfdc_contact_history.field_modified_at,
+      cohort_base_combined.bizible_touchpoint_date,
+      datediff(DAY, 
+        cohort_base_combined.bizible_touchpoint_date,
+        sfdc_lead_history.field_modified_at
+      ) AS date_difference,
+      sfdc_contact_history.old_value_string,
+      sfdc_contact_history.new_value_string,
+      'Contact' as record_type
+    FROM sfdc_contact_history
+      INNER JOIN cohort_base_combined
+        ON cohort_base_combined.sfdc_record_id = sfdc_contact_history.sfdc_record_id
+    WHERE contact_field = 'contact_status__c'
+
+), person_history_final as (
+  SELECT
+  person_history_base.*,
+  person_history_base.old_value_string || ' -> ' || person_history_base.new_value_string as person_status_change,
+  CASE WHEN status_change IS NULL THEN
+    '[No Update]' 
+    ELSE status_change
+  END AS person_status_update,
+  row_number() OVER (PARTITION BY sfdc_record_id, dim_crm_touchpoint_id ORDER BY field_modified_at ASC) AS history_update_rank
+  FROM
+  person_history_base
+  QUALIFY history_update_rank = 1
+
+
+
+
 ), today AS (
 
   SELECT DISTINCT
@@ -855,6 +915,9 @@
         ELSE FALSE
       END AS is_sales_dev_owned_record,
 
+      person_history_final.person_status_update,
+      person_history_final.person_status_change,
+
      --inquiry_date fields
       inquiry_date.fiscal_year                     AS inquiry_date_range_year,
       inquiry_date.fiscal_quarter_name_fy          AS inquiry_date_range_quarter,
@@ -882,6 +945,13 @@
       DATE_TRUNC(month, sao_date.date_actual)  AS sao_date_range_month,
       sao_date.first_day_of_week               AS sao_date_range_week,
       sao_date.date_id                         AS sao_date_range_id,
+
+    --pipeline_created_date fields
+      pipeline_created_date.fiscal_year                     AS pipeline_created_date_range_year,
+      pipeline_created_date.fiscal_quarter_name_fy          AS pipeline_created_date_range_quarter,
+      DATE_TRUNC(month, pipeline_created_date.date_actual)  AS pipeline_created_date_range_month,
+      pipeline_created_date.first_day_of_week               AS pipeline_created_date_range_week,
+      pipeline_created_date.date_id                         AS pipeline_created_date_range_id,
   
     --closed_date fields
       closed_date.fiscal_year                     AS closed_date_range_year,
@@ -914,6 +984,9 @@
     ON dim_crm_account.dim_crm_user_id = account_owner.dim_crm_user_id
   LEFT JOIN dim_crm_user opportunity_owner
     ON cohort_base_combined.opp_dim_crm_user_id = opportunity_owner.dim_crm_user_id
+  LEFT JOIN person_history_final
+    ON cohort_base_combined.dim_crm_touchpoint_id = person_history_final.dim_crm_touchpoint_id 
+    AND cohort_base_combined.sfdc_record_id = person_history_final.sfdc_record_id
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
@@ -924,6 +997,8 @@
     ON cohort_base_combined.sales_accepted_date = sao_date.date_day
   LEFT JOIN dim_date closed_date
     ON cohort_base_combined.close_date=closed_date.date_day
+  LEFT JOIN dim_date pipeline_created_date
+    ON person_history_final.pipeline_created_date=pipeline_created_date.date_day
   LEFT JOIN dim_date bizible_date
     ON cohort_base_combined.bizible_touchpoint_date=bizible_date.date_day
 
@@ -938,7 +1013,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@dmicovic",
     created_date="2022-07-05",
     updated_date="2023-12-13",
   ) }}
