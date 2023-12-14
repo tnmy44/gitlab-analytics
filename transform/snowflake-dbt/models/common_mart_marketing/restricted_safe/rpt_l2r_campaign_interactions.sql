@@ -243,6 +243,7 @@
       person_base.dim_crm_person_id,
       person_base.dim_crm_user_id,
       person_base.crm_partner_id,
+      person_base.sfdc_record_id,
       person_base.email_hash,
       person_base.email_domain,
       person_base.was_converted_lead,
