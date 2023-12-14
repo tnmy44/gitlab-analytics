@@ -33,8 +33,7 @@ WITH all_issues AS (
     state_id::NUMBER                                         AS state_id,
     duplicated_to_id::NUMBER                                 AS duplicated_to_id,
     promoted_to_epic_id::NUMBER                              AS promoted_to_epic_id,
-      -- column to be dropped in a future MR
-    NULL                                                     AS issue_type
+    work_item_type_id                                        AS work_item_type_id
   FROM {{ ref('gitlab_dotcom_issues_dedupe_source') }}
   WHERE created_at::VARCHAR NOT IN ('0001-01-01 12:00:00','1000-01-01 12:00:00','10000-01-01 12:00:00')
     AND LEFT(created_at::VARCHAR , 10) != '1970-01-01'
@@ -85,7 +84,7 @@ combined AS (
     all_issues.state_id                                      AS state_id,
     all_issues.duplicated_to_id                              AS duplicated_to_id,
     all_issues.promoted_to_epic_id                           AS promoted_to_epic_id,
-    all_issues.issue_type                                    AS issue_type
+    all_issues.work_item_type_id                             AS work_item_type_id
   FROM all_issues
   LEFT JOIN internal_only 
     ON internal_only.internal_issue_id = all_issues.issue_id
