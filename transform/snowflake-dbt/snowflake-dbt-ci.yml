@@ -18,7 +18,7 @@
     - echo $ENVIRONMENT
     - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
     - echo $CI_PROFILE_TARGET
-    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}"
+    - export DBT_RUNNER="${GITLAB_USER_ID}-${CI_MERGE_REQUEST_ID}-${CI_JOB_ID}"
     - echo $DBT_RUNNER
     - mkdir -p $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/
     - curl -o $CI_PROJECT_DIR/transform/snowflake-dbt/reference_state/manifest.json https://dbt.gitlabdata.com/manifest.json
