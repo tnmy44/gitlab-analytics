@@ -42,7 +42,7 @@ unioned AS (
   SELECT
     DATE_TRUNC('month', events_new.behavior_at) AS month,
     events_new.ultimate_parent_namespace_id,
-    events_new.metrics_path,
+    events_new.metrics_path
   FROM events_new
 ),
 
