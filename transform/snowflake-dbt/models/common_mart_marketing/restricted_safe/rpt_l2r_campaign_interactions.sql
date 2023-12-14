@@ -23,7 +23,7 @@
       person_base.dim_crm_user_id,
       person_base.crm_partner_id,
       person_base.partner_prospect_id,
-      person_base.sfddc_record_id,
+      person_base.sfdc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
       mart_crm_touchpoint.dim_campaign_id,
 
