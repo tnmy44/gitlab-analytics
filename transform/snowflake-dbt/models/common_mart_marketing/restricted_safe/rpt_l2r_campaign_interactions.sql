@@ -806,7 +806,7 @@
       'Lead' AS record_type
     FROM sfdc_lead_history
       INNER JOIN cohort_base_combined
-        ON cohort_base_combined.sfdc_record_id = sfdc_contact_history.sfdc_record_id
+        ON sfdc_lead_history.lead_id = cohort_base_combined.sfdc_record_id 
     WHERE 
     lead_field = 'status' AND field_modified_at >= bizible_touchpoint_date
     
@@ -826,7 +826,7 @@
       'Contact' as record_type
     FROM sfdc_contact_history
       INNER JOIN cohort_base_combined
-        ON cohort_base_combined.sfdc_record_id = sfdc_contact_history.sfdc_record_id
+        ON sfdc_contact_history.contact_id = cohort_base_combined.sfdc_record_id 
     WHERE contact_field = 'contact_status__c' AND field_modified_at >= bizible_touchpoint_date
 
 ), person_history_final as (
