@@ -999,7 +999,7 @@
   LEFT JOIN dim_date closed_date
     ON cohort_base_combined.close_date=closed_date.date_day
   LEFT JOIN dim_date pipeline_created_date
-    ON person_history_final.pipeline_created_date=pipeline_created_date.date_day
+    ON person_historycohort_base_combined_final.pipeline_created_date=pipeline_created_date.date_day
   LEFT JOIN dim_date bizible_date
     ON cohort_base_combined.bizible_touchpoint_date=bizible_date.date_day
 
