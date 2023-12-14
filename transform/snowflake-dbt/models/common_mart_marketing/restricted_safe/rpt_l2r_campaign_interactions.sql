@@ -819,7 +819,7 @@
       cohort_base_combined.bizible_touchpoint_date,
       datediff(DAY, 
         cohort_base_combined.bizible_touchpoint_date,
-        sfdc_lead_history.field_modified_at
+        sfdc_contact_history.field_modified_at
       ) AS date_difference,
       sfdc_contact_history.old_value_string,
       sfdc_contact_history.new_value_string,
