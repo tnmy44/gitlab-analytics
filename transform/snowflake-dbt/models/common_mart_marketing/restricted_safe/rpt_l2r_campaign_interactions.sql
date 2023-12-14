@@ -807,7 +807,7 @@
       INNER JOIN cohort_base_combined
         ON cohort_base_combined.sfdc_record_id = sfdc_contact_history.sfdc_record_id
     WHERE 
-    lead_field = 'status'
+    lead_field = 'status' AND field_modified_at >= bizible_touchpoint_date
     
     UNION ALL 
 
@@ -826,7 +826,7 @@
     FROM sfdc_contact_history
       INNER JOIN cohort_base_combined
         ON cohort_base_combined.sfdc_record_id = sfdc_contact_history.sfdc_record_id
-    WHERE contact_field = 'contact_status__c'
+    WHERE contact_field = 'contact_status__c' AND field_modified_at >= bizible_touchpoint_date
 
 ), person_history_final as (
   SELECT
