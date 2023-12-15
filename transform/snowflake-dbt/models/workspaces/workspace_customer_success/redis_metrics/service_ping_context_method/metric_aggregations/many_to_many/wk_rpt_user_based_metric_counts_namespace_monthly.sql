@@ -11,7 +11,10 @@ WITH events AS (
   FROM {{ ref('wk_mart_snowplow_events_service_ping_metrics') }}
   -- only include redis_hll metrics with 28d time frame, which limits to user-based metrics
   -- more details here: https://gitlab.com/gitlab-org/gitlab/-/issues/411607#note_1392956155
-  WHERE data_source = 'redis_hll'
+  WHERE data_source IN (
+    'redis_hll', 
+    'internal_events'
+  )
     AND time_frame = '28d'
 ),
 
