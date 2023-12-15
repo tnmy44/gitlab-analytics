@@ -17,10 +17,11 @@ from gitlabdata.orchestration_utils import snowflake_engine_factory
 
 class ZuoraQueriesAPI:
     """_summary_
-        Main class file to authentication ,
-        running query
-        generating date range
+    Main class file to authentication ,
+    running query
+    generating date range
     """
+
     def __init__(self, config_dict: Dict):
         """
 
