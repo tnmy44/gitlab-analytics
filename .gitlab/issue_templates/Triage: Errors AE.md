@@ -63,6 +63,7 @@ As we work to incorporate Monte Carlo into the AE workflow, it will be a bit nua
 1. [ ] For models outside of the 1 month warranty period, check the git log for the problematic model, as well as any parent models. If there are any changes here which are obviously causing the problem, you can either:
     1. [ ] If the problem is syntax and simple to solve (i.e. a missing comma) create an MR attached to the triage issue and correct the problem. Tag the last merger for review on the issue to confirm the change is correct and valid.
     1. [ ] If the problem is complicated or you are uncertain on how to solve it tag the CODEOWNER for the file.
+1. [ ] Notify the #data channel of the dbt model run error with a link to the triage issue. Be sure to notify the channel once the error has been cleared and the data is good to go.
 
 **DBT Test Specific Triage Steps:**
 
