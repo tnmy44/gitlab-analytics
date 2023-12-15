@@ -1,9 +1,7 @@
-from os import environ as env
-from api import ZuoraQueriesAPI
-from typing import Dict
-from fire import Fire
-import logging
-import yaml
+"""
+main function
+"""
+
 import logging
 from os import environ as env
 from typing import Dict
@@ -56,6 +54,9 @@ def fetch_data_query_upload(
 
 
 def main(file_path: str, load_only_table: str = None) -> None:
+    """
+    main function to iterate over file and range of data
+    """
     config_dict = env.copy()
     zq = ZuoraQueriesAPI(config_dict)
 

@@ -65,14 +65,14 @@ class ZuoraQueriesAPI:
             "grant_type": "client_credentials",
         }
         auth_url = f"{self.base_url}/oauth/token"
-        response = requests.post(auth_url, headers=headers, data=data_auth)
+        response = requests.post(auth_url, headers=headers, data=data_auth, timeout=60)
         if response.ok:
             info("Successful auth")
             return response.json()["access_token"]
-        else:
-            logging.error(response.status_code)
-            logging.error(response.json())
-            raise ConnectionError("COULD NOT AUTHENTICATE")
+
+        logging.error(response.status_code)
+        logging.error(response.json())
+        raise ConnectionError("COULD NOT AUTHENTICATE")
 
     def request_data_query_data(self, query_string: str) -> str:
         """
@@ -91,14 +91,14 @@ class ZuoraQueriesAPI:
         )
 
         response = requests.post(
-            api_url, headers=self.request_headers, data=json.dumps(payload)
+            api_url, headers=self.request_headers, data=json.dumps(payload), timeout=60
         )
 
         if response.status_code == 200:
             return response.json().get("data").get("id")
-        else:
-            logging.error(response.json)
-            raise ConnectionError("Error requesting job")
+
+        logging.error(response.json)
+        raise ConnectionError("Error requesting job")
 
     def get_job_data(self, job_id: str) -> Dict:
         """
@@ -109,16 +109,13 @@ class ZuoraQueriesAPI:
         :rtype:
         """
         api_url = f"{self.base_url}/query/jobs"
-        response = requests.get(
-            api_url,
-            headers=self.request_headers,
-        )
+        response = requests.get(api_url, headers=self.request_headers, timeout=60)
         data = response.json()
         job = [j for j in data.get("data") if j.get("id") == job_id]
         if len(job) > 0:
             return job[0]
-        else:
-            raise ReferenceError("Job not found")
+
+        raise ReferenceError("Job not found")
 
     def get_data_query_file(self, job_id: str, wait_time: int = 30) -> pd.DataFrame:
         """
@@ -150,15 +147,15 @@ class ZuoraQueriesAPI:
         if job_status == "completed":
             info("File ready")
             file_url = job["dataFile"]
-            response = requests.get(url=file_url)
+            response = requests.get(url=file_url, timeout=60)
 
             df = pd.read_csv(StringIO(response.text))
             info("File downloaded")
             return df
-        else:
-            job = self.get_job_data(job_id)
-            job_status = job.get("queryStatus")
-            raise ValueError(f"The job has failed or has been killed: {job_status}")
+
+        job = self.get_job_data(job_id)
+        job_status = job.get("queryStatus")
+        raise ValueError(f"The job has failed or has been killed: {job_status}")
 
     def get_date_interval_list(self, start_date, end_date):
         """Generate time interval range with end_date of one interval overlapping the other, and extract value from dataframe
