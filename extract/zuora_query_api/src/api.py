@@ -1,25 +1,14 @@
-import logging
-import time
-import json
-from io import StringIO
-
-import requests
-import pandas as pd
-
-import yaml
-from logging import info, error, warning
-from os import environ as env
-
-from typing import Dict
-
+"""
+    API class file for zuora data query
+"""
 import json
 import logging
 import time
+from datetime import datetime
 from io import StringIO
 from logging import info
 from os import environ as env
 from typing import Dict
-from datetime import datetime
 
 import pandas as pd
 import requests
@@ -27,6 +16,11 @@ from gitlabdata.orchestration_utils import snowflake_engine_factory
 
 
 class ZuoraQueriesAPI:
+    """_summary_
+        Main class file to authentication ,
+        running query
+        generating date range
+    """
     def __init__(self, config_dict: Dict):
         """
 
