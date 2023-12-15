@@ -21,7 +21,7 @@ databases:
         shared: yes
     - monte_carlo:
         shared: yes
-    - feature_store
+    - feature_store:
         shared: no
 
 # User / Testing
