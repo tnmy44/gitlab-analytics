@@ -21,6 +21,8 @@ databases:
         shared: yes
     - monte_carlo:
         shared: yes
+    - feature_store:
+        shared: no
 
 # User / Testing
     - abright_prod:
@@ -137,12 +139,12 @@ databases:
     - jonglee_prod:
         shared: no
     - jonglee_prep:
-        shared: no     
+        shared: no
 
     - juwong_prod:
         shared: no
     - juwong_prep:
-        shared: no  
+        shared: no
 
     - kdietz_prod:
         shared: no
@@ -267,12 +269,12 @@ databases:
     - schaturvedi_prod:
         shared: no
     - schaturvedi_prep:
-        shared: no  
+        shared: no
 
     - skhan_prod:
         shared: no
     - skhan_prep:
-        shared: no        
+        shared: no
 
     - snalamaru_analytics:
         shared: no
@@ -308,7 +310,7 @@ roles:
         member_of:
             - securityadmin
             - sysadmin
-    
+
     - orgadmin:
         warehouses:
             - admin
@@ -343,11 +345,13 @@ roles:
                     - snowflake
                     - testing_db
                     - monte_carlo
+                    - feature_store
                 write:
                     - prep
                     - prod
                     - raw
                     - testing_db
+                    - feature_store
             schemas:
                 read:
                     - prep.*
@@ -355,11 +359,13 @@ roles:
                     - raw.*
                     - testing_db.*
                     - monte_carlo.prod_insights
+                    - feature_store.feast
                 write:
                     - prep.*
                     - prod.*
                     - raw.*
                     - testing_db.*
+                    - feature_store.feast
             tables:
                 read:
                     - prep.*.*
@@ -367,11 +373,13 @@ roles:
                     - raw.*.*
                     - testing_db.*.*
                     - monte_carlo.prod_insights.*
+                    - feature_store.feast.*
                 write:
                     - prep.*.*
                     - prod.*.*
                     - raw.*.*
                     - testing_db.*.*
+                    - feature_store.feast.*
 
 # ==========================================
 # Functional Roles
@@ -983,15 +991,18 @@ roles:
           owns:
               schemas:
                   - raw.data_science
+                  - feature_store.feast
           privileges:
               databases:
                   read:
                       - prep
                       - prod
                       - raw
+                      - feature_store
                   write:
                       - prod
                       - raw
+                      - feature_store
               schemas:
                   read:
                       - prod.workspace_sales
@@ -1001,6 +1012,7 @@ roles:
                       - prod.legacy
                       - prod.common_mart_product
                       - prod.restricted_safe_common_mart_sales
+                      - prod.common_mart_sales
                       - prod.common_mart_marketing
                       - prod.restricted_safe_workspace_sales
                       - prod.restricted_safe_common
@@ -1014,9 +1026,11 @@ roles:
                       - raw.data_science
                       - raw.salesforce_v2_stitch
                       - raw.snapshots
+                      - feature_store.feast
                   write:
                       - raw.data_science
                       - prod.workspace_data_science
+                      - feature_store.feast
               tables:
                   read:
                       - prod.workspace_sales.*
@@ -1033,15 +1047,18 @@ roles:
                       - prod.legacy.*
                       - prod.common_mart_product.*
                       - prod.restricted_safe_common_mart_sales.*
+                      - prod.common_mart_sales.*
                       - prod.restricted_safe_common.*
                       - prod.restricted_safe_workspace_sales.*
                       - prod.common_mart_marketing.*
                       - prod.pumps_sensitive.*
                       - raw.salesforce_v2_stitch.*
                       - raw.snapshots.*
+                      - feature_store.feast.*
                   write:
                       - raw.data_science.*
                       - prod.workspace_data_science.*
+                      - feature_store.feast.*
 
     - meltano:
         warehouses:
@@ -1316,12 +1333,15 @@ roles:
             databases:
                 read:
                     - raw
+                    - feature_store
             schemas:
                 read:
                     - raw.data_science
+                    - feature_store.feast
             tables:
                 read:
                     - raw.data_science.*
+                    - feature_store.feast.*
 
 
 # ==========================================
