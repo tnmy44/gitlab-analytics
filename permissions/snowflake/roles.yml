@@ -1012,6 +1012,7 @@ roles:
                       - prod.legacy
                       - prod.common_mart_product
                       - prod.restricted_safe_common_mart_sales
+                      - prod.common_mart_sales
                       - prod.common_mart_marketing
                       - prod.restricted_safe_workspace_sales
                       - prod.restricted_safe_common
@@ -1046,6 +1047,7 @@ roles:
                       - prod.legacy.*
                       - prod.common_mart_product.*
                       - prod.restricted_safe_common_mart_sales.*
+                      - prod.common_mart_sales.*
                       - prod.restricted_safe_common.*
                       - prod.restricted_safe_workspace_sales.*
                       - prod.common_mart_marketing.*
