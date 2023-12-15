@@ -270,7 +270,7 @@
         CASE WHEN ROW_NUMBER() OVER (PARTITION BY snapshot_month, paid_user_metrics.dim_subscription_id_original, delivery_type ORDER BY billable_user_count desc nulls last, ping_created_at desc nulls last) = 1 
              THEN True 
              ELSE False 
-        END AS is_primary_instance 
+        END AS is_primary_instance_subscription 
 
 FROM paid_user_metrics
 LEFT JOIN dim_crm_account
