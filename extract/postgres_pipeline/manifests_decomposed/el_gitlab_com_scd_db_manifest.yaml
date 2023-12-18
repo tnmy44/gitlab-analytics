@@ -801,6 +801,16 @@ tables:
       , issue_id
       , sentry_issue_identifier
       FROM sentry_issues
+  service_desk_settings:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'service_desk_settings'
+    export_table_primary_key: project_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT project_id
+      , custom_email_enabled
+      FROM service_desk_settings
   shards:
     export_schema: 'gitlab_com'
     export_table: 'shards'
