@@ -80,7 +80,7 @@ SELECT
   LEFT JOIN purchased_minutes
     ON pipeline_activity.ultimate_parent_namespace_id = purchased_minutes.ultimate_parent_namespace_id
     AND pipeline_activity.reporting_month = purchased_minutes.reporting_month
-  WHERE reporting_month < date_trunc('month', current_date())
+  WHERE pipeline_activity.reporting_month < date_trunc('month', current_date())
   {% if is_incremental() %}
     AND pipeline_activity.reporting_month > (select max(pipeline_activity.reporting_month) from {{ this }})
   {% endif %}
