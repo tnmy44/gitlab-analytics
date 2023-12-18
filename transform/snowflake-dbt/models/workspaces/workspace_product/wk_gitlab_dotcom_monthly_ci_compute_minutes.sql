@@ -82,7 +82,7 @@ SELECT
     AND pipeline_activity.reporting_month = purchased_minutes.reporting_month
   WHERE reporting_month < date_trunc('month', current_date())
   {% if is_incremental() %}
-    AND reporting_month > (select max(reporting_month) from {{ this }})
+    AND pipeline_activity.reporting_month > (select max(pipeline_activity.reporting_month) from {{ this }})
   {% endif %}
 
 )
