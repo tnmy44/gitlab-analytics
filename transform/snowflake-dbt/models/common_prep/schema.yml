@@ -130,6 +130,8 @@ models:
         tests:
           - not_null
           - unique
+      - name: campaign_partner_crm_id
+        description: The partner associated with this campaign through Vartopia.
 
   - name: prep_crm_person
     description: '{{ doc("prep_crm_person") }}'
