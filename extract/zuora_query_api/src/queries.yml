@@ -132,3 +132,30 @@ tables:
         ,EndDate
         ,Currency
       FROM chargemetricsdiscountallocationdetail
+  chargemetrics:
+    query: |- 
+      SELECT 
+        id
+        ,subscriptionowneraccountnumber
+        ,invoiceowneraccountnumber
+        ,subscriptionname
+        ,chargenumber
+        ,rateplanchargeid
+        ,productid
+        ,productrateplanid
+        ,productrateplanchargeid
+        ,amendmentid
+        ,amendmenttype
+        ,startdate
+        ,enddate
+        ,mrrgrossamount
+        ,mrrnetamount
+        ,mrrdiscountamount
+        ,tcvgrossamount
+        ,tcvnetamount
+        ,tcvdiscountamount
+        ,currency
+        ,createddate
+        ,updateddate
+        ,deleted
+      FROM  ChargeMetrics
