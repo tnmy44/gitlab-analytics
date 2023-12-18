@@ -3015,11 +3015,8 @@ roles:
                     - akapungu_prod.*.*
 
     - akramer:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - alpcohen:
         member_of:
@@ -3163,11 +3160,8 @@ roles:
             - dev_xs
 
     - bvandre:
-        member_of:
-            - analyst_sales
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - caitlin:
         member_of: []
@@ -3746,11 +3740,8 @@ roles:
         warehouses: []
 
     - jburrows:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - jcaine:
         member_of:
@@ -3844,11 +3835,8 @@ roles:
             - dev_xs
 
     - jhope:
-        member_of:
-            - gitlab_dotcom
-            - reporter
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - jonglee:
         member_of:
@@ -4388,11 +4376,8 @@ roles:
                     - lmai_prod.*.*
 
     - lstahlman:
-        member_of:
-            - analyst_core
-            - data_team_analyst
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - lvinueza:
         member_of:
@@ -4769,10 +4754,8 @@ roles:
             - dev_xs
 
     - nbelokolodov:
-        member_of:
-            - analyst_growth
-        warehouses:
-            - dev_xs
+        member_of: [] 
+        warehouses: []
 
     - ncregan:
         member_of: []
@@ -5291,11 +5274,8 @@ roles:
                     - rrendon_prod.*.*
 
     - rrosu:
-        member_of:
-            - reporter
-            - analyst_marketing
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - rtaira:
         member_of:
@@ -5674,10 +5654,8 @@ roles:
                     - testing_db.*.*
 
     - tjayaramaraju:
-        member_of:
-            - reporter
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - tliu:
         member_of:
@@ -5817,10 +5795,8 @@ roles:
         warehouses: []
 
     - wleidheiser:
-        member_of:
-            - reporter
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - wlin:
         member_of:
@@ -5880,9 +5856,8 @@ users:
             - akapungu
 
     - akramer:
-        can_login: yes
-        member_of:
-            - akramer
+        can_login: no
+        member_of: []
 
     - alpcohen:
         can_login: yes
@@ -5934,9 +5909,8 @@ users:
             - bnguyen
 
     - bvandre:
-        can_login: yes
-        member_of:
-            - bvandre
+        can_login: no
+        member_of: []
 
     - caitlin:
         can_login: no
@@ -6088,9 +6062,8 @@ users:
         member_of: []
 
     - jburrows:
-        can_login: yes
-        member_of:
-            - jburrows
+        can_login: no
+        member_of: []
 
     - jcaine:
         can_login: yes
@@ -6108,9 +6081,8 @@ users:
             - jcolyer
 
     - jhope:
-        can_login: yes
-        member_of:
-            - jhope
+        can_login: no
+        member_of: []
 
     - jonglee:
         can_login: yes
@@ -6203,9 +6175,8 @@ users:
             - lmai
 
     - lstahlman:
-        can_login: yes
-        member_of:
-            - lstahlman
+        can_login: no
+        member_of: []
 
     - lvinueza:
         can_login: yes
@@ -6293,9 +6264,8 @@ users:
             - nbilgrami
 
     - nbelokolodov:
-        can_login: yes
-        member_of:
-            - nbelokolodov
+        can_login: no
+        member_of: []
 
     - ncregan:
         can_login: no
@@ -6388,9 +6358,8 @@ users:
             - rrendon
 
     - rrosu:
-        can_login: yes
-        member_of:
-            - rrosu
+        can_login: no
+        member_of: []
 
     - rtaira:
         can_login: yes
@@ -6487,9 +6456,8 @@ users:
             - target_snowflake
 
     - tjayaramaraju:
-        can_login: yes
-        member_of:
-            - tjayaramaraju
+        can_login: no
+        member_of: []
 
     - tliu:
         can_login: yes
@@ -6533,9 +6501,8 @@ users:
         member_of: []
 
     - wleidheiser:
-        can_login: yes
-        member_of:
-            - wleidheiser
+        can_login: no
+        member_of: []
 
     - wlin:
         can_login: yes
