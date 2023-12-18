@@ -39,7 +39,8 @@ joined AS (
     metric_bridge.aggregate_operator,
     metric_bridge.aggregate_attribute,
     metric_bridge.metrics_status,
-    metric_bridge.time_frame
+    metric_bridge.time_frame,
+    metric_bridge.data_source
   FROM service_ping_events
   /* 
     Inner join on redis event name only allows events to come through that have
@@ -55,5 +56,5 @@ joined AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-12-21",
-    updated_date="2023-03-08"
+    updated_date="2023-12-14"
 ) }}
