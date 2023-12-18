@@ -3146,11 +3146,8 @@ roles:
             - reporting
 
     - bmandavia:
-        member_of:
-            - reporter
-            - salesforce
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - bnguyen:
         member_of:
@@ -4287,16 +4284,8 @@ roles:
             - dev_xs
 
     - kkarthikeyan:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
-            - zoominfo_inbound
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - lchilamakuru:
         member_of:
@@ -5936,9 +5925,8 @@ users:
             - bbutterfield
 
     - bmandavia:
-        can_login: yes
-        member_of:
-            - bmandavia
+        can_login: no
+        member_of: []
 
     - bnguyen:
         can_login: yes
@@ -6191,9 +6179,8 @@ users:
             - kmckern
 
     - kkarthikeyan:
-        can_login: yes
-        member_of:
-            - kkarthikeyan
+        can_login: no
+        member_of: []
 
     - lchilamakuru:
         can_login: yes
