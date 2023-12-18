@@ -116,7 +116,16 @@
         THEN latest_ptpf_score_date
       WHEN ptp_source = 'Lead'
         THEN latest_ptpl_score_date
-    END AS last_score_date
+    END AS last_score_date,
+
+    CASE
+      WHEN ptp_source = 'Trial'
+        THEN 1
+      WHEN ptp_source = 'Free'
+        THEN 2
+      WHEN ptp_source = 'Lead'
+        THEN 3
+    END AS score_priority
     
   FROM prep_ptpt_scores_by_user
   FULL JOIN prep_ptpf_scores_by_user 
@@ -151,10 +160,12 @@
       latest_score_date,
       prev_group,
       score_group_rank,
+      --Determine which model source to display. Priority is trials then free then leads
+      MIN(score_priority) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank) AS score_priority, 
       --Determine the first date the score occured within the "rank"
-      FIRST_VALUE(score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank, ptp_source ORDER BY score_date) AS valid_from,
+      FIRST_VALUE(score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank ORDER BY score_date) AS valid_from,
       --Determine the last time the score occured within the "rank"
-      LAST_VALUE(next_score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank, ptp_source ORDER BY score_date) AS valid_to_prep,
+      LAST_VALUE(next_score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank ORDER BY score_date) AS valid_to_prep,
       --If score_date is the same date as the most recent score date. If it is then null valid_to because that score it still valid. If if does not equal, then the valid_to date is the day before the next valid_from date.
       CASE
         WHEN score_date = latest_score_date
@@ -170,8 +181,13 @@
 SELECT
   dim_marketing_contact_id,
   score_group,
-  ptp_source,
-  last_score_date,
+  CASE WHEN score_priority = 1
+          THEN 'Trial'
+       WHEN score_priority = 2
+          THEN 'Free'
+       WHEN score_priority = 3
+          THEN 'Lead'
+    END AS ptp_source,
   valid_from,
   valid_to
 FROM valid_to_from
