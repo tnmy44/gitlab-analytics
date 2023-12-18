@@ -3015,11 +3015,8 @@ roles:
                     - akapungu_prod.*.*
 
     - akramer:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - alpcohen:
         member_of:
@@ -5891,9 +5888,8 @@ users:
             - akapungu
 
     - akramer:
-        can_login: yes
-        member_of:
-            - akramer
+        can_login: no
+        member_of: []
 
     - alpcohen:
         can_login: yes
