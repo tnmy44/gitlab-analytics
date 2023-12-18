@@ -5676,10 +5676,8 @@ roles:
                     - testing_db.*.*
 
     - tjayaramaraju:
-        member_of:
-            - reporter
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - tliu:
         member_of:
@@ -6488,9 +6486,8 @@ users:
             - target_snowflake
 
     - tjayaramaraju:
-        can_login: yes
-        member_of:
-            - tjayaramaraju
+        can_login: no
+        member_of: []
 
     - tliu:
         can_login: yes
