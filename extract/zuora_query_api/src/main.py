@@ -36,7 +36,7 @@ def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> Dict:
 
 
 def fetch_data_query_upload(
-    zq, table_spec: str, query_string: str, if_exists_parameter: str = "append"
+    zq, table_spec: str, query_string: str, if_exists_parameter: str = "replace"
 ):
     """
     This function is responsible for executing the passed query_string in data query download the file and upload it to snowflake using dataframe uploader.
