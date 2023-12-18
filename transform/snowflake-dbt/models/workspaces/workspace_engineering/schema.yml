@@ -1,5 +1,4 @@
 version: 2
-
 models:
   - name: zengrc_assessment
     description: '{{ doc("zengrc_assessments_desc") }}'
@@ -699,3 +698,28 @@ models:
         description: added for filters
       - name: DIM_NAMESPACE_ID
         description: added for filters
+  - name: wk_say_do
+    description: ""
+    columns:
+      - name: ISSUE_ID
+        description: ID of the issue
+      - name: ISSUE_CREATED_AT
+        description: Issue created at (date)
+      - name: ISSUE_CLOSED_AT
+        description: Issue closed at (date)
+      - name: LINKED_ISSUE_TITLE
+        description: "Title of the issue "
+      - name: IS_CLOSED_BEFORE_RELEASE
+        description: Was the issue closed before the release? True/False
+      - name: LABELS
+        description: Issue labels
+      - name: WEIGHT
+        description: Issue weight
+      - name: STAGE
+        description: Issue stage
+      - name: GROUP_
+        description: Issue group
+      - name: REMOVED
+        description: Is the issue removed? 1/0
+      - name: MILESTONE
+        description: Issue milestone
