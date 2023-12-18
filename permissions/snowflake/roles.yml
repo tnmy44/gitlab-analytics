@@ -3838,11 +3838,8 @@ roles:
             - dev_xs
 
     - jhope:
-        member_of:
-            - gitlab_dotcom
-            - reporter
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - jonglee:
         member_of:
@@ -6096,9 +6093,8 @@ users:
             - jcolyer
 
     - jhope:
-        can_login: yes
-        member_of:
-            - jhope
+        can_login: no
+        member_of: []
 
     - jonglee:
         can_login: yes
