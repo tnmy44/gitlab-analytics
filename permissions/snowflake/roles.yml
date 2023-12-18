@@ -3743,11 +3743,8 @@ roles:
         warehouses: []
 
     - jburrows:
-        member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - jcaine:
         member_of:
@@ -6083,9 +6080,8 @@ users:
         member_of: []
 
     - jburrows:
-        can_login: yes
-        member_of:
-            - jburrows
+        can_login: no
+        member_of: []
 
     - jcaine:
         can_login: yes
