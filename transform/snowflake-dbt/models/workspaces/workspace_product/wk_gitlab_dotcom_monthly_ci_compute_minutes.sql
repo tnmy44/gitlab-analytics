@@ -1,5 +1,5 @@
 {{ config({
-        "materialized": "table",
+        "materialized": "incremental",
         "unique_key": "user_reporting_month_pk",
         "tags": ["product", "mnpi_exception"]
     })
@@ -38,7 +38,7 @@ WITH pipeline_activity AS (
     AND ci_build_finished_at IS NOT NULL
     AND namespace_is_internal = FALSE
     AND namespace_creator_is_blocked = FALSE
- {{ dbt_utils.group_by(n=6) }}
+  GROUP BY ALL
 
 ), purchased_minutes AS (
 
@@ -53,7 +53,7 @@ WITH pipeline_activity AS (
     ON fct_charge.dim_charge_id = dim_charge.dim_charge_id
   WHERE effective_end_date_id > effective_start_date_id
     AND rate_plan_name IN ('1,000 CI Minutes','1,000 Compute Minutes')
-{{ dbt_utils.group_by(n=2) }}
+  GROUP BY ALL
 
 ), final AS (
 
@@ -80,18 +80,18 @@ SELECT
   LEFT JOIN purchased_minutes
     ON pipeline_activity.ultimate_parent_namespace_id = purchased_minutes.ultimate_parent_namespace_id
     AND pipeline_activity.reporting_month = purchased_minutes.reporting_month
-  
+  WHERE reporting_month < date_trunc('month', current_date())
+  {% if is_incremental() %}
+    AND reporting_month > (select max(reporting_month) from {{ this }})
+  {% endif %}
 
 )
-
-{% if is_incremental() %}
-  where reporting_month > (select max(reporting_month) from {{final}})
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@nhervas",
     updated_by="@nhervas",
-    created_date="2023-12-12",
-    updated_date="2023-12-12"
+    created_date="2023-12-18",
+    updated_date="2023-12-18"
 ) }}
 
