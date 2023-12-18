@@ -402,8 +402,10 @@ SELECT *
 FROM final
 /*
 -- TEST OVERALL BOOKINGS
+--use warehouse reporting
 select sum(booked_net_arr)
 from final
-from sfdc_opportunity_xf --76045368.88000001
+--from sfdc_opportunity_xf --76045368.88000001
 where close_fiscal_year = 2024
- */
+
+*/

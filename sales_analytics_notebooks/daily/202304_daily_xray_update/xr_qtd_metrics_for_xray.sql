@@ -1,3 +1,4 @@
+-- USE WAREHOUSE REPORTING;
 WITH sfdc_opportunity_xf AS (
 
     SELECT *
@@ -457,8 +458,18 @@ aggregation AS (
                 AND oppty.is_stage_4_plus = 1
                 THEN oppty.net_arr
             ELSE 0
-        END) AS next_4q_open_4plus_net_arr
+        END) AS next_4q_open_4plus_net_arr,
 
+
+        -- FY Pipe Gen
+        -- created pipeline in quarter
+        SUM(CASE
+            WHEN
+                oppty.pipeline_created_fiscal_year = today.current_fiscal_year
+                AND oppty.is_eligible_created_pipeline_flag = 1
+                THEN oppty.net_arr
+            ELSE 0
+        END) AS fy_pipe_gen_net_arr
 
 
 
