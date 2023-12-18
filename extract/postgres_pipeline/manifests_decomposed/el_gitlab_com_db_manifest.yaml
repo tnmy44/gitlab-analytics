@@ -2413,7 +2413,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , base_type
+      , name
       , created_at
       , updated_at
       FROM work_item_types
