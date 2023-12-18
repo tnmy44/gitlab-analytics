@@ -1,1 +1,1 @@
-{{ dedupe_source(source_table='batched_background_migrations') }}
+{{ dedupe_source(source_table='dependency_proxy_packages_settings', unique_key='project_id') }}

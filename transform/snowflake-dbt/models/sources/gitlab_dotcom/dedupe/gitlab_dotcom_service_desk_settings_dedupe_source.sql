@@ -1,1 +1,1 @@
-{{ dedupe_source(source_table='dependency_proxy_packages_settings') }}
+{{ dedupe_source(source_table='service_desk_settings', unique_key='project_id') }}
