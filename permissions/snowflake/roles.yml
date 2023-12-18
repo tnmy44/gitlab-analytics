@@ -4774,10 +4774,8 @@ roles:
             - dev_xs
 
     - nbelokolodov:
-        member_of:
-            - analyst_growth
-        warehouses:
-            - dev_xs
+        member_of: [] 
+        warehouses: []
 
     - ncregan:
         member_of: []
@@ -6293,9 +6291,8 @@ users:
             - nbilgrami
 
     - nbelokolodov:
-        can_login: yes
-        member_of:
-            - nbelokolodov
+        can_login: no
+        member_of: []
 
     - ncregan:
         can_login: no
