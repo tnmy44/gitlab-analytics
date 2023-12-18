@@ -4773,6 +4773,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - nbilgrami:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - nbelokolodov:
         member_of:
             - analyst_growth
@@ -6293,6 +6299,11 @@ users:
         can_login: yes
         member_of:
             - mxiao
+
+    - nbilgrami:
+        can_login: yes
+        member_of:
+            - nbilgrami
 
     - nbelokolodov:
         can_login: yes
