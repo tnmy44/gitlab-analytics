@@ -3163,11 +3163,8 @@ roles:
             - dev_xs
 
     - bvandre:
-        member_of:
-            - analyst_sales
-            - restricted_safe
-        warehouses:
-            - dev_xs
+        member_of: []
+        warehouses: []
 
     - caitlin:
         member_of: []
@@ -5942,9 +5939,8 @@ users:
             - bnguyen
 
     - bvandre:
-        can_login: yes
-        member_of:
-            - bvandre
+        can_login: no
+        member_of: []
 
     - caitlin:
         can_login: no
