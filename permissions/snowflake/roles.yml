@@ -4003,6 +4003,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - jrubi:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - jsingh:
         member_of:
             - engineer
@@ -6108,6 +6114,11 @@ users:
         can_login: yes
         member_of:
             - jpetr
+
+    - jrubi:
+        can_login: yes
+        member_of:
+            - jrubi
 
     - jsingh:
         can_login: yes
