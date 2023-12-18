@@ -84,6 +84,9 @@ SELECT
 
 )
 
+{% if is_incremental() %}
+  where reporting_month > (select max(reporting_month) from {{final}})
+
 {{ dbt_audit(
     cte_ref="final",
     created_by="@nhervas",
