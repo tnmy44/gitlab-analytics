@@ -47,7 +47,7 @@ WITH RECURSIVE namespaces AS (
 
   SELECT
     *,
-    GET(upstream_lineage, ARRAY_SIZE(upstream_lineage)-1) AS ultimate_parent_id -- Last item is the ultimate parent.
+    GET(upstream_lineage, ARRAY_SIZE(upstream_lineage)-1)::NUMERIC AS ultimate_parent_id -- Last item is the ultimate parent.
   FROM recursive_namespaces
 
   UNION ALL
