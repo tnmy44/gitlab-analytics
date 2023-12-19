@@ -255,7 +255,7 @@ clone_stop:
   
 .permifrost: &permifrost
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/permifrost:v0.13.1
+  image: registry.gitlab.com/gitlab-data/permifrost:v0.15.4
   tags:
     - analytics
   only:
@@ -289,7 +289,7 @@ clone_stop:
   before_script:
     - export PATH="$CI_PROJECT_DIR/orchestration/:$PATH"
   script:
-    - export SNOWFLAKE_SNAPSHOT_DATABASE="SNOWFLAKE"
+    - export SNOWFLAKE_SNAPSHOT_DATABASE="RAW"
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa

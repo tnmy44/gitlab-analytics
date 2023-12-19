@@ -5,7 +5,6 @@ arr_snapshots,For ARR Snapshots
 atr, Available to Renew
 atr_snapshots, For ATR snapshots
 bamboohr,Related to bamboohr data source
-billing_account,For billing accounts
 common,For the common schema
 common_prep,For common_prep schema
 crm_account,For CRM Accounts

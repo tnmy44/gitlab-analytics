@@ -8,6 +8,7 @@ WITH source AS (
         importance              as importance,
         grouping                as score_group,
         insights                as insights,
+        model_version           as model_version,
         uploaded_at::TIMESTAMP  as uploaded_at
     FROM {{ source('data_science', 'ptpt_scores') }}
 )

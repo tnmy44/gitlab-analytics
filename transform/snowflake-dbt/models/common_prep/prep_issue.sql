@@ -28,7 +28,8 @@
     ('gitlab_dotcom_epic_issues_source', 'gitlab_dotcom_epic_issues_source'),
     ('prep_epic', 'prep_epic'),
     ('gitlab_dotcom_routes_source', 'gitlab_dotcom_routes_source'),
-    ('gitlab_dotcom_award_emoji_source', 'gitlab_dotcom_award_emoji_source')
+    ('gitlab_dotcom_award_emoji_source', 'gitlab_dotcom_award_emoji_source'),
+    ('gitlab_dotcom_work_item_type_source', 'gitlab_dotcom_work_item_type_source')
 ]) }}
 
 , gitlab_dotcom_issues_source AS (
@@ -112,10 +113,10 @@
       prep_gitlab_dotcom_plan.dim_plan_sk                                     AS dim_plan_sk_at_creation,
       prep_milestone.dim_milestone_sk,
       gitlab_dotcom_issues_source.sprint_id,
-      author.dim_user_sk                                                      AS dim_user_sk_author,
-      updated_by.dim_user_sk                                                  AS dim_user_sk_updated_by,
-      last_edited_by.dim_user_sk                                              AS dim_user_sk_last_edited_by,
-      closed_by.dim_user_sk                                                   AS dim_user_sk_closed_by,
+      author.dim_user_sk                                                      AS dim_user_author_sk,
+      updated_by.dim_user_sk                                                  AS dim_user_updated_by_sk,
+      last_edited_by.dim_user_sk                                              AS dim_user_last_edited_by_sk,
+      closed_by.dim_user_sk                                                   AS dim_user_closed_by_sk,
       -- maintained to keep prep_event working until all of gitlab.com lineage has surrogate keys available for all event sources
       prep_gitlab_dotcom_plan.dim_plan_id                                     AS dim_plan_id_at_creation,
       prep_project.project_id,
@@ -150,7 +151,7 @@
       gitlab_dotcom_issues_source.service_desk_reply_to,
       gitlab_dotcom_issues_source.state_id                                 AS issue_state_id,
       {{ map_state_id('gitlab_dotcom_issues_source.state_id') }}           AS issue_state,
-      gitlab_dotcom_issues_source.issue_type,
+      gitlab_dotcom_work_item_type_source.work_item_type_name              AS issue_type,
       CASE 
         WHEN prep_issue_severity.severity = 4
           THEN 'S1'
@@ -263,13 +264,15 @@
       ON gitlab_dotcom_issues_source.last_edited_by_id = last_edited_by.user_id
     LEFT JOIN prep_user closed_by
       ON gitlab_dotcom_issues_source.closed_by_id = closed_by.user_id
+    LEFT JOIN gitlab_dotcom_work_item_type_source
+      ON gitlab_dotcom_issues_source.work_item_type_id = gitlab_dotcom_work_item_type_source.work_item_type_id
     WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
 )
 
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@michellecooper",
+    updated_by="@annapiaseczna",
     created_date="2021-06-17",
-    updated_date="2023-10-25"
+    updated_date="2023-12-11"
 ) }}

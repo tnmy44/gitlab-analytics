@@ -17,10 +17,11 @@ else:
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.31"
-DATA_IMAGE_3_10 = "registry.gitlab.com/gitlab-data/data-image/data-image:v2.0.1"
+DATA_IMAGE_3_10 = "registry.gitlab.com/gitlab-data/data-image/data-image:v2.0.3"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/dbt-image:v0.0.3"
-PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
+PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.15.4"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/analyst-image:v0.0.2"
+TABLEAU_CONFIG_IMAGE = "registry.gitlab.com/gitlab-data/tableauconman:v0.1.12"
 
 SALES_ANALYTICS_NOTEBOOKS_PATH = "analytics/sales_analytics_notebooks"
 # Needed to find the correct drives as the path when running in cloud in the latest Airflow is different
@@ -46,7 +47,7 @@ def get_sales_analytics_notebooks(frequency: str) -> Dict:
 
 analytics_pipelines_dag = [
     "dbt",
-    "dbt_full_refresh",
+    "dbt_manual_refresh",
     "dbt_full_refresh_weekly",
     "dbt_netsuite_actuals_income_cogs_opex",
     "dbt_snowplow_backfill",
@@ -301,6 +302,9 @@ gitlab_pod_env_vars = {
     "SNOWFLAKE_PROD_DATABASE": "PROD"
     if GIT_BRANCH == "master"
     else f"{GIT_BRANCH.upper()}_PROD",
+    "DBT_RUNNER": "{{ task_instance_key_str }}__{{ run_id }}__{{ task_instance.try_number }}"
+    if GIT_BRANCH == "master"
+    else f"{GIT_BRANCH.upper()}",
 }
 
 # git commands

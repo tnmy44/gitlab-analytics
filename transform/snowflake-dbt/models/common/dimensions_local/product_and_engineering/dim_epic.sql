@@ -22,10 +22,10 @@ WITH prep_epic AS (
       ultimate_parent_namespace_id,
       dim_created_date_id,
       dim_plan_sk_at_creation,
-      dim_user_sk_assignee,
-      dim_user_sk_author,
-      dim_user_sk_updated_by,
-      dim_user_sk_last_edited_by,
+      dim_user_assignee_sk,
+      dim_user_author_sk,
+      dim_user_updated_by_sk,
+      dim_user_last_edited_by_sk,
 
       --METADATA
       epic_internal_id,
@@ -57,7 +57,7 @@ WITH prep_epic AS (
 {{ dbt_audit(
     cte_ref="prep_epic",
     created_by="@mpeychet_",
-    updated_by="@michellecooper",
+    updated_by="@annapiaseczna",
     created_date="2021-06-22",
-    updated_date="2023-09-27"
+    updated_date="2023-12-11"
 ) }}
