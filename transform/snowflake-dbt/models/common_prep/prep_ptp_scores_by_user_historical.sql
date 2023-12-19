@@ -166,10 +166,10 @@
       FIRST_VALUE(score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank ORDER BY score_date) AS valid_from,
       --Determine the last time the score occured within the "rank"
       LAST_VALUE(next_score_date) OVER (PARTITION BY dim_marketing_contact_id, score_group_rank ORDER BY score_date) AS valid_to_prep,
-      --If score_date is the same date as the most recent score date. If it is then null valid_to because that score it still valid. If if does not equal, then the valid_to date is the day before the next valid_from date.
+      --If score_date is the same date as the most recent score date. If it is then use, otherwise the valid_to date is the day before the next valid_from date.
       CASE
         WHEN score_date = latest_score_date
-          THEN NULL
+          THEN latest_score_date
         ELSE DATEADD('day', -1, valid_to_prep)
       END AS valid_to
     FROM combined_historic_scores_lag 
@@ -191,5 +191,6 @@ SELECT
   valid_from,
   valid_to
 FROM valid_to_from
+WHERE VALID_TO IS NOT NULL
 QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_marketing_contact_id, valid_from, valid_to ORDER BY last_score_date DESC) = 1
 ORDER BY dim_marketing_contact_id, valid_from

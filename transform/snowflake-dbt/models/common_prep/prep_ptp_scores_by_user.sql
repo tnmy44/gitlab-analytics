@@ -14,8 +14,9 @@
       last_score_date AS score_date,
       score_group
     FROM prep_ptp_scores_by_user_historical
-    WHERE valid_to IS NULL -- Only most recent score has a NULL value for valid_to
-      AND (ptp_source = 'Trial' OR score_group >=3) -- All Trial accounts and only Free and Leads >= 3
+    WHERE (ptp_source = 'Trial' OR score_group >=3) -- All Trial accounts and only Free and Leads >= 3
+       AND DATEDIFF('day', valid_to, CURRENT_DATE) <= 60 -- record needs to have been scored in last 60 days
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_marketing_contact_id ORDER BY valid_to DESC) = 1
     
 ), prior_score_dates AS (
     
@@ -25,8 +26,7 @@
       last_score_date AS past_score_date,
       score_group
     FROM prep_ptp_scores_by_user_historical
-    WHERE valid_to IS NOT NULL -- NOT NULL to remove most recent score
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_marketing_contact_id ORDER BY valid_to DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_marketing_contact_id ORDER BY valid_to DESC) = 2
 
 ), prior_scores AS (
 
