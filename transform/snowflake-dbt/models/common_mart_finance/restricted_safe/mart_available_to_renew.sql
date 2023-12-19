@@ -559,7 +559,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 25 AND 36
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=24) }}
     ORDER BY 1
 
 ), forty_eight_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_MYB for multi-year bookings.
@@ -593,7 +593,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=24) }}
 
     UNION ALL
 
@@ -626,7 +626,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=24) }}
 
     UNION ALL
 
@@ -659,7 +659,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=24) }}
     ORDER BY 1
 
 ), sixty_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_MYB for multi-year bookings.
@@ -693,7 +693,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=24) }}
 
     UNION ALL
 
@@ -726,7 +726,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=24) }}
 
     UNION ALL
 
@@ -759,7 +759,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=24) }}
 
     UNION ALL
 
@@ -791,7 +791,7 @@
       SUM(arr)                                              AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60 AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=24) }}
     ORDER BY 1
 
 ), combined_{{renewal_fiscal_year}} AS (--union all of the charges
