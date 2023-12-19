@@ -225,6 +225,8 @@
       dim_product_detail.product_delivery_type                                        AS product_delivery_type,
       dim_product_detail.service_type                                                 AS service_type,
       dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
+      dim_product_detail.is_arpu                                                      AS is_arpu,
+      dim_product_detail.is_licensed_user                                             AS is_licensed_user,
 
       --Amendment Information
       dim_subscription.dim_amendment_id_subscription,
@@ -320,6 +322,8 @@
       dim_crm_user.crm_user_region,
       dim_crm_user.crm_user_area,
       mart_charge.product_tier_name,
+      mart_charge.is_arpu,
+      mart_charge.is_licensed_user,
       mart_charge.product_delivery_type,
       mart_charge.subscription_name,
       dim_subscription_last_term.zuora_renewal_subscription_name,
@@ -366,7 +370,6 @@
           mart_charge.is_single_fiscal_year_term_subscription = TRUE
           AND mart_charge.term_start_fiscal_year = '{{renewal_fiscal_year}}'
         )
-    {{ dbt_utils.group_by(n=36) }}
 
 ), agg_charge_term_less_than_equal_12_{{renewal_fiscal_year}} AS (--get the starting and ending month ARR for charges with current terms <= 12 months. These terms do not need additional logic.
 
@@ -394,15 +397,17 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       term_end_month,
       subscription_end_month,
-      SUM(quantity) AS number_of_seats,
+      SUM(quantity) AS quantity,
       SUM(arr)      AS arr
     FROM base_{{renewal_fiscal_year}}
     WHERE current_term <= 12
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
 ), agg_charge_term_greater_than_12_{{renewal_fiscal_year}} AS (--get the starting and ending month ARR for terms > 12 months. These terms need additional logic.
 
@@ -447,15 +452,17 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                  AS number_of_seats,
+      SUM(quantity)                         AS quantity,
       SUM(arr)                              AS arr
     FROM base_{{renewal_fiscal_year}}
     WHERE current_term > 12
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
 ), twenty_four_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year charges that are not in the Zuora data. The start and end months are in the agg_myb for multi-year bookings.
 
@@ -479,16 +486,18 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       DATEADD('month',current_term/2,term_start_month)  AS term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                              AS number_of_seats,
+      SUM(quantity)                                     AS quantity,
       SUM(arr)                                          AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 13 AND 24
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=24) }}
+    {{ dbt_utils.group_by(n=25) }}
 
 ), thirty_six_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_myb for multi-year bookings.
 
@@ -512,16 +521,18 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       DATEADD('month',current_term/3,term_start_month)      AS term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                                  AS number_of_seats,
+      SUM(quantity)                                         AS quantity,
       SUM(arr)                                              AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 25 AND 36
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -545,16 +556,18 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       DATEADD('month',current_term/3*2,term_start_month)    AS term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                                  AS number_of_seats,
+      SUM(quantity)                                         AS quantity,
       SUM(arr)                                              AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 25 AND 36
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
     ORDER BY 1
 
 ), forty_eight_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_MYB for multi-year bookings.
@@ -579,16 +592,18 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       DATEADD('month',current_term/4,term_start_month)      AS term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                                  AS number_of_seats,
+      SUM(quantity)                                         AS quantity,
       SUM(arr)                                              AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -612,16 +627,18 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       DATEADD('month',current_term/4*2,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                                      AS number_of_seats,
+      SUM(quantity)                                             AS quantity,
       SUM(arr)                                                  AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -645,16 +662,18 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       DATEADD('month',current_term/4*3,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                                      AS number_of_seats,
+      SUM(quantity)                                             AS quantity,
       SUM(arr)                                                  AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
     ORDER BY 1
 
 ), sixty_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_MYB for multi-year bookings.
@@ -679,16 +698,18 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       DATEADD('month',current_term/5,term_start_month)          AS term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                                      AS number_of_seats,
+      SUM(quantity)                                             AS quantity,
       SUM(arr)                                                  AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -712,16 +733,18 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       DATEADD('month',current_term/5*2,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                                      AS number_of_seats,
+      SUM(quantity)                                             AS quantity,
       SUM(arr)                                                  AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -745,16 +768,18 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       DATEADD('month',current_term/5*3,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                                      AS number_of_seats,
+      SUM(quantity)                                             AS quantity,
       SUM(arr)                                                  AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
 
     UNION ALL
 
@@ -778,15 +803,17 @@
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
+      is_arpu,
+      is_licensed_user,
       subscription_name,
       term_start_month,
       DATEADD('month',current_term/5*4,term_start_month)    AS term_end_month,
       subscription_end_month,
-      SUM(number_of_seats)                                  AS number_of_seats,
+      SUM(quantity)                                         AS quantity,
       SUM(arr)                                              AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60 AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=25) }}
     ORDER BY 1
 
 ), combined_{{renewal_fiscal_year}} AS (--union all of the charges
