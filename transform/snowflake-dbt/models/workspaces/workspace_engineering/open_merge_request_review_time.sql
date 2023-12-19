@@ -10,6 +10,16 @@ WITH product_mrs AS (
 
 ),
 
+map_employee_info AS (
+
+  SELECT
+    a.*,
+    b.user_id
+  FROM {{ ref('mart_team_member_directory') }} AS a
+  INNER JOIN {{ ref('map_team_member_user') }} AS b ON a.employee_id = b.employee_id
+
+),
+
 /*when mr author reassigns to someone other than themself, we recognize this as a review request*/
 first_non_author_assignment AS (
 
@@ -62,34 +72,7 @@ agg AS (
   GROUP BY 1
 
 ),
-/*
-agg AS (
 
-  SELECT
-    mrs.merge_request_id,
-    COUNT(DISTINCT username)                        AS reviewer_count, --extracted from notes
-    COUNT(DISTINCT review_requested_at || username) AS review_requests, --extracted from notes
-    MIN(review_requested_at)                        AS first_review_date -- first assignment event
-  FROM extracted_usernames
-  INNER JOIN product_mrs AS mrs ON extracted_usernames.merge_request_id = mrs.merge_request_id
-  GROUP BY 1
-),
-
-combined AS (
-  SELECT
-    merge_request_id,
-    MAX(reviewer_count)    AS reviewer_count,
-    MAX(review_requests)   AS review_requests,
-    MIN(first_review_date) AS first_review_date
-  FROM (
-    SELECT * FROM first_non_author_assignment
-    UNION
-    SELECT * FROM agg
-  )
-  GROUP BY 1
-
-),
-*/
 first_review_date AS (
 
   SELECT DISTINCT
@@ -125,19 +108,29 @@ add_old_flag AS (
   INNER JOIN first_review_date ON date_spine.date_actual BETWEEN first_review_date.first_review_date AND
     COALESCE(merged_at, CURRENT_DATE)::DATE
 
-)
+),
 
-
-SELECT DISTINCT
-  mr.*,
-  TRY_CAST(sizes.product_merge_request_files_changed AS INTEGER)               AS files_changed,
-  TRY_CAST(sizes.product_merge_request_lines_added AS INTEGER)                 AS added_lines,
-  TRY_CAST(sizes.product_merge_request_lines_removed AS INTEGER)               AS removed_lines,
-  MAX(notes.review_requested_at) OVER (PARTITION BY mr.merge_request_id)::DATE AS last_note_date
-FROM add_old_flag AS mr
-LEFT JOIN {{ ref('sizes_part_of_product_merge_requests') }} AS sizes ON mr.merge_request_iid = sizes.product_merge_request_iid AND mr.target_project_id = sizes.product_merge_request_project_id
-LEFT JOIN notes ON mr.merge_request_id = notes.merge_request_id
-WHERE mr.merge_request_id NOT IN (SELECT deleted_merge_request_id FROM {{ ref('sheetload_deleted_mrs') }})
+final AS (
+  SELECT DISTINCT
+    mr.*,
+    TRY_CAST(sizes.product_merge_request_files_changed AS INTEGER)               AS files_changed,
+    TRY_CAST(sizes.product_merge_request_lines_added AS INTEGER)                 AS added_lines,
+    TRY_CAST(sizes.product_merge_request_lines_removed AS INTEGER)               AS removed_lines,
+    MAX(notes.review_requested_at) OVER (PARTITION BY mr.merge_request_id)::DATE AS last_note_date,
+    map_employee_info.gitlab_username                                            AS author_gitlab_username,
+    map_employee_info.division                                                   AS author_division,
+    map_employee_info.department                                                 AS author_department,
+    map_employee_info.position                                                   AS author_position,
+    map_employee_info.job_specialty_single                                       AS author_job_specialty
+  FROM add_old_flag AS mr
+  LEFT JOIN {{ ref('sizes_part_of_product_merge_requests') }} AS sizes ON mr.merge_request_iid = sizes.product_merge_request_iid AND mr.target_project_id = sizes.product_merge_request_project_id
+  LEFT JOIN notes ON mr.merge_request_id = notes.merge_request_id
+  LEFT JOIN map_employee_info ON mr.author_id = map_employee_info.user_id AND date_actual BETWEEN map_employee_info.valid_from AND DATEADD('day', -1, map_employee_info.valid_to)
+  WHERE mr.merge_request_id NOT IN (SELECT deleted_merge_request_id FROM {{ ref('sheetload_deleted_mrs') }})
 --AND old_1yr_flag = 0
 -- and date_actual = dateadd('day',-1,current_date)
 -- and reviewer_count is null
+)
+
+SELECT *
+FROM final
