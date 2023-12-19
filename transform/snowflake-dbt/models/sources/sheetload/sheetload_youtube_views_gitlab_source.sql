@@ -1,7 +1,7 @@
 
 WITH source AS (
   SELECT *
-  FROM {{ source('sheetload', 'sheetload_youtube_views_gitlab') }}
+  FROM {{ source('sheetload', 'youtube_views_gitlab') }}
 ), renamed AS (
   SELECT 
     video_id::VARCHAR       AS video_id,
