@@ -333,6 +333,8 @@ sheets:
   
   - name: partner_discount_summary
     owner: '@vagrawalg'
+    tabs: 
+      - partner_discount_summary
 
   - name: devrel_campaigns
     owner: '@degan'
