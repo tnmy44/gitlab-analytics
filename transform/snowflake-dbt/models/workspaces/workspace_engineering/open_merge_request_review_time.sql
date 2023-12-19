@@ -106,7 +106,7 @@ date_spine AS (
 
   SELECT date_actual
   FROM {{ ref('dim_date') }}
-  WHERE date_actual BETWEEN DATEADD(MONTH, -18, CURRENT_DATE) AND CURRENT_DATE
+  WHERE date_actual BETWEEN DATEADD(MONTH, -24, CURRENT_DATE) AND CURRENT_DATE
 
 ),
 
@@ -114,13 +114,13 @@ date_spine AS (
 add_old_flag AS (
 
   SELECT
-    DATE_TRUNC('day', date_spine.date_actual)                                                         AS day,
+    date_actual,
     first_review_date.*,
     CASE WHEN DATEADD('day', -365, date_actual) >= created_at AND merged_at IS NULL THEN 1 ELSE 0 END AS old_1yr_flag,
     DATEDIFF('day', created_at, date_spine.date_actual)                                               AS days_open,
     ROUND(DATEDIFF('day', created_at, first_review_date), 2)                                          AS days_to_review,
     ROUND(DATEDIFF('day', first_review_date, date_spine.date_actual), 2)                              AS days_in_review,
-    PERCENT_RANK() OVER (PARTITION BY day ORDER BY days_open)                                         AS days_open_p95
+    PERCENT_RANK() OVER (PARTITION BY date_actual ORDER BY days_open)                                 AS days_open_p95
   FROM date_spine
   INNER JOIN first_review_date ON date_spine.date_actual BETWEEN first_review_date.first_review_date AND
     COALESCE(merged_at, CURRENT_DATE)::DATE
@@ -139,5 +139,5 @@ LEFT JOIN {{ ref('sizes_part_of_product_merge_requests') }} AS sizes ON mr.merge
 LEFT JOIN notes ON mr.merge_request_id = notes.merge_request_id
 WHERE mr.merge_request_id NOT IN (SELECT deleted_merge_request_id FROM {{ ref('sheetload_deleted_mrs') }})
 --AND old_1yr_flag = 0
--- and day = dateadd('day',-1,current_date)
+-- and date_actual = dateadd('day',-1,current_date)
 -- and reviewer_count is null
