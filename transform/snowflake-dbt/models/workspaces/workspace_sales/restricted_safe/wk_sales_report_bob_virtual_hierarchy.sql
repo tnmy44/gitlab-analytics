@@ -17,7 +17,7 @@ WITH RECURSIVE date_details AS (
            user_email,
            manager_name,
            manager_id,
-           crm_user_geo AS user_geo,
+           user_geo,
            user_region,
            user_segment,
            raw_user_segment,
