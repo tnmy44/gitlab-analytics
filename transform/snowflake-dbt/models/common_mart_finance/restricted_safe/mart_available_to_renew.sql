@@ -451,7 +451,7 @@
       term_start_month,
       term_end_month,
       subscription_end_month,
-      SUM(quantity)                         AS number_of_seats,
+      SUM(number_of_seats)                  AS number_of_seats,
       SUM(arr)                              AS arr
     FROM base_{{renewal_fiscal_year}}
     WHERE current_term > 12
@@ -483,12 +483,12 @@
       term_start_month,
       DATEADD('month',current_term/2,term_start_month)  AS term_end_month,
       subscription_end_month,
-      SUM(quantity)                                     AS number_of_seats,
+      SUM(number_of_seats)                              AS number_of_seats,
       SUM(arr)                                          AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 13 AND 24
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=24) }}
 
 ), thirty_six_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_myb for multi-year bookings.
 
@@ -516,7 +516,7 @@
       term_start_month,
       DATEADD('month',current_term/3,term_start_month)      AS term_end_month,
       subscription_end_month,
-      SUM(quantity)                                         AS number_of_seats,
+      SUM(number_of_seats)                                  AS number_of_seats,
       SUM(arr)                                              AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 25 AND 36
@@ -549,7 +549,7 @@
       term_start_month,
       DATEADD('month',current_term/3*2,term_start_month)    AS term_end_month,
       subscription_end_month,
-      SUM(quantity) AS number_of_seats,
+      SUM(number_of_seats)                                  AS number_of_seats,
       SUM(arr)                                              AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 25 AND 36
@@ -583,7 +583,7 @@
       term_start_month,
       DATEADD('month',current_term/4,term_start_month)      AS term_end_month,
       subscription_end_month,
-      SUM(quantity)                                         AS number_of_seats,
+      SUM(number_of_seats)                                  AS number_of_seats,
       SUM(arr)                                              AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
@@ -616,7 +616,7 @@
       term_start_month,
       DATEADD('month',current_term/4*2,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(quantity)                                             AS number_of_seats,
+      SUM(number_of_seats)                                      AS number_of_seats,
       SUM(arr)                                                  AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
@@ -649,7 +649,7 @@
       term_start_month,
       DATEADD('month',current_term/4*3,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(quantity)                                             AS number_of_seats,
+      SUM(number_of_seats)                                      AS number_of_seats,
       SUM(arr)                                                  AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 37 AND 48
@@ -683,7 +683,7 @@
       term_start_month,
       DATEADD('month',current_term/5,term_start_month)          AS term_end_month,
       subscription_end_month,
-      SUM(quantity)                                             AS number_of_seats,
+      SUM(number_of_seats)                                      AS number_of_seats,
       SUM(arr)                                                  AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
@@ -716,7 +716,7 @@
       term_start_month,
       DATEADD('month',current_term/5*2,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(quantity)                                             AS number_of_seats,
+      SUM(number_of_seats)                                      AS number_of_seats,
       SUM(arr)                                                  AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
@@ -749,7 +749,7 @@
       term_start_month,
       DATEADD('month',current_term/5*3,term_start_month)        AS term_end_month,
       subscription_end_month,
-      SUM(quantity)                                             AS number_of_seats,
+      SUM(number_of_seats)                                      AS number_of_seats,
       SUM(arr)                                                  AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60
@@ -782,7 +782,7 @@
       term_start_month,
       DATEADD('month',current_term/5*4,term_start_month)    AS term_end_month,
       subscription_end_month,
-      SUM(quantity)                                         AS number_of_seats,
+      SUM(number_of_seats)                                  AS number_of_seats,
       SUM(arr)                                              AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
     WHERE current_term BETWEEN 49 AND 60 AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')
