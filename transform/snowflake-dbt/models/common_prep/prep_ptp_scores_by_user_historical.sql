@@ -188,6 +188,7 @@ SELECT
        WHEN score_priority = 3
           THEN 'Lead'
     END AS ptp_source,
+  last_score_date,
   valid_from,
   valid_to
 FROM valid_to_from
