@@ -1,3 +1,5 @@
+{{ config(alias='report_bob_virtual_hierarchy') }}
+
 WITH RECURSIVE date_details AS (
 
     SELECT *
