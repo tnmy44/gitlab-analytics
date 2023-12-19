@@ -932,7 +932,7 @@
           THEN 'No Opportunity Term'
         ELSE opportunity_term_group.opportunity_term_group
       END                                                                                                                                   AS opportunity_term_group,
-      base_{{renewal_fiscal_year}}.number_of_seats                                                                                          AS number_of_seats,
+      base_{{renewal_fiscal_year}}.quantity                                                                                                 AS quantity,
       base_{{renewal_fiscal_year}}.arr                                                                                                      AS arr
     FROM combined_{{renewal_fiscal_year}}
     LEFT JOIN dim_date
@@ -995,7 +995,7 @@
     estimated_total_future_billings,
     is_available_to_renew,
     opportunity_term_group,
-    number_of_seats,
+    quantity,
     arr
     FROM renewal_report_{{renewal_fiscal_year}}
     {%- if not loop.last %} UNION ALL {%- endif %}
