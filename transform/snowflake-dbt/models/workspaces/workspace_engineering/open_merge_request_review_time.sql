@@ -53,12 +53,12 @@ agg AS (
 
   SELECT
     mrs.merge_request_id,
-    greatest(COUNT(DISTINCT username),max(first_non_author_assignment.reviewer_count))                        AS reviewer_count, --extracted from notes
-    greatest(COUNT(DISTINCT review_requested_at || username),max(first_non_author_assignment.review_requests)) AS review_requests, --extracted from notes
-    least(MIN(extracted_usernames.review_requested_at),min(first_non_author_assignment.first_review_date)) AS first_review_date -- first assignment event
+    GREATEST(COUNT(DISTINCT username), MAX(first_non_author_assignment.reviewer_count))                         AS reviewer_count, --extracted from notes
+    GREATEST(COUNT(DISTINCT review_requested_at || username), MAX(first_non_author_assignment.review_requests)) AS review_requests, --extracted from notes
+    LEAST(MIN(extracted_usernames.review_requested_at), MIN(first_non_author_assignment.first_review_date))     AS first_review_date -- first assignment event
   FROM product_mrs AS mrs
-  left JOIN extracted_usernames ON extracted_usernames.merge_request_id = mrs.merge_request_id
-  left join first_non_author_assignment on mrs.merge_request_id = first_non_author_assignment.merge_request_id
+  LEFT JOIN extracted_usernames ON mrs.merge_request_id = extracted_usernames.merge_request_id
+  LEFT JOIN first_non_author_assignment ON mrs.merge_request_id = first_non_author_assignment.merge_request_id
   GROUP BY 1
 
 ),
@@ -114,13 +114,13 @@ date_spine AS (
 add_old_flag AS (
 
   SELECT
-    DATE_TRUNC('day', date_spine.date_actual)                                                                       AS day,
+    DATE_TRUNC('day', date_spine.date_actual)                                                         AS day,
     first_review_date.*,
     CASE WHEN DATEADD('day', -365, date_actual) >= created_at AND merged_at IS NULL THEN 1 ELSE 0 END AS old_1yr_flag,
     DATEDIFF('day', created_at, date_spine.date_actual)                                               AS days_open,
     ROUND(DATEDIFF('day', created_at, first_review_date), 2)                                          AS days_to_review,
-    ROUND(DATEDIFF('day', first_review_date, date_spine.date_actual), 2)                                            AS days_in_review,
-    PERCENT_RANK() OVER (PARTITION BY day ORDER BY days_open)                                                       AS days_open_p95
+    ROUND(DATEDIFF('day', first_review_date, date_spine.date_actual), 2)                              AS days_in_review,
+    PERCENT_RANK() OVER (PARTITION BY day ORDER BY days_open)                                         AS days_open_p95
   FROM date_spine
   INNER JOIN first_review_date ON date_spine.date_actual BETWEEN first_review_date.first_review_date AND
     COALESCE(merged_at, CURRENT_DATE)::DATE
@@ -130,10 +130,10 @@ add_old_flag AS (
 
 SELECT DISTINCT
   mr.*,
-  TRY_CAST(sizes.product_merge_request_files_changed AS INTEGER) AS files_changed,
-  TRY_CAST(sizes.product_merge_request_lines_added AS INTEGER)   AS added_lines,
-  TRY_CAST(sizes.product_merge_request_lines_removed AS INTEGER) AS removed_lines,
-  MAX(notes.review_requested_at) over (partition by mr.merge_request_id)::DATE AS last_note_date
+  TRY_CAST(sizes.product_merge_request_files_changed AS INTEGER)               AS files_changed,
+  TRY_CAST(sizes.product_merge_request_lines_added AS INTEGER)                 AS added_lines,
+  TRY_CAST(sizes.product_merge_request_lines_removed AS INTEGER)               AS removed_lines,
+  MAX(notes.review_requested_at) OVER (PARTITION BY mr.merge_request_id)::DATE AS last_note_date
 FROM add_old_flag AS mr
 LEFT JOIN {{ ref('sizes_part_of_product_merge_requests') }} AS sizes ON mr.merge_request_iid = sizes.product_merge_request_iid AND mr.target_project_id = sizes.product_merge_request_project_id
 LEFT JOIN notes ON mr.merge_request_id = notes.merge_request_id
