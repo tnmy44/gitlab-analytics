@@ -241,6 +241,11 @@ databases:
     - pempey_prep:
         shared: no
 
+    - rakreddy_prod:
+        shared: no
+    - rakreddy_prep:
+        shared: no
+
     - rbacovic_prod:
         shared: no
     - rbacovic_prep:
@@ -5114,6 +5119,46 @@ roles:
         warehouses:
             - admin
 
+    - rakreddy:
+        member_of:
+            - analyst_people
+            - bamboohr
+	    - bamboohr_analytics
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - rakreddy_prep
+                - rakreddy_prod
+            schemas:
+                - rakreddy_prep.*
+                - rakreddy_prod.*
+            tables:
+                - rakreddy_prep.*.*
+                - rakreddy_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rakreddy_prep
+                    - rakreddy_prod
+                write:
+                    - rakreddy_prep
+                    - rakreddy_prod
+            schemas:
+                read:
+                    - rakreddy_prep.*
+                    - rakreddy_prod.*
+                write:
+                    - rakreddy_prep.*
+                    - rakreddy_prod.*
+            tables:
+                read:
+                    - rakreddy_prep.*.*
+                    - rakreddy_prod.*.*
+                write:
+                    - rakreddy_prep.*.*
+                    - rakreddy_prod.*.*
+
     - rbacovic:
         member_of:
             - engineer
@@ -6340,6 +6385,11 @@ users:
             - permission_bot
             - securityadmin
             - sysadmin
+
+    - rbacrakreddyovic:
+        can_login: yes
+        member_of:
+            - rakreddy
 
     - rbacovic:
         can_login: yes
