@@ -5123,7 +5123,7 @@ roles:
         member_of:
             - analyst_people
             - bamboohr
-	        - bamboohr_analytics
+            - bamboohr_analytics
         warehouses:
             - dev_xs
         owns:
