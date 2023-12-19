@@ -6386,7 +6386,7 @@ users:
             - securityadmin
             - sysadmin
 
-    - rbacrakreddyovic:
+    - rakreddy:
         can_login: yes
         member_of:
             - rakreddy
