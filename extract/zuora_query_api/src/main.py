@@ -70,6 +70,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
         if table_spec == "chargecontractualvalue":
             date_interval_list = zq.date_range()
             logging.info(f"The date list : {date_interval_list}")
+            logging.info(" Truncate the table to allow full load")
             query_executor(
                 zq.snowflake_engine,
                 "TRUNCATE TABLE RAW.ZUORA_QUERY_API.chargecontractualvalue",
