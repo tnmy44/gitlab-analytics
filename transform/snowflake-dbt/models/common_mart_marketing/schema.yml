@@ -617,7 +617,22 @@ models:
         - name: is_created_through_deal_registration
           description: Boolean value for being created through the deal reg process. 
         - name: is_mdf_campaign
-          description: Boolean value for whether or not this is from a channel partner effort.  
+          description: Boolean value for whether or not this is from a channel partner effort.
+        - name: sfdc_record_id
+          description: The SFDC ID of the person record
+        - name: opp_partner_dim_crm_account_id
+          description: The partner account id of the Opportunity attached to the touchpoin
+        - name: report_opportunity_user_business_unit
+          description: A case statement comparsing the closed date to today, when the closed date is before today the field passes the account owner bussiness unit, else the opp owner.
+        - name: report_opportunity_user_sub_business_unit
+          description: A case statement comparsing the closed date to today, when the closed date is before today the field passes the account owner sub bussiness unit, else the opp owner.
+        - name: report_opportunity_user_asm
+          description: Reports the Opportunities Users's ASM accounting for hybrid accounts.
+        - name: person_status_change
+          description: Tracks the change in status for the person record after the touchpoint date. 
+        - name: person_status_update
+          description: A non-null field of `person_status_change`
+
 
     - name: rpt_l2r_community_data
       description: Tableau-specific table that joins Zuora, Opportunity, and Lead To Revenue data to hone in on the community-owned opportunities and their related data points. 

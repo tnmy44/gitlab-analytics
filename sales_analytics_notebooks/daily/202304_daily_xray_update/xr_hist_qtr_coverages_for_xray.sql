@@ -4,6 +4,7 @@ SELECT
     agg_key_value,
     close_day_of_fiscal_quarter_normalised AS agg_key_day,
     bookings_linearity,
+    pipe_generation_linearity_rate,
     open_1plus_net_arr_coverage,
     open_3plus_net_arr_coverage,
     open_4plus_net_arr_coverage,

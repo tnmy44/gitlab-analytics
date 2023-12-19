@@ -7,7 +7,7 @@ WITH source AS (
   
     SELECT
       id::NUMBER                                AS work_item_type_id,
-      base_type::VARCHAR                        AS work_item_type,
+      name::VARCHAR                             AS work_item_type_name,
       created_at::TIMESTAMP                     AS created_at,
       updated_at::TIMESTAMP                     AS updated_at,
       TO_TIMESTAMP_NTZ(_uploaded_at::NUMBER)    AS uploaded_at
