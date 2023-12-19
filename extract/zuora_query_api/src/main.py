@@ -73,7 +73,8 @@ def main(file_path: str, load_only_table: str = None) -> None:
             logging.info(" Truncate the table to allow full load")
             query_executor(
                 zq.snowflake_engine,
-                "TRUNCATE TABLE IF EXISTS RAW.ZUORA_QUERY_API.chargecontractualvalue",
+                "TRUNCATE TABLE IF EXISTS ZUORA_QUERY_API.chargecontractualvalue",
+                
             )
             for start_end_date in date_interval_list:
                 logging.info(
