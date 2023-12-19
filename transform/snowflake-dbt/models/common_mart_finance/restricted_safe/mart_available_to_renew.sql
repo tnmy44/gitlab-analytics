@@ -254,7 +254,6 @@
       fct_charge.arr,
       fct_charge.previous_arr,
       fct_charge.delta_arr,
-      fct_charge.unit_of_measure,
       fct_charge.quantity,
       fct_charge.previous_quantity,
       fct_charge.delta_quantity,
