@@ -9,7 +9,7 @@ from typing import Dict
 import yaml
 from api import ZuoraQueriesAPI
 from fire import Fire
-from gitlabdata.orchestration_utils import dataframe_uploader
+from gitlabdata.orchestration_utils import dataframe_uploader, query_executor
 
 
 def manifest_reader(file_path: str) -> Dict[str, Dict]:
@@ -70,6 +70,10 @@ def main(file_path: str, load_only_table: str = None) -> None:
         if table_spec == "chargecontractualvalue":
             date_interval_list = zq.date_range()
             logging.info(f"The date list : {date_interval_list}")
+            query_executor(
+                zq.snowflake_engine,
+                "TRUNCATE TABLE RAW.ZUORA_QUERY_API.chargecontractualvalue",
+            )
             for start_end_date in date_interval_list:
                 logging.info(
                     f"The date range for extraction is between start_date= {start_end_date['start_date']} to end_date= {start_end_date['end_date']}"
