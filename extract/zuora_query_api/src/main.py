@@ -71,9 +71,13 @@ def main(file_path: str, load_only_table: str = None) -> None:
             date_interval_list = zq.date_range()
             logging.info(f"The date list : {date_interval_list}")
             logging.info(" Truncate the table to allow full load")
+            sf_load_db=config_dict.get('SNOWFLAKE_LOAD_DATABASE')
+            logging.info(sf_load_db)
+            truncate_statement=f"TRUNCATE TABLE IF EXISTS {sf_load_db}.ZUORA_QUERY_API.chargecontractualvalue"
+            logging.info(truncate_statement)
             truncate_table = query_executor(
                 zq.snowflake_engine,
-                f"TRUNCATE TABLE IF EXISTS {config_dict.get('SNOWFLAKE_LOAD_DATABASE')}.ZUORA_QUERY_API.chargecontractualvalue",
+                truncate_statement
             )
             logging.info(truncate_table)
             for start_end_date in date_interval_list:
