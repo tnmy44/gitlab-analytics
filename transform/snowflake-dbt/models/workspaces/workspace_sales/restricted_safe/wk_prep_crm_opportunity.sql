@@ -66,15 +66,11 @@ sfdc_opportunity_snapshot AS (
       sfdc_opportunity_snapshots_source.is_web_portal_purchase                                                      AS is_web_portal_purchase_snapshot,
       sfdc_opportunity_snapshots_source.is_won                                                                      AS is_won_snapshot,
       sfdc_opportunity_snapshots_source.stage_name                                                                  AS stage_name_snapshot,
-      sfdc_opportunity_snapshots_source.fiscal_quarter_name_fy                                                      AS pipeline_created_fiscal_quarter_name_snapshot,
-      sfdc_opportunity_snapshots_source.first_day_of_fiscal_quarter                                                 AS pipeline_created_fiscal_quarter_date_snapshot,
-      sfdc_opportunity_snapshots_source.fiscal_quarter_name_fy                                                      AS close_fiscal_quarter_name_snapshot,
       sfdc_opportunity_snapshots_source.order_type_grouped                                                          AS order_type_grouped_snapshot,
       sfdc_opportunity_snapshots_source.created_date::DATE                                                          AS created_date_snapshot,
       sfdc_opportunity_snapshots_source.sales_accepted_date::DATE                                                   AS sales_accepted_date_snapshot,
       sfdc_opportunity_snapshots_source.close_date::DATE                                                            AS close_date_snapshot,
       sfdc_opportunity_snapshots_source.net_arr                                                                     AS net_arr_snapshot,
-      {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
       sfdc_account_snapshot.is_jihu_account,
       CASE
         WHEN sfdc_opportunity_snapshots_source.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 
@@ -100,7 +96,6 @@ sfdc_opportunity_snapshot AS (
 ), sfdc_opportunity_live AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
       sfdc_opportunity_source.opportunity_id                                                                        AS dim_crm_opportunity_id,
       sfdc_opportunity_source.order_type_stamped                                                                    AS order_type_live,
       {{ sales_qualified_source_cleaning('sfdc_opportunity_source.sales_qualified_source') }}                       AS sales_qualified_source_live,
@@ -114,7 +109,7 @@ sfdc_opportunity_snapshot AS (
       sfdc_opportunity_source.opportunity_category                                                                  AS opportunity_category_live,
       sfdc_opportunity_source.is_deleted                                                                            AS is_deleted_live,      
       sfdc_opportunity_source.forecast_category_name                                                                AS forecast_category_name_live,
-      sfdc_opportunity_source.fpa_master_bookings_flag_live                                                         AS fpa_master_bookings_flag_live,
+      sfdc_opportunity_source.fpa_master_bookings_flag                                                              AS fpa_master_bookings_flag_live,
 
       CASE
        WHEN sfdc_opportunity_source.order_type = '1. New - First Order'
@@ -128,10 +123,7 @@ sfdc_opportunity_snapshot AS (
       sfdc_opportunity_source.is_web_portal_purchase                                                                AS is_web_portal_purchase_live,
       sfdc_opportunity_source.is_won                                                                                AS is_won_live,
       sfdc_opportunity_source.stage_name                                                                            AS stage_name_live,
-      sfdc_opportunity_source.fiscal_quarter_name_fy                                                                AS pipeline_created_fiscal_quarter_name_live,
-      sfdc_opportunity_source.first_day_of_fiscal_quarter                                                           AS pipeline_created_fiscal_quarter_date_live,
-      sfdc_opportunity_source.fiscal_quarter_name_fy                                                                AS close_fiscal_quarter_name_live,
-      live_date.order_type_grouped                                                                                  AS order_type_grouped_live,
+      sfdc_opportunity_source.order_type_grouped                                                                    AS order_type_grouped_live,
       sfdc_opportunity_source.created_date::DATE                                                                    AS created_date_live,
       sfdc_opportunity_source.sales_accepted_date::DATE                                                             AS sales_accepted_date_live,
       sfdc_opportunity_source.close_date::DATE                                                                      AS close_date_live,
@@ -160,7 +152,7 @@ sfdc_opportunity_snapshot AS (
 SELECT 
   prep_crm_opportunity.*,
   COALESCE(
-    sfdc_opportunity.is_pipeline_created_eligible,
+    prep_crm_opportunity.is_pipeline_created_eligible,
     CASE
       WHEN sfdc_opportunity_live.order_type_live IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
         AND sfdc_opportunity_live.is_edu_oss_live  = 0
@@ -243,7 +235,7 @@ SELECT
       AND sfdc_opportunity_snapshot.is_deleted_snapshot = 0
       AND sfdc_opportunity_snapshot.is_renewal_snapshot = 0
       AND sfdc_opportunity_live.order_type_live IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
-      AND sfdc_opportunity_live.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
+      AND sfdc_opportunity_live.opportunity_category_live IN ('Standard','Ramp Deal','Decommissioned')
       AND sfdc_opportunity_snapshot.is_web_portal_purchase_snapshot = 0
         THEN 1
       ELSE 0
