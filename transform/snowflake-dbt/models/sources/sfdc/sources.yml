@@ -99,6 +99,18 @@ sources:
         description: '{{ doc("sfdc_userrole_source") }}'
       - name: user
         description: '{{ doc("sfdc_user_source") }}'
+      - name: zoom_webinar
+        identifier: zoom_app__zoom_webinar__c
+        description: '{{ doc("sfdc_zoom_source") }}'
+      - name: zoom_webinar_attendee
+        identifier: zoom_app__zoom_webinar_attendee__c
+        description: '{{ doc("sfdc_zoom_source") }}'
+      - name: zoom_webinar_history
+        identifier: zoom_app__zoom_webinar_history__c
+        description: '{{ doc("sfdc_zoom_source") }}'
+      - name: zoom_webinar_registrant
+        identifier: zoom_app__zoom_webinar_registrant__c
+        description: '{{ doc("sfdc_zoom_source") }}'
       - name: zqu_quote
         identifier: zqu__quote__c
       - name: zqu_quote_amendment
