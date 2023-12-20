@@ -1,12 +1,8 @@
 WITH product_mrs AS (
 
-  SELECT *
-  FROM {{ ref('engineering_merge_requests') }} AS mrs
-  WHERE (
-    (merge_request_state = 'opened' AND mrs.merged_at IS NULL)
-    OR (merge_request_state = 'merged' AND mrs.merged_at IS NOT NULL)
-  )
-  AND YEAR(created_at) >= 2022
+  SELECT * EXCLUDE (merge_request_description)
+  FROM {{ ref('engineering_merge_requests') }}
+  WHERE YEAR(created_at) >= 2022
 
 ),
 
@@ -65,13 +61,17 @@ agg AS (
 
   SELECT
     mrs.merge_request_id,
-    GREATEST(COUNT(DISTINCT username), MAX(first_non_author_assignment.reviewer_count))                         AS reviewer_count,
-    GREATEST(COUNT(DISTINCT review_requested_at || username), MAX(first_non_author_assignment.review_requests)) AS review_requests,
-    LEAST(MIN(extracted_usernames.review_requested_at), MIN(first_non_author_assignment.first_review_date))     AS first_review_date,
-    GREATEST(MAX(extracted_usernames.last_note_date), MAX(mrs.merged_at))                                       AS last_note_date
+    GREATEST(COALESCE(COUNT(DISTINCT username), 0), COALESCE(MAX(first_non_author_assignment.reviewer_count), 0))                         AS reviewer_count,
+    GREATEST(COALESCE(COUNT(DISTINCT review_requested_at || username), 0), COALESCE(MAX(first_non_author_assignment.review_requests), 0)) AS review_requests,
+    LEAST(
+      COALESCE(MIN(extracted_usernames.review_requested_at), '9999-12-31'), COALESCE(MIN(first_non_author_assignment.first_review_date), '9999-12-31'),
+      COALESCE(MIN(reviewer_requested_at_creation.created_at), '9999-12-31')
+    )                                                                                                                                     AS first_review_date,
+    GREATEST(MAX(extracted_usernames.last_note_date), MAX(mrs.merged_at))                                                                 AS last_reported_date
   FROM product_mrs AS mrs
   LEFT JOIN extracted_usernames ON mrs.merge_request_id = extracted_usernames.merge_request_id
   LEFT JOIN first_non_author_assignment ON mrs.merge_request_id = first_non_author_assignment.merge_request_id
+  LEFT JOIN {{ ref('gitlab_dotcom_merge_request_reviewers') }} AS reviewer_requested_at_creation ON mrs.merge_request_id = reviewer_requested_at_creation.merge_request_id
   GROUP BY 1
 
 ),
@@ -83,9 +83,11 @@ first_review_date AS (
     reviewer_count,
     review_requests,
     first_review_date,
-    last_note_date
+    last_reported_date
   FROM product_mrs AS mrs
   INNER JOIN agg ON mrs.merge_request_id = agg.merge_request_id
+  WHERE (merge_request_state = 'opened' AND mrs.merged_at IS NULL)
+    OR (merge_request_state != 'opened' AND last_reported_date IS NOT NULL)
 
 ),
 
@@ -109,8 +111,8 @@ add_old_flag AS (
     ROUND(DATEDIFF('day', first_review_date, date_spine.date_actual), 2)                              AS days_in_review,
     PERCENT_RANK() OVER (PARTITION BY date_actual ORDER BY days_open)                                 AS days_open_p95
   FROM date_spine
-  INNER JOIN first_review_date ON date_spine.date_actual BETWEEN first_review_date.first_review_date AND
-    COALESCE(merged_at, CURRENT_DATE)::DATE
+  INNER JOIN first_review_date ON date_spine.date_actual BETWEEN DATE_TRUNC('day', first_review_date.first_review_date) AND
+    COALESCE(merged_at, last_reported_date, CURRENT_DATE)::DATE
 
 ),
 
@@ -127,7 +129,7 @@ final AS (
     map_employee_info.job_specialty_single                         AS author_job_specialty
   FROM add_old_flag AS mr
   LEFT JOIN {{ ref('sizes_part_of_product_merge_requests') }} AS sizes ON mr.merge_request_iid = sizes.product_merge_request_iid AND mr.target_project_id = sizes.product_merge_request_project_id
-  LEFT JOIN map_employee_info ON mr.author_id = map_employee_info.user_id AND date_actual BETWEEN map_employee_info.valid_from AND DATEADD('day', -1, map_employee_info.valid_to)
+  LEFT JOIN map_employee_info ON mr.author_id = map_employee_info.user_id AND DATE_TRUNC('day', mr.created_at) BETWEEN map_employee_info.valid_from AND DATEADD('day', -1, map_employee_info.valid_to)
   WHERE mr.merge_request_id NOT IN (SELECT deleted_merge_request_id FROM {{ ref('sheetload_deleted_mrs') }})
 --AND old_1yr_flag = 0
 -- and date_actual = dateadd('day',-1,current_date)
