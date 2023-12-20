@@ -73,7 +73,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
             logging.info(" Truncate the table to allow full load")
             sf_load_db = config_dict.get("SNOWFLAKE_LOAD_DATABASE")
             logging.info(sf_load_db)
-            truncate_statement = f'TRUNCATE TABLE IF EXISTS "{sf_load_db}".ZUORA_QUERY_API.chargecontractualvalue'
+            truncate_statement = "TRUNCATE TABLE IF EXISTS ZUORA_QUERY_API.chargecontractualvalue"
             logging.info(truncate_statement)
             truncate_table = query_executor(zq.snowflake_engine, truncate_statement)
             logging.info(truncate_table)
