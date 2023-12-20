@@ -70,7 +70,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
         if table_spec == "chargecontractualvalue":
             date_interval_list = zq.date_range()
             logging.info(f"The date list : {date_interval_list}")
-            logging.info(" Truncate the table to allow full reload")
+            logging.info(" Drop the table to allow full reload")
             truncate_table = query_executor(
                 zq.snowflake_engine,
                 "DROP TABLE IF EXISTS zuora_query_api.chargecontractualvalue",
