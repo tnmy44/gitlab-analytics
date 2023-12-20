@@ -73,7 +73,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
             logging.info(" Truncate the table to allow full reload")
             truncate_table = query_executor(
                 zq.snowflake_engine,
-                "DELETE FROM zuora_query_api.chargecontractualvalue",
+                "DROP TABLE IF EXISTS zuora_query_api.chargecontractualvalue",
             )
             logging.info(f"Table delete status: {truncate_table}")
             for start_end_date in date_interval_list:
