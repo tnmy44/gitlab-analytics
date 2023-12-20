@@ -75,11 +75,11 @@ def main(file_path: str, load_only_table: str = None) -> None:
                 zq.snowflake_engine,
                 'SELECT CURRENT_DATABASE();',
             )}")
-            
-            logging.info(f"Table delete status: {query_executor(
+            drop_result=query_executor(
                 zq.snowflake_engine,
                 'DROP TABLE IF EXISTS zuora_query_api.chargecontractualvalue',
-            )}")
+            )
+            logging.info(f"Table delete status: {drop_result}")
             for start_end_date in date_interval_list:
                 logging.info(
                     f"The date range for extraction is between start_date= {start_end_date['start_date']} to end_date= {start_end_date['end_date']}"
