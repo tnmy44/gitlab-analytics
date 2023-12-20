@@ -53,6 +53,7 @@ WITH base AS (
     _sdc_table_version::number AS sdc_table_version,
     lastvieweddate::timestamp_tz AS last_viewed_date,
     lastreferenceddate::timestamp_tz AS last_referenced_date
+    from base
 
   )
 
