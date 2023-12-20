@@ -6,17 +6,23 @@
     ])
 }}
 
- , base AS (
+ , base_prep AS (
 
     SELECT 
       dim_marketing_contact_id,
       ptp_source,
       last_score_date AS score_date,
-      score_group
+      score_group,
+      valid_to
     FROM prep_ptp_scores_by_user_historical
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_marketing_contact_id ORDER BY valid_to DESC) = 1
+
+), base AS (
+
+    SELECT *
+    FROM base_prep
     WHERE (ptp_source = 'Trial' OR score_group >=3) -- All Trial accounts and only Free and Leads >= 3
        AND DATEDIFF('day', valid_to, CURRENT_DATE) <= 60 -- record needs to have been scored in last 60 days
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_marketing_contact_id ORDER BY valid_to DESC) = 1
     
 ), prior_score_dates AS (
     
