@@ -1,6 +1,6 @@
 
 {{ config(
-    tags=["mnpi"]
+    tags=["mnpi_exception"]
 ) }}
 
 WITH base AS (
