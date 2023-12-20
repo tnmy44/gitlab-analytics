@@ -155,6 +155,8 @@ sources:
           error_after: {count: 15, period: day}
       - name: deployment_approvals
         identifier: gitlab_db_deployment_approvals
+      - name: dependency_proxy_packages_settings
+        identifier: gitlab_db_dependency_proxy_packages_settings
       - name: deployments
         identifier: gitlab_db_deployments
       - name: deployment_merge_requests
@@ -207,8 +209,6 @@ sources:
         identifier: gitlab_db_group_group_links
       - name: identities
         identifier: gitlab_db_identities
-      - name: in_product_marketing_emails
-        identifier: gitlab_db_in_product_marketing_emails
       - name: issuable_severities
         identifier: gitlab_db_issuable_severities
       - name: issue_assignees
@@ -360,6 +360,8 @@ sources:
           error_after: {count: 15, period: day}
       - name: saml_providers
         identifier: gitlab_db_saml_providers
+      - name: service_desk_settings
+        identifier: gitlab_db_service_desk_settings
       - name: slack_integrations
         identifier: gitlab_db_slack_integrations
       - name: shards

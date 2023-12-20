@@ -241,6 +241,11 @@ databases:
     - pempey_prep:
         shared: no
 
+    - rakreddy_prod:
+        shared: no
+    - rakreddy_prep:
+        shared: no
+
     - rbacovic_prod:
         shared: no
     - rbacovic_prep:
@@ -1802,6 +1807,7 @@ roles:
                     - prod.restricted_safe_common_mart_product.rpt_user_request_crm_account_issue_epic
                     - prod.restricted_safe_common_mart_product.rpt_user_request_issue_epic
                     - prod.workspace_customer_success.mart_product_usage_health_score
+                    - prod.common_mart_product.rpt_product_usage_health_score
                     - prod.workspace_customer_success.mart_product_usage_paid_user_metrics_monthly_workspace
                     - prod.pumps.pump_gainsight_metrics_monthly_paid
 
@@ -4003,6 +4009,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - jrubi:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - jsingh:
         member_of:
             - engineer
@@ -5108,6 +5120,46 @@ roles:
         warehouses:
             - admin
 
+    - rakreddy:
+        member_of:
+            - analyst_people
+            - bamboohr
+            - bamboohr_analytics
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - rakreddy_prep
+                - rakreddy_prod
+            schemas:
+                - rakreddy_prep.*
+                - rakreddy_prod.*
+            tables:
+                - rakreddy_prep.*.*
+                - rakreddy_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rakreddy_prep
+                    - rakreddy_prod
+                write:
+                    - rakreddy_prep
+                    - rakreddy_prod
+            schemas:
+                read:
+                    - rakreddy_prep.*
+                    - rakreddy_prod.*
+                write:
+                    - rakreddy_prep.*
+                    - rakreddy_prod.*
+            tables:
+                read:
+                    - rakreddy_prep.*.*
+                    - rakreddy_prod.*.*
+                write:
+                    - rakreddy_prep.*.*
+                    - rakreddy_prod.*.*
+
     - rbacovic:
         member_of:
             - engineer
@@ -6109,6 +6161,11 @@ users:
         member_of:
             - jpetr
 
+    - jrubi:
+        can_login: yes
+        member_of:
+            - jrubi
+
     - jsingh:
         can_login: yes
         member_of:
@@ -6329,6 +6386,11 @@ users:
             - permission_bot
             - securityadmin
             - sysadmin
+
+    - rakreddy:
+        can_login: yes
+        member_of:
+            - rakreddy
 
     - rbacovic:
         can_login: yes

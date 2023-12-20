@@ -326,6 +326,8 @@ models:
       - name: budget_holder
       - name: bizible_touchpoint_enabled_setting
       - name: strategic_marketing_contribution
+      - name: campaign_partner_crm_id
+        description: The partner associated with this campaign through Vartopia.
 
   - name: dim_crm_person
     description: '{{ doc("dim_crm_person") }}'
