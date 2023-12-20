@@ -53,3 +53,13 @@ models:
         - name: source
           tests:
             - not_null
+
+    - name: snowplow_gitlab_events_ide_extension_version_context
+      description: This is a view that extracts all the key data from the [gitlab ide extension context json](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/ide_extension_version/jsonschema)
+      columns:
+        - name: event_id
+          tests:
+            - not_null
+        - name: extension_name
+          tests:
+            - not_null
