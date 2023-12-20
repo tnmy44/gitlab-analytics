@@ -66,7 +66,14 @@ structured_event_renamed AS (
       has_gitlab_experiment_context, 
       has_subscription_auto_renew_context,
       has_code_suggestions_context,
-      has_ide_extension_version_context
+      has_ide_extension_version_context,
+      ide_extension_version_context,
+      extension_name,
+      extension_version,
+      ide_name,
+      ide_vendor,
+      ide_version,
+      language_server_version
 
     FROM {{ ref('prep_snowplow_unnested_events_all') }}
     WHERE event = 'struct'
@@ -134,6 +141,15 @@ structured_events_w_dim AS (
       events_with_plan.gsc_plan,
       events_with_plan.gsc_source,
 
+      -- Degenerate Dimensions (IDE Extension Version Context Attributes)
+      events_with_plan.ide_extension_version_context,
+      events_with_plan.extension_name,
+      events_with_plan.extension_version,
+      events_with_plan.ide_name,
+      events_with_plan.ide_vendor,
+      events_with_plan.ide_version,
+      events_with_plan.language_server_version,
+
       -- Degenerate Dimensions (User Location)
       events_with_plan.user_city, 
       events_with_plan.user_country,
@@ -163,7 +179,7 @@ structured_events_w_dim AS (
 {{ dbt_audit(
     cte_ref="structured_events_w_dim",
     created_by="@michellecooper",
-    updated_by="@cbraza",
+    updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2023-10-11"
+    updated_date="2023-12-20"
 ) }}

@@ -224,6 +224,11 @@ WITH filtered_source as (
     SELECT *
     FROM {{ ref('snowplow_gitlab_events_standard_context') }}
 
+), events_with_ide_extension_version_context AS (
+
+    SELECT *
+    FROM {{ ref('snowplow_gitlab_events_ide_extension_version_context') }}
+
 ), base_with_sorted_columns AS (
   
     SELECT 
@@ -373,12 +378,21 @@ WITH filtered_source as (
         WHEN LOWER(page_url) LIKE 'https://staging.gitlab.com/%' THEN TRUE
         WHEN LOWER(page_url) LIKE 'https://customers.stg.gitlab.com/%' THEN TRUE
         ELSE FALSE
-      END AS is_staging_url
+      END AS is_staging_url,
+      events_with_ide_extension_version_context.ide_extension_version_context,
+      events_with_ide_extension_version_context.extension_name,
+      events_with_ide_extension_version_context.extension_version,
+      events_with_ide_extension_version_context.ide_name,
+      events_with_ide_extension_version_context.ide_vendor,
+      events_with_ide_extension_version_context.ide_version,
+      events_with_ide_extension_version_context.language_server_version
     FROM base
     LEFT JOIN events_with_web_page_id
       ON base.event_id = events_with_web_page_id.event_id
     LEFT JOIN events_with_standard_context
       ON base.event_id = events_with_standard_context.event_id
+    LEFT JOIN events_with_ide_extension_version_context
+      ON base.event_id = events_with_ide_extension_version_context.event_id
     WHERE NOT EXISTS (
       SELECT event_id
       FROM events_with_web_page_id web_page_events

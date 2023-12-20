@@ -54,7 +54,7 @@ WITH filtered_source as (
 SELECT 
   base.event_id,
   base.derived_tstamp,
-  f.value['schema']::VARCHAR                          AS context_data_schema,
+  f.value['schema']::VARCHAR                          AS ide_extension_version_context_data_schema,
   f.value['data']                                     AS ide_extension_version_context,
   f.value['data']['extension_name']::VARCHAR          AS extension_name,
   f.value['data']['extension_version']::VARCHAR       AS extension_version,
@@ -64,6 +64,6 @@ SELECT
   f.value['data']['language_server_version']::VARCHAR AS language_server_version
 FROM base,
 lateral flatten(input => TRY_PARSE_JSON(contexts), path => 'data') f
-WHERE context_data_schema LIKE 'iglu:com.gitlab/ide_extension_version/jsonschema/%'
+WHERE ide_extension_version_context_data_schema LIKE 'iglu:com.gitlab/ide_extension_version/jsonschema/%'
 
 

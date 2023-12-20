@@ -142,5 +142,13 @@ SELECT
     'has_subscription_auto_renew_context',
     'has_code_suggestions_context',
     'has_ide_extension_version_context'
-    ]) }}                                                                                                           AS dim_behavior_contexts_sk
+    ]) }}                                                                                                           AS dim_behavior_contexts_sk,
+  
+ide_extension_version_context,
+extension_name,
+extension_version,
+ide_name,
+ide_vendor,
+ide_version,
+language_server_version
 FROM unioned_view
