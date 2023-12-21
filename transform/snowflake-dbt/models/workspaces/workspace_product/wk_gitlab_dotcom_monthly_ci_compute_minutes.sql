@@ -60,13 +60,13 @@ SELECT
   {{ dbt_utils.surrogate_key(['pipeline_activity.reporting_month', 'pipeline_activity.ultimate_parent_namespace_id']) }} as namespace_reporting_month_pk,
   pipeline_activity.reporting_month, 
   pipeline_activity.ultimate_parent_namespace_id, 
-  dim_project_id, 
+  dim_project_id,
+  dim_user_id, 
   plan_title, 
   runner_type,
   ci_runner_machine_type
   count_of_runners,
   count_of_pipelines,
-  count_of_users,
   ci_build_minutes,
   CASE 
     WHEN plan_title = 'Free' THEN 400
