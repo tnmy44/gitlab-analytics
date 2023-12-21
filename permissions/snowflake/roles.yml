@@ -4480,6 +4480,7 @@ roles:
             - analyst_marketing
             - customers_db
             - hightouch_role
+            - iterable
             - marketo
             - reporter
             - workato
