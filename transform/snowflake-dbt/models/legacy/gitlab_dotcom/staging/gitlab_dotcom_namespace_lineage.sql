@@ -76,7 +76,7 @@ WITH RECURSIVE namespaces AS (
       ELSE COALESCE(ultimate_parent_plans.plan_title, 'Free')
     END                                                                               AS ultimate_parent_plan_title,
     CASE
-      WHEN ultimate_parent_gitlab_subscriptions.is_trial AND COALESCE(ultimate_parent_gitlab_subscriptions.plan_id, 34) <> 34
+      WHEN ultimate_parent_gitlab_subscriptions.is_trial AND COALESCE(ultimate_parent_gitlab_subscriptions.plan_id, 34) != 34
         THEN 'ultimate_trial'
       ELSE COALESCE(ultimate_parent_plans.plan_name, 'free')
     END                                                                               AS ultimate_parent_plan_name,
