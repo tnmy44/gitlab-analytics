@@ -25,5 +25,5 @@
           role_level_3::VARCHAR                                                     AS role_level_3,
           role_level_4::VARCHAR                                                     AS role_level_4,
           role_level_5::VARCHAR                                                     AS role_level_5,
-          allocated_target::VARCHAR                                                 AS allocated_target
+          REPLACE(allocated_target, ',', '')::FLOAT                                 AS allocated_target
         FROM source
