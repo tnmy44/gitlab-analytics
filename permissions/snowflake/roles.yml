@@ -5793,7 +5793,7 @@ roles:
         warehouses:
             - dev_xs
 
-   - usinghal:
+    - usinghal:
         member_of:
          - analytics_engineer_core
          - analyst_engineering
