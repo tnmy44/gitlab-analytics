@@ -5267,6 +5267,7 @@ roles:
             - data_team_analyst
             - data_science_readonly
             - facebook_ads
+            - iterable
             - linkedin_ads
             - reporter
             - restricted_safe
