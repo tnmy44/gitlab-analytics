@@ -2140,6 +2140,19 @@ roles:
                     - prod.workspace_marketing.marketo_form_fills_missing_touchpoints
                     - prod.common_mart_product.rpt_namespace_onboarding
 
+    - iterable:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.iterable
+            tables:
+                read:
+                    - raw.iterable.*
+
+
     - license_db:
         privileges:
             databases:
@@ -4467,6 +4480,7 @@ roles:
             - analyst_marketing
             - customers_db
             - hightouch_role
+            - iterable
             - marketo
             - reporter
             - workato
@@ -5253,6 +5267,7 @@ roles:
             - data_team_analyst
             - data_science_readonly
             - facebook_ads
+            - iterable
             - linkedin_ads
             - reporter
             - restricted_safe
