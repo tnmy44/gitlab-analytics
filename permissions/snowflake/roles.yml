@@ -298,6 +298,11 @@ databases:
     - tnguyen_prep:
         shared: no
 
+    - usinghal_prod:
+        shared: no
+    - usinghal_prep:
+        shared: no
+
     - vprakash_prod:
         shared: no
     - vprakash_prep:
@@ -5788,6 +5793,50 @@ roles:
         warehouses:
             - dev_xs
 
+    - usinghal:
+        member_of:
+         - analytics_engineer_core
+         - analyst_engineering
+         - analyst_growth
+         - data_team_analyst
+         - restricted_safe
+         - bi_tool_eval_read
+         - zuora
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - usinghal_prep
+                - usinghal_prod
+            schemas:
+                - usinghal_prep.*
+                - usinghal_prod.*
+            tables:
+                - usinghal_prep.*.*
+                - usinghal_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - usinghal_prep
+                    - usinghal_prod
+                write:
+                    - usinghal_prep
+                    - usinghal_prod
+            schemas:
+                read:
+                    - usinghal_prep.*
+                    - usinghal_prod.*
+                write:
+                    - usinghal_prep.*
+                    - usinghal_prod.*
+            tables:
+                read:
+                    - usinghal_prep.*.*
+                    - usinghal_prod.*.*
+                write:
+                    - usinghal_prep.*.*
+                    - usinghal_prod.*.*
+
     - vagrawal:
         member_of:
             - adaptive
@@ -6551,6 +6600,11 @@ users:
         can_login: yes
         member_of:
             - tscott
+
+    - usinghal:
+        can_login: yes
+        member_of:
+            - usinghal
 
     - vagrawal:
         can_login: yes
