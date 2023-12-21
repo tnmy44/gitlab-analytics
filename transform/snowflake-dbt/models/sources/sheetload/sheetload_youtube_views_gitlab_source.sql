@@ -11,7 +11,7 @@ WITH source AS (
     url::VARCHAR            as url,
     video_title::VARCHAR    as video_title,
     publication_date::VARCHAR            as publication_date,
-    gitLab_publication_quarter::VARCHAR  as gitLab_publication_quarter,
+    gitlab_publication_quarter::VARCHAR  as gitlab_publication_quarter,
     include_in_looker_report::VARCHAR    as include_in_looker_report
   FROM source
 )
