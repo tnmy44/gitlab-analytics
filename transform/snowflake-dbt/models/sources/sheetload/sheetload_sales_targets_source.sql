@@ -8,7 +8,7 @@
         SELECT
           scenario::VARCHAR                                                         AS scenario,
           kpi_name::VARCHAR                                                         AS kpi_name,
-          month::VARCHAR,                                                           AS month,
+          month::VARCHAR                                                            AS month,
           {{ sales_qualified_source_cleaning('sales_qualified_source') }}::VARCHAR  AS sales_qualified_source,
           alliance_partner::VARCHAR                                                 AS alliance_partner,
           partner_category::VARCHAR                                                 AS partner_category,
