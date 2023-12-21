@@ -144,11 +144,11 @@ SELECT
     'has_ide_extension_version_context'
     ]) }}                                                                                                           AS dim_behavior_contexts_sk,
   
-ide_extension_version_context,
-extension_name,
-extension_version,
-ide_name,
-ide_vendor,
-ide_version,
-language_server_version
+  ide_extension_version_context,
+  extension_name,
+  extension_version,
+  ide_name,
+  ide_vendor,
+  ide_version,
+  language_server_version
 FROM unioned_view
