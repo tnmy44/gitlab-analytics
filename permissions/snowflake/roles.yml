@@ -3905,6 +3905,12 @@ roles:
                     - jonglee_prep.*.*
                     - jonglee_prod.*.*
 
+    - joshua:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - jng:
         member_of:
          - analytics_engineer_core
@@ -6205,6 +6211,11 @@ users:
         can_login: yes
         member_of:
             - jonglee
+
+    - joshua:
+        can_login: yes
+        member_of:
+            - joshua
 
     - jng:
         can_login: yes
