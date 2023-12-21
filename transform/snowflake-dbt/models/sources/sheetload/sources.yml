@@ -125,3 +125,4 @@ sources:
       - name: xactly_credit_sheetload
 
       - name: partner_discount_summary
+      - name: sales_targets
