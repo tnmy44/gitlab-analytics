@@ -205,3 +205,9 @@ Source model for SFDC custom object representing a quote rate plan charge from Z
 Custom source table: This table contains customer subscription data.
 
 {% enddocs %}
+
+{% docs sfdc_zoom_source %}
+
+Source models for salesforce and zoom integrated objects.
+
+{% enddocs %}
