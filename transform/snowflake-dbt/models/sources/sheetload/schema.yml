@@ -621,7 +621,7 @@ models:
     - name: dim_crm_opportunity_id
     - name: close_date
     - name: partner_type
-- name: sheetload_sales_targets
+- name: sheetload_sales_targets_source
   description: Sales funnel target matrix source data. New for FY25.
   columns:
     - name: kpi_name
