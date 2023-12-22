@@ -1,6 +1,4 @@
 {{ simple_cte([
-    ('prep_crm_opportunity', 'prep_crm_opportunity'),
-    ('sfdc_opportunity_snapshots_source', 'sfdc_opportunity_snapshots_source'),
     ('sfdc_opportunity_source', 'sfdc_opportunity_source'),
     ('sfdc_account_snapshot', 'prep_crm_account_daily_snapshot'),
     ('dim_date', 'dim_date')
@@ -14,11 +12,28 @@ sfdc_account AS (
 
 ),
 
+prep_crm_opportunity AS (
+
+    SELECT *
+    FROM {{ ref('prep_crm_opportunity') }}
+    WHERE created_date > '2023-05-31'
+
+),
+
+sfdc_opportunity_snapshots_source AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_opportunity_snapshots_source') }}
+    WHERE account_id IS NOT NULL
+      AND is_deleted = FALSE
+
+),
+
 snapshot_dates AS (
 
     SELECT *
     FROM dim_date
-    WHERE date_actual::DATE >= '2020-02-01' -- Restricting snapshot model to only have data from this date forward. More information https://gitlab.com/gitlab-data/analytics/-/issues/14418#note_1134521216
+    WHERE date_actual::DATE >= '2023-05-31' -- Restricting snapshot model to only have data from this date forward. More information https://gitlab.com/gitlab-data/analytics/-/issues/14418#note_1134521216
       AND date_actual < CURRENT_DATE
 
     {% if is_incremental() %}
@@ -31,7 +46,7 @@ snapshot_dates AS (
 
     SELECT *
     FROM dim_date
-    WHERE date_actual = CURRENT_DATE
+    WHERE date_actual = CURRENT_DATE AND date_actual::DATE >= '2023-05-31'
 
 ),
 
@@ -39,36 +54,17 @@ sfdc_opportunity_snapshot AS (
 
     SELECT
       sfdc_opportunity_snapshots_source.opportunity_id                                                              AS dim_crm_opportunity_id,
-      sfdc_opportunity_snapshots_source.order_type_stamped                                                          AS order_type_snapshot,
-      {{ sales_qualified_source_cleaning('sfdc_opportunity_snapshots_source.sales_qualified_source') }}             AS sales_qualified_source_snapshot,
-      sfdc_opportunity_snapshots_source.user_segment_stamped                                                        AS crm_opp_owner_sales_segment_stamped_snapshot,
-      sfdc_opportunity_snapshots_source.user_geo_stamped                                                            AS crm_opp_owner_geo_stamped_snapshot,
-      sfdc_opportunity_snapshots_source.user_region_stamped                                                         AS crm_opp_owner_region_stamped_snapshot,
-      sfdc_opportunity_snapshots_source.user_area_stamped                                                           AS crm_opp_owner_area_stamped_snapshot,
-      sfdc_opportunity_snapshots_source.user_segment_geo_region_area_stamped                                        AS crm_opp_owner_sales_segment_geo_region_area_stamped_snapshot,
-      sfdc_opportunity_snapshots_source.user_business_unit_stamped                                                  AS crm_opp_owner_business_unit_stamped_snapshot,
       sfdc_opportunity_snapshots_source.is_edu_oss                                                                  AS is_edu_oss_snapshot,
       sfdc_opportunity_snapshots_source.opportunity_category                                                        AS opportunity_category_snapshot,
       sfdc_opportunity_snapshots_source.is_deleted                                                                  AS is_deleted_snapshot,
       sfdc_opportunity_snapshots_source.forecast_category_name                                                      AS forecast_category_name_snapshot,
       sfdc_opportunity_snapshots_source.fpa_master_bookings_flag                                                    AS fpa_master_bookings_flag_snapshot,
-
-      CASE
-       WHEN sfdc_opportunity_snapshots_source.order_type = '1. New - First Order'
-         THEN '1. New'
-       WHEN sfdc_opportunity_snapshots_source.order_type IN ('2. New - Connected', '3. Growth', '5. Churn - Partial','6. Churn - Final','4. Contraction')
-         THEN '2. Growth'
-       ELSE '3. Other'
-     END                                                                                                            AS deal_group_snapshot,
-      
+    
       IFF(LOWER(sfdc_opportunity_snapshots_source.sales_type) like '%renewal%', 1, 0)                               AS is_renewal_snapshot,
       sfdc_opportunity_snapshots_source.is_closed                                                                   AS is_closed_snapshot,
       sfdc_opportunity_snapshots_source.is_web_portal_purchase                                                      AS is_web_portal_purchase_snapshot,
-      sfdc_opportunity_snapshots_source.is_won                                                                      AS is_won_snapshot,
       sfdc_opportunity_snapshots_source.stage_name                                                                  AS stage_name_snapshot,
-      sfdc_opportunity_snapshots_source.order_type_grouped                                                          AS order_type_grouped_snapshot,
       sfdc_opportunity_snapshots_source.created_date::DATE                                                          AS created_date_snapshot,
-      sfdc_opportunity_snapshots_source.sales_accepted_date::DATE                                                   AS sales_accepted_date_snapshot,
       sfdc_opportunity_snapshots_source.close_date::DATE                                                            AS close_date_snapshot,
       sfdc_opportunity_snapshots_source.net_arr                                                                     AS net_arr_snapshot,
       sfdc_account_snapshot.is_jihu_account,
@@ -89,8 +85,6 @@ sfdc_opportunity_snapshot AS (
         AND snapshot_dates.date_id = sfdc_account_snapshot.snapshot_id
     LEFT JOIN snapshot_dates AS close_date
       ON sfdc_opportunity_snapshots_source.close_date = close_date.date_actual
-    WHERE sfdc_opportunity_snapshots_source.account_id IS NOT NULL
-      AND sfdc_opportunity_snapshots_source.is_deleted = FALSE
     
 
 ), sfdc_opportunity_live AS (
@@ -255,3 +249,4 @@ LEFT JOIN sfdc_opportunity_snapshot
   ON sfdc_opportunity_snapshot.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
 LEFT JOIN sfdc_opportunity_live
   ON sfdc_opportunity_live.dim_crm_opportunity_id = prep_crm_opportunity.dim_crm_opportunity_id
+
