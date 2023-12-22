@@ -298,6 +298,11 @@ databases:
     - tnguyen_prep:
         shared: no
 
+    - usinghal_prod:
+        shared: no
+    - usinghal_prep:
+        shared: no
+
     - vprakash_prod:
         shared: no
     - vprakash_prep:
@@ -2140,6 +2145,19 @@ roles:
                     - prod.workspace_marketing.marketo_form_fills_missing_touchpoints
                     - prod.common_mart_product.rpt_namespace_onboarding
 
+    - iterable:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.iterable
+            tables:
+                read:
+                    - raw.iterable.*
+
+
     - license_db:
         privileges:
             databases:
@@ -3192,6 +3210,15 @@ roles:
                 - cbraza_prep.*.*
                 - cbraza_prod.*.*
 
+    - ccontreras:
+        member_of:
+            - analyst_sales
+            - xactly
+            - restricted_safe
+            - bi_tool_eval_read
+        warehouses:
+            - dev_xs
+
     - cdeleon:
         member_of:
             - analyst_engineering
@@ -3887,6 +3914,12 @@ roles:
                     - jonglee_prep.*.*
                     - jonglee_prod.*.*
 
+    - joshua:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - jng:
         member_of:
          - analytics_engineer_core
@@ -4467,6 +4500,7 @@ roles:
             - analyst_marketing
             - customers_db
             - hightouch_role
+            - iterable
             - marketo
             - reporter
             - workato
@@ -4756,6 +4790,7 @@ roles:
     - mxiao:
         member_of:
             - reporter
+            - restricted_safe
         warehouses:
             - dev_xs
 
@@ -5252,6 +5287,7 @@ roles:
             - data_team_analyst
             - data_science_readonly
             - facebook_ads
+            - iterable
             - linkedin_ads
             - reporter
             - restricted_safe
@@ -5772,6 +5808,50 @@ roles:
         warehouses:
             - dev_xs
 
+    - usinghal:
+        member_of:
+         - analytics_engineer_core
+         - analyst_engineering
+         - analyst_growth
+         - data_team_analyst
+         - restricted_safe
+         - bi_tool_eval_read
+         - zuora
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - usinghal_prep
+                - usinghal_prod
+            schemas:
+                - usinghal_prep.*
+                - usinghal_prod.*
+            tables:
+                - usinghal_prep.*.*
+                - usinghal_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - usinghal_prep
+                    - usinghal_prod
+                write:
+                    - usinghal_prep
+                    - usinghal_prod
+            schemas:
+                read:
+                    - usinghal_prep.*
+                    - usinghal_prod.*
+                write:
+                    - usinghal_prep.*
+                    - usinghal_prod.*
+            tables:
+                read:
+                    - usinghal_prep.*.*
+                    - usinghal_prod.*.*
+                write:
+                    - usinghal_prep.*.*
+                    - usinghal_prod.*.*
+
     - vagrawal:
         member_of:
             - adaptive
@@ -5973,6 +6053,11 @@ users:
         member_of:
             - cbraza
 
+    - ccontreras:
+        can_login: yes
+        member_of:
+            - ccontreras
+
     - cdewit:
         can_login: yes
         member_of:
@@ -6140,6 +6225,11 @@ users:
         can_login: yes
         member_of:
             - jonglee
+
+    - joshua:
+        can_login: yes
+        member_of:
+            - joshua
 
     - jng:
         can_login: yes
@@ -6535,6 +6625,11 @@ users:
         can_login: yes
         member_of:
             - tscott
+
+    - usinghal:
+        can_login: yes
+        member_of:
+            - usinghal
 
     - vagrawal:
         can_login: yes

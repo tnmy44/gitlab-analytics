@@ -374,6 +374,21 @@ tables:
       FROM dast_profiles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  dependency_proxy_packages_settings:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'dependency_proxy_packages_settings'
+    export_table_primary_key: project_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT project_id
+      , enabled
+      , created_at
+      , updated_at
+      , maven_external_registry_url
+      FROM dependency_proxy_packages_settings
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   deployment_approvals:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -574,23 +589,6 @@ tables:
       , updated_at
       , saml_provider_id
       FROM identities
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  in_product_marketing_emails:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'in_product_marketing_emails'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , user_id
-      , cta_clicked_at
-      , track
-      , series
-      , created_at
-      , updated_at
-      FROM in_product_marketing_emails
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   integrations:
