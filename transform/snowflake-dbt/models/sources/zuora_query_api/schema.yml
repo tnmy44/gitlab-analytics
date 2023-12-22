@@ -59,7 +59,7 @@ models:
   - name: zuora_query_api_charge_metrics_discount_allocation_detail_source
     description: Source layer for Zuora charge_metrics_discount_allocation_detail
     columns:
-      - name: charge_metrics_discount_allocation_detail_id
+      - name: chargemetrics_discountallocationdetail_id
         tags: [ "tdf", "zuora", "zuora_query_api" ]
         tests:
           - not_null
