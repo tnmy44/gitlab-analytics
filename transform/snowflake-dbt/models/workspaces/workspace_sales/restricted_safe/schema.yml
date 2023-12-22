@@ -44,3 +44,4 @@ models:
             - week_start_date 
             - crm_user_id
             - field_name
+  - name: wk_prep_sales_funnel_target
