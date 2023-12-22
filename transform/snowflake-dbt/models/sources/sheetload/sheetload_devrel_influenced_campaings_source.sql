@@ -1,7 +1,7 @@
 
 WITH source AS (
   SELECT *
-  FROM {{ source('sheetload', 'devrel_influenced_campaings') }}
+  FROM {{ source('sheetload', 'devrel_influenced_campaigns') }}
 ), renamed AS (
   SELECT 
     campaign_name::VARCHAR  as campaign_name,
