@@ -2144,8 +2144,6 @@ models:
         description: OAuth provider. Used for GL.com authentication.
       - name: user_provider_user_id
         description:  The User ID provided by the User to log in to  GitLab.com.
-      - name: zuora_account_id
-        description: A unique Zuora account number associated with the User
       - name: country
         description: User Country selected during registration
       - name: state

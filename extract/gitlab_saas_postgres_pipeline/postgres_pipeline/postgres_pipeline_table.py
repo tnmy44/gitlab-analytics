@@ -280,7 +280,7 @@ class PostgresPipelineTable:
     ) -> bool:
         if not is_schema_addition:
             logging.info(
-                f"Table {self.get_target_table_name()} already exists and won't be tested."
+                f"Table {self.get_target_table_name()} already exists and won't be processed further."
             )
             return False
         target_table = self.get_temp_target_table_name()
