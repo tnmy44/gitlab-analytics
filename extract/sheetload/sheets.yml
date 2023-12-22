@@ -337,4 +337,9 @@ sheets:
     owner: '@chrissharp'
     tabs:
       - sales_targets
-  
+  - name: devrel_campaigns
+    owner: '@degan'
+    tabs: 
+      - devrel_influenced_campaigns
+      - youtube_views_gitlab
+      - devrel_blog_posts_views

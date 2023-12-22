@@ -630,3 +630,9 @@ models:
     - name: month
       tests:
       - not_null
+- name: sheetload_devrel_influenced_campaigns_source
+  description: A list updated by the DelRel team of campaigns they have worked on.
+- name: sheetload_devrel_blog_posts_views_source
+  description: A list updated by the DevRel team of Youtube videos they worked on.
+- name: sheetload_youtube_views_gitlab_source
+  description: A list updated by the DevRel team of blog posts they worked on.
