@@ -3210,6 +3210,15 @@ roles:
                 - cbraza_prep.*.*
                 - cbraza_prod.*.*
 
+    - ccontreras:
+        member_of:
+            - analyst_sales
+            - xactly
+            - restricted_safe
+            - bi_tool_eval_read
+        warehouses:
+            - dev_xs
+
     - cdeleon:
         member_of:
             - analyst_engineering
@@ -6043,6 +6052,11 @@ users:
         can_login: yes
         member_of:
             - cbraza
+
+    - ccontreras:
+        can_login: yes
+        member_of:
+            - ccontreras
 
     - cdewit:
         can_login: yes
