@@ -119,6 +119,12 @@ suggestion_level AS (
 
     --Suggestion attributes
     requested.event_label                                                                           AS suggestion_id,
+   
+    -- Customer attributes
+    requested.namespace_id,
+    requested.instance_id,
+    requested.host_name,
+
     --Edge cases where language on the requested event is NULL or blank (''), fall back to other events to maximize coverage
     CASE
       WHEN requested.language != '' THEN requested.language
@@ -197,8 +203,8 @@ suggestion_level AS (
 {{ dbt_audit(
     cte_ref="suggestion_level",
     created_by="@cbraza",
-    updated_by="@cbraza",
+    updated_by="@michellecooper",
     created_date="2023-10-20",
-    updated_date="2023-10-20"
+    updated_date="2023-12-21"
 ) }}
 
