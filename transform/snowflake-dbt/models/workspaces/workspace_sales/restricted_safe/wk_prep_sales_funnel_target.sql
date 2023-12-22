@@ -16,7 +16,7 @@
     SELECT
       sheetload_sales_targets_source.kpi_name,
       sheetload_sales_targets_source.month,
-      sheetload_sales_targets_source.opportunity_source,
+      sheetload_sales_targets_source.sales_qualified_source,
       sheetload_sales_targets_source.order_type,
       sheetload_sales_targets_source.area,
       sheetload_sales_targets_source.allocated_target,
@@ -26,19 +26,7 @@
       sheetload_sales_targets_source.user_area,
       sheetload_sales_targets_source.user_business_unit,
       CASE
-        WHEN fiscal_months.fiscal_year < 2024
-          THEN CONCAT(
-                      UPPER(sheetload_sales_targets_source.user_segment), 
-                      '-',
-                      UPPER(sheetload_sales_targets_source.user_geo), 
-                      '-',
-                      UPPER(sheetload_sales_targets_source.user_region), 
-                      '-',
-                      UPPER(sheetload_sales_targets_source.user_area),
-                      '-',
-                      fiscal_months.fiscal_year
-                      )
-        WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(sheetload_sales_targets_source.user_business_unit) = 'comm'
+        WHEN fiscal_months.fiscal_year = 2024 AND LOWER(sheetload_sales_targets_source.user_business_unit) = 'comm'
           THEN CONCAT(
                       UPPER(sheetload_sales_targets_source.user_business_unit), 
                       '-',
@@ -52,7 +40,7 @@
                       '-',
                       fiscal_months.fiscal_year
                       )
-        WHEN fiscal_months.fiscal_year >= 2024 AND LOWER(sheetload_sales_targets_source.user_business_unit) = 'entg'
+        WHEN fiscal_months.fiscal_year = 2024 AND LOWER(sheetload_sales_targets_source.user_business_unit) = 'entg'
           THEN CONCAT(
                       UPPER(sheetload_sales_targets_source.user_business_unit), 
                       '-',
@@ -66,7 +54,7 @@
                       '-',
                       fiscal_months.fiscal_year
                       )
-        WHEN fiscal_months.fiscal_year >= 2024 
+        WHEN fiscal_months.fiscal_year = 2024 
           AND (sheetload_sales_targets_source.user_business_unit IS NOT NULL AND LOWER(sheetload_sales_targets_source.user_business_unit) NOT IN ('comm', 'entg')) -- account for non-sales reps
           THEN CONCAT(
                       UPPER(sheetload_sales_targets_source.user_business_unit), 
@@ -82,7 +70,7 @@
                       fiscal_months.fiscal_year
                       )
 
-        WHEN fiscal_months.fiscal_year >= 2024 AND sheetload_sales_targets_source.user_business_unit IS NULL -- account for nulls/possible data issues
+        WHEN fiscal_months.fiscal_year = 2024 AND sheetload_sales_targets_source.user_business_unit IS NULL -- account for nulls/possible data issues
           THEN CONCAT(
                       UPPER(sheetload_sales_targets_source.user_segment), 
                       '-',
@@ -94,6 +82,8 @@
                       '-',
                       fiscal_months.fiscal_year
                       )
+        WHEN fiscal_months.fiscal_year = 2025 --AND sheetload_sales_targets_source.user_business_unit IS NULL -- account for nulls/possible data issues
+          THEN UPPER(sheetload_sales_targets_source.user_role_name)
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,
         fiscal_months.fiscal_year,
         fiscal_months.first_day_of_month
