@@ -125,6 +125,6 @@ sources:
       - name: xactly_credit_sheetload
       - name: partner_discount_summary
       - name: sales_targets
-      - name: devrel_influenced_campaings
+      - name: devrel_influenced_campaigns
       - name: youtube_views_gitlab
       - name: devrel_blog_posts_views
