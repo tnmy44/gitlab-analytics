@@ -5,9 +5,6 @@ models:
   - name: customers_db_reconciliations
     description: Workspace model of the source data (deduplicated).
 
-  - name: gitlab_dotcom_ci_editor_ai_conversation_messages
-    description: Workspace model of the source data (deduplicated).
-
   - name: gitlab_dotcom_fork_network_members
     description: Workspace model of the source data (deduplicated).
 
