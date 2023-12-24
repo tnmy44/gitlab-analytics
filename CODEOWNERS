@@ -26,6 +26,7 @@ README.md          @iweeks @dvanrooijen2 @nmcavinue @amiebright
 /orchestration/                     @jjstark @paul_armstrong @vedprakash2021 @rbacovic
 /permissions/                       @dvanrooijen2 @paul_armstrong @jjstark
 /pump/                              @jjstark @paul_armstrong @vedprakash2021 @rbacovic
+/extract/gitlab_saas_postgres_pipeline/ @jjstark @paul_armstrong @vedprakash2021 @rbacovic @juwong
 
 [Data Science]
 /dags/data_science/ @paul_armstrong @rigerta
