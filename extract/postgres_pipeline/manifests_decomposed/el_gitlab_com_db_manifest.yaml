@@ -2412,6 +2412,7 @@ tables:
     import_query: |-
       SELECT id
       , name
+      , base_type
       , created_at
       , updated_at
       FROM work_item_types
