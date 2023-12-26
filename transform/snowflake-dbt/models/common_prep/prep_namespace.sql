@@ -14,7 +14,10 @@
     ('projects_source', 'gitlab_dotcom_projects_source'),
     ('audit_events', 'gitlab_dotcom_audit_events_source'),
     ('audit_event_details', 'gitlab_dotcom_audit_event_details'),
-    ('users', 'prep_user')
+    ('users', 'prep_user'),
+    ('prep_subscription', 'prep_subscription'),
+    ('prep_charge', 'prep_charge'),
+    ('prep_product_detail', 'prep_product_detail')
 ]) }},
 
 members AS (
@@ -58,6 +61,21 @@ creators AS (
 
 ),
 
+namespace_crm_account_mapping AS (
+
+  SELECT 
+    namespaces.namespace_id,
+    prep_subscription.dim_subscription_id,
+    prep_subscription.dim_crm_account_id
+  FROM namespaces
+  LEFT JOIN prep_subscription
+    ON namespaces.namespace_id = prep_subscription.namespace_id
+  LEFT JOIN prep_charge
+    ON prep_subscription.subscription_id = prep_charge.subscription_id
+  LEFT JOIN prep_product_detail
+    ON prep_charge.dim_product_detail_id = prep_product_detail.dim_product_detail_id
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY namespaces.namespace_id ORDER BY prep_product_detail.product_ranking DESC, prep_subscription.term_end_date DESC, prep_subscription.subscription_version DESC, prep_charge.rate_plan_charge_segment DESC, prep_charge.charge_created_date, prep_charge.effective_start_date DESC) = 1
+
 joined AS (
 
   SELECT
@@ -80,6 +98,8 @@ joined AS (
       namespaces.parent_id,
       namespaces.namespace_id)                                              AS ultimate_parent_namespace_id,
     {{ get_keyed_nulls('saas_product_tiers.dim_product_tier_id') }}         AS dim_product_tier_id,
+    namespace_crm_account_mapping.dim_subscription_id,
+    namespace_crm_account_mapping.dim_crm_account_id,
 
     -- Attributes
     IFF(namespaces.namespace_id = COALESCE(namespace_lineage.ultimate_parent_id,
@@ -155,6 +175,8 @@ joined AS (
       AND namespace_lineage.ultimate_parent_plan_name = LOWER(IFF(saas_product_tiers.product_tier_name_short != 'Trial: Ultimate',
         saas_product_tiers.product_tier_historical_short,
         'ultimate_trial'))
+  LEFT JOIN namespace_crm_account_mapping
+    ON namespace.namespace_id = namespace_crm_account_mapping.namespace_id
 
 )
 
@@ -163,5 +185,5 @@ joined AS (
     created_by="@ischweickartDD",
     updated_by="@michellecooper",
     created_date="2021-01-14",
-    updated_date="2023-12-15"
+    updated_date="2023-12-26"
 ) }}
