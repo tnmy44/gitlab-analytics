@@ -76,7 +76,7 @@ namespace_crm_account_mapping AS (
     ON prep_charge.dim_product_detail_id = prep_product_detail.dim_product_detail_id
   QUALIFY ROW_NUMBER() OVER (PARTITION BY namespaces.namespace_id ORDER BY prep_product_detail.product_ranking DESC, prep_subscription.term_end_date DESC, prep_subscription.subscription_version DESC, prep_charge.rate_plan_charge_segment DESC, prep_charge.charge_created_date, prep_charge.effective_start_date DESC) = 1
 
-joined AS (
+), joined AS (
 
   SELECT
 
