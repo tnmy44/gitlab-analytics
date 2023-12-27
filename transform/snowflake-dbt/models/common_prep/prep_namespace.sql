@@ -176,7 +176,7 @@ namespace_crm_account_mapping AS (
         saas_product_tiers.product_tier_historical_short,
         'ultimate_trial'))
   LEFT JOIN namespace_crm_account_mapping
-    ON namespace.namespace_id = namespace_crm_account_mapping.namespace_id
+    ON namespaces.namespace_id = namespace_crm_account_mapping.namespace_id
 
 )
 
