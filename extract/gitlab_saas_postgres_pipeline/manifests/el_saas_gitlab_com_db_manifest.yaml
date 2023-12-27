@@ -1562,6 +1562,7 @@ tables:
       , license_scanning_run_at
       , secure_dependency_scanning_run_at
       , secure_dast_run_at
+      , code_added_at
       FROM onboarding_progresses
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
