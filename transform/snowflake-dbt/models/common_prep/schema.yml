@@ -759,6 +759,8 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: subscription_name
+        description: The unique identifier of a subscription.
       - name: active_user_count
         description: Count of active users currently on the customer's subcription. A count of 0 indicates that Seat Link has been turned off by the customer.
       - name: license_user_count
@@ -783,6 +785,7 @@ models:
         description: Flags rows where the `product_rate_plan_id` from `customers_db_orders_source` is not found in `dim_product_tier`.
       - name: is_active_user_count_available
         description: Flags rows where `active_user_count` is NULL in source.
+
 
   - name: prep_gainsight_source_model_counts
     description: '{{ doc("prep_gainsight_source_model_counts") }}'
