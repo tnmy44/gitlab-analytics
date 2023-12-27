@@ -58,9 +58,7 @@ class TestPostgresPipelineTable:
         }
         pipeline_table2 = PostgresPipelineTable(table_config2)
         actual_source_table_name = pipeline_table2.source_table_name
-        expected_source_table_name = (
-            "p_" + pipeline_table2.table_dict["export_table"]
-        )
+        expected_source_table_name = "p_" + pipeline_table2.table_dict["export_table"]
         assert actual_source_table_name == expected_source_table_name
 
     def test_get_target_table_name(self):
