@@ -45,7 +45,7 @@ sfdc_opportunity_live AS (
     WHEN sfdc_opportunity_source.order_type IN ('2. New - Connected', '3. Growth', '5. Churn - Partial','6. Churn - Final','4. Contraction')
       THEN '2. Growth'
     ELSE '3. Other'
-  END                                                                                                            AS deal_group_live,
+  END                                                                                                             AS deal_group_live,
     IFF(LOWER(sfdc_opportunity_source.sales_type) like '%renewal%', 1, 0)                                         AS is_renewal_live,
     sfdc_opportunity_source.is_closed                                                                             AS is_closed_live,
     sfdc_opportunity_source.is_web_portal_purchase                                                                AS is_web_portal_purchase_live,

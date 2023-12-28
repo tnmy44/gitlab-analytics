@@ -20,6 +20,9 @@
                                  'dim_date.date_day'
                                  ]) }}                                                                                  AS actuals_targets_daily_pk,
     sfdc_opportunity.dim_crm_opportunity_id,
+    {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                       AS dim_sales_qualified_source_id,
+    {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                               AS dim_order_type_id,
+    {{ get_keyed_nulls('sales_rep_account.dim_crm_user_hierarchy_sk') }}                                                AS dim_crm_user_hierarchy_sk,
     sfdc_opportunity.merged_opportunity_id                                                                              AS merged_crm_opportunity_id,
     sfdc_opportunity.dim_crm_account_id,
     sfdc_opportunity.dim_crm_person_id,
@@ -184,20 +187,17 @@
     sfdc_opportunity.override_arr_basis_clari,
     sfdc_opportunity.vsa_start_date_net_arr,
     sfdc_opportunity.cycle_time_in_days_combined,
-    dim_date.date_day,
+    dim_date.day_of_week,
+    dim_date.first_day_of_week,
+    dim_date.date_id,
+    dim_date.fiscal_month_name_fy,
     dim_date.fiscal_quarter_name_fy,
-    dim_date.first_day_of_month,
-    dim_date.fiscal_year                     AS date_range_year,
-    dim_date.fiscal_quarter_name_fy          AS date_range_quarter,
-    DATE_TRUNC(month, dim_date.date_actual)  AS date_range_month,
-    dim_date.first_day_of_week               AS date_range_week,
-    dim_date.date_id                         AS date_range_id,
-    dim_date.fiscal_month_name_fy, 
-    dim_date.fiscal_year,
     dim_date.first_day_of_fiscal_quarter,
-    {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                               AS dim_sales_qualified_source_id,
-    {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                       AS dim_order_type_id,
-    {{ get_keyed_nulls('sales_rep_account.dim_crm_user_hierarchy_sk') }}                                                        AS dim_crm_user_hierarchy_sk
+    dim_date.first_day_of_fiscal_year,
+    dim_date.last_day_of_week,
+    dim_date.last_day_of_month,
+    dim_date.last_day_of_fiscal_quarter,
+    dim_date.last_day_of_fiscal_year
   FROM sfdc_opportunity
   INNER JOIN dim_date
     ON sfdc_opportunity.snapshot_date = dim_date.date_actual
