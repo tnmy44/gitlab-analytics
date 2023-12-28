@@ -176,6 +176,11 @@ databases:
     - lvinueza_prep:
         shared: no
 
+    - lwork_prod:
+        shared: no
+    - lwork_prep:
+        shared: no
+
     - mcooper_prod:
         shared: no
     - mcooper_prep:
@@ -4477,6 +4482,53 @@ roles:
                     - lvinueza_prep.*.*
                     - lvinueza_prod.*.*
 
+    - lwork:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - data_team_analyst
+            - bi_tool_eval_read
+            - xactly
+            - sales_analytics
+            - data_science_readonly
+            - marketo
+            - static_sensitive
+            - zuora_stitch_rest_api
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - lwork_prep
+                - lwork_prod
+            schemas:
+                - lwork_prep.*
+                - lwork_prod.*
+            tables:
+                - lwork_prep.*.*
+                - lwork_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - lwork_prep
+                    - lwork_prod
+                write:
+                    - lwork_prep
+                    - lwork_prod
+            schemas:
+                read:
+                    - lwork_prep.*
+                    - lwork_prod.*
+                write:
+                    - lwork_prep.*
+                    - lwork_prod.*
+            tables:
+                read:
+                    - lwork_prep.*.*
+                    - lwork_prod.*.*
+                write:
+                    - lwork_prep.*.*
+                    - lwork_prod.*.*
+
     - manggara:
         member_of:
             - analyst_finance
@@ -6329,6 +6381,11 @@ users:
         can_login: yes
         member_of:
             - lvinueza
+
+    - lwork:
+        can_login: yes
+        member_of:
+            - lwork
 
     - manggara:
         can_login: yes
