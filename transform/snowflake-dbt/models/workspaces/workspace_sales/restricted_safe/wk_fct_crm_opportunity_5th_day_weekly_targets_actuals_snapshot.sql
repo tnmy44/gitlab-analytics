@@ -1,4 +1,12 @@
-WITH targets AS (
+WITH dim_date AS (
+
+  SELECT *
+  FROM {{ref('dim_date')}}
+  
+),
+
+
+targets AS (
 
   SELECT *
   FROM {{ref('wk_fct_sales_funnel_target_daily_pivoted')}}
@@ -12,9 +20,20 @@ actuals AS (
 
 ),
 
+day_5_list AS (
+
+  SELECT 
+    date_actual AS day_5_current_week,
+    LAG(day_5_current_week) OVER (ORDER BY day_5_current_week) + 1 AS day_6_previous_week -- Add an extra day to exclude the previous thursday from the calculation
+  FROM dim_date
+  WHERE day_of_week = 5
+
+),
+
 combined AS (
 
   SELECT 
+    -- Keys
     actuals.actuals_targets_daily_pk,
     actuals.dim_crm_opportunity_id,
     actuals.dim_sales_qualified_source_id,
@@ -25,49 +44,6 @@ combined AS (
     actuals.dim_crm_person_id,
     actuals.sfdc_contact_id,
     actuals.record_type_id,
-
-    -- dates
-    actuals.snapshot_date,
-    actuals.created_date,
-    actuals.created_date_id,
-    actuals.sales_accepted_date,
-    actuals.sales_accepted_date_id,
-    actuals.close_date,
-    actuals.close_date_id,
-    actuals.arr_created_date_id,
-    actuals.arr_created_date,
-    actuals.stage_0_pending_acceptance_date,
-    actuals.stage_0_pending_acceptance_date_id,
-    actuals.stage_1_discovery_date,
-    actuals.stage_1_discovery_date_id,
-    actuals.stage_2_scoping_date,
-    actuals.stage_2_scoping_date_id,
-    actuals.stage_3_technical_evaluation_date,
-    actuals.stage_3_technical_evaluation_date_id,
-    actuals.stage_4_proposal_date,
-    actuals.stage_4_proposal_date_id,
-    actuals.stage_5_negotiating_date,
-    actuals.stage_5_negotiating_date_id,
-    actuals.stage_6_awaiting_signature_date,
-    actuals.stage_6_awaiting_signature_date_id,
-    actuals.stage_6_closed_won_date,
-    actuals.stage_6_closed_won_date_id,
-    actuals.stage_6_closed_lost_date,
-    actuals.stage_6_closed_lost_date_id,
-    actuals.days_in_0_pENDing_acceptance,
-    actuals.days_in_1_discovery,
-    actuals.days_in_2_scoping,
-    actuals.days_in_3_technical_evaluation,
-    actuals.days_in_4_proposal,
-    actuals.days_in_5_negotiating,
-    actuals.subscription_start_date_id,
-    actuals.subscription_END_date_id,
-    actuals.sales_qualified_date_id,
-    actuals.last_activity_date,
-    actuals.last_activity_date_id,
-    actuals.sales_last_activity_date,
-    actuals.sales_last_activity_date_id,
-    actuals.technical_evaluation_date,
     actuals.dim_crm_opp_owner_stamped_hierarchy_sk,
     actuals.technical_evaluation_date_id,
     actuals.ssp_id,
@@ -117,7 +93,7 @@ combined AS (
     actuals.opportunity_deal_size,
     actuals.closed_buckets,
 
-    -- channel fields
+    --channel fields
     actuals.lead_source,
     actuals.dr_partner_deal_type,
     actuals.dr_partner_engagement,
@@ -138,7 +114,7 @@ combined AS (
     actuals.partner_discount_calc,
     actuals.comp_channel_neutral,
 
-    -- additive fields
+    --additive fields
     actuals.iacv,
     actuals.net_iacv,
     actuals.segment_order_type_iacv_to_net_arr_ratio,
@@ -184,20 +160,20 @@ combined AS (
     actuals.override_arr_basis_clari,
     actuals.vsa_start_date_net_arr,
     actuals.cycle_time_in_days_combined,
-    dim_date.day_of_week,
-    dim_date.first_day_of_week,
-    dim_date.date_id,
-    dim_date.fiscal_month_name_fy,
-    dim_date.fiscal_quarter_name_fy,
-    dim_date.first_day_of_fiscal_quarter,
-    dim_date.first_day_of_fiscal_year,
-    dim_date.last_day_of_week,
-    dim_date.last_day_of_month,
-    dim_date.last_day_of_fiscal_quarter,
-    dim_date.last_day_of_fiscal_year,
+    actuals.day_of_week,
+    actuals.first_day_of_week,
+    actuals.date_id,
+    actuals.fiscal_month_name_fy,
+    actuals.fiscal_quarter_name_fy,
+    actuals.first_day_of_fiscal_quarter,
+    actuals.first_day_of_fiscal_year,
+    actuals.last_day_of_week,
+    actuals.last_day_of_month,
+    actuals.last_day_of_fiscal_quarter,
+    actuals.last_day_of_fiscal_year,
 
 
-    -- dates
+    --dates
     created_date.date_actual                                        AS created_date,
     created_date.first_day_of_month                                 AS created_month,
     created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
@@ -263,11 +239,11 @@ combined AS (
     subscription_start_date.first_day_of_fiscal_quarter             AS subscription_start_fiscal_quarter_date,
     subscription_start_date.fiscal_quarter_name_fy                  AS subscription_start_fiscal_quarter_name,
     subscription_start_date.fiscal_year                             AS subscription_start_fiscal_year,
-    subscription_end_date.date_actual                               AS subscription_end_date,
-    subscription_end_date.first_day_of_month                        AS subscription_end_month,
-    subscription_end_date.first_day_of_fiscal_quarter               AS subscription_end_fiscal_quarter_date,
-    subscription_end_date.fiscal_quarter_name_fy                    AS subscription_end_fiscal_quarter_name,
-    subscription_end_date.fiscal_year                               AS subscription_end_fiscal_year,
+    subscription_END_date.date_actual                               AS subscription_END_date,
+    subscription_END_date.first_day_of_month                        AS subscription_END_month,
+    subscription_END_date.first_day_of_fiscal_quarter               AS subscription_END_fiscal_quarter_date,
+    subscription_END_date.fiscal_quarter_name_fy                    AS subscription_END_fiscal_quarter_name,
+    subscription_END_date.fiscal_year                               AS subscription_END_fiscal_year,
     sales_qualified_date.date_actual                                AS sales_qualified_date,
     sales_qualified_date.first_day_of_month                         AS sales_qualified_month,
     sales_qualified_date.first_day_of_fiscal_quarter                AS sales_qualified_fiscal_quarter_date,
@@ -303,6 +279,78 @@ combined AS (
     arr_created_date.first_day_of_fiscal_quarter                    AS net_arr_created_fiscal_quarter_date,
     arr_created_date.fiscal_quarter_name_fy                         AS net_arr_created_fiscal_quarter_name,
     arr_created_date.fiscal_year                                    AS net_arr_created_fiscal_year,
+
+    -- Create flags to know whether an action happened in the current snapshot week 
+    -- ie. Whether it happened between last Friday and current Thursday
+    CASE
+      WHEN created_date BETWEEN day_6_previous_week AND day_5_current_week
+        THEN 1
+      ELSE 0
+    END AS is_created_in_snapshot_week, 
+    CASE  
+      WHEN close_date BETWEEN day_6_previous_week AND day_5_current_week
+        THEN 1
+      ELSE 0
+    END AS is_close_in_snapshot_week, 
+    CASE  
+      WHEN arr_created_date BETWEEN day_6_previous_week AND day_5_current_week
+        THEN 1
+      ELSE 0
+    END AS is_arr_created_in_snapshot_week, 
+    CASE  
+      WHEN arr_created_date BETWEEN day_6_previous_week AND day_5_current_week
+        THEN 1
+      ELSE 0
+    END AS is_net_arr_created_in_snapshot_week, 
+    CASE  
+      WHEN pipeline_created_date BETWEEN day_6_previous_week AND day_5_current_week
+        THEN 1
+      ELSE 0
+    END AS is_pipeline_created_in_snapshot_week,
+    CASE  
+      WHEN sales_accepted_date BETWEEN day_6_previous_week AND day_5_current_week
+        THEN 1
+      ELSE 0
+    END AS is_sales_accepted_in_snapshot_week,
+
+    -- Pull in the metric only when the corresponding flag is set
+    -- ie. Only calculate created arr in the week where the opportunity was created
+    CASE
+      WHEN is_arr_created_in_snapshot_week = 1
+        THEN arr
+      ELSE 0
+    END AS created_arr_in_snapshot_week,
+    CASE
+      WHEN is_net_arr_created_in_snapshot_week = 1
+        THEN raw_net_arr
+      ELSE 0
+    END AS created_net_arr_in_snapshot_week,
+    CASE
+      WHEN is_created_in_snapshot_week = 1
+        THEN 1
+      ELSE 0
+    END AS created_deal_count_in_snapshot_week,
+    CASE
+      WHEN is_close_in_snapshot_week = 1
+        THEN net_arr
+      ELSE 0
+    END AS closed_net_arr_in_snapshot_week,
+    CASE
+      WHEN is_close_in_snapshot_week = 1
+        THEN 1
+      ELSE 0
+    END AS closed_deal_count_in_snapshot_week,
+    CASE
+      WHEN is_close_in_snapshot_week = 1
+        THEN 1
+      ELSE 0
+    END AS closed_new_logo_count_in_snapshot_week,
+    CASE
+      WHEN is_close_in_snapshot_week = 1
+        THEN close_date - created_date
+      ELSE 0
+    END AS closed_cycle_time_in_snapshot_week,
+
     -- TARGETS
     "Deals Daily",
     "Deals Monthly",
@@ -359,52 +407,51 @@ combined AS (
     "Trials QTD",
     "Trials YTD"
   FROM actuals
+  INNER JOIN day_5_list
+    ON actuals.snapshot_date = day_5_list.day_5_current_week
   LEFT JOIN targets 
-    ON targets.actuals_targets_daily_pk = actuals.actuals_targets_daily_pk
-  LEFT JOIN dim_date 5th_day
-    ON actuals.snapshot_date 
+    ON actuals.actuals_targets_daily_pk = targets.actuals_targets_daily_pk 
   LEFT JOIN dim_date created_date
-    ON fct_crm_opportunity.created_date_id = created_date.date_id
+    ON actuals.created_date_id = created_date.date_id
   LEFT JOIN dim_date sales_accepted_date
-    ON fct_crm_opportunity.sales_accepted_date_id = sales_accepted_date.date_id
+    ON actuals.sales_accepted_date_id = sales_accepted_date.date_id
   LEFT JOIN dim_date close_date
-    ON fct_crm_opportunity.close_date_id = close_date.date_id
+    ON actuals.close_date_id = close_date.date_id
   LEFT JOIN dim_date stage_0_pending_acceptance_date
-    ON fct_crm_opportunity.stage_0_pending_acceptance_date_id = stage_0_pending_acceptance_date.date_id
+    ON actuals.stage_0_pending_acceptance_date_id = stage_0_pending_acceptance_date.date_id
   LEFT JOIN dim_date stage_1_discovery_date
-    ON fct_crm_opportunity.stage_1_discovery_date_id = stage_1_discovery_date.date_id
+    ON actuals.stage_1_discovery_date_id = stage_1_discovery_date.date_id
   LEFT JOIN dim_date stage_2_scoping_date
-    ON fct_crm_opportunity.stage_2_scoping_date_id = stage_2_scoping_date.date_id
+    ON actuals.stage_2_scoping_date_id = stage_2_scoping_date.date_id
   LEFT JOIN dim_date stage_3_technical_evaluation_date
-    ON fct_crm_opportunity.stage_3_technical_evaluation_date_id = stage_3_technical_evaluation_date.date_id
+    ON actuals.stage_3_technical_evaluation_date_id = stage_3_technical_evaluation_date.date_id
   LEFT JOIN dim_date stage_4_proposal_date
-    ON fct_crm_opportunity.stage_4_proposal_date_id = stage_4_proposal_date.date_id
+    ON actuals.stage_4_proposal_date_id = stage_4_proposal_date.date_id
   LEFT JOIN dim_date stage_5_negotiating_date
-    ON fct_crm_opportunity.stage_5_negotiating_date_id = stage_5_negotiating_date.date_id
+    ON actuals.stage_5_negotiating_date_id = stage_5_negotiating_date.date_id
   LEFT JOIN dim_date stage_6_awaiting_signature_date
-    ON fct_crm_opportunity.stage_6_awaiting_signature_date_id = stage_6_awaiting_signature_date.date_id
+    ON actuals.stage_6_awaiting_signature_date_id = stage_6_awaiting_signature_date.date_id
   LEFT JOIN dim_date stage_6_closed_won_date
-    ON fct_crm_opportunity.stage_6_closed_won_date_id = stage_6_closed_won_date.date_id
+    ON actuals.stage_6_closed_won_date_id = stage_6_closed_won_date.date_id
   LEFT JOIN dim_date stage_6_closed_lost_date
-    ON fct_crm_opportunity.stage_6_closed_lost_date_id = stage_6_closed_lost_date.date_id
+    ON actuals.stage_6_closed_lost_date_id = stage_6_closed_lost_date.date_id
   LEFT JOIN dim_date subscription_start_date
-    ON fct_crm_opportunity.subscription_start_date_id = subscription_start_date.date_id
-  LEFT JOIN dim_date subscription_end_date
-    ON fct_crm_opportunity.subscription_end_date_id = subscription_end_date.date_id
+    ON actuals.subscription_start_date_id = subscription_start_date.date_id
+  LEFT JOIN dim_date subscription_END_date
+    ON actuals.subscription_END_date_id = subscription_END_date.date_id
   LEFT JOIN dim_date sales_qualified_date
-    ON fct_crm_opportunity.sales_qualified_date_id = sales_qualified_date.date_id
+    ON actuals.sales_qualified_date_id = sales_qualified_date.date_id
   LEFT JOIN dim_date last_activity_date
-    ON fct_crm_opportunity.last_activity_date_id = last_activity_date.date_id
+    ON actuals.last_activity_date_id = last_activity_date.date_id
   LEFT JOIN dim_date sales_last_activity_date
-    ON fct_crm_opportunity.sales_last_activity_date_id = sales_last_activity_date.date_id
+    ON actuals.sales_last_activity_date_id = sales_last_activity_date.date_id
   LEFT JOIN dim_date technical_evaluation_date
-    ON fct_crm_opportunity.technical_evaluation_date_id = technical_evaluation_date.date_id
+    ON actuals.technical_evaluation_date_id = technical_evaluation_date.date_id
   LEFT JOIN dim_date arr_created_date
-    ON fct_crm_opportunity.arr_created_date_id = arr_created_date.date_id
+    ON actuals.arr_created_date_id = arr_created_date.date_id
   
 
 )
 
 SELECT * 
 FROM combined
-WHERE actuals.day_of_week = 5
