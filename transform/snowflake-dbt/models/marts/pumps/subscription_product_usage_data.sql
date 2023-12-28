@@ -1,7 +1,8 @@
-{{config({
-    schema = "legacy",
-    tags = ["product", "mnpi_exception"]
-  })
+{{
+  config(
+    tags=["product", "mnpi_exception"],
+    schema="legacy"
+  )
 }}
 
 WITH customers_db_license_seat_links AS (
