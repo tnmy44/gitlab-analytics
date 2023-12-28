@@ -4482,7 +4482,6 @@ roles:
                     - lvinueza_prep.*.*
                     - lvinueza_prod.*.*
 
-
     - lwork:
         member_of:
             - analyst_sales
