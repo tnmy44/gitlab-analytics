@@ -1,7 +1,6 @@
 {{ simple_cte([
     ('sales_qualified_source', 'prep_sales_qualified_source'),
     ('order_type', 'prep_order_type'),
-    ('sales_segment', 'prep_sales_segment'),
     ('dim_date', 'dim_date'),
     ('sales_rep', 'prep_crm_user'),
     ('prep_crm_account', 'prep_crm_account'),
@@ -13,6 +12,13 @@
  final AS (
 
   SELECT
+    {{ dbt_utils.surrogate_key(['sales_rep_account.dim_crm_user_hierarchy_sk', 
+                                 'dim_date.fiscal_year', 
+                                 'dim_date.first_day_of_month', 
+                                 'sales_qualified_source.dim_sales_qualified_source_id',
+                                 'order_type.dim_order_type_id',
+                                 'dim_date.date_day'
+                                 ]) }}                                                                                  AS actuals_targets_daily_pk,
     sfdc_opportunity.dim_crm_opportunity_id,
     sfdc_opportunity.merged_opportunity_id                                                                              AS merged_crm_opportunity_id,
     sfdc_opportunity.dim_crm_account_id,
@@ -21,6 +27,7 @@
     sfdc_opportunity.record_type_id,
 
     -- dates
+    sfdc_opportunity.snapshot_date,
     sfdc_opportunity.created_date,
     sfdc_opportunity.created_date_id,
     sfdc_opportunity.sales_accepted_date,
@@ -177,9 +184,17 @@
     sfdc_opportunity.override_arr_basis_clari,
     sfdc_opportunity.vsa_start_date_net_arr,
     sfdc_opportunity.cycle_time_in_days_combined,
-    dim_date.fiscal_year,
+    dim_date.date_day,
     dim_date.fiscal_quarter_name_fy,
     dim_date.first_day_of_month,
+    dim_date.fiscal_year                     AS date_range_year,
+    dim_date.fiscal_quarter_name_fy          AS date_range_quarter,
+    DATE_TRUNC(month, dim_date.date_actual)  AS date_range_month,
+    dim_date.first_day_of_week               AS date_range_week,
+    dim_date.date_id                         AS date_range_id,
+    dim_date.fiscal_month_name_fy, 
+    dim_date.fiscal_year,
+    dim_date.first_day_of_fiscal_quarter,
     {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                               AS dim_sales_qualified_source_id,
     {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                       AS dim_order_type_id,
     {{ get_keyed_nulls('sales_rep_account.dim_crm_user_hierarchy_sk') }}                                                        AS dim_crm_user_hierarchy_sk
@@ -192,8 +207,6 @@
     ON sfdc_opportunity.sales_qualified_source = sales_qualified_source.sales_qualified_source_name
   LEFT JOIN order_type
     ON sfdc_opportunity.order_type = order_type.order_type_name
-  LEFT JOIN sales_segment
-    ON sfdc_opportunity.sales_segment = sales_segment.sales_segment_name
   LEFT JOIN sales_rep AS sales_rep_account
     ON prep_crm_account.dim_crm_user_id = sales_rep_account.dim_crm_user_id 
   WHERE is_live = 0

@@ -1,19 +1,43 @@
-WITH final AS (
+{{ simple_cte([
+    ('fct_sales_funnel_target_daily', 'fct_sales_funnel_target_daily'),
+    ('dim_date', 'dim_date')
+    ])
+
+}},
+
+
+final AS (
   
   SELECT  
-    target_date, 
-    target_date_id,
-    report_target_date,
-    days_of_month,
-    first_day_of_week,
-    fiscal_quarter_name,
-    target_month_id, 
-    first_day_of_month,
-    fiscal_year,
-    dim_crm_user_hierarchy_sk,
-    dim_order_type_id,
-    dim_sales_qualified_source_id,
-
+    {{ dbt_utils.surrogate_key(['fct_sales_funnel_target_daily.dim_crm_user_hierarchy_sk', 
+                                 'dim_date.fiscal_year', 
+                                 'dim_date.first_day_of_month', 
+                                 'fct_sales_funnel_target_daily.dim_sales_qualified_source_id',
+                                 'fct_sales_funnel_target_daily.dim_order_type_id',
+                                 'dim_date.date_day'
+                                 ]) }}                                                                                  AS actuals_targets_daily_pk,
+    fct_sales_funnel_target_daily.target_date, 
+    fct_sales_funnel_target_daily.target_date_id,
+    fct_sales_funnel_target_daily.report_target_date,
+    fct_sales_funnel_target_daily.days_of_month,
+    fct_sales_funnel_target_daily.first_day_of_week,
+    fct_sales_funnel_target_daily.fiscal_quarter_name,
+    fct_sales_funnel_target_daily.target_month_id, 
+    fct_sales_funnel_target_daily.first_day_of_month,
+    fct_sales_funnel_target_daily.fiscal_year,
+    dim_date.first_day_of_week                                                                                          AS date_range_week,
+    dim_date.date_id                                                                                                    AS date_range_id,
+    dim_date.fiscal_month_name_fy,
+    dim_date.fiscal_quarter_name_fy,
+    dim_date.first_day_of_fiscal_quarter,
+    dim_date.first_day_of_fiscal_year,
+    dim_date.last_day_of_week,
+    dim_date.last_day_of_month,
+    dim_date.last_day_of_fiscal_quarter,
+    dim_date.last_day_of_fiscal_year,
+    fct_sales_funnel_target_daily.dim_crm_user_hierarchy_sk,
+    fct_sales_funnel_target_daily.dim_order_type_id,
+    fct_sales_funnel_target_daily.dim_sales_qualified_source_id,
     -- CHURN % ATR
     MAX(CASE WHEN kpi_name = 'Churn % ATR' THEN daily_allocated_target ELSE 0 END) AS "Churn % ATR Daily",
     MAX(CASE WHEN kpi_name = 'Churn % ATR' THEN monthly_allocated_target ELSE 0 END) AS "Churn % ATR Monthly",
@@ -129,10 +153,10 @@ WITH final AS (
     -- PRO SERVE AMOUNT
     MAX(CASE WHEN kpi_name = 'ProServe Amount' THEN daily_allocated_target ELSE 0 END) AS "ProServe Amount Daily",
     MAX(CASE WHEN kpi_name = 'ProServe Amount' THEN monthly_allocated_target ELSE 0 END) AS "ProServe Amount Monthly",
-    MAX(CASE WHEN kpi_name = 'ProServe Amount' THEN wtd_allocated_target ELSE 0 END) AS "ProServe Amount",
-    MAX(CASE WHEN kpi_name = 'ProServe Amount' THEN mtd_allocated_target ELSE 0 END) AS "ProServe Amount",
-    MAX(CASE WHEN kpi_name = 'ProServe Amount' THEN qtd_allocated_target ELSE 0 END) AS "ProServe Amount",
-    MAX(CASE WHEN kpi_name = 'ProServe Amount' THEN ytd_allocated_target ELSE 0 END) AS "ProServe Amount",
+    MAX(CASE WHEN kpi_name = 'ProServe Amount' THEN wtd_allocated_target ELSE 0 END) AS "ProServe Amount WTD",
+    MAX(CASE WHEN kpi_name = 'ProServe Amount' THEN mtd_allocated_target ELSE 0 END) AS "ProServe Amount MTD",
+    MAX(CASE WHEN kpi_name = 'ProServe Amount' THEN qtd_allocated_target ELSE 0 END) AS "ProServe Amount QTD",
+    MAX(CASE WHEN kpi_name = 'ProServe Amount' THEN ytd_allocated_target ELSE 0 END) AS "ProServe Amount YTD",
 
     -- STAGE 1 OPPORTUNITIES
     MAX(CASE WHEN kpi_name = 'Stage 1 Opportunities' THEN daily_allocated_target ELSE 0 END) AS "Stage 1 Opportunities Daily",
@@ -157,7 +181,10 @@ WITH final AS (
     MAX(CASE WHEN kpi_name = 'Trials' THEN mtd_allocated_target ELSE 0 END) AS "Trials MTD",
     MAX(CASE WHEN kpi_name = 'Trials' THEN qtd_allocated_target ELSE 0 END) AS "Trials QTD",
     MAX(CASE WHEN kpi_name = 'Trials' THEN ytd_allocated_target ELSE 0 END) AS "Trials YTD"
-FROM {{ref('fct_sales_funnel_target_daily')}}
+FROM fct_sales_funnel_target_daily
+LEFT JOIN dim_date
+  ON fct_sales_funnel_target_daily.target_date = dim_date.date_actual
+{{ dbt_utils.group_by(n=23)}} 
 
 )
 
