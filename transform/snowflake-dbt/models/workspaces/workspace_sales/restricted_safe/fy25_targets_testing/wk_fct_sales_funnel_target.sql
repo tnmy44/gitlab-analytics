@@ -3,7 +3,7 @@
       ('sales_qualified_source', 'prep_sales_qualified_source'),
       ('order_type', 'prep_order_type'),
       ('prep_sales_funnel_target', 'wk_prep_sales_funnel_target'),
-      ('prep_sales_funnel_kpi', 'prep_sales_funnel_kpi'),
+      ('prep_sales_funnel_kpi', 'wk_prep_sales_funnel_kpi'),
       ('prep_date', 'prep_date')
 ])}}
 
