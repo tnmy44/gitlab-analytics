@@ -39,7 +39,10 @@ flattened AS (
       WHEN flat_contexts.value['data']['gitlab_realm']::VARCHAR IS NULL THEN NULL
       ELSE flat_contexts.value['data']['gitlab_realm']::VARCHAR
     END                                                                             AS delivery_type,
-    flat_contexts.value['data']['api_status_code']::INT                             AS api_status_code
+    flat_contexts.value['data']['api_status_code']::INT                             AS api_status_code,
+    flat_contexts.value['data']['gitlab_saas_namespace_ids']::VARCHAR               AS namespace_id,
+    flat_contexts.value['data']['gitlab_instance_id']::VARCHAR                      AS instance_id,
+    flat_contexts.value['data']['gitlab_host_name']::VARCHAR                        AS host_name
   FROM clicks,
   LATERAL FLATTEN(input => TRY_PARSE_JSON(clicks.contexts), path => 'data') AS flat_contexts
   WHERE flat_contexts.value['schema']::VARCHAR LIKE 'iglu:com.gitlab/code_suggestions_context/jsonschema/%'
@@ -53,7 +56,7 @@ flattened AS (
 {{ dbt_audit(
     cte_ref="flattened",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@michellecooper",
     created_date="2023-09-25",
-    updated_date="2023-09-27"
+    updated_date="2023-12-21"
 ) }}
