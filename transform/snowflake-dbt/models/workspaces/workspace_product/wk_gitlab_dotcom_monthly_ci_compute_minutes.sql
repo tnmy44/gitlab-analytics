@@ -64,7 +64,7 @@ SELECT
   dim_user_id, 
   plan_title, 
   runner_type,
-  ci_runner_machine_type
+  ci_runner_machine_type,
   count_of_runners,
   count_of_pipelines,
   ci_build_minutes,
