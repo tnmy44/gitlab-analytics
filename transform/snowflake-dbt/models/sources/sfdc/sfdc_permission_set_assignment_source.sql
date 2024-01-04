@@ -1,10 +1,10 @@
 WITH source AS (
-SELECT * FROM {{ source('salesforce', 'PermissionSetAssignment') }}
-
-
-
+    
+    SELECT * 
+    FROM {{ source('salesforce', 'permission_set_assignment') }}
 
 ), renamed AS (
+
        SELECT
       
          --keys
