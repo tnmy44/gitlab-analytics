@@ -64,7 +64,7 @@ SELECT
   dim_user_id, 
   plan_title, 
   runner_type,
-  ci_runner_machine_type
+  ci_runner_machine_type,
   count_of_runners,
   count_of_pipelines,
   ci_build_minutes,
@@ -86,7 +86,7 @@ SELECT
     cte_ref="final",
     created_by="@nhervas",
     updated_by="@nhervas",
-    created_date="2023-12-18",
-    updated_date="2023-12-18"
+    created_date="2024-01-02",
+    updated_date="2024-01-02"
 ) }}
 
