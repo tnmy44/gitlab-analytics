@@ -31,18 +31,6 @@
     SELECT fiscal_year
     FROM dim_date
     WHERE date_actual = CURRENT_DATE - 1
-
-), sheetload_sales_funnel_targets_matrix_source AS (
-
-    SELECT 
-      sheetload_sales_funnel_targets_matrix_source.*
-    FROM {{ ref('sheetload_sales_funnel_targets_matrix_source') }}
-
-), sheetload_sales_funnel_partner_alliance_targets_matrix_source AS (
-
-    SELECT 
-      sheetload_sales_funnel_partner_alliance_targets_matrix_source.*
-    FROM {{ ref('sheetload_sales_funnel_partner_alliance_targets_matrix_source') }}
   
 ), account_demographics_hierarchy AS (
 
