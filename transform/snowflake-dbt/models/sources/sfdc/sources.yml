@@ -129,4 +129,13 @@ sources:
         identifier: permissionsetassignment
       - name: profile
         identifier: profile
+      - name: group_member
+        identifier: groupmember
+      - name: group
+        identifier: '"GROUP"'
+      - name: account_share
+        identifier: accountshare
+      - name: opportunity_share
+        identifier: opportunityshare
+
 

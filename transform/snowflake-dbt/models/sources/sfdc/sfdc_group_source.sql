@@ -1,20 +1,20 @@
 WITH source AS (
     
     SELECT * 
-    FROM {{ source('salesforce', 'permission_set_assignment') }}
+    FROM {{ source('salesforce', 'group') }}
 
 ), renamed AS (
 
        SELECT
       
          --keys
-         id AS permission_set_assignment_id,
+         id AS group_id,
 
          --info
-         assigneeid AS assignee_id,
-         permissionsetgroupid AS permission_set_group_id,
-         permissionsetid AS permission_set_id,
-         isactive AS is_active,
+         name AS group_name,
+         relatedid AS related_id,
+         type AS group_type,
+         doesincludebosses AS is_does_include_bosses,
 
          --metadata
          systemmodstamp AS system_mod_stamp,

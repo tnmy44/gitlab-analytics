@@ -126,7 +126,7 @@ WITH source AS (
           permissionsgiverecognitionbadge	AS	is_permissions_give_recognition_badge,
           permissionsgovernnetworks	AS	is_permissions_govern_networks,
           permissionshasunlimitederbscoringrequests	AS	is_permissions_has_unlimited_erb_scoring_requests,
-          permissionshasunlimitednbaexecutions	AS	is_permissions_hasunlimitednbaexecutions,
+          permissionshasunlimitednbaexecutions	AS	is_permissions_has_unlimited_nba_executions,
           permissionsheadlesscmsaccess	AS	is_permissions_headless_cms_access,
           permissionshidereadbylist	AS	is_permissions_hide_read_by_list,
           permissionsidentityconnect	AS	is_permissions_identity_connect,
@@ -164,7 +164,7 @@ WITH source AS (
           permissionsmanagecontenttypes	AS	is_permissions_manage_content_types,
           permissionsmanagecustompermissions	AS	is_permissions_manage_custom_permissions,
           permissionsmanagecustomreporttypes	AS	is_permissions_manage_custom_report_types,
-          permissionsmanagedashbdsinpubfolders	AS	is_permissions_manage_dashbds_inpubfolders,
+          permissionsmanagedashbdsinpubfolders	AS	is_permissions_manage_dashbds_in_pub_folders,
           permissionsmanagedatacategories	AS	is_permissions_manage_data_categories,
           permissionsmanagedataintegrations	AS	is_permissions_manage_data_integrations,
           permissionsmanagedynamicdashboards	AS	is_permissions_manage_dynamic_dashboards,
@@ -186,7 +186,7 @@ WITH source AS (
           permissionsmanagenetworks	AS	is_permissions_manage_networks,
           permissionsmanagepartners	AS	is_permissions_manage_partners,
           permissionsmanagepasswordpolicies	AS	is_permissions_manage_password_policies,
-          permissionsmanageprofilespermissionsets	AS	is_permissions_manage_profiles_permissionsets,
+          permissionsmanageprofilespermissionsets	AS	is_permissions_manage_profiles_permission_sets,
           permissionsmanagepropositions	AS	is_permissions_manage_propositions,
           permissionsmanagepvtrptsanddashbds	AS	is_permissions_manage_pvt_rpts_and_dashbds,
           permissionsmanagequotas	AS	permissions_manage_quotas,
@@ -311,7 +311,6 @@ WITH source AS (
           lastmodifieddate	AS	last_modified_date,
           lastreferenceddate	AS	last_referenced_date,
           lastvieweddate	AS	last_viewed_date,
-
 
          --metadata
          systemmodstamp AS system_mod_stamp,
