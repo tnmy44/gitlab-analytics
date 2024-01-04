@@ -644,7 +644,7 @@ models:
           - unique
 
   - name: sfdc_profile_source
-    description: Source model for SFDC Profile object. Represents a profile, which defines a set of permissoions to perform different operations. Operations can include creating a custom profile or querying, adding, updating, or deleting information.
+    description: Source model for SFDC Profile object. Represents a profile, which defines a set of permissions to perform different operations. Operations can include creating a custom profile or querying, adding, updating, or deleting information.
     columns:
       - name: profile_id
         tags: ["tdf", "sfdc"]
