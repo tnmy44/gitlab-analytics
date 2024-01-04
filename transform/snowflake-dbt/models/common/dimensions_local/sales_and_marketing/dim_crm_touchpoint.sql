@@ -262,7 +262,6 @@ WITH campaign_details AS (
       END as is_delrev_influneced_campaign,
       devrel_influence_campaigns.campaign_type    AS devrel_campaign_type,
       devrel_influence_campaigns.description      AS devrel_campaign_description,
-      devrel_influence_campaigns.influence_type   AS devrel_campaign_influence_type,
       devrel_influence_campaigns.influence_type   AS devrel_campaign_influence_type
     FROM combined_touchpoints
     LEFT JOIN bizible_campaign_grouping
