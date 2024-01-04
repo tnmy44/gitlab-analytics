@@ -9,10 +9,9 @@ WITH source AS (
       
          --keys
          id AS permission_set_assignment_id,
-         assigneeid AS assignee_id,
-
 
          --info
+         assigneeid AS assignee_id,
          isactive AS is_active,
          permissionsetgroupid AS permission_set_group_id,
          permissionsetid AS permission_set_id,

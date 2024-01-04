@@ -127,4 +127,6 @@ sources:
         identifier: impartnermdf__fundsrequest__c
       - name: permission_set_assignment
         identifier: permissionsetassignment
+      - name: profile
+        identifier: profile
 
