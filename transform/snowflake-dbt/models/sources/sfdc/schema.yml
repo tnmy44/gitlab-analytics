@@ -621,3 +621,6 @@ models:
   
   - name: sfdc_impartner_mdf_funds_claim_source
     description: Source model for SFDC custom object from impartner with parter MDF fund claims after requests
+
+  - name: sfdc_permission_set_assignment
+    description: Source model for SFDC Permission Set Assignment object

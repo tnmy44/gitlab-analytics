@@ -125,3 +125,6 @@ sources:
         identifier: impartnermdf__fundsclaim__c
       - name: impartner_mdf_funds_request
         identifier: impartnermdf__fundsrequest__c
+      - name: permission_set_assignment
+        identifier: permissionsetassignment
+
