@@ -3,6 +3,7 @@
     materialized='incremental',
     unique_key='behavior_structured_event_pk',
     tags=["mnpi_exception", "product"]
+    on_schema_change='sync_all_columns'
   )
 }}
 
