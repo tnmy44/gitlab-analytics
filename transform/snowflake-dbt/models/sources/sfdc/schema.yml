@@ -622,5 +622,5 @@ models:
   - name: sfdc_impartner_mdf_funds_claim_source
     description: Source model for SFDC custom object from impartner with parter MDF fund claims after requests
 
-  - name: vartopia_drs_registration_source
+  - name: sfdc_vartopia_drs_registration_source
     description: Source model for SFDC custom object from Vartopia with all Deal Registraitons 
