@@ -88,6 +88,26 @@ models:
                 values: ['Self-Managed', 'SaaS']
       - name: api_status_code
         description: '{{ doc("code_suggestions_api_status_code") }}'
+      - name: namespace_ids
+        description: List of the namespace IDs that the user has a Code Suggestions subscription in SaaS for
+      - name: ultimate_parent_namespace_ids
+        description: List of ultimate parents namespace IDs that the namespaces_ids map to
+      - name: subscription_names
+        description: The most recent subscription associated with the namespace(s) associated with the Code Suggestion event, either through Orders for SaaS or through Service Ping for Self-Managed.
+      - name: dim_crm_account_ids
+        description: List of CRM account IDs that are associated with the most recent paid subscriptions associated with the Code Suggestion event
+      - name: dim_parent_crm_account_ids
+        description: List of ultimate parent CRM account IDs that are associated with the most recent paid subscriptions associated with the Code Suggestion event
+      - name: dim_crm_account_id
+        description: If a Code Suggestion has only one CRM account associated with it, we display the unique identifier for that CRM account. Otherwise, this field is NULL.
+      - name: dim_parent_crm_account_id
+        description: If a Code Suggestion has only one ultimate parent CRM account associated with it, we display the unique identifier for that ultimate parent CRM account. Otherwise, this field is NULL.
+      - name: subscription_name
+        description: If a Code Suggestion has only one subscription name associated with it, we display it. Otherwise, this field is NULL.
+      - name: ultimate_parent_namespace_id
+        description: If a Code Suggestion has only one ultimate parent namespace associated with it, we display the unique identifier for that ultimate parent namespace. Otherwise, this field is NULL.
+      - name: dim_installation_id
+        description: If a Code Suggestion has only one installation associated with it, we display the unique identifier for that installation. Otherwise, this field is NULL.
 
   - name: wk_mart_behavior_structured_event_code_suggestion
     description: '{{ doc("wk_mart_behavior_structured_event_code_suggestion") }}'
@@ -162,3 +182,23 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
+      - name: namespace_ids
+        description: List of the namespace IDs that the user has a Code Suggestions subscription in SaaS for
+      - name: ultimate_parent_namespace_ids
+        description: List of ultimate parents namespace IDs that the namespaces_ids map to
+      - name: subscription_names
+        description: The most recent subscription associated with the namespace(s) associated with the Code Suggestion event, either through Orders for SaaS or through Service Ping for Self-Managed.
+      - name: dim_crm_account_ids
+        description: List of CRM account IDs that are associated with the most recent paid subscriptions associated with the Code Suggestion event
+      - name: dim_parent_crm_account_ids
+        description: List of ultimate parent CRM account IDs that are associated with the most recent paid subscriptions associated with the Code Suggestion event
+      - name: dim_crm_account_id
+        description: If a Code Suggestion has only one CRM account associated with it, we display the unique identifier for that CRM account. Otherwise, this field is NULL.
+      - name: dim_parent_crm_account_id
+        description: If a Code Suggestion has only one ultimate parent CRM account associated with it, we display the unique identifier for that ultimate parent CRM account. Otherwise, this field is NULL.
+      - name: subscription_name
+        description: If a Code Suggestion has only one subscription name associated with it, we display it. Otherwise, this field is NULL.
+      - name: ultimate_parent_namespace_id
+        description: If a Code Suggestion has only one ultimate parent namespace associated with it, we display the unique identifier for that ultimate parent namespace. Otherwise, this field is NULL.
+      - name: dim_installation_id
+        description: If a Code Suggestion has only one installation associated with it, we display the unique identifier for that installation. Otherwise, this field is NULL.

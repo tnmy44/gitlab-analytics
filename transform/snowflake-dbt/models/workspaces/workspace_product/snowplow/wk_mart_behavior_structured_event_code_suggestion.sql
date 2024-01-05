@@ -116,9 +116,18 @@ filtered_code_suggestion_events AS (
     ide_extension_version_context,
     has_code_suggestions_context,
     has_ide_extension_version_context,
-    namespace_id,
     instance_id,
-    host_name
+    host_name,
+    namespace_ids,
+    ultimate_parent_namespace_ids,
+    subscription_names,
+    dim_crm_account_ids,
+    dim_parent_crm_account_ids,
+    dim_crm_account_id,
+    dim_parent_crm_account_id,
+    subscription_name,
+    ultimate_parent_namespace_id,
+    dim_installation_id
   FROM code_suggestions_joined_to_fact_and_dim
   WHERE app_id IN ('gitlab_ai_gateway', 'gitlab_ide_extension') --"official" Code Suggestions app_ids
     AND is_event_to_exclude = FALSE --only include the good events
@@ -130,5 +139,5 @@ filtered_code_suggestion_events AS (
     created_by="@cbraza",
     updated_by="@michellecooper",
     created_date="2023-10-09",
-    updated_date="2023-12-21"
+    updated_date="2024-01-05"
 ) }}
