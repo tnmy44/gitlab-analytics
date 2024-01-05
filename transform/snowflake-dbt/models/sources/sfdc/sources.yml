@@ -117,4 +117,4 @@ sources:
         description: '{{ doc("sfdc_impartner_mdf_funds_request_source") }}'
       - name: vartopia_drs_registration
         identifier: vartopiadrs__registration__c
-        description: '{{ doc("vartopia_drs_registration_source") }}'
+        description: '{{ doc("sfdc_vartopia_drs_registration_source") }}'
