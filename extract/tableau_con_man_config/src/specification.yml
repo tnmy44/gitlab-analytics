@@ -1374,7 +1374,7 @@ projects:
       - group_name: General All Access
         permission_rule: publish_limited
 
-  - project name: Restricted
+  - project_name: Restricted
     description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/People/Restricted
