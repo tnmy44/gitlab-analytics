@@ -85,7 +85,7 @@ projects:
 # ==========================================
 
   - project_name: Resources
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Resources
     permission_set:
@@ -100,7 +100,7 @@ projects:
 # ==========================================
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Resources/General
     permission_set:
@@ -136,7 +136,7 @@ projects:
 # ==========================================
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Resources/SAFE
     permission_set:
@@ -151,7 +151,7 @@ projects:
 # ==========================================
   
   - project_name: Production
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production
     permission_set:
@@ -167,7 +167,7 @@ projects:
 # ==========================================
 
   - project_name: Customer Success
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Customer Success
     permission_set:
@@ -177,7 +177,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Customer Success/General
     permission_set:
@@ -187,7 +187,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Customer Success/SAFE
     permission_set:
@@ -204,7 +204,7 @@ projects:
 # ==========================================
 
   - project_name: Data Team
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Data Team
     permission_set:
@@ -215,7 +215,7 @@ projects:
 
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Data Team/General
     permission_set:
@@ -226,7 +226,7 @@ projects:
 
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Data Team/SAFE
     permission_set:
@@ -242,7 +242,7 @@ projects:
 # ==========================================
 
   - project_name: Engineering
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Engineering
     permission_set:
@@ -253,7 +253,7 @@ projects:
 
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Engineering/General
     permission_set:
@@ -263,7 +263,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Engineering/SAFE
     permission_set:
@@ -279,7 +279,7 @@ projects:
 # ==========================================
 
   - project_name: Finance
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Finance
     permission_set:
@@ -289,7 +289,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Finance/General
     permission_set:
@@ -299,7 +299,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Finance/SAFE
     permission_set:
@@ -315,7 +315,7 @@ projects:
 # ==========================================
 
   - project_name: Go To Market
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Go To Market
     permission_set:
@@ -325,7 +325,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Go To Market/General
     permission_set:
@@ -335,7 +335,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Go To Market/SAFE
     permission_set:
@@ -351,7 +351,7 @@ projects:
 # ==========================================
 
   - project_name: Marketing
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Marketing
     permission_set:
@@ -359,7 +359,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Marketing/General
     permission_set:
@@ -369,7 +369,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Marketing/SAFE
     permission_set:
@@ -385,7 +385,7 @@ projects:
 # ==========================================
 
   - project_name: People
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/People
     permission_set:
@@ -395,7 +395,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/People/General
     permission_set:
@@ -405,7 +405,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: Restricted
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/People/Restricted
     permission_set:
@@ -417,7 +417,7 @@ projects:
         permission_rule: view_limited
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/People/SAFE
     permission_set:
@@ -433,7 +433,7 @@ projects:
 # ==========================================
 
   - project_name: Product
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Product
     permission_set:
@@ -443,7 +443,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Product/General
     permission_set:
@@ -453,7 +453,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Product/SAFE
     permission_set:
@@ -469,7 +469,7 @@ projects:
 # ==========================================
 
   - project_name: Sales
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Sales
     permission_set:
@@ -479,7 +479,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Sales/General
     permission_set:
@@ -489,7 +489,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Sales/SAFE
     permission_set:
@@ -499,7 +499,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: RSA SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Sales/RSA SAFE
     permission_set:
@@ -515,7 +515,7 @@ projects:
 # ==========================================
 
   - project_name: Security
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Security
     permission_set:
@@ -525,7 +525,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Sales/General
     permission_set:
@@ -535,7 +535,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Sales/SAFE
     permission_set:
@@ -551,7 +551,7 @@ projects:
 # ==========================================
 
   - project_name: Team Member
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Team Member
     permission_set:
@@ -561,7 +561,7 @@ projects:
         permission_rule: project_lead    
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Production/Team Member/General
     permission_set:
@@ -571,7 +571,7 @@ projects:
         permission_rule: project_lead
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Production/Team Member/SAFE
     permission_set:
@@ -586,7 +586,7 @@ projects:
 # ==========================================
 
   - project_name: Ad-hoc
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc
     permission_set:
@@ -602,7 +602,7 @@ projects:
 # ==========================================
 
   - project_name: Customer Success
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Customer Success
     permission_set:
@@ -614,7 +614,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Customer Success/General
     permission_set:
@@ -626,7 +626,7 @@ projects:
         permission_rule: view
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Customer Success/SAFE
     permission_set:
@@ -644,7 +644,7 @@ projects:
 # ==========================================
 
   - project_name: Data Team
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Data Team
     permission_set:
@@ -656,7 +656,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Data Team/General
     permission_set:
@@ -668,7 +668,7 @@ projects:
         permission_rule: view
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Data Team/SAFE
     permission_set:
@@ -686,7 +686,7 @@ projects:
 # ==========================================
 
   - project_name: Engineering
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Engineering
     permission_set:
@@ -698,7 +698,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Engineering/General
     permission_set:
@@ -710,7 +710,7 @@ projects:
         permission_rule: view
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Engineering/SAFE
     permission_set:
@@ -728,7 +728,7 @@ projects:
 # ==========================================
 
   - project_name: Finance
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Finance
     permission_set:
@@ -740,7 +740,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Finance/General
     permission_set:
@@ -752,7 +752,7 @@ projects:
         permission_rule: view
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Finance/SAFE
     permission_set:
@@ -770,7 +770,7 @@ projects:
 # ==========================================
 
   - project_name: Go To Market
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Go To Market
     permission_set:
@@ -782,7 +782,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Go To Market/General
     permission_set:
@@ -794,7 +794,7 @@ projects:
         permission_rule: view
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Go To Market/SAFE
     permission_set:
@@ -812,7 +812,7 @@ projects:
 # ==========================================
 
   - project_name: Marketing
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Marketing
     permission_set:
@@ -824,7 +824,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Marketing/General
     permission_set:
@@ -836,7 +836,7 @@ projects:
         permission_rule: view
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Marketing/SAFE
     permission_set:
@@ -854,7 +854,7 @@ projects:
 # ==========================================
 
   - project_name: People
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/People
     permission_set:
@@ -866,7 +866,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/People/General
     permission_set:
@@ -878,7 +878,7 @@ projects:
         permission_rule: view_limited
 
   - project_name: Restricted
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/People/Restricted
     permission_set:
@@ -890,7 +890,7 @@ projects:
         permission_rule: view_limited
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/People/SAFE
     permission_set:
@@ -908,7 +908,7 @@ projects:
 # ==========================================
 
   - project_name: Product
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Product
     permission_set:
@@ -920,7 +920,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Product/General
     permission_set:
@@ -932,7 +932,7 @@ projects:
         permission_rule: view
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Product/SAFE
     permission_set:
@@ -950,7 +950,7 @@ projects:
 # ==========================================
 
   - project_name: Sales
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Sales
     permission_set:
@@ -962,7 +962,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Sales/General
     permission_set:
@@ -974,7 +974,7 @@ projects:
         permission_rule: view
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Sales/SAFE
     permission_set:
@@ -986,7 +986,7 @@ projects:
         permission_rule: view
 
   - project_name: RSA SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Sales/RSA SAFE
     permission_set:
@@ -1004,7 +1004,7 @@ projects:
 # ==========================================
 
   - project_name: Security
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Security
     permission_set:
@@ -1016,7 +1016,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Security/General
     permission_set:
@@ -1028,7 +1028,7 @@ projects:
         permission_rule: view
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Security/SAFE
     permission_set:
@@ -1046,7 +1046,7 @@ projects:
 # ==========================================
 
   - project_name: Team Member
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Team Member
     permission_set:
@@ -1058,7 +1058,7 @@ projects:
         permission_rule: view
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Ad-hoc/Team Member/General
     permission_set:
@@ -1070,7 +1070,7 @@ projects:
         permission_rule: view
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Ad-hoc/Team Member/SAFE
     permission_set:
@@ -1083,7 +1083,7 @@ projects:
 # ==========================================
 
   - project_name: Development
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development
     permission_set:
@@ -1099,7 +1099,7 @@ projects:
 # ==========================================
 
   - project_name: Customer Success
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Customer Success
     permission_set:
@@ -1111,7 +1111,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Customer Success/General
     permission_set:
@@ -1123,7 +1123,7 @@ projects:
         permission_rule: publish
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Customer Success/SAFE
     permission_set:
@@ -1141,7 +1141,7 @@ projects:
 # ==========================================
 
   - project_name: Data Team
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Data Team
     permission_set:
@@ -1153,7 +1153,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Data Team/General
     permission_set:
@@ -1165,7 +1165,7 @@ projects:
         permission_rule: publish
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Data Team/SAFE
     permission_set:
@@ -1183,7 +1183,7 @@ projects:
 # ==========================================
 
   - project_name: Engineering
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Engineering
     permission_set:
@@ -1195,7 +1195,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Engineering/General
     permission_set:
@@ -1207,7 +1207,7 @@ projects:
         permission_rule: publish
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Engineering/SAFE
     permission_set:
@@ -1225,7 +1225,7 @@ projects:
 # ==========================================
 
   - project_name: Finance
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Finance
     permission_set:
@@ -1237,7 +1237,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Finance/General
     permission_set:
@@ -1249,7 +1249,7 @@ projects:
         permission_rule: publish
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Finance/SAFE
     permission_set:
@@ -1267,7 +1267,7 @@ projects:
 # ==========================================
 
   - project_name: Go To Market
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Go To Market
     permission_set:
@@ -1279,7 +1279,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Go To Market/General
     permission_set:
@@ -1291,7 +1291,7 @@ projects:
         permission_rule: publish
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Go To Market/SAFE
     permission_set:
@@ -1309,7 +1309,7 @@ projects:
 # ==========================================
 
   - project_name: Marketing
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Marketing
     permission_set:
@@ -1321,7 +1321,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Marketing/General
     permission_set:
@@ -1333,7 +1333,7 @@ projects:
         permission_rule: publish
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Marketing/SAFE
     permission_set:
@@ -1351,7 +1351,7 @@ projects:
 # ==========================================
 
   - project_name: People
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/People
     permission_set:
@@ -1363,7 +1363,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/People/General
     permission_set:
@@ -1375,7 +1375,7 @@ projects:
         permission_rule: publish_limited
 
   - project name: Restricted
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/People/Restricted
     permission_set:
@@ -1389,7 +1389,7 @@ projects:
         permission_rule: connect_only
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/People/SAFE
     permission_set:
@@ -1407,7 +1407,7 @@ projects:
 # ==========================================
 
   - project_name: Product
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Product
     permission_set:
@@ -1419,7 +1419,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Product/General
     permission_set:
@@ -1431,7 +1431,7 @@ projects:
         permission_rule: publish
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Product/SAFE
     permission_set:
@@ -1449,7 +1449,7 @@ projects:
 # ==========================================
 
   - project_name: Sales
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Sales
     permission_set:
@@ -1461,7 +1461,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Sales/General
     permission_set:
@@ -1473,7 +1473,7 @@ projects:
         permission_rule: publish
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Sales/SAFE
     permission_set:
@@ -1485,7 +1485,7 @@ projects:
         permission_rule: publish
 
   - project_name: RSA SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Sales/RSA SAFE
     permission_set:
@@ -1503,7 +1503,7 @@ projects:
 # ==========================================
 
   - project_name: Security
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Sales
     permission_set:
@@ -1515,7 +1515,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Security/General
     permission_set:
@@ -1527,7 +1527,7 @@ projects:
         permission_rule: publish
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Security/SAFE
     permission_set:
@@ -1545,7 +1545,7 @@ projects:
 # ==========================================
 
   - project_name: Team Member
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Team Member
     permission_set:
@@ -1557,7 +1557,7 @@ projects:
         permission_rule: publish
 
   - project_name: General
-    description: null
+    description: ""
     content_permissions: LockedToProjectWithoutNested
     project_path: Development/Team Member/General
     permission_set:
@@ -1569,7 +1569,7 @@ projects:
         permission_rule: publish
 
   - project_name: SAFE
-    description: null
+    description: ""
     content_permissions: LockedToProject
     project_path: Development/Team Member/SAFE
     permission_set:
