@@ -16,13 +16,13 @@ WITH source AS (
          type AS group_type,
          doesincludebosses AS is_does_include_bosses,
 
-         --metadata
+         --Stitch metadata
          systemmodstamp AS system_mod_stamp,
-         _sdc_batched_at AS sfdc_batched_at,
-         _sdc_extracted_at AS sfdc_extracted_at,
-         _sdc_received_at AS sfdc_received_at,
-         _sdc_sequence AS sfdc_sequence,
-         _sdc_table_version AS sfdc_table_version
+         _sdc_batched_at AS sdc_batched_at,
+         _sdc_extracted_at AS sdc_extracted_at,
+         _sdc_received_at AS sdc_received_at,
+         _sdc_sequence AS sdc_sequence,
+         _sdc_table_version AS sdc_table_version
       
        FROM source
 )
