@@ -14,7 +14,6 @@
     ('prep_crm_account', 'prep_crm_account'),
     ('prep_crm_opportunity', 'prep_crm_opportunity'),
     ('prep_sales_funnel_target', 'wk_prep_sales_funnel_target'),
-    ('prep_sales_funnel_partner_alliance_target', 'prep_sales_funnel_partner_alliance_target'),
     ('prep_crm_person', 'prep_crm_person')
 ]) }}
 
@@ -125,23 +124,6 @@
       AND prep_sales_funnel_target.user_region IS NOT NULL
       AND prep_sales_funnel_target.user_area IS NOT NULL
 
-), user_hierarchy_sheetload_partner_alliance AS (
-/*
-  To get a complete picture of the hierarchy and to ensure fidelity with the target setting model, we will union in the distinct hierarchy values from the partner and alliance file.
-*/
-
-    SELECT DISTINCT 
-      prep_sales_funnel_partner_alliance_target.fiscal_year,
-      prep_sales_funnel_partner_alliance_target.user_segment,
-      prep_sales_funnel_partner_alliance_target.user_geo,
-      prep_sales_funnel_partner_alliance_target.user_region,
-      prep_sales_funnel_partner_alliance_target.user_area,
-      prep_sales_funnel_partner_alliance_target.user_business_unit,
-      prep_sales_funnel_partner_alliance_target.dim_crm_user_hierarchy_sk
-    FROM prep_sales_funnel_partner_alliance_target
-    WHERE prep_sales_funnel_partner_alliance_target.user_area != 'N/A'
-      AND prep_sales_funnel_partner_alliance_target.area IS NOT NULL
-
 ), user_hierarchy_stamped_opportunity AS (
 /*
   To get a complete picture of the hierarchy and to ensure fidelity with the stamped opportunities, we will union in the distinct hierarchy values from the stamped opportunities.
@@ -170,11 +152,6 @@
  
     SELECT *
     FROM user_hierarchy_sheetload
-
-    UNION
-
-    SELECT *
-    FROM  user_hierarchy_sheetload_partner_alliance
 
     UNION
 

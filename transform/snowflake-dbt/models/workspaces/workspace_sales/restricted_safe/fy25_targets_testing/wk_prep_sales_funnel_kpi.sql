@@ -4,7 +4,7 @@
 
 WITH prep_sales_funnel_target AS (
 
-    SELECT kpi_name
+    SELECT DISTINCT kpi_name
     FROM {{ ref('wk_prep_sales_funnel_target') }}
 
 )
