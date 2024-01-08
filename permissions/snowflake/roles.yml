@@ -4907,6 +4907,12 @@ roles:
                     - nfiguera_prep.*.*
                     - nfiguera_prod.*.*
 
+    - nhertz:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - nhervas:
         member_of:
             - analyst_growth
@@ -6479,6 +6485,11 @@ users:
         can_login: yes
         member_of:
             - nfiguera
+
+    - nhertz:
+        can_login: yes
+        member_of:
+            - nhertz
 
     - nhervas:
         can_login: yes
