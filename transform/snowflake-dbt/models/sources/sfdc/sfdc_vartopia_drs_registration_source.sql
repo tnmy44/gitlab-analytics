@@ -21,11 +21,6 @@ WITH source AS (
       isdeleted::BOOLEAN                           AS is_deleted,
       lastmodifiedbyid::VARCHAR                    AS last_modified_by_id,
       lastmodifieddate::TIMESTAMP                  AS last_modified_date,
-      _sdc_received_at::TIMESTAMP                  AS sfdc_received_at,
-      _sdc_extracted_at::TIMESTAMP                 AS sfdc_extracted_at,
-      _sdc_table_version::NUMBER                   AS sfdc_table_version,
-      _sdc_batched_at::TIMESTAMP                   AS sfdc_batched_at,
-      _sdc_sequence::NUMBER                        AS sfdc_sequence,
       systemmodstamp::TIMESTAMP                    AS system_mod_stamp
 
     FROM source
