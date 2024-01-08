@@ -190,10 +190,10 @@
     FROM unioned 
     WHERE fiscal_year < 2024
 
-), fy24_and_beyond_hierarchy AS (
+), fy24_hierarchy AS (
 
 /*
-  After FY24, business unit was added to the hierarchy.
+  In FY24, business unit was added to the hierarchy.
 */
 
 
@@ -206,7 +206,25 @@
       UPPER(user_business_unit) AS user_business_unit,
       dim_crm_user_hierarchy_sk
     FROM unioned 
-    WHERE fiscal_year >= 2024
+    WHERE fiscal_year = 2024
+
+, fy25_and_beyond_hierarchy AS (
+
+/*
+  After FY25, business unit was added to the hierarchy.
+*/
+
+
+    SELECT DISTINCT
+      fiscal_year,
+      UPPER(user_segment)       AS user_segment,
+      UPPER(user_geo)           AS user_geo,
+      UPPER(user_region)        AS user_region,
+      UPPER(user_area)          AS user_area,
+      UPPER(user_business_unit) AS user_business_unit,
+      dim_crm_user_hierarchy_sk
+    FROM unioned 
+    WHERE fiscal_year >= 2025
 
 ), final_unioned AS (
 
@@ -214,10 +232,13 @@
     SELECT *
     FROM pre_fy24_hierarchy
 
-    UNION ALL 
+    UNION ALL
 
     SELECT *
-    FROM fy24_and_beyond_hierarchy
+    FROM fy24_hierarchy
+
+    SELECT *
+    FROM fy25_and_beyond_hierarchy
 
 ), final AS (
 
