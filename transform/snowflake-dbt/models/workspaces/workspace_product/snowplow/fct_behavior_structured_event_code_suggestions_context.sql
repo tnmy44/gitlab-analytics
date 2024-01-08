@@ -7,7 +7,19 @@
   )
 }}
 
-WITH clicks AS (
+
+{{ simple_cte([
+    ('bdg_namespace_order_subscription', 'bdg_namespace_order_subscription'),
+    ('dim_subscription', 'dim_subscription'),
+    ('zuora_product_rate_plan_source', 'zuora_product_rate_plan_source'),
+    ('dim_namespace', 'dim_namespace'),
+    ('dim_behavior_event', 'dim_behavior_event'),
+    ('dim_crm_account', 'dim_crm_account'),
+    ('dim_installation', 'dim_installation'),
+    ('fct_ping_instance_metric', 'fct_ping_instance_metric')
+]) }},
+
+clicks AS (
   SELECT
     behavior_structured_event_pk,
     behavior_at,
@@ -71,19 +83,19 @@ WITH clicks AS (
   */
 
   SELECT
-    namespace_order_subscription.dim_subscription_id                            AS dim_latest_subscription_id,
-    namespace_order_subscription.subscription_name                              AS latest_subscription_name,
-    namespace_order_subscription.dim_crm_account_id,
-    namespace_order_subscription.dim_billing_account_id,
-    namespace_order_subscription.dim_namespace_id
-  FROM prod.common.bdg_namespace_order_subscription namespace_order_subscription
-  INNER JOIN prod.common.dim_subscription
-    ON namespace_order_subscription.dim_subscription_id = dim_subscription.dim_subscription_id
-  LEFT JOIN prep.zuora.zuora_product_rate_plan_source order_product_rate_plan
-    ON namespace_order_subscription.product_rate_plan_id_order = order_product_rate_plan.product_rate_plan_id
-  LEFT JOIN prep.zuora.zuora_product_rate_plan_source subscription_product_rate_plan
-    ON namespace_order_subscription.product_rate_plan_id_subscription = subscription_product_rate_plan.product_rate_plan_id
-  WHERE namespace_order_subscription.product_tier_name_subscription IN ('SaaS - Bronze', 'SaaS - Ultimate', 'SaaS - Premium')
+    bdg_namespace_order_subscription.dim_subscription_id                            AS dim_latest_subscription_id,
+    bdg_namespace_order_subscription.subscription_name                              AS latest_subscription_name,
+    bdg_namespace_order_subscription.dim_crm_account_id,
+    bdg_namespace_order_subscription.dim_billing_account_id,
+    bdg_namespace_order_subscription.dim_namespace_id
+  FROM bdg_namespace_order_subscription
+  INNER JOIN dim_subscription
+    ON bdg_namespace_order_subscription.dim_subscription_id = dim_subscription.dim_subscription_id
+  LEFT JOIN zuora_product_rate_plan_source AS order_product_rate_plan
+    ON bdg_namespace_order_subscription.product_rate_plan_id_order = order_product_rate_plan.product_rate_plan_id
+  LEFT JOIN zuora_product_rate_plan_source AS subscription_product_rate_plan
+    ON bdg_namespace_order_subscription.product_rate_plan_id_subscription = subscription_product_rate_plan.product_rate_plan_id
+  WHERE bdg_namespace_order_subscription.product_tier_name_subscription IN ('SaaS - Bronze', 'SaaS - Ultimate', 'SaaS - Premium')
   QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY subscription_version DESC) = 1
   
 ), dim_namespace_w_bdg AS (
@@ -96,7 +108,7 @@ WITH clicks AS (
     deduped_namespace_bdg.dim_billing_account_id,
     deduped_namespace_bdg.latest_subscription_name
   FROM deduped_namespace_bdg
-  INNER JOIN prod.common.dim_namespace
+  INNER JOIN dim_namespace
     ON dim_namespace.dim_namespace_id = deduped_namespace_bdg.dim_namespace_id
  
 ), code_suggestions_with_ultimate_parent_namespaces_and_crm_accounts AS (
@@ -111,11 +123,11 @@ WITH clicks AS (
     dim_crm_account.crm_account_name,
     dim_crm_account.parent_crm_account_name
   FROM flattened_namespaces
-  LEFT JOIN prod.common.dim_namespace
+  LEFT JOIN dim_namespace
     ON flattened_namespaces.namespace_id = dim_namespace.namespace_id
   LEFT JOIN dim_namespace_w_bdg
     ON flattened_namespaces.namespace_id = dim_namespace_w_bdg.dim_namespace_id
-  LEFT JOIN prod.restricted_safe_common.dim_crm_account
+  LEFT JOIN dim_crm_account
     ON dim_namespace_w_bdg.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
 ), code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas AS (
@@ -140,31 +152,31 @@ WITH clicks AS (
 ), context_with_installation_id AS (
 
   SELECT
-    fct_behavior_structured_event_code_suggestions_context.behavior_structured_event_pk,
-    fct_behavior_structured_event_code_suggestions_context.instance_id,
+    code_suggestion_context.behavior_structured_event_pk,
+    code_suggestion_context.instance_id,
     dim_installation.dim_installation_id,
     dim_installation.host_name
-  FROM PROD.workspace_product.fct_behavior_structured_event_code_suggestions_context
-  LEFT JOIN PROD.common.dim_installation 
-    ON dim_installation.dim_instance_id = fct_behavior_structured_event_code_suggestions_context.instance_id
-  WHERE fct_behavior_structured_event_code_suggestions_context.instance_id IS NOT NULL
-    AND fct_behavior_structured_event_code_suggestions_context.instance_id != 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'
+  FROM code_suggestion_context
+  LEFT JOIN dim_installation
+    ON dim_installation.dim_instance_id = code_suggestion_context.instance_id
+  WHERE code_suggestion_context.instance_id IS NOT NULL
+    AND code_suggestion_context.instance_id != 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'
 
 ), bdg_latest_instance_subscription AS (
 
   SELECT 
     fct_ping_instance_metric.dim_installation_id, 
     fct_ping_instance_metric.dim_subscription_id,
-    prep_subscription.subscription_name,
-    prep_subscription.dim_crm_account_id,
+    dim_subscription.subscription_name,
+    dim_subscription.dim_crm_account_id,
     dim_crm_account.dim_parent_crm_account_id,
     dim_crm_account.crm_account_name,
     dim_crm_account.parent_crm_account_name
-  FROM prod.common.fct_ping_instance_metric
-  LEFT JOIN prod.common_prep.prep_subscription
-    ON fct_ping_instance_metric.dim_subscription_id = prep_subscription.dim_subscription_id
-  LEFT JOIN prod.restricted_safe_common.dim_crm_account
-    ON prep_subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+  FROM fct_ping_instance_metric
+  LEFT JOIN dim_subscription
+    ON fct_ping_instance_metric.dim_subscription_id = dim_subscription.dim_subscription_id
+  LEFT JOIN dim_crm_account
+    ON dim_subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
   QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_installation_id ORDER BY dim_ping_date_id DESC) = 1
 
 ), code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm AS (
