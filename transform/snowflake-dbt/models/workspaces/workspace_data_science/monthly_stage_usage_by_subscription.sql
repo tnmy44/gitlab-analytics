@@ -138,7 +138,7 @@ flattened_metrics AS (
     SELECT
         dim_crm_account_id,
         dim_subscription_id,
-        dim_subscription_id_original,
+        dim_namespace_id,
         NULL AS uuid,
         NULL AS hostname,
         snapshot_month,
