@@ -208,7 +208,7 @@
     FROM unioned 
     WHERE fiscal_year = 2024
 
-, fy25_and_beyond_hierarchy AS (
+), fy25_and_beyond_hierarchy AS (
 
 /*
   After FY25, business unit was added to the hierarchy.
@@ -236,6 +236,8 @@
 
     SELECT *
     FROM fy24_hierarchy
+
+    UNION ALL
 
     SELECT *
     FROM fy25_and_beyond_hierarchy
