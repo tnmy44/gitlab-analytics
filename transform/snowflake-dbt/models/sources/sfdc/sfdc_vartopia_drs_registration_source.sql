@@ -8,7 +8,7 @@ WITH source AS (
       ID::VARCHAR AS registration_id,
       VartopiaDRS__Vendor_Deal_ID__c::VARCHAR      AS deal_id,
       Name::VARCHAR                                AS registration_name,
-      CAM_Approval_Status__c::VARCHAR.             AS partner_manager_approval_status,
+      CAM_Approval_Status__c::VARCHAR             AS partner_manager_approval_status,
       VartopiaDRS__DR_status1__c::VARCHAR          AS deal_registration_status,
       VartopiaDRS__Approved_Date__c::VARCHAR       AS deal_registration_approval_date,
       VartopiaDRS__Picklist_1__c::VARCHAR          AS deal_registration_type,
