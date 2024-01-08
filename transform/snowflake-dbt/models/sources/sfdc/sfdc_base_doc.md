@@ -253,3 +253,15 @@ Source model for SFDC Opportunity Share object. For a given opportunity, the use
 Source model for SFDC custom object from Vartopia with all Deal Registraitons 
 
 {% enddocs %}
+
+{% docs sfdc_impartner_mdf_funds_claim_source  %}
+
+Source model for SFDC MDF Funds Claims
+
+{% enddocs %}
+
+{% docs sfdc_impartner_mdf_funds_request_source  %}
+
+Source model for SFDC MDF Funds Requests
+
+{% enddocs %}
