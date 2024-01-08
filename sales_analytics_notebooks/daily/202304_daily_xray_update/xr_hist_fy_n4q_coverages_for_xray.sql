@@ -6,6 +6,8 @@ SELECT
     cfy_open_3plus_net_arr_coverage,
     n4q_open_1plus_net_arr_coverage,
     n4q_open_3plus_net_arr_coverage,
+    cfy_pipe_generation_linearity_rate,
+    cfy_booked_linearity_rate,
     last_updated_at
 FROM prod.workspace_sales.rsa_source_coverage_fy_n4q_fitted_curves
 WHERE
