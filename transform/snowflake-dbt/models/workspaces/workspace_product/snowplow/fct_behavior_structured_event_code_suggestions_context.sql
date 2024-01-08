@@ -71,8 +71,8 @@ WITH clicks AS (
   */
 
   SELECT
-    namespace_order_subscription.dim_subscription_id AS dim_latest_subscription_id,
-    namespace_order_subscription.subscription_name AS latest_subscription_name,
+    namespace_order_subscription.dim_subscription_id                            AS dim_latest_subscription_id,
+    namespace_order_subscription.subscription_name                              AS latest_subscription_name,
     namespace_order_subscription.dim_crm_account_id,
     namespace_order_subscription.dim_billing_account_id,
     namespace_order_subscription.dim_namespace_id
@@ -90,7 +90,7 @@ WITH clicks AS (
 
   SELECT
     dim_namespace.dim_namespace_id,
-    dim_namespace.dim_product_tier_id AS dim_latest_product_tier_id,
+    dim_namespace.dim_product_tier_id   AS dim_latest_product_tier_id,
     deduped_namespace_bdg.dim_latest_subscription_id,
     deduped_namespace_bdg.dim_crm_account_id,
     deduped_namespace_bdg.dim_billing_account_id,
@@ -103,11 +103,13 @@ WITH clicks AS (
 
   SELECT
     flattened_namespaces.behavior_structured_event_pk,
-    flattened_namespaces.namespace_id AS namespace_id,
+    flattened_namespaces.namespace_id                       AS namespace_id,
     dim_namespace.ultimate_parent_namespace_id,
-    dim_namespace_w_bdg.latest_subscription_name AS subscription_name,
-    dim_crm_account.dim_crm_account_id AS dim_crm_account_id,
-    dim_crm_account.dim_parent_crm_account_id
+    dim_namespace_w_bdg.latest_subscription_name            AS subscription_name,
+    dim_crm_account.dim_crm_account_id                      AS dim_crm_account_id,
+    dim_crm_account.dim_parent_crm_account_id,
+    dim_crm_account.crm_account_name,
+    dim_crm_account.parent_crm_account_name
   FROM flattened_namespaces
   LEFT JOIN prod.common.dim_namespace
     ON flattened_namespaces.namespace_id = dim_namespace.namespace_id
@@ -120,14 +122,18 @@ WITH clicks AS (
 
   SELECT
     behavior_structured_event_pk,
-    ARRAY_AGG(DISTINCT ultimate_parent_namespace_id) WITHIN GROUP (ORDER BY ultimate_parent_namespace_id) AS ultimate_parent_namespace_ids,
-    ARRAY_AGG(DISTINCT subscription_name) WITHIN GROUP (ORDER BY subscription_name ASC) AS subscription_names,
-    ARRAY_AGG(DISTINCT dim_crm_account_id) WITHIN GROUP (ORDER BY dim_crm_account_id ASC) AS dim_crm_account_ids,
-    ARRAY_AGG(DISTINCT dim_parent_crm_account_id) WITHIN GROUP (ORDER BY dim_parent_crm_account_id ASC) AS dim_parent_crm_account_ids,
-    ARRAY_SIZE(ultimate_parent_namespace_ids) AS count_ultimate_parent_namespace_ids,
-    ARRAY_SIZE(subscription_names) AS count_subscription_names,
-    ARRAY_SIZE(dim_crm_account_ids) AS count_dim_crm_account_ids,
-    ARRAY_SIZE(dim_parent_crm_account_ids) AS count_dim_parent_crm_account_ids
+    ARRAY_AGG(DISTINCT ultimate_parent_namespace_id) WITHIN GROUP (ORDER BY ultimate_parent_namespace_id)   AS ultimate_parent_namespace_ids,
+    ARRAY_AGG(DISTINCT subscription_name) WITHIN GROUP (ORDER BY subscription_name ASC)                     AS subscription_names,
+    ARRAY_AGG(DISTINCT dim_crm_account_id) WITHIN GROUP (ORDER BY dim_crm_account_id ASC)                   AS dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT dim_parent_crm_account_id) WITHIN GROUP (ORDER BY dim_parent_crm_account_id ASC)     AS dim_parent_crm_account_ids,
+    ARRAY_AGG(DISTINCT crm_account_name) WITHIN GROUP (ORDER BY crm_account_name)                           AS crm_account_names,
+    ARRAY_AGG(DISTINCT parent_crm_account_name) WITHIN GROUP (ORDER BY parent_crm_account_name)             AS parent_crm_account_names,
+    ARRAY_SIZE(ultimate_parent_namespace_ids)                                                               AS count_ultimate_parent_namespace_ids,
+    ARRAY_SIZE(subscription_names)                                                                          AS count_subscription_names,
+    ARRAY_SIZE(dim_crm_account_ids)                                                                         AS count_dim_crm_account_ids,
+    ARRAY_SIZE(dim_parent_crm_account_ids)                                                                  AS count_dim_parent_crm_account_ids,
+    ARRAY_SIZE(crm_account_names)                                                                           AS count_crm_account_names,
+    ARRAY_SIZE(parent_crm_account_names)                                                                    AS count_parent_crm_account_names
   FROM code_suggestions_with_ultimate_parent_namespaces_and_crm_accounts
   GROUP BY ALL
 
@@ -136,7 +142,8 @@ WITH clicks AS (
   SELECT
     fct_behavior_structured_event_code_suggestions_context.behavior_structured_event_pk,
     fct_behavior_structured_event_code_suggestions_context.instance_id,
-    dim_installation.dim_installation_id
+    dim_installation.dim_installation_id,
+    dim_installation.host_name
   FROM PROD.workspace_product.fct_behavior_structured_event_code_suggestions_context
   LEFT JOIN PROD.common.dim_installation 
     ON dim_installation.dim_instance_id = fct_behavior_structured_event_code_suggestions_context.instance_id
@@ -150,7 +157,9 @@ WITH clicks AS (
     fct_ping_instance_metric.dim_subscription_id,
     prep_subscription.subscription_name,
     prep_subscription.dim_crm_account_id,
-    dim_crm_account.dim_parent_crm_account_id
+    dim_crm_account.dim_parent_crm_account_id,
+    dim_crm_account.crm_account_name,
+    dim_crm_account.parent_crm_account_name
   FROM prod.common.fct_ping_instance_metric
   LEFT JOIN prod.common_prep.prep_subscription
     ON fct_ping_instance_metric.dim_subscription_id = prep_subscription.dim_subscription_id
@@ -162,14 +171,20 @@ WITH clicks AS (
 
   SELECT
     context_with_installation_id.behavior_structured_event_pk,
-    ARRAY_AGG(DISTINCT context_with_installation_id.dim_installation_id) WITHIN GROUP (ORDER BY context_with_installation_id.dim_installation_id ASC) AS dim_installation_ids,
-    ARRAY_AGG(DISTINCT bdg_latest_instance_subscription.subscription_name) WITHIN GROUP (ORDER BY bdg_latest_instance_subscription.subscription_name ASC) AS subscription_names,
-    ARRAY_AGG(DISTINCT bdg_latest_instance_subscription.dim_crm_account_id) WITHIN GROUP (ORDER BY bdg_latest_instance_subscription.dim_crm_account_id ASC) AS dim_crm_account_ids,
+    ARRAY_AGG(DISTINCT context_with_installation_id.dim_installation_id) WITHIN GROUP (ORDER BY context_with_installation_id.dim_installation_id ASC)                     AS dim_installation_ids,
+    ARRAY_AGG(DISTINCT context_with_installation_id.host_name) WITHIN GROUP (ORDER BY context_with_installation_id.host_name)                                             AS host_names,
+    ARRAY_AGG(DISTINCT bdg_latest_instance_subscription.subscription_name) WITHIN GROUP (ORDER BY bdg_latest_instance_subscription.subscription_name ASC)                 AS subscription_names,
+    ARRAY_AGG(DISTINCT bdg_latest_instance_subscription.dim_crm_account_id) WITHIN GROUP (ORDER BY bdg_latest_instance_subscription.dim_crm_account_id ASC)               AS dim_crm_account_ids,
     ARRAY_AGG(DISTINCT bdg_latest_instance_subscription.dim_parent_crm_account_id) WITHIN GROUP (ORDER BY bdg_latest_instance_subscription.dim_parent_crm_account_id ASC) AS dim_parent_crm_account_ids,
-    ARRAY_SIZE(dim_installation_ids) AS count_dim_installation_ids,
-    ARRAY_SIZE(subscription_names) AS count_subscription_names,
-    ARRAY_SIZE(dim_crm_account_ids) AS count_dim_crm_account_ids,
-    ARRAY_SIZE(dim_parent_crm_account_ids) AS count_dim_parent_crm_account_ids
+    ARRAY_AGG(DISTINCT bdg_latest_instance_subscription.crm_account_name) WITHIN GROUP (ORDER BY bdg_latest_instance_subscription.crm_account_name)                       AS crm_account_names,
+    ARRAY_AGG(DISTINCT bdg_latest_instance_subscription.parent_crm_account_name) WITHIN GROUP (ORDER BY bdg_latest_instance_subscription.parent_crm_account_name)         AS parent_crm_account_names,
+    ARRAY_SIZE(dim_installation_ids)                                                                                                                                      AS count_dim_installation_ids,
+    ARRAY_SIZE(subscription_names)                                                                                                                                        AS count_subscription_names,
+    ARRAY_SIZE(dim_crm_account_ids)                                                                                                                                       AS count_dim_crm_account_ids,
+    ARRAY_SIZE(dim_parent_crm_account_ids)                                                                                                                                AS count_dim_parent_crm_account_ids,
+    ARRAY_SIZE(crm_account_names)                                                                                                                                         AS count_crm_account_names,
+    ARRAY_SIZE(parent_crm_account_names)                                                                                                                                  AS count_parent_crm_account_names,
+    ARRAY_SIZE(host_names)                                                                                                                                                AS count_host_names
   FROM context_with_installation_id
   LEFT JOIN bdg_latest_instance_subscription
     ON context_with_installation_id.dim_installation_id = bdg_latest_instance_subscription.dim_installation_id
@@ -179,16 +194,27 @@ WITH clicks AS (
 
   SELECT 
     code_suggestion_context.*,
-    code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.ultimate_parent_namespace_ids,
-    COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.subscription_names,code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.subscription_names)                     AS subscription_names, 
-    COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.dim_crm_account_ids,code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_crm_account_ids)                   AS dim_crm_account_ids, 
-    COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.dim_parent_crm_account_ids,code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_parent_crm_account_ids)     AS dim_parent_crm_account_ids, 
-    code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_installation_ids,
-    IFF(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_dim_crm_account_ids, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_dim_crm_account_ids) = 1, COALESCE(GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.dim_crm_account_ids,0), GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_crm_account_ids,0))::VARCHAR, NULL) AS dim_crm_account_id,
-    IFF(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_dim_parent_crm_account_ids, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_dim_parent_crm_account_ids) = 1, COALESCE(GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.dim_parent_crm_account_ids,0), GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_parent_crm_account_ids,0))::VARCHAR, NULL) AS dim_parent_crm_account_id,
-    IFF(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_subscription_names, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_subscription_names) = 1, COALESCE(GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.subscription_names,0), GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.subscription_names,0))::VARCHAR, NULL) AS subscription_name,
-    IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_ultimate_parent_namespace_ids = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.ultimate_parent_namespace_ids,0)::VARCHAR, NULL) AS ultimate_parent_namespace_id,
-    IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_dim_installation_ids = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_installation_ids,0)::VARCHAR, NULL) AS dim_installation_id
+    COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.ultimate_parent_namespace_ids,[])                                                                                                                                 AS ultimate_parent_namespace_ids,
+    COALESCE(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.subscription_names,code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.subscription_names),[])                                                AS subscription_names, 
+    COALESCE(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.dim_crm_account_ids,code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_crm_account_ids),[])                                              AS dim_crm_account_ids, 
+    COALESCE(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.dim_parent_crm_account_ids,code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_parent_crm_account_ids),[])                                AS dim_parent_crm_account_ids,
+    COALESCE(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.crm_account_names,code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.crm_account_names),[])                                                  AS crm_account_names,
+    COALESCE(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.parent_crm_account_names,code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.parent_crm_account_names),[])                                    AS parent_crm_account_names,
+    COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_installation_ids,[])                                                                                                                                            AS dim_installation_ids,
+    COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.host_names,[])                                                                                                                                                      AS host_names,
+    IFF(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_dim_crm_account_ids, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_dim_crm_account_ids) = 1, 
+      COALESCE(GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.dim_crm_account_ids,0), GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_crm_account_ids,0))::VARCHAR, NULL)                          AS dim_crm_account_id,
+    IFF(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_dim_parent_crm_account_ids, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_dim_parent_crm_account_ids) = 1, 
+      COALESCE(GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.dim_parent_crm_account_ids,0), GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_parent_crm_account_ids,0))::VARCHAR, NULL)            AS dim_parent_crm_account_id,
+    IFF(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_subscription_names, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_subscription_names) = 1, 
+      COALESCE(GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.subscription_names,0), GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.subscription_names,0))::VARCHAR, NULL)                            AS subscription_name,
+    IFF(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_crm_account_names, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_crm_account_names) = 1, 
+      COALESCE(GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.crm_account_names,0), GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.crm_account_names,0))::VARCHAR, NULL)                              AS crm_account_name,
+    IFF(COALESCE(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_parent_crm_account_names, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_parent_crm_account_names) = 1, 
+      COALESCE(GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.parent_crm_account_names,0), GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.parent_crm_account_names,0))::VARCHAR, NULL)                AS parent_crm_account_name,
+    IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.count_ultimate_parent_namespace_ids = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.ultimate_parent_namespace_ids,0)::VARCHAR, NULL)         AS ultimate_parent_namespace_id,
+    IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_dim_installation_ids = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.dim_installation_ids,0)::VARCHAR, NULL)                               AS dim_installation_id,
+    IFF(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.count_host_names = 1, GET(code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm.host_names,0)::VARCHAR, NULL)                                                   AS installation_host_name
   FROM code_suggestion_context
   LEFT JOIN code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas
     ON code_suggestion_context.behavior_structured_event_pk = code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas.behavior_structured_event_pk
@@ -201,5 +227,5 @@ WITH clicks AS (
     created_by="@mdrussell",
     updated_by="@michellecooper",
     created_date="2023-09-25",
-    updated_date="2024-01-05"
+    updated_date="2024-01-08"
 ) }}
