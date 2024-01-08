@@ -87,7 +87,7 @@ saas_last_monthly_ping_per_account AS (
     SELECT
         namespace_subscription_bridge.dim_crm_account_id,
         namespace_subscription_bridge.dim_subscription_id,
-        namespace_subscription_bridge.dim_subscription_id_original,
+        namespace_subscription_bridge.dim_namespace_id,
         namespace_subscription_bridge.snapshot_month,
         saas_usage_ping.ping_name AS metrics_path,
         saas_usage_ping.counter_value AS metrics_value
@@ -95,8 +95,8 @@ saas_last_monthly_ping_per_account AS (
     INNER JOIN dates ON saas_usage_ping.ping_date = dates.date_day
     INNER JOIN
         namespace_subscription_bridge ON
-            saas_usage_ping.dim_subscription_id_original =
-            namespace_subscription_bridge.dim_subscription_id_original
+            saas_usage_ping.dim_namespace_id =
+            namespace_subscription_bridge.dim_namespace_id
             AND dates.first_day_of_month =
             namespace_subscription_bridge.snapshot_month
             AND namespace_subscription_bridge.namespace_order_subscription_match_status = 'Paid All Matching'
@@ -109,7 +109,7 @@ saas_last_monthly_ping_per_account AS (
   QUALIFY ROW_NUMBER() OVER (
     PARTITION BY
       namespace_subscription_bridge.dim_crm_account_id,
-      namespace_subscription_bridge.dim_subscription_id_original,
+      namespace_subscription_bridge.dim_namespace_id,
       namespace_subscription_bridge.snapshot_month,
       saas_usage_ping.ping_name
     ORDER BY
@@ -121,7 +121,7 @@ flattened_metrics AS (
     SELECT
         dim_crm_account_id,
         dim_subscription_id,
-        NULL AS dim_subscription_id_original,
+        NULL AS dim_namespace_id,
         uuid,
         hostname,
         snapshot_month,
