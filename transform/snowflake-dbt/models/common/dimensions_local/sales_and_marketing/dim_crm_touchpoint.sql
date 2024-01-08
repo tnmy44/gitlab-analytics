@@ -256,10 +256,11 @@ WITH campaign_details AS (
         ELSE 0
       END AS is_dg_sourced,
       combined_touchpoints.bizible_created_date,
-      CASE WHEN
-        devrel_influence_campaigns.campaign_name is not null 
-        THEN TRUE ELSE FALSE 
-      END as is_delrev_influneced_campaign,
+      CASE 
+        WHEN devrel_influence_campaigns.campaign_name IS NOT NULL 
+          THEN TRUE 
+          ELSE FALSE 
+      END AS is_devrel_influenced_campaign,
       devrel_influence_campaigns.campaign_type    AS devrel_campaign_type,
       devrel_influence_campaigns.description      AS devrel_campaign_description,
       devrel_influence_campaigns.influence_type   AS devrel_campaign_influence_type
@@ -273,7 +274,7 @@ WITH campaign_details AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2021-01-21",
-    updated_date="2023-06-01"
+    updated_date="2024-01-08"
 ) }}
