@@ -2425,11 +2425,11 @@ roles:
             schemas:
                 read:
                     - prep.sfdc
-                    - raw.salesforce_sandbox_stitch
+                    - raw.salesforce_stitch_sandbox_v2
             tables:
                 read:
                     - prep.sfdc.*
-                    - raw.salesforce_sandbox_stitch.*
+                    - raw.salesforce_stitch_sandbox_v2.*
 
     - share:
         privileges:
