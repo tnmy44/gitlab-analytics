@@ -2,7 +2,7 @@
 
     materialized='incremental',
     unique_key='behavior_structured_event_pk',
-    tags=['product'],
+    tags=['mnpi_exception','product'],
     on_schema_change='sync_all_columns',
     cluster_by=['behavior_at::DATE']
   ) 

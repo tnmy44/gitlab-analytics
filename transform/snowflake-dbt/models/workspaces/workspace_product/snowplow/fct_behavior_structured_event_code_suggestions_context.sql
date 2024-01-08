@@ -13,7 +13,6 @@
     ('dim_subscription', 'dim_subscription'),
     ('zuora_product_rate_plan_source', 'zuora_product_rate_plan_source'),
     ('dim_namespace', 'dim_namespace'),
-    ('dim_behavior_event', 'dim_behavior_event'),
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_installation', 'dim_installation'),
     ('fct_ping_instance_metric', 'fct_ping_instance_metric')
@@ -65,17 +64,21 @@ clicks AS (
     
     {% endif %}
 
-), flattened_namespaces AS (
+)
+
+, flattened_namespaces AS (
 
   SELECT 
     code_suggestion_context.behavior_structured_event_pk,
-    flattened_namespace.value AS namespace_id
+    flattened_namespace.value                                 AS namespace_id
   FROM code_suggestion_context,
   LATERAL FLATTEN (input => TRY_PARSE_JSON(code_suggestion_context.namespace_ids)) AS flattened_namespace
   WHERE namespace_ids IS NOT NULL
     AND namespace_ids != '[]'
 
-), deduped_namespace_bdg AS (
+)
+
+, deduped_namespace_bdg AS (
 
   /*
   Limit the subscriptions we connect to code suggestions to only the paid tiers and filter to the most recent subscription version.
@@ -98,7 +101,9 @@ clicks AS (
   WHERE bdg_namespace_order_subscription.product_tier_name_subscription IN ('SaaS - Bronze', 'SaaS - Ultimate', 'SaaS - Premium')
   QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY subscription_version DESC) = 1
   
-), dim_namespace_w_bdg AS (
+)
+
+, dim_namespace_w_bdg AS (
 
   SELECT
     dim_namespace.dim_namespace_id,
@@ -111,7 +116,9 @@ clicks AS (
   INNER JOIN dim_namespace
     ON dim_namespace.dim_namespace_id = deduped_namespace_bdg.dim_namespace_id
  
-), code_suggestions_with_ultimate_parent_namespaces_and_crm_accounts AS (
+)
+
+, code_suggestions_with_ultimate_parent_namespaces_and_crm_accounts AS (
 
   SELECT
     flattened_namespaces.behavior_structured_event_pk,
@@ -130,7 +137,9 @@ clicks AS (
   LEFT JOIN dim_crm_account
     ON dim_namespace_w_bdg.dim_crm_account_id = dim_crm_account.dim_crm_account_id
 
-), code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas AS (
+)
+
+, code_suggestions_with_multiple_ultimate_parent_crm_accounts_saas AS (
 
   SELECT
     behavior_structured_event_pk,
@@ -149,7 +158,9 @@ clicks AS (
   FROM code_suggestions_with_ultimate_parent_namespaces_and_crm_accounts
   GROUP BY ALL
 
-), context_with_installation_id AS (
+)
+
+, context_with_installation_id AS (
 
   SELECT
     code_suggestion_context.behavior_structured_event_pk,
@@ -162,7 +173,9 @@ clicks AS (
   WHERE code_suggestion_context.instance_id IS NOT NULL
     AND code_suggestion_context.instance_id != 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'
 
-), bdg_latest_instance_subscription AS (
+)
+
+, bdg_latest_instance_subscription AS (
 
   SELECT 
     fct_ping_instance_metric.dim_installation_id, 
@@ -179,7 +192,9 @@ clicks AS (
     ON dim_subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
   QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_installation_id ORDER BY dim_ping_date_id DESC) = 1
 
-), code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm AS (
+)
+
+, code_suggestions_with_multiple_ultimate_parent_crm_accounts_sm AS (
 
   SELECT
     context_with_installation_id.behavior_structured_event_pk,
@@ -202,7 +217,9 @@ clicks AS (
     ON context_with_installation_id.dim_installation_id = bdg_latest_instance_subscription.dim_installation_id
   GROUP BY ALL
   
-), combined AS (
+)
+
+, combined AS (
 
   SELECT 
     code_suggestion_context.*,
