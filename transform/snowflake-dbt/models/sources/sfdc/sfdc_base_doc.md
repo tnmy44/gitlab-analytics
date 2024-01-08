@@ -247,3 +247,9 @@ Source model for SFDC Account Share object. For a given account, the user or gro
 Source model for SFDC Opportunity Share object. For a given opportunity, the user or group that has access based on the opportunity id.
 
 {% enddocs %}
+
+{% docs sfdc_vartopia_drs_registration_source %}
+
+Source model for SFDC custom object from Vartopia with all Deal Registraitons 
+
+{% enddocs %}
