@@ -3309,6 +3309,7 @@ roles:
             - postgres_pipeline
             - restricted_safe
             - salesforce
+            - salesforce_sandbox
             - zuora_api_sandbox_stitch
             - zuora_stitch_rest_api
             - zuora
