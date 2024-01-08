@@ -2035,22 +2035,6 @@ tables:
       FROM resource_milestone_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-#  resource_state_events:
-    deletes_exempt: True
-#    export_schema: 'gitlab_com'
-#    export_table: 'resource_state_events'
-#    export_table_primary_key: id
-#    import_db: GITLAB_DB
-#    import_query: >
-#      SELECT id
-#      , user_id
-#      , issue_id
-#      , merge_request_id
-#      , state
-#      , created_at
-#      FROM resource_state_events
-#      WHERE created_at BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
-#        AND '{EXECUTION_DATE}'::timestamp
   resource_weight_events:
     dbt_source_model: true
     deletes_exempt: True
