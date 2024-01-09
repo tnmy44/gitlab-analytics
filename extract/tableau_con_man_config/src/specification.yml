@@ -2326,6 +2326,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: afarrukh
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7150,6 +7151,7 @@ users:
       - ASM EMEA Commercial Restricted Access
       - ASM Restricted Access
       - General All Access
+      - General SAFE Access
   - user_name: lvandijk
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10830,3 +10832,34 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+  - user_name: usinghal
+    user_name_domain: gitlab.com
+    site_role: Creator
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access     
+  - user_name: rreddy
+    user_name_domain: gitlab.com
+    site_role: Creator
+    auth_setting: SAML
+    groups:
+      - General All Access  
+  - user_name: shinya
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: bcardoso
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: mksionek
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access              
