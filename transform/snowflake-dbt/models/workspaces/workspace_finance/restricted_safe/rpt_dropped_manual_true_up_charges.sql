@@ -1,6 +1,6 @@
 
 {{ config({
-    "tags": ["tdf", "true_up"]
+    "tags": ["true_up"]
     })
 }}
 
