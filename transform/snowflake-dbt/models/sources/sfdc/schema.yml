@@ -635,7 +635,24 @@ models:
           - unique
 
   - name: sfdc_vartopia_drs_registration_source
-    description: Source model for SFDC custom object from Vartopia with all Deal Registraitons 
+    description: Source model for SFDC custom object from Vartopia with all Deal Registraitons
+    columns:
+      - name: registration_id
+        description: The SFDC of the Deal Registration from SFDC
+      - name: deal_id
+        description: The deal ID of the DR from vartopia
+      - name: registration_name
+        description: Name of the DR, often is close to the Opportunity.
+      - name: partner_manager_approval_status
+        description: Approval status from the Partner 
+      - name: deal_registration_approval_date
+        description: Approval status from GitLab
+      - name: deal_registration_type
+        description: Type of DR
+      - name: gitLab_marketing_campaign
+        description: The linked GitLab SFDC Marketing Campaign for Partners
+      - name: distributor_marketing_campaign
+        description: The linked GitLab SFDC Marketing Campaign for distributors
 
   - name: sfdc_permission_set_assignment_source
     description: '{{ doc("sfdc_permission_set_assignment_source") }}'
