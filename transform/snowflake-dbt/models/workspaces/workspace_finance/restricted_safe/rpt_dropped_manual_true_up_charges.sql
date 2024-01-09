@@ -1,3 +1,9 @@
+
+{{ config({
+    "tags": ["tdf", "true_up"]
+    })
+}}
+
 WITH base_all_time AS (
   
   SELECT DISTINCT 

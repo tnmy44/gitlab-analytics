@@ -1,3 +1,9 @@
+
+{{ config({
+    "tags": ["true_up"]
+    })
+}}
+
 WITH map_merged_crm_account AS (
 
     SELECT *
