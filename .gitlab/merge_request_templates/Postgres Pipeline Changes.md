@@ -13,16 +13,16 @@ Closes
         * [ ] `el_saas_gitlab_com_ci_db_manifest.yaml`
         * [ ] `el_saas_gitlab_com_ci_scd_db_manifest.yaml`
         * [ ] `el_saas_gitlab_com_db_manifest.yaml`
-        * [ ] `el_saas_gitlab_com_scd_db_manifest.yaml` 
-    * [ ] 🚂`Extract` -> [gitlab_ops_pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#gitlab_ops_pgp_test) if one of this file(s) is changed: 
+        * [ ] `el_saas_gitlab_com_scd_db_manifest.yaml`
+    * [ ] 🚂`Extract` -> [gitlab_ops_pgp_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#gitlab_ops_pgp_test) if one of this file(s) is changed:
         * [ ] `el_saas_gitlab_ops_db_manifest.yaml`
         * [ ] `el_saas_gitlab_ops_scd_db_manifest.yaml`
- 
-It should pass properly to move forward. 
+
+It should pass properly to move forward.
 
 ##### Check downstream impact
 
-Determine if there is downstream impact. I.e. additional changes to downstream models or the need for a manual full refresh in dbt. 
+Determine if there is downstream impact. I.e. additional changes to downstream models or the need for a manual full refresh in dbt.
 
 - [ ] Downstream impact has been determined and;
    - [ ] changes to the manifest do not have downstream impact.
@@ -32,12 +32,12 @@ Determine if there is downstream impact. I.e. additional changes to downstream m
 
 ## Submitter Checklist
 
-* [ ] Any >200M row table is **modified**? If yes, please refer to the page [Large table backfilling](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#large-tables-backfilling) and follow the steps
+* [ ] Any >200M row table is **modified**? If no, continue. Else, follow the `deletes_exempt` guidelines as explained here: #TOADD_hb_link
 * [ ] Confirm there is no `RED` data loaded due to your changes. For more details about Data Classification refer to [Data Classification Standard](https://about.gitlab.com/handbook/security/data-classification-standard.html) page
 
 ## All MRs Checklist
 - [ ] [Label hygiene](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling) on issue.
-    - [ ] Set workflow to `6 - review` (or type command `/label ~"workflow::6 - review" ` in the comment) 
+    - [ ] Set workflow to `6 - review` (or type command `/label ~"workflow::6 - review" ` in the comment)
 - [ ] Branch set to delete. (Leave option `Squash commits when merge request is accepted.` unchecked)
 - [ ] This MR is ready for final review and merge.
 - [ ] All threads are resolved.
