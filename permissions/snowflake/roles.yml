@@ -1392,6 +1392,20 @@ roles:
             tables:
                 read:
                     - raw.adaptive_custom.*
+    
+    - aws_billing:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.aws_billing
+            tables:
+                read:
+                    - raw.aws_billing.*
 
     - bamboohr_analytics:
         warehouses:
@@ -3249,6 +3263,7 @@ roles:
     - cleroux:
         member_of:
             - analyst_engineering
+            - aws_billing
             - oci_reports
             - prometheus
             - restricted_safe
