@@ -5979,8 +5979,10 @@ roles:
         warehouses: []
 
     - wleidheiser:
-        member_of: []
-        warehouses: []
+        member_of:
+            - reporter
+        warehouses:
+            - dev_x
 
     - wlin:
         member_of:
@@ -6715,8 +6717,9 @@ users:
         member_of: []
 
     - wleidheiser:
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of:
+            - wleidheiser
 
     - wlin:
         can_login: yes
