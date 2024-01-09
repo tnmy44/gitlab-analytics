@@ -9,11 +9,11 @@ renamed AS (
 
   SELECT
 
-    "Id"::TEXT                                                      AS chargemetrics_discountallocationdetail_id,
+    "Id"::TEXT                                                      AS charge_metrics_discount_allocation_detail_id,
     "ChargeMetricsId"::TEXT                                         AS charge_metrics_id,
     "DiscountChargeNumber"::TEXT                                    AS discount_charge_number,
-    "DiscountMrr"::NUMBER                                           AS discount_mrr,
-    "DiscountTcv"::NUMBER                                           AS discount_tcv,
+    "DiscountMrr"::FLOAT                                           AS discount_mrr,
+    "DiscountTcv"::FLOAT                                           AS discount_tcv,
     TO_TIMESTAMP(CONVERT_TIMEZONE('UTC', "CreatedDate"))::TIMESTAMP AS created_date,
     TO_TIMESTAMP(CONVERT_TIMEZONE('UTC', "UpdatedDate"))::TIMESTAMP AS updated_date,
     "DELETED"::BOOLEAN                                              AS deleted,

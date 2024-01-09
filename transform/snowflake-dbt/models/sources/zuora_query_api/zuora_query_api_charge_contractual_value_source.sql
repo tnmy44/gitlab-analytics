@@ -9,12 +9,12 @@ renamed AS (
 
   SELECT
     "ID"::TEXT                                                    AS charge_contractual_value_id,
-    "AMOUNT"::TEXT                                                AS amount,
+    "AMOUNT"::FLOAT                                                AS amount,
     "createdBy"::TEXT                                             AS created_by,
     TO_TIMESTAMP(CONVERT_TIMEZONE('UTC', "createdOn"))::TIMESTAMP AS created_on,
     "CURRENCY"::TEXT                                              AS currency,
-    "ELP"::NUMBER                                                 AS elp,
-    "elpTaxAmount"::NUMBER                                        AS elp_tax_amount,
+    "ELP"::FLOAT                                                 AS elp,
+    "elpTaxAmount"::FLOAT                                        AS elp_tax_amount,
     "estimatedEvergreenEndDate"::TEXT                             AS estimated_ever_green_end_date,
     "ratePlanChargeId"::TEXT                                      AS rate_plan_charge_id,
     "REASON"::TEXT                                                AS reason,
