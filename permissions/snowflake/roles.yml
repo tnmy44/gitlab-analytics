@@ -5982,7 +5982,7 @@ roles:
         member_of:
             - reporting
         warehouses:
-            - dev_x
+            - dev_xs
 
     - wlin:
         member_of:
