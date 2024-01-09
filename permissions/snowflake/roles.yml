@@ -645,6 +645,10 @@ roles:
         warehouses:
             - dev_xs
 
+    - analyst_marketing_sensitive:
+        warehouses:
+            - dev_xs
+
     - analytics_engineer_core:
         warehouses:
             - dev_xs
@@ -3413,6 +3417,7 @@ roles:
             - facebook_ads
             - linkedin_ads
             - static_pmg_readonly
+            - analyst_marketing_sensitive
         warehouses:
             - dev_xs
         owns:
@@ -4668,6 +4673,7 @@ roles:
             - analyst_sales_sensitive
             - data_team_analyst
             - restricted_safe
+            - analyst_marketing_sensitive
         warehouses:
             - dev_xs
 

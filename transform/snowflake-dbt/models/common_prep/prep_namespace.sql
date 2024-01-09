@@ -90,10 +90,11 @@ joined AS (
       TRUE, FALSE)                                                          AS namespace_is_internal,
     CASE
       WHEN namespaces.visibility_level = 'public'
-        OR namespace_is_internal THEN namespace_name
+        OR namespace_is_internal THEN namespaces.namespace_name
       WHEN namespaces.visibility_level = 'internal' THEN 'internal - masked'
       WHEN namespaces.visibility_level = 'private' THEN 'private - masked'
     END                                                                     AS namespace_name,
+    namespaces.namespace_name                                               AS namespace_name_unmasked,
     CASE
       WHEN namespaces.visibility_level = 'public'
         OR namespace_is_internal THEN namespace_path

@@ -303,6 +303,10 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: namespace_name_unmasked
+        description: '{{ doc("namespace_name_unmasked") }}'
+        meta:
+          masking_policy: analyst_marketing_sensitive
 
   - name: prep_order_hist
     description: '{{ doc("dim_order_hist") }}'

@@ -404,3 +404,73 @@ models:
         description: The most recent trial start date across all the namespaces associated with the marketing_contact.
       - name: namespaces_array
         description: '{{ doc("namespaces_array") }}'
+
+  - name: dim_namespace_pii
+    description: This model mirrors the columns in `dim_namespace`. It also includes the unmasked top-level namespace name, which is considered sensitive information. Access is limited by a dynamic masking policy on the namespace_name column.
+    columns:
+      - name: dim_namespace_id
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "gainsight"]
+      - name: namespace_is_internal
+      - name: namespace_is_ultimate_parent
+        description: '{{ doc("namespace_is_ultimate_parent") }}'
+      - name: namespace_name
+        meta:
+          masking_policy: analyst_marketing_sensitive
+      - name: namespace_path
+      - name: owner_id
+      - name: namespace_type
+        description: '{{ doc("namespace_type") }}'
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: has_avatar
+      - name: created_at
+        description: '{{ doc("namespace_created_at") }}'
+      - name: updated_at
+      - name: is_membership_locked
+      - name: has_request_access_enabled
+      - name: has_share_with_group_locked
+      - name: visibility_level
+        description: '{{ doc("visibility_level") }}'
+      - name: dap_sync_status
+      - name: ldap_sync_error
+      - name: ldap_sync_last_update_at
+      - name: ldap_sync_last_successful_update_at
+      - name: ldap_sync_last_sync_at
+      - name: lfs_enabled
+      - name: parent_id
+      - name: shared_runners_minutes_limit
+      - name: extra_shared_runners_minutes_limit
+      - name: repository_size_limit
+      - name: does_require_two_factor_authentication
+      - name: two_factor_grace_period
+      - name: project_creation_level
+      - name: push_rule_id
+      - name: creator_id
+      - name: namespace_creator_is_blocked
+      - name: ultimate_parent_namespace_id
+      - name: gitlab_plan_id
+        description: The **plan_id** associated with the namespace's subscription. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: gitlab_plan_title
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: gitlab_plan_is_paid
+        description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
+        tests:
+          - not_null
+        tags: ["tdf", "common", "gainsight"]
+      - name: dim_product_tier_id,
+      - name: current_member_count
+        description: Do not use this count, it is incorrect. Use [gitlab_dotcom_memberships](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.gitlab_dotcom_memberships) for member counts.
+      - name: current_project_count
+        description: The number of projects that are presently associated with the namespace.
+      - name: has_code_suggestions_enabled
+        description: '{{ doc("namespace_has_code_suggestions_enabled") }}'
