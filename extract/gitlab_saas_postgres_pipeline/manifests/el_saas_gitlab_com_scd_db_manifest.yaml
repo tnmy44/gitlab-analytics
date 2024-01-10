@@ -881,6 +881,5 @@ tables:
       , resolved_on_default_branch
       , state
       , dismissal_reason
-      , created_at
       FROM vulnerability_reads
   
