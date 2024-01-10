@@ -392,7 +392,8 @@ WITH filtered_source as (
     LEFT JOIN events_with_standard_context
       ON base.event_id = events_with_standard_context.event_id
     LEFT JOIN events_with_ide_extension_version_context
-      ON base.event_id = events_with_ide_extension_version_context.event_id
+      ON base.derived_tstamp::date = events_with_ide_extension_version_context.derived_tstamp::date
+        AND base.event_id = events_with_ide_extension_version_context.event_id
     WHERE NOT EXISTS (
       SELECT event_id
       FROM events_with_web_page_id web_page_events

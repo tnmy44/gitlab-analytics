@@ -36,21 +36,6 @@ WITH filtered_source as (
 
 )
 
-/*
-    we need to extract the GitLab standard context fields from the contexts JSON provided in the raw events
-    A contexts json look like a list of context attached to an event:
-
-    The GitLab standard context which we are looking for is defined by schema at:
-    https://gitlab.com/gitlab-org/iglu/-/blob/master/public/schemas/com.gitlab/gitlab_standard/jsonschema/1-0-5
-
-    To in this CTE for any event, we use LATERAL FLATTEN to create one row per context per event.
-    We then extract the context schema and the context data
-
-    We take the results from the previous CTE and isolate the only context we are interested in:
-    the gitlab standard context, which has this context schema: iglu:com.gitlab/gitlab_standard/jsonschema/1-0-5
-    Then we extract the id from the context_data column
-*/
-
 SELECT 
   base.event_id,
   base.derived_tstamp,
