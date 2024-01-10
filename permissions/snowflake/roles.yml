@@ -1341,6 +1341,19 @@ roles:
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly_report_view
 
+    - snowflake_analyst:
+        warehouses:
+            - dev_xs
+        member_of:
+            - reporter
+
+    - snowflake_analyst_safe:
+        warehouses:
+            - dev_xs
+        member_of:
+            - reporter
+            - restricted_safe
+
     - data_science_readonly:
         warehouses:
             - dev_xs
