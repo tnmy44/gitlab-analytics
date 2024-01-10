@@ -13,9 +13,8 @@ WITH base AS (
 
   SELECT
     event_id,
-    derived_tstamp,
     contexts
-  {% if target.name NOT IN ("prod") -%}
+  {% if target.name not in ("prod") -%}
 
   FROM {{ ref('snowplow_gitlab_good_events_sample_source') }}
 
