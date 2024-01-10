@@ -21,7 +21,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    GCP_SERVICE_CREDS,
+    ELASTIC_SEARCH_BILLING_API_KEY,
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
@@ -69,7 +69,7 @@ elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
-        GCP_SERVICE_CREDS,
+        ELASTIC_SEARCH_BILLING_API_KEY,
     ],
     env_vars={
         **pod_env_vars,
