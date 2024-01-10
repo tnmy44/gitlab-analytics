@@ -2,6 +2,7 @@ import json
 import logging
 import sys
 from os import environ as env
+from typing import List, Dict
 
 from fire import Fire
 from gitlabdata.orchestration_utils import snowflake_engine_factory
