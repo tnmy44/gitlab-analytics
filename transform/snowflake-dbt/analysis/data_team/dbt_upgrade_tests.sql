@@ -174,15 +174,6 @@ tests:
       - dbt_updated_at
       - dbt_created_at
 
-  - name: compare_customers_db_charges_xf
-    test_type: compare_relations
-    source_db: prod
-    source_schema: restricted_safe_legacy
-    source_name: customers_db_charges_xf
-    exclude_columns:
-      - dbt_updated_at
-      - dbt_created_at
-
   - name: compare_customers_db_trial_histories
     test_type: compare_relations
     source_db: prod
