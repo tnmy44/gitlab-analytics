@@ -29,8 +29,8 @@ def get_records_with_extended_feedback(engine: Engine) -> List[str]:
         connection = engine.connect()
         duo_feedback_events = connection.execute(query).fetchall()
 
-        for event in duo_feedback_events:
-            logging.info(event)
+        for event_id, event_contexts in duo_feedback_events:
+            logging.info(f"event_id: {event_id}, contexts: {event_contexts})
 
     except:
         logging.info("Failed to get snowplow events")
