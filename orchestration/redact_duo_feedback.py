@@ -34,12 +34,13 @@ def get_records_with_extended_feedback(engine: Engine) -> List[str]:
 
     return duo_feedback_events
 
-def redact_extended_feedback():    
+def redact_extended_feedback():
     config_dict = env.copy()
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
-    get_records_with_extended_feedback(engine)
+    records = get_records_with_extended_feedback(engine)
+    print(records)
 
 if __name__ == "__main__":
     logging.basicConfig(level=20)
-    Fireredact_extended_feedback)
+    Fire(redact_extended_feedback())
     logging.info(duo_feedback_events)
