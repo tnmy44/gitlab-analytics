@@ -5988,7 +5988,7 @@ roles:
 
     - wleidheiser:
         member_of:
-            - reporting
+            - reporter
         warehouses:
             - dev_xs
 
