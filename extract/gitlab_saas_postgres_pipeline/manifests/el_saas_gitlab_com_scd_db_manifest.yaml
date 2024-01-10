@@ -867,6 +867,11 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
+      , vulnerability_id
+      , project_id
+      , scanner_id
+      , uuid
+      , namespace_id
       , report_type
       , resolved_on_default_branch
       , state
