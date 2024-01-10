@@ -217,9 +217,9 @@ WITH filtered_source as (
 ), events_with_web_page_id AS (
 
     SELECT *
-    FROM {{ ref('snowplow_gitlab_events_web_page_id') }}
+    FROM {{ ref('snowplow_gitlab_events_web_page_context') }}
 
-),events_with_standard_context AS (
+), events_with_standard_context AS (
 
     SELECT *
     FROM {{ ref('snowplow_gitlab_events_standard_context') }}
@@ -228,6 +228,11 @@ WITH filtered_source as (
 
     SELECT *
     FROM {{ ref('snowplow_gitlab_events_ide_extension_version_context') }}
+
+), events_with_experiment_context AS (
+
+    SELECT *
+    FROM {{ ref('snowplow_gitlab_events_experiment_context') }}
 
 ), base_with_sorted_columns AS (
   
@@ -275,15 +280,22 @@ WITH filtered_source as (
       base.event_fingerprint,
       base.event_format,
       base.event_id,
+      events_with_web_page_id.web_page_context,
       events_with_web_page_id.web_page_id,
-      events_with_standard_context.environment AS gsc_environment,
-      events_with_standard_context.extra AS gsc_extra,
-      events_with_standard_context.namespace_id AS gsc_namespace_id,
-      events_with_standard_context.plan AS gsc_plan,
+      events_with_standard_context.gitlab_standard_context,
+      events_with_standard_context.environment                AS gsc_environment,
+      events_with_standard_context.extra                      AS gsc_extra,
+      events_with_standard_context.namespace_id               AS gsc_namespace_id,
+      events_with_standard_context.plan                       AS gsc_plan,
       events_with_standard_context.google_analytics_client_id AS gsc_google_analytics_client_id,
-      events_with_standard_context.project_id AS gsc_project_id,
-      events_with_standard_context.pseudonymized_user_id AS gsc_pseudonymized_user_id,
-      events_with_standard_context.source AS gsc_source,
+      events_with_standard_context.project_id                 AS gsc_project_id,
+      events_with_standard_context.pseudonymized_user_id      AS gsc_pseudonymized_user_id,
+      events_with_standard_context.source                     AS gsc_source,
+      events_with_experiment_context.experiment_context,
+      events_with_experiment_context.experiment_name,
+      events_with_experiment_context.context_key              AS experiment_context_key,
+      events_with_experiment_context.experiment_variant,
+      events_with_experiment_context.experiment_migration_keys,
       base.event_name,
       base.event_vendor,
       base.event_version,
@@ -388,12 +400,17 @@ WITH filtered_source as (
       events_with_ide_extension_version_context.language_server_version
     FROM base
     LEFT JOIN events_with_web_page_id
-      ON base.event_id = events_with_web_page_id.event_id
+      ON base.derived_tstamp::date = events_with_web_page_id.derived_tstamp::date
+        AND base.event_id = events_with_web_page_id.event_id
     LEFT JOIN events_with_standard_context
-      ON base.event_id = events_with_standard_context.event_id
+      ON base.derived_tstamp::date = events_with_standard_context.derived_tstamp::date
+        AND base.event_id = events_with_standard_context.event_id
     LEFT JOIN events_with_ide_extension_version_context
       ON base.derived_tstamp::date = events_with_ide_extension_version_context.derived_tstamp::date
         AND base.event_id = events_with_ide_extension_version_context.event_id
+    LEFT JOIN events_with_experiment_context
+      ON base.derived_tstamp::date = events_with_experiment_context.derived_tstamp::date
+        AND base.event_id = events_with_experiment_context.event_id
     WHERE NOT EXISTS (
       SELECT event_id
       FROM events_with_web_page_id web_page_events

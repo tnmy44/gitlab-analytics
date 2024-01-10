@@ -2,9 +2,11 @@
 {% set month_value = var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) %}
 
 {{config({
-    "unique_key":"event_id"
+    "unique_key":"event_id",
+    "cluster_by":['derived_tstamp::DATE']
   })
 }}
+
 
 {% set change_form = ['formId','elementId','nodeName','type','elementClasses','value'] %}
 {% set submit_form = ['formId','formClasses','elements'] %}
@@ -17,6 +19,7 @@ WITH filtered_source as (
 
     SELECT
         event_id,
+        derived_tstamp,
         contexts
     {% if target.name not in ("prod") -%}
 
@@ -28,40 +31,9 @@ WITH filtered_source as (
 
     {%- endif %}
 
-    WHERE app_id IS NOT NULL
-      AND DATE_PART(month, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ month_value }}'
+    WHERE DATE_PART(month, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ month_value }}'
       AND DATE_PART(year, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ year_value }}'
-      AND 
-        (
-          (
-            -- js backend tracker
-            v_tracker LIKE 'js%'
-            AND COALESCE(lower(page_url), '') NOT LIKE 'http://localhost:%'
-          )
-          
-          OR
-          
-          (
-            -- ruby backend tracker
-            v_tracker LIKE 'rb%'
-          )
-
-          OR
-
-          (
-            -- code suggestions events
-            v_tracker LIKE 'py%'
-          )
-
-          OR
-
-          (
-            -- jetbrains plugin events
-            v_tracker LIKE 'java%'
-          )
-        )
-
-      AND TRY_TO_TIMESTAMP(derived_tstamp) is not null
+      AND TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
 )
 
 , base AS (
@@ -100,6 +72,9 @@ Then we extract the id from the context_data column
 */
 SELECT 
     events_with_context_flattened.event_id,
-    context_data['id']::TEXT AS web_page_id
+    events_with_context_flattened.derived_tstamp,
+    context_data                                  AS web_page_context,
+    context_data_schema                           AS web_page_context_schema,
+    context_data['id']::TEXT                      AS web_page_id
 FROM events_with_context_flattened
 WHERE context_data_schema = 'iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0'

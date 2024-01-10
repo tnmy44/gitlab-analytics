@@ -188,7 +188,7 @@ WITH filtered_source as (
 ), events_with_web_page_id AS (
 
     SELECT *
-    FROM {{ ref('snowplow_gitlab_events_web_page_id') }}
+    FROM {{ ref('snowplow_gitlab_events_web_page_context') }}
 
 ), base_with_sorted_columns AS (
   
