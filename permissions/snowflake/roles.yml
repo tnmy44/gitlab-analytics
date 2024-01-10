@@ -1352,8 +1352,7 @@ roles:
             - dev_xs
         member_of:
             - common
-            - 
-
+            - common_safe
 
     - data_science_readonly:
         warehouses:
