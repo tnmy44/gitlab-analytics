@@ -74,6 +74,7 @@ SELECT
     'app_id', 
     'page_url_scheme'
     ]) }}                                                                                                           AS dim_behavior_website_page_sk,
+  gitlab_standard_context                                                                                           AS gitlab_standard_context,
   gsc_environment                                                                                                   AS gsc_environment,
   gsc_extra                                                                                                         AS gsc_extra,
   gsc_namespace_id                                                                                                  AS gsc_namespace_id,
@@ -143,12 +144,16 @@ SELECT
     'has_code_suggestions_context',
     'has_ide_extension_version_context'
     ]) }}                                                                                                           AS dim_behavior_contexts_sk,
-  
-  ide_extension_version_context,
-  extension_name,
-  extension_version,
-  ide_name,
-  ide_vendor,
-  ide_version,
-  language_server_version
+  ide_extension_version_context                                                                                     AS ide_extension_version_context,
+  extension_name                                                                                                    AS extension_name,
+  extension_version                                                                                                 AS extension_version,
+  ide_name                                                                                                          AS ide_name,
+  ide_vendor                                                                                                        AS ide_vendor,
+  ide_version                                                                                                       AS ide_version,
+  language_server_version                                                                                           AS language_server_version,
+  experiment_context                                                                                                AS experiment_context,
+  experiment_name                                                                                                   AS experiment_name,
+  experiment_context_key                                                                                            AS experiment_context_key,
+  experiment_variant                                                                                                AS experiment_variant,
+  experiment_migration_keys                                                                                         AS experiment_migration_keys
 FROM unioned_view

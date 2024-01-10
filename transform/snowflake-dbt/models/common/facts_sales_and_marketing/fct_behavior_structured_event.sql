@@ -41,6 +41,7 @@ structured_event_renamed AS (
       dim_behavior_operating_system_sk,
       dim_behavior_website_page_sk,
       dim_behavior_referrer_page_sk,
+      gitlab_standard_context,
       gsc_environment,
       gsc_extra,
       gsc_namespace_id,
@@ -73,7 +74,12 @@ structured_event_renamed AS (
       ide_name,
       ide_vendor,
       ide_version,
-      language_server_version
+      language_server_version,
+      experiment_context,
+      experiment_name,
+      experiment_context_key,
+      experiment_variant,
+      experiment_migration_keys
 
     FROM {{ ref('prep_snowplow_unnested_events_all') }}
     WHERE event = 'struct'
@@ -134,6 +140,7 @@ structured_events_w_dim AS (
       events_with_plan.event_value,
 
       -- Degenerate Dimensions (Gitlab Standard Context Attributes)
+      events_with_plan.gitlab_standard_context,
       events_with_plan.gsc_google_analytics_client_id,
       events_with_plan.gsc_pseudonymized_user_id,
       events_with_plan.gsc_environment,
@@ -155,6 +162,13 @@ structured_events_w_dim AS (
       events_with_plan.user_country,
       events_with_plan.user_region,
       events_with_plan.user_timezone_name,
+
+      -- Degenerate Dimensions (Experiment)
+      events_with_plan.experiment_context,
+      events_with_plan.experiment_name,
+      events_with_plan.experiment_context_key,
+      events_with_plan.experiment_variant,
+      events_with_plan.experiment_migration_keys,
 
       -- Junk Dimensions (Context Flags)
       events_with_plan.has_performance_timing_context, 
