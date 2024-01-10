@@ -41,6 +41,26 @@ class TestPostgresPipelineTable:
         assert is_scd is False
         assert is_incremental
 
+    def test_get_source_table_name(self):
+        """check that get_target_name() matches its attribute"""
+
+        # test when 'import_query_table' == manifest['export_table']
+        actual_source_table_name = self.pipeline_table.source_table_name
+        expected_source_table_name = self.pipeline_table.table_dict["export_table"]
+        assert actual_source_table_name == expected_source_table_name
+
+        # test when 'import_query_table' != manifest['export_table']
+        table_config2 = {
+            "import_query": "SELECT * FROM p_ci_builds WHERE updated_at >= '{BEGIN_TIMESTAMP}'::timestamp;",
+            "import_db": "some_database",
+            "export_table": "ci_builds",
+            "export_table_primary_key": "id",
+        }
+        pipeline_table2 = PostgresPipelineTable(table_config2)
+        actual_source_table_name = pipeline_table2.source_table_name
+        expected_source_table_name = "p_" + pipeline_table2.table_dict["export_table"]
+        assert actual_source_table_name == expected_source_table_name
+
     def test_get_target_table_name(self):
         """check that get_target_name() matches its attribute"""
         actual_table_name = self.pipeline_table.get_target_table_name()
