@@ -1342,17 +1342,18 @@ roles:
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly_report_view
 
     - snowflake_analyst:
-        warehouses:
+         warehouses:
             - dev_xs
         member_of:
-            - reporter
+            - common
 
     - snowflake_analyst_safe:
-        warehouses:
+         warehouses:
             - dev_xs
         member_of:
-            - reporter
-            - restricted_safe
+            - common
+            - 
+
 
     - data_science_readonly:
         warehouses:
@@ -1615,6 +1616,30 @@ roles:
                     - prod.common_mart_product.*
                     - prod.common_mart_people.*
                     - prod.common_prep.*
+
+    - common_safe:
+         privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - restricted_safe_common
+                    - restricted_safe_common_mapping 
+                    - restricted_safe_common_mart_finance
+                    - restricted_safe_common_mart_product
+                    - restricted_safe_common_mart_sales
+                    - restricted_safe_common_prep
+                    - restricted_safe_common_safe
+            tables:
+                read:
+                    - restricted_safe_common.*
+                    - restricted_safe_common_mapping.*
+                    - restricted_safe_common_mart_finance.*
+                    - restricted_safe_common_mart_product.*
+                    - restricted_safe_common_mart_sales.*
+                    - restricted_safe_common_prep.*
+                    - restricted_safe_common_safe.*
 
     - container_registry:
         privileges:
