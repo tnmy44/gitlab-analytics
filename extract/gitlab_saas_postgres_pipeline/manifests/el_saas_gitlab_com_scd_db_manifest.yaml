@@ -859,3 +859,28 @@ tables:
       SELECT user_id
       , project_id
       FROM users_security_dashboard_projects
+  users_security_dashboard_projects:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'users_security_dashboard_projects'
+    export_table_primary_key: user_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT user_id
+      , project_id
+      FROM users_security_dashboard_projects
+  vulnerability_reads:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'vulnerability_reads'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , report_type
+      , resolved_on_default_branch
+      , state
+      , dismissal_reason
+      , created_at
+      FROM vulnerability_reads
+  
