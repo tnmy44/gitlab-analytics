@@ -18,7 +18,7 @@ def get_records_with_extended_feedback(engine: Engine) -> List[str]:
 
     query = """
     SELECT event_id, contexts
-    FROM testing_db.test.snowplow_gitlab_events_clone
+    FROM testing_db.test.snowplow_gitlab_events_clone_test
     WHERE collector_tstamp <= dateadd(days, -90, current_timestamp) 
     AND se_label ='response_feedback'
 --  AND contexts like '%"extendedFeedback":%'
