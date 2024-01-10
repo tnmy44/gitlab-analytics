@@ -27,7 +27,11 @@ def get_records_with_extended_feedback(engine: Engine) -> List[str]:
     try:
         logging.info("Getting snowplow events with extended feedback")
         connection = engine.connect()
-        duo_feedback_events = [row[0] for row in connection.execute(query).fetchall()]
+        duo_feedback_events = connection.execute(query).fetchall()
+
+        for event in duo_feedback_events:
+            logging.info(event)
+
     except:
         logging.info("Failed to get snowplow events")
     finally:
@@ -40,7 +44,6 @@ def redact_extended_feedback():
     config_dict = env.copy()
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     records = get_records_with_extended_feedback(engine)
-    logging.info(records)
 
 if __name__ == "__main__":
     logging.basicConfig(level=20)
