@@ -1344,13 +1344,13 @@ roles:
     - snowflake_analyst:
          warehouses:
             - dev_xs
-        member_of:
+         member_of:
             - common
 
     - snowflake_analyst_safe:
          warehouses:
             - dev_xs
-        member_of:
+         member_of:
             - common
             - common_safe
 
@@ -2729,6 +2729,52 @@ roles:
                     - prep.workday.*
                     - raw.workday.*
 
+    - workspace:
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - workspace_customer_success
+                    - workspace_data
+                    - workspace_science
+                    - workspace_engineering
+                    - workspace_finance
+                    - workspace_marketing
+                    - workspace_people
+                    - workspace_product
+                    - workspace_sales
+            tables:
+                read:
+                    - workspace_customer_success.*
+                    - workspace_data.*
+                    - workspace_science.*
+                    - workspace_engineering.*
+                    - workspace_finance.*
+                    - workspace_marketing.*
+                    - workspace_people.*
+                    - workspace_product.*
+                    - workspace_sales.*
+
+    - workspace_safe:
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - restricted_safe_workspace_engineering
+                    - restricted_safe_workspace_finance
+                    - restricted_safe_workspace_marketing
+                    - restricted_safe_workspace_sales
+            tables:
+                read:
+                    - restricted_safe_workspace_engineering.*
+                    - restricted_safe_workspace_finance.*
+                    - restricted_safe_workspace_marketing.*
+                    - restricted_safe_workspace_sales.*
+
     - xactly:
         warehouses:
             - dev_xs
@@ -2836,7 +2882,6 @@ roles:
             tables:
                 read:
                     - zoominfo_inbound.gitlab.*
-
 
     - zuora:
         warehouses:
