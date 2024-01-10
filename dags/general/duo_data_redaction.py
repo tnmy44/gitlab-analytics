@@ -62,6 +62,7 @@ for table in snowplow_tables:
     run_redaction_command = f"""
       {clone_repo_cmd} &&
       export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
+      export SNOWFLAKE_LOAD_WAREHOUSE="TRANSFORMING_XL" &&
       python3 /analytics/orchestration/redact_duo_feedback.py \
         --table={table["name"]} \
         --key={table["key"]} \

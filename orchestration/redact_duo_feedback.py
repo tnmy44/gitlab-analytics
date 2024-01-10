@@ -19,7 +19,8 @@ def get_records_with_extended_feedback(engine: Engine) -> List[str]:
     query = """
     SELECT event_id, contexts
     FROM testing_db.test.snowplow_gitlab_events_clone
-    WHERE se_label ='response_feedback'
+    WHERE collector_tstamp <= dateadd(days, -90, current_timestamp) 
+    AND se_label ='response_feedback'
 --  AND contexts like '%"extendedFeedback":%'
     """
 
@@ -39,9 +40,9 @@ def redact_extended_feedback():
     config_dict = env.copy()
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     records = get_records_with_extended_feedback(engine)
-    print(records)
+    logging.info(records)
 
 if __name__ == "__main__":
     logging.basicConfig(level=20)
     Fire(redact_extended_feedback())
-    logging.info(duo_feedback_events)
+    logging.info("completed")
