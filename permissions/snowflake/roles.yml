@@ -1346,6 +1346,7 @@ roles:
             - dev_xs
          member_of:
             - common
+            - workspace
 
     - snowflake_analyst_safe:
          warehouses:
@@ -1353,6 +1354,8 @@ roles:
          member_of:
             - common
             - common_safe
+            - workspace
+            - workspace_safe
 
     - data_science_readonly:
         warehouses:
