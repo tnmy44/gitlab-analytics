@@ -176,6 +176,11 @@ databases:
     - lvinueza_prep:
         shared: no
 
+    - lwork_prod:
+        shared: no
+    - lwork_prep:
+        shared: no
+
     - mcooper_prod:
         shared: no
     - mcooper_prep:
@@ -296,6 +301,11 @@ databases:
     - tnguyen_prod:
         shared: no
     - tnguyen_prep:
+        shared: no
+
+    - usinghal_prod:
+        shared: no
+    - usinghal_prep:
         shared: no
 
     - vprakash_prod:
@@ -2140,6 +2150,19 @@ roles:
                     - prod.workspace_marketing.marketo_form_fills_missing_touchpoints
                     - prod.common_mart_product.rpt_namespace_onboarding
 
+    - iterable:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.iterable
+            tables:
+                read:
+                    - raw.iterable.*
+
+
     - license_db:
         privileges:
             databases:
@@ -2402,11 +2425,11 @@ roles:
             schemas:
                 read:
                     - prep.sfdc
-                    - raw.salesforce_sandbox_stitch
+                    - raw.salesforce_stitch_sandbox_v2
             tables:
                 read:
                     - prep.sfdc.*
-                    - raw.salesforce_sandbox_stitch.*
+                    - raw.salesforce_stitch_sandbox_v2.*
 
     - share:
         privileges:
@@ -3192,6 +3215,15 @@ roles:
                 - cbraza_prep.*.*
                 - cbraza_prod.*.*
 
+    - ccontreras:
+        member_of:
+            - analyst_sales
+            - xactly
+            - restricted_safe
+            - bi_tool_eval_read
+        warehouses:
+            - dev_xs
+
     - cdeleon:
         member_of:
             - analyst_engineering
@@ -3277,6 +3309,7 @@ roles:
             - postgres_pipeline
             - restricted_safe
             - salesforce
+            - salesforce_sandbox
             - zuora_api_sandbox_stitch
             - zuora_stitch_rest_api
             - zuora
@@ -3887,6 +3920,12 @@ roles:
                     - jonglee_prep.*.*
                     - jonglee_prod.*.*
 
+    - joshua:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - jng:
         member_of:
          - analytics_engineer_core
@@ -4444,6 +4483,53 @@ roles:
                     - lvinueza_prep.*.*
                     - lvinueza_prod.*.*
 
+    - lwork:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - data_team_analyst
+            - bi_tool_eval_read
+            - xactly
+            - sales_analytics
+            - data_science_readonly
+            - marketo
+            - static_sensitive
+            - zuora_stitch_rest_api
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - lwork_prep
+                - lwork_prod
+            schemas:
+                - lwork_prep.*
+                - lwork_prod.*
+            tables:
+                - lwork_prep.*.*
+                - lwork_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - lwork_prep
+                    - lwork_prod
+                write:
+                    - lwork_prep
+                    - lwork_prod
+            schemas:
+                read:
+                    - lwork_prep.*
+                    - lwork_prod.*
+                write:
+                    - lwork_prep.*
+                    - lwork_prod.*
+            tables:
+                read:
+                    - lwork_prep.*.*
+                    - lwork_prod.*.*
+                write:
+                    - lwork_prep.*.*
+                    - lwork_prod.*.*
+
     - manggara:
         member_of:
             - analyst_finance
@@ -4467,6 +4553,7 @@ roles:
             - analyst_marketing
             - customers_db
             - hightouch_role
+            - iterable
             - marketo
             - reporter
             - workato
@@ -4756,6 +4843,7 @@ roles:
     - mxiao:
         member_of:
             - reporter
+            - restricted_safe
         warehouses:
             - dev_xs
 
@@ -4819,6 +4907,12 @@ roles:
                 write:
                     - nfiguera_prep.*.*
                     - nfiguera_prod.*.*
+
+    - nhertz:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - nhervas:
         member_of:
@@ -5252,6 +5346,7 @@ roles:
             - data_team_analyst
             - data_science_readonly
             - facebook_ads
+            - iterable
             - linkedin_ads
             - reporter
             - restricted_safe
@@ -5682,6 +5777,7 @@ roles:
         member_of:
             - reporter
             - snowflake_account_usage
+            - restricted_workspace_people
         warehouses:
             - reporting
 
@@ -5772,6 +5868,50 @@ roles:
         warehouses:
             - dev_xs
 
+    - usinghal:
+        member_of:
+         - analytics_engineer_core
+         - analyst_engineering
+         - analyst_growth
+         - data_team_analyst
+         - restricted_safe
+         - bi_tool_eval_read
+         - zuora
+        warehouses:
+            - dev_xs
+        owns:
+            databases:
+                - usinghal_prep
+                - usinghal_prod
+            schemas:
+                - usinghal_prep.*
+                - usinghal_prod.*
+            tables:
+                - usinghal_prep.*.*
+                - usinghal_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - usinghal_prep
+                    - usinghal_prod
+                write:
+                    - usinghal_prep
+                    - usinghal_prod
+            schemas:
+                read:
+                    - usinghal_prep.*
+                    - usinghal_prod.*
+                write:
+                    - usinghal_prep.*
+                    - usinghal_prod.*
+            tables:
+                read:
+                    - usinghal_prep.*.*
+                    - usinghal_prod.*.*
+                write:
+                    - usinghal_prep.*.*
+                    - usinghal_prod.*.*
+
     - vagrawal:
         member_of:
             - adaptive
@@ -5847,8 +5987,10 @@ roles:
         warehouses: []
 
     - wleidheiser:
-        member_of: []
-        warehouses: []
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - wlin:
         member_of:
@@ -5972,6 +6114,11 @@ users:
         can_login: yes
         member_of:
             - cbraza
+
+    - ccontreras:
+        can_login: yes
+        member_of:
+            - ccontreras
 
     - cdewit:
         can_login: yes
@@ -6141,6 +6288,11 @@ users:
         member_of:
             - jonglee
 
+    - joshua:
+        can_login: yes
+        member_of:
+            - joshua
+
     - jng:
         can_login: yes
         member_of:
@@ -6240,6 +6392,11 @@ users:
         member_of:
             - lvinueza
 
+    - lwork:
+        can_login: yes
+        member_of:
+            - lwork
+
     - manggara:
         can_login: yes
         member_of:
@@ -6332,6 +6489,11 @@ users:
         can_login: yes
         member_of:
             - nfiguera
+
+    - nhertz:
+        can_login: yes
+        member_of:
+            - nhertz
 
     - nhervas:
         can_login: yes
@@ -6536,6 +6698,11 @@ users:
         member_of:
             - tscott
 
+    - usinghal:
+        can_login: yes
+        member_of:
+            - usinghal
+
     - vagrawal:
         can_login: yes
         member_of:
@@ -6563,8 +6730,9 @@ users:
         member_of: []
 
     - wleidheiser:
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of:
+            - wleidheiser
 
     - wlin:
         can_login: yes

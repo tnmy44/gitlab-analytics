@@ -325,14 +325,21 @@ sheets:
     owner: '@nick_vh'
     tabs:
       - leading_organization_entry_dates
-
   - name: abm_key_account_list
     owner: '@dmicovic'
     tabs: 
       - abm_key_account_list
-
   - name: partner_discount_summary
     owner: '@vagrawalg'
     tabs: 
       - partner_discount_summary
-  
+  - name: sales_targets
+    owner: '@chrissharp'
+    tabs:
+      - sales_targets
+  - name: devrel_campaigns
+    owner: '@degan'
+    tabs: 
+      - devrel_influenced_campaigns
+      - youtube_views_gitlab
+      - devrel_blog_posts_views

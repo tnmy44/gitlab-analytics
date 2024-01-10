@@ -14,6 +14,7 @@ connection_info:
 tables:
   ci_pipelines:
     dbt_source_model: true
+    deletes_exempt: True
     export_schema: 'gitlab_ops_net'
     export_table: 'ci_pipelines'
     export_table_primary_key: id
@@ -46,6 +47,7 @@ tables:
         AND '{EXECUTION_DATE}'::timestamp
   ci_stages:
     dbt_source_model: true
+    deletes_exempt: True
     export_schema: 'gitlab_ops_net'
     export_table: ci_stages
     export_table_primary_key: id
@@ -65,6 +67,7 @@ tables:
         AND '{EXECUTION_DATE}'::timestamp
   labels:
     dbt_source_model: true
+    deletes_exempt: True
     export_schema: 'gitlab_ops_net'
     export_table: 'labels'
     export_table_primary_key: id
@@ -84,6 +87,7 @@ tables:
         AND '{EXECUTION_DATE}'::timestamp
   merge_request_metrics:
     dbt_source_model: true
+    deletes_exempt: True
     export_schema: 'gitlab_ops_net'
     export_table: 'merge_request_metrics'
     export_table_primary_key: id
@@ -102,6 +106,7 @@ tables:
         AND '{EXECUTION_DATE}'::timestamp
   merge_requests:
     dbt_source_model: true
+    deletes_exempt: True
     export_schema: 'gitlab_ops_net'
     export_table: 'merge_requests'
     export_table_primary_key: id
@@ -141,6 +146,7 @@ tables:
         AND '{EXECUTION_DATE}'::timestamp
   projects:
     dbt_source_model: true
+    deletes_exempt: True
     export_schema: 'gitlab_ops_net'
     export_table: 'projects'
     export_table_primary_key: id
@@ -208,6 +214,7 @@ tables:
         AND '{EXECUTION_DATE}'::timestamp
   users:
     dbt_source_model: true
+    deletes_exempt: True
     export_schema: 'gitlab_ops_net'
     export_table: 'users'
     export_table_primary_key: id

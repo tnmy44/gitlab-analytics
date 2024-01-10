@@ -41,6 +41,26 @@ class TestPostgresPipelineTable:
         assert is_scd is False
         assert is_incremental
 
+    def test_get_source_table_name(self):
+        """check that get_target_name() matches its attribute"""
+
+        # test when 'import_query_table' == manifest['export_table']
+        actual_source_table_name = self.pipeline_table.source_table_name
+        expected_source_table_name = self.pipeline_table.table_dict["export_table"]
+        assert actual_source_table_name == expected_source_table_name
+
+        # test when 'import_query_table' != manifest['export_table']
+        table_config2 = {
+            "import_query": "SELECT * FROM p_ci_builds WHERE updated_at >= '{BEGIN_TIMESTAMP}'::timestamp;",
+            "import_db": "some_database",
+            "export_table": "ci_builds",
+            "export_table_primary_key": "id",
+        }
+        pipeline_table2 = PostgresPipelineTable(table_config2)
+        actual_source_table_name = pipeline_table2.source_table_name
+        expected_source_table_name = "p_" + pipeline_table2.table_dict["export_table"]
+        assert actual_source_table_name == expected_source_table_name
+
     def test_get_target_table_name(self):
         """check that get_target_name() matches its attribute"""
         actual_table_name = self.pipeline_table.get_target_table_name()
@@ -54,6 +74,18 @@ class TestPostgresPipelineTable:
         actual = self.pipeline_table.get_temp_target_table_name()
         expected = f"{self.pipeline_table.get_target_table_name()}_TEMP"
         assert actual == expected
+
+    def test_internal_table_names(self):
+        """Test that internal tables are handled correctly"""
+        table_config = {
+            "import_query": "SELECT * FROM some_table;",
+            "import_db": "some_database",
+            "export_table": "some_table_internal_only",
+            "export_table_primary_key": "id",
+        }
+        self.pipeline_table = PostgresPipelineTable(table_config)
+        assert "_internal_only" not in self.pipeline_table.source_table_name
+        assert "_internal_only" in self.pipeline_table.target_table_name.lower()
 
     @patch("postgres_pipeline_table.swap_temp_table")
     def test_swap_temp_table_on_schema_change_continue(self, mock_swap_temp_table):
