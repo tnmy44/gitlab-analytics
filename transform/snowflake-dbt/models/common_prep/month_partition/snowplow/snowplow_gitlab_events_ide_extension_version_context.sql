@@ -50,9 +50,10 @@ SELECT
     context_data                                           AS ide_extension_version_context,
     context_data_schema                                    AS ide_extension_version_context_schema,
     context_data['extension_name']::VARCHAR                AS extension_name,
+    context_data['extension_version']::VARCHAR             AS extension_version,
     context_data['ide_name']::NUMBER                       AS ide_name,
     context_data['ide_vendor']::VARCHAR                    AS ide_vendor,
     context_data['ide_version']::VARCHAR                   AS ide_version,
     context_data['language_server_version']::NUMBER        AS language_server_version
 FROM events_with_context_flattened
-HERE ide_extension_version_context_data_schema LIKE 'iglu:com.gitlab/ide_extension_version/jsonschema/%'
+WHERE ide_extension_version_context_schema LIKE 'iglu:com.gitlab/ide_extension_version/jsonschema/%'
