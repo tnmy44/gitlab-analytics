@@ -408,7 +408,7 @@ combined AS (
     "Trials WTD Target",
     "Trials MTD Target",
     "Trials QTD Target",
-    "Trials YTD"
+    "Trials YTD Target"
   FROM actuals
   INNER JOIN day_5_list
     ON actuals.snapshot_date = day_5_list.day_5_current_week
