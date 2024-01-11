@@ -1345,17 +1345,14 @@ roles:
          warehouses:
             - dev_xs
          member_of:
-            - common
-            - workspace
+            - prod_reporting
 
     - snowflake_analyst_safe:
          warehouses:
             - dev_xs
          member_of:
-            - common
-            - common_safe
-            - workspace
-            - workspace_safe
+            - prod_reporting
+            - prod_reporting_safe
 
     - data_science_readonly:
         warehouses:
