@@ -164,5 +164,5 @@ joined AS (
     created_by="@ischweickartDD",
     updated_by="@michellecooper",
     created_date="2021-01-14",
-    updated_date="2023-12-15"
+    updated_date="2024-01-11"
 ) }}

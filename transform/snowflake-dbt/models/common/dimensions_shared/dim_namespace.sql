@@ -29,6 +29,7 @@ final AS (
     namespace_is_internal,
     namespace_is_ultimate_parent,
     namespace_name,
+    namespace_name_unmasked,
     namespace_path,
     namespace_type,
     has_avatar,
@@ -70,5 +71,5 @@ final AS (
     created_by="@snalamaru",
     updated_by="@michellecooper",
     created_date="2020-12-29",
-    updated_date="2023-09-05"
+    updated_date="2024-01-11"
 ) }}

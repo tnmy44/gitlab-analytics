@@ -2344,6 +2344,9 @@ models:
       - name: namespace_is_ultimate_parent
         description: '{{ doc("namespace_is_ultimate_parent") }}'
       - name: namespace_name
+      - name: namespace_name_unmasked
+        meta:
+          masking_policy: analyst_marketing_sensitive
       - name: namespace_path
       - name: owner_id
       - name: namespace_type
