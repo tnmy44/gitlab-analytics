@@ -32,7 +32,7 @@ Determine if there is downstream impact. I.e. additional changes to downstream m
 
 ## Submitter Checklist
 
-* [ ] Any >200M row table is **modified**? If no, continue. Else, follow the `deletes_exempt` guidelines as explained here: #TOADD_hb_link
+* [ ] Any >200M row table is **modified**? If no, continue. Else, follow the `deletes_exempt` guidelines as explained in [the handbook](https://gitlab.com/gitlab-com/content-sites/internal-handbook/-/blob/main/content/handbook/enterprise-data/platform/pipelines/_index.md?ref_type=heads#pgp-manifest-definition).
 * [ ] Confirm there is no `RED` data loaded due to your changes. For more details about Data Classification refer to [Data Classification Standard](https://about.gitlab.com/handbook/security/data-classification-standard.html) page
 
 ## All MRs Checklist
