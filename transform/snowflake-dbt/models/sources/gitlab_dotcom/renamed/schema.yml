@@ -1959,7 +1959,6 @@ models:
     description: A base model for Gitlab.com vulnerability_reads.
     columns:
       - name: id
-        tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
           - unique
