@@ -13,6 +13,7 @@ WITH base AS (
 
   SELECT
     event_id,
+    derived_tstamp,
     contexts
   {% if target.name not in ("prod") -%}
 
