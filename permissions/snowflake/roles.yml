@@ -1593,7 +1593,7 @@ roles:
                     - prep.customers.*
                     - prep.sensitive.customers_db_customers_pii
 
-    - common:
+    - prod_reporting:
         privileges:
             databases:
                 read:
@@ -1608,6 +1608,15 @@ roles:
                     - prod.common_mart_product
                     - prod.common_mart_people
                     - prod.common_prep
+                    - workspace_customer_success
+                    - workspace_data
+                    - workspace_science
+                    - workspace_engineering
+                    - workspace_finance
+                    - workspace_marketing
+                    - workspace_people
+                    - workspace_product
+                    - workspace_sales
             tables:
                 read:
                     - prod.common.*
@@ -1618,8 +1627,17 @@ roles:
                     - prod.common_mart_product.*
                     - prod.common_mart_people.*
                     - prod.common_prep.*
+                    - workspace_customer_success.*
+                    - workspace_data.*
+                    - workspace_science.*
+                    - workspace_engineering.*
+                    - workspace_finance.*
+                    - workspace_marketing.*
+                    - workspace_people.*
+                    - workspace_product.*
+                    - workspace_sales.*
 
-    - common_safe:
+    - prod_reporting_safe:
          privileges:
             databases:
                 read:
@@ -1633,6 +1651,10 @@ roles:
                     - restricted_safe_common_mart_sales
                     - restricted_safe_common_prep
                     - restricted_safe_common_safe
+                    - restricted_safe_workspace_engineering
+                    - restricted_safe_workspace_finance
+                    - restricted_safe_workspace_marketing
+                    - restricted_safe_workspace_sales
             tables:
                 read:
                     - restricted_safe_common.*
@@ -1642,6 +1664,10 @@ roles:
                     - restricted_safe_common_mart_sales.*
                     - restricted_safe_common_prep.*
                     - restricted_safe_common_safe.*
+                    - restricted_safe_workspace_engineering.*
+                    - restricted_safe_workspace_finance.*
+                    - restricted_safe_workspace_marketing.*
+                    - restricted_safe_workspace_sales.*
 
     - container_registry:
         privileges:
@@ -2731,52 +2757,6 @@ roles:
                 read:
                     - prep.workday.*
                     - raw.workday.*
-
-    - workspace:
-        privileges:
-            databases:
-                read:
-                    - prod
-            schemas:
-                read:
-                    - workspace_customer_success
-                    - workspace_data
-                    - workspace_science
-                    - workspace_engineering
-                    - workspace_finance
-                    - workspace_marketing
-                    - workspace_people
-                    - workspace_product
-                    - workspace_sales
-            tables:
-                read:
-                    - workspace_customer_success.*
-                    - workspace_data.*
-                    - workspace_science.*
-                    - workspace_engineering.*
-                    - workspace_finance.*
-                    - workspace_marketing.*
-                    - workspace_people.*
-                    - workspace_product.*
-                    - workspace_sales.*
-
-    - workspace_safe:
-        privileges:
-            databases:
-                read:
-                    - prod
-            schemas:
-                read:
-                    - restricted_safe_workspace_engineering
-                    - restricted_safe_workspace_finance
-                    - restricted_safe_workspace_marketing
-                    - restricted_safe_workspace_sales
-            tables:
-                read:
-                    - restricted_safe_workspace_engineering.*
-                    - restricted_safe_workspace_finance.*
-                    - restricted_safe_workspace_marketing.*
-                    - restricted_safe_workspace_sales.*
 
     - xactly:
         warehouses:
