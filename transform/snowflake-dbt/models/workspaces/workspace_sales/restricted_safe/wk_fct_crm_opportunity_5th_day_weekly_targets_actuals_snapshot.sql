@@ -402,7 +402,7 @@ combined AS (
     "Total Closed WTD Target",
     "Total Closed MTD Target",
     "Total Closed QTD Target",
-    "Total Closed YTD"
+    "Total Closed YTD Target"
     "Trials Daily Target",
     "Trials Monthly Target",
     "Trials WTD Target",
