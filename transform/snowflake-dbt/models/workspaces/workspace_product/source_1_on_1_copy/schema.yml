@@ -62,6 +62,9 @@ models:
         description: '{{ doc("dim_user_id") }}'
       - name: deleted_on
   
+  - name: gitlab_dotcom_vulnerability_reads
+    description: Workspace model of the source data (deduplicated).
+
   - name: gitlab_dotcom_vulnerability_state_transitions
     description: Workspace model of the source data (deduplicated).
 

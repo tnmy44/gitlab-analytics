@@ -1954,7 +1954,16 @@ models:
       - name: vulnerability_name
       - name: vulnerability_report_type
       - name: vulnerability_severity
-  
+
+  - name: gitlab_dotcom_vulnerability_reads_source
+    description: A base model for Gitlab.com vulnerability_reads.
+    columns:
+      - name: id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_vulnerability_state_transitions_source
     description: A base model for Gitlab.com vulnerability_state_transitions.
     columns:
