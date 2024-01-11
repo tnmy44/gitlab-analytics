@@ -395,6 +395,8 @@ sources:
         identifier: gitlab_db_vulnerabilities
       - name: vulnerability_occurrences
         identifier: gitlab_db_vulnerability_occurrences
+      - name: vulnerability_state_transitions
+        identifier: gitlab_db_vulnerability_state_transitions
       - name: alert_management_http_integrations
         identifier: gitlab_db_alert_management_http_integrations
         freshness: null
