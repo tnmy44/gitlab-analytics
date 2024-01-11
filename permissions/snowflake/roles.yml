@@ -1605,6 +1605,7 @@ roles:
                     - prod.common_mart_product
                     - prod.common_mart_people
                     - prod.common_prep
+                    - prod.legacy
                     - workspace_customer_success
                     - workspace_data
                     - workspace_science
@@ -1624,6 +1625,7 @@ roles:
                     - prod.common_mart_product.*
                     - prod.common_mart_people.*
                     - prod.common_prep.*
+                    - prod.legacy.*
                     - workspace_customer_success.*
                     - workspace_data.*
                     - workspace_science.*
@@ -1648,6 +1650,7 @@ roles:
                     - restricted_safe_common_mart_sales
                     - restricted_safe_common_prep
                     - restricted_safe_common_safe
+                    - prod.legacy_safe
                     - restricted_safe_workspace_engineering
                     - restricted_safe_workspace_finance
                     - restricted_safe_workspace_marketing
@@ -1661,6 +1664,7 @@ roles:
                     - restricted_safe_common_mart_sales.*
                     - restricted_safe_common_prep.*
                     - restricted_safe_common_safe.*
+                    - restricted_safe_legacy.*
                     - restricted_safe_workspace_engineering.*
                     - restricted_safe_workspace_finance.*
                     - restricted_safe_workspace_marketing.*
