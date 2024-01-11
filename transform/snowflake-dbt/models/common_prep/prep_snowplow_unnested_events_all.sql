@@ -155,5 +155,17 @@ SELECT
   experiment_name                                                                                                   AS experiment_name,
   experiment_context_key                                                                                            AS experiment_context_key,
   experiment_variant                                                                                                AS experiment_variant,
-  experiment_migration_keys                                                                                         AS experiment_migration_keys
+  experiment_migration_keys,
+  code_suggestions_context,
+  model_engine,
+  model_name,
+  prefix_length,
+  suffix_length,
+  language,
+  user_agent,
+  delivery_type,
+  api_status_code,
+  namespace_ids,
+  instance_id,
+  host_name                                                                                         AS experiment_migration_keys
 FROM unioned_view

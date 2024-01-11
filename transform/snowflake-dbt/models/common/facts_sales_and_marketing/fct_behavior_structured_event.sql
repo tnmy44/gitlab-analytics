@@ -79,7 +79,19 @@ structured_event_renamed AS (
       experiment_name,
       experiment_context_key,
       experiment_variant,
-      experiment_migration_keys
+      experiment_migration_keys,
+      code_suggestions_context,
+      model_engine,
+      model_name,
+      prefix_length,
+      suffix_length,
+      language,
+      user_agent,
+      delivery_type,
+      api_status_code,
+      namespace_ids,
+      instance_id,
+      host_name
 
     FROM {{ ref('prep_snowplow_unnested_events_all') }}
     WHERE event = 'struct'
@@ -170,6 +182,20 @@ structured_events_w_dim AS (
       events_with_plan.experiment_variant,
       events_with_plan.experiment_migration_keys,
 
+      -- Degenerate Dimensions (Code Suggestions)
+      events_with_plan.code_suggestions_context,
+      events_with_plan.model_engine,
+      events_with_plan.model_name,
+      events_with_plan.prefix_length,
+      events_with_plan.suffix_length,
+      events_with_plan.language,
+      events_with_plan.user_agent,
+      events_with_plan.delivery_type,
+      events_with_plan.api_status_code,
+      events_with_plan.namespace_ids,
+      events_with_plan.instance_id,
+      events_with_plan.host_name
+
       -- Junk Dimensions (Context Flags)
       events_with_plan.has_performance_timing_context, 
       events_with_plan.has_web_page_context,
@@ -195,5 +221,5 @@ structured_events_w_dim AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2023-12-20"
+    updated_date="2024-01-11"
 ) }}

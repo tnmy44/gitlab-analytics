@@ -234,6 +234,11 @@ WITH filtered_source as (
     SELECT *
     FROM {{ ref('snowplow_gitlab_events_experiment_contexts') }}
 
+), events_with_code_suggestions_context AS (
+
+    SELECT *
+    FROM {{ ref('snowplow_gitlab_events_code_suggestions_context') }}
+
 ), base_with_sorted_columns AS (
   
     SELECT 
@@ -397,7 +402,19 @@ WITH filtered_source as (
       events_with_ide_extension_version_context.ide_name,
       events_with_ide_extension_version_context.ide_vendor,
       events_with_ide_extension_version_context.ide_version,
-      events_with_ide_extension_version_context.language_server_version
+      events_with_ide_extension_version_context.language_server_version,
+      events_with_code_suggestions_context.code_suggestions_context,
+      events_with_code_suggestions_context.model_engine,
+      events_with_code_suggestions_context.model_name,
+      events_with_code_suggestions_context.prefix_length,
+      events_with_code_suggestions_context.suffix_length,
+      events_with_code_suggestions_context.language,
+      events_with_code_suggestions_context.user_agent,
+      events_with_code_suggestions_context.delivery_type,
+      events_with_code_suggestions_context.api_status_code,
+      events_with_code_suggestions_context.namespace_ids,
+      events_with_code_suggestions_context.instance_id,
+      events_with_code_suggestions_context.host_name
     FROM base
     LEFT JOIN events_with_web_page_id
       ON base.derived_tstamp::date = events_with_web_page_id.derived_tstamp::date
@@ -411,6 +428,9 @@ WITH filtered_source as (
     LEFT JOIN events_with_experiment_context
       ON base.derived_tstamp::date = events_with_experiment_context.derived_tstamp::date
         AND base.event_id = events_with_experiment_context.event_id
+    LEFT JOIN events_with_code_suggestions_context
+      ON base.derived_tstamp::date = events_with_code_suggestions_context.derived_tstamp::date
+        AND base.event_id = events_with_code_suggestions_context.event_id
     WHERE NOT EXISTS (
       SELECT event_id
       FROM events_with_web_page_id web_page_events
