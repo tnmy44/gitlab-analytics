@@ -404,3 +404,4 @@ models:
         description: The most recent trial start date across all the namespaces associated with the marketing_contact.
       - name: namespaces_array
         description: '{{ doc("namespaces_array") }}'
+        
