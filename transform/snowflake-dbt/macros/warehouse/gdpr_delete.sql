@@ -16,7 +16,7 @@
         WITH email_columns AS (
         
             SELECT 
-                LOWER(table_catalog)||'.'||LOWER(table_schema)||'.'||LOWER(table_name) AS fqd_name,
+                LOWER(table_catalog)||'.'||LOWER(table_schema)||'."'||UPPER(table_name)||'"' AS fqd_name,
                 LISTAGG(column_name,',') AS email_column_names
             FROM "RAW"."INFORMATION_SCHEMA"."COLUMNS"
             WHERE LOWER(column_name) LIKE '%email%'
@@ -69,7 +69,7 @@
         WITH email_columns AS (
         
             SELECT 
-                LOWER(table_catalog)||'.'||LOWER(table_schema)||'.'||LOWER(table_name) AS fqd_name,
+                LOWER(table_catalog)||'.'||LOWER(table_schema)||'."'||UPPER(table_name)||'"' AS fqd_name,
                 LISTAGG(column_name,',') AS email_column_names
             FROM "RAW"."INFORMATION_SCHEMA"."COLUMNS"
             WHERE LOWER(column_name) LIKE '%email%'
@@ -81,7 +81,7 @@
         ), non_email_columns AS (
 
             SELECT 
-              LOWER(table_catalog)||'.'||LOWER(table_schema)||'.'||LOWER(table_name) AS fqd_name,
+              LOWER(table_catalog)||'.'||LOWER(table_schema)||'."'||UPPER(table_name)||'"' AS fqd_name,
               LISTAGG(column_name,',') AS non_email_column_names
             FROM "RAW"."INFORMATION_SCHEMA"."COLUMNS" AS a
             WHERE LOWER(column_name) NOT LIKE '%email%'
