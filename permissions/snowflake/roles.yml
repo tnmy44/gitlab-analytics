@@ -645,10 +645,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - analyst_marketing_sensitive:
-        warehouses:
-            - dev_xs
-
     - analytics_engineer_core:
         warehouses:
             - dev_xs
