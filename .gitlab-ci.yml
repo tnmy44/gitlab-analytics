@@ -259,8 +259,10 @@ clone_stop:
   tags:
     - analytics
   only:
+    changes:
+      - "permissions/snowflake/roles.yml"
     refs:
-      - merge_requests
+      - merge_request
   allow_failure: true
 
 🧊⚙permifrost_run:
