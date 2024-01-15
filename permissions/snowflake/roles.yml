@@ -3351,9 +3351,21 @@ roles:
                     - csharp_prep.*.*
                     - csharp_prod.*.*
 
+    - cswords:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - david:
         member_of: []
         warehouses: []
+
+    - dbolkensteyn:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - dcharukulvanich:
         member_of:
@@ -3600,6 +3612,12 @@ roles:
                     - eneuberger_prep.*.*
                     - eneuberger_prod.*.*
 
+    - fcatteau:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - fivetran_role:
         warehouses:
             - loading
@@ -3658,6 +3676,12 @@ roles:
             - restricted_safe
             - salesforce
             - xactly
+        warehouses:
+            - dev_xs
+
+    - idawson:
+        member_of:
+            - reporter
         warehouses:
             - dev_xs
 
@@ -4054,6 +4078,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - jsalazar:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - jsingh:
         member_of:
             - engineer
@@ -4136,6 +4166,12 @@ roles:
                 write:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
+
+    - jthome:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - juwong:
         member_of:
@@ -4325,6 +4361,12 @@ roles:
     - kkarthikeyan:
         member_of: []
         warehouses: []
+
+    - lcharles:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - lchilamakuru:
         member_of:
@@ -4675,6 +4717,12 @@ roles:
         member_of:
             - analyst_sales
             - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - mhenriksen:
+        member_of:
+            - reporter
         warehouses:
             - dev_xs
 
@@ -5102,6 +5150,12 @@ roles:
             - analyst_finance
             - restricted_safe
             - sales_analytics_read
+        warehouses:
+            - dev_xs
+
+    - ogonzalez:
+        member_of:
+            - reporter
         warehouses:
             - dev_xs
 
@@ -5801,6 +5855,12 @@ roles:
                 write:
                     - testing_db.*.*
 
+    - tfigueiro:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - tjayaramaraju:
         member_of: []
         warehouses: []
@@ -5867,6 +5927,13 @@ roles:
             - restricted_safe
         warehouses:
             - dev_xs
+
+    - twoodham:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
 
     - usinghal:
         member_of:
@@ -5985,6 +6052,12 @@ roles:
     - webrahim:
         member_of: []
         warehouses: []
+
+    - whaber:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - wleidheiser:
         member_of:
@@ -6140,9 +6213,19 @@ users:
         member_of:
             - csharp
 
+    - cswords:
+        can_login: yes
+        member_of:
+            - cswords
+
     - david:
         can_login: no
         member_of: []
+
+    - dbolkensteyn:
+        can_login: yes
+        member_of:
+            - dbolkensteyn
 
     - dcharukulvanich:
         can_login: yes
@@ -6191,6 +6274,11 @@ users:
         member_of:
             - eneuberger
 
+    - fcatteau:
+        can_login: yes
+        member_of:
+            - fcatteau
+
     - fivetran:
         can_login: yes
         member_of:
@@ -6235,6 +6323,11 @@ users:
         can_login: yes
         member_of:
             - hselim
+
+    - idawson:
+        can_login: yes
+        member_of:
+            - idawson
 
     - ikosenko:
         can_login: yes
@@ -6318,6 +6411,11 @@ users:
         member_of:
             - jrubi
 
+    - jsalazar:
+        can_login: yes
+        member_of:
+            - jsalazar
+
     - jsingh:
         can_login: yes
         member_of:
@@ -6330,6 +6428,11 @@ users:
             - jstark
             - securityadmin
             - sysadmin
+
+    - jthome:
+        can_login: yes
+        member_of:
+            - jthome
 
     - juwong:
         can_login: yes
@@ -6362,6 +6465,11 @@ users:
     - kkarthikeyan:
         can_login: no
         member_of: []
+
+    - lcharles:
+        can_login: yes
+        member_of:
+            - lcharles
 
     - lchilamakuru:
         can_login: yes
@@ -6442,6 +6550,11 @@ users:
         can_login: yes
         member_of:
             - mgilgalindo
+
+    - mhenriksen:
+        can_login: yes
+        member_of:
+            - mhenriksen
 
     - mnohr:
         can_login: no
@@ -6524,6 +6637,11 @@ users:
         can_login: yes
         member_of:
             - ofalkenhof
+
+    - ogonzalez:
+        can_login: yes
+        member_of:
+            - ogonzalez
 
     - parmstrong:
         can_login: yes
@@ -6679,6 +6797,11 @@ users:
         member_of:
             - target_snowflake
 
+    - tfigueiro:
+        can_login: yes
+        member_of:
+            - tfigueiro
+
     - tjayaramaraju:
         can_login: no
         member_of: []
@@ -6697,6 +6820,11 @@ users:
         can_login: yes
         member_of:
             - tscott
+
+    - twoodham:
+        can_login: yes
+        member_of:
+            - twoodham
 
     - usinghal:
         can_login: yes
@@ -6728,6 +6856,11 @@ users:
     - webrahim:
         can_login: no
         member_of: []
+
+    - whaber:
+        can_login: yes
+        member_of:
+            - whaber
 
     - wleidheiser:
         can_login: yes
