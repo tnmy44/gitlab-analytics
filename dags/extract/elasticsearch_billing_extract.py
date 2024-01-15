@@ -22,6 +22,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
     ELASTIC_SEARCH_BILLING_API_KEY,
+    ELASTIC_CLOUD_ORG_ID,
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
@@ -63,6 +64,11 @@ elasticsearch_billing_itemized_costs_extract_command = (
     f"python elasticsearch_billing/src/elasticsearch_billing_itemized_costs.py"
 )
 
+elasticsearch_billing_deployments_itemized_costs_extract_command = (
+    f"{clone_and_setup_extraction_cmd} && "
+    f"python elasticsearch_billing/src/elasticsearch_billing_itemized_costs_by_deployment.py"
+)
+
 elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
@@ -75,6 +81,7 @@ elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
         ELASTIC_SEARCH_BILLING_API_KEY,
+        ELASTIC_CLOUD_ORG_ID,
     ],
     env_vars={
         **pod_env_vars,
@@ -98,6 +105,7 @@ elasticsearch_billing_itemized_costs_task = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
         ELASTIC_SEARCH_BILLING_API_KEY,
+        ELASTIC_CLOUD_ORG_ID,
     ],
     env_vars={
         **pod_env_vars,
@@ -109,5 +117,30 @@ elasticsearch_billing_itemized_costs_task = KubernetesPodOperator(
     dag=dag,
 )
 
+elasticsearch_billing_itemized_costs_by_deployments_task = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DATA_IMAGE,
+    task_id=f"el-itemized-costs-by-deployments-extract-daily",
+    name=f"el-itemized-costs-by-deployments-extract-daily",
+    secrets=[
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_LOAD_PASSWORD,
+        ELASTIC_SEARCH_BILLING_API_KEY,
+        ELASTIC_CLOUD_ORG_ID,
+    ],
+    env_vars={
+        **pod_env_vars,
+        "logical_date": "{{ logical_date }}",
+    },
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
+    arguments=[elasticsearch_billing_deployments_itemized_costs_extract_command],
+    dag=dag,
+)
+
 elasticsearch_billing_costs_overview_task
 elasticsearch_billing_itemized_costs_task
+elasticsearch_billing_itemized_costs_by_deployments_task
