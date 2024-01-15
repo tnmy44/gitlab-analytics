@@ -5855,6 +5855,12 @@ roles:
                 write:
                     - testing_db.*.*
 
+    - tfigueiro:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - tjayaramaraju:
         member_of: []
         warehouses: []
@@ -6790,6 +6796,11 @@ users:
         can_login: yes
         member_of:
             - target_snowflake
+
+    - tfigueiro:
+        can_login: yes
+        member_of:
+            - tfigueiro
 
     - tjayaramaraju:
         can_login: no
