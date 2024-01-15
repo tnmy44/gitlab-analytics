@@ -12,7 +12,7 @@
     ('prep_crm_user_daily_snapshot', 'prep_crm_user_daily_snapshot'),
     ('prep_crm_account_daily_snapshot', 'prep_crm_account_daily_snapshot'),
     ('prep_crm_account', 'prep_crm_account'),
-    ('prep_crm_opportunity', 'prep_crm_opportunity'),
+    ('prep_crm_opportunity', 'wk_prep_crm_opportunity_fy25'),
     ('prep_sales_funnel_target', 'wk_prep_sales_funnel_target'),
     ('prep_crm_person', 'prep_crm_person')
 ]) }}
