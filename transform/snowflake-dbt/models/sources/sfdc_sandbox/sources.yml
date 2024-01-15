@@ -23,3 +23,5 @@ sources:
         description: '{{ doc("sfdc_opp_source") }}'
       - name: user
         description: '{{ doc("sfdc_user_source") }}'
+      - name: user_role
+        identifier: userrole
