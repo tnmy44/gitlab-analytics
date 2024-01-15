@@ -5620,6 +5620,7 @@ roles:
             - data_science_readonly
             - gitlab_dotcom
             - hightouch_role
+            - marketo
             - postgres_pipeline
             - restricted_safe
             - zuora
