@@ -244,7 +244,7 @@ clone_stop:
     changes:
       - "permissions/snowflake/roles.yml"
     refs:
-      - merge_request
+      - merge_requests
   allow_failure: true
 
 📁yaml_validation:
@@ -262,7 +262,7 @@ clone_stop:
     changes:
       - "permissions/snowflake/roles.yml"
     refs:
-      - merge_request
+      - merge_requests
   allow_failure: true
 
 🧊⚙permifrost_run:
