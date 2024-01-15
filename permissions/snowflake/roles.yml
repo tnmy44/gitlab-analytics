@@ -3612,6 +3612,12 @@ roles:
                     - eneuberger_prep.*.*
                     - eneuberger_prod.*.*
 
+    - fcatteau:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - fivetran_role:
         warehouses:
             - loading
@@ -6255,6 +6261,11 @@ users:
         can_login: yes
         member_of:
             - eneuberger
+
+    - fcatteau:
+        can_login: yes
+        member_of:
+            - fcatteau
 
     - fivetran:
         can_login: yes
