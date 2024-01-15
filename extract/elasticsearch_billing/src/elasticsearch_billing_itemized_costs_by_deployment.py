@@ -63,6 +63,38 @@ def get_itemized_costs_by_deployments(base_url, org_id):
 
         # Upload this response to snowflake
 
+def get_reconciliation_data(base_url, org_id):
+    """Get reconciliation data from Elastic Cloud API"""
+
+    info("Performing reconciliation...")
+    date_today = datetime.utcnow().date()
+
+    # if date_today day is 7 or 14 then set extraction_start_date as previous months start date and extraction_end_date as previous months end date
+    if date_today.day in [7, 14]:
+        current_months_first_day = date_today.replace(day=1)
+        extraction_end_date = current_months_first_day - timedelta(days=1)
+        extraction_start_date = extraction_end_date.replace(day=1) 
+        url = f"{base_url}/billing/costs/{org_id}/deployments"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"ApiKey {config_dict['ELASTIC_SEARCH_BILLING_API_KEY']}",
+        }
+
+        response = requests.get(url, headers=headers, timeout=60)
+
+        for deployments in response.json()["deployments"]:
+            deployment_id = deployments["deployment_id"]
+            deployment_name = deployments["deployment_name"]
+            url = f"{base_url}/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"ApiKey {config_dict['ELASTIC_SEARCH_BILLING_API_KEY']}",
+            }
+            response = requests.get(url, headers=headers, timeout=60)
+            # upload this data to snowflake
+            info("Uploading data to Snowflake")
+    else:
+        info("No reconciliation required")
 
 # main function
 if __name__ == "__main__":

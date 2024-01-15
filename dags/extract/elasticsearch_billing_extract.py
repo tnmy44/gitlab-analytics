@@ -40,15 +40,15 @@ default_args = {
     "sla": timedelta(hours=24),
     "sla_miss_callback": slack_failed_task,
     "retries": 2,
-    "description": "This DAG is extracts and loads elastic search billing data",
+    "description": "This DAG extracts and loads elastic search billing data",
 }
 
 # Define the DAG
 dag = DAG(
     f"el_elasticsearch_billing",
     default_args=default_args,
-    schedule_interval="0 7 * * *",
-    start_date=datetime(2023, 11, 7),
+    schedule_interval="0 0 * * *",
+    start_date=datetime(2024, 1, 14),
     catchup=False,
     max_active_runs=1,
     concurrency=1,
