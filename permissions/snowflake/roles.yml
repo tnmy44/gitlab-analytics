@@ -3351,6 +3351,13 @@ roles:
                     - csharp_prep.*.*
                     - csharp_prod.*.*
 
+    - cswords:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
+
     - david:
         member_of: []
         warehouses: []
@@ -6145,6 +6152,11 @@ users:
         can_login: yes
         member_of:
             - csharp
+
+    - cswords:
+        can_login: yes
+        member_of:
+            - cswords
 
     - david:
         can_login: no
