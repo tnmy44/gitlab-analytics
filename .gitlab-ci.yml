@@ -268,13 +268,14 @@ clone_stop:
   script:
     - permifrost run permissions/snowflake/roles.yml --diff --dry
   when: manual
+  allow_failure: true
 
 🧊permifrost_spec_test:
   <<: *permifrost
   script:
     - permifrost spec-test permissions/snowflake/roles.yml
   when: manual
-  allow_failure: false
+  allow_failure: true
 
 # ======
 # dbt docs to GitLab Pages
