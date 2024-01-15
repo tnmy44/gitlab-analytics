@@ -13,13 +13,14 @@ from gitlabdata.orchestration_utils import (
 
 config_dict = os.environ.copy()
 
+
 # test API connection
-def test_api_connection(base_url,org_id):
+def test_api_connection(base_url, org_id):
     """Check API response for 200 status code"""
     url = f"{base_url}/billing/costs/{org_id}"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"ApiKey {config_dict['ELASTIC_CLOUD_API_KEY']}"
+        "Authorization": f"ApiKey {config_dict['ELASTIC_CLOUD_API_KEY']}",
     }
     response = requests.get(url, headers=headers, timeout=60)
 
@@ -30,30 +31,30 @@ def test_api_connection(base_url,org_id):
         info(f"API connection failed with status code {response.status_code}")
         return False
 
+
 # call API
-def get_costs_overview(base_url,org_id):
-    """Get Itemized costs from Elastic Cloud API"""
-    
-    date_today=datetime.utcnow().date()
+def get_costs_overview(base_url, org_id):
+    """Get costs overview from Elastic Cloud API"""
+
+    date_today = datetime.utcnow().date()
 
     start_date = date_today.replace(day=1)
-    end_date=date_today
+    end_date = date_today
 
-    url = f"{base_url}/billing/costs/{org_id}/items?from={start_date}&to={end_date}"
+    url = f"{base_url}/billing/costs/{org_id}?from={start_date}&to={end_date}"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"ApiKey {config_dict['ELASTIC_CLOUD_API_KEY']}"
+        "Authorization": f"ApiKey {config_dict['ELASTIC_CLOUD_API_KEY']}",
     }
 
     response = requests.get(url, headers=headers, timeout=60)
 
-    data =  response.json()
+    data = response.json()
 
     extraction_start_date = date_today.replace(day=1)
     extraction_end_date = date_today - timedelta(days=1)
 
     # upload this data to snowflake
-
 
     try:
         response = requests.get(url, headers=headers, timeout=60)
@@ -62,11 +63,6 @@ def get_costs_overview(base_url,org_id):
         info(f"API call failed with error: {e}")
         sys.exit(1)
 
-
-
-
-
-# upload response
 
 # main function
 if __name__ == "__main__":
@@ -77,11 +73,11 @@ if __name__ == "__main__":
 
     base_url = "https://api.elastic-cloud.com/api/v1"
 
-    org_id = ''
+    org_id = config_dict["ELASTIC_CLOUD_ORG_ID"]
 
-    check_api_connection = test_api_connection(base_url,org_id)
+    check_api_connection = test_api_connection(base_url, org_id)
 
     if check_api_connection:
-        get_costs_overview(base_url,org_id)
+        get_costs_overview(base_url, org_id)
     else:
         sys.exit(1)
