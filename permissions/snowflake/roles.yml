@@ -4702,6 +4702,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - mhenriksen:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - mnohr:
         member_of: []
         warehouses: []
@@ -6492,6 +6498,11 @@ users:
         can_login: yes
         member_of:
             - mgilgalindo
+
+    - mhenriksen:
+        can_login: yes
+        member_of:
+            - mhenriksen
 
     - mnohr:
         can_login: no
