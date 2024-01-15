@@ -4356,6 +4356,12 @@ roles:
         member_of: []
         warehouses: []
 
+    - lcharles:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - lchilamakuru:
         member_of:
             - reporter
@@ -6436,6 +6442,11 @@ users:
     - kkarthikeyan:
         can_login: no
         member_of: []
+
+    - lcharles:
+        can_login: yes
+        member_of:
+            - lcharles
 
     - lchilamakuru:
         can_login: yes
