@@ -4155,6 +4155,12 @@ roles:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
 
+    - jthome:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - juwong:
         member_of:
             - engineer
@@ -6369,6 +6375,11 @@ users:
             - jstark
             - securityadmin
             - sysadmin
+
+    - jthome:
+        can_login: yes
+        member_of:
+            - jthome
 
     - juwong:
         can_login: yes
