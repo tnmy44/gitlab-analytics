@@ -5986,6 +5986,12 @@ roles:
         member_of: []
         warehouses: []
 
+    - whaber:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - wleidheiser:
         member_of:
             - reporter
@@ -6728,6 +6734,11 @@ users:
     - webrahim:
         can_login: no
         member_of: []
+
+    - whaber:
+        can_login: yes
+        member_of:
+            - whaber
 
     - wleidheiser:
         can_login: yes
