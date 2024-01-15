@@ -4726,6 +4726,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - mikesmith:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - mnohr:
         member_of: []
         warehouses: []
@@ -6562,6 +6568,11 @@ users:
         can_login: yes
         member_of:
             - mhenriksen
+
+    - mikesmith:
+        can_login: yes
+        member_of:
+            - mikesmith
 
     - mnohr:
         can_login: no
