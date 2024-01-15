@@ -53,7 +53,12 @@ dag = DAG(
     concurrency=1,
 )
 
-elasticsearch_billing_extract_command = (
+elasticsearch_billing_costs_overview_extract_command = (
+    f"{clone_and_setup_extraction_cmd} && "
+    f"python elastic_search_billing/src/elasticsearch_billing_costs_overview.py"
+)
+
+elasticsearch_billing_itemized_costs_extract_command = (
     f"{clone_and_setup_extraction_cmd} && "
     f"python elastic_search_billing/src/elasticsearch_billing_costs_overview.py"
 )
@@ -77,8 +82,32 @@ elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
     },
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
-    arguments=[elasticsearch_billing_extract_command],
+    arguments=[elasticsearch_billing_costs_overview_extract_command],
+    dag=dag,
+)
+
+elasticsearch_billing_itemized_costs_task = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DATA_IMAGE,
+    task_id=f"el-itemized-costs-extract-daily",
+    name=f"el-itemized-costs-extract-daily",
+    secrets=[
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_LOAD_PASSWORD,
+        ELASTIC_SEARCH_BILLING_API_KEY,
+    ],
+    env_vars={
+        **pod_env_vars,
+        "logical_date": "{{ logical_date }}",
+    },
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
+    arguments=[elasticsearch_billing_itemized_costs_extract_command],
     dag=dag,
 )
 
 elasticsearch_billing_costs_overview_task
+elasticsearch_billing_itemized_costs_task

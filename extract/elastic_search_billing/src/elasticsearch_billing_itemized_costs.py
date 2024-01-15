@@ -32,14 +32,14 @@ def test_api_connection(base_url,org_id):
 
 # call API
 def get_costs_overview(base_url,org_id):
-    """Get costs overview from Elastic Cloud API"""
+    """Get Itemized costs from Elastic Cloud API"""
     
     date_today=datetime.utcnow().date()
 
     start_date = date_today.replace(day=1)
     end_date=date_today
 
-    url = f"{base_url}/billing/costs/{org_id}?from={start_date}&to={end_date}"
+    url = f"{base_url}/billing/costs/{org_id}/items?from={start_date}&to={end_date}"
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"ApiKey {config_dict['ELASTIC_CLOUD_API_KEY']}"
