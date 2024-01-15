@@ -53,6 +53,7 @@ def get_itemized_costs(base_url, org_id):
 
     # upload this data to snowflake
 
+
 def get_reconciliation_data(base_url, org_id):
     """Get reconciliation data from Elastic Cloud API"""
 
@@ -63,11 +64,11 @@ def get_reconciliation_data(base_url, org_id):
     if date_today.day in [7, 14]:
         current_months_first_day = date_today.replace(day=1)
         extraction_end_date = current_months_first_day - timedelta(days=1)
-        extraction_start_date = extraction_end_date.replace(day=1) 
+        extraction_start_date = extraction_end_date.replace(day=1)
         url = f"{base_url}/billing/costs/{org_id}/items?from={extraction_start_date}&to={extraction_end_date}"
         headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"ApiKey {config_dict['ELASTIC_SEARCH_BILLING_API_KEY']}",
+            "Content-Type": "application/json",
+            "Authorization": f"ApiKey {config_dict['ELASTIC_SEARCH_BILLING_API_KEY']}",
         }
         response = requests.get(url, headers=headers, timeout=60)
         data = response.json()
@@ -75,6 +76,7 @@ def get_reconciliation_data(base_url, org_id):
         info("Uploading data to Snowflake")
     else:
         info("No reconciliation required")
+
 
 # main function
 if __name__ == "__main__":
