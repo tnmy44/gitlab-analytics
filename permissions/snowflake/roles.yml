@@ -3357,10 +3357,15 @@ roles:
         warehouses:
             - dev_xs
 
-
     - david:
         member_of: []
         warehouses: []
+
+    - dbolkensteyn:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - dcharukulvanich:
         member_of:
@@ -6167,6 +6172,11 @@ users:
     - david:
         can_login: no
         member_of: []
+
+    - dbolkensteyn:
+        can_login: yes
+        member_of:
+            - dbolkensteyn
 
     - dcharukulvanich:
         can_login: yes
