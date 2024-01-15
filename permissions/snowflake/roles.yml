@@ -5794,6 +5794,12 @@ roles:
                     - raw.stitch_google_sheets.*
                     - raw.zuora_stitch.*
 
+    - stseng:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - tableau:
         warehouses:
             - reporting
@@ -6784,6 +6790,11 @@ users:
         can_login: yes
         member_of:
             - stitch
+
+    - stseng:
+        can_login: yes
+        member_of:
+            - stseng
 
     - tableau:
         can_login: yes
