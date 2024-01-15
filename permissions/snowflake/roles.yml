@@ -5153,6 +5153,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - ogonzalez:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - parmstrong:
         member_of:
             - engineer
@@ -6625,6 +6631,11 @@ users:
         can_login: yes
         member_of:
             - ofalkenhof
+
+    - ogonzalez:
+        can_login: yes
+        member_of:
+            - ogonzalez
 
     - parmstrong:
         can_login: yes
