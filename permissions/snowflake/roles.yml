@@ -5722,6 +5722,12 @@ roles:
                     - snalamaru_prep.*.*
                     - snalamaru_prod.*.*
 
+    - sranasinghe:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - srehm:
         member_of:
             - analyst_growth
@@ -6762,6 +6768,12 @@ users:
         can_login: yes
         member_of:
             - snalamaru
+
+    - sranasinghe:
+        can_login: yes
+        member_of:
+            - sranasinghe
+
 
     - srehm:
         can_login: yes
