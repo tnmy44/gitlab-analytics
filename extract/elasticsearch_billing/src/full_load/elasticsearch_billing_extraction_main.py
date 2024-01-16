@@ -7,8 +7,12 @@ from logging import basicConfig, getLogger, info
 
 import fire
 
-from elasticsearch_billing_itemized_costs import extract_load_billing_itemized_costs_full_load
-from elasticsearch_billing_costs_overview import extract_load_billing_costs_overview_full_load
+from elasticsearch_billing_itemized_costs import (
+    extract_load_billing_itemized_costs_full_load,
+)
+from elasticsearch_billing_costs_overview import (
+    extract_load_billing_costs_overview_full_load,
+)
 from elasticsearch_billing_itemized_costs_by_deployment import (
     extract_load_billing_itemized_costs_by_deployment_full_load,
 )

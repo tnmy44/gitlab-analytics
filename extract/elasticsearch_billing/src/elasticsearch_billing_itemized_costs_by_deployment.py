@@ -21,6 +21,7 @@ HEADERS = {
 base_url = "https://api.elastic-cloud.com/api/v1"
 org_id = config_dict["ELASTIC_CLOUD_ORG_ID"]
 
+
 def test_api_connection():
     """Check API response for 200 status code"""
     url = f"{base_url}/billing/costs/{org_id}"
@@ -32,6 +33,7 @@ def test_api_connection():
     else:
         info(f"API connection failed with status code {response.status_code}")
         return False
+
 
 def get_itemized_costs_by_deployments():
     """Retrieves the itemized costs for the given deployment from start of current month till present date"""

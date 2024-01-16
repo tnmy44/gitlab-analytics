@@ -43,32 +43,36 @@ def get_itemized_costs():
     current_date = datetime.utcnow().date()
 
     extraction_start_date = date(2023, 1, 1)
-    extraction_end_date = date(current_date.year, current_date.month, 1) - timedelta(days=1)
+    extraction_end_date = date(current_date.year, current_date.month, 1) - timedelta(
+        days=1
+    )
 
     print(f"{extraction_start_date} till {extraction_end_date}")
     output_list = []
     # iterate each month in between extraction_start_date and extraction_end_date and call API
     for month in range(extraction_start_date.month, extraction_end_date.month + 1):
-      current_month = date(extraction_start_date.year, month, 1)
-      start_date = current_month
-      if month == extraction_end_date.month:
-        end_date = extraction_end_date
-      else:
-        # update end_date to ending date of next month
-        end_date = date(current_month.year, current_month.month+1, 1) - timedelta(days=1)
-    
-      print(f"{start_date} till {end_date}")
+        current_month = date(extraction_start_date.year, month, 1)
+        start_date = current_month
+        if month == extraction_end_date.month:
+            end_date = extraction_end_date
+        else:
+            # update end_date to ending date of next month
+            end_date = date(current_month.year, current_month.month + 1, 1) - timedelta(
+                days=1
+            )
 
-      url = f"{base_url}/billing/costs/{org_id}/items?from={start_date}&to={end_date}"
-      response = requests.get(url, headers=HEADERS, timeout=60)
+        print(f"{start_date} till {end_date}")
 
-      data = response.json()
-      row_list = [
-        data,
-        start_date,
-        end_date,
+        url = f"{base_url}/billing/costs/{org_id}/items?from={start_date}&to={end_date}"
+        response = requests.get(url, headers=HEADERS, timeout=60)
+
+        data = response.json()
+        row_list = [
+            data,
+            start_date,
+            end_date,
         ]
-      output_list.append(row_list)
+        output_list.append(row_list)
 
     # upload this data to snowflake
     info("Uploading data to Snowflake")
@@ -81,7 +85,7 @@ def get_itemized_costs():
         ],
     )
     info("Uploading records to snowflake...")
-    upload_to_snowflake(output_df) 
+    upload_to_snowflake(output_df)
 
 
 def upload_to_snowflake(output_df):
