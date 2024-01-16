@@ -23,7 +23,7 @@ def get_records_with_extended_feedback(engine: Engine) -> List[str]:
     FROM {table}
     WHERE {tstamp_column} <= dateadd(days, -60, current_timestamp) 
     AND se_label ='response_feedback'
---  AND contexts like '%"extendedFeedback":%'
+    AND contexts like '%"extendedFeedback":%'
     """
 
     try:
@@ -33,9 +33,12 @@ def get_records_with_extended_feedback(engine: Engine) -> List[str]:
 
         for key_value, column_value in duo_feedback_events:
             logging.info((f"{key}: {key_value}, {column}: {column_value}")
-            column_value_json = json.loads(column_value)
-            column_value_json['data'][0]['data']['extra']['extendedFeedback'] = "***DATA REDACTED***"
-            logging.info(f"alter table {table} set {column} = {column_value_json} where {key} ='{key_value}' ")
+
+            # column_value_json = json.loads(column_value)
+            
+            # column_value_json['data'][0]['data']['extra']['extendedFeedback'] = "***DATA REDACTED***"
+
+            # logging.info(f"alter table {table} set {column} = {column_value_json} where {key} ='{key_value}' ")
 
     except:
         logging.info("Failed to get snowplow events")
