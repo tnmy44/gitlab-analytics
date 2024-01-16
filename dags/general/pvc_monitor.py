@@ -62,7 +62,7 @@ other_test = f"""
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
 tableau_workbook_migrate = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DATA_IMAGE_3_10,
+    image="registry.gitlab.com/gitlab-data/airflow-image:v0.0.2",
     task_id="pvc-monitor",
     name="pvc-monitor",
     env_vars=pod_env_vars,
