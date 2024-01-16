@@ -33,7 +33,7 @@ def test_api_connection(base_url, org_id):
 
 # call API
 def get_itemized_costs_by_deployments(base_url, org_id):
-    """Retrieves the itemized costs for the given deployment"""
+    """Retrieves the itemized costs for the given deployment from start of current month till present date"""
 
     date_today = datetime.utcnow().date()
 
