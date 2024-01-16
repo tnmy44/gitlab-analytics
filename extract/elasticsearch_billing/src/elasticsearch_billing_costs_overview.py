@@ -21,8 +21,6 @@ HEADERS = {
 base_url = "https://api.elastic-cloud.com/api/v1"
 org_id = config_dict["ELASTIC_CLOUD_ORG_ID"]
 
-
-# test API connection
 def test_api_connection():
     """Check API response for 200 status code"""
     url = f"{base_url}/billing/costs/{org_id}"
@@ -36,8 +34,6 @@ def test_api_connection():
         info(f"API connection failed with status code {response.status_code}")
         return False
 
-
-# call API
 def get_costs_overview():
     """Get costs overview from Elastic Cloud API from start of current month till present date"""
 
