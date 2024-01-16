@@ -1,3 +1,6 @@
+"""
+Extract and load Elasticsearch billing itemized costs
+"""
 import os
 import sys
 from datetime import datetime, timedelta
@@ -73,11 +76,11 @@ def get_reconciliation_data():
     It is performed on 7 and 14th of every month for the previous month to capture any billing corrections
     """
 
-    info("Performing reconciliation...")
     date_today = datetime.utcnow().date()
     output_list = []
     # if date_today day is 7 or 14 then set extraction_start_date as previous months start date and extraction_end_date as previous months end date
     if date_today.day in [7, 14]:
+        info("Performing reconciliation...")
         current_months_first_day = date_today.replace(day=1)
         extraction_end_date = current_months_first_day - timedelta(days=1)
         extraction_start_date = extraction_end_date.replace(day=1)

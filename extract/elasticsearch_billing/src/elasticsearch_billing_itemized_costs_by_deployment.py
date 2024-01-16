@@ -1,3 +1,6 @@
+"""
+Extract and load elasticsearch billing itemized costs by deployment
+"""
 import os
 import sys
 from datetime import datetime, timedelta
@@ -53,10 +56,6 @@ def get_itemized_costs_by_deployments():
         deployment_name = deployments["deployment_name"]
         info(f"Retrieving itemized costs for deployment {deployment_id}")
         url = f"{base_url}/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"ApiKey {config_dict['ELASTIC_SEARCH_BILLING_API_KEY']}",
-        }
 
         response = requests.get(url, headers=HEADERS, timeout=60)
 
@@ -90,11 +89,11 @@ def get_reconciliation_data():
     It is performed on 7 and 14th of every month for the previous month to capture any billing corrections
     """
 
-    info("Performing reconciliation...")
     date_today = datetime.utcnow().date()
     output_list = []
     # if date_today day is 7 or 14 then set extraction_start_date as previous months start date and extraction_end_date as previous months end date
     if date_today.day in [7, 14]:
+        info("Performing reconciliation...")
         current_months_first_day = date_today.replace(day=1)
         extraction_end_date = current_months_first_day - timedelta(days=1)
         extraction_start_date = extraction_end_date.replace(day=1)
@@ -108,11 +107,7 @@ def get_reconciliation_data():
             deployment_name = deployments["deployment_name"]
             info(f"Retrieving itemized costs for deployment {deployment_id}")
             url = f"{base_url}/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
-            headers = {
-                "Content-Type": "application/json",
-                "Authorization": f"ApiKey {config_dict['ELASTIC_SEARCH_BILLING_API_KEY']}",
-            }
-            response = requests.get(url, headers=headers, timeout=60)
+            response = requests.get(url, headers=HEADERS, timeout=60)
             data = response.json()
             # upload this data to snowflake
             row_list = [
