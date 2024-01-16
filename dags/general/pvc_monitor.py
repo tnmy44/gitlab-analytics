@@ -73,4 +73,4 @@ tableau_workbook_migrate = KubernetesPodOperator(
     dag=dag,
 )
 
-
+tableau_workbook_migrate >> get_pvc_values
