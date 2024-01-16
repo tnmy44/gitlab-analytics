@@ -194,7 +194,7 @@ structured_events_w_dim AS (
       events_with_plan.api_status_code,
       events_with_plan.namespace_ids,
       events_with_plan.instance_id,
-      events_with_plan.host_name
+      events_with_plan.host_name,
 
       -- Junk Dimensions (Context Flags)
       events_with_plan.has_performance_timing_context, 

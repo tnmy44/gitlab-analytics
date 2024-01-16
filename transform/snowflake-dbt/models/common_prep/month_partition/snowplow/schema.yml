@@ -60,12 +60,18 @@ models:
         - name: event_id
           tests:
             - not_null
-        - name: extension_name
+            - unique
+
+    - name: snowplow_gitlab_events_code_suggestions_context
+      description: This is a view that extracts all the key data from the [code suggestions context json](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema)
+      columns:
+        - name: event_id
           tests:
             - not_null
+            - unique
 
-    - name: snowplow_gitlab_events_ide_extension_version_context
-      description: This is a view that extracts all the key data from the [code suggestions context json](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/code_suggestions_context/jsonschema)
+    - name: snowplow_gitlab_events_web_page_context
+      description: This is a view that extracts the web page id from the event context.
       columns:
         - name: event_id
           tests:
