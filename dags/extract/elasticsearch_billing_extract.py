@@ -45,7 +45,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    f"el_elasticsearch_billing",
+    "el_elasticsearch_billing",
     default_args=default_args,
     schedule_interval="0 0 * * *",
     start_date=datetime(2024, 1, 14),
@@ -56,24 +56,24 @@ dag = DAG(
 
 elasticsearch_billing_costs_overview_extract_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    f"python elasticsearch_billing/src/elasticsearch_billing_costs_overview.py"
+    "python elasticsearch_billing/src/elasticsearch_billing_costs_overview.py"
 )
 
 elasticsearch_billing_itemized_costs_extract_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    f"python elasticsearch_billing/src/elasticsearch_billing_itemized_costs.py"
+    "python elasticsearch_billing/src/elasticsearch_billing_itemized_costs.py"
 )
 
 elasticsearch_billing_deployments_itemized_costs_extract_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    f"python elasticsearch_billing/src/elasticsearch_billing_itemized_costs_by_deployment.py"
+    "python elasticsearch_billing/src/elasticsearch_billing_itemized_costs_by_deployment.py"
 )
 
 elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id=f"el-costs-overview-extract-daily",
-    name=f"el-costs-overview-extract-daily",
+    task_id="el-costs-overview-extract-daily",
+    name="el-costs-overview-extract-daily",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
@@ -96,8 +96,8 @@ elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
 elasticsearch_billing_itemized_costs_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id=f"el-itemized-costs-extract-daily",
-    name=f"el-itemized-costs-extract-daily",
+    task_id="el-itemized-costs-extract-daily",
+    name="el-itemized-costs-extract-daily",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
@@ -120,8 +120,8 @@ elasticsearch_billing_itemized_costs_task = KubernetesPodOperator(
 elasticsearch_billing_itemized_costs_by_deployments_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id=f"el-itemized-costs-by-deployments-extract-daily",
-    name=f"el-itemized-costs-by-deployments-extract-daily",
+    task_id="el-itemized-costs-by-deployments-extract-daily",
+    name="el-itemized-costs-by-deployments-extract-daily",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
