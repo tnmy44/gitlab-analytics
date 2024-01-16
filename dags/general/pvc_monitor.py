@@ -55,6 +55,9 @@ get_pvc_values = BashOperator(
     bash_command = pvc_monitor_cmd
 )
 
+other_test = f"""
+    kubectl get pods --namespace=airflow
+"""
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
 tableau_workbook_migrate = KubernetesPodOperator(
@@ -65,10 +68,9 @@ tableau_workbook_migrate = KubernetesPodOperator(
     env_vars=pod_env_vars,
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
-    arguments=[pvc_monitor_cmd],
+    arguments=[other_test],
     do_xcom_push=True,
     dag=dag,
 )
 
 
-get_pvc_values >> tableau_workbook_migrate
