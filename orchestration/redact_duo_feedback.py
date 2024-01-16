@@ -48,14 +48,13 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column, engine
     return duo_feedback_events
 
 
-def redact_extended_feedback(table):
+def redact_extended_feedback():
     config_dict = env.copy()
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
-    logging.info(table)
-    # records = get_records_with_extended_feedback(table, key, column, tstamp_column, engine)
+    records = get_records_with_extended_feedback(table, key, column, tstamp_column, engine)
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=20)
-    Fire(redact_extended_feedback(table))
+    Fire(redact_extended_feedback())
     logging.info("completed")

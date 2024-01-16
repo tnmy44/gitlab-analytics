@@ -64,7 +64,7 @@ for table in snowplow_tables:
       export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
       export SNOWFLAKE_LOAD_WAREHOUSE="TRANSFORMING_XL" &&
       python3 /analytics/orchestration/redact_duo_feedback.py \
-        --table={table["name"]} \
+        --table="{table["name"]}" \
         --key={table["key"]} \
         --column={table["column"]} \
         --tstamp_column={table["tstamp_column"]}
