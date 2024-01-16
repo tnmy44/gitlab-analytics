@@ -11,6 +11,7 @@ from snowflake.sqlalchemy import URL
 from sqlalchemy import create_engine
 from sqlalchemy.exc import ProgrammingError
 
+
 def get_records_with_extended_feedback(engine: Engine) -> List[str]:
     """
     retrieves snowplow events with Duo extended feedback populated
@@ -40,10 +41,12 @@ def get_records_with_extended_feedback(engine: Engine) -> List[str]:
 
     return duo_feedback_events
 
+
 def redact_extended_feedback():
     config_dict = env.copy()
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     records = get_records_with_extended_feedback(engine)
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=20)

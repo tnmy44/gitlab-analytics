@@ -49,8 +49,8 @@ dag = DAG(
 
 snowplow_tables = [
     {
-        "name":"raw.snowplow.gitlab_events",
-        "key":"event_id",
+        "name": "raw.snowplow.gitlab_events",
+        "key": "event_id",
         "column": "contexts",
         "action": "update json",
     },
