@@ -52,7 +52,7 @@ snowplow_tables = [
         "name": "raw.snowplow.gitlab_events",
         "key": "event_id",
         "column": "contexts",
-        "action": "update json",
+        "tstamp_column": "collector_tstamp",
     },
 ]
 
@@ -67,7 +67,7 @@ for table in snowplow_tables:
         --table={table["name"]} \
         --key={table["key"]} \
         --column={table["column"]} \
-        --action={table["action"]}
+        --tstamp_column={table["tstamp_column"]}
         """
 
     run_redaction = KubernetesPodOperator(

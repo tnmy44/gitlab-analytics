@@ -16,11 +16,12 @@ def get_records_with_extended_feedback(engine: Engine) -> List[str]:
     """
     retrieves snowplow events with Duo extended feedback populated
     """
-
-    query = """
-    SELECT event_id, contexts
-    FROM testing_db.test.snowplow_gitlab_events_clone_test
-    WHERE collector_tstamp <= dateadd(days, -90, current_timestamp) 
+    config_dict = env.copy()
+    
+    query = f"""
+    SELECT {key}}, {column}}
+    FROM {table}
+    WHERE {tstamp_column} <= dateadd(days, -60, current_timestamp) 
     AND se_label ='response_feedback'
 --  AND contexts like '%"extendedFeedback":%'
     """
@@ -30,8 +31,11 @@ def get_records_with_extended_feedback(engine: Engine) -> List[str]:
         connection = engine.connect()
         duo_feedback_events = connection.execute(query).fetchall()
 
-        for event_id, event_contexts in duo_feedback_events:
-            logging.info(f"event_id: {event_id}, contexts: {event_contexts}")
+        for key_value, column_value in duo_feedback_events:
+            logging.info((f"{key}: {key_value}, {column}: {column_value}")
+            column_value_json = json.loads(column_value)
+            column_value_json['data'][0]['data']['extra']['extendedFeedback'] = "***DATA REDACTED***"
+            logging.info(f"alter table {table} set {column} = {column_value_json} where {key} ='{key_value}' ")
 
     except:
         logging.info("Failed to get snowplow events")
