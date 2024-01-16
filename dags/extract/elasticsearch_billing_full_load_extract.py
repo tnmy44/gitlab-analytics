@@ -137,7 +137,9 @@ elasticsearch_billing_itemized_costs_by_deployments_task = KubernetesPodOperator
     },
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
-    arguments=[elasticsearch_billing_deployments_itemized_costs_extract_full_load_command],
+    arguments=[
+        elasticsearch_billing_deployments_itemized_costs_extract_full_load_command
+    ],
     dag=dag,
 )
 
