@@ -132,10 +132,10 @@ def upload_to_snowflake(output_df):
         sys.exit(1)
 
 
-# main function
-if __name__ == "__main__":
-    basicConfig(stream=sys.stdout, level=20)
-    getLogger("snowflake.connector.cursor").disabled = True
+def extract_load_billing_costs_overview():
+    """
+    Extract and load Elastic Search Billing costs overview from start of current month till present date and perform reconciliation
+    """
 
     info("Starting extraction of Elastic Search Billing Costs Overview")
 

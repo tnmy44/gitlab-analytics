@@ -130,17 +130,20 @@ def upload_to_snowflake(output_df):
         sys.exit(1)
 
 
-# main function
-if __name__ == "__main__":
-    basicConfig(stream=sys.stdout, level=20)
-    getLogger("snowflake.connector.cursor").disabled = True
+def extract_load_billing_itemized_costs():
+    """
+    Extract and load Elastic Search Billing itemized costs from start of current month till present date and perform reconciliation
+    """
 
     info("Starting extraction of Elastic Search Billing Costs Overview")
 
     check_api_connection = test_api_connection()
 
     if check_api_connection:
+        # Regular daily load from start of current month date till present date
+        info("Beginning extraction of Elastic Search Billing itemized costs")
         get_itemized_costs()
+        # Capture reconciliation data for previous month
         get_reconciliation_data()
         info("Extraction completed for Elastic Search Billing itemized costs")
     else:
