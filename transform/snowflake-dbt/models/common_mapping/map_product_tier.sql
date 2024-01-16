@@ -80,7 +80,7 @@ WITH zuora_product AS (
                                                                       , 'JIRA Integration'
                                                                       , 'Custom PS Education Services'
                                                                       , 'GitLab CI/CD Training - Onsite'
-                                                                      , 'GitLab DevSecOps Fundamentals - Remote'
+                                                                      , 'GitLab DevSecOps Fundamentals Training - Remote'
                                                                       , 'GitLab Agile Portfolio Management Training - Remote'
                                                                       , 'GitLab System Administration Training - Onsite'
                                                                       , 'GitLab Agile Portfolio Management Training - Onsite'

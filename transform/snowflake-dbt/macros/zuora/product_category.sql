@@ -76,7 +76,7 @@ CASE
                                     , 'GitLab System Administration Training - Remote'
                                     , 'Expert Services (48 Hours)'
                                     , 'GitLab CI/CD Training - Onsite'
-                                    , 'GitLab DevSecOps Fundamentals - Remote'
+                                    , 'GitLab DevSecOps Fundamentals Training - Remote'
                                     , 'GitLab Agile Portfolio Management Training - Remote'
                                     , 'GitLab System Administration Training - Onsite'
                                     , 'GitLab Agile Portfolio Management Training - Onsite'
