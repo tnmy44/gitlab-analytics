@@ -51,7 +51,8 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column, engine
 def redact_extended_feedback():
     config_dict = env.copy()
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
-    records = get_records_with_extended_feedback(table, key, column, tstamp_column, engine)
+    logging.info(table)
+    # records = get_records_with_extended_feedback(table, key, column, tstamp_column, engine)
 
 
 if __name__ == "__main__":
