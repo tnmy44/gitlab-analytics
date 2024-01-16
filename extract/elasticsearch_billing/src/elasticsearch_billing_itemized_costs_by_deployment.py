@@ -1,13 +1,12 @@
-import json
-from logging import basicConfig, getLogger, info
+from logging import basicConfig, getLogger, info, error
 import requests
 import sys
-import time
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 import os
+import pandas as pd
 
 from gitlabdata.orchestration_utils import (
-    snowflake_stage_load_copy_remove,
+    dataframe_uploader,
     snowflake_engine_factory,
 )
 
@@ -49,7 +48,7 @@ def get_itemized_costs_by_deployments(base_url, org_id):
     }
 
     response = requests.get(url, headers=headers, timeout=60)
-
+    output_list = []
     for deployments in response.json()["deployments"]:
         deployment_id = deployments["deployment_id"]
         deployment_name = deployments["deployment_name"]
@@ -61,7 +60,48 @@ def get_itemized_costs_by_deployments(base_url, org_id):
 
         response = requests.get(url, headers=headers, timeout=60)
 
-        # Upload this response to snowflake
+        data = response.json()
+        row_list = [
+            deployment_id,
+            deployment_name,
+            data,
+            extraction_start_date,
+            extraction_end_date,
+        ]
+        output_list.append(row_list)
+
+    output_df = pd.DataFrame(
+        output_list,
+        columns=[
+            "deployment_id",
+            "deployment_name",
+            "payload",
+            "extraction_start_date",
+            "extraction_end_date",
+        ],
+    )
+    info("Uploading records to snowflake...")
+    upload_to_snowflake(output_df)
+
+
+def upload_to_snowflake(output_df):
+    """
+    This function will upload the dataframe to snowflake
+    """
+    try:
+        loader_engine = snowflake_engine_factory(config_dict, "LOADER")
+        dataframe_uploader(
+            output_df,
+            loader_engine,
+            table_name="itemized_costs_by_deployment",
+            schema="elasticsearch_billing",
+            if_exists="append",
+            add_uploaded_at=True,
+        )
+        info("Uploaded 'itemised_costs_by_deployment' to Snowflake")
+    except Exception as e:
+        error(f"Error uploading to snowflake: {e}")
+        sys.exit(1)
 
 
 def get_reconciliation_data(base_url, org_id):
@@ -69,12 +109,13 @@ def get_reconciliation_data(base_url, org_id):
 
     info("Performing reconciliation...")
     date_today = datetime.utcnow().date()
-
+    output_list = []
     # if date_today day is 7 or 14 then set extraction_start_date as previous months start date and extraction_end_date as previous months end date
     if date_today.day in [7, 14]:
         current_months_first_day = date_today.replace(day=1)
         extraction_end_date = current_months_first_day - timedelta(days=1)
         extraction_start_date = extraction_end_date.replace(day=1)
+        # Get the list of deployments
         url = f"{base_url}/billing/costs/{org_id}/deployments"
         headers = {
             "Content-Type": "application/json",
@@ -92,8 +133,29 @@ def get_reconciliation_data(base_url, org_id):
                 "Authorization": f"ApiKey {config_dict['ELASTIC_SEARCH_BILLING_API_KEY']}",
             }
             response = requests.get(url, headers=headers, timeout=60)
+            data = response.json()
             # upload this data to snowflake
-            info("Uploading data to Snowflake")
+            row_list = [
+                deployment_id,
+                deployment_name,
+                data,
+                extraction_start_date,
+                extraction_end_date,
+            ]
+            output_list.append(row_list)
+
+        output_df = pd.DataFrame(
+            output_list,
+            columns=[
+                "deployment_id",
+                "deployment_name",
+                "payload",
+                "extraction_start_date",
+                "extraction_end_date",
+            ],
+        )
+        info("Uploading records to snowflake...")
+        upload_to_snowflake(output_df)
     else:
         info("No reconciliation required")
 
