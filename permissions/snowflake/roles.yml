@@ -3002,6 +3002,13 @@ roles:
                     - abright_prep.*.*
                     - abright_prod.*.*
 
+    - ahan:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - akapungu:
         member_of:
             - analyst_sales
@@ -6135,6 +6142,11 @@ users:
             - abright
             - accountadmin
             - securityadmin
+
+    - ahan:
+        can_login: yes
+        member_of:
+            - ahan
 
     - akapungu:
         can_login: yes
