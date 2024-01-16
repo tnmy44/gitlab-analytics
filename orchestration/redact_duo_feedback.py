@@ -57,5 +57,5 @@ def redact_extended_feedback(table):
 
 if __name__ == "__main__":
     logging.basicConfig(level=20)
-    Fire(redact_extended_feedback())
+    Fire(redact_extended_feedback(table))
     logging.info("completed")
