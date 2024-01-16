@@ -48,7 +48,7 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column, engine
     return duo_feedback_events
 
 
-def redact_extended_feedback():
+def redact_extended_feedback(table):
     config_dict = env.copy()
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     logging.info(table)
