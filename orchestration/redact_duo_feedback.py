@@ -52,9 +52,6 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
         connection.close()
         engine.dispose()
 
-    return duo_feedback_events
-
-
 def redact_extended_feedback(table, key, column, tstamp_column):
     
     records = get_records_with_extended_feedback(table, key, column, tstamp_column)

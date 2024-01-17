@@ -55,6 +55,13 @@ snowplow_tables = [
         "column": "contexts",
         "tstamp_column": "collector_tstamp",
     },
+    {
+        # "name": "raw.snowplow.gitlab_events",
+        "name": "testing_db.test.snowplow_gitlab_events_clonet",
+        "key": "event_id",
+        "column": "contexts",
+        "tstamp_column": "collector_tstamp",
+    },
 ]
 
 for table in snowplow_tables:
