@@ -232,7 +232,7 @@ WITH filtered_source as (
 ), events_with_experiment_context AS (
 
     SELECT *
-    FROM {{ ref('snowplow_gitlab_events_experiment_contexts') }}
+    FROM {{ ref('snowplow_gitlab_events_experiment_context') }}
 
 ), events_with_code_suggestions_context AS (
 
