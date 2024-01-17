@@ -1645,32 +1645,32 @@ roles:
                     - prod
             schemas:
                 read:
-                    - restricted_safe_common
-                    - restricted_safe_common_mapping 
-                    - restricted_safe_common_mart_finance
-                    - restricted_safe_common_mart_product
-                    - restricted_safe_common_mart_sales
-                    - restricted_safe_common_prep
-                    - restricted_safe_common_safe
+                    - prod.restricted_safe_common
+                    - prod.prod.restricted_safe_common_mapping 
+                    - prod.restricted_safe_common_mart_finance
+                    - prod.restricted_safe_common_mart_product
+                    - prod.restricted_safe_common_mart_sales
+                    - prod.restricted_safe_common_prep
+                    - prod.restricted_safe_common_safe
                     - prod.legacy_safe
-                    - restricted_safe_workspace_engineering
-                    - restricted_safe_workspace_finance
-                    - restricted_safe_workspace_marketing
-                    - restricted_safe_workspace_sales
+                    - prod.restricted_safe_workspace_engineering
+                    - prod.restricted_safe_workspace_finance
+                    - prod.restricted_safe_workspace_marketing
+                    - prod.restricted_safe_workspace_sales
             tables:
                 read:
-                    - restricted_safe_common.*
-                    - restricted_safe_common_mapping.*
-                    - restricted_safe_common_mart_finance.*
-                    - restricted_safe_common_mart_product.*
-                    - restricted_safe_common_mart_sales.*
-                    - restricted_safe_common_prep.*
-                    - restricted_safe_common_safe.*
-                    - restricted_safe_legacy.*
-                    - restricted_safe_workspace_engineering.*
-                    - restricted_safe_workspace_finance.*
-                    - restricted_safe_workspace_marketing.*
-                    - restricted_safe_workspace_sales.*
+                    - prod.restricted_safe_common.*
+                    - prod.restricted_safe_common_mapping.*
+                    - prod.restricted_safe_common_mart_finance.*
+                    - prod.restricted_safe_common_mart_product.*
+                    - prod.restricted_safe_common_mart_sales.*
+                    - prod.restricted_safe_common_prep.*
+                    - prod.restricted_safe_common_safe.*
+                    - prod.restricted_safe_legacy.*
+                    - prod.restricted_safe_workspace_engineering.*
+                    - prod.restricted_safe_workspace_finance.*
+                    - prod.restricted_safe_workspace_marketing.*
+                    - prod.restricted_safe_workspace_sales.*
 
     - container_registry:
         privileges:
