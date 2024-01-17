@@ -253,6 +253,7 @@ clone_stop:
 📁yaml_validation:
   <<: *yaml_validate
   script:
+    - echo "Changed files are $CHANGED_FILES"
     - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < $CHANGED_FILES
   allow_failure: false
   
