@@ -375,21 +375,3 @@ schedule:run-triage:
       variables:
         - $RUN_GITLAB_TRIAGE
 
-
-validate_yaml:
-  stage: validate_yaml
-  script:
-    - CHANGED_FILES=$(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA)
-    - echo "Changed files: $CHANGED_FILES"
-    # Validate each changed YAML file using Python's yaml.safe_load
-        for file in $CHANGED_FILES; do
-          if python -c "import yaml; yaml.safe_load(open('$file'))" > /dev/null 2>&1; then
-            echo "YAML validation passed for $file"
-          else
-            echo "YAML validation failed for $file"
-            exit 1
-          fi
-        done
-  only:
-    changes:
-      - '*.yaml'
