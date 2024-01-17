@@ -56,7 +56,7 @@ get_pvc_values = BashOperator(
 )
 
 other_test = f"""
-    kubectl get pods
+    kubectl get pods --namespace=testing
 """
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
