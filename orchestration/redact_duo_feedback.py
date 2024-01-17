@@ -23,6 +23,7 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
     WHERE {tstamp_column} <= dateadd(days, -60, current_timestamp) 
     AND se_label ='response_feedback'
     AND contexts like '%"extendedFeedback":%'
+    --AND contexts not like '%***DATA REDACTED***:%'
     """
 
     try:
@@ -32,6 +33,8 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
         logging.info(f"query: {query}")
         connection = engine.connect()
         duo_feedback_events = connection.execute(query).fetchall()
+        record_count = len(duo_feedback_events)
+        logging.info(f"found {record_count} records")
 
         for key_value, column_value in duo_feedback_events:
             logging.info(f"{key}: {key_value}, {column}: {column_value}")
@@ -41,7 +44,7 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
             column_value_json['data'][0]['data']['extra']['extendedFeedback'] = "***DATA REDACTED***"
 
             new_column_value = json.dumps(column_value_json)
-
+            logging.info(f"redacting from event: {key}={key_value}")
             update_cmd = f"update {table} set {column} = $${new_column_value}$$ where {key} ='{key_value}'"
             
             update_results = connection.execute(update_cmd).fetchall()
