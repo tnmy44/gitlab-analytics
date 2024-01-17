@@ -245,7 +245,7 @@ clone_stop:
       - "permissions/snowflake/roles.yml"
       - "extract/tableau_con_man_config/*"
     refs:
-      - merge_request
+      - merge_requests
   allow_failure: true
   before_script:
     - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.yml\|\.yaml'$)
