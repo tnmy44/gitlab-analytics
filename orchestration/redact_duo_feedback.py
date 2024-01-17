@@ -42,7 +42,9 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
 
             new_column_value = json.dumps(column_value_json)
 
-            logging.info(f"update {table} set {column} = $${new_column_value}$$ where {key} ='{key_value}' ")
+            update_cmd = f"update {table} set {column} = $${new_column_value}$$ where {key} ='{key_value}'"
+            
+            update_results = connection.execute(update_cmd).fetchall()
 
     except:
         logging.info("Failed to get snowplow events")
