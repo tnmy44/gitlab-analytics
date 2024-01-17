@@ -261,7 +261,7 @@ clone_stop:
         echo "YAML validation failed for $file"
         exit 1
       fi
-    done
+    done;
   allow_failure: false
 
 .permifrost: &permifrost
