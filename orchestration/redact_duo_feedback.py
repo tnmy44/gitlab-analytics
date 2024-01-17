@@ -29,7 +29,6 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
         config_dict = env.copy()
         engine = snowflake_engine_factory(config_dict, "SYSADMIN")
         logging.info("Getting snowplow events with extended feedback")
-        logging.info(f"running query: {query}")
         connection = engine.connect()
         duo_feedback_events = connection.execute(query).fetchall()
 
@@ -42,12 +41,10 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
 
             column_value_json_escaped = column_value_json.replace("'","''")
 
-            logging.info(f"update {table} set {column} = '{column_value_json_escaped}' where {key} ='{key_value}' ")
+            logging.info(f"update {table} set {column} = $${column_value_json}$$ where {key} ='{key_value}' ")
 
     except:
         logging.info("Failed to get snowplow events")
-        raise
-
     finally:
         connection.close()
         engine.dispose()
