@@ -243,7 +243,7 @@ clone_stop:
   only:
     changes:
       - "permissions/snowflake/roles.yml"
-      - "extract/tableau_con_man_config/*"
+      - "extract/tableau_con_man_config/src/*"
     refs:
       - merge_requests
   allow_failure: true
