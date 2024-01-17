@@ -243,14 +243,17 @@ clone_stop:
   only:
     changes:
       - "permissions/snowflake/roles.yml"
+      - "extract/tableau_con_man_config/*"
     refs:
       - merge_request
   allow_failure: true
+  before_script:
+    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.yml\|\.yaml'$)
 
 📁yaml_validation:
   <<: *yaml_validate
   script:
-    - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < permissions/snowflake/roles.yml
+    - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < $CHANGED_FILES
   allow_failure: false
   
 .permifrost: &permifrost
