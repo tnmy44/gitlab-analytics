@@ -69,4 +69,4 @@ SELECT
   context_data['gitlab_instance_id']::VARCHAR                                     AS instance_id,
   context_data['gitlab_host_name']::VARCHAR                                       AS host_name
 FROM events_with_context_flattened
-WHERE code_suggestions_context LIKE 'iglu:com.gitlab/code_suggestions_context/jsonschema/%'
+WHERE code_suggestions_context_schema LIKE 'iglu:com.gitlab/code_suggestions_context/jsonschema/%'
