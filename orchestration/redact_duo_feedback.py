@@ -23,7 +23,7 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
     WHERE {tstamp_column} <= dateadd(days, -60, current_timestamp) 
     AND se_label ='response_feedback'
     AND contexts like '%"extendedFeedback":%'
-    --AND contexts not like '%***DATA REDACTED***:%'
+    AND contexts not like '%***DATA REDACTED***:%'
     """
 
     try:
