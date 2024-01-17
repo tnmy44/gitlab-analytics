@@ -91,7 +91,10 @@ structured_event_renamed AS (
       api_status_code,
       namespace_ids,
       instance_id,
-      host_name
+      host_name,
+      event_name,
+      key_path,
+      data_source
 
     FROM {{ ref('prep_snowplow_unnested_events_all') }}
     WHERE event = 'struct'
@@ -195,6 +198,12 @@ structured_events_w_dim AS (
       events_with_plan.namespace_ids,
       events_with_plan.instance_id,
       events_with_plan.host_name,
+
+      -- Degenerate Dimensions (Service Ping)
+      events_with_plan.service_ping_version_context,
+      events_with_plan.event_name,
+      events_with_plan.key_path,
+      events_with_plan.data_source,
 
       -- Junk Dimensions (Context Flags)
       events_with_plan.has_performance_timing_context, 

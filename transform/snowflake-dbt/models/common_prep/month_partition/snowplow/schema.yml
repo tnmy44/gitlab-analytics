@@ -76,3 +76,11 @@ models:
         - name: event_id
           tests:
             - not_null
+    
+    - name: snowplow_gitlab_events_service_ping_context
+      description: This is a view that extracts all the key data from the [service ping context json](https://gitlab.com/gitlab-org/iglu/-/tree/master/public/schemas/com.gitlab/gitlab_service_ping/jsonschema)
+      columns:
+        - name: event_id
+          tests:
+            - not_null
+            - unique

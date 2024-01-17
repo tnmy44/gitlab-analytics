@@ -175,5 +175,9 @@ SELECT
   api_status_code                                                                                                   AS api_status_code,
   namespace_ids                                                                                                     AS namespace_ids,
   instance_id                                                                                                       AS instance_id,
-  host_name                                                                                                         AS host_name
+  host_name                                                                                                         AS host_name,
+  service_ping_version_context                                                                                      AS service_ping_version_context,
+  event_name                                                                                                        AS event_name,
+  key_path                                                                                                          AS key_path,
+  data_source                                                                                                       AS data_source
 FROM unioned_view

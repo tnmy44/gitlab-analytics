@@ -239,6 +239,11 @@ WITH filtered_source as (
     SELECT *
     FROM {{ ref('snowplow_gitlab_events_code_suggestions_context') }}
 
+), events_with_service_ping_context AS (
+
+    SELECT *
+    FROM {{ ref('snowplow_gitlab_events_service_ping_context') }}
+
 ), base_with_sorted_columns AS (
   
     SELECT 
@@ -415,6 +420,10 @@ WITH filtered_source as (
       events_with_code_suggestions_context.namespace_ids,
       events_with_code_suggestions_context.instance_id,
       events_with_code_suggestions_context.host_name
+      events_with_service_ping_context.service_ping_version_context,
+      events_with_service_ping_context.event_name,
+      events_with_service_ping_context.key_path,
+      events_with_service_ping_context.data_source
     FROM base
     LEFT JOIN events_with_web_page_id
       ON base.derived_tstamp::date = events_with_web_page_id.derived_tstamp::date
@@ -431,6 +440,9 @@ WITH filtered_source as (
     LEFT JOIN events_with_code_suggestions_context
       ON base.derived_tstamp::date = events_with_code_suggestions_context.derived_tstamp::date
         AND base.event_id = events_with_code_suggestions_context.event_id
+    LEFT JOIN events_with_service_ping_context
+      ON base.derived_tstamp::date = events_with_service_ping_context.derived_tstamp::date
+        AND base.event_id = events_with_service_ping_context.event_id
     WHERE NOT EXISTS (
       SELECT event_id
       FROM events_with_web_page_id web_page_events
