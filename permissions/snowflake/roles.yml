@@ -1344,14 +1344,14 @@ roles:
     - snowflake_analyst:
          warehouses:
             - dev_xs
-            - reporter
+            - reporting
          member_of:
             - prod_reporting
 
     - snowflake_analyst_safe:
          warehouses:
             - dev_xs
-            - reporter
+            - reporting
          member_of:
             - prod_reporting
             - prod_reporting_safe
