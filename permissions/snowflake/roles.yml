@@ -1608,15 +1608,15 @@ roles:
                     - prod.common_mart_people
                     - prod.common_prep
                     - prod.legacy
-                    - workspace_customer_success
-                    - workspace_data
-                    - workspace_science
-                    - workspace_engineering
-                    - workspace_finance
-                    - workspace_marketing
-                    - workspace_people
-                    - workspace_product
-                    - workspace_sales
+                    - prod.workspace_customer_success
+                    - prod.workspace_data
+                    - prod.workspace_science
+                    - prod.workspace_engineering
+                    - prod.workspace_finance
+                    - prod.workspace_marketing
+                    - prod.workspace_people
+                    - prod.workspace_product
+                    - prod.workspace_sales
             tables:
                 read:
                     - prod.common.*
@@ -1628,15 +1628,15 @@ roles:
                     - prod.common_mart_people.*
                     - prod.common_prep.*
                     - prod.legacy.*
-                    - workspace_customer_success.*
-                    - workspace_data.*
-                    - workspace_science.*
-                    - workspace_engineering.*
-                    - workspace_finance.*
-                    - workspace_marketing.*
-                    - workspace_people.*
-                    - workspace_product.*
-                    - workspace_sales.*
+                    - prod.workspace_customer_success.*
+                    - prod.workspace_data.*
+                    - prod.workspace_science.*
+                    - prod.workspace_engineering.*
+                    - prod.workspace_finance.*
+                    - prod.workspace_marketing.*
+                    - prod.workspace_people.*
+                    - prod.workspace_product.*
+                    - prod.workspace_sales.*
 
     - prod_reporting_safe:
          privileges:
