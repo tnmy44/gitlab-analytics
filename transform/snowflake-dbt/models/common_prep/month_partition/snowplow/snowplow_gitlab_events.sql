@@ -419,9 +419,9 @@ WITH filtered_source as (
       events_with_code_suggestions_context.api_status_code,
       events_with_code_suggestions_context.namespace_ids,
       events_with_code_suggestions_context.instance_id,
-      events_with_code_suggestions_context.host_name
-      events_with_service_ping_context.service_ping_version_context,
-      events_with_service_ping_context.event_name,
+      events_with_code_suggestions_context.host_name,
+      events_with_service_ping_context.service_ping_context,
+      events_with_service_ping_context.service_ping_event_name,
       events_with_service_ping_context.key_path,
       events_with_service_ping_context.data_source
     FROM base

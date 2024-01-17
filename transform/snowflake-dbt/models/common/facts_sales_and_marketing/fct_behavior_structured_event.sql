@@ -92,7 +92,8 @@ structured_event_renamed AS (
       namespace_ids,
       instance_id,
       host_name,
-      event_name,
+      service_ping_context,
+      service_ping_event_name,
       key_path,
       data_source
 
@@ -200,8 +201,8 @@ structured_events_w_dim AS (
       events_with_plan.host_name,
 
       -- Degenerate Dimensions (Service Ping)
-      events_with_plan.service_ping_version_context,
-      events_with_plan.event_name,
+      events_with_plan.service_ping_context,
+      events_with_plan.service_ping_event_name,
       events_with_plan.key_path,
       events_with_plan.data_source,
 
