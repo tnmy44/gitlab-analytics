@@ -121,9 +121,6 @@ models:
       - name: primary_contact_email
         meta:
           sensitive: true
-      - name: converted_from_lead_email
-        meta:
-          sensitive: true
   - name: bizible_page_views_source
     columns:
       - name: email
