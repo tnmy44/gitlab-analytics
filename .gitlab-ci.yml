@@ -255,12 +255,12 @@ clone_stop:
   script:
     # Iterate over each changed YAML file using Python's yaml.safe_load
     for file in $CHANGED_FILES; do
-    if python -c "import yaml; yaml.safe_load(open('$file'))" > /dev/null 2>&1; then
-    echo "YAML validation passed for $file"
-    else
-    echo "YAML validation failed for $file"
-    exit 1
-    fi
+      if python -c "import yaml; yaml.safe_load(open('$file'))" > /dev/null 2>&1; then
+        echo "YAML validation passed for $file"
+      else
+        echo "YAML validation failed for $file"
+        exit 1
+      fi
     done
   allow_failure: false
 
