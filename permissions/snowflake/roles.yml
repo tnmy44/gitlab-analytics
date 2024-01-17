@@ -1646,7 +1646,7 @@ roles:
             schemas:
                 read:
                     - prod.restricted_safe_common
-                    - prod.prod.restricted_safe_common_mapping 
+                    - prod.restricted_safe_common_mapping 
                     - prod.restricted_safe_common_mart_finance
                     - prod.restricted_safe_common_mart_product
                     - prod.restricted_safe_common_mart_sales
