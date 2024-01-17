@@ -39,7 +39,7 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
             
             column_value_json['data'][0]['data']['extra']['extendedFeedback'] = "***DATA REDACTED***"
 
-            logging.info(f"alter table {table} set {column} = {column_value_json} where {key} ='{key_value}' ")
+            logging.info(f"alter table {table} set {column} = '{column_value_json}' where {key} ='{key_value}' ")
 
     except:
         logging.info("Failed to get snowplow events")

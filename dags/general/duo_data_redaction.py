@@ -49,7 +49,8 @@ dag = DAG(
 
 snowplow_tables = [
     {
-        "name": "raw.snowplow.gitlab_events",
+        # "name": "raw.snowplow.gitlab_events",
+        "name": "testing_db.test.snowplow_gitlab_events_clone_test",
         "key": "event_id",
         "column": "contexts",
         "tstamp_column": "collector_tstamp",
@@ -64,7 +65,7 @@ for table in snowplow_tables:
       export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
       export SNOWFLAKE_LOAD_WAREHOUSE="TRANSFORMING_XL" &&
       python3 /analytics/orchestration/redact_duo_feedback.py \
-        --table="{table["name"]}" \
+        --table={table["name"]} \
         --key={table["key"]} \
         --column={table["column"]} \
         --tstamp_column={table["tstamp_column"]}
