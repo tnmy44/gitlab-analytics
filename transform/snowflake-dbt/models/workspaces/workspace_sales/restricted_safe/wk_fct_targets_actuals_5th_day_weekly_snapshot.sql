@@ -163,20 +163,67 @@ combined AS (
     actuals.override_arr_basis_clari,
     actuals.vsa_start_date_net_arr,
     actuals.cycle_time_in_days_combined,
-    actuals.day_of_week,
-    actuals.first_day_of_week,
-    actuals.date_id,
-    actuals.fiscal_month_name_fy,
-    actuals.fiscal_quarter_name_fy,
-    actuals.first_day_of_fiscal_quarter,
-    actuals.first_day_of_fiscal_year,
-    actuals.last_day_of_week,
-    actuals.last_day_of_month,
-    actuals.last_day_of_fiscal_quarter,
-    actuals.last_day_of_fiscal_year,
-
 
     --dates
+    dim_date.date_day,
+    dim_date.day_name,
+    dim_date.month_actual,
+    dim_date.year_actual,
+    dim_date.quarter_actual,
+    dim_date.day_of_week,
+    dim_date.first_day_of_week,
+    dim_date.week_of_year,
+    dim_date.day_of_month,
+    dim_date.day_of_quarter,
+    dim_date.day_of_year,
+    dim_date.fiscal_year,
+    dim_date.fiscal_quarter,
+    dim_date.day_of_fiscal_quarter,
+    dim_date.day_of_fiscal_year,
+    dim_date.month_name,
+    dim_date.first_day_of_month,
+    dim_date.last_day_of_month,
+    dim_date.first_day_of_year,
+    dim_date.last_day_of_year,
+    dim_date.first_day_of_quarter,
+    dim_date.last_day_of_quarter,
+    dim_date.first_day_of_fiscal_quarter,
+    dim_date.last_day_of_fiscal_quarter,
+    dim_date.first_day_of_fiscal_year,
+    dim_date.last_day_of_fiscal_year,
+    dim_date.week_of_fiscal_year,
+    dim_date.month_of_fiscal_year,
+    dim_date.last_day_of_week,
+    dim_date.quarter_name,
+    dim_date.fiscal_quarter_name,
+    dim_date.fiscal_quarter_name_fy,
+    dim_date.fiscal_quarter_number_absolute,
+    dim_date.fiscal_month_name,
+    dim_date.fiscal_month_name_fy,
+    dim_date.holiday_desc,
+    dim_date.is_holiday,
+    dim_date.last_month_of_fiscal_quarter,
+    dim_date.is_first_day_of_last_month_of_fiscal_quarter,
+    dim_date.last_month_of_fiscal_year,
+    dim_date.is_first_day_of_last_month_of_fiscal_year,
+    dim_date.snapshot_date_fpa,
+    dim_date.snapshot_date_billings,
+    dim_date.days_in_month_count,
+    dim_date.week_of_month_normalised,
+    dim_date.day_of_fiscal_quarter_normalised,
+    dim_date.week_of_fiscal_quarter_normalised,
+    dim_date.day_of_fiscal_year_normalised,
+    dim_date.is_first_day_of_fiscal_quarter_week,
+    dim_date.days_until_last_day_of_month,
+    dim_date.current_date_actual,
+    dim_date.current_fiscal_year,
+    dim_date.current_first_day_of_fiscal_year,
+    dim_date.current_fiscal_quarter_name_fy,
+    dim_date.current_first_day_of_month,
+    dim_date.current_first_day_of_fiscal_quarter,
+    dim_date.current_day_of_month,
+    dim_date.current_day_of_fiscal_quarter,
+    dim_date.current_day_of_fiscal_year,
     created_date.date_actual                                        AS created_date,
     created_date.first_day_of_month                                 AS created_month,
     created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
@@ -242,11 +289,11 @@ combined AS (
     subscription_start_date.first_day_of_fiscal_quarter             AS subscription_start_fiscal_quarter_date,
     subscription_start_date.fiscal_quarter_name_fy                  AS subscription_start_fiscal_quarter_name,
     subscription_start_date.fiscal_year                             AS subscription_start_fiscal_year,
-    subscription_END_date.date_actual                               AS subscription_END_date,
-    subscription_END_date.first_day_of_month                        AS subscription_END_month,
-    subscription_END_date.first_day_of_fiscal_quarter               AS subscription_END_fiscal_quarter_date,
-    subscription_END_date.fiscal_quarter_name_fy                    AS subscription_END_fiscal_quarter_name,
-    subscription_END_date.fiscal_year                               AS subscription_END_fiscal_year,
+    subscription_end_date.date_actual                               AS subscription_end_date,
+    subscription_end_date.first_day_of_month                        AS subscription_END_month,
+    subscription_end_date.first_day_of_fiscal_quarter               AS subscription_END_fiscal_quarter_date,
+    subscription_end_date.fiscal_quarter_name_fy                    AS subscription_END_fiscal_quarter_name,
+    subscription_end_date.fiscal_year                               AS subscription_END_fiscal_year,
     sales_qualified_date.date_actual                                AS sales_qualified_date,
     sales_qualified_date.first_day_of_month                         AS sales_qualified_month,
     sales_qualified_date.first_day_of_fiscal_quarter                AS sales_qualified_fiscal_quarter_date,
@@ -412,6 +459,8 @@ combined AS (
   FROM actuals
   INNER JOIN day_5_list
     ON actuals.snapshot_date = day_5_list.day_5_current_week
+  LEFT JOIN dim_date 
+    ON dim_date.date_actual = day_5_list.day_5_current_week
   LEFT JOIN targets 
     ON actuals.actuals_targets_daily_pk = targets.actuals_targets_daily_pk 
   LEFT JOIN dim_date created_date
@@ -453,7 +502,6 @@ combined AS (
   LEFT JOIN dim_date arr_created_date
     ON actuals.arr_created_date_id = arr_created_date.date_id
   
-
 )
 
 SELECT * 
