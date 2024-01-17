@@ -255,7 +255,7 @@ clone_stop:
   script:
     - CHANGED_FILES=$(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA)
     - echo "Changed files: $CHANGED_FILES"
-    - for file in $CHANGED_FILES; do
+    - for file in $CHANGED_FILES; do 
         if python -c "import yaml; yaml.safe_load(open('$file'))" > /dev/null 2>&1; then
         echo "YAML validation passed for $file"
         else
