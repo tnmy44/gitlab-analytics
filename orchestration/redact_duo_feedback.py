@@ -29,6 +29,7 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
         config_dict = env.copy()
         engine = snowflake_engine_factory(config_dict, "SYSADMIN")
         logging.info("Getting snowplow events with extended feedback")
+        logging.info(f"query: {query}")
         connection = engine.connect()
         duo_feedback_events = connection.execute(query).fetchall()
 
