@@ -7,10 +7,17 @@ from logging import basicConfig, getLogger, info
 
 import fire
 
-from elasticsearch_billing_itemized_costs import extract_load_billing_itemized_costs
-from elasticsearch_billing_costs_overview import extract_load_billing_costs_overview
+from elasticsearch_billing_itemized_costs import (
+    extract_load_billing_itemized_costs,
+    get_itemized_costs_full_load,
+)
+from elasticsearch_billing_costs_overview import (
+    extract_load_billing_costs_overview,
+    get_costs_overview_full_load,
+)
 from elasticsearch_billing_itemized_costs_by_deployment import (
     extract_load_billing_itemized_costs_by_deployment,
+    get_itemized_costs_by_deployments_full_load,
 )
 
 config_dict = os.environ.copy()
@@ -23,6 +30,9 @@ if __name__ == "__main__":
             "extract_load_billing_itemized_costs_by_deployment": extract_load_billing_itemized_costs_by_deployment,
             "extract_load_billing_itemized_costs": extract_load_billing_itemized_costs,
             "extract_load_billing_costs_overview": extract_load_billing_costs_overview,
+            "extract_load_billing_itemized_costs_by_deployment_full_load": get_itemized_costs_by_deployments_full_load,
+            "extract_load_billing_itemized_costs_full_load": get_itemized_costs_full_load,
+            "extract_load_billing_costs_overview_full_load": get_costs_overview_full_load,
         }
     )
     info("Complete.")

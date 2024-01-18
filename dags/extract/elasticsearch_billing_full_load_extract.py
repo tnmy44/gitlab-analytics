@@ -56,17 +56,17 @@ dag = DAG(
 
 elasticsearch_billing_costs_overview_extract_full_load_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    "python elasticsearch_billing/src/full_load/elasticsearch_billing_extraction_main.py extract_load_billing_costs_overview_full_load"
+    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py extract_load_billing_costs_overview_full_load"
 )
 
 elasticsearch_billing_itemized_costs_extract_full_load_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    "python elasticsearch_billing/src/full_load/elasticsearch_billing_extraction_main.py extract_load_billing_itemized_costs_full_load"
+    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py extract_load_billing_itemized_costs_full_load"
 )
 
 elasticsearch_billing_deployments_itemized_costs_extract_full_load_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    "python elasticsearch_billing/src/full_load/elasticsearch_billing_extraction_main.py extract_load_billing_itemized_costs_by_deployment_full_load"
+    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py extract_load_billing_itemized_costs_by_deployment_full_load"
 )
 
 elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
