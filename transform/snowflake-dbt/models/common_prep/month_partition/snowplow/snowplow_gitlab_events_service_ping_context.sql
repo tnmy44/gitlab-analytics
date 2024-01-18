@@ -49,7 +49,7 @@ SELECT
     events_with_context_flattened.derived_tstamp,
     context_data                                           AS service_ping_context,
     context_data_schema                                    AS service_ping_context_schema,
-    context_data['event_name']::VARCHAR                    AS service_ping_event_name,
+    context_data['event_name']::VARCHAR                    AS redis_event_name,
     context_data['key_path']::VARCHAR                      AS key_path,
     context_data['data_source']::VARCHAR                   AS data_source
 FROM events_with_context_flattened

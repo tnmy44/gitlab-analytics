@@ -93,7 +93,7 @@ structured_event_renamed AS (
       instance_id,
       host_name,
       service_ping_context,
-      service_ping_event_name,
+      redis_event_name,
       key_path,
       data_source
 
@@ -202,7 +202,7 @@ structured_events_w_dim AS (
 
       -- Degenerate Dimensions (Service Ping)
       events_with_plan.service_ping_context,
-      events_with_plan.service_ping_event_name,
+      events_with_plan.redis_event_name,
       events_with_plan.key_path,
       events_with_plan.data_source,
 
@@ -231,5 +231,5 @@ structured_events_w_dim AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2024-01-11"
+    updated_date="2024-01-18"
 ) }}
