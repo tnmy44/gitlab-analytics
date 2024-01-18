@@ -164,8 +164,6 @@ WITH source AS (
         stamped_opp_owner_user_business_unit__c                                             AS user_business_unit_stamped,
         stamped_opportunity_owner__c                                                        AS crm_opp_owner_stamped_name,
         stamped_account_owner__c                                                            AS crm_account_owner_stamped_name,
-        sao_opportunity_owner__c                                                            AS sao_crm_opp_owner_stamped_name,
-        sao_account_owner__c                                                                AS sao_crm_account_owner_stamped_name,
         sao_user_segment__c                                                                 AS sao_crm_opp_owner_sales_segment_stamped,
         sao_opp_owner_segment_geo_region_area__c                                            AS sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
         CASE
