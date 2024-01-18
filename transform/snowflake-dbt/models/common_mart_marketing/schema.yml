@@ -70,6 +70,12 @@ models:
           description: Average net ARR associated with a campaign based on the number of campaigns connected to an opportunity that is tied to the touchpoint.
         - name: is_partner_recalled
           description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
+        - name: devrel_campaign_type
+          description: A field explaining if the campaign was in SFDC or UTMs.
+        - name: devrel_campaign_description
+          description: A short description of the work the devrel team did on the campaign.
+        - name: devrel_campaign_influence_type
+          description: The output the devrel team created to contribute to the campaign.
 
     - name: mart_crm_touchpoint
       description: Model containing Bizible touchpoints (non-attribution) along with contact, lead, account, and campaign details.
@@ -228,7 +234,7 @@ models:
         - name: mqls
           description: The sum of MQLs by the various dimensions. 
         - name: saos
-          description: The sum of SAOs by the various dimensions. 
+          description: The sum of SAOs by the various dimensions.
 
 
     - name: rpt_lead_to_revenue
