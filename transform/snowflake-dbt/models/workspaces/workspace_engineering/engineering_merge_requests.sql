@@ -103,70 +103,6 @@ milestones AS (
 
 ),
 
-dates AS (
-
-  SELECT date_actual AS month
-  FROM {{ ref('dim_date') }}
-  WHERE date_actual = DATE_TRUNC('month', date_actual)
-    AND date_actual BETWEEN DATEADD('year', -5, CURRENT_DATE) AND CURRENT_DATE
-
-),
-
-category AS (
-
-  SELECT
-    SPLIT_PART(LOWER(group_name), ':', 1)     AS group_name,
-    LOWER(stage_display_name)                 AS stage_display_name,
-    stage_section,
-    MIN(snapshot_date)                        AS valid_from,
-    MAX(snapshot_date)                        AS valid_to,
-    ROW_NUMBER() OVER (
-      PARTITION BY SPLIT_PART(LOWER(group_name), ':', 1)
-      ORDER BY valid_to
-    )                                         AS rn,
-    IFF(valid_to = CURRENT_DATE, TRUE, FALSE) AS is_current
-  FROM {{ ref('stages_groups_yaml_historical') }}
-  {{ dbt_utils.group_by(n=3) }}
-
-),
-
-directory_mapping AS (
-
-  SELECT
-    a.month,
-    b.gitlab_username,
-    CONCAT(COALESCE(job_specialty_multi, ''), '; ', COALESCE(job_specialty_single, ''))                                                                                 AS job_specialty,
-    --sometimes specialty is only specified in either single/multi, this way we can extract the group name properly
-
-    b.division,
-    b.department,
-    MAX(IFF(CONTAINS(LOWER(job_specialty), c.group_name), c.group_name, NULL))                                                                                          AS author_group,
-    MAX(IFF(CONTAINS(LOWER(job_specialty), c.group_name), c.stage_display_name, IFF(CONTAINS(LOWER(job_specialty), c.stage_display_name), c.stage_display_name, NULL))) AS author_stage,
-    MAX(IFF(CONTAINS(LOWER(job_specialty), c.group_name), c.stage_section, IFF(CONTAINS(LOWER(job_specialty), c.stage_display_name), c.stage_section, NULL)))           AS author_section
-  FROM dates AS a
-  INNER JOIN
-    {{ ref('mart_team_member_directory') }}
-      AS b
-    ON b.is_current_team_member
-      AND a.month >= b.valid_from
-      AND a.month < b.valid_to
-  INNER JOIN category AS c ON a.month BETWEEN c.valid_from AND c.valid_to
-  {{ dbt_utils.group_by(n=5) }}
-
-),
-
-directory_final AS (
-
-  SELECT
-    *,
-    IFF(author_group IS NULL, NULL, COUNT(gitlab_username) OVER (PARTITION BY month, author_group))     AS merge_month_author_group_total_members,
-    IFF(author_stage IS NULL, NULL, COUNT(gitlab_username) OVER (PARTITION BY month, author_stage))     AS merge_month_author_stage_total_members,
-    IFF(author_section IS NULL, NULL, COUNT(gitlab_username) OVER (PARTITION BY month, author_section)) AS merge_month_author_section_total_members,
-    IFF(author_section IS NULL, NULL, COUNT(gitlab_username) OVER (PARTITION BY month, department))     AS merge_month_author_department_total_members
-  FROM directory_mapping
-
-),
-
 engineering_merge_requests AS (
 
   SELECT
@@ -247,20 +183,5 @@ engineering_merge_requests AS (
   WHERE is_part_of_product = TRUE
 )
 
-SELECT
-  a.*,
-  c.gitlab_username AS author_gitlab_username,
-  c.division        AS author_division,
-  c.department      AS author_department,
-  c.job_specialty   AS author_job_specialty,
-  c.author_group,
-  c.author_stage,
-  c.author_section,
-  c.merge_month_author_group_total_members,
-  c.merge_month_author_stage_total_members,
-  c.merge_month_author_section_total_members,
-  c.merge_month_author_department_total_members
-FROM engineering_merge_requests AS a
-LEFT JOIN {{ ref('dim_gitlab_dotcom_gitlab_emails') }} AS b ON a.author_id = b.gitlab_dotcom_user_id
-LEFT JOIN directory_final AS c ON a.merge_month = c.month
-  AND b.gitlab_dotcom_user_name = c.gitlab_username --using merged_at instead of created_at because MR rate is joining employee_month to the merged_month
+SELECT *
+FROM engineering_merge_requests
