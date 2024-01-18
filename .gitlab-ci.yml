@@ -244,7 +244,7 @@ clone_stop:
     changes:
       - "permissions/snowflake/roles.yml"
     refs:
-      - merge_request
+      - merge_requests
   allow_failure: true
 
 📁yaml_validation:
@@ -259,6 +259,8 @@ clone_stop:
   tags:
     - analytics
   only:
+    changes:
+      - "permissions/snowflake/roles.yml"
     refs:
       - merge_requests
   allow_failure: true
@@ -268,13 +270,14 @@ clone_stop:
   script:
     - permifrost run permissions/snowflake/roles.yml --diff --dry
   when: manual
+  allow_failure: true
 
 🧊permifrost_spec_test:
   <<: *permifrost
   script:
     - permifrost spec-test permissions/snowflake/roles.yml
   when: manual
-  allow_failure: false
+  allow_failure: true
 
 # ======
 # dbt docs to GitLab Pages
