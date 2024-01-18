@@ -11,4 +11,3 @@ FROM base_union
 WHERE {{ column_name }} >= dateadd('day', -{{ day_limit }}, CURRENT_DATE())
 
 {% endmacro %}
-
