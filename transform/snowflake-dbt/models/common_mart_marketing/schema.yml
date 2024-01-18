@@ -117,6 +117,12 @@ models:
           description: Count of touchpoints that occured on or before the `accepted_date` that are also Lead Created.
         - name: is_partner_recalled
           description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
+        - name: devrel_campaign_type
+          description: A field explaining if the campaign was in SFDC or UTMs.
+        - name: devrel_campaign_description
+          description: A short description of the work the devrel team did on the campaign.
+        - name: devrel_campaign_influence_type
+          description: The output the devrel team created to contribute to the campaign.
 
     - name: mart_crm_person
       description: Model with person and MQL business logic.
@@ -632,6 +638,12 @@ models:
           description: Tracks the change in status for the person record after the touchpoint date. 
         - name: person_status_update
           description: A non-null field of `person_status_change`
+        - name: devrel_campaign_type
+          description: A field explaining if the campaign was in SFDC or UTMs.
+        - name: devrel_campaign_description
+          description: A short description of the work the devrel team did on the campaign.
+        - name: devrel_campaign_influence_type
+          description: The output the devrel team created to contribute to the campaign.
 
 
     - name: rpt_l2r_community_data
