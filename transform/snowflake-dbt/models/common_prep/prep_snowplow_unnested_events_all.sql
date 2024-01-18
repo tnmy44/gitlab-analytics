@@ -8,15 +8,7 @@
 
 WITH unioned_view AS (
 
-{% if target.name not in ("prod") -%}
-
-{{ schema_union_limit('snowplow_', 'snowplow_unnested_events', 'derived_tstamp', 750,database_name=env_var('SNOWFLAKE_PREP_DATABASE'), boolean_filter_statement='is_staging_url = FALSE',local='yes') }}
-
-{%- else %}
-
-{{ schema_union_limit('snowplow_', 'snowplow_unnested_events', 'derived_tstamp', 750, database_name=env_var('SNOWFLAKE_PREP_DATABASE'), boolean_filter_statement='is_staging_url = FALSE', local='no') }}
-
-{%- endif %}
+{{ schema_union_limit('snowplow_', 'snowplow_unnested_events', 'derived_tstamp', 750, database_name=env_var('SNOWFLAKE_PREP_DATABASE'), boolean_filter_statement='is_staging_url = FALSE') }}
 
 )
 
