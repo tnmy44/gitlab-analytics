@@ -1789,6 +1789,21 @@ roles:
                     - prep.driveload.*
                     - raw.driveload.*
 
+    - elasticsearch_billing:
+        warehouses:
+            - dev_xs
+            - dev_l
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.elasticsearch_billing
+            tables:
+                read:
+                    - raw.elasticsearch_billing.*
+
     - facebook_ads:
         privileges:
             databases:
@@ -3265,6 +3280,7 @@ roles:
         member_of:
             - analyst_engineering
             - aws_billing
+            - elasticsearch_billing
             - oci_reports
             - prometheus
             - restricted_safe
