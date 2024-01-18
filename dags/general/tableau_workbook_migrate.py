@@ -24,6 +24,8 @@ from kube_secrets import (
     TABLEAU_API_PUBLIC_TOKEN_SECRET,
     TABLEAU_API_PUBLIC_URL,
     TABLEAU_API_PUBLIC_SITE_NAME,
+    SNOWFLAKE_TABLEAU_PASSWORD,
+    SNOWFLAKE_TABLEAU_USERNAME,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -112,6 +114,8 @@ tableau_workbook_migrate = KubernetesPodOperator(
         TABLEAU_API_PUBLIC_TOKEN_SECRET,
         TABLEAU_API_PUBLIC_URL,
         TABLEAU_API_PUBLIC_SITE_NAME,
+        SNOWFLAKE_TABLEAU_PASSWORD,
+        SNOWFLAKE_TABLEAU_USERNAME,
     ],
     env_vars=pod_env_vars,
     affinity=get_affinity("extraction"),
