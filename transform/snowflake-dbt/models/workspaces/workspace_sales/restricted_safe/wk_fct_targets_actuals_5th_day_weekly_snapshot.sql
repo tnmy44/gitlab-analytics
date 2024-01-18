@@ -290,10 +290,10 @@ combined AS (
     subscription_start_date.fiscal_quarter_name_fy                  AS subscription_start_fiscal_quarter_name,
     subscription_start_date.fiscal_year                             AS subscription_start_fiscal_year,
     subscription_end_date.date_actual                               AS subscription_end_date,
-    subscription_end_date.first_day_of_month                        AS subscription_END_month,
-    subscription_end_date.first_day_of_fiscal_quarter               AS subscription_END_fiscal_quarter_date,
-    subscription_end_date.fiscal_quarter_name_fy                    AS subscription_END_fiscal_quarter_name,
-    subscription_end_date.fiscal_year                               AS subscription_END_fiscal_year,
+    subscription_end_date.first_day_of_month                        AS subscription_end_month,
+    subscription_end_date.first_day_of_fiscal_quarter               AS subscription_end_fiscal_quarter_date,
+    subscription_end_date.fiscal_quarter_name_fy                    AS subscription_end_fiscal_quarter_name,
+    subscription_end_date.fiscal_year                               AS subscription_end_fiscal_year,
     sales_qualified_date.date_actual                                AS sales_qualified_date,
     sales_qualified_date.first_day_of_month                         AS sales_qualified_month,
     sales_qualified_date.first_day_of_fiscal_quarter                AS sales_qualified_fiscal_quarter_date,
@@ -489,8 +489,8 @@ combined AS (
     ON actuals.stage_6_closed_lost_date_id = stage_6_closed_lost_date.date_id
   LEFT JOIN dim_date subscription_start_date
     ON actuals.subscription_start_date_id = subscription_start_date.date_id
-  LEFT JOIN dim_date subscription_END_date
-    ON actuals.subscription_END_date_id = subscription_END_date.date_id
+  LEFT JOIN dim_date subscription_end_date
+    ON actuals.subscription_end_date_id = subscription_end_date.date_id
   LEFT JOIN dim_date sales_qualified_date
     ON actuals.sales_qualified_date_id = sales_qualified_date.date_id
   LEFT JOIN dim_date last_activity_date
