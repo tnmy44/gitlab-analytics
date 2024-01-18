@@ -37,15 +37,16 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
         logging.info(f"found {record_count} records")
 
         for key_value, column_value in duo_feedback_events:
-
             column_value_json = json.loads(column_value)
-            
-            column_value_json['data'][0]['data']['extra']['extendedFeedback'] = "***DATA REDACTED***"
+
+            column_value_json["data"][0]["data"]["extra"][
+                "extendedFeedback"
+            ] = "***DATA REDACTED***"
 
             new_column_value = json.dumps(column_value_json)
             logging.info(f"redacting from event: {key}={key_value}")
             update_cmd = f"update {table} set {column} = $${new_column_value}$$ where {key} ='{key_value}'"
-            
+
             update_results = connection.execute(update_cmd).fetchall()
 
     except:
@@ -54,8 +55,8 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
         connection.close()
         engine.dispose()
 
+
 def redact_extended_feedback(table, key, column, tstamp_column):
-    
     records = get_records_with_extended_feedback(table, key, column, tstamp_column)
 
 
