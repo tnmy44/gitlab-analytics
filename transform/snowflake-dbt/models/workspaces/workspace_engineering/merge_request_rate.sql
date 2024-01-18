@@ -139,8 +139,8 @@ aggregated AS (
   SELECT
     merged_merge_requests.merge_month,
     ''                                                        AS group_name,
-    ''                                                        AS technology_group,
     bamboohr_engineering_division.department,
+    ''                                                        AS technology_group,
     COUNT(DISTINCT bamboohr_engineering_division.employee_id) AS employees,
     COUNT(DISTINCT merged_merge_requests.merge_request_id)    AS mrs,
     ROUND(mrs / (NULLIF(employees, 0) - 3), 2)                AS mr_rate,
@@ -154,8 +154,8 @@ aggregated AS (
   SELECT
     team_author_product_mrs.merge_month,
     ''                                                        AS group_name,
-    ''                                                        AS technology_group,
     team_author_product_mrs.department,
+    ''                                                        AS technology_group,
     team_author_product_mrs.mrs,
     COUNT(DISTINCT bamboohr_engineering_division.employee_id) AS employees,
     ROUND(mrs / NULLIF(employees, 0), 2)                      AS mr_rate,
