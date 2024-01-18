@@ -174,8 +174,6 @@ WITH prep_crm_opportunity AS (
       -- stamped fields
       prep_crm_opportunity.crm_opp_owner_stamped_name,
       prep_crm_opportunity.crm_account_owner_stamped_name,
-      prep_crm_opportunity.sao_crm_opp_owner_stamped_name,
-      prep_crm_opportunity.sao_crm_account_owner_stamped_name,
       prep_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
       prep_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
       prep_crm_opportunity.sao_crm_opp_owner_geo_stamped,
