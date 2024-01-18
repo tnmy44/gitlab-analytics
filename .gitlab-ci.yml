@@ -243,16 +243,27 @@ clone_stop:
   only:
     changes:
       - "permissions/snowflake/roles.yml"
+      - "extract/tableau_con_man_config/src/*"
     refs:
       - merge_requests
   allow_failure: true
+  before_script:
+    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.yml\|\.yaml'$)
 
 📁yaml_validation:
   <<: *yaml_validate
-  script:
-    - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < permissions/snowflake/roles.yml
+  script: | 
+    # Iterate over each changed YAML file using Python's yaml.safe_load
+    for file in $CHANGED_FILES; do
+      if python -c "import yaml; yaml.safe_load(open('$file'))" > /dev/null 2>&1; then
+        echo "YAML validation passed for $file"
+      else
+        echo "YAML validation failed for $file"
+        exit 1
+      fi
+    done;
   allow_failure: false
-  
+
 .permifrost: &permifrost
   stage: 🐍 Python
   image: registry.gitlab.com/gitlab-data/permifrost:v0.15.4
@@ -365,3 +376,4 @@ schedule:run-triage:
     only:
       variables:
         - $RUN_GITLAB_TRIAGE
+
