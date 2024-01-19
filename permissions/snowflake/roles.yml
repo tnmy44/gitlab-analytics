@@ -1610,7 +1610,7 @@ roles:
                     - prod.legacy
                     - prod.workspace_customer_success
                     - prod.workspace_data
-                    - prod.workspace_science
+                    - prod.workspace_data_science
                     - prod.workspace_engineering
                     - prod.workspace_finance
                     - prod.workspace_marketing
@@ -1630,7 +1630,7 @@ roles:
                     - prod.legacy.*
                     - prod.workspace_customer_success.*
                     - prod.workspace_data.*
-                    - prod.workspace_science.*
+                    - prod.workspace_data_science.*
                     - prod.workspace_engineering.*
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
@@ -1651,8 +1651,8 @@ roles:
                     - prod.restricted_safe_common_mart_product
                     - prod.restricted_safe_common_mart_sales
                     - prod.restricted_safe_common_prep
-                    - prod.restricted_safe_common_safe
-                    - prod.legacy_safe
+                    - prod.restricted_safe_common
+                    - prod.restricted_safe_legacy
                     - prod.restricted_safe_workspace_engineering
                     - prod.restricted_safe_workspace_finance
                     - prod.restricted_safe_workspace_marketing
@@ -1665,7 +1665,7 @@ roles:
                     - prod.restricted_safe_common_mart_product.*
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.restricted_safe_common_prep.*
-                    - prod.restricted_safe_common_safe.*
+                    - prod.restricted_safe_common.*
                     - prod.restricted_safe_legacy.*
                     - prod.restricted_safe_workspace_engineering.*
                     - prod.restricted_safe_workspace_finance.*
