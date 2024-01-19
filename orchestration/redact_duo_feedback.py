@@ -3,9 +3,7 @@ import logging
 import sys
 from os import environ as env
 from typing import List, Dict
-from datetime import datetime, timedelta
 
-import pandas as pd 
 from fire import Fire
 from gitlabdata.orchestration_utils import snowflake_engine_factory
 from sqlalchemy.engine import Engine
@@ -58,7 +56,7 @@ def get_records_with_extended_feedback(table):
         engine.dispose()
 
 
-def redact_extended_feedback(table, key, column, tstamp_column):
+def redact_extended_feedback(table):
     records = get_records_with_extended_feedback(table)
 
 
