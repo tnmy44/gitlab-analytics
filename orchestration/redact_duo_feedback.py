@@ -51,6 +51,7 @@ def get_records_with_extended_feedback(table, schema, database):
 
     except:
         logging.info("Failed to get snowplow events")
+        raise
     finally:
         connection.close()
         engine.dispose()

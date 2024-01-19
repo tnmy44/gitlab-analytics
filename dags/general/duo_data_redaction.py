@@ -55,7 +55,7 @@ prep_db = 'redact-duo-feedback_prep'
 
 snowplow_tables = [
     {
-        "databse":raw_db,
+        "database":raw_db,
         "schema":"snowplow",
         "table":"gitlab_events",
     }
@@ -79,10 +79,8 @@ for schema in snowplow_prep_schemas:
     )
 
 for table in snowplow_tables:
-    replace_chars = ['.','_']
-    for char in replace_chars:
-        
-        task_identifier = table.replace(char, "-").replace('"','')
+    full_name = f"{table['database']}-{table['schema']}-{table['table']}"    
+    task_identifier = full_name.replace("_", "-")
 
     run_redaction_command = f"""
       {clone_repo_cmd} &&
