@@ -18,7 +18,7 @@
                                  'sales_qualified_source.dim_sales_qualified_source_id',
                                  'order_type.dim_order_type_id',
                                  'dim_date.date_day'
-                                 ]) }}                                                                                  AS actuals_targets_daily_pk,
+                                 ]) }}                                                                                  AS actuals_targets_pk,
     sfdc_opportunity.dim_crm_opportunity_id,
     {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                       AS dim_sales_qualified_source_id,
     {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                               AS dim_order_type_id,
@@ -28,6 +28,15 @@
     sfdc_opportunity.dim_crm_person_id,
     sfdc_opportunity.sfdc_contact_id,
     sfdc_opportunity.record_type_id,
+
+    --attributes
+    sales_qualified_source.sales_qualified_source_name,
+    order_type.order_type_name,
+    sales_rep_account.crm_user_sales_segment, 
+    sales_rep_account.crm_user_geo, 
+    sales_rep_account.crm_user_region, 
+    sales_rep_account.crm_user_area, 
+    sales_rep_account.crm_user_business_unit,
 
     -- dates
     sfdc_opportunity.snapshot_date,

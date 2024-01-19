@@ -34,7 +34,7 @@ combined AS (
 
   SELECT 
     -- Keys
-    actuals.actuals_targets_daily_pk,
+    actuals.actuals_targets_pk,
     actuals.dim_crm_opportunity_id,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
@@ -48,6 +48,15 @@ combined AS (
     actuals.technical_evaluation_date_id,
     actuals.ssp_id,
     actuals.ga_client_id,
+
+    --targets attributes
+    actuals.order_type_name,
+    actuals.sales_qualified_source_name,
+    actuals.crm_user_sales_segment, 
+    actuals.crm_user_geo, 
+    actuals.crm_user_region, 
+    actuals.crm_user_area, 
+    actuals.crm_user_business_unit,
 
     -- snapshot info
     actuals.snapshot_date,
@@ -455,14 +464,50 @@ combined AS (
     trials_wtd_target,
     trials_mtd_target,
     trials_qtd_target,
-    trials_ytd_target
+    trials_ytd_target,
+
+    -- Calculated fields for pipeline coverage
+    -- check if we are in the current fiscal year or not. If not, use total, if we are use target
+    CASE
+      WHEN dim_date.current_fiscal_year <= close_fiscal_year
+        THEN net_arr_daily_target
+      ELSE booked_net_arr
+    END                                         AS adjusted_daily_target_net_arr,
+    -- check if we are in the current fiscal year or not. If not, use total, if we are use target
+    CASE
+      WHEN dim_date.current_fiscal_year <= close_fiscal_year
+        THEN net_arr_monthly_target
+      ELSE booked_net_arr
+    END                                         AS adjusted_monthly_target_net_arr,
+    CASE
+      WHEN dim_date.current_fiscal_year <= close_fiscal_year
+        THEN deals_daily_target
+      ELSE booked_net_arr
+    END                                         AS adjusted_daily_target_deals,
+    -- check if we are in the current fiscal year or not. If not, use total, if we are use target
+    CASE
+      WHEN dim_date.current_fiscal_year <= close_fiscal_year
+        THEN deals_monthly_target
+      ELSE booked_net_arr
+    END                                         AS adjusted_monthly_target_deals,
+    CASE
+      WHEN dim_date.current_fiscal_year <= close_fiscal_year
+        THEN net_arr_pipeline_created_daily_target
+      ELSE booked_net_arr
+    END                                         AS adjusted_daily_target_net_arr_pipeline_created,
+    -- check if we are in the current fiscal year or not. If not, use total, if we are use target
+    CASE
+      WHEN dim_date.current_fiscal_year <= close_fiscal_year
+        THEN net_arr_pipeline_created_monthly_target
+      ELSE booked_net_arr
+    END                                         AS adjusted_monthly_target_net_arr_pipeline_created
   FROM actuals
   INNER JOIN day_5_list
     ON actuals.snapshot_date = day_5_list.day_5_current_week
   LEFT JOIN dim_date 
     ON dim_date.date_actual = day_5_list.day_5_current_week
   LEFT JOIN targets 
-    ON actuals.actuals_targets_daily_pk = targets.actuals_targets_daily_pk 
+    ON actuals.actuals_targets_pk = targets.actuals_targets_pk 
   LEFT JOIN dim_date created_date
     ON actuals.created_date_id = created_date.date_id
   LEFT JOIN dim_date sales_accepted_date

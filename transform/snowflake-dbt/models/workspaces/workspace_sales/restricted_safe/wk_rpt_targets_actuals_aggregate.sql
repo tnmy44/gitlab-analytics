@@ -8,10 +8,19 @@ WITH day_5th_snapshot AS (
 aggregate_data AS (
 
   SELECT
-    actuals_targets_daily_pk,
+    actuals_targets_pk,
     dim_sales_qualified_source_id,
     dim_order_type_id,
     dim_crm_user_hierarchy_sk,
+
+    --targets attributes
+    order_type_name,
+    sales_qualified_source_name,
+    crm_user_sales_segment, 
+    crm_user_geo, 
+    crm_user_region, 
+    crm_user_area, 
+    crm_user_business_unit,
 
      --dates
     snapshot_date,
@@ -175,4 +184,3 @@ aggregate_data AS (
 
 SELECT * 
 FROM aggregate_data
-ORDER BY snapshot_date DESC

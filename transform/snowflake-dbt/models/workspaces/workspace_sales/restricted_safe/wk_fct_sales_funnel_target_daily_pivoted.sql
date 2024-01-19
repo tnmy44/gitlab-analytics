@@ -15,7 +15,7 @@ final AS (
                                  'fct_sales_funnel_target_daily.dim_sales_qualified_source_id',
                                  'fct_sales_funnel_target_daily.dim_order_type_id',
                                  'dim_date.date_day'
-                                 ]) }}                                                                                  AS actuals_targets_daily_pk,
+                                 ]) }}                                                                                  AS actuals_targets_pk,
     fct_sales_funnel_target_daily.target_date, 
     fct_sales_funnel_target_daily.target_date_id,
     fct_sales_funnel_target_daily.report_target_date,
