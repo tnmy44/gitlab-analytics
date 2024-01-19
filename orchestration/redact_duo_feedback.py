@@ -57,11 +57,7 @@ def get_records_with_extended_feedback(table, schema, database):
         engine.dispose()
 
 
-def redact_extended_feedback(table, schema, database):
-    records = get_records_with_extended_feedback(table, schema, database)
-
-
 if __name__ == "__main__":
     logging.basicConfig(level=20)
-    Fire(redact_extended_feedback)
+    Fire(get_records_with_extended_feedback)
     logging.info("completed")
