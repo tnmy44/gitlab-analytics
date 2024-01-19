@@ -1792,7 +1792,6 @@ roles:
     - elasticsearch_billing:
         warehouses:
             - dev_xs
-            - dev_l
         privileges:
             databases:
                 read:
