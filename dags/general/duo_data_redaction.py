@@ -50,7 +50,7 @@ dag = DAG(
 snowplow_tables = [
     {
         # "name": "raw.snowplow.gitlab_events",
-        "name": "testing_db.test.snowplow_gitlab_events_clone_test",
+        "name": '"REDACT-DUO-FEEDBACK_RAW".snowplow.gitlab_events',
         "key": "event_id",
         "column": "contexts",
         "tstamp_column": "collector_tstamp",
