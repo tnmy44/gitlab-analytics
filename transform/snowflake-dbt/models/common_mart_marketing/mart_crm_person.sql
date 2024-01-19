@@ -207,6 +207,7 @@
       fct_crm_person.is_bdr_sdr_worked,
       fct_crm_person.is_abm_tier_inquiry,
       fct_crm_person.is_abm_tier_mql,
+      fct_crm_person.is_high_priority,
       CASE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
@@ -300,5 +301,5 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-11-21",
+    updated_date="2024-01-19",
   ) }}  
