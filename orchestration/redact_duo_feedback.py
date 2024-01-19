@@ -3,7 +3,9 @@ import logging
 import sys
 from os import environ as env
 from typing import List, Dict
+from datetime import datetime, timedelta
 
+import pandas as pd 
 from fire import Fire
 from gitlabdata.orchestration_utils import snowflake_engine_factory
 from sqlalchemy.engine import Engine
@@ -12,15 +14,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import ProgrammingError
 
 
-def get_records_with_extended_feedback(table, key, column, tstamp_column):
+def get_records_with_extended_feedback(table):
     """
     retrieves snowplow events with Duo extended feedback populated
     """
 
     query = f"""
-    SELECT {key}, {column}
+    SELECT event_id, contexts
     FROM {table}
-    WHERE {tstamp_column} <= dateadd(days, -60, current_timestamp) 
+    WHERE collector_tstamp <= dateadd(days, -60, current_timestamp) 
     AND se_label ='response_feedback'
     AND contexts like '%"extendedFeedback":%'
     AND contexts not like '%***DATA REDACTED***%'
@@ -44,8 +46,8 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
             ] = "***DATA REDACTED***"
 
             new_column_value = json.dumps(column_value_json)
-            logging.info(f"redacting from event: {key}={key_value}")
-            update_cmd = f"update {table} set {column} = $${new_column_value}$$ where {key} ='{key_value}'"
+            logging.info(f"redacting from event: event_id = {key_value}")
+            update_cmd = f"update {table} set contexts = $${new_column_value}$$ where event_id ='{key_value}'"
 
             update_results = connection.execute(update_cmd).fetchall()
 
@@ -57,7 +59,7 @@ def get_records_with_extended_feedback(table, key, column, tstamp_column):
 
 
 def redact_extended_feedback(table, key, column, tstamp_column):
-    records = get_records_with_extended_feedback(table, key, column, tstamp_column)
+    records = get_records_with_extended_feedback(table)
 
 
 if __name__ == "__main__":

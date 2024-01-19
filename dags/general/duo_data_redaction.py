@@ -1,5 +1,8 @@
 import os
 from datetime import datetime, timedelta
+
+import pandas as pd 
+
 from yaml import safe_load, YAMLError
 
 from airflow import DAG
@@ -47,35 +50,36 @@ dag = DAG(
     catchup=False,
 )
 
+raw_db = 'redact-duo-feedback_raw'
+prep_db = 'redact-duo-feedback_prep'
+
 snowplow_tables = [
-    {
-        # "name": "raw.snowplow.gitlab_events",
-        "name": '"REDACT-DUO-FEEDBACK_RAW".snowplow.gitlab_events',
-        "key": "event_id",
-        "column": "contexts",
-        "tstamp_column": "collector_tstamp",
-    },
-    {
-        # "name": "raw.snowplow.gitlab_events",
-        "name": "testing_db.test.snowplow_gitlab_events_clone",
-        "key": "event_id",
-        "column": "contexts",
-        "tstamp_column": "collector_tstamp",
-    },
+    f'"{raw_db}".snowplow.gitlab_events'
 ]
 
+days_to_subtract = 180
+today_d = datetime.today()
+starting_d = today_d - timedelta(days=days_to_subtract)
+
+snowplow_schemas = pd.date_range(starting_d, today_d, freq="MS").strftime("SNOWPLOW_%Y_%m").tolist()
+
+
+for schema in snowplow_schemas:
+    
+    snowplow_tables.append(f'"{prep_db}".{schema}.snowplow_gitlab_events')
+
 for table in snowplow_tables:
-    task_identifier = table["name"].replace(".", "-").replace("_", "-")
+    replace_chars = ['.','_']
+    for char in replace_chars:
+        
+        task_identifier = table.replace(char, "-").replace('"','')
 
     run_redaction_command = f"""
       {clone_repo_cmd} &&
       export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
       export SNOWFLAKE_LOAD_WAREHOUSE="TRANSFORMING_XL" &&
       python3 /analytics/orchestration/redact_duo_feedback.py \
-        --table={table["name"]} \
-        --key={table["key"]} \
-        --column={table["column"]} \
-        --tstamp_column={table["tstamp_column"]}
+        --table={table} \
         """
 
     run_redaction = KubernetesPodOperator(
