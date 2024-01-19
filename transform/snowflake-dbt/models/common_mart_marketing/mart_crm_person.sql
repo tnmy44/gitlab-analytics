@@ -116,6 +116,7 @@
       worked_date_pt.date_day                  AS worked_date_pt,
       worked_date.first_day_of_month           AS worked_month,
       worked_date_pt.first_day_of_month        AS worked_month_pt,
+      fct_crm_person.high_priority_datetime,
       dim_crm_person.email_domain,
       dim_crm_person.email_domain_type,
       is_valuable_signup,
