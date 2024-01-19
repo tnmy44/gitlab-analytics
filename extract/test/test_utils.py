@@ -78,12 +78,7 @@ def test_excluded_sql_metrics(utils):
     Test content of excluded metrics
     """
     actual = (
-        1
-        if (
-            "clusters_platforms" in x
-            or "batched_background_migration_count_failed_jobs_metric" in x
-        )
-        else 0
+        1 if (x.startswith("usage_activity_by_stage") or x.startswith("counts")) else 0
         for x in utils.METRICS_EXCEPTION_INSTANCE_SQL
     )
     assert all(actual)
