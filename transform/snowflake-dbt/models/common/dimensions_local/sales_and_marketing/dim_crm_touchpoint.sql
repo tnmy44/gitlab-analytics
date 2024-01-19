@@ -40,6 +40,11 @@ WITH campaign_details AS (
     SELECT *
     FROM {{ ref('map_bizible_campaign_grouping') }}
 
+), devrel_influence_campaigns AS (
+
+    SELECT *
+    FROM {{ ref('sheetload_devrel_influenced_campaigns_source') }}
+
 ), combined_touchpoints AS (
 
     SELECT
@@ -250,16 +255,26 @@ WITH campaign_details AS (
           THEN 1
         ELSE 0
       END AS is_dg_sourced,
-      combined_touchpoints.bizible_created_date 
+      combined_touchpoints.bizible_created_date,
+      CASE 
+        WHEN devrel_influence_campaigns.campaign_name IS NOT NULL 
+          THEN TRUE 
+          ELSE FALSE 
+      END AS is_devrel_influenced_campaign,
+      devrel_influence_campaigns.campaign_type    AS devrel_campaign_type,
+      devrel_influence_campaigns.description      AS devrel_campaign_description,
+      devrel_influence_campaigns.influence_type   AS devrel_campaign_influence_type
     FROM combined_touchpoints
     LEFT JOIN bizible_campaign_grouping
       ON combined_touchpoints.dim_crm_touchpoint_id = bizible_campaign_grouping.dim_crm_touchpoint_id
+    LEFT JOIN devrel_influence_campaigns
+      ON combined_touchpoints.bizible_ad_campaign_name = devrel_influence_campaigns.campaign_name
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2021-01-21",
-    updated_date="2023-06-01"
+    updated_date="2024-01-08"
 ) }}

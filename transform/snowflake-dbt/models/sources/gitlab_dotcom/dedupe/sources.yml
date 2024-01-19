@@ -67,8 +67,6 @@ sources:
         identifier: gitlab_db_ci_builds_internal_only
       - name: ci_builds_runner_session
         identifier: gitlab_db_ci_builds_runner_session
-      - name: ci_editor_ai_conversation_messages
-        identifier: gitlab_db_ci_editor_ai_conversation_messages
       - name: ci_group_variables
         identifier: gitlab_db_ci_group_variables
       - name: ci_job_artifacts
@@ -397,6 +395,10 @@ sources:
         identifier: gitlab_db_vulnerabilities
       - name: vulnerability_occurrences
         identifier: gitlab_db_vulnerability_occurrences
+      - name: vulnerability_reads
+        identifier: gitlab_db_vulnerability_reads
+      - name: vulnerability_state_transitions
+        identifier: gitlab_db_vulnerability_state_transitions
       - name: alert_management_http_integrations
         identifier: gitlab_db_alert_management_http_integrations
         freshness: null

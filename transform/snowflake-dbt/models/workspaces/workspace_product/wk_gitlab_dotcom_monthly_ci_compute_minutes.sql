@@ -10,6 +10,7 @@ WITH pipeline_activity AS (
     DATE_TRUNC('month',ci_build_started_at)::DATE AS reporting_month,
     dim_namespace.ultimate_parent_namespace_id,
     dim_project_id, 
+    dim_user_id,
     CASE 
       WHEN plan_name_modified LIKE '%trial%' THEN 'Trial' --plan_name_modified maps to current plan names
       WHEN plan_name_modified = 'ultimate' THEN 'Ultimate'
@@ -24,7 +25,6 @@ WITH pipeline_activity AS (
     ci_runner_machine_type,
     COUNT(DISTINCT fct_ci_runner_activity.dim_ci_runner_id) as count_of_runners,
     COUNT(DISTINCT dim_ci_pipeline_id) as count_of_pipelines,
-    COUNT(DISTINCT dim_user_id) as count_of_users,
     SUM(ci_build_duration_in_s) / 60 AS ci_build_minutes
   FROM {{ ref('fct_ci_runner_activity') }} as fct_ci_runner_activity
   JOIN {{ ref ('dim_ci_runner') }} as dim_ci_runner
@@ -60,13 +60,13 @@ SELECT
   {{ dbt_utils.surrogate_key(['pipeline_activity.reporting_month', 'pipeline_activity.ultimate_parent_namespace_id']) }} as namespace_reporting_month_pk,
   pipeline_activity.reporting_month, 
   pipeline_activity.ultimate_parent_namespace_id, 
-  dim_project_id, 
+  dim_project_id,
+  dim_user_id, 
   plan_title, 
   runner_type,
-  ci_runner_machine_type
+  ci_runner_machine_type,
   count_of_runners,
   count_of_pipelines,
-  count_of_users,
   ci_build_minutes,
   CASE 
     WHEN plan_title = 'Free' THEN 400
@@ -86,7 +86,7 @@ SELECT
     cte_ref="final",
     created_by="@nhervas",
     updated_by="@nhervas",
-    created_date="2023-12-18",
-    updated_date="2023-12-18"
+    created_date="2024-01-02",
+    updated_date="2024-01-02"
 ) }}
 

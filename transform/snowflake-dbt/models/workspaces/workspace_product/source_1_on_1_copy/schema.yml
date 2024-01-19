@@ -5,9 +5,6 @@ models:
   - name: customers_db_reconciliations
     description: Workspace model of the source data (deduplicated).
 
-  - name: gitlab_dotcom_ci_editor_ai_conversation_messages
-    description: Workspace model of the source data (deduplicated).
-
   - name: gitlab_dotcom_fork_network_members
     description: Workspace model of the source data (deduplicated).
 
@@ -64,6 +61,12 @@ models:
       - name: user_id
         description: '{{ doc("dim_user_id") }}'
       - name: deleted_on
+  
+  - name: gitlab_dotcom_vulnerability_reads
+    description: Workspace model of the source data (deduplicated).
+
+  - name: gitlab_dotcom_vulnerability_state_transitions
+    description: Workspace model of the source data (deduplicated).
 
   - name: customers_db_provisions
     description: Workspace model of the customers.gitlab.com provisions table. The table used to track the provision of SM and SaaS subscriptions through its entire life cycle.

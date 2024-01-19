@@ -618,6 +618,75 @@ models:
 
   - name: sfdc_impartner_mdf_funds_request_source
     description: Source model for SFDC custom object from impartner with parter MDF fund requests
+    columns:
+      - name: funds_request_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
   
   - name: sfdc_impartner_mdf_funds_claim_source
     description: Source model for SFDC custom object from impartner with parter MDF fund claims after requests
+    columns:
+      - name: funds_claim_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+
+  - name: sfdc_permission_set_assignment_source
+    description: '{{ doc("sfdc_permission_set_assignment_source") }}'
+    columns:
+      - name: permission_set_assignment_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+
+  - name: sfdc_profile_source
+    description: '{{ doc("sfdc_profile_source") }}'
+    columns:
+      - name: profile_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+
+  - name: sfdc_group_member_source
+    description: '{{ doc("sfdc_group_member_source") }}'
+    columns:
+      - name: group_member_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+  
+  - name: sfdc_group_source
+    description: '{{ doc("sfdc_group_source") }}'
+    columns:
+      - name: group_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+
+  - name: sfdc_account_share_source
+    description: '{{ doc("sfdc_account_share_source") }}'
+    columns:
+      - name: account_share_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+
+  - name: sfdc_opportunity_share_source
+    description: '{{ doc("sfdc_opportunity_share_source") }}'
+    columns:
+      - name: opportunity_share_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique
+  
+
+  

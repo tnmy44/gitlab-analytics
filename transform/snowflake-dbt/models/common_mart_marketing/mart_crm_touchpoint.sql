@@ -65,6 +65,9 @@
       fct_crm_touchpoint.bizible_count_lead_creation_touch,
       fct_crm_touchpoint.bizible_count_u_shaped,
       dim_crm_touchpoint.bizible_created_date,
+      dim_crm_touchpoint.devrel_campaign_type,
+      dim_crm_touchpoint.devrel_campaign_description,
+      dim_crm_touchpoint.devrel_campaign_influence_type,
 
       -- person info
       fct_crm_touchpoint.dim_crm_person_id,
@@ -346,7 +349,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2021-02-18",
-    updated_date="2023-05-22"
+    updated_date="2024-01-08"
 ) }}

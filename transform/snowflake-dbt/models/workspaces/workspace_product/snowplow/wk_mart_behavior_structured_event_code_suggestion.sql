@@ -2,7 +2,7 @@
 
     materialized='incremental',
     unique_key='behavior_structured_event_pk',
-    tags=['product'],
+    tags=['mnpi_exception','product'],
     on_schema_change='sync_all_columns',
     cluster_by=['behavior_at::DATE']
   ) 
@@ -115,7 +115,26 @@ filtered_code_suggestion_events AS (
     code_suggestions_context,
     ide_extension_version_context,
     has_code_suggestions_context,
-    has_ide_extension_version_context
+    has_ide_extension_version_context,
+    instance_id,
+    host_name,
+    namespace_ids,
+    ultimate_parent_namespace_ids,
+    dim_installation_ids,
+    host_names,
+    subscription_names,
+    dim_crm_account_ids,
+    crm_account_names,
+    dim_parent_crm_account_ids,
+    parent_crm_account_names,
+    dim_crm_account_id,
+    crm_account_name,
+    dim_parent_crm_account_id,
+    parent_crm_account_name,
+    subscription_name,
+    ultimate_parent_namespace_id,
+    dim_installation_id,
+    installation_host_name
   FROM code_suggestions_joined_to_fact_and_dim
   WHERE app_id IN ('gitlab_ai_gateway', 'gitlab_ide_extension') --"official" Code Suggestions app_ids
     AND is_event_to_exclude = FALSE --only include the good events
@@ -125,7 +144,7 @@ filtered_code_suggestion_events AS (
 {{ dbt_audit(
     cte_ref="filtered_code_suggestion_events",
     created_by="@cbraza",
-    updated_by="@cbraza",
+    updated_by="@michellecooper",
     created_date="2023-10-09",
-    updated_date="2023-12-07"
+    updated_date="2024-01-08"
 ) }}
