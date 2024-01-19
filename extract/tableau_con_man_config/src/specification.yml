@@ -4621,6 +4621,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: echui
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -5475,6 +5476,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: jbrethauer
     user_name_domain: gitlab.com
     site_role: Unlicensed
@@ -10027,6 +10029,7 @@ users:
       - ASM AMER Commercial Restricted Access
       - ASM Restricted Access
       - General All Access
+      - General SAFE Access
   - user_name: stejacks
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10909,6 +10912,12 @@ users:
     groups:
       - General All Access
   - user_name: msnow-ext
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: rutshah
     user_name_domain: gitlab.com
     site_role: Viewer
     auth_setting: SAML
