@@ -12,14 +12,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import ProgrammingError
 
 
-def get_records_with_extended_feedback(table):
+def get_records_with_extended_feedback(table, schema, database):
     """
     retrieves snowplow events with Duo extended feedback populated
     """
-
+    fully_qualified_table = f'"{database}".{schema}.{table}'
     query = f"""
     SELECT event_id, contexts
-    FROM {table}
+    FROM {fully_qualified_table}
     WHERE collector_tstamp <= dateadd(days, -60, current_timestamp) 
     AND se_label ='response_feedback'
     AND contexts like '%"extendedFeedback":%'
@@ -45,7 +45,7 @@ def get_records_with_extended_feedback(table):
 
             new_column_value = json.dumps(column_value_json)
             logging.info(f"redacting from event: event_id = {key_value}")
-            update_cmd = f"update {table} set contexts = $${new_column_value}$$ where event_id ='{key_value}'"
+            update_cmd = f"update {fully_qualified_table} set contexts = $${new_column_value}$$ where event_id ='{key_value}'"
 
             update_results = connection.execute(update_cmd).fetchall()
 
@@ -56,8 +56,8 @@ def get_records_with_extended_feedback(table):
         engine.dispose()
 
 
-def redact_extended_feedback(table):
-    records = get_records_with_extended_feedback(table)
+def redact_extended_feedback(table, schema, database):
+    records = get_records_with_extended_feedback(table, schema, database)
 
 
 if __name__ == "__main__":

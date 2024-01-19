@@ -54,19 +54,29 @@ raw_db = 'redact-duo-feedback_raw'
 prep_db = 'redact-duo-feedback_prep'
 
 snowplow_tables = [
-    f'"{raw_db}".snowplow.gitlab_events'
+    {
+        "databse":raw_db,
+        "schema":"snowplow",
+        "table":"gitlab_events",
+    }
 ]
 
 days_to_subtract = 180
 today_d = datetime.today()
 starting_d = today_d - timedelta(days=days_to_subtract)
 
-snowplow_schemas = pd.date_range(starting_d, today_d, freq="MS").strftime("SNOWPLOW_%Y_%m").tolist()
+snowplow_prep_schemas = pd.date_range(starting_d, today_d, freq="MS").strftime("SNOWPLOW_%Y_%m").tolist()
 
 
-for schema in snowplow_schemas:
+for schema in snowplow_prep_schemas:
     
-    snowplow_tables.append(f'"{prep_db}".{schema}.snowplow_gitlab_events')
+    snowplow_tables.append(
+        {
+            "database":prep_db,
+            "schema":schema,
+            "table":"snowplow_gitlab_events",            
+        }
+    )
 
 for table in snowplow_tables:
     replace_chars = ['.','_']
@@ -79,7 +89,9 @@ for table in snowplow_tables:
       export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
       export SNOWFLAKE_LOAD_WAREHOUSE="TRANSFORMING_XL" &&
       python3 /analytics/orchestration/redact_duo_feedback.py \
-        --table={table} \
+        --table={table['table']} \
+        --table={table['schema']} \
+        --table={table['database']} 
         """
 
     run_redaction = KubernetesPodOperator(
