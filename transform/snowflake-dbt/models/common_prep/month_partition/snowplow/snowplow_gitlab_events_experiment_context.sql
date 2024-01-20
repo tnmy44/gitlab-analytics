@@ -1,11 +1,9 @@
-{% set year_value = var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) | int %}
-{% set month_value = var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) | int %}
-{% set start_date = modules.datetime.datetime(year_value, month_value, 1) %}
-{% set end_date = (start_date + modules.datetime.timedelta(days=31)).strftime('%Y-%m-01') %}
+{% set year_value = var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) %}
+{% set month_value = var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) %}
 
 {{config({
     "unique_key":"event_id",
-    "cluster_by":['derived_tstamp::DATE']
+    "cluster_by":['derived_tstamp_date']
   })
 }}
 
@@ -25,9 +23,9 @@ WITH base AS (
 
   {%- endif %}
 
-  WHERE TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
-    AND derived_tstamp >= '{{ start_date }}'
-    AND derived_tstamp < '{{ end_date }}'
+  WHERE DATE_PART(month, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ month_value }}'
+      AND DATE_PART(year, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ year_value }}'
+      AND TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
 
 ),
 
@@ -58,7 +56,7 @@ events_with_context_flattened AS (
 
 SELECT DISTINCT -- Some event_id are not unique despite haveing the same experiment context as discussed in MR 6288
   events_with_context_flattened.event_id,
-  events_with_context_flattened.derived_tstamp,
+  events_with_context_flattened.derived_tstamp::DATE              AS derived_tstamp_date,
   context_data                                                    AS experiment_context,
   context_data_schema                                             AS experiment_context_schema,
   context_data['experiment']::VARCHAR                             AS experiment_name,

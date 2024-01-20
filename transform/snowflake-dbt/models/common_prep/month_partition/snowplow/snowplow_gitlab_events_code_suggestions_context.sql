@@ -1,9 +1,9 @@
-  {% set year_value = var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) %}
+{% set year_value = var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) %}
 {% set month_value = var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) %}
 
 {{config({
     "unique_key":"event_id",
-    "cluster_by":['derived_tstamp::DATE']
+    "cluster_by":['derived_tstamp_date']
   })
 }}
 
@@ -46,7 +46,7 @@ WITH filtered_source as (
 
 SELECT
   events_with_context_flattened.event_id::VARCHAR                                 AS event_id,
-  events_with_context_flattened.derived_tstamp,
+  events_with_context_flattened.derived_tstamp::DATE                              AS derived_tstamp_date,
   context_data                                                                    AS code_suggestions_context,
   context_data_schema                                                             AS code_suggestions_context_schema,
   context_data['model_engine']::VARCHAR                                           AS model_engine, 

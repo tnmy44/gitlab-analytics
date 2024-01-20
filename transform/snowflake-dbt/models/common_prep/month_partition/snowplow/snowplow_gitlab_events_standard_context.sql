@@ -3,7 +3,7 @@
 
 {{config({
     "unique_key":"event_id",
-    "cluster_by":['derived_tstamp::DATE']
+    "cluster_by":['derived_tstamp_date']
   })
 }}
 
@@ -60,7 +60,7 @@ Then we extract the id from the context_data column
 */
 SELECT
     events_with_context_flattened.event_id::VARCHAR        AS event_id,
-    events_with_context_flattened.derived_tstamp,
+    events_with_context_flattened.derived_tstamp::DATE     AS derived_tstamp_date,
     context_data                                           AS gitlab_standard_context,
     context_data_schema                                    AS gitlab_standard_context_schema,
     context_data['environment']::VARCHAR                   AS environment,
@@ -75,4 +75,4 @@ SELECT
     context_data['user_id']::VARCHAR                       AS pseudonymized_user_id,
     context_data['source']::VARCHAR                        AS source
 FROM events_with_context_flattened
-WHERE context_data_schema like 'iglu:com.gitlab/gitlab_standard/jsonschema/%'
+WHERE context_data_schema LIKE 'iglu:com.gitlab/gitlab_standard/jsonschema/%'

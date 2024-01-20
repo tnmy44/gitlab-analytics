@@ -3,7 +3,7 @@
 
 {{config({
     "unique_key":"event_id",
-    "cluster_by":['derived_tstamp::DATE']
+    "cluster_by":['derived_tstamp_date']
   })
 }}
 
@@ -46,7 +46,7 @@ WITH filtered_source as (
 
 SELECT
     events_with_context_flattened.event_id::VARCHAR        AS event_id,
-    events_with_context_flattened.derived_tstamp,
+    events_with_context_flattened.derived_tstamp::DATE     AS derived_tstamp_date,
     context_data                                           AS service_ping_context,
     context_data_schema                                    AS service_ping_context_schema,
     context_data['event_name']::VARCHAR                    AS redis_event_name,

@@ -3,7 +3,7 @@
 
 {{config({
     "unique_key":"event_id",
-    "cluster_by":['derived_tstamp::DATE']
+    "cluster_by":['derived_tstamp_date']
   })
 }}
 
@@ -72,9 +72,9 @@ Then we extract the id from the context_data column
 */
 SELECT 
     events_with_context_flattened.event_id,
-    events_with_context_flattened.derived_tstamp,
-    context_data                                  AS web_page_context,
-    context_data_schema                           AS web_page_context_schema,
-    context_data['id']::TEXT                      AS web_page_id
+    events_with_context_flattened.derived_tstamp::DATE  AS derived_tstamp_date,
+    context_data                                        AS web_page_context,
+    context_data_schema                                 AS web_page_context_schema,
+    context_data['id']::TEXT                            AS web_page_id
 FROM events_with_context_flattened
 WHERE context_data_schema = 'iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0'

@@ -204,7 +204,9 @@ WITH filtered_source as (
 
 , base AS (
   
-    SELECT * 
+    SELECT 
+      *,
+      derived_tstamp::DATE AS derived_tstamp_date 
     FROM filtered_source fe1
     WHERE NOT EXISTS (
       SELECT 1
@@ -214,35 +216,11 @@ WITH filtered_source as (
       HAVING COUNT(*) > 1
     )
 
-), events_with_web_page_id AS (
+), events_with_flattened_context AS (
 
     SELECT *
-    FROM {{ ref('snowplow_gitlab_events_web_page_context') }}
+    FROM {{ ref('snowplow_gitlab_events_context_flattened') }}
 
-), events_with_standard_context AS (
-
-    SELECT *
-    FROM {{ ref('snowplow_gitlab_events_standard_context') }}
-
-), events_with_ide_extension_version_context AS (
-
-    SELECT *
-    FROM {{ ref('snowplow_gitlab_events_ide_extension_version_context') }}
-
-), events_with_experiment_context AS (
-
-    SELECT *
-    FROM {{ ref('snowplow_gitlab_events_experiment_context') }}
-
-), events_with_code_suggestions_context AS (
-
-    SELECT *
-    FROM {{ ref('snowplow_gitlab_events_code_suggestions_context') }}
-
-), events_with_service_ping_context AS (
-
-    SELECT *
-    FROM {{ ref('snowplow_gitlab_events_service_ping_context') }}
 
 ), base_with_sorted_columns AS (
   
@@ -290,22 +268,22 @@ WITH filtered_source as (
       base.event_fingerprint,
       base.event_format,
       base.event_id,
-      events_with_web_page_id.web_page_context,
-      events_with_web_page_id.web_page_id,
-      events_with_standard_context.gitlab_standard_context,
-      events_with_standard_context.environment                AS gsc_environment,
-      events_with_standard_context.extra                      AS gsc_extra,
-      events_with_standard_context.namespace_id               AS gsc_namespace_id,
-      events_with_standard_context.plan                       AS gsc_plan,
-      events_with_standard_context.google_analytics_client_id AS gsc_google_analytics_client_id,
-      events_with_standard_context.project_id                 AS gsc_project_id,
-      events_with_standard_context.pseudonymized_user_id      AS gsc_pseudonymized_user_id,
-      events_with_standard_context.source                     AS gsc_source,
-      events_with_experiment_context.experiment_context,
-      events_with_experiment_context.experiment_name,
-      events_with_experiment_context.context_key              AS experiment_context_key,
-      events_with_experiment_context.experiment_variant,
-      events_with_experiment_context.experiment_migration_keys,
+      events_with_flattened_context.web_page_context,
+      events_with_flattened_context.web_page_id,
+      events_with_flattened_context.gitlab_standard_context,
+      events_with_flattened_context.environment                AS gsc_environment,
+      events_with_flattened_context.extra                      AS gsc_extra,
+      events_with_flattened_context.namespace_id               AS gsc_namespace_id,
+      events_with_flattened_context.plan                       AS gsc_plan,
+      events_with_flattened_context.google_analytics_client_id AS gsc_google_analytics_client_id,
+      events_with_flattened_context.project_id                 AS gsc_project_id,
+      events_with_flattened_context.pseudonymized_user_id      AS gsc_pseudonymized_user_id,
+      events_with_flattened_context.source                     AS gsc_source,
+      events_with_flattened_context.experiment_context,
+      events_with_flattened_context.experiment_name,
+      events_with_flattened_context.experiment_context_key,
+      events_with_flattened_context.experiment_variant,
+      events_with_flattened_context.experiment_migration_keys,
       base.event_name,
       base.event_vendor,
       base.event_version,
@@ -401,52 +379,38 @@ WITH filtered_source as (
         WHEN LOWER(page_url) LIKE 'https://customers.stg.gitlab.com/%' THEN TRUE
         ELSE FALSE
       END AS is_staging_url,
-      events_with_ide_extension_version_context.ide_extension_version_context,
-      events_with_ide_extension_version_context.extension_name,
-      events_with_ide_extension_version_context.extension_version,
-      events_with_ide_extension_version_context.ide_name,
-      events_with_ide_extension_version_context.ide_vendor,
-      events_with_ide_extension_version_context.ide_version,
-      events_with_ide_extension_version_context.language_server_version,
-      events_with_code_suggestions_context.code_suggestions_context,
-      events_with_code_suggestions_context.model_engine,
-      events_with_code_suggestions_context.model_name,
-      events_with_code_suggestions_context.prefix_length,
-      events_with_code_suggestions_context.suffix_length,
-      events_with_code_suggestions_context.language,
-      events_with_code_suggestions_context.user_agent,
-      events_with_code_suggestions_context.delivery_type,
-      events_with_code_suggestions_context.api_status_code,
-      events_with_code_suggestions_context.namespace_ids,
-      events_with_code_suggestions_context.instance_id,
-      events_with_code_suggestions_context.host_name,
-      events_with_service_ping_context.service_ping_context,
-      events_with_service_ping_context.redis_event_name,
-      events_with_service_ping_context.key_path,
-      events_with_service_ping_context.data_source
+      events_with_flattened_context.ide_extension_version_context,
+      events_with_flattened_context.extension_name,
+      events_with_flattened_context.extension_version,
+      events_with_flattened_context.ide_name,
+      events_with_flattened_context.ide_vendor,
+      events_with_flattened_context.ide_version,
+      events_with_flattened_context.language_server_version,
+      events_with_flattened_context.code_suggestions_context,
+      events_with_flattened_context.model_engine,
+      events_with_flattened_context.model_name,
+      events_with_flattened_context.prefix_length,
+      events_with_flattened_context.suffix_length,
+      events_with_flattened_context.language,
+      events_with_flattened_context.user_agent,
+      events_with_flattened_context.delivery_type,
+      events_with_flattened_context.api_status_code,
+      events_with_flattened_context.namespace_ids,
+      events_with_flattened_context.instance_id,
+      events_with_flattened_context.host_name,
+      events_with_flattened_context.service_ping_context,
+      events_with_flattened_context.redis_event_name,
+      events_with_flattened_context.key_path,
+      events_with_flattened_context.data_source
     FROM base
-    LEFT JOIN events_with_web_page_id
-      ON base.derived_tstamp::date = events_with_web_page_id.derived_tstamp::date
-        AND base.event_id = events_with_web_page_id.event_id
-    LEFT JOIN events_with_standard_context
-      ON base.derived_tstamp::date = events_with_standard_context.derived_tstamp::date
-        AND base.event_id = events_with_standard_context.event_id
-    LEFT JOIN events_with_ide_extension_version_context
-      ON base.derived_tstamp::date = events_with_ide_extension_version_context.derived_tstamp::date
-        AND base.event_id = events_with_ide_extension_version_context.event_id
-    LEFT JOIN events_with_experiment_context
-      ON base.derived_tstamp::date = events_with_experiment_context.derived_tstamp::date
-        AND base.event_id = events_with_experiment_context.event_id
-    LEFT JOIN events_with_code_suggestions_context
-      ON base.derived_tstamp::date = events_with_code_suggestions_context.derived_tstamp::date
-        AND base.event_id = events_with_code_suggestions_context.event_id
-    LEFT JOIN events_with_service_ping_context
-      ON base.derived_tstamp::date = events_with_service_ping_context.derived_tstamp::date
-        AND base.event_id = events_with_service_ping_context.event_id
+    LEFT JOIN events_with_flattened_context
+      ON base.derived_tstamp_date = events_with_flattened_context.derived_tstamp_date
+        AND base.event_id = events_with_flattened_context.event_id
     WHERE NOT EXISTS (
       SELECT event_id
-      FROM events_with_web_page_id web_page_events
-      WHERE events_with_web_page_id.event_id = web_page_events.event_id
+      FROM events_with_flattened_context web_page_events
+      WHERE events_with_flattened_context.web_page_id IS NOT NULL
+        AND events_with_flattened_context.event_id = web_page_events.event_id
       GROUP BY event_id HAVING COUNT(1) > 1
 
     )
