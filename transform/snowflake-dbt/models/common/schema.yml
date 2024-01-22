@@ -477,6 +477,12 @@ models:
         description: First non-null value of `utm_allptnr` parameter between `bizible_landing_page` and `bizible_form_url`
       - name: utm_partnerid
         description: First non-null value of `utm_partnerid` parameter between `bizible_landing_page` and `bizible_form_url`
+      - name: devrel_campaign_type
+        description: A field explaining if the campaign was in SFDC or UTMs.
+      - name: devrel_campaign_description
+        description: A short description of the work the devrel team did on the campaign.
+      - name: devrel_campaign_influence_type
+        description: The output the devrel team created to contribute to the campaign.
         
   - name: dim_date
     description: '{{ doc("dim_date") }}'

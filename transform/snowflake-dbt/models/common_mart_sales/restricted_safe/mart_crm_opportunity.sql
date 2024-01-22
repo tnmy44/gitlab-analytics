@@ -187,8 +187,6 @@
       fct_crm_opportunity.is_abm_tier_closed_won,
 
       -- crm opp owner/account owner fields stamped at SAO date (only used for reporting on opps with close date < 2022-02-01)
-      dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
-      dim_crm_opportunity.sao_crm_account_owner_stamped_name,
       dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
       dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
       dim_crm_opportunity.sao_crm_opp_owner_geo_stamped,
