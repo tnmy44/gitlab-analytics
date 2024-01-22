@@ -4358,6 +4358,12 @@ roles:
                     - kgliksman_prep.*.*
                     - kgliksman_prod.*.*
 
+    - kpaizee:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - kmagda:
         member_of:
             - analyst_marketing
@@ -6533,6 +6539,11 @@ users:
         can_login: yes
         member_of:
             - kgliksman
+
+    - kpaizee:
+        can_login: yes
+        member_of:
+            - kpaizee
 
     - kmagda:
         can_login: yes
