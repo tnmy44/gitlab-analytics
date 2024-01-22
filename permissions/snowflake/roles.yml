@@ -645,7 +645,7 @@ roles:
         warehouses:
             - dev_xs
 
-    - analyst_marketing_sensitive:
+    - analyst_marketing_sensitive: #role for dynamic masking
         warehouses:
             - dev_xs
 
