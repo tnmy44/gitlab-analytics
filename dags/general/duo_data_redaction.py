@@ -50,8 +50,8 @@ dag = DAG(
     catchup=False,
 )
 
-raw_db = 'redact-duo-feedback_raw'
-prep_db = 'redact-duo-feedback_prep'
+raw_db = 'REDACT-DUO-FEEDBACK_RAW'
+prep_db = 'REDACT-DUO-FEEDBACK_PREP'
 
 snowplow_tables = [
     {
@@ -80,7 +80,7 @@ for schema in snowplow_prep_schemas:
 
 for table in snowplow_tables:
     full_name = f"{table['database']}-{table['schema']}-{table['table']}"    
-    task_identifier = full_name.replace("_", "-")
+    task_identifier = full_name.replace("_", "-").lower()
 
     run_redaction_command = f"""
       {clone_repo_cmd} &&
@@ -88,8 +88,8 @@ for table in snowplow_tables:
       export SNOWFLAKE_LOAD_WAREHOUSE="TRANSFORMING_XL" &&
       python3 /analytics/orchestration/redact_duo_feedback.py \
         --table={table['table']} \
-        --table={table['schema']} \
-        --table={table['database']} 
+        --schema={table['schema']} \
+        --database={table['database']} 
         """
 
     run_redaction = KubernetesPodOperator(
