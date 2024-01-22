@@ -776,3 +776,15 @@ models:
         description: Is the issue removed? 1/0
       - name: MILESTONE
         description: Issue milestone
+  - name: finished_pipelines
+    description: join builds, pipelines, and stages to get details of a pipeline's duration
+    columns:
+      - name: dim_ci_pipeline_id
+        description: the identifier for the ci_pipeline
+        tests:
+          - not_null
+    columns:
+      - name: pipeline_finished_date
+        description: the date the pipeline finished
+        tests:
+          - not_null
