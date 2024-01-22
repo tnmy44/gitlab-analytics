@@ -1,5 +1,5 @@
 <!-- format should be something like 'user provisioning - firstname last initial' -->
-<!-- example: user rovisioning - John S -->
+<!-- example: user Provisioning - John S -->
 
 
 Source Access Request: <!-- link to source  Access Request issue, it should be approved and ready for provisioning -->

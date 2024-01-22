@@ -64,6 +64,9 @@
       dim_crm_touchpoint.pipe_name,
       dim_crm_touchpoint.is_dg_influenced,
       dim_crm_touchpoint.is_dg_sourced,
+      dim_crm_touchpoint.devrel_campaign_type,
+      dim_crm_touchpoint.devrel_campaign_description,
+      dim_crm_touchpoint.devrel_campaign_influence_type,
       fct_crm_attribution_touchpoint.opps_per_touchpoint,
       fct_crm_attribution_touchpoint.bizible_count_lead_creation_touch,
       fct_crm_attribution_touchpoint.bizible_count_first_touch,
@@ -332,7 +335,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2020-02-18",
-    updated_date="2023-05-22"
+    updated_date="2024-01-08"
 ) }}

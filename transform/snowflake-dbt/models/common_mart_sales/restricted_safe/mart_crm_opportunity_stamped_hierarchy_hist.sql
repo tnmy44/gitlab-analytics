@@ -202,8 +202,6 @@
       -- If the opportunity's SAO date is in a prior fiscal year, use the sales hierarchy from the account owner, unless the current account owner is a hybrid user, in which case
       -- use the account's sales hierarchy (account demographics fields)
       -- If the opportunity's SAO date in this fiscal year or is set a future fiscal year, use the stamped hierarchy
-      dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
-      dim_crm_opportunity.sao_crm_account_owner_stamped_name,
        CASE
         WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
           THEN crm_account_user_sales_segment

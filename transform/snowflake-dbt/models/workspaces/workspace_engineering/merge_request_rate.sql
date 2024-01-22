@@ -69,13 +69,13 @@ aggregated AS (
 
   SELECT
     merged_merge_requests.merge_month,
-    ''                                                     AS group_name,
+    ''                                                        AS group_name,
     team_member_history.department,
-    ''                                                     AS technology_group,
-    COUNT(DISTINCT team_member_history.employee_id)        AS employees,
-    COUNT(DISTINCT merged_merge_requests.merge_request_id) AS mrs,
-    ROUND(mrs / (NULLIF(employees, 0) - 3), 2)             AS mr_rate,
-    'department'                                           AS granularity_level
+    ''                                                        AS technology_group,
+    COUNT(DISTINCT bamboohr_engineering_division.employee_id) AS employees,
+    COUNT(DISTINCT merged_merge_requests.merge_request_id)    AS mrs,
+    ROUND(mrs / (NULLIF(employees, 0) - 3), 2)                AS mr_rate,
+    'department'                                              AS granularity_level
   FROM merged_merge_requests
   LEFT JOIN team_member_history ON merged_merge_requests.merge_month = DATE_TRUNC('month', team_member_history.date_actual) AND team_member_history.department = 'Development'
   GROUP BY 1, 2, 3, 4
@@ -84,9 +84,9 @@ aggregated AS (
 
   SELECT
     team_author_product_mrs.merge_month,
-    ''                                              AS group_name,
+    ''                                                        AS group_name,
     team_author_product_mrs.department,
-    ''                                              AS technology_group,
+    ''                                                        AS technology_group,
     team_author_product_mrs.mrs,
     COUNT(DISTINCT team_member_history.employee_id) AS employees,
     ROUND(mrs / NULLIF(employees, 0), 2)            AS mr_rate,
