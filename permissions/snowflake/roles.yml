@@ -5316,6 +5316,7 @@ roles:
             - analyst_people
             - bamboohr
             - bamboohr_analytics
+            - workday
         warehouses:
             - dev_xs
         owns:
