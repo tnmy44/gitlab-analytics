@@ -619,7 +619,7 @@ models:
   - name: sfdc_impartner_mdf_funds_request_source
     description: Source model for SFDC custom object from impartner with parter MDF fund requests
     columns:
-      - name: customer_subscription_id
+      - name: funds_request_id
         tags: ["tdf", "sfdc"]
         tests:
           - not_null
@@ -628,7 +628,7 @@ models:
   - name: sfdc_impartner_mdf_funds_claim_source
     description: Source model for SFDC custom object from impartner with parter MDF fund claims after requests
     columns:
-      - name: customer_subscription_id
+      - name: funds_claim_id
         tags: ["tdf", "sfdc"]
         tests:
           - not_null

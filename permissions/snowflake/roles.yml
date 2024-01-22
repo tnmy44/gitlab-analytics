@@ -645,6 +645,10 @@ roles:
         warehouses:
             - dev_xs
 
+    - analyst_marketing_sensitive: #role for dynamic masking
+        warehouses:
+            - dev_xs
+
     - analytics_engineer_core:
         warehouses:
             - dev_xs
@@ -1392,6 +1396,20 @@ roles:
             tables:
                 read:
                     - raw.adaptive_custom.*
+    
+    - aws_billing:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.aws_billing
+            tables:
+                read:
+                    - raw.aws_billing.*
 
     - bamboohr_analytics:
         warehouses:
@@ -1773,6 +1791,20 @@ roles:
                 read:
                     - prep.driveload.*
                     - raw.driveload.*
+
+    - elasticsearch_billing:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.elasticsearch_billing
+            tables:
+                read:
+                    - raw.elasticsearch_billing.*
 
     - facebook_ads:
         privileges:
@@ -2270,6 +2302,23 @@ roles:
             tables:
                 read:
                     - raw.tap_postgres.*
+
+    - pto:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.pto
+                    - prep.gitlab_pto
+            tables:
+                read:
+                    - raw.pto.*   
+                    - prep.gitlab_pto.*     
 
     - public:
         member_of:
@@ -3002,6 +3051,13 @@ roles:
                     - abright_prep.*.*
                     - abright_prod.*.*
 
+    - ahan:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - akapungu:
         member_of:
             - analyst_sales
@@ -3071,6 +3127,7 @@ roles:
             - analyst_people
             - bamboohr
             - bi_tool_eval_read
+            - pto
             - restricted_safe
             - workday
         warehouses:
@@ -3249,6 +3306,8 @@ roles:
     - cleroux:
         member_of:
             - analyst_engineering
+            - aws_billing
+            - elasticsearch_billing
             - oci_reports
             - prometheus
             - restricted_safe
@@ -3351,9 +3410,21 @@ roles:
                     - csharp_prep.*.*
                     - csharp_prod.*.*
 
+    - cswords:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - david:
         member_of: []
         warehouses: []
+
+    - dbolkensteyn:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - dcharukulvanich:
         member_of:
@@ -3411,8 +3482,10 @@ roles:
             - bi_tool_eval_read
             - data_science_readonly
             - facebook_ads
+            - hightouch_role
             - linkedin_ads
             - static_pmg_readonly
+            - analyst_marketing_sensitive
         warehouses:
             - dev_xs
         owns:
@@ -3600,6 +3673,12 @@ roles:
                     - eneuberger_prep.*.*
                     - eneuberger_prod.*.*
 
+    - fcatteau:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - fivetran_role:
         warehouses:
             - loading
@@ -3658,6 +3737,12 @@ roles:
             - restricted_safe
             - salesforce
             - xactly
+        warehouses:
+            - dev_xs
+
+    - idawson:
+        member_of:
+            - reporter
         warehouses:
             - dev_xs
 
@@ -4054,6 +4139,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - jsalazar:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - jsingh:
         member_of:
             - engineer
@@ -4136,6 +4227,12 @@ roles:
                 write:
                     - jstark_prep.*.*
                     - jstark_prod.*.*
+
+    - jthome:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - juwong:
         member_of:
@@ -4267,6 +4364,12 @@ roles:
                     - kgliksman_prep.*.*
                     - kgliksman_prod.*.*
 
+    - kpaizee:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - kmagda:
         member_of:
             - analyst_marketing
@@ -4325,6 +4428,12 @@ roles:
     - kkarthikeyan:
         member_of: []
         warehouses: []
+
+    - lcharles:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - lchilamakuru:
         member_of:
@@ -4668,6 +4777,7 @@ roles:
             - analyst_sales_sensitive
             - data_team_analyst
             - restricted_safe
+            - analyst_marketing_sensitive
         warehouses:
             - dev_xs
 
@@ -4675,6 +4785,18 @@ roles:
         member_of:
             - analyst_sales
             - restricted_safe
+        warehouses:
+            - dev_xs
+
+    - mhenriksen:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
+    - mikesmith:
+        member_of:
+            - reporter
         warehouses:
             - dev_xs
 
@@ -5105,6 +5227,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - ogonzalez:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - parmstrong:
         member_of:
             - engineer
@@ -5219,6 +5347,7 @@ roles:
             - analyst_people
             - bamboohr
             - bamboohr_analytics
+            - workday
         warehouses:
             - dev_xs
         owns:
@@ -5351,6 +5480,7 @@ roles:
             - reporter
             - restricted_safe
             - zuora_order
+            - zuora_stitch_rest_api
         warehouses:
             - dev_xs
         owns:
@@ -5593,6 +5723,7 @@ roles:
         member_of:
             - analyst_people
             - bamboohr
+            - pto
             - reporter
             - restricted_safe
             - workday
@@ -5620,6 +5751,7 @@ roles:
             - data_science_readonly
             - gitlab_dotcom
             - hightouch_role
+            - marketo
             - postgres_pipeline
             - restricted_safe
             - zuora
@@ -5666,6 +5798,12 @@ roles:
                 write:
                     - snalamaru_prep.*.*
                     - snalamaru_prod.*.*
+
+    - sranasinghe:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
 
     - srehm:
         member_of:
@@ -5732,6 +5870,13 @@ roles:
                     - raw.salesforce_v2_stitch.*
                     - raw.stitch_google_sheets.*
                     - raw.zuora_stitch.*
+
+    - stseng:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
 
     - tableau:
         warehouses:
@@ -5801,6 +5946,12 @@ roles:
                 write:
                     - testing_db.*.*
 
+    - tfigueiro:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - tjayaramaraju:
         member_of: []
         warehouses: []
@@ -5867,6 +6018,13 @@ roles:
             - restricted_safe
         warehouses:
             - dev_xs
+
+    - twoodham:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
 
     - usinghal:
         member_of:
@@ -5986,9 +6144,15 @@ roles:
         member_of: []
         warehouses: []
 
+    - whaber:
+        member_of:
+            - reporter
+        warehouses:
+            - dev_xs
+
     - wleidheiser:
         member_of:
-            - reporting
+            - reporter
         warehouses:
             - dev_xs
 
@@ -6043,6 +6207,11 @@ users:
             - abright
             - accountadmin
             - securityadmin
+
+    - ahan:
+        can_login: yes
+        member_of:
+            - ahan
 
     - akapungu:
         can_login: yes
@@ -6140,9 +6309,19 @@ users:
         member_of:
             - csharp
 
+    - cswords:
+        can_login: yes
+        member_of:
+            - cswords
+
     - david:
         can_login: no
         member_of: []
+
+    - dbolkensteyn:
+        can_login: yes
+        member_of:
+            - dbolkensteyn
 
     - dcharukulvanich:
         can_login: yes
@@ -6191,6 +6370,11 @@ users:
         member_of:
             - eneuberger
 
+    - fcatteau:
+        can_login: yes
+        member_of:
+            - fcatteau
+
     - fivetran:
         can_login: yes
         member_of:
@@ -6235,6 +6419,11 @@ users:
         can_login: yes
         member_of:
             - hselim
+
+    - idawson:
+        can_login: yes
+        member_of:
+            - idawson
 
     - ikosenko:
         can_login: yes
@@ -6318,6 +6507,11 @@ users:
         member_of:
             - jrubi
 
+    - jsalazar:
+        can_login: yes
+        member_of:
+            - jsalazar
+
     - jsingh:
         can_login: yes
         member_of:
@@ -6330,6 +6524,11 @@ users:
             - jstark
             - securityadmin
             - sysadmin
+
+    - jthome:
+        can_login: yes
+        member_of:
+            - jthome
 
     - juwong:
         can_login: yes
@@ -6349,6 +6548,11 @@ users:
         member_of:
             - kgliksman
 
+    - kpaizee:
+        can_login: yes
+        member_of:
+            - kpaizee
+
     - kmagda:
         can_login: yes
         member_of:
@@ -6362,6 +6566,11 @@ users:
     - kkarthikeyan:
         can_login: no
         member_of: []
+
+    - lcharles:
+        can_login: yes
+        member_of:
+            - lcharles
 
     - lchilamakuru:
         can_login: yes
@@ -6442,6 +6651,16 @@ users:
         can_login: yes
         member_of:
             - mgilgalindo
+
+    - mhenriksen:
+        can_login: yes
+        member_of:
+            - mhenriksen
+
+    - mikesmith:
+        can_login: yes
+        member_of:
+            - mikesmith
 
     - mnohr:
         can_login: no
@@ -6524,6 +6743,11 @@ users:
         can_login: yes
         member_of:
             - ofalkenhof
+
+    - ogonzalez:
+        can_login: yes
+        member_of:
+            - ogonzalez
 
     - parmstrong:
         can_login: yes
@@ -6644,6 +6868,12 @@ users:
         member_of:
             - snalamaru
 
+    - sranasinghe:
+        can_login: yes
+        member_of:
+            - sranasinghe
+
+
     - srehm:
         can_login: yes
         member_of:
@@ -6653,6 +6883,11 @@ users:
         can_login: yes
         member_of:
             - stitch
+
+    - stseng:
+        can_login: yes
+        member_of:
+            - stseng
 
     - tableau:
         can_login: yes
@@ -6679,6 +6914,11 @@ users:
         member_of:
             - target_snowflake
 
+    - tfigueiro:
+        can_login: yes
+        member_of:
+            - tfigueiro
+
     - tjayaramaraju:
         can_login: no
         member_of: []
@@ -6697,6 +6937,11 @@ users:
         can_login: yes
         member_of:
             - tscott
+
+    - twoodham:
+        can_login: yes
+        member_of:
+            - twoodham
 
     - usinghal:
         can_login: yes
@@ -6728,6 +6973,11 @@ users:
     - webrahim:
         can_login: no
         member_of: []
+
+    - whaber:
+        can_login: yes
+        member_of:
+            - whaber
 
     - wleidheiser:
         can_login: yes

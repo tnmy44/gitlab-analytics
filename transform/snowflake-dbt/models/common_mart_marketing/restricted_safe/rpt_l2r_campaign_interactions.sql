@@ -122,6 +122,9 @@
       mart_crm_touchpoint.bizible_count_lead_creation_touch,
       mart_crm_touchpoint.is_fmm_influenced,
       mart_crm_touchpoint.is_fmm_sourced,
+      mart_crm_touchpoint.devrel_campaign_type,
+      mart_crm_touchpoint.devrel_campaign_description,
+      mart_crm_touchpoint.devrel_campaign_influence_type,
       mart_crm_touchpoint.bizible_count_lead_creation_touch AS new_lead_created_sum,
       mart_crm_touchpoint.count_true_inquiry AS count_true_inquiry,
       mart_crm_touchpoint.count_inquiry AS inquiry_sum, 
@@ -340,6 +343,9 @@
       mart_crm_attribution_touchpoint.bizible_weight_first_touch,
       mart_crm_attribution_touchpoint.is_fmm_influenced,
       mart_crm_attribution_touchpoint.is_fmm_sourced,
+      mart_crm_attribution_touchpoint.devrel_campaign_type,
+      mart_crm_attribution_touchpoint.devrel_campaign_description,
+      mart_crm_attribution_touchpoint.devrel_campaign_influence_type,
       CASE
           WHEN mart_crm_attribution_touchpoint.dim_crm_touchpoint_id IS NOT null THEN opp.dim_crm_opportunity_id
           ELSE null
@@ -377,7 +383,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=175)}}
+  {{dbt_utils.group_by(n=178)}}
     
 ), cohort_base_combined AS (
   
@@ -568,6 +574,9 @@
       bizible_count_lead_creation_touch,
       is_fmm_influenced,
       is_fmm_sourced,
+      devrel_campaign_type,
+      devrel_campaign_description,
+      devrel_campaign_influence_type,
       new_lead_created_sum,
       count_true_inquiry,
       inquiry_sum, 
@@ -774,6 +783,9 @@
       bizible_count_lead_creation_touch,
       is_fmm_influenced,
       is_fmm_sourced,
+      devrel_campaign_type,
+      devrel_campaign_description,
+      devrel_campaign_influence_type,
       0 AS new_lead_created_sum,
       0 AS count_true_inquiry,
       0 AS inquiry_sum, 
@@ -841,9 +853,6 @@
   FROM
   person_history_base
   QUALIFY history_update_rank = 1
-
-
-
 
 ), today AS (
 
@@ -1014,7 +1023,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@dmicovic",
+    updated_by="@degan",
     created_date="2022-07-05",
-    updated_date="2023-12-13",
+    updated_date="2024-01-08",
   ) }}

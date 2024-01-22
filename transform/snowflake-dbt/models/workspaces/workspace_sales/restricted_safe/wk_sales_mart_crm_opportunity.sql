@@ -179,8 +179,6 @@ WITH sfdc_users_xf AS (
        is_booked_net_arr,
        is_downgrade,
        critical_deal_flag,
-       sao_crm_opp_owner_stamped_name,
-       sao_crm_account_owner_stamped_name,
        sao_crm_opp_owner_sales_segment_stamped,
        sao_crm_opp_owner_sales_segment_stamped_grouped,
        sao_crm_opp_owner_geo_stamped,

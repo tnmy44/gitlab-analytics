@@ -625,6 +625,19 @@ tables:
       FROM external_status_checks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  geo_nodes:
+    deletes_exempt: True
+    export_schema: 'gitlab_com'
+    export_table: geo_nodes
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      FROM geo_nodes
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   grafana_integrations:
     deletes_exempt: True
     export_schema: "gitlab_com"
@@ -2552,6 +2565,22 @@ tables:
       FROM vulnerability_occurrences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  vulnerability_state_transitions:
+    deletes_exempt: True
+    export_schema: 'gitlab_com'
+    export_table: 'vulnerability_state_transitions'
+    export_table_primary_key: 'id'
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , author_id
+      , vulnerability_id
+      , dismissal_reason
+      FROM vulnerability_state_transitions
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   web_hooks:
     deletes_exempt: True
     export_schema: 'gitlab_com'
@@ -2577,6 +2606,7 @@ tables:
     import_query: |-
       SELECT id
       , name
+      , base_type
       , created_at
       , updated_at
       FROM work_item_types

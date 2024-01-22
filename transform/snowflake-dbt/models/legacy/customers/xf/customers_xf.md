@@ -1,13 +1,3 @@
-{% docs customers_db_charges_xf %}
-
-This model creates a clean table that one can easily join on `zuora_base_mrr` tables to have some financial information. It deduplicates, transforms and joins on `zuora_subscription_xf`, `zuora_rate_plan` and `zuora_rate_plan_charge` in order to create a table at the granularity of one charge per row.
-
-This model first unions the 2 ephemeral models `customers_db_charges_with_valid_charges` and `customers_db_charges_with_incomplete_charges` which provides a clean list of all orders that have been created in the subscription portal and that can be linked to Zuora subscriptions and charges.
-
-The union of these 2 tables is then easily joined on `zuora_base_mrr` to add financial information such as `mrr`, `tcv`, `quantity_ordered`... 
-
-{% enddocs %}
-
 {% docs customers_db_trials %}
 
 This model collects all trials started from the subscription portal. For this we use the `customers_db_orders_snapshots_base` model in order to isolate them. This model does the following thing:

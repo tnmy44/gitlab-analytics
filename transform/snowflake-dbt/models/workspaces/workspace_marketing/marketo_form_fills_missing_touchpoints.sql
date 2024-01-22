@@ -14,7 +14,7 @@
   
   SELECT DISTINCT
     wk_marketo_activity_fill_out_form.lead_id::VARCHAR AS marketo_lead_id,
-    wk_marketo_activity_fill_out_form.activity_date,
+    wk_marketo_activity_fill_out_form.activity_date::DATE AS activity_date,
     wk_marketo_activity_fill_out_form.primary_attribute_value AS marketo_form_name,
     CASE 
       WHEN referrer_url LIKE '%free-trial/index%' THEN 'https://about.gitlab.com/free-trial/.html'
