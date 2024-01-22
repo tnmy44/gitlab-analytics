@@ -87,7 +87,7 @@ WITH zuora_product AS (
                                                                       , 'GitLab Security Essentials Training - Remote'
                                                                       , 'GitLab with Git Fundamentals Training - Onsite'
                                                                       , 'GitLab with Git Fundamentals Training - Remote'
-                                                                      , 'Implementation QuickStart - SaaS'
+                                                                      , 'Implementation QuickStart - GitLab.com'
                                                                       , 'GitLab Security Essentials Training - Onsite'
                                                                       , 'Implementation QuickStart - Self Managed (HA)'
                                                                      )
