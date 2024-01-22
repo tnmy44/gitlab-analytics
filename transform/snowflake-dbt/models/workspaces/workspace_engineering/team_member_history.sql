@@ -67,3 +67,4 @@ directory_mapping AS (
 
 SELECT *
 FROM directory_mapping
+
