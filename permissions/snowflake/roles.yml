@@ -3123,6 +3123,7 @@ roles:
             - analyst_people
             - bamboohr
             - bi_tool_eval_read
+            - pto
             - restricted_safe
             - workday
         warehouses:
@@ -5707,6 +5708,7 @@ roles:
         member_of:
             - analyst_people
             - bamboohr
+            - pto
             - reporter
             - restricted_safe
             - workday
