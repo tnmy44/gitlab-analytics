@@ -5448,6 +5448,7 @@ roles:
             - reporter
             - restricted_safe
             - zuora_order
+            - zuora_stitch_rest_api
         warehouses:
             - dev_xs
         owns:
