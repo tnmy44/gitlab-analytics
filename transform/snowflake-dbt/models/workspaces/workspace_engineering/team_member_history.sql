@@ -2,7 +2,7 @@ WITH dates AS (
 
   SELECT date_actual
   FROM {{ ref('dim_date') }}
-  WHERE date_actual >= '2013-12-01'
+  WHERE date_actual >= '2023-12-01'
 
 ),
 
@@ -42,6 +42,14 @@ directory_mapping AS (
 
     b.division,
     b.department,
+    CASE
+      WHEN LOWER(b.position) LIKE '%backend%'
+        THEN 'backend'
+      WHEN LOWER(b.position) LIKE '%fullstack%'
+        THEN 'fullstack'
+      WHEN LOWER(b.position) LIKE '%frontend%'
+        THEN 'frontend'
+    END                                                                                                                                                                 AS technology_group,
     MAX(IFF(CONTAINS(LOWER(job_specialty), c.group_name), c.group_name, NULL))                                                                                          AS user_group,
     MAX(IFF(CONTAINS(LOWER(job_specialty), c.group_name), c.stage_display_name, IFF(CONTAINS(LOWER(job_specialty), c.stage_display_name), c.stage_display_name, NULL))) AS user_stage,
     MAX(IFF(CONTAINS(LOWER(job_specialty), c.group_name), c.stage_section, IFF(CONTAINS(LOWER(job_specialty), c.stage_display_name), c.stage_section, NULL)))           AS user_section
@@ -54,7 +62,7 @@ directory_mapping AS (
       AND a.date_actual < b.valid_to
   INNER JOIN category AS c ON a.date_actual BETWEEN c.valid_from AND c.valid_to
   LEFT JOIN gitlab_dotcom_users AS d ON b.gitlab_username = d.user_name
-  {{ dbt_utils.group_by(n=6) }}
+  {{ dbt_utils.group_by(n=7) }}
 
 )
 
