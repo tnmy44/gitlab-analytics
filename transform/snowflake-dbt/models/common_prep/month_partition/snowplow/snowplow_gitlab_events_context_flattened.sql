@@ -1,5 +1,7 @@
-{% set year_value = var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) %}
-{% set month_value = var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) %}
+{% set year_value = var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) | int %}
+{% set month_value = var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) | int %}
+{% set start_date = modules.datetime.datetime(year_value, month_value, 1) %}
+{% set end_date = (start_date + modules.datetime.timedelta(days=31)).strftime('%Y-%m-01') %}
 
 {{config({
     "unique_key":"event_id",
@@ -23,9 +25,9 @@ WITH filtered_source as (
 
     {%- endif %}
 
-    WHERE DATE_PART(month, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ month_value }}'
-      AND DATE_PART(year, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ year_value }}'
-      AND TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
+    WHERE TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
+      AND derived_tstamp >= '{{ start_date }}'
+      AND derived_tstamp < '{{ end_date }}'
 )
 
 , base AS (
@@ -116,52 +118,52 @@ WITH filtered_source as (
 SELECT
   events_with_context_flattened.event_id::VARCHAR                                                                                                             AS event_id,
   events_with_context_flattened.derived_tstamp_date,
-  MAX(gitlab_standard_context)                                                                                                                                AS gitlab_standard_context,
-  MAX(gitlab_standard_context_schema)                                                                                                                         AS gitlab_standard_context_schema,
-  MAX(environment)                                                                                                                                            AS environment,
-  MAX(extra)                                                                                                                                                  AS extra,
-  MAX(namespace_id)                                                                                                                                           AS namespace_id,
-  MAX(plan)                                                                                                                                                   AS plan,
-  MAX(google_analytics_id)                                                                                                                                    AS google_analytics_id,
-  MAX(google_analytics_client_id)                                                                                                                             AS google_analytics_client_id,
-  MAX(project_id)                                                                                                                                             AS project_id,
-  MAX(pseudonymized_user_id)                                                                                                                                  AS pseudonymized_user_id,
-  MAX(source)                                                                                                                                                 AS source,
-  MAX(web_page_context)                                                                                                                                       AS web_page_context,
-  MAX(web_page_context_schema)                                                                                                                                AS web_page_context_schema,
-  MAX(web_page_id)                                                                                                                                            AS web_page_id,
-  MAX(experiment_context)                                                                                                                                     AS experiment_context,
-  MAX(experiment_context_schema)                                                                                                                              AS experiment_context_schema,
-  MAX(experiment_name)                                                                                                                                        AS experiment_name,
-  MAX(experiment_context_key)                                                                                                                                 AS experiment_context_key,
-  MAX(experiment_variant)                                                                                                                                     AS experiment_variant,
-  MAX(experiment_migration_keys)                                                                                                                              AS experiment_migration_keys,
-  MAX(code_suggestions_context)                                                                                                                               AS code_suggestions_context,
-  MAX(code_suggestions_context_schema)                                                                                                                        AS code_suggestions_context_schema,
-  MAX(model_engine)                                                                                                                                           AS model_engine, 
-  MAX(model_name)                                                                                                                                             AS model_name,
-  MAX(prefix_length)                                                                                                                                          AS prefix_length,
-  MAX(suffix_length)                                                                                                                                          AS suffix_length,
-  MAX(language)                                                                                                                                               AS language,
-  MAX(user_agent)                                                                                                                                             AS user_agent,
-  MAX(delivery_type)                                                                                                                                          AS delivery_type,
-  MAX(api_status_code)                                                                                                                                        AS api_status_code,
-  MAX(namespace_ids)                                                                                                                                          AS namespace_ids,
-  MAX(instance_id)                                                                                                                                            AS instance_id,
-  MAX(host_name)                                                                                                                                              AS host_name,
-  MAX(ide_extension_version_context)                                                                                                                          AS ide_extension_version_context,
-  MAX(ide_extension_version_context_schema)                                                                                                                   AS ide_extension_version_context_schema,
-  MAX(extension_name)                                                                                                                                         AS extension_name,
-  MAX(extension_version)                                                                                                                                      AS extension_version,
-  MAX(ide_name)                                                                                                                                               AS ide_name,
-  MAX(ide_vendor)                                                                                                                                             AS ide_vendor,
-  MAX(ide_version)                                                                                                                                            AS ide_version,
-  MAX(language_server_version)                                                                                                                                AS language_server_version,
-  MAX(service_ping_context)                                                                                                                                   AS service_ping_context,
-  MAX(service_ping_context_schema)                                                                                                                            AS service_ping_context_schema,
-  MAX(redis_event_name)                                                                                                                                       AS redis_event_name,
-  MAX(key_path)                                                                                                                                               AS key_path,
-  MAX(data_source)                                                                                                                                            AS data_source
+  MODE(gitlab_standard_context)                                                                                                                               AS gitlab_standard_context,
+  MODE(gitlab_standard_context_schema)                                                                                                                        AS gitlab_standard_context_schema,
+  MODE(environment)                                                                                                                                           AS environment,
+  MODE(extra)                                                                                                                                                 AS extra,
+  MODE(namespace_id)                                                                                                                                          AS namespace_id,
+  MODE(plan)                                                                                                                                                  AS plan,
+  MODE(google_analytics_id)                                                                                                                                   AS google_analytics_id,
+  MODE(google_analytics_client_id)                                                                                                                            AS google_analytics_client_id,
+  MODE(project_id)                                                                                                                                            AS project_id,
+  MODE(pseudonymized_user_id)                                                                                                                                 AS pseudonymized_user_id,
+  MODE(source)                                                                                                                                                AS source,
+  MODE(web_page_context)                                                                                                                                      AS web_page_context,
+  MODE(web_page_context_schema)                                                                                                                               AS web_page_context_schema,
+  MODE(web_page_id)                                                                                                                                           AS web_page_id,
+  MODE(experiment_context)                                                                                                                                    AS experiment_context,
+  MODE(experiment_context_schema)                                                                                                                             AS experiment_context_schema,
+  MODE(experiment_name)                                                                                                                                       AS experiment_name,
+  MODE(experiment_context_key)                                                                                                                                AS experiment_context_key,
+  MODE(experiment_variant)                                                                                                                                    AS experiment_variant,
+  MODE(experiment_migration_keys)                                                                                                                             AS experiment_migration_keys,
+  MODE(code_suggestions_context)                                                                                                                              AS code_suggestions_context,
+  MODE(code_suggestions_context_schema)                                                                                                                       AS code_suggestions_context_schema,
+  MODE(model_engine)                                                                                                                                          AS model_engine, 
+  MODE(model_name)                                                                                                                                            AS model_name,
+  MODE(prefix_length)                                                                                                                                         AS prefix_length,
+  MODE(suffix_length)                                                                                                                                         AS suffix_length,
+  MODE(language)                                                                                                                                              AS language,
+  MODE(user_agent)                                                                                                                                            AS user_agent,
+  MODE(delivery_type)                                                                                                                                         AS delivery_type,
+  MODE(api_status_code)                                                                                                                                       AS api_status_code,
+  MODE(namespace_ids)                                                                                                                                         AS namespace_ids,
+  MODE(instance_id)                                                                                                                                           AS instance_id,
+  MODE(host_name)                                                                                                                                             AS host_name,
+  MODE(ide_extension_version_context)                                                                                                                         AS ide_extension_version_context,
+  MODE(ide_extension_version_context_schema)                                                                                                                  AS ide_extension_version_context_schema,
+  MODE(extension_name)                                                                                                                                        AS extension_name,
+  MODE(extension_version)                                                                                                                                     AS extension_version,
+  MODE(ide_name)                                                                                                                                              AS ide_name,
+  MODE(ide_vendor)                                                                                                                                            AS ide_vendor,
+  MODE(ide_version)                                                                                                                                           AS ide_version,
+  MODE(language_server_version)                                                                                                                               AS language_server_version,
+  MODE(service_ping_context)                                                                                                                                  AS service_ping_context,
+  MODE(service_ping_context_schema)                                                                                                                           AS service_ping_context_schema,
+  MODE(redis_event_name)                                                                                                                                      AS redis_event_name,
+  MODE(key_path)                                                                                                                                              AS key_path,
+  MODE(data_source)                                                                                                                                           AS data_source
 
 FROM events_with_context_flattened
 GROUP BY 1,2

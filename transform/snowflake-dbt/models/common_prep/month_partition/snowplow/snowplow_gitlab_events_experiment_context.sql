@@ -1,5 +1,7 @@
-{% set year_value = var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) %}
-{% set month_value = var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) %}
+{% set year_value = var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) | int %}
+{% set month_value = var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) | int %}
+{% set start_date = modules.datetime.datetime(year_value, month_value, 1) %}
+{% set end_date = (start_date + modules.datetime.timedelta(days=31)).strftime('%Y-%m-01') %}
 
 {{config({
     "unique_key":"event_id",
@@ -23,9 +25,10 @@ WITH base AS (
 
   {%- endif %}
 
-  WHERE DATE_PART(month, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ month_value }}'
-      AND DATE_PART(year, TRY_TO_TIMESTAMP(derived_tstamp)) = '{{ year_value }}'
-      AND TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
+  WHERE TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
+    AND derived_tstamp >= '{{ start_date }}'
+    AND derived_tstamp < '{{ end_date }}'
+
 
 ),
 
