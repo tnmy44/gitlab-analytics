@@ -1,5 +1,10 @@
 import os
 from datetime import datetime, timedelta
+from datetime import datetime, timedelta
+from airflow.providers.kubernetes.operators.volume_mount_pod import VolumeMountPodOperator
+from airflow.providers.kubernetes.sensors.volume import KubeAPIVolumeSensor
+from airflow.utils.dates import days_ago
+
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -12,6 +17,10 @@ from airflow_utils import (
     slack_failed_task,
     gitlab_pod_env_vars,
 )
+
+# Define the Kubernetes namespace and PVC name
+namespace = 'airflow'
+pvc_name = 'airflow-logs-pvc'
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -31,7 +40,7 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "pvc_monitor",
+    "kubernetes_pvc_monitoring",
     default_args=default_args,
     schedule_interval="0 2 * * *",
     concurrency=1,
@@ -39,38 +48,26 @@ dag = DAG(
     start_date= datetime(2023, 11, 15),
 )
 
-# tableau Extract
-pvc_monitor_cmd = f"""
-    export USE_GKE_GCLOUD_AUTH_PLUGIN=True &&
-    kubectl get pods && 
-    apt-get update && 
-    apt-get install jq -y &&  
-    cd ./pvc_monitor && 1
-    bash get_pvc_values.sh > pvc_values.csv
-    python3 pvc_check.py
-"""
 
-get_pvc_values = BashOperator(
-    task_id = 'other-get',
-    bash_command = pvc_monitor_cmd
-)
-
-other_test = f"""
-    kubectl get pods --namespace=testing
-"""
-
-# having both xcom flag flavors since we're in an airflow version where one is being deprecated
-tableau_workbook_migrate = KubernetesPodOperator(
-    **gitlab_defaults,
-    image="registry.gitlab.com/gitlab-data/airflow-image:v0.0.2",
-    task_id="pvc-monitor",
-    name="pvc-monitor",
-    env_vars=pod_env_vars,
-    affinity=get_affinity("extraction"),
-    tolerations=get_toleration("extraction"),
-    arguments=[other_test],
-    do_xcom_push=True,
+# Define the task to mount the PVC and execute a command
+mount_pvc_task = VolumeMountPodOperator(
+    task_id='mount_pvc_task',
+    name='mount-pvc',
+    image='"registry.gitlab.com/gitlab-data/airflow-image:v0.0.2"',  # Replace with your Docker image
+    namespace=namespace,
+    cmds=['sh', '-c', 'df -h /mnt'],
+    volumes=[{'name': 'data', 'persistentVolumeClaim': {'claimName': pvc_name}}],
+    volume_mounts=[{'mountPath': '/mnt', 'name': 'data'}],
     dag=dag,
 )
 
-tableau_workbook_migrate >> get_pvc_values
+# Define the task to sense the PVC status
+sense_pvc_task = KubeAPIVolumeSensor(
+    task_id='sense_pvc_task',
+    namespace=namespace,
+    pvc_name=pvc_name,
+    dag=dag,
+)
+
+# Set task dependencies
+mount_pvc_task >> sense_pvc_task
