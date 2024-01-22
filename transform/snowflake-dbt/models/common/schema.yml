@@ -2351,6 +2351,7 @@ models:
         description: '{{ doc("namespace_is_ultimate_parent") }}'
       - name: namespace_name
       - name: namespace_name_unmasked
+        description: '{{ doc("namespace_name_unmasked") }}'
         meta:
           masking_policy: analyst_marketing_sensitive
       - name: namespace_path

@@ -71,5 +71,5 @@ final AS (
     created_by="@snalamaru",
     updated_by="@michellecooper",
     created_date="2020-12-29",
-    updated_date="2024-01-11"
+    updated_date="2024-01-22"
 ) }}
