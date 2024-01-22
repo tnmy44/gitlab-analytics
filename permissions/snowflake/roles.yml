@@ -2299,6 +2299,23 @@ roles:
                 read:
                     - raw.tap_postgres.*
 
+    - pto:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.pto
+                    - prep.gitlab_pto
+            tables:
+                read:
+                    - raw.pto.*   
+                    - prep.gitlab_pto.*     
+
     - public:
         member_of:
           - date
