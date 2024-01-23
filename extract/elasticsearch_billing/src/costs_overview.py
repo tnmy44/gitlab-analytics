@@ -8,8 +8,9 @@ import pandas as pd
 
 from utility import (
     get_response,
-    upload_costs_overview_and_itemised_costs_respone_to_snowflake,
     upload_to_snowflake,
+    prep_dataframe,
+    get_extraction_start_date_end_date_backfill,
 )
 
 config_dict = os.environ.copy()
@@ -30,9 +31,15 @@ def get_costs_overview():
         "/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
     )
     data = get_response(costs_endpoint_url)
-    upload_costs_overview_and_itemised_costs_respone_to_snowflake(
-        extraction_start_date, extraction_end_date, data, table_name
-    )
+    output_list = [data, extraction_start_date, extraction_end_date]
+    columns_list = [
+        "payload",
+        "extraction_start_date",
+        "extraction_end_date",
+    ]
+    output_df = prep_dataframe(output_list, columns_list)
+    info("Uploading records to snowflake...")
+    upload_to_snowflake(output_df, table_name)
 
 
 def get_reconciliation_data():
@@ -50,26 +57,32 @@ def get_reconciliation_data():
         extraction_start_date = extraction_end_date.replace(day=1)
         costs_endpoint_url = "/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
         data = get_response(costs_endpoint_url)
-        upload_costs_overview_and_itemised_costs_respone_to_snowflake(
-            extraction_start_date, extraction_end_date, data, table_name
-        )
+        output_list = [data, extraction_start_date, extraction_end_date]
+        columns_list = [
+            "payload",
+            "extraction_start_date",
+            "extraction_end_date",
+        ]
+        output_df = prep_dataframe(output_list, columns_list)
+        info("Uploading records to snowflake...")
+        upload_to_snowflake(output_df, table_name)
     else:
         info("No reconciliation required")
 
 
 def get_costs_overview_backfill():
     """
-    Get costs overview from Elastic Cloud API from 2023-01-01 till previous months_end_date
+    Get costs overview from Elastic Cloud API from start date provided by dag config till previous months_end_date
     """
 
     info("Getting costs overview")
-    current_date = datetime.utcnow().date()
-    start_date = config_dict["extraction_start_date"]
-    extraction_start_date = datetime.strptime(start_date, "%Y-%m-%d")
-    extraction_end_date = date(current_date.year, current_date.month, 1) - timedelta(
-        days=1
+    (
+        extraction_start_date,
+        extraction_end_date,
+    ) = get_extraction_start_date_end_date_backfill()
+    info(
+        f"Extraction starting from date {extraction_start_date} till date {extraction_end_date}"
     )
-    info(f"{extraction_start_date} till {extraction_end_date}")
     output_list = []
     # iterate each month in between extraction_start_date and extraction_end_date and call API
     for month in range(extraction_start_date.month, extraction_end_date.month + 1):
@@ -93,14 +106,12 @@ def get_costs_overview_backfill():
         output_list.append(row_list)
     # upload this data to snowflake
     info("Uploading data to Snowflake")
-    output_df = pd.DataFrame(
-        output_list,
-        columns=[
-            "payload",
-            "extraction_start_date",
-            "extraction_end_date",
-        ],
-    )
+    columns_list = [
+        "payload",
+        "extraction_start_date",
+        "extraction_end_date",
+    ]
+    output_df = prep_dataframe(output_list, columns_list)
     info("Uploading records to snowflake...")
     upload_to_snowflake(output_df, table_name)
 

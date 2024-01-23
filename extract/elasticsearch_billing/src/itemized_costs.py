@@ -8,8 +8,9 @@ import pandas as pd
 
 from utility import (
     get_response,
-    upload_costs_overview_and_itemised_costs_respone_to_snowflake,
+    prep_dataframe,
     upload_to_snowflake,
+    get_extraction_start_date_end_date_backfill,
 )
 
 config_dict = os.environ.copy()
@@ -27,9 +28,15 @@ def get_itemized_costs():
     extraction_end_date = date_today - timedelta(days=1)
     itemised_costs_url = f"/billing/costs/{org_id}/items?from={extraction_start_date}&to={extraction_end_date}"
     data = get_response(itemised_costs_url)
-    upload_costs_overview_and_itemised_costs_respone_to_snowflake(
-        extraction_start_date, extraction_end_date, data, table_name
-    )
+    output_list = [data, extraction_start_date, extraction_end_date]
+    columns_list = [
+        "payload",
+        "extraction_start_date",
+        "extraction_end_date",
+    ]
+    output_df = prep_dataframe(output_list, columns_list)
+    info("Uploading records to snowflake...")
+    upload_to_snowflake(output_df, table_name)
 
 
 def get_reconciliation_data():
@@ -48,24 +55,28 @@ def get_reconciliation_data():
         itemised_costs_url = f"/billing/costs/{org_id}/items?from={extraction_start_date}&to={extraction_end_date}"
         data = get_response(itemised_costs_url)
         # upload this data to snowflake
-        upload_costs_overview_and_itemised_costs_respone_to_snowflake(
-            extraction_start_date, extraction_end_date, data, table_name
-        )
+        output_list = [data, extraction_start_date, extraction_end_date]
+        columns_list = [
+            "payload",
+            "extraction_start_date",
+            "extraction_end_date",
+        ]
+        output_df = prep_dataframe(output_list, columns_list)
+        info("Uploading records to snowflake...")
+        upload_to_snowflake(output_df, table_name)
 
     else:
         info("No reconciliation required")
 
 
 def get_itemized_costs_backfill():
-    """Get Itemized costs from Elastic Cloud API from start 2023-01-01 till previous months_end_date"""
-
-    current_date = datetime.utcnow().date()
-    start_date = config_dict["extraction_start_date"]
-    extraction_start_date = datetime.strptime(start_date, "%Y-%m-%d")
-    # extraction_start_date = date(2023, 1, 1)
-    extraction_end_date = date(current_date.year, current_date.month, 1) - timedelta(
-        days=1
-    )
+    """
+    Get Itemized costs from Elastic Cloud API from start date provided by dag config till previous months_end_date
+    """
+    (
+        extraction_start_date,
+        extraction_end_date,
+    ) = get_extraction_start_date_end_date_backfill()
     info(
         f"Extraction starting from date {extraction_start_date} till date {extraction_end_date}"
     )
@@ -94,14 +105,12 @@ def get_itemized_costs_backfill():
         output_list.append(row_list)
     # upload this data to snowflake
     info("Uploading data to Snowflake")
-    output_df = pd.DataFrame(
-        output_list,
-        columns=[
-            "payload",
-            "extraction_start_date",
-            "extraction_end_date",
-        ],
-    )
+    columns_list = [
+        "payload",
+        "extraction_start_date",
+        "extraction_end_date",
+    ]
+    output_df = prep_dataframe(output_list, columns_list)
     info("Uploading records to snowflake...")
     upload_to_snowflake(output_df, table_name)
 

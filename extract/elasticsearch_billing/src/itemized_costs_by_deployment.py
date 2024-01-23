@@ -9,8 +9,9 @@ import pandas as pd
 from utility import (
     get_list_of_deployments,
     get_response,
-    prep_dataframe_itemised_costs_by_deployment,
+    prep_dataframe,
     upload_to_snowflake,
+    get_extraction_start_date_end_date_backfill,
 )
 
 config_dict = os.environ.copy()
@@ -45,7 +46,13 @@ def get_itemized_costs_by_deployments():
         ]
         output_list.append(row_list)
 
-    output_df = prep_dataframe_itemised_costs_by_deployment(output_list)
+    columns_list = [
+        "deployment_id",
+        "payload",
+        "extraction_start_date",
+        "extraction_end_date",
+    ]
+    output_df = prep_dataframe(output_list, columns_list)
     info("Uploading records to snowflake...")
     upload_to_snowflake(output_df, table_name)
 
@@ -81,7 +88,13 @@ def get_reconciliation_data():
             ]
             output_list.append(row_list)
 
-        output_df = prep_dataframe_itemised_costs_by_deployment(output_list)
+        columns_list = [
+            "deployment_id",
+            "payload",
+            "extraction_start_date",
+            "extraction_end_date",
+        ]
+        output_df = prep_dataframe(output_list, columns_list)
         info("Uploading records to snowflake...")
         upload_to_snowflake(output_df, table_name)
     else:
@@ -91,12 +104,10 @@ def get_reconciliation_data():
 def get_itemized_costs_by_deployments_backfill():
     """Retrieves the itemized costs for the given deployment from 2023-01-01 till previous months_end_date"""
     info("Retrieving itemized costs by deployment")
-    current_date = datetime.utcnow().date()
-    start_date = config_dict["extraction_start_date"]
-    extraction_start_date = datetime.strptime(start_date, "%Y-%m-%d")
-    extraction_end_date = date(current_date.year, current_date.month, 1) - timedelta(
-        days=1
-    )
+    (
+        extraction_start_date,
+        extraction_end_date,
+    ) = get_extraction_start_date_end_date_backfill()
     output_list = []
     info(f"{extraction_start_date} till {extraction_end_date}")
     # Get the list of deployments
@@ -124,7 +135,14 @@ def get_itemized_costs_by_deployments_backfill():
                 end_date,
             ]
             output_list.append(row_list)
-    output_df = prep_dataframe_itemised_costs_by_deployment(output_list)
+
+    columns_list = [
+        "deployment_id",
+        "payload",
+        "extraction_start_date",
+        "extraction_end_date",
+    ]
+    output_df = prep_dataframe(output_list, columns_list)
     info("Uploading records to snowflake...")
     upload_to_snowflake(output_df, table_name)
 

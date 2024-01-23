@@ -3,6 +3,7 @@ Utility file
 """
 import os
 import sys
+from datetime import date, datetime, timedelta
 from logging import info, error
 import requests
 
@@ -56,31 +57,6 @@ def get_response(url):
         sys.exit(1)
 
 
-def upload_costs_overview_and_itemised_costs_respone_to_snowflake(
-    extraction_start_date, extraction_end_date, data, table_name
-):
-    """
-    This function will upload the json payload to snowflake
-    """
-    output_list = []
-    row_list = [
-        data,
-        extraction_start_date,
-        extraction_end_date,
-    ]
-    output_list.append(row_list)
-    output_df = pd.DataFrame(
-        output_list,
-        columns=[
-            "payload",
-            "extraction_start_date",
-            "extraction_end_date",
-        ],
-    )
-    info("Uploading records to snowflake...")
-    upload_to_snowflake(output_df, table_name)
-
-
 def get_list_of_deployments():
     """
     This function will get the list of deployments from the API
@@ -94,17 +70,25 @@ def get_list_of_deployments():
     return output_list
 
 
-def prep_dataframe_itemised_costs_by_deployment(output_list):
+def prep_dataframe(output_list, columns_list):
     """
     This function will prepare the dataframe for itemised costs by deployment
     """
     output_df = pd.DataFrame(
         output_list,
-        columns=[
-            "deployment_id",
-            "payload",
-            "extraction_start_date",
-            "extraction_end_date",
-        ],
+        columns=columns_list,
     )
     return output_df
+
+
+def get_extraction_start_date_end_date_backfill():
+    """
+    This function will set the extraction start date and end date
+    """
+    current_date = datetime.utcnow().date()
+    start_date = config_dict["extraction_start_date"]
+    extraction_start_date = datetime.strptime(start_date, "%Y-%m-%d")
+    extraction_end_date = date(current_date.year, current_date.month, 1) - timedelta(
+        days=1
+    )
+    return extraction_start_date, extraction_end_date
