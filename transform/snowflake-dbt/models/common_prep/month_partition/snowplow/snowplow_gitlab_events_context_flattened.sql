@@ -78,7 +78,7 @@ WITH filtered_source as (
        {{
         snowplow_schema_field_aliasing(
           schema='iglu:com.gitlab/gitlab_experiment/jsonschema/%',
-          context_name='experiment_context',
+          context_name='experiment',
           field_alias_datatype_list=[
             ('experiment','','','experiment_name'), 
             ('key','', '', 'experiment_context_key'), 
