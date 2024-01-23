@@ -118,3 +118,17 @@ models:
       - name: dim_sales_funnel_kpi_sk
         tests:
           - not_null
+  - name: wk_rpt_crm_opportunity_reduced
+    description: a table with reduced column list from mart_crm_opportunity that is used for testing entitlement tables for Tableau
+    columns:
+      - name: dim_crm_opportunity_id
+        tests:
+            - not_null
+            - unique
+  - name: wk_rpt_crm_account_reduced
+    description: a table with reduced column list from mart_crm_account that is used for testing entitlement tables for Tableau
+    columns:
+      - name: dim_crm_account_id
+        tests:
+            - not_null
+            - unique
