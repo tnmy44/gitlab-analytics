@@ -96,7 +96,8 @@ def get_itemized_costs_by_deployments_backfill():
         info("Retrieving itemized costs by deployment")
         current_date = datetime.utcnow().date()
 
-        extraction_start_date = date(2023, 1, 1)
+        start_date = config_dict["extraction_start_date"]
+        extraction_start_date = datetime.strptime(start_date, "%Y-%m-%d")
         extraction_end_date = date(
             current_date.year, current_date.month, 1
         ) - timedelta(days=1)

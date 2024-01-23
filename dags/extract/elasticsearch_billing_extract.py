@@ -30,6 +30,10 @@ from kubernetes_helpers import get_affinity, get_toleration
 env = os.environ.copy()
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
+invoke_base_file = (
+    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py"
+)
+
 # Define the default arguments for the DAG
 default_args = {
     "depends_on_past": False,
@@ -55,17 +59,17 @@ dag = DAG(
 
 elasticsearch_billing_costs_overview_extract_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py extract_load_billing_costs_overview"
+    f"{invoke_base_file} extract_load_billing_costs_overview"
 )
 
 elasticsearch_billing_itemized_costs_extract_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py extract_load_billing_itemized_costs"
+    f"{invoke_base_file} extract_load_billing_itemized_costs"
 )
 
 elasticsearch_billing_deployments_itemized_costs_extract_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py extract_load_billing_itemized_costs_by_deployment"
+    f"{invoke_base_file} extract_load_billing_itemized_costs_by_deployment"
 )
 
 elasticsearch_billing_costs_overview_task = KubernetesPodOperator(

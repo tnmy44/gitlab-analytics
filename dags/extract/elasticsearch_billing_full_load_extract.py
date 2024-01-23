@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.models.param import Param
 
 from airflow_utils import (
     DATA_IMAGE,
@@ -29,6 +30,17 @@ from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
+invoke_base_file = (
+    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py"
+)
+
+params = {
+    "extraction_start_date": Param(
+        "2023-01-01",
+        type="string",
+        format="full-date",
+    )
+}
 
 # Define the default arguments for the DAG
 default_args = {
@@ -51,21 +63,22 @@ dag = DAG(
     catchup=False,
     max_active_runs=1,
     concurrency=1,
+    params=params,
 )
 
 elasticsearch_billing_costs_overview_extract_full_load_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py extract_load_billing_costs_overview_full_load"
+    f"{invoke_base_file} extract_load_billing_costs_overview_full_load"
 )
 
 elasticsearch_billing_itemized_costs_extract_full_load_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py extract_load_billing_itemized_costs_full_load"
+    f"{invoke_base_file} extract_load_billing_itemized_costs_full_load"
 )
 
 elasticsearch_billing_deployments_itemized_costs_extract_full_load_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    "python elasticsearch_billing/src/elasticsearch_billing_extraction_main.py extract_load_billing_itemized_costs_by_deployment_full_load"
+    f"{invoke_base_file} extract_load_billing_itemized_costs_by_deployment_full_load"
 )
 
 elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
@@ -85,6 +98,7 @@ elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
     env_vars={
         **pod_env_vars,
         "logical_date": "{{ logical_date }}",
+        "extraction_start_date": "{{params.extraction_start_date}}",
     },
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
@@ -109,6 +123,7 @@ elasticsearch_billing_itemized_costs_task = KubernetesPodOperator(
     env_vars={
         **pod_env_vars,
         "logical_date": "{{ logical_date }}",
+        "extraction_start_date": "{{params.extraction_start_date}}",
     },
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
@@ -133,6 +148,7 @@ elasticsearch_billing_itemized_costs_by_deployments_task = KubernetesPodOperator
     env_vars={
         **pod_env_vars,
         "logical_date": "{{ logical_date }}",
+        "extraction_start_date": "{{params.extraction_start_date}}",
     },
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
