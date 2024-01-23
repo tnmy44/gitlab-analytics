@@ -32,8 +32,8 @@ def get_itemized_costs_by_deployments():
     deployments_list = get_list_of_deployments()
     output_list = []
 
-    for deployments in deployments_list:
-        deployment_id = deployments
+    for deployments in deployments_list["deployments"]:
+        deployment_id = deployments["deployment_id"]
         info(f"Retrieving itemized costs for deployment {deployment_id}")
 
         itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
