@@ -41,8 +41,6 @@ WITH filtered_source as (
       base.*,
       f.value['schema']::VARCHAR                                                                                                                              AS context_data_schema,
       f.value['data']                                                                                                                                         AS context_data, 
-
- -- Gitlab Standard Context Columns
        {{
         snowplow_schema_field_aliasing(
           schema='iglu:com.gitlab/gitlab_standard/jsonschema/%',
@@ -74,7 +72,6 @@ WITH filtered_source as (
         )
       }},
 
-      -- Gitlab Experiment Context Columns
        {{
         snowplow_schema_field_aliasing(
           schema='iglu:com.gitlab/gitlab_experiment/jsonschema/%',
@@ -88,8 +85,6 @@ WITH filtered_source as (
         )
       }},
 
-
-      -- Code Suggestions Context Columns
       {{
         snowplow_schema_field_aliasing(
           schema='iglu:com.gitlab/code_suggestions_context/jsonschema/%',
@@ -119,7 +114,6 @@ WITH filtered_source as (
         ELSE gitlab_realm
       END                                                                                                                                                     AS delivery_type,
 
-      -- IDE Extension Version Context Columns
       {{
         snowplow_schema_field_aliasing(
           schema='iglu:com.gitlab/ide_extension_version/jsonschema/%',
@@ -135,7 +129,6 @@ WITH filtered_source as (
         )
       }},
 
-      -- Service Ping Context Columns
       {{
         snowplow_schema_field_aliasing(
           schema='iglu:com.gitlab/gitlab_service_ping/jsonschema/%',
