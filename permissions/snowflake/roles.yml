@@ -4429,6 +4429,15 @@ roles:
         member_of: []
         warehouses: []
 
+    - ksu:
+        member_of:
+            - data_team_analyst
+            - analyst_core
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - lcharles:
         member_of:
             - reporter
@@ -6083,6 +6092,15 @@ roles:
         warehouses:
             - dev_xs
 
+    - vlu:
+        member_of:
+            - data_team_analyst
+            - analyst_core
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - vmairet:
         member_of:
             - reporter
@@ -6567,6 +6585,11 @@ users:
         can_login: no
         member_of: []
 
+    - ksu:
+        can_login: yes
+        member_of:
+            - ksu
+
     - lcharles:
         can_login: yes
         member_of:
@@ -6952,6 +6975,11 @@ users:
         can_login: yes
         member_of:
             - vagrawal
+
+    - vlu:
+        can_login: yes
+        member_of:
+            - vlu
 
     - vmairet:
         can_login: yes
