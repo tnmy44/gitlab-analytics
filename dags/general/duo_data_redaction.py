@@ -10,6 +10,7 @@ from airflow_utils import (
     gitlab_defaults,
     slack_failed_task,
     REPO_BASE_PATH,
+    gitlab_pod_env_vars,
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
@@ -47,8 +48,8 @@ dag = DAG(
     catchup=False,
 )
 
-raw_db = env["SNOWFLAKE_LOAD_DATABASE"]
-prep_db = env["SNOWFLAKE_PREP_DATABASE"]
+raw_db = gitlab_pod_env_vars["SNOWFLAKE_LOAD_DATABASE"]
+prep_db = gitlab_pod_env_vars["SNOWFLAKE_PREP_DATABASE"]
 snowplow_tables = [
     {
         "database":raw_db,
