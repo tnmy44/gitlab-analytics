@@ -28,7 +28,6 @@ from kube_secrets import (
 from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
-GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # Define the default arguments for the DAG
