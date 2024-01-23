@@ -6979,7 +6979,7 @@ users:
     - vlu:
         can_login: yes
         member_of:
-            - whaber
+            - vlu
 
     - vmairet:
         can_login: yes
