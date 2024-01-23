@@ -24,19 +24,20 @@ def get_costs_overview():
 
     info("Getting costs overview")
     date_today = datetime.utcnow().date()
-
+    output_list = []
     extraction_start_date = date_today.replace(day=1)
     extraction_end_date = date_today - timedelta(days=1)
     costs_endpoint_url = (
         f"/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
     )
     data = get_response(costs_endpoint_url)
-    output_list = [data, extraction_start_date, extraction_end_date]
+    row_list = [data, extraction_start_date, extraction_end_date]
     columns_list = [
         "payload",
         "extraction_start_date",
         "extraction_end_date",
     ]
+    output_list.append(row_list)
     output_df = prep_dataframe(output_list, columns_list)
     info("Uploading records to snowflake...")
     upload_to_snowflake(output_df, table_name)
@@ -47,7 +48,7 @@ def get_reconciliation_data():
     Get reconciliation data from Elastic Cloud API,
     It is performed on 7 and 14th of every month for the previous month to capture any billing corrections
     """
-
+    output_list = []
     date_today = datetime.utcnow().date()
     # if date_today day is 7 or 14 then set extraction_start_date as previous months start date and extraction_end_date as previous months end date
     if date_today.day in [7, 14]:
@@ -58,12 +59,13 @@ def get_reconciliation_data():
         ) = get_extraction_start_date_end_date_recon(date_today)
         costs_endpoint_url = f"/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
         data = get_response(costs_endpoint_url)
-        output_list = [data, extraction_start_date, extraction_end_date]
+        row_list = [data, extraction_start_date, extraction_end_date]
         columns_list = [
             "payload",
             "extraction_start_date",
             "extraction_end_date",
         ]
+        output_list.append(row_list)
         output_df = prep_dataframe(output_list, columns_list)
         info("Uploading records to snowflake...")
         upload_to_snowflake(output_df, table_name)
