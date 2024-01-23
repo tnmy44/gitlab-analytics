@@ -22,20 +22,6 @@ base_url = "https://api.elastic-cloud.com/api/v1"
 org_id = config_dict["ELASTIC_CLOUD_ORG_ID"]
 
 
-def test_api_connection():
-    """Check API response for 200 status code"""
-    url = f"{base_url}/billing/costs/{org_id}"
-
-    response = requests.get(url, headers=HEADERS, timeout=60)
-
-    if response.status_code == 200:
-        info("API connection successful")
-        return True
-    else:
-        info(f"API connection failed with status code {response.status_code}")
-        return False
-
-
 def upload_to_snowflake(output_df, table_name):
     """
     This function will upload the dataframe to snowflake
@@ -60,10 +46,14 @@ def get_response(url):
     """
     This function will get the response from the API
     """
-    url = f"{base_url}{url}"
-    response = requests.get(url, headers=HEADERS, timeout=60)
-    data = response.json()
-    return data
+    try:
+        url = f"{base_url}{url}"
+        response = requests.get(url, headers=HEADERS, timeout=60)
+        data = response.json()
+        return data
+    except Exception as e:
+        error(f"API connection failed: {e}")
+        sys.exit(1)
 
 
 def upload_costs_overview_and_itemised_costs_respone_to_snowflake(
