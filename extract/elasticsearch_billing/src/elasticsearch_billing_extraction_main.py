@@ -7,15 +7,15 @@ from logging import basicConfig, getLogger, info
 
 import fire
 
-from extract.elasticsearch_billing.src.itemized_costs import (
+from itemized_costs import (
     extract_load_billing_itemized_costs,
     get_itemized_costs_backfill,
 )
-from extract.elasticsearch_billing.src.costs_overview import (
+from costs_overview import (
     extract_load_billing_costs_overview,
     get_costs_overview_backfill,
 )
-from extract.elasticsearch_billing.src.itemized_costs_by_deployment import (
+from itemized_costs_by_deployment import (
     extract_load_billing_itemized_costs_by_deployment,
     get_itemized_costs_by_deployments_backfill,
 )
