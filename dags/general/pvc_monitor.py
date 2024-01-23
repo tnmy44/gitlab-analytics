@@ -1,8 +1,9 @@
 import os
 from datetime import datetime, timedelta
-from datetime import datetime, timedelta
 from airflow.utils.dates import days_ago
 
+from airflow.kubernetes.volume import Volume
+from airflow.kubernetes.volume_mount import VolumeMount
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -46,6 +47,17 @@ dag = DAG(
     start_date= datetime(2023, 11, 15),
 )
 
+volume_mount = VolumeMount('airflow-logs-pvc',
+                           mount_path='/mnt',
+                           sub_path=None,
+                           read_only=False)
+volume_config = {
+    'persistentVolumeClaim':
+        {
+            'claimName': 'airflow-logs-pvc'
+        }
+}
+volume = Volume(name='data', configs=volume_config)
 
 # Define the task to mount the PVC and execute a command
 mount_pvc_task = KubernetesPodOperator(
@@ -54,20 +66,22 @@ mount_pvc_task = KubernetesPodOperator(
     image='"registry.gitlab.com/gitlab-data/airflow-image:v0.0.2"',  # Replace with your Docker image
     namespace=namespace,
     cmds=['sh', '-c', 'df -h /mnt'],
-    volumes=[{'name': 'data', 'persistentVolumeClaim': {'claimName': pvc_name}}],
-    volume_mounts=[{'mountPath': '/mnt', 'name': 'data'}],
+    volumes=[volume],
+    volume_mounts=[volume_mount],
+    #volumes=[{'name': 'data', 'persistentVolumeClaim': {'claimName': pvc_name}}],
+    #volume_mounts=[{'mountPath': '/mnt', 'name': 'data'}],
     dag=dag,
 )
-#  = KubernetesPodOperator(
-#     task_id='example-task',
-#     name='example-pod',
-#     namespace='your-namespace',
-#     image='your-docker-image',
-#     cmds=['bash', '-c', 'echo "Volume Size: $(df -h /path/to/volume | awk \'NR==2{print $2}\')"'],
-#     get_logs=True,
-#     dag=dag,
-# )
-#
+t1 = KubernetesPodOperator(
+   task_id='example-task',
+   name='example-pod',
+   namespace='your-namespace',
+   image='your-docker-image',
+   cmds=['bash', '-c', 'echo "Volume Size: $(df -h /path/to/volume | awk \'NR==2{print $2}\')"'],
+   get_logs=True,
+   dag=dag,
+)
+
 # # Define the task to sense the PVC status
 # sense_pvc_task = KubeAPIVolumeSensor(
 #     task_id='sense_pvc_task',
