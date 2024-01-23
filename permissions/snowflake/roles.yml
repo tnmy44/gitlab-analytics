@@ -4429,6 +4429,15 @@ roles:
         member_of: []
         warehouses: []
 
+    - ksu:
+        member_of:
+            - data_team_analyst
+            - analyst_core
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - lcharles:
         member_of:
             - reporter
@@ -6575,6 +6584,11 @@ users:
     - kkarthikeyan:
         can_login: no
         member_of: []
+
+    - ksu:
+        can_login: yes
+        member_of:
+            - ksu
 
     - lcharles:
         can_login: yes
