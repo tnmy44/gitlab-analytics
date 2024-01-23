@@ -4,7 +4,6 @@ Extract and load elasticsearch billing itemized costs by deployment
 import os
 from datetime import date, datetime, timedelta
 from logging import info
-import pandas as pd
 
 from utility import (
     get_list_of_deployments,
