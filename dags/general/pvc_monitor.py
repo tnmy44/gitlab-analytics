@@ -7,6 +7,7 @@ from airflow.kubernetes.volume_mount import VolumeMount
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.operators.python_operator import PythonOperator
 from airflow.operators.bash import BashOperator
 from kubernetes_helpers import get_affinity, get_toleration
 from airflow_utils import (
@@ -47,48 +48,27 @@ dag = DAG(
     start_date= datetime(2023, 11, 15),
 )
 
-volume_mount = VolumeMount('airflow-logs-pvc',
-                           mount_path='/mnt',
-                           sub_path=None,
-                           read_only=False)
-volume_config = {
-    'persistentVolumeClaim':
-        {
-            'claimName': 'airflow-logs-pvc'
-        }
-}
-volume = Volume(name='data', configs=volume_config)
 
-# Define the task to mount the PVC and execute a command
-mount_pvc_task = KubernetesPodOperator(
-    task_id='mount_pvc_task',
-    name='mount-pvc',
-    image='"registry.gitlab.com/gitlab-data/airflow-image:v0.0.2"',  # Replace with your Docker image
-    namespace=namespace,
-    cmds=['sh', '-c', 'df -h /mnt'],
-    volumes=[volume],
-    volume_mounts=[volume_mount],
-    #volumes=[{'name': 'data', 'persistentVolumeClaim': {'claimName': pvc_name}}],
-    #volume_mounts=[{'mountPath': '/mnt', 'name': 'data'}],
+def run_kubectl_script(**kwargs):
+    import subprocess
+
+    # Custom script with kubectl and jq
+    script = """
+    kubectl get pvc -n your-namespace your-pvc-name -o json | jq '.status.capacity.storage'
+    """
+
+    # Run the script using subprocess
+    result = subprocess.run(script, shell=True, capture_output=True, text=True)
+
+    # Log the result
+    print(result.stdout)
+    print(result.stderr)
+
+
+# PythonOperator to run the kubectl script
+run_script_task = PythonOperator(
+    task_id='run_kubectl_script',
+    python_callable=run_kubectl_script,
+    provide_context=True,
     dag=dag,
 )
-t1 = KubernetesPodOperator(
-   task_id='example-task',
-   name='example-pod',
-   namespace='your-namespace',
-   image='your-docker-image',
-   cmds=['bash', '-c', 'echo "Volume Size: $(df -h /path/to/volume | awk \'NR==2{print $2}\')"'],
-   get_logs=True,
-   dag=dag,
-)
-
-# # Define the task to sense the PVC status
-# sense_pvc_task = KubeAPIVolumeSensor(
-#     task_id='sense_pvc_task',
-#     namespace=namespace,
-#     pvc_name=pvc_name,
-#     dag=dag,
-# )
-#
-# # Set task dependencies
-# mount_pvc_task >> sense_pvc_task
