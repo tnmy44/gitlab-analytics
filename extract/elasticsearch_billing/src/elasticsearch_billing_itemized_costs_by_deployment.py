@@ -5,17 +5,17 @@ import os
 import sys
 from datetime import date, datetime, timedelta
 from logging import info
-import requests
 import pandas as pd
 
-from utility import test_api_connection, upload_to_snowflake
+from utility import (
+    get_list_of_deployments,
+    get_response,
+    prep_dataframe_itemised_costs_by_deployment,
+    test_api_connection,
+    upload_to_snowflake,
+)
 
 config_dict = os.environ.copy()
-HEADERS = {
-    "Content-Type": "application/json",
-    "Authorization": f"ApiKey {config_dict['ELASTIC_SEARCH_BILLING_API_KEY']}",
-}
-base_url = "https://api.elastic-cloud.com/api/v1"
 org_id = config_dict["ELASTIC_CLOUD_ORG_ID"]
 table_name = "itemized_costs_by_deployment"
 
@@ -30,38 +30,24 @@ def get_itemized_costs_by_deployments():
     extraction_end_date = date_today - timedelta(days=1)
 
     # Get the list of deployments
-    url = f"{base_url}/billing/costs/{org_id}/deployments"
-
-    response = requests.get(url, headers=HEADERS, timeout=60)
+    deployments_list = get_list_of_deployments()
     output_list = []
-    for deployments in response.json()["deployments"]:
-        deployment_id = deployments["deployment_id"]
-        deployment_name = deployments["deployment_name"]
+
+    for deployments in deployments_list:
+        deployment_id = deployments
         info(f"Retrieving itemized costs for deployment {deployment_id}")
-        url = f"{base_url}/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
 
-        response = requests.get(url, headers=HEADERS, timeout=60)
-
-        data = response.json()
+        itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
+        data = get_response(itemised_costs_by_deployments_url)
         row_list = [
             deployment_id,
-            deployment_name,
             data,
             extraction_start_date,
             extraction_end_date,
         ]
         output_list.append(row_list)
 
-    output_df = pd.DataFrame(
-        output_list,
-        columns=[
-            "deployment_id",
-            "deployment_name",
-            "payload",
-            "extraction_start_date",
-            "extraction_end_date",
-        ],
-    )
+    output_df = prep_dataframe_itemised_costs_by_deployment(output_list)
     info("Uploading records to snowflake...")
     upload_to_snowflake(output_df, table_name)
 
@@ -81,44 +67,30 @@ def get_reconciliation_data():
         extraction_end_date = current_months_first_day - timedelta(days=1)
         extraction_start_date = extraction_end_date.replace(day=1)
         # Get the list of deployments
-        url = f"{base_url}/billing/costs/{org_id}/deployments"
+        deployments_list = get_list_of_deployments()
 
-        response = requests.get(url, headers=HEADERS, timeout=60)
-
-        for deployments in response.json()["deployments"]:
-            deployment_id = deployments["deployment_id"]
-            deployment_name = deployments["deployment_name"]
+        for deployments in deployments_list:
+            deployment_id = deployments
             info(f"Retrieving itemized costs for deployment {deployment_id}")
-            url = f"{base_url}/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
-            response = requests.get(url, headers=HEADERS, timeout=60)
-            data = response.json()
+            itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
+            data = get_response(itemised_costs_by_deployments_url)
             # upload this data to snowflake
             row_list = [
                 deployment_id,
-                deployment_name,
                 data,
                 extraction_start_date,
                 extraction_end_date,
             ]
             output_list.append(row_list)
 
-        output_df = pd.DataFrame(
-            output_list,
-            columns=[
-                "deployment_id",
-                "deployment_name",
-                "payload",
-                "extraction_start_date",
-                "extraction_end_date",
-            ],
-        )
+        output_df = prep_dataframe_itemised_costs_by_deployment(output_list)
         info("Uploading records to snowflake...")
         upload_to_snowflake(output_df, table_name)
     else:
         info("No reconciliation required")
 
 
-def get_itemized_costs_by_deployments_full_load():
+def get_itemized_costs_by_deployments_backfill():
     """Retrieves the itemized costs for the given deployment from 2023-01-01 till previous months_end_date"""
     if test_api_connection:
         info("Retrieving itemized costs by deployment")
@@ -129,14 +101,11 @@ def get_itemized_costs_by_deployments_full_load():
             current_date.year, current_date.month, 1
         ) - timedelta(days=1)
         output_list = []
-        print(f"{extraction_start_date} till {extraction_end_date}")
+        info(f"{extraction_start_date} till {extraction_end_date}")
         # Get the list of deployments
-        url = f"{base_url}/billing/costs/{org_id}/deployments"
-
-        response = requests.get(url, headers=HEADERS, timeout=60)
-        for deployments in response.json()["deployments"]:
-            deployment_id = deployments["deployment_id"]
-            deployment_name = deployments["deployment_name"]
+        deployments_list = get_list_of_deployments()
+        for deployments in deployments_list:
+            deployment_id = deployments
             info(f"Retrieving itemized costs for deployment {deployment_id}")
             for month in range(
                 extraction_start_date.month, extraction_end_date.month + 1
@@ -151,30 +120,18 @@ def get_itemized_costs_by_deployments_full_load():
                         current_month.year, current_month.month + 1, 1
                     ) - timedelta(days=1)
 
-                print(f"{start_date} till {end_date}")
-                url = f"{base_url}/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={start_date}&end_date={end_date}"
-                response = requests.get(url, headers=HEADERS, timeout=60)
-
-                data = response.json()
+                info(f"{start_date} till {end_date}")
+                itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={start_date}&end_date={end_date}"
+                data = get_response(itemised_costs_by_deployments_url)
                 row_list = [
                     deployment_id,
-                    deployment_name,
                     data,
                     start_date,
                     end_date,
                 ]
                 output_list.append(row_list)
 
-        output_df = pd.DataFrame(
-            output_list,
-            columns=[
-                "deployment_id",
-                "deployment_name",
-                "payload",
-                "extraction_start_date",
-                "extraction_end_date",
-            ],
-        )
+        output_df = prep_dataframe_itemised_costs_by_deployment(output_list)
         info("Uploading records to snowflake...")
         upload_to_snowflake(output_df, table_name)
 
