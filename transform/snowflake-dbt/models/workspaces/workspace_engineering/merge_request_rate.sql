@@ -13,7 +13,7 @@ team_member_history AS (
     *,
     DATE_TRUNC('month', date_actual) AS employee_month
   FROM {{ ref('team_member_history') }}
-  WHERE date_actual <= CURRENT_DATE AND division = 'Engineering'
+  WHERE date_actual <= CURRENT_DATE
     AND date_actual >= '2020-01-01'
     AND department != 'CEO'
 
@@ -77,7 +77,7 @@ aggregated AS (
     ROUND(mrs / (NULLIF(employees, 0) - 3), 2)                AS mr_rate,
     'department'                                              AS granularity_level
   FROM merged_merge_requests
-  LEFT JOIN team_member_history ON merged_merge_requests.merge_month = DATE_TRUNC('month', team_member_history.date_actual) AND team_member_history.department = 'Development'
+  LEFT JOIN team_member_history ON merged_merge_requests.merge_month = team_member_history.employee_month AND team_member_history.department = 'Development'
   GROUP BY 1, 2, 3, 4
 
   UNION ALL

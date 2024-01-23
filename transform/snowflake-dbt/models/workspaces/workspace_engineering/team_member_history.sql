@@ -2,7 +2,7 @@ WITH dates AS (
 
   SELECT date_actual
   FROM {{ ref('dim_date') }}
-  WHERE date_actual >= '2023-12-01'
+  WHERE date_actual >= '2020-12-01'
 
 ),
 
@@ -67,4 +67,3 @@ directory_mapping AS (
 
 SELECT *
 FROM directory_mapping
-
