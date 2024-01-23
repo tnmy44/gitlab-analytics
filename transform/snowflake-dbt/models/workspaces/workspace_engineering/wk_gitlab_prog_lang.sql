@@ -41,7 +41,12 @@ project_statistics AS (
       namespaces.namespace_name,
       namespaces.namespace_is_internal,
       projects.mirror,
-      namespaces.dim_namespace_id
+      namespaces.dim_namespace_id,
+      CASE
+        WHEN ROW_NUMBER() OVER (PARTITION BY projects.ultimate_parent_namespace_id, programming_lang.programming_language_name ORDER BY repository_lang.project_id ASC) = 1 THEN 1
+        ELSE 0 
+      END AS first_project_per_top_level_namespace 
+      --Returns true boolean values for all programming languages used in the first project created per ultimate_parent_namespace_id
     FROM repository_lang
     JOIN programming_lang
       ON repository_lang.programming_language_id = programming_lang.programming_language_id 
