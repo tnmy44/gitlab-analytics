@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: aws_focus
+    description: FOCUS spec model for AWS data from 6 accounts
