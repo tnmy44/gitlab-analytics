@@ -32,8 +32,8 @@ def get_itemized_costs_by_deployments():
     deployments_list = get_list_of_deployments()
     output_list = []
 
-    for deployments in deployments_list["deployments"]:
-        deployment_id = deployments["deployment_id"]
+    for deployments in deployments_list:
+        deployment_id = deployments
         info(f"Retrieving itemized costs for deployment {deployment_id}")
 
         itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
@@ -69,8 +69,8 @@ def get_reconciliation_data():
     if date_today.day in [7, 14]:
         info("Performing reconciliation...")
         (
-            extraction_start_date,
-            extraction_end_date,
+        extraction_start_date,
+        extraction_end_date,
         ) = get_extraction_start_date_end_date_recon(date_today)
         # Get the list of deployments
         deployments_list = get_list_of_deployments()
