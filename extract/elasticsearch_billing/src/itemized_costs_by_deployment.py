@@ -69,8 +69,8 @@ def get_reconciliation_data():
     if date_today.day in [7, 14]:
         info("Performing reconciliation...")
         (
-        extraction_start_date,
-        extraction_end_date,
+            extraction_start_date,
+            extraction_end_date,
         ) = get_extraction_start_date_end_date_recon(date_today)
         # Get the list of deployments
         deployments_list = get_list_of_deployments()

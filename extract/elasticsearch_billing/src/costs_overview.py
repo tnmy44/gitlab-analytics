@@ -28,7 +28,7 @@ def get_costs_overview():
     extraction_start_date = date_today.replace(day=1)
     extraction_end_date = date_today - timedelta(days=1)
     costs_endpoint_url = (
-        "/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
+        f"/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
     )
     data = get_response(costs_endpoint_url)
     output_list = [data, extraction_start_date, extraction_end_date]
@@ -56,7 +56,7 @@ def get_reconciliation_data():
             extraction_start_date,
             extraction_end_date,
         ) = get_extraction_start_date_end_date_recon(date_today)
-        costs_endpoint_url = "/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
+        costs_endpoint_url = f"/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
         data = get_response(costs_endpoint_url)
         output_list = [data, extraction_start_date, extraction_end_date]
         columns_list = [
@@ -97,7 +97,7 @@ def get_costs_overview_backfill():
                 days=1
             )
         info(f"{start_date} till {end_date}")
-        costs_endpoint_url = "/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
+        costs_endpoint_url = f"/billing/costs/{org_id}?from={start_date}&to={end_date}"
         data = get_response(costs_endpoint_url)
         row_list = [
             data,
