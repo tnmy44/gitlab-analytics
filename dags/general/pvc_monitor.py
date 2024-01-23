@@ -2,8 +2,8 @@ import os
 from datetime import datetime, timedelta
 from airflow.utils.dates import days_ago
 
-from airflow.kubernetes.volume import Volume
-from airflow.kubernetes.volume_mount import VolumeMount
+# from airflow.kubernetes.volume import Volume
+# from airflow.kubernetes.volume_mount import VolumeMount
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
