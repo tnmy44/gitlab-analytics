@@ -10,6 +10,7 @@ from utility import (
     prep_dataframe,
     upload_to_snowflake,
     get_extraction_start_date_end_date_backfill,
+    get_extraction_start_date_end_date_recon,
 )
 
 config_dict = os.environ.copy()
@@ -48,9 +49,10 @@ def get_reconciliation_data():
     # if date_today day is 7 or 14 then set extraction_start_date as previous months start date and extraction_end_date as previous months end date
     if date_today.day in [7, 14]:
         info("Performing reconciliation...")
-        current_months_first_day = date_today.replace(day=1)
-        extraction_end_date = current_months_first_day - timedelta(days=1)
-        extraction_start_date = extraction_end_date.replace(day=1)
+        (
+            extraction_start_date,
+            extraction_end_date,
+        ) = get_extraction_start_date_end_date_recon(date_today)
         itemised_costs_url = f"/billing/costs/{org_id}/items?from={extraction_start_date}&to={extraction_end_date}"
         data = get_response(itemised_costs_url)
         # upload this data to snowflake

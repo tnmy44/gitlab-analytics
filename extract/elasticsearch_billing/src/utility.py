@@ -92,3 +92,13 @@ def get_extraction_start_date_end_date_backfill():
         days=1
     )
     return extraction_start_date, extraction_end_date
+
+
+def get_extraction_start_date_end_date_recon(date_today):
+    """
+    This function will set the extraction start date and end date
+    """
+    current_months_first_day = date_today.replace(day=1)
+    extraction_end_date = current_months_first_day - timedelta(days=1)
+    extraction_start_date = extraction_end_date.replace(day=1)
+    return extraction_start_date, extraction_end_date
