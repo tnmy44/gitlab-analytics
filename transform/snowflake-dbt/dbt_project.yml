@@ -469,12 +469,6 @@ models:
           +schema: sensitive
           secure: true
 
-      customers:
-        restricted_safe:
-          +schema: restricted_safe_legacy
-          +tags: ["safe"]
-          secure: true
-
       date:
         +materialized: view
 
