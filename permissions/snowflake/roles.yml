@@ -6083,6 +6083,15 @@ roles:
         warehouses:
             - dev_xs
 
+    - vlu:
+        member_of:
+            - data_team_analyst
+            - analyst_core
+            - reporter
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - vmairet:
         member_of:
             - reporter
@@ -6952,6 +6961,11 @@ users:
         can_login: yes
         member_of:
             - vagrawal
+
+    - vlu:
+        can_login: yes
+        member_of:
+            - whaber
 
     - vmairet:
         can_login: yes
