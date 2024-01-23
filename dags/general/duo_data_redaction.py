@@ -2,9 +2,6 @@ import os
 from datetime import datetime, timedelta
 
 import pandas as pd 
-
-from yaml import safe_load, YAMLError
-
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
@@ -50,9 +47,8 @@ dag = DAG(
     catchup=False,
 )
 
-raw_db = 'REDACT-DUO-FEEDBACK_RAW'
-prep_db = 'REDACT-DUO-FEEDBACK_PREP'
-
+raw_db = env["SNOWFLAKE_LOAD_DATABASE"]
+prep_db = env["SNOWFLAKE_PREP_DATABASE"]
 snowplow_tables = [
     {
         "database":raw_db,

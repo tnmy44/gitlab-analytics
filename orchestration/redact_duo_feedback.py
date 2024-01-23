@@ -46,8 +46,8 @@ def get_records_with_extended_feedback(table, schema, database):
             new_column_value = json.dumps(column_value_json)
             logging.info(f"redacting from event: event_id = {key_value}")
             update_cmd = f"update {fully_qualified_table} set contexts = $${new_column_value}$$ where event_id ='{key_value}'"
-
-            update_results = connection.execute(update_cmd).fetchall()
+            logging.info(update_cmd)
+            # update_results = connection.execute(update_cmd).fetchall()
 
     except:
         logging.info("Failed to get snowplow events")
