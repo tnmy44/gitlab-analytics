@@ -54,7 +54,7 @@ def run_kubectl_script(**kwargs):
 
     # Custom script with kubectl and jq
     script = """
-    kubectl get pvc -n your-namespace your-pvc-name -o json | jq '.status.capacity.storage'
+    sudo kubectl get pvc -n your-namespace your-pvc-name -o json | jq '.status.capacity.storage'
     """
 
     # Run the script using subprocess
