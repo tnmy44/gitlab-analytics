@@ -4,6 +4,7 @@ WITH final AS (
 
     SELECT 
       dim_crm_opportunity_id,
+      dim_crm_account_id,
       opportunity_name,
       close_date,
       cp_review_notes,
