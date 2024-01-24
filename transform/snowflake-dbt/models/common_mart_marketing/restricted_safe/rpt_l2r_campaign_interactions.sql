@@ -314,6 +314,7 @@
       mart_crm_attribution_touchpoint.bizible_landing_page,
       mart_crm_attribution_touchpoint.bizible_form_url_raw,
       mart_crm_attribution_touchpoint.bizible_landing_page_raw,
+      mart_crm_attribution_touchpoint.touchpoint_sales_stage AS opp_touchpoint_sales_stage,
     -- UTM Parameters 
       mart_crm_attribution_touchpoint.utm_campaign,
       mart_crm_attribution_touchpoint.utm_medium,
@@ -383,7 +384,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=178)}}
+  {{dbt_utils.group_by(n=179)}}
     
 ), cohort_base_combined AS (
   
@@ -548,6 +549,7 @@
       bizible_landing_page,
       bizible_form_url_raw,
       bizible_landing_page_raw,
+      NULL AS opp_touchpoint_sales_stage,
       -- UTM Parameters 
       utm_campaign,
       utm_medium,
@@ -565,7 +567,7 @@
       bizible_referrer_page_raw,
       bizible_integrated_campaign_grouping,
       bizible_salesforce_campaign,
-	  campaign_rep_role_name,
+	    campaign_rep_role_name,
       touchpoint_segment,
       gtm_motion,
       pipe_name,
@@ -757,6 +759,7 @@
       bizible_landing_page,
       bizible_form_url_raw,
       bizible_landing_page_raw,
+      opp_touchpoint_sales_stage
       -- UTM Parameters 
       utm_campaign,
       utm_medium,
@@ -1023,7 +1026,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2022-07-05",
-    updated_date="2024-01-08",
+    updated_date="2024-01-24",
   ) }}

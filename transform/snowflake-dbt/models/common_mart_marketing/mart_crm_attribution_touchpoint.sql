@@ -74,7 +74,7 @@
       fct_crm_attribution_touchpoint.bizible_count_custom_model,
       fct_crm_attribution_touchpoint.bizible_count_u_shaped,
       fct_crm_attribution_touchpoint.bizible_count_w_shaped,
-	  fct_crm_attribution_touchpoint.bizible_weight_full_path,
+	    fct_crm_attribution_touchpoint.bizible_weight_full_path,
       fct_crm_attribution_touchpoint.bizible_weight_custom_model,
       fct_crm_attribution_touchpoint.bizible_weight_first_touch,
       fct_crm_attribution_touchpoint.bizible_weight_lead_conversion,
@@ -93,6 +93,18 @@
       fct_crm_attribution_touchpoint.bizible_revenue_u_shaped,
       fct_crm_attribution_touchpoint.bizible_revenue_w_shaped,
       dim_crm_touchpoint.bizible_created_date, 
+      CASE
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_0_pending_acceptance_date
+          THEN 'Pre Opp Creation'
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_0_pending_acceptance_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_1_discovery_date
+          THEN 'Stage 0'
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_1_discovery_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_2_scoping_date
+          THEN 'Stage 1'
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_2_scoping_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_3_technical_evaluation_date
+          THEN 'Stage 2'
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_3_technical_evaluation_date
+          THEN 'Stage 3+'
+      END AS touchpoint_sales_stage,
 
       -- person info
       fct_crm_attribution_touchpoint.dim_crm_person_id,
@@ -335,7 +347,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2024-01-08"
+    updated_date="2024-01-24"
 ) }}
