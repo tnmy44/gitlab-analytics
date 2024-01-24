@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta
 
-import pandas as pd 
+import pandas as pd
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
@@ -52,9 +52,9 @@ raw_db = gitlab_pod_env_vars["SNOWFLAKE_LOAD_DATABASE"]
 prep_db = gitlab_pod_env_vars["SNOWFLAKE_PREP_DATABASE"]
 snowplow_tables = [
     {
-        "database":raw_db,
-        "schema":"snowplow",
-        "table":"gitlab_events",
+        "database": raw_db,
+        "schema": "snowplow",
+        "table": "gitlab_events",
     }
 ]
 
@@ -62,21 +62,23 @@ days_to_subtract = 180
 today_d = datetime.today()
 starting_d = today_d - timedelta(days=days_to_subtract)
 
-snowplow_prep_schemas = pd.date_range(starting_d, today_d, freq="MS").strftime("SNOWPLOW_%Y_%m").tolist()
+snowplow_prep_schemas = (
+    pd.date_range(starting_d, today_d, freq="MS").strftime("SNOWPLOW_%Y_%m").tolist()
+)
 
 
 for schema in snowplow_prep_schemas:
-    
+
     snowplow_tables.append(
         {
-            "database":prep_db,
-            "schema":schema,
-            "table":"snowplow_gitlab_events",            
+            "database": prep_db,
+            "schema": schema,
+            "table": "snowplow_gitlab_events",
         }
     )
 
 for table in snowplow_tables:
-    full_name = f"{table['database']}-{table['schema']}-{table['table']}"    
+    full_name = f"{table['database']}-{table['schema']}-{table['table']}"
     task_identifier = full_name.replace("_", "-").lower()
 
     run_redaction_command = f"""
