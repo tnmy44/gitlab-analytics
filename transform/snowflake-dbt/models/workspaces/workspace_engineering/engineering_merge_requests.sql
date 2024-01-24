@@ -168,7 +168,7 @@ engineering_merge_requests AS (
     projects.visibility_level                                                                                                                                                                                                                                                                                           AS visibility_level,
     projects.project_path,
     ns.full_group_path,
-    'https://gitlab.com/' || ns.full_group_path || '/' || projects.project_path || '/-/merge_requests/' || internal_merge_requests.merge_request_iid                                                                                                                                                                       AS url,
+    'https://gitlab.com/' || ns.full_group_path || '/' || projects.project_path || '/-/merge_requests/' || internal_merge_requests.merge_request_iid                                                                                                                                                                    AS url,
     IFF(ARRAY_CONTAINS('infradev'::VARIANT, internal_merge_requests.labels), TRUE, FALSE)                                                                                                                                                                                                                               AS is_infradev,
     ARRAY_CONTAINS('customer'::VARIANT, internal_merge_requests.labels)                                                                                                                                                                                                                                                 AS is_customer_related
   FROM internal_merge_requests
