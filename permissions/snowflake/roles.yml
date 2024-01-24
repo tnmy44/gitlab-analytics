@@ -1296,6 +1296,7 @@ roles:
                 read:
                     - raw
                     - prod
+                    - prep
                 write:
                     - raw
             schemas:
