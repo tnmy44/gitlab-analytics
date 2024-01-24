@@ -133,10 +133,10 @@ final AS (
     ON start_to_end.hire_id = pto2.hr_employee_id
       AND dates.date_actual >= pto2.pto_date
       AND r12_start_date <= pto2.pto_date
-  {{ dbt_utils.group_by(n=10)}}
+  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
   ORDER BY
-    start_to_end.hire_id ASC
-    ,dates.date_actual DESC
+    1 ASC
+    ,5 DESC
 )
 
 SELECT
