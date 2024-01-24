@@ -1302,12 +1302,14 @@ roles:
                 read:
                     - raw.sales_analytics
                     - prod.workspace_sales
+                    - prep.tableau_cloud
                 write:
                     - raw.sales_analytics
             tables:
                 read:
                     - raw.sales_analytics.*
                     - prod.workspace_sales.*
+                    - prep.tableau_cloud.*
                 write:
                     - raw.sales_analytics.*
 
