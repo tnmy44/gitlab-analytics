@@ -1,13 +1,36 @@
-import pandas as pd
-from logging import error, info
+from google.cloud import storage
 
-df = pd.read_csv('pvc_values.csv', delimiter="|")
-output_df = df.loc[(df['percent_used']) >= 80]
+def list_buckets():
+    # Initialize a GCS client
+    scope = ["https://www.googleapis.com/auth/cloud-platform"]
+    keyfile = load(env["GCP_SERVICE_CREDS"], Loader=FullLoader)
+    credentials = service_account.Credentials.from_service_account_info(keyfile)
+    scoped_credentials = credentials.with_scopes(scope)
+    storage_client = storage.Client(credentials=scoped_credentials)
+    # bucket_obj = storage_client.get_bucket(bucket)
 
-for idx, row in output_df.iterrows():
-    info(f"{(row['PVC'])} has {row['percent_used']} remaining")
 
-if len(output_df) > (0):
-    for idx, row in output_df.iterrows():
-        error(f"{(row['PVC'])} is running out of space")
-    raise ValueError("PVCs are low on space, please investigate on GCS")
+    # List all buckets in the project
+    buckets = list(storage_client.list_buckets())
+
+    # Print details for each bucket
+    for bucket in buckets:
+        print(f"Bucket name: {bucket.name}")
+        print(f"Bucket ID: {bucket.id}")
+        print(f"Location: {bucket.location}")
+        print(f"Storage Class: {bucket.storage_class}")
+        print(f"Time Created: {bucket.time_created}")
+        print(f"Owner: {bucket.owner}")
+
+        # Get additional details
+        bucket = client.get_bucket(bucket.name)
+        print(f"Current Space Used: {bucket.usage() / (1024**3):.2f} GB")  # Convert bytes to GB
+        print(f"Capacity: {bucket.quota / (1024**3):.2f} GB")  # Convert bytes to GB
+
+        print("\n")
+
+if __name__ == "__main__":
+    # Replace 'your_project_id' with your actual Google Cloud project ID
+    project_id = "gitlab-analysis"
+
+    list_buckets(project_id)

@@ -18,10 +18,6 @@ from airflow_utils import (
     gitlab_pod_env_vars,
 )
 
-# Define the Kubernetes namespace and PVC name
-namespace = 'airflow'
-pvc_name = 'airflow-logs-pvc'
-
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 pod_env_vars = gitlab_pod_env_vars
@@ -48,27 +44,25 @@ dag = DAG(
     start_date= datetime(2023, 11, 15),
 )
 
-
-def run_kubectl_script(**kwargs):
-    import subprocess
-
-    # Custom script with kubectl and jq
-    script = """
-    sudo kubectl get pvc -n your-namespace your-pvc-name -o json | jq '.status.capacity.storage'
+container_cmd = f"""
+        {clone_and_setup_extraction_cmd} &&
+        cd pvc_monitor/ &&
+        python3 pvc_check.py
     """
 
-    # Run the script using subprocess
-    result = subprocess.run(script, shell=True, capture_output=True, text=True)
 
-    # Log the result
-    print(result.stdout)
-    print(result.stderr)
-
-
-# PythonOperator to run the kubectl script
-run_script_task = PythonOperator(
-    task_id='run_kubectl_script',
-    python_callable=run_kubectl_script,
-    provide_context=True,
+# having both xcom flag flavors since we're in an airflow version where one is being deprecated
+tableau_workbook_migrate = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DATA_IMAGE_3_10,
+    task_id="pvc-monitor",
+    name="pvc-monitor",
+    env_vars=pod_env_vars,
+    affinity=get_affinity("extraction"),
+    tolerations=get_toleration("extraction"),
+    arguments=[container_cmd],
+    do_xcom_push=True,
     dag=dag,
 )
+
+tableau_workbook_migrate
