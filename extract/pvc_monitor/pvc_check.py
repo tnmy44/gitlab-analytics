@@ -26,7 +26,7 @@ def list_buckets():
         print(f"Owner: {bucket.owner}")
 
         # Get additional details
-        bucket = client.get_bucket(bucket.name)
+        bucket = storage_client.get_bucket(bucket.name)
         print(f"Current Space Used: {bucket.usage() / (1024**3):.2f} GB")  # Convert bytes to GB
         print(f"Capacity: {bucket.quota / (1024**3):.2f} GB")  # Convert bytes to GB
 
