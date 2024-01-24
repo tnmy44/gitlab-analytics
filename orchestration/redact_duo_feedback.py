@@ -55,7 +55,6 @@ def get_records_with_extended_feedback(database, schema, table):
     AND contexts not like '%{redaction_str}%'
     """
 
-
     try:
         logging.info("Getting snowplow events with extended feedback")
         connection = engine.connect()
