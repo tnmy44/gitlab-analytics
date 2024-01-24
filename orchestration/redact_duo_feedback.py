@@ -44,6 +44,7 @@ def get_records_with_extended_feedback(database, schema, table):
     """
 
     fully_qualified_table_ref = f'"{database}".{schema}.{table}'
+    redaction_str = "<REDACTED>"
 
     query = f"""
     SELECT event_id, contexts
@@ -54,7 +55,6 @@ def get_records_with_extended_feedback(database, schema, table):
     AND contexts not like '%{redaction_str}%'
     """
 
-    redaction_str = "<REDACTED>"
 
     try:
         logging.info("Getting snowplow events with extended feedback")
