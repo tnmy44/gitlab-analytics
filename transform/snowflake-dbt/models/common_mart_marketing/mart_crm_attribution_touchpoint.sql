@@ -102,8 +102,18 @@
           THEN 'Stage 1'
         WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_2_scoping_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_3_technical_evaluation_date
           THEN 'Stage 2'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_3_technical_evaluation_date
-          THEN 'Stage 3+'
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_3_technical_evaluation_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_4_proposal_date
+          THEN 'Stage 3'
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_4_proposal_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_5_negotiating_date
+          THEN 'Stage 4'
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_5_negotiating_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_awaiting_signature_date
+          THEN 'Stage 5'
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_awaiting_signature_date
+          THEN 'Stage 6 - Awaiting Signature'
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_won_date
+          THEN 'Stage 6 - Closed Won'
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_lost_date
+          THEN 'Stage 6 - Closed Lost'
       END AS touchpoint_sales_stage,
 
       -- person info

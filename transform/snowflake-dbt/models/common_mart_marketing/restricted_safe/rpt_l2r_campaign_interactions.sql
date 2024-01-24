@@ -759,7 +759,7 @@
       bizible_landing_page,
       bizible_form_url_raw,
       bizible_landing_page_raw,
-      opp_touchpoint_sales_stage
+      opp_touchpoint_sales_stage,
       -- UTM Parameters 
       utm_campaign,
       utm_medium,
