@@ -21,41 +21,18 @@ The third parameter has some required and some non-required fields:
         - `formula`: Any SQL logic that the analyst wants to apply to the column. If this is blank, standard logic to flatten the column from context column will be applied.
         - `data_type`: The default data type for any column will be VARCHAR, but the analyst can choose to cast the column as any data type using this key-value pair.
         - `alias`: If the analyst want to rename the field, they can fill in the alias column, otherwise the macro will use the `field` column as the alias.
-        
+
 Examples:
-```sql
-WITH filtered_source as (
 
-    SELECT
-        event_id,
-        derived_tstamp::DATE AS derived_tstamp_date,
-        contexts
-    FROM {{ ref('snowplow_gitlab_good_events_sample_source') }}
-    WHERE TRY_TO_TIMESTAMP(derived_tstamp) IS NOT NULL
-)
-
-, base AS (
-  
-    SELECT DISTINCT * 
-    FROM filtered_source
-)
-SELECT
-  base.*,
-  f.value['schema']::VARCHAR                 AS context_data_schema,
-  f.value['data']                            AS context_data, 
-  -- GitLab Experiment Context Columns
-  --{{
-    snowplow_schema_field_aliasing(
-      schema='iglu:com.gitlab/gitlab_experiment/jsonschema/%',
-      context_name='gitlab_experiment',
-      field_alias_datatype_list=[
-        {'field':'experiment'},
-        {'field':'migration_keys', 'formula':"ARRAY_TO_STRING(context_data['migration_keys']::VARIANT, ', ')" , 'data_type':'text', 'alias':'experiment_migration_keys'}
-        ]
-      )
-    --}} commented out to make the text display
-FROM base,
-lateral flatten(input => TRY_PARSE_JSON(contexts), path => 'data') f
+```text
+snowplow_schema_field_aliasing(
+schema='iglu:com.gitlab/gitlab_experiment/jsonschema/%',
+context_name='gitlab_experiment',
+field_alias_datatype_list=[
+  {'field':'experiment'},
+  {'field':'migration_keys', 'formula':"ARRAY_TO_STRING(context_data['migration_keys']::VARIANT, ', ')" , 'data_type':'text', 'alias':'experiment_migration_keys'}
+   ]
+  )
 ```
 
 In this example, `experiment`, would have all default settings applied (no additional formula logic, cast as VARCHAR, aliased as experiment). The other column, `migration_keys` would have additional logic applied to convert it from an array to a string, it would be cast as text (done for demonstration purposes in this example since it is synonymous with VARCHAR), and it is renamed as `experiment_migration_keys`.
