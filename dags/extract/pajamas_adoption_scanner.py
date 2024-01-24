@@ -40,7 +40,8 @@ default_args = {
 dag = DAG(
     "pajamas_adoption_scanner_extract",
     default_args=default_args,
-    schedule_interval="0 8 * * *",
+    # Run this before dbt_snapshots 07:00 UTC
+    schedule_interval="30 6 * * *",
     start_date=datetime(2024, 1, 23),
     catchup=False,
     max_active_runs=1,
