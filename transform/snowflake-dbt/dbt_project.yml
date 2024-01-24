@@ -277,6 +277,10 @@ models:
         +materialized: table
         +schema: omamori
 
+      pajamas_adoption_scanner:
+        +materialized: table
+        +schema: pajamas_adoption_scanner
+
       pto:
         +materialized: table
         +schema: gitlab_pto
