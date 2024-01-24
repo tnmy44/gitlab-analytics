@@ -33,4 +33,4 @@ if __name__ == "__main__":
     # Replace 'your_project_id' with your actual Google Cloud project ID
     project_id = "gitlab-analysis"
 
-    list_buckets(project_id)
+    list_buckets()
