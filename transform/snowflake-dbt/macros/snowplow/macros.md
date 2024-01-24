@@ -21,10 +21,9 @@ The third parameter has some required and some non-required fields:
         - `formula`: Any SQL logic that the analyst wants to apply to the column. If this is blank, standard logic to flatten the column from context column will be applied.
         - `data_type`: The default data type for any column will be VARCHAR, but the analyst can choose to cast the column as any data type using this key-value pair.
         - `alias`: If the analyst want to rename the field, they can fill in the alias column, otherwise the macro will use the `field` column as the alias.
-
+        
 Examples:
---
-```
+```sql
 WITH filtered_source as (
 
     SELECT
@@ -45,7 +44,7 @@ SELECT
   f.value['schema']::VARCHAR                 AS context_data_schema,
   f.value['data']                            AS context_data, 
   -- GitLab Experiment Context Columns
-  {{
+  --{{
     snowplow_schema_field_aliasing(
       schema='iglu:com.gitlab/gitlab_experiment/jsonschema/%',
       context_name='gitlab_experiment',
@@ -54,7 +53,7 @@ SELECT
         {'field':'migration_keys', 'formula':"ARRAY_TO_STRING(context_data['migration_keys']::VARIANT, ', ')" , 'data_type':'text', 'alias':'experiment_migration_keys'}
         ]
       )
-    }}
+    --}} commented out to make the text display
 FROM base,
 lateral flatten(input => TRY_PARSE_JSON(contexts), path => 'data') f
 ```
