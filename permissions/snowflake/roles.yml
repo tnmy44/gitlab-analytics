@@ -1345,6 +1345,21 @@ roles:
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly_report_view
 
+    - snowflake_analyst:
+         warehouses:
+            - dev_xs
+            - reporting
+         member_of:
+            - prod_reporting
+
+    - snowflake_analyst_safe:
+         warehouses:
+            - dev_xs
+            - reporting
+         member_of:
+            - prod_reporting
+            - prod_reporting_safe
+
     - data_science_readonly:
         warehouses:
             - dev_xs
@@ -1595,7 +1610,7 @@ roles:
                     - prep.customers.*
                     - prep.sensitive.customers_db_customers_pii
 
-    - common:
+    - prod_reporting:
         privileges:
             databases:
                 read:
@@ -1610,6 +1625,16 @@ roles:
                     - prod.common_mart_product
                     - prod.common_mart_people
                     - prod.common_prep
+                    - prod.legacy
+                    - prod.workspace_customer_success
+                    - prod.workspace_data
+                    - prod.workspace_data_science
+                    - prod.workspace_engineering
+                    - prod.workspace_finance
+                    - prod.workspace_marketing
+                    - prod.workspace_people
+                    - prod.workspace_product
+                    - prod.workspace_sales
             tables:
                 read:
                     - prod.common.*
@@ -1620,6 +1645,50 @@ roles:
                     - prod.common_mart_product.*
                     - prod.common_mart_people.*
                     - prod.common_prep.*
+                    - prod.legacy.*
+                    - prod.workspace_customer_success.*
+                    - prod.workspace_data.*
+                    - prod.workspace_data_science.*
+                    - prod.workspace_engineering.*
+                    - prod.workspace_finance.*
+                    - prod.workspace_marketing.*
+                    - prod.workspace_people.*
+                    - prod.workspace_product.*
+                    - prod.workspace_sales.*
+
+    - prod_reporting_safe:
+         privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.restricted_safe_common
+                    - prod.restricted_safe_common_mapping 
+                    - prod.restricted_safe_common_mart_finance
+                    - prod.restricted_safe_common_mart_product
+                    - prod.restricted_safe_common_mart_sales
+                    - prod.restricted_safe_common_prep
+                    - prod.restricted_safe_common
+                    - prod.restricted_safe_legacy
+                    - prod.restricted_safe_workspace_engineering
+                    - prod.restricted_safe_workspace_finance
+                    - prod.restricted_safe_workspace_marketing
+                    - prod.restricted_safe_workspace_sales
+            tables:
+                read:
+                    - prod.restricted_safe_common.*
+                    - prod.restricted_safe_common_mapping.*
+                    - prod.restricted_safe_common_mart_finance.*
+                    - prod.restricted_safe_common_mart_product.*
+                    - prod.restricted_safe_common_mart_sales.*
+                    - prod.restricted_safe_common_prep.*
+                    - prod.restricted_safe_common.*
+                    - prod.restricted_safe_legacy.*
+                    - prod.restricted_safe_workspace_engineering.*
+                    - prod.restricted_safe_workspace_finance.*
+                    - prod.restricted_safe_workspace_marketing.*
+                    - prod.restricted_safe_workspace_sales.*
 
     - container_registry:
         privileges:
@@ -2846,7 +2915,6 @@ roles:
             tables:
                 read:
                     - zoominfo_inbound.gitlab.*
-
 
     - zuora:
         warehouses:
