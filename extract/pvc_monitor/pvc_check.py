@@ -1,5 +1,6 @@
 from google.cloud import storage
 from yaml import load, safe_load, YAMLError, FullLoader
+from os import environ as env
 
 def list_buckets():
     # Initialize a GCS client
