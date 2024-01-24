@@ -43,11 +43,3 @@ models:
             - not_null
         - name: experiment_migration_keys
           description:  This column may contain a list of migration keys.
-
-
-    - name: snowplow_gitlab_events_web_page_context
-      description: This is a view that extracts the web page id from the event context.
-      columns:
-        - name: event_id
-          tests:
-            - not_null

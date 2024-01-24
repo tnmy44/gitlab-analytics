@@ -75,7 +75,7 @@ structured_event_renamed AS (
       ide_vendor,
       ide_version,
       language_server_version,
-      experiment_context,
+      gitlab_experiment_context,
       experiment_name,
       experiment_context_key,
       experiment_variant,
@@ -92,7 +92,7 @@ structured_event_renamed AS (
       namespace_ids,
       instance_id,
       host_name,
-      service_ping_context,
+      gitlab_service_ping_context,
       redis_event_name,
       key_path,
       data_source
@@ -180,7 +180,7 @@ structured_events_w_dim AS (
       events_with_plan.user_timezone_name,
 
       -- Degenerate Dimensions (Experiment)
-      events_with_plan.experiment_context,
+      events_with_plan.gitlab_experiment_context,
       events_with_plan.experiment_name,
       events_with_plan.experiment_context_key,
       events_with_plan.experiment_variant,
@@ -201,10 +201,33 @@ structured_events_w_dim AS (
       events_with_plan.host_name,
 
       -- Degenerate Dimensions (Service Ping)
-      events_with_plan.service_ping_context,
+      events_with_plan.gitlab_service_ping_context,
       events_with_plan.redis_event_name,
       events_with_plan.key_path,
       events_with_plan.data_source,
+
+      -- Degenerate Dimensions (Performance Timing)
+      events_with_plan.connect_end,
+      events_with_plan.connect_start,
+      events_with_plan.dom_complete,
+      events_with_plan.dom_content_loaded_event_end,
+      events_with_plan.dom_content_loaded_event_start,
+      events_with_plan.dom_interactive,
+      events_with_plan.dom_loading,
+      events_with_plan.domain_lookup_end,
+      events_with_plan.domain_lookup_start,
+      events_with_plan.fetch_start,
+      events_with_plan.load_event_end,
+      events_with_plan.load_event_start,
+      events_with_plan.navigation_start,
+      events_with_plan.redirect_end,
+      events_with_plan.redirect_start,
+      events_with_plan.request_start,
+      events_with_plan.response_end,
+      events_with_plan.response_start,
+      events_with_plan.secure_connection_start,
+      events_with_plan.unload_event_end,
+      events_with_plan.unload_event_start,
 
       -- Junk Dimensions (Context Flags)
       events_with_plan.has_performance_timing_context, 
@@ -231,5 +254,5 @@ structured_events_w_dim AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2024-01-18"
+    updated_date="2024-01-24"
 ) }}
