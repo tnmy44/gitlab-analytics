@@ -11,6 +11,7 @@ from utility import (
     upload_to_snowflake,
     get_extraction_start_date_end_date_backfill,
     get_extraction_start_date_end_date_recon,
+    get_response_and_upload,
 )
 
 config_dict = os.environ.copy()
@@ -19,25 +20,18 @@ table_name = "itemized_costs"
 
 
 def get_itemized_costs():
-    """Get Itemized costs from Elastic Cloud API from start of current month till present date"""
+    """
+    Get Itemized costs from Elastic Cloud API from start of current month till present date
+    """
 
     info("Getting itemized costs from Elastic Cloud API")
     date_today = datetime.utcnow().date()
-    output_list = []
     extraction_start_date = date_today.replace(day=1)
     extraction_end_date = date_today - timedelta(days=1)
     itemised_costs_url = f"/billing/costs/{org_id}/items?from={extraction_start_date}&to={extraction_end_date}"
-    data = get_response(itemised_costs_url)
-    row_list = [data, extraction_start_date, extraction_end_date]
-    columns_list = [
-        "payload",
-        "extraction_start_date",
-        "extraction_end_date",
-    ]
-    output_list.append(row_list)
-    output_df = prep_dataframe(output_list, columns_list)
-    info("Uploading records to snowflake...")
-    upload_to_snowflake(output_df, table_name)
+    get_response_and_upload(
+        itemised_costs_url, extraction_start_date, extraction_end_date, table_name
+    )
 
 
 def get_reconciliation_data():
@@ -45,7 +39,7 @@ def get_reconciliation_data():
     Get reconciliation data from Elastic Cloud API,
     It is performed on 7 and 14th of every month for the previous month to capture any billing corrections
     """
-    output_list = []
+
     date_today = datetime.utcnow().date()
     # if date_today day is 7 or 14 then set extraction_start_date as previous months start date and extraction_end_date as previous months end date
     if date_today.day in [7, 14]:
@@ -55,18 +49,9 @@ def get_reconciliation_data():
             extraction_end_date,
         ) = get_extraction_start_date_end_date_recon(date_today)
         itemised_costs_url = f"/billing/costs/{org_id}/items?from={extraction_start_date}&to={extraction_end_date}"
-        data = get_response(itemised_costs_url)
-        # upload this data to snowflake
-        row_list = [data, extraction_start_date, extraction_end_date]
-        columns_list = [
-            "payload",
-            "extraction_start_date",
-            "extraction_end_date",
-        ]
-        output_list.append(row_list)
-        output_df = prep_dataframe(output_list, columns_list)
-        info("Uploading records to snowflake...")
-        upload_to_snowflake(output_df, table_name)
+        get_response_and_upload(
+            itemised_costs_url, extraction_start_date, extraction_end_date, table_name
+        )
 
     else:
         info("No reconciliation required")

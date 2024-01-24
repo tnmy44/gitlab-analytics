@@ -12,6 +12,7 @@ from utility import (
     upload_to_snowflake,
     get_extraction_start_date_end_date_backfill,
     get_extraction_start_date_end_date_recon,
+    get_response_and_upload_costs_by_deployments,
 )
 
 config_dict = os.environ.copy()
@@ -29,32 +30,9 @@ def get_itemized_costs_by_deployments():
     extraction_end_date = date_today - timedelta(days=1)
 
     # Get the list of deployments
-    deployments_list = get_list_of_deployments()
-    output_list = []
-
-    for deployments in deployments_list:
-        deployment_id = deployments
-        info(f"Retrieving itemized costs for deployment {deployment_id}")
-
-        itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
-        data = get_response(itemised_costs_by_deployments_url)
-        row_list = [
-            deployment_id,
-            data,
-            extraction_start_date,
-            extraction_end_date,
-        ]
-        output_list.append(row_list)
-
-    columns_list = [
-        "deployment_id",
-        "payload",
-        "extraction_start_date",
-        "extraction_end_date",
-    ]
-    output_df = prep_dataframe(output_list, columns_list)
-    info("Uploading records to snowflake...")
-    upload_to_snowflake(output_df, table_name)
+    get_response_and_upload_costs_by_deployments(
+        extraction_start_date, extraction_end_date, table_name
+    )
 
 
 def get_reconciliation_data():
@@ -73,31 +51,9 @@ def get_reconciliation_data():
             extraction_end_date,
         ) = get_extraction_start_date_end_date_recon(date_today)
         # Get the list of deployments
-        deployments_list = get_list_of_deployments()
-
-        for deployments in deployments_list:
-            deployment_id = deployments
-            info(f"Retrieving itemized costs for deployment {deployment_id}")
-            itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
-            data = get_response(itemised_costs_by_deployments_url)
-            # upload this data to snowflake
-            row_list = [
-                deployment_id,
-                data,
-                extraction_start_date,
-                extraction_end_date,
-            ]
-            output_list.append(row_list)
-
-        columns_list = [
-            "deployment_id",
-            "payload",
-            "extraction_start_date",
-            "extraction_end_date",
-        ]
-        output_df = prep_dataframe(output_list, columns_list)
-        info("Uploading records to snowflake...")
-        upload_to_snowflake(output_df, table_name)
+        get_response_and_upload_costs_by_deployments(
+            extraction_start_date, extraction_end_date, table_name
+        )
     else:
         info("No reconciliation required")
 

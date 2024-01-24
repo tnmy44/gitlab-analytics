@@ -11,6 +11,7 @@ from utility import (
     prep_dataframe,
     get_extraction_start_date_end_date_backfill,
     get_extraction_start_date_end_date_recon,
+    get_response_and_upload,
 )
 
 config_dict = os.environ.copy()
@@ -24,23 +25,14 @@ def get_costs_overview():
 
     info("Getting costs overview")
     date_today = datetime.utcnow().date()
-    output_list = []
     extraction_start_date = date_today.replace(day=1)
     extraction_end_date = date_today - timedelta(days=1)
     costs_endpoint_url = (
         f"/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
     )
-    data = get_response(costs_endpoint_url)
-    row_list = [data, extraction_start_date, extraction_end_date]
-    columns_list = [
-        "payload",
-        "extraction_start_date",
-        "extraction_end_date",
-    ]
-    output_list.append(row_list)
-    output_df = prep_dataframe(output_list, columns_list)
-    info("Uploading records to snowflake...")
-    upload_to_snowflake(output_df, table_name)
+    get_response_and_upload(
+        costs_endpoint_url, extraction_start_date, extraction_end_date, table_name
+    )
 
 
 def get_reconciliation_data():
@@ -58,17 +50,9 @@ def get_reconciliation_data():
             extraction_end_date,
         ) = get_extraction_start_date_end_date_recon(date_today)
         costs_endpoint_url = f"/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"
-        data = get_response(costs_endpoint_url)
-        row_list = [data, extraction_start_date, extraction_end_date]
-        columns_list = [
-            "payload",
-            "extraction_start_date",
-            "extraction_end_date",
-        ]
-        output_list.append(row_list)
-        output_df = prep_dataframe(output_list, columns_list)
-        info("Uploading records to snowflake...")
-        upload_to_snowflake(output_df, table_name)
+        get_response_and_upload(
+            costs_endpoint_url, extraction_start_date, extraction_end_date, table_name
+        )
     else:
         info("No reconciliation required")
 

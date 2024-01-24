@@ -102,3 +102,55 @@ def get_extraction_start_date_end_date_recon(date_today):
     extraction_end_date = current_months_first_day - timedelta(days=1)
     extraction_start_date = extraction_end_date.replace(day=1)
     return extraction_start_date, extraction_end_date
+
+
+def get_response_and_upload(
+    url, extraction_start_date, extraction_end_date, table_name
+):
+    """
+    This function will get the response from the API and upload to snowflake
+    """
+    output_list = []
+    data = get_response(url)
+    row_list = [data, extraction_start_date, extraction_end_date]
+    columns_list = [
+        "payload",
+        "extraction_start_date",
+        "extraction_end_date",
+    ]
+    output_list.append(row_list)
+    output_df = prep_dataframe(output_list, columns_list)
+    info("Uploading records to snowflake...")
+    upload_to_snowflake(output_df, table_name)
+
+
+def get_response_and_upload_costs_by_deployments(
+    extraction_start_date, extraction_end_date, table_name
+):
+    """
+    This function will get the response from the API and upload to snowflake
+    """
+    deployments_list = get_list_of_deployments()
+    output_list = []
+    for deployments in deployments_list:
+        deployment_id = deployments
+        info(f"Retrieving itemized costs for deployment {deployment_id}")
+        itemised_costs_by_deployments_url = f"/billing/costs/{org_id}/deployments/{deployment_id}/items?start_date={extraction_start_date}&end_date={extraction_end_date}"
+        data = get_response(itemised_costs_by_deployments_url)
+        # upload this data to snowflake
+        row_list = [
+            deployment_id,
+            data,
+            extraction_start_date,
+            extraction_end_date,
+        ]
+        output_list.append(row_list)
+    columns_list = [
+        "deployment_id",
+        "payload",
+        "extraction_start_date",
+        "extraction_end_date",
+    ]
+    output_df = prep_dataframe(output_list, columns_list)
+    info("Uploading records to snowflake...")
+    upload_to_snowflake(output_df, table_name)
