@@ -17,6 +17,7 @@ from airflow_utils import (
     slack_failed_task,
     gitlab_pod_env_vars,
 )
+from kube_secrets import GCP_SERVICE_CREDS
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -61,6 +62,7 @@ tableau_workbook_migrate = KubernetesPodOperator(
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
     arguments=[container_cmd],
+    secrets=[GCP_SERVICE_CREDS],
     do_xcom_push=True,
     dag=dag,
 )
