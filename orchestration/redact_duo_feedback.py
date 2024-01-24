@@ -13,7 +13,7 @@ from sqlalchemy.exc import ProgrammingError
 
 
 def update_records_redact_extended_feedback(
-    fully_qualified_table_ref: str, snowplow_events: List
+    fully_qualified_table_ref: str, redaction_str: str, snowplow_events: List
 ):
     """
     updates each record from list with a json string, replacing the feedback attribute with the redaction_str
@@ -64,7 +64,7 @@ def get_records_with_extended_feedback(database, schema, table):
 
         logging.info(f"updating {record_count} records")
         update_records_redact_extended_feedback(
-            duo_feedback_events, fully_qualified_table_ref
+            fully_qualified_table_ref, redaction_str, duo_feedback_events
         )
 
     except:
