@@ -1,4 +1,5 @@
 from google.cloud import storage
+from yaml import load, safe_load, YAMLError, FullLoader
 
 def list_buckets():
     # Initialize a GCS client
