@@ -20,16 +20,6 @@ actuals AS (
 
 ),
 
-day_5_list AS (
-
-  SELECT 
-    date_actual AS day_5_current_week,
-    LAG(day_5_current_week) OVER (ORDER BY day_5_current_week) + 1 AS day_6_previous_week -- Add an extra day to exclude the previous thursday from the calculation
-  FROM dim_date
-  WHERE day_of_week = 5
-
-),
-
 combined AS (
 
   SELECT 
@@ -339,77 +329,6 @@ combined AS (
     arr_created_date.fiscal_quarter_name_fy                         AS net_arr_created_fiscal_quarter_name,
     arr_created_date.fiscal_year                                    AS net_arr_created_fiscal_year,
 
-    -- Create flags to know whether an action happened in the current snapshot week 
-    -- ie. Whether it happened between last Friday and current Thursday
-    CASE
-      WHEN created_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_created_in_snapshot_week, 
-    CASE  
-      WHEN close_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_close_in_snapshot_week, 
-    CASE  
-      WHEN arr_created_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_arr_created_in_snapshot_week, 
-    CASE  
-      WHEN arr_created_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_net_arr_created_in_snapshot_week, 
-    CASE  
-      WHEN pipeline_created_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_pipeline_created_in_snapshot_week,
-    CASE  
-      WHEN sales_accepted_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_sales_accepted_in_snapshot_week,
-
-    -- Pull in the metric only when the corresponding flag is set
-    -- ie. Only calculate created arr in the week where the opportunity was created
-    CASE
-      WHEN is_arr_created_in_snapshot_week = 1
-        THEN arr
-      ELSE 0
-    END AS created_arr_in_snapshot_week,
-    CASE
-      WHEN is_net_arr_created_in_snapshot_week = 1
-        THEN raw_net_arr
-      ELSE 0
-    END AS created_net_arr_in_snapshot_week,
-    CASE
-      WHEN is_created_in_snapshot_week = 1
-        THEN 1
-      ELSE 0
-    END AS created_deal_count_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN net_arr
-      ELSE 0
-    END AS closed_net_arr_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN 1
-      ELSE 0
-    END AS closed_deal_count_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN 1
-      ELSE 0
-    END AS closed_new_logo_count_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN close_date - created_date
-      ELSE 0
-    END AS closed_cycle_time_in_snapshot_week,
-
     -- TARGETS
     deals_daily_target,
     deals_monthly_target,
@@ -464,48 +383,10 @@ combined AS (
     trials_wtd_target,
     trials_mtd_target,
     trials_qtd_target,
-    trials_ytd_target,
-
-    -- Calculated fields for pipeline coverage
-    -- check if we are in the current fiscal year or not. If not, use total, if we are use target
-    CASE
-      WHEN dim_date.current_fiscal_year <= close_fiscal_year
-        THEN net_arr_daily_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_daily_target_net_arr,
-    -- check if we are in the current fiscal year or not. If not, use total, if we are use target
-    CASE
-      WHEN dim_date.current_fiscal_year <= close_fiscal_year
-        THEN net_arr_monthly_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_monthly_target_net_arr,
-    CASE
-      WHEN dim_date.current_fiscal_year <= close_fiscal_year
-        THEN deals_daily_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_daily_target_deals,
-    -- check if we are in the current fiscal year or not. If not, use total, if we are use target
-    CASE
-      WHEN dim_date.current_fiscal_year <= close_fiscal_year
-        THEN deals_monthly_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_monthly_target_deals,
-    CASE
-      WHEN dim_date.current_fiscal_year <= close_fiscal_year
-        THEN net_arr_pipeline_created_daily_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_daily_target_net_arr_pipeline_created,
-    -- check if we are in the current fiscal year or not. If not, use total, if we are use target
-    CASE
-      WHEN dim_date.current_fiscal_year <= close_fiscal_year
-        THEN net_arr_pipeline_created_monthly_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_monthly_target_net_arr_pipeline_created
+    trials_ytd_target
   FROM actuals
-  INNER JOIN day_5_list
-    ON actuals.snapshot_date = day_5_list.day_5_current_week
-  LEFT JOIN dim_date 
-    ON dim_date.date_actual = day_5_list.day_5_current_week
+  INNER JOIN dim_date 
+    ON dim_date.date_actual = actuals.snapshot_date
   LEFT JOIN targets 
     ON actuals.actuals_targets_pk = targets.actuals_targets_pk 
   LEFT JOIN dim_date created_date
