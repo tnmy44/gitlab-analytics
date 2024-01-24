@@ -40,7 +40,6 @@ def get_reconciliation_data():
     Get reconciliation data from Elastic Cloud API,
     It is performed on 7 and 14th of every month for the previous month to capture any billing corrections
     """
-    output_list = []
     date_today = datetime.utcnow().date()
     # if date_today day is 7 or 14 then set extraction_start_date as previous months start date and extraction_end_date as previous months end date
     if date_today.day in [7, 14]:
