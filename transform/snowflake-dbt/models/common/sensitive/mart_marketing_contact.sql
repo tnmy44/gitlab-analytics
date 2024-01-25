@@ -261,7 +261,7 @@
 ), namespace_notifications AS (
 
     SELECT
-      COALESCE(notification_email, email) AS email_address,
+      email                               AS email_address,
       namespace_details.namespace_id      AS user_limit_namespace_id,
       dashboard_notification_at           AS user_limit_notification_at,
       dashboard_enforcement_at            AS user_limit_enforcement_at
