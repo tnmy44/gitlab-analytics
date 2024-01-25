@@ -22,26 +22,40 @@ def get_storage_metrics(project_id, metric_type, filter_str):
     now = time.time()
     seconds = int(now)
     nanos = int((now - seconds) * 10 ** 9)
-    interval = monitoring_v3.TimeInterval(
-        {
-            "end_time": {"seconds": seconds, "nanos": nanos},
-            "start_time": {"seconds": (seconds - 1200), "nanos": nanos},
-        }
-    )
+    start_time = {"seconds": (seconds - start_time_offset), "nanos": nanos}
+    end_time = {"seconds": seconds, "nanos": nanos}
+    interval = monitoring_v3.TimeInterval({"end_time": end_time, "start_time": start_time})
 
-    results = client.list_time_series(
-        request={
-            "name": project_name,
-            "filter": f'metric.type = "{metric_type}"',
-            "interval": interval,
-            "view": monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
-        }
-    )
-    for result in results:
-        print(result)
+    try:
+        results = client.list_time_series(
+            name=project_name,
+            filter=f'metric.type = "{metric_type}" AND {filter_str}',
+            interval=interval,
+            view=monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
+        )
+
+        latest_metrics = []
+        for result in results:
+            if result.points:
+                latest_value = result.points[-1].value
+                latest_metric = {
+                    "metric_type": result.metric.type,
+                    "resource": result.resource.labels,
+                    "value": latest_value,
+                }
+                latest_metrics.append(latest_metric)
+
+        for metric in latest_metrics:
+            print(metric)
+
+        return latest_metrics
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
 
 
-    # full_metric_type = f"{project_name}/metricDescriptors/{metric_type}"
+# full_metric_type = f"{project_name}/metricDescriptors/{metric_type}"
 #
     # descriptor = client.get_metric_descriptor(name=full_metric_type)
     # print(descriptor)
