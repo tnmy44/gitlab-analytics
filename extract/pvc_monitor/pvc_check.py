@@ -3,23 +3,15 @@ from yaml import load, safe_load, YAMLError, FullLoader
 from os import environ as env
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
-# Project ID and Location of your Google Cloud Filestore instance
-from google.cloud import monitoring_v3
-from google.oauth2 import service_account
-import datetime
 from google.cloud import monitoring_v3
 from google.oauth2 import service_account
 import datetime
 
 
-scope = ["https://www.googleapis.com/auth/cloud-platform"]
-keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"], Loader=FullLoader)
-credentials = service_account.Credentials.from_service_account_info(keyfile)
-scoped_credentials = credentials.with_scopes(scope)
 
 def get_storage_metrics(project_id, key_path, metric_type, filter_str):
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"], Loader=FullLoader)
+    keyfile = load(env["GCP_SERVICE_CREDS"], Loader=FullLoader)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     client = monitoring_v3.MetricServiceClient(credentials=scoped_credentials)
