@@ -45,8 +45,6 @@ def get_storage_metrics(project_id, metric_type, filter_str):
 if __name__ == "__main__":
     # Replace these values with your own
     project_id = "gitlab-analysis"
-    metric_type = "compute.googleapis.com/container/ephemeral_storage/limit_bytes"  # Replace with your desired metric type
+    metric_type = "file.googleapis.com/nfs/server/free_bytes_percent"  # Replace with your desired metric type
     filter_str = f'metric.type="{metric_type}"'
-
-    full_metric_type = "projects/PROJECT_ID/metricDescriptors/compute.googleapis.com/firewall/dropped_packets_count"
     get_storage_metrics(project_id, metric_type, filter_str)
