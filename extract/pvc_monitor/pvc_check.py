@@ -7,6 +7,10 @@ from google.cloud import monitoring_v3
 from google.oauth2 import service_account
 import datetime
 
+from google.cloud import monitoring_v3
+
+client = monitoring_v3.MetricServiceClient()
+project_name = f"projects/{project_id}"
 
 
 def get_storage_metrics(project_id, metric_type, filter_str):
@@ -16,10 +20,33 @@ def get_storage_metrics(project_id, metric_type, filter_str):
     scoped_credentials = credentials.with_scopes(scope)
     project_name = f"projects/{project_id}"
     client = monitoring_v3.MetricServiceClient(credentials=scoped_credentials)
-    full_metric_type = f"{project_name}/metricDescriptors/{metric_type}"
 
-    descriptor = client.get_metric_descriptor(name=full_metric_type)
-    print(descriptor)
+    now = time.time()
+    seconds = int(now)
+    nanos = int((now - seconds) * 10 ** 9)
+    interval = monitoring_v3.TimeInterval(
+        {
+            "end_time": {"seconds": seconds, "nanos": nanos},
+            "start_time": {"seconds": (seconds - 1200), "nanos": nanos},
+        }
+    )
+
+    results = client.list_time_series(
+        request={
+            "name": project_name,
+            "filter": f'metric.type = f"{metric_type}"',
+            "interval": interval,
+            "view": monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
+        }
+    )
+    for result in results:
+        print(result)
+
+
+    # full_metric_type = f"{project_name}/metricDescriptors/{metric_type}"
+#
+    # descriptor = client.get_metric_descriptor(name=full_metric_type)
+    # print(descriptor)
 
     # interval = monitoring_v3.TimeInterval()
     # interval.end_time = datetime.datetime.utcnow()
