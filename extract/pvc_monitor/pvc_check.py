@@ -27,10 +27,10 @@ def list_buckets():
 
         # Get additional details
         bucket = storage_client.get_bucket(bucket.name)
-        bucket.reload()
         print(dir(bucket))
-        print(f"Current Space Used: {bucket.usage / (1024**3):.2f} GB")  # Convert bytes to GB
-        print(f"Capacity: {bucket.quota / (1024**3):.2f} GB")  # Convert bytes to GB
+        print(bucket)
+        # print(f"Current Space Used: {bucket.usage / (1024**3):.2f} GB")  # Convert bytes to GB
+        # print(f"Capacity: {bucket.quota / (1024**3):.2f} GB")  # Convert bytes to GB
 
         print("\n")
 
