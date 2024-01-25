@@ -1,13 +1,13 @@
-from google.cloud import storage
-from yaml import load, safe_load, YAMLError, FullLoader
-from os import environ as env
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
-from google.cloud import monitoring_v3
-from google.oauth2 import service_account
 import datetime
 import time
 from google.cloud import monitoring_v3
+from google.cloud import monitoring_v3
+from google.cloud import storage
+from google.oauth2 import service_account
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from os import environ as env
+from yaml import load, safe_load, YAMLError, FullLoader
 
 
 def get_metrics(scoped_credentials, project_id, metric_type, start_time_offset=1200):
@@ -24,10 +24,12 @@ def get_metrics(scoped_credentials, project_id, metric_type, start_time_offset=1
 
     now = time.time()
     seconds = int(now)
-    nanos = int((now - seconds) * 10 ** 9)
+    nanos = int((now - seconds) * 10**9)
     start_time = {"seconds": (seconds - start_time_offset), "nanos": nanos}
     end_time = {"seconds": seconds, "nanos": nanos}
-    interval = monitoring_v3.TimeInterval({"end_time": end_time, "start_time": start_time})
+    interval = monitoring_v3.TimeInterval(
+        {"end_time": end_time, "start_time": start_time}
+    )
 
     try:
         results = client.list_time_series(
@@ -64,9 +66,11 @@ def check_pvc_metrics(scoped_credentials):
     metric_type = "file.googleapis.com/nfs/server/free_bytes_percent"  # Replace with your desired metric type
     filter_str = f'metric.type="{metric_type}"'
 
-    pvc_free_space = get_metrics(scoped_credentials, project_id, metric_type, filter_str)
+    pvc_free_space = get_metrics(
+        scoped_credentials, project_id, metric_type, filter_str
+    )
     for m in pvc_free_space:
-        if m.get('value').int64_value <= 20:
+        if m.get("value").int64_value <= 20:
             raise ValueError(f"{m.get('resource')} is running low on space")
 
 
