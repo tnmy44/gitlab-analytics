@@ -2,40 +2,54 @@ from google.cloud import storage
 from yaml import load, safe_load, YAMLError, FullLoader
 from os import environ as env
 from google.oauth2 import service_account
+from googleapiclient.discovery import build
+# Project ID and Location of your Google Cloud Filestore instance
+from google.cloud import monitoring_v3
+from google.oauth2 import service_account
+import datetime
+from google.cloud import monitoring_v3
+from google.oauth2 import service_account
+import datetime
 
-def list_buckets():
-    # Initialize a GCS client
+
+scope = ["https://www.googleapis.com/auth/cloud-platform"]
+keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"], Loader=FullLoader)
+credentials = service_account.Credentials.from_service_account_info(keyfile)
+scoped_credentials = credentials.with_scopes(scope)
+
+def get_storage_metrics(project_id, key_path, metric_type, filter_str):
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    keyfile = load(env["GCP_SERVICE_CREDS"], Loader=FullLoader)
+    keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"], Loader=FullLoader)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
-    storage_client = storage.Client(credentials=scoped_credentials)
-    # bucket_obj = storage_client.get_bucket(bucket)
+    client = monitoring_v3.MetricServiceClient(credentials=scoped_credentials)
 
+    project_name = f"projects/{project_id}"
+    interval = monitoring_v3.TimeInterval()
+    interval.end_time = datetime.datetime.utcnow()
+    interval.start_time = interval.end_time - datetime.timedelta(minutes=5)
 
-    # List all buckets in the project
-    buckets = list(storage_client.list_buckets())
+    results = client.list_time_series(
+        name=project_name,
+        filter=filter_str,
+        interval=interval,
+        view=monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
+    )
 
-    # Print details for each bucket
-    for bucket in buckets:
-        print(f"Bucket name: {bucket.name}")
-        print(f"Bucket ID: {bucket.id}")
-        print(f"Location: {bucket.location}")
-        print(f"Storage Class: {bucket.storage_class}")
-        print(f"Time Created: {bucket.time_created}")
-        print(f"Owner: {bucket.owner}")
+    for result in results:
+        print(f"Resource: {result.resource.type}, {result.resource.labels}")
+        print(f"Metric: {result.metric.type}")
+        for point in result.points:
+            print(f"  Value: {point.value}")
+            print(f"  Start Time: {point.interval.start_time}")
+            print(f"  End Time: {point.interval.end_time}")
+            print("\n")
 
-        # Get additional details
-        bucket = storage_client.get_bucket(bucket.name)
-        print(dir(bucket))
-        print(bucket)
-        # print(f"Current Space Used: {bucket.usage / (1024**3):.2f} GB")  # Convert bytes to GB
-        # print(f"Capacity: {bucket.quota / (1024**3):.2f} GB")  # Convert bytes to GB
-
-        print("\n")
 
 if __name__ == "__main__":
-    # Replace 'your_project_id' with your actual Google Cloud project ID
+    # Replace these values with your own
     project_id = "gitlab-analysis"
+    metric_type = "compute.googleapis.com/instance/disk/write_bytes_count"  # Replace with your desired metric type
+    filter_str = f'metric.type="{metric_type}"'
 
-    list_buckets()
+    get_storage_metrics(project_id, key_path, metric_type, filter_str)
