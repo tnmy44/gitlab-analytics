@@ -93,7 +93,7 @@ for table in snowplow_tables:
 
     run_redaction = KubernetesPodOperator(
         **gitlab_defaults,
-        image=DATA_IMAGE,
+        image=DATA_IMAGE_3_10,
         task_id=task_identifier,
         name=task_identifier,
         secrets=[
