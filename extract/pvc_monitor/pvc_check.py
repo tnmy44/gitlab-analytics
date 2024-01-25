@@ -11,7 +11,7 @@ import time
 from google.cloud import monitoring_v3
 
 
-def get_storage_metrics(project_id, metric_type, filter_str):
+def get_storage_metrics(project_id, metric_type, filter_str, start_time_offset=1200):
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
     keyfile = load(env["GCP_SERVICE_CREDS"], Loader=FullLoader)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
