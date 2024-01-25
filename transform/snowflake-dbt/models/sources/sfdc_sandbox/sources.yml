@@ -25,5 +25,4 @@ sources:
         description: '{{ doc("sfdc_user_source") }}'
       - name: user_role
         identifier: userrole
-      - name: contact
       - name: lead
