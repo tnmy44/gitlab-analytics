@@ -172,7 +172,7 @@ SELECT
   redis_event_name                                                                                                  AS redis_event_name,
   key_path                                                                                                          AS key_path,
   data_source                                                                                                       AS data_source,
-  performance_timing_context,
+  performance_timing_context                                                                                        AS performance_timing_context,
   connect_end                                                                                                       AS connect_end,
   connect_start                                                                                                     AS connect_start,
   dom_complete                                                                                                      AS dom_complete,

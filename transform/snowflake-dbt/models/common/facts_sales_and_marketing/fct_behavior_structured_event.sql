@@ -95,7 +95,29 @@ structured_event_renamed AS (
       gitlab_service_ping_context,
       redis_event_name,
       key_path,
-      data_source
+      data_source,
+      performance_timing_context,
+      connect_end,
+      connect_start,
+      dom_complete,
+      dom_content_loaded_event_end,
+      dom_content_loaded_event_start,
+      dom_interactive,
+      dom_loading,
+      domain_lookup_end,
+      domain_lookup_start,
+      fetch_start,
+      load_event_end,
+      load_event_start,
+      navigation_start,
+      redirect_end,
+      redirect_start,
+      request_start,
+      response_end,
+      response_start,
+      secure_connection_start,
+      unload_event_end,
+      unload_event_start
 
     FROM {{ ref('prep_snowplow_unnested_events_all') }}
     WHERE event = 'struct'
@@ -207,6 +229,7 @@ structured_events_w_dim AS (
       events_with_plan.data_source,
 
       -- Degenerate Dimensions (Performance Timing)
+      events_with_plan.performance_timing_context,
       events_with_plan.connect_end,
       events_with_plan.connect_start,
       events_with_plan.dom_complete,
