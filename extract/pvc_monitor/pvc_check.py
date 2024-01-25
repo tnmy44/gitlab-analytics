@@ -29,7 +29,7 @@ def get_storage_metrics(project_id, metric_type, filter_str, start_time_offset=1
     try:
         results = client.list_time_series(
             name=project_name,
-            filter=f'metric.type = "{metric_type}" AND {filter_str}',
+            filter=f'metric.type = "{metric_type}"', #  AND {filter_str}',
             interval=interval,
             view=monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
         )
