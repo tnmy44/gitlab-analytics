@@ -10,12 +10,15 @@ import time
 from google.cloud import monitoring_v3
 
 
+def get_metrics(scoped_credentials, project_id, metric_type, start_time_offset=1200):
+    """
 
-def get_storage_metrics(project_id, metric_type, filter_str, start_time_offset=1200):
-    scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    keyfile = load(env["GCP_SERVICE_CREDS"], Loader=FullLoader)
-    credentials = service_account.Credentials.from_service_account_info(keyfile)
-    scoped_credentials = credentials.with_scopes(scope)
+    :param scoped_credentials:
+    :param project_id:
+    :param metric_type:
+    :param start_time_offset:
+    :return:
+    """
     project_name = f"projects/{project_id}"
     client = monitoring_v3.MetricServiceClient(credentials=scoped_credentials)
 
@@ -29,7 +32,7 @@ def get_storage_metrics(project_id, metric_type, filter_str, start_time_offset=1
     try:
         results = client.list_time_series(
             name=project_name,
-            filter=f'metric.type = "{metric_type}"', #  AND {filter_str}',
+            filter=f'metric.type = "{metric_type}"',
             interval=interval,
             view=monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
         )
@@ -52,13 +55,25 @@ def get_storage_metrics(project_id, metric_type, filter_str, start_time_offset=1
         return []
 
 
+def check_pvc_metrics(scoped_credentials):
+    """
 
-if __name__ == "__main__":
+    :param scoped_credentials:
+    """
     project_id = "gitlab-analysis"
     metric_type = "file.googleapis.com/nfs/server/free_bytes_percent"  # Replace with your desired metric type
     filter_str = f'metric.type="{metric_type}"'
-    latest_metrics = get_storage_metrics(project_id, metric_type, filter_str)
 
-    for m in latest_metrics:
-        if m.get('value').int64_value <= 94:
+    pvc_free_space = get_metrics(scoped_credentials, project_id, metric_type, filter_str)
+    for m in pvc_free_space:
+        if m.get('value').int64_value <= 20:
             raise ValueError(f"{m.get('resource')} is running low on space")
+
+
+if __name__ == "__main__":
+    scope = ["https://www.googleapis.com/auth/cloud-platform"]
+    keyfile = load(env["GCP_SERVICE_CREDS"], Loader=FullLoader)
+    credentials = service_account.Credentials.from_service_account_info(keyfile)
+    credentials_with_scope = credentials.with_scopes(scope)
+
+    check_pvc_metrics(credentials_with_scope)
