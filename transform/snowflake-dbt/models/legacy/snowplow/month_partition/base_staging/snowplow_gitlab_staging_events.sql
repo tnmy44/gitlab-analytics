@@ -191,7 +191,7 @@ WITH filtered_source as (
       event_id,
       web_page_id
     FROM {{ ref('snowplow_gitlab_events_context_flattened') }}
-    WHERE has_web_page_context IS TRUE
+    WHERE has_web_page_context = TRUE
 
 ), base_with_sorted_columns AS (
   
