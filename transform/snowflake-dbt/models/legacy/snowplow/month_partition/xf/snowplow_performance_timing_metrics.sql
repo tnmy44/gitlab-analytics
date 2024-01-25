@@ -30,7 +30,7 @@ WITH events AS (
       unload_event_start,
       event_id                          AS root_id,
       derived_tstamp                    AS root_tstamp
-    FROM contexts
+    FROM events
 )
 
 SELECT *
