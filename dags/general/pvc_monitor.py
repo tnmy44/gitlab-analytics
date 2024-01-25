@@ -1,10 +1,6 @@
 import os
 from datetime import datetime, timedelta
 from airflow.utils.dates import days_ago
-
-# from airflow.kubernetes.volume import Volume
-# from airflow.kubernetes.volume_mount import VolumeMount
-
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow.operators.python_operator import PythonOperator
@@ -37,24 +33,23 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "kubernetes_pvc_monitoring",
+    "pvc_monitor",
     default_args=default_args,
     schedule_interval="0 2 * * *",
     concurrency=1,
     catchup=False,
-    start_date=datetime(2023, 11, 15),
+    start_date=datetime(2024, 1, 25),
 )
 
 container_cmd = f"""
         {clone_and_setup_extraction_cmd} &&
-        pip install google-cloud-monitoring
         cd pvc_monitor/ &&
         python3 pvc_check.py
     """
 
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
-tableau_workbook_migrate = KubernetesPodOperator(
+pvc_monitor = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE_3_10,
     task_id="pvc-monitor",
@@ -68,4 +63,4 @@ tableau_workbook_migrate = KubernetesPodOperator(
     dag=dag,
 )
 
-tableau_workbook_migrate
+pvc_monitor
