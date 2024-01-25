@@ -5137,6 +5137,8 @@ models:
         description: Red, Yellow, Green health rating based on the Net ARR field
       - name: renewal_ownership
         description: This field determines Rules of Engagement (ROE) and ownership for the Renewal between the Renewals Manager and the Account Executive
+      - name: ptc_predicted_arr
+      - name: ptc_predicted_renewal_risk_category 
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'

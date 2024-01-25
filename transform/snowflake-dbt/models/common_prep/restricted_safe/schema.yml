@@ -108,6 +108,8 @@ models:
         description: This field determines Rules of Engagement (ROE) and ownership for the Renewal between the Renewals Manager and the Account Executive
       - name: cycle_time_in_days
         description: '{{ doc("cycle_time_in_days") }}'
+      - name: ptc_predicted_arr
+      - name: ptc_predicted_renewal_risk_category
 
   - name: prep_quote
     description: '{{ doc("prep_quote") }}'

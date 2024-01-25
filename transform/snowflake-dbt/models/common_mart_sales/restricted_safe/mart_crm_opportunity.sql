@@ -123,6 +123,8 @@
       dim_crm_opportunity.renewal_manager, 
       dim_crm_opportunity.renewal_forecast_health,
       dim_crm_opportunity.renewal_ownership,
+      dim_crm_opportunity.ptc_predicted_arr,
+      dim_crm_opportunity.ptc_predicted_renewal_risk_category,    
 
        -- Account fields
       dim_crm_account.crm_account_name,
