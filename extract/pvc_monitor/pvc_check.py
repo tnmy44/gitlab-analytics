@@ -16,8 +16,9 @@ def get_storage_metrics(project_id, metric_type, filter_str):
     scoped_credentials = credentials.with_scopes(scope)
     project_name = f"projects/{project_id}"
     client = monitoring_v3.MetricServiceClient(credentials=scoped_credentials)
-#    descriptors = client.list_metric_descriptors(name=project_name)
-    descriptor = client.get_metric_descriptor(name=metric_type)
+    full_metric_type = f"{project_name}/metricDescriptors/{metric_type}"
+
+    descriptor = client.get_metric_descriptor(name=full_metric_type)
     print(descriptor)
 
     # interval = monitoring_v3.TimeInterval()
@@ -47,4 +48,5 @@ if __name__ == "__main__":
     metric_type = "compute.googleapis.com/container/ephemeral_storage/limit_bytes"  # Replace with your desired metric type
     filter_str = f'metric.type="{metric_type}"'
 
+    full_metric_type = "projects/PROJECT_ID/metricDescriptors/compute.googleapis.com/firewall/dropped_packets_count"
     get_storage_metrics(project_id, metric_type, filter_str)
