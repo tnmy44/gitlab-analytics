@@ -540,9 +540,6 @@ models:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: "snowplow_{{ var('year', (run_started_at - modules.datetime.timedelta(1)).strftime('%Y')) }}_{{ var('month', (run_started_at - modules.datetime.timedelta(1)).strftime('%m')) }}"
 
-      version:
-        +tags: ["product"]
-
       trusted_data_framework:
         +tags: ["tdf"]
 
