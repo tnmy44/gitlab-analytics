@@ -9,9 +9,6 @@ import datetime
 
 from google.cloud import monitoring_v3
 
-client = monitoring_v3.MetricServiceClient()
-project_name = f"projects/{project_id}"
-
 
 def get_storage_metrics(project_id, metric_type, filter_str):
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
