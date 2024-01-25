@@ -63,6 +63,6 @@ if __name__ == "__main__":
 
     for m in latest_metrics:
         data = data.append({"instance_name": m.get('resource').get('instance_name'),
-                            "space_remaining": m.get('value')})
+                            "space_remaining": m.get('value')}, ignore_index=True)
 
     print(data)
