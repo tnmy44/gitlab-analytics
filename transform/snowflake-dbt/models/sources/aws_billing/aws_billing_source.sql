@@ -1,41 +1,70 @@
 {{ config(
-    materialized='table',
+    materialized='incremental',
     )
 }}
 
 WITH dedicated_legacy_0475 AS (
 
-  SELECT * FROM {{ source('aws_billing', 'dedicated_legacy_0475') }}
+  SELECT * , metadata$FILE_LAST_MODIFIED AS modified_at_dedicated_legacy_0475 FROM {{ source('aws_billing', 'dedicated_legacy_0475') }}
+  {% if is_incremental() %}
+
+  WHERE metadata$FILE_LAST_MODIFIED  >= (SELECT MAX(modified_at_dedicated_legacy_0475) FROM {{this}})
+
+  {% endif %}
 
 ),
 
 dedicated_dev_3675 AS (
 
-  SELECT * FROM {{ source('aws_billing', 'dedicated_dev_3675') }}
+  SELECT * , metadata$FILE_LAST_MODIFIED AS modified_at_dedicated_dev_3675 FROM {{ source('aws_billing', 'dedicated_dev_3675') }}
+  {% if is_incremental() %}
+
+  WHERE metadata$FILE_LAST_MODIFIED  >= (SELECT MAX(modified_at_dedicated_dev_3675) FROM {{this}})
+
+  {% endif %}
 
 ),
 
 gitlab_marketplace_5127 AS (
 
-  SELECT * FROM {{ source('aws_billing', 'gitlab_marketplace_5127') }}
+  SELECT * , metadata$FILE_LAST_MODIFIED AS modified_at_gitlab_marketplace_5127 FROM {{ source('aws_billing', 'gitlab_marketplace_5127') }}
+  {% if is_incremental() %}
 
+  WHERE metadata$FILE_LAST_MODIFIED  >= (SELECT MAX(modified_at_gitlab_marketplace_5127) FROM {{this}})
+
+  {% endif %}
 ),
 
 itorg_3027 AS (
 
-  SELECT * FROM {{ source('aws_billing', 'itorg_3027') }}
+  SELECT * , metadata$FILE_LAST_MODIFIED AS modified_at_itorg_3027 FROM {{ source('aws_billing', 'itorg_3027') }}
+  {% if is_incremental() %}
+
+  WHERE metadata$FILE_LAST_MODIFIED  >= (SELECT MAX(modified_at_itorg_3027) FROM {{this}})
+
+  {% endif %}
 
 ),
 
 legacy_gitlab_0347 AS (
 
-  SELECT * FROM {{ source('aws_billing', 'legacy_gitlab_0347') }}
+  SELECT * , metadata$FILE_LAST_MODIFIED AS modified_at_legacy_gitlab_0347 FROM {{ source('aws_billing', 'legacy_gitlab_0347') }}
+  {% if is_incremental() %}
+
+  WHERE metadata$FILE_LAST_MODIFIED  >= (SELECT MAX(modified_at_legacy_gitlab_0347) FROM {{this}})
+
+  {% endif %}
 
 ),
 
 services_org_6953 AS (
 
-  SELECT * FROM {{ source('aws_billing', 'services_org_6953') }}
+  SELECT * , metadata$FILE_LAST_MODIFIED AS modified_at_services_org_6953 FROM {{ source('aws_billing', 'services_org_6953') }}
+  {% if is_incremental() %}
+
+  WHERE metadata$FILE_LAST_MODIFIED  >= (SELECT MAX(modified_at_services_org_6953) FROM {{this}})
+
+  {% endif %}
 
 ),
 
@@ -215,5 +244,11 @@ SELECT
   value['savings_plan_savings_plan_effective_cost']::DECIMAL as savings_plan_savings_plan_effective_cost,
   value['savings_plan_savings_plan_rate']::DECIMAL as savings_plan_savings_plan_rate,
   value['savings_plan_total_commitment_to_date']::DECIMAL as savings_plan_total_commitment_to_date,
-  value['savings_plan_used_commitment']::DECIMAL as savings_plan_used_commitment
+  value['savings_plan_used_commitment']::DECIMAL as savings_plan_used_commitment,
+  modified_at_dedicated_legacy_0475 as modified_at_dedicated_legacy_0475,
+  modified_at_dedicated_dev_3675 as modified_at_dedicated_dev_3675,
+  modified_at_gitlab_marketplace_5127 as modified_at_gitlab_marketplace_5127,
+  modified_at_itorg_3027 as modified_at_itorg_3027,
+  modified_at_legacy_gitlab_0347 as modified_at_legacy_gitlab_0347,
+  modified_at_services_org_6953 as modified_at_services_org_6953,
 FROM all_raw
