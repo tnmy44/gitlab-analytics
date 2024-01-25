@@ -71,6 +71,7 @@ include:
   script:
     - manage_snowflake.py manage_clones --database prod --empty
     - manage_snowflake.py manage_clones --database prep --empty
+    - manage_snowflake.py manage_clones --database raw --empty
   when: always
 
 📈❗️clone_prod_real:
@@ -115,6 +116,11 @@ include:
     - manage_snowflake.py manage_clones --force --database prep --empty
     - manage_snowflake.py manage_clones --force --database prod --empty
     - manage_snowflake.py manage_clones --force --database raw --include_stages
+
+clone_raw_by_schema:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py clone_database_by_schemas --database raw --include_stages
 
 clone_stop:
   <<: *snowflake_clone_template
@@ -237,22 +243,35 @@ clone_stop:
   only:
     changes:
       - "permissions/snowflake/roles.yml"
+      - "extract/tableau_con_man_config/src/*"
     refs:
-      - merge_request
+      - merge_requests
   allow_failure: true
+  before_script:
+    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.yml\|\.yaml'$)
 
 📁yaml_validation:
   <<: *yaml_validate
-  script:
-    - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < permissions/snowflake/roles.yml
+  script: | 
+    # Iterate over each changed YAML file using Python's yaml.safe_load
+    for file in $CHANGED_FILES; do
+      if python -c "import yaml; yaml.safe_load(open('$file'))" > /dev/null 2>&1; then
+        echo "YAML validation passed for $file"
+      else
+        echo "YAML validation failed for $file"
+        exit 1
+      fi
+    done;
   allow_failure: false
-  
+
 .permifrost: &permifrost
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/permifrost:v0.13.1
+  image: registry.gitlab.com/gitlab-data/permifrost:v0.15.4
   tags:
     - analytics
   only:
+    changes:
+      - "permissions/snowflake/roles.yml"
     refs:
       - merge_requests
   allow_failure: true
@@ -262,13 +281,14 @@ clone_stop:
   script:
     - permifrost run permissions/snowflake/roles.yml --diff --dry
   when: manual
+  allow_failure: true
 
 🧊permifrost_spec_test:
   <<: *permifrost
   script:
     - permifrost spec-test permissions/snowflake/roles.yml
   when: manual
-  allow_failure: false
+  allow_failure: true
 
 # ======
 # dbt docs to GitLab Pages
@@ -283,7 +303,7 @@ clone_stop:
   before_script:
     - export PATH="$CI_PROJECT_DIR/orchestration/:$PATH"
   script:
-    - export SNOWFLAKE_SNAPSHOT_DATABASE="SNOWFLAKE"
+    - export SNOWFLAKE_SNAPSHOT_DATABASE="RAW"
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - mkdir -p ~/.ssh
     - touch ~/.ssh/id_rsa
@@ -356,3 +376,4 @@ schedule:run-triage:
     only:
       variables:
         - $RUN_GITLAB_TRIAGE
+

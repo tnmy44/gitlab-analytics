@@ -197,23 +197,6 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_editor_ai_conversation_messages_source
-    description: Base model for Gitlab.com ci_editor_ai_conversation_messages
-    columns:
-      - name: ci_editor_ai_conversation_messages_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
   - name: gitlab_dotcom_ci_group_variables_source
     description: Base model for Gitlab.com ci_group_variables
     columns:
@@ -883,23 +866,6 @@ models:
       - name: created_at
       - name: updated_at
 
-  - name: gitlab_dotcom_in_product_marketing_emails_source
-    description: >-
-      Base model for Gitlab.com in_product_marketing emails table
-    columns:
-      - name: created_at
-      - name: cta_clicked_at
-      - name: in_product_marketing_email_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: series
-      - name: track
-      - name: updated_at
-        tests:
-          - not_null
-      - name: user_id
   - name: gitlab_dotcom_issuable_severities_source
     description: Base model for Gitlab.com Incident Issue Severities
     columns:
@@ -1988,6 +1954,23 @@ models:
       - name: vulnerability_name
       - name: vulnerability_report_type
       - name: vulnerability_severity
+
+  - name: gitlab_dotcom_vulnerability_reads_source
+    description: A base model for Gitlab.com vulnerability_reads.
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+
+  - name: gitlab_dotcom_vulnerability_state_transitions_source
+    description: A base model for Gitlab.com vulnerability_state_transitions.
+    columns:
+      - name: id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
 
   - name: gitlab_dotcom_security_scans_source
     description: >-

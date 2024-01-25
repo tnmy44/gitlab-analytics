@@ -64,7 +64,7 @@ Below checklist of activities would be run once for quarter to validate security
    WHERE has_password = 'true'
    AND disabled = 'false'
    AND deleted_on IS NULL
-   AND name NOT IN ('PERMISSION_BOT','FIVETRAN','GITLAB_CI','AIRFLOW','STITCH','SISENSE_RESTRICTED_SAFE','PERISCOPE','MELTANO','TARGET_SNOWFLAKE','GRAFANA','SECURITYBOTSNOWFLAKEAPI', 'GAINSIGHT','MELTANO_DEV','BI_TOOL_EVAL','TABLEAU_RESTRICTED_SAFE','DATA_OBS_USER_1','TABLEAU', 'HIGHTOUCH_USER');
+   AND name NOT IN ('PERMISSION_BOT','FIVETRAN','GITLAB_CI','AIRFLOW','STITCH','SISENSE_RESTRICTED_SAFE','PERISCOPE','MELTANO','TARGET_SNOWFLAKE','GRAFANA','SECURITYBOTSNOWFLAKEAPI', 'GAINSIGHT','MELTANO_DEV','BI_TOOL_EVAL','TABLEAU_RESTRICTED_SAFE','DATA_OBS_USER_1','TABLEAU', 'HIGHTOUCH_USER', 'DATA_SCIENCE_LOADER', 'TABLEAU_RESTRICTED_PEOPLE_DATA', 'TABLEAU_LOADER');
 
  
     ```
@@ -230,23 +230,7 @@ Below checklist of activities would be run once for quarter to validate security
    - [ ] SAFE Intermediate Space
 
 ## TRUSTED DATA
-1. [ ] Review all Golden Record TD tests and make sure they're passing.
-
-    <details>
-
-    * [ ] Run below SQL script to perform the check.
-
-     ```sql
-
-    SELECT *  
-    FROM "PROD"."WORKSPACE_DATA"."DBT_TEST_RESULTS" 
-    WHERE test_unique_id LIKE '%raw_golden_data%' 
-    AND test_status <>'pass' 
-    ORDER BY results_generated_at DESC ;				
-				
-    ```
-
-2.  [ ] Review Data Siren to confirm known existence of RED data.
+1.  [ ] Review Data Siren to confirm known existence of RED data.
 
     <details>
     
@@ -438,6 +422,13 @@ Below checklist of activities would be run once for quarter to validate security
       AND employee.termination_date IS NOT NULL
     ```
 2. [ ] Clean up old log files, following [this runbook](https://gitlab.com/gitlab-data/runbooks/-/blob/main/airflow_infrastructure/archival_pvc_volume/delete_pvc_volume.md). 
+
+
+## Package version inventory
+
+1. [ ] Go to [/package_inventory](https://gitlab.com/gitlab-data/package_inventory/-/blob/main/README.md) repo, and run application and generate reports using guidelines from the `README.md` file
+1. [ ] Once you generate the reports, analyze the libraries manually, and propose the candidates for upgrading 
+1. [ ] If we agree on candidates for upgrading, create a new issue in the `/analytics` repo with the list of libraries we should upgrade and proceed further
 
 <!-- DO NOT EDIT BELOW THIS LINE -->
 /label ~"Team::Data Platform" ~Snowflake ~TDF ~"Data Team" ~"Priority::1-Ops" ~"workflow::4 - scheduled" ~"Quarterly Data Health and Security Audit" ~"Periscope / Sisense"

@@ -8,7 +8,9 @@
     ('dim_date','dim_date'),
     ('fct_campaign','fct_campaign'),
     ('dim_campaign', 'dim_campaign'),
-    ('dim_crm_user', 'dim_crm_user')
+    ('dim_crm_user', 'dim_crm_user'),
+    ('sfdc_lead_history', 'sfdc_lead_history_source'),
+    ('sfdc_contact_history', 'sfdc_contact_history_source')
 ]) }}
 
 , person_base_with_tp AS (
@@ -21,6 +23,7 @@
       person_base.dim_crm_user_id,
       person_base.crm_partner_id,
       person_base.partner_prospect_id,
+      person_base.sfdc_record_id,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
       mart_crm_touchpoint.dim_campaign_id,
 
@@ -119,6 +122,9 @@
       mart_crm_touchpoint.bizible_count_lead_creation_touch,
       mart_crm_touchpoint.is_fmm_influenced,
       mart_crm_touchpoint.is_fmm_sourced,
+      mart_crm_touchpoint.devrel_campaign_type,
+      mart_crm_touchpoint.devrel_campaign_description,
+      mart_crm_touchpoint.devrel_campaign_influence_type,
       mart_crm_touchpoint.bizible_count_lead_creation_touch AS new_lead_created_sum,
       mart_crm_touchpoint.count_true_inquiry AS count_true_inquiry,
       mart_crm_touchpoint.count_inquiry AS inquiry_sum, 
@@ -151,6 +157,7 @@
       opp.owner_id AS opp_owner_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
       partner_account.crm_account_name AS partner_account_name,
+      partner_account.dim_crm_account_id AS opp_partner_dim_crm_account_id,
 
 	--Opp Dates
       opp.created_date AS opp_created_date,
@@ -239,6 +246,7 @@
       person_base.dim_crm_person_id,
       person_base.dim_crm_user_id,
       person_base.crm_partner_id,
+      person_base.sfdc_record_id,
       person_base.email_hash,
       person_base.email_domain,
       person_base.was_converted_lead,
@@ -335,6 +343,9 @@
       mart_crm_attribution_touchpoint.bizible_weight_first_touch,
       mart_crm_attribution_touchpoint.is_fmm_influenced,
       mart_crm_attribution_touchpoint.is_fmm_sourced,
+      mart_crm_attribution_touchpoint.devrel_campaign_type,
+      mart_crm_attribution_touchpoint.devrel_campaign_description,
+      mart_crm_attribution_touchpoint.devrel_campaign_influence_type,
       CASE
           WHEN mart_crm_attribution_touchpoint.dim_crm_touchpoint_id IS NOT null THEN opp.dim_crm_opportunity_id
           ELSE null
@@ -372,7 +383,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=173)}}
+  {{dbt_utils.group_by(n=178)}}
     
 ), cohort_base_combined AS (
   
@@ -384,6 +395,7 @@
       dim_crm_user_id,
       crm_partner_id,
       partner_prospect_id,
+      sfdc_record_id,
       dim_crm_touchpoint_id,
       dim_campaign_id,
       null AS dim_crm_opportunity_id,
@@ -562,6 +574,9 @@
       bizible_count_lead_creation_touch,
       is_fmm_influenced,
       is_fmm_sourced,
+      devrel_campaign_type,
+      devrel_campaign_description,
+      devrel_campaign_influence_type,
       new_lead_created_sum,
       count_true_inquiry,
       inquiry_sum, 
@@ -589,6 +604,7 @@
       dim_crm_user_id,
       crm_partner_id,
       null AS partner_prospect_id,
+      sfdc_record_id,
       dim_crm_touchpoint_id,
       dim_campaign_id,
       dim_crm_opportunity_id,
@@ -767,6 +783,9 @@
       bizible_count_lead_creation_touch,
       is_fmm_influenced,
       is_fmm_sourced,
+      devrel_campaign_type,
+      devrel_campaign_description,
+      devrel_campaign_influence_type,
       0 AS new_lead_created_sum,
       0 AS count_true_inquiry,
       0 AS inquiry_sum, 
@@ -784,6 +803,65 @@
       won_custom_net_arr
     FROM opp_base_with_batp
 
+), person_history_base AS (
+    SELECT
+      sfdc_lead_history.lead_id AS sfdc_record_id,
+      cohort_base_combined.dim_crm_touchpoint_id,
+      sfdc_lead_history.field_modified_at,
+      cohort_base_combined.bizible_touchpoint_date,
+      datediff(DAY, 
+        cohort_base_combined.bizible_touchpoint_date,
+        sfdc_lead_history.field_modified_at
+      ) AS date_difference,
+      sfdc_lead_history.old_value_string,
+      sfdc_lead_history.new_value_string,
+      'Lead' AS record_type
+    FROM sfdc_lead_history
+      INNER JOIN cohort_base_combined
+        ON sfdc_lead_history.lead_id = cohort_base_combined.sfdc_record_id 
+    WHERE 
+    lead_field = 'status' AND field_modified_at >= bizible_touchpoint_date
+    
+    UNION ALL 
+
+    SELECT
+      sfdc_contact_history.contact_id AS sfdc_record_id,
+      cohort_base_combined.dim_crm_touchpoint_id,
+      sfdc_contact_history.field_modified_at,
+      cohort_base_combined.bizible_touchpoint_date,
+      datediff(DAY, 
+        cohort_base_combined.bizible_touchpoint_date,
+        sfdc_contact_history.field_modified_at
+      ) AS date_difference,
+      sfdc_contact_history.old_value_string,
+      sfdc_contact_history.new_value_string,
+      'Contact' as record_type
+    FROM sfdc_contact_history
+      INNER JOIN cohort_base_combined
+        ON sfdc_contact_history.contact_id = cohort_base_combined.sfdc_record_id 
+    WHERE contact_field = 'contact_status__c' AND field_modified_at >= bizible_touchpoint_date
+
+), person_history_final as (
+  SELECT
+  person_history_base.*,
+  person_history_base.old_value_string || ' -> ' || person_history_base.new_value_string as person_status_change,
+  CASE WHEN person_status_change IS NULL THEN
+    '[No Update]' 
+    ELSE person_status_change
+  END AS person_status_update,
+  row_number() OVER (PARTITION BY sfdc_record_id, dim_crm_touchpoint_id ORDER BY field_modified_at ASC) AS history_update_rank
+  FROM
+  person_history_base
+  QUALIFY history_update_rank = 1
+
+), today AS (
+
+  SELECT DISTINCT
+    fiscal_year               AS current_fiscal_year,
+    first_day_of_fiscal_year  AS current_fiscal_year_date
+  FROM dim_date
+  WHERE date_actual = CURRENT_DATE
+
 ), intermediate AS (
   
     SELECT 
@@ -791,18 +869,46 @@
       PARSE_URL(bizible_form_url_raw):parameters:utm_asset_type::VARCHAR    AS bizible_form_page_utm_asset_type,
       PARSE_URL(bizible_landing_page_raw):parameters:utm_asset_type::VARCHAR AS bizible_landing_page_utm_asset_type,
       COALESCE(bizible_landing_page_utm_asset_type, bizible_form_page_utm_asset_type) AS utm_asset_type,
-      fct_campaign.start_date AS campaign_start_date,
-      fct_campaign.region AS sfdc_campaign_region,
-      fct_campaign.sub_region AS sfdc_campaign_sub_region,
-      dim_campaign.type AS sfdc_campaign_type,
+      
+      -- campaign
+      fct_campaign.start_date  AS campaign_start_date,
+      fct_campaign.region     AS sfdc_campaign_region,
+      fct_campaign.sub_region  AS sfdc_campaign_sub_region,
+      dim_campaign.type        AS sfdc_campaign_type,
       fct_campaign.budgeted_cost,
       fct_campaign.actual_cost,
       dim_campaign.is_a_channel_partner_involved,
+      campaign_owner.user_name AS campaign_owner,
       CASE  
         WHEN dim_campaign.will_there_be_mdf_funding = 'Yes'
           THEN TRUE
           ELSE FALSE
       END AS is_mdf_campaign,
+
+      -- Account
+      dim_crm_account.abm_tier,
+      dim_crm_account.health_number,
+
+     -- Opportunity Report Fields
+     CASE 
+        WHEN cohort_base_combined.close_date < today.current_fiscal_year_date
+          THEN account_owner.crm_user_business_unit
+        ELSE opportunity_owner.crm_user_business_unit
+    END                                                       AS report_opportunity_user_business_unit,
+    CASE 
+        WHEN cohort_base_combined.close_date < today.current_fiscal_year_date
+          THEN account_owner.crm_user_sub_business_unit
+        ELSE opportunity_owner.crm_user_sub_business_unit
+    END                                                       AS report_opportunity_user_sub_business_unit,
+    CASE 
+        WHEN account_owner.is_hybrid_user = 1 
+            THEN dim_crm_account.parent_crm_account_area
+        WHEN cohort_base_combined.close_date < today.current_fiscal_year_date
+          THEN account_owner.asm
+        WHEN UPPER(opportunity_owner.crm_user_area) = 'ALL'
+           THEN dim_crm_account.parent_crm_account_area         
+        ELSE opportunity_owner.asm
+    END                                                       AS report_opportunity_user_asm,
 
       -- user
       user.user_name        AS record_owner_name,
@@ -818,6 +924,9 @@
         THEN TRUE
         ELSE FALSE
       END AS is_sales_dev_owned_record,
+
+      person_history_final.person_status_update,
+      person_history_final.person_status_change,
 
      --inquiry_date fields
       inquiry_date.fiscal_year                     AS inquiry_date_range_year,
@@ -846,6 +955,13 @@
       DATE_TRUNC(month, sao_date.date_actual)  AS sao_date_range_month,
       sao_date.first_day_of_week               AS sao_date_range_week,
       sao_date.date_id                         AS sao_date_range_id,
+
+    --pipeline_created_date fields
+      pipeline_created_date.fiscal_year                     AS pipeline_created_date_range_year,
+      pipeline_created_date.fiscal_quarter_name_fy          AS pipeline_created_date_range_quarter,
+      DATE_TRUNC(month, pipeline_created_date.date_actual)  AS pipeline_created_date_range_month,
+      pipeline_created_date.first_day_of_week               AS pipeline_created_date_range_week,
+      pipeline_created_date.date_id                         AS pipeline_created_date_range_id,
   
     --closed_date fields
       closed_date.fiscal_year                     AS closed_date_range_year,
@@ -861,6 +977,7 @@
       bizible_date.first_day_of_week               AS bizible_date_range_week,
       bizible_date.date_id                         AS bizible_date_range_id
   FROM cohort_base_combined
+  CROSS JOIN today
   LEFT JOIN dim_campaign
     ON cohort_base_combined.dim_campaign_id = dim_campaign.dim_campaign_id
   LEFT JOIN fct_campaign
@@ -869,6 +986,17 @@
     ON cohort_base_combined.dim_crm_user_id = user.dim_crm_user_id
   LEFT JOIN dim_crm_user manager
     ON user.manager_id = manager.dim_crm_user_id
+  LEFT JOIN dim_crm_user campaign_owner
+    ON fct_campaign.campaign_owner_id = campaign_owner.dim_crm_user_id
+  LEFT JOIN dim_crm_account
+    ON cohort_base_combined.dim_crm_account_id=dim_crm_account.dim_crm_account_id
+  LEFT JOIN dim_crm_user account_owner
+    ON dim_crm_account.dim_crm_user_id = account_owner.dim_crm_user_id
+  LEFT JOIN dim_crm_user opportunity_owner
+    ON cohort_base_combined.opp_dim_crm_user_id = opportunity_owner.dim_crm_user_id
+  LEFT JOIN person_history_final
+    ON cohort_base_combined.dim_crm_touchpoint_id = person_history_final.dim_crm_touchpoint_id 
+    AND cohort_base_combined.sfdc_record_id = person_history_final.sfdc_record_id
   LEFT JOIN dim_date inquiry_date
     ON cohort_base_combined.true_inquiry_date = inquiry_date.date_day
   LEFT JOIN dim_date mql_date
@@ -879,6 +1007,8 @@
     ON cohort_base_combined.sales_accepted_date = sao_date.date_day
   LEFT JOIN dim_date closed_date
     ON cohort_base_combined.close_date=closed_date.date_day
+  LEFT JOIN dim_date pipeline_created_date
+    ON cohort_base_combined.pipeline_created_date=pipeline_created_date.date_day
   LEFT JOIN dim_date bizible_date
     ON cohort_base_combined.bizible_touchpoint_date=bizible_date.date_day
 
@@ -893,7 +1023,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2022-07-05",
-    updated_date="2023-10-31",
+    updated_date="2024-01-08",
   ) }}

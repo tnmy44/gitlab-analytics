@@ -34,7 +34,6 @@ models:
           - not_null
       - name: current_sign_in_at
       - name: last_sign_in_at
-      - name: zuora_account_id
       - name: salesforce_account_id
       - name: billable
   - name: customers_db_leads_source

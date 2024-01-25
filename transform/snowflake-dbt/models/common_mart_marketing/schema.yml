@@ -70,6 +70,12 @@ models:
           description: Average net ARR associated with a campaign based on the number of campaigns connected to an opportunity that is tied to the touchpoint.
         - name: is_partner_recalled
           description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
+        - name: devrel_campaign_type
+          description: A field explaining if the campaign was in SFDC or UTMs.
+        - name: devrel_campaign_description
+          description: A short description of the work the devrel team did on the campaign.
+        - name: devrel_campaign_influence_type
+          description: The output the devrel team created to contribute to the campaign.
 
     - name: mart_crm_touchpoint
       description: Model containing Bizible touchpoints (non-attribution) along with contact, lead, account, and campaign details.
@@ -117,6 +123,12 @@ models:
           description: Count of touchpoints that occured on or before the `accepted_date` that are also Lead Created.
         - name: is_partner_recalled
           description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
+        - name: devrel_campaign_type
+          description: A field explaining if the campaign was in SFDC or UTMs.
+        - name: devrel_campaign_description
+          description: A short description of the work the devrel team did on the campaign.
+        - name: devrel_campaign_influence_type
+          description: The output the devrel team created to contribute to the campaign.
 
     - name: mart_crm_person
       description: Model with person and MQL business logic.
@@ -180,6 +192,10 @@ models:
           description: This field indicates the number of days that passed since this user started a trial.
         - name: is_partner_recalled
           description: A boolean field from Salesforce on the lead and contact, these are persons taken back by GitLab when the person was previously passed to partners. The partner had exceeded the time period in which they were supposed to qualify the lead, so they return to GitLab’s possession
+        - name: is_abm_tier_inquiry
+          description: A flag that indicates whether or not the person's account was in an ABM Tier at the time of Inquiry
+        - name: is_abm_tier_mql
+          description: A flag that indicates whether or not the person's account was in an ABM Tier at the time of MQL
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
@@ -218,7 +234,7 @@ models:
         - name: mqls
           description: The sum of MQLs by the various dimensions. 
         - name: saos
-          description: The sum of SAOs by the various dimensions. 
+          description: The sum of SAOs by the various dimensions.
 
 
     - name: rpt_lead_to_revenue
@@ -613,7 +629,28 @@ models:
         - name: is_created_through_deal_registration
           description: Boolean value for being created through the deal reg process. 
         - name: is_mdf_campaign
-          description: Boolean value for whether or not this is from a channel partner effort.  
+          description: Boolean value for whether or not this is from a channel partner effort.
+        - name: sfdc_record_id
+          description: The SFDC ID of the person record
+        - name: opp_partner_dim_crm_account_id
+          description: The partner account id of the Opportunity attached to the touchpoin
+        - name: report_opportunity_user_business_unit
+          description: A case statement comparsing the closed date to today, when the closed date is before today the field passes the account owner bussiness unit, else the opp owner.
+        - name: report_opportunity_user_sub_business_unit
+          description: A case statement comparsing the closed date to today, when the closed date is before today the field passes the account owner sub bussiness unit, else the opp owner.
+        - name: report_opportunity_user_asm
+          description: Reports the Opportunities Users's ASM accounting for hybrid accounts.
+        - name: person_status_change
+          description: Tracks the change in status for the person record after the touchpoint date. 
+        - name: person_status_update
+          description: A non-null field of `person_status_change`
+        - name: devrel_campaign_type
+          description: A field explaining if the campaign was in SFDC or UTMs.
+        - name: devrel_campaign_description
+          description: A short description of the work the devrel team did on the campaign.
+        - name: devrel_campaign_influence_type
+          description: The output the devrel team created to contribute to the campaign.
+
 
     - name: rpt_l2r_community_data
       description: Tableau-specific table that joins Zuora, Opportunity, and Lead To Revenue data to hone in on the community-owned opportunities and their related data points. 

@@ -1,4 +1,5 @@
 import logging
+import re
 from typing import Dict, Tuple, Optional
 from datetime import datetime
 
@@ -30,12 +31,14 @@ DELETES_CSV_CHUNKSIZE = 100_000_000
 
 class PostgresPipelineTable:
     def __init__(self, table_config: Dict[str, str]):
-        self.query = table_config["import_query"]
+        import_query = table_config["import_query"]
+        self.query = import_query
         self.import_db = table_config["import_db"]
 
-        suffix = "_internal_only"
-        if table_config["export_table"].endswith(suffix):
-            self.source_table_name = table_config["export_table"][: -len(suffix)]
+        # get source_table_name from query: `FROM <source_table_name>`
+        match = re.search(r"\bFROM\b\s+(\w+)", import_query)
+        if match:
+            self.source_table_name = match.group(1)
         else:
             self.source_table_name = table_config["export_table"]
 
@@ -280,7 +283,7 @@ class PostgresPipelineTable:
     ) -> bool:
         if not is_schema_addition:
             logging.info(
-                f"Table {self.get_target_table_name()} already exists and won't be tested."
+                f"Table {self.get_target_table_name()} already exists and won't be processed further."
             )
             return False
         target_table = self.get_temp_target_table_name()

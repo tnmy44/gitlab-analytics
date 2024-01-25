@@ -2,7 +2,7 @@
 
     materialized='incremental',
     unique_key='behavior_structured_event_pk',
-    tags=['product'],
+    tags=['mnpi_exception','product'],
     on_schema_change='sync_all_columns',
     cluster_by=['behavior_at::DATE']
   ) 
@@ -72,10 +72,8 @@ code_suggestions_joined_to_fact_and_dim AS (
     dim_behavior_event.event_action,
     dim_behavior_event.event_label,
     dim_behavior_event.event_property,
-    --Need to exclude VS Code 3.76.0 (which sent duplicate events)
     CASE
-      WHEN user_agent LIKE '%3.76.0 VSCode%' THEN TRUE --exclude events which carry the version in user_agent from the code_suggestions_context
-      WHEN ide_name = 'Visual Studio Code' AND extension_version = '3.76.0' THEN TRUE --exclude events from with version from the ide_extension_version context
+      WHEN ide_name = 'Visual Studio Code' AND extension_version = '3.76.0' THEN TRUE --exclude IDE events from VS Code extension version 3.76.0 (which sent duplicate events)
       ELSE FALSE
     END AS is_event_to_exclude
   FROM joined_code_suggestions_contexts
@@ -117,7 +115,26 @@ filtered_code_suggestion_events AS (
     code_suggestions_context,
     ide_extension_version_context,
     has_code_suggestions_context,
-    has_ide_extension_version_context
+    has_ide_extension_version_context,
+    instance_id,
+    host_name,
+    namespace_ids,
+    ultimate_parent_namespace_ids,
+    dim_installation_ids,
+    host_names,
+    subscription_names,
+    dim_crm_account_ids,
+    crm_account_names,
+    dim_parent_crm_account_ids,
+    parent_crm_account_names,
+    dim_crm_account_id,
+    crm_account_name,
+    dim_parent_crm_account_id,
+    parent_crm_account_name,
+    subscription_name,
+    ultimate_parent_namespace_id,
+    dim_installation_id,
+    installation_host_name
   FROM code_suggestions_joined_to_fact_and_dim
   WHERE app_id IN ('gitlab_ai_gateway', 'gitlab_ide_extension') --"official" Code Suggestions app_ids
     AND is_event_to_exclude = FALSE --only include the good events
@@ -127,7 +144,7 @@ filtered_code_suggestion_events AS (
 {{ dbt_audit(
     cte_ref="filtered_code_suggestion_events",
     created_by="@cbraza",
-    updated_by="@cbraza",
+    updated_by="@michellecooper",
     created_date="2023-10-09",
-    updated_date="2023-10-11"
+    updated_date="2024-01-08"
 ) }}

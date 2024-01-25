@@ -5,7 +5,7 @@
     ('dim_order_type','dim_order_type'),
     ('dim_deal_path','dim_deal_path'),
     ('fct_crm_opportunity','fct_crm_opportunity'),
-    ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
+    ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'), 
     ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date', 'dim_date'),
@@ -173,6 +173,8 @@
       fct_crm_opportunity.is_booked_net_arr,
       fct_crm_opportunity.is_downgrade,
       dim_crm_opportunity.critical_deal_flag,
+      fct_crm_opportunity.is_abm_tier_sao,
+      fct_crm_opportunity.is_abm_tier_closed_won,
 
       -- crm owner/sales rep live fields
       dim_crm_user_hierarchy_live.crm_user_sales_segment,
@@ -200,8 +202,6 @@
       -- If the opportunity's SAO date is in a prior fiscal year, use the sales hierarchy from the account owner, unless the current account owner is a hybrid user, in which case
       -- use the account's sales hierarchy (account demographics fields)
       -- If the opportunity's SAO date in this fiscal year or is set a future fiscal year, use the stamped hierarchy
-      dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
-      dim_crm_opportunity.sao_crm_account_owner_stamped_name,
        CASE
         WHEN dim_date_sao_date.fiscal_year < dim_date_sao_date.current_fiscal_year AND fct_crm_opportunity.is_hybrid_account_owner_opp = 0
           THEN crm_account_user_sales_segment
@@ -654,7 +654,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jeanpeguero",
-    updated_by="@lisvinueza",
+    updated_by="@rkohnke",
     created_date="2022-02-28",
-    updated_date="2023-07-24"
+    updated_date="2023-11-01"
   ) }}

@@ -40,7 +40,7 @@ WITH structured_events AS (
     FROM {{ ref('mart_behavior_structured_event') }}
     WHERE metric IS NOT NULL
     --- filter out any internal namespaces
-      AND namespace_is_internal = FALSE
+      AND (namespace_is_internal = FALSE OR gsc_namespace_id IS NULL)
   {{ dbt_utils.group_by(n=7) }}
 
 ), pageviews AS (

@@ -13,10 +13,13 @@ issues AS (
   SELECT
     issues.*,
     internal_projects.parent_namespace_id AS namespace_id,
-    internal_projects.ultimate_parent_namespace_id
+    internal_projects.ultimate_parent_namespace_id,
+    gitlab_dotcom_work_item_type_source.work_item_type_name AS issue_type
   FROM {{ ref('gitlab_dotcom_issues_source') }} AS issues
   INNER JOIN internal_projects
     ON issues.project_id = internal_projects.project_id
+  LEFT JOIN {{ ref('gitlab_dotcom_work_item_type_source') }}
+    ON issues.work_item_type_id = gitlab_dotcom_work_item_type_source.work_item_type_id
 
 
 ),
@@ -47,9 +50,11 @@ close_moved_date AS (
   FROM {{ ref('gitlab_dotcom_notes_source') }}
   WHERE noteable_type = 'Issue'
     AND system = TRUE
-    AND (CONTAINS(note, 'closed')
+    AND (
+      CONTAINS(note, 'closed')
       OR CONTAINS(note, 'moved to')
-      OR note ILIKE ANY ('Status changed to closed%', 'closed via%'))
+      OR note ILIKE ANY ('Status changed to closed%', 'closed via%')
+    )
   QUALIFY ROW_NUMBER() OVER (PARTITION BY noteable_id ORDER BY created_at DESC) = 1
 
 ),
@@ -120,6 +125,31 @@ prep_epic AS (
 
 ),
 
+gitlab_user AS (
+
+  SELECT *
+  FROM {{ ref('dim_gitlab_dotcom_gitlab_emails') }}
+
+),
+
+issue_to_assignee AS (
+
+  SELECT *
+  FROM {{ ref('gitlab_dotcom_issue_assignees_source') }}
+
+),
+
+list_assignees AS (
+
+  SELECT
+    a.issue_id,
+    LISTAGG(gitlab_dotcom_user_name, ' | ') AS issue_assignee_user_name
+  FROM issue_to_assignee AS a
+  INNER JOIN gitlab_user AS b ON a.user_id = b.gitlab_dotcom_user_id
+  GROUP BY 1
+
+),
+
 joined AS (
 
   SELECT
@@ -146,10 +176,12 @@ joined AS (
     - The derived_closed_at date from the last note left in the issue (regardless of the type of note)
     */
     IFF(issues.state = 'closed', COALESCE(issues.issue_closed_at, close_moved_date.derived_closed_at, derived_close_date.derived_closed_at), issues.issue_closed_at)
-    AS issue_closed_at,
+      AS issue_closed_at,
     issues.is_confidential                                                                                                                                           AS issue_is_confidential,
-    COALESCE(issues.namespace_id = 9970
-      AND ARRAY_CONTAINS('community contribution'::VARIANT, agg_labels.labels), FALSE)                                                                               AS is_community_contributor_related,
+    COALESCE(
+      issues.namespace_id = 9970
+      AND ARRAY_CONTAINS('community contribution'::VARIANT, agg_labels.labels), FALSE
+    )                                                                                                                                                                AS is_community_contributor_related,
 
     CASE
       WHEN ARRAY_CONTAINS('severity::1'::VARIANT, agg_labels.labels) OR ARRAY_CONTAINS('S1'::VARIANT, agg_labels.labels)
@@ -173,12 +205,18 @@ joined AS (
         THEN 'priority 4'
       ELSE 'undefined'
     END                                                                                                                                                              AS priority_tag,
-    COALESCE(issues.namespace_id = 9970
-      AND ARRAY_CONTAINS('security'::VARIANT, agg_labels.labels), FALSE)                                                                                             AS is_security_issue,
-    IFF(issues.project_id IN ({{ is_project_included_in_engineering_metrics() }}),
-      TRUE, FALSE)                                                                                                                                                   AS is_included_in_engineering_metrics,
-    IFF(issues.project_id IN ({{ is_project_part_of_product() }}),
-      TRUE, FALSE)                                                                                                                                                   AS is_part_of_product,
+    COALESCE(
+      issues.namespace_id = 9970
+      AND ARRAY_CONTAINS('security'::VARIANT, agg_labels.labels), FALSE
+    )                                                                                                                                                                AS is_security_issue,
+    IFF(
+      issues.project_id IN ({{ is_project_included_in_engineering_metrics() }}),
+      TRUE, FALSE
+    )                                                                                                                                                                AS is_included_in_engineering_metrics,
+    IFF(
+      issues.project_id IN ({{ is_project_part_of_product() }}),
+      TRUE, FALSE
+    )                                                                                                                                                                AS is_part_of_product,
     issues.state,
     issues.weight,
     issues.due_date,
@@ -200,7 +238,8 @@ joined AS (
     prep_epic.epic_id,
     prep_epic.epic_title,
     prep_epic.labels                                                                                                                                                 AS epic_labels,
-    prep_epic.epic_state
+    prep_epic.epic_state,
+    list_assignees.issue_assignee_user_name
   FROM issues
   LEFT JOIN agg_labels
     ON issues.issue_id = agg_labels.issue_id
@@ -216,6 +255,8 @@ joined AS (
     ON issues.issue_id = epic_to_issue.issue_id
   LEFT JOIN prep_epic
     ON epic_to_issue.epic_id = prep_epic.epic_id
+  LEFT JOIN list_assignees
+    ON issues.issue_id = list_assignees.issue_id
 
 )
 

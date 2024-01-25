@@ -8,7 +8,7 @@
     ('dim_sales_qualified_source','dim_sales_qualified_source'),
     ('dim_order_type','dim_order_type'),
     ('dim_deal_path','dim_deal_path'),
-    ('fct_crm_opportunity','fct_crm_opportunity'),
+    ('fct_crm_opportunity','fct_crm_opportunity'), 
     ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
     ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
@@ -183,10 +183,10 @@
       fct_crm_opportunity.is_booked_net_arr,
       fct_crm_opportunity.is_downgrade,
       dim_crm_opportunity.critical_deal_flag,
+      fct_crm_opportunity.is_abm_tier_sao,
+      fct_crm_opportunity.is_abm_tier_closed_won,
 
       -- crm opp owner/account owner fields stamped at SAO date (only used for reporting on opps with close date < 2022-02-01)
-      dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
-      dim_crm_opportunity.sao_crm_account_owner_stamped_name,
       dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
       dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
       dim_crm_opportunity.sao_crm_opp_owner_geo_stamped,
@@ -583,9 +583,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@kmagda1",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2023-09-01"
+    updated_date="2023-11-01"
   ) }}
 
 

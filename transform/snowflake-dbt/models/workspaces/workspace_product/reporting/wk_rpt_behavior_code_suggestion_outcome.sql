@@ -2,7 +2,7 @@
 
     materialized='incremental',
     unique_key='suggestion_id',
-    tags=['product'],
+    tags=['mnpi_exception', 'product'],
     on_schema_change='sync_all_columns'
   ) 
 

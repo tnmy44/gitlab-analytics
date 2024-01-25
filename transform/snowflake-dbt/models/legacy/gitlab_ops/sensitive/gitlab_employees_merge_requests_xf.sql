@@ -41,9 +41,9 @@
     LEFT JOIN prep_project AS target_project
       ON gitlab_dotcom_merge_requests.dim_project_sk = target_project.dim_project_sk
     LEFT JOIN prep_user AS author
-      ON gitlab_dotcom_merge_requests.dim_user_sk_author = author.dim_user_sk
+      ON gitlab_dotcom_merge_requests.dim_user_author_sk = author.dim_user_sk
     LEFT JOIN prep_user AS assignee
-      ON gitlab_dotcom_merge_requests.dim_user_sk_assignee = assignee.dim_user_sk
+      ON gitlab_dotcom_merge_requests.dim_user_assignee_sk = assignee.dim_user_sk
 
     UNION ALL  
     

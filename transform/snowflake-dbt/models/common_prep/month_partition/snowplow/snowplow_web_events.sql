@@ -114,6 +114,7 @@ WITH all_events AS (
           WHEN ev.os_timezone = 'SystemV/EST5' THEN NULL
           WHEN ev.os_timezone = 'SystemV/HST10' THEN NULL
           WHEN ev.os_timezone = 'EuropeALondon' THEN 'Europe/London'
+          WHEN ev.os_timezone = 'SystemV/CST6' THEN NULL
           ELSE ev.os_timezone
         END
         , '%2F', '/') AS os_timezone,

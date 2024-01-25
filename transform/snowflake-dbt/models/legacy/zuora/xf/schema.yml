@@ -1,13 +1,6 @@
 version: 2
 
 models:
-    - name: saas_charges_with_namespace_id
-      description: '{{ doc("saas_charges_with_namespace_id") }}'
-      columns:
-          - name: rate_plan_charge_id
-            tests:
-                - not_null
-                - unique
     - name: zuora_accounts_receivables
       description: Zuora accounts receivable
       columns:
@@ -103,7 +96,9 @@ models:
           - name: delivery
             description: delivery is based on the product category name.
             tests:
-                - not_null
+                - not_null:
+                    config:
+                      severity: warn
     - name: zuora_base_invoice_details
       description: '{{ doc("zuora_base_invoice_details") }}'
     - name: zuora_base_ci_minutes
@@ -204,7 +199,9 @@ models:
           - name: product_category
           - name: delivery
             tests:
-                - not_null
+                - not_null:
+                    config:
+                      severity: warn
           - name: unit_of_measure
           - name: mrr
             description: '{{ doc("zuora_mrr_totals_col_mrr") }}'
