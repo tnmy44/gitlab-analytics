@@ -1303,8 +1303,6 @@ LEFT JOIN cw_base
         WHEN is_renewal = 0 AND sfdc_opportunity.is_open = 1
             THEN DATEDIFF(day, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
     END                                                           AS cycle_time_in_days
-    --sfdc_opportunity.ptc_predicted_arr,
-    --sfdc_opportunity.ptc_predicted_renewal_risk_category
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
