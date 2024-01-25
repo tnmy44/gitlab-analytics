@@ -7,8 +7,8 @@ from google.cloud import monitoring_v3
 from google.oauth2 import service_account
 import datetime
 import time
-import pandas as pd
 from google.cloud import monitoring_v3
+
 
 
 def get_storage_metrics(project_id, metric_type, filter_str, start_time_offset=1200):
@@ -62,7 +62,5 @@ if __name__ == "__main__":
     data = pd.DataFrame()
 
     for m in latest_metrics:
-        data = data.append({"instance_name": m.get('resource').get('instance_name'),
-                            "space_remaining": m.get('value')}, ignore_index=True)
-
-    print(data)
+        if m.get('value') <= 94:
+            raise ValueError(f"{m.get('resource')} is running low on space")
