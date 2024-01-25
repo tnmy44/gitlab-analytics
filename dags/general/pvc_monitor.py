@@ -38,7 +38,7 @@ dag = DAG(
     schedule_interval="0 2 * * *",
     concurrency=1,
     catchup=False,
-    start_date=datetime(2024, 1, 25),
+    start_date=datetime(2024, 1, 20),
 )
 
 container_cmd = f"""
