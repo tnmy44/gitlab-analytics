@@ -1,7 +1,3 @@
-{{ config(
-    tags=["six_hourly"]
-) }}
-
 {{ simple_cte([
     ('crm_account_dimensions', 'map_crm_account'),
     ('prep_crm_account', 'prep_crm_account'),
