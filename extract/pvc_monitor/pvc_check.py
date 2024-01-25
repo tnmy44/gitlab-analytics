@@ -59,8 +59,6 @@ if __name__ == "__main__":
     filter_str = f'metric.type="{metric_type}"'
     latest_metrics = get_storage_metrics(project_id, metric_type, filter_str)
 
-    data = pd.DataFrame()
-
     for m in latest_metrics:
         if m.get('value') <= 94:
             raise ValueError(f"{m.get('resource')} is running low on space")
