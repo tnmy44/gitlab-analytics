@@ -134,9 +134,7 @@ final AS (
       AND dates.date_actual >= pto2.pto_date
       AND r12_start_date <= pto2.pto_date
   GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
-  ORDER BY
-    1 ASC
-    ,5 DESC
+  ORDER BY 1 ASC, 5 DESC
 )
 
 SELECT
