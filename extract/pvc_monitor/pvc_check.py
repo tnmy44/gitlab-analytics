@@ -60,5 +60,5 @@ if __name__ == "__main__":
     latest_metrics = get_storage_metrics(project_id, metric_type, filter_str)
 
     for m in latest_metrics:
-        if m.get('value') <= 94:
+        if m.get('value').int64_value <= 94:
             raise ValueError(f"{m.get('resource')} is running low on space")
