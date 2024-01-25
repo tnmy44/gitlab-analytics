@@ -45,9 +45,6 @@ def get_storage_metrics(project_id, metric_type, filter_str, start_time_offset=1
                 }
                 latest_metrics.append(latest_metric)
 
-        for metric in latest_metrics:
-            print(metric)
-
         return latest_metrics
 
     except Exception as e:
@@ -55,35 +52,13 @@ def get_storage_metrics(project_id, metric_type, filter_str, start_time_offset=1
         return []
 
 
-# full_metric_type = f"{project_name}/metricDescriptors/{metric_type}"
-#
-    # descriptor = client.get_metric_descriptor(name=full_metric_type)
-    # print(descriptor)
-
-    # interval = monitoring_v3.TimeInterval()
-    # interval.end_time = datetime.datetime.utcnow()
-    # interval.start_time = interval.end_time - datetime.timedelta(minutes=5)
-#
-    # results = client.list_time_series(
-    #     name=project_name,
-    #     filter=filter_str,
-    #     interval=interval,
-    #     view=monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
-    # )
-#
-    # for result in results:
-    #     print(f"Resource: {result.resource.type}, {result.resource.labels}")
-    #     print(f"Metric: {result.metric.type}")
-    #     for point in result.points:
-    #         print(f"  Value: {point.value}")
-    #         print(f"  Start Time: {point.interval.start_time}")
-    #         print(f"  End Time: {point.interval.end_time}")
-    #         print("\n")
-
 
 if __name__ == "__main__":
-    # Replace these values with your own
     project_id = "gitlab-analysis"
     metric_type = "file.googleapis.com/nfs/server/free_bytes_percent"  # Replace with your desired metric type
     filter_str = f'metric.type="{metric_type}"'
-    get_storage_metrics(project_id, metric_type, filter_str)
+    latest_metrics = get_storage_metrics(project_id, metric_type, filter_str)
+
+    for m in latest_metrics:
+        print(m.get('resource').get('instance_name'))
+        print(m.get('value'))
