@@ -14,28 +14,32 @@ def get_storage_metrics(project_id, metric_type, filter_str):
     keyfile = load(env["GCP_SERVICE_CREDS"], Loader=FullLoader)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
-    client = monitoring_v3.MetricServiceClient(credentials=scoped_credentials)
-
     project_name = f"projects/{project_id}"
-    interval = monitoring_v3.TimeInterval()
-    interval.end_time = datetime.datetime.utcnow()
-    interval.start_time = interval.end_time - datetime.timedelta(minutes=5)
+    client = monitoring_v3.MetricServiceClient(credentials=scoped_credentials)
+    descriptors = client.list_metric_descriptors(name=project_name)
+    for descriptor in descriptors:
+        print(descriptor.type)
 
-    results = client.list_time_series(
-        name=project_name,
-        filter=filter_str,
-        interval=interval,
-        view=monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
-    )
-
-    for result in results:
-        print(f"Resource: {result.resource.type}, {result.resource.labels}")
-        print(f"Metric: {result.metric.type}")
-        for point in result.points:
-            print(f"  Value: {point.value}")
-            print(f"  Start Time: {point.interval.start_time}")
-            print(f"  End Time: {point.interval.end_time}")
-            print("\n")
+    #
+    # interval = monitoring_v3.TimeInterval()
+    # interval.end_time = datetime.datetime.utcnow()
+    # interval.start_time = interval.end_time - datetime.timedelta(minutes=5)
+#
+    # results = client.list_time_series(
+    #     name=project_name,
+    #     filter=filter_str,
+    #     interval=interval,
+    #     view=monitoring_v3.ListTimeSeriesRequest.TimeSeriesView.FULL,
+    # )
+#
+    # for result in results:
+    #     print(f"Resource: {result.resource.type}, {result.resource.labels}")
+    #     print(f"Metric: {result.metric.type}")
+    #     for point in result.points:
+    #         print(f"  Value: {point.value}")
+    #         print(f"  Start Time: {point.interval.start_time}")
+    #         print(f"  End Time: {point.interval.end_time}")
+    #         print("\n")
 
 
 if __name__ == "__main__":
