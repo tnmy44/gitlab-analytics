@@ -59,6 +59,10 @@ if __name__ == "__main__":
     filter_str = f'metric.type="{metric_type}"'
     latest_metrics = get_storage_metrics(project_id, metric_type, filter_str)
 
+    data = pd.DataFrame()
+
     for m in latest_metrics:
-        print(m.get('resource').get('instance_name'))
-        print(m.get('value'))
+        data = data.append({"instance_name": m.get('resource').get('instance_name'),
+                            "space_remaining": m.get('value')})
+
+    print(data)
