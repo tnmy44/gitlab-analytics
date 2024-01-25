@@ -16,11 +16,10 @@ def get_storage_metrics(project_id, metric_type, filter_str):
     scoped_credentials = credentials.with_scopes(scope)
     project_name = f"projects/{project_id}"
     client = monitoring_v3.MetricServiceClient(credentials=scoped_credentials)
-    descriptors = client.list_metric_descriptors(name=project_name)
-    for descriptor in descriptors:
-        print(descriptor.type)
+#    descriptors = client.list_metric_descriptors(name=project_name)
+    descriptor = client.get_metric_descriptor(name=metric_type)
+    print(descriptor)
 
-    #
     # interval = monitoring_v3.TimeInterval()
     # interval.end_time = datetime.datetime.utcnow()
     # interval.start_time = interval.end_time - datetime.timedelta(minutes=5)
