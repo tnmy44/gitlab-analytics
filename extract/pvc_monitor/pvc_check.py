@@ -9,7 +9,7 @@ import datetime
 
 
 
-def get_storage_metrics(project_id, key_path, metric_type, filter_str):
+def get_storage_metrics(project_id, metric_type, filter_str):
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
     keyfile = load(env["GCP_SERVICE_CREDS"], Loader=FullLoader)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
@@ -44,4 +44,4 @@ if __name__ == "__main__":
     metric_type = "compute.googleapis.com/instance/disk/write_bytes_count"  # Replace with your desired metric type
     filter_str = f'metric.type="{metric_type}"'
 
-    get_storage_metrics(project_id, key_path, metric_type, filter_str)
+    get_storage_metrics(project_id, metric_type, filter_str)
