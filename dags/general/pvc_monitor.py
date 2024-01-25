@@ -47,6 +47,7 @@ dag = DAG(
 
 container_cmd = f"""
         {clone_and_setup_extraction_cmd} &&
+        pip install google-cloud-monitoring
         cd pvc_monitor/ &&
         python3 pvc_check.py
     """
