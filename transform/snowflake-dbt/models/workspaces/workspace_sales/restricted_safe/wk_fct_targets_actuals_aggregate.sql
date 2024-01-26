@@ -15,202 +15,38 @@ day_5_list AS (
 
 ),
 
-aggregated_data AS (
+quarterly_targets AS (
 
-  SELECT
-    actuals_targets_pk,
-    snapshot_date,
+  SELECT  
+    snapshot_fiscal_quarter_name,
+    snapshot_fiscal_quarter_date,
+    current_first_day_of_fiscal_quarter,
     dim_sales_qualified_source_id,
     dim_order_type_id,
     dim_crm_user_hierarchy_sk,
-
-    -- attributes
-    report_user_segment_geo_region_area_sqs_ot,
-    order_type_name,
-    sales_qualified_source_name,
-    crm_user_sales_segment, 
-    crm_user_geo, 
-    crm_user_region, 
-    crm_user_area, 
-    crm_user_business_unit,
-
-     --dates
-    snapshot_day,
-    snapshot_day_name, 
-    snapshot_day_of_week,
-    snapshot_first_day_of_week,
-    snapshot_week_of_year,
-    snapshot_day_of_month,
-    snapshot_day_of_quarter,
-    snapshot_day_of_year,
-    snapshot_fiscal_year,
-    snapshot_fiscal_quarter,
-    snapshot_day_of_fiscal_quarter,
-    snapshot_day_of_fiscal_year,
-    snapshot_month_name,
-    snapshot_first_day_of_month,
-    snapshot_last_day_of_month,
-    snapshot_first_day_of_year,
-    snapshot_last_day_of_year,
-    snapshot_first_day_of_quarter,
-    snapshot_last_day_of_quarter,
-    snapshot_first_day_of_fiscal_quarter,
-    snapshot_last_day_of_fiscal_quarter,
-    snapshot_first_day_of_fiscal_year,
-    snapshot_last_day_of_fiscal_year,
-    snapshot_week_of_fiscal_year,
-    snapshot_month_of_fiscal_year,
-    snapshot_last_day_of_week,
-    snapshot_quarter_name,
-    snapshot_fiscal_quarter_date,
-    snapshot_fiscal_quarter_name,
-    snapshot_fiscal_quarter_name_fy,
-    snapshot_fiscal_quarter_number_absolute,
-    snapshot_fiscal_month_name,
-    snapshot_fiscal_month_name_fy,
-    snapshot_holiday_desc,
-    snapshot_is_holiday,
-    snapshot_last_month_of_fiscal_quarter,
-    snapshot_is_first_day_of_last_month_of_fiscal_quarter,
-    snapshot_last_month_of_fiscal_year,
-    snapshot_is_first_day_of_last_month_of_fiscal_year,
-    snapshot_days_in_month_count,
-    snapshot_week_of_month_normalised,
-    snapshot_day_of_fiscal_quarter_normalised,
-    snapshot_week_of_fiscal_quarter_normalised,
-    snapshot_day_of_fiscal_year_normalised,
-    snapshot_is_first_day_of_fiscal_quarter_week,
-    snapshot_days_until_last_day_of_month,
-    snapshot_current_date_actual,
-    snapshot_current_fiscal_year,
-    snapshot_current_first_day_of_fiscal_year,
-    snapshot_current_fiscal_quarter_name_fy,
-    snapshot_current_first_day_of_month,
-    snapshot_current_first_day_of_fiscal_quarter,
-    snapshot_current_day_of_month,
-    snapshot_current_day_of_fiscal_quarter,
-    snapshot_current_day_of_fiscal_year,
-
-     -- Targets
-    deals_daily_target,
-    deals_monthly_target,
-    deals_wtd_target,
-    deals_mtd_target,
-    deals_qtd_target,
-    deals_ytd_target,
-    mql_daily_target,
-    mql_monthly_target,
-    mql_wtd_target,
-    mql_mtd_target,
-    mql_qtd_target,
-    mql_ytd_target,
-    net_arr_daily_target,
-    net_arr_monthly_target,
-    net_arr_wtd_target,
-    net_arr_mtd_target,
-    net_arr_qtd_target,
-    net_arr_ytd_target,
-    net_arr_company_daily_target,
-    net_arr_company_monthly_target,
-    net_arr_company_wtd_target,
-    net_arr_company_mtd_target,
-    net_arr_company_qtd_target,
-    net_arr_company_ytd_target,
-    net_arr_pipeline_created_daily_target,
-    net_arr_pipeline_created_monthly_target,
-    net_arr_pipeline_created_wtd_target,
-    net_arr_pipeline_created_mtd_target,
-    net_arr_pipeline_created_qtd_target,
-    net_arr_pipeline_created_ytd_target,
-    new_logos_daily_target,
-    new_logos_monthly_target,
-    new_logos_wtd_target,
-    new_logos_mtd_target,
-    new_logos_qtd_target,
-    new_logos_ytd_target,
-    stage_1_opportunities_daily_target,
-    stage_1_opportunities_monthly_target,
-    stage_1_opportunities_wtd_target,
-    stage_1_opportunities_mtd_target,
-    stage_1_opportunities_qtd_target,
-    stage_1_opportunities_ytd_target,
-    total_closed_daily_target,
-    total_closed_monthly_target,
-    total_closed_wtd_target,
-    total_closed_mtd_target,
-    total_closed_qtd_target,
-    total_closed_ytd_target,
-    trials_daily_target,
-    trials_monthly_target,
-    trials_wtd_target,
-    trials_mtd_target,
-    trials_qtd_target,
-    trials_ytd_target,
-
-    -- Additive fields
-    SUM(iacv)                                            AS iacv,
-    SUM(net_iacv)                                        AS net_iacv,
-    SUM(segment_order_type_iacv_to_net_arr_ratio)        AS segment_order_type_iacv_to_net_arr_ratio,
-    SUM(calculated_from_ratio_net_arr)                   AS calculated_from_ratio_net_arr,
-    SUM(net_arr)                                         AS net_arr,
-    SUM(raw_net_arr)                                     AS raw_net_arr,
-    SUM(new_logo_count)                                  AS new_logo_count,
-    SUM(amount)                                          AS amount,
-    SUM(recurring_amount)                                AS recurring_amount,
-    SUM(true_up_amount)                                  AS true_up_amount,
-    SUM(proserv_amount)                                  AS proserv_amount,
-    SUM(other_non_recurring_amount)                      AS other_non_recurring_amount,
-    SUM(arr_basis)                                       AS arr_basis,
-    SUM(arr)                                             AS arr,
-    SUM(count_crm_attribution_touchpoints)               AS count_crm_attribution_touchpoints,
-    SUM(weighted_linear_iacv)                            AS weighted_linear_iacv,
-    SUM(count_campaigns)                                 AS count_campaigns,
-    SUM(probability)                                     AS probability,
-    SUM(days_in_sao)                                     AS days_in_sao,
-    SUM(open_1plus_deal_count)                           AS open_1plus_deal_count,
-    SUM(open_3plus_deal_count)                           AS open_3plus_deal_count,
-    SUM(open_4plus_deal_count)                           AS open_4plus_deal_count,
-    SUM(booked_deal_count)                               AS booked_deal_count,
-    SUM(churned_contraction_deal_count)                  AS churned_contraction_deal_count,
-    SUM(open_1plus_net_arr)                              AS open_1plus_net_arr,
-    SUM(open_3plus_net_arr)                              AS open_3plus_net_arr,
-    SUM(open_4plus_net_arr)                              AS open_4plus_net_arr,
-    SUM(booked_net_arr)                                  AS booked_net_arr,
-    SUM(churned_contraction_net_arr)                     AS churned_contraction_net_arr,
-    SUM(calculated_deal_count)                           AS calculated_deal_count,
-    SUM(booked_churned_contraction_deal_count)           AS booked_churned_contraction_deal_count,
-    SUM(booked_churned_contraction_net_arr)              AS booked_churned_contraction_net_arr,
-    SUM(renewal_amount)                                  AS renewal_amount,
-    SUM(total_contract_value)                            AS total_contract_value,
-    SUM(days_in_stage)                                   AS days_in_stage,
-    SUM(calculated_age_in_days)                          AS calculated_age_in_days,
-    SUM(days_since_last_activity)                        AS days_since_last_activity,
-    SUM(pre_military_invasion_arr)                       AS pre_military_invasion_arr,
-    SUM(won_arr_basis_for_clari)                         AS won_arr_basis_for_clari,
-    SUM(arr_basis_for_clari)                             AS arr_basis_for_clari,
-    SUM(forecasted_churn_for_clari)                      AS forecasted_churn_for_clari,
-    SUM(override_arr_basis_clari)                        AS override_arr_basis_clari,
-    SUM(vsa_start_date_net_arr)                          AS vsa_start_date_net_arr
-  FROM targets_actuals
-  GROUP BY all
-
-),
-
-quarterly_targets_totals AS (
-
-  SELECT  
-    snapshot_fiscal_year,
-    snapshot_fiscal_quarter,
-    snapshot_fiscal_quarter_date,
-    report_user_segment_geo_region_area_sqs_ot,
     SUM(deals_monthly_target)                            AS deals_quarterly_target,
     SUM(mql_monthly_target)                              AS mql_quarterly_target,
     SUM(net_arr_monthly_target)                          AS net_arr_quarterly_target,
+    SUM(net_arr_pipeline_created_monthly_target)         AS net_arr_pipeline_created_quarterly_target,
     SUM(net_arr_company_monthly_target)                  AS net_arr_company_quarterly_target,
     SUM(new_logos_monthly_target)                        AS new_logos_quarterly_target,
     SUM(stage_1_opportunities_monthly_target)            AS stage_1_opportunities_quarterly_target, 
     SUM(total_closed_monthly_target)                     AS total_closed_quarterly_target,
-    SUM(trials_monthly_target)                           AS trials_quarterly_target,
+    SUM(trials_monthly_target)                           AS trials_quarterly_target
+  FROM targets_actuals
+  GROUP BY 1,2,3,4,5,6
+
+),
+
+quarterly_totals AS (
+
+  SELECT
+    snapshot_fiscal_quarter_name,
+    snapshot_fiscal_quarter_date,
+    current_first_day_of_fiscal_quarter,
+    dim_sales_qualified_source_id,
+    dim_order_type_id,
+    dim_crm_user_hierarchy_sk,
     SUM(CASE 
           WHEN close_fiscal_quarter_date = snapshot_fiscal_quarter_date
               THEN booked_net_arr
@@ -253,52 +89,90 @@ quarterly_targets_totals AS (
           ELSE 0
         END)                                               AS total_created_and_booked_same_quarter_net_arr
   FROM targets_actuals
-  WHERE snapshot_day_of_fiscal_quarter_normalised = 90
-  GROUP BY all
+  WHERE is_excluded_from_pipeline_created_combined = 0
+     AND is_deleted = 0
+     AND snapshot_day_of_fiscal_quarter_normalised = 90
+  GROUP BY 1,2,3,4,5,6
+
+),
+
+base_targets_actuals AS (
+
+  SELECT 
+    snapshot_fiscal_quarter_name,
+    snapshot_fiscal_quarter_date,
+    current_first_day_of_fiscal_quarter,
+    dim_sales_qualified_source_id,
+    dim_order_type_id,
+    dim_crm_user_hierarchy_sk
+  FROM quarterly_totals
+
+  UNION
+
+  SELECT 
+    snapshot_fiscal_quarter_name,
+    snapshot_fiscal_quarter_date,
+    current_first_day_of_fiscal_quarter,
+    dim_sales_qualified_source_id,
+    dim_order_type_id,
+    dim_crm_user_hierarchy_sk
+  FROM quarterly_targets
 
 ),
 
 historical_targets_actuals AS (
 
   SELECT
-    aggregated_data.*,
+    base_targets_actuals.snapshot_fiscal_quarter_name,
+    base_targets_actuals.snapshot_fiscal_quarter_date,
+    base_targets_actuals.current_first_day_of_fiscal_quarter,
+    base_targets_actuals.dim_sales_qualified_source_id,
+    base_targets_actuals.dim_order_type_id,
+    base_targets_actuals.dim_crm_user_hierarchy_sk,
+    deals_quarterly_target,
+    mql_quarterly_target,
+    net_arr_quarterly_target,
+    net_arr_company_quarterly_target,
+    new_logos_quarterly_target,
+    stage_1_opportunities_quarterly_target, 
+    total_closed_quarterly_target,
+    trials_quarterly_target,
+    total_booked_net_arr,
+    total_churned_contraction_net_arr,       
+    total_booked_deal_count,
+    total_churned_contraction_deal_count,   
+    total_pipe_generation_net_arr,
+    total_pipe_generation_deal_count,
+    total_created_and_booked_same_quarter_net_arr,
     -- check if we are in the current fiscal year or not. If not, use total, if we are use target
     CASE
-      WHEN snapshot_current_fiscal_quarter_name_fy < snapshot_fiscal_quarter_name
-        THEN net_arr_daily_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_daily_target_net_arr,
+      WHEN base_targets_actuals.current_first_day_of_fiscal_quarter <= base_targets_actuals.snapshot_fiscal_quarter_date
+        THEN net_arr_quarterly_target
+      ELSE total_booked_net_arr
+    END                                         AS adjusted_quarterly_target_net_arr,
     CASE
-      WHEN snapshot_current_fiscal_quarter_name_fy < snapshot_fiscal_quarter_name
-        THEN net_arr_monthly_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_monthly_target_net_arr,
+      WHEN base_targets_actuals.current_first_day_of_fiscal_quarter <= base_targets_actuals.snapshot_fiscal_quarter_date
+        THEN deals_quarterly_target
+      ELSE total_booked_deal_count
+    END                                         AS adjusted_quarterly_target_deals,
     CASE
-      WHEN snapshot_current_fiscal_quarter_name_fy < snapshot_fiscal_quarter_name
-        THEN deals_daily_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_daily_target_deals,
-    CASE
-      WHEN snapshot_current_fiscal_quarter_name_fy < snapshot_fiscal_quarter_name
-        THEN deals_monthly_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_monthly_target_deals,
-    CASE
-      WHEN snapshot_current_fiscal_quarter_name_fy = snapshot_fiscal_quarter_name
-        THEN net_arr_pipeline_created_daily_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_daily_target_net_arr_pipeline_created,
-    CASE
-      WHEN snapshot_current_fiscal_quarter_name_fy <= snapshot_fiscal_quarter_name
-        THEN net_arr_pipeline_created_monthly_target
-      ELSE booked_net_arr
-    END                                         AS adjusted_monthly_target_net_arr_pipeline_created,
-    IFF(snapshot_fiscal_quarter_name_fy = snapshot_current_fiscal_quarter_name_fy, TRUE, FALSE) AS is_current_snapshot_quarter
-  FROM aggregated_data
-  INNER JOIN quarterly_targets_totals
-    ON quarterly_targets_totals.snapshot_fiscal_year = aggregated_data.snapshot_fiscal_year
-      AND quarterly_targets_totals.snapshot_fiscal_quarter = aggregated_data.snapshot_fiscal_quarter
-        AND quarterly_targets_totals.report_user_segment_geo_region_area_sqs_ot = aggregated_data.report_user_segment_geo_region_area_sqs_ot
+      WHEN base_targets_actuals.current_first_day_of_fiscal_quarter <= base_targets_actuals.snapshot_fiscal_quarter_date
+        THEN net_arr_pipeline_created_quarterly_target
+      ELSE total_pipe_generation_net_arr
+    END                                         AS adjusted_quarterly_target_net_arr_pipeline_created,
+    IFF(base_targets_actuals.snapshot_fiscal_quarter_date = base_targets_actuals.current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
+  FROM base_targets_actuals
+  LEFT JOIN quarterly_targets
+    ON base_targets_actuals.snapshot_fiscal_quarter_date = quarterly_targets.snapshot_fiscal_quarter_date
+      AND base_targets_actuals.dim_sales_qualified_source_id = quarterly_targets.dim_sales_qualified_source_id
+        AND base_targets_actuals.dim_order_type_id = quarterly_targets.dim_order_type_id
+          AND base_targets_actuals.dim_crm_user_hierarchy_sk = quarterly_targets.dim_crm_user_hierarchy_sk
+  LEFT JOIN quarterly_totals
+    ON base_targets_actuals.snapshot_fiscal_quarter_date = quarterly_totals.snapshot_fiscal_quarter_date
+      AND base_targets_actuals.dim_sales_qualified_source_id = quarterly_totals.dim_sales_qualified_source_id
+        AND base_targets_actuals.dim_order_type_id = quarterly_totals.dim_order_type_id
+          AND base_targets_actuals.dim_crm_user_hierarchy_sk = quarterly_totals.dim_crm_user_hierarchy_sk
+  
 
 ),
 
@@ -376,7 +250,7 @@ granular_data AS (
         THEN close_date - created_date
       ELSE 0
     END AS closed_cycle_time_in_snapshot_week,
-    IFF(snapshot_fiscal_quarter_name_fy = snapshot_current_fiscal_quarter_name_fy, TRUE, FALSE) AS is_current_snapshot_quarter
+    IFF(snapshot_fiscal_quarter_date = current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
   FROM targets_actuals
   INNER JOIN day_5_list
     ON targets_actuals.snapshot_date = day_5_list.day_5_current_week

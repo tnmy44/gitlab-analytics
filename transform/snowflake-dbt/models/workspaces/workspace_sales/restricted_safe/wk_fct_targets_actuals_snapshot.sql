@@ -5,7 +5,6 @@ WITH dim_date AS (
   
 ),
 
-
 targets AS (
 
   SELECT *
@@ -212,15 +211,15 @@ combined AS (
     dim_date.week_of_fiscal_quarter_normalised                      AS snapshot_week_of_fiscal_quarter_normalised,
     dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
     dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
-    dim_date.current_date_actual                                    AS snapshot_current_date_actual,
-    dim_date.current_fiscal_year                                    AS snapshot_current_fiscal_year,
-    dim_date.current_first_day_of_fiscal_year                       AS snapshot_current_first_day_of_fiscal_year,
-    dim_date.current_fiscal_quarter_name_fy                         AS snapshot_current_fiscal_quarter_name_fy,
-    dim_date.current_first_day_of_month                             AS snapshot_current_first_day_of_month,
-    dim_date.current_first_day_of_fiscal_quarter                    AS snapshot_current_first_day_of_fiscal_quarter,
-    dim_date.current_day_of_month                                   AS snapshot_current_day_of_month,
-    dim_date.current_day_of_fiscal_quarter                          AS snapshot_current_day_of_fiscal_quarter,
-    dim_date.current_day_of_fiscal_year                             AS snapshot_current_day_of_fiscal_year,
+    dim_date.current_date_actual                                    AS current_date_actual,
+    dim_date.current_fiscal_year                                    AS current_fiscal_year,
+    dim_date.current_first_day_of_fiscal_year                       AS current_first_day_of_fiscal_year,
+    dim_date.current_fiscal_quarter_name_fy                         AS current_fiscal_quarter_name_fy,
+    dim_date.current_first_day_of_month                             AS current_first_day_of_month,
+    dim_date.current_first_day_of_fiscal_quarter                    AS current_first_day_of_fiscal_quarter,
+    dim_date.current_day_of_month                                   AS current_day_of_month,
+    dim_date.current_day_of_fiscal_quarter                          AS current_day_of_fiscal_quarter,
+    dim_date.current_day_of_fiscal_year                             AS current_day_of_fiscal_year,
     created_date.date_actual                                        AS created_date,
     created_date.first_day_of_month                                 AS created_month,
     created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
