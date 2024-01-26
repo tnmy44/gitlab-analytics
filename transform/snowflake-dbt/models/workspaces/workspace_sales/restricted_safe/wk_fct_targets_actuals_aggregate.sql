@@ -297,7 +297,9 @@ historical_targets_actuals AS (
     IFF(snapshot_fiscal_quarter_name_fy = snapshot_current_fiscal_quarter_name_fy, TRUE, FALSE) AS is_current_snapshot_quarter
   FROM aggregated_data
   INNER JOIN quarterly_targets_totals
-    ON quarterly_targets_totals.actuals_targets_pk = aggregated_data.actuals_targets_pk
+    ON quarterly_targets_totals.snapshot_fiscal_year = aggregated_data.snapshot_fiscal_year
+      AND quarterly_targets_totals.snapshot_fiscal_quarter = aggregated_data.snapshot_fiscal_quarter
+        AND quarterly_targets_totals.report_user_segment_geo_region_area_sqs_ot = aggregated_data.report_user_segment_geo_region_area_sqs_ot
 
 ),
 
