@@ -70,7 +70,7 @@ def check_pvc_metrics(scoped_credentials):
         scoped_credentials, project_id, metric_type
     )
     for m in pvc_free_space:
-        if m.get("value").double_value >= 20.0:
+        if m.get("value").double_value <= 20.0:
             print(m.get("value"))
             print(m.get("resource"))
             raise ValueError(f"{m.get('resource')} is running low on space")
