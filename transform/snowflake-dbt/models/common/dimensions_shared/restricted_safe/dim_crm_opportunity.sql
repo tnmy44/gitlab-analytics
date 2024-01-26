@@ -239,7 +239,7 @@ WITH prep_crm_opportunity AS (
 
       -- PTC related fields
       prep_crm_opportunity.ptc_predicted_arr,
-      prep_crm_opportunity.ptc_Predicted_renewal_risk_category,
+      prep_crm_opportunity.ptc_predicted_renewal_risk_category,
 
       -- metadata
       prep_crm_opportunity._last_dbt_run
