@@ -30,7 +30,10 @@
     {% set alias = context_col.get('field') %}
   {%- endif -%}
 
-  IFF(context_data_schema LIKE '{{schema}}', {{formula}}::{{data_type}}, NULL)  AS {{alias}}{%- if not loop.last %},{% endif %}
+  IFF(context_data_schema LIKE '{{schema}}', {{formula}}::{{data_type}}, NULL)  AS {{alias}}
+  {%- if not loop.last %}
+    ,
+  {% endif %}
 
 {%- endfor -%}
 {% endmacro %}
