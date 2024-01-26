@@ -8,6 +8,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from os import environ as env
 from yaml import load, safe_load, YAMLError, FullLoader
+from logging import error, info, basicConfig, getLogger, warning
 
 
 def get_metrics(scoped_credentials, project_id, metric_type, start_time_offset=1200):
@@ -69,10 +70,12 @@ def check_pvc_metrics(scoped_credentials):
         scoped_credentials, project_id, metric_type
     )
     for m in pvc_free_space:
-        if m.get("value").double_value <= 20.0:
+        if m.get("value").double_value >= 20.0:
             print(m.get("value"))
             print(m.get("resource"))
             raise ValueError(f"{m.get('resource')} is running low on space")
+
+    info("All PVC's have enough free space")
 
 
 if __name__ == "__main__":
