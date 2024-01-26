@@ -5,7 +5,7 @@ WITH bugs AS (
     stage_label,
     group_label,
     section_label
-  FROM {{ ref('issues_history') }} --using this instead of internal_issues_enhanced because of severity labels are added later
+  FROM {{ ref('issues_history') }} --using this instead of internal_issues_enhanced because severity labels are subject to change during issue's life time
   WHERE is_part_of_product
     AND type_label = 'bug'
     AND severity != 'No Severity'
