@@ -7,3 +7,9 @@ WITH base AS (
 
 SELECT *
 FROM base
+
+
+UNION ALL
+
+SELECT * 
+FROM {{ ref ('fy25_sfdc_sandbox_user_roles_hierarchy') }}
