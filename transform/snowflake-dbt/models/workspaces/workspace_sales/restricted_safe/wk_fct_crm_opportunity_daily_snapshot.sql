@@ -41,6 +41,12 @@
 
     -- dates
     sfdc_opportunity.snapshot_date,
+    sfdc_opportunity.snapshot_month,
+    sfdc_opportunity.snapshot_fiscal_year,
+    sfdc_opportunity.snapshot_fiscal_quarter_name,
+    sfdc_opportunity.snapshot_fiscal_quarter_date,
+    sfdc_opportunity.snapshot_day_of_fiscal_quarter_normalised,
+    sfdc_opportunity.snapshot_day_of_fiscal_year_normalised,
     sfdc_opportunity.created_date,
     sfdc_opportunity.created_date_id,
     sfdc_opportunity.sales_accepted_date,
@@ -112,6 +118,7 @@
     sfdc_opportunity.is_renewal,
     sfdc_opportunity.is_deleted,
     sfdc_opportunity.is_excluded_from_pipeline_created_combined,
+    sfdc_opportunity.created_in_snapshot_quarter_deal_count,
     sfdc_opportunity.is_duplicate,
     sfdc_opportunity.is_contract_reset,
     sfdc_opportunity.is_comp_new_logo_override,

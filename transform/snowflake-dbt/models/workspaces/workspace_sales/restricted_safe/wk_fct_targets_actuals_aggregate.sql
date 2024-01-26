@@ -154,7 +154,6 @@ aggregated_data AS (
     SUM(calculated_from_ratio_net_arr)                   AS calculated_from_ratio_net_arr,
     SUM(net_arr)                                         AS net_arr,
     SUM(raw_net_arr)                                     AS raw_net_arr,
-    SUM(created_and_won_same_quarter_net_arr_combined)   AS created_and_won_same_quarter_net_arr_combined,
     SUM(new_logo_count)                                  AS new_logo_count,
     SUM(amount)                                          AS amount,
     SUM(recurring_amount)                                AS recurring_amount,
@@ -191,8 +190,7 @@ aggregated_data AS (
     SUM(arr_basis_for_clari)                             AS arr_basis_for_clari,
     SUM(forecasted_churn_for_clari)                      AS forecasted_churn_for_clari,
     SUM(override_arr_basis_clari)                        AS override_arr_basis_clari,
-    SUM(vsa_start_date_net_arr)                          AS vsa_start_date_net_arr,
-    SUM(cycle_time_in_days_combined)                     AS cycle_time_in_days_combined
+    SUM(vsa_start_date_net_arr)                          AS vsa_start_date_net_arr
   FROM targets_actuals
   GROUP BY all
 
@@ -237,13 +235,13 @@ quarterly_targets_totals AS (
     -- Pipe gen totals
     SUM(CASE 
           WHEN pipeline_created_fiscal_quarter_date = snapshot_fiscal_quarter_date
-            AND is_eligible_created_pipeline_flag = 1
-              THEN created_in_snapshot_quarter_net_arr
+            AND is_net_arr_pipeline_created_combined = 1
+              THEN created_and_won_same_quarter_net_arr_combined
           ELSE 0
         END )                                              AS total_pipe_generation_net_arr,
     SUM(CASE 
           WHEN pipeline_created_fiscal_quarter_date = snapshot_fiscal_quarter_date
-            AND is_eligible_created_pipeline_flag = 1
+            AND is_net_arr_pipeline_created_combined = 1
               THEN created_in_snapshot_quarter_deal_count
           ELSE 0
         END )                                              AS total_pipe_generation_deal_count,
@@ -251,11 +249,12 @@ quarterly_targets_totals AS (
     -- Created & Landed totals
     SUM(CASE 
           WHEN close_fiscal_quarter_date = snapshot_fiscal_quarter_date
-              THEN created_and_won_same_quarter_net_arr
+              THEN created_and_won_same_quarter_net_arr_combined
           ELSE 0
         END)                                               AS total_created_and_booked_same_quarter_net_arr
   FROM targets_actuals
   WHERE snapshot_day_of_fiscal_quarter_normalised = 90
+  GROUP BY all
 
 ),
 
@@ -377,10 +376,10 @@ granular_data AS (
         THEN close_date - created_date
       ELSE 0
     END AS closed_cycle_time_in_snapshot_week,
-    IFF(fiscal_quarter_name_fy = current_fiscal_quarter_name_fy, TRUE, FALSE) AS is_current_snapshot_quarter
+    IFF(snapshot_fiscal_quarter_name_fy = snapshot_current_fiscal_quarter_name_fy, TRUE, FALSE) AS is_current_snapshot_quarter
   FROM targets_actuals
   INNER JOIN day_5_list
-    ON actuals.snapshot_date = day_5_list.day_5_current_week
+    ON targets_actuals.snapshot_date = day_5_list.day_5_current_week
 
 )
 
