@@ -35,3 +35,7 @@ seeds:
     description: A categorization of non GitLab team member snowflake users
   - name: test_employee_ids
     description: Employee IDs that were created as test or duplicate accounts in BambooHR. 
+  - name: fy25_sfdc_sandbox_users_hierarchy
+    description: Some temp test data for FY25 hierarchy prep
+  - name: fy25_sfdc_sandbox_user_roles_hierarchy
+    description: Some temp test data for FY25 hierarchy prep
