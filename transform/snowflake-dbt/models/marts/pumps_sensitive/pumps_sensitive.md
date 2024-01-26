@@ -30,3 +30,9 @@ This table contains PtE & PtC predicted scores that will automatically uploaded 
 This table contains Churn Forecasting predicted scores that will be automatically uploaded to Salesforce via Openprise.
 
 {% enddocs %}
+
+{% docs pump_opportunity_forecasting_scores %}
+
+This table contains Opportunity Forecasting predicted scores that will be automatically uploaded to Salesforce via Openprise.
+
+{% enddocs %}
