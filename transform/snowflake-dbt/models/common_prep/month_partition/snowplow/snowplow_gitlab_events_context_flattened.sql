@@ -204,6 +204,7 @@ SELECT
   MAX(column_selection.extra)                                 AS extra,
   MAX(column_selection.namespace_id)                          AS namespace_id,
   MAX(column_selection.plan)                                  AS plan,
+  MAX(column_selection.google_analytics_id)                   AS google_analytics_id,
   MAX(column_selection.google_analytics_client_id)            AS google_analytics_client_id,
   MAX(column_selection.project_id)                            AS project_id,
   MAX(column_selection.pseudonymized_user_id)                 AS pseudonymized_user_id,
