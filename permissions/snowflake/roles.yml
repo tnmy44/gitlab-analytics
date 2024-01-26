@@ -4630,6 +4630,7 @@ roles:
             - data_team_analyst
             - marketo
             - prometheus
+            - pto
             - restricted_safe
             - salesforce_sandbox
             - workday
@@ -5364,6 +5365,7 @@ roles:
             - bamboohr
             - bi_tool_eval_db
             - prometheus
+            - pto
             - restricted_safe
             - snowflake
             - workday
@@ -5424,6 +5426,7 @@ roles:
             - analyst_people
             - bamboohr
             - bamboohr_analytics
+            - pto
             - workday
         warehouses:
             - dev_xs
