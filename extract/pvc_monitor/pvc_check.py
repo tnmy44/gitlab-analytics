@@ -70,6 +70,8 @@ def check_pvc_metrics(scoped_credentials):
     )
     for m in pvc_free_space:
         if m.get("value").int64_value <= 20:
+            print(m.get("value"))
+            print(m.get("resource"))
             raise ValueError(f"{m.get('resource')} is running low on space")
 
 
