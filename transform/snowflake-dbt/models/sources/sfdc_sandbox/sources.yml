@@ -26,3 +26,4 @@ sources:
       - name: user_role
         identifier: userrole
       - name: lead
+      - name: contact
