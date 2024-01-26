@@ -30,6 +30,7 @@
     sfdc_opportunity.record_type_id,
 
     --attributes
+    sfdc_opportunity.report_user_segment_geo_region_area_sqs_ot,
     sales_qualified_source.sales_qualified_source_name,
     order_type.order_type_name,
     sales_rep_account.crm_user_sales_segment, 
