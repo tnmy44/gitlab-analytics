@@ -64,10 +64,9 @@ def check_pvc_metrics(scoped_credentials):
     """
     project_id = "gitlab-analysis"
     metric_type = "file.googleapis.com/nfs/server/free_bytes_percent"  # Replace with your desired metric type
-    filter_str = f'metric.type="{metric_type}"'
 
     pvc_free_space = get_metrics(
-        scoped_credentials, project_id, metric_type, filter_str
+        scoped_credentials, project_id, metric_type
     )
     for m in pvc_free_space:
         if m.get("value").int64_value <= 20:
