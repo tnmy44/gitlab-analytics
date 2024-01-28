@@ -82,6 +82,7 @@ SELECT
   gsc_google_analytics_client_id                                                                                    AS gsc_google_analytics_client_id,
   gsc_project_id                                                                                                    AS gsc_project_id,
   gsc_source                                                                                                        AS gsc_source,
+  gsc_is_gitlab_team_member                                                                                         AS gsc_is_gitlab_team_member,
   os_name                                                                                                           AS os_name,
   os_timezone                                                                                                       AS os_timezone,
   os_family                                                                                                         AS os,

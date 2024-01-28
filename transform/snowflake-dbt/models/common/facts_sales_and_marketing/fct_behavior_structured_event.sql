@@ -50,6 +50,7 @@ structured_event_renamed AS (
       gsc_project_id,
       gsc_pseudonymized_user_id,
       gsc_source,
+      gsc_is_gitlab_team_member,
       user_city, 
       user_country,
       user_region,
@@ -185,6 +186,7 @@ structured_events_w_dim AS (
       events_with_plan.gsc_extra,
       events_with_plan.gsc_plan,
       events_with_plan.gsc_source,
+      events_with_plan.gsc_is_gitlab_team_member,
 
       -- Degenerate Dimensions (IDE Extension Version Context Attributes)
       events_with_plan.ide_extension_version_context,
@@ -275,7 +277,7 @@ structured_events_w_dim AS (
 {{ dbt_audit(
     cte_ref="structured_events_w_dim",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@utkarsh060",
     created_date="2022-09-01",
-    updated_date="2024-01-24"
+    updated_date="2024-01-25"
 ) }}

@@ -376,6 +376,7 @@ WITH filtered_source as (
       events_with_flattened_context.project_id                 AS gsc_project_id,
       events_with_flattened_context.pseudonymized_user_id      AS gsc_pseudonymized_user_id,
       events_with_flattened_context.source                     AS gsc_source,
+      events_with_flattened_context.is_gitlab_team_member      AS gsc_is_gitlab_team_member,
       events_with_flattened_context.gitlab_experiment_context,
       events_with_flattened_context.has_gitlab_experiment_context,
       events_with_flattened_context.experiment_name,

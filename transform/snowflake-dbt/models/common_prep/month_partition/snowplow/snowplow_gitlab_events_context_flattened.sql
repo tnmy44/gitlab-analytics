@@ -65,7 +65,8 @@ WITH filtered_source as (
             {'field':'google_analytics_id'},
             {'field':'project_id', 'data_type':'number'},
             {'field':'pseudonymized_user_id'},
-            {'field':'source'}
+            {'field':'source'},
+            {'field':'is_gitlab_team_member', 'data_type':'boolean'}
             ]
         )
       }},
@@ -209,6 +210,7 @@ SELECT
   MAX(column_selection.project_id)                            AS project_id,
   MAX(column_selection.pseudonymized_user_id)                 AS pseudonymized_user_id,
   MAX(column_selection.source)                                AS source,
+  MAX(column_selection.is_gitlab_team_member)                 AS is_gitlab_team_member,
 
   MAX(column_selection.web_page_context)                      AS web_page_context,
   MAX(column_selection.web_page_context_schema)               AS web_page_context_schema,
