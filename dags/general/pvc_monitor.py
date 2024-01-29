@@ -33,7 +33,6 @@ from kube_secrets import GCP_SERVICE_CREDS
 from kubernetes_helpers import get_affinity, get_toleration
 
 # Load the env vars into a dict and set Secrets
-env = os.environ.copy()
 pod_env_vars = gitlab_pod_env_vars
 
 # Default arguments for the DAG

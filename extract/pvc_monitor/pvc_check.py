@@ -1,15 +1,13 @@
 import datetime
 import time
 from google.cloud import monitoring_v3
-from google.cloud import monitoring_v3
 from google.cloud import storage
-from google.oauth2 import service_account
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from os import environ as env
 from yaml import load, safe_load, YAMLError, FullLoader
 import time
-from logging import info
+from logging import info, error
 from os import environ as env
 
 from google.cloud import monitoring_v3
@@ -60,7 +58,7 @@ def get_metrics(scoped_credentials, project_id, metric_type, start_time_offset=1
         return latest_metrics
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        error(f"An error occurred: {e}")
         return []
 
 
@@ -72,14 +70,18 @@ def check_pvc_metrics(scoped_credentials):
     project_id = "gitlab-analysis"
     metric_type = "file.googleapis.com/nfs/server/free_bytes_percent"  # Replace with your desired metric type
 
+    res = []
     pvc_free_space = get_metrics(scoped_credentials, project_id, metric_type)
     for m in pvc_free_space:
         if m.get("value").double_value <= 20.0:
-            print(m.get("value"))
-            print(m.get("resource"))
-            raise ValueError(f"{m.get('resource')} is running low on space")
+            res.add(f"{m.get('resource')} is running low on space {m.get("value")} {m.get("resource")}")
 
-    info("All PVC's have enough free space")
+    if res:
+        for i, r in enumerate(res, start=1):
+            log(f"{i}: {r}")
+        raise ValueError("Volumes with low space")
+    else:
+        info("All PVC's have enough free space")
 
 
 if __name__ == "__main__":
