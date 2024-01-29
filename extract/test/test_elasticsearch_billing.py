@@ -9,6 +9,7 @@ os.environ["ELASTIC_CLOUD_ORG_ID"] = "111"
 
 from extract.elasticsearch_billing.src.utility import HEADERS, prep_dataframe
 
+
 def test_static_variables():
     """
     Test static variables
