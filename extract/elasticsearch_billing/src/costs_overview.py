@@ -21,7 +21,9 @@ table_name = "costs_overview"
 
 
 def get_costs_overview():
-    """Get costs overview from Elastic Cloud API from start of current month till present date"""
+    """
+    Get costs overview from Elastic Cloud API from start of current month till present date
+    """
 
     info("Getting costs overview")
     date_today = datetime.utcnow().date()
@@ -91,14 +93,12 @@ def get_costs_overview_backfill():
         ]
         output_list.append(row_list)
     # upload this data to snowflake
-    info("Uploading data to Snowflake")
     columns_list = [
         "payload",
         "extraction_start_date",
         "extraction_end_date",
     ]
     output_df = prep_dataframe(output_list, columns_list)
-    info("Uploading records to snowflake...")
     upload_to_snowflake(output_df, table_name)
 
 

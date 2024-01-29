@@ -21,7 +21,9 @@ table_name = "itemized_costs_by_deployment"
 
 
 def get_itemized_costs_by_deployments():
-    """Retrieves the itemized costs for the given deployment from start of current month till present date"""
+    """
+    Retrieves the itemized costs for the given deployment from start of current month till present date
+    """
 
     info("Retrieving itemized costs by deployment")
     date_today = datetime.utcnow().date()
@@ -58,7 +60,9 @@ def get_reconciliation_data():
 
 
 def get_itemized_costs_by_deployments_backfill():
-    """Retrieves the itemized costs for the given deployment from 2023-01-01 till previous months_end_date"""
+    """
+    Retrieves the itemized costs for the given deployment from 2023-01-01 till previous months_end_date
+    """
     info("Retrieving itemized costs by deployment")
     (
         extraction_start_date,
@@ -99,7 +103,6 @@ def get_itemized_costs_by_deployments_backfill():
         "extraction_end_date",
     ]
     output_df = prep_dataframe(output_list, columns_list)
-    info("Uploading records to snowflake...")
     upload_to_snowflake(output_df, table_name)
 
 

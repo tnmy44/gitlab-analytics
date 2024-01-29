@@ -28,6 +28,7 @@ def upload_to_snowflake(output_df, table_name):
     This function will upload the dataframe to snowflake
     """
     try:
+        info("Uploading records to snowflake...")
         loader_engine = snowflake_engine_factory(config_dict, "LOADER")
         dataframe_uploader(
             output_df,
@@ -70,13 +71,22 @@ def get_list_of_deployments():
     return output_list
 
 
-def prep_dataframe(output_list, columns_list):
+def prep_dataframe(data: list, columns: list) -> pd.DataFrame:
     """
     This function will prepare the dataframe for itemised costs by deployment
+    and will return the prepared data frame
+    Input:
+    data = [1,2,3]
+    columns = ['c1','c2','c3']
+
+    Return:
+    pd.DataFrame
+    columns: 'c1','c2','c3'
+    head(1): 1, 2, 3
     """
     output_df = pd.DataFrame(
-        output_list,
-        columns=columns_list,
+        data,
+        columns=columns,
     )
     return output_df
 
@@ -120,7 +130,6 @@ def get_response_and_upload(
     ]
     output_list.append(row_list)
     output_df = prep_dataframe(output_list, columns_list)
-    info("Uploading records to snowflake...")
     upload_to_snowflake(output_df, table_name)
 
 
@@ -152,5 +161,4 @@ def get_response_and_upload_costs_by_deployments(
         "extraction_end_date",
     ]
     output_df = prep_dataframe(output_list, columns_list)
-    info("Uploading records to snowflake...")
     upload_to_snowflake(output_df, table_name)
