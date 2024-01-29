@@ -3,11 +3,11 @@ The main test unit for ElasticSearch billing data
 """
 import os
 import pandas as pd
-from extract.elasticsearch_billing.src.utility import HEADERS, prep_dataframe
 
 os.environ["ELASTIC_SEARCH_BILLING_API_KEY"] = "111"
 os.environ["ELASTIC_CLOUD_ORG_ID"] = "111"
 
+from extract.elasticsearch_billing.src.utility import HEADERS, prep_dataframe
 
 def test_static_variables():
     """
