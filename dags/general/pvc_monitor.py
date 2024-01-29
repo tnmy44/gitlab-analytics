@@ -13,7 +13,20 @@ from airflow_utils import (
     slack_failed_task,
     gitlab_pod_env_vars,
 )
+import os
+from datetime import datetime, timedelta
+
+from airflow import DAG
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow_utils import (
+    DATA_IMAGE_3_10,
+    clone_and_setup_extraction_cmd,
+    gitlab_defaults,
+    gitlab_pod_env_vars,
+    slack_failed_task,
+)
 from kube_secrets import GCP_SERVICE_CREDS
+from kubernetes_helpers import get_affinity, get_toleration
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
