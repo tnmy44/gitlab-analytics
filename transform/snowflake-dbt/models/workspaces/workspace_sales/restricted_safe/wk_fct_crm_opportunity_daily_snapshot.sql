@@ -132,6 +132,7 @@
     sfdc_opportunity.primary_solution_architect,
     sfdc_opportunity.product_details,
     sfdc_opportunity.product_category,
+    sfdc_opportunity.intended_product_tier,
     sfdc_opportunity.products_purchased,
     sfdc_opportunity.growth_type,
     sfdc_opportunity.opportunity_deal_size,
