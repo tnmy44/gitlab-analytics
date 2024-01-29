@@ -25,7 +25,7 @@ def test_prep_dataframe():
     """
     data = [[1, 2, 3], [4, 5, 6]]
     columns = ["a", "b", "c"]
-    actual = prep_dataframe(output_list=data, columns_list=columns)
+    actual = prep_dataframe(data, columns)
 
     assert actual.shape == (2, 3)
     assert actual.columns[0] == "a"
