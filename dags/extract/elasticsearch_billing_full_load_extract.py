@@ -56,7 +56,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "el_elasticsearch_billing_full_load",
+    "el_elasticsearch_billing_backfill",
     default_args=default_args,
     schedule_interval=None,
     start_date=datetime(2023, 1, 1),
@@ -66,26 +66,26 @@ dag = DAG(
     params=params,
 )
 
-elasticsearch_billing_costs_overview_extract_full_load_command = (
+elasticsearch_billing_costs_overview_extract_backfill_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    f"{invoke_base_file} extract_load_billing_costs_overview_full_load"
+    f"{invoke_base_file} extract_load_billing_costs_overview_backfill"
 )
 
-elasticsearch_billing_itemized_costs_extract_full_load_command = (
+elasticsearch_billing_itemized_costs_extract_backfill_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    f"{invoke_base_file} extract_load_billing_itemized_costs_full_load"
+    f"{invoke_base_file} extract_load_billing_itemized_costs_backfill"
 )
 
-elasticsearch_billing_deployments_itemized_costs_extract_full_load_command = (
+elasticsearch_billing_deployments_itemized_costs_extract_backfill_command = (
     f"{clone_and_setup_extraction_cmd} && "
-    f"{invoke_base_file} extract_load_billing_itemized_costs_by_deployment_full_load"
+    f"{invoke_base_file} extract_load_billing_itemized_costs_by_deployment_backfill"
 )
 
 elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="el-costs-overview-extract-full-load",
-    name="el-costs-overview-extract-full-load",
+    task_id="el-costs-overview-extract-backfill",
+    name="el-costs-overview-extract-backfill",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
@@ -102,15 +102,15 @@ elasticsearch_billing_costs_overview_task = KubernetesPodOperator(
     },
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
-    arguments=[elasticsearch_billing_costs_overview_extract_full_load_command],
+    arguments=[elasticsearch_billing_costs_overview_extract_backfill_command],
     dag=dag,
 )
 
 elasticsearch_billing_itemized_costs_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="el-itemized-costs-extract-full-load",
-    name="el-itemized-costs-extract-full-load",
+    task_id="el-itemized-costs-extract-backfill",
+    name="el-itemized-costs-extract-backfill",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
@@ -127,15 +127,15 @@ elasticsearch_billing_itemized_costs_task = KubernetesPodOperator(
     },
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
-    arguments=[elasticsearch_billing_itemized_costs_extract_full_load_command],
+    arguments=[elasticsearch_billing_itemized_costs_extract_backfill_command],
     dag=dag,
 )
 
 elasticsearch_billing_itemized_costs_by_deployments_task = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="el-itemized-costs-by-deployments-extract-full-load",
-    name="el-itemized-costs-by-deployments-extract-full-load",
+    task_id="el-itemized-costs-by-deployments-extract-backfill",
+    name="el-itemized-costs-by-deployments-extract-backfill",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
@@ -153,7 +153,7 @@ elasticsearch_billing_itemized_costs_by_deployments_task = KubernetesPodOperator
     affinity=get_affinity("extraction"),
     tolerations=get_toleration("extraction"),
     arguments=[
-        elasticsearch_billing_deployments_itemized_costs_extract_full_load_command
+        elasticsearch_billing_deployments_itemized_costs_extract_backfill_command
     ],
     dag=dag,
 )
