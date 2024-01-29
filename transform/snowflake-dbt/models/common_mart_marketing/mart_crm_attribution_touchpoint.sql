@@ -108,12 +108,13 @@
           THEN 'Stage 4'
         WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_5_negotiating_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_awaiting_signature_date
           THEN 'Stage 5'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_awaiting_signature_date
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_awaiting_signature_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_closed_won_date AND dim_crm_touchpoint.bizible_touchpoint_date < fct_crm_opportunity.stage_6_closed_lost_date
           THEN 'Stage 6 - Awaiting Signature'
-        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_won_date
+        WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_won_date AND fct_crm_opportunity.is_closed_won = TRUE
           THEN 'Stage 6 - Closed Won'
         WHEN dim_crm_touchpoint.bizible_touchpoint_date >= fct_crm_opportunity.stage_6_closed_lost_date
           THEN 'Stage 6 - Closed Lost'
+        ELSE stage_name||'-Mapping Missing'
       END AS touchpoint_sales_stage,
 
       -- person info
@@ -359,5 +360,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2024-01-24"
+    updated_date="2024-01-29"
 ) }}
