@@ -248,7 +248,7 @@ clone_stop:
       - merge_requests
   allow_failure: true
   before_script:
-    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.yml\|\.yaml'$)
+    - CHANGED_FILES=$(git diff --name-only --diff-filter=d origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} ${CI_COMMIT_SHA} | grep '\.yml\|\.yaml'$)
 
 📁yaml_validation:
   <<: *yaml_validate
