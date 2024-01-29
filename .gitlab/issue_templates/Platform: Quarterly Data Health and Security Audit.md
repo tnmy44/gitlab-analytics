@@ -426,7 +426,7 @@ Below checklist of activities would be run once for quarter to validate security
 
 ## Package version inventory
 
-1. [ ] Go to [/package_inventory](https://gitlab.com/gitlab-data/package_inventory/-/blob/main/README.md) repo, and run application and generate reports using guidelines from the `README.md` file
+1. [ ] Go to [/package_inventory](https://gitlab.com/gitlab-data/package_inventory/-/blob/main/package_inventory/src/README.md) repo, and run application and generate reports using guidelines from the `README.md` file
 1. [ ] Once you generate the reports, analyze the libraries manually, and propose the candidates for upgrading 
 1. [ ] If we agree on candidates for upgrading, create a new issue in the `/analytics` repo with the list of libraries we should upgrade and proceed further
 
