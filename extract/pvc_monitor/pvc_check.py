@@ -8,7 +8,13 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from os import environ as env
 from yaml import load, safe_load, YAMLError, FullLoader
-from logging import error, info, basicConfig, getLogger, warning
+import time
+from logging import info
+from os import environ as env
+
+from google.cloud import monitoring_v3
+from google.oauth2 import service_account
+from yaml import FullLoader, load
 
 
 def get_metrics(scoped_credentials, project_id, metric_type, start_time_offset=1200):
