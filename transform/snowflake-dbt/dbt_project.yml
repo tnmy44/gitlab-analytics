@@ -150,6 +150,10 @@ models:
         +materialized: table
         +schema: airflow
 
+      aws_billing:
+        +materialized: table
+        +schema: aws_billing
+
       bamboohr:
         +materialized: table
         +schema: bamboohr
