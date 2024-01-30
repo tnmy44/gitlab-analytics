@@ -241,7 +241,6 @@ SELECT
 
     UPPER(acc_owner.user_geo)                           AS account_owner_user_geo,
     acc_owner.user_region                               AS account_owner_user_region,
-    acc_owner.user_area                                 AS account_owner_user_area,
 
     -- NF: Add the logic for hybrid users
     -- If hybrid user we leverage the account demographics data
@@ -276,7 +275,6 @@ SELECT
 
     UPPER(upa_owner.user_geo)                     AS upa_owner_user_geo,
     upa_owner.user_region                         AS upa_owner_user_region,
-    upa_owner.user_area                           AS upa_owner_user_area,
 
     -- NF: Add the logic for hybrid users
     -- If hybrid user we leverage the account demographics data
