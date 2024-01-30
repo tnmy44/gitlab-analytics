@@ -14,28 +14,27 @@ from airflow_utils import (
     slack_failed_task,
 )
 from kube_secrets import (
-    GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_CONFIG,
+    GIT_DATA_TESTS_PRIVATE_KEY,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
     SALT,
     SALT_EMAIL,
     SALT_IP,
     SALT_NAME,
     SALT_PASSWORD,
     SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_PASSWORD,
-    SNOWFLAKE_TRANSFORM_ROLE,
-    SNOWFLAKE_TRANSFORM_SCHEMA,
-    SNOWFLAKE_TRANSFORM_WAREHOUSE,
-    SNOWFLAKE_USER,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    MCD_DEFAULT_API_ID,
-    MCD_DEFAULT_API_TOKEN,
+    SNOWFLAKE_PASSWORD,
     SNOWFLAKE_STATIC_DATABASE,
+    SNOWFLAKE_TRANSFORM_ROLE,
+    SNOWFLAKE_TRANSFORM_SCHEMA,
+    SNOWFLAKE_TRANSFORM_WAREHOUSE,
+    SNOWFLAKE_USER,
 )
-
 from kubernetes_helpers import get_affinity, get_toleration
 
 # Load the env vars into a dict and set Secrets
@@ -112,8 +111,6 @@ def generate_dbt_command(vars_dict):
         tolerations=get_toleration("dbt"),
         dag=dag,
     )
-
-
 
 
 dummy_operator = DummyOperator(task_id="start", dag=dag)
