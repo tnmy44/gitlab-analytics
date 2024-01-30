@@ -335,10 +335,9 @@ SELECT
     raw_acc.customer_score__c                            AS customer_score,
 
 
-    COALESCE(raw_acc.potential_users__c,0)                      AS potential_users,
     COALESCE(raw_acc.decision_maker_count_linkedin__c,0)        AS linkedin_developer,
     COALESCE(raw_acc.zi_revenue__c,0)                           AS zi_revenue,
-    COALESCE(raw_acc.account_demographics_employee_count__c,0)  AS employees,
+    COALESCE(raw_acc.account_demographics_employee_count__c,0)  AS account_demographics_employees,
     COALESCE(raw_acc.carr_acct_family__c,0)                     AS account_family_arr,
     LEAST(50000,GREATEST(COALESCE(raw_acc.number_of_licenses_this_account__c,0),COALESCE(raw_acc.potential_users__c, raw_acc.decision_maker_count_linkedin__c , raw_acc.zi_number_of_developers__c, 0)))           AS calculated_developer_count
 
