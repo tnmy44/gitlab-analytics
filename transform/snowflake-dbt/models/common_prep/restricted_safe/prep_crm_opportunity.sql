@@ -1335,7 +1335,7 @@ LEFT JOIN cw_base
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@chrisharp",
+    updated_by="@snalamaru",
     created_date="2022-02-23",
-    updated_date="2023-12-06"
+    updated_date="2024-01-24"
 ) }}
