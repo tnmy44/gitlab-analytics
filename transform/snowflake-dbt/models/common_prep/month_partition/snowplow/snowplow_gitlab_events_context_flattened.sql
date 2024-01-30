@@ -161,7 +161,7 @@ WITH filtered_source as (
       -- Performance Timing Context Columns
       {{
         snowplow_schema_field_aliasing(
-          schema='iglu:org.w3/PerformanceTiming/jsonschema/1-0-0',
+          schema='iglu:org.w3/PerformanceTiming/jsonschema/%',
           context_name='performance_timing',
           field_alias_datatype_list=[
             {'field':'connectEnd', 'alias':'connect_end'},
