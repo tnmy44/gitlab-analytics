@@ -1,3 +1,6 @@
+"""
+DAG for SnowPlow backfilling
+"""
 import json
 import os
 from datetime import date, datetime
@@ -89,9 +92,12 @@ dag = DAG(
 
 
 def generate_dbt_command(vars_dict):
+    """
+    Generate dbt command for dynamic tasks
+    """
     json_dict = json.dumps(vars_dict)
 
-    dbt_generate_command = f""" 
+    dbt_generate_command = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
         dbt run --profiles-dir profile --target {target} --models +snowplow --full-refresh --vars '{json_dict}' ; ret=$?;
