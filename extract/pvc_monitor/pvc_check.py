@@ -74,8 +74,9 @@ def check_pvc_metrics(scoped_credentials):
     pvc_free_space = get_metrics(scoped_credentials, project_id, metric_type)
     for m in pvc_free_space:
         if m.get("value").double_value <= 20.0:
-            res.add(f"{m.get('resource')} is running low on space {m.get("value")} {m.get("resource")}")
-
+            res.append(
+                f"{m.get('resource')} is running low on space {m.get('value').double_value}"
+            )
     if res:
         for i, r in enumerate(res, start=1):
             log(f"{i}: {r}")
