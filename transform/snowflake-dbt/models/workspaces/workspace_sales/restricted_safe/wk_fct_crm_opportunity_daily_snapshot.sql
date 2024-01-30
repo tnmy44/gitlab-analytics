@@ -133,6 +133,25 @@
     sfdc_opportunity.product_details,
     sfdc_opportunity.product_category,
     sfdc_opportunity.intended_product_tier,
+    CASE
+      WHEN LOWER(product_category) LIKE '%premium%'
+          THEN 'Premium'
+      WHEN LOWER(product_category) LIKE '%ultimate%'
+          THEN 'Ultimate'
+      WHEN LOWER(intended_product_tier) LIKE '%premium%'
+          THEN 'Premium'
+      WHEN LOWER(intended_product_tier) LIKE '%ultimate%'
+          THEN 'Ultimate'
+      ELSE 'Other'
+    END AS  product_category_tier,
+
+    CASE
+      WHEN LOWER(product_category) LIKE '%saas%'
+              THEN 'SaaS'
+      WHEN LOWER(product_category) LIKE '%self-managed%'
+              THEN 'Self-Managed'
+      ELSE 'Other'
+    END AS  product_category_deployment,
     sfdc_opportunity.products_purchased,
     sfdc_opportunity.growth_type,
     sfdc_opportunity.opportunity_deal_size,
