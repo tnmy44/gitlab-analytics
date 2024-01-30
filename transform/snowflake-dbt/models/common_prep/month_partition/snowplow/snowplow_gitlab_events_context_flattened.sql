@@ -77,7 +77,7 @@ WITH filtered_source as (
       -- Web Page Context Columns
        {{
         snowplow_schema_field_aliasing(
-          schema='iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0',
+          schema='iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/%',
           context_name='web_page',
           field_alias_datatype_list=[
             {'field':'id', 'alias':'web_page_id'}
