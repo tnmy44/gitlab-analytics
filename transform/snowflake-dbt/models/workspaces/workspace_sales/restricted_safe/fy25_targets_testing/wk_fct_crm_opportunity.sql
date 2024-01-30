@@ -4,14 +4,14 @@
     ('order_type', 'prep_order_type'),
     ('sales_qualified_source', 'prep_sales_qualified_source'),
     ('deal_path', 'prep_deal_path'),
-    ('sales_rep', 'prep_crm_user'),
+    ('sales_rep', 'wk_prep_crm_user'),
     ('sales_segment', 'prep_sales_segment'),
     ('sfdc_campaigns', 'prep_campaign'),
     ('dr_partner_engagement', 'prep_dr_partner_engagement'),
     ('alliance_type', 'prep_alliance_type_scd'),
     ('channel_type', 'prep_channel_type'),
     ('prep_crm_opportunity', 'wk_prep_crm_opportunity_fy25'),
-    ('prep_crm_user_hierarchy', 'prep_crm_user_hierarchy'),
+    ('prep_crm_user_hierarchy', 'wk_prep_crm_user_hierarchy'),
     ('prep_date', 'prep_date')
 
 ]) }}
