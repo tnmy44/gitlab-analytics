@@ -35,7 +35,6 @@ WITH source AS (
       role_level_4__c                                                   AS user_role_level_4,
       role_level_5__c                                                   AS user_role_level_5,
       start_date__c                                                     AS start_date,
-      ramping_quota__c                                                  AS ramping_quota,
       {{ sales_hierarchy_sales_segment_cleaning('user_segment__c') }}   AS user_segment,
       user_geo__c                                                       AS user_geo,
       user_region__c                                                    AS user_region,
