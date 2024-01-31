@@ -1,3 +1,8 @@
+{{ config(
+    tags=["mnpi_exception"],
+    materialized="table"
+) }}
+
 WITH bizible_person_touchpoint_source AS (
 
     SELECT *
