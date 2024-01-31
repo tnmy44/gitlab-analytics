@@ -5,7 +5,6 @@ WITH dim_date AS (
   
 ),
 
-
 targets AS (
 
   SELECT *
@@ -18,15 +17,6 @@ actuals AS (
   SELECT *
   FROM {{ref('wk_fct_crm_opportunity_daily_snapshot')}}
 
-),
-
-day_5_list AS (
-
-  SELECT 
-    date_actual AS day_5_current_week,
-    LAG(day_5_current_week) OVER (ORDER BY day_5_current_week) + 1 AS day_6_previous_week -- Add an extra day to exclude the previous thursday from the calculation
-  FROM dim_date
-  WHERE day_of_week = 5
 
 ),
 
@@ -34,7 +24,7 @@ combined AS (
 
   SELECT 
     -- Keys
-    actuals.actuals_targets_daily_pk,
+    actuals.actuals_targets_pk,
     actuals.dim_crm_opportunity_id,
     actuals.dim_sales_qualified_source_id,
     actuals.dim_order_type_id,
@@ -48,6 +38,16 @@ combined AS (
     actuals.technical_evaluation_date_id,
     actuals.ssp_id,
     actuals.ga_client_id,
+
+    --targets attributes
+    actuals.report_user_segment_geo_region_area_sqs_ot,
+    actuals.order_type_name,
+    actuals.sales_qualified_source_name,
+    actuals.crm_user_sales_segment, 
+    actuals.crm_user_geo, 
+    actuals.crm_user_region, 
+    actuals.crm_user_area, 
+    actuals.crm_user_business_unit,
 
     -- snapshot info
     actuals.snapshot_date,
@@ -91,6 +91,10 @@ combined AS (
     actuals.primary_solution_architect,
     actuals.product_details,
     actuals.product_category,
+    actuals.intended_product_tier,
+    actuals.product_category_tier,
+    actuals.product_category_deployment,
+
     actuals.products_purchased,
     actuals.growth_type,
     actuals.opportunity_deal_size,
@@ -163,20 +167,64 @@ combined AS (
     actuals.override_arr_basis_clari,
     actuals.vsa_start_date_net_arr,
     actuals.cycle_time_in_days_combined,
-    actuals.day_of_week,
-    actuals.first_day_of_week,
-    actuals.date_id,
-    actuals.fiscal_month_name_fy,
-    actuals.fiscal_quarter_name_fy,
-    actuals.first_day_of_fiscal_quarter,
-    actuals.first_day_of_fiscal_year,
-    actuals.last_day_of_week,
-    actuals.last_day_of_month,
-    actuals.last_day_of_fiscal_quarter,
-    actuals.last_day_of_fiscal_year,
-
+    actuals.created_in_snapshot_quarter_deal_count,
 
     --dates
+    dim_date.date_day                                               AS snapshot_day,
+    dim_date.day_name                                               AS snapshot_day_name, 
+    actuals.snapshot_fiscal_year                                    AS snapshot_fiscal_year,
+    actuals.snapshot_fiscal_quarter_name                            AS snapshot_fiscal_quarter_name,
+    actuals.snapshot_fiscal_quarter_date                            AS snapshot_fiscal_quarter_date,
+    actuals.snapshot_day_of_fiscal_quarter_normalised               AS snapshot_day_of_fiscal_quarter_normalised,
+    actuals.snapshot_day_of_fiscal_year_normalised                  AS snapshot_day_of_fiscal_year_normalised,
+    dim_date.day_of_week                                            AS snapshot_day_of_week,
+    dim_date.first_day_of_week                                      AS snapshot_first_day_of_week,
+    dim_date.week_of_year                                           AS snapshot_week_of_year,
+    dim_date.day_of_month                                           AS snapshot_day_of_month,
+    dim_date.day_of_quarter                                         AS snapshot_day_of_quarter,
+    dim_date.day_of_year                                            AS snapshot_day_of_year,
+    dim_date.fiscal_quarter                                         AS snapshot_fiscal_quarter,
+    dim_date.day_of_fiscal_quarter                                  AS snapshot_day_of_fiscal_quarter,
+    dim_date.day_of_fiscal_year                                     AS snapshot_day_of_fiscal_year,
+    dim_date.month_name                                             AS snapshot_month_name,
+    dim_date.first_day_of_month                                     AS snapshot_first_day_of_month,
+    dim_date.last_day_of_month                                      AS snapshot_last_day_of_month,
+    dim_date.first_day_of_year                                      AS snapshot_first_day_of_year,
+    dim_date.last_day_of_year                                       AS snapshot_last_day_of_year,
+    dim_date.first_day_of_quarter                                   AS snapshot_first_day_of_quarter,
+    dim_date.last_day_of_quarter                                    AS snapshot_last_day_of_quarter,
+    dim_date.first_day_of_fiscal_quarter                            AS snapshot_first_day_of_fiscal_quarter,
+    dim_date.last_day_of_fiscal_quarter                             AS snapshot_last_day_of_fiscal_quarter,
+    dim_date.first_day_of_fiscal_year                               AS snapshot_first_day_of_fiscal_year,
+    dim_date.last_day_of_fiscal_year                                AS snapshot_last_day_of_fiscal_year,
+    dim_date.week_of_fiscal_year                                    AS snapshot_week_of_fiscal_year,
+    dim_date.month_of_fiscal_year                                   AS snapshot_month_of_fiscal_year,
+    dim_date.last_day_of_week                                       AS snapshot_last_day_of_week,
+    dim_date.quarter_name                                           AS snapshot_quarter_name,
+    dim_date.fiscal_quarter_name_fy                                 AS snapshot_fiscal_quarter_name_fy,
+    dim_date.fiscal_quarter_number_absolute                         AS snapshot_fiscal_quarter_number_absolute,
+    dim_date.fiscal_month_name                                      AS snapshot_fiscal_month_name,
+    dim_date.fiscal_month_name_fy                                   AS snapshot_fiscal_month_name_fy,
+    dim_date.holiday_desc                                           AS snapshot_holiday_desc,
+    dim_date.is_holiday                                             AS snapshot_is_holiday,
+    dim_date.last_month_of_fiscal_quarter                           AS snapshot_last_month_of_fiscal_quarter,
+    dim_date.is_first_day_of_last_month_of_fiscal_quarter           AS snapshot_is_first_day_of_last_month_of_fiscal_quarter,
+    dim_date.last_month_of_fiscal_year                              AS snapshot_last_month_of_fiscal_year,
+    dim_date.is_first_day_of_last_month_of_fiscal_year              AS snapshot_is_first_day_of_last_month_of_fiscal_year,
+    dim_date.days_in_month_count                                    AS snapshot_days_in_month_count,
+    dim_date.week_of_month_normalised                               AS snapshot_week_of_month_normalised,
+    dim_date.week_of_fiscal_quarter_normalised                      AS snapshot_week_of_fiscal_quarter_normalised,
+    dim_date.is_first_day_of_fiscal_quarter_week                    AS snapshot_is_first_day_of_fiscal_quarter_week,
+    dim_date.days_until_last_day_of_month                           AS snapshot_days_until_last_day_of_month,
+    dim_date.current_date_actual                                    AS current_date_actual,
+    dim_date.current_fiscal_year                                    AS current_fiscal_year,
+    dim_date.current_first_day_of_fiscal_year                       AS current_first_day_of_fiscal_year,
+    dim_date.current_fiscal_quarter_name_fy                         AS current_fiscal_quarter_name_fy,
+    dim_date.current_first_day_of_month                             AS current_first_day_of_month,
+    dim_date.current_first_day_of_fiscal_quarter                    AS current_first_day_of_fiscal_quarter,
+    dim_date.current_day_of_month                                   AS current_day_of_month,
+    dim_date.current_day_of_fiscal_quarter                          AS current_day_of_fiscal_quarter,
+    dim_date.current_day_of_fiscal_year                             AS current_day_of_fiscal_year,
     created_date.date_actual                                        AS created_date,
     created_date.first_day_of_month                                 AS created_month,
     created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
@@ -242,11 +290,11 @@ combined AS (
     subscription_start_date.first_day_of_fiscal_quarter             AS subscription_start_fiscal_quarter_date,
     subscription_start_date.fiscal_quarter_name_fy                  AS subscription_start_fiscal_quarter_name,
     subscription_start_date.fiscal_year                             AS subscription_start_fiscal_year,
-    subscription_END_date.date_actual                               AS subscription_END_date,
-    subscription_END_date.first_day_of_month                        AS subscription_END_month,
-    subscription_END_date.first_day_of_fiscal_quarter               AS subscription_END_fiscal_quarter_date,
-    subscription_END_date.fiscal_quarter_name_fy                    AS subscription_END_fiscal_quarter_name,
-    subscription_END_date.fiscal_year                               AS subscription_END_fiscal_year,
+    subscription_end_date.date_actual                               AS subscription_end_date,
+    subscription_end_date.first_day_of_month                        AS subscription_end_month,
+    subscription_end_date.first_day_of_fiscal_quarter               AS subscription_end_fiscal_quarter_date,
+    subscription_end_date.fiscal_quarter_name_fy                    AS subscription_end_fiscal_quarter_name,
+    subscription_end_date.fiscal_year                               AS subscription_end_fiscal_year,
     sales_qualified_date.date_actual                                AS sales_qualified_date,
     sales_qualified_date.first_day_of_month                         AS sales_qualified_month,
     sales_qualified_date.first_day_of_fiscal_quarter                AS sales_qualified_fiscal_quarter_date,
@@ -283,137 +331,75 @@ combined AS (
     arr_created_date.fiscal_quarter_name_fy                         AS net_arr_created_fiscal_quarter_name,
     arr_created_date.fiscal_year                                    AS net_arr_created_fiscal_year,
 
-    -- Create flags to know whether an action happened in the current snapshot week 
-    -- ie. Whether it happened between last Friday and current Thursday
-    CASE
-      WHEN created_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_created_in_snapshot_week, 
-    CASE  
-      WHEN close_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_close_in_snapshot_week, 
-    CASE  
-      WHEN arr_created_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_arr_created_in_snapshot_week, 
-    CASE  
-      WHEN arr_created_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_net_arr_created_in_snapshot_week, 
-    CASE  
-      WHEN pipeline_created_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_pipeline_created_in_snapshot_week,
-    CASE  
-      WHEN sales_accepted_date BETWEEN day_6_previous_week AND day_5_current_week
-        THEN 1
-      ELSE 0
-    END AS is_sales_accepted_in_snapshot_week,
-
-    -- Pull in the metric only when the corresponding flag is set
-    -- ie. Only calculate created arr in the week where the opportunity was created
-    CASE
-      WHEN is_arr_created_in_snapshot_week = 1
-        THEN arr
-      ELSE 0
-    END AS created_arr_in_snapshot_week,
-    CASE
-      WHEN is_net_arr_created_in_snapshot_week = 1
-        THEN raw_net_arr
-      ELSE 0
-    END AS created_net_arr_in_snapshot_week,
-    CASE
-      WHEN is_created_in_snapshot_week = 1
-        THEN 1
-      ELSE 0
-    END AS created_deal_count_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN net_arr
-      ELSE 0
-    END AS closed_net_arr_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN 1
-      ELSE 0
-    END AS closed_deal_count_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN 1
-      ELSE 0
-    END AS closed_new_logo_count_in_snapshot_week,
-    CASE
-      WHEN is_close_in_snapshot_week = 1
-        THEN close_date - created_date
-      ELSE 0
-    END AS closed_cycle_time_in_snapshot_week,
-
     -- TARGETS
     deals_daily_target,
     deals_monthly_target,
+    deals_quarterly_target,
     deals_wtd_target,
     deals_mtd_target,
     deals_qtd_target,
     deals_ytd_target,
     mql_daily_target,
     mql_monthly_target,
+    mql_quarterly_target,
     mql_wtd_target,
     mql_mtd_target,
     mql_qtd_target,
     mql_ytd_target,
     net_arr_daily_target,
     net_arr_monthly_target,
+    net_arr_quarterly_target,
     net_arr_wtd_target,
     net_arr_mtd_target,
     net_arr_qtd_target,
     net_arr_ytd_target,
     net_arr_company_daily_target,
     net_arr_company_monthly_target,
+    net_arr_company_quarterly_target,
     net_arr_company_wtd_target,
     net_arr_company_mtd_target,
     net_arr_company_qtd_target,
     net_arr_company_ytd_target,
     net_arr_pipeline_created_daily_target,
     net_arr_pipeline_created_monthly_target,
+    net_arr_pipeline_created_quarterly_target,
     net_arr_pipeline_created_wtd_target,
     net_arr_pipeline_created_mtd_target,
     net_arr_pipeline_created_qtd_target,
     net_arr_pipeline_created_ytd_target,
     new_logos_daily_target,
     new_logos_monthly_target,
+    new_logos_quarterly_target,
     new_logos_wtd_target,
     new_logos_mtd_target,
     new_logos_qtd_target,
     new_logos_ytd_target,
     stage_1_opportunities_daily_target,
     stage_1_opportunities_monthly_target,
+    stage_1_opportunities_quarterly_target,
     stage_1_opportunities_wtd_target,
     stage_1_opportunities_mtd_target,
     stage_1_opportunities_qtd_target,
     stage_1_opportunities_ytd_target,
     total_closed_daily_target,
     total_closed_monthly_target,
+    total_closed_quarterly_target,
     total_closed_wtd_target,
     total_closed_mtd_target,
     total_closed_qtd_target,
     total_closed_ytd_target,
     trials_daily_target,
     trials_monthly_target,
+    trials_quarterly_target,
     trials_wtd_target,
     trials_mtd_target,
     trials_qtd_target,
     trials_ytd_target
   FROM actuals
-  INNER JOIN day_5_list
-    ON actuals.snapshot_date = day_5_list.day_5_current_week
+  INNER JOIN dim_date 
+    ON dim_date.date_actual = actuals.snapshot_date
   LEFT JOIN targets 
-    ON actuals.actuals_targets_daily_pk = targets.actuals_targets_daily_pk 
+    ON actuals.actuals_targets_pk = targets.actuals_targets_pk 
   LEFT JOIN dim_date created_date
     ON actuals.created_date_id = created_date.date_id
   LEFT JOIN dim_date sales_accepted_date
@@ -440,8 +426,8 @@ combined AS (
     ON actuals.stage_6_closed_lost_date_id = stage_6_closed_lost_date.date_id
   LEFT JOIN dim_date subscription_start_date
     ON actuals.subscription_start_date_id = subscription_start_date.date_id
-  LEFT JOIN dim_date subscription_END_date
-    ON actuals.subscription_END_date_id = subscription_END_date.date_id
+  LEFT JOIN dim_date subscription_end_date
+    ON actuals.subscription_end_date_id = subscription_end_date.date_id
   LEFT JOIN dim_date sales_qualified_date
     ON actuals.sales_qualified_date_id = sales_qualified_date.date_id
   LEFT JOIN dim_date last_activity_date
@@ -453,7 +439,6 @@ combined AS (
   LEFT JOIN dim_date arr_created_date
     ON actuals.arr_created_date_id = arr_created_date.date_id
   
-
 )
 
 SELECT * 
