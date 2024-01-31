@@ -3,7 +3,7 @@ models:
   - name: sfdc_sandbox_user_roles_source
     description: Source model for SFDC User Roles
     columns:
-      - name: id
+      - name: user_role_id
         tests:
           - not_null
           - unique
