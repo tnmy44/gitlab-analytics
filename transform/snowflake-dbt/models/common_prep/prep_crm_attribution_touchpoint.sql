@@ -20,7 +20,7 @@ WITH bizible_attribution_touchpoint_source AS (
   LEFT JOIN {{ ref('sheetload_bizible_to_pathfactory_mapping') }}  
     ON bizible_form_url_clean=bizible_url
 
-), bizible_attribution_touchpoint_final AS (
+), final AS (
 
   SELECT
     bizible_attribution_touchpoint_base.*,
@@ -114,12 +114,6 @@ WITH bizible_attribution_touchpoint_source AS (
       ELSE 'Other'
     END AS touchpoint_offer_type_grouped
   FROM bizible_attribution_touchpoint_base
-
-), final AS (
-
-    SELECT
-        {{ dbt_utils.star(from=ref('bizible_attribution_touchpoint_final'), except=["BIZIBLE_FORM_URL_PREP","BIZIBLE_FORM_URL_CLEAN"] ) }}
-    FROM bizible_attribution_touchpoint_final
 
 )
 
