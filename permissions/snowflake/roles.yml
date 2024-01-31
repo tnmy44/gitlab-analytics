@@ -4032,12 +4032,24 @@ roles:
 
     - jonglee:
         member_of:
+            - data_science_readonly
+            - driveload
             - gainsight
+            - gitlab_data_yaml
+            - gitlab_dotcom
+            - marketo
             - reporter
             - restricted_safe
             - salesforce
+            - sheetload
+            - snapshots
+            - snowplow
+            - version_db
+            - zuora
             - zuora_api_sandbox_stitch
             - zuora_central_sandbox
+            - zuora_stitch_rest_api
+            - zuora_query_api
         warehouses:
             - dev_xs
         owns:
