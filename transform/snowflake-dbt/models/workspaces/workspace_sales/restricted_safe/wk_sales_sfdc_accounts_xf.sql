@@ -260,8 +260,6 @@ SELECT
 
     acc_owner.role_type                                 AS account_owner_user_role_type,
 
-    acc_owner.key_geo_bu_region_asm                     AS acc_owner_key_geo_bu_region_asm,
-
 
     -----------------------------------
     -- upa owner fields
