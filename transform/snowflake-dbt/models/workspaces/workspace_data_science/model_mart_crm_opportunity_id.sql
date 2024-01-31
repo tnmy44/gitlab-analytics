@@ -6,10 +6,10 @@ WITH oppt_latest_date AS (
 
     SELECT MAX(score_date) AS score_date
     FROM PROD.workspace_data_science.opportunity_forecasting_scores
-      
+
 ), oppt AS (
 
-   SELECT 
+   SELECT
       dim_crm_opportunity_id AS crm_opportunity_id,
       score_date AS forecast_score_date,
       forecasted_days_remaining AS forecasted_days_remaining,
@@ -19,10 +19,10 @@ WITH oppt_latest_date AS (
       insights AS forecast_insights,
       submodel AS forecast_submodel,
       model_version AS forecast_model_version
-    FROM PROD.workspace_data_science.opportunity_forecasting_scores   
+    FROM PROD.workspace_data_science.opportunity_forecasting_scores
 
 )
-       
+
 SELECT
   a.crm_opportunity_id,
   a.forecast_score_date::DATE AS forecast_score_date,
