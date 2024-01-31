@@ -76,7 +76,7 @@ SELECT
  FROM pte a
  FULL OUTER JOIN ptc b
    ON  a.crm_account_id = b.crm_account_id
-   AND a.ptc_score_date = b.ptc_score_date
+   AND a.pte_score_date = b.ptc_score_date
  LEFT JOIN pte_latest_date c
    ON a.pte_score_date = c.score_date
  LEFT JOIN ptc_latest_date d
