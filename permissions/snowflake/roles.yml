@@ -593,33 +593,7 @@ roles:
     - masked_people_data:
         warehouses:
             - dev_xs
-        member_of:
-            - analyst_core
-            - bamboohr_analytics
-            - bamboohr_sensitive_separations
-            - boneyard
-            - covid19
-            - dbt_analytics
-            - dbt_analytics_sensitive
-            - driveload
-            - gitlab_data_yaml
-            - gitlab_dotcom
-            - greenhouse
-            - license_db
-            - netsuite
-            - postgres_pipeline
-            - salesforce
-            - sheetload
-            - snapshots
-            - snowplow
-            - snowflake_db
-            - version_db
-            - zendesk
-            - zendesk_community_relations
-            - zuora
-            - zuora_central_sandbox
-            - restricted_workspace_people
-
+        
     - analyst_people:
         warehouses:
             - dev_xs
