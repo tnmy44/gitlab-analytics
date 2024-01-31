@@ -9,7 +9,7 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('prep_crm_user_daily_snapshot', 'prep_crm_user_daily_snapshot'),
+    ('prep_crm_user_daily_snapshot', 'wk_prep_crm_user_daily_snapshot'),
     ('prep_crm_account_daily_snapshot', 'prep_crm_account_daily_snapshot'),
     ('prep_crm_account', 'prep_crm_account'),
     ('prep_crm_opportunity', 'wk_prep_crm_opportunity_fy25'),

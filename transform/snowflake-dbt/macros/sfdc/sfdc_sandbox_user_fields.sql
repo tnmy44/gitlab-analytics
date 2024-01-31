@@ -75,7 +75,6 @@
       sfdc_users.user_email,
       sfdc_users.is_active,
       sfdc_users.start_date,
-      sfdc_users.ramping_quota,
       sfdc_users.user_timezone,
       sfdc_users.user_role_id,
       sfdc_user_roles_source.name                                                                                                     AS user_role_name,
