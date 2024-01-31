@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"] 
+) }}
+
 WITH campaign_details AS (
 
     SELECT *
