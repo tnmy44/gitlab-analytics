@@ -91,10 +91,10 @@ granular_data AS (
       ELSE 0
     END AS closed_cycle_time_in_snapshot_week,
     CASE 
-      WHEN is_close_in_snapshot_week
+      WHEN is_close_in_snapshot_week = 1
         THEN booked_net_arr
       ELSE 0
-    END booked_net_arr_in_snapshot_week,
+    END AS booked_net_arr_in_snapshot_week,
     IFF(snapshot_fiscal_quarter_date = current_first_day_of_fiscal_quarter, TRUE, FALSE) AS is_current_snapshot_quarter
   FROM targets_actuals
   INNER JOIN day_5_list
