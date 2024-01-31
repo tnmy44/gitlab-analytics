@@ -77,7 +77,7 @@
       sfdc_users.start_date,
       sfdc_users.user_timezone,
       sfdc_users.user_role_id,
-      sfdc_user_roles_source.name                                                                                                     AS user_role_name,
+      sfdc_user_roles_source.user_role_name                                                                                           AS user_role_name,
       {{ dbt_utils.surrogate_key(['sfdc_users.user_segment']) }}                                                                      AS dim_crm_user_sales_segment_id,
       sfdc_users.user_segment                                                                                                         AS crm_user_sales_segment,
       sfdc_users.user_segment_grouped                                                                                                 AS crm_user_sales_segment_grouped,
@@ -102,7 +102,7 @@
         ELSE 0 
       END                                                                                                                             AS is_hybrid_user,
       {%- if model_type == 'live' %}
-      sfdc_user_roles_source.name                                                                                                     AS dim_crm_user_hierarchy_sk,
+      sfdc_user_roles_source.user_role_name                                                                                           AS dim_crm_user_hierarchy_sk,
       {%- elif model_type == 'snapshot' %}
       CASE
         WHEN sfdc_users.snapshot_fiscal_year < 2024
@@ -174,7 +174,7 @@
                       sfdc_users.snapshot_fiscal_year
                       )
         WHEN sfdc_users.snapshot_fiscal_year >= 2025
-          THEN sfdc_user_roles_source.name
+          THEN sfdc_user_roles_source.user_role_name
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,
       {%- endif %}
       COALESCE(
