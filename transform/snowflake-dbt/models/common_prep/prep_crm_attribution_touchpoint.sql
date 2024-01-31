@@ -118,7 +118,7 @@ WITH bizible_attribution_touchpoint_source AS (
 ), final AS (
 
     SELECT
-        {{ dbt_utils.star(from=bizible_attribution_touchpoint_final, except=["BIZIBLE_FORM_URL_PREP","BIZIBLE_FORM_URL_CLEAN"])}}
+        {{ dbt_utils.star(from=ref('bizible_attribution_touchpoint_final'), except=["BIZIBLE_FORM_URL_PREP","BIZIBLE_FORM_URL_CLEAN"] ) }}
     FROM bizible_attribution_touchpoint_final
 
 )
