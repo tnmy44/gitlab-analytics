@@ -767,8 +767,8 @@ WITH edm_opty AS (
 
       -- JK 2023-02-06: FY24 keys
       LOWER(agg_demo_keys_base.key_bu)                      AS key_bu,
-      LOWER(key_bu_ot)                                      AS key_bu_ot,
-      LOWER(key_bu_sqs)                                     AS key_bu_sqs,
+      LOWER(agg_demo_keys_base.key_bu_ot)                   AS key_bu_ot,
+      LOWER(agg_demo_keys_base.key_bu_sqs)                  AS key_bu_sqs,
       LOWER(agg_demo_keys_base.key_bu_subbu)                AS key_bu_subbu,
       LOWER(agg_demo_keys_base.key_bu_subbu_ot)             AS key_bu_subbu_ot,
       LOWER(agg_demo_keys_base.key_bu_subbu_sqs)            AS key_bu_subbu_sqs,
@@ -776,6 +776,25 @@ WITH edm_opty AS (
       LOWER(agg_demo_keys_base.key_bu_subbu_division_ot)    AS key_bu_subbu_division_ot,
       LOWER(agg_demo_keys_base.key_bu_subbu_division_sqs)   AS key_bu_subbu_division_sqs,
       LOWER(agg_demo_keys_base.key_bu_subbu_division_asm)   AS key_bu_subbu_division_asm,
+
+
+        --NF 2024-01-31: FY25 keys
+        agg_demo_keys_base.key_geo,
+
+        agg_demo_keys_base.key_geo_ot,
+        agg_demo_keys_base.key_geo_sqs,
+            
+        agg_demo_keys_base.key_geo_bu,
+        agg_demo_keys_base.key_geo_bu_ot,
+        agg_demo_keys_base.key_geo_bu_sqs,
+
+        agg_demo_keys_base.key_geo_bu_region,
+        agg_demo_keys_base.key_geo_bu_region_ot,
+        agg_demo_keys_base.key_geo_bu_region_sqs,
+
+        agg_demo_keys_base.key_geo_bu_region_asm,
+        agg_demo_keys_base.key_geo_bu_region_asm_segment,
+
 
       -- Created pipeline eligibility definition
       -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389

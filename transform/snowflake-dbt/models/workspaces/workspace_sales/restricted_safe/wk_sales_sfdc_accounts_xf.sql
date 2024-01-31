@@ -28,10 +28,21 @@ WITH raw_account AS (
 ),
  sfdc_users_xf AS (
 
-    SELECT *
+    SELECT *,
+        user_geo || '_' || business_unit   || '_' || user_region || '_' || user_area AS key_geo_bu_region_asm
     --FROM prod.workspace_sales.sfdc_users_xf
     FROM {{ref('wk_sales_sfdc_users_xf')}}
- )
+ ), 
+ agg_demo_keys_base AS (
+
+    SELECT DISTINCT
+        key_geo,      
+        key_geo_bu,
+        key_geo_bu_region,
+        key_geo_bu_region_asm
+    FROM {{ ref('wk_sales_report_agg_keys_base') }}
+    --FROM restricted_safe_workspace_sales.report_agg_keys_base
+)
 
 SELECT
     mart.dim_crm_account_id                                  AS account_id,
@@ -260,6 +271,9 @@ SELECT
 
     acc_owner.role_type                                 AS account_owner_user_role_type,
 
+    acc_owner.key_geo_bu_region_asm                     AS acc_owner_key_geo_bu_region_asm,
+
+
     -----------------------------------
     -- upa owner fields
 
@@ -339,7 +353,15 @@ SELECT
     COALESCE(raw_acc.zi_revenue__c,0)                           AS zi_revenue,
     COALESCE(raw_acc.account_demographics_employee_count__c,0)  AS account_demographics_employees,
     COALESCE(raw_acc.carr_acct_family__c,0)                     AS account_family_arr,
-    LEAST(50000,GREATEST(COALESCE(raw_acc.number_of_licenses_this_account__c,0),COALESCE(raw_acc.potential_users__c, raw_acc.decision_maker_count_linkedin__c , raw_acc.zi_number_of_developers__c, 0)))           AS calculated_developer_count
+    LEAST(50000,GREATEST(COALESCE(raw_acc.number_of_licenses_this_account__c,0),COALESCE(raw_acc.potential_users__c, raw_acc.decision_maker_count_linkedin__c , raw_acc.zi_number_of_developers__c, 0)))           AS calculated_developer_count,
+
+
+    
+    -- fy25 keys
+    fy25keys.key_geo,      
+    fy25keys.key_geo_bu,
+    fy25keys.key_geo_bu_region,
+    fy25keys.key_geo_bu_region_asm
 
 
 FROM mart_crm_account AS mart
@@ -357,6 +379,9 @@ LEFT JOIN sfdc_users_xf AS acc_owner
 -- upa owner id doesn't seem to be on mart crm
 LEFT JOIN sfdc_users_xf AS upa_owner
     ON raw_upa.ownerid = upa_owner.user_id
+-- FY25 keys link
+LEFT JOIN agg_demo_keys_base fy25keys
+    ON fy25keys.key_geo_bu_region_asm = acc_owner.key_geo_bu_region_asm 
 WHERE mart.is_deleted = FALSE
 
 --------------------

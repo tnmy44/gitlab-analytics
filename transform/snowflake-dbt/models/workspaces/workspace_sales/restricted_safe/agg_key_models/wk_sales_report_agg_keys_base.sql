@@ -194,21 +194,21 @@ WITH sfdc_account_xf AS (
         report_opportunity_user_business_unit || '_' || report_opportunity_user_sub_business_unit || '_' || report_opportunity_user_division || '_' || report_opportunity_user_asm AS key_bu_subbu_division_asm,
 
         -- FY25 structure keys (pending)
-        report_opportunity_user_geo                                      AS key_geo,
+        LOWER(report_opportunity_user_geo)                                      AS key_geo,
 
-        report_opportunity_user_geo || '_' || deal_group                 AS key_geo_ot,
-        report_opportunity_user_geo || '_' || sales_qualified_source     AS key_geo_sqs,
+        LOWER(report_opportunity_user_geo || '_' || deal_group)                 AS key_geo_ot,
+        LOWER(report_opportunity_user_geo || '_' || sales_qualified_source)     AS key_geo_sqs,
         
-        report_opportunity_user_geo || '_' || report_opportunity_user_business_unit                                       AS key_geo_bu,
-        report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' ||  deal_group                 AS key_geo_bu_ot,
-        report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' ||  sales_qualified_source     AS key_geo_bu_sqs,
+        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit)                                       AS key_geo_bu,
+        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' ||  deal_group)                 AS key_geo_bu_ot,
+        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' ||  sales_qualified_source)     AS key_geo_bu_sqs,
 
-        report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region                                    AS key_geo_bu_region,
-        report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' ||  deal_group              AS key_geo_bu_region_ot,
-        report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' ||  sales_qualified_source  AS key_geo_bu_region_sqs,
+        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region)                                    AS key_geo_bu_region,
+        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' ||  deal_group)              AS key_geo_bu_region_ot,
+        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' ||  sales_qualified_source)  AS key_geo_bu_region_sqs,
 
-        report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area AS key_geo_bu_region_asm,
-        report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || report_opportunity_user_segment AS key_geo_bu_region_asm_segment,
+        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area) AS key_geo_bu_region_asm,
+        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || report_opportunity_user_segment) AS key_geo_bu_region_asm_segment,
  
         ---------------------------------
   
