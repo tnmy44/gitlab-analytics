@@ -38,7 +38,7 @@ default_args = {
 
 # Define the DAG
 dag = DAG(
-    "pajamas_adoption_scanner_extract",
+    "el_pajamas_adoption_scanner_extract",
     default_args=default_args,
     # Run this before dbt_snapshots 07:00 UTC
     schedule_interval="30 6 * * *",
