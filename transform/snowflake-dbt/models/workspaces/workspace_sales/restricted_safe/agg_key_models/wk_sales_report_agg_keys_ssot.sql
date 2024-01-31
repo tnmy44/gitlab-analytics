@@ -82,8 +82,8 @@ SELECT DISTINCT
     key_geo_bu_region_ot,
     key_geo_bu_region_sqs,
 
-    key_geo_bu_region_asm,
-    key_geo_bu_region_asm_segment
+    key_geo_bu_region_area,
+    key_geo_bu_region_area_segment
  
 
 

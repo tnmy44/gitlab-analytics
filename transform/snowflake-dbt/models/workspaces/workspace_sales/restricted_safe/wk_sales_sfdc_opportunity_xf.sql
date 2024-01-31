@@ -792,8 +792,8 @@ WITH edm_opty AS (
         agg_demo_keys_base.key_geo_bu_region_ot,
         agg_demo_keys_base.key_geo_bu_region_sqs,
 
-        agg_demo_keys_base.key_geo_bu_region_asm,
-        agg_demo_keys_base.key_geo_bu_region_asm_segment,
+        agg_demo_keys_base.key_geo_bu_region_area,
+        agg_demo_keys_base.key_geo_bu_region_area_segment,
 
 
       -- Created pipeline eligibility definition

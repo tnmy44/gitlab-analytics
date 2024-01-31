@@ -28,21 +28,10 @@ WITH raw_account AS (
 ),
  sfdc_users_xf AS (
 
-    SELECT *,
-        user_geo || '_' || business_unit   || '_' || user_region || '_' || user_area AS key_geo_bu_region_asm
+    SELECT *
     --FROM prod.workspace_sales.sfdc_users_xf
     FROM {{ref('wk_sales_sfdc_users_xf')}}
- ), 
- agg_demo_keys_base AS (
-
-    SELECT DISTINCT
-        key_geo,      
-        key_geo_bu,
-        key_geo_bu_region,
-        key_geo_bu_region_asm
-    FROM {{ ref('wk_sales_report_agg_keys_base') }}
-    --FROM restricted_safe_workspace_sales.report_agg_keys_base
-)
+ )
 
 SELECT
     mart.dim_crm_account_id                                  AS account_id,
@@ -358,11 +347,11 @@ SELECT
 
     
     -- fy25 keys
-    fy25keys.key_geo,      
-    fy25keys.key_geo_bu,
-    fy25keys.key_geo_bu_region,
-    fy25keys.key_geo_bu_region_asm
 
+     LOWER(account_owner_user_geo)                                                                                                     AS key_geo,
+     LOWER(account_owner_user_geo || '_' || account_owner_user_business_unit)                                                          AS key_geo_bu,
+     LOWER(account_owner_user_geo || '_' || account_owner_user_business_unit || '_' || account_owner_user_region)                      AS key_geo_bu_region,
+     LOWER(account_owner_user_geo || '_' || account_owner_user_business_unit || '_' || account_owner_user_region|| '_' || account_owner_user_area)   AS key_geo_bu_region_area,
 
 FROM mart_crm_account AS mart
 LEFT JOIN sfdc_record_type
@@ -379,9 +368,6 @@ LEFT JOIN sfdc_users_xf AS acc_owner
 -- upa owner id doesn't seem to be on mart crm
 LEFT JOIN sfdc_users_xf AS upa_owner
     ON raw_upa.ownerid = upa_owner.user_id
--- FY25 keys link
-LEFT JOIN agg_demo_keys_base fy25keys
-    ON fy25keys.key_geo_bu_region_asm = acc_owner.key_geo_bu_region_asm 
 WHERE mart.is_deleted = FALSE
 
 --------------------

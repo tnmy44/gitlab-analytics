@@ -207,8 +207,8 @@ WITH sfdc_account_xf AS (
         LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' ||  deal_group)              AS key_geo_bu_region_ot,
         LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' ||  sales_qualified_source)  AS key_geo_bu_region_sqs,
 
-        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area) AS key_geo_bu_region_asm,
-        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || report_opportunity_user_segment) AS key_geo_bu_region_asm_segment,
+        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area) AS key_geo_bu_region_area,
+        LOWER(report_opportunity_user_geo || '_' || report_opportunity_user_business_unit || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || report_opportunity_user_segment) AS key_geo_bu_region_area_segment,
  
         ---------------------------------
   
