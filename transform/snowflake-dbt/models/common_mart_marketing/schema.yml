@@ -76,6 +76,10 @@ models:
           description: A short description of the work the devrel team did on the campaign.
         - name: devrel_campaign_influence_type
           description: The output the devrel team created to contribute to the campaign.
+        - name: touchpoint_offer_type
+          description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
+        - name: touchpoint_offer_type_grouped
+          description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
 
     - name: mart_crm_touchpoint
       description: Model containing Bizible touchpoints (non-attribution) along with contact, lead, account, and campaign details.
@@ -129,6 +133,10 @@ models:
           description: A short description of the work the devrel team did on the campaign.
         - name: devrel_campaign_influence_type
           description: The output the devrel team created to contribute to the campaign.
+        - name: touchpoint_offer_type
+          description: The initial grouping of bizible touchpoint dimensions, creating an offer type bucket. 
+        - name: touchpoint_offer_type_grouped
+          description: The final grouping of bizible touchpoint dimensions, creating an offer type bucket.
 
     - name: mart_crm_person
       description: Model with person and MQL business logic.

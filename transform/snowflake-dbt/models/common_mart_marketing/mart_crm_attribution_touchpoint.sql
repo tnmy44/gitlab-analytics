@@ -29,6 +29,8 @@
       dim_crm_touchpoint.bizible_touchpoint_source,
       dim_crm_touchpoint.bizible_touchpoint_source_type,
       dim_crm_touchpoint.bizible_touchpoint_type,
+      dim_crm_touchpoint.touchpoint_offer_type,
+      dim_crm_touchpoint.touchpoint_offer_type_grouped,
       dim_crm_touchpoint.bizible_ad_campaign_name,
       dim_crm_touchpoint.bizible_ad_content,
       dim_crm_touchpoint.bizible_ad_group_name,
@@ -74,7 +76,7 @@
       fct_crm_attribution_touchpoint.bizible_count_custom_model,
       fct_crm_attribution_touchpoint.bizible_count_u_shaped,
       fct_crm_attribution_touchpoint.bizible_count_w_shaped,
-	  fct_crm_attribution_touchpoint.bizible_weight_full_path,
+	    fct_crm_attribution_touchpoint.bizible_weight_full_path,
       fct_crm_attribution_touchpoint.bizible_weight_custom_model,
       fct_crm_attribution_touchpoint.bizible_weight_first_touch,
       fct_crm_attribution_touchpoint.bizible_weight_lead_conversion,
@@ -335,7 +337,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2024-01-08"
+    updated_date="2024-01-31"
 ) }}
