@@ -351,7 +351,7 @@ SELECT
      LOWER(account_owner_user_geo)                                                                                                     AS key_geo,
      LOWER(account_owner_user_geo || '_' || account_owner_user_business_unit)                                                          AS key_geo_bu,
      LOWER(account_owner_user_geo || '_' || account_owner_user_business_unit || '_' || account_owner_user_region)                      AS key_geo_bu_region,
-     LOWER(account_owner_user_geo || '_' || account_owner_user_business_unit || '_' || account_owner_user_region|| '_' || account_owner_user_area)   AS key_geo_bu_region_area,
+     LOWER(account_owner_user_geo || '_' || account_owner_user_business_unit || '_' || account_owner_user_region|| '_' || account_owner_user_area)   AS key_geo_bu_region_area
 
 FROM mart_crm_account AS mart
 LEFT JOIN sfdc_record_type
