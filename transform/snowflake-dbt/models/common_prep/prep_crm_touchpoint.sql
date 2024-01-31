@@ -118,7 +118,7 @@ WITH bizible_person_touchpoint_source AS (
 ), final AS (
 
     SELECT
-        {{ dbt_utils.star(from=bizible_person_touchpoint_final, except=["BIZIBLE_FORM_URL_PREP","BIZIBLE_FORM_URL_CLEAN")}}
+        {{ dbt_utils.star(from=bizible_person_touchpoint_final, except=["BIZIBLE_FORM_URL_PREP","BIZIBLE_FORM_URL_CLEAN"])}}
     FROM bizible_person_touchpoint_final
 
 )
