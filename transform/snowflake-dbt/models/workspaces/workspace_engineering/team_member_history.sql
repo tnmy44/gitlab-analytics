@@ -43,6 +43,8 @@ directory_mapping AS (
 
     b.division,
     b.department,
+    b.position,
+    b.management_level,
     CASE
       WHEN LOWER(b.position) LIKE '%backend%'
         THEN 'backend'
@@ -61,7 +63,7 @@ directory_mapping AS (
       AND a.date_actual < b.valid_to
   INNER JOIN category AS c ON a.date_actual BETWEEN c.valid_from AND c.valid_to
   LEFT JOIN gitlab_dotcom_users AS d ON b.gitlab_username = d.user_name
-  {{ dbt_utils.group_by(n=8) }}
+  {{ dbt_utils.group_by(n=10) }}
 
 )
 
