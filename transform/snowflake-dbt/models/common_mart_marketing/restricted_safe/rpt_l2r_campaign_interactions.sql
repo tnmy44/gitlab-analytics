@@ -59,6 +59,7 @@
       person_base.behavior_score,
       person_base.employee_bucket,
       person_base.leandata_matched_account_sales_Segment,
+      person_base.sfdc_record_type,
       map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
       COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
@@ -275,6 +276,7 @@
       person_base.behavior_score,
       person_base.employee_bucket,
       person_base.leandata_matched_account_sales_Segment,
+      person_base.sfdc_record_type,
       map_alternative_lead_demographics.employee_count_segment_custom,
       map_alternative_lead_demographics.employee_bucket_segment_custom,
       COALESCE(map_alternative_lead_demographics.employee_count_segment_custom, 
@@ -383,7 +385,7 @@
       ON opp.dim_crm_account_id=dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_account partner_account
       ON opp.partner_account=partner_account.dim_crm_account_id
-  {{dbt_utils.group_by(n=178)}}
+  {{dbt_utils.group_by(n=179)}}
     
 ), cohort_base_combined AS (
   
@@ -437,6 +439,7 @@
       behavior_score,
       employee_bucket,
       leandata_matched_account_sales_Segment,
+      sfdc_record_type,
       employee_count_segment_custom,
       employee_bucket_segment_custom,
       inferred_employee_segment,
@@ -646,6 +649,7 @@
       behavior_score,
       employee_bucket,
       leandata_matched_account_sales_Segment,
+      sfdc_record_type,
       employee_count_segment_custom,
       employee_bucket_segment_custom,
       inferred_employee_segment,
@@ -1025,5 +1029,5 @@
     created_by="@rkohnke",
     updated_by="@degan",
     created_date="2022-07-05",
-    updated_date="2024-01-08",
+    updated_date="2024-02-01",
   ) }}
