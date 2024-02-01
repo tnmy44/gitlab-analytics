@@ -18,7 +18,7 @@
                                  'sales_qualified_source.dim_sales_qualified_source_id',
                                  'order_type.dim_order_type_id',
                                  'dim_date.date_day'
-                                 ]) }}                                                                                  AS actuals_targets_daily_pk,
+                                 ]) }}                                                                                  AS actuals_targets_pk,
     sfdc_opportunity.dim_crm_opportunity_id,
     {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                       AS dim_sales_qualified_source_id,
     {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                               AS dim_order_type_id,
@@ -29,8 +29,24 @@
     sfdc_opportunity.sfdc_contact_id,
     sfdc_opportunity.record_type_id,
 
+    --attributes
+    sfdc_opportunity.report_user_segment_geo_region_area_sqs_ot,
+    sales_qualified_source.sales_qualified_source_name,
+    order_type.order_type_name,
+    sales_rep_account.crm_user_sales_segment, 
+    sales_rep_account.crm_user_geo, 
+    sales_rep_account.crm_user_region, 
+    sales_rep_account.crm_user_area, 
+    sales_rep_account.crm_user_business_unit,
+
     -- dates
     sfdc_opportunity.snapshot_date,
+    sfdc_opportunity.snapshot_month,
+    sfdc_opportunity.snapshot_fiscal_year,
+    sfdc_opportunity.snapshot_fiscal_quarter_name,
+    sfdc_opportunity.snapshot_fiscal_quarter_date,
+    sfdc_opportunity.snapshot_day_of_fiscal_quarter_normalised,
+    sfdc_opportunity.snapshot_day_of_fiscal_year_normalised,
     sfdc_opportunity.created_date,
     sfdc_opportunity.created_date_id,
     sfdc_opportunity.sales_accepted_date,
@@ -102,6 +118,7 @@
     sfdc_opportunity.is_renewal,
     sfdc_opportunity.is_deleted,
     sfdc_opportunity.is_excluded_from_pipeline_created_combined,
+    sfdc_opportunity.created_in_snapshot_quarter_deal_count,
     sfdc_opportunity.is_duplicate,
     sfdc_opportunity.is_contract_reset,
     sfdc_opportunity.is_comp_new_logo_override,
@@ -115,6 +132,26 @@
     sfdc_opportunity.primary_solution_architect,
     sfdc_opportunity.product_details,
     sfdc_opportunity.product_category,
+    sfdc_opportunity.intended_product_tier,
+    CASE
+      WHEN LOWER(product_category) LIKE '%premium%'
+          THEN 'Premium'
+      WHEN LOWER(product_category) LIKE '%ultimate%'
+          THEN 'Ultimate'
+      WHEN LOWER(intended_product_tier) LIKE '%premium%'
+          THEN 'Premium'
+      WHEN LOWER(intended_product_tier) LIKE '%ultimate%'
+          THEN 'Ultimate'
+      ELSE 'Other'
+    END AS  product_category_tier,
+
+    CASE
+      WHEN LOWER(product_category) LIKE '%saas%'
+              THEN 'SaaS'
+      WHEN LOWER(product_category) LIKE '%self-managed%'
+              THEN 'Self-Managed'
+      ELSE 'Other'
+    END AS  product_category_deployment,
     sfdc_opportunity.products_purchased,
     sfdc_opportunity.growth_type,
     sfdc_opportunity.opportunity_deal_size,

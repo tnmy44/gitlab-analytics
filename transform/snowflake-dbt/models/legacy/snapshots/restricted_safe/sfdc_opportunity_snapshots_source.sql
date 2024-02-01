@@ -317,6 +317,10 @@ WITH source AS (
         intended_product_tier__c                        AS intended_product_tier,
         parent_opportunity__c                           AS parent_opportunity_id,
 
+        -- ptc fields - issue: https://gitlab.com/gitlab-data/analytics/-/issues/19440
+        PTC_Predicted_ARR__c                            AS ptc_predicted_arr,
+        PTC_Predicted_Renewal_Risk_Category__c          AS ptc_predicted_renewal_risk_category,
+
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
                  CURRENT_TIMESTAMP()))                                                      AS _last_dbt_run,
