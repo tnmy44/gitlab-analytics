@@ -9,7 +9,6 @@ from airflow_utils import (
     clone_repo_cmd,
     gitlab_defaults,
     slack_failed_task,
-    REPO_BASE_PATH,
     gitlab_pod_env_vars,
 )
 from kube_secrets import (
@@ -58,12 +57,14 @@ snowplow_tables = [
     }
 ]
 
-days_to_subtract = 180
+days_to_subtract = 90
 today_d = datetime.today()
 starting_d = today_d - timedelta(days=days_to_subtract)
 
 snowplow_prep_schemas = (
-    pd.date_range(starting_d, today_d, freq="MS").strftime("SNOWPLOW_%Y_%m").tolist()
+    pd.date_range(starting_d, today_d, freq="M", inclusive="left")
+    .strftime("SNOWPLOW_%Y_%m")
+    .tolist()
 )
 
 
@@ -88,7 +89,7 @@ for table in snowplow_tables:
       python3 /analytics/orchestration/redact_duo_feedback.py \
         --table={table['table']} \
         --schema={table['schema']} \
-        --database={table['database']} 
+        --database={table['database']}
         """
 
     run_redaction = KubernetesPodOperator(
