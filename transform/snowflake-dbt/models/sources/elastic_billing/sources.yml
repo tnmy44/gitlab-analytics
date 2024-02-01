@@ -12,6 +12,5 @@ sources:
       identifier: false
 
     tables:
-      - name: costs_overview
       - name: itemized_costs
-      - name: itemized_costs_by_deployment
+

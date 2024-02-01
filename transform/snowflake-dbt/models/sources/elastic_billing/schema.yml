@@ -18,25 +18,4 @@ models:
         description: Usage of the charge
       - name: usage_unit
         description: Usage unit of the charge
-  - name: elastic_billing_costs_overview
-    description: "Overview of the Elastic costs. Contains total costs and 
-      information aboput our ECU balance"
-    columns:
-      - name: extraction_start_date
-        description: Start of the month. Billing period is one month.
-      - name: extraction_end_date
-        description: End of the month
-      - name: costs_total
-        description: Total costs in ECU
-      - name: trials
-        description: Trial costs in ECU
-      - name: hourly_rate
-        description: Hourly rate during the month in ECU per hour
-      - name: balance_available
-        description: ECU Balance available
-      - name: balance_remaining
-        description: ECU Balance remaining
-      - name: balance_line_items
-        description: "Details about the ECU balance "
-      - name: costs_dimensions
-        description: ""
+
