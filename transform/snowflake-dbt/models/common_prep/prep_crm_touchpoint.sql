@@ -21,7 +21,7 @@ WITH bizible_person_touchpoint_source AS (
   LEFT JOIN {{ ref('sheetload_bizible_to_pathfactory_mapping') }}  
     ON bizible_form_url_clean=bizible_url
   LEFT JOIN {{ ref('prep_campaign') }}
-      ON bizible_attribution_touchpoint_source.campaign_id = prep_campaign.dim_campaign_id
+      ON bizible_person_touchpoint_source.campaign_id = prep_campaign.dim_campaign_id
 
 ), final AS (
 
