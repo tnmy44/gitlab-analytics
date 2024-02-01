@@ -1,0 +1,57 @@
+version: 2
+models:
+  - name: elastic_billing_itemized
+    description: Reports on a monthly basis the detailed ElasticSearch billing data,
+      per charge. Displays the total cost per each charge as well as the usage
+      and usage units for the charge.
+    columns:
+      - name: EXTRACTION_START_DATE
+        description: First day of the billing period. Each billing period is a month.
+        data_type: DATE
+      - name: EXTRACTION_END_DATE
+        description: Last day of the billing period. Last day of every month.
+        data_type: DATE
+      - name: CHARGE_TYPE
+        description: Service used. Data transfers are self-explanatory. Capacity
+          represent the aggregated costs of all compute resources deployed.
+        data_type: VARCHAR
+      - name: COST
+        description: Cost of the charge in ECU
+        data_type: VARIANT
+      - name: USAGE
+        description: Usage of the charge
+        data_type: FLOAT
+      - name: USAGE_UNIT
+        description: Usage unit of the charge
+        data_type: VARIANT
+  - name: elastic_billing_costs_overview
+    description: "Overview of the Elastic costs. Contains total costs and 
+      information aboput our ECU balance"
+    columns:
+      - name: EXTRACTION_START_DATE
+        description: Start of the month. Billing period is one month.
+        data_type: DATE
+      - name: EXTRACTION_END_DATE
+        description: End of the month
+        data_type: DATE
+      - name: COSTS_TOTAL
+        description: Total costs in ECU
+        data_type: FLOAT
+      - name: TRIALS
+        description: Trial costs in ECU
+        data_type: FLOAT
+      - name: HOURLY_RATE
+        description: Hourly rate during the month in ECU per hour
+        data_type: VARCHAR
+      - name: BALANCE_AVAILABLE
+        description: ECU Balance available
+        data_type: FLOAT
+      - name: BALANCE_REMAINING
+        description: ECU Balance remaining
+        data_type: FLOAT
+      - name: BALANCE_LINE_ITEMS
+        description: "Details about the ECU balance "
+        data_type: ARRAY
+      - name: COSTS_DIMENSIONS
+        description: ""
+        data_type: ARRAY
