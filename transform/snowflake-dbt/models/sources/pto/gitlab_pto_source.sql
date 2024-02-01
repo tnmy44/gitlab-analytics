@@ -26,7 +26,11 @@ WITH source AS (
       ooo_days.value['is_holiday']::BOOLEAN                 AS is_holiday,
       ooo_days.value['recorded_hours']::NUMBER              AS recorded_hours,
       ooo_days.value['start_time']::TIMESTAMP               AS pto_starts_at,
-      ooo_days.value['total_hours']::NUMBER                 AS total_hours
+      ooo_days.value['total_hours']::NUMBER                 AS total_hours,
+      jsontext['ooo_type']['group_type']::VARCHAR           AS pto_group_type,
+      jsontext['ooo_type']['is_pto']::BOOLEAN               AS is_pto,
+      jsontext['ooo_type']['name']::VARCHAR                 AS pto_type_name,
+      jsontext['ooo_type']['uuid']::VARCHAR                 AS pto_type_uuid
     FROM deduped,
     LATERAL FLATTEN(INPUT => jsontext['ooo_days']::ARRAY) ooo_days
 
