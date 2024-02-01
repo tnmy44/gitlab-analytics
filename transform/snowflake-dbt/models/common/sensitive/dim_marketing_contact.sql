@@ -153,7 +153,7 @@ WITH sfdc_lead AS (
 ), gitlab_dotcom AS (
 
     SELECT
-      COALESCE(notification_email, email)                                                                                   AS email_address,
+      email                                                                                                                 AS email_address,
       user_id                                                                                                               AS user_id,
       SPLIT_PART(users_name,' ',1)                                                                                          AS first_name,
       SPLIT_PART(users_name,' ',2)                                                                                          AS last_name,
