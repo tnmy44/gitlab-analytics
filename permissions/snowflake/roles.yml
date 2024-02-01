@@ -590,7 +590,7 @@ roles:
                     - prep.sensitive.mart_marketing_contact
                     - prod.pumps_sensitive.pump_marketing_contact
 
-    - masked_people_data:
+    - analyst_people_sensitive: # role for dynamic masking of people data
         warehouses:
             - dev_xs
         
@@ -623,7 +623,7 @@ roles:
             - zuora
             - zuora_central_sandbox
             - restricted_workspace_people
-            - masked_people_data
+            - analyst_people_sensitive
 
     - analyst_sales:
         warehouses:
@@ -6008,7 +6008,7 @@ roles:
             - reporter
             - snowflake_account_usage
             - restricted_workspace_people
-            - masked_people_data
+            - analyst_people_sensitive
         warehouses:
             - reporting
 
