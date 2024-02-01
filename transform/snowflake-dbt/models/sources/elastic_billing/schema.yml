@@ -1,6 +1,6 @@
 version: 2
 models:
-  - name: elastic_billing_itemized
+  - name: elastic_billing_source
     description: Reports on a monthly basis the detailed ElasticSearch billing data,
       per charge. Displays the total cost per each charge as well as the usage
       and usage units for the charge.
