@@ -15,10 +15,13 @@ WITH bizible_attribution_touchpoint_source AS (
     bizible_attribution_touchpoint_source.*,
     LOWER(bizible_form_url) AS bizible_form_url_prep,
     REPLACE(bizible_form_url_prep,'.html','') AS bizible_form_url_clean,
-    pathfactory_content_type
+    pathfactory_content_type,
+    prep_campaign.type
   FROM bizible_attribution_touchpoint_source
   LEFT JOIN {{ ref('sheetload_bizible_to_pathfactory_mapping') }}  
     ON bizible_form_url_clean=bizible_url
+  LEFT JOIN {{ ref('prep_campaign') }}
+      ON bizible_attribution_touchpoint_source.campaign_id = prep_campaign.dim_campaign_id
 
 ), final AS (
 
