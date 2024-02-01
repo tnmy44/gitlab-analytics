@@ -63,7 +63,9 @@ today_d = datetime.today()
 starting_d = today_d - timedelta(days=days_to_subtract)
 
 snowplow_prep_schemas = (
-    pd.date_range(starting_d, today_d, freq="M", inclusive="left").strftime("SNOWPLOW_%Y_%m").tolist()
+    pd.date_range(starting_d, today_d, freq="M", inclusive="left")
+    .strftime("SNOWPLOW_%Y_%m")
+    .tolist()
 )
 
 
