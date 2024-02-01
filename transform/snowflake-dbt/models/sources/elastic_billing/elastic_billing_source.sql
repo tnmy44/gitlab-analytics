@@ -23,25 +23,25 @@ renamed AS (
       extraction_start_date,
       extraction_end_date,
 
-      value[0]['cost']                               AS cost_gcp_data_transfer_in,
+      value[0]['cost']                                    AS cost_gcp_data_transfer_in,
       value[0]['quantity']['value']::FLOAT / POW(1024, 3) AS usage_gcp_data_transfer_in_gb,
-      value[0]['name']                                AS cost_gcp_data_transfer_in_formatted_name,
+      value[0]['name']                                    AS cost_gcp_data_transfer_in_formatted_name,
 
-      value[1]['cost']                                AS cost_gcp_data_transfer_inter_node,
+      value[1]['cost']                                    AS cost_gcp_data_transfer_inter_node,
       value[1]['quantity']['value']::FLOAT / POW(1024, 3) AS usage_gcp_data_transfer_inter_node_gb,
-      value[1]['name']                                 AS cost_gcp_data_transfer_inter_node_formatted_name,
+      value[1]['name']                                    AS cost_gcp_data_transfer_inter_node_formatted_name,
 
-      value[2]['cost']                                 AS cost_gcp_data_transfer_out,
+      value[2]['cost']                                    AS cost_gcp_data_transfer_out,
       value[2]['quantity']['value']::FLOAT / POW(1024, 3) AS usage_gcp_data_transfer_out_gb,
-      value[2]['name']                                 AS cost_gcp_data_transfer_out_formatted_name,
+      value[2]['name']                                    AS cost_gcp_data_transfer_out_formatted_name,
 
-      value[3]['cost']                                 AS cost_gcp_snapshot_storage_api,
+      value[3]['cost']                                    AS cost_gcp_snapshot_storage_api,
       value[3]['quantity']['value']::FLOAT                AS usage_gcp_snapshot_storage_api_requests,
-      value[3]['name']                                 AS cost_gcp_snapshot_transfer_out_formatted_name,
+      value[3]['name']                                    AS cost_gcp_snapshot_transfer_out_formatted_name,
 
-      value[4]['cost']                                 AS cost_gcp_snapshot_storage,
+      value[4]['cost']                                    AS cost_gcp_snapshot_storage,
       value[4]['quantity']['value']::FLOAT / POW(1024, 3) AS usage_gcp_snapshot_storage_gb_month,
-      value[4]['name']                                 AS cost_gcp_snapshot_storage_formatted_name
+      value[4]['name']                                    AS cost_gcp_snapshot_storage_formatted_name
 
     FROM source
     WHERE path = 'data_transfer_and_storage'
