@@ -118,10 +118,30 @@ def generate_dbt_command(vars_dict):
         dag=dag,
     )
 
+dbt_snowplow_combined_cmd = f"""
+        {dbt_install_deps_nosha_cmd} &&
+        dbt run --profiles-dir profile --target {target} --select path:legacy/snowplow/combined,config.materialized:view ; ret=$?;
+        montecarlo import dbt-run --manifest target/manifest.json --run-results target/run_results.json --project-name gitlab-analysis;
+        python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+        """
+
+dbt_snowplow_combined = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id=f"dbt-snowplow-combined",
+    name=f"dbt-snowplow-combined",
+    trigger_rule="all_success",
+    secrets=task_secrets,
+    env_vars=pod_env_vars,
+    arguments=[dbt_snowplow_combined_cmd],
+    affinity=get_affinity("dbt"),
+    tolerations=get_toleration("dbt"),
+    dag=dag,
+)
 
 dummy_operator = DummyOperator(task_id="start", dag=dag)
 
 for month in partitions(
     datetime.strptime("2018-07-01", "%Y-%m-%d").date(), date.today(), "month"
 ):
-    dummy_operator >> generate_dbt_command(month)
+    dummy_operator >> generate_dbt_command(month) >> dbt_snowplow_combined
