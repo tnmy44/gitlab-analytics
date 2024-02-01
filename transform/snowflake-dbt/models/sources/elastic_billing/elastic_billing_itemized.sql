@@ -10,12 +10,13 @@ cost_dimensions as (
     SELECT     
     extraction_start_date,
     extraction_end_date,
-    value:dimensions[0]:cost as capacity_cost,
-    value:dimensions[1]:cost as data_in_cost,
+    value:dimensions[0]:cost as capacity_cost
+    {# value:dimensions[1]:cost as data_in_cost,
     value:dimensions[2]:cost as data_internode_cost,
     value:dimensions[3]:cost as data_out_cost,
     value:dimensions[4]:cost as storage_api_cost,
-    value:dimensions[5]:cost as storage_bytes_cost FROM source 
+    value:dimensions[5]:cost as storage_bytes_cost #}
+    FROM source 
     WHERE path = 'costs'
 
 ),
@@ -61,18 +62,20 @@ resources_dimensions as (
     FROM source 
     WHERE path = 'resources'
 
-)
+),
+
+wide as (
 
 SELECT 
 -- cost dimensions
-cost_dimensions.extraction_start_date, 
-cost_dimensions.extraction_end_date,
+data_transfer_dimensions.extraction_start_date, 
+data_transfer_dimensions.extraction_end_date,
 cost_dimensions.capacity_cost as cost_capacity,
-cost_dimensions.data_in_cost as cost_data_in,
+{#cost_dimensions.data_in_cost as cost_data_in,
 cost_dimensions.data_internode_cost as cost_data_internode,
 cost_dimensions.data_out_cost as cost_data_out,
 cost_dimensions.storage_api_cost as cost_storage_api,
-cost_dimensions.storage_bytes_cost as cost_storage_bytes,
+cost_dimensions.storage_bytes_cost as cost_storage_bytes, #}
 
 --data_transfer_dimensions
 data_transfer_dimensions.cost_gcp_data_transfer_in,
@@ -102,8 +105,68 @@ LEFT JOIN data_transfer_dimensions
 ON data_transfer_dimensions.extraction_start_date = cost_dimensions.extraction_start_date
 AND data_transfer_dimensions.extraction_end_date = cost_dimensions.extraction_end_date
 LEFT JOIN resources_dimensions 
-ON resources_dimensions.extraction_start_date = cost_dimensions.extraction_start_date
-AND resources_dimensions.extraction_start_date = cost_dimensions.extraction_start_date
+ON resources_dimensions.extraction_start_date = data_transfer_dimensions.extraction_start_date
+AND resources_dimensions.extraction_start_date = data_transfer_dimensions.extraction_start_date
+
+),
+
+long as (
+  SELECT 
+    extraction_start_date, 
+    extraction_end_date,
+    'capacity' AS charge_type, 
+    cost_capacity AS cost,
+    NULL AS usage,
+    NULL as usage_unit
+    FROM wide
+  UNION ALL
+  SELECT 
+    extraction_start_date, 
+    extraction_end_date,
+    'cost_gcp_data_transfer_in' AS charge_type, 
+    cost_gcp_data_transfer_in AS cost,
+    usage_gcp_data_transfer_in_gb AS usage,
+    cost_gcp_data_transfer_in_formatted_name as usage_unit
+    FROM wide
+  UNION ALL
+  SELECT
+    extraction_start_date, 
+    extraction_end_date,
+    'cost_gcp_data_transfer_inter_node' AS charge_type,
+    cost_gcp_data_transfer_inter_node AS cost, 
+    usage_gcp_data_transfer_inter_node_gb AS usage,
+    cost_gcp_data_transfer_inter_node_formatted_name as usage_unit
+    FROM wide
+  UNION ALL
+  SELECT
+    extraction_start_date, 
+    extraction_end_date,
+    'cost_gcp_data_transfer_out' AS charge_type,
+    cost_gcp_data_transfer_out AS cost,
+    usage_gcp_data_transfer_out_gb AS usage,
+    cost_gcp_data_transfer_out_formatted_name as usage_unit
+    FROM wide
+  UNION ALL
+  SELECT
+    extraction_start_date, 
+    extraction_end_date,
+    'cost_gcp_snapshot_storage_api' AS charge_type,
+    cost_gcp_snapshot_storage_api AS cost,
+    usage_gcp_snapshot_storage_api_requests AS usage,
+    cost_gcp_snapshot_transfer_out_formatted_name as usage_unit
+    FROM wide
+  UNION ALL
+  SELECT
+    extraction_start_date, 
+    extraction_end_date,
+    'cost_gcp_snapshot_storage' AS charge_type,
+    cost_gcp_snapshot_storage AS cost,
+    usage_gcp_snapshot_storage_gb_month AS usage,
+    cost_gcp_snapshot_storage_formatted_name as usage_unit
+    FROM wide
+)
+
+SELECT * FROM long
 
 
 
