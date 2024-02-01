@@ -7,51 +7,36 @@ models:
     columns:
       - name: extraction_start_date
         description: First day of the billing period. Each billing period is a month.
-        data_type: DATE
       - name: extraction_end_date
         description: Last day of the billing period. Last day of every month.
-        data_type: DATE
       - name: charge_type
         description: Service used. Data transfers are self-explanatory. Capacity
           represent the aggregated costs of all compute resources deployed.
-        data_type: VARCHAR
       - name: cost
         description: Cost of the charge in ECU
-        data_type: VARIANT
       - name: usage
         description: Usage of the charge
-        data_type: FLOAT
       - name: usage_unit
         description: Usage unit of the charge
-        data_type: VARIANT
   - name: elastic_billing_costs_overview
     description: "Overview of the Elastic costs. Contains total costs and 
       information aboput our ECU balance"
     columns:
       - name: extraction_start_date
         description: Start of the month. Billing period is one month.
-        data_type: DATE
       - name: extraction_end_date
         description: End of the month
-        data_type: DATE
       - name: costs_total
         description: Total costs in ECU
-        data_type: FLOAT
       - name: trials
         description: Trial costs in ECU
-        data_type: FLOAT
       - name: hourly_rate
         description: Hourly rate during the month in ECU per hour
-        data_type: VARCHAR
       - name: balance_available
         description: ECU Balance available
-        data_type: FLOAT
       - name: balance_remaining
         description: ECU Balance remaining
-        data_type: FLOAT
       - name: balance_line_items
         description: "Details about the ECU balance "
-        data_type: ARRAY
       - name: costs_dimensions
         description: ""
-        data_type: ARRAY
