@@ -118,6 +118,7 @@ def generate_dbt_command(vars_dict):
         dag=dag,
     )
 
+
 dbt_snowplow_combined_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         dbt run --profiles-dir profile --target {target} --select path:legacy/snowplow/combined,config.materialized:view ; ret=$?;
@@ -128,8 +129,8 @@ dbt_snowplow_combined_cmd = f"""
 dbt_snowplow_combined = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id=f"dbt-snowplow-combined",
-    name=f"dbt-snowplow-combined",
+    task_id="dbt-snowplow-combined",
+    name="dbt-snowplow-combined",
     trigger_rule="all_success",
     secrets=task_secrets,
     env_vars=pod_env_vars,
