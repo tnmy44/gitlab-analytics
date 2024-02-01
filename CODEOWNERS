@@ -146,7 +146,7 @@ transform/snowflake-dbt/models/marts/pumps_sensitive/       @jjstark @paul_armst
 
 /transform/snowflake-dbt/models/workspaces/workspace_sales/          @nfiguera @mvilain @snalamaru @chrissharp @lisvinueza
 
-/transform/snowflake-dbt/models/workspaces/workspace_finance/        @iweeks @michellecooper @jeanpeguero @vagrawalg @snalamaru
+/transform/snowflake-dbt/models/workspaces/workspace_finance/        @iweeks @michellecooper @jeanpeguero @vagrawalg @snalamaru @annapiaseczna
 
 /transform/snowflake-dbt/models/workspaces/workspace_engineering/    @pempey @iweeks @meks @lmai1 @clem.lr @lisvinueza
 
