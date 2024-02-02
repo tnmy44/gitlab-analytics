@@ -3299,6 +3299,7 @@ roles:
             - reporter
             - restricted_safe
             - bi_tool_eval_read
+            - static_sensitive
         warehouses:
             - reporting
 
@@ -4750,6 +4751,7 @@ roles:
             - analyst_sales
             - restricted_safe
             - bi_tool_eval_read
+            - static_sensitive
         warehouses:
             - dev_xs
             - dev_l
