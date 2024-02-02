@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta
+from dateutil import rrule
 
-import pandas as pd
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
@@ -9,7 +9,6 @@ from airflow_utils import (
     clone_repo_cmd,
     gitlab_defaults,
     slack_failed_task,
-    REPO_BASE_PATH,
     gitlab_pod_env_vars,
 )
 from kube_secrets import (
@@ -44,7 +43,7 @@ default_args = {
 dag = DAG(
     "duo_data_redaction",
     default_args=default_args,
-    schedule_interval="0 5 * * *",
+    schedule_interval="0 22 * * *",
     catchup=False,
 )
 
@@ -58,14 +57,14 @@ snowplow_tables = [
     }
 ]
 
-days_to_subtract = 180
+days_to_subtract = 90
 today_d = datetime.today()
 starting_d = today_d - timedelta(days=days_to_subtract)
 
-snowplow_prep_schemas = (
-    pd.date_range(starting_d, today_d, freq="MS").strftime("SNOWPLOW_%Y_%m").tolist()
-)
+snowplow_prep_schemas = []
 
+for dt in rrule.rrule(rrule.MONTHLY, dtstart=starting_d, until=today_d):
+    snowplow_prep_schemas.append(dt.strftime("SNOWPLOW_%Y_%m"))
 
 for schema in snowplow_prep_schemas:
 
@@ -88,7 +87,7 @@ for table in snowplow_tables:
       python3 /analytics/orchestration/redact_duo_feedback.py \
         --table={table['table']} \
         --schema={table['schema']} \
-        --database={table['database']} 
+        --database={table['database']}
         """
 
     run_redaction = KubernetesPodOperator(
