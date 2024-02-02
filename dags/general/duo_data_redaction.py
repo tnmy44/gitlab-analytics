@@ -87,7 +87,7 @@ for table in snowplow_tables:
       python3 /analytics/orchestration/redact_duo_feedback.py \
         --table={table['table']} \
         --schema={table['schema']} \
-        --database={table['database']} 
+        --database={table['database']}
         """
 
     run_redaction = KubernetesPodOperator(
