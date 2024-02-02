@@ -650,6 +650,8 @@ models:
           description: A short description of the work the devrel team did on the campaign.
         - name: devrel_campaign_influence_type
           description: The output the devrel team created to contribute to the campaign.
+        - name: sfdc_record_type
+          description: Shows if the person record is a lead or contact in SFDC.
 
 
     - name: rpt_l2r_community_data
