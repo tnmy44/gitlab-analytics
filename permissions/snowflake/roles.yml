@@ -5098,6 +5098,8 @@ roles:
             - data_science_readonly
             - marketo
             - static_sensitive
+            - zendesk
+            - zuora_order
             - zuora_stitch_rest_api
         warehouses:
             - dev_xs
