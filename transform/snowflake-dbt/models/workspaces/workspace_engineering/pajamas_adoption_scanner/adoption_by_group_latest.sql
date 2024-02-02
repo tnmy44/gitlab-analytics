@@ -2,12 +2,8 @@ WITH latest AS (
 
   SELECT *
   FROM {{ ref('adoption_by_group') }}
-  WHERE aggregated_at
 
-    = (
-      SELECT MAX(aggregated_at)
-      FROM {{ ref('adoption_by_group') }}
-    )
+  QUALIFY MAX(aggregated_at) OVER () = aggregated_at
 
 ),
 
@@ -30,7 +26,7 @@ overall AS (
     adopted,
     not_adopted,
     adopted + not_adopted             AS total_findings,
-    adopted / total_findings          AS adoption_percentage,
+    DIV0NULL(adopted, total_findings) AS adoption_percentage,
     lower_bound,
     upper_bound,
     CASE

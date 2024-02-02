@@ -5,7 +5,7 @@ WITH source AS (
     adopted,
     not_adopted,
     adopted + not_adopted             AS total_findings,
-    adopted / total_findings          AS adoption_percentage,
+    DIV0NULL(adopted, total_findings) AS adoption_percentage,
     lower_bound,
     upper_bound,
 

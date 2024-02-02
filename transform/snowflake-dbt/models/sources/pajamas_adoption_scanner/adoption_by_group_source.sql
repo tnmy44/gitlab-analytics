@@ -1,28 +1,33 @@
-WITH
+WITH source AS (
+  SELECT *
+  FROM
+    {{ source('pajamas_adoption_scanner', 'adoption_by_group') }}
+),
+
 groups AS (
   SELECT
-    value:name::VARCHAR             AS group_name,
-    value:adopted::INT              AS adopted,
-    value:notAdopted::INT           AS not_adopted,
-    jsontext:aggregatedAt::DATETIME AS aggregated_at
+    value['name']::VARCHAR              AS group_name,
+    value['adopted']::INT               AS adopted,
+    value['notAdopted']::INT            AS not_adopted,
+    jsontext['aggregatedAt']::TIMESTAMP AS aggregated_at
   FROM
-    {{ source('pajamas_adoption_scanner', 'adoption_by_group') }},
-    LATERAL FLATTEN(input => jsontext:groups)
+    source
+  INNER JOIN LATERAL FLATTEN(input => jsontext['groups'])
 ),
 
 bounds AS (
   SELECT
-    jsontext:bounds:low             AS lower_bound,
-    jsontext:bounds:high            AS upper_bound,
-    jsontext:aggregatedAt::DATETIME AS aggregated_at
+    jsontext['bounds']['low']::NUMBER(2, 2)  AS lower_bound,
+    jsontext['bounds']['high']::NUMBER(2, 2) AS upper_bound,
+    jsontext['aggregatedAt']::TIMESTAMP      AS aggregated_at
   FROM
     {{ source('pajamas_adoption_scanner', 'adoption_by_group') }}
 ),
 
 minimum_findings_table AS (
   SELECT
-    jsontext:minimumFindings        AS minimum_findings,
-    jsontext:aggregatedAt::DATETIME AS aggregated_at
+    jsontext['minimumFindings']::INT    AS minimum_findings,
+    jsontext['aggregatedAt']::TIMESTAMP AS aggregated_at
   FROM
     {{ source('pajamas_adoption_scanner', 'adoption_by_group') }}
 ),
