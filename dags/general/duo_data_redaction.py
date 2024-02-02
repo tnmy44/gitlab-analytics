@@ -45,7 +45,7 @@ default_args = {
 dag = DAG(
     "duo_data_redaction",
     default_args=default_args,
-    schedule_interval="0 5 * * *",
+    schedule_interval="0 22 * * *",
     catchup=False,
 )
 
@@ -59,7 +59,7 @@ snowplow_tables = [
     }
 ]
 
-days_to_subtract = 180
+days_to_subtract = 90
 today_d = datetime.today()
 starting_d = today_d - timedelta(days=days_to_subtract)
 
