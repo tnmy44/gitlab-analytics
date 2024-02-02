@@ -82,8 +82,12 @@ blocked_ci_usage AS (
     END                                                                                                                                                                                                                                                                                                                                                                                                AS is_paid_by_gitlab,
     SUM(DATEDIFF(SECOND, builds.started_at, builds.finished_at) / 60)                                                                                                                                                                                                                                                                                                                                  AS ci_minutes,
     SUM(CASE WHEN runners.ci_runner_description LIKE 'shared-runners-manager%' THEN (DATEDIFF(SECOND, builds.started_at, builds.finished_at) / 3600) * .0475 WHEN runners.ci_runner_description LIKE 'windows-shared-runners-manager%' THEN (DATEDIFF(SECOND, builds.started_at, builds.finished_at) / 3600) * .135 ELSE (DATEDIFF(SECOND, builds.started_at, builds.finished_at) / 3600) * .0845 END) AS cost_old,
-    SUM(DATEDIFF(SECOND, builds.started_at, builds.finished_at) / 60) / 1000 * 2.38                                                                                                                                                                                                                                                                                                                    AS cost_ue,
-    -- https://gitlab.com/gitlab-org/quality/engineering-analytics/finops-analysis/-/issues/84#note_1518500625
+    /*
+    https://gitlab.com/gitlab-org/quality/engineering-analytics/finops-analysis/-/issues/84#note_1518500625
+    Unit price is taken from the value of linux small runners in the past 6 months: https://10az.online.tableau.com/#/site/gitlab/views/FinOps-Unit-economics-CICDRunners/UE-Runners-Compute?:iid=2
+    */
+    SUM(DATEDIFF(SECOND, builds.started_at, builds.finished_at) / 60) / 1000 * 2.43                                                                                                                                                                                                                                                                                                                    AS cost_ue,
+
 
     COUNT(DISTINCT builds.dim_ci_build_id)                                                                                                                                                                                                                                                                                                                                                             AS job_count
   FROM {{ ref('dim_ci_runner') }} AS runners
@@ -100,25 +104,24 @@ blocked_ci_usage AS (
 joined AS (
 
   SELECT
-    blocked_project_storage.snapshot_month                                                              AS date_month,
+    blocked_project_storage.snapshot_month                                                                        AS date_month,
     blocked_project_storage.abuse_cost_category,
     /*
-    take sum of repo cost & object storage cost
-    $.224/GB for repo storage (gitaly SSD persistent disks)
-    References for Repository costs per GB:
-    https://gitlab.com/gitlab-org/gitlab/-/issues/424365#note_1552880291
-    https://docs.google.com/spreadsheets/d/19cj6pHvRY7qGLkli9f5E8ZKrGdMjtg9DPs94BEHUFbQ/edit?usp=sharing
-    $.026/GB for multi-regional Object storage
+    References for Repository costs:
+    $173.1TB/month = $0.169GB/month
+
+    $0.2028/GB for multi-regional Object storage is the contract price instead of listed price
+    `0D5D-6E23-4250	Standard Storage US Multi-region`
     */
-    blocked_project_storage.repo_size_gb * .224 + blocked_project_storage.object_storage_size_gb * .026 AS cost,
-    NULL                                                                                                AS data_transfer,
-    'Potential Saving on Storage'                                                                       AS saving_type
+    blocked_project_storage.repo_size_gb / 1024 * 173.1 + blocked_project_storage.object_storage_size_gb * .02028 AS cost,
+    NULL                                                                                                          AS data_transfer,
+    'Potential Saving on Storage'                                                                                 AS saving_type
   FROM blocked_project_storage
   UNION ALL
   SELECT
     blocked_ci_usage.ci_month AS date_month,
     blocked_ci_usage.abuse_cost_category,
-    blocked_ci_usage.cost_ue,
+    blocked_ci_usage.cost_ue  AS cost,
     NULL                      AS data_transfer,
     'Actual Saving for CI'    AS saving_type
   FROM blocked_ci_usage
