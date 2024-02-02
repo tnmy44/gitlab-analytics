@@ -2,7 +2,6 @@ import os
 from datetime import datetime, timedelta
 from dateutil import rrule
 
-import pandas as pd
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
@@ -10,7 +9,6 @@ from airflow_utils import (
     clone_repo_cmd,
     gitlab_defaults,
     slack_failed_task,
-    REPO_BASE_PATH,
     gitlab_pod_env_vars,
 )
 from kube_secrets import (
