@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timedelta
+from dateutil import rrule
 
 import pandas as pd
 from airflow import DAG
@@ -62,10 +63,10 @@ days_to_subtract = 180
 today_d = datetime.today()
 starting_d = today_d - timedelta(days=days_to_subtract)
 
-snowplow_prep_schemas = (
-    pd.date_range(starting_d, today_d, freq="MS").strftime("SNOWPLOW_%Y_%m").tolist()
-)
+snowplow_prep_schemas = []
 
+for dt in rrule.rrule(rrule.MONTHLY, dtstart=starting_d, until=today_d):
+    snowplow_prep_schemas.append(dt.strftime("SNOWPLOW_%Y_%m"))
 
 for schema in snowplow_prep_schemas:
 
