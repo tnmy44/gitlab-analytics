@@ -11,7 +11,7 @@ WITH source AS (
       registration_objective::NUMBER                      AS registration_objective,
       organization::VARCHAR                               AS user_organization,
       TRY_TO_NUMBER(discord)                              AS user_discord,
-      TRY_PARSE_JSON(user_details):email_opt_in::VARCHAR  AS initial_email_opt_in_value
+      TRY_PARSE_JSON(onboarding_status):email_opt_in::VARCHAR  AS initial_email_opt_in_value
     FROM source
     
 )
