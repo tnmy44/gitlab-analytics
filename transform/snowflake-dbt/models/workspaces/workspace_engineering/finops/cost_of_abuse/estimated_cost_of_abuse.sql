@@ -87,8 +87,6 @@ blocked_ci_usage AS (
     Unit price is taken from the value of linux small runners in the past 6 months: https://10az.online.tableau.com/#/site/gitlab/views/FinOps-Unit-economics-CICDRunners/UE-Runners-Compute?:iid=2
     */
     SUM(DATEDIFF(SECOND, builds.started_at, builds.finished_at) / 60) / 1000 * 2.43                                                                                                                                                                                                                                                                                                                    AS cost_ue,
-
-
     COUNT(DISTINCT builds.dim_ci_build_id)                                                                                                                                                                                                                                                                                                                                                             AS job_count
   FROM {{ ref('dim_ci_runner') }} AS runners
   INNER JOIN {{ ref('dim_ci_build') }} AS builds ON runners.dim_ci_runner_id = builds.dim_ci_runner_id
@@ -108,8 +106,7 @@ joined AS (
     blocked_project_storage.abuse_cost_category,
     /*
     References for Repository costs:
-    $173.1TB/month = $0.169GB/month
-
+    $173.1TB/month = $0.169GB/month >> taken from Aug/Sep/Oct '23 in https://10az.online.tableau.com/#/site/gitlab/views/FinOps-Unit-economics-Gitaly/UE-Gitaly-Repostorage?:iid=4
     $0.2028/GB for multi-regional Object storage is the contract price instead of listed price
     `0D5D-6E23-4250	Standard Storage US Multi-region`
     */
