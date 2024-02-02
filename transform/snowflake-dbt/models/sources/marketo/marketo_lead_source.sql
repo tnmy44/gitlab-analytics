@@ -38,7 +38,8 @@ WITH source AS (
       currently_in_trial_c::BOOLEAN             AS is_currently_in_trial_marketo,
       trial_start_date_c::DATE                  AS trial_start_date_marketo,
       trial_end_date_c::DATE                    AS trial_end_date_marketo,
-      updated_at::TIMESTAMP                     AS updated_at
+      updated_at::TIMESTAMP                     AS updated_at,
+      * exclude(id,email,sfdc_lead_id,sfdc_contact_id,first_name,last_name,company,title,country,mobile_phone,sfdc_type,inactive_lead_c,inactive_contact_c,sales_segmentation_c,is_email_bounced,email_bounced_date,unsubscribed,opt_in,compliance_segment_value,pql_product_qualified_lead_c,cdbispaidtier_c,ptpt_is_contact_c,ptp_is_ptp_contact_c,cdb_impacted_by_user_limit_c,currently_in_trial_c,trial_start_date_c,trial_end_date_c,updated_at)
 
     FROM source
     QUALIFY ROW_NUMBER() OVER(PARTITION BY id ORDER BY updated_at DESC) = 1
