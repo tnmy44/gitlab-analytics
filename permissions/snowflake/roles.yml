@@ -313,6 +313,14 @@ databases:
     - vprakash_prep:
         shared: no
 
+#  Staging Enviornment 
+    - snowplow_stg_test_ved_prep:
+        shared: yes
+    - snowplow_stg_test_ved_prod:
+        shared: yes
+    - snowplow_stg_test_ved_raw:
+        shared: yes
+
 
 # ==========================================
 # Roles
