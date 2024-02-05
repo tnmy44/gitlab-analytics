@@ -65,10 +65,19 @@ def make_request(
         raise
 
 
+def log_json_values(results_dict):
+    """Returns some info about JSON response"""
+    aggregated_at = results_dict["aggregatedAt"]
+    groups = results_dict["groups"]
+    info(f"Response has `aggregated_at` value of `{aggregated_at}`")
+    info(f"Response returned {len(groups)} groups")
+
+
 def get_adoption_by_group_json():
     """Return json response"""
     response = make_request("GET", ADOPTION_BY_GROUP_URL)
     results_dict = response.json()
+    log_json_values(results_dict)
     return results_dict
 
 
