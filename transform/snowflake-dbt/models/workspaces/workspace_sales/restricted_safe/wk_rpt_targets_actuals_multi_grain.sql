@@ -387,7 +387,7 @@ unioned AS (
     closed_new_logo_count_in_snapshot_week,
     closed_cycle_time_in_snapshot_week,
     booked_net_arr_in_snapshot_week,
-    'TRUE' AS is_granular
+    TRUE AS is_granular
   FROM granular_data
   WHERE is_current_snapshot_quarter
 
@@ -766,7 +766,7 @@ unioned AS (
     closed_new_logo_count_in_snapshot_week,
     closed_cycle_time_in_snapshot_week,
     booked_net_arr_in_snapshot_week,
-    'FALSE' AS is_granular
+    FALSE AS is_granular
   FROM aggregate_data
 
 
