@@ -9136,7 +9136,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-      - General SAFE Access
   - user_name: rsmith
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -10760,6 +10759,7 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
+      - General SAFE Access
   - user_name: spatnaik
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
