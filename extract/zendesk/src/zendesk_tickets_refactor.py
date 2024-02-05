@@ -60,7 +60,7 @@ def refactor_tickets_read_gcs():
             )
 
             info(f"Deleting file {blob.name}")
-            #blob.delete()  # delete the file after successful upload to the table
+            # blob.delete()  # delete the file after successful upload to the table
         else:
             error("No file found!")
             sys.exit(1)
@@ -85,11 +85,13 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
     info("read files from ticket_fields")
     output_list_ticket_field = []
 
-    #if custom_field_options in df_ticket_fields_extracted.columns: then process the below block
-    
+    # if custom_field_options in df_ticket_fields_extracted then process the below block
+
     if "custom_field_options" in df_ticket_fields_extracted.columns:
         for ind in df_ticket_fields_extracted.index:
-            CUSTOM_FIELD_OPTIONS = df_ticket_fields_extracted["custom_field_options"][ind]
+            CUSTOM_FIELD_OPTIONS = df_ticket_fields_extracted["custom_field_options"][
+                ind
+            ]
             # print(CUSTOM_FIELD_OPTIONS)
             id = df_ticket_fields_extracted["id"][ind]
             if (
@@ -105,7 +107,6 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
             else:
                 continue
     # convert dataframe column names to upper caps
-
     df_tickets.columns = map(str.upper, df_tickets.columns)
 
     output_list = []
@@ -300,7 +301,7 @@ def upload_to_snowflake(output_df, BUCKET):
                 "meltano/tap_zendesk__sensitive/archive/ticket_fields/" + blob.name,
             )
             info(f"Deleting {blob.name}")
-            #blob.delete()
+            # blob.delete()
     except Exception as e:
         error(f"Error uploading to snowflake: {e}")
         sys.exit(1)
