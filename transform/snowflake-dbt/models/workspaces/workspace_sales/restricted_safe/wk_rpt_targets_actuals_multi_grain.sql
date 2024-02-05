@@ -389,6 +389,7 @@ unioned AS (
     booked_net_arr_in_snapshot_week,
     'TRUE' AS is_granular
   FROM granular_data
+  WHERE is_current_snapshot_quarter
 
   UNION
 
