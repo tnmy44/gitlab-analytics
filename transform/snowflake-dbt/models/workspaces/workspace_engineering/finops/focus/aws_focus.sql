@@ -17,3 +17,4 @@ SELECT
   line_item_net_unblended_cost AS billed_cost,
   pricing_public_on_demand_cost AS list_cost
 FROM source
+
