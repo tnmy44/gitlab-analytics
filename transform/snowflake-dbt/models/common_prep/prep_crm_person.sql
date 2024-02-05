@@ -255,6 +255,7 @@ WITH biz_person AS (
       ptp_namespace_id                               AS propensity_to_purchase_namespace_id,
       ptp_past_insights                              AS propensity_to_purchase_past_insights,
       ptp_past_score_group                           AS propensity_to_purchase_past_score_group,
+      lead_score_classification,
       NULL                                           AS zoominfo_company_employee_count,
       zoominfo_contact_id,
       NULL                                           AS is_partner_recalled,
@@ -415,6 +416,7 @@ WITH biz_person AS (
       ptp_namespace_id                               AS propensity_to_purchase_namespace_id,
       ptp_past_insights                              AS propensity_to_purchase_past_insights,
       ptp_past_score_group                           AS propensity_to_purchase_past_score_group,
+      lead_score_classification,
       zoominfo_company_employee_count,
       NULL AS zoominfo_contact_id,
       is_partner_recalled,
@@ -456,6 +458,99 @@ WITH biz_person AS (
         ELSE
             INITCAP(two_letter_person_first_country)
       END AS person_first_country,
+      CASE
+        WHEN LEN(two_letter_person_first_country) = 2 THEN UPPER(two_letter_person_first_country)
+        WHEN two_letter_person_first_country LIKE '%ivoire%' THEN 'CI'
+        WHEN two_letter_person_first_country = 'saint kitts and nevis' THEN 'KN'
+        WHEN two_letter_person_first_country = 'democratic repulic of congo' THEN 'CD'
+        WHEN two_letter_person_first_country = 'congo' THEN 'CG'
+        WHEN two_letter_person_first_country = 'libyan arab jamahiriya' THEN 'LY'
+        WHEN two_letter_person_first_country = 'holy see (vatican city state)' THEN 'VA'
+        WHEN two_letter_person_first_country = 'viet nam' THEN 'VN'
+        WHEN two_letter_person_first_country = 'timor-leste' THEN 'TL'
+        WHEN two_letter_person_first_country = 'bonaire saint eustatius and saba' THEN 'BQ'
+        WHEN two_letter_person_first_country = 'czech republic' THEN 'CZ'
+        WHEN two_letter_person_first_country = 'cape verde' THEN 'CV'
+        WHEN two_letter_person_first_country LIKE 'korea, democratic%' THEN 'KP'
+        WHEN two_letter_person_first_country = 'cambodia.' THEN 'KH'
+        WHEN two_letter_person_first_country LIKE 'lao people%' THEN 'LA'
+        WHEN two_letter_person_first_country = 'reunion' THEN 'RE'
+        WHEN two_letter_person_first_country = 'macedonia, the former yugoslav republic of' THEN 'MK'
+        WHEN two_letter_person_first_country = 'south africa centurion' THEN 'ZA'
+        WHEN two_letter_person_first_country = 'taiwan, province of china' THEN 'TW'
+        WHEN two_letter_person_first_country = 'brunei darussalam' THEN 'BN'
+        WHEN two_letter_person_first_country = 'bosnia and herzegowina' THEN 'BA'
+        WHEN two_letter_person_first_country = 'falkland islands (malvinas)' THEN 'FK'
+        WHEN two_letter_person_first_country = 'brasil' THEN 'BR'
+        WHEN two_letter_person_first_country = 'korea, republic of' THEN 'KR'
+        WHEN two_letter_person_first_country = 'aland islands' THEN 'AX'
+        WHEN two_letter_person_first_country = 'palestinian territory, occupied' THEN 'PS'
+        WHEN two_letter_person_first_country = 'moldova' THEN 'MD'
+        WHEN two_letter_person_first_country = 'russian federation' THEN 'RU'
+        WHEN two_letter_person_first_country = 'swaziland' THEN 'SZ'
+        WHEN two_letter_person_first_country = 'us virgin islands' THEN 'VI'
+        WHEN two_letter_person_first_country = 'virgin islands, british' THEN 'VG'
+        WHEN two_letter_person_first_country = 'iran, islamic republic of' THEN 'IR'
+        WHEN two_letter_person_first_country = 'pitcairn' THEN 'PN'
+        WHEN two_letter_person_first_country = 'congo, the democratic republic of the' THEN 'CD'
+        WHEN two_letter_person_first_country = 'lithuania' THEN 'LT'
+        WHEN two_letter_person_first_country = 'moldova, republic of' THEN 'MD'
+        WHEN two_letter_person_first_country = 'saint helena, ascension and tristan da cunha' THEN 'SH'
+        WHEN two_letter_person_first_country = 'sao tome and principe' THEN 'ST'
+        WHEN two_letter_person_first_country = 'united republic of tanzania' THEN 'TZ'
+        WHEN two_letter_person_first_country = 'cocos (keeling) islands' THEN 'CC'
+        WHEN two_letter_person_first_country = 'macedonia' THEN 'MK'
+        WHEN two_letter_person_first_country = 'the bahamas' THEN 'BS'
+        WHEN two_letter_person_first_country = 'costa rica br' THEN 'CR'
+        WHEN two_letter_person_first_country = 'fiji islands' THEN 'FJ'
+        WHEN two_letter_person_first_country = 'saint martin (french part)' THEN 'MF'
+        WHEN two_letter_person_first_country = 'sint maarten (dutch part)' THEN 'SX'
+        WHEN two_letter_person_first_country = 't3k' THEN 'null'
+        WHEN two_letter_person_first_country = 'tanzania, united republic of' THEN 'TZ'
+        WHEN two_letter_person_first_country = 'syrian arab republic' THEN 'SY'
+        WHEN two_letter_person_first_country = 'null' THEN 'null'
+        WHEN two_letter_person_first_country = 'bonaire, saint eustatius and saba' THEN 'BQ'
+        WHEN two_letter_person_first_country = 'jordan' THEN 'JO'
+        WHEN two_letter_person_first_country = 'españa' THEN 'ES'
+        ELSE two_letter_country.iso_2_country_code
+      END                AS iso_2_country_code_final,
+      CASE
+        WHEN iso_2_country_code_final IN
+          (
+            'AG', 'AI', 'AR', 'AW', 'BB', 'BM', 'BO', 'BQ', 'BR', 'BS', 'BZ', 'CA', 'CL', 'CO', 'CR', 'DO', 'EC', 'GD', 'BL', 'GP', 'CU', 'GT',
+            'GY', 'HN', 'HT', 'CW', 'DM', 'JM', 'FK', 'GF', 'KY', 'LC', 'GS', 'KN', 'MQ', 'MF', 'MX', 'NI', 'PA', 'PE', 'MS', 'PM', 'PY', 'SX',
+            'SR', 'SV', 'TC', 'VG', 'TT', 'US', 'UY', 'WF', 'VC', 'VE'
+          ) THEN 'AMER'
+        WHEN iso_2_country_code_final IN
+          (
+            'AAQ', 'BN', 'CC', 'TF', 'ID', 'KH', 'LA', 'MM', 'MN', 'MY', 'PH', 'TH', 'TW', 'VN', 'AU', 'CK', 'CX', 'FJ', 'HM', 'IO', 'KI', 'MH',
+            'NC', 'NF', 'NR', 'NU', 'PF', 'PG', 'PN', 'SB', 'TK', 'TL', 'TO', 'TV', 'VU', 'WS', 'KP', 'KR', 'SG', 'BD', 'BT', 'IN', 'LK', 'MV',
+            'NP', 'NZ'
+          ) THEN 'APAC'
+        WHEN iso_2_country_code_final IN
+          (
+            'AE', 'AF', 'AO', 'BF', 'BH', 'BI', 'BJ', 'BW', 'CD', 'CF', 'CG', 'CI', 'CM', 'CV', 'DJ', 'EG', 'ER', 'ET', 'GA', 'GH', 'GM', 'SM',
+            'GN', 'GQ', 'GW', 'IQ', 'IR', 'VA', 'JO', 'KE', 'KM', 'KW', 'LB', 'LR', 'LS', 'LY', 'MG', 'ML', 'MR', 'MU', 'MW', 'MZ', 'NA', 'NE',
+            'NG', 'OM', 'PK', 'PS', 'QA', 'RW', 'SA', 'SC', 'SD', 'SL', 'SN', 'SO', 'SS', 'ST', 'SY', 'SZ', 'TD', 'TG', 'TM', 'TR', 'TZ', 'UG',
+            'YE', 'ZA', 'ZM', 'ZW', 'AL', 'BA', 'CY', 'GR', 'HR', 'BE', 'ME', 'MK', 'MT', 'RS', 'LU', 'SI', 'BG', 'CZ', 'EE', 'HU', 'LT', 'LV',
+            'PL', 'RO', 'SK', 'AM', 'AZ', 'BY', 'GE', 'KG', 'KZ', 'MD', 'RU', 'TJ', 'UA', 'UZ', 'AD', 'ES', 'PT', 'DZ', 'IL', 'EH', 'IT', 'MA',
+            'TN', 'SH', 'YT', 'AT', 'CH', 'DE', 'LI', 'MC', 'RE', 'FR', 'BV', 'FI', 'GL', 'IS', 'SE', 'GB', 'GG', 'GI', 'SJ', 'IE', 'IM', 'DK',
+            'JE', 'NL', 'FO', 'NO', 'AX'
+          ) THEN 'EMEA'
+        WHEN iso_2_country_code_final = 'JP' THEN 'JAPAN'
+        WHEN iso_2_country_code_final IN
+          (
+            'AG', 'AI', 'AR', 'AW', 'BB', 'BM', 'BO', 'BQ', 'BR', 'BS', 'BZ', 'CA', 'CL', 'CO', 'CR', 'DO', 'EC', 'GD', 'BL', 'GP', 'CU', 'GT',
+            'GY', 'HN', 'HT', 'CW', 'DM', 'JM', 'FK', 'GF', 'KY', 'LC', 'GS', 'KN', 'MQ', 'MF', 'MX', 'NI', 'PA', 'PE', 'MS', 'PM', 'PY', 'SX',
+            'SR', 'SV', 'TC', 'VG', 'TT', 'US', 'UY', 'WF', 'VC', 'VE'
+          ) THEN 'JIHU'
+        ELSE 'OTHER'
+      END                AS person_first_geo,
+      CASE
+        WHEN account_demographics_geo IN ('CHANNEL','UNKNOWN','Channel') OR account_demographics_geo IS NULL
+          THEN person_first_geo
+        ELSE account_demographics_geo AS person_geo_combined,
+      final_iso_country.country_name AS country_name_iso_based,
       prep_date.fiscal_year  AS created_date_fiscal_year,
       CONCAT(
         UPPER(crm_person_final.account_demographics_sales_segment),
@@ -476,6 +571,10 @@ WITH biz_person AS (
       ON two_letter_person_first_country = LOWER(prep_location_country.iso_2_country_code)
       -- Only join when the value is 2 letters
       AND LEN(two_letter_person_first_country) = 2
+    LEFT JOIN prep_location_country AS two_letter_country
+      ON two_letter_person_first_country = LOWER(two_letter_country.country_name)
+    LEFT JOIN prep_location_country AS final_iso_country 
+      ON iso_2_country_code_final = final_iso_country.iso_2_country_code
     WHERE sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
 
 )
@@ -485,5 +584,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2023-11-01"
+    updated_date="2024-02-05"
 ) }}
