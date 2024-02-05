@@ -76,7 +76,7 @@
                 AND table_schema IN ('SNAPSHOTS')
                 AND data_type NOT IN {{data_types}}
                 AND LOWER(column_name) NOT IN {{exclude_columns}}
-                AND LOWER(column_name) NOT LIKE '%_at'
+                AND LOWER(column_name) NOT LIKE '%\_at'
             GROUP BY 1
         
         ), non_email_columns AS (
@@ -89,7 +89,7 @@
               AND table_schema IN ('SNAPSHOTS')
               AND data_type NOT IN {{data_types}}
               AND LOWER(column_name) NOT IN {{exclude_columns}}
-              AND NOT (LOWER(column_name) LIKE ANY ('%id%', '%_at'))
+              AND NOT (LOWER(column_name) LIKE ANY ('%id%', '%\_at'))
               AND LOWER(column_name) NOT IN {{exclude_columns}}
             GROUP BY 1
 
