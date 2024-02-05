@@ -82,6 +82,7 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
                 io.BytesIO(blob.download_as_string()), lines=True
             )
 
+    info("read files from ticket_fields")
     output_list_ticket_field = []
 
     for ind in df_ticket_fields_extracted.index:
@@ -100,7 +101,7 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
                     output_list_ticket_field.append(ticket_field_value)
         else:
             continue
-
+    info("read custom_field_options")
     # convert dataframe column names to upper caps
 
     df_tickets.columns = map(str.upper, df_tickets.columns)
