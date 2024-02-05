@@ -23,6 +23,9 @@
         lead_source,
         inquiry_sum,
         mql_sum,
+        person_geo_combined,
+        lead_score_classification,
+        country_name_iso_based,
 
     --Person Dates
         true_inquiry_date,

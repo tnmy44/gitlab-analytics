@@ -53,6 +53,9 @@
           THEN '1. New - First Order'
         ELSE '3. Growth'
       END AS person_order_type,
+      person_base.person_geo_combined,
+      person_base.lead_score_classification,
+      person_base.country_name_iso_based,
 
   --Account Data
       mart_crm_account.crm_account_name,
@@ -409,6 +412,9 @@
       traction_first_response_time,
       traction_first_response_time_seconds,
       traction_response_time_in_business_hours,
+      person_geo_combined,
+      lead_score_classification,
+      country_name_iso_based,
   
   --Opp Data
       opportunity_name,
@@ -618,5 +624,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-10-05",
-    updated_date="2024-01-31",
+    updated_date="2024-02-05",
   ) }}

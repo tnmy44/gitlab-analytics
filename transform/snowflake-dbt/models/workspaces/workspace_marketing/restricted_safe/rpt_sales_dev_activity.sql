@@ -240,6 +240,9 @@
     mart_crm_person.is_mql,
     mart_crm_person.is_first_order_person,
     mart_crm_person.person_first_country,
+    mart_crm_person.person_geo_combined,
+    mart_crm_person.lead_score_classification,
+    mart_crm_person.country_name_iso_based,
     CASE 
       WHEN mart_crm_person.propensity_to_purchase_score_group IS NULL 
         THEN 'No PTP Score' 

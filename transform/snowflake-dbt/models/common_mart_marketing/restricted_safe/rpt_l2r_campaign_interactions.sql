@@ -73,6 +73,9 @@
       END AS person_order_type,
       last_utm_campaign,
       last_utm_content,
+      person_geo_combined,
+      lead_score_classification,
+      country_name_iso_based,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -294,6 +297,9 @@
       last_utm_content,
       person_base.prospect_share_status,
       person_base.partner_prospect_status,
+      person_base.person_geo_combined,
+      person_base.lead_score_classification,
+      person_base.country_name_iso_based,
 
   --Person Dates
       person_base.true_inquiry_date,
@@ -454,6 +460,9 @@
       last_utm_content,
       prospect_share_status,
       partner_prospect_status,
+      person_geo_combined,
+      lead_score_classification,
+      country_name_iso_based,
 
   --Person Dates
       true_inquiry_date,
@@ -667,6 +676,9 @@
       last_utm_content,
       prospect_share_status,
       partner_prospect_status,
+      person_geo_combined,
+      lead_score_classification,
+      country_name_iso_based,
     
     --Person Dates
       true_inquiry_date,

@@ -118,15 +118,17 @@ WITH crm_person AS (
       propensity_to_purchase_namespace_id,
       propensity_to_purchase_past_insights,
       propensity_to_purchase_past_score_group,
-      person_first_country
-
+      lead_score_classification,
+      person_first_country,
+      person_geo_combined,
+      country_name_iso_based
     FROM crm_person
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jjstark",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-09-10",
-    updated_date="2023-10-13"
+    updated_date="2024-02-05"
 ) }}
