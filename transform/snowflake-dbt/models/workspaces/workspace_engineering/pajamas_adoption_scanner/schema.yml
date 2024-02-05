@@ -2,6 +2,11 @@ version: 2
 models:
   - name: adoption_by_group
     description: Adds some additional columns to `adoption_by_group_source` model that are needed for Tableau dashboard
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - group_name
+            - aggregated_at
     columns:
       - name: group_name
         tests:
