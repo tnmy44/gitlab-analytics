@@ -2359,12 +2359,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: agraban
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: agroleau
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -2771,13 +2765,6 @@ users:
     site_role: Viewer
     auth_setting: SAML
     groups:
-      - General All Access
-  - user_name: apotter
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - ASM AMER Commercial Restricted Access
       - General All Access
   - user_name: aramsey
     user_name_domain: gitlab.com
@@ -5255,12 +5242,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: imahros
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: iouhab
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -6449,12 +6430,6 @@ users:
     groups:
       - General All Access
       - General SAFE Access
-  - user_name: kdemircan
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: kdietz
     user_name_domain: gitlab.com
     site_role: Creator
@@ -6607,13 +6582,6 @@ users:
       - Data Team All Access
       - General All Access
       - General SAFE Access
-  - user_name: kmatharu
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - People All Access
   - user_name: kmatrazzo
     user_name_domain: gitlab.com
     site_role: Viewer
@@ -7701,12 +7669,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: mnogales
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
   - user_name: mnohr
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -8505,15 +8467,6 @@ users:
       - General All Access
       - General SAFE Access
       - Sales All Access
-  - user_name: pclitheroe
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - ASM EMEA Commercial Restricted Access
-      - ASM Restricted Access
-      - General All Access
-      - General SAFE Access
   - user_name: pcordero
     user_name_domain: gitlab.com
     site_role: ExplorerCanPublish
@@ -8750,12 +8703,6 @@ users:
     groups:
       - General All Access
   - user_name: rabdullayev
-    user_name_domain: gitlab.com
-    site_role: Unlicensed
-    auth_setting: SAML
-    groups:
-      - General All Access
-  - user_name: ralbus
     user_name_domain: gitlab.com
     site_role: Unlicensed
     auth_setting: SAML
@@ -10389,13 +10336,6 @@ users:
     groups:
       - Engineering All Access
       - General All Access
-  - user_name: uchetta
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - General All Access
-      - General SAFE Access
   - user_name: urselak
     user_name_domain: gitlab.com
     site_role: Viewer
