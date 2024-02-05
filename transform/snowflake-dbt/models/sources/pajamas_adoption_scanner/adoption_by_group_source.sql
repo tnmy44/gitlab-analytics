@@ -13,6 +13,8 @@ groups AS (
   FROM
     source
   INNER JOIN LATERAL FLATTEN(input => jsontext['groups'])
+  -- for safety, in case daily extract is run more than once in a day
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY group_name, aggregated_at ORDER BY uploaded_at DESC) = 1
 ),
 
 bounds AS (
@@ -21,7 +23,9 @@ bounds AS (
     jsontext['bounds']['high']::NUMBER(2, 2) AS upper_bound,
     jsontext['aggregatedAt']::TIMESTAMP      AS aggregated_at
   FROM
-    {{ source('pajamas_adoption_scanner', 'adoption_by_group') }}
+    source
+  -- for safety, in case daily extract is run more than once in a day
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY aggregated_at ORDER BY uploaded_at DESC) = 1
 ),
 
 minimum_findings_table AS (
@@ -29,7 +33,9 @@ minimum_findings_table AS (
     jsontext['minimumFindings']::INT    AS minimum_findings,
     jsontext['aggregatedAt']::TIMESTAMP AS aggregated_at
   FROM
-    {{ source('pajamas_adoption_scanner', 'adoption_by_group') }}
+    source
+  -- for safety, in case daily extract is run more than once in a day
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY aggregated_at ORDER BY uploaded_at DESC) = 1
 ),
 
 groups_joined AS (

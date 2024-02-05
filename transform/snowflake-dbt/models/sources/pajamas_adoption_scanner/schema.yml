@@ -2,6 +2,11 @@ version: 2
 models:
   - name: adoption_by_group_source
     description: Flattens a json object which consists of adoption usage by various gitlab groups
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - group_name
+            - aggregated_at
     columns:
       - name: group_name
         tests:
