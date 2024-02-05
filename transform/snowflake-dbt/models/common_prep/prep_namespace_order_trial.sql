@@ -47,7 +47,7 @@ WITH trial_histories AS (
     SELECT 
 
     --Surrogate Key
-    {{ dbt_utils.surrogate_key(['COALESCE(trial_histories.gl_namespace_id, trial_orders.gitlab_namespace_id)']) }}   AS dim_namespace_order_trial_sk, 
+    {{ dbt_utils.generate_surrogate_key(['COALESCE(trial_histories.gl_namespace_id, trial_orders.gitlab_namespace_id)']) }}   AS dim_namespace_order_trial_sk,
 
     --Natural Key
       COALESCE(trial_histories.gl_namespace_id, trial_orders.gitlab_namespace_id)                                    AS dim_namespace_id, 

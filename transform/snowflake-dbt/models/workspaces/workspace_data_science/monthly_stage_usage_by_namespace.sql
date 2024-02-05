@@ -21,7 +21,7 @@ WITH flattened_metrics AS (
 )
 
 SELECT
-  {{ dbt_utils.surrogate_key(['flattened_metrics.snapshot_month', 'flattened_metrics.dim_namespace_id']) }} AS primary_key,
+  {{ dbt_utils.generate_surrogate_key(['flattened_metrics.snapshot_month', 'flattened_metrics.dim_namespace_id']) }} AS primary_key,
 	flattened_metrics.snapshot_month,
 	flattened_metrics.dim_namespace_id,
 

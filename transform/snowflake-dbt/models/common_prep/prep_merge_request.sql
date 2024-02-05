@@ -52,7 +52,7 @@
 
     SELECT
 
-      {{ dbt_utils.surrogate_key(['gitlab_dotcom_merge_requests_source.merge_request_id'])}}    AS dim_merge_request_sk,
+      {{ dbt_utils.generate_surrogate_key(['gitlab_dotcom_merge_requests_source.merge_request_id'])}}    AS dim_merge_request_sk,
 
       gitlab_dotcom_merge_requests_source.merge_request_id                                      AS merge_request_id,
 

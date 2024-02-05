@@ -12,7 +12,7 @@
  final AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['sales_rep_account.dim_crm_user_hierarchy_sk', 
+    {{ dbt_utils.generate_surrogate_key(['sales_rep_account.dim_crm_user_hierarchy_sk',
                                  'dim_date.fiscal_year', 
                                  'dim_date.first_day_of_month', 
                                  'sales_qualified_source.dim_sales_qualified_source_id',

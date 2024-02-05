@@ -148,7 +148,7 @@ flattened_metrics AS (
 )
 
 SELECT
-    {{ dbt_utils.surrogate_key(["dim_subscription.dim_subscription_id_original", "flattened_metrics.snapshot_month"]) }} AS monthly_stage_usage_by_subscription_pk,
+    {{ dbt_utils.generate_surrogate_key(["dim_subscription.dim_subscription_id_original", "flattened_metrics.snapshot_month"]) }} AS monthly_stage_usage_by_subscription_pk,
     dim_subscription.dim_subscription_id_original,
     flattened_metrics.snapshot_month,
 

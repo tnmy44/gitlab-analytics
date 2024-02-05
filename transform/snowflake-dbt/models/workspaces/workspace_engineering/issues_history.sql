@@ -28,7 +28,7 @@ workflow_labels AS (
 
 final AS (
   SELECT
-    {{ dbt_utils.surrogate_key(['dates.date_actual','issues.issue_id']) }} AS daily_issue_id,
+    {{ dbt_utils.generate_surrogate_key(['dates.date_actual','issues.issue_id']) }} AS daily_issue_id,
     dates.date_actual,
     issues.issue_id,
     issues.issue_iid,

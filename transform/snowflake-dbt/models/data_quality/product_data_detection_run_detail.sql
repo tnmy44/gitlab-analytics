@@ -166,7 +166,7 @@
 
     SELECT
       --primary_key
-      {{ dbt_utils.surrogate_key(['rule_run_date.rule_run_date', 'processed_passed_failed_record_count.rule_id']) }} AS primary_key,
+      {{ dbt_utils.generate_surrogate_key(['rule_run_date.rule_run_date', 'processed_passed_failed_record_count.rule_id']) }} AS primary_key,
 
       --Detection Rule record counts
       rule_id,

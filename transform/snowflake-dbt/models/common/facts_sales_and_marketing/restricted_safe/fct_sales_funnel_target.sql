@@ -10,7 +10,7 @@
 , final_targets AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['prep_sales_funnel_target.dim_crm_user_hierarchy_sk', 
+      {{ dbt_utils.generate_surrogate_key(['prep_sales_funnel_target.dim_crm_user_hierarchy_sk',
                                  'prep_sales_funnel_target.fiscal_year', 
                                  'prep_sales_funnel_target.kpi_name', 
                                  'prep_sales_funnel_target.first_day_of_month', 

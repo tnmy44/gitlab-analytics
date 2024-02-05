@@ -16,7 +16,7 @@
     SELECT
 
       -- SURROGATE KEY
-      {{ dbt_utils.surrogate_key(['ci_pipeline_id']) }}         AS dim_ci_pipeline_sk,
+      {{ dbt_utils.generate_surrogate_key(['ci_pipeline_id']) }}         AS dim_ci_pipeline_sk,
 
       -- NATURAL KEY
       ci_pipeline_id,

@@ -17,7 +17,7 @@ WITH source AS (
 
 ) , flattened_high_level as (
       SELECT
-        {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'path']) }}                         AS ping_instance_flattened_id,
+        {{ dbt_utils.generate_surrogate_key(['dim_ping_instance_id', 'path']) }}                         AS ping_instance_flattened_id,
         dim_ping_instance_id                                                                    AS dim_ping_instance_id,
         dim_host_id                                                                             AS dim_host_id,
         dim_instance_id                                                                         AS dim_instance_id,

@@ -37,7 +37,7 @@ quarterly_monthly_targets AS (
 final AS (
   
   SELECT  
-    {{ dbt_utils.surrogate_key(['quarterly_monthly_targets.dim_crm_user_hierarchy_sk', 
+    {{ dbt_utils.generate_surrogate_key(['quarterly_monthly_targets.dim_crm_user_hierarchy_sk',
                                  'dim_date.fiscal_year', 
                                  'dim_date.first_day_of_month', 
                                  'quarterly_monthly_targets.dim_sales_qualified_source_id',

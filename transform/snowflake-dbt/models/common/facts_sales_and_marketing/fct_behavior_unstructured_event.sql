@@ -56,7 +56,7 @@
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['event_id','behavior_at']) }} AS fct_behavior_unstructured_sk,
+      {{ dbt_utils.generate_surrogate_key(['event_id','behavior_at']) }} AS fct_behavior_unstructured_sk,
 
       -- Natural Key
       unstruct_event.app_id,

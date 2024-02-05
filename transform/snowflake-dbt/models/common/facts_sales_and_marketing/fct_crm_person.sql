@@ -117,7 +117,7 @@ WITH account_dims_mapping AS (
 
     SELECT
 
-      {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)','marketo_qualified_lead_datetime::timestamp']) }} AS mql_event_id,
+      {{ dbt_utils.generate_surrogate_key(['COALESCE(converted_contact_id, lead_id)','marketo_qualified_lead_datetime::timestamp']) }} AS mql_event_id,
 
       marketo_qualified_lead_datetime::timestamp                                                                          AS mql_event_timestamp,
       initial_marketo_mql_date_time::timestamp                                                                            AS initial_mql_event_timestamp,
@@ -125,7 +125,7 @@ WITH account_dims_mapping AS (
       mql_datetime_inferred::timestamp                                                                                    AS inferred_mql_event_timestamp,
       lead_id                                                                                                             AS sfdc_record_id,
       'lead'                                                                                                              AS sfdc_record,
-      {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)']) }}                                          AS crm_person_id,
+      {{ dbt_utils.generate_surrogate_key(['COALESCE(converted_contact_id, lead_id)']) }}                                          AS crm_person_id,
       converted_contact_id                                                                                                AS contact_id,
       converted_account_id                                                                                                AS account_id,
       owner_id                                                                                                            AS crm_user_id,
@@ -139,14 +139,14 @@ WITH account_dims_mapping AS (
 
     SELECT
 
-      {{ dbt_utils.surrogate_key(['contact_id','marketo_qualified_lead_datetime::timestamp']) }}                          AS mql_event_id,
+      {{ dbt_utils.generate_surrogate_key(['contact_id','marketo_qualified_lead_datetime::timestamp']) }}                          AS mql_event_id,
       marketo_qualified_lead_datetime::timestamp                                                                          AS mql_event_timestamp,
       initial_marketo_mql_date_time::timestamp                                                                            AS initial_mql_event_timestamp,
       true_mql_date::timestamp                                                                                            AS legacy_mql_event_timestamp,
       mql_datetime_inferred::timestamp                                                                                    AS inferred_mql_event_timestamp,
       contact_id                                                                                                          AS sfdc_record_id,
       'contact'                                                                                                           AS sfdc_record,
-      {{ dbt_utils.surrogate_key(['contact_id']) }}                                                                       AS crm_person_id,
+      {{ dbt_utils.generate_surrogate_key(['contact_id']) }}                                                                       AS crm_person_id,
       contact_id                                                                                                          AS contact_id,
       account_id                                                                                                          AS account_id,
       owner_id                                                                                                            AS crm_user_id,

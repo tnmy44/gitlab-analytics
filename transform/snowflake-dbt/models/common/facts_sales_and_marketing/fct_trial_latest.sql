@@ -87,7 +87,7 @@
 
   SELECT 
    --Primary Key-- 
-     {{ dbt_utils.surrogate_key(['internal_order_id','dim_namespace_id']) }} AS trial_latest_pk,
+     {{ dbt_utils.generate_surrogate_key(['internal_order_id','dim_namespace_id']) }} AS trial_latest_pk,
 
    --Natural Key--
     internal_order_id,
