@@ -85,22 +85,25 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
     info("read files from ticket_fields")
     output_list_ticket_field = []
 
-    for ind in df_ticket_fields_extracted.index:
-        CUSTOM_FIELD_OPTIONS = df_ticket_fields_extracted["custom_field_options"][ind]
-        # print(CUSTOM_FIELD_OPTIONS)
-        id = df_ticket_fields_extracted["id"][ind]
-        if (
-            type(CUSTOM_FIELD_OPTIONS) is not float
-        ):  # When the data is null CUSTOM_FIELD_OPTIONS is a float
-            for key in CUSTOM_FIELD_OPTIONS:
-                # print(key['value'])
-                if (
-                    id == 360020421853
-                ):  # We are only bringing the values related to this id which is the Transaction issue type custom field id(more here https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.zendesk_tickets_xf)
-                    ticket_field_value = key["value"]
-                    output_list_ticket_field.append(ticket_field_value)
-        else:
-            continue
+    #if custom_field_options in df_ticket_fields_extracted.columns: then process the below block
+    
+    if "custom_field_options" in df_ticket_fields_extracted.columns:
+        for ind in df_ticket_fields_extracted.index:
+            CUSTOM_FIELD_OPTIONS = df_ticket_fields_extracted["custom_field_options"][ind]
+            # print(CUSTOM_FIELD_OPTIONS)
+            id = df_ticket_fields_extracted["id"][ind]
+            if (
+                type(CUSTOM_FIELD_OPTIONS) is not float
+            ):  # When the data is null CUSTOM_FIELD_OPTIONS is a float
+                for key in CUSTOM_FIELD_OPTIONS:
+                    # print(key['value'])
+                    if (
+                        id == 360020421853
+                    ):  # We are only bringing the values related to this id which is the Transaction issue type custom field id(more here https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.zendesk_tickets_xf)
+                        ticket_field_value = key["value"]
+                        output_list_ticket_field.append(ticket_field_value)
+            else:
+                continue
     info("read custom_field_options")
     # convert dataframe column names to upper caps
 
