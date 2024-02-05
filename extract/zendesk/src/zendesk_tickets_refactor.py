@@ -60,7 +60,7 @@ def refactor_tickets_read_gcs():
             )
 
             info(f"Deleting file {blob.name}")
-            blob.delete()  # delete the file after successful upload to the table
+            #blob.delete()  # delete the file after successful upload to the table
         else:
             error("No file found!")
             sys.exit(1)
@@ -297,7 +297,7 @@ def upload_to_snowflake(output_df, BUCKET):
                 "meltano/tap_zendesk__sensitive/archive/ticket_fields/" + blob.name,
             )
             info(f"Deleting {blob.name}")
-            blob.delete()
+            #blob.delete()
     except Exception as e:
         error(f"Error uploading to snowflake: {e}")
         sys.exit(1)
