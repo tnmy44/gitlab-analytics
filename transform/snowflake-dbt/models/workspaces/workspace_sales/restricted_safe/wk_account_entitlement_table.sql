@@ -1,4 +1,4 @@
-{{ config(materialized='view') }}
+{{ config(materialized='table') }}
 
 With ExpandedGroupMembers AS (
     -- Recursive CTE to expand group memberships
