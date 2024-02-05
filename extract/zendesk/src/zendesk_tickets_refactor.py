@@ -104,7 +104,6 @@ def refactor_tickets(df_tickets: pd.DataFrame, BUCKET):
                         output_list_ticket_field.append(ticket_field_value)
             else:
                 continue
-    info("read custom_field_options")
     # convert dataframe column names to upper caps
 
     df_tickets.columns = map(str.upper, df_tickets.columns)
