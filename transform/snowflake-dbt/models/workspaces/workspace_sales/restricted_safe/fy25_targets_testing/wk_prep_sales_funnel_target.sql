@@ -25,6 +25,12 @@
       sheetload_sales_targets_source.user_region,
       sheetload_sales_targets_source.user_area,
       sheetload_sales_targets_source.user_business_unit,
+      sheetload_sales_targets_source.user_role_name,
+      sheetload_sales_targets_source.role_level_1,
+      sheetload_sales_targets_source.role_level_2,
+      sheetload_sales_targets_source.role_level_3,
+      sheetload_sales_targets_source.role_level_4,
+      sheetload_sales_targets_source.role_level_5,
       CASE
         WHEN fiscal_months.fiscal_year = 2024 AND LOWER(sheetload_sales_targets_source.user_business_unit) = 'comm'
           THEN CONCAT(
