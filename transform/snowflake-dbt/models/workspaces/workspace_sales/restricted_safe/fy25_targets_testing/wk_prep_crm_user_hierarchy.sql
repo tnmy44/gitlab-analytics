@@ -40,7 +40,13 @@
       UPPER(account_demographics_region)        AS account_demographics_region,
       UPPER(account_demographics_area)          AS account_demographics_area,
       NULL                                      AS user_business_unit,
-      dim_account_demographics_hierarchy_sk
+      dim_account_demographics_hierarchy_sk,
+      NULL                AS user_role_name,
+      NULL                AS user_role_level_1,
+      NULL                AS user_role_level_2,
+      NULL                AS user_role_level_3,
+      NULL                AS user_role_level_4,
+      NULL                AS user_role_level_5
     FROM prep_crm_person 
 
 ), user_hierarchy_source AS (
@@ -82,7 +88,13 @@
       prep_crm_account_daily_snapshot.parent_crm_account_region,
       prep_crm_account_daily_snapshot.parent_crm_account_area,
       prep_crm_account_daily_snapshot.parent_crm_account_business_unit,
-      prep_crm_account_daily_snapshot.dim_crm_parent_account_hierarchy_sk
+      prep_crm_account_daily_snapshot.dim_crm_parent_account_hierarchy_sk,
+      NULL                AS user_role_name,
+      NULL                AS user_role_level_1,
+      NULL                AS user_role_level_2,
+      NULL                AS user_role_level_3,
+      NULL                AS user_role_level_4,
+      NULL                AS user_role_level_5
     FROM prep_crm_account_daily_snapshot
     INNER JOIN dim_date 
       ON prep_crm_account_daily_snapshot.snapshot_id = dim_date.date_id
@@ -103,7 +115,13 @@
       prep_crm_account.parent_crm_account_region,
       prep_crm_account.parent_crm_account_area,
       prep_crm_account.parent_crm_account_business_unit,
-      prep_crm_account.dim_crm_parent_account_hierarchy_sk
+      prep_crm_account.dim_crm_parent_account_hierarchy_sk,
+      NULL                AS user_role_name,
+      NULL                AS user_role_level_1,
+      NULL                AS user_role_level_2,
+      NULL                AS user_role_level_3,
+      NULL                AS user_role_level_4,
+      NULL                AS user_role_level_5
     FROM prep_crm_account
     LEFT JOIN current_fiscal_year
     WHERE prep_crm_account.parent_crm_account_sales_segment IS NOT NULL
@@ -123,7 +141,13 @@
       prep_sales_funnel_target.user_region,
       prep_sales_funnel_target.user_area,
       prep_sales_funnel_target.user_business_unit,
-      prep_sales_funnel_target.dim_crm_user_hierarchy_sk
+      prep_sales_funnel_target.dim_crm_user_hierarchy_sk,
+      prep_sales_funnel_target.user_role_name,
+      prep_sales_funnel_target.role_level_1,
+      prep_sales_funnel_target.role_level_2,
+      prep_sales_funnel_target.role_level_3,
+      prep_sales_funnel_target.role_level_4,
+      prep_sales_funnel_target.role_level_5
     FROM prep_sales_funnel_target
     WHERE prep_sales_funnel_target.user_area != 'N/A'
       AND prep_sales_funnel_target.user_segment IS NOT NULL
@@ -143,7 +167,13 @@
       prep_crm_opportunity.user_region_stamped                       AS user_region,
       prep_crm_opportunity.user_area_stamped                         AS user_area,
       prep_crm_opportunity.user_business_unit_stamped                AS user_business_unit,
-      prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk    AS dim_crm_user_hierarchy_sk
+      prep_crm_opportunity.dim_crm_opp_owner_stamped_hierarchy_sk    AS dim_crm_user_hierarchy_sk,
+      NULL                AS user_role_name,
+      NULL                AS user_role_level_1,
+      NULL                AS user_role_level_2,
+      NULL                AS user_role_level_3,
+      NULL                AS user_role_level_4,
+      NULL                AS user_role_level_5
     FROM prep_crm_opportunity
     WHERE is_live = 1
   
@@ -188,18 +218,18 @@
 
     SELECT DISTINCT
       fiscal_year,
-      UPPER(user_segment) AS user_segment,
-      UPPER(user_geo)     AS user_geo,
-      UPPER(user_region)  AS user_region,
-      UPPER(user_area)    AS user_area,
-      NULL                AS user_business_unit,
+      UPPER(user_segment)       AS user_segment,
+      UPPER(user_geo)           AS user_geo,
+      UPPER(user_region)        AS user_region,
+      UPPER(user_area)          AS user_area,
+      NULL                      AS user_business_unit,
       dim_crm_user_hierarchy_sk,
-      NULL                AS user_role_name,
-      NULL                AS user_role_level_1,
-      NULL                AS user_role_level_2,
-      NULL                AS user_role_level_3,
-      NULL                AS user_role_level_4,
-      NULL                AS user_role_level_5
+      UPPER(user_role_name)     AS user_role_name,
+      UPPER(user_role_level_1)  AS user_role_level_1,
+      UPPER(user_role_level_2)  AS user_role_level_2,
+      UPPER(user_role_level_3)  AS user_role_level_3,
+      UPPER(user_role_level_4)  AS user_role_level_4,
+      UPPER(user_role_level_5)  AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year < 2024
 
@@ -218,12 +248,12 @@
       UPPER(user_area)          AS user_area,
       UPPER(user_business_unit) AS user_business_unit,
       dim_crm_user_hierarchy_sk,
-      NULL                      AS user_role_name,
-      NULL                      AS user_role_level_1,
-      NULL                      AS user_role_level_2,
-      NULL                      AS user_role_level_3,
-      NULL                      AS user_role_level_4,
-      NULL                      AS user_role_level_5
+      UPPER(user_role_name)     AS user_role_name,
+      UPPER(user_role_level_1)  AS user_role_level_1,
+      UPPER(user_role_level_2)  AS user_role_level_2,
+      UPPER(user_role_level_3)  AS user_role_level_3,
+      UPPER(user_role_level_4)  AS user_role_level_4,
+      UPPER(user_role_level_5)  AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year = 2024
 
@@ -284,11 +314,17 @@
       final_unioned.user_area                                                                                                   AS crm_user_area,
       {{ dbt_utils.surrogate_key(['final_unioned.user_area']) }}                                                                AS dim_crm_user_area_id,
       final_unioned.user_role_name                                                                                              AS crm_user_role_name,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_role_name']) }}                                                           AS dim_crm_user_role_name_id,
       final_unioned.user_role_level_1                                                                                           AS crm_user_role_level_1,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_role_level_1']) }}                                                        AS dim_crm_user_role_level_1_id,
       final_unioned.user_role_level_2                                                                                           AS crm_user_role_level_2,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_role_level_2']) }}                                                        AS dim_crm_user_role_level_2_id,
       final_unioned.user_role_level_3                                                                                           AS crm_user_role_level_3,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_role_level_3']) }}                                                        AS dim_crm_user_role_level_3_id,
       final_unioned.user_role_level_4                                                                                           AS crm_user_role_level_4,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_role_level_4']) }}                                                        AS dim_crm_user_role_level_4_id,
       final_unioned.user_role_level_5                                                                                           AS crm_user_role_level_5,
+      {{ dbt_utils.surrogate_key(['final_unioned.user_role_level_5']) }}                                                        AS dim_crm_user_role_level_5_id,
       CASE
           WHEN final_unioned.user_segment IN ('Large', 'PubSec') THEN 'Large'
           ELSE final_unioned.user_segment
