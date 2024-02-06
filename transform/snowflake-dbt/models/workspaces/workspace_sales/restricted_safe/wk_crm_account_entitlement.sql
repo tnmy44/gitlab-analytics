@@ -2,7 +2,7 @@
 
 {{ simple_cte([
 ('group_member', 'sfdc_group_member_source'),
-('group', 'sfdc_group_source'),
+('groups', 'sfdc_group_source'),
 ('users', 'sfdc_users_source'),
 ('user_roles', 'sfdc_user_roles_source'),
 ('profiles', 'sfdc_profile_source'),
@@ -18,7 +18,7 @@ expanded_group_members AS (
     FROM 
         group_member
     WHERE 
-        NOT EXISTS (SELECT 1 FROM group WHERE group.group_id = group_member.user_or_group_id)
+        NOT EXISTS (SELECT 1 FROM group WHERE groups.group_id = group_member.user_or_group_id)
     UNION ALL
     SELECT 
         group_member.user_or_group_id,
@@ -28,7 +28,7 @@ expanded_group_members AS (
     JOIN 
         expanded_group_members ON group_member.group_id = expanded_group_members.user_or_group_id
     WHERE 
-        EXISTS (SELECT 1 FROM group WHERE group.group_id = group_member.user_or_group_id)
+        EXISTS (SELECT 1 FROM group WHERE groups.group_id = group_member.user_or_group_id)
 ),
 user_roles_hierarchies_territories_profiles AS (
     -- CTE for user roles, hierarchies, territories, and profiles
