@@ -43,8 +43,7 @@
       fct_behavior_structured_event.gsc_environment,
       fct_behavior_structured_event.gsc_extra,
       fct_behavior_structured_event.gsc_plan,
-      fct_behavior_structured_event.gsc_source,
-      fct_behavior_structured_event.gsc_is_gitlab_team_member
+      fct_behavior_structured_event.gsc_source
       
     FROM fct_behavior_structured_event
     INNER JOIN dim_behavior_event
@@ -70,7 +69,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@utkarsh060",
+    updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2024-01-25"
+    updated_date="2022-11-02"
 ) }}
