@@ -1,63 +1,73 @@
 {{ config(materialized='table') }}
 
-With ExpandedGroupMembers AS (
+{{ simple_cte([
+('group_member', 'sfdc_group_member_source'),
+('group', 'sfdc_group_source'),
+('users', 'sfdc_users_source'),
+('user_roles', 'sfdc_user_roles_source'),
+('profiles', 'sfdc_profile_source'),
+('user_territory_association', 'sfdc_user_territory_association_source'),
+('account_share_active','wk_prep_crm_account_share_active')]) 
+}},
+
+expanded_group_members AS (
     -- Recursive CTE to expand group memberships
     SELECT 
-        gm.user_or_group_id,
-        gm.group_id
+        group_member.user_or_group_id,
+        group_member.group_id
     FROM 
-        {{ ref('sfdc_group_member_source') }} as gm
+        group_member
     WHERE 
-        NOT EXISTS (SELECT 1 FROM {{ ref('sfdc_group_source') }} WHERE group_id = gm.user_or_group_id)
+        NOT EXISTS (SELECT 1 FROM group WHERE group.group_id = group_member.user_or_group_id)
     UNION ALL
     SELECT 
-        gm.user_or_group_id,
-        egm.group_id
+        group_member.user_or_group_id,
+        expanded_group_members.group_id
     FROM 
-        {{ ref('sfdc_group_member_source') }} as gm
+        group_member
     JOIN 
-        ExpandedGroupMembers as egm ON gm.group_id = egm.user_or_group_id
+        expanded_group_members ON group_member.group_id = expanded_group_members.user_or_group_id
     WHERE 
-        EXISTS (SELECT 1 FROM {{ ref('sfdc_group_source') }} WHERE group_id = gm.user_or_group_id)
+        EXISTS (SELECT 1 FROM group WHERE group.group_id = group_member.user_or_group_id)
 ),
-UserRolesHierarchiesTerritoriesProfiles AS (
+user_roles_hierarchies_territories_profiles AS (
     -- CTE for user roles, hierarchies, territories, and profiles
     SELECT 
-        u.user_id,
-        u.profile_id,
-        u.user_role_id,
-        r.name AS role_name,
-        u.manager_id,
-        ut.Territory2Id,
-        p.is_permissions_view_all_data AS CanViewAllData,
-        p.is_permissions_modify_all_data AS CanModifyAllData
+        users.user_id,
+        users.profile_id,
+        users.user_role_id,
+        user_roles.name AS role_name,
+        users.manager_id,
+        user_territory_association.territory_id,
+        profiles.is_permissions_view_all_data AS can_view_all_data,
+        profiles.is_permissions_modify_all_data AS can_modify_all_data
     FROM 
-        {{ ref('sfdc_users_source') }} as u
+        users
     LEFT JOIN 
-        {{ ref('sfdc_user_roles_source') }} r ON u.user_role_Id = r.id
+        user_roles ON users.user_role_id = user_roles.id
     LEFT JOIN 
-         {{ ref('sfdc_profile_source') }} p ON u.profile_id = p.profile_id
+         profiles ON users.profile_id = profiles.profile_id
     LEFT JOIN 
-        raw.salesforce_v2_stitch.USERTERRITORY2ASSOCIATION ut ON u.user_id = ut.UserId
+        user_territory_association ON users.user_id = user_territory_association.user_id
     WHERE 
-        u.Is_Active = true
+        users.is_active = true
 )
 SELECT 
-    u.user_id, 
-    u.user_name,
-    u.profile_Id,
-    a.account_Id,
+    users.user_id, 
+    users.user_name,
+    users.profile_id,
+    account_share_active.account_id,
     -- Apply profile-based permissions to determine the effective access level
     CASE
-        WHEN urht.CanModifyAllData = true THEN '1'
-        WHEN urht.CanViewAllData = true THEN '1'
-        ELSE a.AccountAccessLevel
-    END AS EffectiveAccountAccessLevel,
-    urht.Territory2Id
+        WHEN user_roles_hierarchies_territories_profiles.can_modify_all_data = true THEN '1'
+        WHEN user_roles_hierarchies_territories_profiles.can_view_all_data = true THEN '1'
+        ELSE account_share_active.account_access_Level
+    END AS effective_account_access_level,
+    user_roles_hierarchies_territories_profiles.territory_id
 FROM 
-    {{ ref('sfdc_users_source') }} as u
+    users
 JOIN 
-    {{ ref('wk_prep_crm_account_share_active') }} a ON u.Id = a.user_Or_group_Id OR a.user_or_group_Id IN (SELECT user_or_group_id FROM ExpandedGroupMembers)
+    account_share_active ON users.user_id = account_share_active.user_or_group_id OR account_share_active.user_or_group_id IN (SELECT user_or_group_id FROM expanded_group_members)
 LEFT JOIN 
-    UserRolesHierarchiesTerritoriesProfiles urht ON u.user_id = urht.user_Id
-QUALIFY ROW_NUMBER() OVER (PARTITION BY u.user_name, a.account_Id ORDER BY a.account_access_Level DESC) = 1;
+    user_roles_hierarchies_territories_profiles ON users.user_id = user_roles_hierarchies_territories_profiles.user_id
+QUALIFY ROW_NUMBER() OVER (PARTITION BY users.user_name, account_share_active.account_id ORDER BY account_share_active.account_access_Level DESC) = 1;
