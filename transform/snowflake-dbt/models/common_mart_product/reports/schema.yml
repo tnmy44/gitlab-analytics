@@ -58,6 +58,8 @@ models:
       description: '{{ doc("event_calendar_year") }}'
     - name: plan_id_at_event_month
       description: '{{ doc("plan_id_at_event_month") }}'
+    - name: plan_name_at_event_month
+      description: '{{ doc("plan_name_at_event_month") }}'
     - name: event_name
       description: '{{ doc("event_name") }}'
     - name: stage_name
