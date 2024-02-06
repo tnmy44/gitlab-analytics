@@ -147,6 +147,10 @@ models:
             - not_null
             - unique
   - name: wk_crm_account_entitlement
-    description: an entitlment table to be used for row level security in Tableau
+    description: an account entitlment table to be used for row level security in Tableau
     columns:
       - name: account_id
+  - name: wk_crm_opportunity_entitlement
+    description: an opportunity entitlment table to be used for row level security in Tableau
+    columns:
+      - name: opportunity_id
