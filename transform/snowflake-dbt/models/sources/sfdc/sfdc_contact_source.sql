@@ -119,6 +119,7 @@ renamed AS (
 	  time_from_last_transfer_to_sequence__c AS time_from_last_transfer_to_sequence,
 	  time_from_mql_to_last_transfer__c AS time_from_mql_to_last_transfer,
     high_priority__c AS is_high_priority,
+    high_priority_timestamp__c AS high_priority_datetime,
     ptp_score_date__c AS ptp_score_date,
     ptp_score_group__c AS ptp_score_group,
     pqlnamespacecreatorjobdescription__c AS pql_namespace_creator_job_description,

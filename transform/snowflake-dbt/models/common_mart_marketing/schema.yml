@@ -196,6 +196,8 @@ models:
           description: A flag that indicates whether or not the person's account was in an ABM Tier at the time of Inquiry
         - name: is_abm_tier_mql
           description: A flag that indicates whether or not the person's account was in an ABM Tier at the time of MQL
+        - name: is_high_priority
+          description: A person-level flag to indicate if the person is a high prioirty person, according to Salesforce field logic. 
 
     - name: mart_marketing_contact_no_pii
       description: Non sensitive version of the mart_marketing_contact model.
