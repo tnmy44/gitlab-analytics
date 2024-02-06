@@ -3618,6 +3618,15 @@ roles:
         warehouses:
             - dev_xs
 
+    - dmack:
+        member_of:
+            - analyst_sales
+            - reporter
+            - restricted_safe
+            - static_sensitive
+        warehouses:
+            - reporting
+
     - dmicovic:
         member_of:
             - reporter
@@ -6466,6 +6475,11 @@ users:
         can_login: yes
         member_of:
             - dgupta
+
+    - dmack:
+        can_login: yes
+        member_of:
+            - dmack
 
     - dmicovic:
         can_login: yes
