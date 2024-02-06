@@ -171,7 +171,7 @@ renamed AS (
     account_owner_user_segment__c AS account_owner_user_segment,
     ultimate_parent_sales_segment_employees__c AS sales_segment,
     sales_segmentation_new__c AS account_segment,
-    account_demographics_sales_segment__c AS new_ultimate_parent_sales_segment,
+    account_demographics_sales_segment__c AS ultimate_parent_sales_segment_new,
 
     NULL AS is_locally_managed_account,
     strategic__c AS is_strategic_account,
