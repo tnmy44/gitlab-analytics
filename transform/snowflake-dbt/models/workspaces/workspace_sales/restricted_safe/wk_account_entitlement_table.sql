@@ -24,10 +24,10 @@ UserRolesHierarchiesTerritoriesProfiles AS (
     -- CTE for user roles, hierarchies, territories, and profiles
     SELECT 
         u.user_id,
-        u.Profile_Id,
-        u.User_Role_Id,
-        r.Name AS Role_Name,
-        u.Manager_Id,
+        u.profile_Id,
+        u.user_role_Id,
+        r.name AS role_Name,
+        u.manager_Id,
         ut.Territory2Id,
         p.is_permissions_view_all_data AS CanViewAllData,
         p.is_permissions_modify_all_data AS CanModifyAllData
@@ -43,10 +43,10 @@ UserRolesHierarchiesTerritoriesProfiles AS (
         u.Is_Active = true
 )
 SELECT 
-    u.Id, 
-    u.User_name,
-    u.Profile_Id,
-    a.Account_Id,
+    u.user_id, 
+    u.user_name,
+    u.profile_Id,
+    a.account_Id,
     -- Apply profile-based permissions to determine the effective access level
     CASE
         WHEN urht.CanModifyAllData = true THEN '1'
@@ -57,7 +57,7 @@ SELECT
 FROM 
     {{ ref('sfdc_users_source') }} as u
 JOIN 
-    {{ ref('wk_prep_crm_account_share_active') }} a ON u.Id = a.User_Or_Group_Id OR a.User_Or_Group_Id IN (SELECT USERORGROUPID FROM ExpandedGroupMembers)
+    {{ ref('wk_prep_crm_account_share_active') }} a ON u.Id = a.user_Or_group_Id OR a.user_Or_group_Id IN (SELECT user_or_group_id FROM ExpandedGroupMembers)
 LEFT JOIN 
-    UserRolesHierarchiesTerritoriesProfiles urht ON u.Id = urht.User_Id
-QUALIFY ROW_NUMBER() OVER (PARTITION BY u.User_name, a.Account_Id ORDER BY a.Account_Access_Level DESC) = 1;
+    UserRolesHierarchiesTerritoriesProfiles urht ON u.user_id = urht.user_Id
+QUALIFY ROW_NUMBER() OVER (PARTITION BY u.user_name, a.account_Id ORDER BY a.account_access_Level DESC) = 1;
