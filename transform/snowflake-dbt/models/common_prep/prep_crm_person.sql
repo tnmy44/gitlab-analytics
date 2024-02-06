@@ -559,7 +559,8 @@ WITH biz_person AS (
       CASE
         WHEN account_demographics_geo IN ('CHANNEL','UNKNOWN','Channel') OR account_demographics_geo IS NULL
           THEN person_first_geo
-        ELSE account_demographics_geo AS person_geo_combined,
+        ELSE account_demographics_geo 
+      END AS person_geo_combined,
       final_iso_country.country_name AS country_name_iso_based,
       prep_date.fiscal_year  AS created_date_fiscal_year,
       CONCAT(
@@ -594,5 +595,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2024-02-05"
+    updated_date="2024-02-06"
 ) }}
