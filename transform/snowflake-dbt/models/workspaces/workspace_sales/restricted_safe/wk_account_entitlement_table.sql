@@ -24,10 +24,10 @@ UserRolesHierarchiesTerritoriesProfiles AS (
     -- CTE for user roles, hierarchies, territories, and profiles
     SELECT 
         u.user_id,
-        u.profile_Id,
-        u.user_role_Id,
-        r.name AS role_Name,
-        u.manager_Id,
+        u.profile_id,
+        u.user_role_id,
+        r.name AS role_name,
+        u.manager_id,
         ut.Territory2Id,
         p.is_permissions_view_all_data AS CanViewAllData,
         p.is_permissions_modify_all_data AS CanModifyAllData
