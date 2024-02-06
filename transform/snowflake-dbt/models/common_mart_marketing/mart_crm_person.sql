@@ -116,6 +116,7 @@
       worked_date_pt.date_day                  AS worked_date_pt,
       worked_date.first_day_of_month           AS worked_month,
       worked_date_pt.first_day_of_month        AS worked_month_pt,
+      fct_crm_person.high_priority_datetime,
       dim_crm_person.email_domain,
       dim_crm_person.email_domain_type,
       is_valuable_signup,
@@ -208,6 +209,7 @@
       fct_crm_person.is_bdr_sdr_worked,
       fct_crm_person.is_abm_tier_inquiry,
       fct_crm_person.is_abm_tier_mql,
+      fct_crm_person.is_high_priority,
       CASE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE

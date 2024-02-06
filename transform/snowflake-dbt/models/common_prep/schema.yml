@@ -141,6 +141,8 @@ models:
         tests:
           - not_null
           - unique
+      - name: is_high_priority
+        description: A person-level flag to indicate if the person is a high prioirty person, according to Salesforce field logic. 
       - name: person_first_country
         description: >
           Selects the first country contact enhancement services using available data. Following the order:  Account Demographics UPA Country, Zoominfo Company Country, Persons Country.

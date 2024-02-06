@@ -173,7 +173,12 @@ WITH biz_person AS (
       sequence_task_due_date,
       sequence_status,
       is_actively_being_sequenced,
-      is_high_priority,
+      high_priority_datetime,
+      CASE
+        WHEN high_priority_datetime IS NOT NULL
+          THEN TRUE
+        ELSE FALSE
+      END AS is_high_priority,
       prospect_share_status,
       partner_prospect_status,
       partner_prospect_id,
@@ -334,7 +339,12 @@ WITH biz_person AS (
       sequence_task_due_date,
       sequence_status,
       is_actively_being_sequenced,
-      is_high_priority,
+      high_priority_datetime,
+      CASE
+        WHEN high_priority_datetime IS NOT NULL
+          THEN TRUE
+        ELSE FALSE
+      END AS is_high_priority,
       prospect_share_status,
       partner_prospect_status,
       partner_prospect_id,
