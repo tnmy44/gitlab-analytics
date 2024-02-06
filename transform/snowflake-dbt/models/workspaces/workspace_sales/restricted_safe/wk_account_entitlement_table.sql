@@ -8,7 +8,7 @@ With ExpandedGroupMembers AS (
     FROM 
         {{ ref('sfdc_group_member_source') }} as gm
     WHERE 
-        NOT EXISTS (SELECT 1 FROM {{ ref('sfdc_group_source') }} WHERE id = gm.user_or_group_id)
+        NOT EXISTS (SELECT 1 FROM {{ ref('sfdc_group_source') }} WHERE group_id = gm.user_or_group_id)
     UNION ALL
     SELECT 
         gm.user_or_group_id,
@@ -16,14 +16,14 @@ With ExpandedGroupMembers AS (
     FROM 
         {{ ref('sfdc_group_member_source') }} as gm
     JOIN 
-        ExpandedGroupMembers egm ON gm.group_id = egm.user_or_group_id
+        ExpandedGroupMembers as egm ON gm.group_id = egm.user_or_group_id
     WHERE 
-        EXISTS (SELECT 1 FROM {{ ref('sfdc_group_source') }} WHERE ID = gm.user_or_group_id)
+        EXISTS (SELECT 1 FROM {{ ref('sfdc_group_source') }} WHERE group_id = gm.user_or_group_id)
 ),
 UserRolesHierarchiesTerritoriesProfiles AS (
     -- CTE for user roles, hierarchies, territories, and profiles
     SELECT 
-        u.Id AS User_Id,
+        u.user_id,
         u.Profile_Id,
         u.User_Role_Id,
         r.Name AS Role_Name,
