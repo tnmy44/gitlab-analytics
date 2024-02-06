@@ -146,7 +146,7 @@ models:
         tests:
             - not_null
             - unique
-  - name: wk_account_entitlement_table
+  - name: wk_crm_account_entitlement
     description: an entitlment table to be used for row level security in Tableau
     columns:
       - name: account_id
