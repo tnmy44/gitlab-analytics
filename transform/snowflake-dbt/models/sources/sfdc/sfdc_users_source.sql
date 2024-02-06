@@ -16,6 +16,7 @@ WITH source AS (
       name                                                              AS name,
       email                                                             AS user_email,
       employeenumber                                                    AS employee_number,
+      profileid                                                         AS profile_id,
 
       -- info
       title                                                             AS title,
