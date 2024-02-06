@@ -34,11 +34,11 @@ UserRolesHierarchiesTerritoriesProfiles AS (
     FROM 
         {{ ref('sfdc_users_source') }} as u
     LEFT JOIN 
-        {{ ref('sfdc_user_roles_source') }} r ON u.User_Role_Id = r.Id
+        {{ ref('sfdc_user_roles_source') }} r ON u.user_role_Id = r.id
     LEFT JOIN 
-         {{ ref('sfdc_profile_source') }} p ON u.Profile_Id = p.ID
+         {{ ref('sfdc_profile_source') }} p ON u.profile_id = p.profile_id
     LEFT JOIN 
-        raw.salesforce_v2_stitch.USERTERRITORY2ASSOCIATION ut ON u.Id = ut.UserId
+        raw.salesforce_v2_stitch.USERTERRITORY2ASSOCIATION ut ON u.user_id = ut.UserId
     WHERE 
         u.Is_Active = true
 )
@@ -57,7 +57,7 @@ SELECT
 FROM 
     {{ ref('sfdc_users_source') }} as u
 JOIN 
-    {{ ref('wk_prep_crm_account_share_active') }} a ON u.Id = a.user_Or_group_Id OR a.user_Or_group_Id IN (SELECT user_or_group_id FROM ExpandedGroupMembers)
+    {{ ref('wk_prep_crm_account_share_active') }} a ON u.Id = a.user_Or_group_Id OR a.user_or_group_Id IN (SELECT user_or_group_id FROM ExpandedGroupMembers)
 LEFT JOIN 
     UserRolesHierarchiesTerritoriesProfiles urht ON u.user_id = urht.user_Id
 QUALIFY ROW_NUMBER() OVER (PARTITION BY u.user_name, a.account_Id ORDER BY a.account_access_Level DESC) = 1;
