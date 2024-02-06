@@ -11,7 +11,7 @@ WITH source AS (
          id AS user_territory_association_id,
 
          --info
-         roleinterritory2 as role_in_territory
+         roleinterritory2 as role_in_territory,
          territory2id AS territory_id,
          userid AS user_id,
          isactive AS is_active,
