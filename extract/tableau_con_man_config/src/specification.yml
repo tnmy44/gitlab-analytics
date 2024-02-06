@@ -4519,7 +4519,7 @@ users:
       - General SAFE Access
   - user_name: dvanrooijen
     user_name_domain: gitlab.com
-    site_role: Creator
+    site_role: SiteAdministratorCreator
     auth_setting: SAML
     groups:
       - Data Team All Access
@@ -10959,3 +10959,21 @@ users:
     auth_setting: SAML
     groups:
       - General All Access                   
+  - user_name: msaleiko
+    user_name_domain: gitlab.com
+    site_role: Creator
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: ebonet 
+    user_name_domain: gitlab.com
+    site_role: Creator
+    auth_setting: SAML
+    groups:
+      - General All Access 
+  - user_name: dfrey
+    user_name_domain: gitlab.com
+    site_role: Creator
+    auth_setting: SAML
+    groups:
+      - General All Access         
