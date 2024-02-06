@@ -21,7 +21,7 @@ renamed AS (
     file_format           AS file_format,
     file_location         AS file_location,
     locked                AS locked,
-    pgp_is_deleted        AS is_pgp_deleted
+    pgp_is_deleted        AS pgp_is_deleted
   FROM source
 
 )
