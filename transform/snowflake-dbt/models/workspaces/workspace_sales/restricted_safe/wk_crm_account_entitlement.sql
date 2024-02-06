@@ -18,7 +18,7 @@ expanded_group_members AS (
     FROM 
         group_member
     WHERE 
-        NOT EXISTS (SELECT 1 FROM group WHERE groups.group_id = group_member.user_or_group_id)
+        NOT EXISTS (SELECT 1 FROM groups WHERE groups.group_id = group_member.user_or_group_id)
     UNION ALL
     SELECT 
         group_member.user_or_group_id,
@@ -28,7 +28,7 @@ expanded_group_members AS (
     JOIN 
         expanded_group_members ON group_member.group_id = expanded_group_members.user_or_group_id
     WHERE 
-        EXISTS (SELECT 1 FROM group WHERE groups.group_id = group_member.user_or_group_id)
+        EXISTS (SELECT 1 FROM groups WHERE groups.group_id = group_member.user_or_group_id)
 ),
 user_roles_hierarchies_territories_profiles AS (
     -- CTE for user roles, hierarchies, territories, and profiles
@@ -70,4 +70,4 @@ JOIN
     account_share_active ON users.user_id = account_share_active.user_or_group_id OR account_share_active.user_or_group_id IN (SELECT user_or_group_id FROM expanded_group_members)
 LEFT JOIN 
     user_roles_hierarchies_territories_profiles ON users.user_id = user_roles_hierarchies_territories_profiles.user_id
-QUALIFY ROW_NUMBER() OVER (PARTITION BY users.user_name, account_share_active.account_id ORDER BY account_share_active.account_access_Level DESC) = 1;
+QUALIFY ROW_NUMBER() OVER (PARTITION BY users.user_name, account_share_active.account_id ORDER BY account_share_active.account_access_Level DESC) = 1
