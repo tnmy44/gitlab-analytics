@@ -178,7 +178,7 @@
                       sfdc_users.snapshot_fiscal_year
                       )
         WHEN sfdc_users.snapshot_fiscal_year >= 2025
-          THEN sfdc_user_roles_source.user_role_name
+          THEN UPPER(sfdc_user_roles_source.user_role_name)
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,
       {%- endif %}
       COALESCE(
