@@ -54,21 +54,22 @@
       prep_crm_user_daily_snapshot.crm_user_area                       AS user_area,
       prep_crm_user_daily_snapshot.crm_user_business_unit              AS user_business_unit,
       prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk,
-      prep_crm_user_daily_snapshot.user_role_name                      AS user_role_name,
-      prep_crm_user_daily_snapshot.user_role_level_1                   AS user_role_level_1,
-      prep_crm_user_daily_snapshot.user_role_level_2                   AS user_role_level_2,
-      prep_crm_user_daily_snapshot.user_role_level_3                   AS user_role_level_3,
-      prep_crm_user_daily_snapshot.user_role_level_4                   AS user_role_level_4,
-      prep_crm_user_daily_snapshot.user_role_level_5                   AS user_role_level_5
+      prep_crm_user_daily_snapshot.crm_user_role_name                  AS user_role_name,
+      prep_crm_user_daily_snapshot.crm_user_role_level_1               AS user_role_level_1,
+      prep_crm_user_daily_snapshot.crm_user_role_level_2               AS user_role_level_2,
+      prep_crm_user_daily_snapshot.crm_user_role_level_3               AS user_role_level_3,
+      prep_crm_user_daily_snapshot.crm_user_role_level_4               AS user_role_level_4,
+      prep_crm_user_daily_snapshot.crm_user_role_level_5               AS user_role_level_5
     FROM prep_crm_user_daily_snapshot
     INNER JOIN dim_date 
       ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
-    WHERE prep_crm_user_daily_snapshot.crm_user_sales_segment IS NOT NULL
+    WHERE (prep_crm_user_daily_snapshot.crm_user_sales_segment IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_geo IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_region IS NOT NULL
       AND prep_crm_user_daily_snapshot.crm_user_area IS NOT NULL
       AND IFF(dim_date.fiscal_year > 2023, prep_crm_user_daily_snapshot.crm_user_business_unit IS NOT NULL, 1=1) -- with the change in structure, business unit must be present after FY23
-      AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
+      AND IFF(dim_date.fiscal_year < dim_date.current_fiscal_year,dim_date.date_actual = dim_date.last_day_of_fiscal_year, dim_date.date_actual = dim_date.current_date_actual)) -- take only the last valid hierarchy of the fiscal year for previous fiscal years
+      OR prep_crm_user_daily_snapshot.crm_user_role_level_1 IS NOT NULL
       AND prep_crm_user_daily_snapshot.is_active = TRUE 
 
 ), account_hierarchy_snapshot_source AS (

@@ -77,7 +77,7 @@
       sfdc_users.start_date,
       sfdc_users.user_timezone,
       sfdc_users.user_role_id,
-      sfdc_user_roles_source.user_role_name                                                                                           AS user_role_name,
+      sfdc_user_roles_source.user_role_name                                                                                           AS crm_user_role_name,
       sfdc_users.user_role_type                                                                                                       AS crm_user_role_type,
       sfdc_users.user_role_level_1                                                                                                    AS crm_user_role_level_1,
       sfdc_users.user_role_level_2                                                                                                    AS crm_user_role_level_2,
