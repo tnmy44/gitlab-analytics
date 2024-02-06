@@ -78,6 +78,12 @@
       sfdc_users.user_timezone,
       sfdc_users.user_role_id,
       sfdc_user_roles_source.user_role_name                                                                                           AS user_role_name,
+      sfdc_users.user_role_type                                                                                                       AS crm_user_role_type,
+      sfdc_users.user_role_level_1                                                                                                    AS crm_user_role_level_1,
+      sfdc_users.user_role_level_2                                                                                                    AS crm_user_role_level_2,
+      sfdc_users.user_role_level_3                                                                                                    AS crm_user_role_level_3,
+      sfdc_users.user_role_level_4                                                                                                    AS crm_user_role_level_4,
+      sfdc_users.user_role_level_5                                                                                                    AS crm_user_role_level_5,
       {{ dbt_utils.surrogate_key(['sfdc_users.user_segment']) }}                                                                      AS dim_crm_user_sales_segment_id,
       sfdc_users.user_segment                                                                                                         AS crm_user_sales_segment,
       sfdc_users.user_segment_grouped                                                                                                 AS crm_user_sales_segment_grouped,
@@ -90,8 +96,6 @@
       {{ dbt_utils.surrogate_key(['sfdc_users.user_business_unit']) }}                                                                AS dim_crm_user_business_unit_id,
       sfdc_users.user_business_unit                                                                                                   AS crm_user_business_unit,
       {{ dbt_utils.surrogate_key(['sfdc_users.user_role_type']) }}                                                                    AS dim_crm_user_role_type_id,
-      sfdc_users.user_role_type                                                                                                       AS crm_user_role_type,
-      sfdc_users.user_role_level_1                                                                                                    AS crm_user_role_level_1,
       CASE 
         WHEN sfdc_users.is_hybrid_user = 'Yes' 
           THEN 1

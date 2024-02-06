@@ -53,7 +53,13 @@
       prep_crm_user_daily_snapshot.crm_user_region                     AS user_region,
       prep_crm_user_daily_snapshot.crm_user_area                       AS user_area,
       prep_crm_user_daily_snapshot.crm_user_business_unit              AS user_business_unit,
-      prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk
+      prep_crm_user_daily_snapshot.dim_crm_user_hierarchy_sk,
+      prep_crm_user_daily_snapshot.user_role_name                      AS user_role_name,
+      prep_crm_user_daily_snapshot.user_role_level_1                   AS user_role_level_1,
+      prep_crm_user_daily_snapshot.user_role_level_2                   AS user_role_level_2,
+      prep_crm_user_daily_snapshot.user_role_level_3                   AS user_role_level_3,
+      prep_crm_user_daily_snapshot.user_role_level_4                   AS user_role_level_4,
+      prep_crm_user_daily_snapshot.user_role_level_5                   AS user_role_level_5
     FROM prep_crm_user_daily_snapshot
     INNER JOIN dim_date 
       ON prep_crm_user_daily_snapshot.snapshot_id = dim_date.date_id
@@ -186,7 +192,13 @@
       UPPER(user_region)  AS user_region,
       UPPER(user_area)    AS user_area,
       NULL                AS user_business_unit,
-      dim_crm_user_hierarchy_sk
+      dim_crm_user_hierarchy_sk,
+      NULL                AS user_role_name,
+      NULL                AS user_role_level_1,
+      NULL                AS user_role_level_2,
+      NULL                AS user_role_level_3,
+      NULL                AS user_role_level_4,
+      NULL                AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year < 2024
 
@@ -204,14 +216,20 @@
       UPPER(user_region)        AS user_region,
       UPPER(user_area)          AS user_area,
       UPPER(user_business_unit) AS user_business_unit,
-      dim_crm_user_hierarchy_sk
+      dim_crm_user_hierarchy_sk,
+      NULL                      AS user_role_name,
+      NULL                      AS user_role_level_1,
+      NULL                      AS user_role_level_2,
+      NULL                      AS user_role_level_3,
+      NULL                      AS user_role_level_4,
+      NULL                      AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year = 2024
 
 ), fy25_and_beyond_hierarchy AS (
 
 /*
-  After FY25, business unit was added to the hierarchy.
+  After FY25, we switched to a role based hierarchy.
 */
 
 
@@ -222,7 +240,13 @@
       UPPER(user_region)        AS user_region,
       UPPER(user_area)          AS user_area,
       UPPER(user_business_unit) AS user_business_unit,
-      dim_crm_user_hierarchy_sk
+      dim_crm_user_hierarchy_sk,
+      UPPER(user_role_name)     AS user_role_name,
+      UPPER(user_role_level_1)  AS user_role_level_1,
+      UPPER(user_role_level_2)  AS user_role_level_2,
+      UPPER(user_role_level_3)  AS user_role_level_3,
+      UPPER(user_role_level_4)  AS user_role_level_4,
+      UPPER(user_role_level_5)  AS user_role_level_5
     FROM unioned 
     WHERE fiscal_year >= 2025
 
@@ -258,6 +282,12 @@
       {{ dbt_utils.surrogate_key(['final_unioned.user_region']) }}                                                              AS dim_crm_user_region_id,
       final_unioned.user_area                                                                                                   AS crm_user_area,
       {{ dbt_utils.surrogate_key(['final_unioned.user_area']) }}                                                                AS dim_crm_user_area_id,
+      final_unioned.user_role_name                                                                                              AS crm_user_role_name,
+      final_unioned.user_role_level_1                                                                                           AS crm_user_role_level_1,
+      final_unioned.user_role_level_2                                                                                           AS crm_user_role_level_2,
+      final_unioned.user_role_level_3                                                                                           AS crm_user_role_level_3,
+      final_unioned.user_role_level_4                                                                                           AS crm_user_role_level_4,
+      final_unioned.user_role_level_5                                                                                           AS crm_user_role_level_5,
       CASE
           WHEN final_unioned.user_segment IN ('Large', 'PubSec') THEN 'Large'
           ELSE final_unioned.user_segment
