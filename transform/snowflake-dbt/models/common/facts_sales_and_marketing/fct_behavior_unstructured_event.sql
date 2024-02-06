@@ -23,7 +23,6 @@
       dim_behavior_event_sk,
       platform,
       gsc_pseudonymized_user_id,
-      gsc_is_gitlab_team_member,
       user_snowplow_domain_id,
       clean_url_path,
       page_url_host,
@@ -86,8 +85,7 @@
       change_form_type,
       change_form_element_id,
       focus_form_element_id,
-      focus_form_node_name,
-      gsc_is_gitlab_team_member
+      focus_form_node_name
     FROM unstruct_event
       
 )
@@ -95,7 +93,7 @@
 {{ dbt_audit(
     cte_ref="unstruct_event_with_dims",
     created_by="@chrissharp",
-    updated_by="@utkarsh060",
+    updated_by="@pempey",
     created_date="2022-09-27",
-    updated_date="2024-01-25"
+    updated_date="2023-04-24"
 ) }}
