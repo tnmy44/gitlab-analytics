@@ -34,6 +34,7 @@
     FROM fct_behavior_structured_event
     INNER JOIN snowplow_gitlab_events_experiment_contexts
       ON fct_behavior_structured_event.behavior_structured_event_pk = snowplow_gitlab_events_experiment_contexts.event_id
+    WHERE fct_behavior_structured_event.has_gitlab_experiment_context = TRUE
 
     {% if is_incremental() %}
 
@@ -46,7 +47,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@pempey",
+    updated_by="@michellecooper",
     created_date="2022-09-01",
-    updated_date="2023-03-27"
+    updated_date="2024-02-07"
 ) }}
