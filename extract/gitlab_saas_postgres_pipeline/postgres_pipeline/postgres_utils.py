@@ -610,25 +610,24 @@ def chunk_and_upload_metadata(
                         initial_load_start_date,
                         advanced_metadata,
                     )
-
-                write_metadata(
-                    database_kwargs["metadata_engine"],
-                    database_kwargs["metadata_table"],
-                    database_kwargs["source_database"],
-                    database_kwargs["real_target_table"],
-                    initial_load_start_date,
-                    upload_date,
-                    upload_file_name,
-                    last_extracted_id,
-                    max_source_id,
-                    is_export_completed,
-                    row_count,
-                )
                 # for loop should auto-terminate, but to be safe, avoid table overwrite
-                if is_export_completed:
                     break
 
-    # need to return in case it was first set here
+    # only write metadata after all chunks have been written because chunks aren't ordered, can lead to false last_extracted_id
+    write_metadata(
+        database_kwargs["metadata_engine"],
+        database_kwargs["metadata_table"],
+        database_kwargs["source_database"],
+        database_kwargs["real_target_table"],
+        initial_load_start_date,
+        upload_date,
+        upload_file_name,
+        last_extracted_id,
+        max_source_id,
+        is_export_completed,
+        row_count,
+    )
+    # need to return `initial_load_start_date` in case it was first set here
     return initial_load_start_date
 
 
@@ -872,7 +871,9 @@ def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
     and prev_initial_load_start_date has not been updated yet,
     it means that deletes needs to be run
     """
-    dbt_full_refresh_monthly_schedule = "* * * * SUN#1"
+    dbt_full_refresh_monthly_schedule = "45 8 * * SUN#1"
+    next_execution_date = os.environ.get("NEXT_EXECUTION_DATE")
+
     next_monthly_full_refresh_run = croniter(
         dbt_full_refresh_monthly_schedule
     ).get_next(datetime)
@@ -882,10 +883,10 @@ def get_is_past_due_deletes(prev_initial_load_start_date: datetime):
         days_till_refresh_threshold
     )
     is_past_due = (prev_initial_load_start_date < date_threshold) and (
-        datetime.utcnow() > date_threshold
+        next_execution_date > date_threshold
     )
     logging.info(
-        f"\ndeletes date_threshold: {date_threshold}, is_past_due: {is_past_due}"
+        f"\ndeletes date_threshold: {date_threshold}, next_execution_date: {next_execution_date}, is_past_due: {is_past_due}"
     )
 
     return is_past_due
