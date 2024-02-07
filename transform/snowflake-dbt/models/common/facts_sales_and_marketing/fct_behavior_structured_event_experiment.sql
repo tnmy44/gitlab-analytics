@@ -8,8 +8,7 @@
 
 {{ 
     simple_cte([
-    ('fct_behavior_structured_event', 'fct_behavior_structured_event'),
-    ('snowplow_gitlab_events_experiment_contexts', 'prep_snowplow_gitlab_events_experiment_contexts_all')
+    ('fct_behavior_structured_event', 'fct_behavior_structured_event')
 
     ])
 }}
@@ -32,13 +31,11 @@
       }}
       
     FROM fct_behavior_structured_event
-    INNER JOIN snowplow_gitlab_events_experiment_contexts
-      ON fct_behavior_structured_event.behavior_structured_event_pk = snowplow_gitlab_events_experiment_contexts.event_id
     WHERE fct_behavior_structured_event.has_gitlab_experiment_context = TRUE
 
     {% if is_incremental() %}
 
-    WHERE behavior_at > (SELECT MAX(behavior_at) FROM {{this}})
+    AND behavior_at > (SELECT MAX(behavior_at) FROM {{this}})
 
     {% endif %}
 
