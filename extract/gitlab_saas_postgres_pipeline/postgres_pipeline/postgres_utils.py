@@ -568,6 +568,7 @@ def chunk_and_upload_metadata(
         - COPY to Snowflake after all files have been uploaded to GCS
     """
     rows_uploaded = 0
+    max_last_extracted_id = -1
 
     with tempfile.TemporaryFile() as tmpfile:
         iter_csv = read_sql_tmpfile(
@@ -581,10 +582,16 @@ def chunk_and_upload_metadata(
             row_count = chunk_df.shape[0]
             rows_uploaded += row_count
             last_extracted_id = chunk_df[primary_key].max()
+            max_last_extracted_id = (
+                last_extracted_id
+                if last_extracted_id > max_last_extracted_id
+                else max_last_extracted_id
+            )
             logging.info(
                 f"\nlast_extracted_id for current Postgres chunk: {last_extracted_id}"
             )
 
+            # one caveat is that we no longer write all uploaded files only the final upload of the chunk...
             upload_date = datetime.utcnow()
             if initial_load_start_date is None:
                 initial_load_start_date = upload_date
@@ -599,20 +606,17 @@ def chunk_and_upload_metadata(
             if row_count > 0:
                 upload_to_gcs(advanced_metadata, chunk_df, upload_file_name)
                 logging.info(f"Uploaded {row_count} rows to GCS in {upload_file_name}")
-                is_export_completed = last_extracted_id >= max_source_id
 
-                # upload to Snowflake before writing metadata=complete for safety
-                if is_export_completed:
-                    upload_to_snowflake_after_extraction(
-                        chunk_df,
-                        database_kwargs,
-                        load_by_id_export_type,
-                        initial_load_start_date,
-                        advanced_metadata,
-                    )
-                # for loop should auto-terminate, but to be safe, avoid table overwrite
-                    break
-
+    is_export_completed = max_last_extracted_id >= max_source_id
+    # upload to Snowflake before writing metadata=complete for safety
+    if is_export_completed:
+        upload_to_snowflake_after_extraction(
+            chunk_df,
+            database_kwargs,
+            load_by_id_export_type,
+            initial_load_start_date,
+            advanced_metadata,
+        )
     # only write metadata after all chunks have been written because chunks aren't ordered, can lead to false last_extracted_id
     write_metadata(
         database_kwargs["metadata_engine"],
@@ -622,7 +626,7 @@ def chunk_and_upload_metadata(
         initial_load_start_date,
         upload_date,
         upload_file_name,
-        last_extracted_id,
+        max_last_extracted_id,
         max_source_id,
         is_export_completed,
         row_count,
@@ -1041,7 +1045,11 @@ def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: 
 
     # Add pgp_is_deleted field to target table if not exists
     # Snowflake has a 'add column IF NOT EXISTS' clause but it doesn't work with DEFAULT
-    add_is_deleted_field_query = f"ALTER TABLE {target_table_path} ADD COLUMN pgp_is_deleted boolean default false;"
+    add_is_deleted_field_query = f"""
+    ALTER TABLE {target_table_path}
+    ADD COLUMN pgp_is_deleted boolean default false,
+    ADD COLUMN pgp_is_deleted_updated_at timestamp default current_timestamp;"
+    """
     try:
         alter_query_results = query_executor(target_engine, add_is_deleted_field_query)
         logging.info(f"pgp_is_deleted add column, {alter_query_results[0][0]}")
@@ -1055,16 +1063,18 @@ def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: 
     update_query = f"""
     UPDATE {target_table_path} t
     SET
-      t.pgp_is_deleted = TRUE
-    WHERE
-      NOT EXISTS (
+      t.pgp_is_deleted = CASE
+      WHEN NOT EXISTS (
         SELECT *
         FROM
           {deletes_table_path}
         WHERE
           {deletes_table_path}.{primary_key} = t.{primary_key}
-      )
-      AND t.pgp_is_deleted = FALSE;
+        ) THEN TRUE
+        ELSE FALSE
+      END,
+      SET
+        pgp_is_deleted_updated_at = current_timestamp;
       """
 
     update_query_results = query_executor(target_engine, update_query)
@@ -1074,6 +1084,7 @@ def update_is_deleted_field(deletes_table: str, target_table: str, primary_key: 
 
     # Run DROP table on deletes table
     drop_query = f" drop table {deletes_table_path};"
+    logging.info(f"Running drop table query: {drop_query}")
     drop_query_results = query_executor(target_engine, drop_query)
-    logging.info(f"Table {deletes_table_path}.{drop_query_results[0][0]}")
+    logging.info(f"Table {drop_query_results[0][0]}")
     target_engine.dispose()
