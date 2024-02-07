@@ -85,7 +85,7 @@ code_suggestions_joined_to_fact_and_dim AS (
     dim_behavior_event.event_label,
     dim_behavior_event.event_property,
     CASE
-      WHEN joined_code_suggestions_contexts.ide_name = 'Visual Studio Code' AND extension_version = '3.76.0' THEN TRUE --exclude IDE events from VS Code extension version 3.76.0 (which sent duplicate events)
+      WHEN joined_code_suggestions_contexts.ide_name = 'Visual Studio Code' AND joined_code_suggestions_contexts.extension_version = '3.76.0' THEN TRUE --exclude IDE events from VS Code extension version 3.76.0 (which sent duplicate events)
       ELSE FALSE
     END AS is_event_to_exclude
   FROM joined_code_suggestions_contexts
