@@ -426,10 +426,19 @@ Below checklist of activities would be run once for quarter to validate security
 
 ## Package version inventory
 
-1. [ ] Go to [/package_inventory](https://gitlab.com/gitlab-data/package_inventory/-/blob/main/package_inventory/src/README.md) repo, and run application and generate reports using guidelines from the `README.md` file
+1. [ ] Go to [/package_inventory](https://gitlab.com/gitlab-data/package_inventory/-/blob/main/package_inventory/src/README.md) repo, run application and generate reports using guidelines from the `README.md` file  - this code is applicable for the `Python` libraries
 1. [ ] Once you generate the reports, analyze the libraries manually, and propose the candidates for upgrading 
+1. [ ] Manually check the all tools we are using, except Python libraries, as they are already analyzed in the previous point. For instance, check the `Python` version itself `Airflow`, `permifrost`, `meltano`, `dbt` and `dbt_packages` versions. Save your findings in the comment, and use this template for the tabular format
+    <details><summary>Template</summary>
+
+    | Tool/Library                       | Current version | Current version release date | Latest version | Latest version release date | Note | Candidate for the upgrade (Yes/No) | 
+    |--------------------------|-----------------|------------------------------|----------------|-----------------------------|--------|--------| 
+    ||                 |                              |                |                             |||
+    ||                 |                              |                |                             |||
+    </details>
+1. [ ] Share your finding with the team `@gitlab-data/engineers` (tag them in the issue) and pick the good candidates for upgrading
 1. [ ] If we agree on candidates for upgrading, create a new issue in the `/analytics` repo with the list of libraries we should upgrade and proceed further
-1. [ ] TODO: add details about other tolls 
+1. [ ] Once when the packages are upgraded and the issue mentioned above is closed, put all updates in the handbook page [Python/Tools package management and inventory](https://handbook.gitlab.com/handbook/business-technology/data-team/platform/python-tool-package-management/) to stay in sync with the current version we are using. 
 
 <!-- DO NOT EDIT BELOW THIS LINE -->
 /label ~"Team::Data Platform" ~Snowflake ~TDF ~"Data Team" ~"Priority::1-Ops" ~"workflow::4 - scheduled" ~"Quarterly Data Health and Security Audit" ~"Periscope / Sisense"
