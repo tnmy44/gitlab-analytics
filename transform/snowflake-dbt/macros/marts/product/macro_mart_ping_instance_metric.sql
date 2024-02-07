@@ -1,132 +1,25 @@
 {% macro macro_mart_ping_instance_metric(model_name1) %}
 
 {{ simple_cte([
-    ('dim_ping_instance', 'dim_ping_instance'),
-    ('dim_product_tier', 'dim_product_tier'),
     ('dim_date', 'dim_date'),
-    ('dim_billing_account', 'dim_billing_account'),
-    ('dim_crm_accounts', 'dim_crm_account'),
-    ('fct_charge', 'fct_charge'),
-    ('dim_license', 'dim_license'),
+    ('dim_ping_instance', 'dim_ping_instance'),
     ('dim_location', 'dim_location_country'),
     ('dim_ping_metric', 'dim_ping_metric'),
-    ('dim_app_release_major_minor', 'dim_app_release_major_minor')
+    ('dim_app_release_major_minor', 'dim_app_release_major_minor'),
+    ('license_subscriptions','prep_license_subscription')
     ])
 
 }}
 
-, dim_product_detail AS (
-
-    SELECT *
-    FROM {{ ref('dim_product_detail') }}
-    WHERE product_deployment_type IN ('Self-Managed', 'Dedicated')
-      AND product_rate_plan_name NOT IN ('Premium - 1 Year - Eval')
-
-), dim_subscription AS (
-
-    SELECT *
-    FROM {{ ref('dim_subscription') }}
-    WHERE (subscription_name_slugify <> zuora_renewal_subscription_name_slugify[0]::TEXT
-      OR zuora_renewal_subscription_name_slugify IS NULL)
-      AND subscription_status NOT IN ('Draft', 'Expired')
-
-), fct_ping_instance_metric AS  (
+, fct_ping_instance_metric AS  (
 
   SELECT
     * FROM {{ ref(model_name1) }}
     WHERE IS_REAL(TO_VARIANT(metric_value))
 
-), subscription_source AS (
+), 
 
-    SELECT *
-    FROM {{ ref('zuora_subscription_source') }}
-    WHERE is_deleted = FALSE
-      AND exclude_from_analysis IN ('False', '')
-
-), license_subscriptions AS (
-
-    SELECT
-      dim_date.first_day_of_month                                                 AS reporting_month,
-      dim_license_id                                                              AS license_id,
-      dim_license.license_md5                                                     AS license_md5,
-      dim_license.license_sha256                                                  AS license_sha256,
-      dim_license.company                                                         AS license_company_name,
-      dim_license.license_expire_date                                             AS license_expire_date,
-      subscription_source.subscription_name_slugify                               AS original_subscription_name_slugify,
-      dim_subscription.dim_subscription_id                                        AS dim_subscription_id,
-      dim_subscription.subscription_start_date                                    AS subscription_start_date,
-      dim_subscription.subscription_end_date                                      AS subscription_end_date,
-      dim_subscription.subscription_start_month                                   AS subscription_start_month,
-      dim_subscription.subscription_end_month                                     AS subscription_end_month,
-      dim_subscription.dim_subscription_id_original                               AS dim_subscription_id_original,
-      dim_billing_account.dim_billing_account_id                                  AS dim_billing_account_id,
-      dim_crm_accounts.crm_account_name                                           AS crm_account_name,
-      dim_crm_accounts.dim_parent_crm_account_id                                  AS dim_parent_crm_account_id,
-      dim_crm_accounts.parent_crm_account_name                                    AS parent_crm_account_name,
-      dim_crm_accounts.parent_crm_account_upa_country                             AS parent_crm_account_upa_country,
-      dim_crm_accounts.parent_crm_account_sales_segment                           AS parent_crm_account_sales_segment,
-      dim_crm_accounts.parent_crm_account_industry                                AS parent_crm_account_industry,
-      dim_crm_accounts.parent_crm_account_territory                               AS parent_crm_account_territory,
-      dim_crm_accounts.technical_account_manager                                  AS technical_account_manager,
-      MAX(mrr)                                                                    AS max_monthly_mrr,
-      MAX(IFF(product_rate_plan_name ILIKE ANY ('%edu%', '%oss%'), TRUE, FALSE))  AS is_program_subscription,
-      ARRAY_AGG(DISTINCT dim_product_detail.product_tier_name)
-        WITHIN GROUP (ORDER BY dim_product_detail.product_tier_name ASC)          AS product_category_array,
-      ARRAY_AGG(DISTINCT product_rate_plan_name)
-        WITHIN GROUP (ORDER BY product_rate_plan_name ASC)                        AS product_rate_plan_name_array,
-      SUM(quantity)                                                               AS quantity,
-      SUM(mrr * 12)                                                               AS arr
-    FROM dim_license
-    INNER JOIN subscription_source
-      ON dim_license.dim_subscription_id = subscription_source.subscription_id
-    LEFT JOIN dim_subscription
-      ON subscription_source.subscription_name_slugify = dim_subscription.subscription_name_slugify
-    LEFT JOIN subscription_source AS all_subscriptions
-      ON subscription_source.subscription_name_slugify = all_subscriptions.subscription_name_slugify
-    INNER JOIN fct_charge
-      ON all_subscriptions.subscription_id = fct_charge.dim_subscription_id
-        AND charge_type = 'Recurring'
-    INNER JOIN dim_product_detail
-      ON dim_product_detail.dim_product_detail_id = fct_charge.dim_product_detail_id
-    LEFT JOIN dim_billing_account
-      ON dim_subscription.dim_billing_account_id = dim_billing_account.dim_billing_account_id
-    LEFT JOIN dim_crm_accounts
-      ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
-    INNER JOIN dim_date
-      ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=22)}}
-
-
-
-  ), latest_subscription AS (
-
-    SELECT
-        dim_subscription_id             AS latest_subscription_id,
-        dim_subscription_id_original    AS dim_subscription_id_original
-    FROM dim_subscription
-        WHERE subscription_status IN ('Active', 'Cancelled')
-
-  ), license_subscriptions_w_latest_subscription_md5 AS (
-
-    SELECT
-      license_subscriptions.*,
-      latest_subscription.latest_subscription_id
-      FROM license_subscriptions
-        LEFT JOIN latest_subscription
-      ON license_subscriptions.dim_subscription_id_original = latest_subscription.dim_subscription_id_original
-   WHERE license_md5 IS NOT NULL
-
-  ), license_subscriptions_w_latest_subscription_sha256 AS (
-
-    SELECT
-      license_subscriptions.*,
-      latest_subscription.latest_subscription_id
-      FROM license_subscriptions
-        LEFT JOIN latest_subscription
-      ON license_subscriptions.dim_subscription_id_original = latest_subscription.dim_subscription_id_original
-    WHERE license_sha256 IS NOT NULL
-
-  ), joined AS (
+ joined AS (
 
       SELECT
         fct_ping_instance_metric.dim_ping_date_id                                                                                       AS dim_ping_date_id,
@@ -168,8 +61,8 @@
         CASE
           WHEN license_subscriptions_w_latest_subscription_sha256.license_expire_date < dim_ping_instance.ping_created_at THEN FALSE
           WHEN license_subscriptions_w_latest_subscription_md5.license_expire_date < dim_ping_instance.ping_created_at THEN FALSE
-          WHEN license_subscriptions_w_latest_subscription_sha256.max_monthly_mrr > 0 THEN TRUE
-          WHEN license_subscriptions_w_latest_subscription_md5.max_monthly_mrr > 0 THEN TRUE
+          WHEN license_subscriptions_w_latest_subscription_sha256.has_monthly_mrr = TRUE THEN TRUE
+          WHEN license_subscriptions_w_latest_subscription_md5.has_monthly_mrr = TRUE THEN TRUE
           ELSE FALSE
         END                                                                                                                             AS is_paid_subscription,
         COALESCE(license_subscriptions_w_latest_subscription_md5.is_program_subscription,license_subscriptions_w_latest_subscription_sha256.is_program_subscription, FALSE)       AS is_program_subscription,
@@ -211,10 +104,10 @@
         ON fct_ping_instance_metric.dim_ping_date_id = dim_date.date_id
       LEFT JOIN dim_ping_instance
         ON fct_ping_instance_metric.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
-      LEFT JOIN license_subscriptions_w_latest_subscription_md5
+      LEFT JOIN license_subscriptions AS license_subscriptions_w_latest_subscription_md5
         ON dim_ping_instance.license_md5 = license_subscriptions_w_latest_subscription_md5.license_md5
        AND dim_date.first_day_of_month = license_subscriptions_w_latest_subscription_md5.reporting_month
-      LEFT JOIN license_subscriptions_w_latest_subscription_sha256
+      LEFT JOIN license_subscriptions AS license_subscriptions_w_latest_subscription_sha256
         ON dim_ping_instance.license_sha256 = license_subscriptions_w_latest_subscription_sha256.license_sha256
        AND dim_date.first_day_of_month = license_subscriptions_w_latest_subscription_sha256.reporting_month
       LEFT JOIN dim_location
