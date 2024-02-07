@@ -29,13 +29,7 @@
         'DBT_CREATED_AT',
         'DBT_UPDATED_AT'
         ]) 
-      }},
-
-      -- Experiment Context
-      snowplow_gitlab_events_experiment_contexts.experiment_name,
-      snowplow_gitlab_events_experiment_contexts.experiment_variant,
-      snowplow_gitlab_events_experiment_contexts.context_key,
-      snowplow_gitlab_events_experiment_contexts.experiment_migration_keys
+      }}
       
     FROM fct_behavior_structured_event
     INNER JOIN snowplow_gitlab_events_experiment_contexts
