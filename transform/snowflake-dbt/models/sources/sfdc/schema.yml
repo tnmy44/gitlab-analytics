@@ -713,3 +713,11 @@ models:
           - not_null
           - unique
 
+  - name: sfdc_user_territory_association_source
+    description: '{{ doc("sfdc_user_territory_association_source") }}'
+    columns:
+      - name: user_territory_association_id
+        tags: ["tdf", "sfdc"]
+        tests:
+          - not_null
+          - unique

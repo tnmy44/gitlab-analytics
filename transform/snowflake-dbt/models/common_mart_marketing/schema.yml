@@ -76,6 +76,8 @@ models:
           description: A short description of the work the devrel team did on the campaign.
         - name: devrel_campaign_influence_type
           description: The output the devrel team created to contribute to the campaign.
+        - name: touchpoint_sales_stage
+          description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred. 
 
     - name: mart_crm_touchpoint
       description: Model containing Bizible touchpoints (non-attribution) along with contact, lead, account, and campaign details.
@@ -237,6 +239,8 @@ models:
           description: The sum of MQLs by the various dimensions. 
         - name: saos
           description: The sum of SAOs by the various dimensions.
+        - name: touchpoint_sales_stage
+          description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred.
 
 
     - name: rpt_lead_to_revenue
@@ -604,6 +608,8 @@ models:
           description: The Opp's Lead Source from SFDC
         - name: opp_source_buckets
           description: The custom bucketing of the Opps' Lead Source
+        - name: touchpoint_sales_stage
+          description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred.
 
     - name: rpt_l2r_campaign_interactions
       description: Tableau-specific table that unions `mart_crm_touchpoint` with person, campaign data joined on and `mart_crm_attribution_touchpoint` with person, campaign and oppunitiy data 
@@ -652,6 +658,8 @@ models:
           description: A short description of the work the devrel team did on the campaign.
         - name: devrel_campaign_influence_type
           description: The output the devrel team created to contribute to the campaign.
+        - name: touchpoint_sales_stage
+          description: The Salesforce Opportunity stage at which the Bizible touchpoint occurred.
 
 
     - name: rpt_l2r_community_data

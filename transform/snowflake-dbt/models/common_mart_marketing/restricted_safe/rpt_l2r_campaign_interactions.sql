@@ -320,6 +320,7 @@
       mart_crm_attribution_touchpoint.bizible_landing_page,
       mart_crm_attribution_touchpoint.bizible_form_url_raw,
       mart_crm_attribution_touchpoint.bizible_landing_page_raw,
+      mart_crm_attribution_touchpoint.touchpoint_sales_stage AS opp_touchpoint_sales_stage,
     -- UTM Parameters 
       mart_crm_attribution_touchpoint.utm_campaign,
       mart_crm_attribution_touchpoint.utm_medium,
@@ -557,6 +558,7 @@
       bizible_landing_page,
       bizible_form_url_raw,
       bizible_landing_page_raw,
+      NULL AS opp_touchpoint_sales_stage,
       -- UTM Parameters 
       utm_campaign,
       utm_medium,
@@ -574,7 +576,7 @@
       bizible_referrer_page_raw,
       bizible_integrated_campaign_grouping,
       bizible_salesforce_campaign,
-	  campaign_rep_role_name,
+	    campaign_rep_role_name,
       touchpoint_segment,
       gtm_motion,
       pipe_name,
@@ -769,6 +771,7 @@
       bizible_landing_page,
       bizible_form_url_raw,
       bizible_landing_page_raw,
+      opp_touchpoint_sales_stage,
       -- UTM Parameters 
       utm_campaign,
       utm_medium,

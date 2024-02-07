@@ -265,3 +265,9 @@ Source model for SFDC MDF Funds Claims
 Source model for SFDC MDF Funds Requests
 
 {% enddocs %}
+
+{% docs sfdc_user_territory_association_source  %}
+
+Source model for SFDC user territory association
+
+{% enddocs %}
