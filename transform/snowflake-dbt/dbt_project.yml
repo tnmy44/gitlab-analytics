@@ -202,6 +202,10 @@ models:
         +schema: driveload
         +tags: ["driveload"]
 
+      elastic_billing:
+        +materialized: table
+        +schema: elastic_billing
+
       engineering:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
@@ -276,6 +280,10 @@ models:
       omamori:
         +materialized: table
         +schema: omamori
+
+      pajamas_adoption_scanner:
+        +materialized: table
+        +schema: pajamas_adoption_scanner
 
       pto:
         +materialized: table

@@ -216,8 +216,9 @@
       mart_crm_attribution_touchpoint.bizible_weight_first_touch,
       mart_crm_attribution_touchpoint.is_fmm_influenced,
       mart_crm_attribution_touchpoint.is_fmm_sourced,
-      mart_crm_attribution_touchpoint.touchpoint_offer_type_grouped,
-      mart_crm_attribution_touchpoint.touchpoint_offer_type,   
+      attribution_touchpoint_offer_type.touchpoint_offer_type_grouped,
+      attribution_touchpoint_offer_type.touchpoint_offer_type,  
+      mart_crm_attribution_touchpoint.touchpoint_sales_stage, 
       CASE
           WHEN mart_crm_attribution_touchpoint.dim_crm_touchpoint_id IS NOT null 
             THEN opp.dim_crm_opportunity_id
@@ -362,7 +363,7 @@
       ON opp.dim_crm_account_id=mart_crm_account.dim_crm_account_id
     WHERE opp.created_date >= '2021-02-01'
       OR opp.created_date IS NULL
-    {{dbt_utils.group_by(n=85)}}
+    {{dbt_utils.group_by(n=86)}}
     
 ), cohort_base_combined AS (
   
@@ -452,6 +453,7 @@
       COALESCE(person_base_with_tp.touchpoint_offer_type,opp_base_with_batp.touchpoint_offer_type) AS touchpoint_offer_type,
       opp_base_with_batp.touchpoint_offer_type_grouped AS opp_touchpoint_offer_type_grouped,
       opp_base_with_batp.touchpoint_offer_type AS opp_touchpoint_offer_type, 
+      opp_base_with_batp.touchpoint_sales_stage AS opp_touchpoint_sales_stage,
       COALESCE(person_base_with_tp.bizible_touchpoint_date,opp_base_with_batp.bizible_touchpoint_date) AS bizible_touchpoint_date, 
       COALESCE(person_base_with_tp.campaign_rep_role_name,opp_base_with_batp.campaign_rep_role_name) AS campaign_rep_role_name, 
       COALESCE(person_base_with_tp.bizible_touchpoint_position,opp_base_with_batp.bizible_touchpoint_position) AS bizible_touchpoint_position, 

@@ -7677,35 +7677,35 @@ models:
       - name: country
         description: Current/latest country the team member resides in
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: nationality
         description: Masked. Team member nationality.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: ethnicity 
         description: Masked. Team member ethnicity.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: gender 
         description: Masked. Team member gender
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: date_of_birth 
         description: Masked. Team member date of birth
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: key_talent_status 
         description: Masked. Team member Key Talent status
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: growth_potential_rating 
         description: Masked. Team member growth potential rating
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: performance_rating 
         description: Masked. Team member performance rating
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: employee_type
         description: The employee type from the following list - Employee (PEO or Entity), Contractor (Independent, customer-to-customer or PEO), Intern, Consultant.
 
@@ -7779,15 +7779,15 @@ models:
       - name: termination_reason
         description: Categorical variable that indicates the reason why a team member has been terminated
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: termination_type
         description: Categorical variable that indicates whether the termination was voluntary or involuntary.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: exit_impact
         description: Whether the team member's departure has a significant negative impact on the company, its customers, its projects or the team.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: status_effective_date
         description: Effective date of employment status
         tests:
@@ -7842,7 +7842,7 @@ models:
       - name: entity
         description: The team member's entity.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: is_position_active
         description: Whether the team member's job position is active.
       - name: is_current
@@ -7889,7 +7889,7 @@ models:
       - name: entity
         description: The team member's entity.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: is_position_active
         description: Whether the team member's job position is active.
       - name: employment_status
@@ -7899,15 +7899,15 @@ models:
       - name: termination_reason
         description: Categorical variable that indicates the reason why a team member has been terminated
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: termination_type
         description: Categorical variable that indicates whether the termination was voluntary or involuntary.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: exit_impact
         description: Whether the team member's departure has a significant negative impact on the company, its customers, its projects or the team.
         meta:
-          masking_policy: analyst_people
+          masking_policy: analyst_people_sensitive
       - name: is_current
         description: Whether the team status is the most current as of the date the query is run.
       - name: valid_from

@@ -74,7 +74,8 @@
     mart_crm_attribution_touchpoint.touchpoint_offer_type,
     mart_crm_attribution_touchpoint.touchpoint_offer_type_grouped,
     sfdc_bizible_attribution_touchpoint_snapshots_source.bizible_weight_custom_model/100 AS bizible_count_custom_model,
-    sfdc_bizible_attribution_touchpoint_snapshots_source.bizible_weight_custom_model
+    sfdc_bizible_attribution_touchpoint_snapshots_source.bizible_weight_custom_model,
+    mart_crm_attribution_touchpoint.touchpoint_sales_stage AS opp_touchpoint_sales_stage
     FROM 
     sfdc_bizible_attribution_touchpoint_snapshots_source
 
@@ -219,6 +220,7 @@ combined_models AS (
 --Touchpoint Dimensions
     attribution_touchpoint_snapshot_base.bizible_touchpoint_type,
     attribution_touchpoint_snapshot_base.bizible_integrated_campaign_grouping,
+    attribution_touchpoint_snapshot_base.opp_touchpoint_sales_stage,
     CASE 
       WHEN wk_sales_sfdc_opportunity_snapshot_history_xf_base.sales_qualified_source_name = 'SDR Generated' 
         AND attribution_touchpoint_snapshot_base.dim_crm_touchpoint_id IS NULL
@@ -359,6 +361,7 @@ combined_models AS (
 --Touchpoint Dimensions
     NULL AS bizible_touchpoint_type,
     NULL AS bizible_integrated_campaign_grouping,
+    NULL AS opp_touchpoint_sales_stage,
     'Other' AS bizible_marketing_channel,
     'Other.Removed Touchpoint' AS bizible_marketing_channel_path,
     'Other' AS snapshot_marketing_channel,

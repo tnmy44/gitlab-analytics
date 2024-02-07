@@ -29,3 +29,9 @@ pumps:
     single: True
     owner: '@rigerta'
     stage: s3_data_science_pump
+  - model: pump_opportunity_forecasting_scores
+    timestamp_column: updated_at
+    sensitive: True
+    single: True
+    owner: '@rigerta'
+    stage: s3_data_science_pump

@@ -313,6 +313,14 @@ databases:
     - vprakash_prep:
         shared: no
 
+#  Staging Enviornment 
+    - snowplow_stg_test_ved_prep:
+        shared: yes
+    - snowplow_stg_test_ved_prod:
+        shared: yes
+    - snowplow_stg_test_ved_raw:
+        shared: yes
+
 
 # ==========================================
 # Roles
@@ -590,6 +598,10 @@ roles:
                     - prep.sensitive.mart_marketing_contact
                     - prod.pumps_sensitive.pump_marketing_contact
 
+    - analyst_people_sensitive: # role for dynamic masking of people data
+        warehouses:
+            - dev_xs
+        
     - analyst_people:
         warehouses:
             - dev_xs
@@ -619,6 +631,7 @@ roles:
             - zuora
             - zuora_central_sandbox
             - restricted_workspace_people
+            - analyst_people_sensitive
 
     - analyst_sales:
         warehouses:
@@ -1296,18 +1309,21 @@ roles:
                 read:
                     - raw
                     - prod
+                    - prep
                 write:
                     - raw
             schemas:
                 read:
                     - raw.sales_analytics
                     - prod.workspace_sales
+                    - prep.tableau_cloud
                 write:
                     - raw.sales_analytics
             tables:
                 read:
                     - raw.sales_analytics.*
                     - prod.workspace_sales.*
+                    - prep.tableau_cloud.*
                 write:
                     - raw.sales_analytics.*
 
@@ -4032,12 +4048,24 @@ roles:
 
     - jonglee:
         member_of:
+            - data_science_readonly
+            - driveload
             - gainsight
+            - gitlab_data_yaml
+            - gitlab_dotcom
+            - marketo
             - reporter
             - restricted_safe
             - salesforce
+            - sheetload
+            - snapshots
+            - snowplow
+            - version_db
+            - zuora
             - zuora_api_sandbox_stitch
             - zuora_central_sandbox
+            - zuora_stitch_rest_api
+            - zuora_query_api
         warehouses:
             - dev_xs
         owns:
@@ -5040,6 +5068,12 @@ roles:
                     - mwawrzyniak_prep.*.*
                     - mwawrzyniak_prod.*.*
 
+    - mwielich:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - dev_xs
+
     - mxiao:
         member_of:
             - reporter
@@ -5072,6 +5106,8 @@ roles:
             - data_science_readonly
             - marketo
             - static_sensitive
+            - zendesk
+            - zuora_order
             - zuora_stitch_rest_api
         warehouses:
             - dev_xs
@@ -6003,6 +6039,7 @@ roles:
             - reporter
             - snowflake_account_usage
             - restricted_workspace_people
+            - analyst_people_sensitive
         warehouses:
             - reporting
 
@@ -6780,6 +6817,11 @@ users:
         can_login: yes
         member_of:
             - mwawrzyniak
+
+    - mwielich:
+        can_login: yes
+        member_of:
+            - mwielich
 
     - mxiao:
         can_login: yes

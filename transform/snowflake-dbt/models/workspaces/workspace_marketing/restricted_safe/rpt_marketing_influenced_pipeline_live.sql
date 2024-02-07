@@ -38,8 +38,12 @@
     mart_crm_attribution_touchpoint.touchpoint_offer_type,
     mart_crm_attribution_touchpoint.touchpoint_offer_type_grouped,
     mart_crm_attribution_touchpoint.bizible_weight_custom_model/100 AS bizible_count_custom_model,
-    mart_crm_attribution_touchpoint.bizible_weight_custom_model
-    FROM mart_crm_attribution_touchpoint 
+    mart_crm_attribution_touchpoint.bizible_weight_custom_model,
+    mart_crm_attribution_touchpoint.touchpoint_sales_stage AS opp_touchpoint_sales_stage
+    FROM 
+    mart_crm_attribution_touchpoint 
+    LEFT JOIN attribution_touchpoint_offer_type
+    ON  mart_crm_attribution_touchpoint.dim_crm_touchpoint_id=attribution_touchpoint_offer_type.dim_crm_touchpoint_id
 
 )
 
@@ -163,6 +167,7 @@ combined_models AS (
 --Touchpoint Dimensions
     attribution_touchpoint_base.bizible_touchpoint_type,
     attribution_touchpoint_base.bizible_integrated_campaign_grouping,
+    attribution_touchpoint_base.opp_touchpoint_sales_stage,
     CASE 
       WHEN wk_sales_sfdc_opportunity_xf_base.sales_qualified_source_name = 'SDR Generated' 
         AND attribution_touchpoint_base.dim_crm_touchpoint_id IS NULL
