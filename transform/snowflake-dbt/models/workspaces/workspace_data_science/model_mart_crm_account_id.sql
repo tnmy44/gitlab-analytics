@@ -80,4 +80,4 @@ SELECT
  LEFT JOIN pte_latest_date c
    ON a.pte_score_date = c.score_date
  LEFT JOIN ptc_latest_date d
-   ON a.ptc_score_date = d.score_date
+   ON b.ptc_score_date = d.score_date
