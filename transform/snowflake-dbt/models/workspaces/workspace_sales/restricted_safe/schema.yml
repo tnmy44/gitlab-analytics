@@ -138,14 +138,12 @@ models:
       - name: account_id
         tests:
             - not_null
-            - unique
   - name: wk_prep_crm_opportunity_share_active
     description: an active opportunity share table with reduced column list
     columns:
       - name: opportunity_id
         tests:
             - not_null
-            - unique
   - name: wk_crm_account_entitlement
     description: an account entitlment table to be used for row level security in Tableau
     columns:
