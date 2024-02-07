@@ -434,9 +434,19 @@ Below checklist of activities would be run once for quarter to validate security
         <details><summary>Template</summary>
     
         | Tool/Library                       | Current version | Current version release date | Latest version | Latest version release date | Note | Candidate for the upgrade (Yes/No) | 
-        |--------------------------|-----------------|------------------------------|----------------|-----------------------------|--------|--------| 
-        ||                 |                              |                |                             |||
-        ||                 |                              |                |                             |||
+        |--------------------------|-----------------|------------------------------|----------------|-----------------------------|--------|--------|
+        | [airflow](https://about.gitlab.com/handbook/business-technology/data-team/platform/infrastructure/#airflow) | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        | [permifrost](https://about.gitlab.com/handbook/business-technology/data-team/platform/permifrost/)          | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        | [meltano](https://about.gitlab.com/handbook/business-technology/data-team/platform/Meltano-Gitlab/)         | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        | [dbt](https://about.gitlab.com/handbook/business-technology/data-team/platform/dbt-guide/)                  | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        | dbt package: [snowflake_spend](https://gitlab.com/gitlab-data/snowflake_spend)                              | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        | dbt package: [data-tests](https://gitlab.com/gitlab-data/data-tests)                                        | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        | dbt package: [dbt-labs/audit_helper](https://github.com/dbt-labs/dbt-audit-helper)                          | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        | dbt package: [dbt-labs/dbt_utils](https://github.com/dbt-labs/dbt-utils)                                    | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        | dbt package: [dbt-labs/snowplow](https://github.com/dbt-labs/snowplow/tree/0.15.1/)                         | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        | dbt package: [dbt-labs/dbt_external_tables](https://hub.getdbt.com/dbt-labs/dbt_external_tables/latest/)    | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        | dbt package: [brooklyn-data/dbt_artifacts](https://github.com/brooklyn-data/dbt_artifacts)                  | ``      | `YYYY-MM-DD` | ``      | `YYYY-MM-DD` | | |
+        
         </details>
 1. [ ] Share your finding with the team `@gitlab-data/engineers` (tag them in the issue) and pick the good candidates for upgrading _(including both Python and other tools and libraries)_
 1. [ ] If we agree on candidates for upgrading, create [**a new issue**](https://gitlab.com/gitlab-data/analytics/-/issues/new?issue%5Bassignee_id%5D=&issue%5Bmilestone_id%5D=) in the `/analytics` repo with the list of libraries we agreed that should upgrade and proceed further
