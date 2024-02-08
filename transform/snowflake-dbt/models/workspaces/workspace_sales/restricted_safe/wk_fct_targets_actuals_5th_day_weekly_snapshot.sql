@@ -5,7 +5,6 @@ WITH targets_actuals AS (
 
 ),
 
-
 day_5_list AS (
 
   SELECT 
@@ -16,7 +15,7 @@ day_5_list AS (
 
 ),
 
-granular_data AS (
+final AS (
 
   SELECT 
     targets_actuals.*,
@@ -103,5 +102,4 @@ granular_data AS (
 )
 
 SELECT * 
-FROM granular_data
-WHERE is_current_snapshot_quarter
+FROM final

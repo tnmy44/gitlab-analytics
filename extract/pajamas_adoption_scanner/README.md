@@ -1,4 +1,4 @@
-**WIP**: Please see [handbook](https://about.gitlab.com/handbook/business-technology/data-team/platform/pipelines/#pajamas_adoption_scanner) for details on this extraction.
+Please see [handbook (internal only)](https://gitlab.com/gitlab-com/content-sites/internal-handbook/-/blob/main/content/handbook/enterprise-data/platform/pipelines/_index.md?ref_type=heads#pajamas-adoption-scanner) for details on this extraction.
 
 Below are instructions to set-up the proper Snowflake environment.
 
@@ -11,7 +11,7 @@ create schema raw.pajamas_adoption_scanner;
 
 use raw.pajamas_adoption_scanner;
 
-CREATE STAGE pajamas_adoption_scanner_loader
+CREATE STAGE pajamas_adoption_scanner_load
 FILE_FORMAT = (TYPE = 'JSON');
 ```
 
