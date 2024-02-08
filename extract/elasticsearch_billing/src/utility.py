@@ -101,6 +101,7 @@ def get_extraction_start_date_end_date_backfill():
     extraction_end_date = date(current_date.year, current_date.month, 1) - timedelta(
         days=1
     )
+    extraction_start_date = extraction_start_date.date()
     return extraction_start_date, extraction_end_date
 
 
