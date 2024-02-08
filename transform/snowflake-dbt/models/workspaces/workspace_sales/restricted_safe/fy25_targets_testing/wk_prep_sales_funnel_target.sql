@@ -75,7 +75,6 @@
                       '-',
                       fiscal_months.fiscal_year
                       )
-
         WHEN fiscal_months.fiscal_year = 2024 AND sheetload_sales_targets_source.user_business_unit IS NULL -- account for nulls/possible data issues
           THEN CONCAT(
                       UPPER(sheetload_sales_targets_source.user_segment), 
@@ -89,7 +88,11 @@
                       fiscal_months.fiscal_year
                       )
         WHEN fiscal_months.fiscal_year = 2025 --AND sheetload_sales_targets_source.user_business_unit IS NULL -- account for nulls/possible data issues
-          THEN UPPER(sheetload_sales_targets_source.user_role_name)
+          THEN CONCAT(
+                    UPPER(sheetload_sales_targets_source.user_role_name),
+                    '-',
+                    fiscal_months.fiscal_year
+                    )
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,
         fiscal_months.fiscal_year,
         fiscal_months.first_day_of_month
