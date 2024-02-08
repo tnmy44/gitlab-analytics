@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('snapshots', 'sfdc_user_snapshots') }}
+    FROM {{ ref('sfdc_user_snapshots') }}
 
     QUALIFY ROW_NUMBER() OVER (
     PARTITION BY 
