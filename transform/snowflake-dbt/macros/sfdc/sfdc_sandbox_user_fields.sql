@@ -1,10 +1,10 @@
 {%- macro sfdc_sandbox_user_fields(model_type) %}
 
 {{ simple_cte([
-    ('sfdc_user_roles_source','sfdc_sandbox_user_roles_source'),
+    ('sfdc_user_roles_source','sfdc_user_roles_source'),
     ('dim_date','dim_date'),
-    ('sfdc_users_source', 'sfdc_sandbox_users_source'),
-    ('sfdc_user_snapshots_source', 'sfdc_sandbox_user_snapshots_source')
+    ('sfdc_users_source', 'sfdc_users_source'),
+    ('sfdc_user_snapshots_source', 'sfdc_user_snapshots_source')
 ]) }}
 
 , sheetload_mapping_sdr_sfdc_bamboohr_source AS (
@@ -75,6 +75,7 @@
       sfdc_users.user_email,
       sfdc_users.is_active,
       sfdc_users.start_date,
+      sfdc_users.ramping_quota,
       sfdc_users.user_timezone,
       sfdc_users.user_role_id,
       sfdc_user_roles_source.user_role_name                                                                                           AS crm_user_role_name,
@@ -106,7 +107,11 @@
         ELSE 0 
       END                                                                                                                             AS is_hybrid_user,
       {%- if model_type == 'live' %}
-      sfdc_user_roles_source.user_role_name                                                                                           AS dim_crm_user_hierarchy_sk,
+      CONCAT(
+             UPPER(sfdc_user_roles_source.user_role_name)
+             '-'
+             current_fiscal_year.fiscal_year
+            )                                                                                                                         AS dim_crm_user_hierarchy_sk,
       {%- elif model_type == 'snapshot' %}
       CASE
         WHEN sfdc_users.snapshot_fiscal_year < 2024
@@ -179,7 +184,7 @@
                       )
         WHEN sfdc_users.snapshot_fiscal_year >= 2025
           THEN CONCAT(
-                      UPPER(sheetload_sales_targets_source.user_role_name),
+                      UPPER(sfdc_user_roles_source.name),
                       '-',
                       fiscal_months.fiscal_year
                       )        
