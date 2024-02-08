@@ -5,11 +5,11 @@
 ) }}
 
 {{ simple_cte([
-    ('sfdc_user_roles_source','sfdc_sandbox_user_roles_source'),
+    ('sfdc_user_roles_source','sfdc_user_roles_source'),
     ('net_iacv_to_net_arr_ratio', 'net_iacv_to_net_arr_ratio'),
     ('dim_date', 'dim_date'),
     ('sfdc_opportunity_stage_source', 'sfdc_opportunity_stage_source'),
-    ('sfdc_opportunity_source', 'sfdc_sandbox_opportunity_source'),
+    ('sfdc_opportunity_source', 'sfdc_opportunity_source'),
     ('sfdc_opportunity_snapshots_source','sfdc_opportunity_snapshots_source'),
     ('sfdc_opportunity_stage', 'sfdc_opportunity_stage_source'),
     ('sfdc_record_type_source', 'sfdc_record_type_source'),
@@ -95,13 +95,13 @@
 ), sfdc_account AS (
 
     SELECT *
-    FROM {{ ref('sfdc_sandbox_account_source') }}
+    FROM {{ ref('sfdc_account_source') }}
     WHERE account_id IS NOT NULL
 
 ), sfdc_user AS (
 
     SELECT *
-    FROM {{ ref('sfdc_sandbox_users_source') }}
+    FROM {{ ref('sfdc_users_source') }}
     WHERE user_id IS NOT NULL
 
 ), sfdc_opportunity_snapshot AS (
@@ -275,7 +275,7 @@
       END                                                                                                   AS opportunity_owner_user_area,
       sfdc_user_roles_source.user_role_name                                                                 AS opportunity_owner_role,
       account_owner.title                                                                                   AS opportunity_owner_title,
-      {{ dbt_utils.star(from=ref('sfdc_sandbox_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED", "IS_WON", 
+      {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED", "IS_WON", 
                                                                      "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", 
                                                                      "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_source")}},
       NULL                                                                                                  AS dbt_scd_id,
