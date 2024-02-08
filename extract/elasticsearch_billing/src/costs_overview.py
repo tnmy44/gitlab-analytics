@@ -27,7 +27,13 @@ def get_costs_overview():
 
     info("Getting costs overview")
     date_today = datetime.utcnow().date()
-    extraction_start_date = date_today.replace(day=1)
+    # if todays date is not one in date_today, then replace day with 1 and month part  to previous month
+    
+    if date_today.day == 1:
+        extraction_start_date = date_today - timedelta(days=1)
+        extraction_start_date = extraction_start_date.replace(day=1)
+    else:
+        extraction_start_date = date_today.replace(day=1)
     extraction_end_date = date_today - timedelta(days=1)
     costs_endpoint_url = (
         f"/billing/costs/{org_id}?from={extraction_start_date}&to={extraction_end_date}"

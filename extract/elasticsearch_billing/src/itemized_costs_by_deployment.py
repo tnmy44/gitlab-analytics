@@ -28,7 +28,11 @@ def get_itemized_costs_by_deployments():
     info("Retrieving itemized costs by deployment")
     date_today = datetime.utcnow().date()
 
-    extraction_start_date = date_today.replace(day=1)
+    if date_today.day == 1:
+        extraction_start_date = date_today - timedelta(days=1)
+        extraction_start_date = extraction_start_date.replace(day=1)
+    else:
+        extraction_start_date = date_today.replace(day=1)
     extraction_end_date = date_today - timedelta(days=1)
 
     # Get the list of deployments

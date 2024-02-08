@@ -26,7 +26,11 @@ def get_itemized_costs():
 
     info("Getting itemized costs from Elastic Cloud API")
     date_today = datetime.utcnow().date()
-    extraction_start_date = date_today.replace(day=1)
+    if date_today.day == 1:
+        extraction_start_date = date_today - timedelta(days=1)
+        extraction_start_date = extraction_start_date.replace(day=1)
+    else:
+        extraction_start_date = date_today.replace(day=1)
     extraction_end_date = date_today - timedelta(days=1)
     itemised_costs_url = f"/billing/costs/{org_id}/items?from={extraction_start_date}&to={extraction_end_date}"
     get_response_and_upload(
