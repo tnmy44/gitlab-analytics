@@ -84,7 +84,9 @@ def get_costs_overview_backfill():
         for month in range(1, 13):
             current_month = date(year, month, 1)
             start_date = current_month
+            print(f"start_date is {start_date}")
             end_date = date(year, month + 1, 1) - timedelta(days=1)
+            print(f"end_date is {end_date}")
             if start_date >= extraction_start_date and end_date <= extraction_end_date:
                 info(f"{start_date} till {end_date}")
                 costs_endpoint_url = f"/billing/costs/{org_id}?from={start_date}&to={end_date}"
