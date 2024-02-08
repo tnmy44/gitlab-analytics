@@ -181,9 +181,7 @@
       {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "PARENT_OPPORTUNITY_ID", "ORDER_TYPE_STAMPED",
                                                                                "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", 
                                                                                "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", 
-                                                                               "NET_ARR", "DEAL_SIZE", "VSA_READOUT", "MASTER_RECORD_ID", "SOLUTIONS_ARCHITECT", 
-                                                                               "LICENSE_UTILIZATION", "RISK_RATE_GUID", "SIX_SENSE_SEGMENTS", "VSA_START_DATE_NET_ARR",
-                                                                               "VSA_START_DATE", "VSA_URL", "VSA_STATUS", "VSA_END_DATE",],relation_alias="sfdc_opportunity_snapshots_source")}},
+                                                                               "NET_ARR", "DEAL_SIZE"],relation_alias="sfdc_opportunity_snapshots_source")}},
       0 AS is_live
     FROM sfdc_opportunity_snapshots_source
     INNER JOIN snapshot_dates
