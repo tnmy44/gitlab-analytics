@@ -6724,7 +6724,7 @@ users:
       - General All Access
   - user_name: lkozloff
     user_name_domain: gitlab.com
-    site_role: Viewer
+    site_role: Creator
     auth_setting: SAML
     groups:
       - General All Access
@@ -9140,7 +9140,7 @@ users:
       - General All Access
   - user_name: schaturvedi
     user_name_domain: gitlab.com
-    site_role: Unlicensed
+    site_role: SiteAdministratorCreator
     auth_setting: SAML
     groups:
       - Data Team All Access
@@ -10755,3 +10755,28 @@ users:
     auth_setting: SAML
     groups:
       - General All Access         
+  - user_name: jschneeweisz
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: cugorji
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: htarver
+    user_name_domain: gitlab.com
+    site_role: Viewer
+    auth_setting: SAML
+    groups:
+      - General All Access
+  - user_name: jtucker
+    user_name_domain: gitlab.com
+    site_role: ExplorerCanPublish
+    auth_setting: SAML
+    groups:
+      - General All Access
+      - General SAFE Access                       
