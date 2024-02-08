@@ -325,7 +325,7 @@
       END                                                                                                         AS asm
     FROM sfdc_users
     LEFT JOIN sfdc_user_roles_source
-      ON sfdc_users.user_role_id = sfdc_user_roles_source.user_role_id
+      ON sfdc_users.user_role_id = sfdc_user_roles_source.id
     LEFT JOIN sheetload_mapping_sdr_sfdc_bamboohr_source
       ON sfdc_users.user_id = sheetload_mapping_sdr_sfdc_bamboohr_source.user_id
     LEFT JOIN current_fiscal_year
