@@ -186,7 +186,7 @@
           THEN CONCAT(
                       UPPER(sfdc_user_roles_source.name),
                       '-',
-                      fiscal_months.fiscal_year
+                      sfdc_users.snapshot_fiscal_year
                       )        
         END                                                                                                                           AS dim_crm_user_hierarchy_sk,
       {%- endif %}
