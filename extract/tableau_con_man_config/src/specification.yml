@@ -9730,14 +9730,6 @@ users:
     auth_setting: SAML
     groups:
       - General All Access
-  - user_name: svogel-ext
-    user_name_domain: gitlab.com
-    site_role: Viewer
-    auth_setting: SAML
-    groups:
-      - Data Team All Access
-      - General All Access
-      - General SAFE Access
   - user_name: swainaina
     user_name_domain: gitlab.com
     site_role: Viewer
